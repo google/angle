@@ -124,9 +124,7 @@ if (is_win || is_linux || is_mac || is_android) {
   import("angle_end2end_tests.gni")
 
   test("angle_end2end_tests") {
-    include_dirs = [
-      "../../src/tests",
-    ]
+    include_dirs = [ "../../src/tests" ]
     defines = [
       "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
       "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}\"",
@@ -184,9 +182,7 @@ if (is_win || is_linux || is_mac || is_android) {
   import("angle_white_box_tests.gni")
 
   test("angle_white_box_tests") {
-    include_dirs = [
-      "../../src/tests",
-    ]
+    include_dirs = [ "../../src/tests" ]
 
     if (is_android) {
       use_native_activity = true
@@ -236,9 +232,7 @@ if (is_win || is_linux || is_android || is_mac) {
   import("angle_perftests.gni")
 
   test("angle_perftests") {
-    include_dirs = [
-      "../../src/tests",
-    ]
+    include_dirs = [ "../../src/tests" ]
 
     sources = angle_perf_tests_sources
 
@@ -261,7 +255,7 @@ if (is_win || is_linux || is_android || is_mac) {
 
     if (angle_enable_vulkan) {
       sources += angle_perf_tests_vulkan_sources
-      if (is_android || is_linux) {
+      if (is_android) {
         sources += angle_perf_tests_vulkan_command_buffer_sources
       }
       deps += [ "$angle_root/third_party/glslang:glslang" ]
@@ -466,9 +460,7 @@ if (build_angle_gles1_conform_tests) {
              angle_root + ":translator",
            ]
 
-    include_dirs = [
-      "../../src/tests",
-    ]
+    include_dirs = [ "../../src/tests" ]
 
     sources = [
       "gles1_conformance_tests/ConformanceTests.cpp",
