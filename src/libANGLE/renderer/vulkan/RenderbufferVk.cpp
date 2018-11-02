@@ -62,7 +62,7 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
         }
     }
 
-    if (!mImage.valid() && (width != 0 || height != 0))
+    if (!mImage.valid() && (width != 0 && height != 0))
     {
         const angle::Format &textureFormat = vkFormat.textureFormat();
         bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
