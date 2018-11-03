@@ -120,7 +120,23 @@ void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
         }
         else if (fieldType.isArrayOfArrays())
         {
-            // TODO(jiajia.qin@intel.com): Add array of array field member support.
+            size_t beginSize                        = encoder->getBlockSize();
+            const TVector<unsigned int> &arraySizes = *fieldType.getArraySizes();
+            // arraySizes[0] stores the innermost array's size.
+            std::vector<unsigned int> innermostArraySize(1u, arraySizes[0]);
+            const BlockMemberInfo &memberInfo =
+                encoder->encodeType(GLVariableType(fieldType), innermostArraySize,
+                                    isRowMajorLayout && fieldType.isMatrix());
+            (*blockInfoOut)[field] = memberInfo;
+            size_t endSize         = encoder->getBlockSize();
+
+            // The total size of array of arrays is memberInfo.arrayStride *
+            // fieldType.getArraySizeProduct(). However, encoder->encodeType will change the current
+            // offset of encoder. So the final increase size will be total size of arrays of arrays
+            // minus the increased sized by encoder->encodeType.
+            size_t arrayOfArraysSize = memberInfo.arrayStride * fieldType.getArraySizeProduct();
+            size_t increaseSize      = arrayOfArraysSize - (endSize - beginSize);
+            encoder->increaseCurrentOffset(increaseSize);
         }
         else
         {

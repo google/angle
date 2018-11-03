@@ -920,6 +920,99 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that non-structure array of arrays is supported in SSBO.
+TEST_P(ShaderStorageBufferTest31, SimpleArrayOfArrays)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=1) in;
+layout(binding=0, std140) buffer Storage0
+{
+    uint a[2][2][2];
+    uint b;
+} sb_load;
+layout(binding=1, std140) buffer Storage1
+{
+    uint a[2][2][2];
+    uint b;
+} sb_store;
+void main()
+{
+   sb_store.a[0][0][0] = sb_load.a[0][0][0];
+   sb_store.a[0][0][1] = sb_load.a[0][0][1];
+   sb_store.a[0][1][0] = sb_load.a[0][1][0];
+   sb_store.a[0][1][1] = sb_load.a[0][1][1];
+   sb_store.a[1][0][0] = sb_load.a[1][0][0];
+   sb_store.a[1][0][1] = sb_load.a[1][0][1];
+   sb_store.a[1][1][0] = sb_load.a[1][1][0];
+   sb_store.a[1][1][1] = sb_load.a[1][1][1];
+   sb_store.b = sb_load.b;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    glUseProgram(program);
+
+    constexpr unsigned int kBytesPerComponent = sizeof(GLuint);
+    // The array stride are rounded up to the base alignment of a vec4 for std140 layout.
+    constexpr unsigned int kArrayStride                 = 16;
+    constexpr unsigned int kDimension0                  = 2;
+    constexpr unsigned int kDimension1                  = 2;
+    constexpr unsigned int kDimension2                  = 2;
+    constexpr unsigned int kAElementCount               = kDimension0 * kDimension1 * kDimension2;
+    constexpr unsigned int kAComponentCountPerDimension = kArrayStride / kBytesPerComponent;
+    constexpr unsigned int kTotalSize = kArrayStride * kAElementCount + kBytesPerComponent;
+
+    constexpr GLuint kInputADatas[kAElementCount * kAComponentCountPerDimension] = {
+        1u, 0u, 0u, 0u, 2u, 0u, 0u, 0u, 3u, 0u, 0u, 0u, 4u, 0u, 0u, 0u,
+        5u, 0u, 0u, 0u, 6u, 0u, 0u, 0u, 7u, 0u, 0u, 0u, 8u, 0u, 0u, 0u};
+    constexpr GLuint kInputBData = 9u;
+
+    // Create shader storage buffer
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kTotalSize, nullptr, GL_STATIC_DRAW);
+    GLint offset = 0;
+    // upload data to sb_load.a
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kAElementCount * kArrayStride, kInputADatas);
+    offset += (kAElementCount * kArrayStride);
+    // upload data to sb_load.b
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kBytesPerComponent, &kInputBData);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kTotalSize, nullptr, GL_STATIC_DRAW);
+
+    // Bind shader storage buffer
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+
+    // Read back shader storage buffer
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    constexpr GLuint kExpectedADatas[kAElementCount] = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u};
+    const GLuint *ptr                                = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kTotalSize, GL_MAP_READ_BIT));
+    for (unsigned i = 0u; i < kDimension0; i++)
+    {
+        for (unsigned j = 0u; j < kDimension1; j++)
+        {
+            for (unsigned k = 0u; k < kDimension2; k++)
+            {
+                unsigned index = i * (kDimension1 * kDimension2) + j * kDimension2 + k;
+                EXPECT_EQ(kExpectedADatas[index],
+                          *(ptr + index * (kArrayStride / kBytesPerComponent)));
+            }
+        }
+    }
+
+    ptr += (kAElementCount * (kArrayStride / kBytesPerComponent));
+    EXPECT_EQ(kInputBData, *ptr);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace
