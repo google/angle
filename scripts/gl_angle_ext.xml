@@ -903,6 +903,17 @@
                 <param len="COMPSIZE(primcount)">const GLsizei*<name>instanceCounts</name></param>
                 <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
             </command>
+            <command>
+            <proto>void <name>glGetMultisamplefvANGLE</name></proto>
+                <param><ptype>GLenum</ptype> <name>pname</name></param>
+                <param><ptype>GLuint</ptype> <name>index</name></param>
+                <param><ptype>GLfloat *</ptype> <name>val</name></param>
+            </command>
+            <command>
+            <proto>void <name>glSampleMaskiANGLE</name></proto>
+                <param><ptype>GLuint</ptype> <name>maskNumber</name></param>
+                <param><ptype>GLbitfield</ptype> <name>mask</name></param>
+            </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -1046,6 +1057,8 @@
                 <command name="glTexStorage2DMultisampleANGLE"/>
                 <command name="glGetTexLevelParameterivANGLE"/>
                 <command name="glGetTexLevelParameterfvANGLE"/>
+                <command name="glGetMultisamplefvANGLE"/>
+                <command name="glSampleMaskiANGLE"/>
             </require>
         </extension>
         <extension name="GL_ANGLE_multi_draw" supported='gl|gles2'>

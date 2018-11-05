@@ -96,7 +96,7 @@
   "proc table:src/libGLESv2/gen_proc_table.py":
     "027bfd5a8a8dffe91f492bf199029cde",
   "proc table:src/libGLESv2/proc_table_data.json":
-    "78d7d15862b563adf3fe957672ca1845",
+    "78700937f7d4de5f3e2a599e128ad557",
   "uniform type:src/common/gen_uniform_type_table.py":
     "59cb4ffd0f584c4bd37f2f4ff59a2b93"
 }

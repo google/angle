@@ -4346,4 +4346,25 @@ bool ValidateGetTexLevelParameterivANGLE(Context *context,
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 
+bool ValidateGetMultisamplefvANGLE(Context *context, GLenum pname, GLuint index, GLfloat *val)
+{
+    if (!context->getExtensions().textureMultisample)
+    {
+        context->validationError(GL_INVALID_OPERATION, kMultisampleTextureExtensionOrES31Required);
+        return false;
+    }
+
+    return ValidateGetMultisamplefvBase(context, pname, index, val);
+}
+
+bool ValidateSampleMaskiANGLE(Context *context, GLuint maskNumber, GLbitfield mask)
+{
+    if (!context->getExtensions().textureMultisample)
+    {
+        context->validationError(GL_INVALID_OPERATION, kMultisampleTextureExtensionOrES31Required);
+        return false;
+    }
+
+    return ValidateSampleMaskiBase(context, maskNumber, mask);
+}
 }  // namespace gl

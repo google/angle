@@ -646,6 +646,8 @@ GL_APICALL void GL_APIENTRY glGetTexLevelParameterfvANGLE(GLenum target, GLint l
                                         GLenum pname, GLfloat *params);
 GL_APICALL void GL_APIENTRY glGetTexLevelParameterivANGLE(GLenum target, GLint level,
                                         GLenum pname, GLint *params);
+GL_APICALL void GL_APIENTRY glGetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val);
+GL_APICALL void GL_APIENTRY glSampleMaskiANGLE(GLuint maskNumber, GLbitfield mask);
 #endif
 #endif  // !GL_ANGLE_texture_multisample
 

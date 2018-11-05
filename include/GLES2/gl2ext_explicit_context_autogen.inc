@@ -331,6 +331,8 @@ typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSANGLECONTEXTANGLE)(GLeglContext c
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSINSTANCEDANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLint *firsts, const GLsizei *counts, const GLsizei *instanceCounts, GLsizei drawcount);
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, GLsizei drawcount);
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSINSTANCEDANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, const GLsizei*instanceCounts, GLsizei drawcount);
+typedef void (GL_APIENTRYP PFNGLGETMULTISAMPLEFVANGLECONTEXTANGLE)(GLeglContext ctx, GLenum pname, GLuint index, GLfloat * val);
+typedef void (GL_APIENTRYP PFNGLSAMPLEMASKIANGLECONTEXTANGLE)(GLeglContext ctx, GLuint maskNumber, GLbitfield mask);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glActiveTextureContextANGLE(GLeglContext ctx, GLenum texture);
 GL_APICALL void GL_APIENTRY glAttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader);
@@ -655,4 +657,6 @@ GL_APICALL void GL_APIENTRY glMultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
 GL_APICALL void GL_APIENTRY glMultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLint *firsts, const GLsizei *counts, const GLsizei *instanceCounts, GLsizei drawcount);
 GL_APICALL void GL_APIENTRY glMultiDrawElementsANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, GLsizei drawcount);
 GL_APICALL void GL_APIENTRY glMultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, const GLsizei*instanceCounts, GLsizei drawcount);
+GL_APICALL void GL_APIENTRY glGetMultisamplefvANGLEContextANGLE(GLeglContext ctx, GLenum pname, GLuint index, GLfloat * val);
+GL_APICALL void GL_APIENTRY glSampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask);
 #endif

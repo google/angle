@@ -964,22 +964,7 @@ bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfl
         return false;
     }
 
-    if (pname != GL_SAMPLE_POSITION)
-    {
-        context->validationError(GL_INVALID_ENUM, kInvalidPname);
-        return false;
-    }
-
-    Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
-    GLint samples            = framebuffer->getSamples(context);
-
-    if (index >= static_cast<GLuint>(samples))
-    {
-        context->validationError(GL_INVALID_VALUE, kIndexExceedsSamples);
-        return false;
-    }
-
-    return true;
+    return ValidateGetMultisamplefvBase(context, pname, index, val);
 }
 
 bool ValidateGetMultisamplefvRobustANGLE(Context *context,
@@ -1823,13 +1808,7 @@ bool ValidateSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask)
         return false;
     }
 
-    if (maskNumber >= context->getCaps().maxSampleMaskWords)
-    {
-        context->validationError(GL_INVALID_VALUE, kInvalidSampleMaskNumber);
-        return false;
-    }
-
-    return true;
+    return ValidateSampleMaskiBase(context, maskNumber, mask);
 }
 
 bool ValidateFramebufferTextureEXT(Context *context,

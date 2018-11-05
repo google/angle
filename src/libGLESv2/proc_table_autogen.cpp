@@ -551,6 +551,8 @@ ProcEntry g_procTable[] = {
     {"glGetMaterialxv", P(gl::GetMaterialxv)},
     {"glGetMaterialxvContextANGLE", P(gl::GetMaterialxvContextANGLE)},
     {"glGetMultisamplefv", P(gl::GetMultisamplefv)},
+    {"glGetMultisamplefvANGLE", P(gl::GetMultisamplefvANGLE)},
+    {"glGetMultisamplefvANGLEContextANGLE", P(gl::GetMultisamplefvANGLEContextANGLE)},
     {"glGetMultisamplefvContextANGLE", P(gl::GetMultisamplefvContextANGLE)},
     {"glGetMultisamplefvRobustANGLE", P(gl::GetMultisamplefvRobustANGLE)},
     {"glGetMultisamplefvRobustANGLEContextANGLE", P(gl::GetMultisamplefvRobustANGLEContextANGLE)},
@@ -1017,6 +1019,8 @@ ProcEntry g_procTable[] = {
     {"glSampleCoveragex", P(gl::SampleCoveragex)},
     {"glSampleCoveragexContextANGLE", P(gl::SampleCoveragexContextANGLE)},
     {"glSampleMaski", P(gl::SampleMaski)},
+    {"glSampleMaskiANGLE", P(gl::SampleMaskiANGLE)},
+    {"glSampleMaskiANGLEContextANGLE", P(gl::SampleMaskiANGLEContextANGLE)},
     {"glSampleMaskiContextANGLE", P(gl::SampleMaskiContextANGLE)},
     {"glSamplerParameterIivOES", P(gl::SamplerParameterIivOES)},
     {"glSamplerParameterIivOESContextANGLE", P(gl::SamplerParameterIivOESContextANGLE)},
@@ -1273,5 +1277,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1205;
+size_t g_numProcs = 1209;
 }  // namespace egl

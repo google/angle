@@ -2050,6 +2050,37 @@ void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
     }
 }
 
+void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum pname = 0x%X, GLuint index = %u, GLfloat * val = 0x%016" PRIxPTR ")", pname,
+          index, (uintptr_t)val);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateGetMultisamplefvANGLE(context, pname, index, val))
+        {
+            context->getMultisamplefv(pname, index, val);
+        }
+    }
+}
+
+void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint maskNumber = %u, GLbitfield mask = 0x%X)", maskNumber, mask);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateSampleMaskiANGLE(context, maskNumber, mask))
+        {
+            context->sampleMaski(maskNumber, mask);
+        }
+    }
+}
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
                                                 GLsizei bufsize,
@@ -17878,6 +17909,42 @@ void GL_APIENTRY MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
         {
             context->multiDrawElementsInstanced(modePacked, counts, type, indices, instanceCounts,
                                                 drawcount);
+        }
+    }
+}
+
+void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
+                                                   GLenum pname,
+                                                   GLuint index,
+                                                   GLfloat *val)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum pname = 0x%X, GLuint index = %u, GLfloat * val = 0x%016" PRIxPTR ")", pname,
+          index, (uintptr_t)val);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateGetMultisamplefvANGLE(context, pname, index, val))
+        {
+            context->getMultisamplefv(pname, index, val);
+        }
+    }
+}
+
+void GL_APIENTRY SampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint maskNumber = %u, GLbitfield mask = 0x%X)", maskNumber, mask);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateSampleMaskiANGLE(context, maskNumber, mask))
+        {
+            context->sampleMaski(maskNumber, mask);
         }
     }
 }

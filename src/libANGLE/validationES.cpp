@@ -6741,4 +6741,35 @@ bool ValidateGetTexLevelParameterBase(Context *context,
     }
     return true;
 }
+
+bool ValidateGetMultisamplefvBase(Context *context, GLenum pname, GLuint index, GLfloat *val)
+{
+    if (pname != GL_SAMPLE_POSITION)
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidPname);
+        return false;
+    }
+
+    Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
+    GLint samples            = framebuffer->getSamples(context);
+
+    if (index >= static_cast<GLuint>(samples))
+    {
+        context->validationError(GL_INVALID_VALUE, kIndexExceedsSamples);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateSampleMaskiBase(Context *context, GLuint maskNumber, GLbitfield mask)
+{
+    if (maskNumber >= context->getCaps().maxSampleMaskWords)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidSampleMaskNumber);
+        return false;
+    }
+
+    return true;
+}
 }  // namespace gl

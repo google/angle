@@ -581,6 +581,8 @@ bool ValidateGetTexLevelParameterfvANGLE(Context *context,
                                          GLint level,
                                          GLenum pname,
                                          GLfloat *params);
+bool ValidateGetMultisamplefvANGLE(Context *context, GLenum pname, GLuint index, GLfloat *val);
+bool ValidateSampleMaskiANGLE(Context *context, GLuint maskNumber, GLbitfield mask);
 
 // GL_ANGLE_translated_shader_source
 bool ValidateGetTranslatedShaderSourceANGLE(Context *context,

@@ -7843,6 +7843,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_MAX_INTEGER_SAMPLES_ANGLE:
             case GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE:
             case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE:
+            case GL_MAX_SAMPLE_MASK_WORDS:
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;
