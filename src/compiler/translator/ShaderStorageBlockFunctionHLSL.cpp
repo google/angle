@@ -8,6 +8,7 @@
 
 #include "compiler/translator/ShaderStorageBlockFunctionHLSL.h"
 
+#include "common/utilities.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
 #include "compiler/translator/blocklayoutHLSL.h"
@@ -41,20 +42,29 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOLoadFunctionBody(
             return;
     }
 
+    size_t bytesPerComponent =
+        gl::VariableComponentSize(gl::VariableComponentType(GLVariableType(ssboFunction.type)));
     out << "    " << ssboFunction.typeString << " result";
     if (ssboFunction.type.isScalar())
     {
-        out << " = " << convertString << "buffer.Load(loc));\n";
+        size_t offset = ssboFunction.swizzleOffsets[0] * bytesPerComponent;
+        out << " = " << convertString << "buffer.Load(loc + " << offset << "));\n ";
     }
     else if (ssboFunction.type.isVector())
     {
-        if (ssboFunction.rowMajor)
+        if (ssboFunction.rowMajor || !ssboFunction.isDefaultSwizzle)
         {
-            out << " = {";
-            for (int index = 0; index < ssboFunction.type.getNominalSize(); index++)
+            size_t componentStride = bytesPerComponent;
+            if (ssboFunction.rowMajor)
             {
-                out << convertString << "buffer.Load(loc + " << index * ssboFunction.matrixStride
-                    << ")),";
+                componentStride = ssboFunction.matrixStride;
+            }
+
+            out << " = {";
+            for (const int offset : ssboFunction.swizzleOffsets)
+            {
+                size_t offsetInBytes = offset * componentStride;
+                out << convertString << "buffer.Load(loc + " << offsetInBytes << ")),";
             }
             out << "};\n";
         }
@@ -105,42 +115,49 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOStoreFunctionBody(
     TInfoSinkBase &out,
     const ShaderStorageBlockFunction &ssboFunction)
 {
+    size_t bytesPerComponent =
+        gl::VariableComponentSize(gl::VariableComponentType(GLVariableType(ssboFunction.type)));
     if (ssboFunction.type.isScalar())
     {
+        size_t offset = ssboFunction.swizzleOffsets[0] * bytesPerComponent;
         if (ssboFunction.type.getBasicType() == EbtBool)
         {
-            out << "    uint _tmp = uint(value);\n"
-                << "    buffer.Store(loc, _tmp);\n";
+            out << "    buffer.Store(loc + " << offset << ", uint(value));\n";
         }
         else
         {
-            out << "    buffer.Store(loc, asuint(value));\n";
+            out << "    buffer.Store(loc + " << offset << ", asuint(value));\n";
         }
     }
     else if (ssboFunction.type.isVector())
     {
-        if (ssboFunction.rowMajor)
+        out << "    uint" << ssboFunction.type.getNominalSize() << " _value;\n";
+        if (ssboFunction.type.getBasicType() == EbtBool)
         {
-            for (int index = 0; index < ssboFunction.type.getNominalSize(); index++)
+            out << "    _value = uint" << ssboFunction.type.getNominalSize() << "(value);\n";
+        }
+        else
+        {
+            out << "    _value = asuint(value);\n";
+        }
+
+        if (ssboFunction.rowMajor || !ssboFunction.isDefaultSwizzle)
+        {
+            size_t componentStride = bytesPerComponent;
+            if (ssboFunction.rowMajor)
             {
-                // Don't need to worry about bool value since there is no bool matrix.
-                out << "buffer.Store(loc + " << index * ssboFunction.matrixStride
-                    << ", asuint(value[" << index << "]));\n";
+                componentStride = ssboFunction.matrixStride;
+            }
+            const TVector<int> &swizzleOffsets = ssboFunction.swizzleOffsets;
+            for (int index = 0; index < static_cast<int>(swizzleOffsets.size()); index++)
+            {
+                size_t offsetInBytes = swizzleOffsets[index] * componentStride;
+                out << "buffer.Store(loc + " << offsetInBytes << ", _value[" << index << "]);\n";
             }
         }
         else
         {
-            if (ssboFunction.type.getBasicType() == EbtBool)
-            {
-                out << "    uint" << ssboFunction.type.getNominalSize() << " _tmp = uint"
-                    << ssboFunction.type.getNominalSize() << "(value);\n";
-                out << "    buffer.Store" << ssboFunction.type.getNominalSize() << "(loc, _tmp);\n";
-            }
-            else
-            {
-                out << "    buffer.Store" << ssboFunction.type.getNominalSize()
-                    << "(loc, asuint(value));\n";
-            }
+            out << "    buffer.Store" << ssboFunction.type.getNominalSize() << "(loc, _value);\n";
         }
     }
     else if (ssboFunction.type.isMatrix())
@@ -175,8 +192,7 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOStoreFunctionBody(
 bool ShaderStorageBlockFunctionHLSL::ShaderStorageBlockFunction::operator<(
     const ShaderStorageBlockFunction &rhs) const
 {
-    return std::tie(functionName, typeString, method) <
-           std::tie(rhs.functionName, rhs.typeString, rhs.method);
+    return functionName < rhs.functionName;
 }
 
 TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
@@ -184,12 +200,34 @@ TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
     SSBOMethod method,
     TLayoutBlockStorage storage,
     bool rowMajor,
-    int matrixStride)
+    int matrixStride,
+    TIntermSwizzle *swizzleNode)
 {
     ShaderStorageBlockFunction ssboFunction;
     ssboFunction.typeString = TypeString(type);
     ssboFunction.method     = method;
     ssboFunction.type       = type;
+    if (swizzleNode != nullptr)
+    {
+        ssboFunction.swizzleOffsets   = swizzleNode->getSwizzleOffsets();
+        ssboFunction.isDefaultSwizzle = false;
+    }
+    else
+    {
+        if (ssboFunction.type.getNominalSize() > 1)
+        {
+            for (int index = 0; index < ssboFunction.type.getNominalSize(); index++)
+            {
+                ssboFunction.swizzleOffsets.push_back(index);
+            }
+        }
+        else
+        {
+            ssboFunction.swizzleOffsets.push_back(0);
+        }
+
+        ssboFunction.isDefaultSwizzle = true;
+    }
     ssboFunction.rowMajor     = rowMajor;
     ssboFunction.matrixStride = matrixStride;
     ssboFunction.functionName =
@@ -215,6 +253,28 @@ TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
     {
         ssboFunction.functionName += "_cm_";
     }
+
+    for (const int offset : ssboFunction.swizzleOffsets)
+    {
+        switch (offset)
+        {
+            case 0:
+                ssboFunction.functionName += "x";
+                break;
+            case 1:
+                ssboFunction.functionName += "y";
+                break;
+            case 2:
+                ssboFunction.functionName += "z";
+                break;
+            case 3:
+                ssboFunction.functionName += "w";
+                break;
+            default:
+                UNREACHABLE();
+        }
+    }
+
     mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
     return ssboFunction.functionName;
 }

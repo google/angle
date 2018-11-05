@@ -63,6 +63,7 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
 
   private:
     void traverseSSBOAccess(TIntermTyped *node, SSBOMethod method);
+    void setMatrixStride(TIntermTyped *node, TLayoutBlockStorage storage, bool rowMajor);
     bool isEndOfSSBOAccessChain();
     void writeEOpIndexDirectOrIndirectOutput(TInfoSinkBase &out, Visit visit, TIntermBinary *node);
     // Common part in dot operations.

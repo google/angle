@@ -323,6 +323,38 @@ void ShaderStorageBlockOutputHLSL::outputLoadFunctionCall(TIntermTyped *node)
     traverseSSBOAccess(node, SSBOMethod::LOAD);
 }
 
+// Note that we must calculate the matrix stride here instead of ShaderStorageBlockFunctionHLSL.
+// It's because that if the current node's type is a vector which comes from a matrix, we will
+// lose the matrix type info once we enter ShaderStorageBlockFunctionHLSL.
+void ShaderStorageBlockOutputHLSL::setMatrixStride(TIntermTyped *node,
+                                                   TLayoutBlockStorage storage,
+                                                   bool rowMajor)
+{
+    if (node->getType().isMatrix())
+    {
+        mMatrixStride = GetMatrixStride(node->getType(), storage, rowMajor);
+        mRowMajor     = rowMajor;
+        return;
+    }
+
+    if (node->getType().isVector())
+    {
+        TIntermBinary *binaryNode = node->getAsBinaryNode();
+        if (binaryNode)
+        {
+            return setMatrixStride(binaryNode->getLeft(), storage, rowMajor);
+        }
+        else
+        {
+            TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
+            if (swizzleNode)
+            {
+                return setMatrixStride(swizzleNode->getOperand(), storage, rowMajor);
+            }
+        }
+    }
+}
+
 void ShaderStorageBlockOutputHLSL::traverseSSBOAccess(TIntermTyped *node, SSBOMethod method)
 {
     mMatrixStride = 0;
@@ -334,31 +366,10 @@ void ShaderStorageBlockOutputHLSL::traverseSSBOAccess(TIntermTyped *node, SSBOMe
     TLayoutBlockStorage storage;
     bool rowMajor;
     GetBlockLayoutInfo(node, false, &storage, &rowMajor);
-
-    // Note that we must calculate the matrix stride here instead of ShaderStorageBlockFunctionHLSL.
-    // It's because that if the current node's type is a vector which comes from a matrix, we will
-    // lost the matrix type info once we enter ShaderStorageBlockFunctionHLSL.
-    if (node->getType().isVector())
-    {
-        TIntermBinary *binaryNode = node->getAsBinaryNode();
-        if (binaryNode)
-        {
-            const TType &leftType = binaryNode->getLeft()->getType();
-            if (leftType.isMatrix())
-            {
-                mMatrixStride = GetMatrixStride(leftType, storage, rowMajor);
-                mRowMajor     = rowMajor;
-            }
-        }
-    }
-    else if (node->getType().isMatrix())
-    {
-        mMatrixStride = GetMatrixStride(node->getType(), storage, rowMajor);
-        mRowMajor     = rowMajor;
-    }
+    setMatrixStride(node, storage, rowMajor);
 
     const TString &functionName = mSSBOFunctionHLSL->registerShaderStorageBlockFunction(
-        node->getType(), method, storage, mRowMajor, mMatrixStride);
+        node->getType(), method, storage, mRowMajor, mMatrixStride, node->getAsSwizzleNode());
     TInfoSinkBase &out = mOutputHLSL->getInfoSink();
     out << functionName;
     out << "(";
@@ -475,8 +486,9 @@ bool ShaderStorageBlockOutputHLSL::visitSwizzle(Visit visit, TIntermSwizzle *nod
         }
 
         TInfoSinkBase &out = mOutputHLSL->getInfoSink();
-        // TODO(jiajia.qin@intel.com): add swizzle process.
-        if (mIsLoadFunctionCall)
+        // TODO(jiajia.qin@intel.com): add swizzle process if the swizzle node is not the last node
+        // of ssbo access chain. Such as, data.xy[0]
+        if (mIsLoadFunctionCall && isEndOfSSBOAccessChain())
         {
             out << ")";
         }

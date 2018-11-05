@@ -420,12 +420,13 @@ class TIntermSwizzle : public TIntermExpression
     TIntermTyped *getOperand() { return mOperand; }
     void writeOffsetsAsXYZW(TInfoSinkBase *out) const;
 
+    const TVector<int> &getSwizzleOffsets() { return mSwizzleOffsets; }
+
     bool hasDuplicateOffsets() const;
     void setHasFoldedDuplicateOffsets(bool hasFoldedDuplicateOffsets);
     bool offsetsMatch(int offset) const;
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
-
   protected:
     TIntermTyped *mOperand;
     TVector<int> mSwizzleOffsets;
@@ -574,8 +575,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     // This covers all built-in function calls - whether they are associated with an op or not.
     static TIntermAggregate *CreateBuiltInFunctionCall(const TFunction &func,
                                                        TIntermSequence *arguments);
-    static TIntermAggregate *CreateConstructor(const TType &type,
-                                               TIntermSequence *arguments);
+    static TIntermAggregate *CreateConstructor(const TType &type, TIntermSequence *arguments);
     ~TIntermAggregate() {}
 
     // Note: only supported for nodes that can be a part of an expression.
@@ -760,6 +760,7 @@ class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
 
     TIntermSequence *getSequence() override { return &mDeclarators; }
     const TIntermSequence *getSequence() const override { return &mDeclarators; }
+
   protected:
     TIntermSequence mDeclarators;
 };

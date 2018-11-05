@@ -37,6 +37,25 @@ struct MatrixCase
     const unsigned int kBytesPerComponent = sizeof(float);
 };
 
+struct VectorCase
+{
+    VectorCase(unsigned components,
+               const char *computeShaderSource,
+               const GLuint *inputData,
+               const GLuint *expectedData)
+        : mComponents(components),
+          mComputeShaderSource(computeShaderSource),
+          mInputdata(inputData),
+          mExpectedData(expectedData)
+    {
+    }
+    unsigned int mComponents;
+    const char *mComputeShaderSource;
+    const GLuint *mInputdata;
+    const GLuint *mExpectedData;
+    const unsigned int kBytesPerComponent = sizeof(GLuint);
+};
+
 class ShaderStorageBufferTest31 : public ANGLETest
 {
   protected:
@@ -86,6 +105,42 @@ class ShaderStorageBufferTest31 : public ANGLETest
                           *(ptr + idx * (matrixCase.mMatrixStride / matrixCase.kBytesPerComponent) +
                             idy));
             }
+        }
+
+        EXPECT_GL_NO_ERROR();
+    }
+
+    void runVectorTest(const VectorCase &vectorCase)
+    {
+        ANGLE_GL_COMPUTE_PROGRAM(program, vectorCase.mComputeShaderSource);
+        glUseProgram(program);
+
+        // Create shader storage buffer
+        GLBuffer shaderStorageBuffer[2];
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+        glBufferData(GL_SHADER_STORAGE_BUFFER,
+                     vectorCase.mComponents * vectorCase.kBytesPerComponent, vectorCase.mInputdata,
+                     GL_STATIC_DRAW);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+        glBufferData(GL_SHADER_STORAGE_BUFFER,
+                     vectorCase.mComponents * vectorCase.kBytesPerComponent, nullptr,
+                     GL_STATIC_DRAW);
+
+        // Bind shader storage buffer
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+        glDispatchCompute(1, 1, 1);
+        glFinish();
+
+        // Read back shader storage buffer
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+        const GLuint *ptr = reinterpret_cast<const GLuint *>(glMapBufferRange(
+            GL_SHADER_STORAGE_BUFFER, 0, vectorCase.mComponents * vectorCase.kBytesPerComponent,
+            GL_MAP_READ_BIT));
+        for (unsigned int idx = 0; idx < vectorCase.mComponents; idx++)
+        {
+            EXPECT_EQ(vectorCase.mExpectedData[idx], *(ptr + idx));
         }
 
         EXPECT_GL_NO_ERROR();
@@ -272,40 +327,126 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
  }
  )";
 
-    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    constexpr unsigned int kComponentCount         = 2;
+    constexpr GLuint kInputValues[kComponentCount] = {3u, 4u};
 
-    glUseProgram(program.get());
+    VectorCase vectorCase(kComponentCount, kComputeShaderSource, kInputValues, kInputValues);
+    runVectorTest(vectorCase);
+}
 
-    constexpr unsigned int kComponentCount                  = 2;
-    constexpr unsigned int kBytesPerComponent               = sizeof(unsigned int);
-    constexpr unsigned int kExpectedValues[kComponentCount] = {3u, 4u};
-    // Create shader storage buffer
-    GLBuffer shaderStorageBuffer[2];
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, kComponentCount * kBytesPerComponent, kExpectedValues,
-                 GL_STATIC_DRAW);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, kComponentCount * kBytesPerComponent, nullptr,
-                 GL_STATIC_DRAW);
+// Test that access/write to swizzle scalar data in shader storage block.
+TEST_P(ShaderStorageBufferTest31, ScalarSwizzleTest)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+ layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+ layout(std140, binding = 0) buffer blockIn {
+     uvec2 data;
+ } instanceIn;
+ layout(std140, binding = 1) buffer blockOut {
+     uvec2 data;
+ } instanceOut;
+ void main()
+ {
+     instanceOut.data.x = instanceIn.data.y;
+     instanceOut.data.y = instanceIn.data.x;
+ }
+ )";
 
-    // Bind shader storage buffer
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+    constexpr unsigned int kComponentCount            = 2;
+    constexpr GLuint kInputValues[kComponentCount]    = {3u, 4u};
+    constexpr GLuint kExpectedValues[kComponentCount] = {4u, 3u};
 
-    glDispatchCompute(1, 1, 1);
+    VectorCase vectorCase(kComponentCount, kComputeShaderSource, kInputValues, kExpectedValues);
+    runVectorTest(vectorCase);
+}
 
-    glFinish();
+// Test that access/write to swizzle vector data in shader storage block.
+TEST_P(ShaderStorageBufferTest31, VectorSwizzleTest)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+ layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+ layout(std140, binding = 0) buffer blockIn {
+     uvec2 data;
+ } instanceIn;
+ layout(std140, binding = 1) buffer blockOut {
+     uvec2 data;
+ } instanceOut;
+ void main()
+ {
+     instanceOut.data.yx = instanceIn.data.xy;
+ }
+ )";
 
-    // Read back shader storage buffer
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
-    const GLuint *ptr = reinterpret_cast<const GLuint *>(glMapBufferRange(
-        GL_SHADER_STORAGE_BUFFER, 0, kComponentCount * kBytesPerComponent, GL_MAP_READ_BIT));
-    for (unsigned int idx = 0; idx < kComponentCount; idx++)
-    {
-        EXPECT_EQ(kExpectedValues[idx], *(ptr + idx));
-    }
+    constexpr unsigned int kComponentCount            = 2;
+    constexpr GLuint kInputValues[kComponentCount]    = {3u, 4u};
+    constexpr GLuint kExpectedValues[kComponentCount] = {4u, 3u};
 
-    EXPECT_GL_NO_ERROR();
+    VectorCase vectorCase(kComponentCount, kComputeShaderSource, kInputValues, kExpectedValues);
+    runVectorTest(vectorCase);
+}
+
+// Test that access/write to swizzle vector data in column_major matrix in shader storage block.
+TEST_P(ShaderStorageBufferTest31, VectorSwizzleInColumnMajorMatrixTest)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+ layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+ layout(std140, binding = 0) buffer blockIn {
+     layout(column_major) mat2x3 data;
+ } instanceIn;
+ layout(std140, binding = 1) buffer blockOut {
+     layout(column_major) mat2x3 data;
+ } instanceOut;
+ void main()
+ {
+     instanceOut.data[0].xyz = instanceIn.data[0].xyz;
+     instanceOut.data[1].xyz = instanceIn.data[1].xyz;
+ }
+ )";
+
+    constexpr unsigned int kColumns                                             = 2;
+    constexpr unsigned int kRows                                                = 3;
+    constexpr unsigned int kBytesPerComponent                                   = sizeof(float);
+    constexpr unsigned int kMatrixStride                                        = 16;
+    constexpr float kInputDada[kColumns * (kMatrixStride / kBytesPerComponent)] = {
+        0.1, 0.2, 0.3, 0.0, 0.4, 0.5, 0.6, 0.0};
+    MatrixCase matrixCase(kRows, kColumns, kMatrixStride, kComputeShaderSource, kInputDada);
+    runMatrixTest(matrixCase);
+}
+
+// Test that access/write to swizzle vector data in row_major matrix in shader storage block.
+TEST_P(ShaderStorageBufferTest31, VectorSwizzleInRowMajorMatrixTest)
+{
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+ layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+ layout(std140, binding = 0) buffer blockIn {
+     layout(row_major) mat2x3 data;
+ } instanceIn;
+ layout(std140, binding = 1) buffer blockOut {
+     layout(row_major) mat2x3 data;
+ } instanceOut;
+ void main()
+ {
+     instanceOut.data[0].xyz = instanceIn.data[0].xyz;
+     instanceOut.data[1].xyz = instanceIn.data[1].xyz;
+ }
+ )";
+
+    constexpr unsigned int kColumns           = 2;
+    constexpr unsigned int kRows              = 3;
+    constexpr unsigned int kBytesPerComponent = sizeof(float);
+    // std140 layout requires that base alignment and stride of arrays of scalars and vectors are
+    // rounded up a multiple of the base alignment of a vec4.
+    constexpr unsigned int kMatrixStride                                     = 16;
+    constexpr float kInputDada[kRows * (kMatrixStride / kBytesPerComponent)] = {
+        0.1, 0.2, 0.0, 0.0, 0.3, 0.4, 0.0, 0.0, 0.5, 0.6, 0.0, 0.0};
+    MatrixCase matrixCase(kColumns, kRows, kMatrixStride, kComputeShaderSource, kInputDada);
+    runMatrixTest(matrixCase);
 }
 
 // Test that access/write to scalar data in matrix in shader storage block with row major.
