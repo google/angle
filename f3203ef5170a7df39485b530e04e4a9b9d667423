@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5301ddae_11ee2b25",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-06T15:11:53Z",
+      "side": 1,
+      "message": "nit: put output variable after input variables",
+      "range": {
+        "startLine": 39,
+        "startChar": 25,
+        "endLine": 41,
+        "endChar": 52
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf165568_c78329ae",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-06T15:11:53Z",
+      "side": 1,
+      "message": "you have BlockMemberInfoMap .. is it possible to use this to get the matrix stride instead of making a whole new encoder in GetMatrixStride?",
+      "range": {
+        "startLine": 316,
+        "startChar": 24,
+        "endLine": 316,
+        "endChar": 39
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
