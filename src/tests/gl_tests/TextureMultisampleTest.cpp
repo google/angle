@@ -414,7 +414,6 @@ TEST_P(TextureMultisampleTest, CheckSamplePositions)
 // Test textureSize and texelFetch when using ANGLE_texture_multisample extension
 TEST_P(TextureMultisampleTest, SimpleTexelFetch)
 {
-    ANGLE_SKIP_TEST_IF(IsD3D11());
     ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_ANGLE_texture_multisample"));
 
     ANGLE_GL_PROGRAM(texelFetchProgram, essl3_shaders::vs::Passthrough(),
