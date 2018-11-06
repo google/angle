@@ -212,14 +212,14 @@ void VertexArrayVk::ensureConversionReleased(RendererVk *renderer, size_t attrib
     case gl::VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:                             \
         ANGLE_TRY(syncDirtyAttrib(contextVk, attribs[INDEX],                      \
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
-        invalidatePipeline = true;                                                \
+        invalidateContext = true;                                                 \
         break;
 
 #define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                    \
     case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                            \
         ANGLE_TRY(syncDirtyAttrib(contextVk, attribs[INDEX],                      \
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
-        invalidatePipeline = true;                                                \
+        invalidateContext = true;                                                 \
         break;
 
 #define ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC(INDEX)                                \
@@ -235,7 +235,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
 {
     ASSERT(dirtyBits.any());
 
-    bool invalidatePipeline = false;
+    bool invalidateContext = false;
 
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -288,9 +288,9 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         }
     }
 
-    if (invalidatePipeline)
+    if (invalidateContext)
     {
-        contextVk->invalidateCurrentPipeline();
+        contextVk->invalidateVertexAndIndexBuffers();
     }
 
     return angle::Result::Continue();

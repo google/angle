@@ -159,7 +159,7 @@ class ContextVk : public ContextImpl, public vk::Context
     VkDevice getDevice() const;
     const FeaturesVk &getFeatures() const;
 
-    void invalidateCurrentPipeline();
+    void invalidateVertexAndIndexBuffers();
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
 
@@ -169,7 +169,7 @@ class ContextVk : public ContextImpl, public vk::Context
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
     VkColorComponentFlags getClearColorMask() const;
-    const VkRect2D &getScissor() const { return mPipelineDesc->getScissor(); }
+    const VkRect2D &getScissor() const { return mScissor; }
     gl::Error getIncompleteTexture(const gl::Context *context,
                                    gl::TextureType type,
                                    gl::Texture **textureOut);
@@ -191,6 +191,8 @@ class ContextVk : public ContextImpl, public vk::Context
         DIRTY_BIT_INDEX_BUFFER,
         DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_DESCRIPTOR_SETS,
+        DIRTY_BIT_VIEWPORT,
+        DIRTY_BIT_SCISSOR,
         DIRTY_BIT_MAX,
     };
 
@@ -224,13 +226,20 @@ class ContextVk : public ContextImpl, public vk::Context
                                     const void *indices,
                                     vk::CommandBuffer **commandBufferOut);
 
-    void updateScissor(const gl::State &glState) const;
+    void updateViewport(FramebufferVk *framebufferVk,
+                        const gl::Rectangle &viewport,
+                        float nearPlane,
+                        float farPlane,
+                        bool invertViewport);
+    void updateDepthRange(float nearPlane, float farPlane);
+    void updateScissor(const gl::State &glState);
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
+    void invalidateCurrentPipeline();
     void invalidateCurrentTextures();
     void invalidateDriverUniforms();
 
@@ -246,6 +255,8 @@ class ContextVk : public ContextImpl, public vk::Context
                                             vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDescriptorSets(const gl::Context *context,
                                             vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyViewport(const gl::Context *context, vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyScissor(const gl::Context *context, vk::CommandBuffer *commandBuffer);
 
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -316,6 +327,10 @@ class ContextVk : public ContextImpl, public vk::Context
     // "Current Value" aka default vertex attribute state.
     gl::AttributesMask mDirtyDefaultAttribsMask;
     gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
+
+    // Viewport and scissor are handled as dynamic state.
+    VkViewport mViewport;
+    VkRect2D mScissor;
 };
 }  // namespace rx
 

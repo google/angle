@@ -89,11 +89,6 @@ void BindNonNullVertexBufferRanges(vk::CommandBuffer *commandBuffer,
     }
 }
 
-constexpr gl::Rectangle kMaxSizedScissor(0,
-                                         0,
-                                         std::numeric_limits<int>::max(),
-                                         std::numeric_limits<int>::max());
-
 constexpr VkColorComponentFlags kAllColorChannelsMask =
     (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
      VK_COLOR_COMPONENT_A_BIT);
@@ -123,7 +118,9 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16),
       mDriverUniformsDescriptorSet(VK_NULL_HANDLE),
       mDefaultAttribBuffers{{INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT,
-                             INIT, INIT, INIT, INIT}}
+                             INIT, INIT, INIT, INIT}},
+      mViewport{},
+      mScissor{}
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
@@ -138,6 +135,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+    mNewCommandBufferDirtyBits.set(DIRTY_BIT_VIEWPORT);
+    mNewCommandBufferDirtyBits.set(DIRTY_BIT_SCISSOR);
 
     mDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] = &ContextVk::handleDirtyDefaultAttribs;
     mDirtyBitHandlers[DIRTY_BIT_PIPELINE]        = &ContextVk::handleDirtyPipeline;
@@ -146,6 +145,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     mDirtyBitHandlers[DIRTY_BIT_INDEX_BUFFER]    = &ContextVk::handleDirtyIndexBuffer;
     mDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] = &ContextVk::handleDirtyDriverUniforms;
     mDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] = &ContextVk::handleDirtyDescriptorSets;
+    mDirtyBitHandlers[DIRTY_BIT_VIEWPORT]        = &ContextVk::handleDirtyViewport;
+    mDirtyBitHandlers[DIRTY_BIT_SCISSOR]         = &ContextVk::handleDirtyScissor;
 
     mDirtyBits = mNewCommandBufferDirtyBits;
 }
@@ -276,8 +277,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Set any dirty bits that depend on draw call parameters or other objects.
     if (mode != mCurrentDrawMode)
     {
-        mCurrentPipeline = nullptr;
-        mDirtyBits.set(DIRTY_BIT_PIPELINE);
+        invalidateCurrentPipeline();
         mCurrentDrawMode = mode;
     }
 
@@ -467,6 +467,20 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
     return angle::Result::Continue();
 }
 
+angle::Result ContextVk::handleDirtyViewport(const gl::Context *context,
+                                             vk::CommandBuffer *commandBuffer)
+{
+    commandBuffer->setViewport(0, 1, &mViewport);
+    return angle::Result::Continue();
+}
+
+angle::Result ContextVk::handleDirtyScissor(const gl::Context *context,
+                                            vk::CommandBuffer *commandBuffer)
+{
+    commandBuffer->setScissor(0, 1, &mScissor);
+    return angle::Result::Continue();
+}
+
 angle::Result ContextVk::drawArrays(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLint first,
@@ -636,25 +650,36 @@ void ContextVk::updateColorMask(const gl::BlendState &blendState)
                                         framebufferVk->getEmulatedAlphaAttachmentMask());
 }
 
-void ContextVk::updateScissor(const gl::State &glState) const
+void ContextVk::updateViewport(FramebufferVk *framebufferVk,
+                               const gl::Rectangle &viewport,
+                               float nearPlane,
+                               float farPlane,
+                               bool invertViewport)
+{
+    gl_vk::GetViewport(viewport, nearPlane, farPlane, invertViewport,
+                       framebufferVk->getState().getDimensions().height, &mViewport);
+    invalidateDriverUniforms();
+    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+}
+
+void ContextVk::updateDepthRange(float nearPlane, float farPlane)
+{
+    // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
+    // arguments of type clampf.
+    mViewport.minDepth = gl::clamp01(nearPlane);
+    mViewport.maxDepth = gl::clamp01(farPlane);
+    invalidateDriverUniforms();
+    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+}
+
+void ContextVk::updateScissor(const gl::State &glState)
 {
     FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
     gl::Box dimensions           = framebufferVk->getState().getDimensions();
     gl::Rectangle renderArea(0, 0, dimensions.width, dimensions.height);
 
-    if (glState.isScissorTestEnabled())
-    {
-        mPipelineDesc->updateScissor(glState.getScissor(), isViewportFlipEnabledForDrawFBO(),
-                                     renderArea);
-    }
-    else
-    {
-        // If the scissor test isn't enabled, we can simply use a really big scissor that's
-        // certainly larger than the current surface using the maximum size of a 2D texture
-        // for the width and height.
-        mPipelineDesc->updateScissor(kMaxSizedScissor, isViewportFlipEnabledForDrawFBO(),
-                                     renderArea);
-    }
+    gl_vk::GetScissor(glState, isViewportFlipEnabledForDrawFBO(), renderArea, &mScissor);
+    mDirtyBits.set(DIRTY_BIT_SCISSOR);
 }
 
 angle::Result ContextVk::syncState(const gl::Context *context,
@@ -663,7 +688,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 {
     if (dirtyBits.any())
     {
-        invalidateCurrentPipeline();
+        invalidateVertexAndIndexBuffers();
     }
 
     const gl::State &glState = context->getGLState();
@@ -679,15 +704,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_VIEWPORT:
             {
                 FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
-                mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
-                                              glState.getNearPlane(), glState.getFarPlane(),
-                                              isViewportFlipEnabledForDrawFBO());
-                invalidateDriverUniforms();
+                updateViewport(framebufferVk, glState.getViewport(), glState.getNearPlane(),
+                               glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
-                mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
-                invalidateDriverUniforms();
+                updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
                 mPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());
@@ -810,9 +832,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             {
                 mDrawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
                 updateFlipViewportDrawFramebuffer(glState);
-                mPipelineDesc->updateViewport(mDrawFramebuffer, glState.getViewport(),
-                                              glState.getNearPlane(), glState.getFarPlane(),
-                                              isViewportFlipEnabledForDrawFBO());
+                updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
+                               glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
                 mPipelineDesc->updateCullMode(glState.getRasterizerState());
                 updateScissor(glState);
@@ -826,7 +847,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                            glState.getDrawFramebuffer());
                 mPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
                                                           glState.getDrawFramebuffer());
-                invalidateDriverUniforms();
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -1035,11 +1055,18 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
     return std::vector<PathImpl *>();
 }
 
+void ContextVk::invalidateVertexAndIndexBuffers()
+{
+    invalidateCurrentPipeline();
+    mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+    mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+}
+
 void ContextVk::invalidateCurrentPipeline()
 {
     mDirtyBits.set(DIRTY_BIT_PIPELINE);
-    mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-    mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+    mDirtyBits.set(DIRTY_BIT_SCISSOR);
     mCurrentPipeline = nullptr;
 }
 

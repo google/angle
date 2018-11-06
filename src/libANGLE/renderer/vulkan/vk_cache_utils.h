@@ -269,13 +269,6 @@ class PipelineDesc final
                                      const ShaderModule &fragmentModule,
                                      Pipeline *pipelineOut) const;
 
-    void updateViewport(FramebufferVk *framebufferVk,
-                        const gl::Rectangle &viewport,
-                        float nearPlane,
-                        float farPlane,
-                        bool invertViewport);
-    void updateDepthRange(float nearPlane, float farPlane);
-
     // Shader stage info
     const ShaderStageInfo &getShaderStageInfo() const;
     void updateShaders(Serial vertexSerial, Serial fragmentSerial);
@@ -295,12 +288,6 @@ class PipelineDesc final
     // RenderPass description.
     const RenderPassDesc &getRenderPassDesc() const;
     void updateRenderPassDesc(const RenderPassDesc &renderPassDesc);
-
-    // Scissor support
-    const VkRect2D &getScissor() const { return mScissor; }
-    void updateScissor(const gl::Rectangle &rect,
-                       bool invertScissor,
-                       const gl::Rectangle &renderArea);
 
     // Blend states
     void updateBlendEnabled(bool isBlendEnabled);
@@ -332,7 +319,7 @@ class PipelineDesc final
     void updatePolygonOffset(const gl::RasterizerState &rasterState);
 
   private:
-    // TODO(jmadill): Use gl::ShaderMap when we can pack into fewer bits. http://anglebug.com/2522
+    // We can consider storing the shader stage info
     ShaderStageInfo mShaderStageInfo;
     VertexInputBindings mVertexInputBindings;
     VertexInputAttributes mVertexInputAttribs;
@@ -340,11 +327,7 @@ class PipelineDesc final
     PackedRasterizationAndMultisampleStateInfo mRasterizationAndMultisampleStateInfo;
     PackedDepthStencilStateInfo mDepthStencilStateInfo;
     PackedInputAssemblyAndColorBlendStateInfo mInputAssembltyAndColorBlendStateInfo;
-    // TODO(jmadill): Consider using dynamic state for viewport/scissor.
-    VkViewport mViewport;
-    VkRect2D mScissor;
-    // TODO(jmadill): Dynamic state.
-    // TODO(jmadill): Pipeline layout
+    // Viewport and scissor are applied as dynamic state.
 };
 
 // Verify the packed pipeline description has no gaps in the packing.
@@ -353,9 +336,8 @@ class PipelineDesc final
 // into uninitialized memory regions.
 constexpr size_t kPipelineDescSumOfSizes =
     kShaderStageInfoSize + kVertexInputBindingsSize + kVertexInputAttributesSize +
-    kPackedInputAssemblyAndColorBlendStateSize + sizeof(VkViewport) + sizeof(VkRect2D) +
-    kPackedRasterizationAndMultisampleStateSize + kPackedDepthStencilStateSize +
-    kRenderPassDescSize;
+    kPackedInputAssemblyAndColorBlendStateSize + kPackedRasterizationAndMultisampleStateSize +
+    kPackedDepthStencilStateSize + kRenderPassDescSize;
 
 static constexpr size_t kPipelineDescSize = sizeof(PipelineDesc);
 static_assert(kPipelineDescSize == kPipelineDescSumOfSizes, "Size mismatch");

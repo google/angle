@@ -33,6 +33,11 @@ VkImageUsageFlags GetStagingBufferUsageFlags(rx::vk::StagingUsage usage)
             return 0;
     }
 }
+
+constexpr gl::Rectangle kMaxSizedScissor(0,
+                                         0,
+                                         std::numeric_limits<int>::max(),
+                                         std::numeric_limits<int>::max());
 }  // anonymous namespace
 
 namespace angle
@@ -618,6 +623,22 @@ void CommandBuffer::writeTimestamp(VkPipelineStageFlagBits pipelineStage,
 {
     ASSERT(valid());
     vkCmdWriteTimestamp(mHandle, pipelineStage, queryPool, query);
+}
+
+void CommandBuffer::setViewport(uint32_t firstViewport,
+                                uint32_t viewportCount,
+                                const VkViewport *viewports)
+{
+    ASSERT(valid());
+    vkCmdSetViewport(mHandle, firstViewport, viewportCount, viewports);
+}
+
+void CommandBuffer::setScissor(uint32_t firstScissor,
+                               uint32_t scissorCount,
+                               const VkRect2D *scissors)
+{
+    ASSERT(valid());
+    vkCmdSetScissor(mHandle, firstScissor, scissorCount, scissors);
 }
 
 // Image implementation.
@@ -1573,6 +1594,58 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
 {
     return (red ? VK_COLOR_COMPONENT_R_BIT : 0) | (green ? VK_COLOR_COMPONENT_G_BIT : 0) |
            (blue ? VK_COLOR_COMPONENT_B_BIT : 0) | (alpha ? VK_COLOR_COMPONENT_A_BIT : 0);
+}
+
+void GetViewport(const gl::Rectangle &viewport,
+                 float nearPlane,
+                 float farPlane,
+                 bool invertViewport,
+                 GLint renderAreaHeight,
+                 VkViewport *viewportOut)
+{
+    viewportOut->x        = static_cast<float>(viewport.x);
+    viewportOut->y        = static_cast<float>(viewport.y);
+    viewportOut->width    = static_cast<float>(viewport.width);
+    viewportOut->height   = static_cast<float>(viewport.height);
+    viewportOut->minDepth = gl::clamp01(nearPlane);
+    viewportOut->maxDepth = gl::clamp01(farPlane);
+
+    if (invertViewport)
+    {
+        viewportOut->y      = static_cast<float>(renderAreaHeight - viewport.y);
+        viewportOut->height = -viewportOut->height;
+    }
+}
+
+void GetScissor(const gl::State &glState,
+                bool invertViewport,
+                const gl::Rectangle &renderArea,
+                VkRect2D *scissorOut)
+{
+    if (glState.isScissorTestEnabled())
+    {
+        gl::Rectangle clippedRect;
+        if (!gl::ClipRectangle(glState.getScissor(), renderArea, &clippedRect))
+        {
+            memset(scissorOut, 0, sizeof(VkRect2D));
+            return;
+        }
+
+        *scissorOut = gl_vk::GetRect(clippedRect);
+
+        if (invertViewport)
+        {
+            scissorOut->offset.y =
+                renderArea.height - scissorOut->offset.y - scissorOut->extent.height;
+        }
+    }
+    else
+    {
+        // If the scissor test isn't enabled, we can simply use a really big scissor that's
+        // certainly larger than the current surface using the maximum size of a 2D texture
+        // for the width and height.
+        *scissorOut = gl_vk::GetRect(kMaxSizedScissor);
+    }
 }
 }  // namespace gl_vk
 }  // namespace rx

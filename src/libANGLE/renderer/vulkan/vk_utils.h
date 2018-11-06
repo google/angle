@@ -42,6 +42,7 @@ struct Box;
 struct Extents;
 struct RasterizerState;
 struct Rectangle;
+class State;
 struct SwizzleState;
 struct VertexAttribute;
 class VertexBinding;
@@ -441,6 +442,9 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void writeTimestamp(VkPipelineStageFlagBits pipelineStage,
                         VkQueryPool queryPool,
                         uint32_t query);
+
+    void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
+    void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
 };
 
 class Image final : public WrappedObject<Image, VkImage>
@@ -862,8 +866,6 @@ class BindingPointer final : angle::NonCopyable
   private:
     RefCounted<T> *mRefCounted;
 };
-
-using SharedDescriptorPool = RefCounted<DescriptorPool>;
 }  // namespace vk
 
 namespace gl_vk
@@ -883,6 +885,17 @@ void GetExtent(const gl::Extents &glExtent, VkExtent3D *vkExtent);
 VkImageType GetImageType(gl::TextureType textureType);
 VkImageViewType GetImageViewType(gl::TextureType textureType);
 VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bool alpha);
+
+void GetViewport(const gl::Rectangle &viewport,
+                 float nearPlane,
+                 float farPlane,
+                 bool invertViewport,
+                 GLint renderAreaHeight,
+                 VkViewport *viewportOut);
+void GetScissor(const gl::State &glState,
+                bool invertViewport,
+                const gl::Rectangle &renderArea,
+                VkRect2D *scissorOut);
 }  // namespace gl_vk
 
 }  // namespace rx

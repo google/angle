@@ -558,9 +558,9 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     viewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     viewportState.flags         = 0;
     viewportState.viewportCount = 1;
-    viewportState.pViewports    = &mViewport;
+    viewportState.pViewports    = nullptr;
     viewportState.scissorCount  = 1;
-    viewportState.pScissors     = &mScissor;
+    viewportState.pScissors     = nullptr;
 
     const PackedRasterizationAndMultisampleStateInfo &rasterAndMS =
         mRasterizationAndMultisampleStateInfo;
@@ -639,7 +639,13 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
         UnpackBlendAttachmentState(inputAndBlend.attachments[colorIndex], &state);
     }
 
-    // TODO(jmadill): Dynamic state.
+    std::array<VkDynamicState, 2> dynamicStates = {
+        {VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_VIEWPORT}};
+
+    VkPipelineDynamicStateCreateInfo dynamicState = {};
+    dynamicState.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
+    dynamicState.pDynamicStates    = dynamicStates.data();
 
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.flags               = 0;
@@ -653,7 +659,7 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     createInfo.pMultisampleState   = &multisampleState;
     createInfo.pDepthStencilState  = &depthStencilState;
     createInfo.pColorBlendState    = &blendState;
-    createInfo.pDynamicState       = nullptr;
+    createInfo.pDynamicState       = &dynamicState;
     createInfo.layout              = pipelineLayout.getHandle();
     createInfo.renderPass          = compatibleRenderPass.getHandle();
     createInfo.subpass             = 0;
@@ -678,35 +684,6 @@ void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
     ASSERT(fragmentSerial < std::numeric_limits<uint32_t>::max());
     mShaderStageInfo[ShaderType::FragmentShader].moduleSerial =
         static_cast<uint32_t>(fragmentSerial.getValue());
-}
-
-void PipelineDesc::updateViewport(FramebufferVk *framebufferVk,
-                                  const gl::Rectangle &viewport,
-                                  float nearPlane,
-                                  float farPlane,
-                                  bool invertViewport)
-{
-    mViewport.x      = static_cast<float>(viewport.x);
-    mViewport.y      = static_cast<float>(viewport.y);
-    mViewport.width  = static_cast<float>(viewport.width);
-    mViewport.height = static_cast<float>(viewport.height);
-
-    if (invertViewport)
-    {
-        gl::Box dimensions       = framebufferVk->getState().getDimensions();
-        gl::Rectangle renderArea = gl::Rectangle(0, 0, dimensions.width, dimensions.height);
-        mViewport.y              = static_cast<float>(renderArea.height - viewport.y);
-        mViewport.height = -mViewport.height;
-    }
-    updateDepthRange(nearPlane, farPlane);
-}
-
-void PipelineDesc::updateDepthRange(float nearPlane, float farPlane)
-{
-    // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
-    // arguments of type clampf.
-    mViewport.minDepth = gl::clamp01(nearPlane);
-    mViewport.maxDepth = gl::clamp01(farPlane);
 }
 
 void PipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
@@ -891,17 +868,6 @@ void PipelineDesc::updatePolygonOffset(const gl::RasterizerState &rasterState)
 void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
 {
     mRenderPassDesc = renderPassDesc;
-}
-
-void PipelineDesc::updateScissor(const gl::Rectangle &rect,
-                                 bool invertScissor,
-                                 const gl::Rectangle &renderArea)
-{
-    mScissor = gl_vk::GetRect(rect);
-    if (invertScissor)
-    {
-        mScissor.offset.y = renderArea.height - mScissor.offset.y - mScissor.extent.height;
-    }
 }
 
 // AttachmentOpsArray implementation.

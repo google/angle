@@ -776,7 +776,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     // create a new entry in the command graph.
     mFramebuffer.finishCurrentCommands(renderer);
 
-    contextVk->invalidateCurrentPipeline();
+    // No need to notify the ContextVk. A new command buffer will be started automatically.
 
     return angle::Result::Continue();
 }
@@ -1027,23 +1027,6 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
     pipelineDesc.updateRenderPassDesc(getRenderPassDesc());
     pipelineDesc.updateShaders(fullScreenQuad->getSerial(), pushConstantColor->getSerial());
-    pipelineDesc.updateViewport(this, renderArea, 0.0f, 1.0f, invertViewport);
-
-    const gl::State &glState = contextVk->getGLState();
-    if (glState.isScissorTestEnabled())
-    {
-        gl::Rectangle intersection;
-        if (!gl::ClipRectangle(glState.getScissor(), renderArea, &intersection))
-        {
-            return angle::Result::Continue();
-        }
-
-        pipelineDesc.updateScissor(intersection, invertViewport, renderArea);
-    }
-    else
-    {
-        pipelineDesc.updateScissor(renderArea, invertViewport, renderArea);
-    }
 
     vk::PipelineAndSerial *pipeline = nullptr;
     ANGLE_TRY(renderer->getPipeline(contextVk, *fullScreenQuad, *pushConstantColor,
@@ -1072,6 +1055,18 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     // TODO(jmadill): Masked combined color and depth/stencil clear. http://anglebug.com/2455
     // Any active queries submitted by the user should also be paused here.
     drawCommands->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->get());
+
+    GLint renderAreaHeight = mState.getDimensions().height;
+
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, invertViewport, renderAreaHeight, &viewport);
+    drawCommands->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor;
+    const gl::State &glState = contextVk->getGLState();
+    gl_vk::GetScissor(glState, invertViewport, renderArea, &scissor);
+    drawCommands->setScissor(0, 1, &scissor);
+
     drawCommands->draw(6, 1, 0, 0);
 
     return angle::Result::Continue();
