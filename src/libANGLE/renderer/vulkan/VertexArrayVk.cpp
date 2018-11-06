@@ -75,6 +75,8 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
       mCurrentElementArrayBufferHandle(VK_NULL_HANDLE),
       mCurrentElementArrayBufferOffset(0),
       mCurrentElementArrayBufferResource(nullptr),
+      mPackedInputBindings{},
+      mPackedInputAttributes{},
       mDynamicVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kDynamicVertexDataSize),
       mDynamicIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kDynamicIndexDataSize),
       mTranslatedByteIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kDynamicIndexDataSize),
@@ -84,9 +86,6 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
     mCurrentArrayBufferHandles.fill(VK_NULL_HANDLE);
     mCurrentArrayBufferOffsets.fill(0);
     mCurrentArrayBufferResources.fill(nullptr);
-
-    mPackedInputBindings.fill({0, 0});
-    mPackedInputAttributes.fill({0, 0, 0});
 
     for (vk::DynamicBuffer &buffer : mCurrentArrayBufferConversion)
     {
@@ -397,10 +396,9 @@ void VertexArrayVk::updatePackedInputDescriptions()
             bindingDesc.stride                            = 0;
             bindingDesc.inputRate                         = VK_VERTEX_INPUT_RATE_VERTEX;
 
-            vk::PackedVertexInputAttributeDesc &attribDesc = mPackedInputAttributes[attribIndex];
-            attribDesc.format   = static_cast<uint16_t>(VK_FORMAT_R32G32B32A32_SFLOAT);
-            attribDesc.location = static_cast<uint16_t>(attribIndex);
-            attribDesc.offset   = 0;
+            mPackedInputAttributes.formats[attribIndex] =
+                static_cast<uint16_t>(VK_FORMAT_R32G32B32A32_SFLOAT);
+            mPackedInputAttributes.offsets[attribIndex] = 0;
         }
     }
 
@@ -424,10 +422,8 @@ void VertexArrayVk::updatePackedInputInfo(uint32_t attribIndex,
         UNIMPLEMENTED();
     }
 
-    vk::PackedVertexInputAttributeDesc &attribDesc = mPackedInputAttributes[attribIndex];
-    attribDesc.format                              = static_cast<uint16_t>(vkFormat);
-    attribDesc.location                            = static_cast<uint16_t>(attribIndex);
-    attribDesc.offset                              = static_cast<uint32_t>(attrib.relativeOffset);
+    mPackedInputAttributes.formats[attribIndex] = static_cast<uint8_t>(vkFormat);
+    mPackedInputAttributes.offsets[attribIndex] = static_cast<uint16_t>(attrib.relativeOffset);
 }
 
 angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
