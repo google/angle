@@ -261,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "f63de9f2_ce0c4ba2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-06T17:06:36Z",
+      "side": 1,
+      "message": "Technically internal enums that are equivalent to the set of all relevant GLenums which is probably a subset (or superset) or Vk enums. To be totally pedantic.",
+      "parentUuid": "592670d7_249806f9",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 81
+      },
+      "revId": "7beb6422aa4d4983b9767eb74ee40d67e30826db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f303cf5b_9f0f2abe",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 2
