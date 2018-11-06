@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2819956a_b3678ca6",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-06T19:52:31Z",
+      "side": 1,
+      "message": "This seems to be an actual driver bug:\n\nhttps://cs.chromium.org/chromium/src/media/gpu/windows/dxva_video_decode_accelerator_win.cc?rcl\u003d1ac713b7c88f9a4ffb2f54db3724ec7453280551\u0026l\u003d2896",
+      "revId": "fe740862ffbfaf68639a6cc76ef27d8caa6fe077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
