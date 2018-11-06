@@ -237,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "592670d7_249806f9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-06T16:38:16Z",
+      "side": 1,
+      "message": "nit: this is about GL enums, while we also need to pack Vk enums",
+      "parentUuid": "819bd6da_c730cc8f",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 81
+      },
+      "revId": "7beb6422aa4d4983b9767eb74ee40d67e30826db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f303cf5b_9f0f2abe",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 2
