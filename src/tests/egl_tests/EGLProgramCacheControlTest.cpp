@@ -259,4 +259,8 @@ TEST_P(EGLProgramCacheControlTest, LinkProgramWithBadShaders)
     glDeleteProgram(program);
 }
 
-ANGLE_INSTANTIATE_TEST(EGLProgramCacheControlTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(EGLProgramCacheControlTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_VULKAN());

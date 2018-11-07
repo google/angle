@@ -59,6 +59,9 @@ class CubeMapTextureTest : public ANGLETest
 // Verify that rendering to the faces of a cube map consecutively will correctly render to each face.
 TEST_P(CubeMapTextureTest, RenderToFacesConsecutively)
 {
+    // TODO: Diagnose and fix. http://anglebug.com/2954
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsWindows());
+
     const GLfloat faceColors[] =
     {
         1.0f, 0.0f, 0.0f, 1.0f,
@@ -122,4 +125,5 @@ ANGLE_INSTANTIATE_TEST(CubeMapTextureTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());

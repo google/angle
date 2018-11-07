@@ -1970,15 +1970,18 @@ ANGLE_INSTANTIATE_TEST(CHROMIUMPathRenderingTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGL(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(CHROMIUMPathRenderingDrawTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGL(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(CHROMIUMPathRenderingWithTexturingTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGL(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());

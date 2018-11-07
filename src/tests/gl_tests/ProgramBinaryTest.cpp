@@ -252,7 +252,8 @@ ANGLE_INSTANTIATE_TEST(ProgramBinaryTest,
                        ES2_D3D11(),
                        ES3_D3D11(),
                        ES2_OPENGL(),
-                       ES3_OPENGL());
+                       ES3_OPENGL(),
+                       ES2_VULKAN());
 
 class ProgramBinaryES3Test : public ANGLETest
 {

@@ -1322,6 +1322,9 @@ TEST_P(SamplerArrayTest, SamplerArrayDraw)
 // user-defined function in the shader.
 TEST_P(SamplerArrayAsFunctionParameterTest, SamplerArrayAsFunctionParameter)
 {
+    // TODO: Diagnose and fix. http://anglebug.com/2955
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
     testSamplerArrayDraw();
 }
 
@@ -4308,19 +4311,22 @@ ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerArrayTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerArrayAsFunctionParameterTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Texture2DTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture3DTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DIntegerAlpha1TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
@@ -4340,36 +4346,42 @@ ANGLE_INSTANTIATE_TEST(SamplerInStructTest,
                        ES2_D3D11_FL9_3(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerInStructAsFunctionParameterTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerInStructArrayAsFunctionParameterTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerInNestedStructAsFunctionParameterTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(TextureBorderClampTest,
                        ES2_D3D11(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(TextureBorderClampTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureBorderClampIntegerTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());

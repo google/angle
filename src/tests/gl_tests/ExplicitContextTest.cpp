@@ -91,6 +91,11 @@ TEST_P(ExplicitContextTest, NullContext)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST(ExplicitContextTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ExplicitContextTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 
 }  // namespace angle

@@ -1200,7 +1200,7 @@ TEST_P(D3DTextureTestMS, CopyTexSubImage2DTest)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST(D3DTextureTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(D3DTextureTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(D3DTextureTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(D3DTextureTestMS, ES2_D3D11());
 }  // namespace

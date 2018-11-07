@@ -265,4 +265,8 @@ TEST_P(EGLSurfacelessContextTest, Switcheroo)
 
 }  // anonymous namespace
 
-ANGLE_INSTANTIATE_TEST(EGLSurfacelessContextTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(EGLSurfacelessContextTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_VULKAN());

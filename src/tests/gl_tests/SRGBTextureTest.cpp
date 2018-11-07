@@ -356,6 +356,7 @@ ANGLE_INSTANTIATE_TEST(SRGBTextureTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 } // namespace

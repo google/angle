@@ -288,7 +288,11 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
     EXPECT_EQ(0, memcmp(results[0].get(), results[2].get(), kResultSize));
 }
 
-ANGLE_INSTANTIATE_TEST(EXTMultisampleCompatibilityTest, ES2_OPENGL(), ES2_OPENGLES(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(EXTMultisampleCompatibilityTest,
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES3_OPENGL(),
+                       ES2_VULKAN());
 
 class MultisampleCompatibilityTest : public ANGLETest
 {

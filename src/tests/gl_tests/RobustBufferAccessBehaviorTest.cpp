@@ -336,6 +336,7 @@ ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        ES31_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
-                       ES31_OPENGLES());
+                       ES31_OPENGLES(),
+                       ES2_VULKAN());
 
 }  // namespace

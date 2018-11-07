@@ -865,6 +865,7 @@ ANGLE_INSTANTIATE_TEST(WebGLFramebufferTest,
                        ES2_OPENGLES(),
                        ES3_D3D11(),
                        ES3_OPENGL(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 }  // namespace
