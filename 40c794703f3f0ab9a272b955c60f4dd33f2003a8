@@ -22,6 +22,30 @@
       "revId": "40c794703f3f0ab9a272b955c60f4dd33f2003a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e80fd16c_966e54a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-07T20:53:26Z",
+      "side": 1,
+      "message": "I see. If you look at this:\n\nhttps://cs.chromium.org/chromium/src/media/gpu/windows/dxva_video_decode_accelerator_win.cc?rcl\u003d1ac713b7c88f9a4ffb2f54db3724ec7453280551\u0026l\u003d2896\n\nthey loop only 4 times, which seems riskily small. I didn\u0027t follow deeper though to see if there is a timed sleep somewhere.\n\nI\u0027m going to change this to measuring the actual time then.",
+      "parentUuid": "64647c6b_36edb5a5",
+      "range": {
+        "startLine": 658,
+        "startChar": 8,
+        "endLine": 658,
+        "endChar": 17
+      },
+      "revId": "40c794703f3f0ab9a272b955c60f4dd33f2003a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
