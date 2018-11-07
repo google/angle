@@ -46,6 +46,30 @@
       "revId": "40c794703f3f0ab9a272b955c60f4dd33f2003a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e30a9bf_bdaa8c79",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-11-07T21:15:33Z",
+      "side": 1,
+      "message": "Yea, timing it or using some large number (\u003e10k) would be reasonable I think.",
+      "parentUuid": "e80fd16c_966e54a4",
+      "range": {
+        "startLine": 658,
+        "startChar": 8,
+        "endLine": 658,
+        "endChar": 17
+      },
+      "revId": "40c794703f3f0ab9a272b955c60f4dd33f2003a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
