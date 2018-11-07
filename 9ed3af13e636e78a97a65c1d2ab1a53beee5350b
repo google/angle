@@ -22,6 +22,30 @@
       "revId": "9ed3af13e636e78a97a65c1d2ab1a53beee5350b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55b5696c_a3e58a05",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-07T23:46:05Z",
+      "side": 1,
+      "message": "Oh yes, I forgot to put the yield back.",
+      "parentUuid": "d542aae4_3b572ac1",
+      "range": {
+        "startLine": 667,
+        "startChar": 8,
+        "endLine": 667,
+        "endChar": 17
+      },
+      "revId": "9ed3af13e636e78a97a65c1d2ab1a53beee5350b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
