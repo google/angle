@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64647c6b_36edb5a5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-11-07T20:30:26Z",
+      "side": 1,
+      "message": "I agree that we should limit the number of attempts here but we should probably not use Sleep(1) instead of Sleep(0).  There were some hangs the last time I attempted this: https://chromium-review.googlesource.com/c/angle/angle/+/300491/",
+      "range": {
+        "startLine": 658,
+        "startChar": 8,
+        "endLine": 658,
+        "endChar": 17
+      },
+      "revId": "40c794703f3f0ab9a272b955c60f4dd33f2003a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
