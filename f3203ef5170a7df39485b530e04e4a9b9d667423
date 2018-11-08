@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9ef944f7_157007b2",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-08T05:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5301ddae_11ee2b25",
+      "range": {
+        "startLine": 39,
+        "startChar": 25,
+        "endLine": 41,
+        "endChar": 52
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf165568_c78329ae",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2018-11-06T15:11:53Z",
       "side": 1,
       "message": "you have BlockMemberInfoMap .. is it possible to use this to get the matrix stride instead of making a whole new encoder in GetMatrixStride?",
+      "range": {
+        "startLine": 316,
+        "startChar": 24,
+        "endLine": 316,
+        "endChar": 39
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5965b475_d4e995b5",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-08T05:53:03Z",
+      "side": 1,
+      "message": "The correct BlockMemberInfoMap is gotten until we execute the last dot operator in ssbo access chain. But before this, we should generate the corresponding function name. If we want to use BlockMemberInfoMap\u0027s matrixStride, we have to save the function name to a ShaderStorageBlockOutputHLSL\u0027s memeber, such as mFunctionName. Then in ShaderStorageBlockOutputHLSL::writeDotOperatorOutput, you need to set the corresponding matrix stride by function name. Additionally, a function like setMatrixStrideByFunctionName should be added in ShaderStorageBlockFunctionHLSL.\n\nSo the main difference of these two methods is that one is to set matrix stride when the function name is registered, the other is to update matrix stride by function name when we can get matrix stride in BlockMemberInfoMap. I am ok for both methods. If you think the latter one is better, I can change it. What do you think?\n\nBTW, in both methods, GetBlockLayoutInfo(node, \u0026storage, \u0026rowMajor, false) is necessary since we need storage layout(std140/std430) and matrix packing(major_major/column_major) as part of the function name to distinguish the same type variable.",
+      "parentUuid": "cf165568_c78329ae",
       "range": {
         "startLine": 316,
         "startChar": 24,
