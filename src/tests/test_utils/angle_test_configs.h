@@ -171,6 +171,8 @@ PlatformParameters ES1_VULKAN();
 PlatformParameters ES1_VULKAN_NULL();
 PlatformParameters ES2_VULKAN();
 PlatformParameters ES2_VULKAN_NULL();
+PlatformParameters ES3_VULKAN();
+PlatformParameters ES3_VULKAN_NULL();
 
 }  // namespace angle
 

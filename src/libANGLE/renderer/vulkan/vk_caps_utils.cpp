@@ -200,11 +200,18 @@ EGLint ComputeMaximumPBufferPixels(const VkPhysicalDeviceProperties &physicalDev
 
 // Generates a basic config for a combination of color format, depth stencil format and sample
 // count.
-egl::Config GenerateDefaultConfig(const VkPhysicalDeviceProperties &physicalDeviceProperties,
+egl::Config GenerateDefaultConfig(const RendererVk *renderer,
                                   const gl::InternalFormat &colorFormat,
                                   const gl::InternalFormat &depthStencilFormat,
                                   EGLint sampleCount)
 {
+    const VkPhysicalDeviceProperties &physicalDeviceProperties =
+        renderer->getPhysicalDeviceProperties();
+    gl::Version maxSupportedESVersion = renderer->getMaxSupportedESVersion();
+
+    EGLint es2Support = (maxSupportedESVersion.major >= 2 ? EGL_OPENGL_ES2_BIT : 0);
+    EGLint es3Support = (maxSupportedESVersion.major >= 3 ? EGL_OPENGL_ES3_BIT : 0);
+
     egl::Config config;
 
     config.renderTargetFormat    = colorFormat.internalFormat;
@@ -232,7 +239,7 @@ egl::Config GenerateDefaultConfig(const VkPhysicalDeviceProperties &physicalDevi
     config.nativeRenderable      = EGL_TRUE;
     config.nativeVisualID        = 0;
     config.nativeVisualType      = EGL_NONE;
-    config.renderableType        = EGL_OPENGL_ES2_BIT;
+    config.renderableType        = es2Support | es3Support;
     config.sampleBuffers         = (sampleCount > 0) ? 1 : 0;
     config.samples               = sampleCount;
     config.surfaceType = EGL_WINDOW_BIT | EGL_PBUFFER_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
@@ -264,10 +271,6 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
 
     egl::ConfigSet configSet;
 
-    const RendererVk *renderer = display->getRenderer();
-    const VkPhysicalDeviceProperties &physicalDeviceProperties =
-        renderer->getPhysicalDeviceProperties();
-
     for (size_t colorFormatIdx = 0; colorFormatIdx < colorFormatsCount; colorFormatIdx++)
     {
         const gl::InternalFormat &colorFormatInfo =
@@ -286,7 +289,7 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
                  sampleCountIndex++)
             {
                 egl::Config config =
-                    GenerateDefaultConfig(physicalDeviceProperties, colorFormatInfo,
+                    GenerateDefaultConfig(display->getRenderer(), colorFormatInfo,
                                           depthStencilFormatInfo, sampleCounts[sampleCountIndex]);
                 if (display->checkConfigSupport(&config))
                 {

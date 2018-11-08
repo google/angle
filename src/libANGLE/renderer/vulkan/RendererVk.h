@@ -55,6 +55,8 @@ class RendererVk : angle::NonCopyable
     std::string getVendorString() const;
     std::string getRendererDescription() const;
 
+    gl::Version getMaxSupportedESVersion() const;
+
     VkInstance getInstance() const { return mInstance; }
     VkPhysicalDevice getPhysicalDevice() const { return mPhysicalDevice; }
     const VkPhysicalDeviceProperties &getPhysicalDeviceProperties() const

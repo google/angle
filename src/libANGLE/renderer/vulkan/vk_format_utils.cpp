@@ -29,7 +29,21 @@ bool HasFormatFeatureBits(const VkFormatFeatureFlags featureBits,
     return IsMaskFlagSet(formatProperties.optimalTilingFeatures, featureBits);
 }
 
-void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
+void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *outSet)
+{
+    // The possible bits are VK_SAMPLE_COUNT_n_BIT = n, with n = 1 << b.  At the time of this
+    // writing, b is in [0, 6], however, we test all 32 bits in case the enum is extended.
+    for (unsigned int i = 0; i < 32; ++i)
+    {
+        if ((sampleCounts & (1 << i)) != 0)
+        {
+            outSet->insert(1 << i);
+        }
+    }
+}
+
+void FillTextureFormatCaps(const VkPhysicalDeviceLimits &physicalDeviceLimits,
+                           const VkFormatProperties &formatProperties,
                            gl::TextureCaps *outTextureCaps)
 {
     outTextureCaps->texturable =
@@ -40,6 +54,22 @@ void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
         HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties) ||
         HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
     outTextureCaps->renderbuffer = outTextureCaps->textureAttachment;
+
+    if (outTextureCaps->renderbuffer)
+    {
+        if (HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties))
+        {
+            AddSampleCounts(physicalDeviceLimits.framebufferColorSampleCounts,
+                            &outTextureCaps->sampleCounts);
+        }
+        if (HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties))
+        {
+            AddSampleCounts(physicalDeviceLimits.framebufferDepthSampleCounts,
+                            &outTextureCaps->sampleCounts);
+            AddSampleCounts(physicalDeviceLimits.framebufferStencilSampleCounts,
+                            &outTextureCaps->sampleCounts);
+        }
+    }
 }
 
 bool HasFullTextureFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
@@ -191,6 +221,7 @@ FormatTable::~FormatTable()
 }
 
 void FormatTable::initialize(VkPhysicalDevice physicalDevice,
+                             const VkPhysicalDeviceProperties &physicalDeviceProperties,
                              const angle::FeaturesVk &featuresVk,
                              gl::TextureCapsMap *outTextureCapsMap,
                              std::vector<GLenum> *outCompressedTextureFormats)
@@ -217,7 +248,7 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
         VkFormatProperties formatProperties;
         GetFormatProperties(physicalDevice, vkFormat, &formatProperties);
         gl::TextureCaps textureCaps;
-        FillTextureFormatCaps(formatProperties, &textureCaps);
+        FillTextureFormatCaps(physicalDeviceProperties.limits, formatProperties, &textureCaps);
         outTextureCapsMap->set(formatID, textureCaps);
 
         if (angleFormat.isBlock)

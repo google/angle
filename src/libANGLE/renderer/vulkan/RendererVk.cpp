@@ -531,8 +531,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     GlslangWrapper::Initialize();
 
     // Initialize the format table.
-    mFormatTable.initialize(mPhysicalDevice, mFeatures, &mNativeTextureCaps,
-                            &mNativeCaps.compressedTextureFormats);
+    mFormatTable.initialize(mPhysicalDevice, mPhysicalDeviceProperties, mFeatures,
+                            &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
 
     return angle::Result::Continue();
 }
@@ -731,6 +731,19 @@ std::string RendererVk::getRendererDescription() const
     strstr << mPhysicalDeviceProperties.deviceName << ")";
 
     return strstr.str();
+}
+
+gl::Version RendererVk::getMaxSupportedESVersion() const
+{
+    // Declare GLES2 support if necessary features for GLES3 are missing
+    bool necessaryFeaturesForES3 = mPhysicalDeviceFeatures.inheritedQueries;
+
+    if (!necessaryFeaturesForES3)
+    {
+        return gl::Version(2, 0);
+    }
+
+    return gl::Version(3, 0);
 }
 
 void RendererVk::initFeatures()

@@ -690,4 +690,14 @@ PlatformParameters ES2_VULKAN_NULL()
     return PlatformParameters(2, 0, egl_platform::VULKAN_NULL());
 }
 
+PlatformParameters ES3_VULKAN()
+{
+    return PlatformParameters(3, 0, egl_platform::VULKAN());
+}
+
+PlatformParameters ES3_VULKAN_NULL()
+{
+    return PlatformParameters(3, 0, egl_platform::VULKAN_NULL());
+}
+
 }  // namespace angle
