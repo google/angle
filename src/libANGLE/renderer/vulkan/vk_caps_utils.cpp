@@ -63,6 +63,13 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outExtensions->queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
     outExtensions->queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
 
+    outExtensions->textureFilterAnisotropic =
+        physicalDeviceFeatures.samplerAnisotropy &&
+        physicalDeviceProperties.limits.maxSamplerAnisotropy > 1.0f;
+    outExtensions->maxTextureAnisotropy = outExtensions->textureFilterAnisotropic
+                                              ? physicalDeviceProperties.limits.maxSamplerAnisotropy
+                                              : 0.0f;
+
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html

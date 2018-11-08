@@ -968,13 +968,17 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     }
 
     ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
     if (mSampler.valid())
     {
-        RendererVk *renderer = contextVk->getRenderer();
         renderer->releaseObject(renderer->getCurrentQueueSerial(), &mSampler);
     }
 
+    const gl::Extensions &extensions     = renderer->getNativeExtensions();
     const gl::SamplerState &samplerState = mState.getSamplerState();
+
+    float maxAnisotropy   = samplerState.getMaxAnisotropy();
+    bool anisotropyEnable = extensions.textureFilterAnisotropic && maxAnisotropy > 1.0f;
 
     // Create a simple sampler. Force basic parameter settings.
     VkSamplerCreateInfo samplerInfo     = {};
@@ -987,8 +991,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     samplerInfo.addressModeV            = gl_vk::GetSamplerAddressMode(samplerState.getWrapT());
     samplerInfo.addressModeW            = gl_vk::GetSamplerAddressMode(samplerState.getWrapR());
     samplerInfo.mipLodBias              = 0.0f;
-    samplerInfo.anisotropyEnable        = VK_FALSE;
-    samplerInfo.maxAnisotropy           = 1.0f;
+    samplerInfo.anisotropyEnable        = anisotropyEnable;
+    samplerInfo.maxAnisotropy           = maxAnisotropy;
     samplerInfo.compareEnable           = VK_FALSE;
     samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
     samplerInfo.minLod                  = samplerState.getMinLod();
