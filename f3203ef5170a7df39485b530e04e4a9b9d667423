@@ -93,6 +93,30 @@
       "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67e4aa79_473bff03",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-08T20:55:16Z",
+      "side": 1,
+      "message": "Well, how about a third option? Can\u0027t you gather the BlockMemberInfoMap either a) in a PreVisit, or b) here in traverseSSBOAccess when you run into an unmapped node, or in GetBlockFieldMemberInfoAndReturnBlockSize if you run into a an unmapped node? Are you able to get the Node * for the BlockMemberInfoMap here in traverseSSBOAccess?",
+      "parentUuid": "5965b475_d4e995b5",
+      "range": {
+        "startLine": 316,
+        "startChar": 24,
+        "endLine": 316,
+        "endChar": 39
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
