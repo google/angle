@@ -445,7 +445,8 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
             uniformBufferInfo.queueFamilyIndexCount = 0;
             uniformBufferInfo.pQueueFamilyIndices   = nullptr;
 
-            ANGLE_TRY(mEmptyUniformBlockStorage.buffer.init(contextVk, uniformBufferInfo));
+            ANGLE_VK_TRY(contextVk, mEmptyUniformBlockStorage.buffer.init(contextVk->getDevice(),
+                                                                          uniformBufferInfo));
 
             // Assume host visible/coherent memory available.
             VkMemoryPropertyFlags flags =

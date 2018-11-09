@@ -751,7 +751,8 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
         imageViews[0] = swapchainImage.imageView.getHandle();
-        ANGLE_TRY(swapchainImage.framebuffer.init(context, framebufferInfo));
+        ANGLE_VK_TRY(context,
+                     swapchainImage.framebuffer.init(context->getDevice(), framebufferInfo));
     }
 
     ASSERT(currentFramebuffer.valid());

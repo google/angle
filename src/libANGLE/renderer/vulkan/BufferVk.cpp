@@ -116,8 +116,10 @@ angle::Result BufferVk::map(const gl::Context *context, GLenum access, void **ma
 
 angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
 {
-    return mBuffer.getDeviceMemory().map(contextVk, 0, mState.getSize(), 0,
-                                         reinterpret_cast<uint8_t **>(mapPtr));
+    ANGLE_VK_TRY(contextVk,
+                 mBuffer.getDeviceMemory().map(contextVk->getDevice(), 0, mState.getSize(), 0,
+                                               reinterpret_cast<uint8_t **>(mapPtr)));
+    return angle::Result::Continue();
 }
 
 GLint64 BufferVk::getSize()
@@ -135,8 +137,9 @@ angle::Result BufferVk::mapRange(const gl::Context *context,
 
     ContextVk *contextVk = vk::GetImpl(context);
 
-    return mBuffer.getDeviceMemory().map(contextVk, offset, length, 0,
-                                         reinterpret_cast<uint8_t **>(mapPtr));
+    ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset, length, 0,
+                                                          reinterpret_cast<uint8_t **>(mapPtr)));
+    return angle::Result::Continue();
 }
 
 angle::Result BufferVk::unmap(const gl::Context *context, GLboolean *result)
@@ -181,8 +184,8 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
 
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(
-        mBuffer.getDeviceMemory().map(contextVk, offset, typeInfo.bytes * count, 0, &mapPointer));
+    ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset,
+                                                          typeInfo.bytes * count, 0, &mapPointer));
 
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 
@@ -206,7 +209,8 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                      vk::StagingUsage::Write));
 
         uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(stagingBuffer.getDeviceMemory().map(contextVk, 0, size, 0, &mapPointer));
+        ANGLE_VK_TRY(contextVk,
+                     stagingBuffer.getDeviceMemory().map(device, 0, size, 0, &mapPointer));
         ASSERT(mapPointer);
 
         memcpy(mapPointer, data, size);
@@ -222,7 +226,8 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     else
     {
         uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(mBuffer.getDeviceMemory().map(contextVk, offset, size, 0, &mapPointer));
+        ANGLE_VK_TRY(contextVk,
+                     mBuffer.getDeviceMemory().map(device, offset, size, 0, &mapPointer));
         ASSERT(mapPointer);
 
         memcpy(mapPointer, data, size);

@@ -621,7 +621,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
-    ANGLE_TRY(mCommandPool.init(displayVk, commandPoolInfo));
+    ANGLE_VK_TRY(displayVk, mCommandPool.init(mDevice, commandPoolInfo));
 
     // Initialize the vulkan pipeline cache.
     ANGLE_TRY(initPipelineCacheVk(displayVk));
@@ -790,7 +790,7 @@ angle::Result RendererVk::initPipelineCacheVk(DisplayVk *display)
     pipelineCacheCreateInfo.initialDataSize = success ? initialData.size() : 0;
     pipelineCacheCreateInfo.pInitialData    = success ? initialData.data() : nullptr;
 
-    ANGLE_TRY(mPipelineCacheVk.init(display, pipelineCacheCreateInfo));
+    ANGLE_VK_TRY(display, mPipelineCacheVk.init(mDevice, pipelineCacheCreateInfo));
     return angle::Result::Continue();
 }
 
@@ -940,10 +940,12 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 
     for (CommandBatch &batch : mInFlightCommands)
     {
-        angle::Result result = batch.fence.getStatus(context);
-        ANGLE_TRY(result);
-        if (result == angle::Result::Incomplete())
+        VkResult result = batch.fence.getStatus(mDevice);
+        if (result == VK_NOT_READY)
+        {
             break;
+        }
+        ANGLE_VK_TRY(context, result);
 
         ASSERT(batch.serial > mLastCompletedQueueSerial);
         mLastCompletedQueueSerial = batch.serial;
@@ -981,7 +983,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
     vk::Scoped<CommandBatch> scopedBatch(mDevice);
     CommandBatch &batch = scopedBatch.get();
-    ANGLE_TRY(batch.fence.init(context, fenceInfo));
+    ANGLE_VK_TRY(context, batch.fence.init(mDevice, fenceInfo));
 
     ANGLE_VK_TRY(context, vkQueueSubmit(mQueue, 1, &submitInfo, batch.fence.getHandle()));
 
@@ -1018,7 +1020,8 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     poolInfo.queueFamilyIndex        = mCurrentQueueFamilyIndex;
 
-    return mCommandPool.init(context, poolInfo);
+    ANGLE_VK_TRY(context, mCommandPool.init(mDevice, poolInfo));
+    return angle::Result::Continue();
 }
 
 bool RendererVk::isSerialInUse(Serial serial) const
@@ -1048,13 +1051,8 @@ angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 
     // Wait for it finish
     constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
-    angle::Result result                   = batch.fence.wait(context, kMaxFenceWaitTimeNs);
-    if (result == angle::Result::Incomplete())
-    {
-        // Wait a maximum of 10s.  If that times out, we declare it a failure.
-        result = angle::Result::Stop();
-    }
-    ANGLE_TRY(result);
+    // Wait a maximum of 10s.  If that times out, we declare it a failure.
+    ANGLE_VK_TRY(context, batch.fence.wait(mDevice, kMaxFenceWaitTimeNs));
 
     // Clean up finished batches.
     return checkCompletedCommands(context);
@@ -1182,21 +1180,23 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 
     // Get the size of the cache.
     size_t pipelineCacheSize = 0;
-    ANGLE_TRY(mPipelineCacheVk.getCacheData(displayVk, &pipelineCacheSize, nullptr));
+    VkResult result          = mPipelineCacheVk.getCacheData(mDevice, &pipelineCacheSize, nullptr);
+    if (result != VK_INCOMPLETE)
+    {
+        ANGLE_VK_TRY(displayVk, result);
+    }
 
     angle::MemoryBuffer *pipelineCacheData = nullptr;
     ANGLE_VK_CHECK_ALLOC(displayVk,
                          displayVk->getScratchBuffer(pipelineCacheSize, &pipelineCacheData));
 
     size_t originalPipelineCacheSize = pipelineCacheSize;
-    angle::Result result =
-        mPipelineCacheVk.getCacheData(displayVk, &pipelineCacheSize, pipelineCacheData->data());
-    ANGLE_TRY(result);
-
+    result = mPipelineCacheVk.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData->data());
     // Note: currently we don't accept incomplete as we don't expect it (the full size of cache
     // was determined just above), so receiving it hints at an implementation bug we would want
     // to know about early.
-    ASSERT(result != angle::Result::Incomplete());
+    ASSERT(result != VK_INCOMPLETE);
+    ANGLE_VK_TRY(displayVk, result);
 
     // If vkGetPipelineCacheData ends up writing fewer bytes than requested, zero out the rest of
     // the buffer to avoid leaking garbage memory.
@@ -1282,14 +1282,14 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
     commandBufferInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     commandBufferInfo.commandBufferCount          = 1;
 
-    ANGLE_TRY(commandBuffer.init(context, commandBufferInfo));
+    ANGLE_VK_TRY(context, commandBuffer.init(mDevice, commandBufferInfo));
 
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags                    = 0;
     beginInfo.pInheritanceInfo         = nullptr;
 
-    ANGLE_TRY(commandBuffer.begin(context, beginInfo));
+    ANGLE_VK_TRY(context, commandBuffer.begin(beginInfo));
 
     commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
                                  timestampQuery.getQuery(), 1);
@@ -1297,7 +1297,7 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
                                  timestampQuery.getQueryPool()->getHandle(),
                                  timestampQuery.getQuery());
 
-    ANGLE_TRY(commandBuffer.end(context));
+    ANGLE_VK_TRY(context, commandBuffer.end());
 
     // Create fence for the submission
     VkFenceCreateInfo fenceInfo = {};
@@ -1305,7 +1305,7 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
     fenceInfo.flags             = 0;
 
     vk::Scoped<vk::Fence> fence(mDevice);
-    ANGLE_TRY(fence.get().init(context, fenceInfo));
+    ANGLE_VK_TRY(context, fence.get().init(mDevice, fenceInfo));
 
     // Submit the command buffer
     VkSubmitInfo submitInfo         = {};
@@ -1322,21 +1322,16 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
+    // Declare it a failure if it times out.
     constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
-    angle::Result result                   = fence.get().wait(context, kMaxFenceWaitTimeNs);
-    if (result == angle::Result::Incomplete())
-    {
-        // Declare it a failure if it times out.
-        result = angle::Result::Stop();
-    }
-    ANGLE_TRY(result);
+    ANGLE_VK_TRY(context, fence.get().wait(mDevice, kMaxFenceWaitTimeNs));
 
     // Get the query results
     constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
 
-    ANGLE_TRY(timestampQuery.getQueryPool()->getResults(context, timestampQuery.getQuery(), 1,
-                                                        sizeof(*timestampOut), timestampOut,
-                                                        sizeof(*timestampOut), queryFlags));
+    ANGLE_VK_TRY(context, timestampQuery.getQueryPool()->getResults(
+                              mDevice, timestampQuery.getQuery(), 1, sizeof(*timestampOut),
+                              timestampOut, sizeof(*timestampOut), queryFlags));
 
     timestampQueryPool.get().freeQuery(context, &timestampQuery);
 
@@ -1430,9 +1425,9 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
     eventCreateInfo.flags             = 0;
 
     vk::Scoped<vk::Event> cpuReady(mDevice), gpuReady(mDevice), gpuDone(mDevice);
-    ANGLE_TRY(cpuReady.get().init(context, eventCreateInfo));
-    ANGLE_TRY(gpuReady.get().init(context, eventCreateInfo));
-    ANGLE_TRY(gpuDone.get().init(context, eventCreateInfo));
+    ANGLE_VK_TRY(context, cpuReady.get().init(mDevice, eventCreateInfo));
+    ANGLE_VK_TRY(context, gpuReady.get().init(mDevice, eventCreateInfo));
+    ANGLE_VK_TRY(context, gpuDone.get().init(mDevice, eventCreateInfo));
 
     constexpr uint32_t kRetries = 10;
 
@@ -1443,9 +1438,9 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
     for (uint32_t i = 0; i < kRetries; ++i)
     {
         // Reset the events
-        ANGLE_TRY(cpuReady.get().reset(context));
-        ANGLE_TRY(gpuReady.get().reset(context));
-        ANGLE_TRY(gpuDone.get().reset(context));
+        ANGLE_VK_TRY(context, cpuReady.get().reset(mDevice));
+        ANGLE_VK_TRY(context, gpuReady.get().reset(mDevice));
+        ANGLE_VK_TRY(context, gpuDone.get().reset(mDevice));
 
         // Record the command buffer
         vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
@@ -1457,14 +1452,14 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
         commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         commandBufferInfo.commandBufferCount = 1;
 
-        ANGLE_TRY(commandBuffer.init(context, commandBufferInfo));
+        ANGLE_VK_TRY(context, commandBuffer.init(mDevice, commandBufferInfo));
 
         VkCommandBufferBeginInfo beginInfo = {};
         beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags                    = 0;
         beginInfo.pInheritanceInfo         = nullptr;
 
-        ANGLE_TRY(commandBuffer.begin(context, beginInfo));
+        ANGLE_VK_TRY(context, commandBuffer.begin(beginInfo));
 
         commandBuffer.setEvent(gpuReady.get(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
         commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
@@ -1479,7 +1474,7 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
 
         commandBuffer.setEvent(gpuDone.get(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
 
-        ANGLE_TRY(commandBuffer.end(context));
+        ANGLE_VK_TRY(context, commandBuffer.end());
 
         // Submit the command buffer
         angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> waitSemaphores;
@@ -1499,25 +1494,31 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
         ANGLE_TRY(submitFrame(context, submitInfo, std::move(commandBuffer)));
 
         // Wait for GPU to be ready.  This is a short busy wait.
-        angle::Result result = angle::Result::Incomplete();
+        VkResult result = VK_EVENT_RESET;
         do
         {
-            result = gpuReady.get().getStatus(context);
-            ANGLE_TRY(result);
-        } while (result == angle::Result::Incomplete());
+            result = gpuReady.get().getStatus(mDevice);
+            if (result != VK_EVENT_SET && result != VK_EVENT_RESET)
+            {
+                ANGLE_VK_TRY(context, result);
+            }
+        } while (result == VK_EVENT_RESET);
 
         double TsS = platform->monotonicallyIncreasingTime(platform);
 
         // Tell the GPU to go ahead with the timestamp query.
-        ANGLE_TRY(cpuReady.get().set(context));
+        ANGLE_VK_TRY(context, cpuReady.get().set(mDevice));
         double cpuTimestampS = platform->monotonicallyIncreasingTime(platform);
 
         // Wait for GPU to be done.  Another short busy wait.
         do
         {
-            result = gpuDone.get().getStatus(context);
-            ANGLE_TRY(result);
-        } while (result == angle::Result::Incomplete());
+            result = gpuDone.get().getStatus(mDevice);
+            if (result != VK_EVENT_SET && result != VK_EVENT_RESET)
+            {
+                ANGLE_VK_TRY(context, result);
+            }
+        } while (result == VK_EVENT_RESET);
 
         double TeS = platform->monotonicallyIncreasingTime(platform);
 
@@ -1527,9 +1528,9 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
         constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
 
         uint64_t gpuTimestampCycles = 0;
-        ANGLE_TRY(timestampQuery.getQueryPool()->getResults(
-            context, timestampQuery.getQuery(), 1, sizeof(gpuTimestampCycles), &gpuTimestampCycles,
-            sizeof(gpuTimestampCycles), queryFlags));
+        ANGLE_VK_TRY(context, timestampQuery.getQueryPool()->getResults(
+                                  mDevice, timestampQuery.getQuery(), 1, sizeof(gpuTimestampCycles),
+                                  &gpuTimestampCycles, sizeof(gpuTimestampCycles), queryFlags));
 
         // Use the first timestamp queried as origin.
         if (mGpuEventTimestampOrigin == 0)
@@ -1607,16 +1608,15 @@ angle::Result RendererVk::checkCompletedGpuEvents(vk::Context *context)
 
         // See if the results are available.
         uint64_t gpuTimestampCycles = 0;
-        angle::Result result        = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex)
-                                   ->getResults(context, eventQuery.queryIndex, 1,
-                                                sizeof(gpuTimestampCycles), &gpuTimestampCycles,
-                                                sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
-        ANGLE_TRY(result);
-
-        if (result == angle::Result::Incomplete())
+        VkResult result             = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex)
+                              ->getResults(mDevice, eventQuery.queryIndex, 1,
+                                           sizeof(gpuTimestampCycles), &gpuTimestampCycles,
+                                           sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
+        if (result == VK_NOT_READY)
         {
             break;
         }
+        ANGLE_VK_TRY(context, result);
 
         mGpuEventQueryPool.freeQuery(context, eventQuery.queryPoolIndex, eventQuery.queryIndex);
 

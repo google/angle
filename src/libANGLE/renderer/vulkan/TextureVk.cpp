@@ -996,7 +996,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    return mSampler.init(contextVk, samplerInfo);
+    ANGLE_VK_TRY(contextVk, mSampler.init(contextVk->getDevice(), samplerInfo));
+    return angle::Result::Continue();
 }
 
 gl::Error TextureVk::setStorageMultisample(const gl::Context *context,

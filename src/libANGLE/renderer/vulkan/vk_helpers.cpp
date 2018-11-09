@@ -146,7 +146,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
-        ANGLE_TRY(mBuffer.init(context, createInfo));
+        ANGLE_VK_TRY(context, mBuffer.init(context->getDevice(), createInfo));
 
         VkMemoryPropertyFlags actualMemoryPropertyFlags = 0;
         ANGLE_TRY(AllocateBufferMemory(context, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -154,7 +154,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
         mHostCoherent = (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT ==
                          (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT & actualMemoryPropertyFlags));
 
-        ANGLE_TRY(mMemory.map(context, 0, mSize, 0, &mMappedMemory));
+        ANGLE_VK_TRY(context, mMemory.map(context->getDevice(), 0, mSize, 0, &mMappedMemory));
         mNextAllocationOffset        = 0;
         mLastFlushOrInvalidateOffset = 0;
 
@@ -315,7 +315,8 @@ angle::Result DescriptorPoolHelper::init(Context *context,
 
     mFreeDescriptorSets = maxSets;
 
-    return mDescriptorPool.init(context, descriptorPoolInfo);
+    ANGLE_VK_TRY(context, mDescriptorPool.init(context->getDevice(), descriptorPoolInfo));
+    return angle::Result::Continue();
 }
 
 void DescriptorPoolHelper::destroy(VkDevice device)
@@ -337,7 +338,9 @@ angle::Result DescriptorPoolHelper::allocateSets(Context *context,
     ASSERT(mFreeDescriptorSets >= descriptorSetCount);
     mFreeDescriptorSets -= descriptorSetCount;
 
-    return mDescriptorPool.allocateDescriptorSets(context, allocInfo, descriptorSetsOut);
+    ANGLE_VK_TRY(context, mDescriptorPool.allocateDescriptorSets(context->getDevice(), allocInfo,
+                                                                 descriptorSetsOut));
+    return angle::Result::Continue();
 }
 
 // DynamicDescriptorPool implementation.
@@ -599,7 +602,7 @@ angle::Result DynamicQueryPool::allocateNewPool(Context *context)
 
     vk::QueryPool queryPool;
 
-    ANGLE_TRY(queryPool.init(context, queryPoolInfo));
+    ANGLE_VK_TRY(context, queryPool.init(context->getDevice(), queryPoolInfo));
 
     return allocateNewEntryPool(context, std::move(queryPool));
 }
@@ -691,7 +694,7 @@ angle::Result DynamicSemaphorePool::allocateNewPool(Context *context)
 
     for (Semaphore &semaphore : newPool)
     {
-        ANGLE_TRY(semaphore.init(context));
+        ANGLE_VK_TRY(context, semaphore.init(context->getDevice()));
     }
 
     // This code is safe as long as the growth of the outer vector in vector<vector<T>> is done by
@@ -900,7 +903,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
                                  const VkBufferCreateInfo &createInfo,
                                  VkMemoryPropertyFlags memoryPropertyFlags)
 {
-    ANGLE_TRY(mBuffer.init(contextVk, createInfo));
+    ANGLE_VK_TRY(contextVk, mBuffer.init(contextVk->getDevice(), createInfo));
     return vk::AllocateBufferMemory(contextVk, memoryPropertyFlags, &mMemoryPropertyFlags, &mBuffer,
                                     &mDeviceMemory);
 }
@@ -1016,7 +1019,7 @@ angle::Result ImageHelper::init(Context *context,
 
     mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    ANGLE_TRY(mImage.init(context, imageInfo));
+    ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
     return angle::Result::Continue();
 }
 
@@ -1086,7 +1089,7 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
     viewInfo.subresourceRange.baseArrayLayer = baseArrayLayer;
     viewInfo.subresourceRange.layerCount     = layerCount;
 
-    ANGLE_TRY(imageViewOut->init(context, viewInfo));
+    ANGLE_VK_TRY(context, imageViewOut->init(context->getDevice(), viewInfo));
     return angle::Result::Continue();
 }
 
@@ -1149,7 +1152,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     imageInfo.pQueueFamilyIndices   = nullptr;
     imageInfo.initialLayout         = mCurrentLayout;
 
-    ANGLE_TRY(mImage.init(context, imageInfo));
+    ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
     // Allocate and bind host visible and coherent Image memory.
     // TODO(ynovikov): better approach would be to request just visible memory,
@@ -1455,7 +1458,8 @@ FramebufferHelper::~FramebufferHelper() = default;
 angle::Result FramebufferHelper::init(ContextVk *contextVk,
                                       const VkFramebufferCreateInfo &createInfo)
 {
-    return mFramebuffer.init(contextVk, createInfo);
+    ANGLE_VK_TRY(contextVk, mFramebuffer.init(contextVk->getDevice(), createInfo));
+    return angle::Result::Continue();
 }
 
 void FramebufferHelper::release(RendererVk *renderer)

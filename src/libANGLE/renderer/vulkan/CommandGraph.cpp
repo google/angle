@@ -38,14 +38,14 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
     createInfo.level                       = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
     createInfo.commandBufferCount          = 1;
 
-    ANGLE_TRY(commandBuffer->init(context, createInfo));
+    ANGLE_VK_TRY(context, commandBuffer->init(context->getDevice(), createInfo));
 
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags                    = flags | VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     beginInfo.pInheritanceInfo         = &inheritanceInfo;
 
-    ANGLE_TRY(commandBuffer->begin(context, beginInfo));
+    ANGLE_VK_TRY(context, commandBuffer->begin(beginInfo));
     return angle::Result::Continue();
 }
 
@@ -505,7 +505,7 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
 
             if (mOutsideRenderPassCommands.valid())
             {
-                ANGLE_TRY(mOutsideRenderPassCommands.end(context));
+                ANGLE_VK_TRY(context, mOutsideRenderPassCommands.end());
                 primaryCommandBuffer->executeCommands(1, &mOutsideRenderPassCommands);
             }
 
@@ -517,7 +517,7 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
                 ANGLE_TRY(renderPassCache->getCompatibleRenderPass(context, serial, mRenderPassDesc,
                                                                    &renderPass));
 
-                ANGLE_TRY(mInsideRenderPassCommands.end(context));
+                ANGLE_VK_TRY(context, mInsideRenderPassCommands.end());
 
                 VkRenderPassBeginInfo beginInfo = {};
                 beginInfo.sType                 = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -658,7 +658,7 @@ angle::Result CommandGraph::submitCommands(Context *context,
     primaryInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     primaryInfo.commandBufferCount          = 1;
 
-    ANGLE_TRY(primaryCommandBufferOut->init(context, primaryInfo));
+    ANGLE_VK_TRY(context, primaryCommandBufferOut->init(context->getDevice(), primaryInfo));
 
     if (mEnableGraphDiagnostics)
     {
@@ -672,7 +672,7 @@ angle::Result CommandGraph::submitCommands(Context *context,
     beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     beginInfo.pInheritanceInfo         = nullptr;
 
-    ANGLE_TRY(primaryCommandBufferOut->begin(context, beginInfo));
+    ANGLE_VK_TRY(context, primaryCommandBufferOut->begin(beginInfo));
 
     ANGLE_TRY(context->getRenderer()->traceGpuEvent(
         context, primaryCommandBufferOut, TRACE_EVENT_PHASE_BEGIN, "Primary Command Buffer"));
@@ -713,7 +713,7 @@ angle::Result CommandGraph::submitCommands(Context *context,
     ANGLE_TRY(context->getRenderer()->traceGpuEvent(
         context, primaryCommandBufferOut, TRACE_EVENT_PHASE_END, "Primary Command Buffer"));
 
-    ANGLE_TRY(primaryCommandBufferOut->end(context));
+    ANGLE_VK_TRY(context, primaryCommandBufferOut->end());
 
     // TODO(jmadill): Use pool allocation so we don't need to deallocate command graph.
     for (CommandGraphNode *node : mNodes)

@@ -135,18 +135,17 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
 
     VkQueryResultFlags flags = (wait ? VK_QUERY_RESULT_WAIT_BIT : 0) | VK_QUERY_RESULT_64_BIT;
 
-    angle::Result result = mQueryHelper.getQueryPool()->getResults(
-        contextVk, mQueryHelper.getQuery(), 1, sizeof(mCachedResult), &mCachedResult,
+    VkResult result = mQueryHelper.getQueryPool()->getResults(
+        contextVk->getDevice(), mQueryHelper.getQuery(), 1, sizeof(mCachedResult), &mCachedResult,
         sizeof(mCachedResult), flags);
-    ANGLE_TRY(result);
-
     // If the results are not ready, do nothing.  mCachedResultValid remains false.
-    if (result == angle::Result::Incomplete())
+    if (result == VK_NOT_READY)
     {
-        // If VK_QUERY_RESULT_WAIT_BIT was given, Incomplete() cannot have been returned.
+        // If VK_QUERY_RESULT_WAIT_BIT was given, VK_NOT_READY cannot have been returned.
         ASSERT(!wait);
         return angle::Result::Continue();
     }
+    ANGLE_VK_TRY(contextVk, result);
 
     // Fix up the results to what OpenGL expects.
     switch (getType())
@@ -163,13 +162,12 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
             uint64_t timeElapsedEnd = mCachedResult;
 
             result = mQueryHelperTimeElapsedBegin.getQueryPool()->getResults(
-                contextVk, mQueryHelperTimeElapsedBegin.getQuery(), 1, sizeof(mCachedResult),
-                &mCachedResult, sizeof(mCachedResult), flags);
-            ANGLE_TRY(result);
-
+                contextVk->getDevice(), mQueryHelperTimeElapsedBegin.getQuery(), 1,
+                sizeof(mCachedResult), &mCachedResult, sizeof(mCachedResult), flags);
             // Since the result of the end query of time-elapsed is already available, the
             // result of begin query must be available too.
-            ASSERT(result != angle::Result::Incomplete());
+            ASSERT(result != VK_NOT_READY);
+            ANGLE_VK_TRY(contextVk, result);
 
             mCachedResult = timeElapsedEnd - mCachedResult;
             break;

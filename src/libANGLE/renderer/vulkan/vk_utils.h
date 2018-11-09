@@ -290,7 +290,7 @@ class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
 
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkCommandPoolCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkCommandPoolCreateInfo &createInfo);
 };
 
 // Helper class that wraps a Vulkan command buffer.
@@ -307,7 +307,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     // This is used in conjunction with VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT.
     void destroy(VkDevice device, const CommandPool &commandPool);
 
-    angle::Result init(Context *context, const VkCommandBufferAllocateInfo &createInfo);
+    VkResult init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
     void blitImage(const Image &srcImage,
                    VkImageLayout srcImageLayout,
                    const Image &dstImage,
@@ -317,10 +317,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                    VkFilter filter);
     using WrappedObject::operator=;
 
-    angle::Result begin(Context *context, const VkCommandBufferBeginInfo &info);
+    VkResult begin(const VkCommandBufferBeginInfo &info);
 
-    angle::Result end(Context *context);
-    angle::Result reset(Context *context);
+    VkResult end();
+    VkResult reset();
 
     void pipelineBarrier(VkPipelineStageFlags srcStageMask,
                          VkPipelineStageFlags dstStageMask,
@@ -461,10 +461,10 @@ class Image final : public WrappedObject<Image, VkImage>
     // Called on shutdown when the helper class *does* own the handle to the image resource.
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkImageCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkImageCreateInfo &createInfo);
 
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const;
-    angle::Result bindMemory(Context *context, const DeviceMemory &deviceMemory);
+    VkResult bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
 
     void getSubresourceLayout(VkDevice device,
                               VkImageAspectFlagBits aspectMask,
@@ -479,7 +479,7 @@ class ImageView final : public WrappedObject<ImageView, VkImageView>
     ImageView();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkImageViewCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkImageViewCreateInfo &createInfo);
 };
 
 class Semaphore final : public WrappedObject<Semaphore, VkSemaphore>
@@ -488,7 +488,7 @@ class Semaphore final : public WrappedObject<Semaphore, VkSemaphore>
     Semaphore();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context);
+    VkResult init(VkDevice device);
 };
 
 class Framebuffer final : public WrappedObject<Framebuffer, VkFramebuffer>
@@ -500,7 +500,7 @@ class Framebuffer final : public WrappedObject<Framebuffer, VkFramebuffer>
     // Use this method only in necessary cases. (RenderPass)
     void setHandle(VkFramebuffer handle);
 
-    angle::Result init(Context *context, const VkFramebufferCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkFramebufferCreateInfo &createInfo);
 };
 
 class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
@@ -509,12 +509,12 @@ class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
     DeviceMemory();
     void destroy(VkDevice device);
 
-    angle::Result allocate(Context *context, const VkMemoryAllocateInfo &allocInfo);
-    angle::Result map(Context *context,
-                      VkDeviceSize offset,
-                      VkDeviceSize size,
-                      VkMemoryMapFlags flags,
-                      uint8_t **mapPointer) const;
+    VkResult allocate(VkDevice device, const VkMemoryAllocateInfo &allocInfo);
+    VkResult map(VkDevice device,
+                 VkDeviceSize offset,
+                 VkDeviceSize size,
+                 VkMemoryMapFlags flags,
+                 uint8_t **mapPointer) const;
     void unmap(VkDevice device) const;
 };
 
@@ -524,7 +524,7 @@ class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
     RenderPass();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkRenderPassCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkRenderPassCreateInfo &createInfo);
 };
 
 enum class StagingUsage
@@ -540,8 +540,8 @@ class Buffer final : public WrappedObject<Buffer, VkBuffer>
     Buffer();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkBufferCreateInfo &createInfo);
-    angle::Result bindMemory(Context *context, const DeviceMemory &deviceMemory);
+    VkResult init(VkDevice device, const VkBufferCreateInfo &createInfo);
+    VkResult bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut);
 };
 
@@ -551,7 +551,7 @@ class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>
     ShaderModule();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkShaderModuleCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkShaderModuleCreateInfo &createInfo);
 };
 
 class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayout>
@@ -560,7 +560,7 @@ class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayo
     PipelineLayout();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkPipelineLayoutCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
 };
 
 class PipelineCache final : public WrappedObject<PipelineCache, VkPipelineCache>
@@ -569,8 +569,8 @@ class PipelineCache final : public WrappedObject<PipelineCache, VkPipelineCache>
     PipelineCache();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkPipelineCacheCreateInfo &createInfo);
-    angle::Result getCacheData(Context *context, size_t *cacheSize, void *cacheData);
+    VkResult init(VkDevice device, const VkPipelineCacheCreateInfo &createInfo);
+    VkResult getCacheData(VkDevice device, size_t *cacheSize, void *cacheData);
 };
 
 class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
@@ -579,9 +579,9 @@ class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
     Pipeline();
     void destroy(VkDevice device);
 
-    angle::Result initGraphics(Context *context,
-                               const VkGraphicsPipelineCreateInfo &createInfo,
-                               const PipelineCache &pipelineCacheVk);
+    VkResult initGraphics(VkDevice device,
+                          const VkGraphicsPipelineCreateInfo &createInfo,
+                          const PipelineCache &pipelineCacheVk);
 };
 
 class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDescriptorSetLayout>
@@ -590,7 +590,7 @@ class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDe
     DescriptorSetLayout();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkDescriptorSetLayoutCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkDescriptorSetLayoutCreateInfo &createInfo);
 };
 
 class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPool>
@@ -599,14 +599,14 @@ class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPo
     DescriptorPool();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkDescriptorPoolCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkDescriptorPoolCreateInfo &createInfo);
 
-    angle::Result allocateDescriptorSets(Context *context,
-                                         const VkDescriptorSetAllocateInfo &allocInfo,
-                                         VkDescriptorSet *descriptorSetsOut);
-    angle::Result freeDescriptorSets(Context *context,
-                                     uint32_t descriptorSetCount,
-                                     const VkDescriptorSet *descriptorSets);
+    VkResult allocateDescriptorSets(VkDevice device,
+                                    const VkDescriptorSetAllocateInfo &allocInfo,
+                                    VkDescriptorSet *descriptorSetsOut);
+    VkResult freeDescriptorSets(VkDevice device,
+                                uint32_t descriptorSetCount,
+                                const VkDescriptorSet *descriptorSets);
 };
 
 class Sampler final : public WrappedObject<Sampler, VkSampler>
@@ -614,32 +614,32 @@ class Sampler final : public WrappedObject<Sampler, VkSampler>
   public:
     Sampler();
     void destroy(VkDevice device);
-    angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
+    VkResult init(VkDevice device, const VkSamplerCreateInfo &createInfo);
 };
 
 class Event final : public WrappedObject<Event, VkEvent>
 {
   public:
     Event();
-    void destroy(VkDevice fence);
+    void destroy(VkDevice device);
     using WrappedObject::operator=;
 
-    angle::Result init(Context *context, const VkEventCreateInfo &createInfo);
-    angle::Result getStatus(Context *context) const;
-    angle::Result set(Context *context) const;
-    angle::Result reset(Context *context) const;
+    VkResult init(VkDevice device, const VkEventCreateInfo &createInfo);
+    VkResult getStatus(VkDevice device) const;
+    VkResult set(VkDevice device) const;
+    VkResult reset(VkDevice device) const;
 };
 
 class Fence final : public WrappedObject<Fence, VkFence>
 {
   public:
     Fence();
-    void destroy(VkDevice fence);
+    void destroy(VkDevice device);
     using WrappedObject::operator=;
 
-    angle::Result init(Context *context, const VkFenceCreateInfo &createInfo);
-    angle::Result getStatus(Context *context) const;
-    angle::Result wait(Context *context, uint64_t timeout) const;
+    VkResult init(VkDevice device, const VkFenceCreateInfo &createInfo);
+    VkResult getStatus(VkDevice device) const;
+    VkResult wait(VkDevice device, uint64_t timeout) const;
 };
 
 // Similar to StagingImage, for Buffers.
@@ -671,14 +671,14 @@ class QueryPool final : public WrappedObject<QueryPool, VkQueryPool>
     QueryPool();
     void destroy(VkDevice device);
 
-    angle::Result init(Context *context, const VkQueryPoolCreateInfo &createInfo);
-    angle::Result getResults(Context *context,
-                             uint32_t firstQuery,
-                             uint32_t queryCount,
-                             size_t dataSize,
-                             void *data,
-                             VkDeviceSize stride,
-                             VkQueryResultFlags flags) const;
+    VkResult init(VkDevice device, const VkQueryPoolCreateInfo &createInfo);
+    VkResult getResults(VkDevice device,
+                        uint32_t firstQuery,
+                        uint32_t queryCount,
+                        size_t dataSize,
+                        void *data,
+                        VkDeviceSize stride,
+                        VkQueryResultFlags flags) const;
 };
 
 template <typename ObjT>
@@ -918,40 +918,6 @@ void GetScissor(const gl::State &glState,
 
 #define ANGLE_VK_CHECK_ALLOC(context, result) \
     ANGLE_VK_CHECK(context, result, VK_ERROR_OUT_OF_HOST_MEMORY)
-
-// Macros specifically made for vulkan wrappers (in vk_utils.h) that execute the call and return
-// appropriately.
-#define ANGLE_VK_TRY_RETURN(context, command) \
-    do                                        \
-    {                                         \
-        ANGLE_VK_TRY(context, command);       \
-        return angle::Result::Continue();     \
-    } while (0)
-
-#define ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, success, incomplete)           \
-    do                                                                                   \
-    {                                                                                    \
-        auto ANGLE_LOCAL_VAR = command;                                                  \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != success && ANGLE_LOCAL_VAR != incomplete)) \
-        {                                                                                \
-            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                   \
-            return angle::Result::Stop();                                                \
-        }                                                                                \
-        return ANGLE_LOCAL_VAR == success ? angle::Result::Continue()                    \
-                                          : angle::Result::Incomplete();                 \
-    } while (0)
-
-#define ANGLE_VK_TRY_RETURN_ALLOW_INCOMPLETE(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_SUCCESS, VK_INCOMPLETE)
-
-#define ANGLE_VK_TRY_RETURN_ALLOW_NOT_READY(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_SUCCESS, VK_NOT_READY)
-
-#define ANGLE_VK_TRY_RETURN_ALLOW_TIMEOUT(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_SUCCESS, VK_TIMEOUT)
-
-#define ANGLE_VK_TRY_RETURN_EVENT_STATUS(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_EVENT_SET, VK_EVENT_RESET)
 
 #define ANGLE_VK_UNREACHABLE(context) \
     UNREACHABLE();                    \

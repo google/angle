@@ -238,7 +238,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
     createInfo.dependencyCount = 0;
     createInfo.pDependencies   = nullptr;
 
-    ANGLE_TRY(renderPass->init(context, createInfo));
+    ANGLE_VK_TRY(context, renderPass->init(context->getDevice(), createInfo));
     return angle::Result::Continue();
 }
 
@@ -666,8 +666,8 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
-    ANGLE_TRY(pipelineOut->initGraphics(context, createInfo, pipelineCacheVk));
-
+    ANGLE_VK_TRY(context,
+                 pipelineOut->initGraphics(context->getDevice(), createInfo, pipelineCacheVk));
     return angle::Result::Continue();
 }
 
@@ -1235,7 +1235,7 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     createInfo.pBindings    = bindings.data();
 
     vk::DescriptorSetLayout newLayout;
-    ANGLE_TRY(newLayout.init(context, createInfo));
+    ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
 
     auto insertedItem = mPayload.emplace(desc, vk::SharedDescriptorSetLayout(std::move(newLayout)));
     vk::SharedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
@@ -1319,7 +1319,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     createInfo.pPushConstantRanges    = pushConstantRanges.data();
 
     vk::PipelineLayout newLayout;
-    ANGLE_TRY(newLayout.init(context, createInfo));
+    ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
 
     auto insertedItem = mPayload.emplace(desc, vk::SharedPipelineLayout(std::move(newLayout)));
     vk::SharedPipelineLayout &insertedLayout = insertedItem.first->second;
