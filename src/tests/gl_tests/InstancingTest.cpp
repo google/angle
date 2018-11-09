@@ -12,7 +12,7 @@ using namespace angle;
 class InstancingTest : public ANGLETest
 {
   protected:
-    InstancingTest() : mProgram(0), mVertexBuffer(0)
+    InstancingTest()
     {
         setWindowWidth(256);
         setWindowHeight(256);
@@ -22,232 +22,169 @@ class InstancingTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    ~InstancingTest() override
+    void TearDown() override
     {
-        glDeleteBuffers(1, &mVertexBuffer);
-        glDeleteProgram(mProgram);
+        glDeleteBuffers(1, &mInstanceBuffer);
+        glDeleteProgram(mProgram0);
+        glDeleteProgram(mProgram1);
     }
 
     void SetUp() override
     {
         ANGLETest::SetUp();
 
-        // Initialize the vertex and index vectors
-        constexpr GLfloat qvertex1[3] = {-quadRadius, quadRadius, 0.0f};
-        constexpr GLfloat qvertex2[3] = {-quadRadius, -quadRadius, 0.0f};
-        constexpr GLfloat qvertex3[3] = {quadRadius, -quadRadius, 0.0f};
-        constexpr GLfloat qvertex4[3] = {quadRadius, quadRadius, 0.0f};
-        mQuadVertices.insert(mQuadVertices.end(), qvertex1, qvertex1 + 3);
-        mQuadVertices.insert(mQuadVertices.end(), qvertex2, qvertex2 + 3);
-        mQuadVertices.insert(mQuadVertices.end(), qvertex3, qvertex3 + 3);
-        mQuadVertices.insert(mQuadVertices.end(), qvertex4, qvertex4 + 3);
-
-        constexpr GLfloat coord1[2] = {0.0f, 0.0f};
-        constexpr GLfloat coord2[2] = {0.0f, 1.0f};
-        constexpr GLfloat coord3[2] = {1.0f, 1.0f};
-        constexpr GLfloat coord4[2] = {1.0f, 0.0f};
-        mTexcoords.insert(mTexcoords.end(), coord1, coord1 + 2);
-        mTexcoords.insert(mTexcoords.end(), coord2, coord2 + 2);
-        mTexcoords.insert(mTexcoords.end(), coord3, coord3 + 2);
-        mTexcoords.insert(mTexcoords.end(), coord4, coord4 + 2);
-
-        mIndices.push_back(0);
-        mIndices.push_back(1);
-        mIndices.push_back(2);
-        mIndices.push_back(0);
-        mIndices.push_back(2);
-        mIndices.push_back(3);
-
-        for (size_t vertexIndex = 0; vertexIndex < 6; ++vertexIndex)
+        for (int i = 0; i < kMaxDrawn; ++i)
         {
-            mNonIndexedVertices.insert(mNonIndexedVertices.end(),
-                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3,
-                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3 + 3);
+            mInstanceData[i] = i * kDrawSize;
         }
+        glGenBuffers(1, &mInstanceBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, mInstanceBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(mInstanceData), mInstanceData, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        for (size_t vertexIndex = 0; vertexIndex < 6; ++vertexIndex)
-        {
-            mNonIndexedVertices.insert(mNonIndexedVertices.end(),
-                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3,
-                                       mQuadVertices.begin() + mIndices[vertexIndex] * 3 + 3);
-        }
-
-        // Tile a 2x2 grid of the tiles
-        for (float y = -1.0f + quadRadius; y < 1.0f - quadRadius; y += quadRadius * 3)
-        {
-            for (float x = -1.0f + quadRadius; x < 1.0f - quadRadius; x += quadRadius * 3)
+        const std::string inst = "attribute float a_instance;";
+        const std::string pos  = "attribute vec2 a_position;";
+        const std::string main = R"(
+            void main()
             {
-                const GLfloat instance[3] = {x + quadRadius, y + quadRadius, 0.0f};
-                mInstances.insert(mInstances.end(), instance, instance + 3);
+                gl_PointSize = 6.0;
+                gl_Position = vec4(a_position.x, a_position.y + a_instance, 0, 1);
+            }
+        )";
+
+        // attrib 0 is instanced
+        mProgram0 = CompileProgram(inst + pos + main, essl1_shaders::fs::Red());
+        ASSERT_NE(0u, mProgram0);
+        ASSERT_EQ(0, glGetAttribLocation(mProgram0, "a_instance"));
+        ASSERT_EQ(1, glGetAttribLocation(mProgram0, "a_position"));
+
+        // attrib 1 is instanced
+        mProgram1 = CompileProgram(pos + inst + main, essl1_shaders::fs::Red());
+        ASSERT_NE(0u, mProgram1);
+        ASSERT_EQ(1, glGetAttribLocation(mProgram1, "a_instance"));
+        ASSERT_EQ(0, glGetAttribLocation(mProgram1, "a_position"));
+
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+
+    void runTest(
+        unsigned numInstance,
+        unsigned divisor,
+        bool attribZeroInstanced,  // true: attrib 0 is instance, false: attrib 1 is instanced
+        bool points,               // true: draw points, false: draw quad
+        bool indexed,              // true: DrawElements, false: DrawArrays
+        bool offset,               // true: pass nonzero offset to DrawArrays, false: zero offset
+        bool buffer)               // true: use instance data in buffer, false: in client memory
+    {
+        // The window is divided into kMaxDrawn slices of size kDrawSize.
+        // The slice drawn into is determined by the instance datum.
+        // The instance data array selects all the slices in order.
+        // 'lastDrawn' is the index (zero-based) of the last slice into which we draw.
+        const unsigned lastDrawn = (numInstance - 1) / divisor;
+        ASSERT(lastDrawn < kMaxDrawn);
+
+        const int instanceAttrib = attribZeroInstanced ? 0 : 1;
+        const int positionAttrib = attribZeroInstanced ? 1 : 0;
+
+        glUseProgram(attribZeroInstanced ? mProgram0 : mProgram1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, buffer ? mInstanceBuffer : 0);
+        glVertexAttribPointer(instanceAttrib, 1, GL_FLOAT, GL_FALSE, 0,
+                              buffer ? nullptr : mInstanceData);
+        glEnableVertexAttribArray(instanceAttrib);
+        glVertexAttribDivisorANGLE(instanceAttrib, divisor);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glVertexAttribPointer(positionAttrib, 2, GL_FLOAT, GL_FALSE, 0,
+                              points ? kPointVertices : kQuadVertices);
+        glEnableVertexAttribArray(positionAttrib);
+        glVertexAttribDivisorANGLE(positionAttrib, 0);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        if (points)
+        {
+            if (indexed)
+                glDrawElementsInstancedANGLE(GL_POINTS, ArraySize(kPointIndices), GL_UNSIGNED_SHORT,
+                                             kPointIndices, numInstance);
+            else
+                glDrawArraysInstancedANGLE(GL_POINTS, offset ? 2 : 0, 4, numInstance);
+        }
+        else
+        {
+            if (indexed)
+                glDrawElementsInstancedANGLE(GL_TRIANGLES, ArraySize(kQuadIndices),
+                                             GL_UNSIGNED_SHORT, kQuadIndices, numInstance);
+            else
+                glDrawArraysInstancedANGLE(GL_TRIANGLES, offset ? 4 : 0, 6, numInstance);
+        }
+
+        ASSERT_GL_NO_ERROR();
+        checkDrawing(lastDrawn);
+    }
+
+    void checkDrawing(unsigned lastDrawn)
+    {
+        for (unsigned i = 0; i < kMaxDrawn; ++i)
+        {
+            float y = -1.0 + kDrawSize / 2.0 + i * kDrawSize;
+            int iy  = (y + 1.0) / 2.0 * getWindowHeight();
+            for (unsigned j = 0; j < 8; j += 2)
+            {
+                int ix = (kPointVertices[j] + 1.0) / 2.0 * getWindowWidth();
+                EXPECT_PIXEL_COLOR_EQ(ix, iy, i <= lastDrawn ? GLColor::red : GLColor::blue);
             }
         }
-
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        glGenBuffers(1, &mVertexBuffer);
-
-        ASSERT_GL_NO_ERROR();
     }
 
-    void setupDrawArraysTest(const std::string &vs)
-    {
-        mProgram = CompileProgram(vs, essl1_shaders::fs::Red());
-        ASSERT_NE(0u, mProgram);
+    GLuint mProgram0;
+    GLuint mProgram1;
+    GLuint mInstanceBuffer;
 
-        // Set the viewport
-        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    static constexpr int kMaxDrawn   = 4;
+    static constexpr float kDrawSize = 2.0 / kMaxDrawn;
+    GLfloat mInstanceData[kMaxDrawn];
 
-        // Clear the color buffer
-        glClear(GL_COLOR_BUFFER_BIT);
+    // clang-format off
 
-        // Use the program object
-        glUseProgram(mProgram);
-    }
+    // Vertices 0-5 are two triangles that form a quad filling the first "slice" of the window.
+    // See above about slices.  Vertices 4-9 are the same two triangles.
+    static constexpr GLfloat kQuadVertices[] = {
+        -1, -1,
+         1, -1,
+        -1, -1 + kDrawSize,
+         1, -1,
+         1, -1 + kDrawSize,
+        -1, -1 + kDrawSize,
+         1, -1,
+         1, -1,
+        -1, -1 + kDrawSize,
+        -1, -1,
+    };
 
-    void setupInstancedPointsTest()
-    {
-        mIndices.clear();
-        mIndices.push_back(0);
-        mIndices.push_back(1);
-        mIndices.push_back(2);
-        mIndices.push_back(3);
+    // Points 0-3 are spread across the first "slice."
+    // Points 2-4 are the same.
+    static constexpr GLfloat kPointVertices[] = {
+        -0.6f, -1 + kDrawSize / 2.0,
+        -0.2f, -1 + kDrawSize / 2.0,
+         0.2f, -1 + kDrawSize / 2.0,
+         0.6f, -1 + kDrawSize / 2.0,
+        -0.2f, -1 + kDrawSize / 2.0,
+        -0.6f, -1 + kDrawSize / 2.0,
+    };
+    // clang-format on
 
-        // clang-format off
-        const std::string vs =
-            "attribute vec3 a_position;\n"
-            "attribute vec3 a_instancePos;\n"
-            "void main()\n"
-            "{\n"
-            "    gl_Position  = vec4(a_position.xyz, 1.0);\n"
-            "    gl_Position  = vec4(a_instancePos.xyz, 1.0);\n"
-            "    gl_PointSize = 6.0;\n"
-            "}\n";
-        // clang-format on
+    // Same two triangles as described above.
+    static constexpr GLushort kQuadIndices[] = {2, 9, 7, 5, 6, 4};
 
-        mProgram = CompileProgram(vs, essl1_shaders::fs::Red());
-        ASSERT_NE(0u, mProgram);
-
-        // Set the viewport
-        glViewport(0, 0, getWindowWidth(), getWindowHeight());
-
-        // Clear the color buffer
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Use the program object
-        glUseProgram(mProgram);
-    }
-
-    void runDrawArraysTest(GLint first, GLsizei count, GLsizei instanceCount, const float *offset)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, mInstances.size() * sizeof(mInstances[0]), &mInstances[0],
-                     GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        // Get the attribute locations
-        GLint positionLoc    = glGetAttribLocation(mProgram, "a_position");
-        GLint instancePosLoc = glGetAttribLocation(mProgram, "a_instancePos");
-
-        // Load the vertex position
-        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, mNonIndexedVertices.data());
-        glEnableVertexAttribArray(positionLoc);
-
-        // Load the instance position
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        glVertexAttribPointer(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glEnableVertexAttribArray(instancePosLoc);
-
-        // Enable instancing
-        glVertexAttribDivisorANGLE(instancePosLoc, 1);
-
-        // Offset
-        GLint uniformLoc = glGetUniformLocation(mProgram, "u_offset");
-        ASSERT_NE(-1, uniformLoc);
-        glUniform3fv(uniformLoc, 1, offset);
-
-        // Do the instanced draw
-        glDrawArraysInstancedANGLE(GL_TRIANGLES, first, count, instanceCount);
-
-        ASSERT_GL_NO_ERROR();
-    }
-
-    virtual void runDrawElementsTest(std::string vs, bool shouldAttribZeroBeInstanced)
-    {
-        const std::string fs =
-            "precision mediump float;\n"
-            "void main()\n"
-            "{\n"
-            "    gl_FragColor = vec4(1.0, 0, 0, 1.0);\n"
-            "}\n";
-
-        ANGLE_GL_PROGRAM(program, vs, fs);
-
-        // Get the attribute locations
-        GLint positionLoc    = glGetAttribLocation(program, "a_position");
-        GLint instancePosLoc = glGetAttribLocation(program, "a_instancePos");
-
-        // If this ASSERT fails then the vertex shader code should be refactored
-        ASSERT_EQ(shouldAttribZeroBeInstanced, (instancePosLoc == 0));
-
-        // Set the viewport
-        glViewport(0, 0, getWindowWidth(), getWindowHeight());
-
-        // Clear the color buffer
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Use the program object
-        glUseProgram(program);
-
-        // Load the vertex position
-        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, mQuadVertices.data());
-        glEnableVertexAttribArray(positionLoc);
-
-        // Load the instance position
-        glVertexAttribPointer(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0, mInstances.data());
-        glEnableVertexAttribArray(instancePosLoc);
-
-        // Enable instancing
-        glVertexAttribDivisorANGLE(instancePosLoc, 1);
-
-        // Do the instanced draw
-        glDrawElementsInstancedANGLE(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()),
-                                     GL_UNSIGNED_SHORT, mIndices.data(),
-                                     static_cast<GLsizei>(mInstances.size()) / 3);
-
-        ASSERT_GL_NO_ERROR();
-
-        checkQuads();
-    }
-
-    void checkQuads()
-    {
-        // Check that various pixels are the expected color.
-        for (unsigned int quadIndex = 0; quadIndex < 4; ++quadIndex)
-        {
-            unsigned int baseOffset = quadIndex * 3;
-
-            int quadx =
-                static_cast<int>(((mInstances[baseOffset + 0]) * 0.5f + 0.5f) * getWindowWidth());
-            int quady =
-                static_cast<int>(((mInstances[baseOffset + 1]) * 0.5f + 0.5f) * getWindowHeight());
-
-            EXPECT_PIXEL_EQ(quadx, quady, 255, 0, 0, 255);
-        }
-    }
-
-    // Vertex data
-    std::vector<GLfloat> mQuadVertices;
-    std::vector<GLfloat> mNonIndexedVertices;
-    std::vector<GLfloat> mTexcoords;
-    std::vector<GLfloat> mInstances;
-    std::vector<GLushort> mIndices;
-
-    static constexpr GLfloat quadRadius = 0.30f;
-
-    GLuint mProgram;
-    GLuint mVertexBuffer;
+    // Same four points as described above.
+    static constexpr GLushort kPointIndices[] = {1, 5, 3, 2};
 };
+
+constexpr GLfloat InstancingTest::kQuadVertices[];
+constexpr GLfloat InstancingTest::kPointVertices[];
+constexpr GLushort InstancingTest::kQuadIndices[];
+constexpr GLushort InstancingTest::kPointIndices[];
 
 class InstancingTestAllConfigs : public InstancingTest
 {
@@ -274,15 +211,8 @@ TEST_P(InstancingTestAllConfigs, AttributeZeroInstanced)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
 
-    const std::string vs =
-        "attribute vec3 a_instancePos;\n"
-        "attribute vec3 a_position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(a_position.xyz + a_instancePos.xyz, 1.0);\n"
-        "}\n";
-
-    runDrawElementsTest(vs, true);
+    runTest(4, 1, true /* attrib 0 instanced */, false /* quads */, true /* DrawElements */,
+            false /* N/A */, false /* no buffer */);
 }
 
 // Same as AttributeZeroInstanced, but attribute zero is not instanced.
@@ -292,15 +222,8 @@ TEST_P(InstancingTestAllConfigs, AttributeZeroNotInstanced)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
 
-    const std::string vs =
-        "attribute vec3 a_position;\n"
-        "attribute vec3 a_instancePos;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(a_position.xyz + a_instancePos.xyz, 1.0);\n"
-        "}\n";
-
-    runDrawElementsTest(vs, false);
+    runTest(4, 1, false /* attrib 1 instanced */, false /* quads */, true /* DrawElements */,
+            false /* N/A */, false /* no buffer */);
 }
 
 // Tests that the "first" parameter to glDrawArraysInstancedANGLE is only an offset into
@@ -309,24 +232,8 @@ TEST_P(InstancingTestNo9_3, DrawArraysWithOffset)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
 
-    const std::string vs =
-        "attribute vec3 a_position;\n"
-        "attribute vec3 a_instancePos;\n"
-        "uniform vec3 u_offset;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(a_position.xyz + a_instancePos.xyz + u_offset, 1.0);\n"
-        "}\n";
-
-    setupDrawArraysTest(vs);
-
-    constexpr float offset1[3] = {0, 0, 0};
-    runDrawArraysTest(0, 6, 2, offset1);
-
-    constexpr float offset2[3] = {0.0f, 1.0f, 0};
-    runDrawArraysTest(6, 6, 2, offset2);
-
-    checkQuads();
+    runTest(4, 1, false /* attribute 1 instanced */, false /* quads */, false /* DrawArrays */,
+            true /* offset>0 */, true /* buffer */);
 }
 
 // This test verifies instancing with GL_POINTS with glDrawArraysInstanced works.
@@ -340,37 +247,8 @@ TEST_P(InstancingTestPoints, DrawArrays)
     // This doesn't occur on Windows 10 (Version 1511) though.
     ignoreD3D11SDKLayersWarnings();
 
-    setupInstancedPointsTest();
-
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mInstances.size() * sizeof(mInstances[0]), &mInstances[0],
-                 GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Get the attribute locations
-    GLint positionLoc    = glGetAttribLocation(mProgram, "a_position");
-    GLint instancePosLoc = glGetAttribLocation(mProgram, "a_instancePos");
-
-    // Load the vertex position
-    constexpr GLfloat pos[3] = {0, 0, 0};
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, pos);
-    glEnableVertexAttribArray(positionLoc);
-
-    // Load the instance position
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glVertexAttribPointer(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glEnableVertexAttribArray(instancePosLoc);
-
-    // Enable instancing
-    glVertexAttribDivisorANGLE(instancePosLoc, 1);
-
-    // Do the instanced draw
-    glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, static_cast<GLsizei>(mInstances.size()) / 3);
-
-    ASSERT_GL_NO_ERROR();
-
-    checkQuads();
+    runTest(4, 1, false /* attrib 1 instanced */, true /* points */, false /* DrawArrays */,
+            false /* offset=0 */, true /* buffer */);
 }
 
 // This test verifies instancing with GL_POINTS with glDrawElementsInstanced works.
@@ -384,39 +262,8 @@ TEST_P(InstancingTestPoints, DrawElements)
     // This doesn't occur on Windows 10 (Version 1511) though.
     ignoreD3D11SDKLayersWarnings();
 
-    setupInstancedPointsTest();
-
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mInstances.size() * sizeof(mInstances[0]), &mInstances[0],
-                 GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Get the attribute locations
-    GLint positionLoc    = glGetAttribLocation(mProgram, "a_position");
-    GLint instancePosLoc = glGetAttribLocation(mProgram, "a_instancePos");
-
-    // Load the vertex position
-    const Vector3 pos[] = {Vector3(0), Vector3(0), Vector3(0), Vector3(0)};
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, pos);
-    glEnableVertexAttribArray(positionLoc);
-
-    // Load the instance position
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glVertexAttribPointer(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glEnableVertexAttribArray(instancePosLoc);
-
-    // Enable instancing
-    glVertexAttribDivisorANGLE(instancePosLoc, 1);
-
-    // Do the instanced draw
-    glDrawElementsInstancedANGLE(GL_POINTS, static_cast<GLsizei>(mIndices.size()),
-                                 GL_UNSIGNED_SHORT, mIndices.data(),
-                                 static_cast<GLsizei>(mInstances.size()) / 3);
-
-    ASSERT_GL_NO_ERROR();
-
-    checkQuads();
+    runTest(4, 1, false /* attrib 1 instanced */, true /* points */, true /* DrawElements */,
+            false /* N/A */, true /* buffer */);
 }
 
 class InstancingTestES3 : public InstancingTest
@@ -436,29 +283,11 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
 
-    const std::string vs =
-        "attribute vec3 a_instancePos;\n"
-        "attribute vec3 a_position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(a_position.xyz + a_instancePos.xyz, 1.0);\n"
-        "}\n";
-
-    const std::string fs =
-        "precision mediump float;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1.0, 0, 0, 1.0);\n"
-        "}\n";
-
-    constexpr GLsizei kFloatStride = 4;
-
-    ANGLE_GL_PROGRAM(program, vs, fs);
-    glUseProgram(program);
+    glUseProgram(mProgram0);
 
     // Get the attribute locations
-    GLint positionLoc    = glGetAttribLocation(program, "a_position");
-    GLint instancePosLoc = glGetAttribLocation(program, "a_instancePos");
+    GLint positionLoc    = glGetAttribLocation(mProgram0, "a_position");
+    GLint instancePosLoc = glGetAttribLocation(mProgram0, "a_instance");
     ASSERT_NE(-1, positionLoc);
     ASSERT_NE(-1, instancePosLoc);
     ASSERT_GL_NO_ERROR();
@@ -469,16 +298,16 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
 
     GLBuffer quadBuffer;
     glBindBuffer(GL_ARRAY_BUFFER, quadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mQuadVertices.size() * kFloatStride, mQuadVertices.data(),
-                 GL_STATIC_DRAW);
-    GLBuffer instancesBuffer;
-    glBindBuffer(GL_ARRAY_BUFFER, instancesBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mInstances.size() * kFloatStride, mInstances.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kQuadVertices), kQuadVertices, GL_STATIC_DRAW);
+
+    const unsigned numInstance = 4;
+    const unsigned divisor     = 1;
+    const unsigned lastDrawn   = (numInstance - 1) / divisor;
+    ASSERT(lastDrawn < kMaxDrawn);
 
     // Set the formats by VertexAttribFormat
-    glVertexAttribFormat(positionLoc, 3, GL_FLOAT, GL_FALSE, 0);
-    glVertexAttribFormat(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0);
+    glVertexAttribFormat(positionLoc, 2, GL_FLOAT, GL_FALSE, 0);
+    glVertexAttribFormat(instancePosLoc, 1, GL_FLOAT, GL_FALSE, 0);
     glEnableVertexAttribArray(positionLoc);
     glEnableVertexAttribArray(instancePosLoc);
 
@@ -487,8 +316,8 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
 
     // Load the vertex position into the binding indexed positionBinding (== instancePosLoc)
     // Load the instance position into the binding indexed instanceBinding (== positionLoc)
-    glBindVertexBuffer(positionBinding, quadBuffer, 0, kFloatStride * 3);
-    glBindVertexBuffer(instanceBinding, instancesBuffer, 0, kFloatStride * 3);
+    glBindVertexBuffer(positionBinding, quadBuffer, 0, 2 * sizeof(kQuadVertices[0]));
+    glBindVertexBuffer(instanceBinding, mInstanceBuffer, 0, sizeof(mInstanceData[0]));
 
     // The attribute indexed positionLoc is using the binding indexed positionBinding
     // The attribute indexed instancePosLoc is using the binding indexed instanceBinding
@@ -496,34 +325,34 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
     glVertexAttribBinding(instancePosLoc, instanceBinding);
 
     // Enable instancing on the binding indexed instanceBinding
-    glVertexBindingDivisor(instanceBinding, 1);
+    glVertexBindingDivisor(instanceBinding, divisor);
 
     // Do the first instanced draw
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()), GL_UNSIGNED_SHORT,
-                            mIndices.data(), static_cast<GLsizei>(mInstances.size()) / 3);
-    checkQuads();
+    glDrawElementsInstanced(GL_TRIANGLES, ArraySize(kQuadIndices), GL_UNSIGNED_SHORT, kQuadIndices,
+                            numInstance);
+    checkDrawing(lastDrawn);
 
     // Disable instancing.
     glVertexBindingDivisor(instanceBinding, 0);
 
     // Load the vertex position into the binding indexed positionLoc.
     // Load the instance position into the binding indexed instancePosLoc.
-    glBindVertexBuffer(positionLoc, quadBuffer, 0, kFloatStride * 3);
-    glBindVertexBuffer(instancePosLoc, instancesBuffer, 0, kFloatStride * 3);
+    glBindVertexBuffer(positionLoc, quadBuffer, 0, 2 * sizeof(kQuadVertices[0]));
+    glBindVertexBuffer(instancePosLoc, mInstanceBuffer, 0, sizeof(mInstanceData[0]));
 
     // The attribute indexed positionLoc is using the binding indexed positionLoc.
     glVertexAttribBinding(positionLoc, positionLoc);
 
     // Call VertexAttribDivisor to both enable instancing on instancePosLoc and set the attribute
     // indexed instancePosLoc using the binding indexed instancePosLoc.
-    glVertexAttribDivisor(instancePosLoc, 1);
+    glVertexAttribDivisor(instancePosLoc, divisor);
 
     // Do the second instanced draw
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()), GL_UNSIGNED_SHORT,
-                            mIndices.data(), static_cast<GLsizei>(mInstances.size()) / 3);
-    checkQuads();
+    glDrawElementsInstanced(GL_TRIANGLES, ArraySize(kQuadIndices), GL_UNSIGNED_SHORT, kQuadIndices,
+                            numInstance);
+    checkDrawing(lastDrawn);
 
     glDeleteVertexArrays(1, &vao);
 }
