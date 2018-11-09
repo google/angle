@@ -643,13 +643,13 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->copyImageDataToBuffer(contextVk, sourceLevel, 1, sourceArea, &sourceData));
 
-    // Using the front-end ANGLE format for the colorRead and colorWrite functions.  Otherwise
-    // emulated formats like luminance-alpha would not know how to interpret the data.
-    const angle::Format &sourceAngleFormat = source->getImage().getFormat().angleFormat();
-    const angle::Format &destAngleFormat =
-        renderer->getFormat(destFormat.sizedInternalFormat).angleFormat();
+    const vk::Format &sourceVkFormat = source->getImage().getFormat();
+    const vk::Format &destVkFormat   = renderer->getFormat(destFormat.sizedInternalFormat);
+
+    const angle::Format &sourceTextureFormat = sourceVkFormat.textureFormat();
+    const angle::Format &destTextureFormat   = destVkFormat.textureFormat();
     size_t destinationAllocationSize =
-        sourceArea.width * sourceArea.height * destAngleFormat.pixelBytes;
+        sourceArea.width * sourceArea.height * destTextureFormat.pixelBytes;
 
     // Allocate memory in the destination texture for the copy/conversion
     uint8_t *destData = nullptr;
@@ -658,14 +658,30 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
         gl::Extents(sourceArea.width, sourceArea.height, 1), destOffset, &destData));
 
     // Source and dest data is tightly packed
-    GLuint sourceDataRowPitch = sourceArea.width * sourceAngleFormat.pixelBytes;
-    GLuint destDataRowPitch   = sourceArea.width * destAngleFormat.pixelBytes;
+    GLuint sourceDataRowPitch = sourceArea.width * sourceTextureFormat.pixelBytes;
+    GLuint destDataRowPitch   = sourceArea.width * destTextureFormat.pixelBytes;
 
-    CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceAngleFormat.pixelBytes, 0,
-                      sourceAngleFormat.pixelReadFunction, destData, destDataRowPitch,
-                      destAngleFormat.pixelBytes, 0, destAngleFormat.pixelWriteFunction,
-                      destFormat.format, destFormat.componentType, sourceArea.width,
-                      sourceArea.height, 1, unpackFlipY, unpackPremultiplyAlpha,
+    rx::PixelReadFunction pixelReadFunction   = sourceTextureFormat.pixelReadFunction;
+    rx::PixelWriteFunction pixelWriteFunction = destTextureFormat.pixelWriteFunction;
+
+    // Fix up the read/write functions for the sake of luminance/alpha that are emulated with
+    // formats whose channels don't correspond to the original format (alpha is emulated with red,
+    // and luminance/alpha is emulated with red/green).
+    GLenum sourceInternalFormat = sourceVkFormat.internalFormat;
+    GLenum destInternalFormat   = destVkFormat.internalFormat;
+    if (gl::GetSizedInternalFormatInfo(sourceInternalFormat).isLUMA())
+    {
+        pixelReadFunction = sourceVkFormat.angleFormat().pixelReadFunction;
+    }
+    if (gl::GetSizedInternalFormatInfo(destInternalFormat).isLUMA())
+    {
+        pixelWriteFunction = destVkFormat.angleFormat().pixelWriteFunction;
+    }
+
+    CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceTextureFormat.pixelBytes, 0,
+                      pixelReadFunction, destData, destDataRowPitch, destTextureFormat.pixelBytes,
+                      0, pixelWriteFunction, destFormat.format, destFormat.componentType,
+                      sourceArea.width, sourceArea.height, 1, unpackFlipY, unpackPremultiplyAlpha,
                       unpackUnmultiplyAlpha);
 
     // Create a new graph node to store image initialization commands.
