@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "64ab158f_c2f144ec",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-11-09T10:46:40Z",
+      "side": 1,
+      "message": "nit: you can use std::max",
+      "range": {
+        "startLine": 325,
+        "startChar": 8,
+        "endLine": 325,
+        "endChar": 90
+      },
+      "revId": "41d8867cbec9a365910e04a6ea71afa98977f3ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97ddd542_473ea0f0",
         "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
         "patchSetId": 4
