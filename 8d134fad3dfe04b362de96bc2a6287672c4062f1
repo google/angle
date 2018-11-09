@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "83dc3840_a5aeb6ef",
+        "filename": "additional_readme_paths.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-11-09T19:21:57Z",
+      "side": 1,
+      "message": "I was thinking of smhasher, but that\u0027s already there in Chrome. Not sure about any of the stuff in angle/third_party",
+      "parentUuid": "90ec32b1_f578818d",
+      "revId": "8d134fad3dfe04b362de96bc2a6287672c4062f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ad102294_e106ce79",
         "filename": "src/libANGLE/SizedMRUCache.h",
         "patchSetId": 9
