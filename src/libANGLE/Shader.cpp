@@ -369,6 +369,7 @@ void Shader::compile(const Context *context)
         options |= SH_LIMIT_CALL_STACK_DEPTH;
         options |= SH_LIMIT_EXPRESSION_COMPLEXITY;
         options |= SH_ENFORCE_PACKING_RESTRICTIONS;
+        options |= SH_INIT_SHARED_VARIABLES;
     }
 
     // Some targets (eg D3D11 Feature Level 9_3 and below) do not support non-constant loop indexes

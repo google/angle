@@ -79,6 +79,12 @@ class ComputeShaderTestES3 : public ANGLETest
     ComputeShaderTestES3() {}
 };
 
+class WebGL2ComputeTest : public ComputeShaderTest
+{
+  protected:
+    WebGL2ComputeTest() { setWebGLCompatibilityEnabled(true); }
+};
+
 // link a simple compute program. It should be successful.
 TEST_P(ComputeShaderTest, LinkComputeProgram)
 {
@@ -2275,7 +2281,48 @@ TEST_P(ComputeShaderTestES3, NotSupported)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
+// The contents of shared variables should be cleared to zero at the beginning of shader execution.
+TEST_P(WebGL2ComputeTest, sharedVariablesShouldBeZero)
+{
+    const char kCSShader[] =
+        R"(#version 310 es
+        layout (local_size_x = 4, local_size_y = 4, local_size_z = 1) in;
+        layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
+        layout (r32ui, binding = 1) writeonly uniform highp uimage2D dstImage;
+        struct S {
+            float f;
+            int i;
+            uint u;
+            bool b;
+            vec4 v[64];
+        };
+
+        shared S vars[16];
+        void main()
+        {
+            S zeroS;
+            zeroS.f = 0.0f;
+            zeroS.i = 0;
+            zeroS.u = 0u;
+            zeroS.b = false;
+            for (int i = 0; i < 64; i++)
+            {
+                zeroS.v[i] = vec4(0.0f);
+            }
+
+            uint tid = gl_LocalInvocationID.x + gl_LocalInvocationID.y * 4u;
+            uint value = (zeroS == vars[tid] ? 127u : 0u);
+            imageStore(dstImage, ivec2(gl_LocalInvocationID.xy), uvec4(value));
+        })";
+
+    const std::array<GLuint, 16> inputData = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+    const std::array<GLuint, 16> expectedValues = {
+        {127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127}};
+    runSharedMemoryTest<GLuint, 4, 4>(kCSShader, GL_R32UI, GL_UNSIGNED_INT, inputData,
+                                      expectedValues);
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
-
+ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11());
 }  // namespace
