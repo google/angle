@@ -267,7 +267,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     // Keep a cached pipeline description structure that can be used to query the pipeline cache.
     // Kept in a pointer so allocations can be aligned, and structs can be portably packed.
-    std::unique_ptr<vk::PipelineDesc> mPipelineDesc;
+    std::unique_ptr<vk::GraphicsPipelineDesc> mGraphicsPipelineDesc;
 
     // The descriptor pools are externally sychronized, so cannot be accessed from different
     // threads simultaneously. Hence, we keep them in the ContextVk instead of the RendererVk.

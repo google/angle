@@ -243,20 +243,20 @@ constexpr size_t kShaderStageInfoSize       = sizeof(ShaderStageInfo);
 constexpr size_t kVertexInputBindingsSize   = sizeof(VertexInputBindings);
 constexpr size_t kVertexInputAttributesSize = sizeof(VertexInputAttributes);
 
-class PipelineDesc final
+class GraphicsPipelineDesc final
 {
   public:
     // Use aligned allocation and free so we can use the alignas keyword.
     void *operator new(std::size_t size);
     void operator delete(void *ptr);
 
-    PipelineDesc();
-    ~PipelineDesc();
-    PipelineDesc(const PipelineDesc &other);
-    PipelineDesc &operator=(const PipelineDesc &other);
+    GraphicsPipelineDesc();
+    ~GraphicsPipelineDesc();
+    GraphicsPipelineDesc(const GraphicsPipelineDesc &other);
+    GraphicsPipelineDesc &operator=(const GraphicsPipelineDesc &other);
 
     size_t hash() const;
-    bool operator==(const PipelineDesc &other) const;
+    bool operator==(const GraphicsPipelineDesc &other) const;
 
     void initDefaults();
 
@@ -334,13 +334,13 @@ class PipelineDesc final
 // This is not guaranteed by the spec, but is validated by a compile-time check.
 // No gaps or padding at the end ensures that hashing and memcmp checks will not run
 // into uninitialized memory regions.
-constexpr size_t kPipelineDescSumOfSizes =
+constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kShaderStageInfoSize + kVertexInputBindingsSize + kVertexInputAttributesSize +
     kPackedInputAssemblyAndColorBlendStateSize + kPackedRasterizationAndMultisampleStateSize +
     kPackedDepthStencilStateSize + kRenderPassDescSize;
 
-static constexpr size_t kPipelineDescSize = sizeof(PipelineDesc);
-static_assert(kPipelineDescSize == kPipelineDescSumOfSizes, "Size mismatch");
+static constexpr size_t kGraphicsPipelineDescSize = sizeof(GraphicsPipelineDesc);
+static_assert(kGraphicsPipelineDescSize == kGraphicsPipelineDescSumOfSizes, "Size mismatch");
 
 constexpr uint32_t kMaxDescriptorSetLayoutBindings = gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES;
 
@@ -348,8 +348,8 @@ using DescriptorSetLayoutBindingVector =
     angle::FixedVector<VkDescriptorSetLayoutBinding, kMaxDescriptorSetLayoutBindings>;
 
 // A packed description of a descriptor set layout. Use similarly to RenderPassDesc and
-// PipelineDesc. Currently we only need to differentiate layouts based on sampler usage. In the
-// future we could generalize this.
+// GraphicsPipelineDesc. Currently we only need to differentiate layouts based on sampler usage. In
+// the future we could generalize this.
 class DescriptorSetLayoutDesc final
 {
   public:
@@ -454,9 +454,9 @@ struct hash<rx::vk::AttachmentOpsArray>
 };
 
 template <>
-struct hash<rx::vk::PipelineDesc>
+struct hash<rx::vk::GraphicsPipelineDesc>
 {
-    size_t operator()(const rx::vk::PipelineDesc &key) const { return key.hash(); }
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const { return key.hash(); }
 };
 
 template <>
@@ -503,15 +503,15 @@ class RenderPassCache final : angle::NonCopyable
 };
 
 // TODO(jmadill): Add cache trimming/eviction.
-class PipelineCache final : angle::NonCopyable
+class GraphicsPipelineCache final : angle::NonCopyable
 {
   public:
-    PipelineCache();
-    ~PipelineCache();
+    GraphicsPipelineCache();
+    ~GraphicsPipelineCache();
 
     void destroy(VkDevice device);
 
-    void populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline);
+    void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
     angle::Result getPipeline(vk::Context *context,
                               const vk::PipelineCache &pipelineCacheVk,
                               const vk::RenderPass &compatibleRenderPass,
@@ -519,11 +519,11 @@ class PipelineCache final : angle::NonCopyable
                               const gl::AttributesMask &activeAttribLocationsMask,
                               const vk::ShaderModule &vertexModule,
                               const vk::ShaderModule &fragmentModule,
-                              const vk::PipelineDesc &desc,
+                              const vk::GraphicsPipelineDesc &desc,
                               vk::PipelineAndSerial **pipelineOut);
 
   private:
-    std::unordered_map<vk::PipelineDesc, vk::PipelineAndSerial> mPayload;
+    std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineAndSerial> mPayload;
 };
 
 class DescriptorSetLayoutCache final : angle::NonCopyable

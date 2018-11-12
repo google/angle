@@ -330,7 +330,7 @@ void RendererVk::onDestroy(vk::Context *context)
     mDescriptorSetLayoutCache.destroy(mDevice);
 
     mRenderPassCache.destroy(mDevice);
-    mPipelineCache.destroy(mDevice);
+    mGraphicsPipelineCache.destroy(mDevice);
     mPipelineCacheVk.destroy(mDevice);
     mSubmitSemaphorePool.destroy(mDevice);
     mShaderLibrary.destroy(mDevice);
@@ -1143,7 +1143,7 @@ angle::Result RendererVk::getPipeline(vk::Context *context,
                                       const vk::ShaderAndSerial &vertexShader,
                                       const vk::ShaderAndSerial &fragmentShader,
                                       const vk::PipelineLayout &pipelineLayout,
-                                      const vk::PipelineDesc &pipelineDesc,
+                                      const vk::GraphicsPipelineDesc &pipelineDesc,
                                       const gl::AttributesMask &activeAttribLocationsMask,
                                       vk::PipelineAndSerial **pipelineOut)
 {
@@ -1157,9 +1157,9 @@ angle::Result RendererVk::getPipeline(vk::Context *context,
     ANGLE_TRY(
         getCompatibleRenderPass(context, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
 
-    return mPipelineCache.getPipeline(context, mPipelineCacheVk, *compatibleRenderPass,
-                                      pipelineLayout, activeAttribLocationsMask, vertexShader.get(),
-                                      fragmentShader.get(), pipelineDesc, pipelineOut);
+    return mGraphicsPipelineCache.getPipeline(
+        context, mPipelineCacheVk, *compatibleRenderPass, pipelineLayout, activeAttribLocationsMask,
+        vertexShader.get(), fragmentShader.get(), pipelineDesc, pipelineOut);
 }
 
 angle::Result RendererVk::getDescriptorSetLayout(

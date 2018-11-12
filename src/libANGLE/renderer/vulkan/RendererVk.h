@@ -136,7 +136,7 @@ class RendererVk : angle::NonCopyable
                               const vk::ShaderAndSerial &vertexShader,
                               const vk::ShaderAndSerial &fragmentShader,
                               const vk::PipelineLayout &pipelineLayout,
-                              const vk::PipelineDesc &pipelineDesc,
+                              const vk::GraphicsPipelineDesc &pipelineDesc,
                               const gl::AttributesMask &activeAttribLocationsMask,
                               vk::PipelineAndSerial **pipelineOut);
 
@@ -269,7 +269,7 @@ class RendererVk : angle::NonCopyable
     vk::FormatTable mFormatTable;
 
     RenderPassCache mRenderPassCache;
-    PipelineCache mPipelineCache;
+    GraphicsPipelineCache mGraphicsPipelineCache;
 
     vk::PipelineCache mPipelineCacheVk;
     egl::BlobCache::Key mPipelineCacheVkBlobKey;

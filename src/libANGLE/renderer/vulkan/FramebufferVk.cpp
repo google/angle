@@ -1043,7 +1043,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     bool invertViewport             = contextVk->isViewportFlipEnabledForDrawFBO();
 
     // This pipeline desc could be cached.
-    vk::PipelineDesc pipelineDesc;
+    vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
     pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
     pipelineDesc.updateRenderPassDesc(getRenderPassDesc());

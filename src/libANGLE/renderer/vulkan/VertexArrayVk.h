@@ -36,7 +36,7 @@ class VertexArrayVk : public VertexArrayImpl
                             const gl::VertexArray::DirtyAttribBitsArray &attribBits,
                             const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
-    void getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc);
+    void getPackedInputDescriptions(vk::GraphicsPipelineDesc *pipelineDesc);
 
     void updateDefaultAttrib(RendererVk *renderer,
                              size_t attribIndex,

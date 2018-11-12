@@ -347,49 +347,49 @@ bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs)
     return (memcmp(&lhs, &rhs, sizeof(RenderPassDesc)) == 0);
 }
 
-// PipelineDesc implementation.
+// GraphicsPipelineDesc implementation.
 // Use aligned allocation and free so we can use the alignas keyword.
-void *PipelineDesc::operator new(std::size_t size)
+void *GraphicsPipelineDesc::operator new(std::size_t size)
 {
     return angle::AlignedAlloc(size, 32);
 }
 
-void PipelineDesc::operator delete(void *ptr)
+void GraphicsPipelineDesc::operator delete(void *ptr)
 {
     return angle::AlignedFree(ptr);
 }
 
-PipelineDesc::PipelineDesc()
+GraphicsPipelineDesc::GraphicsPipelineDesc()
 {
-    memset(this, 0, sizeof(PipelineDesc));
+    memset(this, 0, sizeof(GraphicsPipelineDesc));
 }
 
-PipelineDesc::~PipelineDesc() = default;
+GraphicsPipelineDesc::~GraphicsPipelineDesc() = default;
 
-PipelineDesc::PipelineDesc(const PipelineDesc &other)
+GraphicsPipelineDesc::GraphicsPipelineDesc(const GraphicsPipelineDesc &other)
 {
-    memcpy(this, &other, sizeof(PipelineDesc));
+    memcpy(this, &other, sizeof(GraphicsPipelineDesc));
 }
 
-PipelineDesc &PipelineDesc::operator=(const PipelineDesc &other)
+GraphicsPipelineDesc &GraphicsPipelineDesc::operator=(const GraphicsPipelineDesc &other)
 {
-    memcpy(this, &other, sizeof(PipelineDesc));
+    memcpy(this, &other, sizeof(GraphicsPipelineDesc));
     return *this;
 }
 
-size_t PipelineDesc::hash() const
+size_t GraphicsPipelineDesc::hash() const
 {
     return angle::ComputeGenericHash(*this);
 }
 
-bool PipelineDesc::operator==(const PipelineDesc &other) const
+bool GraphicsPipelineDesc::operator==(const GraphicsPipelineDesc &other) const
 {
-    return (memcmp(this, &other, sizeof(PipelineDesc)) == 0);
+    return (memcmp(this, &other, sizeof(GraphicsPipelineDesc)) == 0);
 }
 
 // TODO(jmadill): We should prefer using Packed GLenums. http://anglebug.com/2169
 
-void PipelineDesc::initDefaults()
+void GraphicsPipelineDesc::initDefaults()
 {
     mRasterizationAndMultisampleStateInfo.depthClampEnable           = 0;
     mRasterizationAndMultisampleStateInfo.rasterizationDiscardEnable = 0;
@@ -468,14 +468,15 @@ void PipelineDesc::initDefaults()
     inputAndBlend.primitiveRestartEnable = 0;
 }
 
-angle::Result PipelineDesc::initializePipeline(vk::Context *context,
-                                               const vk::PipelineCache &pipelineCacheVk,
-                                               const RenderPass &compatibleRenderPass,
-                                               const PipelineLayout &pipelineLayout,
-                                               const gl::AttributesMask &activeAttribLocationsMask,
-                                               const ShaderModule &vertexModule,
-                                               const ShaderModule &fragmentModule,
-                                               Pipeline *pipelineOut) const
+angle::Result GraphicsPipelineDesc::initializePipeline(
+    vk::Context *context,
+    const vk::PipelineCache &pipelineCacheVk,
+    const RenderPass &compatibleRenderPass,
+    const PipelineLayout &pipelineLayout,
+    const gl::AttributesMask &activeAttribLocationsMask,
+    const ShaderModule &vertexModule,
+    const ShaderModule &fragmentModule,
+    Pipeline *pipelineOut) const
 {
     VkPipelineShaderStageCreateInfo shaderStages[2]           = {};
     VkPipelineVertexInputStateCreateInfo vertexInputState     = {};
@@ -671,12 +672,12 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     return angle::Result::Continue();
 }
 
-const ShaderStageInfo &PipelineDesc::getShaderStageInfo() const
+const ShaderStageInfo &GraphicsPipelineDesc::getShaderStageInfo() const
 {
     return mShaderStageInfo;
 }
 
-void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
+void GraphicsPipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
 {
     ASSERT(vertexSerial < std::numeric_limits<uint32_t>::max());
     mShaderStageInfo[ShaderType::VertexShader].moduleSerial =
@@ -686,42 +687,43 @@ void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
         static_cast<uint32_t>(fragmentSerial.getValue());
 }
 
-void PipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
-                                         const VertexInputAttributes &attribs)
+void GraphicsPipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
+                                                 const VertexInputAttributes &attribs)
 {
     mVertexInputBindings = bindings;
     mVertexInputAttribs  = attribs;
 }
 
-void PipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
+void GraphicsPipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
 {
     mInputAssembltyAndColorBlendStateInfo.topology =
         static_cast<uint32_t>(gl_vk::GetPrimitiveTopology(drawMode));
 }
 
-void PipelineDesc::updateCullMode(const gl::RasterizerState &rasterState)
+void GraphicsPipelineDesc::updateCullMode(const gl::RasterizerState &rasterState)
 {
     mRasterizationAndMultisampleStateInfo.cullMode =
         static_cast<uint16_t>(gl_vk::GetCullMode(rasterState));
 }
 
-void PipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState, bool invertFrontFace)
+void GraphicsPipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState,
+                                           bool invertFrontFace)
 {
     mRasterizationAndMultisampleStateInfo.frontFace =
         static_cast<uint16_t>(gl_vk::GetFrontFace(rasterState.frontFace, invertFrontFace));
 }
 
-void PipelineDesc::updateLineWidth(float lineWidth)
+void GraphicsPipelineDesc::updateLineWidth(float lineWidth)
 {
     mRasterizationAndMultisampleStateInfo.lineWidth = lineWidth;
 }
 
-const RenderPassDesc &PipelineDesc::getRenderPassDesc() const
+const RenderPassDesc &GraphicsPipelineDesc::getRenderPassDesc() const
 {
     return mRenderPassDesc;
 }
 
-void PipelineDesc::updateBlendColor(const gl::ColorF &color)
+void GraphicsPipelineDesc::updateBlendColor(const gl::ColorF &color)
 {
     mInputAssembltyAndColorBlendStateInfo.blendConstants[0] = color.red;
     mInputAssembltyAndColorBlendStateInfo.blendConstants[1] = color.green;
@@ -729,7 +731,7 @@ void PipelineDesc::updateBlendColor(const gl::ColorF &color)
     mInputAssembltyAndColorBlendStateInfo.blendConstants[3] = color.alpha;
 }
 
-void PipelineDesc::updateBlendEnabled(bool isBlendEnabled)
+void GraphicsPipelineDesc::updateBlendEnabled(bool isBlendEnabled)
 {
     gl::DrawBufferMask blendEnabled;
     if (isBlendEnabled)
@@ -738,7 +740,7 @@ void PipelineDesc::updateBlendEnabled(bool isBlendEnabled)
         static_cast<uint8_t>(blendEnabled.bits());
 }
 
-void PipelineDesc::updateBlendEquations(const gl::BlendState &blendState)
+void GraphicsPipelineDesc::updateBlendEquations(const gl::BlendState &blendState)
 {
     for (PackedColorBlendAttachmentState &blendAttachmentState :
          mInputAssembltyAndColorBlendStateInfo.attachments)
@@ -748,7 +750,7 @@ void PipelineDesc::updateBlendEquations(const gl::BlendState &blendState)
     }
 }
 
-void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
+void GraphicsPipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
 {
     for (PackedColorBlendAttachmentState &blendAttachmentState :
          mInputAssembltyAndColorBlendStateInfo.attachments)
@@ -760,8 +762,8 @@ void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
     }
 }
 
-void PipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlags,
-                                        const gl::DrawBufferMask &alphaMask)
+void GraphicsPipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlags,
+                                                const gl::DrawBufferMask &alphaMask)
 {
     PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend =
         mInputAssembltyAndColorBlendStateInfo;
@@ -774,8 +776,8 @@ void PipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlag
     }
 }
 
-void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState,
-                                          const gl::Framebuffer *drawFramebuffer)
+void GraphicsPipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState,
+                                                  const gl::Framebuffer *drawFramebuffer)
 {
     // Only enable the depth test if the draw framebuffer has a depth buffer.  It's possible that
     // we're emulating a stencil-only buffer with a depth-stencil buffer
@@ -783,21 +785,21 @@ void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthSten
         static_cast<uint8_t>(depthStencilState.depthTest && drawFramebuffer->hasDepth());
 }
 
-void PipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.depthCompareOp = PackGLCompareFunc(depthStencilState.depthFunc);
 }
 
-void PipelineDesc::updateDepthWriteEnabled(const gl::DepthStencilState &depthStencilState,
-                                           const gl::Framebuffer *drawFramebuffer)
+void GraphicsPipelineDesc::updateDepthWriteEnabled(const gl::DepthStencilState &depthStencilState,
+                                                   const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to depth buffers that should not exist
     mDepthStencilStateInfo.depthWriteEnable =
         static_cast<uint8_t>(drawFramebuffer->hasDepth() ? depthStencilState.depthMask : 0);
 }
 
-void PipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState,
-                                            const gl::Framebuffer *drawFramebuffer)
+void GraphicsPipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState,
+                                                    const gl::Framebuffer *drawFramebuffer)
 {
     // Only enable the stencil test if the draw framebuffer has a stencil buffer.  It's possible
     // that we're emulating a depth-only buffer with a depth-stencil buffer
@@ -805,15 +807,16 @@ void PipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthSt
         static_cast<uint8_t>(depthStencilState.stencilTest && drawFramebuffer->hasStencil());
 }
 
-void PipelineDesc::updateStencilFrontFuncs(GLint ref,
-                                           const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateStencilFrontFuncs(GLint ref,
+                                                   const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.frontStencilReference = static_cast<uint8_t>(ref);
     mDepthStencilStateInfo.front.compareOp   = PackGLCompareFunc(depthStencilState.stencilFunc);
     mDepthStencilStateInfo.front.compareMask = static_cast<uint8_t>(depthStencilState.stencilMask);
 }
 
-void PipelineDesc::updateStencilBackFuncs(GLint ref, const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateStencilBackFuncs(GLint ref,
+                                                  const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.backStencilReference = static_cast<uint8_t>(ref);
     mDepthStencilStateInfo.back.compareOp = PackGLCompareFunc(depthStencilState.stencilBackFunc);
@@ -821,7 +824,7 @@ void PipelineDesc::updateStencilBackFuncs(GLint ref, const gl::DepthStencilState
         static_cast<uint8_t>(depthStencilState.stencilBackMask);
 }
 
-void PipelineDesc::updateStencilFrontOps(const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateStencilFrontOps(const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.front.passOp = PackGLStencilOp(depthStencilState.stencilPassDepthPass);
     mDepthStencilStateInfo.front.failOp = PackGLStencilOp(depthStencilState.stencilFail);
@@ -829,7 +832,7 @@ void PipelineDesc::updateStencilFrontOps(const gl::DepthStencilState &depthStenc
         PackGLStencilOp(depthStencilState.stencilPassDepthFail);
 }
 
-void PipelineDesc::updateStencilBackOps(const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateStencilBackOps(const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.back.passOp =
         PackGLStencilOp(depthStencilState.stencilBackPassDepthPass);
@@ -838,34 +841,36 @@ void PipelineDesc::updateStencilBackOps(const gl::DepthStencilState &depthStenci
         PackGLStencilOp(depthStencilState.stencilBackPassDepthFail);
 }
 
-void PipelineDesc::updateStencilFrontWriteMask(const gl::DepthStencilState &depthStencilState,
-                                               const gl::Framebuffer *drawFramebuffer)
+void GraphicsPipelineDesc::updateStencilFrontWriteMask(
+    const gl::DepthStencilState &depthStencilState,
+    const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to stencil buffers that should not exist
     mDepthStencilStateInfo.front.writeMask = static_cast<uint8_t>(
         drawFramebuffer->hasStencil() ? depthStencilState.stencilWritemask : 0);
 }
 
-void PipelineDesc::updateStencilBackWriteMask(const gl::DepthStencilState &depthStencilState,
-                                              const gl::Framebuffer *drawFramebuffer)
+void GraphicsPipelineDesc::updateStencilBackWriteMask(
+    const gl::DepthStencilState &depthStencilState,
+    const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to stencil buffers that should not exist
     mDepthStencilStateInfo.back.writeMask = static_cast<uint8_t>(
         drawFramebuffer->hasStencil() ? depthStencilState.stencilBackWritemask : 0);
 }
 
-void PipelineDesc::updatePolygonOffsetFillEnabled(bool enabled)
+void GraphicsPipelineDesc::updatePolygonOffsetFillEnabled(bool enabled)
 {
     mRasterizationAndMultisampleStateInfo.depthBiasEnable = enabled;
 }
 
-void PipelineDesc::updatePolygonOffset(const gl::RasterizerState &rasterState)
+void GraphicsPipelineDesc::updatePolygonOffset(const gl::RasterizerState &rasterState)
 {
     mRasterizationAndMultisampleStateInfo.depthBiasSlopeFactor    = rasterState.polygonOffsetFactor;
     mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = rasterState.polygonOffsetUnits;
 }
 
-void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
+void GraphicsPipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
 {
     mRenderPassDesc = renderPassDesc;
 }
@@ -1127,15 +1132,15 @@ angle::Result RenderPassCache::getRenderPassWithOps(vk::Context *context,
     return angle::Result::Continue();
 }
 
-// PipelineCache implementation.
-PipelineCache::PipelineCache() = default;
+// GraphicsPipelineCache implementation.
+GraphicsPipelineCache::GraphicsPipelineCache() = default;
 
-PipelineCache::~PipelineCache()
+GraphicsPipelineCache::~GraphicsPipelineCache()
 {
     ASSERT(mPayload.empty());
 }
 
-void PipelineCache::destroy(VkDevice device)
+void GraphicsPipelineCache::destroy(VkDevice device)
 {
     for (auto &item : mPayload)
     {
@@ -1145,15 +1150,16 @@ void PipelineCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-angle::Result PipelineCache::getPipeline(vk::Context *context,
-                                         const vk::PipelineCache &pipelineCacheVk,
-                                         const vk::RenderPass &compatibleRenderPass,
-                                         const vk::PipelineLayout &pipelineLayout,
-                                         const gl::AttributesMask &activeAttribLocationsMask,
-                                         const vk::ShaderModule &vertexModule,
-                                         const vk::ShaderModule &fragmentModule,
-                                         const vk::PipelineDesc &desc,
-                                         vk::PipelineAndSerial **pipelineOut)
+angle::Result GraphicsPipelineCache::getPipeline(
+    vk::Context *context,
+    const vk::PipelineCache &pipelineCacheVk,
+    const vk::RenderPass &compatibleRenderPass,
+    const vk::PipelineLayout &pipelineLayout,
+    const gl::AttributesMask &activeAttribLocationsMask,
+    const vk::ShaderModule &vertexModule,
+    const vk::ShaderModule &fragmentModule,
+    const vk::GraphicsPipelineDesc &desc,
+    vk::PipelineAndSerial **pipelineOut)
 {
     auto item = mPayload.find(desc);
     if (item != mPayload.end())
@@ -1180,7 +1186,7 @@ angle::Result PipelineCache::getPipeline(vk::Context *context,
     return angle::Result::Continue();
 }
 
-void PipelineCache::populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline)
+void GraphicsPipelineCache::populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline)
 {
     auto item = mPayload.find(desc);
     if (item != mPayload.end())
