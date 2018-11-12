@@ -107,6 +107,8 @@ class CommandGraphNode final : angle::NonCopyable
 
     void setQueryPool(const QueryPool *queryPool, uint32_t queryIndex);
 
+    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess);
+
   private:
     void setHasChildren();
 
@@ -142,6 +144,10 @@ class CommandGraphNode final : angle::NonCopyable
     // Additional diagnostic information.
     CommandGraphResourceType mResourceType;
     uintptr_t mResourceID;
+
+    // For global memory barriers.
+    VkFlags mGlobalMemoryBarrierSrcAccess;
+    VkFlags mGlobalMemoryBarrierDstAccess;
 };
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
@@ -214,11 +220,17 @@ class RecordableGraphResource : public CommandGraphResource
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void finishCurrentCommands(RendererVk *renderer);
 
+    // Store a deferred memory barrier. Will be recorded into a primary command buffer at submit.
+    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
+    {
+        ASSERT(mCurrentWritingNode);
+        mCurrentWritingNode->addGlobalMemoryBarrier(srcAccess, dstAccess);
+    }
+
   protected:
     explicit RecordableGraphResource(CommandGraphResourceType resourceType);
 
   private:
-
     // Returns true if this node has a current writing node with no children.
     bool hasChildlessWritingNode() const
     {

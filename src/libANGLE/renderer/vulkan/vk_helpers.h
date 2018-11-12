@@ -369,6 +369,8 @@ class LineLoopHelper final : angle::NonCopyable
     DynamicBuffer mDynamicIndexBuffer;
 };
 
+class FramebufferHelper;
+
 class BufferHelper final : public RecordableGraphResource
 {
   public:
@@ -384,6 +386,14 @@ class BufferHelper final : public RecordableGraphResource
     const Buffer &getBuffer() const { return mBuffer; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
+    // Helper for setting the graph dependencies *and* setting the appropriate barrier.
+    void onFramebufferRead(FramebufferHelper *framebuffer, VkAccessFlagBits accessType);
+
+    // Also implicitly sets up the correct barriers.
+    angle::Result copyFromBuffer(ContextVk *contextVk,
+                                 const Buffer &buffer,
+                                 const VkBufferCopy &copyRegion);
+
   private:
     // Vulkan objects.
     Buffer mBuffer;
@@ -391,6 +401,10 @@ class BufferHelper final : public RecordableGraphResource
 
     // Cached properties.
     VkMemoryPropertyFlags mMemoryPropertyFlags;
+
+    // For memory barriers.
+    VkFlags mCurrentWriteAccess;
+    VkFlags mCurrentReadAccess;
 };
 
 class ImageHelper final : public RecordableGraphResource

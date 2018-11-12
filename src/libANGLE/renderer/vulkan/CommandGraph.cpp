@@ -33,17 +33,17 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
     ASSERT(!commandBuffer->valid());
 
     VkCommandBufferAllocateInfo createInfo = {};
-    createInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    createInfo.commandPool        = commandPool.getHandle();
-    createInfo.level              = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
-    createInfo.commandBufferCount = 1;
+    createInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    createInfo.commandPool                 = commandPool.getHandle();
+    createInfo.level                       = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+    createInfo.commandBufferCount          = 1;
 
     ANGLE_TRY(commandBuffer->init(context, createInfo));
 
     VkCommandBufferBeginInfo beginInfo = {};
-    beginInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.flags            = flags | VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    beginInfo.pInheritanceInfo = &inheritanceInfo;
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags                    = flags | VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    beginInfo.pInheritanceInfo         = &inheritanceInfo;
 
     ANGLE_TRY(commandBuffer->begin(context, beginInfo));
     return angle::Result::Continue();
@@ -297,7 +297,9 @@ CommandGraphNode::CommandGraphNode(CommandGraphNodeFunction function)
       mQueryPool(VK_NULL_HANDLE),
       mQueryIndex(0),
       mHasChildren(false),
-      mVisitedState(VisitedState::Unvisited)
+      mVisitedState(VisitedState::Unvisited),
+      mGlobalMemoryBarrierSrcAccess(0),
+      mGlobalMemoryBarrierDstAccess(0)
 {
 }
 
@@ -323,14 +325,14 @@ angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context
     ASSERT(!mHasChildren);
 
     VkCommandBufferInheritanceInfo inheritanceInfo = {};
-    inheritanceInfo.sType                = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-    inheritanceInfo.renderPass           = VK_NULL_HANDLE;
-    inheritanceInfo.subpass              = 0;
-    inheritanceInfo.framebuffer          = VK_NULL_HANDLE;
+    inheritanceInfo.sType       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+    inheritanceInfo.renderPass  = VK_NULL_HANDLE;
+    inheritanceInfo.subpass     = 0;
+    inheritanceInfo.framebuffer = VK_NULL_HANDLE;
     inheritanceInfo.occlusionQueryEnable =
         context->getRenderer()->getPhysicalDeviceFeatures().inheritedQueries;
-    inheritanceInfo.queryFlags           = 0;
-    inheritanceInfo.pipelineStatistics   = 0;
+    inheritanceInfo.queryFlags         = 0;
+    inheritanceInfo.pipelineStatistics = 0;
 
     ANGLE_TRY(InitAndBeginCommandBuffer(context, commandPool, inheritanceInfo, 0,
                                         &mOutsideRenderPassCommands));
@@ -351,14 +353,14 @@ angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
                                                               &compatibleRenderPass));
 
     VkCommandBufferInheritanceInfo inheritanceInfo = {};
-    inheritanceInfo.sType                = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-    inheritanceInfo.renderPass           = compatibleRenderPass->getHandle();
-    inheritanceInfo.subpass              = 0;
-    inheritanceInfo.framebuffer          = mRenderPassFramebuffer.getHandle();
+    inheritanceInfo.sType       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+    inheritanceInfo.renderPass  = compatibleRenderPass->getHandle();
+    inheritanceInfo.subpass     = 0;
+    inheritanceInfo.framebuffer = mRenderPassFramebuffer.getHandle();
     inheritanceInfo.occlusionQueryEnable =
         context->getRenderer()->getPhysicalDeviceFeatures().inheritedQueries;
-    inheritanceInfo.queryFlags           = 0;
-    inheritanceInfo.pipelineStatistics   = 0;
+    inheritanceInfo.queryFlags         = 0;
+    inheritanceInfo.pipelineStatistics = 0;
 
     ANGLE_TRY(InitAndBeginCommandBuffer(
         context, context->getRenderer()->getCommandPool(), inheritanceInfo,
@@ -429,6 +431,12 @@ void CommandGraphNode::setQueryPool(const QueryPool *queryPool, uint32_t queryIn
     mQueryIndex = queryIndex;
 }
 
+void CommandGraphNode::addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
+{
+    mGlobalMemoryBarrierSrcAccess |= srcAccess;
+    mGlobalMemoryBarrierDstAccess |= dstAccess;
+}
+
 void CommandGraphNode::setHasChildren()
 {
     mHasChildren = true;
@@ -479,6 +487,21 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
     {
         case CommandGraphNodeFunction::Generic:
             ASSERT(mQueryPool == VK_NULL_HANDLE);
+
+            // Record the deferred pipeline barrier if necessary.
+            ASSERT((mGlobalMemoryBarrierDstAccess == 0) == (mGlobalMemoryBarrierSrcAccess == 0));
+            if (mGlobalMemoryBarrierSrcAccess)
+            {
+                VkMemoryBarrier memoryBarrier = {};
+                memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+                memoryBarrier.srcAccessMask   = mGlobalMemoryBarrierSrcAccess;
+                memoryBarrier.dstAccessMask   = mGlobalMemoryBarrierDstAccess;
+
+                // Use the top of pipe stage to keep the state management simple.
+                primaryCommandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                                      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 1,
+                                                      &memoryBarrier, 0, nullptr, 0, nullptr);
+            }
 
             if (mOutsideRenderPassCommands.valid())
             {
@@ -630,10 +653,10 @@ angle::Result CommandGraph::submitCommands(Context *context,
     mLastBarrierIndex = kInvalidNodeIndex;
 
     VkCommandBufferAllocateInfo primaryInfo = {};
-    primaryInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    primaryInfo.commandPool        = commandPool->getHandle();
-    primaryInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    primaryInfo.commandBufferCount = 1;
+    primaryInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    primaryInfo.commandPool                 = commandPool->getHandle();
+    primaryInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    primaryInfo.commandBufferCount          = 1;
 
     ANGLE_TRY(primaryCommandBufferOut->init(context, primaryInfo));
 

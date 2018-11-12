@@ -65,9 +65,9 @@ class VertexArrayVk : public VertexArrayImpl
         return mCurrentArrayBufferOffsets;
     }
 
-    const gl::AttribArray<vk::RecordableGraphResource *> &getCurrentArrayBufferResources() const
+    const gl::AttribArray<vk::BufferHelper *> &getCurrentArrayBuffers() const
     {
-        return mCurrentArrayBufferResources;
+        return mCurrentArrayBuffers;
     }
 
     VkBuffer getCurrentElementArrayBufferHandle() const { return mCurrentElementArrayBufferHandle; }
@@ -82,10 +82,7 @@ class VertexArrayVk : public VertexArrayImpl
         mCurrentElementArrayBufferOffset = reinterpret_cast<VkDeviceSize>(offset);
     }
 
-    vk::RecordableGraphResource *getCurrentElementArrayBufferResource() const
-    {
-        return mCurrentElementArrayBufferResource;
-    }
+    vk::BufferHelper *getCurrentElementArrayBuffer() const { return mCurrentElementArrayBuffer; }
 
     angle::Result updateIndexTranslation(ContextVk *contextVk,
                                          GLsizei indexCount,
@@ -121,14 +118,14 @@ class VertexArrayVk : public VertexArrayImpl
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
-    gl::AttribArray<vk::RecordableGraphResource *> mCurrentArrayBufferResources;
+    gl::AttribArray<vk::BufferHelper *> mCurrentArrayBuffers;
     gl::AttribArray<const vk::Format *> mCurrentArrayBufferFormats;
     gl::AttribArray<GLuint> mCurrentArrayBufferStrides;
     gl::AttribArray<vk::DynamicBuffer> mCurrentArrayBufferConversion;
     gl::AttribArray<bool> mCurrentArrayBufferConversionCanRelease;
     VkBuffer mCurrentElementArrayBufferHandle;
     VkDeviceSize mCurrentElementArrayBufferOffset;
-    vk::RecordableGraphResource *mCurrentElementArrayBufferResource;
+    vk::BufferHelper *mCurrentElementArrayBuffer;
 
     // Keep a cache of binding and attribute descriptions for easy pipeline updates.
     // This is copied out of here into the pipeline description on a Context state change.

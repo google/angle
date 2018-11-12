@@ -887,7 +887,10 @@ void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
 
 // BufferHelper implementation.
 BufferHelper::BufferHelper()
-    : RecordableGraphResource(CommandGraphResourceType::Buffer), mMemoryPropertyFlags{}
+    : RecordableGraphResource(CommandGraphResourceType::Buffer),
+      mMemoryPropertyFlags{},
+      mCurrentWriteAccess(0),
+      mCurrentReadAccess(0)
 {
 }
 
@@ -906,6 +909,47 @@ void BufferHelper::release(RendererVk *renderer)
 {
     renderer->releaseObject(getStoredQueueSerial(), &mBuffer);
     renderer->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
+}
+
+void BufferHelper::onFramebufferRead(FramebufferHelper *framebuffer, VkAccessFlagBits accessType)
+{
+    addReadDependency(framebuffer);
+
+    if ((mCurrentWriteAccess != 0) && ((mCurrentReadAccess & accessType) == 0))
+    {
+        framebuffer->addGlobalMemoryBarrier(mCurrentWriteAccess, accessType);
+        mCurrentReadAccess |= accessType;
+    }
+}
+
+angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
+                                           const Buffer &buffer,
+                                           const VkBufferCopy &copyRegion)
+{
+    // 'recordCommands' will implicitly stop any reads from using the old buffer data.
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
+
+    if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
+    {
+        // Insert a barrier to ensure reads/writes are complete.
+        // Use a global memory barrier to keep things simple.
+        VkMemoryBarrier memoryBarrier = {};
+        memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+        memoryBarrier.srcAccessMask   = mCurrentReadAccess;
+        memoryBarrier.dstAccessMask   = VK_ACCESS_TRANSFER_WRITE_BIT;
+
+        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                       VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 1, &memoryBarrier, 0,
+                                       nullptr, 0, nullptr);
+
+        mCurrentWriteAccess = VK_ACCESS_TRANSFER_WRITE_BIT;
+        mCurrentReadAccess  = 0;
+    }
+
+    commandBuffer->copyBuffer(buffer, mBuffer, 1, &copyRegion);
+
+    return angle::Result::Continue();
 }
 
 // ImageHelper implementation.
