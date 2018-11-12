@@ -117,6 +117,81 @@
       "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472fa4ba_581a0b94",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-12T06:32:00Z",
+      "side": 1,
+      "message": "Sorry, I don\u0027t understand the third option. What I said that \"The correct BlockMemberInfoMap is gotten until we execute the last dot operator in ssbo access chain\" didn\u0027t mean that I can\u0027t gather BlockMemberInfoMap. Currently, BlockMemberInfoMap is already gathered in the PreVisit. But I need to get the right BlockMemberInfo by right TField pointer (Note that TField* may be a member of a structure.). So it\u0027s more reasonable to get BlockMemberInfo when we meet a dot operator (See [a]).\n\nI can delay the function name register time until we gather the BlockMemberInfoMap ([1] and [2]). But we still can\u0027t get matrix stride at that point since the matrix node may be as a field member of structure not a member of shader storage block.",
+      "parentUuid": "67e4aa79_473bff03",
+      "range": {
+        "startLine": 316,
+        "startChar": 24,
+        "endLine": 316,
+        "endChar": 39
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fb7b083_8303f021",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-12T06:32:00Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fef03fb5_3a3d66ee",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-12T06:32:00Z",
+      "side": 1,
+      "message": "[2]",
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bdb3888_a475f6f8",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-12T06:32:00Z",
+      "side": 1,
+      "message": "[a]",
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
