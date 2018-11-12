@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "4c45cdce_e8b7f7f6",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-12T12:32:25Z",
+      "side": 1,
+      "message": "ok. Then this is fine. LGTM",
+      "parentUuid": "472fa4ba_581a0b94",
+      "range": {
+        "startLine": 316,
+        "startChar": 24,
+        "endLine": 316,
+        "endChar": 39
+      },
+      "revId": "f3203ef5170a7df39485b530e04e4a9b9d667423",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fb7b083_8303f021",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 9
