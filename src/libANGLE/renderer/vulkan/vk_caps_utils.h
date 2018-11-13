@@ -30,17 +30,6 @@ struct FeaturesVk;
 
 class DisplayVk;
 
-namespace vk
-{
-void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
-                  const VkPhysicalDeviceFeatures &physicalDeviceFeatures,
-                  const VkQueueFamilyProperties &queueFamilyProperties,
-                  const gl::TextureCapsMap &textureCaps,
-                  gl::Caps *outCaps,
-                  gl::Extensions *outExtensions,
-                  gl::Limitations * /* outLimitations */);
-}  // namespace vk
-
 namespace egl_vk
 {
 constexpr GLenum kConfigDepthStencilFormats[] = {GL_NONE, GL_DEPTH24_STENCIL8, GL_DEPTH_COMPONENT24,

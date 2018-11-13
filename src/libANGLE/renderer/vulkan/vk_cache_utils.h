@@ -128,9 +128,8 @@ struct PackedAttribDesc final
 {
     uint8_t format;
 
-    // inputRate can also be used to store instancing divisors up to 255.
     // TODO(http://anglebug.com/2672): Emulate divisors greater than UBYTE_MAX.
-    uint8_t inputRate;
+    uint8_t divisor;
 
     // Can only take 11 bits on NV.
     uint16_t offset;
