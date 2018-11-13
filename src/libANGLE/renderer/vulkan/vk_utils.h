@@ -582,6 +582,9 @@ class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
     VkResult initGraphics(VkDevice device,
                           const VkGraphicsPipelineCreateInfo &createInfo,
                           const PipelineCache &pipelineCacheVk);
+    VkResult initCompute(VkDevice device,
+                         const VkComputePipelineCreateInfo &createInfo,
+                         const PipelineCache &pipelineCacheVk);
 };
 
 class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDescriptorSetLayout>

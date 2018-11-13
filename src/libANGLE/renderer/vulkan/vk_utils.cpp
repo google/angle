@@ -949,6 +949,15 @@ VkResult Pipeline::initGraphics(VkDevice device,
                                      &mHandle);
 }
 
+VkResult Pipeline::initCompute(VkDevice device,
+                               const VkComputePipelineCreateInfo &createInfo,
+                               const PipelineCache &pipelineCacheVk)
+{
+    ASSERT(!valid());
+    return vkCreateComputePipelines(device, pipelineCacheVk.getHandle(), 1, &createInfo, nullptr,
+                                    &mHandle);
+}
+
 // DescriptorSetLayout implementation.
 DescriptorSetLayout::DescriptorSetLayout()
 {

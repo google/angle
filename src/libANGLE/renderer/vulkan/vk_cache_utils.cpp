@@ -1003,7 +1003,8 @@ void PipelineLayoutDesc::updatePushConstantRange(gl::ShaderType shaderType,
                                                  uint32_t offset,
                                                  uint32_t size)
 {
-    ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Fragment);
+    ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Fragment ||
+           shaderType == gl::ShaderType::Compute);
     PackedPushConstantRange &packed = mPushConstantRanges[static_cast<size_t>(shaderType)];
     packed.offset                   = offset;
     packed.size                     = size;

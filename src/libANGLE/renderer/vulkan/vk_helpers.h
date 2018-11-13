@@ -574,10 +574,14 @@ class ShaderProgramHelper : angle::NonCopyable
                                       const GraphicsPipelineDesc &pipelineDesc,
                                       const gl::AttributesMask &activeAttribLocationsMask,
                                       PipelineAndSerial **pipelineOut);
+    angle::Result getComputePipeline(Context *context,
+                                     const PipelineLayout &pipelineLayout,
+                                     PipelineAndSerial **pipelineOut);
 
   private:
     gl::ShaderMap<BindingPointer<ShaderAndSerial>> mShaders;
     GraphicsPipelineCache mGraphicsPipelines;
+    PipelineAndSerial mComputePipeline;
 };
 }  // namespace vk
 }  // namespace rx

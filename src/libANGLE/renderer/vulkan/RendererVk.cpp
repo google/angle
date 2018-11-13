@@ -513,10 +513,11 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     size_t graphicsQueueFamilyCount   = false;
     uint32_t firstGraphicsQueueFamily = 0;
+    constexpr VkQueueFlags kGraphicsAndCompute = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
     for (uint32_t familyIndex = 0; familyIndex < queueCount; ++familyIndex)
     {
         const auto &queueInfo = mQueueFamilyProperties[familyIndex];
-        if ((queueInfo.queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0)
+        if ((queueInfo.queueFlags & kGraphicsAndCompute) == kGraphicsAndCompute)
         {
             ASSERT(queueInfo.queueCount > 0);
             graphicsQueueFamilyCount++;
@@ -691,10 +692,11 @@ angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
     // Find a graphics and present queue.
     Optional<uint32_t> newPresentQueue;
     uint32_t queueCount = static_cast<uint32_t>(mQueueFamilyProperties.size());
+    constexpr VkQueueFlags kGraphicsAndCompute = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
     for (uint32_t queueIndex = 0; queueIndex < queueCount; ++queueIndex)
     {
         const auto &queueInfo = mQueueFamilyProperties[queueIndex];
-        if ((queueInfo.queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0)
+        if ((queueInfo.queueFlags & kGraphicsAndCompute) == kGraphicsAndCompute)
         {
             VkBool32 supportsPresent = VK_FALSE;
             ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceSupportKHR(
