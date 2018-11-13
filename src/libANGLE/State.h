@@ -486,7 +486,20 @@ class State : angle::NonCopyable
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
     void clearDirtyObjects() { mDirtyObjects.reset(); }
     void setAllDirtyObjects() { mDirtyObjects.set(); }
-    angle::Result syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
+
+    ANGLE_INLINE angle::Result syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
+    {
+        const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
+        if (dirtyObjects.any())
+        {
+            return syncDirtyObjectsImpl(context, dirtyObjects);
+        }
+        else
+        {
+            return angle::Result::Continue();
+        }
+    }
+
     angle::Result syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
     void setSamplerDirty(size_t samplerIndex);
@@ -537,6 +550,7 @@ class State : angle::NonCopyable
     angle::Result updateActiveTexture(const Context *context,
                                       size_t textureIndex,
                                       Texture *texture);
+    angle::Result syncDirtyObjectsImpl(const Context *context, const DirtyObjects &dirtyObjects);
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;

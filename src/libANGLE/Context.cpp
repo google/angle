@@ -3523,6 +3523,27 @@ bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei insta
     return (instanceCount == 0) || noopDraw(mode, count);
 }
 
+ANGLE_INLINE angle::Result Context::syncDirtyBits()
+{
+    const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
+    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
+    mGLState.clearDirtyBits();
+    return angle::Result::Continue();
+}
+
+ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
+{
+    const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
+    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
+    mGLState.clearDirtyBits(dirtyBits);
+    return angle::Result::Continue();
+}
+
+ANGLE_INLINE angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
+{
+    return mGLState.syncDirtyObjects(this, objectMask);
+}
+
 angle::Result Context::prepareForDraw(PrimitiveMode mode)
 {
     if (mGLES1Renderer)
@@ -3538,8 +3559,7 @@ angle::Result Context::prepareForDraw(PrimitiveMode mode)
         ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureDrawAttachmentsInitialized(this));
     }
 
-    ANGLE_TRY(syncDirtyBits());
-    return angle::Result::Continue();
+    return syncDirtyBits();
 }
 
 Error Context::prepareForClear(GLbitfield mask)
@@ -3564,27 +3584,6 @@ Error Context::syncState(const State::DirtyBits &bitMask, const State::DirtyObje
     ANGLE_TRY(syncDirtyObjects(objectMask));
     ANGLE_TRY(syncDirtyBits(bitMask));
     return NoError();
-}
-
-angle::Result Context::syncDirtyBits()
-{
-    const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
-    mGLState.clearDirtyBits();
-    return angle::Result::Continue();
-}
-
-angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
-{
-    const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
-    mGLState.clearDirtyBits(dirtyBits);
-    return angle::Result::Continue();
-}
-
-angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
-{
-    return mGLState.syncDirtyObjects(this, objectMask);
 }
 
 void Context::blitFramebuffer(GLint srcX0,
