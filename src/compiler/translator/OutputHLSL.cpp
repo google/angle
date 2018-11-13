@@ -116,6 +116,44 @@ bool IsAtomicFunctionDirectAssign(const TIntermBinary &node)
            IsAtomicFunction(node.getRight()->getAsAggregate()->getOp());
 }
 
+const char *kZeros       = "_ANGLE_ZEROS_";
+constexpr int kZeroCount = 256;
+std::string DefineZeroArray()
+{
+    std::stringstream ss;
+    // For 'static', if the declaration does not include an initializer, the value is set to zero.
+    // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/dx-graphics-hlsl-variable-syntax
+    ss << "static uint " << kZeros << "[" << kZeroCount << "];\n";
+    return ss.str();
+}
+
+std::string GetZeroInitializer(size_t size)
+{
+    std::stringstream ss;
+    size_t quotient = size / kZeroCount;
+    size_t reminder = size % kZeroCount;
+
+    for (size_t i = 0; i < quotient; ++i)
+    {
+        if (i != 0)
+        {
+            ss << ", ";
+        }
+        ss << kZeros;
+    }
+
+    for (size_t i = 0; i < reminder; ++i)
+    {
+        if (quotient != 0 || i != 0)
+        {
+            ss << ", ";
+        }
+        ss << "0";
+    }
+
+    return ss.str();
+}
+
 }  // anonymous namespace
 
 TReferencedBlock::TReferencedBlock(const TInterfaceBlock *aBlock,
@@ -225,6 +263,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
     mUsesDiscardRewriting        = false;
     mUsesNestedBreak             = false;
     mRequiresIEEEStrictCompiling = false;
+    mUseZeroArray                = false;
 
     mUniqueIndex = 0;
 
@@ -552,6 +591,11 @@ void OutputHLSL::header(TInfoSinkBase &out,
     // ARB_shader_atomic_counters and discussion on
     // https://github.com/KhronosGroup/OpenGL-API/issues/5
     out << "\n#define ATOMIC_COUNTER_ARRAY_STRIDE 4\n\n";
+
+    if (mUseZeroArray)
+    {
+        out << DefineZeroArray() << "\n";
+    }
 
     if (mShaderType == GL_FRAGMENT_SHADER)
     {
@@ -2028,9 +2072,6 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
                 {
                     symbol->traverse(this);
                     out << ArrayString(symbol->getType());
-                    // Add initializer only when requested. It is very slow for D3D11 drivers to
-                    // compile a compute shader if we add code to initialize a groupshared array
-                    // variable with a large array size.
                     if (declarator->getQualifier() != EvqShared ||
                         mCompileOptions & SH_INIT_SHARED_VARIABLES)
                     {
@@ -2965,20 +3006,16 @@ void OutputHLSL::writeParameter(const TVariable *param, TInfoSinkBase &out)
     }
 }
 
-TString OutputHLSL::zeroInitializer(const TType &type)
+TString OutputHLSL::zeroInitializer(const TType &type) const
 {
     TString string;
 
     size_t size = type.getObjectSize();
-    for (size_t component = 0; component < size; component++)
+    if (size >= kZeroCount)
     {
-        string += "0";
-
-        if (component + 1 < size)
-        {
-            string += ", ";
-        }
+        mUseZeroArray = true;
     }
+    string = GetZeroInitializer(size).c_str();
 
     return "{" + string + "}";
 }

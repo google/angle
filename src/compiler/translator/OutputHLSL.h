@@ -57,8 +57,6 @@ class OutputHLSL : public TIntermTraverser
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
 
-    static TString zeroInitializer(const TType &type);
-
     TInfoSinkBase &getInfoSink()
     {
         ASSERT(!mInfoSinkStack.empty());
@@ -67,6 +65,8 @@ class OutputHLSL : public TIntermTraverser
 
   protected:
     friend class ShaderStorageBlockOutputHLSL;
+
+    TString zeroInitializer(const TType &type) const;
 
     void writeReferencedAttributes(TInfoSinkBase &out) const;
     void writeReferencedVaryings(TInfoSinkBase &out) const;
@@ -202,6 +202,7 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;
     bool mRequiresIEEEStrictCompiling;
+    mutable bool mUseZeroArray;
 
     int mNumRenderTargets;
 
