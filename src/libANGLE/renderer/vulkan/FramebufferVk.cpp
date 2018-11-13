@@ -138,8 +138,8 @@ void FramebufferVk::destroy(const gl::Context *context)
     RendererVk *renderer = contextVk->getRenderer();
     mFramebuffer.release(renderer);
 
-    mReadPixelBuffer.destroy(contextVk->getDevice());
-    mBlitPixelBuffer.destroy(contextVk->getDevice());
+    mReadPixelBuffer.release(renderer);
+    mBlitPixelBuffer.release(renderer);
 }
 
 angle::Result FramebufferVk::discard(const gl::Context *context,

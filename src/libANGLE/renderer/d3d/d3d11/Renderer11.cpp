@@ -1203,12 +1203,6 @@ angle::Result Renderer11::flush(Context11 *context11)
 
 angle::Result Renderer11::finish(Context11 *context11)
 {
-    // If device is lost, there is nothing to finish.  This is called on context destroy.
-    if (!mDevice)
-    {
-        return angle::Result::Continue();
-    }
-
     if (!mSyncQuery.valid())
     {
         D3D11_QUERY_DESC queryDesc;

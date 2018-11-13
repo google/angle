@@ -648,20 +648,9 @@ angle::Result Renderer9::finish(const gl::Context *context)
     }
     ANGLE_TRY_HR(context9, result, "Failed to get event query data");
 
-    // Loop until the query completes.  A bug has been observed where the query result is always
-    // false, so we loop for a maximum of 100ms.
+    // Loop until the query completes
     unsigned int attempt = 0;
-
-    LARGE_INTEGER timerFrequency;
-    QueryPerformanceFrequency(&timerFrequency);
-
-    LARGE_INTEGER startTime;
-    QueryPerformanceCounter(&startTime);
-    LARGE_INTEGER currentTime = startTime;
-
-    // Note: timerFrequency is ticks in one second
-    const LONGLONG kMaxWaitTicks = timerFrequency.QuadPart / 10;
-    while (result == S_FALSE && (currentTime.QuadPart - startTime.QuadPart) < kMaxWaitTicks)
+    while (result == S_FALSE)
     {
         // Keep polling, but allow other threads to do something useful first
         ScheduleYield();
@@ -686,8 +675,6 @@ angle::Result Renderer9::finish(const gl::Context *context)
             freeEventQuery(query);
         }
         ANGLE_TRY_HR(context9, result, "Failed to get event query data");
-
-        QueryPerformanceCounter(&currentTime);
     }
 
     freeEventQuery(query);

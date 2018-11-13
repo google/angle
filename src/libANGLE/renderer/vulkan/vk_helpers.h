@@ -361,6 +361,7 @@ class LineLoopHelper final : angle::NonCopyable
                                 VkBuffer *bufferHandleOut,
                                 VkDeviceSize *bufferOffsetOut);
 
+    void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
     static void Draw(uint32_t count, CommandBuffer *commandBuffer);

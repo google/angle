@@ -105,15 +105,16 @@ VertexArrayVk::~VertexArrayVk()
 
 void VertexArrayVk::destroy(const gl::Context *context)
 {
-    VkDevice device = vk::GetImpl(context)->getRenderer()->getDevice();
+    RendererVk *renderer = vk::GetImpl(context)->getRenderer();
+
     for (vk::DynamicBuffer &buffer : mCurrentArrayBufferConversion)
     {
-        buffer.destroy(device);
+        buffer.release(renderer);
     }
-    mDynamicVertexData.destroy(device);
-    mDynamicIndexData.destroy(device);
-    mTranslatedByteIndexData.destroy(device);
-    mLineLoopHelper.destroy(device);
+    mDynamicVertexData.release(renderer);
+    mDynamicIndexData.release(renderer);
+    mTranslatedByteIndexData.release(renderer);
+    mLineLoopHelper.release(renderer);
 }
 
 angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,

@@ -875,6 +875,11 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
     return angle::Result::Continue();
 }
 
+void LineLoopHelper::release(RendererVk *renderer)
+{
+    mDynamicIndexBuffer.release(renderer);
+}
+
 void LineLoopHelper::destroy(VkDevice device)
 {
     mDynamicIndexBuffer.destroy(device);
