@@ -536,6 +536,11 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
                           sizeof(attributeDescs);
     ANGLE_UNUSED_VARIABLE(unpackedSize);
 
+    gl::AttribArray<VkVertexInputBindingDivisorDescriptionEXT> divisorDesc;
+    VkPipelineVertexInputDivisorStateCreateInfoEXT divisorState = {};
+    divisorState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT;
+    divisorState.pVertexBindingDivisors = divisorDesc.data();
+
     for (size_t attribIndexSizeT : activeAttribLocationsMask)
     {
         const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
@@ -545,8 +550,18 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         const PackedAttribDesc &packedAttrib          = mVertexInputAttribs.attribs[attribIndex];
 
         bindingDesc.binding   = attribIndex;
-        bindingDesc.inputRate = static_cast<VkVertexInputRate>(packedAttrib.inputRate);
         bindingDesc.stride    = static_cast<uint32_t>(packedAttrib.stride);
+        if (packedAttrib.divisor != 0)
+        {
+            bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_INSTANCE);
+            divisorDesc[divisorState.vertexBindingDivisorCount].binding = bindingDesc.binding;
+            divisorDesc[divisorState.vertexBindingDivisorCount].divisor = packedAttrib.divisor;
+            ++divisorState.vertexBindingDivisorCount;
+        }
+        else
+        {
+            bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
+        }
 
         // The binding index could become more dynamic in ES 3.1.
         attribDesc.binding  = attribIndex;
@@ -564,6 +579,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     vertexInputState.pVertexBindingDescriptions      = bindingDescs.data();
     vertexInputState.vertexAttributeDescriptionCount = vertexAttribCount;
     vertexInputState.pVertexAttributeDescriptions    = attributeDescs.data();
+    if (divisorState.vertexBindingDivisorCount)
+        vertexInputState.pNext = &divisorState;
 
     // Primitive topology is filled in at draw time.
     inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -696,12 +713,12 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
 {
     vk::PackedAttribDesc &packedAttrib = mVertexInputAttribs.attribs[attribIndex];
 
-    // TODO(http://anglebug.com/2672): This will need to be updated to support instancing.
-    ASSERT(divisor == 0);
+    // TODO: Handle the case where the divisor overflows the field that holds it.
+    // http://anglebug.com/2672
+    ASSERT(divisor <= std::numeric_limits<decltype(packedAttrib.divisor)>::max());
 
     SetBitField(packedAttrib.stride, stride);
-    SetBitField(packedAttrib.inputRate,
-                divisor > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX);
+    SetBitField(packedAttrib.divisor, divisor);
 
     if (format == VK_FORMAT_UNDEFINED)
     {

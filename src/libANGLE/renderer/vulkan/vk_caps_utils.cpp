@@ -56,6 +56,10 @@ void RendererVk::ensureCapsInitialized() const
     // TODO(geofflang): Support GL_OES_EGL_image_external_essl3. http://anglebug.com/2668
     mNativeExtensions.eglImageExternalEssl3 = false;
 
+    // TODO: Enable this always and emulate instanced draws if any divisor exceeds the maximum
+    // supported.  http://anglebug.com/2672
+    mNativeExtensions.instancedArraysANGLE = mMaxVertexAttribDivisor > 1;
+
     // Only expose robust buffer access if the physical device supports it.
     mNativeExtensions.robustBufferAccessBehavior = mPhysicalDeviceFeatures.robustBufferAccess;
 
