@@ -94,7 +94,6 @@
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.linear_nearest = FAIL
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.nearest_nearest = FAIL
-2222 LINUX NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
 
 // Failing everywhere
 2322 DEBUG RELEASE : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
@@ -237,16 +236,11 @@
 // UBO tests trigger crashes when getting the program info log, skip them until this is fixed.
 1323 LINUX : dEQP-GLES3.functional.ubo.* = SKIP
 
-1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8 = FAIL
-1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_out_of_bounds_blit_to_default = FAIL
-1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_scale_blit_to_default = FAIL
-1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_nearest_scale_blit_to_default = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
 1323 LINUX : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.points = FAIL
-1323 LINUX : dEQP-GLES3.functional.state_query.integers64.max_server_wait_timeout_getfloat = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_clamp = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_mirror = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_repeat = FAIL
@@ -332,7 +326,6 @@
 2137 MAC : dEQP-GLES3.functional.shaders.scoping.valid.local_int_variable_hides_struct_type_vertex = FAIL
 2137 MAC : dEQP-GLES3.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_fragment = FAIL
 2137 MAC : dEQP-GLES3.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_vertex = FAIL
-2137 MAC : dEQP-GLES3.functional.state_query.integers64.max_server_wait_timeout_getfloat = FAIL
 2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getfloat = FAIL
 2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getinteger = FAIL
 2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getinteger64 = FAIL
@@ -452,3 +445,13 @@
 2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.red_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rg_unsigned_byte = FAIL
+
+// Seems to fail on all desktop GL
+2960 OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8 = FAIL
+2960 OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_out_of_bounds_blit_to_default = FAIL
+2960 OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_scale_blit_to_default = FAIL
+2960 OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_nearest_scale_blit_to_default = FAIL
+2961 OPENGL : dEQP-GLES3.functional.state_query.integers64.max_server_wait_timeout_getfloat = FAIL
+
+// Fails on Windows + Linux.
+2222 OPENGL NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
