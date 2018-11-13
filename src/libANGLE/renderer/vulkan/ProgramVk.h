@@ -167,9 +167,9 @@ class ProgramVk : public ProgramImpl
         std::vector<sh::BlockMemberInfo> uniformLayout;
     };
 
-    vk::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
-    vk::ShaderBitSet mDefaultUniformBlocksDirty;
-    vk::ShaderMap<uint32_t> mUniformBlocksOffsets;
+    gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
+    gl::ShaderBitSet mDefaultUniformBlocksDirty;
+    gl::ShaderMap<uint32_t> mUniformBlocksOffsets;
 
     // This is a special "empty" placeholder buffer for when a shader has no uniforms.
     // It is necessary because we want to keep a compatible pipeline layout in all cases,
