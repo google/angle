@@ -7,7 +7,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.android.angle">
+    package="com.google.android.angle">
     <uses-sdk android:minSdkVersion="26"
               android:targetSdkVersion="28">
     </uses-sdk>
