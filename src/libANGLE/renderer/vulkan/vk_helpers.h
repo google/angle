@@ -400,17 +400,19 @@ class BufferHelper final : public RecordableGraphResource
                                  const Buffer &buffer,
                                  const VkBufferCopy &copyRegion);
 
-    angle::Result getBufferView(Context *context, const Format &format, BufferView **bufferViewOut)
-    {
-        // Note: currently only one view is allowed.  If needs be, multiple views can be created
-        // based on format.
-        if (!mBufferView.valid())
-        {
-            ANGLE_TRY(initBufferView(context, format));
-        }
+    // Note: currently only one view is allowed.  If needs be, multiple views can be created
+    // based on format.
+    angle::Result initBufferView(Context *context, const Format &format);
 
-        *bufferViewOut = &mBufferView;
-        return angle::Result::Continue();
+    const BufferView &getBufferView() const
+    {
+        ASSERT(mBufferView.valid());
+        return mBufferView;
+    }
+    const Format &getViewFormat() const
+    {
+        ASSERT(mViewFormat);
+        return *mViewFormat;
     }
 
     angle::Result map(Context *context, uint8_t **ptrOut)
@@ -432,7 +434,6 @@ class BufferHelper final : public RecordableGraphResource
 
   private:
     angle::Result mapImpl(Context *context);
-    angle::Result initBufferView(Context *context, const Format &format);
 
     // Vulkan objects.
     Buffer mBuffer;
@@ -443,6 +444,7 @@ class BufferHelper final : public RecordableGraphResource
     VkMemoryPropertyFlags mMemoryPropertyFlags;
     VkDeviceSize mSize;
     uint8_t *mMappedMemory;
+    const Format *mViewFormat;
 
     // For memory barriers.
     VkFlags mCurrentWriteAccess;

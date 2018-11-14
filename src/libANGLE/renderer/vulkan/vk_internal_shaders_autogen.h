@@ -19,6 +19,28 @@ namespace vk
 {
 namespace InternalShader
 {
+namespace BufferUtils_comp
+{
+enum flags
+{
+    kIsAligned = 0x00000001,
+    kFlagsMask = 0x00000001,
+};
+enum Function
+{
+    kIsClear      = 0x00000000,
+    kIsCopy       = 0x00000002,
+    kFunctionMask = 0x00000002,
+};
+enum Format
+{
+    kIsFloat    = 0x00000000,
+    kIsInt      = 0x00000004,
+    kIsUint     = 0x00000008,
+    kFormatMask = 0x0000000C,
+};
+}  // namespace BufferUtils_comp
+
 namespace FullScreenQuad_vert
 {}  // namespace FullScreenQuad_vert
 
@@ -35,6 +57,9 @@ class ShaderLibrary final : angle::NonCopyable
 
     void destroy(VkDevice device);
 
+    angle::Result getBufferUtils_comp(Context *context,
+                                      uint32_t shaderFlags,
+                                      RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getFullScreenQuad_vert(Context *context,
                                          uint32_t shaderFlags,
                                          RefCounted<ShaderAndSerial> **shaderOut);
@@ -43,6 +68,10 @@ class ShaderLibrary final : angle::NonCopyable
                                             RefCounted<ShaderAndSerial> **shaderOut);
 
   private:
+    RefCounted<ShaderAndSerial>
+        mBufferUtils_comp_shaders[InternalShader::BufferUtils_comp::kFlagsMask |
+                                  InternalShader::BufferUtils_comp::kFunctionMask |
+                                  InternalShader::BufferUtils_comp::kFormatMask];
     RefCounted<ShaderAndSerial> mFullScreenQuad_vert_shaders[1];
     RefCounted<ShaderAndSerial> mPushConstantColor_frag_shaders[1];
 };

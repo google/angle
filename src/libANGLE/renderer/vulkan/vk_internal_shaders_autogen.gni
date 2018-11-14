@@ -9,6 +9,18 @@
 #   List of generated shaders for inclusion in ANGLE's build process.
 
 angle_vulkan_internal_shaders = [
+  "shaders/gen/BufferUtils.comp.00000000.inc",
+  "shaders/gen/BufferUtils.comp.00000001.inc",
+  "shaders/gen/BufferUtils.comp.00000002.inc",
+  "shaders/gen/BufferUtils.comp.00000003.inc",
+  "shaders/gen/BufferUtils.comp.00000004.inc",
+  "shaders/gen/BufferUtils.comp.00000005.inc",
+  "shaders/gen/BufferUtils.comp.00000006.inc",
+  "shaders/gen/BufferUtils.comp.00000007.inc",
+  "shaders/gen/BufferUtils.comp.00000008.inc",
+  "shaders/gen/BufferUtils.comp.00000009.inc",
+  "shaders/gen/BufferUtils.comp.0000000A.inc",
+  "shaders/gen/BufferUtils.comp.0000000B.inc",
   "shaders/gen/FullScreenQuad.vert.00000000.inc",
   "shaders/gen/PushConstantColor.frag.00000000.inc",
 ]

@@ -330,6 +330,8 @@ void RendererVk::onDestroy(vk::Context *context)
         (void)finish(context);
     }
 
+    mDispatchUtils.destroy(mDevice);
+
     mPipelineLayoutCache.destroy(mDevice);
     mDescriptorSetLayoutCache.destroy(mDevice);
 

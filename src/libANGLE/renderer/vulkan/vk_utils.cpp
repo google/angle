@@ -1250,6 +1250,9 @@ void GarbageObject::destroy(VkDevice device)
         case HandleType::Buffer:
             vkDestroyBuffer(device, reinterpret_cast<VkBuffer>(mHandle), nullptr);
             break;
+        case HandleType::BufferView:
+            vkDestroyBufferView(device, reinterpret_cast<VkBufferView>(mHandle), nullptr);
+            break;
         case HandleType::Image:
             vkDestroyImage(device, reinterpret_cast<VkImage>(mHandle), nullptr);
             break;

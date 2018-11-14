@@ -21,7 +21,8 @@ namespace vk
 namespace
 {
 constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage =
-    (VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT);
+    VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+    VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
 constexpr int kLineLoopDynamicBufferMinSize = 1024 * 1024;
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -890,6 +891,7 @@ BufferHelper::BufferHelper()
       mMemoryPropertyFlags{},
       mSize(0),
       mMappedMemory(nullptr),
+      mViewFormat(nullptr),
       mCurrentWriteAccess(0),
       mCurrentReadAccess(0)
 {}
@@ -909,7 +911,8 @@ angle::Result BufferHelper::init(Context *context,
 void BufferHelper::destroy(VkDevice device)
 {
     unmap(device);
-    mSize = 0;
+    mSize       = 0;
+    mViewFormat = nullptr;
 
     mBuffer.destroy(device);
     mBufferView.destroy(device);
@@ -919,7 +922,8 @@ void BufferHelper::destroy(VkDevice device)
 void BufferHelper::release(RendererVk *renderer)
 {
     unmap(renderer->getDevice());
-    mSize = 0;
+    mSize       = 0;
+    mViewFormat = nullptr;
 
     renderer->releaseObject(getStoredQueueSerial(), &mBuffer);
     renderer->releaseObject(getStoredQueueSerial(), &mBufferView);
@@ -980,8 +984,13 @@ angle::Result BufferHelper::copyFromBuffer(Context *context,
 
 angle::Result BufferHelper::initBufferView(Context *context, const Format &format)
 {
-    ASSERT(!mBufferView.valid());
     ASSERT(format.valid());
+
+    if (mBufferView.valid())
+    {
+        ASSERT(mViewFormat->vkBufferFormat == format.vkBufferFormat);
+        return angle::Result::Continue();
+    }
 
     VkBufferViewCreateInfo viewCreateInfo = {};
     viewCreateInfo.sType                  = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
@@ -991,6 +1000,7 @@ angle::Result BufferHelper::initBufferView(Context *context, const Format &forma
     viewCreateInfo.range                  = mSize;
 
     ANGLE_VK_TRY(context, mBufferView.init(context->getDevice(), viewCreateInfo));
+    mViewFormat = &format;
 
     return angle::Result::Continue();
 }

@@ -400,6 +400,12 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                          firstInstance);
     }
 
+    void dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ)
+    {
+        ASSERT(valid());
+        vkCmdDispatch(mHandle, groupCountX, groupCountY, groupCountZ);
+    }
+
     void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const Pipeline &pipeline);
     void bindVertexBuffers(uint32_t firstBinding,
                            uint32_t bindingCount,

@@ -23,13 +23,15 @@ namespace rx
 {
 namespace
 {
-constexpr size_t kDynamicVertexDataSize    = 1024 * 1024;
-constexpr size_t kDynamicIndexDataSize     = 1024 * 8;
-constexpr size_t kMaxVertexFormatAlignment = 4;
-constexpr VkBufferUsageFlags kVertexBufferUsageFlags =
-    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
-constexpr VkBufferUsageFlags kIndexBufferUsageFlags =
-    VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+constexpr size_t kDynamicVertexDataSize              = 1024 * 1024;
+constexpr size_t kDynamicIndexDataSize               = 1024 * 8;
+constexpr size_t kMaxVertexFormatAlignment           = 4;
+constexpr VkBufferUsageFlags kVertexBufferUsageFlags = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
+                                                       VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT |
+                                                       VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+constexpr VkBufferUsageFlags kIndexBufferUsageFlags = VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
+                                                      VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT |
+                                                      VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
 
 bool BindingIsAligned(const gl::VertexBinding &binding, unsigned componentSize)
 {
@@ -176,7 +178,6 @@ angle::Result VertexArrayVk::convertVertexBuffer(ContextVk *contextVk,
                                                  const gl::VertexBinding &binding,
                                                  size_t attribIndex)
 {
-
     // Needed before reading buffer or we could get stale data.
     ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
 
@@ -557,16 +558,60 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
 {
     ASSERT(type != gl::DrawElementsType::InvalidEnum);
 
+    RendererVk *renderer = contextVk->getRenderer();
     gl::Buffer *glBuffer = mState.getElementArrayBuffer();
 
     if (!glBuffer)
     {
         ANGLE_TRY(streamIndexData(contextVk, type, indexCount, indices, &mDynamicIndexData));
     }
+    else if (renderer->getFormat(angle::FormatID::R16_UINT).vkSupportsStorageBuffer)
+    {
+        BufferVk *bufferVk = vk::GetImpl(glBuffer);
+
+        ASSERT(type == gl::DrawElementsType::UnsignedByte);
+
+        intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(indices);
+        size_t srcDataSize         = static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData;
+
+        mTranslatedByteIndexData.releaseRetainedBuffers(renderer);
+
+        ANGLE_TRY(mTranslatedByteIndexData.allocate(contextVk, sizeof(GLushort) * srcDataSize,
+                                                    nullptr, nullptr,
+                                                    &mCurrentElementArrayBufferOffset, nullptr));
+        mCurrentElementArrayBuffer = mTranslatedByteIndexData.getCurrentBuffer();
+
+        vk::BufferHelper *dest = mTranslatedByteIndexData.getCurrentBuffer();
+        vk::BufferHelper *src  = &bufferVk->getBuffer();
+
+        ANGLE_TRY(src->initBufferView(contextVk, renderer->getFormat(angle::FormatID::R8_UINT)));
+        ANGLE_TRY(dest->initBufferView(contextVk, renderer->getFormat(angle::FormatID::R16_UINT)));
+
+        // Copy relevant section of the source into destination at allocated offset.  Note that the
+        // offset returned by allocate() above is in bytes, while our allocated array is of
+        // GLushorts.
+        DispatchUtilsVk::CopyParameters params = {};
+        params.destOffset =
+            static_cast<size_t>(mCurrentElementArrayBufferOffset) / sizeof(GLushort);
+        params.srcOffset = offsetIntoSrcData;
+        params.size      = srcDataSize;
+
+        // Note: this is a copy, which implicitly converts between formats.  Once support for
+        // primitive restart is added, a specialized shader is likely needed to special case 0xFF ->
+        // 0xFFFF.
+        ANGLE_TRY(renderer->getDispatchUtils()->copyBuffer(contextVk, dest, src, params));
+    }
     else
     {
+        // If it's not possible to convert the buffer with compute, opt for a CPU read back for now.
+        // TODO(syoussefi): R8G8B8A8_UINT is required to have storage texel buffer support, so a
+        // specialized shader code can be made to read two ubyte indices and output them in R and B
+        // (or A and G based on endianness?) with 0 on the other channels.  If specialized, we might
+        // as well support the ubyte to ushort case with correct handling of primitive restart.
+        // http://anglebug.com/3003
+
         // Needed before reading buffer or we could get stale data.
-        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+        ANGLE_TRY(renderer->finish(contextVk));
 
         ASSERT(type == gl::DrawElementsType::UnsignedByte);
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the

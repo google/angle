@@ -120,7 +120,10 @@ Format::Format()
       textureInitializerFunction(nullptr),
       textureLoadFunctions(),
       vertexLoadRequiresConversion(false),
-      vkBufferFormatIsPacked(false)
+      vkBufferFormatIsPacked(false),
+      vkSupportsStorageBuffer(false),
+      vkFormatIsInt(false),
+      vkFormatIsUnsigned(false)
 {}
 
 void Format::initTextureFallback(RendererVk *renderer,
@@ -195,6 +198,9 @@ void FormatTable::initialize(RendererVk *renderer,
         {
             continue;
         }
+
+        format.vkSupportsStorageBuffer = renderer->hasBufferFormatFeatureBits(
+            format.vkBufferFormat, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT);
 
         gl::TextureCaps textureCaps;
         FillTextureFormatCaps(renderer, format.vkTextureFormat, &textureCaps);

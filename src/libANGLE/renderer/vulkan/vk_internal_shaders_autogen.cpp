@@ -16,6 +16,18 @@ namespace vk
 {
 namespace
 {
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000001.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000002.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000003.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000004.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000005.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000006.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000007.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000008.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000009.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.0000000A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.0000000B.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/PushConstantColor.frag.00000000.inc"
 
@@ -26,6 +38,20 @@ struct ShaderBlob
     size_t codeSize;
 };
 
+constexpr ShaderBlob kBufferUtils_comp_shaders[] = {
+    {kBufferUtils_comp_00000000, sizeof(kBufferUtils_comp_00000000)},
+    {kBufferUtils_comp_00000001, sizeof(kBufferUtils_comp_00000001)},
+    {kBufferUtils_comp_00000002, sizeof(kBufferUtils_comp_00000002)},
+    {kBufferUtils_comp_00000003, sizeof(kBufferUtils_comp_00000003)},
+    {kBufferUtils_comp_00000004, sizeof(kBufferUtils_comp_00000004)},
+    {kBufferUtils_comp_00000005, sizeof(kBufferUtils_comp_00000005)},
+    {kBufferUtils_comp_00000006, sizeof(kBufferUtils_comp_00000006)},
+    {kBufferUtils_comp_00000007, sizeof(kBufferUtils_comp_00000007)},
+    {kBufferUtils_comp_00000008, sizeof(kBufferUtils_comp_00000008)},
+    {kBufferUtils_comp_00000009, sizeof(kBufferUtils_comp_00000009)},
+    {kBufferUtils_comp_0000000A, sizeof(kBufferUtils_comp_0000000A)},
+    {kBufferUtils_comp_0000000B, sizeof(kBufferUtils_comp_0000000B)},
+};
 constexpr ShaderBlob kFullScreenQuad_vert_shaders[] = {
     {kFullScreenQuad_vert_00000000, sizeof(kFullScreenQuad_vert_00000000)},
 };
@@ -63,6 +89,10 @@ ShaderLibrary::~ShaderLibrary() {}
 
 void ShaderLibrary::destroy(VkDevice device)
 {
+    for (RefCounted<ShaderAndSerial> &shader : mBufferUtils_comp_shaders)
+    {
+        shader.get().destroy(device);
+    }
     for (RefCounted<ShaderAndSerial> &shader : mFullScreenQuad_vert_shaders)
     {
         shader.get().destroy(device);
@@ -71,6 +101,14 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
+}
+
+angle::Result ShaderLibrary::getBufferUtils_comp(Context *context,
+                                                 uint32_t shaderFlags,
+                                                 RefCounted<ShaderAndSerial> **shaderOut)
+{
+    return GetShader(context, mBufferUtils_comp_shaders, kBufferUtils_comp_shaders,
+                     ArraySize(kBufferUtils_comp_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getFullScreenQuad_vert(Context *context,
