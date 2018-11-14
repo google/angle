@@ -33,15 +33,15 @@ class ImageEGL final : public ImageGL
 
     egl::Error initialize(const egl::Display *display) override;
 
-    gl::Error orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
+    angle::Result orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
 
-    gl::Error setTexture2D(const gl::Context *context,
-                           gl::TextureType type,
-                           TextureGL *texture,
-                           GLenum *outInternalFormat) override;
-    gl::Error setRenderbufferStorage(const gl::Context *context,
-                                     RenderbufferGL *renderbuffer,
-                                     GLenum *outInternalFormat) override;
+    angle::Result setTexture2D(const gl::Context *context,
+                               gl::TextureType type,
+                               TextureGL *texture,
+                               GLenum *outInternalFormat) override;
+    angle::Result setRenderbufferStorage(const gl::Context *context,
+                                         RenderbufferGL *renderbuffer,
+                                         GLenum *outInternalFormat) override;
 
   private:
     const FunctionsEGL *mEGL;

@@ -62,7 +62,6 @@ class ANGLE_NO_DISCARD Error final
     inline ~Error() = default;
 
     // automatic error type conversion
-    inline Error(egl::Error &&eglErr);
     inline Error(egl::Error eglErr);
 
     inline Error &operator=(const Error &other);

@@ -13,7 +13,6 @@
 
 namespace rx
 {
-
 PathNULL::PathNULL() : PathImpl()
 {
 }
@@ -22,19 +21,16 @@ PathNULL::~PathNULL()
 {
 }
 
-gl::Error PathNULL::setCommands(GLsizei numCommands,
-                                const GLubyte *commands,
-                                GLsizei numCoords,
-                                GLenum coordType,
-                                const void *coords)
+angle::Result PathNULL::setCommands(GLsizei numCommands,
+                                    const GLubyte *commands,
+                                    GLsizei numCoords,
+                                    GLenum coordType,
+                                    const void *coords)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    return angle::Result::Continue();
 }
 
 void PathNULL::setPathParameter(GLenum pname, GLfloat value)
 {
-    UNIMPLEMENTED();
 }
-
 }  // namespace rx

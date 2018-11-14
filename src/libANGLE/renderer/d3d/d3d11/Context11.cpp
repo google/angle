@@ -603,8 +603,8 @@ angle::Result Context11::getIncompleteTexture(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error Context11::initializeMultisampleTextureToBlack(const gl::Context *context,
-                                                         gl::Texture *glTexture)
+angle::Result Context11::initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                             gl::Texture *glTexture)
 {
     ASSERT(glTexture->getType() == gl::TextureType::_2DMultisample);
     TextureD3D *textureD3D        = GetImplAs<TextureD3D>(glTexture);

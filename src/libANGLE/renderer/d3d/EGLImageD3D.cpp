@@ -43,14 +43,14 @@ egl::Error EGLImageD3D::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-gl::Error EGLImageD3D::orphan(const gl::Context *context, egl::ImageSibling *sibling)
+angle::Result EGLImageD3D::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     if (sibling == mState.source)
     {
         ANGLE_TRY(copyToLocalRendertarget(context));
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result EGLImageD3D::getRenderTarget(const gl::Context *context,
@@ -71,7 +71,7 @@ angle::Result EGLImageD3D::getRenderTarget(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
+angle::Result EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
 {
     ASSERT(mState.source != nullptr);
     ASSERT(mRenderTarget == nullptr);

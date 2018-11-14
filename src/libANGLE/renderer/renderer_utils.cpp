@@ -413,7 +413,7 @@ void IncompleteTextureSet::onDestroy(const gl::Context *context)
     }
 }
 
-gl::Error IncompleteTextureSet::getIncompleteTexture(
+angle::Result IncompleteTextureSet::getIncompleteTexture(
     const gl::Context *context,
     gl::TextureType type,
     MultisampleTextureInitializer *multisampleInitializer,
@@ -422,7 +422,7 @@ gl::Error IncompleteTextureSet::getIncompleteTexture(
     *textureOut = mIncompleteTextures[type].get();
     if (*textureOut != nullptr)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     ContextImpl *implFactory = context->getImplementation();
@@ -472,7 +472,7 @@ gl::Error IncompleteTextureSet::getIncompleteTexture(
 
     mIncompleteTextures[type].set(context, t.release());
     *textureOut = mIncompleteTextures[type].get();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 #define ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(cols, rows)                            \

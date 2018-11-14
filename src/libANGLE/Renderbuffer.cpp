@@ -76,7 +76,7 @@ Renderbuffer::Renderbuffer(rx::GLImplFactory *implFactory, GLuint id)
 
 void Renderbuffer::onDestroy(const Context *context)
 {
-    ANGLE_SWALLOW_ERR(orphanImages(context));
+    (void)(orphanImages(context));
 
     if (mImplementation)
     {
@@ -103,7 +103,7 @@ angle::Result Renderbuffer::setStorage(const Context *context,
                                        size_t width,
                                        size_t height)
 {
-    ANGLE_TRY_HANDLE(context, orphanImages(context));
+    ANGLE_TRY(orphanImages(context));
     ANGLE_TRY(mImplementation->setStorage(context, internalformat, width, height));
 
     mState.update(static_cast<GLsizei>(width), static_cast<GLsizei>(height), Format(internalformat),
@@ -119,7 +119,7 @@ angle::Result Renderbuffer::setStorageMultisample(const Context *context,
                                                   size_t width,
                                                   size_t height)
 {
-    ANGLE_TRY_HANDLE(context, orphanImages(context));
+    ANGLE_TRY(orphanImages(context));
     ANGLE_TRY(
         mImplementation->setStorageMultisample(context, samples, internalformat, width, height));
 
@@ -132,7 +132,7 @@ angle::Result Renderbuffer::setStorageMultisample(const Context *context,
 
 angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl::Image *image)
 {
-    ANGLE_TRY_HANDLE(context, orphanImages(context));
+    ANGLE_TRY(orphanImages(context));
     ANGLE_TRY(mImplementation->setStorageEGLImageTarget(context, image));
 
     setTargetImage(context, image);

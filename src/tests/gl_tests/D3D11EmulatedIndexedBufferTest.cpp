@@ -37,9 +37,9 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
 
         mSourceBuffer      = new rx::Buffer11(mBufferState, mRenderer);
         GLfloat testData[] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };
-        gl::Error error    = mSourceBuffer->setData(nullptr, gl::BufferBinding::Array, testData,
-                                                 sizeof(testData), gl::BufferUsage::StaticDraw);
-        ASSERT_FALSE(error.isError());
+        angle::Result error = mSourceBuffer->setData(nullptr, gl::BufferBinding::Array, testData,
+                                                     sizeof(testData), gl::BufferUsage::StaticDraw);
+        ASSERT_EQ(angle::Result::Continue(), error);
 
         mTranslatedAttribute.baseOffset            = 0;
         mTranslatedAttribute.usesFirstVertexOffset = false;
@@ -112,9 +112,9 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
     void emulateAndCompare(rx::SourceIndexData *srcData)
     {
         ID3D11Buffer *emulatedBuffer = nullptr;
-        gl::Error error              = mSourceBuffer->getEmulatedIndexedBuffer(
+        angle::Result error          = mSourceBuffer->getEmulatedIndexedBuffer(
             mContext, srcData, mTranslatedAttribute, 0, &emulatedBuffer);
-        ASSERT_FALSE(error.isError());
+        ASSERT_EQ(angle::Result::Continue(), error);
         ASSERT_TRUE(emulatedBuffer != nullptr);
         compareContents(emulatedBuffer);
     }
@@ -180,8 +180,8 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     const uint8_t *sourceBufferMem = nullptr;
     const uint8_t *cleanBufferMem = nullptr;
 
-    gl::Error error = mSourceBuffer->getData(mContext, &sourceBufferMem);
-    ASSERT_FALSE(error.isError());
+    angle::Result error = mSourceBuffer->getData(mContext, &sourceBufferMem);
+    ASSERT_EQ(angle::Result::Continue(), error);
 
     error = cleanSourceBuffer->getData(mContext, &cleanBufferMem);
     ASSERT_FALSE(error.isError());

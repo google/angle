@@ -253,7 +253,7 @@ class Texture final : public RefCountObject,
 
     const SamplerState &getSamplerState() const;
 
-    gl::Error setBaseLevel(const Context *context, GLuint baseLevel);
+    angle::Result setBaseLevel(const Context *context, GLuint baseLevel);
     GLuint getBaseLevel() const;
 
     void setMaxLevel(GLuint maxLevel);
@@ -283,93 +283,95 @@ class Texture final : public RefCountObject,
 
     bool isMipmapComplete() const;
 
-    Error setImage(const Context *context,
-                   const PixelUnpackState &unpackState,
-                   TextureTarget target,
-                   GLint level,
-                   GLenum internalFormat,
-                   const Extents &size,
-                   GLenum format,
-                   GLenum type,
-                   const uint8_t *pixels);
-    Error setSubImage(const Context *context,
-                      const PixelUnpackState &unpackState,
-                      Buffer *unpackBuffer,
-                      TextureTarget target,
-                      GLint level,
-                      const Box &area,
-                      GLenum format,
-                      GLenum type,
-                      const uint8_t *pixels);
+    angle::Result setImage(const Context *context,
+                           const PixelUnpackState &unpackState,
+                           TextureTarget target,
+                           GLint level,
+                           GLenum internalFormat,
+                           const Extents &size,
+                           GLenum format,
+                           GLenum type,
+                           const uint8_t *pixels);
+    angle::Result setSubImage(const Context *context,
+                              const PixelUnpackState &unpackState,
+                              Buffer *unpackBuffer,
+                              TextureTarget target,
+                              GLint level,
+                              const Box &area,
+                              GLenum format,
+                              GLenum type,
+                              const uint8_t *pixels);
 
-    Error setCompressedImage(const Context *context,
-                             const PixelUnpackState &unpackState,
-                             TextureTarget target,
-                             GLint level,
+    angle::Result setCompressedImage(const Context *context,
+                                     const PixelUnpackState &unpackState,
+                                     TextureTarget target,
+                                     GLint level,
+                                     GLenum internalFormat,
+                                     const Extents &size,
+                                     size_t imageSize,
+                                     const uint8_t *pixels);
+    angle::Result setCompressedSubImage(const Context *context,
+                                        const PixelUnpackState &unpackState,
+                                        TextureTarget target,
+                                        GLint level,
+                                        const Box &area,
+                                        GLenum format,
+                                        size_t imageSize,
+                                        const uint8_t *pixels);
+
+    angle::Result copyImage(const Context *context,
+                            TextureTarget target,
+                            GLint level,
+                            const Rectangle &sourceArea,
+                            GLenum internalFormat,
+                            Framebuffer *source);
+    angle::Result copySubImage(const Context *context,
+                               TextureTarget target,
+                               GLint level,
+                               const Offset &destOffset,
+                               const Rectangle &sourceArea,
+                               Framebuffer *source);
+
+    angle::Result copyTexture(const Context *context,
+                              TextureTarget target,
+                              GLint level,
+                              GLenum internalFormat,
+                              GLenum type,
+                              GLint sourceLevel,
+                              bool unpackFlipY,
+                              bool unpackPremultiplyAlpha,
+                              bool unpackUnmultiplyAlpha,
+                              Texture *source);
+    angle::Result copySubTexture(const Context *context,
+                                 TextureTarget target,
+                                 GLint level,
+                                 const Offset &destOffset,
+                                 GLint sourceLevel,
+                                 const Box &sourceBox,
+                                 bool unpackFlipY,
+                                 bool unpackPremultiplyAlpha,
+                                 bool unpackUnmultiplyAlpha,
+                                 Texture *source);
+    angle::Result copyCompressedTexture(const Context *context, const Texture *source);
+
+    angle::Result setStorage(const Context *context,
+                             TextureType type,
+                             GLsizei levels,
                              GLenum internalFormat,
-                             const Extents &size,
-                             size_t imageSize,
-                             const uint8_t *pixels);
-    Error setCompressedSubImage(const Context *context,
-                                const PixelUnpackState &unpackState,
-                                TextureTarget target,
-                                GLint level,
-                                const Box &area,
-                                GLenum format,
-                                size_t imageSize,
-                                const uint8_t *pixels);
+                             const Extents &size);
 
-    Error copyImage(const Context *context,
-                    TextureTarget target,
-                    GLint level,
-                    const Rectangle &sourceArea,
-                    GLenum internalFormat,
-                    Framebuffer *source);
-    Error copySubImage(const Context *context,
-                       TextureTarget target,
-                       GLint level,
-                       const Offset &destOffset,
-                       const Rectangle &sourceArea,
-                       Framebuffer *source);
+    angle::Result setStorageMultisample(const Context *context,
+                                        TextureType type,
+                                        GLsizei samples,
+                                        GLint internalformat,
+                                        const Extents &size,
+                                        bool fixedSampleLocations);
 
-    Error copyTexture(const Context *context,
-                      TextureTarget target,
-                      GLint level,
-                      GLenum internalFormat,
-                      GLenum type,
-                      GLint sourceLevel,
-                      bool unpackFlipY,
-                      bool unpackPremultiplyAlpha,
-                      bool unpackUnmultiplyAlpha,
-                      Texture *source);
-    Error copySubTexture(const Context *context,
-                         TextureTarget target,
-                         GLint level,
-                         const Offset &destOffset,
-                         GLint sourceLevel,
-                         const Box &sourceBox,
-                         bool unpackFlipY,
-                         bool unpackPremultiplyAlpha,
-                         bool unpackUnmultiplyAlpha,
-                         Texture *source);
-    Error copyCompressedTexture(const Context *context, const Texture *source);
+    angle::Result setEGLImageTarget(const Context *context,
+                                    TextureType type,
+                                    egl::Image *imageTarget);
 
-    Error setStorage(const Context *context,
-                     TextureType type,
-                     GLsizei levels,
-                     GLenum internalFormat,
-                     const Extents &size);
-
-    Error setStorageMultisample(const Context *context,
-                                TextureType type,
-                                GLsizei samples,
-                                GLint internalformat,
-                                const Extents &size,
-                                bool fixedSampleLocations);
-
-    Error setEGLImageTarget(const Context *context, TextureType type, egl::Image *imageTarget);
-
-    Error generateMipmap(const Context *context);
+    angle::Result generateMipmap(const Context *context);
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
@@ -459,26 +461,26 @@ class Texture final : public RefCountObject,
 
     // ANGLE-only method, used internally
     friend class egl::Surface;
-    Error bindTexImageFromSurface(const Context *context, egl::Surface *surface);
-    Error releaseTexImageFromSurface(const Context *context);
+    angle::Result bindTexImageFromSurface(const Context *context, egl::Surface *surface);
+    angle::Result releaseTexImageFromSurface(const Context *context);
 
     // ANGLE-only methods, used internally
     friend class egl::Stream;
     void bindStream(egl::Stream *stream);
     void releaseStream();
-    Error acquireImageFromStream(const Context *context,
-                                 const egl::Stream::GLTextureDescription &desc);
-    Error releaseImageFromStream(const Context *context);
+    angle::Result acquireImageFromStream(const Context *context,
+                                         const egl::Stream::GLTextureDescription &desc);
+    angle::Result releaseImageFromStream(const Context *context);
 
     void invalidateCompletenessCache() const;
-    Error releaseTexImageInternal(const Context *context);
+    angle::Result releaseTexImageInternal(const Context *context);
 
-    Error ensureSubImageInitialized(const Context *context,
-                                    TextureTarget target,
-                                    size_t level,
-                                    const gl::Box &area);
+    angle::Result ensureSubImageInitialized(const Context *context,
+                                            TextureTarget target,
+                                            size_t level,
+                                            const gl::Box &area);
 
-    Error handleMipmapGenerationHint(const Context *context, int level);
+    angle::Result handleMipmapGenerationHint(const Context *context, int level);
 
     TextureState mState;
     DirtyBits mDirtyBits;

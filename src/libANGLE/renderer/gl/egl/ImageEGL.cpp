@@ -98,16 +98,16 @@ egl::Error ImageEGL::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-gl::Error ImageEGL::orphan(const gl::Context *context, egl::ImageSibling *sibling)
+angle::Result ImageEGL::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     // Nothing to do, the native EGLImage will orphan automatically.
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ImageEGL::setTexture2D(const gl::Context *context,
-                                 gl::TextureType type,
-                                 TextureGL *texture,
-                                 GLenum *outInternalFormat)
+angle::Result ImageEGL::setTexture2D(const gl::Context *context,
+                                     gl::TextureType type,
+                                     TextureGL *texture,
+                                     GLenum *outInternalFormat)
 {
     const FunctionsGL *functionsGL = GetFunctionsGL(context);
     StateManagerGL *stateManager   = GetStateManagerGL(context);
@@ -119,12 +119,12 @@ gl::Error ImageEGL::setTexture2D(const gl::Context *context,
     functionsGL->eGLImageTargetTexture2DOES(ToGLenum(type), mImage);
     *outInternalFormat = mNativeInternalFormat;
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ImageEGL::setRenderbufferStorage(const gl::Context *context,
-                                           RenderbufferGL *renderbuffer,
-                                           GLenum *outInternalFormat)
+angle::Result ImageEGL::setRenderbufferStorage(const gl::Context *context,
+                                               RenderbufferGL *renderbuffer,
+                                               GLenum *outInternalFormat)
 {
     const FunctionsGL *functionsGL = GetFunctionsGL(context);
     StateManagerGL *stateManager   = GetStateManagerGL(context);
@@ -136,7 +136,7 @@ gl::Error ImageEGL::setRenderbufferStorage(const gl::Context *context,
     functionsGL->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
     *outInternalFormat = mNativeInternalFormat;
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

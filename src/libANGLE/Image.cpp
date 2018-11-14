@@ -72,7 +72,7 @@ void ImageSibling::setTargetImage(const gl::Context *context, egl::Image *imageT
     imageTarget->addTargetSibling(this);
 }
 
-gl::Error ImageSibling::orphanImages(const gl::Context *context)
+angle::Result ImageSibling::orphanImages(const gl::Context *context)
 {
     if (mTargetOf.get() != nullptr)
     {
@@ -91,7 +91,7 @@ gl::Error ImageSibling::orphanImages(const gl::Context *context)
         mSourcesOf.clear();
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void ImageSibling::addImageSource(egl::Image *imageSource)
@@ -273,7 +273,7 @@ void Image::addTargetSibling(ImageSibling *sibling)
     mState.targets.insert(sibling);
 }
 
-gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling)
+angle::Result Image::orphanSibling(const gl::Context *context, ImageSibling *sibling)
 {
     ASSERT(sibling != nullptr);
 
@@ -296,7 +296,7 @@ gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling
         mState.targets.erase(sibling);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 const gl::Format &Image::getFormat() const

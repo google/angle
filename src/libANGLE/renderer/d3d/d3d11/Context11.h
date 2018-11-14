@@ -158,8 +158,8 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
                                        gl::TextureType type,
                                        gl::Texture **textureOut);
 
-    gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
-                                                  gl::Texture *glTexture) override;
+    angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                      gl::Texture *glTexture) override;
 
     void handleResult(HRESULT hr,
                       const char *message,

@@ -38,13 +38,6 @@ Error::Error(Error &&other)
 }
 
 // automatic error type conversion
-Error::Error(egl::Error &&eglErr)
-    : mCode(GL_INVALID_OPERATION),
-      mID(0),
-      mMessage(std::move(eglErr.mMessage))
-{
-}
-
 Error::Error(egl::Error eglErr)
     : mCode(GL_INVALID_OPERATION),
       mID(0),

@@ -236,8 +236,8 @@ class MultisampleTextureInitializer
 {
   public:
     virtual ~MultisampleTextureInitializer() {}
-    virtual gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
-                                                          gl::Texture *glTexture) = 0;
+    virtual angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                              gl::Texture *glTexture) = 0;
 };
 
 class IncompleteTextureSet final : angle::NonCopyable
@@ -248,10 +248,10 @@ class IncompleteTextureSet final : angle::NonCopyable
 
     void onDestroy(const gl::Context *context);
 
-    gl::Error getIncompleteTexture(const gl::Context *context,
-                                   gl::TextureType type,
-                                   MultisampleTextureInitializer *multisampleInitializer,
-                                   gl::Texture **textureOut);
+    angle::Result getIncompleteTexture(const gl::Context *context,
+                                       gl::TextureType type,
+                                       MultisampleTextureInitializer *multisampleInitializer,
+                                       gl::Texture **textureOut);
 
   private:
     gl::TextureMap mIncompleteTextures;

@@ -108,10 +108,10 @@ std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
 }
 
 template <typename T>
-gl::Error GetQueryObjectParameter(const gl::Context *context,
-                                  gl::Query *query,
-                                  GLenum pname,
-                                  T *params)
+angle::Result GetQueryObjectParameter(const gl::Context *context,
+                                      gl::Query *query,
+                                      GLenum pname,
+                                      T *params)
 {
     ASSERT(query != nullptr);
 
@@ -122,16 +122,13 @@ gl::Error GetQueryObjectParameter(const gl::Context *context,
         case GL_QUERY_RESULT_AVAILABLE_EXT:
         {
             bool available;
-            gl::Error error = query->isResultAvailable(context, &available);
-            if (!error.isError())
-            {
-                *params = gl::CastFromStateValue<T>(pname, static_cast<GLuint>(available));
-            }
-            return error;
+            ANGLE_TRY(query->isResultAvailable(context, &available));
+            *params = gl::CastFromStateValue<T>(pname, static_cast<GLuint>(available));
+            return angle::Result::Continue();
         }
         default:
             UNREACHABLE();
-            return gl::InternalError() << "Unreachable Error";
+            return angle::Result::Stop();
     }
 }
 

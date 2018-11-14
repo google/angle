@@ -174,9 +174,9 @@ class ContextVk : public ContextImpl, public vk::Context
     const VkClearValue &getClearDepthStencilValue() const;
     VkColorComponentFlags getClearColorMask() const;
     const VkRect2D &getScissor() const { return mScissor; }
-    gl::Error getIncompleteTexture(const gl::Context *context,
-                                   gl::TextureType type,
-                                   gl::Texture **textureOut);
+    angle::Result getIncompleteTexture(const gl::Context *context,
+                                       gl::TextureType type,
+                                       gl::Texture **textureOut);
     void updateColorMask(const gl::BlendState &blendState);
 
     void handleError(VkResult errorCode, const char *file, unsigned int line) override;

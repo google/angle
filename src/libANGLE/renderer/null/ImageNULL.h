@@ -22,7 +22,7 @@ class ImageNULL : public ImageImpl
     ~ImageNULL() override;
     egl::Error initialize(const egl::Display *display) override;
 
-    gl::Error orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
+    angle::Result orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
 };
 
 }  // namespace rx

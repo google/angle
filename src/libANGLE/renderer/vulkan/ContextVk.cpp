@@ -178,9 +178,9 @@ void ContextVk::onDestroy(const gl::Context *context)
     }
 }
 
-gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
-                                          gl::TextureType type,
-                                          gl::Texture **textureOut)
+angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
+                                              gl::TextureType type,
+                                              gl::Texture **textureOut)
 {
     // At some point, we'll need to support multisample and we'll pass "this" instead of nullptr
     // and implement the necessary interface.
@@ -1259,7 +1259,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         // Null textures represent incomplete textures.
         if (texture == nullptr)
         {
-            ANGLE_TRY_HANDLE(context, getIncompleteTexture(context, textureType, &texture));
+            ANGLE_TRY(getIncompleteTexture(context, textureType, &texture));
         }
 
         mActiveTextures[textureUnit] = vk::GetImpl(texture);

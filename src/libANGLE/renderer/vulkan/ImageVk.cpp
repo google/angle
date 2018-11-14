@@ -10,6 +10,9 @@
 #include "libANGLE/renderer/vulkan/ImageVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
@@ -28,10 +31,9 @@ egl::Error ImageVk::initialize(const egl::Display *display)
     return egl::EglBadAccess();
 }
 
-gl::Error ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sibling)
+angle::Result ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
-
 }  // namespace rx

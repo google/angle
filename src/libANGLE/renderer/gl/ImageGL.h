@@ -26,13 +26,13 @@ class ImageGL : public ImageImpl
     // TextureGL does not have access to all the parameters needed to implement
     // glEGLImageTargetTexture2DOES or glEGLImageTargetRenderbufferStorageOES. This allows the Image
     // to implement these functions because it holds the native EGLimage or emulated object.
-    virtual gl::Error setTexture2D(const gl::Context *context,
-                                   gl::TextureType type,
-                                   TextureGL *texture,
-                                   GLenum *outInternalFormat)           = 0;
-    virtual gl::Error setRenderbufferStorage(const gl::Context *context,
-                                             RenderbufferGL *renderbuffer,
-                                             GLenum *outInternalFormat) = 0;
+    virtual angle::Result setTexture2D(const gl::Context *context,
+                                       gl::TextureType type,
+                                       TextureGL *texture,
+                                       GLenum *outInternalFormat)           = 0;
+    virtual angle::Result setRenderbufferStorage(const gl::Context *context,
+                                                 RenderbufferGL *renderbuffer,
+                                                 GLenum *outInternalFormat) = 0;
 };
 
 }  // namespace rx
