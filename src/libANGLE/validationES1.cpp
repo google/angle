@@ -6,7 +6,7 @@
 
 // validationES1.cpp: Validation functions for OpenGL ES 1.0 entry point parameters
 
-#include "libANGLE/validationES1.h"
+#include "libANGLE/validationES1_autogen.h"
 
 #include "common/debug.h"
 #include "libANGLE/Context.h"
@@ -1556,7 +1556,7 @@ bool ValidateIsRenderbufferOES(Context *context, GLuint renderbuffer)
 
 bool ValidateRenderbufferStorageOES(Context *context,
                                     GLenum target,
-                                    GLint internalformat,
+                                    GLenum internalformat,
                                     GLsizei width,
                                     GLsizei height)
 {

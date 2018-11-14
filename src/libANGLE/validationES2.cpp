@@ -6,7 +6,7 @@
 
 // validationES2.cpp: Validation functions for OpenGL ES 2.0 entry point parameters
 
-#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES2_autogen.h"
 
 #include <cstdint>
 
@@ -25,7 +25,8 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
-#include "libANGLE/validationES3.h"
+#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES3_autogen.h"
 
 namespace gl
 {
@@ -3581,16 +3582,6 @@ bool ValidateStencilStrokePathCHROMIUM(Context *context, GLuint path, GLint refe
     return true;
 }
 
-bool ValidateCoverFillPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
-{
-    return ValidateCoverPathCHROMIUM(context, path, coverMode);
-}
-
-bool ValidateCoverStrokePathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
-{
-    return ValidateCoverPathCHROMIUM(context, path, coverMode);
-}
-
 bool ValidateCoverPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
 {
     if (!context->getExtensions().pathRendering)
@@ -3614,6 +3605,16 @@ bool ValidateCoverPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
             return false;
     }
     return true;
+}
+
+bool ValidateCoverFillPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
+{
+    return ValidateCoverPathCHROMIUM(context, path, coverMode);
+}
+
+bool ValidateCoverStrokePathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
+{
+    return ValidateCoverPathCHROMIUM(context, path, coverMode);
 }
 
 bool ValidateStencilThenCoverFillPathCHROMIUM(Context *context,

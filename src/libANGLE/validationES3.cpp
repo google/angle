@@ -6,7 +6,7 @@
 
 // validationES3.cpp: Validation functions for OpenGL ES 3.0 entry point parameters
 
-#include "libANGLE/validationES3.h"
+#include "libANGLE/validationES3_autogen.h"
 
 #include "anglebase/numerics/safe_conversions.h"
 #include "common/mathutil.h"
@@ -4098,7 +4098,7 @@ bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pnam
 bool ValidateGetSamplerParameterIivOES(Context *context,
                                        GLuint sampler,
                                        GLenum pname,
-                                       const GLint *params)
+                                       GLint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4111,7 +4111,7 @@ bool ValidateGetSamplerParameterIivOES(Context *context,
 bool ValidateGetSamplerParameterIuivOES(Context *context,
                                         GLuint sampler,
                                         GLenum pname,
-                                        const GLuint *params)
+                                        GLuint *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -4276,7 +4276,7 @@ bool ValidateGetFragDataIndexEXT(Context *context, GLuint program, const char *n
 bool ValidateTexStorage2DMultisampleANGLE(Context *context,
                                           TextureType target,
                                           GLsizei samples,
-                                          GLint internalFormat,
+                                          GLenum internalFormat,
                                           GLsizei width,
                                           GLsizei height,
                                           GLboolean fixedSampleLocations)

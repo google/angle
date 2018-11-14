@@ -6,15 +6,15 @@
 
 // validationES31.cpp: Validation functions for OpenGL ES 3.1 entry point parameters
 
-#include "libANGLE/validationES31.h"
+#include "libANGLE/validationES31_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/validationES.h"
-#include "libANGLE/validationES2.h"
-#include "libANGLE/validationES3.h"
+#include "libANGLE/validationES2_autogen.h"
+#include "libANGLE/validationES3_autogen.h"
 
 #include "common/utilities.h"
 
@@ -948,7 +948,7 @@ bool ValidateGetTexLevelParameterivRobustANGLE(Context *context,
 bool ValidateTexStorage2DMultisample(Context *context,
                                      TextureType target,
                                      GLsizei samples,
-                                     GLint internalFormat,
+                                     GLenum internalFormat,
                                      GLsizei width,
                                      GLsizei height,
                                      GLboolean fixedSampleLocations)
@@ -1893,7 +1893,7 @@ bool ValidateFramebufferTextureEXT(Context *context,
 bool ValidateTexStorage3DMultisampleOES(Context *context,
                                         TextureType target,
                                         GLsizei samples,
-                                        GLint sizedinternalformat,
+                                        GLenum sizedinternalformat,
                                         GLsizei width,
                                         GLsizei height,
                                         GLsizei depth,
