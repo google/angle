@@ -90,8 +90,6 @@ class DrawElementsPerfBenchmark : public ANGLERenderTest,
 DrawElementsPerfBenchmark::DrawElementsPerfBenchmark()
     : ANGLERenderTest("DrawElementsPerf", GetParam())
 {
-    mRunTimeSeconds = GetParam().runTimeSeconds;
-
     if (GetParam().type == GL_UNSIGNED_INT)
     {
         addExtensionPrerequisite("GL_OES_element_index_uint");

@@ -20,7 +20,8 @@ base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file_
 
 # Might have to add lower case "release" in some configurations.
 perftests_paths = glob.glob('out/*Release*')
-metric = 'score'
+metric = 'wall_time'
+max_experiments = 10
 
 binary_name = 'angle_perftests'
 if sys.platform == 'win32':
@@ -95,45 +96,44 @@ if len(sys.argv) >= 2:
 print('Using test executable: ' + perftests_path)
 print('Test name: ' + test_name)
 
-# Infinite loop of running the tests.
-while True:
-    process = subprocess.Popen([perftests_path, '--gtest_filter=' + test_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def get_results(metric, extra_args=[]):
+    process = subprocess.Popen([perftests_path, '--gtest_filter=' + test_name] + extra_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, err = process.communicate()
 
-    start_index = output.find(metric + "=")
-    if start_index == -1:
-        print("Did not find the score of the specified test in output:")
-        print(output)
-        sys.exit(1)
-
-    start_index += len(metric) + 2
-
-    end_index = output[start_index:].find(" ")
-    if end_index == -1:
-        print("Error parsing output:")
-        print(output)
-        sys.exit(2)
-
-    m = re.search('Running (\d+) tests', output)
+    m = re.search(r'Running (\d+) tests', output)
     if m and int(m.group(1)) > 1:
         print("Found more than one test result in output:")
         print(output)
         sys.exit(3)
 
-    end_index += start_index
+    pattern = metric + r'= ([0-9.]+)'
+    m = re.findall(pattern, output)
+    if m is None:
+        print("Did not find the metric '%s' in the test output:" % metric)
+        print(output)
+        sys.exit(1)
 
-    score = int(output[start_index:end_index])
-    sys.stdout.write("score: " + str(score))
+    return [float(value) for value in m]
 
-    scores.append(score)
-    sys.stdout.write(", mean: %.2f" % mean(scores))
+# Calibrate the number of steps
+steps = get_results("steps", ["--calibration"])[0]
+print("running with %d steps." % steps)
 
-    if (len(scores) > 1):
-        sys.stdout.write(", variation: %.2f%%" % (coefficient_of_variation(scores) * 100.0))
+# Loop 'max_experiments' times, running the tests.
+for experiment in range(max_experiments):
+    experiment_scores = get_results(metric, ["--steps", str(steps)])
 
-    if (len(scores) > 7):
-        trucation_n = len(scores) >> 3
-        sys.stdout.write(", truncated mean: %.2f" % truncated_mean(scores, trucation_n))
-        sys.stdout.write(", variation: %.2f%%" % (truncated_cov(scores, trucation_n) * 100.0))
+    for score in experiment_scores:
+        sys.stdout.write("%s: %.2f" % (metric, score))
+        scores.append(score)
 
-    print("")
+        if (len(scores) > 1):
+            sys.stdout.write(", mean: %.2f" % mean(scores))
+            sys.stdout.write(", variation: %.2f%%" % (coefficient_of_variation(scores) * 100.0))
+
+        if (len(scores) > 7):
+            truncation_n = len(scores) >> 3
+            sys.stdout.write(", truncated mean: %.2f" % truncated_mean(scores, trucation_n))
+            sys.stdout.write(", variation: %.2f%%" % (truncated_cov(scores, trucation_n) * 100.0))
+
+        print("")

@@ -84,14 +84,16 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void abortTest() { mRunning = false; }
 
     unsigned int getNumStepsPerformed() const { return mNumStepsPerformed; }
+    void doRunLoop(double maxRunTime);
 
     std::string mName;
     std::string mSuffix;
     Timer *mTimer;
-    double mRunTimeSeconds;
     bool mSkipTest;
 
   private:
+    void printResults();
+
     unsigned int mNumStepsPerformed;
     unsigned int mIterationsPerStep;
     bool mRunning;

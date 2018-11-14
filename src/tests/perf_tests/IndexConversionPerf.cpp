@@ -72,7 +72,6 @@ IndexConversionPerfTest::IndexConversionPerfTest()
       mVertexBuffer(0),
       mIndexBuffer(0)
 {
-    mRunTimeSeconds = 3.0;
 }
 
 void IndexConversionPerfTest::initializeBenchmark()

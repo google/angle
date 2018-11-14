@@ -9,28 +9,11 @@
 
 #include <gtest/gtest.h>
 
-extern bool g_OnlyOneRunFrame;
-extern bool gEnableTrace;
-extern const char *gTraceFile;
+void ANGLEProcessPerfTestArgs(int *argc, char **argv);
 
 int main(int argc, char **argv)
 {
-    for (int i = 0; i < argc; ++i)
-    {
-        if (strcmp("--one-frame-only", argv[i]) == 0)
-        {
-            g_OnlyOneRunFrame = true;
-        }
-        if (strcmp("--enable-trace", argv[i]) == 0)
-        {
-            gEnableTrace = true;
-        }
-        if (strcmp("--trace-file", argv[i]) == 0 && i < argc - 1)
-        {
-            gTraceFile = argv[++i];
-        }
-    }
-
+    ANGLEProcessPerfTestArgs(&argc, argv);
     testing::InitGoogleTest(&argc, argv);
     testing::AddGlobalTestEnvironment(new testing::Environment());
     int rt = RUN_ALL_TESTS();

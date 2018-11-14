@@ -255,9 +255,6 @@ if (is_win || is_linux || is_android || is_mac) {
 
     if (angle_enable_vulkan) {
       sources += angle_perf_tests_vulkan_sources
-      if (is_android) {
-        sources += angle_perf_tests_vulkan_command_buffer_sources
-      }
       deps += [ "$angle_root/third_party/glslang:glslang" ]
       public_configs = [ "$angle_root/third_party/glslang:glslang_config" ]
     }

@@ -162,7 +162,7 @@ void main()
 
 const char *kTrickyESSL300Id = "TrickyESSL300";
 
-constexpr int kNumIterationsPerStep = 10;
+constexpr int kNumIterationsPerStep = 4;
 
 struct CompilerPerfParameters final : public angle::CompilerParameters
 {

@@ -38,12 +38,12 @@ angle_perf_tests_sources = [
   "test_utils/draw_call_perf_utils.cpp",
   "test_utils/draw_call_perf_utils.h",
 ]
-angle_perf_tests_win_sources = [ "perf_tests/IndexDataManagerTest.cpp" ]
-angle_perf_tests_vulkan_sources = [ "perf_tests/VulkanPipelineCachePerf.cpp" ]
 
-# Currently Vulkan Command Buffer Perf Tests compile on Android/Linux
-angle_perf_tests_vulkan_command_buffer_sources = [
+angle_perf_tests_win_sources = [ "perf_tests/IndexDataManagerTest.cpp" ]
+
+angle_perf_tests_vulkan_sources = [
   "perf_tests/VulkanCommandBufferPerf.cpp",
+  "perf_tests/VulkanPipelineCachePerf.cpp",
   "test_utils/third_party/vulkan_command_buffer_utils.cpp",
   "test_utils/third_party/vulkan_command_buffer_utils.h",
 ]

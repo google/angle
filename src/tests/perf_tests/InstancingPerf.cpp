@@ -103,7 +103,6 @@ class InstancingPerfBenchmark : public ANGLERenderTest,
 InstancingPerfBenchmark::InstancingPerfBenchmark()
     : ANGLERenderTest("InstancingPerf", GetParam()), mProgram(0), mNumPoints(75000)
 {
-    mRunTimeSeconds = GetParam().runTimeSeconds;
 }
 
 void InstancingPerfBenchmark::initializeBenchmark()

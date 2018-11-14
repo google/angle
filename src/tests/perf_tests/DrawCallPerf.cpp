@@ -110,7 +110,6 @@ class DrawCallPerfBenchmark : public ANGLERenderTest,
 
 DrawCallPerfBenchmark::DrawCallPerfBenchmark() : ANGLERenderTest("DrawCallPerf", GetParam())
 {
-    mRunTimeSeconds = GetParam().runTimeSeconds;
 }
 
 void DrawCallPerfBenchmark::initializeBenchmark()

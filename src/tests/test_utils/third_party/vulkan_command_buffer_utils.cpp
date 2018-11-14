@@ -397,7 +397,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void init_window(struct sample_info &info)
 {
-    WNDCLASSEX win_class;
+    WNDCLASSEXA win_class;
     assert(info.width > 0);
     assert(info.height > 0);
 
@@ -418,7 +418,7 @@ void init_window(struct sample_info &info)
     win_class.lpszClassName = info.name;
     win_class.hIconSm       = LoadIcon(NULL, IDI_WINLOGO);
     // Register window class:
-    if (!RegisterClassEx(&win_class))
+    if (!RegisterClassExA(&win_class))
     {
         // It didn't work, so try to give a useful error:
         printf("Unexpected error trying to start the application!\n");
@@ -428,18 +428,18 @@ void init_window(struct sample_info &info)
     // Create window with the registered class:
     RECT wr = {0, 0, info.width, info.height};
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
-    info.window = CreateWindowEx(0,
-                                 info.name,             // class name
-                                 info.name,             // app name
-                                 WS_OVERLAPPEDWINDOW |  // window style
-                                     WS_VISIBLE | WS_SYSMENU,
-                                 100, 100,            // x/y coords
-                                 wr.right - wr.left,  // width
-                                 wr.bottom - wr.top,  // height
-                                 NULL,                // handle to parent
-                                 NULL,                // handle to menu
-                                 info.connection,     // hInstance
-                                 NULL);               // no extra parameters
+    info.window = CreateWindowExA(0,
+                                  info.name,             // class name
+                                  info.name,             // app name
+                                  WS_OVERLAPPEDWINDOW |  // window style
+                                      WS_VISIBLE | WS_SYSMENU,
+                                  100, 100,            // x/y coords
+                                  wr.right - wr.left,  // width
+                                  wr.bottom - wr.top,  // height
+                                  NULL,                // handle to parent
+                                  NULL,                // handle to menu
+                                  info.connection,     // hInstance
+                                  NULL);               // no extra parameters
     if (!info.window)
     {
         // It didn't work, so try to give a useful error:
@@ -454,6 +454,7 @@ void destroy_window(struct sample_info &info)
 {
     vkDestroySurfaceKHR(info.inst, info.surface, NULL);
     DestroyWindow(info.window);
+    UnregisterClassA(info.name, GetModuleHandle(NULL));
 }
 
 #elif defined(__ANDROID__)
@@ -846,7 +847,16 @@ void init_swap_chain(struct sample_info &info, VkImageUsageFlags usageFlags)
 
     // The FIFO present mode is guaranteed by the spec to be supported
     // Also note that current Android driver only supports FIFO
-    VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+    VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+
+    for (uint32_t presentModeIndex = 0; presentModeIndex < presentModeCount; ++presentModeIndex)
+    {
+        if (presentModes[presentModeIndex] == VK_PRESENT_MODE_IMMEDIATE_KHR)
+        {
+            swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+            break;
+        }
+    }
 
     // Determine the number of VkImage's to use in the swap chain.
     // We need to acquire only 1 presentable image at at time.

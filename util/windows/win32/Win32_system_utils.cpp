@@ -25,7 +25,11 @@ bool StabilizeCPUForBenchmarking()
     {
         return false;
     }
-    if (SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST) == FALSE)
+    if (SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS) == FALSE)
+    {
+        return false;
+    }
+    if (SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL) == FALSE)
     {
         return false;
     }
