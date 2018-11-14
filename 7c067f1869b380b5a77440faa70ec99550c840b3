@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ed52779d_fefb6119",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:42:58Z",
+      "side": 1,
+      "message": "Sorry. Yuly and/or I may have been confused. Let me try to explain why your CL is failing to build:\n\nTRACE_EVENT0 calls angle::AddTraceEvent in event_tracer.cpp. AddTraceEvent calls ANGLEPlatformCurrent. ANGLEPlatformCurrent is implemented in libANGLE/Platform.cpp and must remain there since it uses egl::Display. debug.cpp is in src/common and cannot call into libANGLE because it is used in projects that don\u0027t link libANGLE. For instance shader_translator.\n\nIf you want access to event tracing you\u0027ll have to do it through LoggingAnnotator. also event_tracer.cpp should be located in libANGLE, but is mistakenly exposed in src/common. This would have prevented some of the mess.\n\nHope this clears this up and lets you proceed with a correct implementation.",
+      "parentUuid": "e3293663_611c5cab",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 22
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d04b6f0_76b4e66c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 14
