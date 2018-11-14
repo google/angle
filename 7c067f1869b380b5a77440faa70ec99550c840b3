@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "e3293663_611c5cab",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-14T21:11:00Z",
+      "side": 1,
+      "message": "The trace events were originally in LoggingAnnotator but after various discussion with you and Yuly we agreed to move them to ScopedPerfEventHelper which is what delayed this change for so long. See diff of #9 for previous implementation.",
+      "parentUuid": "0d85ba44_6c5c503d",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 22
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d04b6f0_76b4e66c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 14
