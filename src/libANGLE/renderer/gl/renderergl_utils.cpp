@@ -466,7 +466,9 @@ void GenerateCaps(const FunctionsGL *functions,
     if (functions->isAtLeastGL(gl::Version(3, 2)) || functions->hasGLExtension("GL_ARB_sync") ||
         functions->isAtLeastGLES(gl::Version(3, 0)))
     {
-        caps->maxServerWaitTimeout = QuerySingleGLInt64(functions, GL_MAX_SERVER_WAIT_TIMEOUT);
+        // Work around Linux NVIDIA driver bug where GL_TIMEOUT_IGNORED is returned.
+        caps->maxServerWaitTimeout =
+            std::max<GLint64>(QuerySingleGLInt64(functions, GL_MAX_SERVER_WAIT_TIMEOUT), 0);
     }
     else
     {
