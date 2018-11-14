@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05816370_6543b07b",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "rather than storing this as a vector, I\u0027d suggest making the const char * function name as the first argument after const char *format. It already is so you shouldn\u0027t have to mess with the entry point generation. That would allow you to store a const char * for the event name. Although we\u0027re already slow when this define is enabled, every little bit of speed could help.\n\nBut see below comments to determine if this is still relevant.",
+      "range": {
+        "startLine": 100,
+        "startChar": 72,
+        "endLine": 100,
+        "endChar": 82
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d85ba44_6c5c503d",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "we don\u0027t have access to this method here, as evidenced by the compile failures.\n\nCould you instead move the trace events into the angle::LoggingAnnotator class?",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 22
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d04b6f0_76b4e66c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "maybe make this a helper method somewhere? like in renderer_utils.h or something?",
+      "range": {
+        "startLine": 127,
+        "startChar": 4,
+        "endLine": 127,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b138ab69_bfbe90ba",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer if we didn\u0027t put these in hotspots. They won\u0027t be very meaningful as they are so fast. As well, they will slow down execution.",
+      "range": {
+        "startLine": 281,
+        "startChar": 5,
+        "endLine": 281,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7bebc46_4abeb4f1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer if we didn\u0027t put these in hotspots. They won\u0027t be very meaningful as they are so fast. As well, they will slow down execution.",
+      "range": {
+        "startLine": 330,
+        "startChar": 4,
+        "endLine": 330,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27e5ddb1_648c559a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "similar here.",
+      "range": {
+        "startLine": 370,
+        "startChar": 4,
+        "endLine": 370,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e310d87_bd00e08d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "similar here.",
+      "range": {
+        "startLine": 501,
+        "startChar": 4,
+        "endLine": 501,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55b55767_66b439f9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "similar here.",
+      "range": {
+        "startLine": 536,
+        "startChar": 4,
+        "endLine": 536,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9865330b_d7c191a9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-14T21:05:21Z",
+      "side": 1,
+      "message": "similar here.",
+      "range": {
+        "startLine": 703,
+        "startChar": 4,
+        "endLine": 703,
+        "endChar": 44
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
