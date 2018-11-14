@@ -1321,9 +1321,9 @@ angle::Result TextureStorage11_2D::createUAVForImage(const gl::Context *context,
 {
     ASSERT(outUAV);
     D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
-    uavDesc.Format                    = format;
-    uavDesc.ViewDimension             = D3D11_UAV_DIMENSION_TEXTURE2D;
-    uavDesc.Texture2D.MipSlice        = mTopLevel + level;
+    uavDesc.Format             = format;
+    uavDesc.ViewDimension      = D3D11_UAV_DIMENSION_TEXTURE2D;
+    uavDesc.Texture2D.MipSlice = mTopLevel + level;
     ANGLE_TRY(
         mRenderer->allocateResource(GetImplAs<Context11>(context), uavDesc, texture.get(), outUAV));
     outUAV->setDebugName("TexStorage2D.UAVForImage");

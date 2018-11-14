@@ -126,7 +126,6 @@ class MockTextureImpl : public TextureImpl
   protected:
     gl::TextureState mMockState;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_TEXTUREIMPLMOCK_H_
+#endif  // LIBANGLE_RENDERER_TEXTUREIMPLMOCK_H_

@@ -100,7 +100,7 @@ angle::Result Image11::CopyImage(const gl::Context *context,
         gl::GetSizedInternalFormatInfo(sourceFormat.fboImplementationInternalFormat).pixelBytes;
 
     GLenum destUnsizedFormat = gl::GetUnsizedFormat(dest->getInternalFormat());
-    const auto &destFormat = d3d11::Format::Get(dest->getInternalFormat(), rendererCaps).format();
+    const auto &destFormat   = d3d11::Format::Get(dest->getInternalFormat(), rendererCaps).format();
     const auto &destFormatInfo =
         gl::GetSizedInternalFormatInfo(destFormat.fboImplementationInternalFormat);
     GLuint destPixelBytes = destFormatInfo.pixelBytes;
@@ -162,7 +162,7 @@ angle::Result Image11::copyToStorage(const gl::Context *context,
     }
 
     const TextureHelper11 *stagingTexture = nullptr;
-    unsigned int stagingSubresourceIndex = 0;
+    unsigned int stagingSubresourceIndex  = 0;
     ANGLE_TRY(getStagingTexture(context, &stagingTexture, &stagingSubresourceIndex));
     ANGLE_TRY(storage11->updateSubresourceLevel(context, *stagingTexture, stagingSubresourceIndex,
                                                 index, region));
@@ -411,7 +411,7 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     const auto &destD3D11Format =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    auto loadFunction = destD3D11Format.getLoadFunctions()(destFormatInfo.type);
+    auto loadFunction   = destD3D11Format.getLoadFunctions()(destFormatInfo.type);
     angle::Result error = angle::Result::Continue();
     if (loadFunction.requiresConversion)
     {
@@ -454,7 +454,7 @@ angle::Result Image11::copyWithoutConversion(const gl::Context *context,
 {
     // No conversion needed-- use copyback fastpath
     const TextureHelper11 *stagingTexture = nullptr;
-    unsigned int stagingSubresourceIndex = 0;
+    unsigned int stagingSubresourceIndex  = 0;
     ANGLE_TRY(getStagingTexture(context, &stagingTexture, &stagingSubresourceIndex));
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -634,7 +634,7 @@ angle::Result Image11::map(const gl::Context *context,
     ANGLE_TRY(recoverFromAssociatedStorage(context));
 
     const TextureHelper11 *stagingTexture = nullptr;
-    unsigned int subresourceIndex  = 0;
+    unsigned int subresourceIndex         = 0;
     ANGLE_TRY(getStagingTexture(context, &stagingTexture, &subresourceIndex));
 
     ASSERT(stagingTexture && stagingTexture->valid());

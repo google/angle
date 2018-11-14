@@ -165,7 +165,7 @@ GLuint ShaderProgramManager::createShader(rx::GLImplFactory *factory,
                                           ShaderType type)
 {
     ASSERT(type != ShaderType::InvalidEnum);
-    GLuint handle    = mHandleAllocator.allocate();
+    GLuint handle = mHandleAllocator.allocate();
     mShaders.assign(handle, new Shader(this, factory, rendererLimitations, type, handle));
     return handle;
 }
@@ -364,7 +364,7 @@ angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *
     for (GLsizei i = 0; i < range; ++i)
     {
         rx::PathImpl *impl = paths[static_cast<unsigned>(i)];
-        const auto id   = client + i;
+        const auto id      = client + i;
         mPaths.assign(id, new Path(impl));
     }
     *createdOut = client;

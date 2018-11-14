@@ -130,7 +130,7 @@ class Buffer11::BufferStorage : angle::NonCopyable
                               size_t length,
                               GLbitfield access,
                               uint8_t **mapPointerOut) = 0;
-    virtual void unmap()                           = 0;
+    virtual void unmap()                               = 0;
 
     angle::Result setData(const gl::Context *context,
                           const uint8_t *data,
@@ -1210,7 +1210,7 @@ angle::Result Buffer11::NativeStorage::map(const gl::Context *context,
     ASSERT(isCPUAccessible(access));
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    D3D11_MAP d3dMapType         = gl_d3d11::GetD3DMapTypeFromBits(mUsage, access);
+    D3D11_MAP d3dMapType = gl_d3d11::GetD3DMapTypeFromBits(mUsage, access);
     UINT d3dMapFlag = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
 
     ANGLE_TRY(

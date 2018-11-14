@@ -173,7 +173,6 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
   protected:
     const gl::TextureState &mState;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_TEXTUREIMPL_H_
+#endif  // LIBANGLE_RENDERER_TEXTUREIMPL_H_

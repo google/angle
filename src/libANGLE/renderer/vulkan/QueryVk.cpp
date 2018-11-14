@@ -25,7 +25,7 @@ QueryVk::~QueryVk() = default;
 
 void QueryVk::onDestroy(const gl::Context *context)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
+    ContextVk *contextVk            = vk::GetImpl(context);
     vk::DynamicQueryPool *queryPool = contextVk->getQueryPool(getType());
     queryPool->freeQuery(contextVk, &mQueryHelper);
     queryPool->freeQuery(contextVk, &mQueryHelperTimeElapsedBegin);

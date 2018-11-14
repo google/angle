@@ -262,4 +262,4 @@ class ANGLE_NO_DISCARD Result
 
 #include "Error.inl"
 
-#endif // LIBANGLE_ERROR_H_
+#endif  // LIBANGLE_ERROR_H_

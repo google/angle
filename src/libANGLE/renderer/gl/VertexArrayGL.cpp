@@ -86,7 +86,7 @@ VertexArrayGL::~VertexArrayGL()
 void VertexArrayGL::destroy(const gl::Context *context)
 {
     mStateManager->deleteVertexArray(mVertexArrayID);
-    mVertexArrayID = 0;
+    mVertexArrayID   = 0;
     mAppliedNumViews = 1;
 
     mStateManager->deleteBuffer(mStreamingElementArrayBuffer);
@@ -276,7 +276,7 @@ void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &att
         // If streaming is going to be required, compute the size of the required buffer
         // and how much slack space at the beginning of the buffer will be required by determining
         // the attribute with the largest data size.
-        size_t typeSize = ComputeVertexAttributeTypeSize(attrib);
+        size_t typeSize        = ComputeVertexAttributeTypeSize(attrib);
         GLuint adjustedDivisor = GetAdjustedDivisor(mAppliedNumViews, binding.getDivisor());
         *outStreamingDataSize +=
             typeSize * ComputeVertexBindingElementCount(adjustedDivisor, indexRange.vertexCount(),
@@ -338,7 +338,7 @@ angle::Result VertexArrayGL::streamAttributes(const gl::Context *context,
 
         for (auto idx : attribsToStream)
         {
-            const auto &attrib  = attribs[idx];
+            const auto &attrib = attribs[idx];
             ASSERT(IsVertexAttribPointerSupported(idx, attrib));
 
             const auto &binding = bindings[attrib.bindingIndex];
@@ -729,7 +729,7 @@ void VertexArrayGL::applyNumViewsToDivisor(int numViews)
 
 void VertexArrayGL::applyActiveAttribLocationsMask(const gl::AttributesMask &activeMask)
 {
-    gl::AttributesMask updateMask     = mProgramActiveAttribLocationsMask ^ activeMask;
+    gl::AttributesMask updateMask = mProgramActiveAttribLocationsMask ^ activeMask;
     if (!updateMask.any())
     {
         return;

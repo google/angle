@@ -22,14 +22,14 @@
 namespace
 {
 // Precompiled shaders
-#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/standardvs.h"
-#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/passthroughps.h"
-#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/luminanceps.h"
-#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/luminancepremultps.h"
-#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/luminanceunmultps.h"
-#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/componentmaskps.h"
 #include "libANGLE/renderer/d3d/d3d9/shaders/compiled/componentmaskpremultps.h"
+#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/componentmaskps.h"
 #include "libANGLE/renderer/d3d/d3d9/shaders/compiled/componentmaskunmultps.h"
+#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/luminancepremultps.h"
+#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/luminanceps.h"
+#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/luminanceunmultps.h"
+#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/passthroughps.h"
+#include "libANGLE/renderer/d3d/d3d9/shaders/compiled/standardvs.h"
 
 const BYTE *const g_shaderCode[] = {
     g_vs20_standardvs,
@@ -88,13 +88,7 @@ angle::Result Blit9::initialize(Context9 *context9)
         return angle::Result::Continue();
     }
 
-    static const float quad[] =
-    {
-        -1, -1,
-        -1,  1,
-         1, -1,
-         1,  1
-    };
+    static const float quad[] = {-1, -1, -1, 1, 1, -1, 1, 1};
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -104,7 +98,7 @@ angle::Result Blit9::initialize(Context9 *context9)
     ANGLE_TRY_HR(context9, result, "Failed to create internal blit vertex shader");
 
     void *lockPtr = nullptr;
-    result = mQuadVertexBuffer->Lock(0, 0, &lockPtr, 0);
+    result        = mQuadVertexBuffer->Lock(0, 0, &lockPtr, 0);
 
     ANGLE_TRY_HR(context9, result, "Failed to lock internal blit vertex shader");
     ASSERT(lockPtr);
@@ -112,11 +106,8 @@ angle::Result Blit9::initialize(Context9 *context9)
     memcpy(lockPtr, quad, sizeof(quad));
     mQuadVertexBuffer->Unlock();
 
-    static const D3DVERTEXELEMENT9 elements[] =
-    {
-        { 0, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-        D3DDECL_END()
-    };
+    static const D3DVERTEXELEMENT9 elements[] = {
+        {0, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0}, D3DDECL_END()};
 
     result = device->CreateVertexDeclaration(elements, &mQuadVertexDeclaration);
     ANGLE_TRY_HR(context9, result, "Failed to create internal blit vertex shader declaration");
@@ -141,12 +132,12 @@ angle::Result Blit9::setShader(Context9 *context9,
 
     if (mCompiledShaders[source] != nullptr)
     {
-        shader = static_cast<D3DShaderType*>(mCompiledShaders[source]);
+        shader = static_cast<D3DShaderType *>(mCompiledShaders[source]);
     }
     else
     {
-        const BYTE* shaderCode = g_shaderCode[source];
-        size_t shaderSize = g_shaderSize[source];
+        const BYTE *shaderCode = g_shaderCode[source];
+        size_t shaderSize      = g_shaderSize[source];
         ANGLE_TRY((mRenderer->*createShader)(context9, reinterpret_cast<const DWORD *>(shaderCode),
                                              shaderSize, &shader));
         mCompiledShaders[source] = shader;
@@ -177,9 +168,9 @@ RECT Blit9::getSurfaceRect(IDirect3DSurface9 *surface) const
     surface->GetDesc(&desc);
 
     RECT rect;
-    rect.left = 0;
-    rect.top = 0;
-    rect.right = desc.Width;
+    rect.left   = 0;
+    rect.top    = 0;
+    rect.right  = desc.Width;
     rect.bottom = desc.Height;
 
     return rect;
@@ -249,7 +240,7 @@ angle::Result Blit9::copy2D(const gl::Context *context,
     ASSERT(source);
 
     angle::ComPtr<IDirect3DSurface9> destSurface = nullptr;
-    TextureStorage9 *storage9      = GetAs<TextureStorage9>(storage);
+    TextureStorage9 *storage9                    = GetAs<TextureStorage9>(storage);
     ANGLE_TRY(
         storage9->getSurfaceLevel(context, gl::TextureTarget::_2D, level, true, &destSurface));
     ASSERT(destSurface);
@@ -283,7 +274,7 @@ angle::Result Blit9::copyCube(const gl::Context *context,
     ASSERT(source);
 
     angle::ComPtr<IDirect3DSurface9> destSurface = nullptr;
-    TextureStorage9 *storage9      = GetAs<TextureStorage9>(storage);
+    TextureStorage9 *storage9                    = GetAs<TextureStorage9>(storage);
     ANGLE_TRY(storage9->getSurfaceLevel(context, target, level, true, &destSurface));
     ASSERT(destSurface);
 
@@ -358,7 +349,9 @@ angle::Result Blit9::copy(Context9 *context9,
         d3d9_gl::IsFormatChannelEquivalent(destDesc.Format, destFormat) && !flipY &&
         premultiplyAlpha == unmultiplyAlpha)
     {
-        RECT destRect = { destOffset.x, destOffset.y, destOffset.x + (sourceRect.right - sourceRect.left), destOffset.y + (sourceRect.bottom - sourceRect.top)};
+        RECT destRect  = {destOffset.x, destOffset.y,
+                         destOffset.x + (sourceRect.right - sourceRect.left),
+                         destOffset.y + (sourceRect.bottom - sourceRect.top)};
         HRESULT result = device->StretchRect(source, &sourceRect, dest, &destRect, D3DTEXF_POINT);
         ANGLE_TRY_HR(context9, result, "StretchRect failed to blit between textures");
         return angle::Result::Continue();
@@ -440,138 +433,145 @@ angle::Result Blit9::setFormatConvertShaders(Context9 *context9,
 
     switch (destFormat)
     {
-      case GL_RGBA:
-      case GL_BGRA_EXT:
-      case GL_RGB:
-      case GL_RG_EXT:
-      case GL_RED_EXT:
-      case GL_ALPHA:
-          if (premultiplyAlpha == unmultiplyAlpha)
-          {
-              ANGLE_TRY(setPixelShader(context9, SHADER_PS_COMPONENTMASK));
-          }
-          else if (premultiplyAlpha)
-          {
-              ANGLE_TRY(setPixelShader(context9, SHADER_PS_COMPONENTMASK_PREMULTIPLY_ALPHA));
-          }
-          else
-          {
-              ASSERT(unmultiplyAlpha);
-              ANGLE_TRY(setPixelShader(context9, SHADER_PS_COMPONENTMASK_UNMULTIPLY_ALPHA));
-          }
-          break;
+        case GL_RGBA:
+        case GL_BGRA_EXT:
+        case GL_RGB:
+        case GL_RG_EXT:
+        case GL_RED_EXT:
+        case GL_ALPHA:
+            if (premultiplyAlpha == unmultiplyAlpha)
+            {
+                ANGLE_TRY(setPixelShader(context9, SHADER_PS_COMPONENTMASK));
+            }
+            else if (premultiplyAlpha)
+            {
+                ANGLE_TRY(setPixelShader(context9, SHADER_PS_COMPONENTMASK_PREMULTIPLY_ALPHA));
+            }
+            else
+            {
+                ASSERT(unmultiplyAlpha);
+                ANGLE_TRY(setPixelShader(context9, SHADER_PS_COMPONENTMASK_UNMULTIPLY_ALPHA));
+            }
+            break;
 
-      case GL_LUMINANCE:
-      case GL_LUMINANCE_ALPHA:
-          if (premultiplyAlpha == unmultiplyAlpha)
-          {
-              ANGLE_TRY(setPixelShader(context9, SHADER_PS_LUMINANCE));
-          }
-          else if (premultiplyAlpha)
-          {
-              ANGLE_TRY(setPixelShader(context9, SHADER_PS_LUMINANCE_PREMULTIPLY_ALPHA));
-          }
-          else
-          {
-              ASSERT(unmultiplyAlpha);
-              ANGLE_TRY(setPixelShader(context9, SHADER_PS_LUMINANCE_UNMULTIPLY_ALPHA));
-          }
-          break;
+        case GL_LUMINANCE:
+        case GL_LUMINANCE_ALPHA:
+            if (premultiplyAlpha == unmultiplyAlpha)
+            {
+                ANGLE_TRY(setPixelShader(context9, SHADER_PS_LUMINANCE));
+            }
+            else if (premultiplyAlpha)
+            {
+                ANGLE_TRY(setPixelShader(context9, SHADER_PS_LUMINANCE_PREMULTIPLY_ALPHA));
+            }
+            else
+            {
+                ASSERT(unmultiplyAlpha);
+                ANGLE_TRY(setPixelShader(context9, SHADER_PS_LUMINANCE_UNMULTIPLY_ALPHA));
+            }
+            break;
 
-      default:
-          UNREACHABLE();
+        default:
+            UNREACHABLE();
     }
 
-    enum { X = 0, Y = 1, Z = 2, W = 3 };
+    enum
+    {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        W = 3
+    };
 
     // The meaning of this constant depends on the shader that was selected.
     // See the shader assembly code above for details.
     // Allocate one array for both registers and split it into two float4's.
-    float psConst[8] = { 0 };
+    float psConst[8] = {0};
     float *multConst = &psConst[0];
-    float *addConst = &psConst[4];
+    float *addConst  = &psConst[4];
 
     switch (destFormat)
     {
-      case GL_RGBA:
-      case GL_BGRA_EXT:
-        multConst[X] = 1;
-        multConst[Y] = 1;
-        multConst[Z] = 1;
-        multConst[W] = 1;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 0;
-        break;
+        case GL_RGBA:
+        case GL_BGRA_EXT:
+            multConst[X] = 1;
+            multConst[Y] = 1;
+            multConst[Z] = 1;
+            multConst[W] = 1;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 0;
+            break;
 
-      case GL_RGB:
-        multConst[X] = 1;
-        multConst[Y] = 1;
-        multConst[Z] = 1;
-        multConst[W] = 0;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 1;
-        break;
+        case GL_RGB:
+            multConst[X] = 1;
+            multConst[Y] = 1;
+            multConst[Z] = 1;
+            multConst[W] = 0;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 1;
+            break;
 
-      case GL_RG_EXT:
-        multConst[X] = 1;
-        multConst[Y] = 1;
-        multConst[Z] = 0;
-        multConst[W] = 0;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 1;
-        break;
+        case GL_RG_EXT:
+            multConst[X] = 1;
+            multConst[Y] = 1;
+            multConst[Z] = 0;
+            multConst[W] = 0;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 1;
+            break;
 
-      case GL_RED_EXT:
-        multConst[X] = 1;
-        multConst[Y] = 0;
-        multConst[Z] = 0;
-        multConst[W] = 0;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 1;
-        break;
+        case GL_RED_EXT:
+            multConst[X] = 1;
+            multConst[Y] = 0;
+            multConst[Z] = 0;
+            multConst[W] = 0;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 1;
+            break;
 
-      case GL_ALPHA:
-        multConst[X] = 0;
-        multConst[Y] = 0;
-        multConst[Z] = 0;
-        multConst[W] = 1;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 0;
-        break;
+        case GL_ALPHA:
+            multConst[X] = 0;
+            multConst[Y] = 0;
+            multConst[Z] = 0;
+            multConst[W] = 1;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 0;
+            break;
 
-      case GL_LUMINANCE:
-        multConst[X] = 1;
-        multConst[Y] = 0;
-        multConst[Z] = 0;
-        multConst[W] = 0;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 1;
-        break;
+        case GL_LUMINANCE:
+            multConst[X] = 1;
+            multConst[Y] = 0;
+            multConst[Z] = 0;
+            multConst[W] = 0;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 1;
+            break;
 
-      case GL_LUMINANCE_ALPHA:
-        multConst[X] = 1;
-        multConst[Y] = 0;
-        multConst[Z] = 0;
-        multConst[W] = 1;
-        addConst[X] = 0;
-        addConst[Y] = 0;
-        addConst[Z] = 0;
-        addConst[W] = 0;
-        break;
+        case GL_LUMINANCE_ALPHA:
+            multConst[X] = 1;
+            multConst[Y] = 0;
+            multConst[Z] = 0;
+            multConst[W] = 1;
+            addConst[X]  = 0;
+            addConst[Y]  = 0;
+            addConst[Z]  = 0;
+            addConst[W]  = 0;
+            break;
 
-      default: UNREACHABLE();
+        default:
+            UNREACHABLE();
     }
 
     mRenderer->getDevice()->SetPixelShaderConstantF(0, psConst, 2);
@@ -652,7 +652,9 @@ void Blit9::setCommonBlitState()
     device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     device->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
-    device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_RED);
+    device->SetRenderState(D3DRS_COLORWRITEENABLE,
+                           D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_BLUE |
+                               D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_RED);
     device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
     device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
@@ -662,10 +664,11 @@ void Blit9::setCommonBlitState()
     device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
     device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
-    RECT scissorRect = {0};   // Scissoring is disabled for flipping, but we need this to capture and restore the old rectangle
+    RECT scissorRect = {0};  // Scissoring is disabled for flipping, but we need this to capture and
+                             // restore the old rectangle
     device->SetScissorRect(&scissorRect);
 
-    for(int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         device->SetStreamSourceFreq(i, 1);
     }
@@ -676,7 +679,7 @@ void Blit9::render()
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
     HRESULT hr = device->SetStreamSource(0, mQuadVertexBuffer, 0, 2 * sizeof(float));
-    hr = device->SetVertexDeclaration(mQuadVertexDeclaration);
+    hr         = device->SetVertexDeclaration(mQuadVertexDeclaration);
 
     mRenderer->startScene();
     hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -698,7 +701,7 @@ void Blit9::saveState()
 
         setCommonBlitState();
 
-        static const float dummyConst[8] = { 0 };
+        static const float dummyConst[8] = {0};
 
         device->SetVertexShader(nullptr);
         device->SetVertexShaderConstantF(0, dummyConst, 2);
@@ -706,12 +709,12 @@ void Blit9::saveState()
         device->SetPixelShaderConstantF(0, dummyConst, 2);
 
         D3DVIEWPORT9 dummyVp;
-        dummyVp.X = 0;
-        dummyVp.Y = 0;
-        dummyVp.Width = 1;
+        dummyVp.X      = 0;
+        dummyVp.Y      = 0;
+        dummyVp.Width  = 1;
         dummyVp.Height = 1;
-        dummyVp.MinZ = 0;
-        dummyVp.MaxZ = 1;
+        dummyVp.MinZ   = 0;
+        dummyVp.MaxZ   = 1;
 
         device->SetViewport(&dummyVp);
 
@@ -751,5 +754,4 @@ void Blit9::restoreState()
         mSavedStateBlock->Apply();
     }
 }
-
 }

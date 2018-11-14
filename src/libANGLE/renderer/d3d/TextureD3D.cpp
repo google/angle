@@ -42,11 +42,13 @@ angle::Result GetUnpackPointer(const gl::Context *context,
 {
     if (unpackBuffer)
     {
-        // Do a CPU readback here, if we have an unpack buffer bound and the fast GPU path is not supported
+        // Do a CPU readback here, if we have an unpack buffer bound and the fast GPU path is not
+        // supported
         ptrdiff_t offset = reinterpret_cast<ptrdiff_t>(pixels);
 
         // TODO: this is the only place outside of renderer that asks for a buffers raw data.
-        // This functionality should be moved into renderer and the getData method of BufferImpl removed.
+        // This functionality should be moved into renderer and the getData method of BufferImpl
+        // removed.
         BufferD3D *bufferD3D = GetImplAs<BufferD3D>(unpackBuffer);
         ASSERT(bufferD3D);
         const uint8_t *bufferData = nullptr;
@@ -71,7 +73,6 @@ bool IsRenderTargetUsage(GLenum usage)
 {
     return (usage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 }
-
 }
 
 TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
@@ -227,8 +228,9 @@ angle::Result TextureD3D::setImageImpl(const gl::Context *context,
         return angle::Result::Continue();
     }
 
-    // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
-    // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
+    // We no longer need the "GLenum format" parameter to TexImage to determine what data format
+    // "pixels" contains. From our image internal format we know how many channels to expect, and
+    // "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
@@ -241,7 +243,8 @@ angle::Result TextureD3D::setImageImpl(const gl::Context *context,
         }
         else
         {
-            gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
+            gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(),
+                                  image->getDepth());
             ANGLE_TRY(image->loadData(context, fullImageArea, unpack, type, pixelData,
                                       index.usesTex3D()));
         }
@@ -298,8 +301,9 @@ angle::Result TextureD3D::setCompressedImageImpl(const gl::Context *context,
         return angle::Result::Continue();
     }
 
-    // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
-    // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
+    // We no longer need the "GLenum format" parameter to TexImage to determine what data format
+    // "pixels" contains. From our image internal format we know how many channels to expect, and
+    // "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
     gl::Buffer *unpackBuffer =
         context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
@@ -367,8 +371,8 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
         return angle::Result::Continue();
     }
 
-    // In order to perform the fast copy through the shader, we must have the right format, and be able
-    // to create a render target.
+    // In order to perform the fast copy through the shader, we must have the right format, and be
+    // able to create a render target.
     ASSERT(mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat));
 
     uintptr_t offset = reinterpret_cast<uintptr_t>(pixels);
@@ -423,7 +427,7 @@ angle::Result TextureD3D::setImageExternal(const gl::Context *context,
 angle::Result TextureD3D::generateMipmap(const gl::Context *context)
 {
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
-    const GLuint maxLevel = mState.getMipmapMaxLevel();
+    const GLuint maxLevel  = mState.getMipmapMaxLevel();
     ASSERT(maxLevel > baseLevel);  // Should be checked before calling this.
 
     if (mTexStorage && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
@@ -481,12 +485,15 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
         }
     }
 
-    // TODO: Decouple this from zeroMaxLodWorkaround. This is a 9_3 restriction, unrelated to zeroMaxLodWorkaround.
-    // The restriction is because Feature Level 9_3 can't create SRVs on individual levels of the texture.
-    // As a result, even if the storage is a rendertarget, we can't use the GPU to generate the mipmaps without further work.
-    // The D3D9 renderer works around this by copying each level of the texture into its own single-layer GPU texture (in Blit9::boxFilter).
-    // Feature Level 9_3 could do something similar, or it could continue to use CPU-side mipmap generation, or something else.
-    bool renderableStorage = (mTexStorage && mTexStorage->isRenderTarget() && !(mRenderer->getWorkarounds().zeroMaxLodWorkaround));
+    // TODO: Decouple this from zeroMaxLodWorkaround. This is a 9_3 restriction, unrelated to
+    // zeroMaxLodWorkaround. The restriction is because Feature Level 9_3 can't create SRVs on
+    // individual levels of the texture. As a result, even if the storage is a rendertarget, we
+    // can't use the GPU to generate the mipmaps without further work. The D3D9 renderer works
+    // around this by copying each level of the texture into its own single-layer GPU texture (in
+    // Blit9::boxFilter). Feature Level 9_3 could do something similar, or it could continue to use
+    // CPU-side mipmap generation, or something else.
+    bool renderableStorage = (mTexStorage && mTexStorage->isRenderTarget() &&
+                              !(mRenderer->getWorkarounds().zeroMaxLodWorkaround));
 
     for (GLint layer = 0; layer < layerCount; ++layer)
     {
@@ -495,7 +502,7 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
             ASSERT(getLayerCount(mip) == layerCount);
 
             gl::ImageIndex sourceIndex = getImageIndex(mip - 1, layer);
-            gl::ImageIndex destIndex = getImageIndex(mip, layer);
+            gl::ImageIndex destIndex   = getImageIndex(mip, layer);
 
             if (renderableStorage)
             {
@@ -625,7 +632,7 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
     // have been created based on the dimensions of the previous specified level range.
     const int newStorageWidth  = std::max(1, getLevelZeroWidth());
     const int newStorageHeight = std::max(1, getLevelZeroHeight());
-    const int newStorageDepth = std::max(1, getLevelZeroDepth());
+    const int newStorageDepth  = std::max(1, getLevelZeroDepth());
     const int newStorageFormat = getBaseLevelInternalFormat();
     if (mTexStorage &&
         (newStorageWidth != oldStorageWidth || newStorageHeight != oldStorageHeight ||
@@ -929,7 +936,8 @@ angle::Result TextureD3D_2D::setCompressedImage(const gl::Context *context,
 {
     ASSERT(index.getTarget() == gl::TextureTarget::_2D && size.depth == 1);
 
-    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    // compressed formats don't have separate sized internal formats-- we can just use the
+    // compressed format directly
     ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormat, size, false));
 
     return setCompressedImageImpl(context, index, unpack, pixels, 0);
@@ -988,8 +996,8 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
 
     gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
 
-    // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
-    // so we should use the non-rendering copy path.
+    // If the zero max LOD workaround is active, then we can't sample from individual layers of the
+    // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ANGLE_TRY(mImageArray[index.getLevelIndex()]->copyFromFramebuffer(context, destOffset,
@@ -1029,11 +1037,12 @@ angle::Result TextureD3D_2D::copySubImage(const gl::Context *context,
     const gl::Offset clippedOffset(destOffset.x + clippedArea.x - sourceArea.x,
                                    destOffset.y + clippedArea.y - sourceArea.y, 0);
 
-    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
-    // the current level we're copying to is defined (with appropriate format, width & height)
+    // can only make our texture storage to a render target if level 0 is defined (with a width &
+    // height) and the current level we're copying to is defined (with appropriate format, width &
+    // height)
 
-    // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
-    // so we should use the non-rendering copy path.
+    // If the zero max LOD workaround is active, then we can't sample from individual layers of the
+    // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ANGLE_TRY(mImageArray[index.getLevelIndex()]->copyFromFramebuffer(context, clippedOffset,
@@ -1100,7 +1109,7 @@ angle::Result TextureD3D_2D::copyTexture(const gl::Context *context,
         ImageD3D *sourceImage           = nullptr;
         ANGLE_TRY(sourceD3D->getImageAndSyncFromStorage(context, sourceImageIndex, &sourceImage));
 
-        ImageD3D *destImage           = nullptr;
+        ImageD3D *destImage = nullptr;
         ANGLE_TRY(getImageAndSyncFromStorage(context, index, &destImage));
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
@@ -1148,7 +1157,7 @@ angle::Result TextureD3D_2D::copySubTexture(const gl::Context *context,
         ImageD3D *sourceImage           = nullptr;
         ANGLE_TRY(sourceD3D->getImageAndSyncFromStorage(context, sourceImageIndex, &sourceImage));
 
-        ImageD3D *destImage           = nullptr;
+        ImageD3D *destImage = nullptr;
         ANGLE_TRY(getImageAndSyncFromStorage(context, index, &destImage));
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
@@ -1167,7 +1176,7 @@ angle::Result TextureD3D_2D::copyCompressedTexture(const gl::Context *context,
                                                    const gl::Texture *source)
 {
     gl::TextureTarget sourceTarget = NonCubeTextureTypeToTarget(source->getType());
-    GLint sourceLevel   = 0;
+    GLint sourceLevel              = 0;
 
     GLint destLevel = 0;
 
@@ -1196,8 +1205,7 @@ angle::Result TextureD3D_2D::setStorage(const gl::Context *context,
 
     for (size_t level = 0; level < levels; level++)
     {
-        gl::Extents levelSize(std::max(1, size.width >> level),
-                              std::max(1, size.height >> level),
+        gl::Extents levelSize(std::max(1, size.width >> level), std::max(1, size.height >> level),
                               1);
         ANGLE_TRY(redefineImage(context, level, internalFormat, levelSize, true));
     }
@@ -1235,7 +1243,7 @@ angle::Result TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surfa
     SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
     ASSERT(surfaceD3D);
 
-    mTexStorage = mRenderer->createTextureStorage2D(surfaceD3D->getSwapChain());
+    mTexStorage     = mRenderer->createTextureStorage2D(surfaceD3D->getSwapChain());
     mEGLImageTarget = false;
 
     mDirtyImages = false;
@@ -1417,8 +1425,8 @@ angle::Result TextureD3D_2D::createCompleteStorage(bool renderTarget,
     bool hintLevelZeroOnly = false;
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        // If any of the CPU images (levels >= 1) are dirty, then the textureStorage2D should use the mipped texture to begin with.
-        // Otherwise, it should use the level-zero-only texture.
+        // If any of the CPU images (levels >= 1) are dirty, then the textureStorage2D should use
+        // the mipped texture to begin with. Otherwise, it should use the level-zero-only texture.
         hintLevelZeroOnly = true;
         for (int level = 1; level < levels && hintLevelZeroOnly; level++)
         {
@@ -1677,7 +1685,8 @@ angle::Result TextureD3D_Cube::setCompressedImage(const gl::Context *context,
 {
     ASSERT(size.depth == 1);
 
-    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    // compressed formats don't have separate sized internal formats-- we can just use the
+    // compressed format directly
     ANGLE_TRY(redefineImage(context, index.cubeMapFaceIndex(), index.getLevelIndex(),
                             internalFormat, size, false));
 
@@ -1737,8 +1746,8 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
 
     gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
 
-    // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
-    // so we should use the non-rendering copy path.
+    // If the zero max LOD workaround is active, then we can't sample from individual layers of the
+    // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ANGLE_TRY(mImageArray[faceIndex][index.getLevelIndex()]->copyFromFramebuffer(
@@ -1780,8 +1789,8 @@ angle::Result TextureD3D_Cube::copySubImage(const gl::Context *context,
 
     GLint faceIndex = index.cubeMapFaceIndex();
 
-    // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
-    // so we should use the non-rendering copy path.
+    // If the zero max LOD workaround is active, then we can't sample from individual layers of the
+    // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ANGLE_TRY(mImageArray[faceIndex][index.getLevelIndex()]->copyFromFramebuffer(
@@ -1961,8 +1970,8 @@ angle::Result TextureD3D_Cube::setStorage(const gl::Context *context,
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureD3D_Cube::isCubeComplete() const
 {
-    int    baseWidth  = getBaseLevelWidth();
-    int    baseHeight = getBaseLevelHeight();
+    int baseWidth     = getBaseLevelWidth();
+    int baseHeight    = getBaseLevelHeight();
     GLenum baseFormat = getBaseLevelInternalFormat();
 
     if (baseWidth <= 0 || baseWidth != baseHeight)
@@ -1974,9 +1983,8 @@ bool TextureD3D_Cube::isCubeComplete() const
     {
         const ImageD3D &faceBaseImage = *mImageArray[faceIndex][getBaseLevel()];
 
-        if (faceBaseImage.getWidth()          != baseWidth  ||
-            faceBaseImage.getHeight()         != baseHeight ||
-            faceBaseImage.getInternalFormat() != baseFormat )
+        if (faceBaseImage.getWidth() != baseWidth || faceBaseImage.getHeight() != baseHeight ||
+            faceBaseImage.getInternalFormat() != baseFormat)
         {
             return false;
         }
@@ -2073,14 +2081,15 @@ angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
     bool hintLevelZeroOnly = false;
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        // If any of the CPU images (levels >= 1) are dirty, then the textureStorage should use the mipped texture to begin with.
-        // Otherwise, it should use the level-zero-only texture.
+        // If any of the CPU images (levels >= 1) are dirty, then the textureStorage should use the
+        // mipped texture to begin with. Otherwise, it should use the level-zero-only texture.
         hintLevelZeroOnly = true;
         for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount && hintLevelZeroOnly; faceIndex++)
         {
             for (int level = 1; level < levels && hintLevelZeroOnly; level++)
             {
-                hintLevelZeroOnly = !(mImageArray[faceIndex][level]->isDirty() && isFaceLevelComplete(faceIndex, level));
+                hintLevelZeroOnly = !(mImageArray[faceIndex][level]->isDirty() &&
+                                      isFaceLevelComplete(faceIndex, level));
             }
         }
     }
@@ -2457,7 +2466,8 @@ angle::Result TextureD3D_3D::setCompressedImage(const gl::Context *context,
 {
     ASSERT(index.getTarget() == gl::TextureTarget::_3D);
 
-    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    // compressed formats don't have separate sized internal formats-- we can just use the
+    // compressed format directly
     ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormat, size, false));
 
     return setCompressedImageImpl(context, index, unpack, pixels, 0);
@@ -2650,8 +2660,7 @@ angle::Result TextureD3D_3D::setStorage(const gl::Context *context,
 
     for (size_t level = 0; level < levels; level++)
     {
-        gl::Extents levelSize(std::max(1, size.width >> level),
-                              std::max(1, size.height >> level),
+        gl::Extents levelSize(std::max(1, size.width >> level), std::max(1, size.height >> level),
                               std::max(1, size.depth >> level));
         mImageArray[level]->redefine(gl::TextureType::_3D, internalFormat, levelSize, true);
     }
@@ -2767,7 +2776,8 @@ angle::Result TextureD3D_3D::createCompleteStorage(bool renderTarget,
     ASSERT(width > 0 && height > 0 && depth > 0);
 
     // use existing storage level count, when previously specified by TexStorage*D
-    GLint levels = (mTexStorage ? mTexStorage->getLevelCount() : creationLevels(width, height, depth));
+    GLint levels =
+        (mTexStorage ? mTexStorage->getLevelCount() : creationLevels(width, height, depth));
 
     // TODO: Verify creation of the storage succeeded
     outStorage->reset(mRenderer->createTextureStorage3D(internalFormat, renderTarget, width, height,
@@ -2780,7 +2790,7 @@ angle::Result TextureD3D_3D::setCompleteTexStorage(const gl::Context *context,
                                                    TextureStorage *newCompleteTexStorage)
 {
     ANGLE_TRY(releaseTexStorage(context));
-    mTexStorage = newCompleteTexStorage;
+    mTexStorage  = newCompleteTexStorage;
     mDirtyImages = true;
 
     // We do not support managed 3D storage, as that is D3D9/ES2-only
@@ -2892,9 +2902,9 @@ angle::Result TextureD3D_3D::redefineImage(const gl::Context *context,
                                            bool forceRelease)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth  = std::max(1, getLevelZeroWidth() >> level);
-    const int storageHeight = std::max(1, getLevelZeroHeight() >> level);
-    const int storageDepth  = std::max(1, getLevelZeroDepth() >> level);
+    const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
+    const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
+    const int storageDepth     = std::max(1, getLevelZeroDepth() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
     mImageArray[level]->redefine(gl::TextureType::_3D, internalformat, size, forceRelease);
@@ -2976,8 +2986,7 @@ TextureD3D_2DArray::~TextureD3D_2DArray()
 ImageD3D *TextureD3D_2DArray::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT((layer == 0 && mLayerCounts[level] == 0) ||
-           layer < mLayerCounts[level]);
+    ASSERT((layer == 0 && mLayerCounts[level] == 0) || layer < mLayerCounts[level]);
     return (mImageArray[level] ? mImageArray[level][layer] : nullptr);
 }
 
@@ -3001,17 +3010,23 @@ GLsizei TextureD3D_2DArray::getLayerCount(int level) const
 
 GLsizei TextureD3D_2DArray::getWidth(GLint level) const
 {
-    return (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mImageArray[level][0]->getWidth() : 0;
+    return (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0)
+               ? mImageArray[level][0]->getWidth()
+               : 0;
 }
 
 GLsizei TextureD3D_2DArray::getHeight(GLint level) const
 {
-    return (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mImageArray[level][0]->getHeight() : 0;
+    return (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0)
+               ? mImageArray[level][0]->getHeight()
+               : 0;
 }
 
 GLenum TextureD3D_2DArray::getInternalFormat(GLint level) const
 {
-    return (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0) ? mImageArray[level][0]->getInternalFormat() : GL_NONE;
+    return (level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS && mLayerCounts[level] > 0)
+               ? mImageArray[level][0]->getInternalFormat()
+               : GL_NONE;
 }
 
 bool TextureD3D_2DArray::isDepth(GLint level) const
@@ -3086,7 +3101,7 @@ angle::Result TextureD3D_2DArray::setSubImage(const gl::Context *context,
 
     for (int i = 0; i < area.depth; i++)
     {
-        int layer = area.z + i;
+        int layer                   = area.z + i;
         const ptrdiff_t layerOffset = (inputDepthPitch * i);
 
         gl::Box layerArea(area.x, area.y, 0, area.width, area.height, 1);
@@ -3111,7 +3126,8 @@ angle::Result TextureD3D_2DArray::setCompressedImage(const gl::Context *context,
 
     ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
 
-    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    // compressed formats don't have separate sized internal formats-- we can just use the
+    // compressed format directly
     ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormat, size, false));
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
@@ -3151,7 +3167,7 @@ angle::Result TextureD3D_2DArray::setCompressedSubImage(const gl::Context *conte
 
     for (int i = 0; i < area.depth; i++)
     {
-        int layer = area.z + i;
+        int layer                   = area.z + i;
         const ptrdiff_t layerOffset = (inputDepthPitch * i);
 
         gl::Box layerArea(area.x, area.y, 0, area.width, area.height, 1);
@@ -3367,15 +3383,14 @@ angle::Result TextureD3D_2DArray::setStorage(const gl::Context *context,
     for (size_t level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         gl::Extents levelLayerSize(std::max(1, size.width >> level),
-                                   std::max(1, size.height >> level),
-                                   1);
+                                   std::max(1, size.height >> level), 1);
 
         mLayerCounts[level] = (level < levels ? size.depth : 0);
 
         if (mLayerCounts[level] > 0)
         {
             // Create new images for this level
-            mImageArray[level] = new ImageD3D*[mLayerCounts[level]];
+            mImageArray[level] = new ImageD3D *[mLayerCounts[level]];
 
             for (int layer = 0; layer < mLayerCounts[level]; layer++)
             {
@@ -3419,10 +3434,10 @@ angle::Result TextureD3D_2DArray::initMipmapImages(const gl::Context *context)
 {
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
     const GLuint maxLevel  = mState.getMipmapMaxLevel();
-    int baseWidth     = getLevelZeroWidth();
-    int baseHeight    = getLevelZeroHeight();
-    int baseDepth     = getLayerCount(getBaseLevel());
-    GLenum baseFormat = getBaseLevelInternalFormat();
+    int baseWidth          = getLevelZeroWidth();
+    int baseHeight         = getLevelZeroHeight();
+    int baseDepth          = getLayerCount(getBaseLevel());
+    GLenum baseFormat      = getBaseLevelInternalFormat();
 
     // Purge array levels baseLevel + 1 through q and reset them to represent the generated mipmap
     // levels.
@@ -3430,8 +3445,7 @@ angle::Result TextureD3D_2DArray::initMipmapImages(const gl::Context *context)
     {
         ASSERT((baseWidth >> level) > 0 || (baseHeight >> level) > 0);
         gl::Extents levelLayerSize(std::max(baseWidth >> level, 1),
-                                   std::max(baseHeight >> level, 1),
-                                   baseDepth);
+                                   std::max(baseHeight >> level, 1), baseDepth);
         ANGLE_TRY(redefineImage(context, level, baseFormat, levelLayerSize, false));
     }
 
@@ -3502,7 +3516,7 @@ angle::Result TextureD3D_2DArray::setCompleteTexStorage(const gl::Context *conte
                                                         TextureStorage *newCompleteTexStorage)
 {
     ANGLE_TRY(releaseTexStorage(context));
-    mTexStorage = newCompleteTexStorage;
+    mTexStorage  = newCompleteTexStorage;
     mDirtyImages = true;
 
     // We do not support managed 2D array storage, as managed storage is ES2/D3D9 only
@@ -3636,9 +3650,9 @@ angle::Result TextureD3D_2DArray::redefineImage(const gl::Context *context,
                                                 bool forceRelease)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth  = std::max(1, getLevelZeroWidth() >> level);
-    const int storageHeight = std::max(1, getLevelZeroHeight() >> level);
-    const GLuint baseLevel  = getBaseLevel();
+    const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
+    const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
+    const GLuint baseLevel     = getBaseLevel();
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
     int storageDepth = 0;
@@ -3659,7 +3673,7 @@ angle::Result TextureD3D_2DArray::redefineImage(const gl::Context *context,
 
         if (size.depth > 0)
         {
-            mImageArray[level] = new ImageD3D*[size.depth];
+            mImageArray[level] = new ImageD3D *[size.depth];
             for (int layer = 0; layer < mLayerCounts[level]; layer++)
             {
                 mImageArray[level][layer] = mRenderer->createImage();

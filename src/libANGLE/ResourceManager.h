@@ -306,4 +306,4 @@ class ProgramPipelineManager
 
 }  // namespace gl
 
-#endif // LIBANGLE_RESOURCEMANAGER_H_
+#endif  // LIBANGLE_RESOURCEMANAGER_H_

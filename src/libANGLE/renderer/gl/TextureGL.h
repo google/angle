@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_RENDERER_GL_TEXTUREGL_H_
 #define LIBANGLE_RENDERER_GL_TEXTUREGL_H_
 
+#include "libANGLE/Texture.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/TextureImpl.h"
-#include "libANGLE/Texture.h"
 
 namespace rx
 {
@@ -246,7 +246,6 @@ class TextureGL : public TextureImpl
 
     GLuint mTextureID;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_GL_TEXTUREGL_H_
+#endif  // LIBANGLE_RENDERER_GL_TEXTUREGL_H_

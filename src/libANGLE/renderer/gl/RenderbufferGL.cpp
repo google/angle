@@ -80,8 +80,9 @@ angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
     const gl::TextureCaps &formatCaps = mTextureCaps.get(internalformat);
     if (samples > formatCaps.getMaxSamples())
     {
-        // Before version 4.2, it is unknown if the specific internal format can support the requested number
-        // of samples.  It is expected that GL_OUT_OF_MEMORY is returned if the renderbuffer cannot be created.
+        // Before version 4.2, it is unknown if the specific internal format can support the
+        // requested number of samples.  It is expected that GL_OUT_OF_MEMORY is returned if the
+        // renderbuffer cannot be created.
         GLenum error = GL_NO_ERROR;
         do
         {

@@ -628,7 +628,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
         dsv = depthStencilRenderTarget->getDepthStencilView().get();
         ASSERT(dsv != nullptr);
 
-        const auto &nativeFormat = depthStencilRenderTarget->getFormatSet().format();
+        const auto &nativeFormat      = depthStencilRenderTarget->getFormatSet().format();
         const auto *stencilAttachment = fboData.getStencilAttachment();
 
         uint32_t stencilUnmasked =
@@ -701,7 +701,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
     ANGLE_TRY(mRenderer->getBlendState(context, mBlendStateKey, &blendState));
 
     const d3d11::DepthStencilState *dsState = nullptr;
-    const float *zValue              = nullptr;
+    const float *zValue                     = nullptr;
 
     if (dsv)
     {
@@ -772,10 +772,10 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
     }
 
     // Get Shaders
-    const d3d11::VertexShader *vs = nullptr;
+    const d3d11::VertexShader *vs   = nullptr;
     const d3d11::GeometryShader *gs = nullptr;
-    const d3d11::InputLayout *il  = nullptr;
-    const d3d11::PixelShader *ps  = nullptr;
+    const d3d11::InputLayout *il    = nullptr;
+    const d3d11::PixelShader *ps    = nullptr;
     const bool hasLayeredLayout =
         (fboData.getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE);
     ANGLE_TRY(mShaderManager.getShadersAndLayout(context, mRenderer, clearParams.colorType, numRtvs,

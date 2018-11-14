@@ -198,12 +198,12 @@ angle::Result Framebuffer9::readPixelsImpl(const gl::Context *context,
     gl::FormatType formatType(format, type);
 
     PackPixelsParams packParams;
-    packParams.area.x      = rect.left;
-    packParams.area.y      = rect.top;
-    packParams.area.width  = rect.right - rect.left;
-    packParams.area.height = rect.bottom - rect.top;
-    packParams.destFormat  = &GetFormatFromFormatType(format, type);
-    packParams.outputPitch = static_cast<GLuint>(outputPitch);
+    packParams.area.x          = rect.left;
+    packParams.area.y          = rect.top;
+    packParams.area.width      = rect.right - rect.left;
+    packParams.area.height     = rect.bottom - rect.top;
+    packParams.destFormat      = &GetFormatFromFormatType(format, type);
+    packParams.outputPitch     = static_cast<GLuint>(outputPitch);
     packParams.reverseRowOrder = pack.reverseRowOrder;
 
     PackPixels(packParams, d3dFormatInfo.info(), inputPitch, source, pixels);

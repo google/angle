@@ -8,12 +8,12 @@
 //   vertex buffer.
 //
 
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_instantiate.h"
 
@@ -25,7 +25,6 @@ namespace
 class D3D11EmulatedIndexedBufferTest : public ANGLETest
 {
   protected:
-
     void SetUp() override
     {
         ANGLETest::SetUp();
@@ -35,15 +34,15 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
         rx::Context11 *context11 = rx::GetImplAs<rx::Context11>(mContext);
         mRenderer                = context11->getRenderer();
 
-        mSourceBuffer      = new rx::Buffer11(mBufferState, mRenderer);
-        GLfloat testData[] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };
+        mSourceBuffer       = new rx::Buffer11(mBufferState, mRenderer);
+        GLfloat testData[]  = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
         angle::Result error = mSourceBuffer->setData(nullptr, gl::BufferBinding::Array, testData,
                                                      sizeof(testData), gl::BufferUsage::StaticDraw);
         ASSERT_EQ(angle::Result::Continue(), error);
 
         mTranslatedAttribute.baseOffset            = 0;
         mTranslatedAttribute.usesFirstVertexOffset = false;
-        mTranslatedAttribute.stride = sizeof(GLfloat);
+        mTranslatedAttribute.stride                = sizeof(GLfloat);
 
         GLubyte indices[] = {0, 0, 3, 4, 2, 1, 1};
 
@@ -62,30 +61,33 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void createMappableCompareBufferFromEmulatedBuffer(ID3D11Buffer *sourceBuffer, GLuint size, ID3D11Buffer **mappableBuffer)
+    void createMappableCompareBufferFromEmulatedBuffer(ID3D11Buffer *sourceBuffer,
+                                                       GLuint size,
+                                                       ID3D11Buffer **mappableBuffer)
     {
         *mappableBuffer = nullptr;
 
         D3D11_BUFFER_DESC bufferDesc;
-        bufferDesc.ByteWidth = size;
-        bufferDesc.MiscFlags = 0;
+        bufferDesc.ByteWidth           = size;
+        bufferDesc.MiscFlags           = 0;
         bufferDesc.StructureByteStride = 0;
-        bufferDesc.Usage = D3D11_USAGE_STAGING;
-        bufferDesc.BindFlags = 0;
-        bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        bufferDesc.Usage               = D3D11_USAGE_STAGING;
+        bufferDesc.BindFlags           = 0;
+        bufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 
         HRESULT hr = mRenderer->getDevice()->CreateBuffer(&bufferDesc, nullptr, mappableBuffer);
         ASSERT_TRUE(SUCCEEDED(hr));
 
         D3D11_BOX srcBox;
-        srcBox.left = 0;
-        srcBox.right = size;
-        srcBox.top = 0;
+        srcBox.left   = 0;
+        srcBox.right  = size;
+        srcBox.top    = 0;
         srcBox.bottom = 1;
-        srcBox.front = 0;
-        srcBox.back = 1;
+        srcBox.front  = 0;
+        srcBox.back   = 1;
 
-        mRenderer->getDeviceContext()->CopySubresourceRegion(*mappableBuffer, 0, 0, 0, 0, sourceBuffer, 0, &srcBox);
+        mRenderer->getDeviceContext()->CopySubresourceRegion(*mappableBuffer, 0, 0, 0, 0,
+                                                             sourceBuffer, 0, &srcBox);
     }
 
     void compareContents(ID3D11Buffer *actual)
@@ -96,10 +98,11 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
             &compareBuffer);
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT hr = mRenderer->getDeviceContext()->Map(compareBuffer, 0, D3D11_MAP_READ, 0, &mappedResource);
+        HRESULT hr = mRenderer->getDeviceContext()->Map(compareBuffer, 0, D3D11_MAP_READ, 0,
+                                                        &mappedResource);
         ASSERT_TRUE(SUCCEEDED(hr));
 
-        GLfloat* compareData = static_cast<GLfloat*>(mappedResource.pData);
+        GLfloat *compareData = static_cast<GLfloat *>(mappedResource.pData);
         for (size_t i = 0; i < mExpectedExpandedData.size(); i++)
         {
             EXPECT_EQ(mExpectedExpandedData[i], compareData[i]);
@@ -161,7 +164,8 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLuintIndices)
     emulateAndCompare(&srcData);
 }
 
-// This tests verifies that a Buffer11 contents remain unchanged after calling getEmulatedIndexedBuffer
+// This tests verifies that a Buffer11 contents remain unchanged after calling
+// getEmulatedIndexedBuffer
 TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpandOperation)
 {
     // Copy the original source buffer before any expand calls have been made
@@ -178,7 +182,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     emulateAndCompare(&srcData);
 
     const uint8_t *sourceBufferMem = nullptr;
-    const uint8_t *cleanBufferMem = nullptr;
+    const uint8_t *cleanBufferMem  = nullptr;
 
     angle::Result error = mSourceBuffer->getData(mContext, &sourceBufferMem);
     ASSERT_EQ(angle::Result::Continue(), error);
@@ -192,7 +196,6 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     SafeDelete(cleanSourceBuffer);
 }
 
-ANGLE_INSTANTIATE_TEST(D3D11EmulatedIndexedBufferTest,
-                       ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(D3D11EmulatedIndexedBufferTest, ES2_D3D11());
 
-} // anonymous namespace
+}  // anonymous namespace

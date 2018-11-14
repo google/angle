@@ -43,7 +43,7 @@ class TextureD3D : public TextureImpl
     void resetDirty() { mDirtyImages = false; }
 
     virtual ImageD3D *getImage(const gl::ImageIndex &index) const = 0;
-    virtual GLsizei getLayerCount(int level) const = 0;
+    virtual GLsizei getLayerCount(int level) const                = 0;
 
     angle::Result getImageAndSyncFromStorage(const gl::Context *context,
                                              const gl::ImageIndex &index,
@@ -78,7 +78,7 @@ class TextureD3D : public TextureImpl
     // Returns an ImageIndex for a particular "Image". 3D Textures do not have images for
     // slices of their depth texures, so 3D textures ignore the layer parameter.
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const = 0;
-    virtual bool isValidIndex(const gl::ImageIndex &index) const = 0;
+    virtual bool isValidIndex(const gl::ImageIndex &index) const       = 0;
 
     angle::Result setImageExternal(const gl::Context *context,
                                    gl::TextureType type,
@@ -703,8 +703,9 @@ class TextureD3D_2DArray : public TextureD3D
 
     // Storing images as an array of single depth textures since D3D11 treats each array level of a
     // Texture2D object as a separate subresource.  Each layer would have to be looped over
-    // to update all the texture layers since they cannot all be updated at once and it makes the most
-    // sense for the Image class to not have to worry about layer subresource as well as mip subresources.
+    // to update all the texture layers since they cannot all be updated at once and it makes the
+    // most sense for the Image class to not have to worry about layer subresource as well as mip
+    // subresources.
     GLsizei mLayerCounts[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
     ImageD3D **mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
@@ -896,4 +897,4 @@ class TextureD3D_2DMultisampleArray : public TextureD3DImmutableBase
 };
 }
 
-#endif // LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
+#endif  // LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
