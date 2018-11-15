@@ -2216,10 +2216,15 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
-        unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0_EXT);
-        ASSERT(colorAttachment < mMaxDrawBuffers);
+        size_t drawBuffer = (pname - GL_DRAW_BUFFER0_EXT);
+        ASSERT(drawBuffer < mMaxDrawBuffers);
         Framebuffer *framebuffer = mDrawFramebuffer;
-        *params                  = framebuffer->getDrawBufferState(colorAttachment);
+        // The default framebuffer may have fewer draw buffer states than a user-created one. The
+        // user is always allowed to query up to GL_MAX_DRAWBUFFERS so just return GL_NONE here if
+        // the draw buffer is out of range for this framebuffer.
+        *params = drawBuffer < framebuffer->getDrawbufferStateCount()
+                      ? framebuffer->getDrawBufferState(drawBuffer)
+                      : GL_NONE;
         return NoError();
     }
 

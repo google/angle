@@ -352,6 +352,20 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
     glDeleteProgram(program);
 }
 
+// Test that non-zero draw buffers can be queried on the default framebuffer
+TEST_P(DrawBuffersTest, DefaultFramebufferDrawBufferQuery)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    GLint drawbuffer = 0;
+    glGetIntegerv(GL_DRAW_BUFFER1, &drawbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(GL_NONE, drawbuffer);
+}
+
 // Tests masking out some of the draw buffers by not writing to them in the program.
 TEST_P(DrawBuffersWebGL2Test, SomeProgramOutputsDisabled)
 {
