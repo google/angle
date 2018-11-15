@@ -120,6 +120,53 @@
     },
     {
       "key": {
+        "uuid": "4c66564c_a62e1bdb",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-15T17:04:11Z",
+      "side": 1,
+      "message": "In the end of discussing #9 we\u0027ve reverted to the original idea of having the trace calls in LoggingAnnotator. The outline is in https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d2528#c10.",
+      "parentUuid": "ed52779d_fefb6119",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 22
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14a035ed_c78c4549",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-15T17:04:11Z",
+      "side": 1,
+      "message": "I think we can move this to ScopedPerfEventHelper constructor, so it will use event name instead of full message. We should still keep ANGLE_LOG(EVENT) in ScopedPerfEventHelper constructor to log additional details.",
+      "range": {
+        "startLine": 165,
+        "startChar": 16,
+        "endLine": 165,
+        "endChar": 75
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d04b6f0_76b4e66c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 14
