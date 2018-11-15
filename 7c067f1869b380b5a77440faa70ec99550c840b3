@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "063c36f1_d1e04a52",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-15T17:29:02Z",
+      "side": 1,
+      "message": "agree it would be more symmetrical in the constructor (as the destructor calls end).",
+      "parentUuid": "14a035ed_c78c4549",
+      "range": {
+        "startLine": 165,
+        "startChar": 16,
+        "endLine": 165,
+        "endChar": 75
+      },
+      "revId": "7c067f1869b380b5a77440faa70ec99550c840b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d04b6f0_76b4e66c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 14
