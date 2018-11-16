@@ -46,6 +46,30 @@
       "revId": "0116a99c25efb6cc6a4a1a0fb3b698ba09ce68f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff2512f9_ab818fa8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-16T21:04:41Z",
+      "side": 1,
+      "message": "No problem. Just checking.",
+      "parentUuid": "b866f99b_e404ded0",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 45
+      },
+      "revId": "0116a99c25efb6cc6a4a1a0fb3b698ba09ce68f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
