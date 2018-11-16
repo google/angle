@@ -2774,10 +2774,10 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
-angle::Result State::syncDirtyObjectsImpl(const Context *context, const DirtyObjects &dirtyObjects)
+angle::Result State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
-    ASSERT(dirtyObjects.any());
-    for (size_t dirtyObject : dirtyObjects)
+    const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
+    for (auto dirtyObject : dirtyObjects)
     {
         switch (dirtyObject)
         {
