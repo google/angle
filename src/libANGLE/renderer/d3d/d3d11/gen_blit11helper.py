@@ -48,15 +48,13 @@ Blit11::BlitShaderType Blit11::getBlitShaderType(BlitShaderOperation operation, 
 }};
 
 angle::Result Blit11::mapBlitShader(const gl::Context *context,
-                                BlitShaderType blitShaderType)
+                                    BlitShaderType blitShaderType)
 {{
     switch(blitShaderType)
     {{
 {add_blitshader_case_list}
         default:
-            UNREACHABLE();
-            context->handleError(gl::InternalError());
-            return angle::Result::Stop();
+            ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     }}
 
     return angle::Result::Continue();

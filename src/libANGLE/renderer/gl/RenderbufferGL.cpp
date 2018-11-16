@@ -100,9 +100,7 @@ angle::Result RenderbufferGL::setStorageEGLImageTarget(const gl::Context *contex
                                                        egl::Image *image)
 {
     ImageGL *imageGL = GetImplAs<ImageGL>(image);
-    ANGLE_TRY_HANDLE(context,
-                     imageGL->setRenderbufferStorage(context, this, &mNativeInternalFormat));
-    return angle::Result::Continue();
+    return imageGL->setRenderbufferStorage(context, this, &mNativeInternalFormat);
 }
 
 GLuint RenderbufferGL::getRenderbufferID() const

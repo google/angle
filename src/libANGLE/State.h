@@ -174,7 +174,7 @@ class State : angle::NonCopyable
     // Texture binding & active texture unit manipulation
     void setActiveSampler(unsigned int active);
     unsigned int getActiveSampler() const;
-    Error setSamplerTexture(const Context *context, TextureType type, Texture *texture);
+    angle::Result setSamplerTexture(const Context *context, TextureType type, Texture *texture);
     Texture *getTargetTexture(TextureType type) const;
 
     Texture *getSamplerTexture(unsigned int sampler, TextureType type) const
@@ -378,7 +378,7 @@ class State : angle::NonCopyable
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
-    Error getIntegerv(const Context *context, GLenum pname, GLint *params);
+    angle::Result getIntegerv(const Context *context, GLenum pname, GLint *params);
     void getPointerv(const Context *context, GLenum pname, void **params) const;
     void getIntegeri_v(GLenum target, GLuint index, GLint *data);
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);

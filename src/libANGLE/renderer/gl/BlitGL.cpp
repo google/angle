@@ -263,7 +263,7 @@ angle::Result BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *contex
     GLenum format = gl::GetUnsizedFormat(internalFormat);
 
     GLenum readType = GL_NONE;
-    ANGLE_TRY_HANDLE(context, source->getImplementationColorReadType(context, &readType));
+    ANGLE_TRY(source->getImplementationColorReadType(context, &readType));
 
     gl::PixelUnpackState unpack;
     mStateManager->setPixelUnpackState(unpack);
@@ -296,10 +296,10 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
 
     GLenum readFormat = GL_NONE;
-    ANGLE_TRY_HANDLE(context, source->getImplementationColorReadFormat(context, &readFormat));
+    ANGLE_TRY(source->getImplementationColorReadFormat(context, &readFormat));
 
     GLenum readType = GL_NONE;
-    ANGLE_TRY_HANDLE(context, source->getImplementationColorReadType(context, &readType));
+    ANGLE_TRY(source->getImplementationColorReadType(context, &readType));
 
     nativegl::CopyTexImageImageFormat copyTexImageFormat =
         nativegl::GetCopyTexImageImageFormat(mFunctions, mWorkarounds, readFormat, readType);
@@ -543,7 +543,7 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
     }
     source->setMinFilter(context, GL_NEAREST);
     source->setMagFilter(context, GL_NEAREST);
-    ANGLE_TRY_HANDLE(context, source->setBaseLevel(context, static_cast<GLuint>(sourceLevel)));
+    ANGLE_TRY(source->setBaseLevel(context, static_cast<GLuint>(sourceLevel)));
 
     // Render to the destination texture, sampling from the source texture
     ScopedGLState scopedState;

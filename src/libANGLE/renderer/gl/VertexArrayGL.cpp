@@ -197,9 +197,9 @@ angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
         if (attributesNeedStreaming)
         {
             ptrdiff_t elementArrayBufferOffset = reinterpret_cast<ptrdiff_t>(indices);
-            ANGLE_TRY_HANDLE(context, mState.getElementArrayBuffer()->getIndexRange(
-                                          context, type, elementArrayBufferOffset, count,
-                                          primitiveRestartEnabled, outIndexRange));
+            ANGLE_TRY(mState.getElementArrayBuffer()->getIndexRange(
+                context, type, elementArrayBufferOffset, count, primitiveRestartEnabled,
+                outIndexRange));
         }
 
         // Indices serves as an offset into the index buffer in this case, use the same value for

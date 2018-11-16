@@ -1597,11 +1597,8 @@ angle::Result Blit11::getBlitShader(const gl::Context *context,
 
     blitShaderType = getBlitShaderType(blitShaderOperation, dimension);
 
-    if (blitShaderType == BLITSHADER_INVALID)
-    {
-        context->handleError(gl::InternalError() << "Internal blit shader type mismatch");
-        return angle::Result::Stop();
-    }
+    ANGLE_CHECK_HR(GetImplAs<Context11>(context), blitShaderType != BLITSHADER_INVALID,
+                   "Internal blit shader type mismatch", E_FAIL);
 
     auto blitShaderIt = mBlitShaderMap.find(blitShaderType);
     if (blitShaderIt != mBlitShaderMap.end())
@@ -1627,11 +1624,8 @@ angle::Result Blit11::getSwizzleShader(const gl::Context *context,
 {
     SwizzleShaderType swizzleShaderType = GetSwizzleShaderType(type, viewDimension);
 
-    if (swizzleShaderType == SWIZZLESHADER_INVALID)
-    {
-        context->handleError(gl::InternalError() << "Swizzle shader type not found");
-        return angle::Result::Stop();
-    }
+    ANGLE_CHECK_HR(GetImplAs<Context11>(context), swizzleShaderType != SWIZZLESHADER_INVALID,
+                   "Swizzle shader type not found", E_FAIL);
 
     auto swizzleShaderIt = mSwizzleShaderMap.find(swizzleShaderType);
     if (swizzleShaderIt != mSwizzleShaderMap.end())
@@ -1706,9 +1700,7 @@ angle::Result Blit11::getSwizzleShader(const gl::Context *context,
                                             "Blit11 2D Array I swizzle pixel shader"));
             break;
         default:
-            UNREACHABLE();
-            context->handleError(gl::InternalError());
-            return angle::Result::Stop();
+            ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     }
 
     swizzleShaderIt = mSwizzleShaderMap.find(swizzleShaderType);
@@ -1726,9 +1718,9 @@ angle::Result Blit11::resolveDepth(const gl::Context *context,
     // Multisampled depth stencil SRVs are not available in feature level 10.0
     ASSERT(mRenderer->getRenderer11DeviceCaps().featureLevel > D3D_FEATURE_LEVEL_10_0);
 
-    const auto &extents          = depth->getExtents();
-    auto *deviceContext          = mRenderer->getDeviceContext();
-    auto *stateManager           = mRenderer->getStateManager();
+    const auto &extents = depth->getExtents();
+    auto *deviceContext = mRenderer->getDeviceContext();
+    auto *stateManager  = mRenderer->getStateManager();
 
     ANGLE_TRY(initResolveDepthOnly(context, depth->getFormatSet(), extents));
 
@@ -1863,8 +1855,8 @@ angle::Result Blit11::resolveStencil(const gl::Context *context,
     ANGLE_TRY(initResolveDepthStencil(context, extents));
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-    auto *stateManager              = mRenderer->getStateManager();
-    ID3D11Resource *stencilResource = depthStencil->getTexture().get();
+    auto *stateManager                 = mRenderer->getStateManager();
+    ID3D11Resource *stencilResource    = depthStencil->getTexture().get();
 
     // Check if we need to re-create the stencil SRV.
     if (mStencilSRV.valid())

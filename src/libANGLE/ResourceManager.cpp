@@ -10,6 +10,7 @@
 #include "libANGLE/ResourceManager.h"
 
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
@@ -18,7 +19,7 @@
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Texture.h"
-#include "libANGLE/renderer/GLImplFactory.h"
+#include "libANGLE/renderer/ContextImpl.h"
 
 namespace gl
 {
@@ -336,24 +337,28 @@ Sync *SyncManager::getSync(GLuint handle) const
 
 // PathManager Implementation.
 
-PathManager::PathManager()
-{
-}
+PathManager::PathManager() = default;
 
-Error PathManager::createPaths(rx::GLImplFactory *factory, GLsizei range, GLuint *createdOut)
+angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *createdOut)
 {
     *createdOut = 0;
 
     // Allocate client side handles.
     const GLuint client = mHandleAllocator.allocateRange(static_cast<GLuint>(range));
     if (client == HandleRangeAllocator::kInvalidHandle)
-        return OutOfMemory() << "Failed to allocate path handle range.";
+    {
+        context->handleError(GL_OUT_OF_MEMORY, "Failed to allocate path handle range.", __FILE__,
+                             ANGLE_FUNCTION, __LINE__);
+        return angle::Result::Stop();
+    }
 
-    const auto &paths = factory->createPaths(range);
+    const auto &paths = context->getImplementation()->createPaths(range);
     if (paths.empty())
     {
         mHandleAllocator.releaseRange(client, range);
-        return OutOfMemory() << "Failed to allocate path objects.";
+        context->handleError(GL_OUT_OF_MEMORY, "Failed to allocate path objects.", __FILE__,
+                             ANGLE_FUNCTION, __LINE__);
+        return angle::Result::Stop();
     }
 
     for (GLsizei i = 0; i < range; ++i)
@@ -363,7 +368,7 @@ Error PathManager::createPaths(rx::GLImplFactory *factory, GLsizei range, GLuint
         mPaths.assign(id, new Path(impl));
     }
     *createdOut = client;
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void PathManager::deletePaths(GLuint first, GLsizei range)

@@ -12,7 +12,7 @@
   "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
     "4253e14cd3217f42b6fec75ee400655a",
   "D3D11 blit shader selection:src/libANGLE/renderer/d3d/d3d11/gen_blit11helper.py":
-    "ba81f15eccbd49cc9558fc08938dc41d",
+    "5373e54840afa67103d70c4c92b5df51",
   "D3D11 format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py":
@@ -70,9 +70,9 @@
   "Vulkan format:src/libANGLE/renderer/angle_format_map.json":
     "be9f9bdbdf785dda05920146e8c55dbb",
   "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
-    "45b9efadef12298527dce8bb5da49178",
+    "d97a76b5da4d964b8313d464f6dcbea2",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
-    "a22cdfceb4f0c43b5ed498bc9ebc2e98",
+    "0c14ee33bcec99ee02eb6b39da046bc0",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "c1cc895645db3fe1cd284352890c219e",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":

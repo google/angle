@@ -98,8 +98,6 @@ using ErrorStream = angle::ErrorStreamBase<Error, GLenum, GL_NO_ERROR, GLenum, E
 
 }  // namespace priv
 
-using InternalError = priv::ErrorStream<GL_INVALID_OPERATION>;
-
 using InvalidEnum                 = priv::ErrorStream<GL_INVALID_ENUM>;
 using InvalidValue                = priv::ErrorStream<GL_INVALID_VALUE>;
 using InvalidOperation            = priv::ErrorStream<GL_INVALID_OPERATION>;
@@ -201,18 +199,6 @@ inline Error NoError()
 
 #define ANGLE_RETURN(X) return X;
 #define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN);
-
-// TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2491
-#define ANGLE_TRY_HANDLE(CONTEXT, EXPR)                \
-    do                                                 \
-    {                                                  \
-        auto ANGLE_LOCAL_VAR = (EXPR);                 \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
-        {                                              \
-            CONTEXT->handleError(ANGLE_LOCAL_VAR);     \
-            return angle::Result::Stop();              \
-        }                                              \
-    } while (0)
 
 // TODO(jmadill): Introduce way to store errors to a const Context. http://anglebug.com/2491
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \

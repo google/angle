@@ -1052,7 +1052,7 @@ angle::Result Renderer9::updateState(const gl::Context *context, gl::PrimitiveMo
     {
         ASSERT(firstColorAttachment->isAttached());
         RenderTarget9 *renderTarget = nullptr;
-        ANGLE_TRY_HANDLE(context, firstColorAttachment->getRenderTarget(context, &renderTarget));
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(context, &renderTarget));
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
@@ -1086,7 +1086,7 @@ angle::Result Renderer9::setBlendDepthRasterStates(const gl::Context *context,
     {
         ASSERT(firstColorAttachment->isAttached());
         RenderTarget9 *renderTarget = nullptr;
-        ANGLE_TRY_HANDLE(context, firstColorAttachment->getRenderTarget(context, &renderTarget));
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(context, &renderTarget));
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
@@ -1609,9 +1609,7 @@ angle::Result Renderer9::drawIndexedPoints(const gl::Context *context,
             DrawPoints<GLuint>(mDevice, count, indices, minIndex);
             return angle::Result::Continue();
         default:
-            UNREACHABLE();
-            context->handleError(gl::InternalError());
-            return angle::Result::Stop();
+            ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
     }
 }
 

@@ -917,7 +917,7 @@ Blit11::BlitShaderType Blit11::getBlitShaderType(BlitShaderOperation operation, 
 };
 
 angle::Result Blit11::mapBlitShader(const gl::Context *context,
-                                BlitShaderType blitShaderType)
+                                    BlitShaderType blitShaderType)
 {
     switch(blitShaderType)
     {
@@ -1567,9 +1567,7 @@ angle::Result Blit11::mapBlitShader(const gl::Context *context,
                                          "Blit11 2DArray FtoF UM RGBA 5551 2DArray pixel shader"));
             break;
         default:
-            UNREACHABLE();
-            context->handleError(gl::InternalError());
-            return angle::Result::Stop();
+            ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     }
 
     return angle::Result::Continue();

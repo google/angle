@@ -750,7 +750,7 @@ GLuint Context::createRenderbuffer()
 
 void Context::tryGenPaths(GLsizei range, GLuint *createdOut)
 {
-    ANGLE_CONTEXT_TRY(mState.mPaths->createPaths(mImplementation.get(), range, createdOut));
+    ANGLE_CONTEXT_TRY(mState.mPaths->createPaths(this, range, createdOut));
 }
 
 GLuint Context::genPaths(GLsizei range)
@@ -3542,28 +3542,29 @@ angle::Result Context::prepareForDraw(PrimitiveMode mode)
     return angle::Result::Continue();
 }
 
-Error Context::prepareForClear(GLbitfield mask)
+angle::Result Context::prepareForClear(GLbitfield mask)
 {
     ANGLE_TRY(syncDirtyObjects(mClearDirtyObjects));
     ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureClearAttachmentsInitialized(this, mask));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
+angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
 {
     ANGLE_TRY(syncDirtyObjects(mClearDirtyObjects));
     ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureClearBufferAttachmentsInitialized(this, buffer,
                                                                                      drawbuffer));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error Context::syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask)
+angle::Result Context::syncState(const State::DirtyBits &bitMask,
+                                 const State::DirtyObjects &objectMask)
 {
     ANGLE_TRY(syncDirtyObjects(objectMask));
     ANGLE_TRY(syncDirtyBits(bitMask));
-    return NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result Context::syncDirtyBits()
@@ -4545,29 +4546,29 @@ void Context::flushMappedBufferRange(BufferBinding /*target*/,
     // We do not currently support a non-trivial implementation of FlushMappedBufferRange
 }
 
-Error Context::syncStateForReadPixels()
+angle::Result Context::syncStateForReadPixels()
 {
     return syncState(mReadPixelsDirtyBits, mReadPixelsDirtyObjects);
 }
 
-Error Context::syncStateForTexImage()
+angle::Result Context::syncStateForTexImage()
 {
     return syncState(mTexImageDirtyBits, mTexImageDirtyObjects);
 }
 
-Error Context::syncStateForBlit()
+angle::Result Context::syncStateForBlit()
 {
     return syncState(mBlitDirtyBits, mBlitDirtyObjects);
 }
 
-Error Context::syncStateForPathOperation()
+angle::Result Context::syncStateForPathOperation()
 {
     ANGLE_TRY(syncDirtyObjects(mPathOperationDirtyObjects));
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     ANGLE_TRY(syncDirtyBits());
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void Context::activeShaderProgram(GLuint pipeline, GLuint program)
@@ -5343,7 +5344,7 @@ bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
     return mZeroFilledBuffer.getInitialized(requstedSizeBytes, zeroBufferOut, 0);
 }
 
-Error Context::prepareForDispatch()
+angle::Result Context::prepareForDispatch()
 {
     ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects));
 

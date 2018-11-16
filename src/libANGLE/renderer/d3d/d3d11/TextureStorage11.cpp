@@ -811,8 +811,7 @@ angle::Result TextureStorage11::ensureDropStencilTexture(
     const gl::Context *context,
     TextureStorage11::DropStencil *dropStencilOut)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "Drop stencil texture not implemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -1560,8 +1559,7 @@ angle::Result TextureStorage11_External::createSRVForImage(const gl::Context *co
                                                            const TextureHelper11 &texture,
                                                            d3d11::SharedSRV *outSRV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -1571,16 +1569,14 @@ angle::Result TextureStorage11_External::createUAVForImage(const gl::Context *co
                                                            const TextureHelper11 &texture,
                                                            d3d11::SharedUAV *outUAV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
 angle::Result TextureStorage11_External::getSwizzleTexture(const gl::Context *context,
                                                            const TextureHelper11 **outTexture)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -1589,8 +1585,7 @@ angle::Result TextureStorage11_External::getSwizzleRenderTarget(
     int mipLevel,
     const d3d11::RenderTargetView **outRTV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -1627,8 +1622,7 @@ angle::Result TextureStorage11ImmutableBase::createSRVForImage(const gl::Context
                                                                const TextureHelper11 &texture,
                                                                d3d11::SharedSRV *outSRV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "createSRVForImage is unimplemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -1638,8 +1632,7 @@ angle::Result TextureStorage11ImmutableBase::createUAVForImage(const gl::Context
                                                                const TextureHelper11 &texture,
                                                                d3d11::SharedUAV *outUAV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "createUAVForImage is unimplemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -1692,8 +1685,7 @@ angle::Result TextureStorage11_EGLImage::getMippedResource(const gl::Context *co
 {
     // This shouldn't be called unless the zero max LOD workaround is active.
     // EGL images are unavailable in this configuration.
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -3430,8 +3422,7 @@ angle::Result TextureStorage11_2DMultisample::createSRVForSampler(const gl::Cont
 angle::Result TextureStorage11_2DMultisample::getSwizzleTexture(const gl::Context *context,
                                                                 const TextureHelper11 **outTexture)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "getSwizzleTexture is unimplemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -3440,16 +3431,14 @@ angle::Result TextureStorage11_2DMultisample::getSwizzleRenderTarget(
     int mipLevel,
     const d3d11::RenderTargetView **outRTV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "getSwizzleRenderTarget is unimplemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
 angle::Result TextureStorage11_2DMultisample::ensureDropStencilTexture(const gl::Context *context,
                                                                        DropStencil *dropStencilOut)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "Drop stencil texture not implemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -3664,8 +3653,7 @@ angle::Result TextureStorage11_2DMultisampleArray::getSwizzleTexture(
     const gl::Context *context,
     const TextureHelper11 **outTexture)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "getSwizzleTexture is unimplemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -3674,8 +3662,7 @@ angle::Result TextureStorage11_2DMultisampleArray::getSwizzleRenderTarget(
     int mipLevel,
     const d3d11::RenderTargetView **outRTV)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "getSwizzleRenderTarget is unimplemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 
@@ -3683,8 +3670,7 @@ angle::Result TextureStorage11_2DMultisampleArray::ensureDropStencilTexture(
     const gl::Context *context,
     DropStencil *dropStencilOut)
 {
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "Drop stencil texture not implemented.");
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
 }
 

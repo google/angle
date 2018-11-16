@@ -1101,8 +1101,7 @@ angle::Result TextureGL::setEGLImageTarget(const gl::Context *context,
     ImageGL *imageGL = GetImplAs<ImageGL>(image);
 
     GLenum imageNativeInternalFormat = GL_NONE;
-    ANGLE_TRY_HANDLE(context,
-                     imageGL->setTexture2D(context, type, this, &imageNativeInternalFormat));
+    ANGLE_TRY(imageGL->setTexture2D(context, type, this, &imageNativeInternalFormat));
 
     setLevelInfo(context, type, 0, 1,
                  GetLevelInfo(image->getFormat().info->internalFormat, imageNativeInternalFormat));

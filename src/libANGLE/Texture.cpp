@@ -1420,9 +1420,10 @@ angle::Result Texture::releaseTexImageInternal(const Context *context)
     {
         // Notify the surface
         egl::Error eglErr = mBoundSurface->releaseTexImageFromTexture(context);
+        // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2491
         if (eglErr.isError())
         {
-            ANGLE_TRY_HANDLE(context, Error(eglErr));
+            context->handleError(Error(eglErr));
         }
 
         // Then, call the same method as from the surface

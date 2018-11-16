@@ -1161,7 +1161,7 @@ unsigned int State::getActiveSampler() const
     return static_cast<unsigned int>(mActiveSampler);
 }
 
-Error State::setSamplerTexture(const Context *context, TextureType type, Texture *texture)
+angle::Result State::setSamplerTexture(const Context *context, TextureType type, Texture *texture)
 {
     mSamplerTextures[type][mActiveSampler].set(context, texture);
 
@@ -1173,7 +1173,7 @@ Error State::setSamplerTexture(const Context *context, TextureType type, Texture
 
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 Texture *State::getTargetTexture(TextureType type) const
@@ -2212,7 +2212,7 @@ void State::getFloatv(GLenum pname, GLfloat *params)
     }
 }
 
-Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
+angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *params)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
@@ -2225,7 +2225,7 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         *params = drawBuffer < framebuffer->getDrawbufferStateCount()
                       ? framebuffer->getDrawBufferState(drawBuffer)
                       : GL_NONE;
-        return NoError();
+        return angle::Result::Continue();
     }
 
     // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
@@ -2624,7 +2624,7 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
             break;
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void State::getPointerv(const Context *context, GLenum pname, void **params) const

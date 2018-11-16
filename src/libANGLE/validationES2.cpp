@@ -4412,7 +4412,7 @@ bool ValidateBufferSubData(Context *context,
     checkedSize += offset;
     if (!checkedSize.IsValid())
     {
-        context->handleError(OutOfMemory());
+        context->handleError(InvalidValue());
         return false;
     }
 

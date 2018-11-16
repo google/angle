@@ -1638,7 +1638,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                               angle::MemoryBuffer **zeroBufferOut) const;
     angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
 
-    Error prepareForDispatch();
+    angle::Result prepareForDispatch();
 
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
 
@@ -1733,16 +1733,16 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount);
 
     angle::Result prepareForDraw(PrimitiveMode mode);
-    Error prepareForClear(GLbitfield mask);
-    Error prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
-    Error syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
+    angle::Result prepareForClear(GLbitfield mask);
+    angle::Result prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
+    angle::Result syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
     angle::Result syncDirtyBits();
     angle::Result syncDirtyBits(const State::DirtyBits &bitMask);
     angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask);
-    Error syncStateForReadPixels();
-    Error syncStateForTexImage();
-    Error syncStateForBlit();
-    Error syncStateForPathOperation();
+    angle::Result syncStateForReadPixels();
+    angle::Result syncStateForTexImage();
+    angle::Result syncStateForBlit();
+    angle::Result syncStateForPathOperation();
 
     VertexArray *checkVertexArrayAllocation(GLuint vertexArrayHandle);
     TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);

@@ -242,7 +242,7 @@ angle::Result Blit9::copy2D(const gl::Context *context,
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget9 = nullptr;
-    ANGLE_TRY_HANDLE(context, colorbuffer->getRenderTarget(context, &renderTarget9));
+    ANGLE_TRY(colorbuffer->getRenderTarget(context, &renderTarget9));
     ASSERT(renderTarget9);
 
     angle::ComPtr<IDirect3DSurface9> source = renderTarget9->getSurface();
@@ -276,7 +276,7 @@ angle::Result Blit9::copyCube(const gl::Context *context,
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget9 = nullptr;
-    ANGLE_TRY_HANDLE(context, colorbuffer->getRenderTarget(context, &renderTarget9));
+    ANGLE_TRY(colorbuffer->getRenderTarget(context, &renderTarget9));
     ASSERT(renderTarget9);
 
     angle::ComPtr<IDirect3DSurface9> source = renderTarget9->getSurface();

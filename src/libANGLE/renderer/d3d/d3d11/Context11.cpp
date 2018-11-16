@@ -598,9 +598,7 @@ angle::Result Context11::getIncompleteTexture(const gl::Context *context,
                                               gl::TextureType type,
                                               gl::Texture **textureOut)
 {
-    ANGLE_TRY_HANDLE(context,
-                     mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut));
-    return angle::Result::Continue();
+    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
 }
 
 angle::Result Context11::initializeMultisampleTextureToBlack(const gl::Context *context,

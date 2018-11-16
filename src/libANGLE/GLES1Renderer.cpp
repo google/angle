@@ -531,7 +531,7 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
         programObject->bindAttributeLocation(index, name.c_str());
     }
 
-    ANGLE_TRY_HANDLE(context, programObject->link(context));
+    ANGLE_TRY(programObject->link(context));
     programObject->resolveLink(context);
 
     ANGLE_TRY(glState->onProgramExecutableChange(context, programObject));
