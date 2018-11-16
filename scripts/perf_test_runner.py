@@ -133,7 +133,7 @@ for experiment in range(max_experiments):
 
         if (len(scores) > 7):
             truncation_n = len(scores) >> 3
-            sys.stdout.write(", truncated mean: %.2f" % truncated_mean(scores, trucation_n))
-            sys.stdout.write(", variation: %.2f%%" % (truncated_cov(scores, trucation_n) * 100.0))
+            sys.stdout.write(", truncated mean: %.2f" % truncated_mean(scores, truncation_n))
+            sys.stdout.write(", variation: %.2f%%" % (truncated_cov(scores, truncation_n) * 100.0))
 
         print("")
