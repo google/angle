@@ -38,14 +38,27 @@ struct FormatType final
 
 struct Type
 {
-    Type();
+    Type() : bytes(0), bytesShift(0), specialInterpretation(0) {}
+
+    Type(uint32_t packedTypeInfo)
+        : bytes(packedTypeInfo & 0xff),
+          bytesShift((packedTypeInfo >> 8) & 0xff),
+          specialInterpretation((packedTypeInfo >> 16) & 1)
+    {
+    }
 
     GLuint bytes;
     GLuint bytesShift;  // Bit shift by this value to effectively divide/multiply by "bytes" in a
                         // more optimal way
     bool specialInterpretation;
 };
-const Type &GetTypeInfo(GLenum type);
+
+uint32_t GetPackedTypeInfo(GLenum type);
+
+ANGLE_INLINE const Type GetTypeInfo(GLenum type)
+{
+    return Type(GetPackedTypeInfo(type));
+}
 
 // Information about an OpenGL internal format.  Can be keyed on the internalFormat and type
 // members.

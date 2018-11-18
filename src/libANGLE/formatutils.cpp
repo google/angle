@@ -39,40 +39,30 @@ bool CheckedMathResult(const CheckedNumeric<GLuint> &value, GLuint *resultOut)
         return true;
     }
 }
+
+constexpr GLuint Log2(GLuint bytes)
+{
+    return bytes == 1 ? 0 : (1 + Log2(bytes / 2));
+}
+
+constexpr uint32_t PackTypeInfo(GLuint bytes, bool specialized)
+{
+    // static_assert within constexpr requires c++17
+    // static_assert(isPow2(bytes));
+    return bytes | (Log2(bytes) << 8) | (specialized << 16);
+}
+
 }  // anonymous namespace
 
-FormatType::FormatType() : format(GL_NONE), type(GL_NONE)
-{
-}
+FormatType::FormatType() : format(GL_NONE), type(GL_NONE) {}
 
-FormatType::FormatType(GLenum format_, GLenum type_) : format(format_), type(type_)
-{
-}
+FormatType::FormatType(GLenum format_, GLenum type_) : format(format_), type(type_) {}
 
 bool FormatType::operator<(const FormatType &other) const
 {
     if (format != other.format)
         return format < other.format;
     return type < other.type;
-}
-
-Type::Type() : bytes(0), bytesShift(0), specialInterpretation(false)
-{
-}
-
-static Type GenTypeInfo(GLuint bytes, bool specialInterpretation)
-{
-    Type info;
-    info.bytes = bytes;
-    GLuint i   = 0;
-    while ((1u << i) < bytes)
-    {
-        ++i;
-    }
-    info.bytesShift = i;
-    ASSERT((1u << info.bytesShift) == bytes);
-    info.specialInterpretation = specialInterpretation;
-    return info;
 }
 
 bool operator<(const Type &a, const Type &b)
@@ -494,13 +484,9 @@ bool InternalFormat::isRequiredRenderbufferFormat(const Version &version) const
     }
 }
 
-Format::Format(GLenum internalFormat) : Format(GetSizedInternalFormatInfo(internalFormat))
-{
-}
+Format::Format(GLenum internalFormat) : Format(GetSizedInternalFormatInfo(internalFormat)) {}
 
-Format::Format(const InternalFormat &internalFormat) : info(&internalFormat)
-{
-}
+Format::Format(const InternalFormat &internalFormat) : info(&internalFormat) {}
 
 Format::Format(GLenum internalFormat, GLenum type)
     : info(&GetInternalFormatInfo(internalFormat, type))
@@ -1043,30 +1029,30 @@ static FormatSet BuildAllSizedInternalFormatSet()
     return result;
 }
 
-const Type &GetTypeInfo(GLenum type)
+uint32_t GetPackedTypeInfo(GLenum type)
 {
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
         case GL_BYTE:
         {
-            static const Type info = GenTypeInfo(1, false);
-            return info;
+            static constexpr uint32_t kPacked = PackTypeInfo(1, false);
+            return kPacked;
         }
         case GL_UNSIGNED_SHORT:
         case GL_SHORT:
         case GL_HALF_FLOAT:
         case GL_HALF_FLOAT_OES:
         {
-            static const Type info = GenTypeInfo(2, false);
-            return info;
+            static constexpr uint32_t kPacked = PackTypeInfo(2, false);
+            return kPacked;
         }
         case GL_UNSIGNED_INT:
         case GL_INT:
         case GL_FLOAT:
         {
-            static const Type info = GenTypeInfo(4, false);
-            return info;
+            static constexpr uint32_t kPacked = PackTypeInfo(4, false);
+            return kPacked;
         }
         case GL_UNSIGNED_SHORT_5_6_5:
         case GL_UNSIGNED_SHORT_4_4_4_4:
@@ -1074,8 +1060,8 @@ const Type &GetTypeInfo(GLenum type)
         case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
         case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
         {
-            static const Type info = GenTypeInfo(2, true);
-            return info;
+            static constexpr uint32_t kPacked = PackTypeInfo(2, true);
+            return kPacked;
         }
         case GL_UNSIGNED_INT_2_10_10_10_REV:
         case GL_UNSIGNED_INT_24_8:
@@ -1083,18 +1069,17 @@ const Type &GetTypeInfo(GLenum type)
         case GL_UNSIGNED_INT_5_9_9_9_REV:
         {
             ASSERT(GL_UNSIGNED_INT_24_8_OES == GL_UNSIGNED_INT_24_8);
-            static const Type info = GenTypeInfo(4, true);
-            return info;
+            static constexpr uint32_t kPacked = PackTypeInfo(4, true);
+            return kPacked;
         }
         case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
         {
-            static const Type info = GenTypeInfo(8, true);
-            return info;
+            static constexpr uint32_t kPacked = PackTypeInfo(8, true);
+            return kPacked;
         }
         default:
         {
-            static const Type defaultInfo;
-            return defaultInfo;
+            return 0;
         }
     }
 }
@@ -2253,4 +2238,4 @@ VertexFormat::VertexFormat(GLenum typeIn,
     ASSERT(!(type == GL_FLOAT || type == GL_HALF_FLOAT || type == GL_FIXED) ||
            normalized == GL_FALSE);
 }
-}
+}  // namespace gl
