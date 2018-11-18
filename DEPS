@@ -36,17 +36,17 @@ vars = {
 deps = {
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@833fdc442d9c20f03f0e157d98b3b5e78f132f1d',
+    'url': '{chromium_git}/chromium/src/build.git@2fb6537bf59c9c9a736997b8bd888ca0ecf54322',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/buildtools': {
-    'url': '{chromium_git}/chromium/buildtools.git@13a00f110ef910a25763346d6538b60f12845656',
+    'url': '{chromium_git}/chromium/buildtools.git@24ebce4578745db15274e180da1938ebc1358243',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/testing': {
-    'url': '{chromium_git}/chromium/src/testing@495ff5a2efba1400df8a7ef7fcbff91ea72a46a9',
+    'url': '{chromium_git}/chromium/src/testing@7bdda3c6577f21fd0ec986a0383ecfce28f5d761',
     'condition': 'not build_with_chromium',
   },
 
@@ -65,7 +65,7 @@ deps = {
   },
 
   '{angle_root}/third_party/googletest/src': {
-    'url': '{chromium_git}/external/github.com/google/googletest.git@145d05750b15324899473340c8dd5af50d125d33',
+    'url': '{chromium_git}/external/github.com/google/googletest.git@d5932506d6eed73ac80b9bcc47ed723c8c74eb1e',
     'condition': 'not build_with_chromium',
   },
 
@@ -114,7 +114,7 @@ deps = {
   },
 
   '{angle_root}/tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@a245b955fe9cd620081ed267fae303c88d033fef',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@1d879cee563167a2b18baffb096cf9e29f2f9376',
     'condition': 'not build_with_chromium',
   },
 }
