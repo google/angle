@@ -10,6 +10,9 @@
 #include "libANGLE/renderer/vulkan/ShaderVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "platform/FeaturesVk.h"
 
 namespace rx
 {
@@ -27,7 +30,17 @@ ShCompileOptions ShaderVk::prepareSourceAndReturnOptions(const gl::Context *cont
                                                          std::string *sourcePath)
 {
     *sourceStream << mData.getSource();
-    return SH_INITIALIZE_UNINITIALIZED_LOCALS;
+
+    ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
+
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    if (contextVk->getFeatures().clampPointSize)
+    {
+        compileOptions |= SH_CLAMP_POINT_SIZE;
+    }
+
+    return compileOptions;
 }
 
 bool ShaderVk::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)

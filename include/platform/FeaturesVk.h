@@ -43,6 +43,11 @@ struct FeaturesVk
     // of various algorithms when a fallback format is used, such as using a packed format to
     // emulate a depth- or stencil-only format.
     bool forceFallbackFormat = false;
+
+    // On some NVIDIA drivers the point size range reported from the API is inconsistent with the
+    // actual behavior. Clamp the point size to the value from the API to fix this.
+    // Tracked in http://anglebug.com/2970.
+    bool clampPointSize = false;
 };
 
 }  // namespace angle

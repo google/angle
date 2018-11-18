@@ -780,6 +780,13 @@ void RendererVk::initFeatures()
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
+
+    // Work around incorrect NVIDIA point size range clamping.
+    // TODO(jmadill): Narrow driver range once fixed. http://anglebug.com/2970
+    if (IsNvidia(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.clampPointSize = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()
