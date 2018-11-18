@@ -200,7 +200,7 @@ IterableBitSet<N>::Iterator::Iterator(const std::bitset<N> &bitset)
 }
 
 template <size_t N>
-typename IterableBitSet<N>::Iterator &IterableBitSet<N>::Iterator::operator++()
+ANGLE_INLINE typename IterableBitSet<N>::Iterator &IterableBitSet<N>::Iterator::operator++()
 {
     ASSERT(mBits.any());
     mBits.set(mCurrentBit - mOffset, 0);
@@ -446,7 +446,8 @@ BitSetT<N, BitsT, ParamT>::Iterator::Iterator(const BitSetT &bits) : mBitsCopy(b
 }
 
 template <size_t N, typename BitsT, typename ParamT>
-typename BitSetT<N, BitsT, ParamT>::Iterator &BitSetT<N, BitsT, ParamT>::Iterator::operator++()
+ANGLE_INLINE typename BitSetT<N, BitsT, ParamT>::Iterator &BitSetT<N, BitsT, ParamT>::Iterator::
+operator++()
 {
     ASSERT(mBitsCopy.any());
     mBitsCopy.reset(static_cast<ParamT>(mCurrentBit));

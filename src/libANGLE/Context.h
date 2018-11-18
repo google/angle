@@ -1732,7 +1732,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
     angle::Result syncDirtyBits();
     angle::Result syncDirtyBits(const State::DirtyBits &bitMask);
-    angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask);
+    ANGLE_INLINE angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask)
+    {
+        return mGLState.syncDirtyObjects(this, objectMask);
+    }
     angle::Result syncStateForReadPixels();
     angle::Result syncStateForTexImage();
     angle::Result syncStateForBlit();

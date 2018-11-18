@@ -2479,49 +2479,33 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
-angle::Result State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
+angle::Result State::syncReadFramebuffer(const Context *context)
 {
-    const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
-    for (auto dirtyObject : dirtyObjects)
-    {
-        switch (dirtyObject)
-        {
-            case DIRTY_OBJECT_READ_FRAMEBUFFER:
-                ASSERT(mReadFramebuffer);
-                ANGLE_TRY(mReadFramebuffer->syncState(context));
-                break;
-            case DIRTY_OBJECT_DRAW_FRAMEBUFFER:
-                ASSERT(mDrawFramebuffer);
-                ANGLE_TRY(mDrawFramebuffer->syncState(context));
-                break;
-            case DIRTY_OBJECT_VERTEX_ARRAY:
-                ASSERT(mVertexArray);
-                ANGLE_TRY(mVertexArray->syncState(context));
-                break;
-            case DIRTY_OBJECT_SAMPLERS:
-                syncSamplers(context);
-                break;
-            case DIRTY_OBJECT_PROGRAM_TEXTURES:
-                ANGLE_TRY(syncProgramTextures(context));
-                break;
-            case DIRTY_OBJECT_PROGRAM:
-                ANGLE_TRY(mProgram->syncState(context));
-                break;
-
-            default:
-                UNREACHABLE();
-                break;
-        }
-    }
-
-    mDirtyObjects &= ~dirtyObjects;
-    return angle::Result::Continue();
+    ASSERT(mReadFramebuffer);
+    return mReadFramebuffer->syncState(context);
 }
 
-void State::syncSamplers(const Context *context)
+angle::Result State::syncWriteFramebuffer(const Context *context)
+{
+    ASSERT(mDrawFramebuffer);
+    return mDrawFramebuffer->syncState(context);
+}
+
+angle::Result State::syncVertexArray(const Context *context)
+{
+    ASSERT(mVertexArray);
+    return mVertexArray->syncState(context);
+}
+
+angle::Result State::syncProgram(const Context *context)
+{
+    return mProgram->syncState(context);
+}
+
+angle::Result State::syncSamplers(const Context *context)
 {
     if (mDirtySamplers.none())
-        return;
+        return angle::Result::Continue();
 
     // This could be optimized by tracking which samplers are dirty.
     for (size_t samplerIndex : mDirtySamplers)
@@ -2534,6 +2518,8 @@ void State::syncSamplers(const Context *context)
     }
 
     mDirtySamplers.reset();
+
+    return angle::Result::Continue();
 }
 
 angle::Result State::syncProgramTextures(const Context *context)
@@ -2796,5 +2782,7 @@ AttributesMask State::getAndResetDirtyCurrentValues() const
     mDirtyCurrentValues.reset();
     return retVal;
 }
+
+constexpr State::DirtyObjectHandler State::kDirtyObjectHandlers[DIRTY_OBJECT_MAX];
 
 }  // namespace gl

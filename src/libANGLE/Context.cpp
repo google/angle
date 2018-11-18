@@ -3563,11 +3563,6 @@ angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
     return angle::Result::Continue();
 }
 
-angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
-{
-    return mGLState.syncDirtyObjects(this, objectMask);
-}
-
 void Context::blitFramebuffer(GLint srcX0,
                               GLint srcY0,
                               GLint srcX1,
