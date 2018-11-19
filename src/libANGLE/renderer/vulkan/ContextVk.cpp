@@ -1235,6 +1235,7 @@ void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int l
 
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
+        WARN() << errorStream.str();
         mRenderer->notifyDeviceLost();
     }
 

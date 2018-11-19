@@ -196,6 +196,7 @@ void DisplayVk::handleError(VkResult result, const char *file, unsigned int line
 
     if (result == VK_ERROR_DEVICE_LOST)
     {
+        WARN() << mStoredErrorString;
         mRenderer->notifyDeviceLost();
     }
 }
