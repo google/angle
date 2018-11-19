@@ -177,6 +177,7 @@ Extensions::Extensions()
       compressedEACR11SignedTexture(false),
       compressedEACRG11UnsignedTexture(false),
       compressedEACRG11SignedTexture(false),
+      compressedTextureETC(false),
       sRGB(false),
       depthTextures(false),
       depth32(false),
@@ -730,6 +731,22 @@ static bool DetermineBPTCTextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
 }
 
+bool DetermineCompressedTextureETCSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {GL_COMPRESSED_R11_EAC,
+                                          GL_COMPRESSED_SIGNED_R11_EAC,
+                                          GL_COMPRESSED_RG11_EAC,
+                                          GL_COMPRESSED_SIGNED_RG11_EAC,
+                                          GL_COMPRESSED_RGB8_ETC2,
+                                          GL_COMPRESSED_SRGB8_ETC2,
+                                          GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+                                          GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+                                          GL_COMPRESSED_RGBA8_ETC2_EAC,
+                                          GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC};
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
+}
+
 void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 {
     // TODO(ynovikov): rgb8rgba8, colorBufferHalfFloat, textureHalfFloat, textureHalfFloatLinear,
@@ -814,6 +831,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_compression_s3tc_srgb"] = enableableExtension(&Extensions::textureCompressionS3TCsRGB);
         map["GL_KHR_texture_compression_astc_hdr"] = enableableExtension(&Extensions::textureCompressionASTCHDR);
         map["GL_KHR_texture_compression_astc_ldr"] = enableableExtension(&Extensions::textureCompressionASTCLDR);
+        map["GL_EXT_texture_compression_bptc"] = enableableExtension(&Extensions::textureCompressionBPTC);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = enableableExtension(&Extensions::compressedETC1RGB8Texture);
         map["OES_compressed_ETC2_RGB8_texture"] = enableableExtension(&Extensions::compressedETC2RGB8Texture);
         map["OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Texture);
@@ -825,7 +843,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["OES_compressed_EAC_R11_signed_texture"] = enableableExtension(&Extensions::compressedEACR11SignedTexture);
         map["OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
         map["OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
-        map["GL_EXT_texture_compression_bptc"] = enableableExtension(&Extensions::textureCompressionBPTC);
+        map["GL_CHROMIUM_compressed_texture_etc"] = enableableExtension(&Extensions::compressedTextureETC);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextures);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);

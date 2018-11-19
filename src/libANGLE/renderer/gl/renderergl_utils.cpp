@@ -1195,6 +1195,12 @@ void GenerateCaps(const FunctionsGL *functions,
         // for more information about this limitation.
         extensions->maxDualSourceDrawBuffers = 1;
     }
+
+    // GL_CHROMIUM_compressed_texture_etc
+    // Expose this extension only when we support the formats or we're running on top of a native
+    // ES driver.
+    extensions->compressedTextureETC = functions->standard == STANDARD_GL_ES &&
+                                       gl::DetermineCompressedTextureETCSupport(*textureCapsMap);
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)
