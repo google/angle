@@ -194,7 +194,7 @@
 // Line segment rasterization has a bug that affects Android configs.
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 
-// Passes on Pixel XL. Fails on 5x and Pixel 2. Might be fixd in latest driver.
+// Passes on Pixel XL. Fails on 5x and Pixel 2. Might be fixed in latest driver.
 2609 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
 
 // Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
@@ -241,3 +241,6 @@
 
 // Fails after OpenGL line rasterization rules implementation. Possibly a bug in FragCoord.
 2809 VULKAN WIN AMD : dEQP-GLES2.functional.clipping.line.long_line_clip = FAIL
+
+// Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).
+2976 VULKAN NVIDIA : dEQP-GLES2.functional.shaders.invariance.* = FAIL
