@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f8135ed_cf53842e",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "see comment below.",
+      "range": {
+        "startLine": 99,
+        "startChar": 45,
+        "endLine": 99,
+        "endChar": 68
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f087dd3b_6bdec990",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "nit: instead of doing this, can you just add funcName to the arguments list?",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 56
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e606e7b5_00ef251f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "nit: std::?",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 16
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fe0a3d9_754e7283",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "nit: std::?",
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "189941ca_b1f7fb14",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "nit: constexpr",
+      "range": {
+        "startLine": 33,
+        "startChar": 11,
+        "endLine": 33,
+        "endChar": 17
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d6dd08b_c15416dc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "nit: kMaxNameLength",
+      "range": {
+        "startLine": 33,
+        "startChar": 21,
+        "endLine": 33,
+        "endChar": 35
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f37816a_d44852c9",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "same nits",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a24397f4_4a55e513",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-19T23:18:47Z",
+      "side": 1,
+      "message": "nit: same nits",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 27,
+        "endChar": 41
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
