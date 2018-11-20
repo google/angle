@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "7a6a9781_b1705a67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T22:41:09Z",
+      "side": 1,
+      "message": "To clarify, in both insertEventMarker() and pushGroupMarker() we should ASSERT that \"mMarker\" is null, yes? To verify that neither is called when there\u0027s an active pushGroupMarker() w/o matching popGroupMarker().",
+      "parentUuid": "7e5408ad_69d3ad2f",
+      "range": {
+        "startLine": 418,
+        "startChar": 4,
+        "endLine": 418,
+        "endChar": 21
+      },
+      "revId": "9d8977096cee144bfafbed069eb708aade08bfff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab903b81_71976432",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 23
