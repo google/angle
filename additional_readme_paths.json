@@ -1,3 +1,4 @@
 [
-	"src/third_party/compiler"
+    "src/common/third_party/xxhash",
+    "src/third_party/compiler"
 ]

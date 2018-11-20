@@ -15,6 +15,7 @@
 
 #include <anglebase/sha1.h>
 #include "common/MemoryBuffer.h"
+#include "common/hash_utils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/SizedMRUCache.h"
 

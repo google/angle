@@ -9,6 +9,7 @@ angle_unittests_sources = [
   "../common/aligned_memory_unittest.cpp",
   "../common/angleutils_unittest.cpp",
   "../common/bitset_utils_unittest.cpp",
+  "../common/hash_utils_unittest.cpp",
   "../common/mathutil_unittest.cpp",
   "../common/matrix_utils_unittest.cpp",
   "../common/string_utils_unittest.cpp",
