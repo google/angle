@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "9b33ff5b_1b204f95",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T20:23:42Z",
+      "side": 1,
+      "message": "I think systrace should get only the function name, which would be hard to extract from formatted message, so better pass both.",
+      "parentUuid": "6aa200ae_3cd422c2",
+      "range": {
+        "startLine": 119,
+        "startChar": 37,
+        "endLine": 119,
+        "endChar": 45
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de5791df_d213b155",
         "filename": "src/libANGLE/LoggingAnnotator.h",
         "patchSetId": 22
