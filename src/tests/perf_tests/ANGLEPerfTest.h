@@ -94,6 +94,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
   private:
     void printResults();
 
+    unsigned int mStepsToRun;
     unsigned int mNumStepsPerformed;
     unsigned int mIterationsPerStep;
     bool mRunning;
@@ -154,7 +155,5 @@ class ANGLERenderTest : public ANGLEPerfTest
     // Trace event record that can be output.
     std::vector<TraceEvent> mTraceEventBuffer;
 };
-
-extern bool g_OnlyOneRunFrame;
 
 #endif // PERF_TESTS_ANGLE_PERF_TEST_H_

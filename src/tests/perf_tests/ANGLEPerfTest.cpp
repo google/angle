@@ -32,6 +32,8 @@ constexpr unsigned int kNumTrials             = 3;
 
 bool gCalibration = false;
 Optional<unsigned int> gStepsToRunOverride;
+bool gEnableTrace      = false;
+const char *gTraceFile = "ANGLETrace.json";
 
 struct TraceCategory
 {
@@ -66,6 +68,9 @@ angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
                                       const unsigned long long *argValues,
                                       unsigned char flags)
 {
+    if (!gEnableTrace)
+        return 0;
+
     // Discover the category name based on categoryEnabledFlag.  This flag comes from the first
     // parameter of TraceCategory, and corresponds to one of the entries in gTraceCategories.
     static_assert(offsetof(TraceCategory, enabled) == 0,
@@ -83,11 +88,14 @@ angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
 const unsigned char *GetTraceCategoryEnabledFlag(angle::PlatformMethods *platform,
                                                  const char *categoryName)
 {
-    for (const TraceCategory &category : gTraceCategories)
+    if (gEnableTrace)
     {
-        if (strcmp(category.name, categoryName) == 0)
+        for (const TraceCategory &category : gTraceCategories)
         {
-            return &category.enabled;
+            if (strcmp(category.name, categoryName) == 0)
+            {
+                return &category.enabled;
+            }
         }
     }
 
@@ -148,11 +156,12 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
 
     outFile.close();
 }
-}  // anonymous namespace
 
-bool g_OnlyOneRunFrame = false;
-bool gEnableTrace      = false;
-const char *gTraceFile = "ANGLETrace.json";
+bool OneFrame()
+{
+    return gStepsToRunOverride.valid() && gStepsToRunOverride.value() == 1;
+}
+}  // anonymous namespace
 
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
                              const std::string &suffix,
@@ -161,6 +170,7 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mSuffix(suffix),
       mTimer(CreateTimer()),
       mSkipTest(false),
+      mStepsToRun(std::numeric_limits<unsigned int>::max()),
       mNumStepsPerformed(0),
       mIterationsPerStep(iterationsPerStep),
       mRunning(true)
@@ -184,14 +194,20 @@ void ANGLEPerfTest::run()
     {
         doRunLoop(kCalibrationRunTimeSeconds);
 
+        // Scale steps down according to the time that exeeded one second.
+        double scale = kCalibrationRunTimeSeconds / mTimer->getElapsedTime();
+        mStepsToRun  = static_cast<size_t>(static_cast<double>(mNumStepsPerformed) * scale);
+
         // Calibration allows the perf test runner script to save some time.
         if (gCalibration)
         {
-            printResult("steps", static_cast<size_t>(mNumStepsPerformed), "count", false);
+            printResult("steps", static_cast<size_t>(mStepsToRun), "count", false);
             return;
         }
-
-        gStepsToRunOverride = mNumStepsPerformed;
+    }
+    else
+    {
+        mStepsToRun = gStepsToRunOverride.value();
     }
 
     // Do another warmup run. Seems to consistently improve results.
@@ -220,8 +236,7 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime)
             {
                 mRunning = false;
             }
-            else if (gStepsToRunOverride.valid() &&
-                     mNumStepsPerformed >= gStepsToRunOverride.value())
+            else if (mNumStepsPerformed >= mStepsToRun)
             {
                 mRunning = false;
             }
@@ -297,19 +312,15 @@ std::string RenderTestParams::suffix() const
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)
-    : ANGLEPerfTest(name,
-                    testParams.suffix(),
-                    g_OnlyOneRunFrame ? 1 : testParams.iterationsPerStep),
+    : ANGLEPerfTest(name, testParams.suffix(), OneFrame() ? 1 : testParams.iterationsPerStep),
       mTestParams(testParams),
       mEGLWindow(createEGLWindow(testParams)),
       mOSWindow(nullptr)
 {
     // Force fast tests to make sure our slowest bots don't time out.
-    // TODO(jmadill): Remove this flag once rolled into Chromium. http://anglebug.com/2923
-    if (g_OnlyOneRunFrame)
+    if (OneFrame())
     {
         const_cast<RenderTestParams &>(testParams).iterationsPerStep = 1;
-        gStepsToRunOverride                                          = 1;
     }
 
     // Try to ensure we don't trigger allocation during execution.
@@ -491,7 +502,6 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
     {
         if (strcmp("--one-frame-only", argv[argIndex]) == 0)
         {
-            g_OnlyOneRunFrame   = true;
             gStepsToRunOverride = 1;
         }
         else if (strcmp("--enable-trace", argv[argIndex]) == 0)
