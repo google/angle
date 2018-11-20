@@ -88,6 +88,11 @@ VulkanCommandBufferPerfTest::VulkanCommandBufferPerfTest()
 
 void VulkanCommandBufferPerfTest::SetUp()
 {
+    if (mSkipTest)
+    {
+        return;
+    }
+
     init_global_layer_properties(mInfo);
     init_instance_extension_names(mInfo);
     init_device_extension_names(mInfo);
@@ -159,6 +164,11 @@ void VulkanCommandBufferPerfTest::step()
 
 void VulkanCommandBufferPerfTest::TearDown()
 {
+    if (mSkipTest)
+    {
+        return;
+    }
+
     vkDestroySemaphore(mInfo.device, mImageAcquiredSemaphore, NULL);
     vkDestroyFence(mInfo.device, mDrawFence, NULL);
     destroy_pipeline(mInfo);
