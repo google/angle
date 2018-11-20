@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ce56384_65b8368c",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "614f564e_84dcc234",
+      "range": {
+        "startLine": 114,
+        "startChar": 7,
+        "endLine": 114,
+        "endChar": 14
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "127b97dd_bccacba1",
         "filename": "src/common/debug.cpp",
         "patchSetId": 21
@@ -36,6 +60,30 @@
       "writtenOn": "2018-11-20T17:39:15Z",
       "side": 1,
       "message": "You should store it in a member to pass to endEvent",
+      "range": {
+        "startLine": 115,
+        "startChar": 16,
+        "endLine": 115,
+        "endChar": 24
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db613e98_86c9760e",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Storing name in LoggingAnnotator class instead.",
+      "parentUuid": "127b97dd_bccacba1",
       "range": {
         "startLine": 115,
         "startChar": 16,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b87b581f_4f4a2d70",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "457a2a32_a32894e3",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 54
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "58d5c89e_1968a77b",
         "filename": "src/libANGLE/LoggingAnnotator.h",
         "patchSetId": 21
@@ -91,6 +163,30 @@
       "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8504c0c1_0138374e",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58d5c89e_1968a77b",
+      "range": {
+        "startLine": 22,
+        "startChar": 52,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +236,54 @@
     },
     {
       "key": {
+        "uuid": "b9f3c57f_63d41aa1",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fab63f5d_996d53e6",
+      "range": {
+        "startLine": 23,
+        "startChar": 29,
+        "endLine": 23,
+        "endChar": 31
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9e734c2_f864cfe5",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "storing event name as member var within this class.",
+      "parentUuid": "b0bfb125_4684c82f",
+      "range": {
+        "startLine": 23,
+        "startChar": 9,
+        "endLine": 23,
+        "endChar": 17
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "efd9c067_7a515bdd",
         "filename": "src/libANGLE/LoggingAnnotator.h",
         "patchSetId": 21
@@ -160,6 +304,30 @@
       "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c0122ec_a77ccf25",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efd9c067_7a515bdd",
+      "range": {
+        "startLine": 24,
+        "startChar": 52,
+        "endLine": 24,
+        "endChar": 54
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -206,6 +374,30 @@
       "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57bea0ac_059cc3f1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T19:12:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8532b8b6_d1f736cc",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 0
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
