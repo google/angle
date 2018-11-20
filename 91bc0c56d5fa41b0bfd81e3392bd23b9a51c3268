@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "00ba46c7_3d485637",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "I think I updated this correctly.",
+      "parentUuid": "f087dd3b_6bdec990",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 56
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e606e7b5_00ef251f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
         "patchSetId": 18
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "7528bd18_b7c29aff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "sdtlib function, added explicit include",
+      "parentUuid": "e606e7b5_00ef251f",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 16
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7fe0a3d9_754e7283",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
         "patchSetId": 18
@@ -82,6 +130,24 @@
       "writtenOn": "2018-11-19T23:18:47Z",
       "side": 1,
       "message": "nit: std::?",
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "969aa5ba_e56e6591",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "sdtlib function, added explicit include",
+      "parentUuid": "7fe0a3d9_754e7283",
       "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -134,6 +200,54 @@
     },
     {
       "key": {
+        "uuid": "0580999a_2ef6549d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8d6dd08b_c15416dc",
+      "range": {
+        "startLine": 33,
+        "startChar": 21,
+        "endLine": 33,
+        "endChar": 35
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "266f4a0c_cbf3ecea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "189941ca_b1f7fb14",
+      "range": {
+        "startLine": 33,
+        "startChar": 11,
+        "endLine": 33,
+        "endChar": 17
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f37816a_d44852c9",
         "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.cpp",
         "patchSetId": 18
@@ -145,6 +259,30 @@
       "writtenOn": "2018-11-19T23:18:47Z",
       "side": 1,
       "message": "same nits",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef732042_1d8fe94f",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "sdtlib function, added explicit include",
+      "parentUuid": "4f37816a_d44852c9",
       "range": {
         "startLine": 18,
         "startChar": 4,
@@ -177,6 +315,30 @@
       "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad7c0de7_c9bfd9ca",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T00:31:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a24397f4_4a55e513",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 27,
+        "endChar": 41
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
