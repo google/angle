@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6aa200ae_3cd422c2",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T20:15:59Z",
+      "side": 1,
+      "message": "oh yes, this does look incorrect. Probably should pass either both or just the formatted message as yuly suggests.",
+      "parentUuid": "86e8d3a9_6ff94817",
+      "range": {
+        "startLine": 119,
+        "startChar": 37,
+        "endLine": 119,
+        "endChar": 45
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de5791df_d213b155",
         "filename": "src/libANGLE/LoggingAnnotator.h",
         "patchSetId": 22
@@ -128,6 +152,30 @@
       "writtenOn": "2018-11-20T20:10:53Z",
       "side": 1,
       "message": "LoggingAnnotator is global, this will not work if ANGLE is multi-threaded.\nPlease store the name in ScopedPerfEventHelper as I suggested.",
+      "range": {
+        "startLine": 35,
+        "startChar": 16,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa28ca3d_73650088",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T20:15:59Z",
+      "side": 1,
+      "message": "This does make sense.",
+      "parentUuid": "ec5f2f7d_bb5cff06",
       "range": {
         "startLine": 35,
         "startChar": 16,
