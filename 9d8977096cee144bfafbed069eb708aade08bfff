@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6ea13c9_c83aa585",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T22:00:03Z",
+      "side": 1,
+      "message": "Now I\u0027m thinking, maybe I was wrong to suggest storing just one marker.\nFrom the API name, sounds like it might be a stack.\nJamie?",
+      "range": {
+        "startLine": 418,
+        "startChar": 4,
+        "endLine": 418,
+        "endChar": 21
+      },
+      "revId": "9d8977096cee144bfafbed069eb708aade08bfff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab903b81_71976432",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T22:00:03Z",
+      "side": 1,
+      "message": "Again, there is only one instance of DebugAnnotator at a time, so we should avoid having state here. (Also in DebugAnnotator9)",
+      "range": {
+        "startLine": 33,
+        "startChar": 10,
+        "endLine": 33,
+        "endChar": 20
+      },
+      "revId": "9d8977096cee144bfafbed069eb708aade08bfff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
