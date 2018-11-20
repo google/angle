@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bc4637d4_c14f7242",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T14:47:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "036a9840_a95c309f",
+      "range": {
+        "startLine": 112,
+        "startChar": 17,
+        "endLine": 112,
+        "endChar": 39
+      },
+      "revId": "5292408d5ef84dd34465e754754d8b5922f9eb8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf029ce4_7d260597",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 20
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "2c09224a_6dedf82b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T14:47:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bf029ce4_7d260597",
+      "range": {
+        "startLine": 33,
+        "startChar": 21,
+        "endLine": 33,
+        "endChar": 25
+      },
+      "revId": "5292408d5ef84dd34465e754754d8b5922f9eb8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9eb6dc9f_85f303b0",
         "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h",
         "patchSetId": 20
@@ -68,6 +116,30 @@
       "revId": "5292408d5ef84dd34465e754754d8b5922f9eb8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd79697e_0345a63d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-11-20T14:47:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9eb6dc9f_85f303b0",
+      "range": {
+        "startLine": 27,
+        "startChar": 21,
+        "endLine": 27,
+        "endChar": 25
+      },
+      "revId": "5292408d5ef84dd34465e754754d8b5922f9eb8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
