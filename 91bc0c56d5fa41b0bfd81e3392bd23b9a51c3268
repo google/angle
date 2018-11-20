@@ -154,6 +154,24 @@
     },
     {
       "key": {
+        "uuid": "055b8e78_236c301d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T01:25:20Z",
+      "side": 1,
+      "message": "it\u0027s ok, you can omit the include. I was just assuming you could use the std:: prefix as defined here:\n\nhttps://en.cppreference.com/w/cpp/string/multibyte/mbstowcs",
+      "parentUuid": "969aa5ba_e56e6591",
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "189941ca_b1f7fb14",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 18
@@ -292,6 +310,30 @@
       "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a224f5e_d585cf90",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/DebugAnnotator9.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T01:25:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ef732042_1d8fe94f",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "91bc0c56d5fa41b0bfd81e3392bd23b9a51c3268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
