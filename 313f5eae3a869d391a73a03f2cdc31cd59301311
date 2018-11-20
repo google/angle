@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de5791df_d213b155",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T19:18:29Z",
+      "side": 1,
+      "message": "nit: you can remove the trailing ;",
+      "range": {
+        "startLine": 20,
+        "startChar": 46,
+        "endLine": 20,
+        "endChar": 47
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed096dfd_841b34be",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T19:18:29Z",
+      "side": 1,
+      "message": "nit: you can omit this-\u003e.\n\nAlso maybe instead ASSERT that mEventName is null?",
+      "range": {
+        "startLine": 25,
+        "startChar": 12,
+        "endLine": 25,
+        "endChar": 29
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c96b5e7b_d9116617",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T19:18:29Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 27,
+        "startChar": 5,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "930eb02a_10c1c9d6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T19:18:29Z",
+      "side": 1,
+      "message": "I think I would probably put this still outside the if. If mUserDefinedAnnotation is null we might still want trace events. The user defined annotation thing is for external debugging tools (a la RenderDoc) but the trace events are separate.",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 55
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8401a71_53322f30",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T19:18:29Z",
+      "side": 1,
+      "message": "same comments for the rest.",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 44
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f8efda0_446a2341",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-20T19:18:29Z",
+      "side": 1,
+      "message": "same comments for the rest.",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 55
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
