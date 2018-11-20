@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "614f564e_84dcc234",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "This confuses me. Isn\u0027t it the 0 index in vararg instead?",
+      "range": {
+        "startLine": 114,
+        "startChar": 7,
+        "endLine": 114,
+        "endChar": 14
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "127b97dd_bccacba1",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "You should store it in a member to pass to endEvent",
+      "range": {
+        "startLine": 115,
+        "startChar": 16,
+        "endLine": 115,
+        "endChar": 24
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "457a2a32_a32894e3",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "You should remove this, or you\u0027d get beginEvent twice.",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 54
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58d5c89e_1968a77b",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "You should call TRACE_EVENT_BEGIN0 here.",
+      "range": {
+        "startLine": 22,
+        "startChar": 52,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0bfb125_4684c82f",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "I think this should also have \"const char *eventName\" argument, so it can pass it to TRACE_EVENT_END0.",
+      "range": {
+        "startLine": 23,
+        "startChar": 9,
+        "endLine": 23,
+        "endChar": 17
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fab63f5d_996d53e6",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "You should call TRACE_EVENT_END0 here.",
+      "range": {
+        "startLine": 23,
+        "startChar": 29,
+        "endLine": 23,
+        "endChar": 31
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efd9c067_7a515bdd",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "You should call TRACE_EVENT_INSTANT0 here.",
+      "range": {
+        "startLine": 24,
+        "startChar": 52,
+        "endLine": 24,
+        "endChar": 54
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d2f9e3c_1f697dbe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "I think if ANGLE ever implements multi-threading properly at some point, this could be called from multiple threads, so mbsrtowcs should be safer.",
+      "range": {
+        "startLine": 44,
+        "startChar": 13,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8532b8b6_d1f736cc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T17:39:15Z",
+      "side": 1,
+      "message": "I think these 3 should call base LoggingAnnotator functions, so that they would also call TRACE_ macros. Same for DebugAnnotator9.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 0
+      },
+      "revId": "6758696ee5278de92dfbbf9cb24e1e4aae93aab8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
