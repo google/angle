@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31391040_c0c0e7ad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T23:43:45Z",
+      "side": 1,
+      "message": "So, no need for assert here.",
+      "range": {
+        "startLine": 405,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 31
+      },
+      "revId": "ee0871fd0d21b231b06233d2bcb292d34e41c663",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4897241_f51ab6a3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T23:43:45Z",
+      "side": 1,
+      "message": "And no need for assert here.",
+      "range": {
+        "startLine": 418,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 20
+      },
+      "revId": "ee0871fd0d21b231b06233d2bcb292d34e41c663",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a62b28f_1ac4168d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T23:43:45Z",
+      "side": 1,
+      "message": "missed ASSERT here.",
+      "revId": "ee0871fd0d21b231b06233d2bcb292d34e41c663",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

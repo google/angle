@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "d3497a95_07b33370",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T23:43:45Z",
+      "side": 1,
+      "message": "Looking at the spec, https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_debug_marker.txt\nseems like you\u0027d only need an assert in pushGroupMarker, pop is permitted without push.\nHowever, since the correct solution (having a stack) is trivial, I don\u0027t see why we should have wrong implementation now to be fixed later.",
+      "parentUuid": "7a6a9781_b1705a67",
+      "range": {
+        "startLine": 418,
+        "startChar": 4,
+        "endLine": 418,
+        "endChar": 21
+      },
+      "revId": "9d8977096cee144bfafbed069eb708aade08bfff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab903b81_71976432",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 23
