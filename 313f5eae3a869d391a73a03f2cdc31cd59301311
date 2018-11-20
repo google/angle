@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "86e8d3a9_6ff94817",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T20:10:53Z",
+      "side": 1,
+      "message": "A small concern I have is that we were passing the result of FormatStringIntoVector here before, and now only the function name.\nJamie, was the rest of the data useful to get through DebugAnnotator11?\nIf yes, maybe we can pass both function name and formatted message.",
+      "range": {
+        "startLine": 119,
+        "startChar": 37,
+        "endLine": 119,
+        "endChar": 45
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de5791df_d213b155",
         "filename": "src/libANGLE/LoggingAnnotator.h",
         "patchSetId": 22
@@ -48,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "e79e8377_55187c81",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T20:10:53Z",
+      "side": 1,
+      "message": "LoggingAnnotator is global, the destructor should never be called.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 10
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c96b5e7b_d9116617",
         "filename": "src/libANGLE/LoggingAnnotator.h",
         "patchSetId": 22
@@ -64,6 +110,52 @@
         "startChar": 5,
         "endLine": 27,
         "endChar": 6
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec5f2f7d_bb5cff06",
+        "filename": "src/libANGLE/LoggingAnnotator.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T20:10:53Z",
+      "side": 1,
+      "message": "LoggingAnnotator is global, this will not work if ANGLE is multi-threaded.\nPlease store the name in ScopedPerfEventHelper as I suggested.",
+      "range": {
+        "startLine": 35,
+        "startChar": 16,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32c452af_0b5e7675",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T20:10:53Z",
+      "side": 1,
+      "message": "Looks like you\u0027ll need to store \"marker\" in Context11, too.",
+      "range": {
+        "startLine": 408,
+        "startChar": 60,
+        "endLine": 408,
+        "endChar": 66
       },
       "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -133,6 +225,29 @@
         "startChar": 8,
         "endLine": 67,
         "endChar": 55
+      },
+      "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1741b1b7_6a591cd4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-20T20:10:53Z",
+      "side": 1,
+      "message": "And in Context9.",
+      "range": {
+        "startLine": 233,
+        "startChar": 59,
+        "endLine": 233,
+        "endChar": 65
       },
       "revId": "313f5eae3a869d391a73a03f2cdc31cd59301311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
