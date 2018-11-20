@@ -4962,7 +4962,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
         case EOpPositive:
             if (child->getBasicType() == EbtStruct || child->isInterfaceBlock() ||
                 child->getBasicType() == EbtBool || child->isArray() ||
-                IsOpaqueType(child->getBasicType()))
+                child->getBasicType() == EbtVoid || IsOpaqueType(child->getBasicType()))
             {
                 unaryOpError(loc, GetOperatorString(op), child->getType());
                 return nullptr;

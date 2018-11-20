@@ -935,6 +935,13 @@ TEST_F(ConstantFoldingTest, FoldIsInfOutOfRangeFloatLiteral)
     ASSERT_TRUE(constantFoundInAST(true));
 }
 
+// Regression test case of unary + constant folding of a void struct member.
+TEST_F(ConstantFoldingTest, VoidStructMember)
+{
+    constexpr const char *kShaderString = "struct U{void t;}n(){+U().t";
+    ASSERT_FALSE(compile(kShaderString));
+}
+
 // Test that floats that are too small to be represented get flushed to zero.
 // ESSL 3.00.6 section 4.1.4 Floats:
 // "A value with a magnitude too small to be represented as a mantissa and exponent is converted to
