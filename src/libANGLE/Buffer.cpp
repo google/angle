@@ -268,6 +268,11 @@ bool Buffer::isBoundForTransformFeedbackAndOtherUse() const
                mState.mBindingCount - mState.mTransformFeedbackGenericBindingCount;
 }
 
+bool Buffer::isDoubleBoundForTransformFeedback() const
+{
+    return mState.mTransformFeedbackIndexedBindingCount > 1;
+}
+
 void Buffer::onTFBindingChanged(const Context *context, bool bound, bool indexed)
 {
     ASSERT(bound || mState.mBindingCount > 0);

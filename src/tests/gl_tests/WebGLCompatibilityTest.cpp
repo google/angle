@@ -4254,6 +4254,30 @@ TEST_P(WebGL2CompatibilityTest, TransformFeedbackCheckNullDeref)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// We should forbid two transform feedback outputs going to the same buffer.
+TEST_P(WebGL2CompatibilityTest, TransformFeedbackDoubleBinding)
+{
+    constexpr char kVS[] =
+        R"(attribute float a; varying float b; varying float c; void main() { b = a; c = a; })";
+    constexpr char kFS[] = R"(void main(){})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    static const char *varyings[] = {"b", "c"};
+    glTransformFeedbackVaryings(program, 2, varyings, GL_SEPARATE_ATTRIBS);
+    glLinkProgram(program);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind the transform feedback varyings to non-overlapping regions of the same buffer.
+    GLBuffer buffer;
+    glBindBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer, 0, 4);
+    glBindBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 1, buffer, 4, 4);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 8, nullptr, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+    // Two varyings bound to the same buffer should be an error.
+    glBeginTransformFeedback(GL_POINTS);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Check the return type of a given parameter upon getting the active uniforms.
 TEST_P(WebGL2CompatibilityTest, UniformVariablesReturnTypes)
 {

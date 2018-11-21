@@ -123,6 +123,7 @@ class Buffer final : public RefCountObject,
 
     bool isBound() const;
     bool isBoundForTransformFeedbackAndOtherUse() const;
+    bool isDoubleBoundForTransformFeedback() const;
     void onTFBindingChanged(const Context *context, bool bound, bool indexed);
     void onNonTFBindingChanged(int incr) { mState.mBindingCount += incr; }
 

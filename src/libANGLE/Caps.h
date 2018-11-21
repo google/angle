@@ -506,6 +506,9 @@ struct Limitations
 
     // D3D9 does not support flexible varying register packing.
     bool noFlexibleVaryingPacking;
+
+    // D3D does not support having multiple transform feedback outputs go to the same buffer.
+    bool noDoubleBoundTransformFeedbackBuffers;
 };
 
 struct TypePrecision

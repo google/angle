@@ -104,6 +104,8 @@ constexpr const char *kErrorDestinationTextureTooSmall = "Destination texture to
 constexpr const char *kErrorDimensionsMustBePow2       = "Texture dimensions must be power-of-two.";
 constexpr const char *kErrorDispatchIndirectBufferNotBound =
     "Dispatch indirect buffer must be bound.";
+constexpr const char *kErrorDoubleBoundTransformFeedbackBuffer =
+    "Transform feedback has a buffer bound to multiple outputs.";
 constexpr const char *kErrorDrawIndirectBufferNotBound = "Draw indirect buffer must be bound.";
 constexpr const char *kErrorDrawBufferTypeMismatch =
     "Fragment shader output type does not match the bound framebuffer attachment type.";

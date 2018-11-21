@@ -286,7 +286,8 @@ Limitations::Limitations()
       noSeparateStencilRefsAndMasks(false),
       shadersRequireIndexedLoopValidation(false),
       noSimultaneousConstantColorAndAlphaBlendFunc(false),
-      noFlexibleVaryingPacking(false)
+      noFlexibleVaryingPacking(false),
+      noDoubleBoundTransformFeedbackBuffers(false)
 {
 }
 
