@@ -24,7 +24,7 @@ ShaderLibrary::~ShaderLibrary()
 
 void ShaderLibrary::destroy(VkDevice device)
 {
-    for (ShaderAndSerial &shader : mShaders)
+    for (RefCounted<ShaderAndSerial> &shader : mShaders)
     {
         shader.get().destroy(device);
     }
@@ -32,10 +32,10 @@ void ShaderLibrary::destroy(VkDevice device)
 
 angle::Result ShaderLibrary::getShader(vk::Context *context,
                                        InternalShaderID shaderID,
-                                       const ShaderAndSerial **shaderOut)
+                                       RefCounted<ShaderAndSerial> **shaderOut)
 {
-    ShaderAndSerial &shader = mShaders[shaderID];
-    *shaderOut              = &shader;
+    RefCounted<ShaderAndSerial> &shader = mShaders[shaderID];
+    *shaderOut                          = &shader;
 
     if (shader.get().valid())
     {
@@ -44,7 +44,7 @@ angle::Result ShaderLibrary::getShader(vk::Context *context,
 
     // Create shader lazily. Access will need to be locked for multi-threading.
     const priv::ShaderBlob &shaderCode = priv::GetInternalShaderBlob(shaderID);
-    return InitShaderAndSerial(context, &shader, shaderCode.code, shaderCode.codeSize);
+    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
 }
 }  // namespace vk
 }  // namespace rx

@@ -672,21 +672,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     return angle::Result::Continue();
 }
 
-const ShaderStageInfo &GraphicsPipelineDesc::getShaderStageInfo() const
-{
-    return mShaderStageInfo;
-}
-
-void GraphicsPipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
-{
-    ASSERT(vertexSerial < std::numeric_limits<uint32_t>::max());
-    mShaderStageInfo[ShaderType::VertexShader].moduleSerial =
-        static_cast<uint32_t>(vertexSerial.getValue());
-    ASSERT(fragmentSerial < std::numeric_limits<uint32_t>::max());
-    mShaderStageInfo[ShaderType::FragmentShader].moduleSerial =
-        static_cast<uint32_t>(fragmentSerial.getValue());
-}
-
 void GraphicsPipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
                                                  const VertexInputAttributes &attribs)
 {
@@ -1144,7 +1129,19 @@ void GraphicsPipelineCache::destroy(VkDevice device)
 {
     for (auto &item : mPayload)
     {
-        item.second.get().destroy(device);
+        vk::PipelineAndSerial &pipeline = item.second;
+        pipeline.get().destroy(device);
+    }
+
+    mPayload.clear();
+}
+
+void GraphicsPipelineCache::release(RendererVk *renderer)
+{
+    for (auto &item : mPayload)
+    {
+        vk::PipelineAndSerial &pipeline = item.second;
+        renderer->releaseObject(pipeline.getSerial(), &pipeline.get());
     }
 
     mPayload.clear();

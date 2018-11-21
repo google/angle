@@ -25,11 +25,11 @@ class ShaderLibrary final : angle::NonCopyable
 
     angle::Result getShader(Context *context,
                             InternalShaderID shaderID,
-                            const ShaderAndSerial **shaderOut);
+                            RefCounted<ShaderAndSerial> **shaderOut);
     void destroy(VkDevice device);
 
   private:
-    angle::PackedEnumMap<InternalShaderID, ShaderAndSerial> mShaders;
+    angle::PackedEnumMap<InternalShaderID, RefCounted<ShaderAndSerial>> mShaders;
 };
 }  // namespace vk
 }  // namespace rx

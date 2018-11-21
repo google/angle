@@ -129,15 +129,6 @@ class RendererVk : angle::NonCopyable
                                        const vk::AttachmentOpsArray &ops,
                                        vk::RenderPass **renderPassOut);
 
-    // For getting a vk::Pipeline and checking the pipeline cache.
-    angle::Result getPipeline(vk::Context *context,
-                              const vk::ShaderAndSerial &vertexShader,
-                              const vk::ShaderAndSerial &fragmentShader,
-                              const vk::PipelineLayout &pipelineLayout,
-                              const vk::GraphicsPipelineDesc &pipelineDesc,
-                              const gl::AttributesMask &activeAttribLocationsMask,
-                              vk::PipelineAndSerial **pipelineOut);
-
     // Queries the descriptor set layout cache. Creates the layout if not present.
     angle::Result getDescriptorSetLayout(
         vk::Context *context,
@@ -169,7 +160,8 @@ class RendererVk : angle::NonCopyable
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
     Serial issueShaderSerial();
 
-    vk::ShaderLibrary *getShaderLibrary();
+    angle::Result getFullScreenClearShaderProgram(vk::Context *context,
+                                                  vk::ShaderProgramHelper **programOut);
     const angle::FeaturesVk &getFeatures() const { return mFeatures; }
 
     angle::Result getTimestamp(vk::Context *context, uint64_t *timestampOut);
@@ -188,6 +180,8 @@ class RendererVk : angle::NonCopyable
     }
 
     bool isMockICDEnabled() const { return mEnableMockICD; }
+
+    const vk::PipelineCache &getPipelineCache() const { return mPipelineCache; }
 
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
@@ -210,7 +204,7 @@ class RendererVk : angle::NonCopyable
     angle::Result flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch);
     void initFeatures();
     void initPipelineCacheVkKey();
-    angle::Result initPipelineCacheVk(DisplayVk *display);
+    angle::Result initPipelineCache(DisplayVk *display);
 
     angle::Result synchronizeCpuGpuTime(vk::Context *context);
     angle::Result traceGpuEventImpl(vk::Context *context,
@@ -269,9 +263,8 @@ class RendererVk : angle::NonCopyable
     vk::FormatTable mFormatTable;
 
     RenderPassCache mRenderPassCache;
-    GraphicsPipelineCache mGraphicsPipelineCache;
 
-    vk::PipelineCache mPipelineCacheVk;
+    vk::PipelineCache mPipelineCache;
     egl::BlobCache::Key mPipelineCacheVkBlobKey;
     uint32_t mPipelineCacheVkUpdateTimeout;
 
@@ -306,6 +299,7 @@ class RendererVk : angle::NonCopyable
 
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;
+    vk::ShaderProgramHelper mFullScreenClearShaderProgram;
 
     // The GpuEventQuery struct holds together a timestamp query and enough data to create a
     // trace event based on that. Use traceGpuEvent to insert such queries.  They will be readback

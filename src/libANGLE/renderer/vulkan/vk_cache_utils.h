@@ -230,7 +230,6 @@ constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
     sizeof(PackedInputAssemblyAndColorBlendStateInfo);
 static_assert(kPackedInputAssemblyAndColorBlendStateSize == 56, "Size check failed");
 
-using ShaderStageInfo       = vk::ShaderMap<PackedShaderStageInfo>;
 using VertexInputBindings   = gl::AttribArray<PackedVertexInputBindingDesc>;
 
 struct VertexInputAttributes final
@@ -239,7 +238,6 @@ struct VertexInputAttributes final
     uint16_t offsets[gl::MAX_VERTEX_ATTRIBS];  // can only take 11 bits on NV
 };
 
-constexpr size_t kShaderStageInfoSize       = sizeof(ShaderStageInfo);
 constexpr size_t kVertexInputBindingsSize   = sizeof(VertexInputBindings);
 constexpr size_t kVertexInputAttributesSize = sizeof(VertexInputAttributes);
 
@@ -268,10 +266,6 @@ class GraphicsPipelineDesc final
                                      const ShaderModule &vertexModule,
                                      const ShaderModule &fragmentModule,
                                      Pipeline *pipelineOut) const;
-
-    // Shader stage info
-    const ShaderStageInfo &getShaderStageInfo() const;
-    void updateShaders(Serial vertexSerial, Serial fragmentSerial);
 
     // Vertex input state
     void updateVertexInputInfo(const VertexInputBindings &bindings,
@@ -319,8 +313,6 @@ class GraphicsPipelineDesc final
     void updatePolygonOffset(const gl::RasterizerState &rasterState);
 
   private:
-    // We can consider storing the shader stage info
-    ShaderStageInfo mShaderStageInfo;
     VertexInputBindings mVertexInputBindings;
     VertexInputAttributes mVertexInputAttribs;
     RenderPassDesc mRenderPassDesc;
@@ -335,7 +327,7 @@ class GraphicsPipelineDesc final
 // No gaps or padding at the end ensures that hashing and memcmp checks will not run
 // into uninitialized memory regions.
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
-    kShaderStageInfoSize + kVertexInputBindingsSize + kVertexInputAttributesSize +
+    kVertexInputBindingsSize + kVertexInputAttributesSize +
     kPackedInputAssemblyAndColorBlendStateSize + kPackedRasterizationAndMultisampleStateSize +
     kPackedDepthStencilStateSize + kRenderPassDescSize;
 
@@ -510,6 +502,7 @@ class GraphicsPipelineCache final : angle::NonCopyable
     ~GraphicsPipelineCache();
 
     void destroy(VkDevice device);
+    void release(RendererVk *renderer);
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
     angle::Result getPipeline(vk::Context *context,

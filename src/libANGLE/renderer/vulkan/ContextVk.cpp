@@ -248,21 +248,9 @@ angle::Result ContextVk::initPipeline()
     // Ensure that the RenderPass description is updated.
     mGraphicsPipelineDesc->updateRenderPassDesc(mDrawFramebuffer->getRenderPassDesc());
 
-    // Trigger draw call shader patching and fill out the pipeline desc.
-    const vk::ShaderAndSerial *vertexShaderAndSerial   = nullptr;
-    const vk::ShaderAndSerial *fragmentShaderAndSerial = nullptr;
-    const vk::PipelineLayout *pipelineLayout           = nullptr;
-    ANGLE_TRY(mProgram->initShaders(this, mCurrentDrawMode, &vertexShaderAndSerial,
-                                    &fragmentShaderAndSerial, &pipelineLayout));
-
-    mGraphicsPipelineDesc->updateShaders(vertexShaderAndSerial->getSerial(),
-                                         fragmentShaderAndSerial->getSerial());
-
-    ANGLE_TRY(mRenderer->getPipeline(this, *vertexShaderAndSerial, *fragmentShaderAndSerial,
-                                     *pipelineLayout, *mGraphicsPipelineDesc,
-                                     activeAttribLocationsMask, &mCurrentPipeline));
-
-    return angle::Result::Continue();
+    // Draw call shader patching, shader compilation, and pipeline cache query.
+    return mProgram->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
+                                         activeAttribLocationsMask, &mCurrentPipeline);
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,

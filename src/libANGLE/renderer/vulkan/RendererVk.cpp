@@ -333,9 +333,10 @@ void RendererVk::onDestroy(vk::Context *context)
     mPipelineLayoutCache.destroy(mDevice);
     mDescriptorSetLayoutCache.destroy(mDevice);
 
+    mFullScreenClearShaderProgram.destroy(mDevice);
+
     mRenderPassCache.destroy(mDevice);
-    mGraphicsPipelineCache.destroy(mDevice);
-    mPipelineCacheVk.destroy(mDevice);
+    mPipelineCache.destroy(mDevice);
     mSubmitSemaphorePool.destroy(mDevice);
     mShaderLibrary.destroy(mDevice);
     mGpuEventQueryPool.destroy(mDevice);
@@ -637,7 +638,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ANGLE_VK_TRY(displayVk, mCommandPool.init(mDevice, commandPoolInfo));
 
     // Initialize the vulkan pipeline cache.
-    ANGLE_TRY(initPipelineCacheVk(displayVk));
+    ANGLE_TRY(initPipelineCache(displayVk));
 
     // Initialize the submission semaphore pool.
     ANGLE_TRY(mSubmitSemaphorePool.init(displayVk, vk::kDefaultSemaphorePoolSize));
@@ -808,7 +809,7 @@ void RendererVk::initPipelineCacheVkKey()
                                hashString.length(), mPipelineCacheVkBlobKey.data());
 }
 
-angle::Result RendererVk::initPipelineCacheVk(DisplayVk *display)
+angle::Result RendererVk::initPipelineCache(DisplayVk *display)
 {
     initPipelineCacheVkKey();
 
@@ -823,7 +824,7 @@ angle::Result RendererVk::initPipelineCacheVk(DisplayVk *display)
     pipelineCacheCreateInfo.initialDataSize = success ? initialData.size() : 0;
     pipelineCacheCreateInfo.pInitialData    = success ? initialData.data() : nullptr;
 
-    ANGLE_VK_TRY(display, mPipelineCacheVk.init(mDevice, pipelineCacheCreateInfo));
+    ANGLE_VK_TRY(display, mPipelineCache.init(mDevice, pipelineCacheCreateInfo));
     return angle::Result::Continue();
 }
 
@@ -1164,29 +1165,6 @@ Serial RendererVk::issueShaderSerial()
     return mShaderSerialFactory.generate();
 }
 
-angle::Result RendererVk::getPipeline(vk::Context *context,
-                                      const vk::ShaderAndSerial &vertexShader,
-                                      const vk::ShaderAndSerial &fragmentShader,
-                                      const vk::PipelineLayout &pipelineLayout,
-                                      const vk::GraphicsPipelineDesc &pipelineDesc,
-                                      const gl::AttributesMask &activeAttribLocationsMask,
-                                      vk::PipelineAndSerial **pipelineOut)
-{
-    ASSERT(vertexShader.getSerial() ==
-           pipelineDesc.getShaderStageInfo()[vk::ShaderType::VertexShader].moduleSerial);
-    ASSERT(fragmentShader.getSerial() ==
-           pipelineDesc.getShaderStageInfo()[vk::ShaderType::FragmentShader].moduleSerial);
-
-    // Pull in a compatible RenderPass.
-    vk::RenderPass *compatibleRenderPass = nullptr;
-    ANGLE_TRY(
-        getCompatibleRenderPass(context, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
-
-    return mGraphicsPipelineCache.getPipeline(
-        context, mPipelineCacheVk, *compatibleRenderPass, pipelineLayout, activeAttribLocationsMask,
-        vertexShader.get(), fragmentShader.get(), pipelineDesc, pipelineOut);
-}
-
 angle::Result RendererVk::getDescriptorSetLayout(
     vk::Context *context,
     const vk::DescriptorSetLayoutDesc &desc,
@@ -1207,7 +1185,7 @@ angle::Result RendererVk::getPipelineLayout(
 
 angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 {
-    ASSERT(mPipelineCacheVk.valid());
+    ASSERT(mPipelineCache.valid());
 
     if (--mPipelineCacheVkUpdateTimeout > 0)
     {
@@ -1218,7 +1196,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 
     // Get the size of the cache.
     size_t pipelineCacheSize = 0;
-    VkResult result          = mPipelineCacheVk.getCacheData(mDevice, &pipelineCacheSize, nullptr);
+    VkResult result          = mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, nullptr);
     if (result != VK_INCOMPLETE)
     {
         ANGLE_VK_TRY(displayVk, result);
@@ -1229,7 +1207,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
                          displayVk->getScratchBuffer(pipelineCacheSize, &pipelineCacheData));
 
     size_t originalPipelineCacheSize = pipelineCacheSize;
-    result = mPipelineCacheVk.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData->data());
+    result = mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData->data());
     // Note: currently we don't accept incomplete as we don't expect it (the full size of cache
     // was determined just above), so receiving it hints at an implementation bug we would want
     // to know about early.
@@ -1276,9 +1254,25 @@ const vk::Semaphore *RendererVk::getSubmitLastSignaledSemaphore(vk::Context *con
     return semaphore;
 }
 
-vk::ShaderLibrary *RendererVk::getShaderLibrary()
+angle::Result RendererVk::getFullScreenClearShaderProgram(vk::Context *context,
+                                                          vk::ShaderProgramHelper **programOut)
 {
-    return &mShaderLibrary;
+    if (!mFullScreenClearShaderProgram.valid())
+    {
+        vk::RefCounted<vk::ShaderAndSerial> *fullScreenQuad = nullptr;
+        ANGLE_TRY(mShaderLibrary.getShader(context, vk::InternalShaderID::FullScreenQuad_vert,
+                                           &fullScreenQuad));
+
+        vk::RefCounted<vk::ShaderAndSerial> *pushConstantColor = nullptr;
+        ANGLE_TRY(mShaderLibrary.getShader(context, vk::InternalShaderID::PushConstantColor_frag,
+                                           &pushConstantColor));
+
+        mFullScreenClearShaderProgram.setShader(gl::ShaderType::Vertex, fullScreenQuad);
+        mFullScreenClearShaderProgram.setShader(gl::ShaderType::Fragment, pushConstantColor);
+    }
+
+    *programOut = &mFullScreenClearShaderProgram;
+    return angle::Result::Continue();
 }
 
 angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestampOut)

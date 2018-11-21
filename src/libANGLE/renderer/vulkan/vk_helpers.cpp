@@ -1471,5 +1471,60 @@ void FramebufferHelper::release(RendererVk *renderer)
 {
     renderer->releaseObject(getStoredQueueSerial(), &mFramebuffer);
 }
+
+// ShaderProgramHelper implementation.
+ShaderProgramHelper::ShaderProgramHelper() = default;
+
+ShaderProgramHelper::~ShaderProgramHelper() = default;
+
+bool ShaderProgramHelper::valid() const
+{
+    // This will need to be extended for compute shader support.
+    return mShaders[gl::ShaderType::Vertex].valid();
+}
+
+void ShaderProgramHelper::destroy(VkDevice device)
+{
+    mGraphicsPipelines.destroy(device);
+    for (BindingPointer<ShaderAndSerial> &shader : mShaders)
+    {
+        shader.reset();
+    }
+}
+
+void ShaderProgramHelper::release(RendererVk *renderer)
+{
+    mGraphicsPipelines.release(renderer);
+    for (BindingPointer<ShaderAndSerial> &shader : mShaders)
+    {
+        shader.reset();
+    }
+}
+
+void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader)
+{
+    mShaders[shaderType].set(shader);
+}
+
+angle::Result ShaderProgramHelper::getGraphicsPipeline(
+    Context *context,
+    const PipelineLayout &pipelineLayout,
+    const GraphicsPipelineDesc &pipelineDesc,
+    const gl::AttributesMask &activeAttribLocationsMask,
+    PipelineAndSerial **pipelineOut)
+{
+    RendererVk *renderer = context->getRenderer();
+
+    // Pull in a compatible RenderPass.
+    vk::RenderPass *compatibleRenderPass = nullptr;
+    ANGLE_TRY(renderer->getCompatibleRenderPass(context, pipelineDesc.getRenderPassDesc(),
+                                                &compatibleRenderPass));
+
+    return mGraphicsPipelines.getPipeline(
+        context, renderer->getPipelineCache(), *compatibleRenderPass, pipelineLayout,
+        activeAttribLocationsMask, mShaders[gl::ShaderType::Vertex].get().get(),
+        mShaders[gl::ShaderType::Fragment].get().get(), pipelineDesc, pipelineOut);
+}
+
 }  // namespace vk
 }  // namespace rx

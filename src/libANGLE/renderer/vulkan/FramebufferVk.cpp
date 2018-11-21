@@ -1009,19 +1009,13 @@ angle::Result FramebufferVk::clearWithClearAttachments(
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            VkColorComponentFlags colorMaskFlags)
 {
-    RendererVk *renderer             = contextVk->getRenderer();
-    vk::ShaderLibrary *shaderLibrary = renderer->getShaderLibrary();
+    RendererVk *renderer = contextVk->getRenderer();
+
+    vk::ShaderProgramHelper *fullScreenClear = nullptr;
+    ANGLE_TRY(renderer->getFullScreenClearShaderProgram(contextVk, &fullScreenClear));
 
     // Trigger a new command node to ensure overlapping writes happen sequentially.
     mFramebuffer.finishCurrentCommands(renderer);
-
-    const vk::ShaderAndSerial *fullScreenQuad = nullptr;
-    ANGLE_TRY(shaderLibrary->getShader(contextVk, vk::InternalShaderID::FullScreenQuad_vert,
-                                       &fullScreenQuad));
-
-    const vk::ShaderAndSerial *pushConstantColor = nullptr;
-    ANGLE_TRY(shaderLibrary->getShader(contextVk, vk::InternalShaderID::PushConstantColor_frag,
-                                       &pushConstantColor));
 
     // The shader uses a simple pipeline layout with a push constant range.
     vk::PipelineLayoutDesc pipelineLayoutDesc;
@@ -1047,12 +1041,10 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     pipelineDesc.initDefaults();
     pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
     pipelineDesc.updateRenderPassDesc(getRenderPassDesc());
-    pipelineDesc.updateShaders(fullScreenQuad->getSerial(), pushConstantColor->getSerial());
 
     vk::PipelineAndSerial *pipeline = nullptr;
-    ANGLE_TRY(renderer->getPipeline(contextVk, *fullScreenQuad, *pushConstantColor,
-                                    pipelineLayout.get(), pipelineDesc, gl::AttributesMask(),
-                                    &pipeline));
+    ANGLE_TRY(fullScreenClear->getGraphicsPipeline(contextVk, pipelineLayout.get(), pipelineDesc,
+                                                   gl::AttributesMask(), &pipeline));
     pipeline->updateSerial(renderer->getCurrentQueueSerial());
 
     vk::CommandBuffer *writeCommands = nullptr;
