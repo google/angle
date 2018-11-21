@@ -98,14 +98,6 @@ using ErrorStream = angle::ErrorStreamBase<Error, GLenum, GL_NO_ERROR, GLenum, E
 
 }  // namespace priv
 
-using InvalidEnum                 = priv::ErrorStream<GL_INVALID_ENUM>;
-using InvalidValue                = priv::ErrorStream<GL_INVALID_VALUE>;
-using InvalidOperation            = priv::ErrorStream<GL_INVALID_OPERATION>;
-using StackOverflow               = priv::ErrorStream<GL_STACK_OVERFLOW>;
-using StackUnderflow              = priv::ErrorStream<GL_STACK_UNDERFLOW>;
-using OutOfMemory                 = priv::ErrorStream<GL_OUT_OF_MEMORY>;
-using InvalidFramebufferOperation = priv::ErrorStream<GL_INVALID_FRAMEBUFFER_OPERATION>;
-
 inline Error NoError()
 {
     return Error::NoError();

@@ -600,12 +600,12 @@ bool ValidateES3TexStorage3DParameters(Context *context,
 // implementation format info for incomplete framebuffers. It seems like these queries are
 // incongruent with the other errors.
 // Inlined for speed.
-template <typename ErrorStream = InvalidFramebufferOperation>
+template <GLenum ErrorCode = GL_INVALID_FRAMEBUFFER_OPERATION>
 ANGLE_INLINE bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer)
 {
     if (!framebuffer->isComplete(context))
     {
-        context->handleError(ErrorStream());
+        context->validationError(ErrorCode, kErrorFramebufferIncomplete);
         return false;
     }
 
