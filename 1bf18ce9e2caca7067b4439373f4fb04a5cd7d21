@@ -22,6 +22,30 @@
       "revId": "1bf18ce9e2caca7067b4439373f4fb04a5cd7d21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64eaef42_497255d5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 5494,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-21T15:36:44Z",
+      "side": 1,
+      "message": "Thanks for following up with this Brian.\n\nAustin what GL API is this one based on? glMultiDrawElements doesn\u0027t take an offset parameter, it takes const GLvoid * const * indices. I recommend you update the spec and implementation to mirror that. It could lead to a real problem as Brian suggests.",
+      "parentUuid": "fbf13848_03a644b0",
+      "range": {
+        "startLine": 5494,
+        "startChar": 0,
+        "endLine": 5494,
+        "endChar": 55
+      },
+      "revId": "1bf18ce9e2caca7067b4439373f4fb04a5cd7d21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
