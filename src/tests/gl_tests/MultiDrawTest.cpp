@@ -285,9 +285,9 @@ void main()
         glVertexAttribPointer(mPositionLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         std::vector<GLsizei> counts(kTriCount, 3);
-        std::vector<GLsizei> offsets(kTriCount);
+        std::vector<const GLvoid *> indices(kTriCount);
         for (uint32_t i = 0; i < kTriCount; ++i)
-            offsets[i] = i * 3 * 2;
+            indices[i] = reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(i * 3 * 2));
 
         if (IsInstancedTest())
         {
@@ -297,11 +297,11 @@ void main()
             DoVertexAttribDivisor(mInstanceLoc, 1);
             std::vector<GLsizei> instanceCounts(kTriCount, 4);
             glMultiDrawElementsInstancedANGLE(GL_TRIANGLES, counts.data(), GL_UNSIGNED_SHORT,
-                                              offsets.data(), instanceCounts.data(), kTriCount);
+                                              indices.data(), instanceCounts.data(), kTriCount);
         }
         else
         {
-            glMultiDrawElementsANGLE(GL_TRIANGLES, counts.data(), GL_UNSIGNED_SHORT, offsets.data(),
+            glMultiDrawElementsANGLE(GL_TRIANGLES, counts.data(), GL_UNSIGNED_SHORT, indices.data(),
                                      kTriCount);
         }
     }
@@ -479,7 +479,7 @@ TEST_P(MultiDrawNoInstancingSupportTest, InvalidOperation)
 
     GLint first       = 0;
     GLsizei count     = 3;
-    GLsizei offset    = 0;
+    GLvoid *indices   = 0;
     GLsizei instances = 1;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -494,7 +494,7 @@ TEST_P(MultiDrawNoInstancingSupportTest, InvalidOperation)
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
     glEnableVertexAttribArray(mPositionLoc);
     glVertexAttribPointer(mPositionLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glMultiDrawElementsInstancedANGLE(GL_TRIANGLES, &count, GL_UNSIGNED_SHORT, &offset, &instances,
+    glMultiDrawElementsInstancedANGLE(GL_TRIANGLES, &count, GL_UNSIGNED_SHORT, &indices, &instances,
                                       1);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }

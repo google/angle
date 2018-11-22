@@ -5467,7 +5467,7 @@ void Context::multiDrawArraysInstanced(PrimitiveMode mode,
 void Context::multiDrawElements(PrimitiveMode mode,
                                 const GLsizei *counts,
                                 GLenum type,
-                                const GLsizei *offsets,
+                                const GLvoid *const *indices,
                                 GLsizei drawcount)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
@@ -5482,9 +5482,8 @@ void Context::multiDrawElements(PrimitiveMode mode,
                 continue;
             }
             programObject->setDrawIDUniform(drawID);
-            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
             ANGLE_CONTEXT_TRY(
-                mImplementation->drawElements(this, mode, counts[drawID], type, indices));
+                mImplementation->drawElements(this, mode, counts[drawID], type, indices[drawID]));
         }
     }
     else
@@ -5495,9 +5494,8 @@ void Context::multiDrawElements(PrimitiveMode mode,
             {
                 continue;
             }
-            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
             ANGLE_CONTEXT_TRY(
-                mImplementation->drawElements(this, mode, counts[drawID], type, indices));
+                mImplementation->drawElements(this, mode, counts[drawID], type, indices[drawID]));
         }
     }
 }
@@ -5505,7 +5503,7 @@ void Context::multiDrawElements(PrimitiveMode mode,
 void Context::multiDrawElementsInstanced(PrimitiveMode mode,
                                          const GLsizei *counts,
                                          GLenum type,
-                                         const GLsizei *offsets,
+                                         const GLvoid *const *indices,
                                          const GLsizei *instanceCounts,
                                          GLsizei drawcount)
 {
@@ -5521,9 +5519,8 @@ void Context::multiDrawElementsInstanced(PrimitiveMode mode,
                 continue;
             }
             programObject->setDrawIDUniform(drawID);
-            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
             ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstanced(
-                this, mode, counts[drawID], type, indices, instanceCounts[drawID]));
+                this, mode, counts[drawID], type, indices[drawID], instanceCounts[drawID]));
         }
     }
     else
@@ -5534,9 +5531,8 @@ void Context::multiDrawElementsInstanced(PrimitiveMode mode,
             {
                 continue;
             }
-            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
             ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstanced(
-                this, mode, counts[drawID], type, indices, instanceCounts[drawID]));
+                this, mode, counts[drawID], type, indices[drawID], instanceCounts[drawID]));
         }
     }
 }

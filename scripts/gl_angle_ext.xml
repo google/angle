@@ -891,7 +891,7 @@
                 <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
                 <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
                 <param group="DrawElementsType"><ptype>GLenum</ptype> <name>type</name></param>
-                <param len="COMPSIZE(primcount)">const GLsizei*<name>offsets</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLvoid</ptype> *const*<name>indices</name></param>
                 <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
             </command>
             <command>
@@ -899,7 +899,7 @@
                 <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
                 <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
                 <param group="DrawElementsType"><ptype>GLenum</ptype> <name>type</name></param>
-                <param len="COMPSIZE(primcount)">const GLsizei*<name>offsets</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLvoid</ptype> *const*<name>indices</name></param>
                 <param len="COMPSIZE(primcount)">const GLsizei*<name>instanceCounts</name></param>
                 <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
             </command>

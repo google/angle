@@ -93,12 +93,12 @@ ANGLE_EXPORT void GL_APIENTRY MultiDrawArraysInstancedANGLE(GLenum mode,
 ANGLE_EXPORT void GL_APIENTRY MultiDrawElementsANGLE(GLenum mode,
                                                      const GLsizei *counts,
                                                      GLenum type,
-                                                     const GLsizei *offsets,
+                                                     const GLvoid *const *indices,
                                                      GLsizei drawcount);
 ANGLE_EXPORT void GL_APIENTRY MultiDrawElementsInstancedANGLE(GLenum mode,
                                                               const GLsizei *counts,
                                                               GLenum type,
-                                                              const GLsizei *offsets,
+                                                              const GLvoid *const *indices,
                                                               const GLsizei *instanceCounts,
                                                               GLsizei drawcount);
 
@@ -3502,14 +3502,14 @@ ANGLE_EXPORT void GL_APIENTRY MultiDrawElementsANGLEContextANGLE(GLeglContext ct
                                                                  GLenum mode,
                                                                  const GLsizei *counts,
                                                                  GLenum type,
-                                                                 const GLsizei *offsets,
+                                                                 const GLvoid *const *indices,
                                                                  GLsizei drawcount);
 ANGLE_EXPORT void GL_APIENTRY
 MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
                                             GLenum mode,
                                             const GLsizei *counts,
                                             GLenum type,
-                                            const GLsizei *offsets,
+                                            const GLvoid *const *indices,
                                             const GLsizei *instanceCounts,
                                             GLsizei drawcount);
 }  // namespace gl

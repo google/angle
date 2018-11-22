@@ -329,8 +329,8 @@ typedef void (GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERIVANGLECONTEXTANGLE)(GLeglCo
 typedef void (GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERFVANGLECONTEXTANGLE)(GLeglContext ctx, GLenum target, GLint level, GLenum pname, GLfloat * params);
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLint *firsts, const GLsizei *counts, GLsizei drawcount);
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSINSTANCEDANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLint *firsts, const GLsizei *counts, const GLsizei *instanceCounts, GLsizei drawcount);
-typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLsizei*offsets, GLsizei drawcount);
-typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSINSTANCEDANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLsizei*offsets, const GLsizei*instanceCounts, GLsizei drawcount);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, GLsizei drawcount);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSINSTANCEDANGLECONTEXTANGLE)(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, const GLsizei*instanceCounts, GLsizei drawcount);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glActiveTextureContextANGLE(GLeglContext ctx, GLenum texture);
 GL_APICALL void GL_APIENTRY glAttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader);
@@ -653,6 +653,6 @@ GL_APICALL void GL_APIENTRY glGetTexLevelParameterivANGLEContextANGLE(GLeglConte
 GL_APICALL void GL_APIENTRY glGetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum pname, GLfloat * params);
 GL_APICALL void GL_APIENTRY glMultiDrawArraysANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLint *firsts, const GLsizei *counts, GLsizei drawcount);
 GL_APICALL void GL_APIENTRY glMultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLint *firsts, const GLsizei *counts, const GLsizei *instanceCounts, GLsizei drawcount);
-GL_APICALL void GL_APIENTRY glMultiDrawElementsANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLsizei*offsets, GLsizei drawcount);
-GL_APICALL void GL_APIENTRY glMultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLsizei*offsets, const GLsizei*instanceCounts, GLsizei drawcount);
+GL_APICALL void GL_APIENTRY glMultiDrawElementsANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, GLsizei drawcount);
+GL_APICALL void GL_APIENTRY glMultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *counts, GLenum type, const GLvoid *const*indices, const GLsizei*instanceCounts, GLsizei drawcount);
 #endif

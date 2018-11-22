@@ -2528,20 +2528,20 @@ void GL_APIENTRY glMultiDrawArraysInstancedANGLE(GLenum mode,
 void GL_APIENTRY glMultiDrawElementsANGLE(GLenum mode,
                                           const GLsizei *counts,
                                           GLenum type,
-                                          const GLsizei *offsets,
+                                          const GLvoid *const *indices,
                                           GLsizei drawcount)
 {
-    return gl::MultiDrawElementsANGLE(mode, counts, type, offsets, drawcount);
+    return gl::MultiDrawElementsANGLE(mode, counts, type, indices, drawcount);
 }
 
 void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
                                                    const GLsizei *counts,
                                                    GLenum type,
-                                                   const GLsizei *offsets,
+                                                   const GLvoid *const *indices,
                                                    const GLsizei *instanceCounts,
                                                    GLsizei drawcount)
 {
-    return gl::MultiDrawElementsInstancedANGLE(mode, counts, type, offsets, instanceCounts,
+    return gl::MultiDrawElementsInstancedANGLE(mode, counts, type, indices, instanceCounts,
                                                drawcount);
 }
 
@@ -9117,21 +9117,21 @@ void GL_APIENTRY glMultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
                                                       GLenum mode,
                                                       const GLsizei *counts,
                                                       GLenum type,
-                                                      const GLsizei *offsets,
+                                                      const GLvoid *const *indices,
                                                       GLsizei drawcount)
 {
-    return gl::MultiDrawElementsANGLEContextANGLE(ctx, mode, counts, type, offsets, drawcount);
+    return gl::MultiDrawElementsANGLEContextANGLE(ctx, mode, counts, type, indices, drawcount);
 }
 
 void GL_APIENTRY glMultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
                                                                GLenum mode,
                                                                const GLsizei *counts,
                                                                GLenum type,
-                                                               const GLsizei *offsets,
+                                                               const GLvoid *const *indices,
                                                                const GLsizei *instanceCounts,
                                                                GLsizei drawcount)
 {
-    return gl::MultiDrawElementsInstancedANGLEContextANGLE(ctx, mode, counts, type, offsets,
+    return gl::MultiDrawElementsInstancedANGLEContextANGLE(ctx, mode, counts, type, indices,
                                                            instanceCounts, drawcount);
 }
 

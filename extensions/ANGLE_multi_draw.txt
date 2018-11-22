@@ -72,7 +72,7 @@ New Procedures and Functions
     void MultiDrawElementsANGLE(enum mode,
                                 const GLint* counts,
                                 GLenum type,
-                                const GLsizei* offsets,
+                                const GLvoid* const* indices,
                                 const GLsizei drawcount);
 
     void MultiDrawArraysInstancedANGLE(enum mode,
@@ -84,7 +84,7 @@ New Procedures and Functions
     void MultiDrawElementsInstancedANGLE(enum mode,
                                          const GLint* counts,
                                          GLenum type,
-                                         const GLsizei* offsets,
+                                         const GLvoid* const* indices,
                                          const GLsizei* instanceCounts,
                                          const GLsizei drawcount);
 
@@ -119,7 +119,7 @@ Additions to Chapter 2 of the OpenGL ES 2.0 Specification
       void MultiDrawElementsANGLE(GLenum mode,
                 GLsizei* counts,
                 GLenum type,
-                GLsizei* offsets,
+                const GLvoid* const* indices,
                 GLsizei drawcount)
 
     Behaves identically to DrawElements except that a list of arrays is
@@ -127,8 +127,9 @@ Additions to Chapter 2 of the OpenGL ES 2.0 Specification
     parameter. It has the same effect as:
 
       for(i=0; i<drawcount; i++) {
-          if (*(counts+i)>0) DrawElements(mode, *(counts+i), type,
-                (const void*)(long)(*(offsets+i)));
+          if (*(counts+i)>0) {
+              DrawElements(mode, *(counts+i), type, *(indices+i));
+          }
       }
 
     The index of the draw (<i> in the above pseudo-code) may be read by
@@ -165,7 +166,7 @@ Additions to Chapter 2 of the OpenGL ES 3.0 Specification
                 GLenum mode,
                 GLsizei* counts,
                 GLenum type,
-                GLsizei* offsets,
+                const GLvoid* const* indices,
                 const GLsizei* instanceCounts,
                 GLsizei drawcount)
 
@@ -174,8 +175,10 @@ Additions to Chapter 2 of the OpenGL ES 3.0 Specification
     parameter. It has the same effect as:
 
       for(i=0; i<drawcount; i++) {
-          if (*(counts+i)>0) DrawElementsInstanced(mode, *(counts+i), type,
-                (const void*)(long)(*(offsets+i)), *(instanceCounts+1));
+          if (*(counts+i)>0) {
+              DrawElementsInstanced(mode, *(counts+i), type,
+                                    *(indices+i), *(instanceCounts+1));
+          }
       }
 
     The index of the draw (<i> in the above pseudo-code) may be read by
