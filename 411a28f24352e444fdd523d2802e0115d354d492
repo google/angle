@@ -22,6 +22,52 @@
       "revId": "411a28f24352e444fdd523d2802e0115d354d492",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5987588a_cb1567fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-22T15:43:59Z",
+      "side": 1,
+      "message": "The spec says: \"If there is no group marker to pop then the PopGroupMarkerEXT command is ignored\", so I think you should just move this inside the if() instead of passing nullptr to it.",
+      "range": {
+        "startLine": 422,
+        "startChar": 0,
+        "endLine": 422,
+        "endChar": 48
+      },
+      "revId": "411a28f24352e444fdd523d2802e0115d354d492",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60fb3bec_1f364503",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-22T15:43:59Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 247,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 48
+      },
+      "revId": "411a28f24352e444fdd523d2802e0115d354d492",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
