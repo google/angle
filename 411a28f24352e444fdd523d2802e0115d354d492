@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1aaf818_d2997ed6",
+        "filename": "src/libANGLE/renderer/d3d/ContextD3D.h",
+        "patchSetId": 34
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-22T13:42:58Z",
+      "side": 1,
+      "message": "could you put this in Context9/Context11.h?",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "411a28f24352e444fdd523d2802e0115d354d492",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
