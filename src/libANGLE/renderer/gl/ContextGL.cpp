@@ -117,7 +117,16 @@ QueryImpl *ContextGL::createQuery(gl::QueryType type)
 
 FenceNVImpl *ContextGL::createFenceNV()
 {
-    return new FenceNVGL(getFunctions());
+    const FunctionsGL *functions = getFunctions();
+    if (FenceNVGL::Supported(functions))
+    {
+        return new FenceNVGL(functions);
+    }
+    else
+    {
+        ASSERT(FenceNVSyncGL::Supported(functions));
+        return new FenceNVSyncGL(functions);
+    }
 }
 
 SyncImpl *ContextGL::createSync()

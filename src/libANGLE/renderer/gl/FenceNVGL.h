@@ -15,6 +15,7 @@ namespace rx
 {
 class FunctionsGL;
 
+// FenceNV implemented with the native GL_NV_fence extension
 class FenceNVGL : public FenceNVImpl
 {
   public:
@@ -25,12 +26,32 @@ class FenceNVGL : public FenceNVImpl
     angle::Result test(const gl::Context *context, GLboolean *outFinished) override;
     angle::Result finish(const gl::Context *context) override;
 
+    static bool Supported(const FunctionsGL *functions);
+
   private:
     GLuint mFence;
 
     const FunctionsGL *mFunctions;
 };
 
+// FenceNV implemented with the GLsync API
+class FenceNVSyncGL : public FenceNVImpl
+{
+  public:
+    explicit FenceNVSyncGL(const FunctionsGL *functions);
+    ~FenceNVSyncGL() override;
+
+    angle::Result set(const gl::Context *context, GLenum condition) override;
+    angle::Result test(const gl::Context *context, GLboolean *outFinished) override;
+    angle::Result finish(const gl::Context *context) override;
+
+    static bool Supported(const FunctionsGL *functions);
+
+  private:
+    GLsync mSyncObject;
+
+    const FunctionsGL *mFunctions;
+};
 }
 
 #endif // LIBANGLE_RENDERER_GL_FENCENVGL_H_

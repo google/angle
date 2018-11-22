@@ -107,18 +107,19 @@ TEST_P(FenceNVTest, BasicOperations)
 
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
-    GLuint fences[20] = { 0 };
+    constexpr size_t kFenceCount = 20;
+    GLuint fences[kFenceCount]   = {0};
     glGenFencesNV(static_cast<GLsizei>(ArraySize(fences)), fences);
     EXPECT_GL_NO_ERROR();
 
     for (GLuint fence : fences)
     {
-        glSetFenceNV(fence, GL_ALL_COMPLETED_NV);
-
         glClear(GL_COLOR_BUFFER_BIT);
+        glSetFenceNV(fence, GL_ALL_COMPLETED_NV);
     }
 
-    glFinish();
+    // Finish the last fence, all fences before should be marked complete
+    glFinishFenceNV(fences[kFenceCount - 1]);
 
     for (GLuint fence : fences)
     {

@@ -19,6 +19,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
+#include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
@@ -943,8 +944,7 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->textureFilterAnisotropic
             ? QuerySingleGLFloat(functions, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
             : 0.0f;
-    extensions->fence =
-        functions->hasGLExtension("GL_NV_fence") || functions->hasGLESExtension("GL_NV_fence");
+    extensions->fence = FenceNVGL::Supported(functions) || FenceNVSyncGL::Supported(functions);
     extensions->blendMinMax = functions->isAtLeastGL(gl::Version(1, 5)) ||
                               functions->hasGLExtension("GL_EXT_blend_minmax") ||
                               functions->isAtLeastGLES(gl::Version(3, 0)) ||
