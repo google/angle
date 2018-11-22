@@ -62,6 +62,26 @@ class SRGBTextureTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
+    GLenum getSRGBA8TextureInternalFormat() const
+    {
+        return getClientMajorVersion() >= 3 ? GL_SRGB8_ALPHA8 : GL_SRGB_ALPHA_EXT;
+    }
+
+    GLenum getSRGBA8TextureFormat() const
+    {
+        return getClientMajorVersion() >= 3 ? GL_RGBA : GL_SRGB_ALPHA_EXT;
+    }
+
+    GLenum getSRGB8TextureInternalFormat() const
+    {
+        return getClientMajorVersion() >= 3 ? GL_SRGB8 : GL_SRGB_EXT;
+    }
+
+    GLenum getSRGB8TextureFormat() const
+    {
+        return getClientMajorVersion() >= 3 ? GL_RGB : GL_SRGB_EXT;
+    }
+
     GLuint mProgram        = 0;
     GLint mTextureLocation = -1;
 };
@@ -80,23 +100,19 @@ TEST_P(SRGBTextureTest, SRGBValidation)
     glBindTexture(GL_TEXTURE_2D, tex);
 
     GLubyte pixel[3] = { 0 };
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, 1, 1, 0, GL_SRGB, GL_UNSIGNED_BYTE, pixel);
+    glTexImage2D(GL_TEXTURE_2D, 0, getSRGB8TextureInternalFormat(), 1, 1, 0,
+                 getSRGB8TextureFormat(), GL_UNSIGNED_BYTE, pixel);
     if (supported)
     {
         EXPECT_GL_NO_ERROR();
 
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, GL_SRGB, GL_UNSIGNED_BYTE, pixel);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, getSRGB8TextureFormat(), GL_UNSIGNED_BYTE,
+                        pixel);
         EXPECT_GL_NO_ERROR();
 
+        // Mipmap generation always generates errors for SRGB unsized in ES2 or SRGB8 sized in ES3.
         glGenerateMipmap(GL_TEXTURE_2D);
-        if (getClientMajorVersion() < 3)
-        {
-            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        }
-        else
-        {
-            EXPECT_GL_NO_ERROR();
-        }
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
     else
     {
@@ -118,12 +134,14 @@ TEST_P(SRGBTextureTest, SRGBAValidation)
     glBindTexture(GL_TEXTURE_2D, tex);
 
     GLubyte pixel[4] = { 0 };
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, pixel);
+    glTexImage2D(GL_TEXTURE_2D, 0, getSRGBA8TextureInternalFormat(), 1, 1, 0,
+                 getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE, pixel);
     if (supported)
     {
         EXPECT_GL_NO_ERROR();
 
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, pixel);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE,
+                        pixel);
         EXPECT_GL_NO_ERROR();
 
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -157,7 +175,8 @@ TEST_P(SRGBTextureTest, SRGBASizedValidation)
     glBindTexture(GL_TEXTURE_2D, tex);
 
     GLubyte pixel[4] = {0};
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+    glTexImage2D(GL_TEXTURE_2D, 0, getSRGBA8TextureInternalFormat(), 1, 1, 0,
+                 getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE, pixel);
 
     EXPECT_GL_NO_ERROR();
 
@@ -237,8 +256,8 @@ TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE,
-                 &linearColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, getSRGBA8TextureInternalFormat(), 1, 1, 0,
+                 getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE, &linearColor);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SRGB_DECODE_EXT, GL_DECODE_EXT);
     ASSERT_GL_NO_ERROR();
 
@@ -267,8 +286,8 @@ TEST_P(SRGBTextureTest, SRGBDecodeSamplerParameter)
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE,
-                 &linearColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, getSRGBA8TextureInternalFormat(), 1, 1, 0,
+                 getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE, &linearColor);
     ASSERT_GL_NO_ERROR();
 
     GLSampler sampler;

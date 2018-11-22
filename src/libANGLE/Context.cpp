@@ -3231,6 +3231,12 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.maxViews              = 1u;
         supportedExtensions.copyTexture3d         = false;
         supportedExtensions.textureMultisample    = false;
+
+        // Don't expose GL_EXT_texture_sRGB_decode without sRGB texture support
+        if (!supportedExtensions.sRGB)
+        {
+            supportedExtensions.textureSRGBDecode = false;
+        }
     }
 
     if (getClientVersion() < ES_3_1)

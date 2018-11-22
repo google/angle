@@ -414,6 +414,13 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             // Workaround Adreno driver not supporting unsized EXT_texture_rg formats
             result = internalFormat.sizedInternalFormat;
         }
+        else if (workarounds.unsizedsRGBReadPixelsDoesntTransform &&
+                 internalFormat.colorEncoding == GL_SRGB)
+        {
+            // Work around some Adreno driver bugs that don't read back SRGB data correctly when
+            // it's in unsized SRGB texture formats.
+            result = internalFormat.sizedInternalFormat;
+        }
     }
 
     return result;
@@ -451,6 +458,21 @@ static GLenum GetNativeFormat(const FunctionsGL *functions,
             if (format == GL_LUMINANCE_ALPHA)
             {
                 result = GL_RG;
+            }
+        }
+    }
+    else if (functions->isAtLeastGLES(gl::Version(3, 0)))
+    {
+        if (workarounds.unsizedsRGBReadPixelsDoesntTransform)
+        {
+            if (format == GL_SRGB)
+            {
+                result = GL_RGB;
+            }
+
+            if (format == GL_SRGB_ALPHA)
+            {
+                result = GL_RGBA;
             }
         }
     }

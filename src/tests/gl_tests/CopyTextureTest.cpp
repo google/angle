@@ -1331,21 +1331,26 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
                         GL_UNSIGNED_BYTE, false, true, false, GLColor(0, 0, 0, 128));
 
     // New sRGB dest formats
-    testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
-                        GL_UNSIGNED_BYTE, false, false, false, GLColor(55, 13, 4, 255));
-    testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
-                        GL_UNSIGNED_BYTE, false, true, false, GLColor(13, 4, 1, 255));
-    testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
-                        GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false, false,
-                        GLColor(55, 13, 4, 128));
+    if (extensionEnabled("GL_EXT_sRGB"))
+    {
+        testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
+                            GL_UNSIGNED_BYTE, false, false, false, GLColor(55, 13, 4, 255));
+        testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
+                            GL_UNSIGNED_BYTE, false, true, false, GLColor(13, 4, 1, 255));
+        testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                            GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false, false,
+                            GLColor(55, 13, 4, 128));
 
-    testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
-                           GL_SRGB, GL_UNSIGNED_BYTE, false, false, false, GLColor(55, 13, 4, 255));
-    testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
-                           GL_SRGB, GL_UNSIGNED_BYTE, false, true, false, GLColor(13, 4, 1, 255));
-    testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
-                           GL_SRGB_ALPHA_EXT, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false,
-                           false, GLColor(55, 13, 4, 128));
+        testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                               GL_SRGB, GL_SRGB, GL_UNSIGNED_BYTE, false, false, false,
+                               GLColor(55, 13, 4, 255));
+        testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                               GL_SRGB, GL_SRGB, GL_UNSIGNED_BYTE, false, true, false,
+                               GLColor(13, 4, 1, 255));
+        testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                               GL_SRGB_ALPHA_EXT, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false,
+                               false, GLColor(55, 13, 4, 128));
+    }
 }
 
 // Test the newly added ES3 float formats

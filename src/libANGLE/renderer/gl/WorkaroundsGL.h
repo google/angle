@@ -158,6 +158,11 @@ struct WorkaroundsGL
     // instead of disabling the functionality entirely. The AMD bug looked like incorrect blending,
     // not sure if a workaround is feasible. http://anglebug.com/1085
     bool disableBlendFuncExtended = false;
+
+    // Qualcomm drivers returns raw sRGB values instead of linearized values when calling
+    // glReadPixels on unsized sRGB texture formats. http://crbug.com/550292 and
+    // http://crbug.com/565179
+    bool unsizedsRGBReadPixelsDoesntTransform = false;
 };
 
 inline WorkaroundsGL::WorkaroundsGL() = default;
