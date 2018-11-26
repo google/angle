@@ -109,7 +109,103 @@ static bool MeetsRequirements(const FunctionsGL *functions,
     }
 }
 
+static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *functions,
+                                                         const WorkaroundsGL &workarounds,
+                                                         GLenum internalFormat)
+{
+    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    ASSERT(formatInfo.sized);
+
+    // Query the current texture so it can be rebound afterwards
+    GLint oldTextureBinding = 0;
+    functions->getIntegerv(GL_TEXTURE_BINDING_2D, &oldTextureBinding);
+
+    // Create a small texture with the same format and type that gl::Texture would use
+    GLuint texture = 0;
+    functions->genTextures(1, &texture);
+    functions->bindTexture(GL_TEXTURE_2D, texture);
+
+    // Nearest filter needed for framebuffer completeness on some drivers.
+    functions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
+        functions, workarounds, formatInfo.internalFormat, formatInfo.format, formatInfo.type);
+    constexpr GLsizei kTextureSize = 16;
+    functions->texImage2D(GL_TEXTURE_2D, 0, texImageFormat.internalFormat, kTextureSize,
+                          kTextureSize, 0, texImageFormat.format, texImageFormat.type, nullptr);
+
+    // Query the current framebuffer so it can be rebound afterwards
+    GLint oldFramebufferBinding = 0;
+    functions->getIntegerv(GL_FRAMEBUFFER_BINDING, &oldFramebufferBinding);
+
+    // Bind the texture to the framebuffer and check renderability
+    GLuint fbo = 0;
+    functions->genFramebuffers(1, &fbo);
+    functions->bindFramebuffer(GL_FRAMEBUFFER, fbo);
+    functions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture,
+                                    0);
+
+    bool supported = functions->checkFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+    // Delete the framebuffer and restore the previous binding
+    functions->deleteFramebuffers(1, &fbo);
+    functions->bindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(oldFramebufferBinding));
+
+    // Delete the texture and restore the previous binding
+    functions->deleteTextures(1, &texture);
+    functions->bindTexture(GL_TEXTURE_2D, static_cast<GLuint>(oldTextureBinding));
+
+    return supported;
+}
+
+static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *functions,
+                                                         const WorkaroundsGL &workarounds,
+                                                         GLenum internalFormat)
+{
+    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    ASSERT(formatInfo.sized);
+
+    // Query the current renderbuffer so it can be rebound afterwards
+    GLint oldRenderbufferBinding = 0;
+    functions->getIntegerv(GL_RENDERBUFFER_BINDING, &oldRenderbufferBinding);
+
+    // Create a small renderbuffer with the same format and type that gl::Renderbuffer would use
+    GLuint renderbuffer = 0;
+    functions->genRenderbuffers(1, &renderbuffer);
+    functions->bindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+
+    nativegl::RenderbufferFormat renderbufferFormat =
+        nativegl::GetRenderbufferFormat(functions, workarounds, formatInfo.internalFormat);
+    constexpr GLsizei kRenderbufferSize = 16;
+    functions->renderbufferStorage(GL_RENDERBUFFER, renderbufferFormat.internalFormat,
+                                   kRenderbufferSize, kRenderbufferSize);
+
+    // Query the current framebuffer so it can be rebound afterwards
+    GLint oldFramebufferBinding = 0;
+    functions->getIntegerv(GL_FRAMEBUFFER_BINDING, &oldFramebufferBinding);
+
+    // Bind the texture to the framebuffer and check renderability
+    GLuint fbo = 0;
+    functions->genFramebuffers(1, &fbo);
+    functions->bindFramebuffer(GL_FRAMEBUFFER, fbo);
+    functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                       renderbuffer);
+
+    bool supported = functions->checkFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+    // Delete the framebuffer and restore the previous binding
+    functions->deleteFramebuffers(1, &fbo);
+    functions->bindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(oldFramebufferBinding));
+
+    // Delete the renderbuffer and restore the previous binding
+    functions->deleteRenderbuffers(1, &renderbuffer);
+    functions->bindRenderbuffer(GL_RENDERBUFFER, static_cast<GLuint>(oldRenderbufferBinding));
+
+    return supported;
+}
+
 static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
+                                                 const WorkaroundsGL &workarounds,
                                                  GLenum internalFormat)
 {
     ASSERT(functions->getError() == GL_NO_ERROR);
@@ -123,6 +219,23 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
         textureCaps.texturable && MeetsRequirements(functions, formatInfo.filter);
     textureCaps.textureAttachment = MeetsRequirements(functions, formatInfo.textureAttachment);
     textureCaps.renderbuffer      = MeetsRequirements(functions, formatInfo.renderbuffer);
+
+    // Do extra renderability validation for some formats.
+    // We require GL_RGBA16F is renderable to expose EXT_color_buffer_half_float but we can't know
+    // if the format is supported unless we try to create a framebuffer.
+    if (internalFormat == GL_RGBA16F)
+    {
+        if (textureCaps.textureAttachment)
+        {
+            textureCaps.textureAttachment = CheckSizedInternalFormatTextureRenderability(
+                functions, workarounds, internalFormat);
+        }
+        if (textureCaps.renderbuffer)
+        {
+            textureCaps.renderbuffer = CheckInternalFormatRenderbufferRenderability(
+                functions, workarounds, internalFormat);
+        }
+    }
 
     // glGetInternalformativ is not available until version 4.2 but may be available through the 3.0
     // extension GL_ARB_internalformat_query
@@ -281,7 +394,8 @@ void GenerateCaps(const FunctionsGL *functions,
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
     {
-        gl::TextureCaps textureCaps = GenerateTextureFormatCaps(functions, internalFormat);
+        gl::TextureCaps textureCaps =
+            GenerateTextureFormatCaps(functions, workarounds, internalFormat);
         textureCapsMap->insert(internalFormat, textureCaps);
 
         if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)

@@ -544,6 +544,16 @@ static GLenum GetNativeType(const FunctionsGL *functions,
             }
         }
     }
+    else if (functions->standard == STANDARD_GL_ES && functions->version == gl::Version(2, 0))
+    {
+        // On ES2, convert GL_HALF_FLOAT to GL_HALF_FLOAT_OES as a convenience for internal
+        // functions. It should not be possible to get here by a normal glTexImage2D call.
+        if (type == GL_HALF_FLOAT)
+        {
+            ASSERT(functions->hasGLExtension("GL_OES_texture_half_float"));
+            result = GL_HALF_FLOAT_OES;
+        }
+    }
 
     return result;
 }
