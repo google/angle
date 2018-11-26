@@ -51,7 +51,7 @@ bool ShaderVk::postTranslateCompile(gl::ShCompilerInstance *compiler, std::strin
 
 std::string ShaderVk::getDebugInfo() const
 {
-    return std::string();
+    return mData.getTranslatedSource();
 }
 
 }  // namespace rx
