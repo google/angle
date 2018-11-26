@@ -13,7 +13,24 @@ IndentWidth: 4
 ColumnLimit: 100
 
 # Always break before braces
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+  # Keeps extern "C" blocks unindented.
+  AfterExternBlock: false
 
 # Indent case labels.
 IndentCaseLabels: true
@@ -33,3 +50,6 @@ AllowShortCaseLabelsOnASingleLine: false
 
 # Useful for spacing out functions in classes
 KeepEmptyLinesAtTheStartOfBlocks: true
+
+# Indent nested PP directives.
+IndentPPDirectives: AfterHash
