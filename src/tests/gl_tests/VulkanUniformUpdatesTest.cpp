@@ -53,14 +53,16 @@ class VulkanUniformUpdatesTest : public ANGLETest
         rx::vk::DynamicDescriptorPool *uniformPool =
             contextVk->getDynamicDescriptorPool(rx::kUniformsDescriptorSetIndex);
         uniformPool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
-        (void)uniformPool->init(contextVk, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                                rx::GetUniformBufferDescriptorCount());
+        VkDescriptorPoolSize uniformSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+                                               rx::GetUniformBufferDescriptorCount()};
+        (void)uniformPool->init(contextVk, &uniformSetSize, 1);
 
         rx::vk::DynamicDescriptorPool *texturePool =
             contextVk->getDynamicDescriptorPool(rx::kTextureDescriptorSetIndex);
         texturePool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
-        (void)texturePool->init(contextVk, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                                contextVk->getRenderer()->getMaxActiveTextures());
+        VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                               contextVk->getRenderer()->getMaxActiveTextures()};
+        (void)texturePool->init(contextVk, &textureSetSize, 1);
     }
 };
 

@@ -102,7 +102,9 @@ class DescriptorPoolHelper
     bool valid() { return mDescriptorPool.valid(); }
 
     bool hasCapacity(uint32_t descriptorSetCount) const;
-    angle::Result init(Context *context, const VkDescriptorPoolSize &poolSize, uint32_t maxSets);
+    angle::Result init(Context *context,
+                       const std::vector<VkDescriptorPoolSize> &poolSizes,
+                       uint32_t maxSets);
     void destroy(VkDevice device);
 
     angle::Result allocateSets(Context *context,
@@ -130,14 +132,16 @@ class DynamicDescriptorPool final : angle::NonCopyable
     ~DynamicDescriptorPool();
 
     // The DynamicDescriptorPool only handles one pool size at this time.
-    angle::Result init(ContextVk *contextVk,
-                       VkDescriptorType descriptorType,
-                       uint32_t descriptorsPerSet);
+    // Note that setSizes[i].descriptorCount is expected to be the number of descriptors in
+    // an individual set.  The pool size will be calculated accordingly.
+    angle::Result init(Context *context,
+                       const VkDescriptorPoolSize *setSizes,
+                       uint32_t setSizeCount);
     void destroy(VkDevice device);
 
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
-    angle::Result allocateSets(ContextVk *contextVk,
+    angle::Result allocateSets(Context *context,
                                const VkDescriptorSetLayout *descriptorSetLayout,
                                uint32_t descriptorSetCount,
                                SharedDescriptorPoolBinding *bindingOut,
@@ -147,12 +151,12 @@ class DynamicDescriptorPool final : angle::NonCopyable
     void setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
 
   private:
-    angle::Result allocateNewPool(ContextVk *contextVk);
+    angle::Result allocateNewPool(Context *context);
 
     uint32_t mMaxSetsPerPool;
     size_t mCurrentPoolIndex;
     std::vector<SharedDescriptorPoolHelper *> mDescriptorPools;
-    VkDescriptorPoolSize mPoolSize;
+    std::vector<VkDescriptorPoolSize> mPoolSizes;
 };
 
 template <typename Pool>
