@@ -147,11 +147,11 @@ GetImplType<T> *GetImpl(const T *glObject)
 // PhysicalDevice
 // Device
 // Queue
-// BufferView
 // DescriptorSet
 
 #define ANGLE_HANDLE_TYPES_X(FUNC) \
     FUNC(Buffer)                   \
+    FUNC(BufferView)               \
     FUNC(CommandBuffer)            \
     FUNC(CommandPool)              \
     FUNC(DescriptorPool)           \
@@ -543,6 +543,15 @@ class Buffer final : public WrappedObject<Buffer, VkBuffer>
     VkResult init(VkDevice device, const VkBufferCreateInfo &createInfo);
     VkResult bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut);
+};
+
+class BufferView final : public WrappedObject<BufferView, VkBufferView>
+{
+  public:
+    BufferView();
+    void destroy(VkDevice device);
+
+    VkResult init(VkDevice device, const VkBufferViewCreateInfo &createInfo);
 };
 
 class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>

@@ -851,6 +851,23 @@ void Buffer::getMemoryRequirements(VkDevice device, VkMemoryRequirements *memory
     vkGetBufferMemoryRequirements(device, mHandle, memoryRequirementsOut);
 }
 
+// BufferView implementation.
+BufferView::BufferView() {}
+
+void BufferView::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroyBufferView(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+VkResult BufferView::init(VkDevice device, const VkBufferViewCreateInfo &createInfo)
+{
+    return vkCreateBufferView(device, &createInfo, nullptr, &mHandle);
+}
+
 // ShaderModule implementation.
 ShaderModule::ShaderModule()
 {
