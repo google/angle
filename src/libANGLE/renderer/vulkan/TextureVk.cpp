@@ -61,7 +61,7 @@ constexpr VkFormatFeatureFlags kBlitFeatureFlags =
 
 // StagingStorage implementation.
 PixelBuffer::PixelBuffer(RendererVk *renderer)
-    : mStagingBuffer(kStagingBufferFlags, kStagingBufferSize)
+    : mStagingBuffer(kStagingBufferFlags, kStagingBufferSize, true)
 {
     // vkCmdCopyBufferToImage must have an offset that is a multiple of 4.
     // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
@@ -125,11 +125,10 @@ angle::Result PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
     VkBuffer bufferHandle = VK_NULL_HANDLE;
 
     uint8_t *stagingPointer    = nullptr;
-    bool newBufferAllocated    = false;
     VkDeviceSize stagingOffset = 0;
     size_t allocationSize      = outputDepthPitch * extents.depth;
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
-                                      &stagingOffset, &newBufferAllocated));
+                                      &stagingOffset, nullptr));
 
     const uint8_t *source = pixels + inputSkipBytes;
 
@@ -196,13 +195,12 @@ angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
     VkBuffer bufferHandle = VK_NULL_HANDLE;
 
     uint8_t *stagingPointer    = nullptr;
-    bool newBufferAllocated    = false;
     VkDeviceSize stagingOffset = 0;
 
     // The destination is only one layer deep.
     size_t allocationSize = outputDepthPitch;
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
-                                      &stagingOffset, &newBufferAllocated));
+                                      &stagingOffset, nullptr));
 
     const angle::Format &copyFormat =
         GetFormatFromFormatType(formatInfo.internalFormat, formatInfo.type);
@@ -335,9 +333,8 @@ angle::Result PixelBuffer::stageSubresourceUpdateAndGetData(ContextVk *contextVk
 {
     VkBuffer bufferHandle;
     VkDeviceSize stagingOffset = 0;
-    bool newBufferAllocated    = false;
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, destData, &bufferHandle,
-                                      &stagingOffset, &newBufferAllocated));
+                                      &stagingOffset, nullptr));
 
     VkBufferImageCopy copy               = {};
     copy.bufferOffset                    = stagingOffset;
@@ -772,11 +769,10 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
 
     // Allocate enough memory to copy the sourceArea region of the source texture into its pixel
     // buffer.
-    bool newBufferAllocated       = false;
     VkBuffer copyBufferHandle     = VK_NULL_HANDLE;
     VkDeviceSize sourceCopyOffset = 0;
     ANGLE_TRY(mPixelBuffer.allocate(contextVk, sourceCopyAllocationSize, outDataPtr,
-                                    &copyBufferHandle, &sourceCopyOffset, &newBufferAllocated));
+                                    &copyBufferHandle, &sourceCopyOffset, nullptr));
 
     VkBufferImageCopy region               = {};
     region.bufferOffset                    = sourceCopyOffset;

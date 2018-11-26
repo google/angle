@@ -101,9 +101,9 @@ constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
 }  // anonymous namespace
 
 // std::array only uses aggregate init. Thus we make a helper macro to reduce on code duplication.
-#define INIT                                   \
-    {                                          \
-        kVertexBufferUsage, kDefaultBufferSize \
+#define INIT                                         \
+    {                                                \
+        kVertexBufferUsage, kDefaultBufferSize, true \
     }
 
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
@@ -117,7 +117,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mCurrentDrawElementsType(GL_NONE),
       mClearColorMask(kAllColorChannelsMask),
       mFlipYForCurrentSurface(false),
-      mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16),
+      mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16, true),
       mDriverUniformsDescriptorSet(VK_NULL_HANDLE),
       mDefaultAttribBuffers{{INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT,
                              INIT, INIT, INIT, INIT}},
@@ -1159,9 +1159,8 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
     uint8_t *ptr            = nullptr;
     VkBuffer buffer         = VK_NULL_HANDLE;
     VkDeviceSize offset     = 0;
-    bool newBufferAllocated = false;
     ANGLE_TRY(mDriverUniformsBuffer.allocate(this, sizeof(DriverUniforms), &ptr, &buffer, &offset,
-                                             &newBufferAllocated));
+                                             nullptr));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
 
     float depthRangeNear = mState.getState().getNearPlane();

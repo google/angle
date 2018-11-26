@@ -738,17 +738,6 @@ angle::Result AllocateBufferMemory(vk::Context *context,
                                    Buffer *buffer,
                                    DeviceMemory *deviceMemoryOut);
 
-struct BufferAndMemory final : angle::NonCopyable
-{
-    BufferAndMemory();
-    BufferAndMemory(Buffer &&buffer, DeviceMemory &&deviceMemory);
-    BufferAndMemory(BufferAndMemory &&other);
-    BufferAndMemory &operator=(BufferAndMemory &&other);
-
-    Buffer buffer;
-    DeviceMemory memory;
-};
-
 angle::Result AllocateImageMemory(vk::Context *context,
                                   VkMemoryPropertyFlags memoryPropertyFlags,
                                   Image *image,

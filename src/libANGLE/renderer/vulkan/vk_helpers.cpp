@@ -83,15 +83,15 @@ VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
 }  // anonymous namespace
 
 // DynamicBuffer implementation.
-DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
+DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize, bool hostVisible)
     : mUsage(usage),
+      mHostVisible(hostVisible),
       mMinSize(minSize),
-      mHostCoherent(false),
+      mBuffer(nullptr),
       mNextAllocationOffset(0),
       mLastFlushOrInvalidateOffset(0),
       mSize(0),
-      mAlignment(0),
-      mMappedMemory(nullptr)
+      mAlignment(0)
 {}
 
 void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
@@ -114,7 +114,7 @@ DynamicBuffer::~DynamicBuffer() {}
 angle::Result DynamicBuffer::allocate(Context *context,
                                       size_t sizeInBytes,
                                       uint8_t **ptrOut,
-                                      VkBuffer *handleOut,
+                                      VkBuffer *bufferOut,
                                       VkDeviceSize *offsetOut,
                                       bool *newBufferAllocatedOut)
 {
@@ -125,15 +125,18 @@ angle::Result DynamicBuffer::allocate(Context *context,
 
     if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() >= mSize)
     {
-        if (mMappedMemory)
+        if (mBuffer)
         {
             ANGLE_TRY(flush(context));
-            unmap(context->getDevice());
+            mBuffer->unmap(context->getDevice());
+
+            mRetainedBuffers.push_back(mBuffer);
+            mBuffer = nullptr;
         }
 
-        mRetainedBuffers.emplace_back(std::move(mBuffer), std::move(mMemory));
-
         mSize = std::max(sizeToAllocate, mMinSize);
+
+        std::unique_ptr<BufferHelper> buffer = std::make_unique<BufferHelper>();
 
         VkBufferCreateInfo createInfo    = {};
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -143,15 +146,13 @@ angle::Result DynamicBuffer::allocate(Context *context,
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
-        ANGLE_VK_TRY(context, mBuffer.init(context->getDevice(), createInfo));
 
-        VkMemoryPropertyFlags actualMemoryPropertyFlags = 0;
-        ANGLE_TRY(AllocateBufferMemory(context, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                                       &actualMemoryPropertyFlags, &mBuffer, &mMemory));
-        mHostCoherent = (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT ==
-                         (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT & actualMemoryPropertyFlags));
+        const VkMemoryPropertyFlags memoryProperty = mHostVisible
+                                                         ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+                                                         : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+        ANGLE_TRY(buffer->init(context, createInfo, memoryProperty));
+        mBuffer = buffer.release();
 
-        ANGLE_VK_TRY(context, mMemory.map(context->getDevice(), 0, mSize, 0, &mMappedMemory));
         mNextAllocationOffset        = 0;
         mLastFlushOrInvalidateOffset = 0;
 
@@ -165,15 +166,22 @@ angle::Result DynamicBuffer::allocate(Context *context,
         *newBufferAllocatedOut = false;
     }
 
-    ASSERT(mBuffer.valid());
+    ASSERT(mBuffer != nullptr);
 
-    if (handleOut != nullptr)
+    if (bufferOut != nullptr)
     {
-        *handleOut = mBuffer.getHandle();
+        *bufferOut = mBuffer->getBuffer().getHandle();
     }
 
-    ASSERT(mMappedMemory);
-    *ptrOut    = mMappedMemory + mNextAllocationOffset;
+    // Optionally map() the buffer if possible
+    if (ptrOut)
+    {
+        ASSERT(mHostVisible);
+        uint8_t *mappedMemory;
+        ANGLE_TRY(mBuffer->map(context, &mappedMemory));
+        *ptrOut = mappedMemory + mNextAllocationOffset;
+    }
+
     *offsetOut = static_cast<VkDeviceSize>(mNextAllocationOffset);
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
     return angle::Result::Continue();
@@ -181,15 +189,11 @@ angle::Result DynamicBuffer::allocate(Context *context,
 
 angle::Result DynamicBuffer::flush(Context *context)
 {
-    if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
+    if (mHostVisible && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
-        VkMappedMemoryRange range = {};
-        range.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        range.memory              = mMemory.getHandle();
-        range.offset              = mLastFlushOrInvalidateOffset;
-        range.size                = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
-        ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(context->getDevice(), 1, &range));
-
+        ASSERT(mBuffer != nullptr);
+        ANGLE_TRY(mBuffer->flush(context, mLastFlushOrInvalidateOffset,
+                                 mNextAllocationOffset - mLastFlushOrInvalidateOffset));
         mLastFlushOrInvalidateOffset = mNextAllocationOffset;
     }
     return angle::Result::Continue();
@@ -197,15 +201,11 @@ angle::Result DynamicBuffer::flush(Context *context)
 
 angle::Result DynamicBuffer::invalidate(Context *context)
 {
-    if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
+    if (mHostVisible && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
-        VkMappedMemoryRange range = {};
-        range.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        range.memory              = mMemory.getHandle();
-        range.offset              = mLastFlushOrInvalidateOffset;
-        range.size                = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
-        ANGLE_VK_TRY(context, vkInvalidateMappedMemoryRanges(context->getDevice(), 1, &range));
-
+        ASSERT(mBuffer != nullptr);
+        ANGLE_TRY(mBuffer->invalidate(context, mLastFlushOrInvalidateOffset,
+                                      mNextAllocationOffset - mLastFlushOrInvalidateOffset));
         mLastFlushOrInvalidateOffset = mNextAllocationOffset;
     }
     return angle::Result::Continue();
@@ -213,22 +213,31 @@ angle::Result DynamicBuffer::invalidate(Context *context)
 
 void DynamicBuffer::release(RendererVk *renderer)
 {
-    unmap(renderer->getDevice());
     reset();
     releaseRetainedBuffers(renderer);
 
-    Serial currentSerial = renderer->getCurrentQueueSerial();
-    renderer->releaseObject(currentSerial, &mBuffer);
-    renderer->releaseObject(currentSerial, &mMemory);
+    if (mBuffer)
+    {
+        mBuffer->unmap(renderer->getDevice());
+
+        // The buffers may not have been recording commands, but they could be used to store data so
+        // they should live until at most this frame.  For example a vertex buffer filled entirely
+        // by the CPU currently never gets a chance to have its serial set.
+        mBuffer->updateQueueSerial(renderer->getCurrentQueueSerial());
+        mBuffer->release(renderer);
+        delete mBuffer;
+        mBuffer = nullptr;
+    }
 }
 
 void DynamicBuffer::releaseRetainedBuffers(RendererVk *renderer)
 {
-    for (BufferAndMemory &toFree : mRetainedBuffers)
+    for (BufferHelper *toFree : mRetainedBuffers)
     {
-        Serial currentSerial = renderer->getCurrentQueueSerial();
-        renderer->releaseObject(currentSerial, &toFree.buffer);
-        renderer->releaseObject(currentSerial, &toFree.memory);
+        // See note in release().
+        toFree->updateQueueSerial(renderer->getCurrentQueueSerial());
+        toFree->release(renderer);
+        delete toFree;
     }
 
     mRetainedBuffers.clear();
@@ -236,24 +245,23 @@ void DynamicBuffer::releaseRetainedBuffers(RendererVk *renderer)
 
 void DynamicBuffer::destroy(VkDevice device)
 {
-    unmap(device);
     reset();
 
-    for (BufferAndMemory &toFree : mRetainedBuffers)
+    for (BufferHelper *toFree : mRetainedBuffers)
     {
-        toFree.buffer.destroy(device);
-        toFree.memory.destroy(device);
+        toFree->destroy(device);
+        delete toFree;
     }
 
     mRetainedBuffers.clear();
 
-    mBuffer.destroy(device);
-    mMemory.destroy(device);
-}
-
-VkBuffer DynamicBuffer::getCurrentBufferHandle() const
-{
-    return mBuffer.getHandle();
+    if (mBuffer)
+    {
+        mBuffer->unmap(device);
+        mBuffer->destroy(device);
+        delete mBuffer;
+        mBuffer = nullptr;
+    }
 }
 
 void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
@@ -263,15 +271,6 @@ void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
 
     // Forces a new allocation on the next allocate.
     mSize = 0;
-}
-
-void DynamicBuffer::unmap(VkDevice device)
-{
-    if (mMappedMemory)
-    {
-        mMemory.unmap(device);
-        mMappedMemory = nullptr;
-    }
 }
 
 void DynamicBuffer::reset()
@@ -730,7 +729,7 @@ void SemaphoreHelper::deinit()
 
 // LineLoopHelper implementation.
 LineLoopHelper::LineLoopHelper(RendererVk *renderer)
-    : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize)
+    : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize, true)
 {
     // We need to use an alignment of the maximum size we're going to allocate, which is
     // VK_INDEX_TYPE_UINT32. When we switch from a drawElement to a drawArray call, the allocations
@@ -884,6 +883,7 @@ BufferHelper::BufferHelper()
     : RecordableGraphResource(CommandGraphResourceType::Buffer),
       mMemoryPropertyFlags{},
       mSize(0),
+      mMappedMemory(nullptr),
       mCurrentWriteAccess(0),
       mCurrentReadAccess(0)
 {}
@@ -900,8 +900,19 @@ angle::Result BufferHelper::init(Context *context,
                                     &mDeviceMemory);
 }
 
+void BufferHelper::destroy(VkDevice device)
+{
+    unmap(device);
+    mSize = 0;
+
+    mBuffer.destroy(device);
+    mBufferView.destroy(device);
+    mDeviceMemory.destroy(device);
+}
+
 void BufferHelper::release(RendererVk *renderer)
 {
+    unmap(renderer->getDevice());
     mSize = 0;
 
     renderer->releaseObject(getStoredQueueSerial(), &mBuffer);
@@ -964,6 +975,53 @@ angle::Result BufferHelper::initBufferView(Context *context, const Format &forma
 
     ANGLE_VK_TRY(context, mBufferView.init(context->getDevice(), viewCreateInfo));
 
+    return angle::Result::Continue();
+}
+
+angle::Result BufferHelper::mapImpl(Context *context)
+{
+    ANGLE_VK_TRY(context, mDeviceMemory.map(context->getDevice(), 0, mSize, 0, &mMappedMemory));
+    return angle::Result::Continue();
+}
+
+void BufferHelper::unmap(VkDevice device)
+{
+    if (mMappedMemory)
+    {
+        mDeviceMemory.unmap(device);
+        mMappedMemory = nullptr;
+    }
+}
+
+angle::Result BufferHelper::flush(Context *context, size_t offset, size_t size)
+{
+    bool hostVisible  = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    bool hostCoherent = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    if (hostVisible && !hostCoherent)
+    {
+        VkMappedMemoryRange range = {};
+        range.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.memory              = mDeviceMemory.getHandle();
+        range.offset              = offset;
+        range.size                = size;
+        ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(context->getDevice(), 1, &range));
+    }
+    return angle::Result::Continue();
+}
+
+angle::Result BufferHelper::invalidate(Context *context, size_t offset, size_t size)
+{
+    bool hostVisible  = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    bool hostCoherent = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    if (hostVisible && !hostCoherent)
+    {
+        VkMappedMemoryRange range = {};
+        range.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.memory              = mDeviceMemory.getHandle();
+        range.offset              = offset;
+        range.size                = size;
+        ANGLE_VK_TRY(context, vkInvalidateMappedMemoryRanges(context->getDevice(), 1, &range));
+    }
     return angle::Result::Continue();
 }
 

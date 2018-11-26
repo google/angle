@@ -174,7 +174,7 @@ class ProgramVk : public ProgramImpl
     // This is a special "empty" placeholder buffer for when a shader has no uniforms.
     // It is necessary because we want to keep a compatible pipeline layout in all cases,
     // and Vulkan does not tolerate having null handles in a descriptor set.
-    vk::BufferAndMemory mEmptyUniformBlockStorage;
+    vk::BufferHelper mEmptyUniformBlockStorage;
 
     // Descriptor sets for uniform blocks and textures for this program.
     std::vector<VkDescriptorSet> mDescriptorSets;

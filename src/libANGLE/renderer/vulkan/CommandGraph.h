@@ -196,6 +196,10 @@ class RecordableGraphResource : public CommandGraphResource
     // Sets up dependency relations. 'this' resource is the resource being read.
     void addReadDependency(RecordableGraphResource *readingResource);
 
+    // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
+    // was not used in this set of command nodes.
+    void updateQueueSerial(Serial queueSerial);
+
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     // Will append to an existing command buffer/graph node if possible.
@@ -250,10 +254,6 @@ class RecordableGraphResource : public CommandGraphResource
         return hasChildlessWritingNode() &&
                mCurrentWritingNode->getInsideRenderPassCommands()->valid();
     }
-
-    // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
-    // was not used in this set of command nodes.
-    void updateQueueSerial(Serial queueSerial);
 
     void startNewCommands(RendererVk *renderer);
 

@@ -26,6 +26,10 @@ namespace
 constexpr size_t kDynamicVertexDataSize    = 1024 * 1024;
 constexpr size_t kDynamicIndexDataSize     = 1024 * 8;
 constexpr size_t kMaxVertexFormatAlignment = 4;
+constexpr VkBufferUsageFlags kVertexBufferUsageFlags =
+    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+constexpr VkBufferUsageFlags kIndexBufferUsageFlags =
+    VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
 
 bool BindingIsAligned(const gl::VertexBinding &binding, unsigned componentSize)
 {
@@ -55,9 +59,9 @@ angle::Result StreamVertexData(ContextVk *contextVk,
 
 }  // anonymous namespace
 
-#define INIT                                        \
-    {                                               \
-        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 1024 * 8 \
+#define INIT                                    \
+    {                                           \
+        kVertexBufferUsageFlags, 1024 * 8, true \
     }
 
 VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *renderer)
@@ -91,9 +95,9 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
       mCurrentElementArrayBuffer(nullptr),
       mPackedInputBindings{},
       mPackedInputAttributes{},
-      mDynamicVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kDynamicVertexDataSize),
-      mDynamicIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kDynamicIndexDataSize),
-      mTranslatedByteIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kDynamicIndexDataSize),
+      mDynamicVertexData(kVertexBufferUsageFlags, kDynamicVertexDataSize, true),
+      mDynamicIndexData(kIndexBufferUsageFlags, kDynamicIndexDataSize, true),
+      mTranslatedByteIndexData(kIndexBufferUsageFlags, kDynamicIndexDataSize, true),
       mLineLoopHelper(renderer),
       mDirtyLineLoopTranslation(true)
 {
