@@ -1259,12 +1259,10 @@ angle::Result RendererVk::getFullScreenClearShaderProgram(vk::Context *context,
     if (!mFullScreenClearShaderProgram.valid())
     {
         vk::RefCounted<vk::ShaderAndSerial> *fullScreenQuad = nullptr;
-        ANGLE_TRY(mShaderLibrary.getShader(context, vk::InternalShaderID::FullScreenQuad_vert,
-                                           &fullScreenQuad));
+        ANGLE_TRY(mShaderLibrary.getFullScreenQuad_vert(context, 0, &fullScreenQuad));
 
         vk::RefCounted<vk::ShaderAndSerial> *pushConstantColor = nullptr;
-        ANGLE_TRY(mShaderLibrary.getShader(context, vk::InternalShaderID::PushConstantColor_frag,
-                                           &pushConstantColor));
+        ANGLE_TRY(mShaderLibrary.getPushConstantColor_frag(context, 0, &pushConstantColor));
 
         mFullScreenClearShaderProgram.setShader(gl::ShaderType::Vertex, fullScreenQuad);
         mFullScreenClearShaderProgram.setShader(gl::ShaderType::Fragment, pushConstantColor);

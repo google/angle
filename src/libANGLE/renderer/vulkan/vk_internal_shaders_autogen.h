@@ -11,32 +11,41 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_INTERNAL_SHADERS_AUTOGEN_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_INTERNAL_SHADERS_AUTOGEN_H_
 
-#include <stddef.h>
-#include <stdint.h>
-
-#include <utility>
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
 namespace vk
 {
-enum class InternalShaderID
+namespace InternalShader
 {
-    FullScreenQuad_vert,
-    PushConstantColor_frag,
-    EnumCount
-};
+namespace FullScreenQuad_vert
+{}  // namespace FullScreenQuad_vert
 
-namespace priv
+namespace PushConstantColor_frag
+{}  // namespace PushConstantColor_frag
+
+}  // namespace InternalShader
+
+class ShaderLibrary final : angle::NonCopyable
 {
-// This is SPIR-V binary blob and the size.
-struct ShaderBlob
-{
-    const uint32_t *code;
-    size_t codeSize;
+  public:
+    ShaderLibrary();
+    ~ShaderLibrary();
+
+    void destroy(VkDevice device);
+
+    angle::Result getFullScreenQuad_vert(Context *context,
+                                         uint32_t shaderFlags,
+                                         RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getPushConstantColor_frag(Context *context,
+                                            uint32_t shaderFlags,
+                                            RefCounted<ShaderAndSerial> **shaderOut);
+
+  private:
+    RefCounted<ShaderAndSerial> mFullScreenQuad_vert_shaders[1];
+    RefCounted<ShaderAndSerial> mPushConstantColor_frag_shaders[1];
 };
-const ShaderBlob &GetInternalShaderBlob(InternalShaderID shaderID);
-}  // namespace priv
 }  // namespace vk
 }  // namespace rx
 

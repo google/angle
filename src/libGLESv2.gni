@@ -748,8 +748,6 @@ libangle_vulkan_sources = [
   "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
   "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
   "src/libANGLE/renderer/vulkan/vk_helpers.h",
-  "src/libANGLE/renderer/vulkan/vk_internal_shaders.cpp",
-  "src/libANGLE/renderer/vulkan/vk_internal_shaders.h",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp",
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp",

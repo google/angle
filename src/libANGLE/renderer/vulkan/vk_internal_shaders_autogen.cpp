@@ -10,28 +10,81 @@
 
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
 
-#include "common/debug.h"
-
 namespace rx
 {
 namespace vk
 {
-namespace priv
-{
 namespace
 {
-#include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/PushConstantColor.frag.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/PushConstantColor.frag.00000000.inc"
 
-constexpr ShaderBlob kShaderBlobs[] = {{kFullScreenQuad_vert, sizeof(kFullScreenQuad_vert)},
-                                       {kPushConstantColor_frag, sizeof(kPushConstantColor_frag)}};
+// This is SPIR-V binary blob and the size.
+struct ShaderBlob
+{
+    const uint32_t *code;
+    size_t codeSize;
+};
+
+constexpr ShaderBlob kFullScreenQuad_vert_shaders[] = {
+    {kFullScreenQuad_vert_00000000, sizeof(kFullScreenQuad_vert_00000000)},
+};
+constexpr ShaderBlob kPushConstantColor_frag_shaders[] = {
+    {kPushConstantColor_frag_00000000, sizeof(kPushConstantColor_frag_00000000)},
+};
 }  // anonymous namespace
 
-const ShaderBlob &GetInternalShaderBlob(InternalShaderID shaderID)
+ShaderLibrary::ShaderLibrary() {}
+
+ShaderLibrary::~ShaderLibrary() {}
+
+void ShaderLibrary::destroy(VkDevice device)
 {
-    ASSERT(static_cast<size_t>(shaderID) < static_cast<size_t>(InternalShaderID::EnumCount));
-    return kShaderBlobs[static_cast<size_t>(shaderID)];
+    for (RefCounted<ShaderAndSerial> &shader : mFullScreenQuad_vert_shaders)
+    {
+        shader.get().destroy(device);
+    }
+    for (RefCounted<ShaderAndSerial> &shader : mPushConstantColor_frag_shaders)
+    {
+        shader.get().destroy(device);
+    }
 }
-}  // namespace priv
+
+angle::Result ShaderLibrary::getFullScreenQuad_vert(Context *context,
+                                                    uint32_t shaderFlags,
+                                                    RefCounted<ShaderAndSerial> **shaderOut)
+{
+    ASSERT(shaderFlags < ArraySize(kFullScreenQuad_vert_shaders));
+    RefCounted<ShaderAndSerial> &shader = mFullScreenQuad_vert_shaders[shaderFlags];
+    *shaderOut                          = &shader;
+
+    if (shader.get().valid())
+    {
+        return angle::Result::Continue();
+    }
+
+    // Create shader lazily. Access will need to be locked for multi-threading.
+    const ShaderBlob &shaderCode = kFullScreenQuad_vert_shaders[shaderFlags];
+    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
+}
+
+angle::Result ShaderLibrary::getPushConstantColor_frag(Context *context,
+                                                       uint32_t shaderFlags,
+                                                       RefCounted<ShaderAndSerial> **shaderOut)
+{
+    ASSERT(shaderFlags < ArraySize(kPushConstantColor_frag_shaders));
+    RefCounted<ShaderAndSerial> &shader = mPushConstantColor_frag_shaders[shaderFlags];
+    *shaderOut                          = &shader;
+
+    if (shader.get().valid())
+    {
+        return angle::Result::Continue();
+    }
+
+    // Create shader lazily. Access will need to be locked for multi-threading.
+    const ShaderBlob &shaderCode = kPushConstantColor_frag_shaders[shaderFlags];
+    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
+}
+
 }  // namespace vk
 }  // namespace rx

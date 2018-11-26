@@ -1,6 +1,6 @@
-	// 7.7.2767
+	// 7.10.2904
 	 #pragma once
-const uint32_t kFullScreenQuad_vert[] = {
+const uint32_t kFullScreenQuad_vert_00000000[] = {
 	0x07230203,0x00010000,0x00080007,0x00000024,0x00000000,0x00020011,0x00000001,0x0006000b,
 	0x00000001,0x4c534c47,0x6474732e,0x3035342e,0x00000000,0x0003000e,0x00000000,0x00000001,
 	0x0007000f,0x00000000,0x00000004,0x6e69616d,0x00000000,0x0000000d,0x0000001b,0x00030003,
@@ -35,3 +35,21 @@ const uint32_t kFullScreenQuad_vert[] = {
 	0x0000001e,0x0000001c,0x0004003d,0x00000007,0x00000021,0x00000020,0x00050041,0x00000022,
 	0x00000023,0x0000000d,0x0000000f,0x0003003e,0x00000023,0x00000021,0x000100fd,0x00010038
 };
+
+#if 0  // Generated from:
+#version 450 core
+
+const vec4 kQuadVertices[]= {
+    vec4(- 1, 1, 0, 1),
+    vec4(- 1, - 1, 0, 1),
+    vec4(1, - 1, 0, 1),
+    vec4(- 1, 1, 0, 1),
+    vec4(1, - 1, 0, 1),
+    vec4(1, 1, 0, 1),
+};
+
+void main()
+{
+    gl_Position = kQuadVertices[gl_VertexIndex];
+}
+#endif  // Preprocessed code

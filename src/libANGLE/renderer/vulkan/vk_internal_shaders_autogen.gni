@@ -9,6 +9,6 @@
 #   List of generated shaders for inclusion in ANGLE's build process.
 
 angle_vulkan_internal_shaders = [
-  "shaders/gen/FullScreenQuad.vert.inc",
-  "shaders/gen/PushConstantColor.frag.inc",
+  "shaders/gen/FullScreenQuad.vert.00000000.inc",
+  "shaders/gen/PushConstantColor.frag.00000000.inc",
 ]
