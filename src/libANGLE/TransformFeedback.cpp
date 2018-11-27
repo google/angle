@@ -55,12 +55,9 @@ TransformFeedbackState::TransformFeedbackState(size_t maxIndexedBuffers)
       mVertexCapacity(0),
       mProgram(nullptr),
       mIndexedBuffers(maxIndexedBuffers)
-{
-}
+{}
 
-TransformFeedbackState::~TransformFeedbackState()
-{
-}
+TransformFeedbackState::~TransformFeedbackState() {}
 
 const OffsetBindingPointer<Buffer> &TransformFeedbackState::getIndexedBuffer(size_t idx) const
 {

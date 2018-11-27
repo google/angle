@@ -61,8 +61,7 @@ DynamicPromotionPerfTest::DynamicPromotionPerfTest()
       mProgram(0),
       mElementArrayBuffer(0),
       mArrayBuffer(0)
-{
-}
+{}
 
 void DynamicPromotionPerfTest::initializeBenchmark()
 {

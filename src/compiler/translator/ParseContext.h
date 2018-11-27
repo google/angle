@@ -459,7 +459,7 @@ class TParseContext : angle::NonCopyable
     }
 
     // TODO(jmadill): make this private
-    TSymbolTable &symbolTable;   // symbol table that goes with the language currently being parsed
+    TSymbolTable &symbolTable;  // symbol table that goes with the language currently being parsed
 
   private:
     class AtomicCounterBindingState;

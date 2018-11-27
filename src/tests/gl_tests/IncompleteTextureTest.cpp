@@ -230,7 +230,8 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(IncompleteTextureTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

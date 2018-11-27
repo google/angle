@@ -30,12 +30,9 @@ RenderStateCache::RenderStateCache()
       mRasterizerStateCache(kMaxStates),
       mDepthStencilStateCache(kMaxStates),
       mSamplerStateCache(kMaxStates)
-{
-}
+{}
 
-RenderStateCache::~RenderStateCache()
-{
-}
+RenderStateCache::~RenderStateCache() {}
 
 void RenderStateCache::clear()
 {

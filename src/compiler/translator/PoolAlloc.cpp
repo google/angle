@@ -6,9 +6,9 @@
 
 #include "compiler/translator/PoolAlloc.h"
 
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <assert.h>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -69,7 +69,7 @@ TPoolAllocator::TPoolAllocator(int growthIncrement, int allocationAlignment)
     alignment &= ~(minAlign - 1);
     if (alignment < minAlign)
         alignment = minAlign;
-    size_t a      = 1;
+    size_t a = 1;
     while (a < alignment)
         a <<= 1;
     alignment     = a;
@@ -161,13 +161,13 @@ void TAllocation::checkGuardBlock(unsigned char *blockMem,
             char assertMsg[80];
 
 // We don't print the assert message.  It's here just to be helpful.
-#if defined(_MSC_VER)
+#    if defined(_MSC_VER)
             snprintf(assertMsg, sizeof(assertMsg),
                      "PoolAlloc: Damage %s %Iu byte allocation at 0x%p\n", locText, size, data());
-#else
+#    else
             snprintf(assertMsg, sizeof(assertMsg),
                      "PoolAlloc: Damage %s %zu byte allocation at 0x%p\n", locText, size, data());
-#endif
+#    endif
             assert(0 && "PoolAlloc: Damage in guard block");
         }
     }
@@ -333,7 +333,7 @@ void *TPoolAllocator::allocate(size_t numBytes)
     mStack.back().push_back(alloc);
 
     intptr_t intAlloc = reinterpret_cast<intptr_t>(alloc);
-    intAlloc          = (intAlloc + alignmentMask) & ~alignmentMask;
+    intAlloc = (intAlloc + alignmentMask) & ~alignmentMask;
     return reinterpret_cast<void *>(intAlloc);
 #endif
 }

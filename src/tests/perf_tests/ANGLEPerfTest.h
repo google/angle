@@ -10,10 +10,11 @@
 #ifndef PERF_TESTS_ANGLE_PERF_TEST_H_
 #define PERF_TESTS_ANGLE_PERF_TEST_H_
 
+#include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
 
-#include <gtest/gtest.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
@@ -29,12 +30,12 @@
 class Event;
 
 #if !defined(ASSERT_GL_NO_ERROR)
-#define ASSERT_GL_NO_ERROR() ASSERT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError())
+#    define ASSERT_GL_NO_ERROR() ASSERT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError())
 #endif  // !defined(ASSERT_GL_NO_ERROR)
 
 #if !defined(ASSERT_GLENUM_EQ)
-#define ASSERT_GLENUM_EQ(expected, actual) \
-    ASSERT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
+#    define ASSERT_GLENUM_EQ(expected, actual) \
+        ASSERT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
 #endif  // !defined(ASSERT_GLENUM_EQ)
 
 // These are trace events according to Google's "Trace Event Format".
@@ -46,13 +47,12 @@ struct TraceEvent final
 
     TraceEvent(char phaseIn, const char *categoryNameIn, const char *nameIn, double timestampIn)
         : phase(phaseIn), categoryName(categoryNameIn), name(nameIn), timestamp(timestampIn)
-    {
-    }
+    {}
 
-    char phase       = 0;
+    char phase               = 0;
     const char *categoryName = nullptr;
-    const char *name = nullptr;
-    double timestamp = 0;
+    const char *name         = nullptr;
+    double timestamp         = 0;
 };
 
 class ANGLEPerfTest : public testing::Test, angle::NonCopyable
@@ -72,8 +72,14 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
   protected:
     void run();
-    void printResult(const std::string &trace, double value, const std::string &units, bool important) const;
-    void printResult(const std::string &trace, size_t value, const std::string &units, bool important) const;
+    void printResult(const std::string &trace,
+                     double value,
+                     const std::string &units,
+                     bool important) const;
+    void printResult(const std::string &trace,
+                     size_t value,
+                     const std::string &units,
+                     bool important) const;
     void SetUp() override;
     void TearDown() override;
 
@@ -104,8 +110,8 @@ struct RenderTestParams : public angle::PlatformParameters
 {
     virtual std::string suffix() const;
 
-    EGLint windowWidth  = 64;
-    EGLint windowHeight = 64;
+    EGLint windowWidth             = 64;
+    EGLint windowHeight            = 64;
     unsigned int iterationsPerStep = 0;
 };
 
@@ -117,8 +123,8 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     void addExtensionPrerequisite(const char *extensionName);
 
-    virtual void initializeBenchmark() { }
-    virtual void destroyBenchmark() { }
+    virtual void initializeBenchmark() {}
+    virtual void destroyBenchmark() {}
 
     virtual void drawBenchmark() = 0;
 
@@ -156,4 +162,4 @@ class ANGLERenderTest : public ANGLEPerfTest
     std::vector<TraceEvent> mTraceEventBuffer;
 };
 
-#endif // PERF_TESTS_ANGLE_PERF_TEST_H_
+#endif  // PERF_TESTS_ANGLE_PERF_TEST_H_

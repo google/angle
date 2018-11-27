@@ -46,7 +46,7 @@ class FindGLDrawIDTraverser : public TIntermTraverser
     bool mFound;
 };
 
-}  // namespace anonymous
+}  // namespace
 
 void EmulateGLDrawID(TIntermBlock *root,
                      TSymbolTable *symbolTable,
@@ -57,7 +57,7 @@ void EmulateGLDrawID(TIntermBlock *root,
     root->traverse(&traverser);
     if (traverser.isGLDrawIDUsed())
     {
-        const TType *type          = StaticType::Get<EbtInt, EbpHigh, EvqUniform, 1, 1>();
+        const TType *type = StaticType::Get<EbtInt, EbpHigh, EvqUniform, 1, 1>();
         const TVariable *drawID =
             new TVariable(symbolTable, kEmulatedGLDrawIDName, type, SymbolType::AngleInternal);
 

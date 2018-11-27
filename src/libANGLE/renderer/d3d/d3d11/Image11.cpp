@@ -34,8 +34,7 @@ Image11::Image11(Renderer11 *renderer)
       mAssociatedStorage(nullptr),
       mAssociatedImageIndex(),
       mRecoveredFromStorageCount(0)
-{
-}
+{}
 
 Image11::~Image11()
 {

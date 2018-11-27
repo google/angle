@@ -18,13 +18,9 @@
 namespace rx
 {
 
-FramebufferNULL::FramebufferNULL(const gl::FramebufferState &state) : FramebufferImpl(state)
-{
-}
+FramebufferNULL::FramebufferNULL(const gl::FramebufferState &state) : FramebufferImpl(state) {}
 
-FramebufferNULL::~FramebufferNULL()
-{
-}
+FramebufferNULL::~FramebufferNULL() {}
 
 angle::Result FramebufferNULL::discard(const gl::Context *context,
                                        size_t count,
@@ -126,7 +122,7 @@ angle::Result FramebufferNULL::readPixels(const gl::Context *context,
     if (packBuffer != nullptr)
     {
         BufferNULL *packBufferGL = GetImplAs<BufferNULL>(packBuffer);
-        pixels                     = reinterpret_cast<GLubyte *>(packBufferGL->getDataPtr());
+        pixels                   = reinterpret_cast<GLubyte *>(packBufferGL->getDataPtr());
         pixels += reinterpret_cast<intptr_t>(ptrOrOffset);
     }
     else

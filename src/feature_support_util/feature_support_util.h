@@ -25,7 +25,8 @@ constexpr unsigned int kFeatureVersion_HighestSupported = 1;
 
 // TODO(ianelliott@google.com angleproject:2801): Revisit this enum.  Make it
 // strongly typed, and look at renaming it and its values.
-typedef enum ANGLEPreference {
+typedef enum ANGLEPreference
+{
     ANGLE_NO_PREFERENCE = 0,
     ANGLE_PREFER_NATIVE = 1,
     ANGLE_PREFER_ANGLE  = 2,

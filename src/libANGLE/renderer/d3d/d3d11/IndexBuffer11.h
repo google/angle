@@ -55,4 +55,4 @@ class IndexBuffer11 : public IndexBuffer
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_INDEXBUFFER11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_INDEXBUFFER11_H_

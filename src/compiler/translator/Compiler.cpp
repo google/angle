@@ -296,12 +296,9 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       mGeometryShaderInvocations(0),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined)
-{
-}
+{}
 
-TCompiler::~TCompiler()
-{
-}
+TCompiler::~TCompiler() {}
 
 bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const
 {
@@ -790,7 +787,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
         {
             if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0)
             {
-                for (auto& uniform : mUniforms)
+                for (auto &uniform : mUniforms)
                 {
                     if (uniform.name == "angle_DrawID" && uniform.mappedName == "angle_DrawID")
                     {
@@ -950,7 +947,7 @@ void TCompiler::clearResults()
 
     mNameMap.clear();
 
-    mSourcePath     = nullptr;
+    mSourcePath = nullptr;
 
     mSymbolTable.clearCompilationResults();
 }
@@ -1067,8 +1064,7 @@ class TCompiler::UnusedPredicate
   public:
     UnusedPredicate(const CallDAG *callDag, const std::vector<FunctionMetadata> *metadatas)
         : mCallDag(callDag), mMetadatas(metadatas)
-    {
-    }
+    {}
 
     bool operator()(TIntermNode *node)
     {

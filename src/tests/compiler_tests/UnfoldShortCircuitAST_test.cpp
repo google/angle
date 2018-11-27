@@ -18,8 +18,7 @@ class UnfoldShortCircuitASTTest : public MatchOutputCodeTest
   public:
     UnfoldShortCircuitASTTest()
         : MatchOutputCodeTest(GL_FRAGMENT_SHADER, SH_UNFOLD_SHORT_CIRCUIT, SH_GLSL_330_CORE_OUTPUT)
-    {
-    }
+    {}
 };
 
 // Test unfolding the && operator.

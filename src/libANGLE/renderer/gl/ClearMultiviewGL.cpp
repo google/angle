@@ -19,8 +19,7 @@ namespace rx
 
 ClearMultiviewGL::ClearMultiviewGL(const FunctionsGL *functions, StateManagerGL *stateManager)
     : mFunctions(functions), mStateManager(stateManager), mFramebuffer(0u)
-{
-}
+{}
 
 ClearMultiviewGL::~ClearMultiviewGL()
 {

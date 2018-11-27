@@ -34,12 +34,9 @@ TextureStorage9::TextureStorage9(Renderer9 *renderer, DWORD usage)
       mRenderer(renderer),
       mD3DUsage(usage),
       mD3DPool(mRenderer->getTexturePool(usage))
-{
-}
+{}
 
-TextureStorage9::~TextureStorage9()
-{
-}
+TextureStorage9::~TextureStorage9() {}
 
 DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, bool renderTarget)
 {
@@ -58,7 +55,6 @@ DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, bool renderTarget)
 
     return d3dusage;
 }
-
 
 bool TextureStorage9::isRenderTarget() const
 {
@@ -111,21 +107,26 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchai
     : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET)
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
-    mTexture = surfaceTexture;
-    mMipLevels = surfaceTexture->GetLevelCount();
+    mTexture                          = surfaceTexture;
+    mMipLevels                        = surfaceTexture->GetLevelCount();
 
     mInternalFormat = swapchain->getRenderTargetInternalFormat();
 
     D3DSURFACE_DESC surfaceDesc;
     surfaceTexture->GetLevelDesc(0, &surfaceDesc);
-    mTextureWidth = surfaceDesc.Width;
+    mTextureWidth  = surfaceDesc.Width;
     mTextureHeight = surfaceDesc.Height;
     mTextureFormat = surfaceDesc.Format;
 
     mRenderTargets.resize(mMipLevels, nullptr);
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels)
+TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer,
+                                       GLenum internalformat,
+                                       bool renderTarget,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       int levels)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = nullptr;
@@ -133,12 +134,12 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalforma
     mInternalFormat = internalformat;
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(internalformat);
-    mTextureFormat = d3dFormatInfo.texFormat;
+    mTextureFormat                           = d3dFormatInfo.texFormat;
 
     d3d9::MakeValidSize(false, d3dFormatInfo.texFormat, &width, &height, &mTopLevel);
-    mTextureWidth = width;
+    mTextureWidth  = width;
     mTextureHeight = height;
-    mMipLevels = mTopLevel + levels;
+    mMipLevels     = mTopLevel + levels;
 
     mRenderTargets.resize(levels, nullptr);
 }
@@ -165,7 +166,7 @@ angle::Result TextureStorage9_2D::getSurfaceLevel(const gl::Context *context,
     IDirect3DBaseTexture9 *baseTexture = nullptr;
     ANGLE_TRY(getBaseTexture(context, &baseTexture));
 
-    IDirect3DTexture9 *texture = static_cast<IDirect3DTexture9*>(baseTexture);
+    IDirect3DTexture9 *texture = static_cast<IDirect3DTexture9 *>(baseTexture);
 
     HRESULT result = texture->GetSurfaceLevel(level + mTopLevel, outSurface);
     ANGLE_TRY_HR(GetImplAs<Context9>(context), result, "Failed to get the surface from a texture");
@@ -282,9 +283,7 @@ TextureStorage9_EGLImage::TextureStorage9_EGLImage(Renderer9 *renderer,
     mMipLevels      = mTopLevel + 1;
 }
 
-TextureStorage9_EGLImage::~TextureStorage9_EGLImage()
-{
-}
+TextureStorage9_EGLImage::~TextureStorage9_EGLImage() {}
 
 angle::Result TextureStorage9_EGLImage::getSurfaceLevel(const gl::Context *context,
                                                         gl::TextureTarget target,
@@ -321,7 +320,7 @@ angle::Result TextureStorage9_EGLImage::getBaseTexture(const gl::Context *contex
     ANGLE_TRY(mImage->getRenderTarget(context, &renderTargetD3D));
 
     RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTargetD3D);
-    *outTexture = renderTarget9->getTexture();
+    *outTexture                  = renderTarget9->getTexture();
     ASSERT(*outTexture != nullptr);
 
     return angle::Result::Continue();
@@ -367,7 +366,12 @@ angle::Result TextureStorage9_EGLImage::copyToStorage(const gl::Context *context
     return angle::Result::Continue();
 }
 
-TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly)
+TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer,
+                                           GLenum internalformat,
+                                           bool renderTarget,
+                                           int size,
+                                           int levels,
+                                           bool hintLevelZeroOnly)
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = nullptr;
@@ -379,13 +383,13 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer, GLenum internalf
     mInternalFormat = internalformat;
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(internalformat);
-    mTextureFormat = d3dFormatInfo.texFormat;
+    mTextureFormat                           = d3dFormatInfo.texFormat;
 
     int height = size;
     d3d9::MakeValidSize(false, d3dFormatInfo.texFormat, &size, &height, &mTopLevel);
-    mTextureWidth = size;
+    mTextureWidth  = size;
     mTextureHeight = size;
-    mMipLevels = mTopLevel + levels;
+    mMipLevels     = mTopLevel + levels;
 }
 
 TextureStorage9_Cube::~TextureStorage9_Cube()
@@ -409,7 +413,7 @@ angle::Result TextureStorage9_Cube::getSurfaceLevel(const gl::Context *context,
     IDirect3DBaseTexture9 *baseTexture = nullptr;
     ANGLE_TRY(getBaseTexture(context, &baseTexture));
 
-    IDirect3DCubeTexture9 *texture = static_cast<IDirect3DCubeTexture9*>(baseTexture);
+    IDirect3DCubeTexture9 *texture = static_cast<IDirect3DCubeTexture9 *>(baseTexture);
 
     D3DCUBEMAP_FACES face = gl_d3d9::ConvertCubeFace(target);
     HRESULT result        = texture->GetCubeMapSurface(face, level, outSurface);

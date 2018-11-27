@@ -34,7 +34,7 @@ namespace rx
 {
 class ContextImpl;
 class EGLImplFactory;
-}
+}  // namespace rx
 
 namespace egl
 {
@@ -42,7 +42,7 @@ class AttributeMap;
 class Surface;
 struct Config;
 class Thread;
-}
+}  // namespace egl
 
 namespace gl
 {

@@ -238,8 +238,7 @@ class WebGLCompatibilityTest : public ANGLETest
 };
 
 class WebGL2CompatibilityTest : public WebGLCompatibilityTest
-{
-};
+{};
 
 // Context creation would fail if EGL_ANGLE_create_context_webgl_compatibility was not available so
 // the GL extension should always be present
@@ -579,7 +578,9 @@ TEST_P(WebGLCompatibilityTest, EnableTextureStorage)
         EXPECT_GL_NO_ERROR();
 
         const GLenum alwaysAcceptableFormats[] = {
-            GL_ALPHA8_EXT, GL_LUMINANCE8_EXT, GL_LUMINANCE8_ALPHA8_EXT,
+            GL_ALPHA8_EXT,
+            GL_LUMINANCE8_EXT,
+            GL_LUMINANCE8_ALPHA8_EXT,
         };
         for (const auto &acceptableFormat : alwaysAcceptableFormats)
         {
@@ -849,7 +850,9 @@ TEST_P(WebGLCompatibilityTest, EnablePackUnpackSubImageExtension)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     constexpr GLenum parameters[] = {
-        GL_UNPACK_ROW_LENGTH_EXT, GL_UNPACK_SKIP_ROWS_EXT, GL_UNPACK_SKIP_PIXELS_EXT,
+        GL_UNPACK_ROW_LENGTH_EXT,
+        GL_UNPACK_SKIP_ROWS_EXT,
+        GL_UNPACK_SKIP_PIXELS_EXT,
     };
 
     for (GLenum param : parameters)
@@ -923,7 +926,9 @@ TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     constexpr GLenum parameters[] = {
-        GL_PACK_ROW_LENGTH, GL_PACK_SKIP_ROWS, GL_PACK_SKIP_PIXELS,
+        GL_PACK_ROW_LENGTH,
+        GL_PACK_SKIP_ROWS,
+        GL_PACK_SKIP_PIXELS,
     };
 
     for (GLenum param : parameters)
@@ -1242,7 +1247,7 @@ TEST_P(WebGLCompatibilityTest, ForbidsClientSideElementBuffer)
     // Use the pointer with value of 1 for indices instead of an actual pointer because WebGL also
     // enforces that the top bit of indices must be 0 (i.e. offset >= 0) and would generate
     // GL_INVALID_VALUE in that case. Using a null pointer gets caught by another check.
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, reinterpret_cast<const void*>(intptr_t(1)));
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, reinterpret_cast<const void *>(intptr_t(1)));
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
@@ -1436,7 +1441,7 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
 
     glEnableVertexAttribArray(posLocation);
 
-    const uint8_t* zeroOffset = nullptr;
+    const uint8_t *zeroOffset = nullptr;
 
     // Test touching the last element is valid.
     glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
@@ -1497,7 +1502,10 @@ TEST_P(WebGLCompatibilityTest, LargeIndexRange)
 
     constexpr GLuint kMaxIntAsGLuint = static_cast<GLuint>(std::numeric_limits<GLint>::max());
     constexpr GLuint kIndexData[]    = {
-        kMaxIntAsGLuint, kMaxIntAsGLuint + 1, kMaxIntAsGLuint + 2, kMaxIntAsGLuint + 3,
+        kMaxIntAsGLuint,
+        kMaxIntAsGLuint + 1,
+        kMaxIntAsGLuint + 2,
+        kMaxIntAsGLuint + 3,
     };
 
     GLBuffer indexBuffer;
@@ -1548,7 +1556,7 @@ TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
 
     ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Red());
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
-    GLint wLocation = glGetAttribLocation(program.get(), "a_w");
+    GLint wLocation   = glGetAttribLocation(program.get(), "a_w");
     ASSERT_NE(-1, posLocation);
     ASSERT_NE(-1, wLocation);
     glUseProgram(program.get());
@@ -1564,7 +1572,7 @@ TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
     glEnableVertexAttribArray(wLocation);
     glVertexAttribDivisor(wLocation, 1);
 
-    const uint8_t* zeroOffset = nullptr;
+    const uint8_t *zeroOffset = nullptr;
 
     // Test touching the last element is valid.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
@@ -1614,7 +1622,7 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsInstancedANGLE)
 
     ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Red());
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
-    GLint wLocation = glGetAttribLocation(program.get(), "a_w");
+    GLint wLocation   = glGetAttribLocation(program.get(), "a_w");
     ASSERT_NE(-1, posLocation);
     ASSERT_NE(-1, wLocation);
     glUseProgram(program.get());
@@ -1630,7 +1638,7 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsInstancedANGLE)
     glEnableVertexAttribArray(wLocation);
     glVertexAttribDivisorANGLE(wLocation, 1);
 
-    const uint8_t* zeroOffset = nullptr;
+    const uint8_t *zeroOffset = nullptr;
 
     // Test touching the last element is valid.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
@@ -1882,7 +1890,7 @@ TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
     for (char invalidChar : invalidSet)
     {
         std::string invalidAttribName = validAttribName + invalidChar;
-        const char *invalidVert[] = {
+        const char *invalidVert[]     = {
             "attribute float ",
             invalidAttribName.c_str(),
             ";\n",
@@ -3819,11 +3827,17 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     ASSERT_GL_NO_ERROR();
 
     GLenum allDrawBuffers[] = {
-        GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
     };
 
     GLenum halfDrawBuffers[] = {
-        GL_NONE, GL_NONE, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+        GL_NONE,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
     };
 
     // Test that when using gl_FragColor, only the first attachment is written to.
@@ -3947,7 +3961,10 @@ TEST_P(WebGLCompatibilityTest, GenerateMipmapUnsizedFloatingPointTexture)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     constexpr GLColor32F data[4] = {
-        kFloatRed, kFloatRed, kFloatGreen, kFloatBlue,
+        kFloatRed,
+        kFloatRed,
+        kFloatGreen,
+        kFloatBlue,
     };
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_FLOAT, data);
     ASSERT_GL_NO_ERROR();
@@ -3975,7 +3992,10 @@ TEST_P(WebGLCompatibilityTest, GenerateMipmapSizedFloatingPointTexture)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     constexpr GLColor32F data[4] = {
-        kFloatRed, kFloatRed, kFloatGreen, kFloatBlue,
+        kFloatRed,
+        kFloatRed,
+        kFloatGreen,
+        kFloatBlue,
     };
     glTexStorage2DEXT(GL_TEXTURE_2D, 2, GL_RGBA32F, 2, 2);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_FLOAT, data);
@@ -4305,4 +4325,4 @@ ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
                        ES3_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(WebGL2CompatibilityTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
-}  // namespace
+}  // namespace angle

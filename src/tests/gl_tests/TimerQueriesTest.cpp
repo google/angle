@@ -474,8 +474,7 @@ TEST_P(TimerQueriesTest, Timestamp)
 }
 
 class TimerQueriesTestES3 : public TimerQueriesTest
-{
-};
+{};
 
 // Tests getting timestamps via glGetInteger64v
 TEST_P(TimerQueriesTestES3, TimestampGetInteger64)

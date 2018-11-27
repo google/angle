@@ -22,7 +22,7 @@ class TextureCapsMap;
 struct Caps;
 struct TextureCaps;
 struct InternalFormat;
-}
+}  // namespace gl
 
 namespace rx
 {

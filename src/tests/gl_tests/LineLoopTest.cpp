@@ -58,7 +58,7 @@ class LineLoopTest : public ANGLETest
 
         static const GLfloat stripPositions[] = {-0.5f, -0.5f, -0.5f, 0.5f,
                                                  0.5f,  0.5f,  0.5f,  -0.5f};
-        static const GLubyte stripIndices[] = {1, 0, 3, 2, 1};
+        static const GLubyte stripIndices[]   = {1, 0, 3, 2, 1};
 
         glUseProgram(mProgram);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);

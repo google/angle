@@ -19,6 +19,6 @@ void GetOperatingSystemVersionNumbers(int32_t *major_version,
                                       int32_t *minor_version,
                                       int32_t *bugfix_version);
 
-} // namespace angle
+}  // namespace angle
 
-#endif // ANGLE_GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
+#endif  // ANGLE_GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_

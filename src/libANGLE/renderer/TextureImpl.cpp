@@ -10,17 +10,11 @@
 
 namespace rx
 {
-TextureImpl::TextureImpl(const gl::TextureState &state) : mState(state)
-{
-}
+TextureImpl::TextureImpl(const gl::TextureState &state) : mState(state) {}
 
-TextureImpl::~TextureImpl()
-{
-}
+TextureImpl::~TextureImpl() {}
 
-void TextureImpl::onDestroy(const gl::Context *context)
-{
-}
+void TextureImpl::onDestroy(const gl::Context *context) {}
 
 angle::Result TextureImpl::copyTexture(const gl::Context *context,
                                        const gl::ImageIndex &index,

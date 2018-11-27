@@ -66,7 +66,7 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)
             "angle-d3d11-fl93", "ANGLE D3D11 FL9_3 Display", d3d1193Attribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(d3d1193Factory);
     }
-#endif // (DE_OS == DE_OS_WIN32)
+#endif  // (DE_OS == DE_OS_WIN32)
 
 #if defined(ANGLE_USE_OZONE) || (DE_OS == DE_OS_ANDROID) || (DE_OS == DE_OS_WIN32)
     {
@@ -105,15 +105,14 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)
         m_nativeDisplayFactoryRegistry.registerFactory(nullFactory);
     }
 
-    m_contextFactoryRegistry.registerFactory(new eglu::GLContextFactory(m_nativeDisplayFactoryRegistry));
+    m_contextFactoryRegistry.registerFactory(
+        new eglu::GLContextFactory(m_nativeDisplayFactoryRegistry));
 
     // Add Null context type for use in generating case lists
     m_contextFactoryRegistry.registerFactory(new null::NullGLContextFactory());
 }
 
-ANGLEPlatform::~ANGLEPlatform()
-{
-}
+ANGLEPlatform::~ANGLEPlatform() {}
 
 bool ANGLEPlatform::processEvents()
 {

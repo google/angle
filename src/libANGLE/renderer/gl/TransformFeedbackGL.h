@@ -48,6 +48,6 @@ class TransformFeedbackGL : public TransformFeedbackImpl
     mutable bool mIsActive;
     mutable bool mIsPaused;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_TRANSFORMFEEDBACKGL_H_

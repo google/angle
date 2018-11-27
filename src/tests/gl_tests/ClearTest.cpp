@@ -92,8 +92,7 @@ class ClearTest : public ClearTestBase
 };
 
 class ClearTestES3 : public ClearTestBase
-{
-};
+{};
 
 class ClearTestRGB : public ANGLETest
 {
@@ -109,8 +108,7 @@ class ClearTestRGB : public ANGLETest
 };
 
 class ScissoredClearTest : public ClearTest
-{
-};
+{};
 
 class VulkanClearTest : public ClearTest
 {

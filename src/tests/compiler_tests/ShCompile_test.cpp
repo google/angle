@@ -144,7 +144,7 @@ TEST_F(ShCompileTest, DecimalSepLocale)
         {
             gl_FragColor = vec4(1.9);
         })";
-    const char *parts[] = {kSource};
+    const char *parts[]  = {kSource};
     testCompile(parts, 1, true);
 
     const auto &translated = sh::GetObjectCode(mCompiler);

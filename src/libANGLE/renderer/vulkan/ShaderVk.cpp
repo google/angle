@@ -17,13 +17,9 @@
 namespace rx
 {
 
-ShaderVk::ShaderVk(const gl::ShaderState &data) : ShaderImpl(data)
-{
-}
+ShaderVk::ShaderVk(const gl::ShaderState &data) : ShaderImpl(data) {}
 
-ShaderVk::~ShaderVk()
-{
-}
+ShaderVk::~ShaderVk() {}
 
 ShCompileOptions ShaderVk::prepareSourceAndReturnOptions(const gl::Context *context,
                                                          std::stringstream *sourceStream,

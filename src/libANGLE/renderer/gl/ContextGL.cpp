@@ -34,12 +34,9 @@ namespace rx
 
 ContextGL::ContextGL(const gl::ContextState &state, const std::shared_ptr<RendererGL> &renderer)
     : ContextImpl(state), mRenderer(renderer)
-{
-}
+{}
 
-ContextGL::~ContextGL()
-{
-}
+ContextGL::~ContextGL() {}
 
 angle::Result ContextGL::initialize()
 {

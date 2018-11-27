@@ -26,8 +26,8 @@ class BufferDataTest : public ANGLETest
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
 
-        mBuffer = 0;
-        mProgram = 0;
+        mBuffer         = 0;
+        mProgram        = 0;
         mAttribLocation = -1;
     }
 
@@ -119,7 +119,7 @@ TEST_P(BufferDataTest, ZeroNonNULLData)
     glBufferSubData(GL_ARRAY_BUFFER, 0, 0, zeroData);
     EXPECT_GL_NO_ERROR();
 
-    delete [] zeroData;
+    delete[] zeroData;
 }
 
 TEST_P(BufferDataTest, NULLResolvedData)
@@ -300,8 +300,8 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
     // TODO(geofflang): Figure out why this fails on AMD OpenGL (http://anglebug.com/1291)
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
-    unsigned char vertexData[] = { 255, 0, 0, 0, 0, 0 };
-    unsigned int indexData[] = { 0, 1 };
+    unsigned char vertexData[] = {255, 0, 0, 0, 0, 0};
+    unsigned int indexData[]   = {0, 1};
 
     glBindBuffer(GL_ARRAY_BUFFER, mBuffers[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(char) * 6, vertexData, GL_STATIC_DRAW);
@@ -336,7 +336,7 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
 
-    unsigned char newData[] = { 0, 255, 0 };
+    unsigned char newData[] = {0, 255, 0};
     glBufferSubData(GL_ARRAY_BUFFER, 3, 3, newData);
 
     glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
@@ -346,8 +346,7 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
 }
 
 class BufferDataTestES3 : public BufferDataTest
-{
-};
+{};
 
 // The following test covers an ANGLE bug where the buffer storage
 // is not resized by Buffer11::getLatestBufferStorage when needed.
@@ -358,13 +357,13 @@ TEST_P(BufferDataTestES3, BufferResizing)
     ASSERT_GL_NO_ERROR();
 
     // Allocate a buffer with one byte
-    uint8_t singleByte[] = { 0xaa };
+    uint8_t singleByte[] = {0xaa};
     glBufferData(GL_ARRAY_BUFFER, 1, singleByte, GL_STATIC_DRAW);
 
     // Resize the buffer
     // To trigger the bug, the buffer need to be big enough because some hardware copy buffers
     // by chunks of pages instead of the minimum number of bytes neeeded.
-    const size_t numBytes = 4096*4;
+    const size_t numBytes = 4096 * 4;
     glBufferData(GL_ARRAY_BUFFER, numBytes, nullptr, GL_STATIC_DRAW);
 
     // Copy the original data to the buffer
@@ -374,7 +373,8 @@ TEST_P(BufferDataTestES3, BufferResizing)
         srcBytes[i] = static_cast<uint8_t>(i);
     }
 
-    void *dest = glMapBufferRange(GL_ARRAY_BUFFER, 0, numBytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+    void *dest = glMapBufferRange(GL_ARRAY_BUFFER, 0, numBytes,
+                                  GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 
     ASSERT_GL_NO_ERROR();
 
@@ -398,7 +398,8 @@ TEST_P(BufferDataTestES3, BufferResizing)
     ASSERT_GL_NO_ERROR();
 
     // Read back the data and compare it to the original
-    uint8_t *data = reinterpret_cast<uint8_t*>(glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, numBytes, GL_MAP_READ_BIT));
+    uint8_t *data = reinterpret_cast<uint8_t *>(
+        glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, numBytes, GL_MAP_READ_BIT));
 
     ASSERT_GL_NO_ERROR();
 
@@ -478,7 +479,8 @@ TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
     ASSERT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(BufferDataTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -497,16 +499,14 @@ ANGLE_INSTANTIATE_TEST(IndexedBufferCopyTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPE
 class BufferDataOverflowTest : public ANGLETest
 {
   protected:
-    BufferDataOverflowTest()
-    {
-    }
+    BufferDataOverflowTest() {}
 };
 
 // See description above.
 TEST_P(BufferDataOverflowTest, VertexBufferIntegerOverflow)
 {
     // These values are special, to trigger the rounding bug.
-    unsigned int numItems = 0x7FFFFFE;
+    unsigned int numItems       = 0x7FFFFFE;
     constexpr GLsizei bufferCnt = 8;
 
     std::vector<GLBuffer> buffers(bufferCnt);

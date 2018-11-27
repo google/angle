@@ -32,16 +32,14 @@ class ConstantFinder : public TIntermTraverser
           mConstantVector(constantVector),
           mFaultTolerance(T()),
           mFound(false)
-    {
-    }
+    {}
 
     ConstantFinder(const std::vector<T> &constantVector, const T &faultTolerance)
         : TIntermTraverser(true, false, false),
           mConstantVector(constantVector),
           mFaultTolerance(faultTolerance),
           mFound(false)
-    {
-    }
+    {}
 
     ConstantFinder(const T &value)
         : TIntermTraverser(true, false, false), mFaultTolerance(T()), mFound(false)

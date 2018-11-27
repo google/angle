@@ -231,11 +231,17 @@ class Texture2DTest : public TexCoordDrawTest
         // clang-format on
 
         GLenum imageFormats[] = {
-            GL_R32F, GL_RG32F, GL_RGB32F, GL_RGBA32F,
+            GL_R32F,
+            GL_RG32F,
+            GL_RGB32F,
+            GL_RGBA32F,
         };
 
         GLenum sourceUnsizedFormats[] = {
-            GL_RED, GL_RG, GL_RGB, GL_RGBA,
+            GL_RED,
+            GL_RG,
+            GL_RGB,
+            GL_RGBA,
         };
 
         GLuint textures[2];
@@ -515,8 +521,7 @@ class TextureCubeTest : public TexCoordDrawTest
           mTextureCube(0),
           mTexture2DUniformLocation(-1),
           mTextureCubeUniformLocation(-1)
-    {
-    }
+    {}
 
     std::string getFragmentShaderSource() override
     {
@@ -583,8 +588,7 @@ class SamplerArrayTest : public TexCoordDrawTest
           mTexture2DB(0),
           mTexture0UniformLocation(-1),
           mTexture1UniformLocation(-1)
-    {
-    }
+    {}
 
     std::string getFragmentShaderSource() override
     {
@@ -743,8 +747,7 @@ class TextureSizeTextureArrayTest : public TexCoordDrawTest
           mTexture2DB(0),
           mTexture0Location(-1),
           mTexture1Location(-1)
-    {
-    }
+    {}
 
     std::string getVertexShaderSource() override
     {
@@ -859,8 +862,7 @@ class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
           mTextureShadowUniformLocation(-1),
           mTexture3DUniformLocation(-1),
           mDepthRefUniformLocation(-1)
-    {
-    }
+    {}
 
     std::string getVertexShaderSource() override
     {
@@ -940,8 +942,7 @@ class SamplerTypeMixTestES3 : public TexCoordDrawTest
           mTexture2DShadowUniformLocation(-1),
           mTextureCubeShadowUniformLocation(-1),
           mDepthRefUniformLocation(-1)
-    {
-    }
+    {}
 
     std::string getVertexShaderSource() override
     {

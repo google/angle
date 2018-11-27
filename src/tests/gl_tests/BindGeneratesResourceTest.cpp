@@ -121,4 +121,4 @@ ANGLE_INSTANTIATE_TEST(BindGeneratesResourceTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 
-}  // namespace
+}  // namespace angle

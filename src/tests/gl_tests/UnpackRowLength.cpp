@@ -60,7 +60,8 @@ class UnpackRowLengthTest : public ANGLETest
         if ((getClientMajorVersion() == 3) || extensionEnabled("GL_EXT_unpack_subimage"))
         {
             // Only texSize * texSize region is filled as WHITE, other parts are BLACK.
-            // If the UNPACK_ROW_LENGTH is implemented correctly, all texels inside this texture are WHITE.
+            // If the UNPACK_ROW_LENGTH is implemented correctly, all texels inside this texture are
+            // WHITE.
             std::vector<GLubyte> buf(rowLength * texSize * 4);
             for (int y = 0; y < texSize; y++)
             {
@@ -73,7 +74,8 @@ class UnpackRowLengthTest : public ANGLETest
             glGenTextures(1, &tex);
             glBindTexture(GL_TEXTURE_2D, tex);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSize, texSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSize, texSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         &buf[0]);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -104,7 +106,8 @@ TEST_P(UnpackRowLengthTest, RowLength1024)
     testRowLength(128, 1024);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(UnpackRowLengthTest,
                        ES3_D3D11(),
                        ES2_D3D11(),
@@ -115,4 +118,4 @@ ANGLE_INSTANTIATE_TEST(UnpackRowLengthTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 
-} // namespace
+}  // namespace

@@ -54,14 +54,14 @@ class VertexBuffer : angle::NonCopyable
                                                 unsigned int offset,
                                                 const uint8_t *sourceData) = 0;
 
-    virtual unsigned int getBufferSize() const = 0;
+    virtual unsigned int getBufferSize() const                                         = 0;
     virtual angle::Result setBufferSize(const gl::Context *context, unsigned int size) = 0;
     virtual angle::Result discard(const gl::Context *context)                          = 0;
 
     unsigned int getSerial() const;
 
     // This may be overridden (e.g. by VertexBuffer11) if necessary.
-    virtual void hintUnmapResource() { };
+    virtual void hintUnmapResource(){};
 
     // Reference counting.
     void addRef();
@@ -184,4 +184,4 @@ class StaticVertexBufferInterface : public VertexBufferInterface
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_
+#endif  // LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_

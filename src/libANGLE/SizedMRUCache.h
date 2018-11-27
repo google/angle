@@ -21,8 +21,7 @@ class SizedMRUCache final : angle::NonCopyable
         : mMaximumTotalSize(maximumTotalSize),
           mCurrentSize(0),
           mStore(SizedMRUCacheStore::NO_AUTO_EVICT)
-    {
-    }
+    {}
 
     // Returns nullptr on failure.
     const Value *put(const Key &key, Value &&value, size_t size)

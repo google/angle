@@ -21,7 +21,7 @@ class ContextState;
 struct IndexRange;
 class Path;
 struct Workarounds;
-}
+}  // namespace gl
 
 namespace egl
 {

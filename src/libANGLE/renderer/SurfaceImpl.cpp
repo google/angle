@@ -11,13 +11,9 @@
 namespace rx
 {
 
-SurfaceImpl::SurfaceImpl(const egl::SurfaceState &state) : mState(state)
-{
-}
+SurfaceImpl::SurfaceImpl(const egl::SurfaceState &state) : mState(state) {}
 
-SurfaceImpl::~SurfaceImpl()
-{
-}
+SurfaceImpl::~SurfaceImpl() {}
 
 egl::Error SurfaceImpl::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {

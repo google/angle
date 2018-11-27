@@ -7,10 +7,11 @@
 //   Performance tests for ANGLE instanced draw calls.
 //
 
+#include "ANGLEPerfTest.h"
+
 #include <cmath>
 #include <sstream>
 
-#include "ANGLEPerfTest.h"
 #include "Matrix.h"
 #include "random_utils.h"
 #include "shader_utils.h"
@@ -102,8 +103,7 @@ class InstancingPerfBenchmark : public ANGLERenderTest,
 
 InstancingPerfBenchmark::InstancingPerfBenchmark()
     : ANGLERenderTest("InstancingPerf", GetParam()), mProgram(0), mNumPoints(75000)
-{
-}
+{}
 
 void InstancingPerfBenchmark::initializeBenchmark()
 {

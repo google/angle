@@ -127,4 +127,4 @@ TEST(BlobCacheTest, OversizeValue)
     EXPECT_FALSE(blobCache.get(nullptr, MakeKey(5), &qvalue));
 }
 
-}  // namespace angle
+}  // namespace egl

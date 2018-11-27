@@ -63,6 +63,6 @@ class WindowSurfaceWGL : public SurfaceWGL
     EGLint mSwapBehavior;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_
+#endif  // LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_

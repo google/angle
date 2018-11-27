@@ -14,13 +14,9 @@
 namespace rx
 {
 
-CompilerNULL::CompilerNULL() : CompilerImpl()
-{
-}
+CompilerNULL::CompilerNULL() : CompilerImpl() {}
 
-CompilerNULL::~CompilerNULL()
-{
-}
+CompilerNULL::~CompilerNULL() {}
 
 ShShaderOutput CompilerNULL::getTranslatorOutputType() const
 {

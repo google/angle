@@ -14,13 +14,9 @@
 namespace rx
 {
 
-FenceNVNULL::FenceNVNULL() : FenceNVImpl()
-{
-}
+FenceNVNULL::FenceNVNULL() : FenceNVImpl() {}
 
-FenceNVNULL::~FenceNVNULL()
-{
-}
+FenceNVNULL::~FenceNVNULL() {}
 
 angle::Result FenceNVNULL::set(const gl::Context *context, GLenum condition)
 {

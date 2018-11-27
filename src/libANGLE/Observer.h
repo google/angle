@@ -56,8 +56,7 @@ class ObserverBindingBase
   public:
     ObserverBindingBase(ObserverInterface *observer, SubjectIndex subjectIndex)
         : mObserver(observer), mIndex(subjectIndex)
-    {
-    }
+    {}
     virtual ~ObserverBindingBase() {}
 
     ObserverInterface *getObserver() const { return mObserver; }
@@ -94,7 +93,6 @@ class Subject : NonCopyable
     }
 
   private:
-
     // Keep a short list of observers so we can allocate/free them quickly. But since we support
     // unlimited bindings, have a spill-over list of that uses dynamic allocation.
     static constexpr size_t kMaxFixedObservers = 8;

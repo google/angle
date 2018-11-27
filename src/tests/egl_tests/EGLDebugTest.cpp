@@ -19,10 +19,7 @@ namespace angle
 class EGLDebugTest : public ANGLETest
 {
   protected:
-    void TearDown() override
-    {
-        eglDebugMessageControlKHR(nullptr, nullptr);
-    }
+    void TearDown() override { eglDebugMessageControlKHR(nullptr, nullptr); }
 
     bool hasExtension() const { return eglClientExtensionEnabled("EGL_KHR_debug"); }
 
@@ -32,8 +29,7 @@ class EGLDebugTest : public ANGLETest
                                          EGLLabelKHR threadLabel,
                                          EGLLabelKHR objectLabel,
                                          const char *message)
-    {
-    }
+    {}
 
     static void EGLAPIENTRY CheckBadBindAPIError(EGLenum error,
                                                  const char *command,
@@ -92,9 +88,15 @@ TEST_P(EGLDebugTest, SetMessageControl)
     ANGLE_SKIP_TEST_IF(!hasExtension());
 
     EGLAttrib controls[] = {
-        EGL_DEBUG_MSG_CRITICAL_KHR, EGL_FALSE,
+        EGL_DEBUG_MSG_CRITICAL_KHR,
+        EGL_FALSE,
         // EGL_DEBUG_MSG_ERROR_KHR left unset
-        EGL_DEBUG_MSG_WARN_KHR, EGL_TRUE, EGL_DEBUG_MSG_INFO_KHR, EGL_FALSE, EGL_NONE, EGL_NONE,
+        EGL_DEBUG_MSG_WARN_KHR,
+        EGL_TRUE,
+        EGL_DEBUG_MSG_INFO_KHR,
+        EGL_FALSE,
+        EGL_NONE,
+        EGL_NONE,
     };
 
     EXPECT_EQ(static_cast<EGLint>(EGL_SUCCESS), eglDebugMessageControlKHR(&StubCallback, controls));

@@ -136,12 +136,9 @@ bool IsOffsetAligned(GLenum elementType, unsigned int offset)
 // IndexDataManager implementation.
 IndexDataManager::IndexDataManager(BufferFactoryD3D *factory)
     : mFactory(factory), mStreamingBufferShort(), mStreamingBufferInt()
-{
-}
+{}
 
-IndexDataManager::~IndexDataManager()
-{
-}
+IndexDataManager::~IndexDataManager() {}
 
 void IndexDataManager::deinitialize()
 {

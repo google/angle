@@ -23,7 +23,8 @@ constexpr uint32_t kCountY                 = 8;
 constexpr uint32_t kQuadCount              = kCountX * kCountY;
 constexpr uint32_t kTriCount               = kQuadCount * 2;
 constexpr std::array<GLfloat, 2> kTileSize = {
-    1.f / static_cast<GLfloat>(kCountX), 1.f / static_cast<GLfloat>(kCountY),
+    1.f / static_cast<GLfloat>(kCountX),
+    1.f / static_cast<GLfloat>(kCountY),
 };
 constexpr std::array<uint32_t, 2> kTilePixelSize  = {kWidth / kCountX, kHeight / kCountY};
 constexpr std::array<GLfloat, 2> kQuadRadius      = {0.25f * kTileSize[0], 0.25f * kTileSize[1]};
@@ -119,8 +120,8 @@ attribute vec2 vPosition;
 varying vec4 color;
 void main()
 {
-    int id = )"
-               << (IsDrawIDTest() ? "gl_DrawID" : "0") << ";"
+    int id = )" << (IsDrawIDTest() ? "gl_DrawID" : "0")
+               << ";"
                << R"(
     float quad_id = float(id / 2);
     float color_id = quad_id - (3.0 * floor(quad_id / 3.0));
@@ -133,7 +134,8 @@ void main()
     }
 
     mat3 transform = mat3(1.0);
-)" << (IsInstancedTest() ? R"(
+)"
+               << (IsInstancedTest() ? R"(
     transform[0][0] = 0.5;
     transform[1][1] = 0.5;
     if (vInstance == 0.0) {
@@ -146,7 +148,8 @@ void main()
         transform[2][0] = 0.5;
         transform[2][1] = 0.5;
     }
-)" : "")
+)"
+                                     : "")
                << R"(
     gl_Position = vec4(transform * vec3(vPosition, 1.0) * 2.0 - 1.0, 1);
 })";
@@ -502,7 +505,10 @@ const angle::PlatformParameters platforms[] = {
 };
 
 const angle::PlatformParameters es2_platforms[] = {
-    ES2_D3D9(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN(),
+    ES2_D3D9(),
+    ES2_OPENGL(),
+    ES2_OPENGLES(),
+    ES2_VULKAN(),
 };
 
 INSTANTIATE_TEST_CASE_P(

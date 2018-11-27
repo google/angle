@@ -73,7 +73,7 @@ bool IsRenderTargetUsage(GLenum usage)
 {
     return (usage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 }
-}
+}  // namespace
 
 TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
     : TextureImpl(state),
@@ -82,8 +82,7 @@ TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
       mImmutable(false),
       mTexStorage(nullptr),
       mBaseLevel(0)
-{
-}
+{}
 
 TextureD3D::~TextureD3D()
 {
@@ -792,9 +791,7 @@ void TextureD3D_2D::onDestroy(const gl::Context *context)
     return TextureD3D::onDestroy(context);
 }
 
-TextureD3D_2D::~TextureD3D_2D()
-{
-}
+TextureD3D_2D::~TextureD3D_2D() {}
 
 ImageD3D *TextureD3D_2D::getImage(int level, int layer) const
 {
@@ -1593,9 +1590,7 @@ void TextureD3D_Cube::onDestroy(const gl::Context *context)
     return TextureD3D::onDestroy(context);
 }
 
-TextureD3D_Cube::~TextureD3D_Cube()
-{
-}
+TextureD3D_Cube::~TextureD3D_Cube() {}
 
 ImageD3D *TextureD3D_Cube::getImage(int level, int layer) const
 {
@@ -2306,9 +2301,7 @@ void TextureD3D_3D::onDestroy(const gl::Context *context)
     return TextureD3D::onDestroy(context);
 }
 
-TextureD3D_3D::~TextureD3D_3D()
-{
-}
+TextureD3D_3D::~TextureD3D_3D() {}
 
 ImageD3D *TextureD3D_3D::getImage(int level, int layer) const
 {
@@ -2979,9 +2972,7 @@ void TextureD3D_2DArray::onDestroy(const gl::Context *context)
     return TextureD3D::onDestroy(context);
 }
 
-TextureD3D_2DArray::~TextureD3D_2DArray()
-{
-}
+TextureD3D_2DArray::~TextureD3D_2DArray() {}
 
 ImageD3D *TextureD3D_2DArray::getImage(int level, int layer) const
 {
@@ -3752,12 +3743,9 @@ void TextureD3D_2DArray::markAllImagesDirty()
 TextureD3DImmutableBase::TextureD3DImmutableBase(const gl::TextureState &state,
                                                  RendererD3D *renderer)
     : TextureD3D(state, renderer)
-{
-}
+{}
 
-TextureD3DImmutableBase::~TextureD3DImmutableBase()
-{
-}
+TextureD3DImmutableBase::~TextureD3DImmutableBase() {}
 
 ImageD3D *TextureD3DImmutableBase::getImage(const gl::ImageIndex &index) const
 {
@@ -3849,12 +3837,9 @@ angle::Result TextureD3DImmutableBase::releaseTexImage(const gl::Context *contex
 
 TextureD3D_External::TextureD3D_External(const gl::TextureState &state, RendererD3D *renderer)
     : TextureD3DImmutableBase(state, renderer)
-{
-}
+{}
 
-TextureD3D_External::~TextureD3D_External()
-{
-}
+TextureD3D_External::~TextureD3D_External() {}
 
 GLsizei TextureD3D_External::getLayerCount(int level) const
 {
@@ -3968,12 +3953,9 @@ void TextureD3D_External::markAllImagesDirty()
 TextureD3D_2DMultisample::TextureD3D_2DMultisample(const gl::TextureState &state,
                                                    RendererD3D *renderer)
     : TextureD3DImmutableBase(state, renderer)
-{
-}
+{}
 
-TextureD3D_2DMultisample::~TextureD3D_2DMultisample()
-{
-}
+TextureD3D_2DMultisample::~TextureD3D_2DMultisample() {}
 
 angle::Result TextureD3D_2DMultisample::setStorageMultisample(const gl::Context *context,
                                                               gl::TextureType type,
@@ -4040,9 +4022,7 @@ GLsizei TextureD3D_2DMultisample::getLayerCount(int level) const
     return 1;
 }
 
-void TextureD3D_2DMultisample::markAllImagesDirty()
-{
-}
+void TextureD3D_2DMultisample::markAllImagesDirty() {}
 
 angle::Result TextureD3D_2DMultisample::initializeStorage(const gl::Context *context,
                                                           bool renderTarget)
@@ -4089,12 +4069,9 @@ bool TextureD3D_2DMultisample::isImageComplete(const gl::ImageIndex &index) cons
 TextureD3D_2DMultisampleArray::TextureD3D_2DMultisampleArray(const gl::TextureState &state,
                                                              RendererD3D *renderer)
     : TextureD3DImmutableBase(state, renderer)
-{
-}
+{}
 
-TextureD3D_2DMultisampleArray::~TextureD3D_2DMultisampleArray()
-{
-}
+TextureD3D_2DMultisampleArray::~TextureD3D_2DMultisampleArray() {}
 
 angle::Result TextureD3D_2DMultisampleArray::setStorageMultisample(const gl::Context *context,
                                                                    gl::TextureType type,
@@ -4159,9 +4136,7 @@ GLsizei TextureD3D_2DMultisampleArray::getLayerCount(int level) const
     return mLayerCount;
 }
 
-void TextureD3D_2DMultisampleArray::markAllImagesDirty()
-{
-}
+void TextureD3D_2DMultisampleArray::markAllImagesDirty() {}
 
 angle::Result TextureD3D_2DMultisampleArray::initializeStorage(const gl::Context *context,
                                                                bool renderTarget)

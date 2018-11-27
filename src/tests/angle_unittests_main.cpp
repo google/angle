@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
+#include "gtest/gtest.h"
 
 class CompilerTestEnvironment : public testing::Environment
 {
@@ -27,7 +27,7 @@ class CompilerTestEnvironment : public testing::Environment
     }
 };
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
     testing::AddGlobalTestEnvironment(new CompilerTestEnvironment());

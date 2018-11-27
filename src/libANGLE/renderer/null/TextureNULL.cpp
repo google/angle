@@ -14,13 +14,9 @@
 namespace rx
 {
 
-TextureNULL::TextureNULL(const gl::TextureState &state) : TextureImpl(state)
-{
-}
+TextureNULL::TextureNULL(const gl::TextureState &state) : TextureImpl(state) {}
 
-TextureNULL::~TextureNULL()
-{
-}
+TextureNULL::~TextureNULL() {}
 
 angle::Result TextureNULL::setImage(const gl::Context *context,
                                     const gl::ImageIndex &index,

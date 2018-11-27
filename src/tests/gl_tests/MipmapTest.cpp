@@ -136,8 +136,10 @@ class MipmapTest : public BaseMipmapTest
 
         setUpCubeProgram();
 
-        mLevelZeroBlueInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 0, 0, 255); // Blue
-        mLevelZeroWhiteInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 255, 255, 255); // White
+        mLevelZeroBlueInitData =
+            createRGBInitData(getWindowWidth(), getWindowHeight(), 0, 0, 255);  // Blue
+        mLevelZeroWhiteInitData =
+            createRGBInitData(getWindowWidth(), getWindowHeight(), 255, 255, 255);  // White
         mLevelOneGreenInitData =
             createRGBInitData((getWindowWidth() / 2), (getWindowHeight() / 2), 0, 255, 0);  // Green
         mLevelTwoRedInitData =
@@ -189,7 +191,7 @@ class MipmapTest : public BaseMipmapTest
     {
         GLubyte *data = new GLubyte[3 * width * height];
 
-        for (int i = 0; i < width * height; i+=1)
+        for (int i = 0; i < width * height; i += 1)
         {
             data[3 * i + 0] = static_cast<GLubyte>(r);
             data[3 * i + 1] = static_cast<GLubyte>(g);
@@ -219,8 +221,8 @@ class MipmapTest : public BaseMipmapTest
     GLuint mTexture2D;
     GLuint mTextureCube;
 
-    GLubyte* mLevelZeroBlueInitData;
-    GLubyte* mLevelZeroWhiteInitData;
+    GLubyte *mLevelZeroBlueInitData;
+    GLubyte *mLevelZeroWhiteInitData;
     GLubyte *mLevelOneGreenInitData;
     GLubyte *mLevelTwoRedInitData;
 
@@ -410,14 +412,16 @@ class MipmapTestES3 : public BaseMipmapTest
     GLuint mCubeProgram;
 };
 
-// This test uses init data for the first three levels of the texture. It passes the level 0 data in, then renders, then level 1, then renders, etc.
-// This ensures that renderers using the zero LOD workaround (e.g. D3D11 FL9_3) correctly pass init data to the mipmapped texture,
-// even if the the zero-LOD texture is currently in use.
+// This test uses init data for the first three levels of the texture. It passes the level 0 data
+// in, then renders, then level 1, then renders, etc. This ensures that renderers using the zero LOD
+// workaround (e.g. D3D11 FL9_3) correctly pass init data to the mipmapped texture, even if the the
+// zero-LOD texture is currently in use.
 TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
 {
     // Pass in level zero init data.
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
     ASSERT_GL_NO_ERROR();
 
     // Disable mips.
@@ -442,7 +446,7 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
         glTexImage2D(GL_TEXTURE_2D, n, GL_RGB, getWindowWidth() / (1U << n),
                      getWindowWidth() / (1U << n), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
         ASSERT_GL_NO_ERROR();
-        n+=1;
+        n += 1;
     }
 
     // Pass in level one init data.
@@ -454,7 +458,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::blue);
 
-    // Draw a half-sized quad, and check it's blue. We've not enabled mipmaps yet, so our init data for level one shouldn't be used.
+    // Draw a half-sized quad, and check it's blue. We've not enabled mipmaps yet, so our init data
+    // for level one shouldn't be used.
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
 
@@ -465,7 +470,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
 
-    // Draw a quarter-sized quad, and check it's black, since we've not passed any init data for level two.
+    // Draw a quarter-sized quad, and check it's black, since we've not passed any init data for
+    // level two.
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::black);
 
@@ -486,7 +492,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
 
-    // Now disable mipmaps again, and render multiple sized quads. They should all be blue, since level 0 is blue.
+    // Now disable mipmaps again, and render multiple sized quads. They should all be blue, since
+    // level 0 is blue.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::blue);
@@ -495,8 +502,10 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::blue);
 
-    // Now reset level 0 to white, keeping mipmaps disabled. Then, render various sized quads. They should be white.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroWhiteInitData);
+    // Now reset level 0 to white, keeping mipmaps disabled. Then, render various sized quads. They
+    // should be white.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, mLevelZeroWhiteInitData);
     ASSERT_GL_NO_ERROR();
 
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
@@ -517,16 +526,18 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
 }
 
-// This test generates (and uses) mipmaps on a texture using init data. D3D11 will use a non-renderable TextureStorage for this.
-// The test then disables mips, renders to level zero of the texture, and reenables mips before using the texture again.
-// To do this, D3D11 has to convert the TextureStorage into a renderable one.
-// This test ensures that the conversion works correctly.
-// In particular, on D3D11 Feature Level 9_3 it ensures that both the zero LOD workaround texture AND the 'normal' texture are copied during conversion.
+// This test generates (and uses) mipmaps on a texture using init data. D3D11 will use a
+// non-renderable TextureStorage for this. The test then disables mips, renders to level zero of the
+// texture, and reenables mips before using the texture again. To do this, D3D11 has to convert the
+// TextureStorage into a renderable one. This test ensures that the conversion works correctly. In
+// particular, on D3D11 Feature Level 9_3 it ensures that both the zero LOD workaround texture AND
+// the 'normal' texture are copied during conversion.
 TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 {
     // Pass in initial data so the texture is blue.
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
 
     // Then generate the mips.
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -574,8 +585,9 @@ TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 }
 
 // This test ensures that mips are correctly generated from a rendered image.
-// In particular, on D3D11 Feature Level 9_3, the clear call will be performed on the zero-level texture, rather than the mipped one.
-// The test ensures that the zero-level texture is correctly copied into the mipped texture before the mipmaps are generated.
+// In particular, on D3D11 Feature Level 9_3, the clear call will be performed on the zero-level
+// texture, rather than the mipped one. The test ensures that the zero-level texture is correctly
+// copied into the mipped texture before the mipmaps are generated.
 TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -602,7 +614,8 @@ TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::blue);
 }
 
-// Test to ensure that rendering to a mipmapped texture works, regardless of whether mipmaps are enabled or not.
+// Test to ensure that rendering to a mipmapped texture works, regardless of whether mipmaps are
+// enabled or not.
 // TODO: This test hits a texture rebind bug in the D3D11 renderer. Fix this.
 TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 {
@@ -614,8 +627,8 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     // Clear the texture to blue.
     clearTextureLevel0(GL_TEXTURE_2D, mTexture2D, 0.0f, 0.0f, 1.0f, 1.0f);
 
-    // Now, draw the texture to a quad that's the same size as the texture. This draws to the default framebuffer.
-    // The quad should be blue.
+    // Now, draw the texture to a quad that's the same size as the texture. This draws to the
+    // default framebuffer. The quad should be blue.
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::blue);
 
@@ -636,18 +649,22 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::blue);
 
-    // Now render the textured quad to an area smaller than the texture (i.e. to force minification). This should be blue.
+    // Now render the textured quad to an area smaller than the texture (i.e. to force
+    // minification). This should be blue.
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::blue);
 
-    // Now clear the texture to green. This just clears the top level. The lower mips should remain blue.
+    // Now clear the texture to green. This just clears the top level. The lower mips should remain
+    // blue.
     clearTextureLevel0(GL_TEXTURE_2D, mTexture2D, 0.0f, 1.0f, 0.0f, 1.0f);
 
-    // Render a textured quad equal in size to the texture. This should be green, since we just cleared level 0.
+    // Render a textured quad equal in size to the texture. This should be green, since we just
+    // cleared level 0.
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::green);
 
-    // Render a small textured quad. This forces minification, so should render blue (the color of levels 1+).
+    // Render a small textured quad. This forces minification, so should render blue (the color of
+    // levels 1+).
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::blue);
 
@@ -655,11 +672,13 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ASSERT_GL_NO_ERROR();
 
-    // Render a textured quad equal in size to the texture. This should be green, the color of level 0 in the texture.
+    // Render a textured quad equal in size to the texture. This should be green, the color of level
+    // 0 in the texture.
     clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::green);
 
-    // Render a small textured quad. This would force minification if mips were enabled, but they're not. Therefore, this should be green.
+    // Render a small textured quad. This would force minification if mips were enabled, but they're
+    // not. Therefore, this should be green.
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::green);
 }
@@ -746,7 +765,10 @@ TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
                        !extensionEnabled("GL_ANGLE_texture_usage"));
 
     const GLColor mip0Color[4] = {
-        GLColor::red, GLColor::green, GLColor::red, GLColor::green,
+        GLColor::red,
+        GLColor::green,
+        GLColor::red,
+        GLColor::green,
     };
     const GLColor mip1Color = GLColor(127, 127, 0, 255);
 
@@ -764,7 +786,8 @@ TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
 }
 
 // This test ensures that the level-zero workaround for TextureCubes (on D3D11 Feature Level 9_3)
-// works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to level zero.
+// works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to
+// level zero.
 TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 {
     // This test seems to fail only on Android Vulkan.
@@ -783,7 +806,8 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
     clearAndDrawQuad(mCubeProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 
-    // Draw using a smaller viewport (to force a lower LOD of the texture). This should still be blue.
+    // Draw using a smaller viewport (to force a lower LOD of the texture). This should still be
+    // blue.
     clearAndDrawQuad(mCubeProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 
@@ -794,8 +818,8 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
     clearAndDrawQuad(mCubeProgram, getWindowWidth(), getWindowHeight());
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
-    // Draw using a quarter-size viewport, to force a lower LOD. This should be *BLUE*, since we only cleared level zero
-    // of the negative-Y face to red, and left its mipmaps blue.
+    // Draw using a quarter-size viewport, to force a lower LOD. This should be *BLUE*, since we
+    // only cleared level zero of the negative-Y face to red, and left its mipmaps blue.
     clearAndDrawQuad(mCubeProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 
@@ -1220,8 +1244,9 @@ TEST_P(MipmapTestES3, BaseLevelTextureBug)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// Note: we run these tests against 9_3 on WARP due to hardware driver issues on Win7
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against. Note: we run these tests against 9_3 on WARP due to hardware driver
+// issues on Win7
 ANGLE_INSTANTIATE_TEST(MipmapTest,
                        ES2_D3D9(),
                        ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE),

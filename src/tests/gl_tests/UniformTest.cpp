@@ -418,22 +418,21 @@ TEST_P(UniformTest, UniformArrayLocations)
 
     // Array index zero should be equivalent to the un-indexed uniform
     EXPECT_NE(-1, glGetUniformLocation(program, "uPosition"));
-    EXPECT_EQ(glGetUniformLocation(program, "uPosition"), glGetUniformLocation(program, "uPosition[0]"));
+    EXPECT_EQ(glGetUniformLocation(program, "uPosition"),
+              glGetUniformLocation(program, "uPosition[0]"));
 
     EXPECT_NE(-1, glGetUniformLocation(program, "uColor"));
     EXPECT_EQ(glGetUniformLocation(program, "uColor"), glGetUniformLocation(program, "uColor[0]"));
 
     // All array uniform locations should be unique
-    GLint positionLocations[4] =
-    {
+    GLint positionLocations[4] = {
         glGetUniformLocation(program, "uPosition[0]"),
         glGetUniformLocation(program, "uPosition[1]"),
         glGetUniformLocation(program, "uPosition[2]"),
         glGetUniformLocation(program, "uPosition[3]"),
     };
 
-    GLint colorLocations[4] =
-    {
+    GLint colorLocations[4] = {
         glGetUniformLocation(program, "uColor[0]"),
         glGetUniformLocation(program, "uColor[1]"),
         glGetUniformLocation(program, "uColor[2]"),
@@ -486,7 +485,7 @@ TEST_P(UniformTest, FloatUniformStateQuery)
         expectedFValues.push_back(static_cast<GLfloat>(value));
 
         double clampedValue = std::max(intMinD, std::min(intMaxD, value));
-        double rounded = round(clampedValue);
+        double rounded      = round(clampedValue);
         expectedIValues.push_back(static_cast<GLint>(rounded));
     }
 
@@ -681,10 +680,7 @@ class UniformTestES3 : public ANGLETest
   protected:
     UniformTestES3() : mProgram(0) {}
 
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-    }
+    void SetUp() override { ANGLETest::SetUp(); }
 
     void TearDown() override
     {
@@ -742,7 +738,7 @@ TEST_P(UniformTestES3, TransposedMatrixArrayUniformStateQuery)
         std::stringstream nameStr;
         nameStr << "uniMat3x2[" << arrayElement << "]";
         std::string name = nameStr.str();
-        GLint location = glGetUniformLocation(mProgram, name.c_str());
+        GLint location   = glGetUniformLocation(mProgram, name.c_str());
         ASSERT_NE(-1, location);
 
         std::vector<GLfloat> sequentialValues(6, 0);
@@ -970,8 +966,7 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
     {
         UniformArrayInfo(std::string type, std::string name, int components)
             : type(type), name(name), components(components)
-        {
-        }
+        {}
         std::string type;
         std::string name;
         int components;
@@ -1009,13 +1004,13 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
         }
     }
 
-    const std::string &vertexShader =
-        "#version 300 es\n" +
-        uniformStream.str() +
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(1.0" + additionStream.str() + ");\n"
-        "}";
+    const std::string &vertexShader = "#version 300 es\n" + uniformStream.str() +
+                                      "void main()\n"
+                                      "{\n"
+                                      "    gl_Position = vec4(1.0" +
+                                      additionStream.str() +
+                                      ");\n"
+                                      "}";
 
     const std::string &fragmentShader =
         "#version 300 es\n"
@@ -1283,7 +1278,8 @@ TEST_P(UniformTest, UniformWithReservedOpenGLName)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleUniformTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -1304,4 +1300,4 @@ ANGLE_INSTANTIATE_TEST(UniformTest,
 ANGLE_INSTANTIATE_TEST(UniformTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(UniformTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
-} // namespace
+}  // namespace

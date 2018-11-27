@@ -65,13 +65,13 @@ struct MultiviewPerfParams final : public RenderTestParams
                         MultiviewOption multiviewOptionIn)
     {
         iterationsPerStep = 1;
-        majorVersion    = 3;
-        minorVersion    = 0;
-        eglParameters   = platformParametersIn;
-        windowWidth     = workloadIn.first;
-        windowHeight    = workloadIn.second;
-        multiviewOption = multiviewOptionIn;
-        numViews        = 2;
+        majorVersion      = 3;
+        minorVersion      = 0;
+        eglParameters     = platformParametersIn;
+        windowWidth       = workloadIn.first;
+        windowHeight      = workloadIn.second;
+        multiviewOption   = multiviewOptionIn;
+        numViews          = 2;
     }
 
     std::string suffix() const override

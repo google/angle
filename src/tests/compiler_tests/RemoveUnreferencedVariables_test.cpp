@@ -18,8 +18,7 @@ class RemoveUnreferencedVariablesTest : public MatchOutputCodeTest
 {
   public:
     RemoveUnreferencedVariablesTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_ESSL_OUTPUT)
-    {
-    }
+    {}
 };
 
 // Test that a simple unreferenced declaration is pruned.

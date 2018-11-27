@@ -1138,10 +1138,14 @@ TEST_F(GeometryShaderTest, GeometryShaderBuiltInConstants)
             gl_Position.x = float()";
 
     const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
-        "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
-        "gl_MaxGeometryImageUniforms", "gl_MaxGeometryTextureImageUnits",
-        "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents",
-        "gl_MaxGeometryUniformComponents", "gl_MaxGeometryAtomicCounters",
+        "gl_MaxGeometryInputComponents",
+        "gl_MaxGeometryOutputComponents",
+        "gl_MaxGeometryImageUniforms",
+        "gl_MaxGeometryTextureImageUnits",
+        "gl_MaxGeometryOutputVertices",
+        "gl_MaxGeometryTotalOutputComponents",
+        "gl_MaxGeometryUniformComponents",
+        "gl_MaxGeometryAtomicCounters",
         "gl_MaxGeometryAtomicCounterBuffers",
     }};
 
@@ -1172,10 +1176,14 @@ TEST_F(GeometryShaderTest, GeometryShaderBuiltInConstantsWithoutExtension)
         "    int val = ";
 
     const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
-        "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
-        "gl_MaxGeometryImageUniforms", "gl_MaxGeometryTextureImageUnits",
-        "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents",
-        "gl_MaxGeometryUniformComponents", "gl_MaxGeometryAtomicCounters",
+        "gl_MaxGeometryInputComponents",
+        "gl_MaxGeometryOutputComponents",
+        "gl_MaxGeometryImageUniforms",
+        "gl_MaxGeometryTextureImageUnits",
+        "gl_MaxGeometryOutputVertices",
+        "gl_MaxGeometryTotalOutputComponents",
+        "gl_MaxGeometryUniformComponents",
+        "gl_MaxGeometryAtomicCounters",
         "gl_MaxGeometryAtomicCounterBuffers",
     }};
 

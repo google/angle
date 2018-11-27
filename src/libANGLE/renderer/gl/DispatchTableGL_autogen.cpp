@@ -14,7 +14,7 @@
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 
 #if defined(ANGLE_ENABLE_OPENGL_NULL)
-#include "libANGLE/renderer/gl/null_functions.h"
+#    include "libANGLE/renderer/gl/null_functions.h"
 #endif  // defined(ANGLE_ENABLE_OPENGL_NULL)
 
 // Check for nullptr so extensions do not overwrite core imports.

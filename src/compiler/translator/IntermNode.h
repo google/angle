@@ -427,6 +427,7 @@ class TIntermSwizzle : public TIntermExpression
     bool offsetsMatch(int offset) const;
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
+
   protected:
     TIntermTyped *mOperand;
     TVector<int> mSwizzleOffsets;

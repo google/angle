@@ -22,7 +22,7 @@ namespace rx
 VertexBuffer9::VertexBuffer9(Renderer9 *renderer) : mRenderer(renderer)
 {
     mVertexBuffer = nullptr;
-    mBufferSize = 0;
+    mBufferSize   = 0;
     mDynamicUsage = false;
 }
 
@@ -52,7 +52,7 @@ angle::Result VertexBuffer9::initialize(const gl::Context *context,
                      "Failed to allocate internal vertex buffer");
     }
 
-    mBufferSize = size;
+    mBufferSize   = size;
     mDynamicUsage = dynamicUsage;
     return angle::Result::Continue();
 }
@@ -80,7 +80,8 @@ angle::Result VertexBuffer9::storeVertexAttributes(const gl::Context *context,
     ANGLE_TRY(
         mRenderer->getVertexSpaceRequired(context, attrib, binding, count, instances, &mapSize));
 
-    HRESULT result = mVertexBuffer->Lock(offset, mapSize, reinterpret_cast<void**>(&mapPtr), lockFlags);
+    HRESULT result =
+        mVertexBuffer->Lock(offset, mapSize, reinterpret_cast<void **>(&mapPtr), lockFlags);
     ANGLE_TRY_HR(GetImplAs<Context9>(context), result, "Failed to lock internal vertex buffer");
 
     const uint8_t *input = sourceData;
@@ -145,7 +146,7 @@ angle::Result VertexBuffer9::discard(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-IDirect3DVertexBuffer9 * VertexBuffer9::getBuffer() const
+IDirect3DVertexBuffer9 *VertexBuffer9::getBuffer() const
 {
     return mVertexBuffer;
 }

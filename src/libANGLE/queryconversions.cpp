@@ -302,4 +302,4 @@ template void CastIndexedStateValues<GLint64>(Context *,
                                               GLuint index,
                                               unsigned int,
                                               GLint64 *);
-}
+}  // namespace gl

@@ -39,11 +39,11 @@ class RemovePowTest : public testing::Test
         allocator.pop();
     }
 
-    void compile(const std::string& shaderString)
+    void compile(const std::string &shaderString)
     {
-        const char *shaderStrings[] = { shaderString.c_str() };
-        mASTRoot = mTranslatorGLSL->compileTreeForTesting(shaderStrings, 1,
-                                                          SH_OBJECT_CODE | SH_REMOVE_POW_WITH_CONSTANT_EXPONENT);
+        const char *shaderStrings[] = {shaderString.c_str()};
+        mASTRoot                    = mTranslatorGLSL->compileTreeForTesting(
+            shaderStrings, 1, SH_OBJECT_CODE | SH_REMOVE_POW_WITH_CONSTANT_EXPONENT);
         if (!mASTRoot)
         {
             TInfoSink &infoSink = mTranslatorGLSL->getInfoSink();
@@ -122,7 +122,7 @@ class FindNestedPowWorkaround : public sh::NodeSearchTraverser<FindNestedPowWork
     bool visitUnary(Visit visit, TIntermUnary *node) override
     {
         TIntermNode *base = nullptr;
-        bool oneFound = IsPowWorkaround(node, &base);
+        bool oneFound     = IsPowWorkaround(node, &base);
         if (oneFound && base)
             mFound = IsPowWorkaround(base, nullptr);
         return !mFound;
@@ -155,4 +155,3 @@ TEST_F(RemovePowTest, NestedPowWithConstantExponent)
     ASSERT_FALSE(foundInAST<FindPow>());
     ASSERT_TRUE(foundInAST<FindNestedPowWorkaround>());
 }
-

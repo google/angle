@@ -62,23 +62,23 @@
 #include "third_party/trace_event/trace_event.h"
 
 #ifdef ANGLE_ENABLE_WINDOWS_STORE
-#include "libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
+#    include "libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
 #else
-#include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
-#include "libANGLE/renderer/d3d/d3d11/win32/NativeWindow11Win32.h"
+#    include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
+#    include "libANGLE/renderer/d3d/d3d11/win32/NativeWindow11Win32.h"
 #endif
 
 // Include the D3D9 debug annotator header for use by the desktop D3D11 renderer
 // because the D3D11 interface method ID3DUserDefinedAnnotation::GetStatus
 // doesn't work with the Graphics Diagnostics tools in Visual Studio 2013.
 #ifdef ANGLE_ENABLE_D3D9
-#include "libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h"
+#    include "libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h"
 #endif
 
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
 // HWNDs or the Windows 7 Platform Update (KB2670838) is expected to be installed.
 #ifndef ANGLE_SKIP_DXGI_1_2_CHECK
-#define ANGLE_SKIP_DXGI_1_2_CHECK 0
+#    define ANGLE_SKIP_DXGI_1_2_CHECK 0
 #endif
 
 namespace rx
@@ -557,7 +557,7 @@ Renderer11::~Renderer11()
 }
 
 #ifndef __d3d11_1_h__
-#define D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET ((D3D11_MESSAGE_ID)3146081)
+#    define D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET ((D3D11_MESSAGE_ID)3146081)
 #endif
 
 egl::Error Renderer11::initialize()
@@ -567,7 +567,7 @@ egl::Error Renderer11::initialize()
     ANGLE_TRY(initializeD3DDevice());
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
-#if !ANGLE_SKIP_DXGI_1_2_CHECK
+#    if !ANGLE_SKIP_DXGI_1_2_CHECK
     {
         TRACE_EVENT0("gpu.angle", "Renderer11::initialize (DXGICheck)");
         // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is
@@ -599,7 +599,7 @@ egl::Error Renderer11::initialize()
             SafeRelease(dxgiDevice2);
         }
     }
-#endif
+#    endif
 #endif
 
     {

@@ -14,10 +14,10 @@
 #include <set>
 
 #if defined(ANGLE_ENABLE_WINDOWS_STORE)
-#include <windows.applicationmodel.core.h>
-#include <windows.graphics.display.h>
-#include <wrl.h>
-#include <wrl/wrappers/corewrappers.h>
+#    include <windows.applicationmodel.core.h>
+#    include <windows.graphics.display.h>
+#    include <wrl.h>
+#    include <wrl/wrappers/corewrappers.h>
 #endif
 
 namespace
@@ -1023,7 +1023,7 @@ EGLClientBuffer GLObjectHandleToEGLClientBuffer(GLuint handle)
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 std::string getTempPath()
 {
-#ifdef ANGLE_PLATFORM_WINDOWS
+#    ifdef ANGLE_PLATFORM_WINDOWS
     char path[MAX_PATH];
     DWORD pathLen = GetTempPathA(sizeof(path) / sizeof(path[0]), path);
     if (pathLen == 0)
@@ -1040,10 +1040,10 @@ std::string getTempPath()
     }
 
     return path;
-#else
+#    else
     UNIMPLEMENTED();
     return "";
-#endif
+#    endif
 }
 
 void writeFile(const char *path, const void *content, size_t size)

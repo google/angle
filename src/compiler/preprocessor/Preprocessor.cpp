@@ -35,8 +35,7 @@ struct PreprocessorImpl
           tokenizer(diag),
           directiveParser(&tokenizer, &macroSet, diag, directiveHandler, settings),
           macroExpander(&directiveParser, &macroSet, diag, settings, false)
-    {
-    }
+    {}
 };
 
 Preprocessor::Preprocessor(Diagnostics *diagnostics,

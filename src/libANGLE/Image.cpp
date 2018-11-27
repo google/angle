@@ -52,9 +52,7 @@ const Display *DisplayFromContext(const gl::Context *context)
 
 }  // anonymous namespace
 
-ImageSibling::ImageSibling() : FramebufferAttachmentObject(), mSourcesOf(), mTargetOf()
-{
-}
+ImageSibling::ImageSibling() : FramebufferAttachmentObject(), mSourcesOf(), mTargetOf() {}
 
 ImageSibling::~ImageSibling()
 {
@@ -137,8 +135,7 @@ ExternalImageSibling::ExternalImageSibling(rx::EGLImplFactory *factory,
                                            EGLClientBuffer buffer,
                                            const AttributeMap &attribs)
     : mImplementation(factory->createExternalImageSibling(context, target, buffer, attribs))
-{
-}
+{}
 
 gl::Extents ExternalImageSibling::getAttachmentSize(const gl::ImageIndex &imageIndex) const
 {
@@ -168,13 +165,9 @@ bool ExternalImageSibling::isTextureable(const gl::Context *context) const
     return mImplementation->isTexturable(context);
 }
 
-void ExternalImageSibling::onAttach(const gl::Context *context)
-{
-}
+void ExternalImageSibling::onAttach(const gl::Context *context) {}
 
-void ExternalImageSibling::onDetach(const gl::Context *context)
-{
-}
+void ExternalImageSibling::onDetach(const gl::Context *context) {}
 
 GLuint ExternalImageSibling::getId() const
 {
@@ -188,8 +181,7 @@ gl::InitState ExternalImageSibling::initState(const gl::ImageIndex &imageIndex) 
 }
 
 void ExternalImageSibling::setInitState(const gl::ImageIndex &imageIndex, gl::InitState initState)
-{
-}
+{}
 
 rx::ExternalImageSiblingImpl *ExternalImageSibling::getImplementation() const
 {
@@ -210,12 +202,9 @@ ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap 
       size(buffer->getAttachmentSize(imageIndex)),
       samples(buffer->getAttachmentSamples(imageIndex)),
       sourceType(target)
-{
-}
+{}
 
-ImageState::~ImageState()
-{
-}
+ImageState::~ImageState() {}
 
 Image::Image(rx::EGLImplFactory *factory,
              const gl::Context *context,

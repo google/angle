@@ -59,23 +59,25 @@ class PbufferTest : public ANGLETest
         EGLWindow *window = getEGLWindow();
 
         EGLint surfaceType = 0;
-        eglGetConfigAttrib(window->getDisplay(), window->getConfig(), EGL_SURFACE_TYPE, &surfaceType);
+        eglGetConfigAttrib(window->getDisplay(), window->getConfig(), EGL_SURFACE_TYPE,
+                           &surfaceType);
         mSupportsPbuffers = (surfaceType & EGL_PBUFFER_BIT) != 0;
 
         EGLint bindToTextureRGBA = 0;
-        eglGetConfigAttrib(window->getDisplay(), window->getConfig(), EGL_BIND_TO_TEXTURE_RGBA, &bindToTextureRGBA);
+        eglGetConfigAttrib(window->getDisplay(), window->getConfig(), EGL_BIND_TO_TEXTURE_RGBA,
+                           &bindToTextureRGBA);
         mSupportsBindTexImage = (bindToTextureRGBA == EGL_TRUE);
 
-        const EGLint pBufferAttributes[] =
-        {
-            EGL_WIDTH, static_cast<EGLint>(mPbufferSize),
-            EGL_HEIGHT, static_cast<EGLint>(mPbufferSize),
+        const EGLint pBufferAttributes[] = {
+            EGL_WIDTH,          static_cast<EGLint>(mPbufferSize),
+            EGL_HEIGHT,         static_cast<EGLint>(mPbufferSize),
             EGL_TEXTURE_FORMAT, mSupportsBindTexImage ? EGL_TEXTURE_RGBA : EGL_NO_TEXTURE,
             EGL_TEXTURE_TARGET, mSupportsBindTexImage ? EGL_TEXTURE_2D : EGL_NO_TEXTURE,
-            EGL_NONE, EGL_NONE,
+            EGL_NONE,           EGL_NONE,
         };
 
-        mPbuffer = eglCreatePbufferSurface(window->getDisplay(), window->getConfig(), pBufferAttributes);
+        mPbuffer =
+            eglCreatePbufferSurface(window->getDisplay(), window->getConfig(), pBufferAttributes);
         if (mSupportsPbuffers)
         {
             ASSERT_NE(mPbuffer, EGL_NO_SURFACE);
@@ -286,7 +288,8 @@ TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
     // Redefine the texture
     unsigned int pixelValue = 0xFFFF00FF;
     std::vector<unsigned int> pixelData(getWindowWidth() * getWindowHeight(), pixelValue);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixelData[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, &pixelData[0]);
 
     // Draw a quad and verify that it is magenta
     glUseProgram(mTextureProgram);
@@ -301,7 +304,8 @@ TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
     glDeleteTextures(1, &texture);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(PbufferTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

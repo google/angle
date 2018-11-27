@@ -14,10 +14,10 @@
 
 #include <set>
 
+#include "GLSLANG/ShaderLang.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"
 #include "compiler/translator/InfoSink.h"
-#include "GLSLANG/ShaderLang.h"
 
 namespace sh
 {

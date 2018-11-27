@@ -55,6 +55,6 @@ class RenderbufferD3D : public RenderbufferImpl
     EGLImageD3D *mImage;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_RENDERBUFFERD3D_H_
+#endif  // LIBANGLE_RENDERER_D3D_RENDERBUFFERD3D_H_

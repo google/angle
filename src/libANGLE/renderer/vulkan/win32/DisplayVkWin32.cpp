@@ -17,9 +17,7 @@
 namespace rx
 {
 
-DisplayVkWin32::DisplayVkWin32(const egl::DisplayState &state) : DisplayVk(state)
-{
-}
+DisplayVkWin32::DisplayVkWin32(const egl::DisplayState &state) : DisplayVk(state) {}
 
 bool DisplayVkWin32::isValidNativeWindow(EGLNativeWindowType window) const
 {

@@ -108,8 +108,7 @@ ResourcesHLSL::ResourcesHLSL(StructureHLSL *structureHLSL,
       mStructureHLSL(structureHLSL),
       mOutputType(outputType),
       mUniforms(uniforms)
-{
-}
+{}
 
 void ResourcesHLSL::reserveUniformRegisters(unsigned int registerCount)
 {

@@ -126,7 +126,8 @@ TEST_P(EGLX11VisualHintTest, ValidVisualIDAndClear)
     ASSERT_EQ(nConfigs, nReturnedConfigs);
 
     EGLint eglNativeId;
-    ASSERT_TRUE(EGL_TRUE == eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &eglNativeId));
+    ASSERT_TRUE(EGL_TRUE ==
+                eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &eglNativeId));
     ASSERT_EQ(visualId, eglNativeId);
 
     // Finally, try to do a clear on the window.
@@ -185,7 +186,6 @@ TEST_P(EGLX11VisualHintTest, InvalidWindowVisualID)
     ASSERT_NE(EGL_NO_DISPLAY, display);
 
     ASSERT_TRUE(EGL_TRUE == eglInitialize(display, nullptr, nullptr));
-
 
     // Initialize the window with a visual id different from the display's visual id
     int otherVisualId = chooseDifferentVisual(visualId);

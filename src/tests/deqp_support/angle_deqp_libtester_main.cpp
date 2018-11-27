@@ -23,13 +23,13 @@
 #include "tcuTestLog.hpp"
 
 #if (DE_OS == DE_OS_WIN32)
-#include <Windows.h>
+#    include <Windows.h>
 #elif (DE_OS == DE_OS_UNIX) || (DE_OS == DE_OS_OSX)
-#include <sys/unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#    include <sys/stat.h>
+#    include <sys/types.h>
+#    include <sys/unistd.h>
 #elif (DE_OS == DE_OS_ANDROID)
-#include <sys/stat.h>
+#    include <sys/stat.h>
 #endif
 
 tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc);
@@ -37,12 +37,12 @@ tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc);
 namespace
 {
 
-tcu::Platform *g_platform = nullptr;
-tcu::CommandLine *g_cmdLine = nullptr;
-tcu::DirArchive *g_archive = nullptr;
-tcu::TestLog *g_log = nullptr;
-tcu::TestContext *g_testCtx = nullptr;
-tcu::TestPackageRoot *g_root = nullptr;
+tcu::Platform *g_platform            = nullptr;
+tcu::CommandLine *g_cmdLine          = nullptr;
+tcu::DirArchive *g_archive           = nullptr;
+tcu::TestLog *g_log                  = nullptr;
+tcu::TestContext *g_testCtx          = nullptr;
+tcu::TestPackageRoot *g_root         = nullptr;
 tcu::RandomOrderExecutor *g_executor = nullptr;
 
 const char *g_dEQPDataSearchDirs[] = {
@@ -78,7 +78,7 @@ deBool deIsDir(const char *filename)
     return result == 0 && ((st.st_mode & S_IFDIR) == S_IFDIR);
 }
 #else
-#error TODO(jmadill): support other platforms
+#    error TODO(jmadill): support other platforms
 #endif
 
 bool FindDataDir(std::string *dataDirOut)
@@ -148,10 +148,10 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
         g_archive = new tcu::DirArchive(deqpDataDir.c_str());
         g_log     = new tcu::TestLog(GetLogFileName(deqpDataDir).c_str(), g_cmdLine->getLogFlags());
         g_testCtx = new tcu::TestContext(*g_platform, *g_archive, *g_log, *g_cmdLine, DE_NULL);
-        g_root = new tcu::TestPackageRoot(*g_testCtx, tcu::TestPackageRegistry::getSingleton());
+        g_root     = new tcu::TestPackageRoot(*g_testCtx, tcu::TestPackageRegistry::getSingleton());
         g_executor = new tcu::RandomOrderExecutor(*g_root, *g_testCtx);
     }
-    catch (const std::exception& e)
+    catch (const std::exception &e)
     {
         tcu::die("%s", e.what());
         return false;

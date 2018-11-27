@@ -13,13 +13,10 @@
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 
-
 namespace rx
 {
 
-FenceNVGL::FenceNVGL(const FunctionsGL *functions)
-    : FenceNVImpl(),
-      mFunctions(functions)
+FenceNVGL::FenceNVGL(const FunctionsGL *functions) : FenceNVImpl(), mFunctions(functions)
 {
     mFunctions->genFencesNV(1, &mFence);
 }
@@ -58,8 +55,7 @@ bool FenceNVGL::Supported(const FunctionsGL *functions)
 
 FenceNVSyncGL::FenceNVSyncGL(const FunctionsGL *functions)
     : FenceNVImpl(), mSyncObject(0), mFunctions(functions)
-{
-}
+{}
 
 FenceNVSyncGL::~FenceNVSyncGL()
 {
@@ -107,4 +103,4 @@ bool FenceNVSyncGL::Supported(const FunctionsGL *functions)
            functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLExtension("GL_ARB_sync");
 }
 
-}  // namespace gl
+}  // namespace rx

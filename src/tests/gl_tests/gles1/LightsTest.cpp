@@ -166,7 +166,9 @@ TEST_P(LightsTest, NegativeInvalidValue)
     glGetIntegerv(GL_MAX_LIGHTS, &maxLights);
 
     std::vector<GLenum> attenuationParams = {
-        GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, GL_QUADRATIC_ATTENUATION,
+        GL_CONSTANT_ATTENUATION,
+        GL_LINEAR_ATTENUATION,
+        GL_QUADRATIC_ATTENUATION,
     };
 
     for (int i = 0; i < maxLights; i++)

@@ -11,9 +11,9 @@
 #include "common/debug.h"
 
 #if defined(COMPILER_MSVC)
-#include <malloc.h>
+#    include <malloc.h>
 #else
-#include <stdlib.h>
+#    include <stdlib.h>
 #endif
 
 namespace angle

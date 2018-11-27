@@ -116,8 +116,7 @@ ANGLE_INLINE bool FastVector<T, N, Storage>::uses_fixed_storage() const
 
 template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector()
-{
-}
+{}
 
 template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(size_type count, const value_type &value)

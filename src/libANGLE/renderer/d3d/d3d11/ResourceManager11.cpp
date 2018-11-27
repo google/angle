@@ -532,12 +532,10 @@ void ResourceManager11::setAllocationsInitialized(bool initialize)
     mInitializeAllocations = initialize;
 }
 
-#define ANGLE_INSTANTIATE_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE)                  \
-    \
-template \
-angle::Result                                                                                   \
-    ResourceManager11::allocate(d3d::Context *, Renderer11 *, const DESCTYPE *, INITDATATYPE *, \
-                                Resource11<D3D11TYPE> *);
+#define ANGLE_INSTANTIATE_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) \
+                                                                               \
+    template angle::Result ResourceManager11::allocate(                        \
+        d3d::Context *, Renderer11 *, const DESCTYPE *, INITDATATYPE *, Resource11<D3D11TYPE> *);
 
 ANGLE_RESOURCE_TYPE_OP(Instantitate, ANGLE_INSTANTIATE_OP)
 }  // namespace rx

@@ -17,13 +17,9 @@
 namespace rx
 {
 
-ImageVk::ImageVk(const egl::ImageState &state) : ImageImpl(state)
-{
-}
+ImageVk::ImageVk(const egl::ImageState &state) : ImageImpl(state) {}
 
-ImageVk::~ImageVk()
-{
-}
+ImageVk::~ImageVk() {}
 
 egl::Error ImageVk::initialize(const egl::Display *display)
 {

@@ -99,7 +99,7 @@ TEST_P(SRGBTextureTest, SRGBValidation)
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
 
-    GLubyte pixel[3] = { 0 };
+    GLubyte pixel[3] = {0};
     glTexImage2D(GL_TEXTURE_2D, 0, getSRGB8TextureInternalFormat(), 1, 1, 0,
                  getSRGB8TextureFormat(), GL_UNSIGNED_BYTE, pixel);
     if (supported)
@@ -133,7 +133,7 @@ TEST_P(SRGBTextureTest, SRGBAValidation)
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
 
-    GLubyte pixel[4] = { 0 };
+    GLubyte pixel[4] = {0};
     glTexImage2D(GL_TEXTURE_2D, 0, getSRGBA8TextureInternalFormat(), 1, 1, 0,
                  getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE, pixel);
     if (supported)
@@ -217,7 +217,8 @@ TEST_P(SRGBTextureTest, SRGBARenderbuffer)
 
     GLint colorEncoding = 0;
     glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                          GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING_EXT, &colorEncoding);
+                                          GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING_EXT,
+                                          &colorEncoding);
     if (supported)
     {
         EXPECT_GL_NO_ERROR();
@@ -367,7 +368,8 @@ TEST_P(SRGBTextureTest, GenerateMipmaps)
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(SRGBTextureTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -378,4 +380,4 @@ ANGLE_INSTANTIATE_TEST(SRGBTextureTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 
-} // namespace
+}  // namespace angle

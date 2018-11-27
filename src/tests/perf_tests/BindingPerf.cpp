@@ -35,8 +35,8 @@ struct BindingsParams final : public RenderTestParams
         windowWidth  = 720;
         windowHeight = 720;
 
-        numObjects      = 100;
-        allocationStyle = EVERY_ITERATION;
+        numObjects        = 100;
+        allocationStyle   = EVERY_ITERATION;
         iterationsPerStep = kIterationsPerStep;
     }
 
@@ -89,9 +89,7 @@ class BindingsBenchmark : public ANGLERenderTest,
     std::vector<GLenum> mBindingPoints;
 };
 
-BindingsBenchmark::BindingsBenchmark() : ANGLERenderTest("Bindings", GetParam())
-{
-}
+BindingsBenchmark::BindingsBenchmark() : ANGLERenderTest("Bindings", GetParam()) {}
 
 void BindingsBenchmark::initializeBenchmark()
 {

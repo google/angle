@@ -19,8 +19,8 @@ struct DispatchComputePerfParams final : public RenderTestParams
     DispatchComputePerfParams()
     {
         iterationsPerStep = kIterationsPerStep;
-        majorVersion = 3;
-        minorVersion = 1;
+        majorVersion      = 3;
+        minorVersion      = 1;
     }
 
     std::string suffix() const override;
@@ -72,8 +72,7 @@ class DispatchComputePerfBenchmark : public ANGLERenderTest,
 
 DispatchComputePerfBenchmark::DispatchComputePerfBenchmark()
     : ANGLERenderTest("DispatchComputePerf", GetParam())
-{
-}
+{}
 
 void DispatchComputePerfBenchmark::initializeBenchmark()
 {

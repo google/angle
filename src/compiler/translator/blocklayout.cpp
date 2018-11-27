@@ -200,9 +200,7 @@ void BlockLayoutEncoder::nextRegister()
     mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, ComponentsPerRegister);
 }
 
-Std140BlockEncoder::Std140BlockEncoder()
-{
-}
+Std140BlockEncoder::Std140BlockEncoder() {}
 
 void Std140BlockEncoder::enterAggregateType()
 {
@@ -343,6 +341,5 @@ void GetUniformBlockInfo(const std::vector<Uniform> &uniforms,
     // flag to true if needed.
     GetInterfaceBlockInfo(uniforms, prefix, encoder, false, blockInfoOut);
 }
-
 
 }  // namespace sh

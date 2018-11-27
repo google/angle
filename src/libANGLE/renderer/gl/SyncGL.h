@@ -35,6 +35,6 @@ class SyncGL : public SyncImpl
     const FunctionsGL *mFunctions;
     GLsync mSyncObject;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_FENCESYNCGL_H_

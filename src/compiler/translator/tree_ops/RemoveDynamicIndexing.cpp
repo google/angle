@@ -296,8 +296,7 @@ RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(
       mUsedTreeInsertion(false),
       mRemoveIndexSideEffectsInSubtree(false),
       mPerfDiagnostics(perfDiagnostics)
-{
-}
+{}
 
 void RemoveDynamicIndexingTraverser::insertHelperDefinitions(TIntermNode *root)
 {

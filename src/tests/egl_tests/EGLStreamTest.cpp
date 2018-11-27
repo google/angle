@@ -100,7 +100,9 @@ TEST_P(EGLStreamTest, StreamValidationTest)
     ASSERT_EQ(EGL_NO_STREAM_KHR, stream);
 
     const EGLint streamAttributes[] = {
-        EGL_CONSUMER_LATENCY_USEC_KHR, 0, EGL_NONE,
+        EGL_CONSUMER_LATENCY_USEC_KHR,
+        0,
+        EGL_NONE,
     };
 
     stream = eglCreateStreamKHR(EGL_NO_DISPLAY, streamAttributes);
@@ -647,8 +649,8 @@ TEST_P(D3D11TextureStreamSamplingTest, NV12)
 // ensures they are correct
 TEST_P(EGLStreamTest, StreamProducerTextureNV12End2End)
 {
-    EGLWindow *window            = getEGLWindow();
-    EGLDisplay display           = window->getDisplay();
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
     ANGLE_SKIP_TEST_IF(
         !eglDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
 
@@ -801,7 +803,9 @@ TEST_P(EGLStreamTest, StreamProducerTextureNV12End2End)
 
     // Insert the frame
     EGLAttrib frameAttributes[] = {
-        EGL_D3D_TEXTURE_SUBRESOURCE_ID_ANGLE, 0, EGL_NONE,
+        EGL_D3D_TEXTURE_SUBRESOURCE_ID_ANGLE,
+        0,
+        EGL_NONE,
     };
     result = eglStreamPostD3DTextureANGLE(display, stream, (void *)texture, frameAttributes);
     ASSERT_EGL_TRUE(result);

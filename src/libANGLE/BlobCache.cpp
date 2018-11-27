@@ -32,12 +32,9 @@ enum CacheResult
 
 BlobCache::BlobCache(size_t maxCacheSizeBytes)
     : mBlobCache(maxCacheSizeBytes), mSetBlobFunc(nullptr), mGetBlobFunc(nullptr)
-{
-}
+{}
 
-BlobCache::~BlobCache()
-{
-}
+BlobCache::~BlobCache() {}
 
 void BlobCache::put(const BlobCache::Key &key, angle::MemoryBuffer &&value)
 {
@@ -171,4 +168,4 @@ bool BlobCache::areBlobCacheFuncsSet() const
     return mSetBlobFunc != nullptr && mGetBlobFunc != nullptr;
 }
 
-}  // namespace gl
+}  // namespace egl

@@ -6,6 +6,7 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+
 #include "libANGLE/Fence.h"
 #include "libANGLE/renderer/FenceNVImpl.h"
 #include "libANGLE/renderer/SyncImpl.h"
@@ -14,7 +15,8 @@ using ::testing::_;
 using ::testing::Return;
 using ::testing::SetArgumentPointee;
 
-namespace {
+namespace
+{
 
 //
 // FenceNV tests
@@ -42,21 +44,18 @@ class FenceNVTest : public testing::Test
         mFence = new gl::FenceNV(mImpl);
     }
 
-    virtual void TearDown()
-    {
-        delete mFence;
-    }
+    virtual void TearDown() { delete mFence; }
 
     MockFenceNVImpl *mImpl;
-    gl::FenceNV* mFence;
+    gl::FenceNV *mFence;
 };
 
 TEST_F(FenceNVTest, DestructionDeletesImpl)
 {
-    MockFenceNVImpl* impl = new MockFenceNVImpl;
+    MockFenceNVImpl *impl = new MockFenceNVImpl;
     EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
 
-    gl::FenceNV* fence = new gl::FenceNV(impl);
+    gl::FenceNV *fence = new gl::FenceNV(impl);
     delete fence;
 
     // Only needed because the mock is leaked if bugs are present,
@@ -153,4 +152,4 @@ TEST_F(FenceSyncTest, SetAndGetStatusBehavior)
     EXPECT_EQ(GL_SIGNALED, out);
 }
 
-} // namespace
+}  // namespace

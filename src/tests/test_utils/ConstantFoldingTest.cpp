@@ -9,9 +9,9 @@
 
 #include "tests/test_utils/ConstantFoldingTest.h"
 
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "compiler/translator/TranslatorESSL.h"
-#include "GLSLANG/ShaderLang.h"
 
 using namespace sh;
 

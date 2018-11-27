@@ -9,9 +9,9 @@
 
 #include "ANGLEPerfTest.h"
 #include "Timer.h"
+#include "platform/Platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
-#include "platform/Platform.h"
 
 using namespace testing;
 
@@ -98,8 +98,8 @@ EGLInitializePerfTest::EGLInitializePerfTest()
     mOSWindow = CreateOSWindow();
     mOSWindow->initialize("EGLInitialize Test", 64, 64);
 
-    auto eglGetPlatformDisplayEXT =
-        reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
+    auto eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
+        eglGetProcAddress("eglGetPlatformDisplayEXT"));
     if (eglGetPlatformDisplayEXT == nullptr)
     {
         std::cerr << "Error getting platform display!" << std::endl;
@@ -133,7 +133,8 @@ void EGLInitializePerfTest::step()
     ASSERT_NE(EGL_NO_DISPLAY, mDisplay);
 
     EGLint majorVersion, minorVersion;
-    ASSERT_EQ(static_cast<EGLBoolean>(EGL_TRUE), eglInitialize(mDisplay, &majorVersion, &minorVersion));
+    ASSERT_EQ(static_cast<EGLBoolean>(EGL_TRUE),
+              eglInitialize(mDisplay, &majorVersion, &minorVersion));
     ASSERT_EQ(static_cast<EGLBoolean>(EGL_TRUE), eglTerminate(mDisplay));
 }
 
@@ -154,4 +155,4 @@ TEST_P(EGLInitializePerfTest, Run)
 
 ANGLE_INSTANTIATE_TEST(EGLInitializePerfTest, angle::ES2_D3D11(), angle::ES2_VULKAN());
 
-} // namespace
+}  // namespace

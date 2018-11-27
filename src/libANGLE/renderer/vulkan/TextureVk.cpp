@@ -68,9 +68,7 @@ PixelBuffer::PixelBuffer(RendererVk *renderer)
     mStagingBuffer.init(4, renderer);
 }
 
-PixelBuffer::~PixelBuffer()
-{
-}
+PixelBuffer::~PixelBuffer() {}
 
 void PixelBuffer::release(RendererVk *renderer)
 {
@@ -406,23 +404,19 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
     return angle::Result::Continue();
 }
 
-PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE)
-{
-}
+PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE) {}
 
 PixelBuffer::SubresourceUpdate::SubresourceUpdate(VkBuffer bufferHandleIn,
                                                   const VkBufferImageCopy &copyRegionIn)
     : bufferHandle(bufferHandleIn), copyRegion(copyRegionIn)
-{
-}
+{}
 
 PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other) = default;
 
 // TextureVk implementation.
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
     : TextureImpl(state), mRenderTarget(&mImage, &mBaseLevelImageView, 0), mPixelBuffer(renderer)
-{
-}
+{}
 
 TextureVk::~TextureVk() = default;
 

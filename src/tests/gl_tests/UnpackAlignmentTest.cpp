@@ -53,44 +53,52 @@ class UnpackAlignmentTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void getPixelSize(GLenum format, GLenum type, unsigned int* size)
+    void getPixelSize(GLenum format, GLenum type, unsigned int *size)
     {
         switch (type)
         {
-          case GL_UNSIGNED_SHORT_5_5_5_1:
-          case GL_UNSIGNED_SHORT_5_6_5:
-          case GL_UNSIGNED_SHORT_4_4_4_4:
-            *size = sizeof(GLushort);
-            break;
+            case GL_UNSIGNED_SHORT_5_5_5_1:
+            case GL_UNSIGNED_SHORT_5_6_5:
+            case GL_UNSIGNED_SHORT_4_4_4_4:
+                *size = sizeof(GLushort);
+                break;
 
-          case GL_UNSIGNED_BYTE:
+            case GL_UNSIGNED_BYTE:
             {
                 unsigned int compCount = 0;
                 switch (format)
                 {
-                  case GL_RGBA:            compCount = 4; break;
-                  case GL_RGB:             compCount = 3; break;
-                  case GL_LUMINANCE_ALPHA: compCount = 2; break;
-                  case GL_LUMINANCE:       compCount = 1; break;
-                  case GL_ALPHA:           compCount = 1; break;
-                  default:                 FAIL() << "unknown pixel format.";
+                    case GL_RGBA:
+                        compCount = 4;
+                        break;
+                    case GL_RGB:
+                        compCount = 3;
+                        break;
+                    case GL_LUMINANCE_ALPHA:
+                        compCount = 2;
+                        break;
+                    case GL_LUMINANCE:
+                        compCount = 1;
+                        break;
+                    case GL_ALPHA:
+                        compCount = 1;
+                        break;
+                    default:
+                        FAIL() << "unknown pixel format.";
                 }
                 *size = sizeof(GLubyte) * compCount;
             }
             break;
-          default:
-            FAIL() << "unknown pixel type.";
+            default:
+                FAIL() << "unknown pixel type.";
         }
     }
 
-    bool formatHasRGB(GLenum format)
-    {
-        return (format != GL_ALPHA);
-    }
+    bool formatHasRGB(GLenum format) { return (format != GL_ALPHA); }
 
     void testAlignment(int alignment, unsigned int offset, GLenum format, GLenum type)
     {
-        static const unsigned int width = 7;
+        static const unsigned int width  = 7;
         static const unsigned int height = 2;
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, alignment);
@@ -106,7 +114,7 @@ class UnpackAlignmentTest : public ANGLETest
         getPixelSize(format, type, &pixelSize);
         for (unsigned int i = 0; i < pixelSize; i++)
         {
-            buf[offset+i] = 0xFF;
+            buf[offset + i] = 0xFF;
         }
 
         GLuint tex;
@@ -135,7 +143,6 @@ TEST_P(UnpackAlignmentTest, DefaultAlignment)
     glGetIntegerv(GL_UNPACK_ALIGNMENT, &defaultAlignment);
     EXPECT_EQ(defaultAlignment, 4);
 }
-
 
 TEST_P(UnpackAlignmentTest, Alignment1RGBAUByte)
 {
@@ -177,7 +184,6 @@ TEST_P(UnpackAlignmentTest, Alignment1AUByte)
     testAlignment(1, 7, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-
 TEST_P(UnpackAlignmentTest, Alignment2RGBAUByte)
 {
     testAlignment(2, 7 * 4, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -217,7 +223,6 @@ TEST_P(UnpackAlignmentTest, Alignment2AUByte)
 {
     testAlignment(2, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
-
 
 TEST_P(UnpackAlignmentTest, Alignment4RGBAUByte)
 {
@@ -259,7 +264,6 @@ TEST_P(UnpackAlignmentTest, Alignment4AUByte)
     testAlignment(4, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-
 TEST_P(UnpackAlignmentTest, Alignment8RGBAUByte)
 {
     testAlignment(8, 7 * 4 + 4, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -300,7 +304,8 @@ TEST_P(UnpackAlignmentTest, Alignment8AUByte)
     testAlignment(8, 7 + 1, GL_ALPHA, GL_UNSIGNED_BYTE);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(UnpackAlignmentTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -310,4 +315,4 @@ ANGLE_INSTANTIATE_TEST(UnpackAlignmentTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
 
-} // namespace
+}  // namespace

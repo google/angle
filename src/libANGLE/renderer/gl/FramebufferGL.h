@@ -132,6 +132,6 @@ class FramebufferGL : public FramebufferImpl
 
     gl::DrawBufferMask mAppliedEnabledDrawBuffers;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_

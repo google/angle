@@ -15,7 +15,7 @@
 namespace gl
 {
 class ImageIndex;
-}  // namespace gl;
+}  // namespace gl
 
 namespace rx
 {

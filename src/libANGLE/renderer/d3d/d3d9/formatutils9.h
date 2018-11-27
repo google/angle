@@ -87,7 +87,7 @@ struct TextureFormat
     LoadImageFunction loadFunction;
 };
 const TextureFormat &GetTextureFormatInfo(GLenum internalFormat);
-}
-}
+}  // namespace d3d9
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_

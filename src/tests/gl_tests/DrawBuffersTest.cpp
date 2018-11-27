@@ -90,8 +90,10 @@ class DrawBuffersTest : public ANGLETest
         {
             if (bufferEnabled[index])
             {
-                strstr << "layout(location = " << index << ") "
-                          "out vec4 value" << index << ";\n";
+                strstr << "layout(location = " << index
+                       << ") "
+                          "out vec4 value"
+                       << index << ";\n";
             }
         }
 
@@ -106,9 +108,8 @@ class DrawBuffersTest : public ANGLETest
                 unsigned int g = (index + 1) & 2;
                 unsigned int b = (index + 1) & 4;
 
-                strstr << "    value" << index << " = vec4("
-                       << r << ".0, " << g << ".0, "
-                       << b << ".0, 1.0);\n";
+                strstr << "    value" << index << " = vec4(" << r << ".0, " << g << ".0, " << b
+                       << ".0, 1.0);\n";
             }
         }
 
@@ -138,9 +139,8 @@ class DrawBuffersTest : public ANGLETest
                 unsigned int g = (index + 1) & 2;
                 unsigned int b = (index + 1) & 4;
 
-                strstr << "    gl_FragData[" << index << "] = vec4("
-                    << r << ".0, " << g << ".0, "
-                    << b << ".0, 1.0);\n";
+                strstr << "    gl_FragData[" << index << "] = vec4(" << r << ".0, " << g << ".0, "
+                       << b << ".0, 1.0);\n";
             }
         }
 
@@ -261,16 +261,12 @@ TEST_P(DrawBuffersTest, Gaps)
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
 
-    bool flags[8] = { false, true };
+    bool flags[8] = {false, true};
 
     GLuint program;
     setupMRTProgram(flags, &program);
 
-    const GLenum bufs[] =
-    {
-        GL_NONE,
-        GL_COLOR_ATTACHMENT1
-    };
+    const GLenum bufs[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
     setDrawBuffers(2, bufs);
     drawQuad(program, positionAttrib(), 0.5);
 
@@ -292,18 +288,12 @@ TEST_P(DrawBuffersTest, FirstAndLast)
     glBindTexture(GL_TEXTURE_2D, mTextures[1]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, mTextures[1], 0);
 
-    bool flags[8] = { true, false, false, true };
+    bool flags[8] = {true, false, false, true};
 
     GLuint program;
     setupMRTProgram(flags, &program);
 
-    const GLenum bufs[] =
-    {
-        GL_COLOR_ATTACHMENT0,
-        GL_NONE,
-        GL_NONE,
-        GL_COLOR_ATTACHMENT3
-    };
+    const GLenum bufs[] = {GL_COLOR_ATTACHMENT0, GL_NONE, GL_NONE, GL_COLOR_ATTACHMENT3};
 
     setDrawBuffers(4, bufs);
     drawQuad(program, positionAttrib(), 0.5);
@@ -323,17 +313,18 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
     // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
-    bool flags[8] = { false };
-    GLenum bufs[8] = { GL_NONE };
+    bool flags[8]  = {false};
+    GLenum bufs[8] = {GL_NONE};
 
     GLuint halfMaxDrawBuffers = static_cast<GLuint>(mMaxDrawBuffers) / 2;
 
     for (GLuint texIndex = 0; texIndex < halfMaxDrawBuffers; texIndex++)
     {
         glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + halfMaxDrawBuffers + texIndex, GL_TEXTURE_2D, mTextures[texIndex], 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + halfMaxDrawBuffers + texIndex,
+                               GL_TEXTURE_2D, mTextures[texIndex], 0);
         flags[texIndex + halfMaxDrawBuffers] = true;
-        bufs[texIndex + halfMaxDrawBuffers] = GL_COLOR_ATTACHMENT0 + halfMaxDrawBuffers + texIndex;
+        bufs[texIndex + halfMaxDrawBuffers]  = GL_COLOR_ATTACHMENT0 + halfMaxDrawBuffers + texIndex;
     }
 
     GLuint program;
@@ -503,13 +494,12 @@ TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
     glBindTexture(GL_TEXTURE_2D, mTextures[1]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[1], 0);
 
-    bool flags[8] = { true, false };
+    bool flags[8] = {true, false};
 
     GLuint program;
     setupMRTProgram(flags, &program);
 
-    const GLenum bufs[] =
-    {
+    const GLenum bufs[] = {
         GL_COLOR_ATTACHMENT0,
         GL_COLOR_ATTACHMENT1,
         GL_NONE,
@@ -574,8 +564,7 @@ TEST_P(DrawBuffersTest, BroadcastGLFragColor)
 }
 
 class DrawBuffersTestES3 : public DrawBuffersTest
-{
-};
+{};
 
 // Test that binding multiple layers of a 3D texture works correctly
 TEST_P(DrawBuffersTestES3, 3DTextures)
@@ -598,7 +587,10 @@ TEST_P(DrawBuffersTestES3, 3DTextures)
     setupMRTProgram(flags, &program);
 
     const GLenum bufs[] = {
-        GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
     };
 
     glDrawBuffers(4, bufs);
@@ -635,7 +627,10 @@ TEST_P(DrawBuffersTestES3, 2DArrayTextures)
     setupMRTProgram(flags, &program);
 
     const GLenum bufs[] = {
-        GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
     };
 
     glDrawBuffers(4, bufs);
@@ -651,7 +646,8 @@ TEST_P(DrawBuffersTestES3, 2DArrayTextures)
     glDeleteProgram(program);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
                        ES2_D3D11(),
                        ES3_D3D11(),

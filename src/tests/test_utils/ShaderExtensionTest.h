@@ -13,8 +13,8 @@
 #include "gtest/gtest.h"
 
 using testing::Combine;
-using testing::Values;
 using testing::make_tuple;
+using testing::Values;
 
 namespace sh
 {
@@ -56,7 +56,7 @@ class ShaderExtensionTest
         return TestShaderCompile(testing::get<1>(GetParam()),  // Version.
                                  pragma,
                                  testing::get<2>(GetParam())  // Shader.
-                                 );
+        );
     }
 
     testing::AssertionResult TestShaderCompile(const char *version,

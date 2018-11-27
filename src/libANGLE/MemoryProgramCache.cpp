@@ -201,12 +201,9 @@ HashStream &operator<<(HashStream &stream, const std::vector<gl::VariableLocatio
 
 MemoryProgramCache::MemoryProgramCache(egl::BlobCache &blobCache)
     : mBlobCache(blobCache), mIssuedWarnings(0)
-{
-}
+{}
 
-MemoryProgramCache::~MemoryProgramCache()
-{
-}
+MemoryProgramCache::~MemoryProgramCache() {}
 
 // static
 angle::Result MemoryProgramCache::Deserialize(const Context *context,

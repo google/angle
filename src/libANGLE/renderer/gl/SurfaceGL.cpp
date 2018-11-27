@@ -18,13 +18,9 @@
 namespace rx
 {
 
-SurfaceGL::SurfaceGL(const egl::SurfaceState &state) : SurfaceImpl(state)
-{
-}
+SurfaceGL::SurfaceGL(const egl::SurfaceState &state) : SurfaceImpl(state) {}
 
-SurfaceGL::~SurfaceGL()
-{
-}
+SurfaceGL::~SurfaceGL() {}
 
 FramebufferImpl *SurfaceGL::createDefaultFramebuffer(const gl::Context *context,
                                                      const gl::FramebufferState &data)

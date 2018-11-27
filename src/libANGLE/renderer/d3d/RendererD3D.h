@@ -36,7 +36,7 @@ class FramebufferState;
 class InfoLog;
 class Texture;
 struct LinkedVarying;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -92,16 +92,15 @@ class Context : angle::NonCopyable
 
 // ANGLE_TRY for HRESULT errors.
 #define ANGLE_TRY_HR(CONTEXT, EXPR, MESSAGE)                                                     \
-    \
-{                                                                                         \
+                                                                                                 \
+    {                                                                                            \
         auto ANGLE_LOCAL_VAR = (EXPR);                                                           \
         if (ANGLE_UNLIKELY(FAILED(ANGLE_LOCAL_VAR)))                                             \
         {                                                                                        \
             CONTEXT->handleResult(ANGLE_LOCAL_VAR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
             return angle::Result::Stop();                                                        \
         }                                                                                        \
-    \
-}
+    }
 
 #define ANGLE_CHECK_HR(CONTEXT, EXPR, MESSAGE, ERROR)                                  \
     {                                                                                  \
@@ -294,30 +293,30 @@ class RendererD3D : public BufferFactoryD3D
                                                          RenderTargetD3D *renderTargetD3D) = 0;
     virtual TextureStorage *createTextureStorageExternal(
         egl::Stream *stream,
-        const egl::Stream::GLTextureDescription &desc)                                   = 0;
+        const egl::Stream::GLTextureDescription &desc)                                        = 0;
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat,
                                                    bool renderTarget,
                                                    GLsizei width,
                                                    GLsizei height,
                                                    int levels,
-                                                   bool hintLevelZeroOnly)               = 0;
+                                                   bool hintLevelZeroOnly)                    = 0;
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat,
                                                      bool renderTarget,
                                                      int size,
                                                      int levels,
-                                                     bool hintLevelZeroOnly)             = 0;
+                                                     bool hintLevelZeroOnly)                  = 0;
     virtual TextureStorage *createTextureStorage3D(GLenum internalformat,
                                                    bool renderTarget,
                                                    GLsizei width,
                                                    GLsizei height,
                                                    GLsizei depth,
-                                                   int levels)                           = 0;
+                                                   int levels)                                = 0;
     virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat,
                                                         bool renderTarget,
                                                         GLsizei width,
                                                         GLsizei height,
                                                         GLsizei depth,
-                                                        int levels)                      = 0;
+                                                        int levels)                           = 0;
     virtual TextureStorage *createTextureStorage2DMultisample(GLenum internalformat,
                                                               GLsizei width,
                                                               GLsizei height,

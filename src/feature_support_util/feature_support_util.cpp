@@ -18,26 +18,26 @@
 //{
 
 #if defined(ANDROID)
-#include <android/log.h>
+#    include <android/log.h>
 
 // Define ANGLE_FEATURE_UTIL_LOG_VERBOSE if you want ALOGV to output
 // ANGLE_FEATURE_UTIL_LOG_VERBOSE is automatically defined when is_debug = true
 
-#define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, "ANGLE", __VA_ARGS__)
-#define ALOGW(...) __android_log_print(ANDROID_LOG_WARN, "ANGLE", __VA_ARGS__)
-#define ALOGI(...) __android_log_print(ANDROID_LOG_INFO, "ANGLE", __VA_ARGS__)
-#define ALOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "ANGLE", __VA_ARGS__)
-#ifdef ANGLE_FEATURE_UTIL_LOG_VERBOSE
-#define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "ANGLE", __VA_ARGS__)
-#else
-#define ALOGV(...) ((void)0)
-#endif
+#    define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, "ANGLE", __VA_ARGS__)
+#    define ALOGW(...) __android_log_print(ANDROID_LOG_WARN, "ANGLE", __VA_ARGS__)
+#    define ALOGI(...) __android_log_print(ANDROID_LOG_INFO, "ANGLE", __VA_ARGS__)
+#    define ALOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "ANGLE", __VA_ARGS__)
+#    ifdef ANGLE_FEATURE_UTIL_LOG_VERBOSE
+#        define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "ANGLE", __VA_ARGS__)
+#    else
+#        define ALOGV(...) ((void)0)
+#    endif
 #else  // defined(ANDROID)
-#define ALOGE(...) printf(__VA_ARGS__);
-#define ALOGW(...) printf(__VA_ARGS__);
-#define ALOGI(...) printf(__VA_ARGS__);
-#define ALOGD(...) printf(__VA_ARGS__);
-#define ALOGV(...) printf(__VA_ARGS__);
+#    define ALOGE(...) printf(__VA_ARGS__);
+#    define ALOGW(...) printf(__VA_ARGS__);
+#    define ALOGI(...) printf(__VA_ARGS__);
+#    define ALOGD(...) printf(__VA_ARGS__);
+#    define ALOGV(...) printf(__VA_ARGS__);
 #endif  // defined(ANDROID)
 
 // JSON values are generally composed of either:
@@ -225,12 +225,10 @@ class Version
   public:
     Version(uint32_t major, uint32_t minor, uint32_t subminor, uint32_t patch)
         : mMajor(major), mMinor(minor), mSubminor(subminor), mPatch(patch), mWildcard(false)
-    {
-    }
+    {}
     Version(uint32_t major, uint32_t minor, uint32_t subminor)
         : mMajor(major), mMinor(minor), mSubminor(subminor), mWildcard(false)
-    {
-    }
+    {}
     Version(uint32_t major, uint32_t minor) : mMajor(major), mMinor(minor), mWildcard(false) {}
     Version(uint32_t major) : mMajor(major), mWildcard(false) {}
     Version() : mWildcard(true) {}
@@ -240,8 +238,7 @@ class Version
           mSubminor(toCopy.mSubminor),
           mPatch(toCopy.mPatch),
           mWildcard(toCopy.mWildcard)
-    {
-    }
+    {}
     ~Version() {}
     bool match(Version &toCheck)
     {
@@ -354,16 +351,13 @@ class Application
   public:
     Application(std::string name, Version &version, std::string intent)
         : mName(name), mVersion(version), mIntent(intent), mWildcard(false)
-    {
-    }
+    {}
     Application(std::string name, std::string intent)
         : mName(name), mVersion(), mIntent(intent), mWildcard(false)
-    {
-    }
+    {}
     Application(std::string name, Version &version)
         : mName(name), mVersion(version), mIntent(), mWildcard(false)
-    {
-    }
+    {}
     Application(std::string name) : mName(name), mVersion(), mIntent(), mWildcard(false) {}
     Application() : mName(), mVersion(), mIntent(), mWildcard(true) {}
     ~Application() {}
@@ -453,21 +447,17 @@ class GPU
   public:
     GPU(std::string vendor, uint32_t deviceId, Version &version)
         : mVendor(vendor), mDeviceId(IntegerPart(deviceId)), mVersion(version), mWildcard(false)
-    {
-    }
+    {}
     GPU(uint32_t deviceId, Version &version)
         : mVendor(), mDeviceId(IntegerPart(deviceId)), mVersion(version), mWildcard(false)
-    {
-    }
+    {}
     GPU(std::string vendor, uint32_t deviceId)
         : mVendor(vendor), mDeviceId(IntegerPart(deviceId)), mVersion(), mWildcard(false)
-    {
-    }
+    {}
     GPU(std::string vendor) : mVendor(vendor), mDeviceId(), mVersion(), mWildcard(false) {}
     GPU(uint32_t deviceId)
         : mVendor(), mDeviceId(IntegerPart(deviceId)), mVersion(), mWildcard(false)
-    {
-    }
+    {}
     GPU() : mVendor(), mDeviceId(), mVersion(), mWildcard(true) {}
     bool match(GPU &toCheck)
     {
@@ -566,12 +556,10 @@ class Device
   public:
     Device(std::string manufacturer, std::string model)
         : mManufacturer(manufacturer), mModel(model), mGpuList("GPU"), mWildcard(false)
-    {
-    }
+    {}
     Device(std::string manufacturer)
         : mManufacturer(manufacturer), mModel(), mGpuList("GPU"), mWildcard(false)
-    {
-    }
+    {}
     Device() : mManufacturer(), mModel(), mGpuList("GPU"), mWildcard(true) {}
     ~Device() {}
     void addGPU(GPU &gpu) { mGpuList.addItem(gpu); }
@@ -672,8 +660,7 @@ class Scenario
   public:
     Scenario(const char *appName, const char *deviceMfr, const char *deviceModel)
         : mApplication(Application(appName)), mDevice(Device(deviceMfr, deviceModel))
-    {
-    }
+    {}
     ~Scenario() {}
     void logScenario()
     {
@@ -705,8 +692,7 @@ class Rule
           mDevList("Device"),
           mAppChoice(appChoice),
           mAnswer(answer)
-    {
-    }
+    {}
     ~Rule() {}
     void addApp(Application &app) { mAppList.addItem(app); }
     void addDev(Device &dev) { mDevList.addItem(dev); }
@@ -741,8 +727,7 @@ class Rule
           mDevList("Device"),
           mAppChoice(false),
           mAnswer(false)
-    {
-    }
+    {}
 };
 
 // This encapsulates a list of Rules that Scenarios are matched against.  A Scenario is compared
@@ -894,7 +879,7 @@ ANGLE_EXPORT bool ANGLEUseForApplication(const char *appName,
                                          ANGLEPreference appPreference)
 {
     Scenario scenario(appName, deviceMfr, deviceModel);
-    bool rtn        = false;
+    bool rtn = false;
     scenario.logScenario();
 
     // #include the contents of the file into a string and then parse it:

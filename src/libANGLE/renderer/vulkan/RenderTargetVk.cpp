@@ -17,19 +17,13 @@ namespace rx
 {
 RenderTargetVk::RenderTargetVk(vk::ImageHelper *image, vk::ImageView *imageView, size_t layerIndex)
     : mImage(image), mImageView(imageView), mLayerIndex(layerIndex)
-{
-}
+{}
 
-RenderTargetVk::~RenderTargetVk()
-{
-}
+RenderTargetVk::~RenderTargetVk() {}
 
 RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
-    : mImage(other.mImage),
-      mImageView(other.mImageView),
-      mLayerIndex(other.mLayerIndex)
-{
-}
+    : mImage(other.mImage), mImageView(other.mImageView), mLayerIndex(other.mLayerIndex)
+{}
 
 void RenderTargetVk::onColorDraw(vk::FramebufferHelper *framebufferVk,
                                  vk::CommandBuffer *commandBuffer,

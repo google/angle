@@ -11,12 +11,8 @@
 namespace rx
 {
 
-ImageGL::ImageGL(const egl::ImageState &state) : ImageImpl(state)
-{
-}
+ImageGL::ImageGL(const egl::ImageState &state) : ImageImpl(state) {}
 
-ImageGL::~ImageGL()
-{
-}
+ImageGL::~ImageGL() {}
 
 }  // namespace rx

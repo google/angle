@@ -27,8 +27,7 @@ struct PreprocessorSettings final
 {
     PreprocessorSettings(ShShaderSpec shaderSpec)
         : maxMacroExpansionDepth(1000), shaderSpec(shaderSpec)
-    {
-    }
+    {}
 
     PreprocessorSettings(const PreprocessorSettings &other) = default;
 

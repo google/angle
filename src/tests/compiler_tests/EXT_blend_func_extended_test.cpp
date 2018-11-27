@@ -11,7 +11,7 @@
 
 namespace
 {
-const char EXTBFEPragma[]   = "#extension GL_EXT_blend_func_extended : require\n";
+const char EXTBFEPragma[] = "#extension GL_EXT_blend_func_extended : require\n";
 
 const char ESSL100_SimpleShader1[] =
     "precision mediump float;\n"
@@ -218,8 +218,7 @@ INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
                                        ESSL300_LocationIndexShader)));
 
 class EXTBlendFuncExtendedCompileFailureTest : public EXTBlendFuncExtendedTest
-{
-};
+{};
 
 TEST_P(EXTBlendFuncExtendedCompileFailureTest, CompileFails)
 {

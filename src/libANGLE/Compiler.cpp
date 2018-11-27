@@ -218,16 +218,13 @@ void Compiler::putInstance(ShCompilerInstance &&instance)
     }
 }
 
-ShCompilerInstance::ShCompilerInstance() : mHandle(nullptr)
-{
-}
+ShCompilerInstance::ShCompilerInstance() : mHandle(nullptr) {}
 
 ShCompilerInstance::ShCompilerInstance(ShHandle handle,
                                        ShShaderOutput outputType,
                                        ShaderType shaderType)
     : mHandle(handle), mOutputType(outputType), mShaderType(shaderType)
-{
-}
+{}
 
 ShCompilerInstance::~ShCompilerInstance()
 {

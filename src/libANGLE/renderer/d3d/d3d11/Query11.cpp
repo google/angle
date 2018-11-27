@@ -52,12 +52,9 @@ namespace rx
 
 Query11::QueryState::QueryState()
     : getDataAttemptCount(0), query(), beginTimestamp(), endTimestamp(), finished(false)
-{
-}
+{}
 
-Query11::QueryState::~QueryState()
-{
-}
+Query11::QueryState::~QueryState() {}
 
 Query11::Query11(Renderer11 *renderer, gl::QueryType type)
     : QueryImpl(type), mResult(0), mResultSum(0), mRenderer(renderer)
@@ -135,7 +132,7 @@ angle::Result Query11::pause(Context11 *context11)
     if (mActiveQuery->query.valid())
     {
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-        gl::QueryType type             = getType();
+        gl::QueryType type           = getType();
 
         // If we are doing time elapsed query the end timestamp
         if (type == gl::QueryType::TimeElapsed)
@@ -158,7 +155,7 @@ angle::Result Query11::resume(Context11 *context11)
     {
         ANGLE_TRY(flush(context11, false));
 
-        gl::QueryType type         = getType();
+        gl::QueryType type       = getType();
         D3D11_QUERY d3dQueryType = gl_d3d11::ConvertQueryType(type);
 
         D3D11_QUERY_DESC queryDesc;

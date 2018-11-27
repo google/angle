@@ -10,9 +10,9 @@
 #ifndef LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
 #define LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
 
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
@@ -26,7 +26,7 @@ class TextureCapsMap;
 struct Extensions;
 struct Version;
 struct Workarounds;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -64,7 +64,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds);
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds);
-}
+}  // namespace nativegl_gl
 
 namespace nativegl
 {
@@ -75,7 +75,7 @@ bool SupportsNativeRendering(const FunctionsGL *functions,
                              GLenum internalFormat);
 bool UseTexImage2D(gl::TextureType textureType);
 bool UseTexImage3D(gl::TextureType textureType);
-}
+}  // namespace nativegl
 
 bool CanMapBufferForRead(const FunctionsGL *functions);
 uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
@@ -105,8 +105,7 @@ struct ContextCreationTry
 
     ContextCreationTry(EGLint displayType, Type type, gl::Version version)
         : displayType(displayType), type(type), version(version)
-    {
-    }
+    {}
 
     EGLint displayType;
     Type type;
@@ -116,4 +115,4 @@ struct ContextCreationTry
 std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedType, bool isMesaGLX);
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_
+#endif  // LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_

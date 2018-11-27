@@ -42,4 +42,4 @@ TEST(AlignedMemoryTest, DynamicAllocation)
     AlignedFree(p);
 }
 
-}  // namespace base
+}  // namespace angle

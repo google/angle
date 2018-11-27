@@ -21,9 +21,9 @@ class BlendMinMaxTest : public ANGLETest
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
 
-        mProgram = 0;
-        mColorLocation = -1;
-        mFramebuffer = 0;
+        mProgram           = 0;
+        mColorLocation     = -1;
+        mFramebuffer       = 0;
         mColorRenderbuffer = 0;
     }
 
@@ -67,7 +67,8 @@ class BlendMinMaxTest : public ANGLETest
         {
             const Color &color = colors[i];
             glUseProgram(mProgram);
-            glUniform4f(mColorLocation, color.values[0], color.values[1], color.values[2], color.values[3]);
+            glUniform4f(mColorLocation, color.values[0], color.values[1], color.values[2],
+                        color.values[3]);
 
             bool blendMin = (rand() % 2 == 0);
             glBlendEquation(blendMin ? GL_MIN : GL_MAX);
@@ -138,7 +139,8 @@ class BlendMinMaxTest : public ANGLETest
         glGenRenderbuffers(1, &mColorRenderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, mColorRenderbuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, colorFormat, getWindowWidth(), getWindowHeight());
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mColorRenderbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  mColorRenderbuffer);
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -186,7 +188,8 @@ TEST_P(BlendMinMaxTest, RGBA16F)
     runTest(GL_RGBA16F, GL_FLOAT);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(BlendMinMaxTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

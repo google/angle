@@ -93,7 +93,10 @@ TEST_P(ClipPlaneTest, Set)
         EXPECT_GL_NO_ERROR();
 
         GLfloat clipPlane[4] = {
-            i + 0.0f, i + 1.0f, i + 2.0f, i + 3.0f,
+            i + 0.0f,
+            i + 1.0f,
+            i + 2.0f,
+            i + 3.0f,
         };
 
         glClipPlanef(plane, clipPlane);

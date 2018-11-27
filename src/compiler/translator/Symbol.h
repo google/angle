@@ -61,8 +61,7 @@ class TSymbol : angle::NonCopyable
           mSymbolType(symbolType),
           mExtension(extension),
           mSymbolClass(symbolClass)
-    {
-    }
+    {}
 
     const ImmutableString mName;
 
@@ -102,8 +101,7 @@ class TVariable : public TSymbol
         : TSymbol(id, name, symbolType, extension, SymbolClass::Variable),
           mType(type),
           unionArray(nullptr)
-    {
-    }
+    {}
 
   private:
     const TType *mType;
@@ -257,8 +255,7 @@ class TFunction : public TSymbol
           defined(false),
           mHasPrototypeDeclaration(false),
           mKnownToNotHaveSideEffects(knownToNotHaveSideEffects)
-    {
-    }
+    {}
 
   private:
     ImmutableString buildMangledName() const;

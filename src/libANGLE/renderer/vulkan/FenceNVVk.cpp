@@ -17,13 +17,9 @@
 namespace rx
 {
 
-FenceNVVk::FenceNVVk() : FenceNVImpl()
-{
-}
+FenceNVVk::FenceNVVk() : FenceNVImpl() {}
 
-FenceNVVk::~FenceNVVk()
-{
-}
+FenceNVVk::~FenceNVVk() {}
 
 angle::Result FenceNVVk::set(const gl::Context *context, GLenum condition)
 {

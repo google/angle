@@ -21,7 +21,7 @@ namespace rx
 {
 class GLImplFactory;
 class ProgramPipelineImpl;
-};
+};  // namespace rx
 
 namespace gl
 {
@@ -60,6 +60,6 @@ class ProgramPipeline final : public RefCountObject, public LabeledObject
 
     ProgramPipelineState mState;
 };
-}
+}  // namespace gl
 
 #endif  // LIBANGLE_PROGRAMPIPELINE_H_

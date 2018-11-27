@@ -19,7 +19,7 @@ class ShaderImpl : angle::NonCopyable
 {
   public:
     ShaderImpl(const gl::ShaderState &data) : mData(data) {}
-    virtual ~ShaderImpl() { }
+    virtual ~ShaderImpl() {}
 
     virtual void destroy() {}
 
@@ -38,6 +38,6 @@ class ShaderImpl : angle::NonCopyable
     const gl::ShaderState &mData;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_SHADERIMPL_H_
+#endif  // LIBANGLE_RENDERER_SHADERIMPL_H_

@@ -64,6 +64,6 @@ class RenderbufferGL : public RenderbufferImpl
     GLenum mNativeInternalFormat;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_RENDERBUFFERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_RENDERBUFFERGL_H_

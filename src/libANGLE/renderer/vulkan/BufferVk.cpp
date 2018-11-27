@@ -18,13 +18,9 @@
 namespace rx
 {
 
-BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state)
-{
-}
+BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state) {}
 
-BufferVk::~BufferVk()
-{
-}
+BufferVk::~BufferVk() {}
 
 void BufferVk::destroy(const gl::Context *context)
 {

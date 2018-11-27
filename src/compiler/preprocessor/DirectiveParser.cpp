@@ -137,7 +137,7 @@ bool isMacroPredefined(const std::string &name, const pp::MacroSet &macroSet)
     return iter != macroSet.end() ? iter->second->predefined : false;
 }
 
-}  // namespace anonymous
+}  // namespace
 
 namespace pp
 {
@@ -154,12 +154,9 @@ DirectiveParser::DirectiveParser(Tokenizer *tokenizer,
       mDirectiveHandler(directiveHandler),
       mShaderVersion(100),
       mSettings(settings)
-{
-}
+{}
 
-DirectiveParser::~DirectiveParser()
-{
-}
+DirectiveParser::~DirectiveParser() {}
 
 void DirectiveParser::lex(Token *token)
 {

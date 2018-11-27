@@ -71,13 +71,11 @@ bool IsMipmapFiltered(const SamplerState &samplerState)
 
 SwizzleState::SwizzleState()
     : swizzleRed(GL_RED), swizzleGreen(GL_GREEN), swizzleBlue(GL_BLUE), swizzleAlpha(GL_ALPHA)
-{
-}
+{}
 
 SwizzleState::SwizzleState(GLenum red, GLenum green, GLenum blue, GLenum alpha)
     : swizzleRed(red), swizzleGreen(green), swizzleBlue(blue), swizzleAlpha(alpha)
-{
-}
+{}
 
 bool SwizzleState::swizzleRequired() const
 {
@@ -109,12 +107,9 @@ TextureState::TextureState(TextureType type)
       mCropRect(0, 0, 0, 0),
       mGenerateMipmapHint(GL_FALSE),
       mInitState(InitState::MayNeedInit)
-{
-}
+{}
 
-TextureState::~TextureState()
-{
-}
+TextureState::~TextureState() {}
 
 bool TextureState::swizzleRequired() const
 {
@@ -474,13 +469,11 @@ TextureTarget TextureState::getBaseImageTarget() const
 
 ImageDesc::ImageDesc()
     : ImageDesc(Extents(0, 0, 0), Format::Invalid(), 0, GL_TRUE, InitState::Initialized)
-{
-}
+{}
 
 ImageDesc::ImageDesc(const Extents &size, const Format &format, const InitState initState)
     : size(size), format(format), samples(0), fixedSampleLocations(GL_TRUE), initState(initState)
-{
-}
+{}
 
 ImageDesc::ImageDesc(const Extents &size,
                      const Format &format,
@@ -492,8 +485,7 @@ ImageDesc::ImageDesc(const Extents &size,
       samples(samples),
       fixedSampleLocations(fixedSampleLocations),
       initState(initState)
-{
-}
+{}
 
 GLint ImageDesc::getMemorySize() const
 {
@@ -1613,8 +1605,7 @@ bool Texture::isSamplerComplete(const Context *context, const Sampler *optionalS
 
 Texture::SamplerCompletenessCache::SamplerCompletenessCache()
     : context(0), samplerState(), samplerComplete(false)
-{
-}
+{}
 
 void Texture::invalidateCompletenessCache() const
 {

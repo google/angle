@@ -10,13 +10,13 @@
 
 #include <fcntl.h>
 #include <poll.h>
-#include <unistd.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #include <EGL/eglext.h>
 
-#include <gbm.h>
 #include <drm_fourcc.h>
+#include <gbm.h>
 
 #include "common/debug.h"
 #include "libANGLE/Config.h"
@@ -35,11 +35,11 @@
 // ARM-specific extension needed to make Mali GPU behave - not in any
 // published header file.
 #ifndef EGL_SYNC_PRIOR_COMMANDS_IMPLICIT_EXTERNAL_ARM
-#define EGL_SYNC_PRIOR_COMMANDS_IMPLICIT_EXTERNAL_ARM 0x328A
+#    define EGL_SYNC_PRIOR_COMMANDS_IMPLICIT_EXTERNAL_ARM 0x328A
 #endif
 
 #ifndef EGL_NO_CONFIG_MESA
-#define EGL_NO_CONFIG_MESA ((EGLConfig)0)
+#    define EGL_NO_CONFIG_MESA ((EGLConfig)0)
 #endif
 
 namespace
@@ -72,7 +72,7 @@ int ChooseCRTC(int fd, drmModeConnectorPtr conn)
     for (int i = 0; i < conn->count_encoders; ++i)
     {
         drmModeEncoderPtr enc = drmModeGetEncoder(fd, conn->encoders[i]);
-        unsigned long crtcs = enc->possible_crtcs;
+        unsigned long crtcs   = enc->possible_crtcs;
         drmModeFreeEncoder(enc);
         if (crtcs)
         {
@@ -89,8 +89,7 @@ namespace rx
 // TODO(fjhenigman) Implement swap control.  Until then this is unused.
 SwapControlData::SwapControlData()
     : targetSwapInterval(0), maxSwapInterval(-1), currentSwapInterval(-1)
-{
-}
+{}
 
 DisplayOzone::Buffer::Buffer(DisplayOzone *display,
                              uint32_t useFlags,
@@ -117,8 +116,7 @@ DisplayOzone::Buffer::Buffer(DisplayOzone *display,
       mColorBuffer(0),
       mDSBuffer(0),
       mTexture(0)
-{
-}
+{}
 
 DisplayOzone::Buffer::~Buffer()
 {
@@ -374,12 +372,9 @@ DisplayOzone::DisplayOzone(const egl::DisplayState &state)
       mWindowSizeUniform(0),
       mBorderSizeUniform(0),
       mDepthUniform(0)
-{
-}
+{}
 
-DisplayOzone::~DisplayOzone()
-{
-}
+DisplayOzone::~DisplayOzone() {}
 
 bool DisplayOzone::hasUsableScreen(int fd)
 {
@@ -484,11 +479,13 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     // advantage of the fact that the system lib is available under multiple names (for example
     // with a .1 suffix) while Angle only installs libEGL.so.
     FunctionsEGLDL *egl = new FunctionsEGLDL();
-    mEGL = egl;
+    mEGL                = egl;
     ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), "libEGL.so.1", nullptr));
 
     const char *necessaryExtensions[] = {
-        "EGL_KHR_image_base", "EGL_EXT_image_dma_buf_import", "EGL_KHR_surfaceless_context",
+        "EGL_KHR_image_base",
+        "EGL_EXT_image_dma_buf_import",
+        "EGL_KHR_surfaceless_context",
     };
     for (auto &ext : necessaryExtensions)
     {
@@ -555,7 +552,7 @@ void DisplayOzone::pageFlipHandler(int fd,
                                    void *data)
 {
     DisplayOzone *display = reinterpret_cast<DisplayOzone *>(data);
-    uint64_t tv = tv_sec;
+    uint64_t tv           = tv_sec;
     display->pageFlipHandler(sequence, tv * 1000000 + tv_usec);
 }
 
@@ -621,7 +618,7 @@ void DisplayOzone::presentScreen()
 GLuint DisplayOzone::makeShader(GLuint type, const char *src)
 {
     const FunctionsGL *gl = mRenderer->getFunctions();
-    GLuint shader = gl->createShader(type);
+    GLuint shader         = gl->createShader(type);
     gl->shaderSource(shader, 1, &src, nullptr);
     gl->compileShader(shader);
 
@@ -680,7 +677,7 @@ void DisplayOzone::drawWithTexture(const gl::Context *context, Buffer *buffer)
 
         mVertexShader   = makeShader(GL_VERTEX_SHADER, vertexSource);
         mFragmentShader = makeShader(GL_FRAGMENT_SHADER, fragmentSource);
-        mProgram = gl->createProgram();
+        mProgram        = gl->createProgram();
         gl->attachShader(mProgram, mVertexShader);
         gl->attachShader(mProgram, mFragmentShader);
         gl->bindAttribLocation(mProgram, 0, "vertex");
@@ -696,7 +693,7 @@ void DisplayOzone::drawWithTexture(const gl::Context *context, Buffer *buffer)
         mWindowSizeUniform = gl->getUniformLocation(mProgram, "windowSize");
         mBorderSizeUniform = gl->getUniformLocation(mProgram, "borderSize");
         mDepthUniform      = gl->getUniformLocation(mProgram, "depth");
-        GLint texUniform = gl->getUniformLocation(mProgram, "tex");
+        GLint texUniform   = gl->getUniformLocation(mProgram, "tex");
         sm->useProgram(mProgram);
         gl->uniform1i(texUniform, 0);
 
@@ -817,7 +814,7 @@ void DisplayOzone::flushGL()
     {
         const EGLint attrib[] = {EGL_SYNC_CONDITION_KHR,
                                  EGL_SYNC_PRIOR_COMMANDS_IMPLICIT_EXTERNAL_ARM, EGL_NONE};
-        EGLSyncKHR fence = mEGL->createSyncKHR(EGL_SYNC_FENCE_KHR, attrib);
+        EGLSyncKHR fence      = mEGL->createSyncKHR(EGL_SYNC_FENCE_KHR, attrib);
         if (fence)
         {
             // TODO(fjhenigman) Figure out the right way to use fences on Mali GPU
@@ -904,7 +901,7 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
 {
     EGLAttrib width  = attribs.get(EGL_WIDTH, 0);
     EGLAttrib height = attribs.get(EGL_HEIGHT, 0);
-    Buffer *buffer = new Buffer(this, GBM_BO_USE_RENDERING, GBM_FORMAT_ARGB8888,
+    Buffer *buffer   = new Buffer(this, GBM_BO_USE_RENDERING, GBM_FORMAT_ARGB8888,
                                 DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888, true, true);
     if (!buffer || !buffer->initialize(width, height))
     {
@@ -950,15 +947,15 @@ egl::ConfigSet DisplayOzone::generateConfigs()
     egl::ConfigSet configs;
 
     egl::Config config;
-    config.redSize           = 8;
-    config.greenSize         = 8;
-    config.blueSize          = 8;
-    config.alphaSize         = 8;
-    config.depthSize         = 24;
-    config.stencilSize       = 8;
-    config.bindToTextureRGBA = EGL_TRUE;
-    config.renderableType    = EGL_OPENGL_ES2_BIT;
-    config.surfaceType       = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.redSize            = 8;
+    config.greenSize          = 8;
+    config.blueSize           = 8;
+    config.alphaSize          = 8;
+    config.depthSize          = 24;
+    config.stencilSize        = 8;
+    config.bindToTextureRGBA  = EGL_TRUE;
+    config.renderableType     = EGL_OPENGL_ES2_BIT;
+    config.surfaceType        = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
     config.renderTargetFormat = GL_RGBA8;
     config.depthStencilFormat = GL_DEPTH24_STENCIL8;
 

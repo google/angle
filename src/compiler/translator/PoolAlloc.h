@@ -8,7 +8,7 @@
 #define COMPILER_TRANSLATOR_POOLALLOC_H_
 
 #ifdef _DEBUG
-#define GUARD_BLOCKS  // define to enable guard block sanity checking
+#    define GUARD_BLOCKS  // define to enable guard block sanity checking
 #endif
 
 //
@@ -176,26 +176,25 @@ class TPoolAllocator
         tHeader(tHeader *nextPage, size_t pageCount)
             : nextPage(nextPage),
               pageCount(pageCount)
-#ifdef GUARD_BLOCKS
+#    ifdef GUARD_BLOCKS
               ,
               lastAllocation(0)
-#endif
-        {
-        }
+#    endif
+        {}
 
         ~tHeader()
         {
-#ifdef GUARD_BLOCKS
+#    ifdef GUARD_BLOCKS
             if (lastAllocation)
                 lastAllocation->checkAllocList();
-#endif
+#    endif
         }
 
         tHeader *nextPage;
         size_t pageCount;
-#ifdef GUARD_BLOCKS
+#    ifdef GUARD_BLOCKS
         TAllocation *lastAllocation;
-#endif
+#    endif
     };
 
     struct tAllocState
@@ -208,10 +207,10 @@ class TPoolAllocator
     // Track allocations if and only if we're using guard blocks
     void *initializeAllocation(tHeader *block, unsigned char *memory, size_t numBytes)
     {
-#ifdef GUARD_BLOCKS
+#    ifdef GUARD_BLOCKS
         new (memory) TAllocation(numBytes, memory, block->lastAllocation);
         block->lastAllocation = reinterpret_cast<TAllocation *>(memory);
-#endif
+#    endif
         // This is optimized entirely away if GUARD_BLOCKS is not defined.
         return TAllocation::offsetAllocation(memory);
     }
@@ -276,8 +275,7 @@ class pool_allocator
 
     template <class Other>
     pool_allocator(const pool_allocator<Other> &p)
-    {
-    }
+    {}
 
     template <class Other>
     pool_allocator<T> &operator=(const pool_allocator<Other> &p)

@@ -43,6 +43,6 @@ class ShaderGL : public ShaderImpl
     const FunctionsGL *mFunctions;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_SHADERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_SHADERGL_H_

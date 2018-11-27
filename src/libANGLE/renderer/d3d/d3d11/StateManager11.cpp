@@ -198,13 +198,11 @@ bool CullsEverything(const gl::State &glState)
 // StateManager11::ViewCache Implementation.
 template <typename ViewType, typename DescType>
 StateManager11::ViewCache<ViewType, DescType>::ViewCache() : mHighestUsedView(0)
-{
-}
+{}
 
 template <typename ViewType, typename DescType>
 StateManager11::ViewCache<ViewType, DescType>::~ViewCache()
-{
-}
+{}
 
 template <typename ViewType, typename DescType>
 void StateManager11::ViewCache<ViewType, DescType>::update(size_t resourceIndex, ViewType *view)
@@ -257,9 +255,7 @@ ShaderConstants11::ShaderConstants11() : mNumActiveShaderSamplers({})
     mShaderConstantsDirty.set();
 }
 
-ShaderConstants11::~ShaderConstants11()
-{
-}
+ShaderConstants11::~ShaderConstants11() {}
 
 void ShaderConstants11::init(const gl::Caps &caps)
 {
@@ -643,9 +639,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurrentVertexOffsets.fill(std::numeric_limits<UINT>::max());
 }
 
-StateManager11::~StateManager11()
-{
-}
+StateManager11::~StateManager11() {}
 
 template <typename SRVType>
 void StateManager11::setShaderResourceInternal(gl::ShaderType shaderType,

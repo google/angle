@@ -156,8 +156,7 @@ Format::Format()
       vkBufferFormatIsPacked(false),
       textureInitializerFunction(nullptr),
       textureLoadFunctions()
-{
-}
+{}
 
 void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
                                  const TextureFormatInitInfo *info,
@@ -212,13 +211,9 @@ bool operator!=(const Format &lhs, const Format &rhs)
 }
 
 // FormatTable implementation.
-FormatTable::FormatTable()
-{
-}
+FormatTable::FormatTable() {}
 
-FormatTable::~FormatTable()
-{
-}
+FormatTable::~FormatTable() {}
 
 void FormatTable::initialize(VkPhysicalDevice physicalDevice,
                              const VkPhysicalDeviceProperties &physicalDeviceProperties,
@@ -274,7 +269,7 @@ const Format &FormatTable::operator[](angle::FormatID formatID) const
 size_t GetVertexInputAlignment(const vk::Format &format)
 {
     const angle::Format &bufferFormat = format.bufferFormat();
-    size_t pixelBytes = bufferFormat.pixelBytes;
+    size_t pixelBytes                 = bufferFormat.pixelBytes;
     return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount());
 }
 }  // namespace rx

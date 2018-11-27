@@ -33,8 +33,7 @@ namespace sh
 
 TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
     : TCompiler(type, spec, output)
-{
-}
+{}
 
 void TranslatorHLSL::translate(TIntermBlock *root,
                                ShCompileOptions compileOptions,
@@ -140,8 +139,8 @@ void TranslatorHLSL::translate(TIntermBlock *root,
     outputHLSL.output(root, getInfoSink().obj);
 
     mShaderStorageBlockRegisterMap = outputHLSL.getShaderStorageBlockRegisterMap();
-    mUniformBlockRegisterMap   = outputHLSL.getUniformBlockRegisterMap();
-    mUniformRegisterMap        = outputHLSL.getUniformRegisterMap();
+    mUniformBlockRegisterMap       = outputHLSL.getUniformBlockRegisterMap();
+    mUniformRegisterMap            = outputHLSL.getUniformRegisterMap();
 }
 
 bool TranslatorHLSL::shouldFlattenPragmaStdglInvariantAll()

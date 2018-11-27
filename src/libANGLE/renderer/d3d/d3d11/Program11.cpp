@@ -16,8 +16,7 @@ namespace rx
 {
 Program11::Program11(const gl::ProgramState &programState, Renderer11 *renderer)
     : ProgramD3D(programState, renderer)
-{
-}
+{}
 
 Program11::~Program11() = default;
 

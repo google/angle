@@ -34,9 +34,9 @@
 // Consts
 namespace
 {
-const uint32_t kMockVendorID     = 0xba5eba11;
-const uint32_t kMockDeviceID     = 0xf005ba11;
-constexpr char kMockDeviceName[] = "Vulkan Mock Device";
+const uint32_t kMockVendorID            = 0xba5eba11;
+const uint32_t kMockDeviceID            = 0xf005ba11;
+constexpr char kMockDeviceName[]        = "Vulkan Mock Device";
 constexpr size_t kInFlightCommandsLimit = 100u;
 }  // anonymous namespace
 
@@ -278,8 +278,7 @@ RendererVk::CommandBatch::~CommandBatch() = default;
 
 RendererVk::CommandBatch::CommandBatch(CommandBatch &&other)
     : commandPool(std::move(other.commandPool)), fence(std::move(other.fence)), serial(other.serial)
-{
-}
+{}
 
 RendererVk::CommandBatch &RendererVk::CommandBatch::operator=(CommandBatch &&other)
 {
@@ -315,12 +314,9 @@ RendererVk::RendererVk()
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0)
-{
-}
+{}
 
-RendererVk::~RendererVk()
-{
-}
+RendererVk::~RendererVk() {}
 
 void RendererVk::onDestroy(vk::Context *context)
 {
@@ -457,9 +453,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     applicationInfo.apiVersion         = VK_API_VERSION_1_0;
 
     VkInstanceCreateInfo instanceInfo = {};
-    instanceInfo.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    instanceInfo.flags            = 0;
-    instanceInfo.pApplicationInfo = &applicationInfo;
+    instanceInfo.sType                = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instanceInfo.flags                = 0;
+    instanceInfo.pApplicationInfo     = &applicationInfo;
 
     // Enable requested layers and extensions.
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
@@ -511,8 +507,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     vkGetPhysicalDeviceQueueFamilyProperties(mPhysicalDevice, &queueCount,
                                              mQueueFamilyProperties.data());
 
-    size_t graphicsQueueFamilyCount   = false;
-    uint32_t firstGraphicsQueueFamily = 0;
+    size_t graphicsQueueFamilyCount            = false;
+    uint32_t firstGraphicsQueueFamily          = 0;
     constexpr VkQueueFlags kGraphicsAndCompute = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
     for (uint32_t familyIndex = 0; familyIndex < queueCount; ++familyIndex)
     {
@@ -632,9 +628,9 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     // Initialize the command pool now that we know the queue family index.
     VkCommandPoolCreateInfo commandPoolInfo = {};
-    commandPoolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    commandPoolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
+    commandPoolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex        = mCurrentQueueFamilyIndex;
 
     ANGLE_VK_TRY(displayVk, mCommandPool.init(mDevice, commandPoolInfo));
 
@@ -1022,8 +1018,8 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 {
     TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
     VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags = 0;
+    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags             = 0;
 
     vk::Scoped<CommandBatch> scopedBatch(mDevice);
     CommandBatch &batch = scopedBatch.get();
@@ -1045,7 +1041,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     // Increment the queue serial. If this fails, we should restart ANGLE.
     // TODO(jmadill): Overflow check.
     mLastSubmittedQueueSerial = mCurrentQueueSerial;
-    mCurrentQueueSerial = mQueueSerialFactory.generate();
+    mCurrentQueueSerial       = mQueueSerialFactory.generate();
 
     ANGLE_TRY(checkCompletedCommands(context));
 

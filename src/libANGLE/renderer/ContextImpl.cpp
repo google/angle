@@ -16,12 +16,9 @@ namespace rx
 
 ContextImpl::ContextImpl(const gl::ContextState &state)
     : mState(state), mMemoryProgramCache(nullptr), mErrors(nullptr)
-{
-}
+{}
 
-ContextImpl::~ContextImpl()
-{
-}
+ContextImpl::~ContextImpl() {}
 
 void ContextImpl::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
 {

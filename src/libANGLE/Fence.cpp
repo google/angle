@@ -19,12 +19,8 @@ namespace gl
 {
 
 FenceNV::FenceNV(rx::FenceNVImpl *impl)
-    : mFence(impl),
-      mIsSet(false),
-      mStatus(GL_FALSE),
-      mCondition(GL_NONE)
-{
-}
+    : mFence(impl), mIsSet(false), mStatus(GL_FALSE), mCondition(GL_NONE)
+{}
 
 FenceNV::~FenceNV()
 {
@@ -36,8 +32,8 @@ angle::Result FenceNV::set(const Context *context, GLenum condition)
     ANGLE_TRY(mFence->set(context, condition));
 
     mCondition = condition;
-    mStatus = GL_FALSE;
-    mIsSet = true;
+    mStatus    = GL_FALSE;
+    mIsSet     = true;
 
     return angle::Result::Continue();
 }
@@ -68,12 +64,9 @@ Sync::Sync(rx::SyncImpl *impl, GLuint id)
       mLabel(),
       mCondition(GL_SYNC_GPU_COMMANDS_COMPLETE),
       mFlags(0)
-{
-}
+{}
 
-void Sync::onDestroy(const Context *context)
-{
-}
+void Sync::onDestroy(const Context *context) {}
 
 Sync::~Sync()
 {
@@ -95,7 +88,7 @@ angle::Result Sync::set(const Context *context, GLenum condition, GLbitfield fla
     ANGLE_TRY(mFence->set(context, condition, flags));
 
     mCondition = condition;
-    mFlags = flags;
+    mFlags     = flags;
     return angle::Result::Continue();
 }
 

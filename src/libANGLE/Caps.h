@@ -682,7 +682,7 @@ struct Caps
 };
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions);
-}
+}  // namespace gl
 
 namespace egl
 {

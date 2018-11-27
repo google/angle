@@ -154,5 +154,5 @@ GLenum NativePixelFormatToGLInternalFormat(int pixelFormat)
             return GL_NONE;
     }
 }
-}
-}
+}  // namespace android
+}  // namespace rx

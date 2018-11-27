@@ -54,4 +54,4 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
 };
 }  // namespace rx
 
-#endif   // LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_
+#endif  // LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_

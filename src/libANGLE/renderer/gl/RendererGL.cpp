@@ -415,25 +415,15 @@ GLenum RendererGL::getResetStatus()
     return mFunctions->getGraphicsResetStatus();
 }
 
-void RendererGL::insertEventMarker(GLsizei length, const char *marker)
-{
-}
+void RendererGL::insertEventMarker(GLsizei length, const char *marker) {}
 
-void RendererGL::pushGroupMarker(GLsizei length, const char *marker)
-{
-}
+void RendererGL::pushGroupMarker(GLsizei length, const char *marker) {}
 
-void RendererGL::popGroupMarker()
-{
-}
+void RendererGL::popGroupMarker() {}
 
-void RendererGL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
-{
-}
+void RendererGL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) {}
 
-void RendererGL::popDebugGroup()
-{
-}
+void RendererGL::popDebugGroup() {}
 
 std::string RendererGL::getVendorString() const
 {

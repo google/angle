@@ -18,6 +18,6 @@ namespace android
 {
 GLenum NativePixelFormatToGLInternalFormat(int pixelFormat);
 }
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_EGL_ANDROID_ANDROID_UTIL_H_

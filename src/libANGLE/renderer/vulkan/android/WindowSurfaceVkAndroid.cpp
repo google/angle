@@ -21,8 +21,7 @@ WindowSurfaceVkAndroid::WindowSurfaceVkAndroid(const egl::SurfaceState &surfaceS
                                                EGLint width,
                                                EGLint height)
     : WindowSurfaceVk(surfaceState, window, width, height)
-{
-}
+{}
 
 angle::Result WindowSurfaceVkAndroid::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {

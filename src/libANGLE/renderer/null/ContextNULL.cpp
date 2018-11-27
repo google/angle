@@ -35,8 +35,7 @@ namespace rx
 
 AllocationTrackerNULL::AllocationTrackerNULL(size_t maxTotalAllocationSize)
     : mAllocatedBytes(0), mMaxBytes(maxTotalAllocationSize)
-{
-}
+{}
 
 AllocationTrackerNULL::~AllocationTrackerNULL()
 {
@@ -102,9 +101,7 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     InitMinimumTextureCapsMap(maxClientVersion, mExtensions, &mTextureCaps);
 }
 
-ContextNULL::~ContextNULL()
-{
-}
+ContextNULL::~ContextNULL() {}
 
 angle::Result ContextNULL::initialize()
 {
@@ -183,65 +180,51 @@ angle::Result ContextNULL::drawElementsIndirect(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-void ContextNULL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
-{
-}
+void ContextNULL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask) {}
 
-void ContextNULL::stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask)
-{
-}
+void ContextNULL::stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask) {}
 
-void ContextNULL::coverFillPath(const gl::Path *path, GLenum coverMode)
-{
-}
+void ContextNULL::coverFillPath(const gl::Path *path, GLenum coverMode) {}
 
-void ContextNULL::coverStrokePath(const gl::Path *path, GLenum coverMode)
-{
-}
+void ContextNULL::coverStrokePath(const gl::Path *path, GLenum coverMode) {}
 
 void ContextNULL::stencilThenCoverFillPath(const gl::Path *path,
                                            GLenum fillMode,
                                            GLuint mask,
                                            GLenum coverMode)
-{
-}
+{}
 
 void ContextNULL::stencilThenCoverStrokePath(const gl::Path *path,
                                              GLint reference,
                                              GLuint mask,
                                              GLenum coverMode)
-{
-}
+{}
 
 void ContextNULL::coverFillPathInstanced(const std::vector<gl::Path *> &paths,
                                          GLenum coverMode,
                                          GLenum transformType,
                                          const GLfloat *transformValues)
-{
-}
+{}
 
 void ContextNULL::coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
                                            GLenum coverMode,
                                            GLenum transformType,
                                            const GLfloat *transformValues)
-{
-}
+{}
 
 void ContextNULL::stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
                                            GLenum fillMode,
                                            GLuint mask,
                                            GLenum transformType,
                                            const GLfloat *transformValues)
-{
-}
+{}
 
 void ContextNULL::stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
                                              GLint reference,
                                              GLuint mask,
                                              GLenum transformType,
                                              const GLfloat *transformValues)
-{
-}
+{}
 
 void ContextNULL::stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
                                                     GLenum coverMode,
@@ -249,8 +232,7 @@ void ContextNULL::stencilThenCoverFillPathInstanced(const std::vector<gl::Path *
                                                     GLuint mask,
                                                     GLenum transformType,
                                                     const GLfloat *transformValues)
-{
-}
+{}
 
 void ContextNULL::stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
                                                       GLenum coverMode,
@@ -258,8 +240,7 @@ void ContextNULL::stencilThenCoverStrokePathInstanced(const std::vector<gl::Path
                                                       GLuint mask,
                                                       GLenum transformType,
                                                       const GLfloat *transformValues)
-{
-}
+{}
 
 GLenum ContextNULL::getResetStatus()
 {
@@ -276,25 +257,15 @@ std::string ContextNULL::getRendererDescription() const
     return "NULL";
 }
 
-void ContextNULL::insertEventMarker(GLsizei length, const char *marker)
-{
-}
+void ContextNULL::insertEventMarker(GLsizei length, const char *marker) {}
 
-void ContextNULL::pushGroupMarker(GLsizei length, const char *marker)
-{
-}
+void ContextNULL::pushGroupMarker(GLsizei length, const char *marker) {}
 
-void ContextNULL::popGroupMarker()
-{
-}
+void ContextNULL::popGroupMarker() {}
 
-void ContextNULL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
-{
-}
+void ContextNULL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) {}
 
-void ContextNULL::popDebugGroup()
-{
-}
+void ContextNULL::popDebugGroup() {}
 
 angle::Result ContextNULL::syncState(const gl::Context *context,
                                      const gl::State::DirtyBits &dirtyBits,

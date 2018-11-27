@@ -22,7 +22,7 @@ class ErrorSet;
 class MemoryProgramCache;
 class Path;
 struct Workarounds;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -44,7 +44,7 @@ class ContextImpl : public GLImplFactory
     virtual angle::Result drawArrays(const gl::Context *context,
                                      gl::PrimitiveMode mode,
                                      GLint first,
-                                     GLsizei count)              = 0;
+                                     GLsizei count)                  = 0;
     virtual angle::Result drawArraysInstanced(const gl::Context *context,
                                               gl::PrimitiveMode mode,
                                               GLint first,

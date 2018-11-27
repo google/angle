@@ -249,13 +249,11 @@ BitSetT<N, BitsT, ParamT>::BitSetT() : mBits(0)
 
 template <size_t N, typename BitsT, typename ParamT>
 constexpr BitSetT<N, BitsT, ParamT>::BitSetT(BitsT value) : mBits(value & Mask(N))
-{
-}
+{}
 
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT>::BitSetT(const BitSetT &other) : mBits(other.mBits)
-{
-}
+{}
 
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator=(const BitSetT &other)
@@ -526,7 +524,7 @@ struct GetBitSet<N, EnableIfBitsFit<N, uint32_t>>
 template <size_t N>
 using BitSet = typename priv::GetBitSet<N>::Type;
 
-}  // angle
+}  // namespace angle
 
 template <size_t N, typename BitsT, typename ParamT>
 inline angle::BitSetT<N, BitsT, ParamT> operator&(const angle::BitSetT<N, BitsT, ParamT> &lhs,

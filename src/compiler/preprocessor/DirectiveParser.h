@@ -66,8 +66,7 @@ class DirectiveParser : public Lexer
 
         ConditionalBlock()
             : skipBlock(false), skipGroup(false), foundValidGroup(false), foundElseGroup(false)
-        {
-        }
+        {}
     };
     bool mPastFirstStatement;
     bool mSeenNonPreprocessorToken;  // Tracks if a non-preprocessor token has been seen yet.  Some

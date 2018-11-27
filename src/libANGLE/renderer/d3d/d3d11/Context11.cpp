@@ -112,12 +112,9 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
 
 Context11::Context11(const gl::ContextState &state, Renderer11 *renderer)
     : ContextD3D(state), mRenderer(renderer)
-{
-}
+{}
 
-Context11::~Context11()
-{
-}
+Context11::~Context11() {}
 
 angle::Result Context11::initialize()
 {

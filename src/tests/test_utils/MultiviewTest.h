@@ -71,8 +71,7 @@ struct MultiviewImplementationParams : public PlatformParameters
                                   const EGLPlatformParameters &eglPlatformParameters)
         : PlatformParameters(majorVersion, minorVersion, eglPlatformParameters),
           mForceUseGeometryShaderOnD3D(forceUseGeometryShaderOnD3D)
-    {
-    }
+    {}
     bool mForceUseGeometryShaderOnD3D;
 };
 std::ostream &operator<<(std::ostream &os, const MultiviewImplementationParams &params);

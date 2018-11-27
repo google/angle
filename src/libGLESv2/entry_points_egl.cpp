@@ -683,7 +683,7 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLint interval = %d)", (uintptr_t)dpy, interval);
-    Thread *thread = GetCurrentThread();
+    Thread *thread       = GetCurrentThread();
     gl::Context *context = thread->getContext();
 
     Display *display      = static_cast<Display *>(dpy);
@@ -1015,4 +1015,4 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
 
     return entry->second;
 }
-}
+}  // namespace egl

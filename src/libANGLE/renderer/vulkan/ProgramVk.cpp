@@ -138,9 +138,7 @@ bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
 }  // anonymous namespace
 
 // ProgramVk::ShaderInfo implementation.
-ProgramVk::ShaderInfo::ShaderInfo()
-{
-}
+ProgramVk::ShaderInfo::ShaderInfo() {}
 
 ProgramVk::ShaderInfo::~ShaderInfo() = default;
 
@@ -189,8 +187,7 @@ bool ProgramVk::ShaderInfo::valid() const
 ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
     : storage(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
               kUniformBlockDynamicBufferMinSize)
-{
-}
+{}
 
 ProgramVk::DefaultUniformBlock::~DefaultUniformBlock() = default;
 
@@ -543,7 +540,7 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     ASSERT(shaderType != gl::ShaderType::InvalidEnum);
 
     const DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];
-    const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
+    const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
 
     ASSERT(linkedUniform.typeInfo->componentType == entryPointType ||
            linkedUniform.typeInfo->componentType == gl::VariableBoolVectorType(entryPointType));

@@ -17,13 +17,9 @@
 namespace rx
 {
 
-SyncVk::SyncVk() : SyncImpl()
-{
-}
+SyncVk::SyncVk() : SyncImpl() {}
 
-SyncVk::~SyncVk()
-{
-}
+SyncVk::~SyncVk() {}
 
 angle::Result SyncVk::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {

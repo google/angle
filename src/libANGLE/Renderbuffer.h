@@ -124,4 +124,4 @@ class Renderbuffer final : public RefCountObject, public egl::ImageSibling, publ
 
 }  // namespace gl
 
-#endif   // LIBANGLE_RENDERBUFFER_H_
+#endif  // LIBANGLE_RENDERBUFFER_H_

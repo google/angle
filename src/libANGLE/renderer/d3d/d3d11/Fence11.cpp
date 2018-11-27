@@ -63,9 +63,7 @@ angle::Result FenceTestHelper(const gl::Context *context,
 // FenceNV11
 //
 
-FenceNV11::FenceNV11(Renderer11 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(nullptr)
-{
-}
+FenceNV11::FenceNV11(Renderer11 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(nullptr) {}
 
 FenceNV11::~FenceNV11()
 {

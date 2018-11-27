@@ -895,6 +895,6 @@ class TextureD3D_2DMultisampleArray : public TextureD3DImmutableBase
 
     GLsizei mLayerCount;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_TEXTURED3D_H_

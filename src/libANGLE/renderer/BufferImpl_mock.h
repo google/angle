@@ -52,6 +52,6 @@ class MockBufferImpl : public BufferImpl
   protected:
     gl::BufferState mMockState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_BUFFERIMPLMOCK_H_

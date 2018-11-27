@@ -7,13 +7,13 @@
 #ifndef COMPILER_TRANSLATOR_COMMON_H_
 #define COMPILER_TRANSLATOR_COMMON_H_
 
+#include <stdio.h>
+#include <limits>
 #include <map>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <limits>
-#include <stdio.h>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -86,8 +86,7 @@ class TUnorderedMap : public std::unordered_map<K, D, H, CMP, pool_allocator<std
         : std::unordered_map<K, D, H, CMP, tAllocator>(
               std::unordered_map<K, D, H, CMP, tAllocator>::key_compare(),
               a)
-    {
-    }
+    {}
 };
 
 template <class K, class D, class CMP = std::less<K>>
@@ -101,8 +100,7 @@ class TMap : public std::map<K, D, CMP, pool_allocator<std::pair<const K, D>>>
     // use correct two-stage name lookup supported in gcc 3.4 and above
     TMap(const tAllocator &a)
         : std::map<K, D, CMP, tAllocator>(std::map<K, D, CMP, tAllocator>::key_compare(), a)
-    {
-    }
+    {}
 };
 
 // Integer to TString conversion

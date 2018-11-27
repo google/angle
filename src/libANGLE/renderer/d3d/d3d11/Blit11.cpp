@@ -565,12 +565,9 @@ Blit11::Blit11(Renderer11 *renderer)
                         "Blit11::mResolveStencilPS"),
       mStencilSRV(),
       mResolvedDepthStencilRTView()
-{
-}
+{}
 
-Blit11::~Blit11()
-{
-}
+Blit11::~Blit11() {}
 
 angle::Result Blit11::initResources(const gl::Context *context)
 {

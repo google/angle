@@ -172,8 +172,7 @@ TEST_P(CopyCompressedTextureTest, InternalFormat)
         Data() : Data(GL_NONE, nullptr, 0) {}
         Data(GLint format, const uint8_t *data, GLsizei dataSize)
             : format(format), data(data), dataSize(dataSize)
-        {
-        }
+        {}
     };
     std::vector<Data> supportedFormats;
 

@@ -14,13 +14,9 @@
 namespace rx
 {
 
-SyncNULL::SyncNULL() : SyncImpl()
-{
-}
+SyncNULL::SyncNULL() : SyncImpl() {}
 
-SyncNULL::~SyncNULL()
-{
-}
+SyncNULL::~SyncNULL() {}
 
 angle::Result SyncNULL::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {

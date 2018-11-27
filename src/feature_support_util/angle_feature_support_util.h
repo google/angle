@@ -15,10 +15,10 @@
 #if defined(ANDROID)
 
 // FIXME - NEED TO #define ANGLE_EXPORT in a way that works for Android builds
-#include "export.h"
+#    include "export.h"
 
 #else
-#include "export.h"
+#    include "export.h"
 #endif
 
 #ifdef __cplusplus

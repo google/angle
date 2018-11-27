@@ -24,13 +24,9 @@ namespace
 void *nativeEGLHandle;
 }  // anonymous namespace
 
-FunctionsEGLDL::FunctionsEGLDL() : mGetProcAddressPtr(nullptr)
-{
-}
+FunctionsEGLDL::FunctionsEGLDL() : mGetProcAddressPtr(nullptr) {}
 
-FunctionsEGLDL::~FunctionsEGLDL()
-{
-}
+FunctionsEGLDL::~FunctionsEGLDL() {}
 
 egl::Error FunctionsEGLDL::initialize(EGLNativeDisplayType nativeDisplay,
                                       const char *libName,

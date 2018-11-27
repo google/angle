@@ -120,8 +120,7 @@ class CompileTask : public angle::Closure
           mSource(source),
           mOptions(options),
           mResult(false)
-    {
-    }
+    {}
     void operator()() override
     {
         std::vector<const char *> srcStrings;
@@ -153,9 +152,7 @@ ShaderState::ShaderState(ShaderType shaderType)
     mLocalSize.fill(-1);
 }
 
-ShaderState::~ShaderState()
-{
-}
+ShaderState::~ShaderState() {}
 
 Shader::Shader(ShaderProgramManager *manager,
                rx::GLImplFactory *implFactory,

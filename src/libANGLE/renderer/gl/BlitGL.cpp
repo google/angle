@@ -312,7 +312,9 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     // LUMA channels.
     GLint swizzle[4] = {
         (lumaFormat == GL_ALPHA) ? GL_ALPHA : GL_RED,
-        (lumaFormat == GL_LUMINANCE_ALPHA) ? GL_ALPHA : GL_ZERO, GL_ZERO, GL_ZERO,
+        (lumaFormat == GL_LUMINANCE_ALPHA) ? GL_ALPHA : GL_ZERO,
+        GL_ZERO,
+        GL_ZERO,
     };
     mFunctions->texParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle);
 

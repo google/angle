@@ -27,6 +27,6 @@ class CompilerD3D : public CompilerImpl
     ShShaderOutput mTranslatorOutputType;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_COMPILERD3D_H_
+#endif  // LIBANGLE_RENDERER_COMPILERD3D_H_

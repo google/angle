@@ -25,7 +25,7 @@ bool IsElementArrayBufferSubjectIndex(angle::SubjectIndex subjectIndex)
 }
 
 constexpr angle::SubjectIndex kElementArrayBufferIndex = MAX_VERTEX_ATTRIBS;
-}  // anonymous namespce
+}  // namespace
 
 // VertexArrayState implementation.
 VertexArrayState::VertexArrayState(VertexArray *vertexArray,
@@ -45,9 +45,7 @@ VertexArrayState::VertexArrayState(VertexArray *vertexArray,
     mClientMemoryAttribsMask.set();
 }
 
-VertexArrayState::~VertexArrayState()
-{
-}
+VertexArrayState::~VertexArrayState() {}
 
 bool VertexArrayState::hasEnabledNullPointerClientArray() const
 {

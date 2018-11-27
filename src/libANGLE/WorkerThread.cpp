@@ -11,11 +11,11 @@
 #include "libANGLE/WorkerThread.h"
 
 #if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
-#include <condition_variable>
-#include <future>
-#include <mutex>
-#include <queue>
-#include <thread>
+#    include <condition_variable>
+#    include <future>
+#    include <mutex>
+#    include <queue>
+#    include <thread>
 #endif  // (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
 
 namespace angle
@@ -37,9 +37,7 @@ class SingleThreadedWaitableEvent final : public WaitableEvent
     bool isReady() override;
 };
 
-void SingleThreadedWaitableEvent::wait()
-{
-}
+void SingleThreadedWaitableEvent::wait() {}
 
 bool SingleThreadedWaitableEvent::isReady()
 {
@@ -61,9 +59,7 @@ std::shared_ptr<WaitableEvent> SingleThreadedWorkerPool::postWorkerTask(
     return std::make_shared<SingleThreadedWaitableEvent>();
 }
 
-void SingleThreadedWorkerPool::setMaxThreads(size_t maxThreads)
-{
-}
+void SingleThreadedWorkerPool::setMaxThreads(size_t maxThreads) {}
 
 #if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
 class AsyncWaitableEvent final : public WaitableEvent

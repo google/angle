@@ -19,8 +19,7 @@ WindowSurfaceVkWin32::WindowSurfaceVkWin32(const egl::SurfaceState &surfaceState
                                            EGLint width,
                                            EGLint height)
     : WindowSurfaceVk(surfaceState, window, width, height)
-{
-}
+{}
 
 angle::Result WindowSurfaceVkWin32::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {

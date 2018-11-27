@@ -194,8 +194,7 @@ FramebufferGL::FramebufferGL(const gl::FramebufferState &data, GLuint id, bool i
       mFramebufferID(id),
       mIsDefault(isDefault),
       mAppliedEnabledDrawBuffers(1)
-{
-}
+{}
 
 FramebufferGL::~FramebufferGL()
 {
@@ -446,7 +445,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         return angle::Result::Continue();
     }
 
-    PixelPackState packState     = context->getGLState().getPackState();
+    PixelPackState packState = context->getGLState().getPackState();
     const gl::Buffer *packBuffer =
         context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
@@ -889,7 +888,7 @@ angle::Result FramebufferGL::readPixelsRowByRow(const gl::Context *context,
                         glFormat.computeSkipBytes(type, rowBytes, 0, pack, false, &skipBytes));
 
     gl::PixelPackState directPack;
-    directPack.alignment   = 1;
+    directPack.alignment = 1;
     stateManager->setPixelPackState(directPack);
 
     pixels += skipBytes;

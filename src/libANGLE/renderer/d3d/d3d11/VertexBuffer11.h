@@ -62,4 +62,4 @@ class VertexBuffer11 : public VertexBuffer
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_VERTEXBUFFER11_H_

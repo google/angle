@@ -230,8 +230,7 @@ class StateManagerGL final : angle::NonCopyable
     {
         ImageUnitBinding()
             : texture(0), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
-        {
-        }
+        {}
 
         GLuint texture;
         GLint level;

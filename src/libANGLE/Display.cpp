@@ -37,39 +37,39 @@
 #include "third_party/trace_event/trace_event.h"
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
-#include "libANGLE/renderer/d3d/DisplayD3D.h"
+#    include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
 
 #if defined(ANGLE_ENABLE_OPENGL)
-#if defined(ANGLE_PLATFORM_WINDOWS)
-#include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
-#elif defined(ANGLE_USE_X11)
-#include "libANGLE/renderer/gl/glx/DisplayGLX.h"
-#elif defined(ANGLE_PLATFORM_APPLE)
-#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
-#elif defined(ANGLE_USE_OZONE)
-#include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
-#elif defined(ANGLE_PLATFORM_ANDROID)
-#include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
-#else
-#error Unsupported OpenGL platform.
-#endif
+#    if defined(ANGLE_PLATFORM_WINDOWS)
+#        include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
+#    elif defined(ANGLE_USE_X11)
+#        include "libANGLE/renderer/gl/glx/DisplayGLX.h"
+#    elif defined(ANGLE_PLATFORM_APPLE)
+#        include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+#    elif defined(ANGLE_USE_OZONE)
+#        include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
+#    elif defined(ANGLE_PLATFORM_ANDROID)
+#        include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
+#    else
+#        error Unsupported OpenGL platform.
+#    endif
 #endif
 
 #if defined(ANGLE_ENABLE_NULL)
-#include "libANGLE/renderer/null/DisplayNULL.h"
+#    include "libANGLE/renderer/null/DisplayNULL.h"
 #endif  // defined(ANGLE_ENABLE_NULL)
 
 #if defined(ANGLE_ENABLE_VULKAN)
-#if defined(ANGLE_PLATFORM_WINDOWS)
-#include "libANGLE/renderer/vulkan/win32/DisplayVkWin32.h"
-#elif defined(ANGLE_PLATFORM_LINUX)
-#include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
-#elif defined(ANGLE_PLATFORM_ANDROID)
-#include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
-#else
-#error Unsupported Vulkan platform.
-#endif
+#    if defined(ANGLE_PLATFORM_WINDOWS)
+#        include "libANGLE/renderer/vulkan/win32/DisplayVkWin32.h"
+#    elif defined(ANGLE_PLATFORM_LINUX)
+#        include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
+#    elif defined(ANGLE_PLATFORM_ANDROID)
+#        include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
+#    else
+#        error Unsupported Vulkan platform.
+#    endif
 #endif  // defined(ANGLE_ENABLE_VULKAN)
 
 namespace egl
@@ -150,11 +150,11 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
 #elif defined(ANGLE_USE_OZONE)
             impl = new rx::DisplayOzone(state);
 #elif defined(ANGLE_PLATFORM_ANDROID)
-#if defined(ANGLE_ENABLE_VULKAN)
+#    if defined(ANGLE_ENABLE_VULKAN)
             impl = new rx::DisplayVkAndroid(state);
-#else
+#    else
             impl = new rx::DisplayAndroid(state);
-#endif
+#    endif
 #else
             // No display available
             UNREACHABLE();
@@ -173,21 +173,21 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
 
         case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
 #if defined(ANGLE_ENABLE_OPENGL)
-#if defined(ANGLE_PLATFORM_WINDOWS)
+#    if defined(ANGLE_PLATFORM_WINDOWS)
             impl = new rx::DisplayWGL(state);
-#elif defined(ANGLE_USE_X11)
+#    elif defined(ANGLE_USE_X11)
             impl = new rx::DisplayGLX(state);
-#elif defined(ANGLE_PLATFORM_APPLE)
+#    elif defined(ANGLE_PLATFORM_APPLE)
             impl = new rx::DisplayCGL(state);
-#elif defined(ANGLE_USE_OZONE)
+#    elif defined(ANGLE_USE_OZONE)
             // This might work but has never been tried, so disallow for now.
             impl = nullptr;
-#elif defined(ANGLE_PLATFORM_ANDROID)
+#    elif defined(ANGLE_PLATFORM_ANDROID)
             // No GL support on this platform, fail display creation.
             impl = nullptr;
-#else
-#error Unsupported OpenGL platform.
-#endif
+#    else
+#        error Unsupported OpenGL platform.
+#    endif
 #else
             // No display available
             UNREACHABLE();
@@ -196,32 +196,32 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
 
         case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
 #if defined(ANGLE_ENABLE_OPENGL)
-#if defined(ANGLE_PLATFORM_WINDOWS)
+#    if defined(ANGLE_PLATFORM_WINDOWS)
             impl = new rx::DisplayWGL(state);
-#elif defined(ANGLE_USE_X11)
+#    elif defined(ANGLE_USE_X11)
             impl = new rx::DisplayGLX(state);
-#elif defined(ANGLE_USE_OZONE)
+#    elif defined(ANGLE_USE_OZONE)
             impl = new rx::DisplayOzone(state);
-#elif defined(ANGLE_PLATFORM_ANDROID)
+#    elif defined(ANGLE_PLATFORM_ANDROID)
             impl = new rx::DisplayAndroid(state);
-#else
+#    else
             // No GLES support on this platform, fail display creation.
             impl = nullptr;
-#endif
+#    endif
 #endif  // defined(ANGLE_ENABLE_OPENGL)
             break;
 
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
 #if defined(ANGLE_ENABLE_VULKAN)
-#if defined(ANGLE_PLATFORM_WINDOWS)
+#    if defined(ANGLE_PLATFORM_WINDOWS)
             impl = new rx::DisplayVkWin32(state);
-#elif defined(ANGLE_PLATFORM_LINUX)
+#    elif defined(ANGLE_PLATFORM_LINUX)
             impl = new rx::DisplayVkXcb(state);
-#elif defined(ANGLE_PLATFORM_ANDROID)
+#    elif defined(ANGLE_PLATFORM_ANDROID)
             impl = new rx::DisplayVkAndroid(state);
-#else
-#error Unsupported Vulkan platform.
-#endif
+#    else
+#        error Unsupported Vulkan platform.
+#    endif
 #else
             // No display available
             UNREACHABLE();
@@ -278,13 +278,9 @@ void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
 
 }  // anonymous namespace
 
-DisplayState::DisplayState() : label(nullptr)
-{
-}
+DisplayState::DisplayState() : label(nullptr) {}
 
-DisplayState::~DisplayState()
-{
-}
+DisplayState::~DisplayState() {}
 
 // static
 Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
@@ -393,8 +389,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
       mMemoryProgramCache(mBlobCache),
       mGlobalTextureShareGroupUsers(0)
-{
-}
+{}
 
 Display::~Display()
 {

@@ -58,6 +58,6 @@ class IndexRangeCache
     IndexRangeMap mIndexRangeCache;
 };
 
-}
+}  // namespace gl
 
-#endif // LIBANGLE_INDEXRANGECACHE_H_
+#endif  // LIBANGLE_INDEXRANGECACHE_H_

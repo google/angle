@@ -25,8 +25,8 @@ namespace rx
 class FenceNVImpl : angle::NonCopyable
 {
   public:
-    FenceNVImpl() { };
-    virtual ~FenceNVImpl() { };
+    FenceNVImpl(){};
+    virtual ~FenceNVImpl(){};
 
     virtual angle::Result set(const gl::Context *context, GLenum condition)        = 0;
     virtual angle::Result test(const gl::Context *context, GLboolean *outFinished) = 0;
@@ -34,4 +34,4 @@ class FenceNVImpl : angle::NonCopyable
 };
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_FENCENVIMPL_H_
+#endif  // LIBANGLE_RENDERER_FENCENVIMPL_H_

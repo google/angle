@@ -42,8 +42,7 @@ class FunctionCallFinder : public TIntermTraverser
         : TIntermTraverser(true, false, false),
           mFunctionMangledName(functionMangledName),
           mNodeFound(nullptr)
-    {
-    }
+    {}
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
@@ -81,9 +80,10 @@ bool compileTestShader(GLenum type,
         return false;
     }
 
-    const char *shaderStrings[] = { shaderString.c_str() };
+    const char *shaderStrings[] = {shaderString.c_str()};
 
-    bool compilationSuccess = translator->compile(shaderStrings, 1, SH_OBJECT_CODE | compileOptions);
+    bool compilationSuccess =
+        translator->compile(shaderStrings, 1, SH_OBJECT_CODE | compileOptions);
     TInfoSink &infoSink = translator->getInfoSink();
     if (translatedCode)
         *translatedCode = infoSink.obj.c_str();
@@ -103,7 +103,8 @@ bool compileTestShader(GLenum type,
 {
     ShBuiltInResources resources;
     sh::InitBuiltInResources(&resources);
-    return compileTestShader(type, spec, output, shaderString, &resources, compileOptions, translatedCode, infoLog);
+    return compileTestShader(type, spec, output, shaderString, &resources, compileOptions,
+                             translatedCode, infoLog);
 }
 
 MatchOutputCodeTest::MatchOutputCodeTest(GLenum shaderType,

@@ -36,7 +36,7 @@ struct ShaderBlob
     size_t codeSize;
 };
 const ShaderBlob &GetInternalShaderBlob(InternalShaderID shaderID);
-}  // priv
+}  // namespace priv
 }  // namespace vk
 }  // namespace rx
 

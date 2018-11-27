@@ -27,8 +27,7 @@ VertexBuffer11::VertexBuffer11(Renderer11 *const renderer)
       mBufferSize(0),
       mDynamicUsage(false),
       mMappedResourceData(nullptr)
-{
-}
+{}
 
 VertexBuffer11::~VertexBuffer11()
 {
@@ -122,8 +121,8 @@ angle::Result VertexBuffer11::storeVertexAttributes(const gl::Context *context,
         input += inputStride * start;
     }
 
-    angle::FormatID vertexFormatID        = gl::GetVertexFormatID(attrib, currentValueType);
-    const D3D_FEATURE_LEVEL featureLevel  = mRenderer->getRenderer11DeviceCaps().featureLevel;
+    angle::FormatID vertexFormatID       = gl::GetVertexFormatID(attrib, currentValueType);
+    const D3D_FEATURE_LEVEL featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
     const d3d11::VertexFormat &vertexFormatInfo =
         d3d11::GetVertexFormatInfo(vertexFormatID, featureLevel);
     ASSERT(vertexFormatInfo.copyFunction != nullptr);

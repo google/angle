@@ -167,7 +167,9 @@ class ImageTest : public ANGLETest
         EGLWindow *window = getEGLWindow();
 
         EGLint attribs[] = {
-            EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+            EGL_IMAGE_PRESERVED,
+            EGL_TRUE,
+            EGL_NONE,
         };
 
         EGLImageKHR image =
@@ -212,7 +214,9 @@ class ImageTest : public ANGLETest
         EGLWindow *window = getEGLWindow();
 
         EGLint attribs[] = {
-            EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+            EGL_IMAGE_PRESERVED,
+            EGL_TRUE,
+            EGL_NONE,
         };
 
         EGLImageKHR image =
@@ -301,7 +305,9 @@ class ImageTest : public ANGLETest
         EGLWindow *window = getEGLWindow();
 
         EGLint attribs[] = {
-            EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+            EGL_IMAGE_PRESERVED,
+            EGL_TRUE,
+            EGL_NONE,
         };
 
         EGLImageKHR image =
@@ -470,8 +476,7 @@ class ImageTest : public ANGLETest
 };
 
 class ImageTestES3 : public ImageTest
-{
-};
+{};
 
 // Tests that the extension is exposed on the platforms we think it should be. Please modify this as
 // you change extension availability.
@@ -565,7 +570,9 @@ TEST_P(ImageTest, ValidationImageBase)
     // If an attribute specified in <attrib_list> is not one of the attributes listed in Table bbb,
     // the error EGL_BAD_PARAMETER is generated.
     EGLint badAttributes[] = {
-        static_cast<EGLint>(0xDEADBEEF), 0, EGL_NONE,
+        static_cast<EGLint>(0xDEADBEEF),
+        0,
+        EGL_NONE,
     };
 
     image = eglCreateImageKHR(display, context, EGL_GL_TEXTURE_2D_KHR, texture2D, badAttributes);
@@ -686,7 +693,9 @@ TEST_P(ImageTest, ValidationGLImage)
         glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
         EGLint level0Attribute[] = {
-            EGL_GL_TEXTURE_LEVEL_KHR, 0, EGL_NONE,
+            EGL_GL_TEXTURE_LEVEL_KHR,
+            0,
+            EGL_NONE,
         };
         image = eglCreateImageKHR(display, context, EGL_GL_TEXTURE_2D_KHR,
                                   reinterpretHelper<EGLClientBuffer>(incompleteTexture),
@@ -716,7 +725,9 @@ TEST_P(ImageTest, ValidationGLImage)
         // EGL_GL_TEXTURE_LEVEL_KHR is not a valid mipmap level for the specified GL texture object
         // <buffer>, the error EGL_BAD_MATCH is generated.
         EGLint level2Attribute[] = {
-            EGL_GL_TEXTURE_LEVEL_KHR, 2, EGL_NONE,
+            EGL_GL_TEXTURE_LEVEL_KHR,
+            2,
+            EGL_NONE,
         };
         image = eglCreateImageKHR(display, context, EGL_GL_TEXTURE_2D_KHR,
                                   reinterpretHelper<EGLClientBuffer>(incompleteTexture),
@@ -760,7 +771,9 @@ TEST_P(ImageTest, ValidationGLImage)
                      nullptr);
 
         EGLint level0Attribute[] = {
-            EGL_GL_TEXTURE_LEVEL_KHR, 0, EGL_NONE,
+            EGL_GL_TEXTURE_LEVEL_KHR,
+            0,
+            EGL_NONE,
         };
         image = eglCreateImageKHR(display, context, EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR,
                                   reinterpretHelper<EGLClientBuffer>(incompleteTextureCube),
@@ -799,7 +812,9 @@ TEST_P(ImageTest, ValidationGLImage)
         glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
         EGLint zOffset3Parameter[] = {
-            EGL_GL_TEXTURE_ZOFFSET_KHR, 3, EGL_NONE,
+            EGL_GL_TEXTURE_ZOFFSET_KHR,
+            3,
+            EGL_NONE,
         };
         image = eglCreateImageKHR(display, context, EGL_GL_TEXTURE_3D_KHR,
                                   reinterpretHelper<EGLClientBuffer>(texture3D), zOffset3Parameter);
@@ -807,7 +822,9 @@ TEST_P(ImageTest, ValidationGLImage)
         EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 
         EGLint zOffsetNegative1Parameter[] = {
-            EGL_GL_TEXTURE_ZOFFSET_KHR, -1, EGL_NONE,
+            EGL_GL_TEXTURE_ZOFFSET_KHR,
+            -1,
+            EGL_NONE,
         };
         image = eglCreateImageKHR(display, context, EGL_GL_TEXTURE_3D_KHR,
                                   reinterpretHelper<EGLClientBuffer>(texture3D),
@@ -826,7 +843,9 @@ TEST_P(ImageTest, ValidationGLImage)
 
             // Verify EGL_GL_TEXTURE_ZOFFSET_KHR is not a valid parameter
             EGLint zOffset0Parameter[] = {
-                EGL_GL_TEXTURE_ZOFFSET_KHR, 0, EGL_NONE,
+                EGL_GL_TEXTURE_ZOFFSET_KHR,
+                0,
+                EGL_NONE,
             };
 
             image =
@@ -953,8 +972,7 @@ TEST_P(ImageTest, ValidationGLEGLImageExternal)
     // In the initial state of a TEXTURE_EXTERNAL_OES texture object, the value assigned to
     // TEXTURE_MIN_FILTER and TEXTURE_MAG_FILTER is LINEAR, and the s and t wrap modes are both set
     // to CLAMP_TO_EDGE
-    auto getTexParam = [](GLenum target, GLenum pname)
-    {
+    auto getTexParam = [](GLenum target, GLenum pname) {
         GLint value = 0;
         glGetTexParameteriv(target, pname, &value);
         EXPECT_GL_NO_ERROR();
@@ -971,7 +989,8 @@ TEST_P(ImageTest, ValidationGLEGLImageExternal)
     // TEXTURE_MIN_FILTER, TEXTURE_WRAP_S, TEXTURE_WRAP_T, or GENERATE_MIPMAP will result in an
     // INVALID_ENUM error.
     GLenum validMinFilters[]{
-        GL_NEAREST, GL_LINEAR,
+        GL_NEAREST,
+        GL_LINEAR,
     };
     for (auto minFilter : validMinFilters)
     {
@@ -980,7 +999,9 @@ TEST_P(ImageTest, ValidationGLEGLImageExternal)
     }
 
     GLenum invalidMinFilters[]{
-        GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR,
+        GL_NEAREST_MIPMAP_LINEAR,
+        GL_NEAREST_MIPMAP_NEAREST,
+        GL_LINEAR_MIPMAP_LINEAR,
         GL_LINEAR_MIPMAP_NEAREST,
     };
     for (auto minFilter : invalidMinFilters)
@@ -1001,7 +1022,8 @@ TEST_P(ImageTest, ValidationGLEGLImageExternal)
     }
 
     GLenum invalidWrapModes[]{
-        GL_REPEAT, GL_MIRRORED_REPEAT,
+        GL_REPEAT,
+        GL_MIRRORED_REPEAT,
     };
     for (auto minFilter : invalidWrapModes)
     {
@@ -1597,7 +1619,8 @@ TEST_P(ImageTest, MipLevels)
     std::vector<GLuint> mip1Data(mip0Data.size() << 1, 0xFF00FF00);
     std::vector<GLuint> mip2Data(mip0Data.size() << 2, 0xFF0000FF);
     GLubyte *data[mipLevels] = {
-        reinterpret_cast<GLubyte *>(&mip0Data[0]), reinterpret_cast<GLubyte *>(&mip1Data[0]),
+        reinterpret_cast<GLubyte *>(&mip0Data[0]),
+        reinterpret_cast<GLubyte *>(&mip1Data[0]),
         reinterpret_cast<GLubyte *>(&mip2Data[0]),
     };
 
@@ -1617,7 +1640,9 @@ TEST_P(ImageTest, MipLevels)
     {
         // Create the Image
         EGLint attribs[] = {
-            EGL_GL_TEXTURE_LEVEL_KHR, static_cast<EGLint>(level), EGL_NONE,
+            EGL_GL_TEXTURE_LEVEL_KHR,
+            static_cast<EGLint>(level),
+            EGL_NONE,
         };
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
@@ -1891,4 +1916,4 @@ ANGLE_INSTANTIATE_TEST(ImageTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(ImageTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
-}
+}  // namespace angle

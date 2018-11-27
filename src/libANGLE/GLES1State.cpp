@@ -17,9 +17,7 @@ namespace gl
 
 TextureCoordF::TextureCoordF() = default;
 
-TextureCoordF::TextureCoordF(float _s, float _t, float _r, float _q) : s(_s), t(_t), r(_r), q(_q)
-{
-}
+TextureCoordF::TextureCoordF(float _s, float _t, float _r, float _q) : s(_s), t(_t), r(_r), q(_q) {}
 
 bool TextureCoordF::operator==(const TextureCoordF &other) const
 {
@@ -55,8 +53,7 @@ GLES1State::GLES1State()
       mPointSmoothHint(HintSetting::DontCare),
       mPerspectiveCorrectionHint(HintSetting::DontCare),
       mFogHint(HintSetting::DontCare)
-{
-}
+{}
 
 GLES1State::~GLES1State() = default;
 
@@ -443,7 +440,9 @@ AttributesMask GLES1State::getVertexArraysAttributeMask() const
     AttributesMask attribsMask;
 
     ClientVertexArrayType nonTexcoordArrays[] = {
-        ClientVertexArrayType::Vertex, ClientVertexArrayType::Normal, ClientVertexArrayType::Color,
+        ClientVertexArrayType::Vertex,
+        ClientVertexArrayType::Normal,
+        ClientVertexArrayType::Color,
         ClientVertexArrayType::PointSize,
     };
 

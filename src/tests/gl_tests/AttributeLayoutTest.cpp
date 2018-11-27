@@ -49,8 +49,7 @@ class VertexData
   public:
     VertexData(int dimension, const double *data, unsigned offset, unsigned stride)
         : mDimension(dimension), mData(data), mOffset(offset), mStride(stride)
-    {
-    }
+    {}
     int getDimension() const { return mDimension; }
     double getValue(unsigned vertexNumber, int component) const
     {

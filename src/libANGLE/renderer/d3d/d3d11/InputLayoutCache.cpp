@@ -65,9 +65,7 @@ struct PackedAttribute
 
 }  // anonymous namespace
 
-PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), flags(0), attributeData({})
-{
-}
+PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), flags(0), attributeData({}) {}
 
 PackedAttributeLayout::PackedAttributeLayout(const PackedAttributeLayout &other) = default;
 
@@ -102,13 +100,9 @@ bool PackedAttributeLayout::operator==(const PackedAttributeLayout &other) const
            (attributeData == other.attributeData);
 }
 
-InputLayoutCache::InputLayoutCache() : mLayoutCache(kDefaultCacheSize * 2)
-{
-}
+InputLayoutCache::InputLayoutCache() : mLayoutCache(kDefaultCacheSize * 2) {}
 
-InputLayoutCache::~InputLayoutCache()
-{
-}
+InputLayoutCache::~InputLayoutCache() {}
 
 void InputLayoutCache::clear()
 {

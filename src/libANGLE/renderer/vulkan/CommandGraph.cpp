@@ -83,8 +83,7 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
 // CommandGraphResource implementation.
 CommandGraphResource::CommandGraphResource(CommandGraphResourceType resourceType)
     : mResourceType(resourceType), mCurrentWritingNode(nullptr)
-{
-}
+{}
 
 CommandGraphResource::~CommandGraphResource() = default;
 
@@ -108,8 +107,7 @@ Serial CommandGraphResource::getStoredQueueSerial() const
 // RecordableGraphResource implementation.
 RecordableGraphResource::RecordableGraphResource(CommandGraphResourceType resourceType)
     : CommandGraphResource(resourceType)
-{
-}
+{}
 
 RecordableGraphResource::~RecordableGraphResource() = default;
 
@@ -251,9 +249,7 @@ void RecordableGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial 
 }
 
 // QueryGraphResource implementation.
-QueryGraphResource::QueryGraphResource() : CommandGraphResource(CommandGraphResourceType::Query)
-{
-}
+QueryGraphResource::QueryGraphResource() : CommandGraphResource(CommandGraphResourceType::Query) {}
 
 QueryGraphResource::~QueryGraphResource() = default;
 
@@ -300,8 +296,7 @@ CommandGraphNode::CommandGraphNode(CommandGraphNodeFunction function)
       mVisitedState(VisitedState::Unvisited),
       mGlobalMemoryBarrierSrcAccess(0),
       mGlobalMemoryBarrierDstAccess(0)
-{
-}
+{}
 
 CommandGraphNode::~CommandGraphNode()
 {
@@ -594,8 +589,7 @@ const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
 // CommandGraph implementation.
 CommandGraph::CommandGraph(bool enableGraphDiagnostics)
     : mEnableGraphDiagnostics(enableGraphDiagnostics), mLastBarrierIndex(kInvalidNodeIndex)
-{
-}
+{}
 
 CommandGraph::~CommandGraph()
 {

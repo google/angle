@@ -1070,7 +1070,8 @@ TEST_P(SimpleOperationTest, RenderbufferAttachment)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES2_D3D9(),
                        ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE),
@@ -1082,4 +1083,4 @@ ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 
-} // namespace
+}  // namespace

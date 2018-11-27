@@ -27,8 +27,7 @@ namespace egl
 
 SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn)
     : label(nullptr), config(configIn), attributes(attributesIn), timestampsEnabled(false)
-{
-}
+{}
 
 Surface::Surface(EGLint surfaceType,
                  const egl::Config *config,
@@ -108,9 +107,7 @@ Surface::Surface(EGLint surfaceType,
     mOrientation = static_cast<EGLint>(attributes.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
 }
 
-Surface::~Surface()
-{
-}
+Surface::~Surface() {}
 
 rx::FramebufferAttachmentObjectImpl *Surface::getAttachmentImpl() const
 {
@@ -537,9 +534,7 @@ WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
     mImplementation = implFactory->createWindowSurface(mState, window, attribs);
 }
 
-WindowSurface::~WindowSurface()
-{
-}
+WindowSurface::~WindowSurface() {}
 
 PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                const Config *config,
@@ -560,9 +555,7 @@ PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
         implFactory->createPbufferFromClientBuffer(mState, buftype, clientBuffer, attribs);
 }
 
-PbufferSurface::~PbufferSurface()
-{
-}
+PbufferSurface::~PbufferSurface() {}
 
 PixmapSurface::PixmapSurface(rx::EGLImplFactory *implFactory,
                              const Config *config,
@@ -573,19 +566,13 @@ PixmapSurface::PixmapSurface(rx::EGLImplFactory *implFactory,
     mImplementation = implFactory->createPixmapSurface(mState, nativePixmap, attribs);
 }
 
-PixmapSurface::~PixmapSurface()
-{
-}
+PixmapSurface::~PixmapSurface() {}
 
 // SurfaceDeleter implementation.
 
-SurfaceDeleter::SurfaceDeleter(const Display *display) : mDisplay(display)
-{
-}
+SurfaceDeleter::SurfaceDeleter(const Display *display) : mDisplay(display) {}
 
-SurfaceDeleter::~SurfaceDeleter()
-{
-}
+SurfaceDeleter::~SurfaceDeleter() {}
 
 void SurfaceDeleter::operator()(Surface *surface)
 {

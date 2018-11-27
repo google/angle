@@ -12,8 +12,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "shader_utils.h"
 #include "random_utils.h"
+#include "shader_utils.h"
 
 using namespace angle;
 
@@ -30,11 +30,11 @@ struct PointSpritesParams final : public RenderTestParams
         // Common default params
         majorVersion = 2;
         minorVersion = 0;
-        windowWidth = 1280;
+        windowWidth  = 1280;
         windowHeight = 720;
-        count = 10;
-        size = 3.0f;
-        numVaryings = 3;
+        count        = 10;
+        size         = 3.0f;
+        numVaryings  = 3;
     }
 
     std::string suffix() const override;
@@ -70,8 +70,7 @@ std::string PointSpritesParams::suffix() const
 {
     std::stringstream strstr;
 
-    strstr << RenderTestParams::suffix()
-           << "_" << count << "_" << size << "px"
+    strstr << RenderTestParams::suffix() << "_" << count << "_" << size << "px"
            << "_" << numVaryings << "vars";
 
     return strstr.str();
@@ -79,8 +78,7 @@ std::string PointSpritesParams::suffix() const
 
 PointSpritesBenchmark::PointSpritesBenchmark()
     : ANGLERenderTest("PointSprites", GetParam()), mRNG(1)
-{
-}
+{}
 
 void PointSpritesBenchmark::initializeBenchmark()
 {
@@ -155,7 +153,8 @@ void PointSpritesBenchmark::initializeBenchmark()
 
     glGenBuffers(1, &mBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(float), &vertexPositions[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(float), &vertexPositions[0],
+                 GL_STATIC_DRAW);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "vPosition");
     ASSERT_NE(-1, positionLocation);
@@ -188,7 +187,7 @@ void PointSpritesBenchmark::drawBenchmark()
 
     for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
-        //TODO(jmadill): Indexed point rendering. ANGLE is bad at this.
+        // TODO(jmadill): Indexed point rendering. ANGLE is bad at this.
         glDrawArrays(GL_POINTS, 0, params.count);
     }
 
@@ -223,7 +222,7 @@ PointSpritesParams VulkanParams()
     return params;
 }
 
-} // namespace
+}  // namespace
 
 TEST_P(PointSpritesBenchmark, Run)
 {

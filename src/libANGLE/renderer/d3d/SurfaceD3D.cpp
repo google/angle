@@ -464,12 +464,9 @@ WindowSurfaceD3D::WindowSurfaceD3D(const egl::SurfaceState &state,
                                    EGLNativeWindowType window,
                                    const egl::AttributeMap &attribs)
     : SurfaceD3D(state, renderer, display, window, 0, static_cast<EGLClientBuffer>(0), attribs)
-{
-}
+{}
 
-WindowSurfaceD3D::~WindowSurfaceD3D()
-{
-}
+WindowSurfaceD3D::~WindowSurfaceD3D() {}
 
 PbufferSurfaceD3D::PbufferSurfaceD3D(const egl::SurfaceState &state,
                                      RendererD3D *renderer,
@@ -484,11 +481,8 @@ PbufferSurfaceD3D::PbufferSurfaceD3D(const egl::SurfaceState &state,
                  buftype,
                  clientBuffer,
                  attribs)
-{
-}
+{}
 
-PbufferSurfaceD3D::~PbufferSurfaceD3D()
-{
-}
+PbufferSurfaceD3D::~PbufferSurfaceD3D() {}
 
-}  // namespace rc
+}  // namespace rx

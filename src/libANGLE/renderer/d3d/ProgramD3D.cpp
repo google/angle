@@ -274,9 +274,7 @@ D3DUniform::D3DUniform(GLenum type,
     }
 }
 
-D3DUniform::~D3DUniform()
-{
-}
+D3DUniform::~D3DUniform() {}
 
 unsigned int D3DUniform::getArraySizeProduct() const
 {
@@ -332,9 +330,7 @@ const uint8_t *D3DUniform::firstNonNullData() const
 
 // D3DVarying Implementation
 
-D3DVarying::D3DVarying() : semanticIndex(0), componentCount(0), outputSlot(0)
-{
-}
+D3DVarying::D3DVarying() : semanticIndex(0), componentCount(0), outputSlot(0) {}
 
 D3DVarying::D3DVarying(const std::string &semanticNameIn,
                        unsigned int semanticIndexIn,
@@ -344,8 +340,7 @@ D3DVarying::D3DVarying(const std::string &semanticNameIn,
       semanticIndex(semanticIndexIn),
       componentCount(componentCountIn),
       outputSlot(outputSlotIn)
-{
-}
+{}
 
 // ProgramD3DMetadata Implementation
 
@@ -358,8 +353,7 @@ ProgramD3DMetadata::ProgramD3DMetadata(RendererD3D *renderer,
       mUsesViewScale(renderer->presentPathFastEnabled()),
       mCanSelectViewInVertexShader(renderer->canSelectViewInVertexShader()),
       mAttachedShaders(attachedShaders)
-{
-}
+{}
 
 int ProgramD3DMetadata::getRendererMajorShaderModel() const
 {
@@ -465,8 +459,7 @@ ProgramD3D::VertexExecutable::VertexExecutable(const gl::InputLayout &inputLayou
                                                const Signature &signature,
                                                ShaderExecutableD3D *shaderExecutable)
     : mInputs(inputLayout), mSignature(signature), mShaderExecutable(shaderExecutable)
-{
-}
+{}
 
 ProgramD3D::VertexExecutable::~VertexExecutable()
 {
@@ -533,8 +526,7 @@ bool ProgramD3D::VertexExecutable::matchesSignature(const Signature &signature) 
 ProgramD3D::PixelExecutable::PixelExecutable(const std::vector<GLenum> &outputSignature,
                                              ShaderExecutableD3D *shaderExecutable)
     : mOutputSignature(outputSignature), mShaderExecutable(shaderExecutable)
-{
-}
+{}
 
 ProgramD3D::PixelExecutable::~PixelExecutable()
 {
@@ -543,12 +535,9 @@ ProgramD3D::PixelExecutable::~PixelExecutable()
 
 ProgramD3D::Sampler::Sampler()
     : active(false), logicalTextureUnit(0), textureType(gl::TextureType::_2D)
-{
-}
+{}
 
-ProgramD3D::Image::Image() : active(false), logicalImageUnit(0)
-{
-}
+ProgramD3D::Image::Image() : active(false), logicalImageUnit(0) {}
 
 unsigned int ProgramD3D::mCurrentSerial = 1;
 
@@ -1226,13 +1215,9 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     }
 }
 
-void ProgramD3D::setBinaryRetrievableHint(bool /* retrievable */)
-{
-}
+void ProgramD3D::setBinaryRetrievableHint(bool /* retrievable */) {}
 
-void ProgramD3D::setSeparable(bool /* separable */)
-{
-}
+void ProgramD3D::setSeparable(bool /* separable */) {}
 
 angle::Result ProgramD3D::getPixelExecutableForCachedOutputLayout(
     d3d::Context *context,
@@ -1469,8 +1454,7 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
   public:
     GetGeometryExecutableTask(ProgramD3D *program, const gl::Caps &caps)
         : GetExecutableTask(program), mCaps(caps)
-    {
-    }
+    {}
 
     angle::Result run() override
     {
@@ -1523,8 +1507,7 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
           mUseGS(useGS),
           mVertexShader(vertexShader),
           mFragmentShader(fragmentShader)
-    {
-    }
+    {}
 
     angle::Result wait(const gl::Context *context) override
     {
@@ -1911,7 +1894,7 @@ void ProgramD3D::updateUniformBufferCache(
          uniformBlockIndex++)
     {
         const D3DInterfaceBlock &uniformBlock = mD3DUniformBlocks[uniformBlockIndex];
-        GLuint blockBinding                 = mState.getUniformBlockBinding(uniformBlockIndex);
+        GLuint blockBinding                   = mState.getUniformBlockBinding(uniformBlockIndex);
 
         // Unnecessary to apply an unreferenced standard or shared UBO
         for (gl::ShaderType shaderType : gl::AllShaderTypes())

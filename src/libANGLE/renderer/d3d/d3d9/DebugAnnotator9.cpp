@@ -40,4 +40,4 @@ bool DebugAnnotator9::getStatus()
     return !!D3DPERF_GetStatus();
 }
 
-}
+}  // namespace rx

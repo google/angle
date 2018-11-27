@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 
 namespace rx
 {
@@ -55,15 +55,42 @@ class ProgramGL : public ProgramImpl
     void setUniform2uiv(GLint location, GLsizei count, const GLuint *v) override;
     void setUniform3uiv(GLint location, GLsizei count, const GLuint *v) override;
     void setUniform4uiv(GLint location, GLsizei count, const GLuint *v) override;
-    void setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
-    void setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) override;
+    void setUniformMatrix2fv(GLint location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value) override;
+    void setUniformMatrix3fv(GLint location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value) override;
+    void setUniformMatrix4fv(GLint location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value) override;
+    void setUniformMatrix2x3fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value) override;
+    void setUniformMatrix3x2fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value) override;
+    void setUniformMatrix2x4fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value) override;
+    void setUniformMatrix4x2fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value) override;
+    void setUniformMatrix3x4fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value) override;
+    void setUniformMatrix4x3fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value) override;
 
     void getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const override;
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
@@ -136,6 +163,6 @@ class ProgramGL : public ProgramImpl
     GLuint mProgramID;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_PROGRAMGL_H_
+#endif  // LIBANGLE_RENDERER_GL_PROGRAMGL_H_

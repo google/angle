@@ -14,8 +14,6 @@
 namespace rx
 {
 
-VertexArrayNULL::VertexArrayNULL(const gl::VertexArrayState &data) : VertexArrayImpl(data)
-{
-}
+VertexArrayNULL::VertexArrayNULL(const gl::VertexArrayState &data) : VertexArrayImpl(data) {}
 
 }  // namespace rx

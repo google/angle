@@ -108,7 +108,7 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
     swapBuffers();
 
     GLuint result = GL_TRUE;
-    glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result); // will block waiting for result
+    glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result);  // will block waiting for result
 
     EXPECT_GL_NO_ERROR();
 
@@ -127,42 +127,46 @@ TEST_P(OcclusionQueriesTest, Errors)
 
     EXPECT_GL_NO_ERROR();
 
-    GLuint query = 0;
+    GLuint query  = 0;
     GLuint query2 = 0;
     glGenQueriesEXT(1, &query);
 
     EXPECT_GL_FALSE(glIsQueryEXT(query));
     EXPECT_GL_FALSE(glIsQueryEXT(query2));
 
-    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, 0); // can't pass 0 as query id
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, 0);  // can't pass 0 as query id
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
-    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // can't initiate a query while one's already active
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
+                    query2);  // can't initiate a query while one's already active
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     EXPECT_GL_TRUE(glIsQueryEXT(query));
     EXPECT_GL_FALSE(glIsQueryEXT(query2));  // have not called begin
 
     drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.8f);  // this quad should not be occluded
-    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT); // no active query for this target
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT);      // no active query for this target
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
 
-    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query); // can't begin a query as a different type than previously used
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
+                    query);  // can't begin a query as a different type than previously used
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // have to call genqueries first
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
+                    query2);  // have to call genqueries first
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glGenQueriesEXT(1, &query2);
-    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // should be ok now
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2);  // should be ok now
     EXPECT_GL_TRUE(glIsQueryEXT(query2));
 
     drawQuad(mProgram, essl1_shaders::PositionAttrib(),
-             0.3f);                 // this should draw in front of other quad
-    glDeleteQueriesEXT(1, &query2); // should delete when query becomes inactive
-    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT); // should not incur error; should delete query + 1 at end of execution.
+             0.3f);                  // this should draw in front of other quad
+    glDeleteQueriesEXT(1, &query2);  // should delete when query becomes inactive
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT);  // should not incur error; should delete
+                                                            // query + 1 at end of execution.
     EXPECT_GL_NO_ERROR();
 
     swapBuffers();
@@ -170,7 +174,8 @@ TEST_P(OcclusionQueriesTest, Errors)
     EXPECT_GL_NO_ERROR();
 
     GLuint ready = GL_FALSE;
-    glGetQueryObjectuivEXT(query2, GL_QUERY_RESULT_AVAILABLE_EXT, &ready); // this query is now deleted
+    glGetQueryObjectuivEXT(query2, GL_QUERY_RESULT_AVAILABLE_EXT,
+                           &ready);  // this query is now deleted
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     EXPECT_GL_NO_ERROR();
@@ -221,28 +226,60 @@ TEST_P(OcclusionQueriesTest, MultiContext)
 
     ContextInfo contexts[] = {
         {
-            EGL_NO_CONTEXT, 0, 0, {false, false, false, false, false}, false,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {false, false, false, false, false},
+            false,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {false, true, false, true, false}, true,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {false, true, false, true, false},
+            true,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {false, false, false, false, false}, false,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {false, false, false, false, false},
+            false,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {true, true, false, true, true}, true,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {true, true, false, true, true},
+            true,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {false, true, true, true, true}, true,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {false, true, true, true, true},
+            true,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {true, false, false, true, false}, true,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {true, false, false, true, false},
+            true,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {false, false, false, false, false}, false,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {false, false, false, false, false},
+            false,
         },
         {
-            EGL_NO_CONTEXT, 0, 0, {false, false, false, false, false}, false,
+            EGL_NO_CONTEXT,
+            0,
+            0,
+            {false, false, false, false, false},
+            false,
         },
     };
 
@@ -302,7 +339,8 @@ TEST_P(OcclusionQueriesTest, MultiContext)
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(OcclusionQueriesTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

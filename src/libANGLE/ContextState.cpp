@@ -90,8 +90,7 @@ ContextState::ContextState(ContextID contextIn,
       mPaths(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mPaths)),
       mFramebuffers(new FramebufferManager()),
       mPipelines(new ProgramPipelineManager())
-{
-}
+{}
 
 ContextState::~ContextState()
 {

@@ -14,13 +14,9 @@
 namespace rx
 {
 
-DeviceVk::DeviceVk() : DeviceImpl()
-{
-}
+DeviceVk::DeviceVk() : DeviceImpl() {}
 
-DeviceVk::~DeviceVk()
-{
-}
+DeviceVk::~DeviceVk() {}
 
 egl::Error DeviceVk::initialize()
 {

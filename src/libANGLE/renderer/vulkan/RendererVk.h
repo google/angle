@@ -26,7 +26,7 @@ namespace egl
 {
 class Display;
 class BlobCache;
-}
+}  // namespace egl
 
 namespace rx
 {

@@ -28,13 +28,13 @@ class GLImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;
 class SurfaceImpl;
-}
+}  // namespace rx
 
 namespace egl
 {
 class Display;
 class Surface;
-}
+}  // namespace egl
 
 namespace gl
 {

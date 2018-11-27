@@ -41,8 +41,8 @@ class IndexBuffer : angle::NonCopyable
 
     virtual angle::Result discard(const gl::Context *context) = 0;
 
-    virtual GLenum getIndexType() const = 0;
-    virtual unsigned int getBufferSize() const = 0;
+    virtual GLenum getIndexType() const             = 0;
+    virtual unsigned int getBufferSize() const      = 0;
     virtual angle::Result setSize(const gl::Context *context,
                                   unsigned int bufferSize,
                                   GLenum indexType) = 0;
@@ -121,4 +121,4 @@ class StaticIndexBufferInterface : public IndexBufferInterface
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_INDEXBUFFER_H_
+#endif  // LIBANGLE_RENDERER_D3D_INDEXBUFFER_H_

@@ -49,8 +49,7 @@ class GeometryShaderTest : public ANGLETest
 };
 
 class GeometryShaderTestES3 : public ANGLETest
-{
-};
+{};
 
 // Verify that Geometry Shader cannot be created in an OpenGL ES 3.0 context.
 TEST_P(GeometryShaderTestES3, CreateGeometryShaderInES3)
@@ -842,4 +841,4 @@ TEST_P(GeometryShaderTest, NegativeLayeredFramebufferCompletenessWithCubeMapText
 
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(GeometryShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
-}
+}  // namespace

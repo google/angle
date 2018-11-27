@@ -92,8 +92,7 @@ DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
       mSize(0),
       mAlignment(0),
       mMappedMemory(nullptr)
-{
-}
+{}
 
 void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
 {
@@ -110,9 +109,7 @@ void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
         static_cast<size_t>(renderer->getPhysicalDeviceProperties().limits.nonCoherentAtomSize));
 }
 
-DynamicBuffer::~DynamicBuffer()
-{
-}
+DynamicBuffer::~DynamicBuffer() {}
 
 angle::Result DynamicBuffer::allocate(Context *context,
                                       size_t sizeInBytes,
@@ -285,9 +282,7 @@ void DynamicBuffer::reset()
 }
 
 // DescriptorPoolHelper implementation.
-DescriptorPoolHelper::DescriptorPoolHelper() : mFreeDescriptorSets(0)
-{
-}
+DescriptorPoolHelper::DescriptorPoolHelper() : mFreeDescriptorSets(0) {}
 
 DescriptorPoolHelper::~DescriptorPoolHelper() = default;
 
@@ -346,8 +341,7 @@ angle::Result DescriptorPoolHelper::allocateSets(Context *context,
 // DynamicDescriptorPool implementation.
 DynamicDescriptorPool::DynamicDescriptorPool()
     : mMaxSetsPerPool(kDefaultDescriptorPoolMaxSets), mCurrentPoolIndex(0), mPoolSize{}
-{
-}
+{}
 
 DynamicDescriptorPool::~DynamicDescriptorPool() = default;
 
@@ -447,8 +441,7 @@ void DynamicDescriptorPool::setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool)
 template <typename Pool>
 DynamicallyGrowingPool<Pool>::DynamicallyGrowingPool()
     : mPoolSize(0), mCurrentPool(0), mCurrentFreeEntry(0)
-{
-}
+{}
 
 template <typename Pool>
 DynamicallyGrowingPool<Pool>::~DynamicallyGrowingPool() = default;
@@ -610,12 +603,9 @@ angle::Result DynamicQueryPool::allocateNewPool(Context *context)
 // QueryHelper implementation
 QueryHelper::QueryHelper()
     : QueryGraphResource(), mDynamicQueryPool(nullptr), mQueryPoolIndex(0), mQuery(0)
-{
-}
+{}
 
-QueryHelper::~QueryHelper()
-{
-}
+QueryHelper::~QueryHelper() {}
 
 void QueryHelper::init(const DynamicQueryPool *dynamicQueryPool,
                        const size_t queryPoolIndex,
@@ -709,13 +699,9 @@ angle::Result DynamicSemaphorePool::allocateNewPool(Context *context)
 }
 
 // SemaphoreHelper implementation
-SemaphoreHelper::SemaphoreHelper() : mSemaphorePoolIndex(0), mSemaphore(0)
-{
-}
+SemaphoreHelper::SemaphoreHelper() : mSemaphorePoolIndex(0), mSemaphore(0) {}
 
-SemaphoreHelper::~SemaphoreHelper()
-{
-}
+SemaphoreHelper::~SemaphoreHelper() {}
 
 SemaphoreHelper::SemaphoreHelper(SemaphoreHelper &&other)
     : mSemaphorePoolIndex(other.mSemaphorePoolIndex), mSemaphore(other.mSemaphore)
@@ -900,8 +886,7 @@ BufferHelper::BufferHelper()
       mSize(0),
       mCurrentWriteAccess(0),
       mCurrentReadAccess(0)
-{
-}
+{}
 
 BufferHelper::~BufferHelper() = default;
 
@@ -989,8 +974,7 @@ ImageHelper::ImageHelper()
       mSamples(0),
       mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED),
       mLayerCount(0)
-{
-}
+{}
 
 ImageHelper::ImageHelper(ImageHelper &&other)
     : RecordableGraphResource(CommandGraphResourceType::Image),
@@ -1477,8 +1461,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
 // FramebufferHelper implementation.
 FramebufferHelper::FramebufferHelper()
     : RecordableGraphResource(CommandGraphResourceType::Framebuffer)
-{
-}
+{}
 
 FramebufferHelper::~FramebufferHelper() = default;
 

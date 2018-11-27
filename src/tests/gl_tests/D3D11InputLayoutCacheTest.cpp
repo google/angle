@@ -47,8 +47,7 @@ class D3D11InputLayoutCacheTest : public ANGLETest
         {
             strstr << "    v += a" << attribIndex << ";" << std::endl;
         }
-        strstr << "    gl_Position = vec4(position, 0.0, 1.0);" << std::endl
-               << "}" << std::endl;
+        strstr << "    gl_Position = vec4(position, 0.0, 1.0);" << std::endl << "}" << std::endl;
 
         const std::string basicFragmentShader =
             "varying highp float v;\n"
@@ -65,9 +64,9 @@ class D3D11InputLayoutCacheTest : public ANGLETest
 TEST_P(D3D11InputLayoutCacheTest, StressTest)
 {
     // Hack the ANGLE!
-    gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
-    rx::Context11 *context11               = rx::GetImplAs<rx::Context11>(context);
-    rx::Renderer11 *renderer11             = context11->getRenderer();
+    gl::Context *context       = static_cast<gl::Context *>(getEGLWindow()->getContext());
+    rx::Context11 *context11   = rx::GetImplAs<rx::Context11>(context);
+    rx::Renderer11 *renderer11 = context11->getRenderer();
     rx::InputLayoutCache *inputLayoutCache = renderer11->getStateManager()->getInputLayoutCache();
 
     // Clamp the cache size to something tiny

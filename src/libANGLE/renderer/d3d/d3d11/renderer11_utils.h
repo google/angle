@@ -242,15 +242,13 @@ class LazyShader final : public LazyResource<GetResourceTypeFromD3D11<D3D11Shade
     // All parameters must be constexpr. Not supported in VS2013.
     constexpr LazyShader(const BYTE *byteCode, size_t byteCodeSize, const char *name)
         : mByteCode(byteCode, byteCodeSize), mName(name)
-    {
-    }
+    {}
 
     constexpr LazyShader(LazyShader &&shader)
         : LazyResource<GetResourceTypeFromD3D11<D3D11ShaderType>()>(std::move(shader)),
           mByteCode(std::move(shader.mByteCode)),
           mName(shader.mName)
-    {
-    }
+    {}
 
     angle::Result resolve(d3d::Context *context, Renderer11 *renderer) override
     {

@@ -17,17 +17,14 @@ namespace sh
 
 HLSLBlockEncoder::HLSLBlockEncoder(HLSLBlockEncoderStrategy strategy, bool transposeMatrices)
     : mEncoderStrategy(strategy), mTransposeMatrices(transposeMatrices)
-{
-}
+{}
 
 void HLSLBlockEncoder::enterAggregateType()
 {
     nextRegister();
 }
 
-void HLSLBlockEncoder::exitAggregateType()
-{
-}
+void HLSLBlockEncoder::exitAggregateType() {}
 
 void HLSLBlockEncoder::getBlockLayoutInfo(GLenum typeIn,
                                           const std::vector<unsigned int> &arraySizes,

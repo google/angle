@@ -24,7 +24,7 @@ struct BlockMemberInfo;
 struct InterfaceBlock;
 struct ShaderVariable;
 struct Uniform;
-}
+}  // namespace sh
 
 namespace gl
 {
@@ -60,8 +60,7 @@ class UniformLinker final : angle::NonCopyable
     struct ShaderUniformCount
     {
         ShaderUniformCount() : vectorCount(0), samplerCount(0), imageCount(0), atomicCounterCount(0)
-        {
-        }
+        {}
         ShaderUniformCount(const ShaderUniformCount &other) = default;
         ShaderUniformCount &operator=(const ShaderUniformCount &other) = default;
 

@@ -130,6 +130,6 @@ const char *QualifierString(TQualifier qualifier);
 // functions.
 TString DisambiguateFunctionName(const TFunction *func);
 TString DisambiguateFunctionName(const TIntermSequence *args);
-}
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_UTILSHLSL_H_

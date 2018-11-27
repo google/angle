@@ -51,8 +51,8 @@ class GLImplFactory : angle::NonCopyable
     virtual ~GLImplFactory() {}
 
     // Shader creation
-    virtual CompilerImpl *createCompiler() = 0;
-    virtual ShaderImpl *createShader(const gl::ShaderState &data) = 0;
+    virtual CompilerImpl *createCompiler()                           = 0;
+    virtual ShaderImpl *createShader(const gl::ShaderState &data)    = 0;
     virtual ProgramImpl *createProgram(const gl::ProgramState &data) = 0;
 
     // Framebuffer creation
@@ -72,8 +72,8 @@ class GLImplFactory : angle::NonCopyable
 
     // Query and Fence creation
     virtual QueryImpl *createQuery(gl::QueryType type) = 0;
-    virtual FenceNVImpl *createFenceNV() = 0;
-    virtual SyncImpl *createSync()              = 0;
+    virtual FenceNVImpl *createFenceNV()               = 0;
+    virtual SyncImpl *createSync()                     = 0;
 
     // Transform Feedback creation
     virtual TransformFeedbackImpl *createTransformFeedback(

@@ -42,4 +42,4 @@ class MockRenderbufferImpl : public RenderbufferImpl
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_RENDERBUFFERIMPLMOCK_H_
+#endif  // LIBANGLE_RENDERER_RENDERBUFFERIMPLMOCK_H_

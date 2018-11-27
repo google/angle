@@ -25,8 +25,7 @@ class OnlyContainsZeroConstantsTraverser final : public TIntermTraverser
   public:
     OnlyContainsZeroConstantsTraverser()
         : TIntermTraverser(true, false, false), mOnlyContainsConstantZeros(true)
-    {
-    }
+    {}
 
     bool visitUnary(Visit, TIntermUnary *node) override
     {

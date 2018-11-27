@@ -33,7 +33,7 @@ constexpr char kLayoutMarkerBegin[]    = "@@ LAYOUT-";
 constexpr char kMarkerEnd[]            = " @@";
 constexpr char kUniformQualifier[]     = "uniform";
 constexpr char kVersionDefine[]        = "#version 450 core\n";
-constexpr char kLineRasterDefine[] = R"(#version 450 core
+constexpr char kLineRasterDefine[]     = R"(#version 450 core
 
 #define ANGLE_ENABLE_LINE_SEGMENT_RASTERIZATION
 )";

@@ -39,7 +39,8 @@ std::ostream &operator<<(std::ostream &stream, const CompilerParameters &pp);
 struct PlatformParameters
 {
     PlatformParameters();
-    PlatformParameters(EGLint majorVersion, EGLint minorVersion,
+    PlatformParameters(EGLint majorVersion,
+                       EGLint minorVersion,
                        const EGLPlatformParameters &eglPlatformParameters);
 
     EGLint getRenderer() const;
@@ -51,7 +52,7 @@ struct PlatformParameters
 
 bool operator<(const PlatformParameters &a, const PlatformParameters &b);
 bool operator==(const PlatformParameters &a, const PlatformParameters &b);
-std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp);
+std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp);
 
 // EGL platforms
 namespace egl_platform
@@ -176,4 +177,4 @@ PlatformParameters ES3_VULKAN_NULL();
 
 }  // namespace angle
 
-#endif // ANGLE_TEST_CONFIGS_H_
+#endif  // ANGLE_TEST_CONFIGS_H_

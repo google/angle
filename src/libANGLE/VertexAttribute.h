@@ -107,7 +107,8 @@ GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib);
 
 struct VertexAttribCurrentValueData
 {
-    union {
+    union
+    {
         GLfloat FloatValues[4];
         GLint IntValues[4];
         GLuint UnsignedIntValues[4];

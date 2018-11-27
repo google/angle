@@ -58,12 +58,9 @@ namespace rx
 {
 NativeBufferImageSiblingAndroid::NativeBufferImageSiblingAndroid(EGLClientBuffer buffer)
     : mBuffer(static_cast<struct ANativeWindowBuffer *>(buffer))
-{
-}
+{}
 
-NativeBufferImageSiblingAndroid::~NativeBufferImageSiblingAndroid()
-{
-}
+NativeBufferImageSiblingAndroid::~NativeBufferImageSiblingAndroid() {}
 
 gl::Format NativeBufferImageSiblingAndroid::getFormat() const
 {

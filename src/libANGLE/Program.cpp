@@ -607,13 +607,9 @@ struct Program::LinkingState
 const char *const g_fakepath = "C:\\fakepath";
 
 // InfoLog implementation.
-InfoLog::InfoLog()
-{
-}
+InfoLog::InfoLog() {}
 
-InfoLog::~InfoLog()
-{
-}
+InfoLog::~InfoLog() {}
 
 size_t InfoLog::getLength() const
 {
@@ -719,9 +715,7 @@ bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock)
 }
 
 // VariableLocation implementation.
-VariableLocation::VariableLocation() : arrayIndex(0), index(kUnused), ignored(false)
-{
-}
+VariableLocation::VariableLocation() : arrayIndex(0), index(kUnused), ignored(false) {}
 
 VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
     : arrayIndex(arrayIndex), index(index), ignored(false)
@@ -732,21 +726,16 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
 // SamplerBindings implementation.
 SamplerBinding::SamplerBinding(TextureType textureTypeIn, size_t elementCount, bool unreferenced)
     : textureType(textureTypeIn), boundTextureUnits(elementCount, 0), unreferenced(unreferenced)
-{
-}
+{}
 
 SamplerBinding::SamplerBinding(const SamplerBinding &other) = default;
 
 SamplerBinding::~SamplerBinding() = default;
 
 // ProgramBindings implementation.
-ProgramBindings::ProgramBindings()
-{
-}
+ProgramBindings::ProgramBindings() {}
 
-ProgramBindings::~ProgramBindings()
-{
-}
+ProgramBindings::~ProgramBindings() {}
 
 void ProgramBindings::bindLocation(GLuint index, const std::string &name)
 {
@@ -770,9 +759,7 @@ ProgramBindings::const_iterator ProgramBindings::end() const
 }
 
 // ImageBinding implementation.
-ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0), unreferenced(false)
-{
-}
+ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0), unreferenced(false) {}
 ImageBinding::ImageBinding(GLuint imageUnit, size_t count, bool unreferenced)
     : unreferenced(unreferenced)
 {
@@ -1120,7 +1107,7 @@ angle::Result Program::link(const Context *context)
     }
 
     egl::BlobCache::Key programHash = {0};
-    MemoryProgramCache *cache = context->getMemoryProgramCache();
+    MemoryProgramCache *cache       = context->getMemoryProgramCache();
 
     if (cache)
     {
@@ -2969,7 +2956,7 @@ bool Program::linkAtomicCounterBuffers()
 // Assigns locations to all attributes from the bindings and program locations.
 bool Program::linkAttributes(const Caps &caps, InfoLog &infoLog)
 {
-    Shader *vertexShader     = mState.getAttachedShader(ShaderType::Vertex);
+    Shader *vertexShader = mState.getAttachedShader(ShaderType::Vertex);
 
     int shaderVersion = vertexShader->getShaderVersion();
 
@@ -3731,7 +3718,7 @@ bool Program::linkOutputVariables(const Caps &caps,
 
         // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
         // structures, so we may use getBasicTypeElementCount().
-        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
+        unsigned int elementCount          = outputVariable.getBasicTypeElementCount();
         unsigned int outputLocationsNeeded = static_cast<unsigned int>(baseLocation) + elementCount;
         if (outputLocationsNeeded > outputLocations->size())
         {
@@ -3754,8 +3741,8 @@ bool Program::linkOutputVariables(const Caps &caps,
             else
             {
                 VariableLocation locationInfo;
-                locationInfo.index                = outputVariableIndex;
-                (*outputLocations)[location]      = locationInfo;
+                locationInfo.index           = outputVariableIndex;
+                (*outputLocations)[location] = locationInfo;
             }
         }
     }
@@ -3892,7 +3879,7 @@ void Program::updateSamplerUniform(const VariableLocation &locationInfo,
                                    const GLint *v)
 {
     ASSERT(mState.isSamplerUniformIndex(locationInfo.index));
-    GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationInfo.index);
+    GLuint samplerIndex            = mState.getSamplerIndexFromUniformIndex(locationInfo.index);
     SamplerBinding &samplerBinding = mState.mSamplerBindings[samplerIndex];
     std::vector<GLuint> &boundTextureUnits = samplerBinding.boundTextureUnits;
 

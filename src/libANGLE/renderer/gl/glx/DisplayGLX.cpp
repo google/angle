@@ -33,26 +33,20 @@ static int IgnoreX11Errors(Display *, XErrorEvent *)
 }
 
 SwapControlData::SwapControlData()
-  : targetSwapInterval(0),
-    maxSwapInterval(-1),
-    currentSwapInterval(-1)
-{
-}
+    : targetSwapInterval(0), maxSwapInterval(-1), currentSwapInterval(-1)
+{}
 
 class FunctionsGLGLX : public FunctionsGL
 {
   public:
-    FunctionsGLGLX(PFNGETPROCPROC getProc)
-      : mGetProc(getProc)
-    {
-    }
+    FunctionsGLGLX(PFNGETPROCPROC getProc) : mGetProc(getProc) {}
 
     ~FunctionsGLGLX() override {}
 
   private:
     void *loadProcAddress(const std::string &function) const override
     {
-        return reinterpret_cast<void*>(mGetProc(function.c_str()));
+        return reinterpret_cast<void *>(mGetProc(function.c_str()));
     }
 
     PFNGETPROCPROC mGetProc;
@@ -78,16 +72,13 @@ DisplayGLX::DisplayGLX(const egl::DisplayState &state)
       mCurrentDrawable(0),
       mXDisplay(nullptr),
       mEGLDisplay(nullptr)
-{
-}
+{}
 
-DisplayGLX::~DisplayGLX()
-{
-}
+DisplayGLX::~DisplayGLX() {}
 
 egl::Error DisplayGLX::initialize(egl::Display *display)
 {
-    mEGLDisplay = display;
+    mEGLDisplay           = display;
     mXDisplay             = display->getNativeDisplayId();
     const auto &attribMap = display->getAttributeMap();
 
@@ -110,9 +101,9 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         return egl::EglNotInitialized() << glxInitError;
     }
 
-    mHasMultisample      = mGLX.minorVersion > 3 || mGLX.hasExtension("GLX_ARB_multisample");
-    mHasARBCreateContext = mGLX.hasExtension("GLX_ARB_create_context");
-    mHasARBCreateContextProfile    = mGLX.hasExtension("GLX_ARB_create_context_profile");
+    mHasMultisample             = mGLX.minorVersion > 3 || mGLX.hasExtension("GLX_ARB_multisample");
+    mHasARBCreateContext        = mGLX.hasExtension("GLX_ARB_create_context");
+    mHasARBCreateContextProfile = mGLX.hasExtension("GLX_ARB_create_context_profile");
     mHasARBCreateContextRobustness = mGLX.hasExtension("GLX_ARB_create_context_robustness");
     mHasEXTCreateContextES2Profile = mGLX.hasExtension("GLX_EXT_create_context_es2_profile");
 
@@ -136,19 +127,19 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     {
         // If we have the Mesa or SGI extension, assume that you can at least set
         // a swap interval of 0 or 1.
-        mSwapControl = SwapControl::Mesa;
+        mSwapControl     = SwapControl::Mesa;
         mMinSwapInterval = 0;
         mMinSwapInterval = 1;
     }
     else if (mGLX.hasExtension("GLX_SGI_swap_control"))
     {
-        mSwapControl = SwapControl::SGI;
+        mSwapControl     = SwapControl::SGI;
         mMinSwapInterval = 0;
         mMinSwapInterval = 1;
     }
     else
     {
-        mSwapControl = SwapControl::Absent;
+        mSwapControl     = SwapControl::Absent;
         mMinSwapInterval = 1;
         mMinSwapInterval = 1;
     }
@@ -190,28 +181,19 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         // context must be compatible with all the GLXFBConfig corresponding to the
         // EGLconfigs that we will be exposing.
         int nConfigs;
-        int attribList[] =
-        {
-            // We want RGBA8 and DEPTH24_STENCIL8
-            GLX_RED_SIZE, 8,
-            GLX_GREEN_SIZE, 8,
-            GLX_BLUE_SIZE, 8,
-            GLX_ALPHA_SIZE, 8,
-            GLX_DEPTH_SIZE, 24,
-            GLX_STENCIL_SIZE, 8,
-            // We want RGBA rendering (vs COLOR_INDEX) and doublebuffer
-            GLX_RENDER_TYPE, GLX_RGBA_BIT,
-            // Double buffer is not strictly required as a non-doublebuffer
-            // context can work with a doublebuffered surface, but it still
-            // flickers and all applications want doublebuffer anyway.
-            GLX_DOUBLEBUFFER, True,
-            // All of these must be supported for full EGL support
-            GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT | GLX_PBUFFER_BIT | GLX_PIXMAP_BIT,
-            // This makes sure the config have an associated visual Id
-            GLX_X_RENDERABLE, True,
-            GLX_CONFIG_CAVEAT, GLX_NONE,
-            None
-        };
+        int attribList[]          = {// We want RGBA8 and DEPTH24_STENCIL8
+                            GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE, 8, GLX_ALPHA_SIZE, 8,
+                            GLX_DEPTH_SIZE, 24, GLX_STENCIL_SIZE, 8,
+                            // We want RGBA rendering (vs COLOR_INDEX) and doublebuffer
+                            GLX_RENDER_TYPE, GLX_RGBA_BIT,
+                            // Double buffer is not strictly required as a non-doublebuffer
+                            // context can work with a doublebuffered surface, but it still
+                            // flickers and all applications want doublebuffer anyway.
+                            GLX_DOUBLEBUFFER, True,
+                            // All of these must be supported for full EGL support
+                            GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT | GLX_PBUFFER_BIT | GLX_PIXMAP_BIT,
+                            // This makes sure the config have an associated visual Id
+                            GLX_X_RENDERABLE, True, GLX_CONFIG_CAVEAT, GLX_NONE, None};
         glx::FBConfig *candidates = mGLX.chooseFBConfig(attribList, &nConfigs);
         if (nConfigs == 0)
         {
@@ -245,7 +227,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         XVisualInfo visualTemplate;
         visualTemplate.visualid = getGLXFBConfigAttrib(mContextConfig, GLX_VISUAL_ID);
 
-        int numVisuals       = 0;
+        int numVisuals = 0;
         XVisualInfo *visuals =
             XGetVisualInfo(mXDisplay, VisualIDMask, &visualTemplate, &numVisuals);
         if (numVisuals <= 0)
@@ -274,11 +256,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     // as commented on https://bugs.freedesktop.org/show_bug.cgi?id=38869 so we
     // use (1, 1) instead.
 
-    int dummyPbufferAttribs[] =
-    {
-        GLX_PBUFFER_WIDTH, 1,
-        GLX_PBUFFER_HEIGHT, 1,
-        None,
+    int dummyPbufferAttribs[] = {
+        GLX_PBUFFER_WIDTH, 1, GLX_PBUFFER_HEIGHT, 1, None,
     };
     mDummyPbuffer = mGLX.createPbuffer(mContextConfig, dummyPbufferAttribs);
     if (!mDummyPbuffer)
@@ -382,7 +361,7 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
 
     EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
     EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
-    bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
+    bool largest  = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
     return new PbufferSurfaceGLX(state, width, height, largest, mGLX, fbConfig);
 }
@@ -509,17 +488,13 @@ egl::ConfigSet DisplayGLX::generateConfigs()
     int contextSampleBuffers =
         mHasMultisample ? getGLXFBConfigAttrib(mContextConfig, GLX_SAMPLE_BUFFERS) : 0;
 
-    int contextAccumRedSize = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_RED_SIZE);
+    int contextAccumRedSize   = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_RED_SIZE);
     int contextAccumGreenSize = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_GREEN_SIZE);
-    int contextAccumBlueSize = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_BLUE_SIZE);
+    int contextAccumBlueSize  = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_BLUE_SIZE);
     int contextAccumAlphaSize = getGLXFBConfigAttrib(mContextConfig, GLX_ACCUM_ALPHA_SIZE);
 
-    int attribList[] =
-    {
-        GLX_RENDER_TYPE, GLX_RGBA_BIT,
-        GLX_X_RENDERABLE, True,
-        GLX_DOUBLEBUFFER, True,
-        None,
+    int attribList[] = {
+        GLX_RENDER_TYPE, GLX_RGBA_BIT, GLX_X_RENDERABLE, True, GLX_DOUBLEBUFFER, True, None,
     };
 
     int glxConfigCount;
@@ -531,7 +506,7 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         egl::Config config;
 
         // Native stuff
-        config.nativeVisualID = getGLXFBConfigAttrib(glxConfig, GLX_VISUAL_ID);
+        config.nativeVisualID   = getGLXFBConfigAttrib(glxConfig, GLX_VISUAL_ID);
         config.nativeVisualType = getGLXFBConfigAttrib(glxConfig, GLX_X_VISUAL_TYPE);
         config.nativeRenderable = EGL_TRUE;
 
@@ -544,11 +519,11 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         }
 
         // Buffer sizes
-        config.redSize = getGLXFBConfigAttrib(glxConfig, GLX_RED_SIZE);
-        config.greenSize = getGLXFBConfigAttrib(glxConfig, GLX_GREEN_SIZE);
-        config.blueSize = getGLXFBConfigAttrib(glxConfig, GLX_BLUE_SIZE);
-        config.alphaSize = getGLXFBConfigAttrib(glxConfig, GLX_ALPHA_SIZE);
-        config.depthSize = getGLXFBConfigAttrib(glxConfig, GLX_DEPTH_SIZE);
+        config.redSize     = getGLXFBConfigAttrib(glxConfig, GLX_RED_SIZE);
+        config.greenSize   = getGLXFBConfigAttrib(glxConfig, GLX_GREEN_SIZE);
+        config.blueSize    = getGLXFBConfigAttrib(glxConfig, GLX_BLUE_SIZE);
+        config.alphaSize   = getGLXFBConfigAttrib(glxConfig, GLX_ALPHA_SIZE);
+        config.depthSize   = getGLXFBConfigAttrib(glxConfig, GLX_DEPTH_SIZE);
         config.stencilSize = getGLXFBConfigAttrib(glxConfig, GLX_STENCIL_SIZE);
 
         // We require RGBA8 and the D24S8 (or no DS buffer)
@@ -570,8 +545,8 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         }
 
         config.colorBufferType = EGL_RGB_BUFFER;
-        config.luminanceSize = 0;
-        config.alphaMaskSize = 0;
+        config.luminanceSize   = 0;
+        config.alphaMaskSize   = 0;
 
         config.bufferSize = config.redSize + config.greenSize + config.blueSize + config.alphaSize;
 
@@ -580,31 +555,30 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         int sampleBuffers =
             mHasMultisample ? getGLXFBConfigAttrib(glxConfig, GLX_SAMPLE_BUFFERS) : 0;
 
-        int accumRedSize = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_RED_SIZE);
+        int accumRedSize   = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_RED_SIZE);
         int accumGreenSize = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_GREEN_SIZE);
-        int accumBlueSize = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_BLUE_SIZE);
+        int accumBlueSize  = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_BLUE_SIZE);
         int accumAlphaSize = getGLXFBConfigAttrib(glxConfig, GLX_ACCUM_ALPHA_SIZE);
 
-        if (samples != contextSamples ||
-            sampleBuffers != contextSampleBuffers ||
-            accumRedSize != contextAccumRedSize ||
-            accumGreenSize != contextAccumGreenSize ||
-            accumBlueSize != contextAccumBlueSize ||
-            accumAlphaSize != contextAccumAlphaSize)
+        if (samples != contextSamples || sampleBuffers != contextSampleBuffers ||
+            accumRedSize != contextAccumRedSize || accumGreenSize != contextAccumGreenSize ||
+            accumBlueSize != contextAccumBlueSize || accumAlphaSize != contextAccumAlphaSize)
         {
             continue;
         }
 
-        config.samples = samples;
+        config.samples       = samples;
         config.sampleBuffers = sampleBuffers;
 
         // Transparency
         if (getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_TYPE) == GLX_TRANSPARENT_RGB)
         {
-            config.transparentType = EGL_TRANSPARENT_RGB;
+            config.transparentType     = EGL_TRANSPARENT_RGB;
             config.transparentRedValue = getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_RED_VALUE);
-            config.transparentGreenValue = getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_GREEN_VALUE);
-            config.transparentBlueValue = getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_BLUE_VALUE);
+            config.transparentGreenValue =
+                getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_GREEN_VALUE);
+            config.transparentBlueValue =
+                getGLXFBConfigAttrib(glxConfig, GLX_TRANSPARENT_BLUE_VALUE);
         }
         else
         {
@@ -612,7 +586,7 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         }
 
         // Pbuffer
-        config.maxPBufferWidth = getGLXFBConfigAttrib(glxConfig, GLX_MAX_PBUFFER_WIDTH);
+        config.maxPBufferWidth  = getGLXFBConfigAttrib(glxConfig, GLX_MAX_PBUFFER_WIDTH);
         config.maxPBufferHeight = getGLXFBConfigAttrib(glxConfig, GLX_MAX_PBUFFER_HEIGHT);
         config.maxPBufferPixels = getGLXFBConfigAttrib(glxConfig, GLX_MAX_PBUFFER_PIXELS);
 
@@ -632,23 +606,23 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         // Misc
         config.level = getGLXFBConfigAttrib(glxConfig, GLX_LEVEL);
 
-        config.bindToTextureRGB = EGL_FALSE;
+        config.bindToTextureRGB  = EGL_FALSE;
         config.bindToTextureRGBA = EGL_FALSE;
 
-        int glxDrawable = getGLXFBConfigAttrib(glxConfig, GLX_DRAWABLE_TYPE);
-        config.surfaceType = 0 |
-            (glxDrawable & GLX_WINDOW_BIT ? EGL_WINDOW_BIT : 0) |
-            (glxDrawable & GLX_PBUFFER_BIT ? EGL_PBUFFER_BIT : 0) |
-            (glxDrawable & GLX_PIXMAP_BIT ? EGL_PIXMAP_BIT : 0);
+        int glxDrawable    = getGLXFBConfigAttrib(glxConfig, GLX_DRAWABLE_TYPE);
+        config.surfaceType = 0 | (glxDrawable & GLX_WINDOW_BIT ? EGL_WINDOW_BIT : 0) |
+                             (glxDrawable & GLX_PBUFFER_BIT ? EGL_PBUFFER_BIT : 0) |
+                             (glxDrawable & GLX_PIXMAP_BIT ? EGL_PIXMAP_BIT : 0);
 
         config.minSwapInterval = mMinSwapInterval;
         config.maxSwapInterval = mMaxSwapInterval;
 
-        // TODO(cwallez) wildly guessing these formats, another TODO says they should be removed anyway
+        // TODO(cwallez) wildly guessing these formats, another TODO says they should be removed
+        // anyway
         config.renderTargetFormat = GL_RGBA8;
         config.depthStencilFormat = GL_DEPTH24_STENCIL8;
 
-        config.conformant = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
+        config.conformant     = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
         config.renderableType = config.conformant;
 
         // TODO(cwallez) I have no idea what this is
@@ -656,7 +630,7 @@ egl::ConfigSet DisplayGLX::generateConfigs()
 
         config.colorComponentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
 
-        int id = configs.add(config);
+        int id                  = configs.add(config);
         configIdToGLXConfig[id] = glxConfig;
     }
 
@@ -882,4 +856,4 @@ egl::Error DisplayGLX::createContextAttribs(glx::FBConfig,
     return egl::NoError();
 }
 
-}
+}  // namespace rx

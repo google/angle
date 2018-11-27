@@ -27,8 +27,7 @@ struct MatrixCase
           mMatrixStride(matrixStride),
           mComputeShaderSource(computeShaderSource),
           mInputdata(inputData)
-    {
-    }
+    {}
     unsigned int mColumns;
     unsigned int mRows;
     unsigned int mMatrixStride;
@@ -47,8 +46,7 @@ struct VectorCase
           mComputeShaderSource(computeShaderSource),
           mInputdata(inputData),
           mExpectedData(expectedData)
-    {
-    }
+    {}
     unsigned int mComponents;
     const char *mComputeShaderSource;
     const GLuint *mInputdata;
@@ -720,10 +718,20 @@ void main()
     glUseProgram(program);
 
     std::array<GLuint, 4> kUVData = {{
-        1u, 2u, 0u, 0u,
+        1u,
+        2u,
+        0u,
+        0u,
     }};
     std::array<GLuint, 8> kUIData = {{
-        3u, 0u, 0u, 0u, 4u, 0u, 0u, 0u,
+        3u,
+        0u,
+        0u,
+        0u,
+        4u,
+        0u,
+        0u,
+        0u,
     }};
     GLuint kLastData              = 5u;
 
@@ -823,10 +831,20 @@ void main()
     glUseProgram(program);
 
     std::array<GLuint, 4> kUVData = {{
-        1u, 2u, 0u, 0u,
+        1u,
+        2u,
+        0u,
+        0u,
     }};
     std::array<GLuint, 8> kUIData = {{
-        3u, 0u, 0u, 0u, 4u, 0u, 0u, 0u,
+        3u,
+        0u,
+        0u,
+        0u,
+        4u,
+        0u,
+        0u,
+        0u,
     }};
     GLuint kLastData              = 5u;
 

@@ -28,7 +28,7 @@ namespace gl
 {
 class Context;
 class TextureManager;
-}
+}  // namespace gl
 
 namespace rx
 {

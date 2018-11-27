@@ -51,6 +51,6 @@ class VertexBuffer9 : public VertexBuffer
     bool mDynamicUsage;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_VERTEXBUFFER9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_VERTEXBUFFER9_H_

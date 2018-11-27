@@ -23,7 +23,7 @@ namespace egl
 {
 class Surface;
 class Image;
-}
+}  // namespace egl
 
 namespace gl
 {
@@ -34,7 +34,7 @@ struct Rectangle;
 class Framebuffer;
 struct PixelUnpackState;
 struct TextureState;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -173,6 +173,6 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
   protected:
     const gl::TextureState &mState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_TEXTUREIMPL_H_

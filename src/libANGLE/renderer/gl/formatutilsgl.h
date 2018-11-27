@@ -129,8 +129,8 @@ ReadPixelsFormat GetReadPixelsFormat(const FunctionsGL *functions,
                                      const WorkaroundsGL &workarounds,
                                      GLenum format,
                                      GLenum type);
-}
+}  // namespace nativegl
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_FORMATUTILSGL_H_
+#endif  // LIBANGLE_RENDERER_GL_FORMATUTILSGL_H_

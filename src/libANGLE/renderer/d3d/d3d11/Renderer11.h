@@ -27,7 +27,7 @@ namespace gl
 {
 class FramebufferAttachment;
 class ImageIndex;
-}
+}  // namespace gl
 
 namespace rx
 {

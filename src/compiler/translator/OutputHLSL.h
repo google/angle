@@ -32,7 +32,7 @@ class TSymbolTable;
 class TVariable;
 class UnfoldShortCircuit;
 
-using ReferencedVariables       = std::map<int, const TVariable *>;
+using ReferencedVariables = std::map<int, const TVariable *>;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -262,6 +262,6 @@ class OutputHLSL : public TIntermTraverser
     bool ancestorEvaluatesToSamplerInStruct();
     ShaderStorageBlockOutputHLSL *mSSBOOutputHLSL;
 };
-}
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTHLSL_H_

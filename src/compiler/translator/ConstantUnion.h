@@ -9,8 +9,8 @@
 
 #include <assert.h>
 
-#include "compiler/translator/Common.h"
 #include "compiler/translator/BaseTypes.h"
+#include "compiler/translator/Common.h"
 
 namespace sh
 {
@@ -100,8 +100,10 @@ class TConstantUnion
     TConstantUnion operator||(const TConstantUnion &constant) const;
 
     TBasicType getType() const { return type; }
+
   private:
-    union {
+    union
+    {
         int iConst;           // used for ivec, scalar ints
         unsigned int uConst;  // used for uvec, scalar uints
         bool bConst;          // used for bvec, scalar bools

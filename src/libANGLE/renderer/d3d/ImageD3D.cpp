@@ -21,8 +21,7 @@ ImageD3D::ImageD3D()
       mRenderable(false),
       mType(gl::TextureType::InvalidEnum),
       mDirty(false)
-{
-}
+{}
 
 angle::Result ImageD3D::setManagedSurface2D(const gl::Context *context,
                                             TextureStorage *storage,

@@ -85,18 +85,13 @@ gl::Texture::DirtyBits GetLevelWorkaroundDirtyBits()
 
 }  // anonymous namespace
 
-LUMAWorkaroundGL::LUMAWorkaroundGL() : LUMAWorkaroundGL(false, GL_NONE)
-{
-}
+LUMAWorkaroundGL::LUMAWorkaroundGL() : LUMAWorkaroundGL(false, GL_NONE) {}
 
 LUMAWorkaroundGL::LUMAWorkaroundGL(bool enabled_, GLenum workaroundFormat_)
     : enabled(enabled_), workaroundFormat(workaroundFormat_)
-{
-}
+{}
 
-LevelInfoGL::LevelInfoGL() : LevelInfoGL(GL_NONE, GL_NONE, false, LUMAWorkaroundGL())
-{
-}
+LevelInfoGL::LevelInfoGL() : LevelInfoGL(GL_NONE, GL_NONE, false, LUMAWorkaroundGL()) {}
 
 LevelInfoGL::LevelInfoGL(GLenum sourceFormat_,
                          GLenum nativeInternalFormat_,
@@ -106,8 +101,7 @@ LevelInfoGL::LevelInfoGL(GLenum sourceFormat_,
       nativeInternalFormat(nativeInternalFormat_),
       depthStencilWorkaround(depthStencilWorkaround_),
       lumaWorkaround(lumaWorkaround_)
-{
-}
+{}
 
 TextureGL::TextureGL(const gl::TextureState &state, GLuint id)
     : TextureImpl(state),

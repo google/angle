@@ -31,6 +31,6 @@ class SurfaceGL : public SurfaceImpl
     virtual egl::Error unMakeCurrent();
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_SURFACEGL_H_
+#endif  // LIBANGLE_RENDERER_GL_SURFACEGL_H_

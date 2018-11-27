@@ -23,12 +23,9 @@ TransformFeedback11::TransformFeedback11(const gl::TransformFeedbackState &state
       mBuffers(state.getIndexedBuffers().size(), nullptr),
       mBufferOffsets(state.getIndexedBuffers().size(), 0),
       mSerial(mRenderer->generateSerial())
-{
-}
+{}
 
-TransformFeedback11::~TransformFeedback11()
-{
-}
+TransformFeedback11::~TransformFeedback11() {}
 
 void TransformFeedback11::begin(gl::PrimitiveMode primitiveMode)
 {

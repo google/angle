@@ -826,8 +826,7 @@ struct TLayoutQualifier
           invocations(0),
           maxVertices(-1),
           index(-1)
-    {
-    }
+    {}
 };
 
 struct TMemoryQualifier
@@ -860,8 +859,7 @@ struct TMemoryQualifier
           coherent(false),
           restrictQualifier(false),
           volatileQualifier(false)
-    {
-    }
+    {}
 };
 
 inline const char *getWorkGroupSizeString(size_t dimension)

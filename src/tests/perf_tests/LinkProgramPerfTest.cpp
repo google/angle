@@ -81,9 +81,7 @@ class LinkProgramBenchmark : public ANGLERenderTest,
     GLuint mVertexBuffer = 0;
 };
 
-LinkProgramBenchmark::LinkProgramBenchmark() : ANGLERenderTest("LinkProgram", GetParam())
-{
-}
+LinkProgramBenchmark::LinkProgramBenchmark() : ANGLERenderTest("LinkProgram", GetParam()) {}
 
 void LinkProgramBenchmark::initializeBenchmark()
 {

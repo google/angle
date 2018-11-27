@@ -19,13 +19,9 @@
 namespace rx
 {
 
-DisplayNULL::DisplayNULL(const egl::DisplayState &state) : DisplayImpl(state)
-{
-}
+DisplayNULL::DisplayNULL(const egl::DisplayState &state) : DisplayImpl(state) {}
 
-DisplayNULL::~DisplayNULL()
-{
-}
+DisplayNULL::~DisplayNULL() {}
 
 egl::Error DisplayNULL::initialize(egl::Display *display)
 {

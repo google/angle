@@ -1371,10 +1371,16 @@ TEST_P(GLSLTest, MixedShaderLengths)
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
     const char *sourceArray[] = {
-        "void main()", "{", "    gl_FragColor = vec4(0, 0, 0, 0);", "}",
+        "void main()",
+        "{",
+        "    gl_FragColor = vec4(0, 0, 0, 0);",
+        "}",
     };
     GLint lengths[] = {
-        -10, 1, static_cast<GLint>(strlen(sourceArray[2])), -1,
+        -10,
+        1,
+        static_cast<GLint>(strlen(sourceArray[2])),
+        -1,
     };
     ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
 
@@ -3624,7 +3630,7 @@ void main()
     GLTexture tex;
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex);
-    GLubyte texData[] = { 0u, 255u, 0u, 255u };
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

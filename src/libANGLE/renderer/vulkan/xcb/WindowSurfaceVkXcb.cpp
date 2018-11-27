@@ -20,8 +20,7 @@ WindowSurfaceVkXcb::WindowSurfaceVkXcb(const egl::SurfaceState &surfaceState,
                                        EGLint height,
                                        xcb_connection_t *conn)
     : WindowSurfaceVk(surfaceState, window, width, height), mXcbConnection(conn)
-{
-}
+{}
 
 angle::Result WindowSurfaceVkXcb::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {

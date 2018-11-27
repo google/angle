@@ -158,7 +158,7 @@ TEST_P(TextureEnvTest, InitialState)
                           GLColor32F(0.0f, 0.0f, 0.0f, 0.0f),  // envColor
                           1.0f,                                // rgbScale
                           1.0f                                 // alphaScale
-                          );
+        );
     }
 }
 
@@ -270,19 +270,28 @@ TEST_P(TextureEnvTest, Set)
     };
 
     std::vector<GLenum> validSrcs = {
-        GL_CONSTANT, GL_PREVIOUS, GL_PRIMARY_COLOR, GL_TEXTURE,
+        GL_CONSTANT,
+        GL_PREVIOUS,
+        GL_PRIMARY_COLOR,
+        GL_TEXTURE,
     };
 
     std::vector<GLenum> validOpRgbs = {
-        GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+        GL_SRC_COLOR,
+        GL_ONE_MINUS_SRC_COLOR,
+        GL_SRC_ALPHA,
+        GL_ONE_MINUS_SRC_ALPHA,
     };
 
     std::vector<GLenum> validOpAlphas = {
-        GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+        GL_SRC_ALPHA,
+        GL_ONE_MINUS_SRC_ALPHA,
     };
 
     std::vector<GLfloat> validScales = {
-        1.0f, 2.0f, 4.0f,
+        1.0f,
+        2.0f,
+        4.0f,
     };
 
     for (int i = 0; i < kTrials; i++)

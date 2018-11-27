@@ -33,31 +33,31 @@ samples utility functions
 #include "SPIRV/GlslangToSpv.h"
 
 #if defined(__linux__) && !defined(__ANDROID__)
-#define VK_USE_PLATFORM_XCB_KHR
+#    define VK_USE_PLATFORM_XCB_KHR
 #endif
 
 #ifdef _WIN32
-#pragma comment(linker, "/subsystem:console")
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#ifndef VK_USE_PLATFORM_WIN32_KHR
-#define VK_USE_PLATFORM_WIN32_KHR
-#endif
-#ifndef NOMINMAX
-#define NOMINMAX /* Don't let Windows define min() or max() */
-#endif
-#define APP_NAME_STR_LEN 80
+#    pragma comment(linker, "/subsystem:console")
+#    ifndef WIN32_LEAN_AND_MEAN
+#        define WIN32_LEAN_AND_MEAN
+#    endif
+#    ifndef VK_USE_PLATFORM_WIN32_KHR
+#        define VK_USE_PLATFORM_WIN32_KHR
+#    endif
+#    ifndef NOMINMAX
+#        define NOMINMAX /* Don't let Windows define min() or max() */
+#    endif
+#    define APP_NAME_STR_LEN 80
 #elif defined(__ANDROID__)
 // Include files for Android
-#define VK_USE_PLATFORM_ANDROID_KHR
-#include <android/log.h>
-#include <unistd.h>
-#include "OSWindow.h"
-#include "android/third_party/android_native_app_glue.h"
+#    define VK_USE_PLATFORM_ANDROID_KHR
+#    include <android/log.h>
+#    include <unistd.h>
+#    include "OSWindow.h"
+#    include "android/third_party/android_native_app_glue.h"
 #else
-#include <unistd.h>
-#include "vulkan/vk_sdk_platform.h"
+#    include <unistd.h>
+#    include "vulkan/vk_sdk_platform.h"
 #endif
 
 #include <vulkan/vulkan.h>
@@ -80,17 +80,18 @@ samples utility functions
 #define FENCE_TIMEOUT 100000000
 
 #ifdef __ANDROID__
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "VK-SAMPLE", __VA_ARGS__))
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "VK-SAMPLE", __VA_ARGS__))
-#define GET_INSTANCE_PROC_ADDR(inst, entrypoint)                                                 \
-    {                                                                                            \
-        info.fp##entrypoint = (PFN_vk##entrypoint)vkGetInstanceProcAddr(inst, "vk" #entrypoint); \
-        if (info.fp##entrypoint == NULL)                                                         \
-        {                                                                                        \
-            std::cout << "vkGetDeviceProcAddr failed to find vk" #entrypoint;                    \
-            exit(-1);                                                                            \
-        }                                                                                        \
-    }
+#    define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "VK-SAMPLE", __VA_ARGS__))
+#    define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "VK-SAMPLE", __VA_ARGS__))
+#    define GET_INSTANCE_PROC_ADDR(inst, entrypoint)                               \
+        {                                                                          \
+            info.fp##entrypoint =                                                  \
+                (PFN_vk##entrypoint)vkGetInstanceProcAddr(inst, "vk" #entrypoint); \
+            if (info.fp##entrypoint == NULL)                                       \
+            {                                                                      \
+                std::cout << "vkGetDeviceProcAddr failed to find vk" #entrypoint;  \
+                exit(-1);                                                          \
+            }                                                                      \
+        }
 
 #endif
 
@@ -123,7 +124,7 @@ typedef struct
 struct sample_info
 {
 #ifdef _WIN32
-#define APP_NAME_STR_LEN 80
+#    define APP_NAME_STR_LEN 80
     HINSTANCE connection;         // hInstance - Windows Instance
     char name[APP_NAME_STR_LEN];  // Name to put on the window/icon
     HWND window;                  // hWnd - window handle

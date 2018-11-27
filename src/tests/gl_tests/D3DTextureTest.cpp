@@ -825,7 +825,7 @@ TEST_P(D3DTextureTest, BindTexImage)
         return;
     }
 
-    EGLWindow *window = getEGLWindow();
+    EGLWindow *window  = getEGLWindow();
     EGLDisplay display = window->getDisplay();
 
     const size_t bufferSize = 32;
@@ -1203,4 +1203,4 @@ TEST_P(D3DTextureTestMS, CopyTexSubImage2DTest)
 ANGLE_INSTANTIATE_TEST(D3DTextureTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(D3DTextureTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(D3DTextureTestMS, ES2_D3D11());
-}  // namespace
+}  // namespace angle

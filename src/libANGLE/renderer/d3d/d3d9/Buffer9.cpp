@@ -16,8 +16,7 @@ namespace rx
 
 Buffer9::Buffer9(const gl::BufferState &state, Renderer9 *renderer)
     : BufferD3D(state, renderer), mSize(0)
-{
-}
+{}
 
 Buffer9::~Buffer9()
 {

@@ -374,8 +374,7 @@ ANGLE_INSTANTIATE_TEST(FramebufferFormatsTest,
                        ES3_OPENGLES());
 
 class FramebufferTest_ES3 : public ANGLETest
-{
-};
+{};
 
 // Covers invalidating an incomplete framebuffer. This should be a no-op, but should not error.
 TEST_P(FramebufferTest_ES3, InvalidateIncomplete)

@@ -14,13 +14,9 @@
 namespace rx
 {
 
-RenderbufferNULL::RenderbufferNULL(const gl::RenderbufferState &state) : RenderbufferImpl(state)
-{
-}
+RenderbufferNULL::RenderbufferNULL(const gl::RenderbufferState &state) : RenderbufferImpl(state) {}
 
-RenderbufferNULL::~RenderbufferNULL()
-{
-}
+RenderbufferNULL::~RenderbufferNULL() {}
 
 angle::Result RenderbufferNULL::setStorage(const gl::Context *context,
                                            GLenum internalformat,

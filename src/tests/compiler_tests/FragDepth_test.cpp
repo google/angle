@@ -7,9 +7,9 @@
 //   Test for GLES SL 3.0 gl_FragDepth variable implementation.
 //
 
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "gtest/gtest.h"
-#include "GLSLANG/ShaderLang.h"
 
 namespace
 {

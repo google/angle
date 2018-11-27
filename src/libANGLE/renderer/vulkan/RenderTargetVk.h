@@ -34,9 +34,7 @@ class RenderPassDesc;
 class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 {
   public:
-    RenderTargetVk(vk::ImageHelper *image,
-                   vk::ImageView *imageView,
-                   size_t layerIndex);
+    RenderTargetVk(vk::ImageHelper *image, vk::ImageView *imageView, size_t layerIndex);
     ~RenderTargetVk();
 
     // Used in std::vector initialization.

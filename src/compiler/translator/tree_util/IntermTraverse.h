@@ -103,10 +103,7 @@ class TIntermTraverser : angle::NonCopyable
     }
 
     // Should only be called from traverse*() functions
-    void decrementDepth()
-    {
-        mPath.pop_back();
-    }
+    void decrementDepth() { mPath.pop_back(); }
 
     int getCurrentTraversalDepth() const { return static_cast<int>(mPath.size()) - 1; }
 
@@ -158,8 +155,7 @@ class TIntermTraverser : angle::NonCopyable
                                      TIntermNode *originalIn,
                                      TIntermSequence replacementsIn)
             : parent(parentIn), original(originalIn), replacements(std::move(replacementsIn))
-        {
-        }
+        {}
 
         TIntermAggregateBase *parent;
         TIntermNode *original;
@@ -232,8 +228,7 @@ class TIntermTraverser : angle::NonCopyable
               position(_position),
               insertionsBefore(_insertionsBefore),
               insertionsAfter(_insertionsAfter)
-        {
-        }
+        {}
 
         TIntermBlock *parent;
         TIntermSequence::size_type position;
@@ -255,8 +250,7 @@ class TIntermTraverser : angle::NonCopyable
               original(_original),
               replacement(_replacement),
               originalBecomesChildOfReplacement(_originalBecomesChildOfReplacement)
-        {
-        }
+        {}
 
         TIntermNode *parent;
         TIntermNode *original;
@@ -268,8 +262,7 @@ class TIntermTraverser : angle::NonCopyable
     {
         ParentBlock(TIntermBlock *nodeIn, TIntermSequence::size_type posIn)
             : node(nodeIn), pos(posIn)
-        {
-        }
+        {}
 
         TIntermBlock *node;
         TIntermSequence::size_type pos;

@@ -22,9 +22,7 @@ IndexBuffer::IndexBuffer()
     updateSerial();
 }
 
-IndexBuffer::~IndexBuffer()
-{
-}
+IndexBuffer::~IndexBuffer() {}
 
 unsigned int IndexBuffer::getSerial() const
 {
@@ -36,12 +34,11 @@ void IndexBuffer::updateSerial()
     mSerial = mNextSerial++;
 }
 
-
 IndexBufferInterface::IndexBufferInterface(BufferFactoryD3D *factory, bool dynamic)
 {
     mIndexBuffer = factory->createIndexBuffer();
 
-    mDynamic = dynamic;
+    mDynamic       = dynamic;
     mWritePosition = 0;
 }
 
@@ -103,7 +100,7 @@ angle::Result IndexBufferInterface::unmapBuffer(const gl::Context *context)
     return mIndexBuffer->unmapBuffer(context);
 }
 
-IndexBuffer * IndexBufferInterface::getIndexBuffer() const
+IndexBuffer *IndexBufferInterface::getIndexBuffer() const
 {
     return mIndexBuffer;
 }
@@ -139,19 +136,16 @@ angle::Result IndexBufferInterface::setBufferSize(const gl::Context *context,
 
 StreamingIndexBufferInterface::StreamingIndexBufferInterface(BufferFactoryD3D *factory)
     : IndexBufferInterface(factory, true)
-{
-}
+{}
 
-StreamingIndexBufferInterface::~StreamingIndexBufferInterface()
-{
-}
+StreamingIndexBufferInterface::~StreamingIndexBufferInterface() {}
 
 angle::Result StreamingIndexBufferInterface::reserveBufferSpace(const gl::Context *context,
                                                                 unsigned int size,
                                                                 GLenum indexType)
 {
     unsigned int curBufferSize = getBufferSize();
-    unsigned int writePos = getWritePosition();
+    unsigned int writePos      = getWritePosition();
     if (size > curBufferSize)
     {
         ANGLE_TRY(setBufferSize(context, std::max(size, 2 * curBufferSize), indexType));
@@ -166,15 +160,11 @@ angle::Result StreamingIndexBufferInterface::reserveBufferSpace(const gl::Contex
     return angle::Result::Continue();
 }
 
-
 StaticIndexBufferInterface::StaticIndexBufferInterface(BufferFactoryD3D *factory)
     : IndexBufferInterface(factory, false)
-{
-}
+{}
 
-StaticIndexBufferInterface::~StaticIndexBufferInterface()
-{
-}
+StaticIndexBufferInterface::~StaticIndexBufferInterface() {}
 
 angle::Result StaticIndexBufferInterface::reserveBufferSpace(const gl::Context *context,
                                                              unsigned int size,

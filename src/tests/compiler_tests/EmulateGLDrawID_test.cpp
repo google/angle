@@ -57,19 +57,19 @@ TEST_F(EmulateGLDrawIDTest, EmulatesUniform)
 {
     addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
     addOutputType(SH_ESSL_OUTPUT);
-    #ifdef ANGLE_ENABLE_VULKAN
+#ifdef ANGLE_ENABLE_VULKAN
     addOutputType(SH_GLSL_VULKAN_OUTPUT);
-    #endif
-    #ifdef ANGLE_ENABLE_HLSL
+#endif
+#ifdef ANGLE_ENABLE_HLSL
     addOutputType(SH_HLSL_3_0_OUTPUT);
     addOutputType(SH_HLSL_3_0_OUTPUT);
-    #endif
+#endif
 
     const std::string &shaderString =
-      "#extension GL_ANGLE_multi_draw : require\n"
-      "void main() {\n"
-      "   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);\n"
-      "}\n";
+        "#extension GL_ANGLE_multi_draw : require\n"
+        "void main() {\n"
+        "   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);\n"
+        "}\n";
 
     compile(shaderString, SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_DRAW_ID);
 
@@ -80,13 +80,14 @@ TEST_F(EmulateGLDrawIDTest, EmulatesUniform)
     EXPECT_TRUE(foundInCode(SH_GLSL_COMPATIBILITY_OUTPUT, "uniform int angle_DrawID"));
     EXPECT_TRUE(foundInCode(SH_ESSL_OUTPUT, "uniform highp int angle_DrawID"));
 
-    #ifdef ANGLE_ENABLE_VULKAN
-    EXPECT_TRUE(foundInCode(SH_GLSL_VULKAN_OUTPUT, "uniform defaultUniforms\n{\n    int angle_DrawID;"));
-    #endif
-    #ifdef ANGLE_ENABLE_HLSL
+#ifdef ANGLE_ENABLE_VULKAN
+    EXPECT_TRUE(
+        foundInCode(SH_GLSL_VULKAN_OUTPUT, "uniform defaultUniforms\n{\n    int angle_DrawID;"));
+#endif
+#ifdef ANGLE_ENABLE_HLSL
     EXPECT_TRUE(foundInCode(SH_HLSL_3_0_OUTPUT, "uniform int angle_DrawID : register"));
     EXPECT_TRUE(foundInCode(SH_HLSL_3_0_OUTPUT, "uniform int angle_DrawID : register"));
-    #endif
+#endif
 }
 
 // Check that a user-defined "gl_DrawID" is not permitted
@@ -131,20 +132,20 @@ TEST_F(EmulateGLDrawIDTest, AllowsUserDefinedANGLEDrawID)
 {
     addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
     addOutputType(SH_ESSL_OUTPUT);
-    #ifdef ANGLE_ENABLE_VULKAN
+#ifdef ANGLE_ENABLE_VULKAN
     addOutputType(SH_GLSL_VULKAN_OUTPUT);
-    #endif
-    #ifdef ANGLE_ENABLE_HLSL
+#endif
+#ifdef ANGLE_ENABLE_HLSL
     addOutputType(SH_HLSL_3_0_OUTPUT);
     addOutputType(SH_HLSL_3_0_OUTPUT);
-    #endif
+#endif
 
     const std::string &shaderString =
-      "#extension GL_ANGLE_multi_draw : require\n"
-      "uniform int angle_DrawID;\n"
-      "void main() {\n"
-      "   gl_Position = vec4(float(angle_DrawID + gl_DrawID), 0.0, 0.0, 1.0);\n"
-      "}\n";
+        "#extension GL_ANGLE_multi_draw : require\n"
+        "uniform int angle_DrawID;\n"
+        "void main() {\n"
+        "   gl_Position = vec4(float(angle_DrawID + gl_DrawID), 0.0, 0.0, 1.0);\n"
+        "}\n";
 
     compile(shaderString, SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_DRAW_ID);
 

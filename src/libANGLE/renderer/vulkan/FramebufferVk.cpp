@@ -385,7 +385,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
         flippedArea.y = fbRect.height - flippedArea.y - flippedArea.height;
     }
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState            = context->getGLState();
     const gl::PixelPackState &packState = glState.getPackState();
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
@@ -465,11 +465,11 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     // This path is only currently used for y-flipping depth/stencil blits.
     PackPixelsParams packPixelsParams;
-    packPixelsParams.reverseRowOrder      = true;
-    packPixelsParams.area.width           = copyArea.width;
-    packPixelsParams.area.height          = copyArea.height;
-    packPixelsParams.area.x               = copyArea.x;
-    packPixelsParams.area.y               = copyArea.y;
+    packPixelsParams.reverseRowOrder = true;
+    packPixelsParams.area.width      = copyArea.width;
+    packPixelsParams.area.height     = copyArea.height;
+    packPixelsParams.area.x          = copyArea.x;
+    packPixelsParams.area.y          = copyArea.y;
 
     // Read back depth values into the destination buffer.
     const angle::Format &copyFormat = GetDepthStencilImageToBufferFormat(readFormat, aspect);
@@ -1187,11 +1187,11 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
         readFormat = &GetDepthStencilImageToBufferFormat(*readFormat, copyAspectFlags);
     }
 
-    VkBuffer bufferHandle    = VK_NULL_HANDLE;
-    uint8_t *readPixelBuffer = nullptr;
-    bool newBufferAllocated  = false;
+    VkBuffer bufferHandle      = VK_NULL_HANDLE;
+    uint8_t *readPixelBuffer   = nullptr;
+    bool newBufferAllocated    = false;
     VkDeviceSize stagingOffset = 0;
-    size_t allocationSize    = readFormat->pixelBytes * area.width * area.height;
+    size_t allocationSize      = readFormat->pixelBytes * area.width * area.height;
 
     ANGLE_TRY(mReadPixelBuffer.allocate(contextVk, allocationSize, &readPixelBuffer, &bufferHandle,
                                         &stagingOffset, &newBufferAllocated));

@@ -415,4 +415,4 @@ ANGLE_INSTANTIATE_TEST(RobustClientMemoryTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 
-}  // namespace
+}  // namespace angle

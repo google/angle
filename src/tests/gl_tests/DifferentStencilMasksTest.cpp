@@ -111,4 +111,4 @@ ANGLE_INSTANTIATE_TEST(DifferentStencilMasksTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_VULKAN());
-} // anonymous namespace
+}  // anonymous namespace

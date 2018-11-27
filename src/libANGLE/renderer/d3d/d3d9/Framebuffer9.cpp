@@ -30,9 +30,7 @@ Framebuffer9::Framebuffer9(const gl::FramebufferState &data, Renderer9 *renderer
     ASSERT(mRenderer != nullptr);
 }
 
-Framebuffer9::~Framebuffer9()
-{
-}
+Framebuffer9::~Framebuffer9() {}
 
 angle::Result Framebuffer9::discard(const gl::Context *context,
                                     size_t count,

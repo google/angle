@@ -60,7 +60,7 @@ static inline void SyncSamplerStateMember(const rx::FunctionsGL *functions,
         SetSamplerParameter(functions, sampler, name, (newState.*getter)());
     }
 }
-}
+}  // namespace
 
 namespace rx
 {
@@ -105,4 +105,4 @@ GLuint SamplerGL::getSamplerID() const
 {
     return mSamplerID;
 }
-}
+}  // namespace rx

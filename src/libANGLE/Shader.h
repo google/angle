@@ -31,7 +31,7 @@ namespace rx
 class GLImplFactory;
 class ShaderImpl;
 class ShaderSh;
-}
+}  // namespace rx
 
 namespace angle
 {

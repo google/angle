@@ -25,12 +25,9 @@ namespace gl
 // RenderbufferState implementation.
 RenderbufferState::RenderbufferState()
     : mWidth(0), mHeight(0), mFormat(GL_RGBA4), mSamples(0), mInitState(InitState::MayNeedInit)
-{
-}
+{}
 
-RenderbufferState::~RenderbufferState()
-{
-}
+RenderbufferState::~RenderbufferState() {}
 
 GLsizei RenderbufferState::getWidth() const
 {
@@ -71,8 +68,7 @@ Renderbuffer::Renderbuffer(rx::GLImplFactory *implFactory, GLuint id)
       mState(),
       mImplementation(implFactory->createRenderbuffer(mState)),
       mLabel()
-{
-}
+{}
 
 void Renderbuffer::onDestroy(const Context *context)
 {
@@ -84,9 +80,7 @@ void Renderbuffer::onDestroy(const Context *context)
     }
 }
 
-Renderbuffer::~Renderbuffer()
-{
-}
+Renderbuffer::~Renderbuffer() {}
 
 void Renderbuffer::setLabel(const std::string &label)
 {

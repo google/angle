@@ -66,6 +66,6 @@ class Query11 : public QueryImpl
     std::deque<std::unique_ptr<QueryState>> mPendingQueries;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_QUERY11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_QUERY11_H_

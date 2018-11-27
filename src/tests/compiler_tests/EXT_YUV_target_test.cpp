@@ -13,7 +13,7 @@ using EXTYUVTargetTest = sh::ShaderExtensionTest;
 
 namespace
 {
-const char EXTYTPragma[]    = "#extension GL_EXT_YUV_target : require\n";
+const char EXTYTPragma[] = "#extension GL_EXT_YUV_target : require\n";
 
 const char ESSL300_SimpleShader[] =
     "precision mediump float;\n"
@@ -277,8 +277,7 @@ INSTANTIATE_TEST_CASE_P(CorrectVariantsWithExtensionAndPragma,
                                 Values(ESSL300_SimpleShader, ESSL300_FragColorShader)));
 
 class EXTYUVTargetCompileSuccessTest : public EXTYUVTargetTest
-{
-};
+{};
 
 TEST_P(EXTYUVTargetCompileSuccessTest, CompileSucceeds)
 {
@@ -298,8 +297,7 @@ INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
                                        ESSL300_BuiltInFunctionsShader)));
 
 class EXTYUVTargetCompileFailureTest : public EXTYUVTargetTest
-{
-};
+{};
 
 TEST_P(EXTYUVTargetCompileFailureTest, CompileFails)
 {
@@ -332,8 +330,7 @@ INSTANTIATE_TEST_CASE_P(IncorrectESSL300Shaders,
                                        ESSL300_YuvCscStandartdEXTQualifiersFailureShader3)));
 
 class EXTYUVNotEnabledTest : public EXTYUVTargetTest
-{
-};
+{};
 
 TEST_P(EXTYUVNotEnabledTest, CanOverloadConversions)
 {

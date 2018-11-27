@@ -212,7 +212,7 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
     {
         mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
 
-        const gl::Type &typeInfo  = gl::GetTypeInfo(type);
+        const gl::Type &typeInfo = gl::GetTypeInfo(type);
         const uint8_t *bufferData =
             MapBufferRangeWithFallback(mFunctions, gl::ToGLenum(DestBufferOperationTarget), offset,
                                        count * typeInfo.bytes, GL_MAP_READ_BIT);
@@ -227,4 +227,4 @@ GLuint BufferGL::getBufferID() const
 {
     return mBufferID;
 }
-}
+}  // namespace rx

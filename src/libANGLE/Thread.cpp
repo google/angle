@@ -20,8 +20,7 @@ Thread::Thread()
       mError(EGL_SUCCESS),
       mAPI(EGL_OPENGL_ES_API),
       mContext(static_cast<gl::Context *>(EGL_NO_CONTEXT))
-{
-}
+{}
 
 void Thread::setLabel(EGLLabelKHR label)
 {

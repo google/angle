@@ -143,7 +143,7 @@ class CHROMIUMFramebufferMixedSamplesTest : public ANGLETest
     GLint mColorLoc;
 };
 
-}  //
+}  // namespace
 
 TEST_P(CHROMIUMFramebufferMixedSamplesTest, StateSettingTest)
 {

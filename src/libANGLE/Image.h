@@ -24,7 +24,7 @@ namespace rx
 class EGLImplFactory;
 class ImageImpl;
 class ExternalImageSiblingImpl;
-}
+}  // namespace rx
 
 namespace egl
 {

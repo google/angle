@@ -19,13 +19,13 @@ struct Config;
 class ImageSibling;
 struct ImageState;
 struct SurfaceState;
-}
+}  // namespace egl
 
 namespace gl
 {
 class Context;
 class ContextState;
-}
+}  // namespace gl
 
 namespace rx
 {

@@ -34,12 +34,9 @@ BufferState::BufferState()
       mBindingCount(0),
       mTransformFeedbackIndexedBindingCount(0),
       mTransformFeedbackGenericBindingCount(0)
-{
-}
+{}
 
-BufferState::~BufferState()
-{
-}
+BufferState::~BufferState() {}
 
 Buffer::Buffer(rx::GLImplFactory *factory, GLuint id)
     : RefCountObject(id),
@@ -110,7 +107,8 @@ angle::Result Buffer::bufferSubData(const Context *context,
 {
     ANGLE_TRY(mImpl->setSubData(context, target, data, size, offset));
 
-    mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(size));
+    mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset),
+                                     static_cast<unsigned int>(size));
 
     // Notify when data changes.
     onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
@@ -127,7 +125,8 @@ angle::Result Buffer::copyBufferSubData(const Context *context,
     ANGLE_TRY(
         mImpl->copySubData(context, source->getImplementation(), sourceOffset, destOffset, size));
 
-    mIndexRangeCache.invalidateRange(static_cast<unsigned int>(destOffset), static_cast<unsigned int>(size));
+    mIndexRangeCache.invalidateRange(static_cast<unsigned int>(destOffset),
+                                     static_cast<unsigned int>(size));
 
     // Notify when data changes.
     onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
@@ -181,7 +180,8 @@ angle::Result Buffer::mapRange(const Context *context,
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {
-        mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(length));
+        mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset),
+                                         static_cast<unsigned int>(length));
     }
 
     // Notify when state changes.

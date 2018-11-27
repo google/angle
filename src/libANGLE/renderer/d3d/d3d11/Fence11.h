@@ -70,6 +70,6 @@ class Sync11 : public SyncImpl
     LONGLONG mCounterFrequency;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_FENCE11_H_

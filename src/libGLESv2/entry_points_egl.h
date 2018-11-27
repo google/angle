@@ -130,6 +130,6 @@ ANGLE_EXPORT EGLSurface EGLAPIENTRY CreatePlatformPixmapSurface(EGLDisplay dpy,
                                                                 void *native_pixmap,
                                                                 const EGLAttrib *attrib_list);
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags);
-}
+}  // namespace egl
 
 #endif  // LIBGLESV2_ENTRYPOINTSEGL_H_

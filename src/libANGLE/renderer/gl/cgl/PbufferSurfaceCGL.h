@@ -69,4 +69,4 @@ class PbufferSurfaceCGL : public SurfaceGL
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_CGL_PBUFFERSURFACECGL_H_
+#endif  // LIBANGLE_RENDERER_GL_CGL_PBUFFERSURFACECGL_H_

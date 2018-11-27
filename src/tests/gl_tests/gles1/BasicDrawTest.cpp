@@ -61,7 +61,9 @@ TEST_P(BasicDrawTest, EnableDisableTexture)
 
     // Green
     GLubyte texture[] = {
-        0x00, 0xff, 0x00,
+        0x00,
+        0xff,
+        0x00,
     };
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);

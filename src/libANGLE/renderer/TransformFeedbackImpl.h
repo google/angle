@@ -33,6 +33,6 @@ class TransformFeedbackImpl : angle::NonCopyable
   protected:
     const gl::TransformFeedbackState &mState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPL_H_

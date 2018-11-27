@@ -11,8 +11,8 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
-#include "libANGLE/renderer/d3d/VertexBuffer.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/VertexBuffer.h"
 
 namespace rx
 {

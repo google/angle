@@ -19,7 +19,7 @@ namespace rx
 {
 class GLImplFactory;
 class SamplerImpl;
-}
+}  // namespace rx
 
 namespace gl
 {
@@ -86,4 +86,4 @@ class Sampler final : public RefCountObject, public LabeledObject, public angle:
 
 }  // namespace gl
 
-#endif // LIBANGLE_SAMPLER_H_
+#endif  // LIBANGLE_SAMPLER_H_

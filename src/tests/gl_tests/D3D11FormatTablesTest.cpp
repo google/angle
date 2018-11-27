@@ -25,9 +25,7 @@ namespace
 {
 
 class D3D11FormatTablesTest : public ANGLETest
-{
-
-};
+{};
 
 // This test enumerates all GL formats - for each, it queries the D3D support for
 // using it as a texture, a render target, and sampling from it in the shader. It
@@ -87,11 +85,12 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
         UINT filterSupport = 0;
         bool filterSuccess =
             SUCCEEDED(device->CheckFormatSupport(formatInfo.srvFormat, &filterSupport));
-        bool filterable = filterSuccess && ((filterSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0);
+        bool filterable =
+            filterSuccess && ((filterSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0);
         EXPECT_EQ(filterable, textureInfo.filterable) << " for " << gl::FmtHex(internalFormat);
 
         // Bits for renderable
-        bool renderable = false;
+        bool renderable          = false;
         UINT renderSupport       = 0u;
         DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
         if (internalFormatInfo.depthBits > 0 || internalFormatInfo.stencilBits > 0)
@@ -136,8 +135,8 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
                 for (unsigned int sampleCount = 1;
                      sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
                 {
-                    UINT qualityCount  = 0;
-                    bool sampleSuccess = SUCCEEDED(device->CheckMultisampleQualityLevels(
+                    UINT qualityCount    = 0;
+                    bool sampleSuccess   = SUCCEEDED(device->CheckMultisampleQualityLevels(
                         renderFormat, sampleCount, &qualityCount));
                     GLuint expectedCount = (!sampleSuccess || qualityCount == 0) ? 0 : 1;
                     EXPECT_EQ(expectedCount, textureInfo.sampleCounts.count(sampleCount))
@@ -159,4 +158,4 @@ ANGLE_INSTANTIATE_TEST(D3D11FormatTablesTest,
                        ES2_D3D11_FL10_1(),
                        ES2_D3D11_FL11_0());
 
-} // anonymous namespace
+}  // anonymous namespace

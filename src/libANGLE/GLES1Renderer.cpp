@@ -28,9 +28,7 @@ namespace
 namespace gl
 {
 
-GLES1Renderer::GLES1Renderer() : mRendererProgramInitialized(false)
-{
-}
+GLES1Renderer::GLES1Renderer() : mRendererProgramInitialized(false) {}
 
 void GLES1Renderer::onDestroy(Context *context, State *state)
 {
@@ -802,7 +800,9 @@ void GLES1Renderer::setAttributesEnabled(Context *context, State *glState, Attri
     GLES1State &gles1 = glState->gles1();
 
     ClientVertexArrayType nonTexcoordArrays[] = {
-        ClientVertexArrayType::Vertex, ClientVertexArrayType::Normal, ClientVertexArrayType::Color,
+        ClientVertexArrayType::Vertex,
+        ClientVertexArrayType::Normal,
+        ClientVertexArrayType::Color,
         ClientVertexArrayType::PointSize,
     };
 

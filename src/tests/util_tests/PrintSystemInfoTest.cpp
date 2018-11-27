@@ -21,7 +21,7 @@ namespace
 
 #if defined(ANGLE_PLATFORM_WINDOWS) || defined(ANGLE_PLATFORM_LINUX) || \
     defined(ANGLE_PLATFORM_APPLE)
-#define SYSTEM_INFO_IMPLEMENTED
+#    define SYSTEM_INFO_IMPLEMENTED
 #endif
 
 #if defined(SYSTEM_INFO_IMPLEMENTED)

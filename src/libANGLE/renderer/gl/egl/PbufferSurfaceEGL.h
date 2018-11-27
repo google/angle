@@ -9,8 +9,8 @@
 #ifndef LIBANGLE_RENDERER_GL_EGL_PBUFFERSURFACEEGL_H_
 #define LIBANGLE_RENDERER_GL_EGL_PBUFFERSURFACEEGL_H_
 
-#include <vector>
 #include <EGL/egl.h>
+#include <vector>
 
 #include "libANGLE/renderer/gl/egl/SurfaceEGL.h"
 

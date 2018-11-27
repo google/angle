@@ -61,4 +61,4 @@ angle::Result SyncGL::getStatus(const gl::Context *context, GLint *outResult)
     mFunctions->getSynciv(mSyncObject, GL_SYNC_STATUS, 1, nullptr, outResult);
     return angle::Result::Continue();
 }
-}
+}  // namespace rx

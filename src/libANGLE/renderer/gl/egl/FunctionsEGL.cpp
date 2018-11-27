@@ -76,8 +76,7 @@ struct FunctionsEGL::EGLDispatchTable
           getNextFrameIdANDROIDPtr(nullptr),
           getFrameTimestampSupportedANDROIDPtr(nullptr),
           getFrameTimestampsANDROIDPtr(nullptr)
-    {
-    }
+    {}
 
     // 1.0
     PFNEGLBINDAPIPROC bindAPIPtr;
@@ -132,8 +131,7 @@ struct FunctionsEGL::EGLDispatchTable
 
 FunctionsEGL::FunctionsEGL()
     : majorVersion(0), minorVersion(0), mFnPtrs(new EGLDispatchTable()), mEGLDisplay(EGL_NO_DISPLAY)
-{
-}
+{}
 
 FunctionsEGL::~FunctionsEGL()
 {

@@ -52,7 +52,7 @@ const size_t g_shaderSize[] = {
     sizeof(g_ps20_componentmaskpremultps),
     sizeof(g_ps20_componentmaskunmultps),
 };
-}
+}  // namespace
 
 namespace rx
 {
@@ -628,7 +628,10 @@ void Blit9::setViewportAndShaderConstants(const RECT &sourceRect,
 
     float vertexConstants[8] = {
         // halfPixelAdjust
-        -1.0f / vp.Width, 1.0f / vp.Height, 0, 0,
+        -1.0f / vp.Width,
+        1.0f / vp.Height,
+        0,
+        0,
         // texcoordOffset
         static_cast<float>(sourceRect.left) / sourceSize.width,
         static_cast<float>(flipY ? sourceRect.bottom : sourceRect.top) / sourceSize.height,
@@ -754,4 +757,4 @@ void Blit9::restoreState()
         mSavedStateBlock->Apply();
     }
 }
-}
+}  // namespace rx

@@ -40,14 +40,14 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
-    outExtensions->mapBuffer      = true;
-    outExtensions->mapBufferRange = true;
-    outExtensions->textureStorage = true;
-    outExtensions->framebufferBlit = true;
-    outExtensions->copyTexture     = true;
-    outExtensions->debugMarker     = true;
-    outExtensions->robustness      = true;
-    outExtensions->textureBorderClamp = false;  // not implemented yet
+    outExtensions->mapBuffer              = true;
+    outExtensions->mapBufferRange         = true;
+    outExtensions->textureStorage         = true;
+    outExtensions->framebufferBlit        = true;
+    outExtensions->copyTexture            = true;
+    outExtensions->debugMarker            = true;
+    outExtensions->robustness             = true;
+    outExtensions->textureBorderClamp     = false;  // not implemented yet
     outExtensions->translatedShaderSource = true;
 
     // We use secondary command buffers almost everywhere and they require a feature to be
@@ -83,7 +83,7 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxRenderbufferSize   = outCaps->max2DTextureSize;
     outCaps->minAliasedPointSize =
         std::max(1.0f, physicalDeviceProperties.limits.pointSizeRange[0]);
-    outCaps->maxAliasedPointSize   = physicalDeviceProperties.limits.pointSizeRange[1];
+    outCaps->maxAliasedPointSize = physicalDeviceProperties.limits.pointSizeRange[1];
 
     outCaps->minAliasedLineWidth = 1.0f;
     outCaps->maxAliasedLineWidth = 1.0f;
@@ -143,9 +143,9 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
     // support is the max buffer range divided by the size of a single uniform (4X float).
-    outCaps->maxVertexUniformVectors      = maxUniformVectors;
+    outCaps->maxVertexUniformVectors                              = maxUniformVectors;
     outCaps->maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxUniformComponents;
-    outCaps->maxFragmentUniformVectors    = maxUniformVectors;
+    outCaps->maxFragmentUniformVectors                            = maxUniformVectors;
     outCaps->maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
 
     // TODO(jmadill): this is an ES 3.0 property and we can skip implementing it for now.
@@ -222,35 +222,35 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
 
     egl::Config config;
 
-    config.renderTargetFormat    = colorFormat.internalFormat;
-    config.depthStencilFormat    = depthStencilFormat.internalFormat;
-    config.bufferSize            = colorFormat.pixelBytes * 8;
-    config.redSize               = colorFormat.redBits;
-    config.greenSize             = colorFormat.greenBits;
-    config.blueSize              = colorFormat.blueBits;
-    config.alphaSize             = colorFormat.alphaBits;
-    config.alphaMaskSize         = 0;
-    config.bindToTextureRGB      = EGL_FALSE;
-    config.bindToTextureRGBA     = EGL_FALSE;
-    config.colorBufferType       = EGL_RGB_BUFFER;
-    config.configCaveat          = EGL_NONE;
-    config.conformant            = 0;
-    config.depthSize             = depthStencilFormat.depthBits;
-    config.stencilSize           = depthStencilFormat.stencilBits;
-    config.level                 = 0;
-    config.matchNativePixmap     = EGL_NONE;
-    config.maxPBufferWidth       = physicalDeviceProperties.limits.maxImageDimension2D;
-    config.maxPBufferHeight      = physicalDeviceProperties.limits.maxImageDimension2D;
-    config.maxPBufferPixels      = ComputeMaximumPBufferPixels(physicalDeviceProperties);
-    config.maxSwapInterval       = 1;
-    config.minSwapInterval       = 1;
-    config.nativeRenderable      = EGL_TRUE;
-    config.nativeVisualID        = 0;
-    config.nativeVisualType      = EGL_NONE;
-    config.renderableType        = es2Support | es3Support;
-    config.sampleBuffers         = (sampleCount > 0) ? 1 : 0;
-    config.samples               = sampleCount;
-    config.surfaceType = EGL_WINDOW_BIT | EGL_PBUFFER_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
+    config.renderTargetFormat = colorFormat.internalFormat;
+    config.depthStencilFormat = depthStencilFormat.internalFormat;
+    config.bufferSize         = colorFormat.pixelBytes * 8;
+    config.redSize            = colorFormat.redBits;
+    config.greenSize          = colorFormat.greenBits;
+    config.blueSize           = colorFormat.blueBits;
+    config.alphaSize          = colorFormat.alphaBits;
+    config.alphaMaskSize      = 0;
+    config.bindToTextureRGB   = EGL_FALSE;
+    config.bindToTextureRGBA  = EGL_FALSE;
+    config.colorBufferType    = EGL_RGB_BUFFER;
+    config.configCaveat       = EGL_NONE;
+    config.conformant         = 0;
+    config.depthSize          = depthStencilFormat.depthBits;
+    config.stencilSize        = depthStencilFormat.stencilBits;
+    config.level              = 0;
+    config.matchNativePixmap  = EGL_NONE;
+    config.maxPBufferWidth    = physicalDeviceProperties.limits.maxImageDimension2D;
+    config.maxPBufferHeight   = physicalDeviceProperties.limits.maxImageDimension2D;
+    config.maxPBufferPixels   = ComputeMaximumPBufferPixels(physicalDeviceProperties);
+    config.maxSwapInterval    = 1;
+    config.minSwapInterval    = 1;
+    config.nativeRenderable   = EGL_TRUE;
+    config.nativeVisualID     = 0;
+    config.nativeVisualType   = EGL_NONE;
+    config.renderableType     = es2Support | es3Support;
+    config.sampleBuffers      = (sampleCount > 0) ? 1 : 0;
+    config.samples            = sampleCount;
+    config.surfaceType        = EGL_WINDOW_BIT | EGL_PBUFFER_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
     // Vulkan surfaces use a different origin than OpenGL, always prefer to be flipped vertically if
     // possible.
     config.optimalOrientation    = EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE;

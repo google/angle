@@ -40,12 +40,10 @@ class TextureRectangleTest : public ANGLETest
 };
 
 class TextureRectangleTestES3 : public TextureRectangleTest
-{
-};
+{};
 
 class TextureRectangleTestES31 : public TextureRectangleTest
-{
-};
+{};
 
 // Test using TexImage2D to define a rectangle texture
 TEST_P(TextureRectangleTest, TexImage2D)
@@ -456,4 +454,4 @@ TEST_P(TextureRectangleTestES3, CopyTexSubImage)
 ANGLE_INSTANTIATE_TEST(TextureRectangleTest, ES2_OPENGL(), ES3_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(TextureRectangleTestES3, ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureRectangleTestES31, ES31_OPENGL());
-} // anonymous namespace
+}  // anonymous namespace

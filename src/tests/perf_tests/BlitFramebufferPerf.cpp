@@ -95,10 +95,10 @@ struct BlitFramebufferParams final : public RenderTestParams
     BlitFramebufferParams()
     {
         iterationsPerStep = kIterationsPerStep;
-        majorVersion = 3;
-        minorVersion = 0;
-        windowWidth  = 256;
-        windowHeight = 256;
+        majorVersion      = 3;
+        minorVersion      = 0;
+        windowWidth       = 256;
+        windowHeight      = 256;
     }
 
     std::string suffix() const override

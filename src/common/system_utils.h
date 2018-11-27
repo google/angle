@@ -9,8 +9,8 @@
 #ifndef COMMON_SYSTEM_UTILS_H_
 #define COMMON_SYSTEM_UTILS_H_
 
-#include "common/angleutils.h"
 #include "common/Optional.h"
+#include "common/angleutils.h"
 
 namespace angle
 {

@@ -257,8 +257,7 @@ D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
       mBoundObjectRenderbufferHandle(nullptr),
       mColorRenderbufferID(0),
       mDepthStencilRenderbufferID(0)
-{
-}
+{}
 
 D3DTextureSurfaceWGL::~D3DTextureSurfaceWGL()
 {

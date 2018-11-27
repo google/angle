@@ -16,36 +16,22 @@ namespace rx
 
 TransformFeedbackNULL::TransformFeedbackNULL(const gl::TransformFeedbackState &state)
     : TransformFeedbackImpl(state)
-{
-}
+{}
 
-TransformFeedbackNULL::~TransformFeedbackNULL()
-{
-}
+TransformFeedbackNULL::~TransformFeedbackNULL() {}
 
-void TransformFeedbackNULL::begin(gl::PrimitiveMode primitiveMode)
-{
-}
+void TransformFeedbackNULL::begin(gl::PrimitiveMode primitiveMode) {}
 
-void TransformFeedbackNULL::end()
-{
-}
+void TransformFeedbackNULL::end() {}
 
-void TransformFeedbackNULL::pause()
-{
-}
+void TransformFeedbackNULL::pause() {}
 
-void TransformFeedbackNULL::resume()
-{
-}
+void TransformFeedbackNULL::resume() {}
 
-void TransformFeedbackNULL::bindGenericBuffer(const gl::BindingPointer<gl::Buffer> &binding)
-{
-}
+void TransformFeedbackNULL::bindGenericBuffer(const gl::BindingPointer<gl::Buffer> &binding) {}
 
 void TransformFeedbackNULL::bindIndexedBuffer(size_t index,
                                               const gl::OffsetBindingPointer<gl::Buffer> &binding)
-{
-}
+{}
 
 }  // namespace rx

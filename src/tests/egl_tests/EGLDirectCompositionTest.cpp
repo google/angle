@@ -146,7 +146,9 @@ class EGLDirectCompositionTest : public ANGLETest
             EGL_DEPTH_SIZE, 8, EGL_STENCIL_SIZE, 8, EGL_NONE};
 
         const EGLint defaultDisplayAttributes[] = {
-            EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_NONE,
+            EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+            EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+            EGL_NONE,
         };
 
         PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =

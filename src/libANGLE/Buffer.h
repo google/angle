@@ -23,7 +23,7 @@ namespace rx
 {
 class BufferImpl;
 class GLImplFactory;
-};
+};  // namespace rx
 
 namespace gl
 {

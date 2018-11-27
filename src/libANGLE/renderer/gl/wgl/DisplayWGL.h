@@ -133,6 +133,6 @@ class DisplayWGL : public DisplayGL
     std::map<IUnknown *, D3DObjectHandle> mRegisteredD3DDevices;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_WGL_DISPLAYWGL_H_
+#endif  // LIBANGLE_RENDERER_GL_WGL_DISPLAYWGL_H_

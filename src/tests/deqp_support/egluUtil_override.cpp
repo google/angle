@@ -533,4 +533,4 @@ const NativePixmapFactory &selectNativePixmapFactory(const NativeDisplayFactory 
     return selectFactory(factory.getNativePixmapRegistry(), "pixmap", cmdLine.getEGLPixmapType());
 }
 
-}  // eglu
+}  // namespace eglu

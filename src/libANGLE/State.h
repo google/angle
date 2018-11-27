@@ -234,7 +234,6 @@ class State : angle::NonCopyable
         return mVertexArray;
     }
 
-
     // Program binding manipulation
     angle::Result setProgram(const Context *context, Program *newProgram);
 

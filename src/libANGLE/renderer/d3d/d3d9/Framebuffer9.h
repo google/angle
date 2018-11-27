@@ -82,4 +82,4 @@ class Framebuffer9 : public FramebufferD3D
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_FRAMBUFFER9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_FRAMBUFFER9_H_

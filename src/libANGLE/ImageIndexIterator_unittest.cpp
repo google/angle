@@ -15,8 +15,8 @@ using namespace gl;
 namespace
 {
 
-static const GLint minMip = 0;
-static const GLint maxMip = 4;
+static const GLint minMip   = 0;
+static const GLint maxMip   = 4;
 static const GLint minLayer = 1;
 static const GLint maxLayer = 3;
 
@@ -29,7 +29,7 @@ TEST(ImageIndexTest, Iterator2D)
     for (GLint mip = minMip; mip < maxMip; mip++)
     {
         EXPECT_TRUE(iter.hasNext());
-        ImageIndex current = iter.current();
+        ImageIndex current   = iter.current();
         ImageIndex nextIndex = iter.next();
 
         EXPECT_EQ(TextureType::_2D, nextIndex.getType());
@@ -98,7 +98,7 @@ TEST(ImageIndexTest, Iterator3D)
 
 TEST(ImageIndexTest, Iterator2DArray)
 {
-    GLsizei layerCounts[] = { 1, 3, 5, 2 };
+    GLsizei layerCounts[] = {1, 3, 5, 2};
 
     ImageIndexIterator iter = ImageIndexIterator::Make2DArray(minMip, maxMip, layerCounts);
 
@@ -155,4 +155,4 @@ TEST(ImageIndexTest, LayerIterator2DArray)
     }
 }
 
-} // namespace
+}  // namespace

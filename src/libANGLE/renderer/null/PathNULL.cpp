@@ -13,13 +13,9 @@
 
 namespace rx
 {
-PathNULL::PathNULL() : PathImpl()
-{
-}
+PathNULL::PathNULL() : PathImpl() {}
 
-PathNULL::~PathNULL()
-{
-}
+PathNULL::~PathNULL() {}
 
 angle::Result PathNULL::setCommands(GLsizei numCommands,
                                     const GLubyte *commands,
@@ -30,7 +26,5 @@ angle::Result PathNULL::setCommands(GLsizei numCommands,
     return angle::Result::Continue();
 }
 
-void PathNULL::setPathParameter(GLenum pname, GLfloat value)
-{
-}
+void PathNULL::setPathParameter(GLenum pname, GLfloat value) {}
 }  // namespace rx

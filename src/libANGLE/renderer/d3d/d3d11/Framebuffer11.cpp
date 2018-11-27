@@ -61,9 +61,7 @@ Framebuffer11::Framebuffer11(const gl::FramebufferState &data, Renderer11 *rende
     ASSERT(mRenderer != nullptr);
 }
 
-Framebuffer11::~Framebuffer11()
-{
-}
+Framebuffer11::~Framebuffer11() {}
 
 angle::Result Framebuffer11::markAttachmentsDirty(const gl::Context *context) const
 {

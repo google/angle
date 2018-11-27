@@ -39,8 +39,7 @@ GLuint AllocateEmptyObject(HandleAllocator *handleAllocator, ResourceMap<Resourc
 
 template <typename HandleAllocatorType>
 ResourceManagerBase<HandleAllocatorType>::ResourceManagerBase() : mRefCount(1)
-{
-}
+{}
 
 template <typename HandleAllocatorType>
 void ResourceManagerBase<HandleAllocatorType>::addRef()
@@ -136,9 +135,7 @@ Buffer *BufferManager::getBuffer(GLuint handle) const
 
 // ShaderProgramManager Implementation.
 
-ShaderProgramManager::ShaderProgramManager()
-{
-}
+ShaderProgramManager::ShaderProgramManager() {}
 
 ShaderProgramManager::~ShaderProgramManager()
 {

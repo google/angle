@@ -50,12 +50,13 @@ std::vector<T> FilterTestParams(const std::vector<T> &params)
 
 // Instantiate the test once for each extra argument. The types of all the
 // arguments must match, and getRenderer must be implemented for that type.
-#define ANGLE_INSTANTIATE_TEST(testName, firstParam, ...) \
-    const decltype(firstParam) testName##params[] = { firstParam, ##__VA_ARGS__ }; \
-    INSTANTIATE_TEST_CASE_P(, testName, \
-                              testing::ValuesIn(::angle::FilterTestParams(testName##params, ArraySize(testName##params))), \
-                              testing::PrintToStringParamName());
+#define ANGLE_INSTANTIATE_TEST(testName, firstParam, ...)                        \
+    const decltype(firstParam) testName##params[] = {firstParam, ##__VA_ARGS__}; \
+    INSTANTIATE_TEST_CASE_P(, testName,                                          \
+                            testing::ValuesIn(::angle::FilterTestParams(         \
+                                testName##params, ArraySize(testName##params))), \
+                            testing::PrintToStringParamName());
 
-} // namespace angle
+}  // namespace angle
 
-#endif // ANGLE_TEST_INSTANTIATE_H_
+#endif  // ANGLE_TEST_INSTANTIATE_H_

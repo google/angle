@@ -21,7 +21,7 @@ namespace gl
 {
 class BufferState;
 class Context;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -71,6 +71,6 @@ class BufferImpl : public angle::Subject
   protected:
     const gl::BufferState &mState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_BUFFERIMPL_H_

@@ -11,13 +11,9 @@
 
 namespace rx
 {
-PathGL::PathGL(const FunctionsGL *functions, GLuint path) : mFunctions(functions), mPathID(path)
-{
-}
+PathGL::PathGL(const FunctionsGL *functions, GLuint path) : mFunctions(functions), mPathID(path) {}
 
-PathGL::~PathGL()
-{
-}
+PathGL::~PathGL() {}
 
 angle::Result PathGL::setCommands(GLsizei numCommands,
                                   const GLubyte *commands,

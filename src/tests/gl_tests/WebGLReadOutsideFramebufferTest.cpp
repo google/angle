@@ -208,11 +208,11 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
     }
 
   protected:
-    static constexpr int kFbWidth    = 128;
-    static constexpr int kFbHeight   = 128;
+    static constexpr int kFbWidth      = 128;
+    static constexpr int kFbHeight     = 128;
     static constexpr int kTextureDepth = 16;
-    static constexpr int kReadWidth  = 4;
-    static constexpr int kReadHeight = 4;
+    static constexpr int kReadWidth    = 4;
+    static constexpr int kReadHeight   = 4;
     static constexpr int kReadLayer    = 2;
 
     // Tag the framebuffer pixels differently than the initial read buffer pixels, so we know for
@@ -345,8 +345,7 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
 };
 
 class WebGL2ReadOutsideFramebufferTest : public WebGLReadOutsideFramebufferTest
-{
-};
+{};
 
 // Check that readPixels does not set a destination pixel when
 // the corresponding source pixel is outside the framebuffer.
@@ -410,4 +409,4 @@ ANGLE_INSTANTIATE_TEST(WebGL2ReadOutsideFramebufferTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
 
-}  // namespace
+}  // namespace angle

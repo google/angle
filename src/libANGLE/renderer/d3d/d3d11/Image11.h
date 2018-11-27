@@ -122,4 +122,4 @@ class Image11 : public ImageD3D
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_

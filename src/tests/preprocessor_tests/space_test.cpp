@@ -17,9 +17,9 @@ class SpaceTest : public PreprocessorTest
   protected:
     SpaceTest() : PreprocessorTest(SH_GLES2_SPEC) {}
 
-    void expectSpace(const std::string& str)
+    void expectSpace(const std::string &str)
     {
-        const char* cstr = str.c_str();
+        const char *cstr = str.c_str();
         ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
 
         pp::Token token;
@@ -39,10 +39,8 @@ static const char kSpaceChars[] = {' ', '\t', '\v', '\f'};
 // This test fixture tests the processing of a single whitespace character.
 // All tests in this fixture are ran with all possible whitespace character
 // allowed in GLSL.
-class SpaceCharTest : public SpaceTest,
-                      public testing::WithParamInterface<char>
-{
-};
+class SpaceCharTest : public SpaceTest, public testing::WithParamInterface<char>
+{};
 
 TEST_P(SpaceCharTest, SpaceIgnored)
 {
@@ -53,18 +51,14 @@ TEST_P(SpaceCharTest, SpaceIgnored)
     expectSpace(str);
 }
 
-INSTANTIATE_TEST_CASE_P(SingleSpaceChar,
-                        SpaceCharTest,
-                        testing::ValuesIn(kSpaceChars));
+INSTANTIATE_TEST_CASE_P(SingleSpaceChar, SpaceCharTest, testing::ValuesIn(kSpaceChars));
 
 // This test fixture tests the processing of a string containing consecutive
 // whitespace characters. All tests in this fixture are ran with all possible
 // combinations of whitespace characters allowed in GLSL.
 typedef std::tuple<char, char, char> SpaceStringParams;
-class SpaceStringTest : public SpaceTest,
-                        public testing::WithParamInterface<SpaceStringParams>
-{
-};
+class SpaceStringTest : public SpaceTest, public testing::WithParamInterface<SpaceStringParams>
+{};
 
 TEST_P(SpaceStringTest, SpaceIgnored)
 {
@@ -89,7 +83,7 @@ INSTANTIATE_TEST_CASE_P(SpaceCharCombination,
 // to have leading space.
 TEST_F(SpaceTest, LeadingSpace)
 {
-    const char* str = " foo+ -bar";
+    const char *str = " foo+ -bar";
     ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     pp::Token token;

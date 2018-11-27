@@ -45,11 +45,17 @@ TEST_P(MaterialsTest, InitialState)
     float actualShininess;
 
     std::vector<GLenum> pnames = {
-        GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION,
+        GL_AMBIENT,
+        GL_DIFFUSE,
+        GL_SPECULAR,
+        GL_EMISSION,
     };
 
     std::vector<GLColor32F> colors = {
-        kAmbientInitial, kDiffuseInitial, kSpecularInitial, kEmissiveInitial,
+        kAmbientInitial,
+        kDiffuseInitial,
+        kSpecularInitial,
+        kEmissiveInitial,
     };
 
     for (size_t i = 0; i < pnames.size(); i++)
@@ -90,11 +96,17 @@ TEST_P(MaterialsTest, SetParameters)
     const float kShininessTestValue = 1.0f;
 
     std::vector<GLenum> pnames = {
-        GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_EMISSION,
+        GL_AMBIENT,
+        GL_DIFFUSE,
+        GL_SPECULAR,
+        GL_EMISSION,
     };
 
     std::vector<GLColor32F> colors = {
-        kAmbientTestValue, kDiffuseTestValue, kSpecularTestValue, kEmissiveTestValue,
+        kAmbientTestValue,
+        kDiffuseTestValue,
+        kSpecularTestValue,
+        kEmissiveTestValue,
     };
 
     GLColor32F actualColor;

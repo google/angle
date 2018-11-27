@@ -180,7 +180,7 @@ TEST_F(IntermNodeTest, DeepCopyBinaryNode)
     TIntermBinary *original = new TIntermBinary(EOpAdd, createTestSymbol(), createTestSymbol());
     original->setLine(getTestSourceLoc());
     TIntermTyped *copyTyped = original->deepCopy();
-    TIntermBinary *copy = copyTyped->getAsBinaryNode();
+    TIntermBinary *copy     = copyTyped->getAsBinaryNode();
     ASSERT_NE(nullptr, copy);
     ASSERT_NE(original, copy);
     checkTestSourceLoc(copy->getLine());
@@ -199,7 +199,7 @@ TEST_F(IntermNodeTest, DeepCopyUnaryNode)
     TIntermUnary *original = new TIntermUnary(EOpPreIncrement, createTestSymbol(), nullptr);
     original->setLine(getTestSourceLoc());
     TIntermTyped *copyTyped = original->deepCopy();
-    TIntermUnary *copy = copyTyped->getAsUnaryNode();
+    TIntermUnary *copy      = copyTyped->getAsUnaryNode();
     ASSERT_NE(nullptr, copy);
     ASSERT_NE(original, copy);
     checkTestSourceLoc(copy->getLine());
@@ -224,7 +224,7 @@ TEST_F(IntermNodeTest, DeepCopyAggregateNode)
     original->setLine(getTestSourceLoc());
 
     TIntermTyped *copyTyped = original->deepCopy();
-    TIntermAggregate *copy = copyTyped->getAsAggregate();
+    TIntermAggregate *copy  = copyTyped->getAsAggregate();
     ASSERT_NE(nullptr, copy);
     ASSERT_NE(original, copy);
     checkTestSourceLoc(copy->getLine());
@@ -260,4 +260,3 @@ TEST_F(IntermNodeTest, DeepCopyTernaryNode)
     checkSymbolCopy(original->getTrueExpression(), copy->getTrueExpression());
     checkSymbolCopy(original->getFalseExpression(), copy->getFalseExpression());
 }
-

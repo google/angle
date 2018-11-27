@@ -45,6 +45,6 @@ class Query9 : public QueryImpl
     IDirect3DQuery9 *mQuery;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_QUERY9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_QUERY9_H_

@@ -10,9 +10,9 @@
 //   rendering works, otherwise it checks an error is generated one MakeCurrent.
 #include <gtest/gtest.h>
 
-#include <vector>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <vector>
 
 #include "OSWindow.h"
 #include "test_utils/ANGLETest.h"
@@ -23,33 +23,23 @@ using namespace angle;
 namespace
 {
 
-const EGLint contextAttribs[] =
-{
-    EGL_CONTEXT_CLIENT_VERSION, 2,
-    EGL_NONE
-};
-
+const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 }
 
 class EGLContextCompatibilityTest : public ANGLETest
 {
   public:
-    EGLContextCompatibilityTest()
-      : mDisplay(0)
-    {
-    }
+    EGLContextCompatibilityTest() : mDisplay(0) {}
 
     void SetUp() override
     {
-        PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
+        PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
+            reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
+                eglGetProcAddress("eglGetPlatformDisplayEXT"));
         ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
-        EGLint dispattrs[] =
-        {
-            EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
-            EGL_NONE
-        };
-        mDisplay = eglGetPlatformDisplayEXT(
+        EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+        mDisplay           = eglGetPlatformDisplayEXT(
             EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
         ASSERT_TRUE(mDisplay != EGL_NO_DISPLAY);
 
@@ -61,7 +51,8 @@ class EGLContextCompatibilityTest : public ANGLETest
 
         int nReturnedConfigs = 0;
         mConfigs.resize(nConfigs);
-        ASSERT_TRUE(eglGetConfigs(mDisplay, mConfigs.data(), nConfigs, &nReturnedConfigs) == EGL_TRUE);
+        ASSERT_TRUE(eglGetConfigs(mDisplay, mConfigs.data(), nConfigs, &nReturnedConfigs) ==
+                    EGL_TRUE);
         ASSERT_TRUE(nConfigs == nReturnedConfigs);
     }
 
@@ -123,17 +114,21 @@ class EGLContextCompatibilityTest : public ANGLETest
                (surfaceType2 & surfaceBit) != 0;
     }
 
-    void testWindowCompatibility(EGLConfig windowConfig, EGLConfig contextConfig, bool compatible) const
+    void testWindowCompatibility(EGLConfig windowConfig,
+                                 EGLConfig contextConfig,
+                                 bool compatible) const
     {
         OSWindow *osWindow = CreateOSWindow();
         ASSERT_TRUE(osWindow != nullptr);
         osWindow->initialize("EGLContextCompatibilityTest", 500, 500);
         osWindow->setVisible(true);
 
-        EGLContext context = eglCreateContext(mDisplay, contextConfig, EGL_NO_CONTEXT, contextAttribs);
+        EGLContext context =
+            eglCreateContext(mDisplay, contextConfig, EGL_NO_CONTEXT, contextAttribs);
         ASSERT_TRUE(context != EGL_NO_CONTEXT);
 
-        EGLSurface window = eglCreateWindowSurface(mDisplay, windowConfig, osWindow->getNativeWindow(), nullptr);
+        EGLSurface window =
+            eglCreateWindowSurface(mDisplay, windowConfig, osWindow->getNativeWindow(), nullptr);
         ASSERT_EGL_SUCCESS();
 
         if (compatible)
@@ -154,16 +149,16 @@ class EGLContextCompatibilityTest : public ANGLETest
         SafeDelete(osWindow);
     }
 
-    void testPbufferCompatibility(EGLConfig pbufferConfig, EGLConfig contextConfig, bool compatible) const
+    void testPbufferCompatibility(EGLConfig pbufferConfig,
+                                  EGLConfig contextConfig,
+                                  bool compatible) const
     {
-        EGLContext context = eglCreateContext(mDisplay, contextConfig, EGL_NO_CONTEXT, contextAttribs);
+        EGLContext context =
+            eglCreateContext(mDisplay, contextConfig, EGL_NO_CONTEXT, contextAttribs);
         ASSERT_TRUE(context != EGL_NO_CONTEXT);
 
-        const EGLint pBufferAttribs[] =
-        {
-            EGL_WIDTH, 500,
-            EGL_HEIGHT, 500,
-            EGL_NONE,
+        const EGLint pBufferAttribs[] = {
+            EGL_WIDTH, 500, EGL_HEIGHT, 500, EGL_NONE,
         };
         EGLSurface pbuffer = eglCreatePbufferSurface(mDisplay, pbufferConfig, pBufferAttribs);
         ASSERT_TRUE(pbuffer != EGL_NO_SURFACE);
@@ -352,7 +347,8 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
             {
                 continue;
             }
-            testPbufferCompatibility(config1, config2, areConfigsCompatible(config1, config2, EGL_PBUFFER_BIT));
+            testPbufferCompatibility(config1, config2,
+                                     areConfigsCompatible(config1, config2, EGL_PBUFFER_BIT));
         }
     }
 }

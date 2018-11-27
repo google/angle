@@ -70,7 +70,9 @@ void Context::clipPlanef(GLenum p, const GLfloat *eqn)
 void Context::clipPlanex(GLenum plane, const GLfixed *equation)
 {
     const GLfloat equationf[4] = {
-        FixedToFloat(equation[0]), FixedToFloat(equation[1]), FixedToFloat(equation[2]),
+        FixedToFloat(equation[0]),
+        FixedToFloat(equation[1]),
+        FixedToFloat(equation[2]),
         FixedToFloat(equation[3]),
     };
 

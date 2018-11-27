@@ -21,7 +21,7 @@ namespace rx
 {
 class CompilerImpl;
 class GLImplFactory;
-}
+}  // namespace rx
 
 namespace gl
 {

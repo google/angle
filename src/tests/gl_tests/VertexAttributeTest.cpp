@@ -83,8 +83,7 @@ class VertexAttributeTest : public ANGLETest
               source(sourceIn),
               inputData(inputDataIn),
               expectedData(expectedDataIn)
-        {
-        }
+        {}
 
         GLenum type;
         GLboolean normalized;
@@ -1522,8 +1521,7 @@ VertexAttributeCachingTest::AttribData::AttribData(GLenum typeIn,
                                                    GLboolean normalizedIn,
                                                    GLsizei strideIn)
     : type(typeIn), size(sizeIn), normalized(normalizedIn), stride(strideIn)
-{
-}
+{}
 
 // static
 template <typename DestT>

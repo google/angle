@@ -28,7 +28,7 @@ namespace gl
 class Context;
 class Framebuffer;
 class Texture;
-}
+}  // namespace gl
 
 namespace rx
 {

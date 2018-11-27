@@ -16,8 +16,7 @@ RendererWGL::RendererWGL(std::unique_ptr<FunctionsGL> functionsGL,
                          DisplayWGL *display,
                          HGLRC context)
     : RendererGL(std::move(functionsGL), attribMap), mDisplay(display), mContext(context)
-{
-}
+{}
 
 RendererWGL::~RendererWGL()
 {

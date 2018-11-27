@@ -24,10 +24,12 @@
 #include "../rapidjson.h"
 
 RAPIDJSON_NAMESPACE_BEGIN
-namespace internal {
+namespace internal
+{
 
-class Double {
-public:
+class Double
+{
+  public:
     Double() {}
     Double(double d) : d(d) {}
     Double(uint64_t u) : u(u) {}
@@ -35,12 +37,14 @@ public:
     double Value() const { return d; }
     uint64_t Uint64Value() const { return u; }
 
-    double NextPositiveDouble() const {
+    double NextPositiveDouble() const
+    {
         RAPIDJSON_ASSERT(!Sign());
         return Double(u + 1).Value();
     }
 
-    double PreviousPositiveDouble() const {
+    double PreviousPositiveDouble() const
+    {
         RAPIDJSON_ASSERT(!Sign());
         if (d == 0.0)
             return 0.0;
@@ -56,11 +60,18 @@ public:
     bool IsInf() const { return (u & kExponentMask) == kExponentMask && Significand() == 0; }
     bool IsNormal() const { return (u & kExponentMask) != 0 || Significand() == 0; }
 
-    uint64_t IntegerSignificand() const { return IsNormal() ? Significand() | kHiddenBit : Significand(); }
-    int IntegerExponent() const { return (IsNormal() ? Exponent() : kDenormalExponent) - kSignificandSize; }
+    uint64_t IntegerSignificand() const
+    {
+        return IsNormal() ? Significand() | kHiddenBit : Significand();
+    }
+    int IntegerExponent() const
+    {
+        return (IsNormal() ? Exponent() : kDenormalExponent) - kSignificandSize;
+    }
     uint64_t ToBias() const { return (u & kSignMask) ? ~u + 1 : u | kSignMask; }
 
-    static unsigned EffectiveSignificandSize(int order) {
+    static unsigned EffectiveSignificandSize(int order)
+    {
         if (order >= -1021)
             return 53;
         else if (order <= -1074)
@@ -69,22 +80,23 @@ public:
             return order + 1074;
     }
 
-private:
-    static const int kSignificandSize = 52;
-    static const int kExponentBias = 0x3FF;
-    static const int kDenormalExponent = 1 - kExponentBias;
-    static const uint64_t kSignMask = RAPIDJSON_UINT64_C2(0x80000000, 0x00000000);
-    static const uint64_t kExponentMask = RAPIDJSON_UINT64_C2(0x7FF00000, 0x00000000);
+  private:
+    static const int kSignificandSize      = 52;
+    static const int kExponentBias         = 0x3FF;
+    static const int kDenormalExponent     = 1 - kExponentBias;
+    static const uint64_t kSignMask        = RAPIDJSON_UINT64_C2(0x80000000, 0x00000000);
+    static const uint64_t kExponentMask    = RAPIDJSON_UINT64_C2(0x7FF00000, 0x00000000);
     static const uint64_t kSignificandMask = RAPIDJSON_UINT64_C2(0x000FFFFF, 0xFFFFFFFF);
-    static const uint64_t kHiddenBit = RAPIDJSON_UINT64_C2(0x00100000, 0x00000000);
+    static const uint64_t kHiddenBit       = RAPIDJSON_UINT64_C2(0x00100000, 0x00000000);
 
-    union {
+    union
+    {
         double d;
         uint64_t u;
     };
 };
 
-} // namespace internal
+}  // namespace internal
 RAPIDJSON_NAMESPACE_END
 
-#endif // RAPIDJSON_IEEE754_
+#endif  // RAPIDJSON_IEEE754_

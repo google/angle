@@ -6,18 +6,19 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "gtest/gtest.h"
-#include "GLSLANG/ShaderLang.h"
 
-class ExpressionLimitTest : public testing::Test {
+class ExpressionLimitTest : public testing::Test
+{
   protected:
     static const int kMaxExpressionComplexity = 16;
     static const int kMaxCallStackDepth       = 16;
     static const int kMaxFunctionParameters   = 16;
-    static const char* kExpressionTooComplex;
-    static const char* kCallStackTooDeep;
-    static const char* kHasRecursion;
+    static const char *kExpressionTooComplex;
+    static const char *kCallStackTooDeep;
+    static const char *kHasRecursion;
     static const char *kTooManyParameters;
     static const char *kTooComplexSwitch;
     static const char *kGlobalVariableInit;
@@ -53,8 +54,9 @@ class ExpressionLimitTest : public testing::Test {
 
     static void GenerateLongExpression(int length, std::stringstream *ss)
     {
-        for (int ii = 0; ii < length; ++ii) {
-          *ss << "+ vec4(" << ii << ")";
+        for (int ii = 0; ii < length; ++ii)
+        {
+            *ss << "+ vec4(" << ii << ")";
         }
     }
 
@@ -109,10 +111,11 @@ class ExpressionLimitTest : public testing::Test {
         )";
 
         *ss << shaderStart;
-        for (int ii = 0; ii < length; ++ii) {
-          *ss << "vec4 function" << (ii + 1) << "() {\n"
-              << "  return function" << ii << "();\n"
-              << "}\n";
+        for (int ii = 0; ii < length; ++ii)
+        {
+            *ss << "vec4 function" << (ii + 1) << "() {\n"
+                << "  return function" << ii << "();\n"
+                << "}\n";
         }
     }
 
@@ -138,7 +141,6 @@ class ExpressionLimitTest : public testing::Test {
         ss << "void main() {\n"
            << "  gl_FragColor = vec4(0,0,0,0);\n"
            << "}";
-
 
         return ss.str();
     }
@@ -223,10 +225,10 @@ class ExpressionLimitTest : public testing::Test {
                                 ShCompileOptions compileOptions,
                                 const char *expected_error)
     {
-                bool success = sh::Compile(compiler, &source, 1, compileOptions) != 0;
-                if (success)
-                {
-                    success = !expected_error;
+        bool success = sh::Compile(compiler, &source, 1, compileOptions) != 0;
+        if (success)
+        {
+            success = !expected_error;
         }
         else
         {
@@ -242,14 +244,11 @@ class ExpressionLimitTest : public testing::Test {
     ShBuiltInResources resources;
 };
 
-const char* ExpressionLimitTest::kExpressionTooComplex =
-    "Expression too complex";
-const char* ExpressionLimitTest::kCallStackTooDeep =
-    "Call stack too deep";
-const char* ExpressionLimitTest::kHasRecursion =
+const char *ExpressionLimitTest::kExpressionTooComplex = "Expression too complex";
+const char *ExpressionLimitTest::kCallStackTooDeep     = "Call stack too deep";
+const char *ExpressionLimitTest::kHasRecursion =
     "Recursive function call in the following call chain";
-const char* ExpressionLimitTest::kTooManyParameters =
-    "Function has too many parameters";
+const char *ExpressionLimitTest::kTooManyParameters = "Function has too many parameters";
 const char *ExpressionLimitTest::kTooComplexSwitch =
     "too complex expressions inside a switch statement";
 const char *ExpressionLimitTest::kGlobalVariableInit =
@@ -257,8 +256,8 @@ const char *ExpressionLimitTest::kGlobalVariableInit =
 
 TEST_F(ExpressionLimitTest, ExpressionComplexity)
 {
-    ShShaderSpec spec = SH_WEBGL_SPEC;
-    ShShaderOutput output = SH_ESSL_OUTPUT;
+    ShShaderSpec spec       = SH_WEBGL_SPEC;
+    ShShaderOutput output   = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, spec, output, &resources);
     ShCompileOptions compileOptions = SH_LIMIT_EXPRESSION_COMPLEXITY;
 
@@ -268,9 +267,7 @@ TEST_F(ExpressionLimitTest, ExpressionComplexity)
         compileOptions, nullptr));
     // Test expression over the limit fails.
     EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler,
-        GenerateShaderWithLongExpression(
-            kMaxExpressionComplexity + 10).c_str(),
+        vertexCompiler, GenerateShaderWithLongExpression(kMaxExpressionComplexity + 10).c_str(),
         compileOptions, kExpressionTooComplex));
     // Test expression over the limit without a limit does not fail.
     EXPECT_TRUE(CheckShaderCompilation(
@@ -281,8 +278,8 @@ TEST_F(ExpressionLimitTest, ExpressionComplexity)
 
 TEST_F(ExpressionLimitTest, UnusedExpressionComplexity)
 {
-    ShShaderSpec spec = SH_WEBGL_SPEC;
-    ShShaderOutput output = SH_ESSL_OUTPUT;
+    ShShaderSpec spec       = SH_WEBGL_SPEC;
+    ShShaderOutput output   = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, spec, output, &resources);
     ShCompileOptions compileOptions = SH_LIMIT_EXPRESSION_COMPLEXITY;
 
@@ -294,8 +291,7 @@ TEST_F(ExpressionLimitTest, UnusedExpressionComplexity)
     // Test expression over the limit fails.
     EXPECT_TRUE(CheckShaderCompilation(
         vertexCompiler,
-        GenerateShaderWithUnusedLongExpression(
-            kMaxExpressionComplexity + 10).c_str(),
+        GenerateShaderWithUnusedLongExpression(kMaxExpressionComplexity + 10).c_str(),
         compileOptions, kExpressionTooComplex));
     // Test expression over the limit without a limit does not fail.
     EXPECT_TRUE(CheckShaderCompilation(
@@ -307,8 +303,8 @@ TEST_F(ExpressionLimitTest, UnusedExpressionComplexity)
 
 TEST_F(ExpressionLimitTest, CallStackDepth)
 {
-    ShShaderSpec spec = SH_WEBGL_SPEC;
-    ShShaderOutput output = SH_ESSL_OUTPUT;
+    ShShaderSpec spec       = SH_WEBGL_SPEC;
+    ShShaderOutput output   = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, spec, output, &resources);
     ShCompileOptions compileOptions = SH_LIMIT_CALL_STACK_DEPTH;
 
@@ -318,9 +314,7 @@ TEST_F(ExpressionLimitTest, CallStackDepth)
         compileOptions, nullptr));
     // Test call stack over the limit fails.
     EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler,
-        GenerateShaderWithDeepFunctionStack(
-            kMaxCallStackDepth + 10).c_str(),
+        vertexCompiler, GenerateShaderWithDeepFunctionStack(kMaxCallStackDepth + 10).c_str(),
         compileOptions, kCallStackTooDeep));
     // Test call stack over the limit without limit does not fail.
     EXPECT_TRUE(CheckShaderCompilation(
@@ -331,8 +325,8 @@ TEST_F(ExpressionLimitTest, CallStackDepth)
 
 TEST_F(ExpressionLimitTest, UnusedCallStackDepth)
 {
-    ShShaderSpec spec = SH_WEBGL_SPEC;
-    ShShaderOutput output = SH_ESSL_OUTPUT;
+    ShShaderSpec spec       = SH_WEBGL_SPEC;
+    ShShaderOutput output   = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, spec, output, &resources);
     ShCompileOptions compileOptions = SH_LIMIT_CALL_STACK_DEPTH;
 
@@ -342,9 +336,7 @@ TEST_F(ExpressionLimitTest, UnusedCallStackDepth)
         compileOptions, nullptr));
     // Test call stack over the limit fails.
     EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler,
-        GenerateShaderWithUnusedDeepFunctionStack(
-            kMaxCallStackDepth + 10).c_str(),
+        vertexCompiler, GenerateShaderWithUnusedDeepFunctionStack(kMaxCallStackDepth + 10).c_str(),
         compileOptions, kCallStackTooDeep));
     // Test call stack over the limit without limit does not fail.
     EXPECT_TRUE(CheckShaderCompilation(
@@ -355,8 +347,8 @@ TEST_F(ExpressionLimitTest, UnusedCallStackDepth)
 
 TEST_F(ExpressionLimitTest, Recursion)
 {
-    ShShaderSpec spec = SH_WEBGL_SPEC;
-    ShShaderOutput output = SH_ESSL_OUTPUT;
+    ShShaderSpec spec       = SH_WEBGL_SPEC;
+    ShShaderOutput output   = SH_ESSL_OUTPUT;
     ShHandle vertexCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, spec, output, &resources);
     ShCompileOptions compileOptions = 0;
 
@@ -517,45 +509,35 @@ TEST_F(ExpressionLimitTest, Recursion)
     )";
 
     // Check simple recursions fails.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion0,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion0, compileOptions,
+                                       kHasRecursion));
     // Check simple recursions fails.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion1,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion1, compileOptions,
+                                       kHasRecursion));
     // Check if recursions fails.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion2,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion2, compileOptions,
+                                       kHasRecursion));
     // Check if recursions fails.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion3,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion3, compileOptions,
+                                       kHasRecursion));
     // Check ternary recursions fails.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion4,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion4, compileOptions,
+                                       kHasRecursion));
     // Check ternary recursions fails.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion5,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion5, compileOptions,
+                                       kHasRecursion));
 
     // Check some more forms of recursion
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion6,
-        compileOptions, kHasRecursion));
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion7,
-        compileOptions, kHasRecursion));
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion8,
-        compileOptions, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion6, compileOptions,
+                                       kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion7, compileOptions,
+                                       kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion8, compileOptions,
+                                       kHasRecursion));
     // Check unused recursions fails if limiting call stack
     // since we check all paths.
-    EXPECT_TRUE(CheckShaderCompilation(
-        vertexCompiler, shaderWithRecursion6,
-        compileOptions | SH_LIMIT_CALL_STACK_DEPTH, kHasRecursion));
+    EXPECT_TRUE(CheckShaderCompilation(vertexCompiler, shaderWithRecursion6,
+                                       compileOptions | SH_LIMIT_CALL_STACK_DEPTH, kHasRecursion));
 
     // Check unused recursions passes.
     EXPECT_TRUE(

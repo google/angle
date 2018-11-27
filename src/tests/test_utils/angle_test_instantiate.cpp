@@ -9,8 +9,8 @@
 
 #include "test_utils/angle_test_instantiate.h"
 
-#include <map>
 #include <iostream>
+#include <map>
 
 #include "EGLWindow.h"
 #include "OSWindow.h"
@@ -87,15 +87,15 @@ bool IsPlatformAvailable(const PlatformParameters &param)
             break;
 #endif
 
-      case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
 #ifndef ANGLE_ENABLE_NULL
-          return false;
+            return false;
 #endif
-          break;
+            break;
 
-      default:
-          std::cout << "Unknown test platform: " << param << std::endl;
-          return false;
+        default:
+            std::cout << "Unknown test platform: " << param << std::endl;
+            return false;
     }
 
     static std::map<PlatformParameters, bool> paramAvailabilityCache;
@@ -107,7 +107,7 @@ bool IsPlatformAvailable(const PlatformParameters &param)
     else
     {
         OSWindow *osWindow = CreateOSWindow();
-        bool result = osWindow->initialize("CONFIG_TESTER", 1, 1);
+        bool result        = osWindow->initialize("CONFIG_TESTER", 1, 1);
 
         if (result)
         {
@@ -126,7 +126,8 @@ bool IsPlatformAvailable(const PlatformParameters &param)
 
         if (!result)
         {
-            std::cout << "Skipping tests using configuration " << param << " because it is not available." << std::endl;
+            std::cout << "Skipping tests using configuration " << param
+                      << " because it is not available." << std::endl;
         }
 
         return result;

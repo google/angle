@@ -34,8 +34,7 @@ bool SupportsMipGen(DXGI_FORMAT dxgiFormat, D3D_FEATURE_LEVEL featureLevel)
 
 DXGIFormatSize::DXGIFormatSize(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight)
     : pixelBytes(pixelBits / 8), blockWidth(blockWidth), blockHeight(blockHeight)
-{
-}
+{}
 
 const DXGIFormatSize &GetDXGIFormatSizeInfo(DXGI_FORMAT format)
 {
@@ -201,15 +200,13 @@ const DXGIFormatSize &GetDXGIFormatSizeInfo(DXGI_FORMAT format)
 
 constexpr VertexFormat::VertexFormat()
     : conversionType(VERTEX_CONVERT_NONE), nativeFormat(DXGI_FORMAT_UNKNOWN), copyFunction(nullptr)
-{
-}
+{}
 
 constexpr VertexFormat::VertexFormat(VertexConversionType conversionTypeIn,
                                      DXGI_FORMAT nativeFormatIn,
                                      VertexCopyFunction copyFunctionIn)
     : conversionType(conversionTypeIn), nativeFormat(nativeFormatIn), copyFunction(copyFunctionIn)
-{
-}
+{}
 
 const VertexFormat *GetVertexFormatInfo_FL_9_3(angle::FormatID vertexFormatID)
 {

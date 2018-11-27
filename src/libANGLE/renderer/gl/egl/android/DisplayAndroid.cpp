@@ -47,12 +47,9 @@ DisplayAndroid::DisplayAndroid(const egl::DisplayState &state)
       mVirtualizedContexts(kDefaultEGLVirtualizedContexts),
       mSupportsSurfaceless(false),
       mDummyPbuffer(EGL_NO_SURFACE)
-{
-}
+{}
 
-DisplayAndroid::~DisplayAndroid()
-{
-}
+DisplayAndroid::~DisplayAndroid() {}
 
 egl::Error DisplayAndroid::initialize(egl::Display *display)
 {
@@ -61,7 +58,7 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
         ShouldUseVirtualizedContexts(mDisplayAttributes, kDefaultEGLVirtualizedContexts);
 
     FunctionsEGLDL *egl = new FunctionsEGLDL();
-    mEGL = egl;
+    mEGL                = egl;
     void *eglHandle =
         reinterpret_cast<void *>(mDisplayAttributes.get(EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE, 0));
     ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), GetEGLPath(), eglHandle));
@@ -183,7 +180,7 @@ void DisplayAndroid::terminate()
 
     if (mDummyPbuffer != EGL_NO_SURFACE)
     {
-        success = mEGL->destroySurface(mDummyPbuffer);
+        success       = mEGL->destroySurface(mDummyPbuffer);
         mDummyPbuffer = EGL_NO_SURFACE;
         if (success == EGL_FALSE)
         {
@@ -212,7 +209,7 @@ SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
     EGLBoolean success;
 
     const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
-    success = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
+    success                         = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
     ASSERT(success && numConfig == 1);
 
     return new WindowSurfaceEGL(state, mEGL, config, window);
@@ -226,7 +223,7 @@ SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state
     EGLBoolean success;
 
     const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
-    success = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
+    success                         = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
     ASSERT(success && numConfig == 1);
 
     return new PbufferSurfaceEGL(state, mEGL, config);
@@ -428,10 +425,10 @@ egl::ConfigSet DisplayAndroid::generateConfigs()
             UNREACHABLE();
         }
 
-        config.matchNativePixmap = EGL_NONE;
+        config.matchNativePixmap  = EGL_NONE;
         config.optimalOrientation = 0;
 
-        int internalId = configSet.add(config);
+        int internalId         = configSet.add(config);
         mConfigIds[internalId] = config.configID;
     }
 

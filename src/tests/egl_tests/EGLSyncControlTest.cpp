@@ -7,12 +7,12 @@
 // EGLSyncControlTest.cpp:
 //   Tests pertaining to eglGetSyncValuesCHROMIUM.
 
-#include <d3d11.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <d3d11.h>
 
-#include "com_utils.h"
 #include "OSWindow.h"
+#include "com_utils.h"
 #include "test_utils/ANGLETest.h"
 
 using namespace angle;

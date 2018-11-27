@@ -14,13 +14,9 @@
 namespace rx
 {
 
-ImageNULL::ImageNULL(const egl::ImageState &state) : ImageImpl(state)
-{
-}
+ImageNULL::ImageNULL(const egl::ImageState &state) : ImageImpl(state) {}
 
-ImageNULL::~ImageNULL()
-{
-}
+ImageNULL::~ImageNULL() {}
 
 egl::Error ImageNULL::initialize(const egl::Display *display)
 {

@@ -14,13 +14,9 @@
 namespace rx
 {
 
-QueryNULL::QueryNULL(gl::QueryType type) : QueryImpl(type)
-{
-}
+QueryNULL::QueryNULL(gl::QueryType type) : QueryImpl(type) {}
 
-QueryNULL::~QueryNULL()
-{
-}
+QueryNULL::~QueryNULL() {}
 
 angle::Result QueryNULL::begin(const gl::Context *context)
 {

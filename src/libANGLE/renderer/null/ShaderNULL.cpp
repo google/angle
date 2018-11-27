@@ -14,13 +14,9 @@
 namespace rx
 {
 
-ShaderNULL::ShaderNULL(const gl::ShaderState &data) : ShaderImpl(data)
-{
-}
+ShaderNULL::ShaderNULL(const gl::ShaderState &data) : ShaderImpl(data) {}
 
-ShaderNULL::~ShaderNULL()
-{
-}
+ShaderNULL::~ShaderNULL() {}
 
 ShCompileOptions ShaderNULL::prepareSourceAndReturnOptions(const gl::Context *context,
                                                            std::stringstream *sourceStream,

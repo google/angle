@@ -218,9 +218,7 @@ TIntermTraverser::TIntermTraverser(bool preVisit,
     ASSERT(!(inVisit && !preVisit && !postVisit));
 }
 
-TIntermTraverser::~TIntermTraverser()
-{
-}
+TIntermTraverser::~TIntermTraverser() {}
 
 void TIntermTraverser::setMaxAllowedDepth(int depth)
 {

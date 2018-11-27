@@ -126,8 +126,7 @@ class TType
           mStructure(nullptr),
           mIsStructSpecifier(false),
           mMangledName(mangledName)
-    {
-    }
+    {}
 
     constexpr TType(TType &&t)
         : type(t.type),
@@ -143,8 +142,7 @@ class TType
           mStructure(t.mStructure),
           mIsStructSpecifier(t.mIsStructSpecifier),
           mMangledName(t.mMangledName)
-    {
-    }
+    {}
 
     constexpr TBasicType getBasicType() const { return type; }
     void setBasicType(TBasicType t);

@@ -22,8 +22,7 @@ class PruneEmptyCasesTest : public MatchOutputCodeTest
 {
   public:
     PruneEmptyCasesTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_GLSL_COMPATIBILITY_OUTPUT)
-    {
-    }
+    {}
 };
 
 // Test that a switch statement that only contains no-ops is pruned entirely.

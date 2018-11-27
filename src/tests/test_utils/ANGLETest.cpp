@@ -152,34 +152,24 @@ const char *GetColorName(GLColor color)
 }
 }  // anonymous namespace
 
-GLColorRGB::GLColorRGB() : R(0), G(0), B(0)
-{
-}
+GLColorRGB::GLColorRGB() : R(0), G(0), B(0) {}
 
-GLColorRGB::GLColorRGB(GLubyte r, GLubyte g, GLubyte b) : R(r), G(g), B(b)
-{
-}
+GLColorRGB::GLColorRGB(GLubyte r, GLubyte g, GLubyte b) : R(r), G(g), B(b) {}
 
 GLColorRGB::GLColorRGB(const angle::Vector3 &floatColor)
     : R(ColorDenorm(floatColor.x())), G(ColorDenorm(floatColor.y())), B(ColorDenorm(floatColor.z()))
-{
-}
+{}
 
-GLColor::GLColor() : R(0), G(0), B(0), A(0)
-{
-}
+GLColor::GLColor() : R(0), G(0), B(0), A(0) {}
 
-GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b), A(a)
-{
-}
+GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b), A(a) {}
 
 GLColor::GLColor(const angle::Vector4 &floatColor)
     : R(ColorDenorm(floatColor.x())),
       G(ColorDenorm(floatColor.y())),
       B(ColorDenorm(floatColor.z())),
       A(ColorDenorm(floatColor.w()))
-{
-}
+{}
 
 GLColor::GLColor(GLuint colorValue) : R(0), G(0), B(0), A(0)
 {
@@ -782,7 +772,7 @@ GLuint ANGLETestBase::compileShader(GLenum type, const std::string &source)
 {
     GLuint shader = glCreateShader(type);
 
-    const char *sourceArray[1] = { source.c_str() };
+    const char *sourceArray[1] = {source.c_str()};
     glShaderSource(shader, 1, sourceArray, nullptr);
     glCompileShader(shader);
 
@@ -1115,9 +1105,7 @@ void ANGLETestBase::SetWindowVisible(bool isVisible)
     mOSWindow->setVisible(isVisible);
 }
 
-ANGLETest::ANGLETest() : ANGLETestBase(GetParam())
-{
-}
+ANGLETest::ANGLETest() : ANGLETestBase(GetParam()) {}
 
 void ANGLETest::SetUp()
 {

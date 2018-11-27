@@ -19,7 +19,7 @@ typedef __IOSurface *IOSurfaceRef;
 namespace egl
 {
 class AttributeMap;
-}  // namespace gl
+}  // namespace egl
 
 namespace rx
 {

@@ -43,8 +43,7 @@ class SymbolOccurrenceCounterByQualifier : public SymbolOccurrenceCounter
   public:
     SymbolOccurrenceCounterByQualifier(TQualifier symbolQualifier)
         : mSymbolQualifier(symbolQualifier)
-    {
-    }
+    {}
 
     bool shouldCountSymbol(const TIntermSymbol *node) const override
     {
@@ -75,8 +74,7 @@ class SymbolOccurrenceCounterByNameAndQualifier : public SymbolOccurrenceCounter
     SymbolOccurrenceCounterByNameAndQualifier(const ImmutableString &symbolName,
                                               TQualifier qualifier)
         : mSymbolName(symbolName), mSymbolQualifier(qualifier)
-    {
-    }
+    {}
 
     bool shouldCountSymbol(const TIntermSymbol *node) const override
     {
@@ -93,6 +91,7 @@ class WEBGLMultiviewVertexShaderTest : public ShaderCompileTreeTest
 {
   public:
     WEBGLMultiviewVertexShaderTest() {}
+
   protected:
     ::GLenum getShaderType() const override { return GL_VERTEX_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
@@ -107,6 +106,7 @@ class WEBGLMultiviewFragmentShaderTest : public ShaderCompileTreeTest
 {
   public:
     WEBGLMultiviewFragmentShaderTest() {}
+
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
@@ -161,8 +161,7 @@ class WEBGLMultiviewFragmentShaderOutputCodeTest : public WEBGLMultiviewOutputCo
 {
   public:
     WEBGLMultiviewFragmentShaderOutputCodeTest() : WEBGLMultiviewOutputCodeTest(GL_FRAGMENT_SHADER)
-    {
-    }
+    {}
 };
 
 class WEBGLMultiviewComputeShaderOutputCodeTest : public WEBGLMultiviewOutputCodeTest

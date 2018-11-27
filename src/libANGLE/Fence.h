@@ -20,7 +20,7 @@ namespace rx
 {
 class FenceNVImpl;
 class SyncImpl;
-}
+}  // namespace rx
 
 namespace gl
 {
@@ -81,4 +81,4 @@ class Sync final : public RefCountObject, public LabeledObject
 
 }  // namespace gl
 
-#endif   // LIBANGLE_FENCE_H_
+#endif  // LIBANGLE_FENCE_H_

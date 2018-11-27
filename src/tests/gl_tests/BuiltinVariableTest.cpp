@@ -61,13 +61,7 @@ class BuiltinVariableVertexIdTest : public ANGLETest
         mExpectedIdLocation = glGetAttribLocation(mProgram, "expectedID");
         ASSERT_NE(-1, mExpectedIdLocation);
 
-        static const float positions[] =
-        {
-             0.5,  0.5,
-            -0.5,  0.5,
-             0.5, -0.5,
-            -0.5, -0.5
-        };
+        static const float positions[] = {0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5};
         glGenBuffers(1, &mPositionBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, mPositionBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);

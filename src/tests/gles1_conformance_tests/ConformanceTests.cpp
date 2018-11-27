@@ -548,4 +548,4 @@ TEST_P(GLES1ConformanceTest, MatrixPalette)
 }
 
 ANGLE_INSTANTIATE_TEST(GLES1ConformanceTest, ES1_OPENGL());
-}
+}  // namespace angle

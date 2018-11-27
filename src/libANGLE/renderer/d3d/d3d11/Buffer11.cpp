@@ -319,8 +319,7 @@ Buffer11::Buffer11(const gl::BufferState &state, Renderer11 *renderer)
       mIdleness({}),
       mConstantBufferStorageAdditionalSize(0),
       mMaxConstantBufferLruCount(0)
-{
-}
+{}
 
 Buffer11::~Buffer11()
 {
@@ -964,8 +963,7 @@ void Buffer11::onStorageUpdate(BufferStorage *updatedStorage)
 
 Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)
     : mRenderer(renderer), mRevision(0), mUsage(usage), mBufferSize(0)
-{
-}
+{}
 
 angle::Result Buffer11::BufferStorage::setData(const gl::Context *context,
                                                const uint8_t *data,
@@ -994,8 +992,7 @@ Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer,
                                        BufferUsage usage,
                                        const angle::Subject *onStorageChanged)
     : BufferStorage(renderer, usage), mBuffer(), mOnStorageChanged(onStorageChanged)
-{
-}
+{}
 
 Buffer11::NativeStorage::~NativeStorage()
 {
@@ -1287,12 +1284,9 @@ void Buffer11::NativeStorage::clearSRVs()
 
 Buffer11::EmulatedIndexedStorage::EmulatedIndexedStorage(Renderer11 *renderer)
     : BufferStorage(renderer, BUFFER_USAGE_EMULATED_INDEXED_VERTEX), mBuffer()
-{
-}
+{}
 
-Buffer11::EmulatedIndexedStorage::~EmulatedIndexedStorage()
-{
-}
+Buffer11::EmulatedIndexedStorage::~EmulatedIndexedStorage() {}
 
 angle::Result Buffer11::EmulatedIndexedStorage::getBuffer(const gl::Context *context,
                                                           SourceIndexData *indexInfo,
@@ -1451,12 +1445,9 @@ void Buffer11::EmulatedIndexedStorage::unmap()
 
 Buffer11::PackStorage::PackStorage(Renderer11 *renderer)
     : BufferStorage(renderer, BUFFER_USAGE_PIXEL_PACK), mStagingTexture(), mDataModified(false)
-{
-}
+{}
 
-Buffer11::PackStorage::~PackStorage()
-{
-}
+Buffer11::PackStorage::~PackStorage() {}
 
 angle::Result Buffer11::PackStorage::copyFromStorage(const gl::Context *context,
                                                      BufferStorage *source,
@@ -1584,8 +1575,7 @@ angle::Result Buffer11::PackStorage::flushQueuedPackCommand(const gl::Context *c
 
 Buffer11::SystemMemoryStorage::SystemMemoryStorage(Renderer11 *renderer)
     : Buffer11::BufferStorage(renderer, BUFFER_USAGE_SYSTEM_MEMORY)
-{
-}
+{}
 
 angle::Result Buffer11::SystemMemoryStorage::copyFromStorage(const gl::Context *context,
                                                              BufferStorage *source,

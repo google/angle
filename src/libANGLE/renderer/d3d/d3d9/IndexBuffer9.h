@@ -52,6 +52,6 @@ class IndexBuffer9 : public IndexBuffer
     bool mDynamic;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_INDEXBUFFER9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_INDEXBUFFER9_H_

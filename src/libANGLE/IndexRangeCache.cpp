@@ -15,13 +15,9 @@
 namespace gl
 {
 
-IndexRangeCache::IndexRangeCache()
-{
-}
+IndexRangeCache::IndexRangeCache() {}
 
-IndexRangeCache::~IndexRangeCache()
-{
-}
+IndexRangeCache::~IndexRangeCache() {}
 
 void IndexRangeCache::addRange(GLenum type,
                                size_t offset,
@@ -86,16 +82,14 @@ void IndexRangeCache::clear()
 
 IndexRangeCache::IndexRangeKey::IndexRangeKey()
     : IndexRangeCache::IndexRangeKey(GL_NONE, 0, 0, false)
-{
-}
+{}
 
 IndexRangeCache::IndexRangeKey::IndexRangeKey(GLenum type_,
                                               size_t offset_,
                                               size_t count_,
                                               bool primitiveRestartEnabled_)
     : type(type_), offset(offset_), count(count_), primitiveRestartEnabled(primitiveRestartEnabled_)
-{
-}
+{}
 
 bool IndexRangeCache::IndexRangeKey::operator<(const IndexRangeKey &rhs) const
 {
@@ -118,4 +112,4 @@ bool IndexRangeCache::IndexRangeKey::operator<(const IndexRangeKey &rhs) const
     return false;
 }
 
-}
+}  // namespace gl

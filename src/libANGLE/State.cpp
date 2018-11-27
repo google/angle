@@ -71,7 +71,7 @@ constexpr State::BufferBindingSetter GetBufferBindingSetter()
     return kBufferBindingDirtyBits[Target] != 0 ? &State::setGenericBufferBindingWithBit<Target>
                                                 : &State::setGenericBufferBinding<Target>;
 }
-}  // anonymous namepace
+}  // namespace
 
 template <typename BindingT, typename... ArgsT>
 ANGLE_INLINE void UpdateNonTFBufferBinding(const Context *context,
@@ -234,12 +234,9 @@ State::State(bool debug,
       mRobustResourceInit(robustResourceInit),
       mProgramBinaryCacheEnabled(programBinaryCacheEnabled),
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max())
-{
-}
+{}
 
-State::~State()
-{
-}
+State::~State() {}
 
 void State::initialize(Context *context)
 {
@@ -1145,7 +1142,6 @@ void State::setRenderbufferBinding(const Context *context, Renderbuffer *renderb
     mDirtyBits.set(DIRTY_BIT_RENDERBUFFER_BINDING);
 }
 
-
 void State::detachRenderbuffer(const Context *context, GLuint renderbuffer)
 {
     // [OpenGL ES 2.0.24] section 4.4 page 109:
@@ -1660,7 +1656,6 @@ void State::setUnpackSkipPixels(GLint skipPixels)
     mUnpack.skipPixels = skipPixels;
     mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
-
 
 void State::setCoverageModulation(GLenum components)
 {

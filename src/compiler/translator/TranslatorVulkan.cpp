@@ -37,8 +37,7 @@ class DeclareStructTypesTraverser : public TIntermTraverser
   public:
     explicit DeclareStructTypesTraverser(TOutputVulkanGLSL *outputVulkanGLSL)
         : TIntermTraverser(true, false, false), mOutputVulkanGLSL(outputVulkanGLSL)
-    {
-    }
+    {}
 
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
     {
@@ -89,8 +88,7 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
           mHashFunction(hashFunction),
           mNameMap(nameMap),
           mInDefaultUniform(false)
-    {
-    }
+    {}
 
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
     {
@@ -150,7 +148,7 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
     bool mInDefaultUniform;
 };
 
-constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPointCoord");
+constexpr ImmutableString kFlippedPointCoordName    = ImmutableString("flippedPointCoord");
 constexpr ImmutableString kFlippedFragCoordName     = ImmutableString("flippedFragCoord");
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
 
@@ -347,8 +345,12 @@ const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *sym
     TFieldList *driverFieldList = new TFieldList;
 
     const std::array<TType *, kNumDriverUniforms> kDriverUniformTypes = {{
-        new TType(EbtFloat, 4), new TType(EbtFloat), new TType(EbtFloat), new TType(EbtFloat),
-        new TType(EbtFloat), emulatedDepthRangeType,
+        new TType(EbtFloat, 4),
+        new TType(EbtFloat),
+        new TType(EbtFloat),
+        new TType(EbtFloat),
+        new TType(EbtFloat),
+        emulatedDepthRangeType,
     }};
 
     for (size_t uniformIndex = 0; uniformIndex < kNumDriverUniforms; ++uniformIndex)
@@ -620,8 +622,7 @@ void AddLineSegmentRasterizationEmulation(TInfoSinkBase &sink,
 
 TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_GLSL_450_CORE_OUTPUT)
-{
-}
+{}
 
 void TranslatorVulkan::translate(TIntermBlock *root,
                                  ShCompileOptions compileOptions,

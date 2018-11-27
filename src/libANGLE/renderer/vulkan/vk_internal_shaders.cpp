@@ -14,13 +14,9 @@ namespace rx
 {
 namespace vk
 {
-ShaderLibrary::ShaderLibrary()
-{
-}
+ShaderLibrary::ShaderLibrary() {}
 
-ShaderLibrary::~ShaderLibrary()
-{
-}
+ShaderLibrary::~ShaderLibrary() {}
 
 void ShaderLibrary::destroy(VkDevice device)
 {

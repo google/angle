@@ -513,7 +513,10 @@ void ProgramGL::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
     }
 }
 
-void ProgramGL::setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix2fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix2fv != nullptr)
     {
@@ -526,7 +529,10 @@ void ProgramGL::setUniformMatrix2fv(GLint location, GLsizei count, GLboolean tra
     }
 }
 
-void ProgramGL::setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix3fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix3fv != nullptr)
     {
@@ -539,7 +545,10 @@ void ProgramGL::setUniformMatrix3fv(GLint location, GLsizei count, GLboolean tra
     }
 }
 
-void ProgramGL::setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix4fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix4fv != nullptr)
     {
@@ -552,7 +561,10 @@ void ProgramGL::setUniformMatrix4fv(GLint location, GLsizei count, GLboolean tra
     }
 }
 
-void ProgramGL::setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix2x3fv(GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix2x3fv != nullptr)
     {
@@ -566,7 +578,10 @@ void ProgramGL::setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean t
     }
 }
 
-void ProgramGL::setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix3x2fv(GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix3x2fv != nullptr)
     {
@@ -580,7 +595,10 @@ void ProgramGL::setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean t
     }
 }
 
-void ProgramGL::setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix2x4fv(GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix2x4fv != nullptr)
     {
@@ -594,7 +612,10 @@ void ProgramGL::setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean t
     }
 }
 
-void ProgramGL::setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix4x2fv(GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix4x2fv != nullptr)
     {
@@ -608,7 +629,10 @@ void ProgramGL::setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean t
     }
 }
 
-void ProgramGL::setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix3x4fv(GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix3x4fv != nullptr)
     {
@@ -622,7 +646,10 @@ void ProgramGL::setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean t
     }
 }
 
-void ProgramGL::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
+void ProgramGL::setUniformMatrix4x3fv(GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
     if (mFunctions->programUniformMatrix4x3fv != nullptr)
     {
@@ -804,7 +831,6 @@ void ProgramGL::setPathFragmentInputGen(const std::string &inputName,
             return;
         }
     }
-
 }
 
 void ProgramGL::preLink()
@@ -857,7 +883,7 @@ void ProgramGL::postLink()
     // Query the uniform information
     ASSERT(mUniformRealLocationMap.empty());
     const auto &uniformLocations = mState.getUniformLocations();
-    const auto &uniforms = mState.getUniforms();
+    const auto &uniforms         = mState.getUniforms();
     mUniformRealLocationMap.resize(uniformLocations.size(), GL_INVALID_INDEX);
     for (size_t uniformLocation = 0; uniformLocation < uniformLocations.size(); uniformLocation++)
     {
@@ -936,7 +962,7 @@ void ProgramGL::postLink()
 
         PathRenderingFragmentInput baseElementInput;
         baseElementInput.mappedName = mappedName;
-        baseElementInput.location = queryResults[0];
+        baseElementInput.location   = queryResults[0];
         mPathRenderingFragmentInputs.push_back(std::move(baseElementInput));
 
         // If the input is an array it's denoted by [0] suffix on the variable
@@ -953,7 +979,7 @@ void ProgramGL::postLink()
             {
                 PathRenderingFragmentInput arrayElementInput;
                 arrayElementInput.mappedName = mappedName + "[" + ToString(arrayIndex) + "]";
-                arrayElementInput.location = baseLocation + arrayIndex;
+                arrayElementInput.location   = baseLocation + arrayIndex;
                 mPathRenderingFragmentInputs.push_back(std::move(arrayElementInput));
             }
         }

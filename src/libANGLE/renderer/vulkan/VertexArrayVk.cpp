@@ -68,7 +68,21 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
       mCurrentArrayBufferFormats{},
       mCurrentArrayBufferStrides{},
       mCurrentArrayBufferConversion{{
-          INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
+          INIT,
           INIT,
       }},
       mCurrentArrayBufferConversionCanRelease{},
@@ -99,9 +113,7 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
     mDirtyPackedInputs.set();
 }
 
-VertexArrayVk::~VertexArrayVk()
-{
-}
+VertexArrayVk::~VertexArrayVk() {}
 
 void VertexArrayVk::destroy(const gl::Context *context)
 {

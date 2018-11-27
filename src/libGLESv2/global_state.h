@@ -60,10 +60,10 @@ namespace angle
 std::mutex &GetGlobalMutex();
 }  // namespace angle
 
-#define ANGLE_SCOPED_GLOBAL_LOCK() \
-    std::lock_guard<std::mutex> globalMutexLock(angle::GetGlobalMutex())
+#    define ANGLE_SCOPED_GLOBAL_LOCK() \
+        std::lock_guard<std::mutex> globalMutexLock(angle::GetGlobalMutex())
 #else
-#define ANGLE_SCOPED_GLOBAL_LOCK()
+#    define ANGLE_SCOPED_GLOBAL_LOCK()
 #endif
 
 #endif  // LIBGLESV2_GLOBALSTATE_H_

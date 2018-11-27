@@ -61,8 +61,7 @@ class DXGISupportHelper : angle::NonCopyable
   public:
     DXGISupportHelper(ID3D11Device *device, D3D_FEATURE_LEVEL featureLevel)
         : mDevice(device), mFeatureLevel(featureLevel)
-    {
-    }
+    {}
 
     bool query(DXGI_FORMAT dxgiFormat, UINT supportMask)
     {
@@ -2312,12 +2311,9 @@ LazyInputLayout::LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
                                  size_t byteCodeLen,
                                  const char *debugName)
     : mInputDesc(inputDesc, inputDescLen), mByteCode(byteCode, byteCodeLen), mDebugName(debugName)
-{
-}
+{}
 
-LazyInputLayout::~LazyInputLayout()
-{
-}
+LazyInputLayout::~LazyInputLayout() {}
 
 angle::Result LazyInputLayout::resolve(d3d::Context *context, Renderer11 *renderer)
 {
@@ -2326,8 +2322,7 @@ angle::Result LazyInputLayout::resolve(d3d::Context *context, Renderer11 *render
 
 LazyBlendState::LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugName)
     : mDesc(desc), mDebugName(debugName)
-{
-}
+{}
 
 angle::Result LazyBlendState::resolve(d3d::Context *context, Renderer11 *renderer)
 {
@@ -2425,9 +2420,7 @@ void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t
 }  // namespace d3d11
 
 // TextureHelper11 implementation.
-TextureHelper11::TextureHelper11() : mFormatSet(nullptr), mSampleCount(0)
-{
-}
+TextureHelper11::TextureHelper11() : mFormatSet(nullptr), mSampleCount(0) {}
 
 TextureHelper11::TextureHelper11(TextureHelper11 &&toCopy) : TextureHelper11()
 {
@@ -2440,9 +2433,7 @@ TextureHelper11::TextureHelper11(const TextureHelper11 &other)
     mData = other.mData;
 }
 
-TextureHelper11::~TextureHelper11()
-{
-}
+TextureHelper11::~TextureHelper11() {}
 
 void TextureHelper11::getDesc(D3D11_TEXTURE2D_DESC *desc) const
 {

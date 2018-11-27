@@ -8,12 +8,13 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+
 #include "libANGLE/Image.h"
-#include "libANGLE/Texture.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Texture.h"
 #include "libANGLE/renderer/ImageImpl_mock.h"
-#include "libANGLE/renderer/TextureImpl_mock.h"
 #include "libANGLE/renderer/RenderbufferImpl_mock.h"
+#include "libANGLE/renderer/TextureImpl_mock.h"
 #include "tests/angle_unittests_utils.h"
 
 using ::testing::_;

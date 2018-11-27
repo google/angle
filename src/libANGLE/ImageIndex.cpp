@@ -72,8 +72,7 @@ TextureTarget TextureTypeToTarget(TextureType type, GLint layerIndex)
 
 ImageIndex::ImageIndex()
     : mType(TextureType::InvalidEnum), mLevelIndex(0), mLayerIndex(0), mLayerCount(kEntireLevel)
-{
-}
+{}
 
 ImageIndex::ImageIndex(const ImageIndex &other) = default;
 
@@ -244,14 +243,17 @@ ImageIndexIterator ImageIndexIterator::MakeCube(GLint minMip, GLint maxMip)
                               Range<GLint>(0, 6), nullptr);
 }
 
-ImageIndexIterator ImageIndexIterator::Make3D(GLint minMip, GLint maxMip,
-                                              GLint minLayer, GLint maxLayer)
+ImageIndexIterator ImageIndexIterator::Make3D(GLint minMip,
+                                              GLint maxMip,
+                                              GLint minLayer,
+                                              GLint maxLayer)
 {
     return ImageIndexIterator(TextureType::_3D, Range<GLint>(minMip, maxMip),
                               Range<GLint>(minLayer, maxLayer), nullptr);
 }
 
-ImageIndexIterator ImageIndexIterator::Make2DArray(GLint minMip, GLint maxMip,
+ImageIndexIterator ImageIndexIterator::Make2DArray(GLint minMip,
+                                                   GLint maxMip,
                                                    const GLsizei *layerCounts)
 {
     return ImageIndexIterator(TextureType::_2DArray, Range<GLint>(minMip, maxMip),

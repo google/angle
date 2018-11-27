@@ -114,8 +114,7 @@ struct UniformTypeInfo final : angle::NonCopyable
           isSampler(isSampler),
           isMatrixType(isMatrixType),
           isImageType(isImageType)
-    {
-    }
+    {}
 
     GLenum type;
     GLenum componentType;

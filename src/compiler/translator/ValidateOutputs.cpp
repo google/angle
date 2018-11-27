@@ -54,8 +54,7 @@ ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &ext
       mAllowUnspecifiedOutputLocationResolution(
           IsExtensionEnabled(extBehavior, TExtension::EXT_blend_func_extended)),
       mUsesFragDepth(false)
-{
-}
+{}
 
 void ValidateOutputsTraverser::visitSymbol(TIntermSymbol *symbol)
 {
@@ -97,11 +96,11 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
 
     for (const auto &symbol : mOutputs)
     {
-        const TType &type         = symbol->getType();
+        const TType &type = symbol->getType();
         ASSERT(!type.isArrayOfArrays());  // Disallowed in GLSL ES 3.10 section 4.3.6.
         const size_t elementCount =
             static_cast<size_t>(type.isArray() ? type.getOutermostArraySize() : 1u);
-        const size_t location     = static_cast<size_t>(type.getLayoutQualifier().location);
+        const size_t location = static_cast<size_t>(type.getLayoutQualifier().location);
 
         ASSERT(type.getLayoutQualifier().location != -1);
 

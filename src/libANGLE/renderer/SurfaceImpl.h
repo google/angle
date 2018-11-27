@@ -26,7 +26,7 @@ namespace gl
 {
 class Context;
 class FramebufferState;
-}
+}  // namespace gl
 
 namespace egl
 {
@@ -37,7 +37,7 @@ class Thread;
 
 using SupportedTimestamps        = angle::PackedEnumBitSet<Timestamp>;
 using SupportedCompositorTimings = angle::PackedEnumBitSet<CompositorTiming>;
-}
+}  // namespace egl
 
 namespace rx
 {
@@ -123,6 +123,6 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
   protected:
     const egl::SurfaceState &mState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_SURFACEIMPL_H_

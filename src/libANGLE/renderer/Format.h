@@ -109,8 +109,7 @@ constexpr Format::Format(FormatID id,
       stencilBits(stencilBits),
       pixelBytes(pixelBytes),
       isBlock(isBlock)
-{
-}
+{}
 
 constexpr bool Format::hasDepthOrStencilBits() const
 {

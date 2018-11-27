@@ -18,8 +18,7 @@ namespace rx
 {
 
 QueryVk::QueryVk(gl::QueryType type) : QueryImpl(type), mCachedResult(0), mCachedResultValid(false)
-{
-}
+{}
 
 QueryVk::~QueryVk() = default;
 

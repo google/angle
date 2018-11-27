@@ -77,8 +77,7 @@ constexpr Format::Format()
       blitSRVFormat(DXGI_FORMAT_UNKNOWN),
       swizzleFormat(GL_NONE),
       dataInitializerFunction(nullptr)
-{
-}
+{}
 
 constexpr Format::Format(GLenum internalFormat,
                          angle::FormatID formatID,
@@ -100,8 +99,7 @@ constexpr Format::Format(GLenum internalFormat,
       blitSRVFormat(blitSRVFormat),
       swizzleFormat(swizzleFormat),
       dataInitializerFunction(internalFormatInitializer)
-{
-}
+{}
 
 }  // namespace d3d11
 

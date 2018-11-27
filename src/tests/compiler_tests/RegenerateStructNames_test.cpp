@@ -19,8 +19,7 @@ class RegenerateStructNamesTest : public MatchOutputCodeTest
   public:
     RegenerateStructNamesTest()
         : MatchOutputCodeTest(GL_FRAGMENT_SHADER, SH_REGENERATE_STRUCT_NAMES, SH_ESSL_OUTPUT)
-    {
-    }
+    {}
 };
 
 // Test that a struct defined in a function scope is renamed. The global struct that's used as a

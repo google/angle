@@ -17,7 +17,7 @@ namespace angle
 {
 struct CompilerWorkaroundsD3D;
 struct WorkaroundsD3D;
-}
+}  // namespace angle
 
 namespace gl
 {

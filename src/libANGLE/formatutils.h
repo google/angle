@@ -44,8 +44,7 @@ struct Type
         : bytes(packedTypeInfo & 0xff),
           bytesShift((packedTypeInfo >> 8) & 0xff),
           specialInterpretation((packedTypeInfo >> 16) & 1)
-    {
-    }
+    {}
 
     GLuint bytes;
     GLuint bytesShift;  // Bit shift by this value to effectively divide/multiply by "bytes" in a

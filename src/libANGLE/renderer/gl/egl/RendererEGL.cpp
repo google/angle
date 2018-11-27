@@ -16,8 +16,7 @@ RendererEGL::RendererEGL(std::unique_ptr<FunctionsGL> functionsGL,
                          DisplayEGL *display,
                          EGLContext context)
     : RendererGL(std::move(functionsGL), attribMap), mDisplay(display), mContext(context)
-{
-}
+{}
 
 RendererEGL::~RendererEGL()
 {

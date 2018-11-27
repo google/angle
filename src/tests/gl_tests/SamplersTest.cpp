@@ -83,4 +83,4 @@ TEST_P(SamplersTest, InvalidOverTextureSamplerMaxAnisotropyExt)
 // tests should be run against.
 // Samplers are only supported on ES3.
 ANGLE_INSTANTIATE_TEST(SamplersTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
-}  // namespace
+}  // namespace angle

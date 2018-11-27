@@ -21,8 +21,7 @@ class MockTransformFeedbackImpl : public TransformFeedbackImpl
   public:
     MockTransformFeedbackImpl(const gl::TransformFeedbackState &state)
         : TransformFeedbackImpl(state)
-    {
-    }
+    {}
     ~MockTransformFeedbackImpl() { destructor(); }
 
     MOCK_METHOD1(begin, void(gl::PrimitiveMode));
@@ -35,6 +34,6 @@ class MockTransformFeedbackImpl : public TransformFeedbackImpl
 
     MOCK_METHOD0(destructor, void());
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPLMOCK_H_

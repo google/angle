@@ -18,12 +18,9 @@ namespace rx
 
 DisplayEGL::DisplayEGL(const egl::DisplayState &state)
     : DisplayGL(state), mEGL(nullptr), mConfig(EGL_NO_CONFIG)
-{
-}
+{}
 
-DisplayEGL::~DisplayEGL()
-{
-}
+DisplayEGL::~DisplayEGL() {}
 
 ImageImpl *DisplayEGL::createImage(const egl::ImageState &state,
                                    const gl::Context *context,

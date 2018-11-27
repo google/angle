@@ -66,8 +66,7 @@ class ShaderConstants11 : angle::NonCopyable
               viewScale{.0f},
               multiviewWriteToViewportIndex{.0f},
               padding{.0f}
-        {
-        }
+        {}
 
         float depthRange[4];
         float viewAdjust[4];
@@ -91,8 +90,7 @@ class ShaderConstants11 : angle::NonCopyable
               viewScale{.0f},
               multiviewWriteToViewportIndex(0),
               padding(0)
-        {
-        }
+        {}
 
         float depthRange[4];
         float viewCoords[4];
@@ -118,8 +116,7 @@ class ShaderConstants11 : angle::NonCopyable
     {
         SamplerMetadata()
             : baseLevel(0), internalFormatBits(0), wrapModes(0), padding(0), intBorderColor{0}
-        {
-        }
+        {}
 
         int baseLevel;
         int internalFormatBits;

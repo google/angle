@@ -74,9 +74,7 @@ constexpr VkImageUsageFlags kSurfaceVKDepthStencilImageUsageFlags =
 
 }  // namespace
 
-OffscreenSurfaceVk::AttachmentImage::AttachmentImage() : renderTarget(&image, &imageView, 0)
-{
-}
+OffscreenSurfaceVk::AttachmentImage::AttachmentImage() : renderTarget(&image, &imageView, 0) {}
 
 OffscreenSurfaceVk::AttachmentImage::~AttachmentImage() = default;
 
@@ -119,12 +117,9 @@ OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
                                        EGLint width,
                                        EGLint height)
     : SurfaceImpl(surfaceState), mWidth(width), mHeight(height)
-{
-}
+{}
 
-OffscreenSurfaceVk::~OffscreenSurfaceVk()
-{
-}
+OffscreenSurfaceVk::~OffscreenSurfaceVk() {}
 
 egl::Error OffscreenSurfaceVk::initialize(const egl::Display *display)
 {
@@ -208,9 +203,7 @@ egl::Error OffscreenSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
     return egl::EglBadAccess();
 }
 
-void OffscreenSurfaceVk::setSwapInterval(EGLint /*interval*/)
-{
-}
+void OffscreenSurfaceVk::setSwapInterval(EGLint /*interval*/) {}
 
 EGLint OffscreenSurfaceVk::getWidth() const
 {
@@ -265,8 +258,7 @@ WindowSurfaceVk::SwapchainImage::SwapchainImage(SwapchainImage &&other)
     : image(std::move(other.image)),
       imageView(std::move(other.imageView)),
       framebuffer(std::move(other.framebuffer))
-{
-}
+{}
 
 WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
                                  EGLNativeWindowType window,
@@ -282,8 +274,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mDepthStencilRenderTarget(&mDepthStencilImage, &mDepthStencilImageView, 0),
       mCurrentSwapchainImageIndex(0),
       mCurrentSwapSerialIndex(0)
-{
-}
+{}
 
 WindowSurfaceVk::~WindowSurfaceVk()
 {
@@ -484,10 +475,10 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
                  vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
 
     VkClearColorValue transparentBlack = {};
-    transparentBlack.float32[0] = 0.0f;
-    transparentBlack.float32[1] = 0.0f;
-    transparentBlack.float32[2] = 0.0f;
-    transparentBlack.float32[3] = 0.0f;
+    transparentBlack.float32[0]        = 0.0f;
+    transparentBlack.float32[1]        = 0.0f;
+    transparentBlack.float32[2]        = 0.0f;
+    transparentBlack.float32[3]        = 0.0f;
 
     mSwapchainImages.resize(imageCount);
     mSwapSerials.resize(imageCount);
@@ -601,10 +592,10 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
     presentInfo.waitSemaphoreCount = commandsCompleteSemaphore ? 1 : 0;
     presentInfo.pWaitSemaphores =
         commandsCompleteSemaphore ? commandsCompleteSemaphore->ptr() : nullptr;
-    presentInfo.swapchainCount     = 1;
-    presentInfo.pSwapchains        = &mSwapchain;
-    presentInfo.pImageIndices      = &mCurrentSwapchainImageIndex;
-    presentInfo.pResults           = nullptr;
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains    = &mSwapchain;
+    presentInfo.pImageIndices  = &mCurrentSwapchainImageIndex;
+    presentInfo.pResults       = nullptr;
 
     ANGLE_VK_TRY(displayVk, vkQueuePresentKHR(renderer->getQueue(), &presentInfo));
 
@@ -623,7 +614,7 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
 
 angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
 {
-    VkDevice device = displayVk->getDevice();
+    VkDevice device      = displayVk->getDevice();
     RendererVk *renderer = displayVk->getRenderer();
 
     const vk::Semaphore *acquireNextImageSemaphore = nullptr;
@@ -677,9 +668,7 @@ egl::Error WindowSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
     return egl::EglBadAccess();
 }
 
-void WindowSurfaceVk::setSwapInterval(EGLint interval)
-{
-}
+void WindowSurfaceVk::setSwapInterval(EGLint interval) {}
 
 EGLint WindowSurfaceVk::getWidth() const
 {

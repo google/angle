@@ -58,13 +58,11 @@ class RenderTargetCache final : angle::NonCopyable
 template <typename RenderTargetT>
 RenderTargetCache<RenderTargetT>::RenderTargetCache()
     : mColorRenderTargets{{nullptr}}, mDepthStencilRenderTarget(nullptr)
-{
-}
+{}
 
 template <typename RenderTargetT>
 RenderTargetCache<RenderTargetT>::~RenderTargetCache()
-{
-}
+{}
 
 template <typename RenderTargetT>
 angle::Result RenderTargetCache<RenderTargetT>::update(const gl::Context *context,

@@ -59,7 +59,8 @@ class ViewportTest : public ANGLETest
         glClearColor(0, 1, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Draw a red quad centered in the middle of the viewport, with dimensions 25% of the size of the viewport.
+        // Draw a red quad centered in the middle of the viewport, with dimensions 25% of the size
+        // of the viewport.
         drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 0.25f);
 
         GLint centerViewportX = viewportSize[0] + (viewportSize[2] / 2);
@@ -74,28 +75,29 @@ class ViewportTest : public ANGLETest
         checkPixel(centerViewportX, centerViewportY, true);
 
         // Pixels just inside the red quad should be red.
-        checkPixel(redQuadLeftSideX,      redQuadTopSideY,        true);
-        checkPixel(redQuadLeftSideX,      redQuadBottomSideY - 1, true);
-        checkPixel(redQuadRightSideX - 1, redQuadTopSideY,        true);
+        checkPixel(redQuadLeftSideX, redQuadTopSideY, true);
+        checkPixel(redQuadLeftSideX, redQuadBottomSideY - 1, true);
+        checkPixel(redQuadRightSideX - 1, redQuadTopSideY, true);
         checkPixel(redQuadRightSideX - 1, redQuadBottomSideY - 1, true);
 
         // Pixels just outside the red quad shouldn't be red.
-        checkPixel(redQuadLeftSideX - 1,  redQuadTopSideY - 1, false);
-        checkPixel(redQuadLeftSideX - 1,  redQuadBottomSideY,  false);
-        checkPixel(redQuadRightSideX,     redQuadTopSideY - 1, false);
-        checkPixel(redQuadRightSideX,     redQuadBottomSideY,  false);
+        checkPixel(redQuadLeftSideX - 1, redQuadTopSideY - 1, false);
+        checkPixel(redQuadLeftSideX - 1, redQuadBottomSideY, false);
+        checkPixel(redQuadRightSideX, redQuadTopSideY - 1, false);
+        checkPixel(redQuadRightSideX, redQuadBottomSideY, false);
 
         // Pixels just within the viewport shouldn't be red.
-        checkPixel(viewportSize[0],                        viewportSize[1],                       false);
-        checkPixel(viewportSize[0],                        viewportSize[1] + viewportSize[3] - 1, false);
-        checkPixel(viewportSize[0] + viewportSize[2] - 1,  viewportSize[1],                       false);
-        checkPixel(viewportSize[0] + viewportSize[2] - 1,  viewportSize[1] + viewportSize[3] - 1, false);
+        checkPixel(viewportSize[0], viewportSize[1], false);
+        checkPixel(viewportSize[0], viewportSize[1] + viewportSize[3] - 1, false);
+        checkPixel(viewportSize[0] + viewportSize[2] - 1, viewportSize[1], false);
+        checkPixel(viewportSize[0] + viewportSize[2] - 1, viewportSize[1] + viewportSize[3] - 1,
+                   false);
     }
 
     void checkPixel(GLint x, GLint y, GLboolean renderedRed)
     {
         // By default, expect the pixel to be black.
-        GLint expectedRedChannel = 0;
+        GLint expectedRedChannel   = 0;
         GLint expectedGreenChannel = 0;
 
         GLint scissorSize[4];
@@ -103,12 +105,13 @@ class ViewportTest : public ANGLETest
 
         EXPECT_GL_NO_ERROR();
 
-        if (scissorSize[0] <= x && x < scissorSize[0] + scissorSize[2]
-            && scissorSize[1] <= y && y < scissorSize[1] + scissorSize[3])
+        if (scissorSize[0] <= x && x < scissorSize[0] + scissorSize[2] && scissorSize[1] <= y &&
+            y < scissorSize[1] + scissorSize[3])
         {
             // If the pixel lies within the scissor rect, then it should have been cleared to green.
-            // If we rendered a red square on top of it, then the pixel should be red (the green channel will have been reset to 0).
-            expectedRedChannel = renderedRed ? 255 : 0;
+            // If we rendered a red square on top of it, then the pixel should be red (the green
+            // channel will have been reset to 0).
+            expectedRedChannel   = renderedRed ? 255 : 0;
             expectedGreenChannel = renderedRed ? 0 : 255;
         }
 
@@ -163,7 +166,8 @@ TEST_P(ViewportTest, QuarterWindow)
 
 TEST_P(ViewportTest, QuarterWindowCentered)
 {
-    glViewport(getWindowWidth() * 3 / 8, getWindowHeight() * 3 / 8, getWindowWidth() / 4, getWindowHeight() / 4);
+    glViewport(getWindowWidth() * 3 / 8, getWindowHeight() * 3 / 8, getWindowWidth() / 4,
+               getWindowHeight() / 4);
 
     runNonScissoredTest();
 
@@ -199,7 +203,8 @@ TEST_P(ViewportTest, DoubleWindow)
 
 TEST_P(ViewportTest, DoubleWindowCentered)
 {
-    glViewport(-getWindowWidth() / 2, -getWindowHeight() / 2, getWindowWidth() * 2, getWindowHeight() * 2);
+    glViewport(-getWindowWidth() / 2, -getWindowHeight() / 2, getWindowWidth() * 2,
+               getWindowHeight() * 2);
 
     runNonScissoredTest();
 
@@ -208,7 +213,8 @@ TEST_P(ViewportTest, DoubleWindowCentered)
 
 TEST_P(ViewportTest, DoubleWindowOffCenter)
 {
-    glViewport(-getWindowWidth() * 3 / 4, getWindowHeight() * 3 / 4, getWindowWidth(), getWindowHeight());
+    glViewport(-getWindowWidth() * 3 / 4, getWindowHeight() * 3 / 4, getWindowWidth(),
+               getWindowHeight());
 
     runNonScissoredTest();
 
@@ -235,7 +241,8 @@ TEST_P(ViewportTest, TripleWindowCentered)
 
 TEST_P(ViewportTest, TripleWindowOffCenter)
 {
-    glViewport(-getWindowWidth() * 3 / 2, -getWindowHeight() * 3 / 2, getWindowWidth() * 3, getWindowHeight() * 3);
+    glViewport(-getWindowWidth() * 3 / 2, -getWindowHeight() * 3 / 2, getWindowWidth() * 3,
+               getWindowHeight() * 3);
 
     runNonScissoredTest();
 
@@ -322,8 +329,9 @@ TEST_P(ViewportTest, DrawLineWithLargeViewport)
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// D3D11 Feature Level 9 and D3D9 emulate large and negative viewports in the vertex shader. We should test both of these as well as D3D11 Feature Level 10_0+.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against. D3D11 Feature Level 9 and D3D9 emulate large and negative viewports
+// in the vertex shader. We should test both of these as well as D3D11 Feature Level 10_0+.
 ANGLE_INSTANTIATE_TEST(ViewportTest,
                        ES2_D3D9(),
                        ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE),
@@ -333,4 +341,4 @@ ANGLE_INSTANTIATE_TEST(ViewportTest,
                        ES3_OPENGLES(),
                        ES2_VULKAN());
 
-} // namespace
+}  // namespace

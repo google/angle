@@ -34,16 +34,14 @@ namespace rx
 {
 TextureStorage11::SamplerKey::SamplerKey()
     : baseLevel(0), mipLevels(0), swizzle(false), dropStencil(false)
-{
-}
+{}
 
 TextureStorage11::SamplerKey::SamplerKey(int baseLevel,
                                          int mipLevels,
                                          bool swizzle,
                                          bool dropStencil)
     : baseLevel(baseLevel), mipLevels(mipLevels), swizzle(swizzle), dropStencil(dropStencil)
-{
-}
+{}
 
 bool TextureStorage11::SamplerKey::operator<(const SamplerKey &rhs) const
 {
@@ -53,8 +51,7 @@ bool TextureStorage11::SamplerKey::operator<(const SamplerKey &rhs) const
 
 TextureStorage11::ImageKey::ImageKey()
     : level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
-{
-}
+{}
 
 TextureStorage11::ImageKey::ImageKey(int level,
                                      bool layered,
@@ -62,8 +59,7 @@ TextureStorage11::ImageKey::ImageKey(int level,
                                      GLenum access,
                                      GLenum format)
     : level(level), layered(layered), layer(layer), access(access), format(format)
-{
-}
+{}
 
 bool TextureStorage11::ImageKey::operator<(const ImageKey &rhs) const
 {
@@ -85,8 +81,7 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer,
       mDropStencilTexture(),
       mBindFlags(bindFlags),
       mMiscFlags(miscFlags)
-{
-}
+{}
 
 TextureStorage11::~TextureStorage11()
 {
@@ -926,9 +921,7 @@ angle::Result TextureStorage11_2D::onDestroy(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-TextureStorage11_2D::~TextureStorage11_2D()
-{
-}
+TextureStorage11_2D::~TextureStorage11_2D() {}
 
 angle::Result TextureStorage11_2D::copyToStorage(const gl::Context *context,
                                                  TextureStorage *destStorage)
@@ -1455,9 +1448,7 @@ angle::Result TextureStorage11_External::onDestroy(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-TextureStorage11_External::~TextureStorage11_External()
-{
-}
+TextureStorage11_External::~TextureStorage11_External() {}
 
 angle::Result TextureStorage11_External::copyToStorage(const gl::Context *context,
                                                        TextureStorage *destStorage)
@@ -1594,20 +1585,13 @@ TextureStorage11ImmutableBase::TextureStorage11ImmutableBase(Renderer11 *rendere
                                                              UINT miscFlags,
                                                              GLenum internalFormat)
     : TextureStorage11(renderer, bindFlags, miscFlags, internalFormat)
-{
-}
+{}
 
-void TextureStorage11ImmutableBase::associateImage(Image11 *, const gl::ImageIndex &)
-{
-}
+void TextureStorage11ImmutableBase::associateImage(Image11 *, const gl::ImageIndex &) {}
 
-void TextureStorage11ImmutableBase::disassociateImage(const gl::ImageIndex &, Image11 *)
-{
-}
+void TextureStorage11ImmutableBase::disassociateImage(const gl::ImageIndex &, Image11 *) {}
 
-void TextureStorage11ImmutableBase::verifyAssociatedImageValid(const gl::ImageIndex &, Image11 *)
-{
-}
+void TextureStorage11ImmutableBase::verifyAssociatedImageValid(const gl::ImageIndex &, Image11 *) {}
 
 angle::Result TextureStorage11ImmutableBase::releaseAssociatedImage(const gl::Context *context,
                                                                     const gl::ImageIndex &,
@@ -1656,9 +1640,7 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
     mTextureDepth  = 1;
 }
 
-TextureStorage11_EGLImage::~TextureStorage11_EGLImage()
-{
-}
+TextureStorage11_EGLImage::~TextureStorage11_EGLImage() {}
 
 angle::Result TextureStorage11_EGLImage::getResource(const gl::Context *context,
                                                      const TextureHelper11 **outResource)
@@ -1913,9 +1895,7 @@ angle::Result TextureStorage11_Cube::onDestroy(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-TextureStorage11_Cube::~TextureStorage11_Cube()
-{
-}
+TextureStorage11_Cube::~TextureStorage11_Cube() {}
 
 UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) const
 {
@@ -2550,9 +2530,7 @@ angle::Result TextureStorage11_3D::onDestroy(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-TextureStorage11_3D::~TextureStorage11_3D()
-{
-}
+TextureStorage11_3D::~TextureStorage11_3D() {}
 
 void TextureStorage11_3D::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
@@ -2883,9 +2861,7 @@ angle::Result TextureStorage11_2DArray::onDestroy(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-TextureStorage11_2DArray::~TextureStorage11_2DArray()
-{
-}
+TextureStorage11_2DArray::~TextureStorage11_2DArray() {}
 
 void TextureStorage11_2DArray::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
@@ -3282,9 +3258,7 @@ angle::Result TextureStorage11_2DMultisample::onDestroy(const gl::Context *conte
     return angle::Result::Continue();
 }
 
-TextureStorage11_2DMultisample::~TextureStorage11_2DMultisample()
-{
-}
+TextureStorage11_2DMultisample::~TextureStorage11_2DMultisample() {}
 
 angle::Result TextureStorage11_2DMultisample::copyToStorage(const gl::Context *context,
                                                             TextureStorage *destStorage)
@@ -3475,9 +3449,7 @@ angle::Result TextureStorage11_2DMultisampleArray::onDestroy(const gl::Context *
     return angle::Result::Continue();
 }
 
-TextureStorage11_2DMultisampleArray::~TextureStorage11_2DMultisampleArray()
-{
-}
+TextureStorage11_2DMultisampleArray::~TextureStorage11_2DMultisampleArray() {}
 
 angle::Result TextureStorage11_2DMultisampleArray::copyToStorage(const gl::Context *context,
                                                                  TextureStorage *destStorage)

@@ -209,8 +209,7 @@ class GarbageObject final
         : mSerial(serial),
           mHandleType(HandleTypeHelper<ObjectT>::kHandleType),
           mHandle(reinterpret_cast<VkDevice>(object.getHandle()))
-    {
-    }
+    {}
 
     GarbageObject();
     GarbageObject(const GarbageObject &other);
@@ -703,8 +702,7 @@ class ObjectAndSerial final : angle::NonCopyable
 
     ObjectAndSerial(ObjectAndSerial &&other)
         : mObject(std::move(other.mObject)), mSerial(std::move(other.mSerial))
-    {
-    }
+    {}
     ObjectAndSerial &operator=(ObjectAndSerial &&other)
     {
         mObject = std::move(other.mObject);

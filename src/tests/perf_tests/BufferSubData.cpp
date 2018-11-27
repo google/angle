@@ -23,14 +23,14 @@ struct BufferSubDataParams final : public RenderTestParams
     BufferSubDataParams()
     {
         // Common default values
-        majorVersion = 2;
-        minorVersion = 0;
-        windowWidth = 512;
-        windowHeight = 512;
-        updateSize = 3000;
-        bufferSize = 40000000;
+        majorVersion      = 2;
+        minorVersion      = 0;
+        windowWidth       = 512;
+        windowHeight      = 512;
+        updateSize        = 3000;
+        bufferSize        = 40000000;
         iterationsPerStep = kIterationsPerStep;
-        updateRate = 1;
+        updateRate        = 1;
     }
 
     std::string suffix() const override;
@@ -70,25 +70,16 @@ class BufferSubDataBenchmark : public ANGLERenderTest,
 
 GLfloat *GetFloatData(GLint componentCount)
 {
-    static GLfloat vertices2[] =
-    {
-        1, 2,
-        0, 0,
-        2, 0,
+    static GLfloat vertices2[] = {
+        1, 2, 0, 0, 2, 0,
     };
 
-    static GLfloat vertices3[] =
-    {
-        1, 2, 1,
-        0, 0, 1,
-        2, 0, 1,
+    static GLfloat vertices3[] = {
+        1, 2, 1, 0, 0, 1, 2, 0, 1,
     };
 
-    static GLfloat vertices4[] =
-    {
-        1, 2, 1, 3,
-        0, 0, 1, 3,
-        2, 0, 1, 3,
+    static GLfloat vertices4[] = {
+        1, 2, 1, 3, 0, 0, 1, 3, 2, 0, 1, 3,
     };
 
     switch (componentCount)
@@ -110,12 +101,13 @@ GLsizeiptr GetNormalizedData(GLsizeiptr numElements, GLfloat *floatData, std::ve
     GLsizeiptr triDataSize = sizeof(T) * numElements;
     data->resize(triDataSize);
 
-    T *destPtr = reinterpret_cast<T*>(data->data());
+    T *destPtr = reinterpret_cast<T *>(data->data());
 
     for (GLsizeiptr dataIndex = 0; dataIndex < numElements; dataIndex++)
     {
         GLfloat scaled = floatData[dataIndex] * 0.25f;
-        destPtr[dataIndex] = static_cast<T>(scaled * static_cast<GLfloat>(std::numeric_limits<T>::max()));
+        destPtr[dataIndex] =
+            static_cast<T>(scaled * static_cast<GLfloat>(std::numeric_limits<T>::max()));
     }
 
     return triDataSize;
@@ -127,7 +119,7 @@ GLsizeiptr GetIntData(GLsizeiptr numElements, GLfloat *floatData, std::vector<ui
     GLsizeiptr triDataSize = sizeof(T) * numElements;
     data->resize(triDataSize);
 
-    T *destPtr = reinterpret_cast<T*>(data->data());
+    T *destPtr = reinterpret_cast<T *>(data->data());
 
     for (GLsizeiptr dataIndex = 0; dataIndex < numElements; dataIndex++)
     {
@@ -137,10 +129,13 @@ GLsizeiptr GetIntData(GLsizeiptr numElements, GLfloat *floatData, std::vector<ui
     return triDataSize;
 }
 
-GLsizeiptr GetVertexData(GLenum type, GLint componentCount, GLboolean normalized, std::vector<uint8_t> *data)
+GLsizeiptr GetVertexData(GLenum type,
+                         GLint componentCount,
+                         GLboolean normalized,
+                         std::vector<uint8_t> *data)
 {
     GLsizeiptr triDataSize = 0;
-    GLfloat *floatData = GetFloatData(componentCount);
+    GLfloat *floatData     = GetFloatData(componentCount);
 
     if (type == GL_FLOAT)
     {
@@ -259,8 +254,7 @@ BufferSubDataBenchmark::BufferSubDataBenchmark()
       mBuffer(0),
       mUpdateData(nullptr),
       mNumTris(0)
-{
-}
+{}
 
 void BufferSubDataBenchmark::initializeBenchmark()
 {
@@ -298,9 +292,8 @@ void BufferSubDataBenchmark::initializeBenchmark()
     }
 
     std::vector<uint8_t> data;
-    GLsizei triDataSize = static_cast<GLsizei>(GetVertexData(params.vertexType,
-                                                             params.vertexComponentCount,
-                                                             params.vertexNormalized, &data));
+    GLsizei triDataSize = static_cast<GLsizei>(GetVertexData(
+        params.vertexType, params.vertexComponentCount, params.vertexNormalized, &data));
 
     mNumTris = static_cast<int>(params.updateSize / triDataSize);
     for (int i = 0, offset = 0; i < mNumTris; ++i)
@@ -350,20 +343,20 @@ void BufferSubDataBenchmark::drawBenchmark()
 BufferSubDataParams BufferUpdateD3D11Params()
 {
     BufferSubDataParams params;
-    params.eglParameters = egl_platform::D3D11();
-    params.vertexType = GL_FLOAT;
+    params.eglParameters        = egl_platform::D3D11();
+    params.vertexType           = GL_FLOAT;
     params.vertexComponentCount = 4;
-    params.vertexNormalized = GL_FALSE;
+    params.vertexNormalized     = GL_FALSE;
     return params;
 }
 
 BufferSubDataParams BufferUpdateD3D9Params()
 {
     BufferSubDataParams params;
-    params.eglParameters = egl_platform::D3D9();
-    params.vertexType = GL_FLOAT;
+    params.eglParameters        = egl_platform::D3D9();
+    params.vertexType           = GL_FLOAT;
     params.vertexComponentCount = 4;
-    params.vertexNormalized = GL_FALSE;
+    params.vertexNormalized     = GL_FALSE;
     return params;
 }
 
@@ -371,9 +364,9 @@ BufferSubDataParams BufferUpdateOpenGLOrGLESParams()
 {
     BufferSubDataParams params;
     params.eglParameters        = egl_platform::OPENGL_OR_GLES(false);
-    params.vertexType = GL_FLOAT;
+    params.vertexType           = GL_FLOAT;
     params.vertexComponentCount = 4;
-    params.vertexNormalized = GL_FALSE;
+    params.vertexNormalized     = GL_FALSE;
     return params;
 }
 
@@ -398,4 +391,4 @@ ANGLE_INSTANTIATE_TEST(BufferSubDataBenchmark,
                        BufferUpdateOpenGLOrGLESParams(),
                        BufferUpdateVulkanParams());
 
-} // namespace
+}  // namespace

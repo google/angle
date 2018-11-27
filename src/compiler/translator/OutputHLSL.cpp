@@ -159,8 +159,7 @@ std::string GetZeroInitializer(size_t size)
 TReferencedBlock::TReferencedBlock(const TInterfaceBlock *aBlock,
                                    const TVariable *aInstanceVariable)
     : block(aBlock), instanceVariable(aInstanceVariable)
-{
-}
+{}
 
 void OutputHLSL::writeFloat(TInfoSinkBase &out, float f)
 {

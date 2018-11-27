@@ -120,7 +120,8 @@ class CopyTextureTest : public ANGLETest
     }
 
     GLuint mTextures[2] = {
-        0, 0,
+        0,
+        0,
     };
     GLuint mFramebuffer = 0;
 
@@ -129,8 +130,7 @@ class CopyTextureTest : public ANGLETest
 };
 
 class CopyTextureTestDest : public CopyTextureTest
-{
-};
+{};
 
 class CopyTextureTestWebGL : public CopyTextureTest
 {
@@ -139,8 +139,7 @@ class CopyTextureTestWebGL : public CopyTextureTest
 };
 
 class CopyTextureTestES3 : public CopyTextureTest
-{
-};
+{};
 
 // Test to ensure that the basic functionality of the extension works.
 TEST_P(CopyTextureTest, BasicCopyTexture)
@@ -1272,7 +1271,6 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
                                                   bool flipY, bool premultiplyAlpha,
                                                   bool unmultiplyAlpha,
                                                   const GLColor &expectedColor) {
-
         GLTexture sourceTexture;
         glBindTexture(GL_TEXTURE_2D, sourceTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, sourceInternalFormat, 1, 1, 0, sourceFormat, sourceType,
@@ -1294,7 +1292,6 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
                                       GLenum destInternalFormat, GLenum destFormat, GLenum destType,
                                       bool flipY, bool premultiplyAlpha, bool unmultiplyAlpha,
                                       const GLColor &expectedColor) {
-
         GLTexture sourceTexture;
         glBindTexture(GL_TEXTURE_2D, sourceTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, sourceInternalFormat, 1, 1, 0, sourceFormat, sourceType,
@@ -1413,7 +1410,6 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
                                                   bool flipY, bool premultiplyAlpha,
                                                   bool unmultiplyAlpha,
                                                   const GLColor32F &expectedColor) {
-
         GLTexture sourceTexture;
         glBindTexture(GL_TEXTURE_2D, sourceTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, sourceInternalFormat, 1, 1, 0, sourceFormat, sourceType,
@@ -1545,7 +1541,6 @@ TEST_P(CopyTextureTestES3, ES3UintFormats)
                                                   bool flipY, bool premultiplyAlpha,
                                                   bool unmultiplyAlpha,
                                                   const GLColor32U &expectedColor) {
-
         GLTexture sourceTexture;
         glBindTexture(GL_TEXTURE_2D, sourceTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, sourceInternalFormat, 1, 1, 0, sourceFormat, sourceType,

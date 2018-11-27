@@ -49,13 +49,9 @@ GLuint64 MergeQueryResults(gl::QueryType type, GLuint64 currentResult, GLuint64 
 namespace rx
 {
 
-QueryGL::QueryGL(gl::QueryType type) : QueryImpl(type)
-{
-}
+QueryGL::QueryGL(gl::QueryType type) : QueryImpl(type) {}
 
-QueryGL::~QueryGL()
-{
-}
+QueryGL::~QueryGL() {}
 
 StandardQueryGL::StandardQueryGL(gl::QueryType type,
                                  const FunctionsGL *functions,
@@ -67,8 +63,7 @@ StandardQueryGL::StandardQueryGL(gl::QueryType type,
       mActiveQuery(0),
       mPendingQueries(),
       mResultSum(0)
-{
-}
+{}
 
 StandardQueryGL::~StandardQueryGL()
 {
@@ -310,9 +305,7 @@ SyncQueryGL::SyncQueryGL(gl::QueryType type, const FunctionsGL *functions)
     ASSERT(type == gl::QueryType::CommandsCompleted);
 }
 
-SyncQueryGL::~SyncQueryGL()
-{
-}
+SyncQueryGL::~SyncQueryGL() {}
 
 bool SyncQueryGL::IsSupported(const FunctionsGL *functions)
 {

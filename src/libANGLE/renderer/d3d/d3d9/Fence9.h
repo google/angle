@@ -35,4 +35,4 @@ class FenceNV9 : public FenceNVImpl
 };
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_FENCE9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_FENCE9_H_

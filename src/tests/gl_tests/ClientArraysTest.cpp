@@ -118,4 +118,4 @@ ANGLE_INSTANTIATE_TEST(ClientArraysTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
                        ES2_VULKAN());
-}  // namespace
+}  // namespace angle

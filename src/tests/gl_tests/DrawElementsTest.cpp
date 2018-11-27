@@ -306,4 +306,4 @@ TEST_P(DrawElementsTest, DrawElementsTypeAlignment)
 }
 
 ANGLE_INSTANTIATE_TEST(DrawElementsTest, ES3_OPENGL(), ES3_OPENGLES());
-}
+}  // namespace

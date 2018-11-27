@@ -20,9 +20,7 @@
 namespace rx
 {
 
-DisplayVkAndroid::DisplayVkAndroid(const egl::DisplayState &state) : DisplayVk(state)
-{
-}
+DisplayVkAndroid::DisplayVkAndroid(const egl::DisplayState &state) : DisplayVk(state) {}
 
 egl::Error DisplayVkAndroid::initialize(egl::Display *display)
 {

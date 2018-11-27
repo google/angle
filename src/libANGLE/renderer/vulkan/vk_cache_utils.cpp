@@ -229,14 +229,14 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
     subpassDesc.pPreserveAttachments    = nullptr;
 
     VkRenderPassCreateInfo createInfo = {};
-    createInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    createInfo.flags           = 0;
-    createInfo.attachmentCount = attachmentCount;
-    createInfo.pAttachments    = attachmentDescs.data();
-    createInfo.subpassCount    = 1;
-    createInfo.pSubpasses      = &subpassDesc;
-    createInfo.dependencyCount = 0;
-    createInfo.pDependencies   = nullptr;
+    createInfo.sType                  = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    createInfo.flags                  = 0;
+    createInfo.attachmentCount        = attachmentCount;
+    createInfo.pAttachments           = attachmentDescs.data();
+    createInfo.subpassCount           = 1;
+    createInfo.pSubpasses             = &subpassDesc;
+    createInfo.dependencyCount        = 0;
+    createInfo.pDependencies          = nullptr;
 
     ANGLE_VK_TRY(context, renderPass->init(context->getDevice(), createInfo));
     return angle::Result::Continue();
@@ -412,8 +412,8 @@ void GraphicsPipelineDesc::initDefaults()
     mRasterizationAndMultisampleStateInfo.alphaToCoverageEnable = 0;
     mRasterizationAndMultisampleStateInfo.alphaToOneEnable      = 0;
 
-    mDepthStencilStateInfo.depthTestEnable       = 0;
-    mDepthStencilStateInfo.depthWriteEnable      = 1;
+    mDepthStencilStateInfo.depthTestEnable  = 0;
+    mDepthStencilStateInfo.depthWriteEnable = 1;
     SetBitField(mDepthStencilStateInfo.depthCompareOp, VK_COMPARE_OP_LESS);
     mDepthStencilStateInfo.depthBoundsTestEnable = 0;
     mDepthStencilStateInfo.stencilTestEnable     = 0;
@@ -521,9 +521,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     {
         const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
 
-        VkVertexInputBindingDescription &bindingDesc       = bindingDescs[vertexAttribCount];
-        VkVertexInputAttributeDescription &attribDesc      = attributeDescs[vertexAttribCount];
-        const PackedVertexInputBindingDesc &packedBinding  = mVertexInputBindings[attribIndex];
+        VkVertexInputBindingDescription &bindingDesc      = bindingDescs[vertexAttribCount];
+        VkVertexInputAttributeDescription &attribDesc     = attributeDescs[vertexAttribCount];
+        const PackedVertexInputBindingDesc &packedBinding = mVertexInputBindings[attribIndex];
 
         bindingDesc.binding   = attribIndex;
         bindingDesc.inputRate = static_cast<VkVertexInputRate>(packedBinding.inputRate);
@@ -547,8 +547,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     vertexInputState.pVertexAttributeDescriptions    = attributeDescs.data();
 
     // Primitive topology is filled in at draw time.
-    inputAssemblyState.sType    = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssemblyState.flags    = 0;
+    inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    inputAssemblyState.flags = 0;
     inputAssemblyState.topology =
         static_cast<VkPrimitiveTopology>(mInputAssembltyAndColorBlendStateInfo.topology);
     inputAssemblyState.primitiveRestartEnable =
@@ -796,7 +796,7 @@ void GraphicsPipelineDesc::updateStencilFrontFuncs(GLint ref,
                                                    const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.frontStencilReference = static_cast<uint8_t>(ref);
-    mDepthStencilStateInfo.front.compareOp   = PackGLCompareFunc(depthStencilState.stencilFunc);
+    mDepthStencilStateInfo.front.compareOp       = PackGLCompareFunc(depthStencilState.stencilFunc);
     mDepthStencilStateInfo.front.compareMask = static_cast<uint8_t>(depthStencilState.stencilMask);
 }
 
@@ -914,9 +914,7 @@ bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs)
 }
 
 // DescriptorSetLayoutDesc implementation.
-DescriptorSetLayoutDesc::DescriptorSetLayoutDesc() : mPackedDescriptorSetLayout{}
-{
-}
+DescriptorSetLayoutDesc::DescriptorSetLayoutDesc() : mPackedDescriptorSetLayout{} {}
 
 DescriptorSetLayoutDesc::~DescriptorSetLayoutDesc() = default;
 
@@ -956,9 +954,9 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
             continue;
 
         VkDescriptorSetLayoutBinding binding = {};
-        binding.binding            = bindingIndex;
-        binding.descriptorCount    = packedBinding.count;
-        binding.descriptorType     = static_cast<VkDescriptorType>(packedBinding.type);
+        binding.binding                      = bindingIndex;
+        binding.descriptorCount              = packedBinding.count;
+        binding.descriptorType               = static_cast<VkDescriptorType>(packedBinding.type);
         binding.stageFlags         = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
         binding.pImmutableSamplers = nullptr;
 
@@ -967,9 +965,7 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
 }
 
 // PipelineLayoutDesc implementation.
-PipelineLayoutDesc::PipelineLayoutDesc() : mDescriptorSetLayouts{}, mPushConstantRanges{}
-{
-}
+PipelineLayoutDesc::PipelineLayoutDesc() : mDescriptorSetLayouts{}, mPushConstantRanges{} {}
 
 PipelineLayoutDesc::~PipelineLayoutDesc() = default;
 
@@ -1315,12 +1311,12 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
 
     // No pipeline layout found. We must create a new one.
     VkPipelineLayoutCreateInfo createInfo = {};
-    createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    createInfo.flags                  = 0;
-    createInfo.setLayoutCount         = static_cast<uint32_t>(setLayoutHandles.size());
-    createInfo.pSetLayouts            = setLayoutHandles.data();
-    createInfo.pushConstantRangeCount = static_cast<uint32_t>(pushConstantRanges.size());
-    createInfo.pPushConstantRanges    = pushConstantRanges.data();
+    createInfo.sType                      = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    createInfo.flags                      = 0;
+    createInfo.setLayoutCount             = static_cast<uint32_t>(setLayoutHandles.size());
+    createInfo.pSetLayouts                = setLayoutHandles.data();
+    createInfo.pushConstantRangeCount     = static_cast<uint32_t>(pushConstantRanges.size());
+    createInfo.pPushConstantRanges        = pushConstantRanges.data();
 
     vk::PipelineLayout newLayout;
     ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));

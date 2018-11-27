@@ -1149,8 +1149,7 @@ class SimpleStateChangeTest : public ANGLETest
 };
 
 class SimpleStateChangeTestES3 : public SimpleStateChangeTest
-{
-};
+{};
 
 constexpr char kSimpleVertexShader[] = R"(attribute vec2 position;
 attribute vec4 color;
@@ -2212,8 +2211,7 @@ class WebGL2ValidationStateChangeTest : public ValidationStateChangeTest
 };
 
 class ValidationStateChangeTestES31 : public ANGLETest
-{
-};
+{};
 
 // Tests that mapping and unmapping an array buffer in various ways causes rendering to fail.
 // This isn't guaranteed to produce an error by GL. But we assume ANGLE always errors.

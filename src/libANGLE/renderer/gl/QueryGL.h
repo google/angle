@@ -101,6 +101,6 @@ class SyncQueryGL : public QueryGL
     std::unique_ptr<SyncProviderGL> mSyncProvider;
     bool mFinished;
 };
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_QUERYGL_H_
+#endif  // LIBANGLE_RENDERER_GL_QUERYGL_H_

@@ -7,7 +7,7 @@
 //
 
 #if defined(_MSC_VER)
-#pragma warning(disable : 4718)
+#    pragma warning(disable : 4718)
 #endif
 
 #include "compiler/translator/Symbol.h"
@@ -93,8 +93,7 @@ TStructure::TStructure(TSymbolTable *symbolTable,
                        const TFieldList *fields,
                        SymbolType symbolType)
     : TSymbol(symbolTable, name, symbolType, SymbolClass::Struct), TFieldListCollection(fields)
-{
-}
+{}
 
 TStructure::TStructure(const TSymbolUniqueId &id,
                        const ImmutableString &name,
@@ -102,8 +101,7 @@ TStructure::TStructure(const TSymbolUniqueId &id,
                        const TFieldList *fields)
     : TSymbol(id, name, SymbolType::BuiltIn, extension, SymbolClass::Struct),
       TFieldListCollection(fields)
-{
-}
+{}
 
 void TStructure::createSamplerSymbols(const char *namePrefix,
                                       const TString &apiNamePrefix,
@@ -130,7 +128,7 @@ void TStructure::createSamplerSymbols(const char *namePrefix,
 void TStructure::setName(const ImmutableString &name)
 {
     ImmutableString *mutableName = const_cast<ImmutableString *>(&mName);
-    *mutableName         = name;
+    *mutableName                 = name;
 }
 
 TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
@@ -155,8 +153,7 @@ TInterfaceBlock::TInterfaceBlock(const TSymbolUniqueId &id,
       TFieldListCollection(fields),
       mBlockStorage(EbsUnspecified),
       mBinding(0)
-{
-}
+{}
 
 TFunction::TFunction(TSymbolTable *symbolTable,
                      const ImmutableString &name,

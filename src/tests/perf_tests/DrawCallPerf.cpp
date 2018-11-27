@@ -98,19 +98,17 @@ class DrawCallPerfBenchmark : public ANGLERenderTest,
     void drawBenchmark() override;
 
   private:
-    GLuint mProgram = 0;
-    GLuint mBuffer1 = 0;
-    GLuint mBuffer2 = 0;
-    GLuint mFBO     = 0;
+    GLuint mProgram    = 0;
+    GLuint mBuffer1    = 0;
+    GLuint mBuffer2    = 0;
+    GLuint mFBO        = 0;
     GLuint mFBOTexture = 0;
     GLuint mTexture1   = 0;
     GLuint mTexture2   = 0;
-    int mNumTris    = GetParam().numTris;
+    int mNumTris       = GetParam().numTris;
 };
 
-DrawCallPerfBenchmark::DrawCallPerfBenchmark() : ANGLERenderTest("DrawCallPerf", GetParam())
-{
-}
+DrawCallPerfBenchmark::DrawCallPerfBenchmark() : ANGLERenderTest("DrawCallPerf", GetParam()) {}
 
 void DrawCallPerfBenchmark::initializeBenchmark()
 {

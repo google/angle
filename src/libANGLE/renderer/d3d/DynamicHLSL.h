@@ -24,7 +24,7 @@ namespace sh
 {
 struct Attribute;
 struct ShaderVariable;
-}
+}  // namespace sh
 
 namespace gl
 {
@@ -32,7 +32,7 @@ class InfoLog;
 struct VariableLocation;
 class VaryingPacking;
 struct VertexAttribute;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -47,8 +47,7 @@ struct PixelShaderOutputVariable
                               const std::string &sourceIn,
                               size_t outputIndexIn)
         : type(typeIn), name(nameIn), source(sourceIn), outputIndex(outputIndexIn)
-    {
-    }
+    {}
 
     GLenum type = GL_NONE;
     std::string name;

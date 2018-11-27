@@ -31,7 +31,7 @@ samples utility functions
 #include <iterator>
 
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
-#include <linux/input.h>
+#    include <linux/input.h>
 #endif
 
 using namespace std;
@@ -295,12 +295,9 @@ static void handle_configure(void *data,
                              uint32_t edges,
                              int32_t width,
                              int32_t height)
-{
-}
+{}
 
-static void handle_popup_done(void *data, wl_shell_surface *shell_surface)
-{
-}
+static void handle_popup_done(void *data, wl_shell_surface *shell_surface) {}
 
 static const wl_shell_surface_listener shell_surface_listener = {handle_ping, handle_configure,
                                                                  handle_popup_done};
@@ -324,9 +321,7 @@ static void registry_handle_global(void *data,
     }
 }
 
-static void registry_handle_global_remove(void *data, wl_registry *registry, uint32_t name)
-{
-}
+static void registry_handle_global_remove(void *data, wl_registry *registry, uint32_t name) {}
 
 static const wl_registry_listener registry_listener = {registry_handle_global,
                                                        registry_handle_global_remove};
@@ -459,9 +454,7 @@ void destroy_window(struct sample_info &info)
 
 #elif defined(__ANDROID__)
 // Android implementation.
-void init_window(struct sample_info &info)
-{
-}
+void init_window(struct sample_info &info) {}
 
 void destroy_window(struct sample_info &info)
 {
@@ -878,8 +871,10 @@ void init_swap_chain(struct sample_info &info, VkImageUsageFlags usageFlags)
     // Find a supported composite alpha mode - one of these is guaranteed to be set
     VkCompositeAlphaFlagBitsKHR compositeAlpha         = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     VkCompositeAlphaFlagBitsKHR compositeAlphaFlags[4] = {
-        VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR, VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR,
-        VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR, VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR,
+        VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR,
+        VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR,
+        VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR,
     };
     for (uint32_t i = 0; i < sizeof(compositeAlphaFlags); i++)
     {

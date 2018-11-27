@@ -19,8 +19,7 @@ SurfaceEGL::SurfaceEGL(const egl::SurfaceState &state, const FunctionsEGL *egl, 
       mConfig(config),
       mSurface(EGL_NO_SURFACE),
       mHasSwapBuffersWithDamage(mEGL->hasExtension("EGL_KHR_swap_buffers_with_damage"))
-{
-}
+{}
 
 SurfaceEGL::~SurfaceEGL()
 {

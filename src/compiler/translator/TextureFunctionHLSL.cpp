@@ -46,7 +46,8 @@ void OutputIntTexCoordWrap(TInfoSinkBase &out,
     out << "{\n";
     out << "    int texCoordInt = int(floor(" << size << " * " << texCoordOutName << "Offset));\n";
     out << "    " << texCoordOutName << " = clamp(texCoordInt, 0, int(" << size << ") - 1);\n";
-    out << "    " << texCoordOutName << "UseBorderColor = (texCoordInt != " << texCoordOutName << ");\n";
+    out << "    " << texCoordOutName << "UseBorderColor = (texCoordInt != " << texCoordOutName
+        << ");\n";
     out << "}\n";
 
     // MIRRORED_REPEAT

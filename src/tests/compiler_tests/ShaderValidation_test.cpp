@@ -7,9 +7,9 @@
 //   Tests that malformed shaders fail compilation, and that correct shaders pass compilation.
 //
 
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "gtest/gtest.h"
-#include "GLSLANG/ShaderLang.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
 using namespace sh;
@@ -20,6 +20,7 @@ class FragmentShaderValidationTest : public ShaderCompileTreeTest
 {
   public:
     FragmentShaderValidationTest() {}
+
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
@@ -4572,10 +4573,14 @@ TEST_F(FragmentShaderEXTGeometryShaderValidationTest, GeometryShaderBuiltInConst
             int val = )";
 
     const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
-        "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
-        "gl_MaxGeometryImageUniforms", "gl_MaxGeometryTextureImageUnits",
-        "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents",
-        "gl_MaxGeometryUniformComponents", "gl_MaxGeometryAtomicCounters",
+        "gl_MaxGeometryInputComponents",
+        "gl_MaxGeometryOutputComponents",
+        "gl_MaxGeometryImageUniforms",
+        "gl_MaxGeometryTextureImageUnits",
+        "gl_MaxGeometryOutputVertices",
+        "gl_MaxGeometryTotalOutputComponents",
+        "gl_MaxGeometryUniformComponents",
+        "gl_MaxGeometryAtomicCounters",
         "gl_MaxGeometryAtomicCounterBuffers",
     }};
 
@@ -4609,10 +4614,14 @@ TEST_F(FragmentShaderEXTGeometryShaderValidationTest,
         "    int val = ";
 
     const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
-        "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
-        "gl_MaxGeometryImageUniforms", "gl_MaxGeometryTextureImageUnits",
-        "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents",
-        "gl_MaxGeometryUniformComponents", "gl_MaxGeometryAtomicCounters",
+        "gl_MaxGeometryInputComponents",
+        "gl_MaxGeometryOutputComponents",
+        "gl_MaxGeometryImageUniforms",
+        "gl_MaxGeometryTextureImageUnits",
+        "gl_MaxGeometryOutputVertices",
+        "gl_MaxGeometryTotalOutputComponents",
+        "gl_MaxGeometryUniformComponents",
+        "gl_MaxGeometryAtomicCounters",
         "gl_MaxGeometryAtomicCounterBuffers",
     }};
 

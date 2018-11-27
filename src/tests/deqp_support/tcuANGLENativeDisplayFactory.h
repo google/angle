@@ -54,6 +54,6 @@ class ANGLENativeDisplayFactory : public eglu::NativeDisplayFactory
     std::vector<eglw::EGLAttrib> mPlatformAttributes;
 };
 
-}  // tcu
+}  // namespace tcu
 
 #endif  // TCU_ANGLE_WIN32_NATIVE_DISPLAY_FACTORY_H_

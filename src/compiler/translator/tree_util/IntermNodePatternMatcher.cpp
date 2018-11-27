@@ -44,9 +44,7 @@ bool ContainsVectorNode(const TIntermSequence &sequence)
 
 }  // anonymous namespace
 
-IntermNodePatternMatcher::IntermNodePatternMatcher(const unsigned int mask) : mMask(mask)
-{
-}
+IntermNodePatternMatcher::IntermNodePatternMatcher(const unsigned int mask) : mMask(mask) {}
 
 // static
 bool IntermNodePatternMatcher::IsDynamicIndexingOfNonSSBOVectorOrMatrix(TIntermBinary *node)

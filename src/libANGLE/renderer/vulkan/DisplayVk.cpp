@@ -21,8 +21,7 @@ namespace rx
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state), vk::Context(new RendererVk()), mScratchBuffer(1000u)
-{
-}
+{}
 
 DisplayVk::~DisplayVk()
 {

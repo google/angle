@@ -85,4 +85,4 @@ ANGLE_INSTANTIATE_TEST(RenderbufferMultisampleTest,
                        ES31_D3D11(),
                        ES31_OPENGL(),
                        ES31_OPENGLES());
-}
+}  // namespace

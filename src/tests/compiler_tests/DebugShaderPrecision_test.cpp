@@ -7,9 +7,9 @@
 //   Tests for writing the code for shader precision emulation.
 //
 
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "gtest/gtest.h"
-#include "GLSLANG/ShaderLang.h"
 #include "tests/test_utils/compiler_test.h"
 
 using namespace sh;
@@ -47,8 +47,7 @@ class NoDebugShaderPrecisionTest : public MatchOutputCodeTest
   public:
     NoDebugShaderPrecisionTest()
         : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_GLSL_COMPATIBILITY_OUTPUT)
-    {
-    }
+    {}
 };
 
 TEST_F(DebugShaderPrecisionTest, RoundingFunctionsDefined)
@@ -288,14 +287,12 @@ TEST_F(DebugShaderPrecisionTest, CompoundAddFunction)
         "   gl_FragColor = v;\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInESSLCode(
-        "highp vec4 angle_compound_add_frm(inout highp vec4 x, in highp vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) + y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "vec4 angle_compound_add_frm(inout vec4 x, in vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) + y);"
-    ));
+    ASSERT_TRUE(
+        foundInESSLCode("highp vec4 angle_compound_add_frm(inout highp vec4 x, in highp vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) + y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_add_frm(inout vec4 x, in vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) + y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_add_frm(inout float4 x, in float4 y) {\n"
                         "    x = angle_frm(angle_frm(x) + y);"));
@@ -316,14 +313,12 @@ TEST_F(DebugShaderPrecisionTest, CompoundSubFunction)
         "   gl_FragColor = v;\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInESSLCode(
-        "highp vec4 angle_compound_sub_frm(inout highp vec4 x, in highp vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) - y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "vec4 angle_compound_sub_frm(inout vec4 x, in vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) - y);"
-    ));
+    ASSERT_TRUE(
+        foundInESSLCode("highp vec4 angle_compound_sub_frm(inout highp vec4 x, in highp vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) - y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_sub_frm(inout vec4 x, in vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) - y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_sub_frm(inout float4 x, in float4 y) {\n"
                         "    x = angle_frm(angle_frm(x) - y);"));
@@ -344,14 +339,12 @@ TEST_F(DebugShaderPrecisionTest, CompoundDivFunction)
         "   gl_FragColor = v;\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInESSLCode(
-        "highp vec4 angle_compound_div_frm(inout highp vec4 x, in highp vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) / y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "vec4 angle_compound_div_frm(inout vec4 x, in vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) / y);"
-    ));
+    ASSERT_TRUE(
+        foundInESSLCode("highp vec4 angle_compound_div_frm(inout highp vec4 x, in highp vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) / y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_div_frm(inout vec4 x, in vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) / y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_div_frm(inout float4 x, in float4 y) {\n"
                         "    x = angle_frm(angle_frm(x) / y);"));
@@ -372,14 +365,12 @@ TEST_F(DebugShaderPrecisionTest, CompoundMulFunction)
         "   gl_FragColor = v;\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInESSLCode(
-        "highp vec4 angle_compound_mul_frm(inout highp vec4 x, in highp vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "vec4 angle_compound_mul_frm(inout vec4 x, in vec4 y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
+    ASSERT_TRUE(
+        foundInESSLCode("highp vec4 angle_compound_mul_frm(inout highp vec4 x, in highp vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_mul_frm(inout vec4 x, in vec4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_mul_frm(inout float4 x, in float4 y) {\n"
                         "    x = angle_frm(angle_frm(x) * y);"));
@@ -402,12 +393,10 @@ TEST_F(DebugShaderPrecisionTest, CompoundAddVectorPlusScalarFunction)
     compile(shaderString);
     ASSERT_TRUE(foundInESSLCode(
         "highp vec4 angle_compound_add_frm(inout highp vec4 x, in highp float y) {\n"
-        "    x = angle_frm(angle_frm(x) + y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "vec4 angle_compound_add_frm(inout vec4 x, in float y) {\n"
-        "    x = angle_frm(angle_frm(x) + y);"
-    ));
+        "    x = angle_frm(angle_frm(x) + y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_add_frm(inout vec4 x, in float y) {\n"
+                        "    x = angle_frm(angle_frm(x) + y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_add_frm(inout float4 x, in float y) {\n"
                         "    x = angle_frm(angle_frm(x) + y);"));
@@ -428,14 +417,12 @@ TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesMatrixFunction)
         "   gl_FragColor = m[0];\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInESSLCode(
-        "highp mat4 angle_compound_mul_frm(inout highp mat4 x, in highp mat4 y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "mat4 angle_compound_mul_frm(inout mat4 x, in mat4 y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
+    ASSERT_TRUE(
+        foundInESSLCode("highp mat4 angle_compound_mul_frm(inout highp mat4 x, in highp mat4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("mat4 angle_compound_mul_frm(inout mat4 x, in mat4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4x4 angle_compound_mul_frm(inout float4x4 x, in float4x4 y) {\n"
                         "    x = angle_frm(angle_frm(x) * y);"));
@@ -488,12 +475,10 @@ TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesScalarFunction)
     compile(shaderString);
     ASSERT_TRUE(foundInESSLCode(
         "highp mat4 angle_compound_mul_frm(inout highp mat4 x, in highp float y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "mat4 angle_compound_mul_frm(inout mat4 x, in float y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
+        "    x = angle_frm(angle_frm(x) * y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("mat4 angle_compound_mul_frm(inout mat4 x, in float y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4x4 angle_compound_mul_frm(inout float4x4 x, in float y) {\n"
                         "    x = angle_frm(angle_frm(x) * y);"));
@@ -514,13 +499,12 @@ TEST_F(DebugShaderPrecisionTest, CompoundVectorTimesMatrixFunction)
         "   gl_FragColor = v;\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInESSLCode(
-        "highp vec4 angle_compound_mul_frm(inout highp vec4 x, in highp mat4 y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode("vec4 angle_compound_mul_frm(inout vec4 x, in mat4 y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
+    ASSERT_TRUE(
+        foundInESSLCode("highp vec4 angle_compound_mul_frm(inout highp vec4 x, in highp mat4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_mul_frm(inout vec4 x, in mat4 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_mul_frm(inout float4 x, in float4x4 y) {\n"
                         "    x = angle_frm(angle_frm(x) * y);"));
@@ -543,12 +527,10 @@ TEST_F(DebugShaderPrecisionTest, CompoundVectorTimesScalarFunction)
     compile(shaderString);
     ASSERT_TRUE(foundInESSLCode(
         "highp vec4 angle_compound_mul_frm(inout highp vec4 x, in highp float y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
-    ASSERT_TRUE(foundInGLSLCode(
-        "vec4 angle_compound_mul_frm(inout vec4 x, in float y) {\n"
-        "    x = angle_frm(angle_frm(x) * y);"
-    ));
+        "    x = angle_frm(angle_frm(x) * y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("vec4 angle_compound_mul_frm(inout vec4 x, in float y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
     ASSERT_TRUE(
         foundInHLSLCode("float4 angle_compound_mul_frm(inout float4 x, in float y) {\n"
                         "    x = angle_frm(angle_frm(x) * y);"));
@@ -650,10 +632,10 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
         "   mat4 m1 = matrixCompMult(um1, um2);\n"
 
         "   gl_FragColor = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 + v9 + v10 +"
-            "v11 + v12 + v13 + v14 + v15 + v16 + v17 + v18 + v19 + v20 +"
-            "v21 + v22 + v23 + v24 + v25 + v26 + v27 + v28 + v29 + v30 +"
-            "v31 + v32 + v33 + v34 + v35 + v36 + v37 + v38 + v39 +"
-            "vec4(f1, f2, f3, 0.0) + vec4(vf31, 0.0) + m1[0];\n"
+        "v11 + v12 + v13 + v14 + v15 + v16 + v17 + v18 + v19 + v20 +"
+        "v21 + v22 + v23 + v24 + v25 + v26 + v27 + v28 + v29 + v30 +"
+        "v31 + v32 + v33 + v34 + v35 + v36 + v37 + v38 + v39 +"
+        "vec4(f1, f2, f3, 0.0) + vec4(vf31, 0.0) + m1[0];\n"
         "}\n";
     compile(shaderString);
     ASSERT_TRUE(foundInAllGLSLCode("v1 = angle_frm(radians(angle_frm(_uu1)))"));

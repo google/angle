@@ -54,13 +54,13 @@
 #include "third_party/trace_event/trace_event.h"
 
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
-#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
+#    define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
 #endif
 
 // Enable ANGLE_SUPPORT_SHADER_MODEL_2 if you wish devices with only shader model 2.
 // Such a device would not be conformant.
 #ifndef ANGLE_SUPPORT_SHADER_MODEL_2
-#define ANGLE_SUPPORT_SHADER_MODEL_2 0
+#    define ANGLE_SUPPORT_SHADER_MODEL_2 0
 #endif
 
 namespace rx
@@ -423,7 +423,9 @@ D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
 egl::ConfigSet Renderer9::generateConfigs()
 {
     static const GLenum colorBufferFormats[] = {
-        GL_BGR5_A1_ANGLEX, GL_BGRA8_EXT, GL_RGB565,
+        GL_BGR5_A1_ANGLEX,
+        GL_BGRA8_EXT,
+        GL_RGB565,
 
     };
 
@@ -2965,8 +2967,7 @@ DeviceImpl *Renderer9::createEGLDevice()
 
 Renderer9::CurSamplerState::CurSamplerState()
     : forceSet(true), baseLevel(std::numeric_limits<size_t>::max()), samplerState()
-{
-}
+{}
 
 angle::Result Renderer9::genericDrawElements(const gl::Context *context,
                                              gl::PrimitiveMode mode,

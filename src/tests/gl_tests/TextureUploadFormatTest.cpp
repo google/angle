@@ -17,8 +17,7 @@ namespace
 {
 
 class TextureUploadFormatTest : public ANGLETest
-{
-};
+{};
 
 struct TexFormat final
 {

@@ -62,8 +62,8 @@ struct UniformsParams final : public RenderTestParams
     size_t numVertexUniforms   = 200;
     size_t numFragmentUniforms = 200;
 
-    DataType dataType = DataType::VEC4;
-    DataMode dataMode = DataMode::REPEAT;
+    DataType dataType       = DataType::VEC4;
+    DataMode dataMode       = DataMode::REPEAT;
     ProgramMode programMode = ProgramMode::SINGLE;
 };
 
@@ -152,9 +152,7 @@ std::vector<Matrix4> GenMatrixData(size_t count, int parity)
     return data;
 }
 
-UniformsBenchmark::UniformsBenchmark() : ANGLERenderTest("Uniforms", GetParam()), mPrograms({})
-{
-}
+UniformsBenchmark::UniformsBenchmark() : ANGLERenderTest("Uniforms", GetParam()), mPrograms({}) {}
 
 void UniformsBenchmark::initializeBenchmark()
 {

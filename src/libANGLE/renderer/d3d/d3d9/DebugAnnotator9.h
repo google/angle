@@ -28,6 +28,6 @@ class DebugAnnotator9 : public angle::LoggingAnnotator
     wchar_t mWCharMessage[kMaxMessageLength];
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_DEBUGANNOTATOR9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_DEBUGANNOTATOR9_H_

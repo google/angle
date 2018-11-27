@@ -48,8 +48,7 @@ TEST_P(ProgramPipelineTest, GenerateProgramPipelineObject)
 }
 
 class ProgramPipelineTest31 : public ProgramPipelineTest
-{
-};
+{};
 
 // Test generate or delete program pipeline.
 TEST_P(ProgramPipelineTest31, GenOrDeleteProgramPipelineTest)

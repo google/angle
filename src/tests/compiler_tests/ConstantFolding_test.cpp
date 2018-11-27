@@ -146,18 +146,10 @@ TEST_F(ConstantFoldingTest, Fold2x2MatrixInverse)
         "   my_Vec = m[0];\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        2.0f, 3.0f,
-        5.0f, 7.0f
-    };
+    float inputElements[] = {2.0f, 3.0f, 5.0f, 7.0f};
     std::vector<float> input(inputElements, inputElements + 4);
     ASSERT_FALSE(constantColumnMajorMatrixFoundInAST(input));
-    float outputElements[] =
-    {
-        -7.0f, 3.0f,
-        5.0f, -2.0f
-    };
+    float outputElements[] = {-7.0f, 3.0f, 5.0f, -2.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
@@ -178,20 +170,12 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixInverse)
         "   my_Vec = m[0];\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        11.0f, 13.0f, 19.0f,
-        23.0f, 29.0f, 31.0f,
-        37.0f, 41.0f, 43.0f
-    };
+    float inputElements[] = {11.0f, 13.0f, 19.0f, 23.0f, 29.0f, 31.0f, 37.0f, 41.0f, 43.0f};
     std::vector<float> input(inputElements, inputElements + 9);
     ASSERT_FALSE(constantVectorFoundInAST(input));
-    float outputElements[] =
-    {
-        3.0f / 85.0f, -11.0f / 34.0f, 37.0f / 170.0f,
-        -79.0f / 340.0f, 23.0f / 68.0f, -12.0f / 85.0f,
-        13.0f / 68.0f, -3.0f / 68.0f, -1.0f / 34.0f
-    };
+    float outputElements[] = {3.0f / 85.0f,    -11.0f / 34.0f, 37.0f / 170.0f,
+                              -79.0f / 340.0f, 23.0f / 68.0f,  -12.0f / 85.0f,
+                              13.0f / 68.0f,   -3.0f / 68.0f,  -1.0f / 34.0f};
     std::vector<float> result(outputElements, outputElements + 9);
     const float floatFaultTolerance = 0.000001f;
     ASSERT_TRUE(constantVectorNearFoundInAST(result, floatFaultTolerance));
@@ -214,22 +198,14 @@ TEST_F(ConstantFoldingTest, Fold4x4MatrixInverse)
         "   my_Vec = m[0];\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        29.0f, 31.0f, 37.0f, 41.0f,
-        43.0f, 47.0f, 53.0f, 59.0f,
-        61.0f, 67.0f, 71.0f, 73.0f,
-        79.0f, 83.0f, 89.0f, 97.0f
-    };
+    float inputElements[] = {29.0f, 31.0f, 37.0f, 41.0f, 43.0f, 47.0f, 53.0f, 59.0f,
+                             61.0f, 67.0f, 71.0f, 73.0f, 79.0f, 83.0f, 89.0f, 97.0f};
     std::vector<float> input(inputElements, inputElements + 16);
     ASSERT_FALSE(constantVectorFoundInAST(input));
-    float outputElements[] =
-    {
-        43.0f / 126.0f, -11.0f / 21.0f, -2.0f / 21.0f, 31.0f / 126.0f,
-        -5.0f / 7.0f, 9.0f / 14.0f, 1.0f / 14.0f, -1.0f / 7.0f,
-        85.0f / 126.0f, -11.0f / 21.0f, 43.0f / 210.0f, -38.0f / 315.0f,
-        -2.0f / 7.0f, 5.0f / 14.0f, -6.0f / 35.0f, 3.0f / 70.0f
-    };
+    float outputElements[] = {43.0f / 126.0f, -11.0f / 21.0f, -2.0f / 21.0f,  31.0f / 126.0f,
+                              -5.0f / 7.0f,   9.0f / 14.0f,   1.0f / 14.0f,   -1.0f / 7.0f,
+                              85.0f / 126.0f, -11.0f / 21.0f, 43.0f / 210.0f, -38.0f / 315.0f,
+                              -2.0f / 7.0f,   5.0f / 14.0f,   -6.0f / 35.0f,  3.0f / 70.0f};
     std::vector<float> result(outputElements, outputElements + 16);
     const float floatFaultTolerance = 0.00001f;
     ASSERT_TRUE(constantVectorNearFoundInAST(result, floatFaultTolerance));
@@ -251,11 +227,7 @@ TEST_F(ConstantFoldingTest, Fold2x2MatrixDeterminant)
         "   my_Float = f;\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        2.0f, 3.0f,
-        5.0f, 7.0f
-    };
+    float inputElements[] = {2.0f, 3.0f, 5.0f, 7.0f};
     std::vector<float> input(inputElements, inputElements + 4);
     ASSERT_FALSE(constantColumnMajorMatrixFoundInAST(input));
     ASSERT_TRUE(constantFoundInAST(-1.0f));
@@ -270,17 +242,12 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixDeterminant)
         "out float my_Float;"
         "void main() {\n"
         "   const float f = determinant(mat3(11.0f, 13.0f, 19.0f,\n"
-             "                               23.0f, 29.0f, 31.0f,\n"
+        "                               23.0f, 29.0f, 31.0f,\n"
         "                                    37.0f, 41.0f, 43.0f));\n"
         "   my_Float = f;\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        11.0f, 13.0f, 19.0f,
-        23.0f, 29.0f, 31.0f,
-        37.0f, 41.0f, 43.0f
-    };
+    float inputElements[] = {11.0f, 13.0f, 19.0f, 23.0f, 29.0f, 31.0f, 37.0f, 41.0f, 43.0f};
     std::vector<float> input(inputElements, inputElements + 9);
     ASSERT_FALSE(constantColumnMajorMatrixFoundInAST(input));
     ASSERT_TRUE(constantFoundInAST(-680.0f));
@@ -301,13 +268,8 @@ TEST_F(ConstantFoldingTest, Fold4x4MatrixDeterminant)
         "   my_Float = f;\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        29.0f, 31.0f, 37.0f, 41.0f,
-        43.0f, 47.0f, 53.0f, 59.0f,
-        61.0f, 67.0f, 71.0f, 73.0f,
-        79.0f, 83.0f, 89.0f, 97.0f
-    };
+    float inputElements[] = {29.0f, 31.0f, 37.0f, 41.0f, 43.0f, 47.0f, 53.0f, 59.0f,
+                             61.0f, 67.0f, 71.0f, 73.0f, 79.0f, 83.0f, 89.0f, 97.0f};
     std::vector<float> input(inputElements, inputElements + 16);
     ASSERT_FALSE(constantColumnMajorMatrixFoundInAST(input));
     ASSERT_TRUE(constantFoundInAST(-2520.0f));
@@ -330,20 +292,10 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixTranspose)
         "   my_Vec = m[0];\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float inputElements[] =
-    {
-        11.0f, 13.0f, 19.0f,
-        23.0f, 29.0f, 31.0f,
-        37.0f, 41.0f, 43.0f
-    };
+    float inputElements[] = {11.0f, 13.0f, 19.0f, 23.0f, 29.0f, 31.0f, 37.0f, 41.0f, 43.0f};
     std::vector<float> input(inputElements, inputElements + 9);
     ASSERT_FALSE(constantColumnMajorMatrixFoundInAST(input));
-    float outputElements[] =
-    {
-        11.0f, 23.0f, 37.0f,
-        13.0f, 29.0f, 41.0f,
-        19.0f, 31.0f, 43.0f
-    };
+    float outputElements[] = {11.0f, 23.0f, 37.0f, 13.0f, 29.0f, 41.0f, 19.0f, 31.0f, 43.0f};
     std::vector<float> result(outputElements, outputElements + 9);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
@@ -436,11 +388,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMat2)
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float outputElements[] =
-    {
-        0.0f, 1.0f,
-        2.0f, 3.0f
-    };
+    float outputElements[] = {0.0f, 1.0f, 2.0f, 3.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
@@ -457,11 +405,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingScalar)
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float outputElements[] =
-    {
-        3.0f, 0.0f,
-        0.0f, 3.0f
-    };
+    float outputElements[] = {3.0f, 0.0f, 0.0f, 3.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
@@ -478,11 +422,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMix)
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float outputElements[] =
-    {
-        -1.0, 0.0f,
-        1.0f, 2.0f
-    };
+    float outputElements[] = {-1.0, 0.0f, 1.0f, 2.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
@@ -499,11 +439,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMat3)
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float outputElements[] =
-    {
-        0.0f, 1.0f,
-        3.0f, 4.0f
-    };
+    float outputElements[] = {0.0f, 1.0f, 3.0f, 4.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
@@ -524,17 +460,11 @@ TEST_F(ConstantFoldingTest, FoldMat4x3ConstructorTakingMat3x2)
         "   my_FragColor = vec4(m[0], m[1][0]);\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float outputElements[] =
-    {
-        1.0f, 2.0f, 0.0f,
-        3.0f, 4.0f, 0.0f,
-        5.0f, 6.0f, 1.0f,
-        0.0f, 0.0f, 0.0f
-    };
+    float outputElements[] = {1.0f, 2.0f, 0.0f, 3.0f, 4.0f, 0.0f,
+                              5.0f, 6.0f, 1.0f, 0.0f, 0.0f, 0.0f};
     std::vector<float> result(outputElements, outputElements + 12);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
-
 
 // Test that constant mat2 initialization with a vec4 parameter works correctly.
 TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingVec4)
@@ -548,11 +478,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingVec4)
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
     compileAssumeSuccess(shaderString);
-    float outputElements[] =
-    {
-        0.0f, 1.0f,
-        2.0f, 3.0f
-    };
+    float outputElements[] = {0.0f, 1.0f, 2.0f, 3.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }

@@ -34,7 +34,7 @@ class FramebufferAttachmentRenderTarget : angle::NonCopyable
 };
 
 class FramebufferAttachmentObjectImpl;
-}
+}  // namespace rx
 
 namespace angle
 {

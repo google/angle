@@ -101,4 +101,4 @@ class WindowSurfaceCGL : public SurfaceGL
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_CGL_WINDOWSURFACECGL_H_
+#endif  // LIBANGLE_RENDERER_GL_CGL_WINDOWSURFACECGL_H_

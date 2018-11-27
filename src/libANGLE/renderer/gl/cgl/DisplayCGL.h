@@ -78,6 +78,6 @@ class DisplayCGL : public DisplayGL
     CGLContextObj mContext;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_CGL_DISPLAYCGL_H_
+#endif  // LIBANGLE_RENDERER_GL_CGL_DISPLAYCGL_H_

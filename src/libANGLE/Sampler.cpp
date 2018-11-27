@@ -17,17 +17,14 @@ namespace gl
 
 Sampler::Sampler(rx::GLImplFactory *factory, GLuint id)
     : RefCountObject(id), mState(), mImpl(factory->createSampler(mState)), mLabel()
-{
-}
+{}
 
 Sampler::~Sampler()
 {
     SafeDelete(mImpl);
 }
 
-void Sampler::onDestroy(const Context *context)
-{
-}
+void Sampler::onDestroy(const Context *context) {}
 
 void Sampler::setLabel(const std::string &label)
 {

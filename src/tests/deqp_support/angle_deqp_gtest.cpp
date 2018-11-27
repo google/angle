@@ -54,17 +54,24 @@ const char *gCaseListSearchPaths[] = {
 };
 
 const char *gTestExpectationsSearchPaths[] = {
-    "/../../src/tests/deqp_support/", "/../../third_party/angle/src/tests/deqp_support/",
-    "/deqp_support/", "/../../sdcard/chromium_tests_root/third_party/angle/src/tests/deqp_support/",
+    "/../../src/tests/deqp_support/",
+    "/../../third_party/angle/src/tests/deqp_support/",
+    "/deqp_support/",
+    "/../../sdcard/chromium_tests_root/third_party/angle/src/tests/deqp_support/",
 };
 
 const char *gCaseListFiles[] = {
-    "gles2-master.txt", "gles3-master.txt", "gles31-master.txt", "egl-master.txt",
+    "gles2-master.txt",
+    "gles3-master.txt",
+    "gles31-master.txt",
+    "egl-master.txt",
 };
 
 const char *gTestExpectationsFiles[] = {
-    "deqp_gles2_test_expectations.txt", "deqp_gles3_test_expectations.txt",
-    "deqp_gles31_test_expectations.txt", "deqp_egl_test_expectations.txt",
+    "deqp_gles2_test_expectations.txt",
+    "deqp_gles3_test_expectations.txt",
+    "deqp_gles31_test_expectations.txt",
+    "deqp_egl_test_expectations.txt",
 };
 
 using APIInfo = std::pair<const char *, gpu::GPUTestConfig::API>;
@@ -101,7 +108,7 @@ const char *GetDefaultAPIName()
 #elif defined(ANGLE_PLATFORM_ANDROID)
     return "angle-gles";
 #else
-#error Unknown platform.
+#    error Unknown platform.
 #endif
 }
 
@@ -175,8 +182,7 @@ class dEQPCaseList
     {
         CaseInfo(const std::string &dEQPName, const std::string &gTestName, int expectation)
             : mDEQPName(dEQPName), mGTestName(gTestName), mExpectation(expectation)
-        {
-        }
+        {}
 
         std::string mDEQPName;
         std::string mGTestName;
@@ -208,8 +214,7 @@ class dEQPCaseList
 
 dEQPCaseList::dEQPCaseList(size_t testModuleIndex)
     : mTestModuleIndex(testModuleIndex), mInitialized(false)
-{
-}
+{}
 
 void dEQPCaseList::initialize()
 {
@@ -450,8 +455,7 @@ void dEQPTest<TestModuleIndex>::TearDownTestCase()
 
 #define ANGLE_INSTANTIATE_DEQP_TEST_CASE(API, N)                             \
     class dEQP : public dEQPTest<N>                                          \
-    {                                                                        \
-    };                                                                       \
+    {};                                                                      \
     TEST_P(dEQP, API) { runTest(); }                                         \
                                                                              \
     INSTANTIATE_TEST_CASE_P(, dEQP, dEQP::GetTestingRange(),                 \

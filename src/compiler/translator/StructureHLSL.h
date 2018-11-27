@@ -93,6 +93,6 @@ class StructureHLSL : angle::NonCopyable
                             bool useStd140Packing);
     DefinedStructs::iterator defineVariants(const TStructure &structure, const TString &name);
 };
-}
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_STRUCTUREHLSL_H_

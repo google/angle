@@ -11,8 +11,8 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 
 #include <map>
 
@@ -20,7 +20,7 @@ namespace gl
 {
 class Framebuffer;
 class ImageIndex;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -159,6 +159,6 @@ class BlitGL : angle::NonCopyable
     GLuint mVAO;
     GLuint mVertexBuffer;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_BLITGL_H_

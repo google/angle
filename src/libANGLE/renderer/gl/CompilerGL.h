@@ -27,6 +27,6 @@ class CompilerGL : public CompilerImpl
     ShShaderOutput mTranslatorOutputType;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_COMPILERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_COMPILERGL_H_

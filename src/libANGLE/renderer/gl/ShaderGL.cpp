@@ -28,8 +28,7 @@ ShaderGL::ShaderGL(const gl::ShaderState &data,
       mShaderID(shaderID),
       mMultiviewImplementationType(multiviewImplementationType),
       mFunctions(functions)
-{
-}
+{}
 
 ShaderGL::~ShaderGL()
 {
@@ -190,4 +189,4 @@ GLuint ShaderGL::getShaderID() const
     return mShaderID;
 }
 
-}
+}  // namespace rx

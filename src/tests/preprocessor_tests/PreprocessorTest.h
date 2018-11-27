@@ -12,7 +12,7 @@
 #include "compiler/preprocessor/SourceLocation.h"
 
 #ifndef PREPROCESSOR_TESTS_PREPROCESSOR_TEST_H_
-#define PREPROCESSOR_TESTS_PREPROCESSOR_TEST_H_
+#    define PREPROCESSOR_TESTS_PREPROCESSOR_TEST_H_
 
 namespace angle
 {
@@ -22,8 +22,7 @@ class PreprocessorTest : public testing::Test
   protected:
     PreprocessorTest(ShShaderSpec shaderSpec)
         : mPreprocessor(&mDiagnostics, &mDirectiveHandler, pp::PreprocessorSettings(shaderSpec))
-    {
-    }
+    {}
 
     MockDiagnostics mDiagnostics;
     MockDirectiveHandler mDirectiveHandler;

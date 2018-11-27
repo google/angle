@@ -128,6 +128,6 @@ class ResourcesHLSL : angle::NonCopyable
     std::map<std::string, unsigned int> mShaderStorageBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformRegisterMap;
 };
-}
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_RESOURCESHLSL_H_

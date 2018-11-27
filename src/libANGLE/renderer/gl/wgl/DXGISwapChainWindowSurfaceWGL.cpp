@@ -11,9 +11,9 @@
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
-#include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 
@@ -54,8 +54,7 @@ DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceS
       mHeight(0),
       mSwapInterval(1),
       mOrientation(orientation)
-{
-}
+{}
 
 DXGISwapChainWindowSurfaceWGL::~DXGISwapChainWindowSurfaceWGL()
 {
@@ -190,7 +189,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::bindTexImage(const gl::Context *contex
     GLuint textureID           = textureGL->getTextureID();
 
     ID3D11Texture2D *colorBuffer = nullptr;
-    HRESULT result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+    HRESULT result               = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
                                            reinterpret_cast<void **>(&colorBuffer));
     if (FAILED(result))
     {
@@ -314,7 +313,8 @@ egl::Error DXGISwapChainWindowSurfaceWGL::setObjectsLocked(bool locked)
     }
 
     HANDLE resources[] = {
-        mRenderbufferBufferHandle, mTextureHandle,
+        mRenderbufferBufferHandle,
+        mTextureHandle,
     };
     GLint count = (mTextureHandle != nullptr) ? 2 : 1;
 
@@ -423,7 +423,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
     }
 
     IDXGIFactory2 *dxgiFactory2 = nullptr;
-    HRESULT result = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2),
+    HRESULT result              = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2),
                                                  reinterpret_cast<void **>(&dxgiFactory2));
     if (SUCCEEDED(result))
     {
@@ -437,7 +437,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
         swapChainDesc.Format                = mSwapChainFormat;
         swapChainDesc.Stereo                = FALSE;
         swapChainDesc.SampleDesc.Count      = 1;
-        swapChainDesc.SampleDesc.Quality = 0;
+        swapChainDesc.SampleDesc.Quality    = 0;
         swapChainDesc.BufferUsage =
             DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT | DXGI_USAGE_BACK_BUFFER;
         swapChainDesc.BufferCount = 1;
@@ -489,7 +489,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
     }
 
     ID3D11Texture2D *colorBuffer = nullptr;
-    result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+    result                       = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
                                    reinterpret_cast<void **>(&colorBuffer));
     if (FAILED(result))
     {

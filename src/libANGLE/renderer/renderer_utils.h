@@ -194,8 +194,7 @@ struct LoadImageFunctionInfo
     LoadImageFunctionInfo() : loadFunction(nullptr), requiresConversion(false) {}
     LoadImageFunctionInfo(LoadImageFunction loadFunction, bool requiresConversion)
         : loadFunction(loadFunction), requiresConversion(requiresConversion)
-    {
-    }
+    {}
 
     LoadImageFunction loadFunction;
     bool requiresConversion;

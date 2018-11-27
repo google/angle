@@ -24,8 +24,8 @@ TEST(TokenTest, DefaultConstructor)
 TEST(TokenTest, Assignment)
 {
     pp::Token token;
-    token.type = 1;
-    token.flags = 1;
+    token.type          = 1;
+    token.flags         = 1;
     token.location.line = 1;
     token.location.file = 1;
     token.text.assign("foo");

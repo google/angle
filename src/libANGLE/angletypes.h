@@ -35,8 +35,7 @@ struct Rectangle
     Rectangle() : x(0), y(0), width(0), height(0) {}
     constexpr Rectangle(int x_in, int y_in, int width_in, int height_in)
         : x(x_in), y(y_in), width(width_in), height(height_in)
-    {
-    }
+    {}
 
     int x0() const { return x; }
     int y0() const { return y; }
@@ -98,8 +97,7 @@ struct Box
     Box() : x(0), y(0), z(0), width(0), height(0), depth(0) {}
     Box(int x_in, int y_in, int z_in, int width_in, int height_in, int depth_in)
         : x(x_in), y(y_in), z(z_in), width(width_in), height(height_in), depth(depth_in)
-    {
-    }
+    {}
     Box(const Offset &offset, const Extents &size)
         : x(offset.x),
           y(offset.y),
@@ -107,8 +105,7 @@ struct Box
           width(size.width),
           height(size.height),
           depth(size.depth)
-    {
-    }
+    {}
     bool operator==(const Box &other) const;
     bool operator!=(const Box &other) const;
     Rectangle toRect() const;
@@ -307,7 +304,8 @@ class SamplerState final
 
     ColorGeneric mBorderColor;
 
-    union Completeness {
+    union Completeness
+    {
         uint32_t packed;
         PackedSamplerCompleteness typed;
     };
@@ -364,8 +362,7 @@ struct PixelStoreStateBase
 };
 
 struct PixelUnpackState : PixelStoreStateBase
-{
-};
+{};
 
 struct PixelPackState : PixelStoreStateBase
 {
@@ -442,20 +439,20 @@ namespace rx
 {
 // A macro that determines whether an object has a given runtime type.
 #if defined(__clang__)
-#if __has_feature(cxx_rtti)
-#define ANGLE_HAS_DYNAMIC_CAST 1
-#endif
+#    if __has_feature(cxx_rtti)
+#        define ANGLE_HAS_DYNAMIC_CAST 1
+#    endif
 #elif !defined(NDEBUG) && (!defined(_MSC_VER) || defined(_CPPRTTI)) &&              \
     (!defined(__GNUC__) || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3) || \
      defined(__GXX_RTTI))
-#define ANGLE_HAS_DYNAMIC_CAST 1
+#    define ANGLE_HAS_DYNAMIC_CAST 1
 #endif
 
 #ifdef ANGLE_HAS_DYNAMIC_CAST
-#define ANGLE_HAS_DYNAMIC_TYPE(type, obj) (dynamic_cast<type>(obj) != nullptr)
-#undef ANGLE_HAS_DYNAMIC_CAST
+#    define ANGLE_HAS_DYNAMIC_TYPE(type, obj) (dynamic_cast<type>(obj) != nullptr)
+#    undef ANGLE_HAS_DYNAMIC_CAST
 #else
-#define ANGLE_HAS_DYNAMIC_TYPE(type, obj) (obj != nullptr)
+#    define ANGLE_HAS_DYNAMIC_TYPE(type, obj) (obj != nullptr)
 #endif
 
 // Downcast a base implementation object (EG TextureImpl to TextureD3D)
@@ -560,13 +557,11 @@ class UniqueObjectPointerBase : angle::NonCopyable
   public:
     template <typename ContextT>
     UniqueObjectPointerBase(const ContextT *context) : mObject(nullptr), mDeleter(context)
-    {
-    }
+    {}
 
     template <typename ContextT>
     UniqueObjectPointerBase(ObjT *obj, const ContextT *context) : mObject(obj), mDeleter(context)
-    {
-    }
+    {}
 
     ~UniqueObjectPointerBase()
     {

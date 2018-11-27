@@ -10,8 +10,8 @@
 #define LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
 
 #include "libANGLE/renderer/gl/glx/DisplayGLX.h"
-#include "libANGLE/renderer/gl/glx/platform_glx.h"
 #include "libANGLE/renderer/gl/glx/SurfaceGLX.h"
+#include "libANGLE/renderer/gl/glx/platform_glx.h"
 
 namespace rx
 {
@@ -74,4 +74,4 @@ class WindowSurfaceGLX : public SurfaceGLX
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_
+#endif  // LIBANGLE_RENDERER_GL_GLX_WINDOWSURFACEGLX_H_

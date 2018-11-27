@@ -18,12 +18,9 @@ namespace rx
 
 IndexBuffer11::IndexBuffer11(Renderer11 *const renderer)
     : mRenderer(renderer), mBuffer(), mBufferSize(0), mIndexType(GL_NONE), mDynamicUsage(false)
-{
-}
+{}
 
-IndexBuffer11::~IndexBuffer11()
-{
-}
+IndexBuffer11::~IndexBuffer11() {}
 
 angle::Result IndexBuffer11::initialize(const gl::Context *context,
                                         unsigned int bufferSize,
@@ -37,11 +34,11 @@ angle::Result IndexBuffer11::initialize(const gl::Context *context,
     if (bufferSize > 0)
     {
         D3D11_BUFFER_DESC bufferDesc;
-        bufferDesc.ByteWidth = bufferSize;
-        bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        bufferDesc.MiscFlags = 0;
+        bufferDesc.ByteWidth           = bufferSize;
+        bufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
+        bufferDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
+        bufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+        bufferDesc.MiscFlags           = 0;
         bufferDesc.StructureByteStride = 0;
 
         ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &mBuffer));
@@ -56,8 +53,8 @@ angle::Result IndexBuffer11::initialize(const gl::Context *context,
         }
     }
 
-    mBufferSize = bufferSize;
-    mIndexType = indexType;
+    mBufferSize   = bufferSize;
+    mIndexType    = indexType;
     mDynamicUsage = dynamic;
 
     return angle::Result::Continue();

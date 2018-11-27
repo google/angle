@@ -149,6 +149,6 @@ class DisplayGLX : public DisplayGL
     egl::Display *mEGLDisplay;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_GLX_DISPLAYGLX_H_
+#endif  // LIBANGLE_RENDERER_GL_GLX_DISPLAYGLX_H_

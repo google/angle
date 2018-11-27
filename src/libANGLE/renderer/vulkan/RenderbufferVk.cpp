@@ -25,12 +25,9 @@ constexpr VkClearColorValue kBlackClearColorValue                 = {{0}};
 
 RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state)
     : RenderbufferImpl(state), mRenderTarget(&mImage, &mImageView, 0)
-{
-}
+{}
 
-RenderbufferVk::~RenderbufferVk()
-{
-}
+RenderbufferVk::~RenderbufferVk() {}
 
 void RenderbufferVk::onDestroy(const gl::Context *context)
 {

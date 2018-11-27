@@ -14,8 +14,8 @@
 #include <map>
 #include <vector>
 
-#include "angle_gl.h"
 #include <GLSLANG/ShaderLang.h>
+#include "angle_gl.h"
 
 namespace sh
 {
@@ -33,8 +33,7 @@ struct BlockMemberInfo
           matrixStride(-1),
           isRowMajorMatrix(false),
           topLevelArrayStride(-1)
-    {
-    }
+    {}
 
     BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
         : offset(offset),
@@ -42,8 +41,7 @@ struct BlockMemberInfo
           matrixStride(matrixStride),
           isRowMajorMatrix(isRowMajorMatrix),
           topLevelArrayStride(-1)
-    {
-    }
+    {}
 
     BlockMemberInfo(int offset,
                     int arrayStride,
@@ -55,8 +53,7 @@ struct BlockMemberInfo
           matrixStride(matrixStride),
           isRowMajorMatrix(isRowMajorMatrix),
           topLevelArrayStride(topLevelArrayStride)
-    {
-    }
+    {}
 
     static BlockMemberInfo getDefaultBlockInfo() { return BlockMemberInfo(-1, -1, -1, false, -1); }
 

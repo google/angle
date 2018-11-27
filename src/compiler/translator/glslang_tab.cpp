@@ -5204,3 +5204,4 @@ yyreturn:
 int glslang_parse(TParseContext* context) {
     return yyparse(context, context->getScanner());
 }
+ 

@@ -14,9 +14,7 @@ CompilerParameters::CompilerParameters()
     output = SH_HLSL_4_1_OUTPUT;
 }
 
-CompilerParameters::CompilerParameters(ShShaderOutput output) : output(output)
-{
-}
+CompilerParameters::CompilerParameters(ShShaderOutput output) : output(output) {}
 
 const char *CompilerParameters::str() const
 {
@@ -40,18 +38,13 @@ std::ostream &operator<<(std::ostream &stream, const CompilerParameters &p)
     return stream;
 }
 
-PlatformParameters::PlatformParameters()
-    : PlatformParameters(2, 0, EGLPlatformParameters())
-{
-}
+PlatformParameters::PlatformParameters() : PlatformParameters(2, 0, EGLPlatformParameters()) {}
 
-PlatformParameters::PlatformParameters(EGLint majorVersion, EGLint minorVersion,
+PlatformParameters::PlatformParameters(EGLint majorVersion,
+                                       EGLint minorVersion,
                                        const EGLPlatformParameters &eglPlatformParameters)
-    : majorVersion(majorVersion),
-      minorVersion(minorVersion),
-      eglParameters(eglPlatformParameters)
-{
-}
+    : majorVersion(majorVersion), minorVersion(minorVersion), eglParameters(eglPlatformParameters)
+{}
 
 EGLint PlatformParameters::getRenderer() const
 {
@@ -75,14 +68,13 @@ bool operator<(const PlatformParameters &a, const PlatformParameters &b)
 
 bool operator==(const PlatformParameters &a, const PlatformParameters &b)
 {
-    return (a.majorVersion == b.majorVersion) &&
-           (a.minorVersion == b.minorVersion) &&
+    return (a.majorVersion == b.majorVersion) && (a.minorVersion == b.minorVersion) &&
            (a.eglParameters == b.eglParameters);
 }
 
-std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
+std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
 {
-    stream << "ES" << pp.majorVersion << "_" ;
+    stream << "ES" << pp.majorVersion << "_";
     if (pp.minorVersion != 0)
     {
         stream << pp.minorVersion << "_";
@@ -128,26 +120,26 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
 
     switch (pp.eglParameters.deviceType)
     {
-      case EGL_DONT_CARE:
-      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
-        // default
-        break;
+        case EGL_DONT_CARE:
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
+            // default
+            break;
 
-      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-          stream << "_NULL";
-          break;
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+            stream << "_NULL";
+            break;
 
-      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
-          stream << "_REFERENCE";
-          break;
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
+            stream << "_REFERENCE";
+            break;
 
-      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
-          stream << "_WARP";
-          break;
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
+            stream << "_WARP";
+            break;
 
-      default:
-        UNREACHABLE();
-        break;
+        default:
+            UNREACHABLE();
+            break;
     }
 
     switch (pp.eglParameters.presentPath)
@@ -183,26 +175,20 @@ EGLPlatformParameters DEFAULT()
 
 EGLPlatformParameters DEFAULT_NULL()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE, EGL_DONT_CARE,
+                                 EGL_DONT_CARE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
 }
 
 EGLPlatformParameters D3D9()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D9_NULL()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
 }
 
 EGLPlatformParameters D3D9_REFERENCE()
@@ -213,10 +199,8 @@ EGLPlatformParameters D3D9_REFERENCE()
 
 EGLPlatformParameters D3D11()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D11(EGLenum presentPath)
@@ -227,50 +211,38 @@ EGLPlatformParameters D3D11(EGLenum presentPath)
 
 EGLPlatformParameters D3D11_FL11_1()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        11, 1,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 11, 1,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL11_0()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        11, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 11, 0,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL10_1()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        10, 1,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 1,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL10_0()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        10, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 0,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL9_3()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        9, 3,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 9, 3,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_NULL()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
 }
 
 EGLPlatformParameters D3D11_WARP()
@@ -350,13 +322,9 @@ EGLPlatformParameters OPENGL()
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
 }
 
-
 EGLPlatformParameters OPENGL(EGLint major, EGLint minor)
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE,
-        major, minor,
-        EGL_DONT_CARE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, major, minor, EGL_DONT_CARE);
 }
 
 EGLPlatformParameters OPENGL_NULL()

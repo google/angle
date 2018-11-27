@@ -300,9 +300,7 @@ FramebufferState::FramebufferState(const Caps &caps, GLuint id)
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
 }
 
-FramebufferState::~FramebufferState()
-{
-}
+FramebufferState::~FramebufferState() {}
 
 const std::string &FramebufferState::getLabel()
 {

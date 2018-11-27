@@ -79,6 +79,6 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
 
     BlockMemberInfoMap mBlockMemberInfoMap;
 };
-}
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_SHADERSTORAGEBLOCKOUTPUTHLSL_H_

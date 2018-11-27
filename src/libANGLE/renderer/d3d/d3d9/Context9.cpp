@@ -29,12 +29,9 @@ namespace rx
 
 Context9::Context9(const gl::ContextState &state, Renderer9 *renderer)
     : ContextD3D(state), mRenderer(renderer)
-{
-}
+{}
 
-Context9::~Context9()
-{
-}
+Context9::~Context9() {}
 
 angle::Result Context9::initialize()
 {

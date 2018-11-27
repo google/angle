@@ -25,7 +25,7 @@ namespace angle
 {
 using base::CheckedNumeric;
 using base::IsValueInRangeForNumericType;
-}
+}  // namespace angle
 
 namespace gl
 {
@@ -152,7 +152,7 @@ inline bool supportsSSE2()
         return supports;
     }
 
-#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
+#    if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
     {
         int info[4];
         __cpuid(info, 0);
@@ -164,7 +164,7 @@ inline bool supportsSSE2()
             supports = (info[3] >> 26) & 1;
         }
     }
-#endif  // defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
+#    endif  // defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
     checked = true;
     return supports;
 #else  // defined(ANGLE_USE_SSE)
@@ -965,35 +965,35 @@ inline uint32_t BitfieldReverse(uint32_t value)
 
 // Count the 1 bits.
 #if defined(_M_IX86) || defined(_M_X64)
-#define ANGLE_HAS_BITCOUNT_32
+#    define ANGLE_HAS_BITCOUNT_32
 inline int BitCount(uint32_t bits)
 {
     return static_cast<int>(__popcnt(bits));
 }
-#if defined(_M_X64)
-#define ANGLE_HAS_BITCOUNT_64
+#    if defined(_M_X64)
+#        define ANGLE_HAS_BITCOUNT_64
 inline int BitCount(uint64_t bits)
 {
     return static_cast<int>(__popcnt64(bits));
 }
-#endif  // defined(_M_X64)
-#endif  // defined(_M_IX86) || defined(_M_X64)
+#    endif  // defined(_M_X64)
+#endif      // defined(_M_IX86) || defined(_M_X64)
 
 #if defined(ANGLE_PLATFORM_POSIX)
-#define ANGLE_HAS_BITCOUNT_32
+#    define ANGLE_HAS_BITCOUNT_32
 inline int BitCount(uint32_t bits)
 {
     return __builtin_popcount(bits);
 }
 
-#if defined(ANGLE_IS_64_BIT_CPU)
-#define ANGLE_HAS_BITCOUNT_64
+#    if defined(ANGLE_IS_64_BIT_CPU)
+#        define ANGLE_HAS_BITCOUNT_64
 inline int BitCount(uint64_t bits)
 {
     return __builtin_popcountll(bits);
 }
-#endif  // defined(ANGLE_IS_64_BIT_CPU)
-#endif  // defined(ANGLE_PLATFORM_POSIX)
+#    endif  // defined(ANGLE_IS_64_BIT_CPU)
+#endif      // defined(ANGLE_PLATFORM_POSIX)
 
 int BitCountPolyfill(uint32_t bits);
 
@@ -1035,7 +1035,7 @@ inline unsigned long ScanForward(uint32_t bits)
     return firstBitIndex;
 }
 
-#if defined(ANGLE_IS_64_BIT_CPU)
+#    if defined(ANGLE_IS_64_BIT_CPU)
 inline unsigned long ScanForward(uint64_t bits)
 {
     ASSERT(bits != 0u);
@@ -1044,8 +1044,8 @@ inline unsigned long ScanForward(uint64_t bits)
     ASSERT(ret != 0u);
     return firstBitIndex;
 }
-#endif  // defined(ANGLE_IS_64_BIT_CPU)
-#endif  // defined(ANGLE_PLATFORM_WINDOWS)
+#    endif  // defined(ANGLE_IS_64_BIT_CPU)
+#endif      // defined(ANGLE_PLATFORM_WINDOWS)
 
 #if defined(ANGLE_PLATFORM_POSIX)
 inline unsigned long ScanForward(uint32_t bits)
@@ -1054,14 +1054,14 @@ inline unsigned long ScanForward(uint32_t bits)
     return static_cast<unsigned long>(__builtin_ctz(bits));
 }
 
-#if defined(ANGLE_IS_64_BIT_CPU)
+#    if defined(ANGLE_IS_64_BIT_CPU)
 inline unsigned long ScanForward(uint64_t bits)
 {
     ASSERT(bits != 0u);
     return static_cast<unsigned long>(__builtin_ctzll(bits));
 }
-#endif  // defined(ANGLE_IS_64_BIT_CPU)
-#endif  // defined(ANGLE_PLATFORM_POSIX)
+#    endif  // defined(ANGLE_IS_64_BIT_CPU)
+#endif      // defined(ANGLE_PLATFORM_POSIX)
 
 inline unsigned long ScanForward(uint8_t bits)
 {
@@ -1086,7 +1086,7 @@ inline unsigned long ScanReverse(unsigned long bits)
 #elif defined(ANGLE_PLATFORM_POSIX)
     return static_cast<unsigned long>(sizeof(unsigned long) * CHAR_BIT - 1 - __builtin_clzl(bits));
 #else
-#error Please implement bit-scan-reverse for your platform!
+#    error Please implement bit-scan-reverse for your platform!
 #endif
 }
 
@@ -1249,8 +1249,8 @@ inline unsigned int UnsignedCeilDivide(unsigned int value, unsigned int divisor)
 
 #if defined(_MSC_VER)
 
-#define ANGLE_ROTL(x, y) _rotl(x, y)
-#define ANGLE_ROTR16(x, y) _rotr16(x, y)
+#    define ANGLE_ROTL(x, y) _rotl(x, y)
+#    define ANGLE_ROTR16(x, y) _rotr16(x, y)
 
 #else
 
@@ -1264,10 +1264,10 @@ inline uint16_t RotR16(uint16_t x, int8_t r)
     return (x >> r) | (x << (16 - r));
 }
 
-#define ANGLE_ROTL(x, y) ::rx::RotL(x, y)
-#define ANGLE_ROTR16(x, y) ::rx::RotR16(x, y)
+#    define ANGLE_ROTL(x, y) ::rx::RotL(x, y)
+#    define ANGLE_ROTR16(x, y) ::rx::RotR16(x, y)
 
 #endif  // namespace rx
-}
+}  // namespace rx
 
 #endif  // COMMON_MATHUTIL_H_

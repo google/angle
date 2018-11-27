@@ -79,9 +79,7 @@ void ClipChannelsAlpha(gl::ColorF *color)
     color->blue  = 0.0f;
 }
 
-void ClipChannelsNoOp(gl::ColorF *color)
-{
-}
+void ClipChannelsNoOp(gl::ColorF *color) {}
 
 void WriteUintColor(const gl::ColorF &color,
                     PixelWriteFunction colorWriteFunction,
@@ -163,8 +161,7 @@ bool ExpandMatrix(T *target, const GLfloat *value)
 
 PackPixelsParams::PackPixelsParams()
     : destFormat(nullptr), outputPitch(0), packBuffer(nullptr), offset(0)
-{
-}
+{}
 
 PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
                                    const angle::Format &destFormat,
@@ -178,8 +175,7 @@ PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
       packBuffer(packBufferIn),
       reverseRowOrder(reverseRowOrderIn),
       offset(offsetIn)
-{
-}
+{}
 
 void PackPixels(const PackPixelsParams &params,
                 const angle::Format &sourceFormat,
@@ -392,13 +388,9 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
 }
 
 // IncompleteTextureSet implementation.
-IncompleteTextureSet::IncompleteTextureSet()
-{
-}
+IncompleteTextureSet::IncompleteTextureSet() {}
 
-IncompleteTextureSet::~IncompleteTextureSet()
-{
-}
+IncompleteTextureSet::~IncompleteTextureSet() {}
 
 void IncompleteTextureSet::onDestroy(const gl::Context *context)
 {

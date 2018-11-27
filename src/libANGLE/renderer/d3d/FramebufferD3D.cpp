@@ -86,7 +86,7 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
     return clearParams;
 }
-}
+}  // namespace
 
 ClearParameters::ClearParameters() = default;
 
@@ -94,12 +94,9 @@ ClearParameters::ClearParameters(const ClearParameters &other) = default;
 
 FramebufferD3D::FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer)
     : FramebufferImpl(data), mRenderer(renderer), mDummyAttachment()
-{
-}
+{}
 
-FramebufferD3D::~FramebufferD3D()
-{
-}
+FramebufferD3D::~FramebufferD3D() {}
 
 angle::Result FramebufferD3D::clear(const gl::Context *context, GLbitfield mask)
 {

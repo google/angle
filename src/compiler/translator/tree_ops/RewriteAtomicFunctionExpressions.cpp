@@ -65,8 +65,7 @@ RewriteAtomicFunctionExpressionsTraverser::RewriteAtomicFunctionExpressionsTrave
     TSymbolTable *symbolTable,
     int shaderVersion)
     : TIntermTraverser(false, false, true, symbolTable), mShaderVersion(shaderVersion)
-{
-}
+{}
 
 void RewriteAtomicFunctionExpressionsTraverser::rewriteAtomicFunctionCallNode(
     TIntermAggregate *oldAtomicFunctionNode)

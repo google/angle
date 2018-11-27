@@ -51,4 +51,4 @@ class VertexArrayImpl : angle::NonCopyable
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_VERTEXARRAYIMPL_H_
+#endif  // LIBANGLE_RENDERER_VERTEXARRAYIMPL_H_

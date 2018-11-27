@@ -17,8 +17,8 @@
 #include "common/debug.h"
 #include "common/string_utils.h"
 
-#define DCHECK_EQ(A,B) ASSERT((A) == (B))
-#define DCHECK_NE(A,B) ASSERT((A) != (B))
+#define DCHECK_EQ(A, B) ASSERT((A) == (B))
+#define DCHECK_NE(A, B) ASSERT((A) != (B))
 #define DCHECK(X) ASSERT(X)
 #define DLOG(X) std::cerr
 #define LOG(X) std::cerr
@@ -28,32 +28,31 @@
 // Shim Chromium's types by importing symbols in the correct namespaces
 namespace base
 {
-    using angle::kWhitespaceASCII;
-    using angle::TRIM_WHITESPACE;
-    using angle::KEEP_WHITESPACE;
-    using angle::SPLIT_WANT_ALL;
-    using angle::SPLIT_WANT_NONEMPTY;
-    using angle::SplitString;
-    using angle::SplitStringAlongWhitespace;
-    using angle::HexStringToUInt;
-    using angle::ReadFileToString;
+using angle::HexStringToUInt;
+using angle::KEEP_WHITESPACE;
+using angle::kWhitespaceASCII;
+using angle::ReadFileToString;
+using angle::SPLIT_WANT_ALL;
+using angle::SPLIT_WANT_NONEMPTY;
+using angle::SplitString;
+using angle::SplitStringAlongWhitespace;
+using angle::TRIM_WHITESPACE;
 
-    using TimeDelta = int;
+using TimeDelta = int;
 }  // namespace base
 
 namespace gfx
 {
-    class Size
-    {
-      public:
-        int width() const { return 0; }
-        int height() const { return 0; }
-    };
+class Size
+{
+  public:
+    int width() const { return 0; }
+    int height() const { return 0; }
+};
 }  // namespace gfx
 
 struct DxDiagNode
-{
-};
+{};
 
 // TODO(jmadill): other platforms
 // clang-format off

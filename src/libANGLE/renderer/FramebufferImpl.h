@@ -20,7 +20,7 @@ class State;
 class Framebuffer;
 class FramebufferAttachment;
 struct Rectangle;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -91,6 +91,6 @@ class FramebufferImpl : angle::NonCopyable
   protected:
     const gl::FramebufferState &mState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_FRAMEBUFFERIMPL_H_

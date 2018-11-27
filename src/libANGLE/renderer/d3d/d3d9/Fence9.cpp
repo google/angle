@@ -16,9 +16,7 @@
 namespace rx
 {
 
-FenceNV9::FenceNV9(Renderer9 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(nullptr)
-{
-}
+FenceNV9::FenceNV9(Renderer9 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(nullptr) {}
 
 FenceNV9::~FenceNV9()
 {

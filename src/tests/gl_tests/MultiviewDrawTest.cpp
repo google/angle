@@ -89,8 +89,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
           mMultiviewLayout(multiviewLayout),
           mSamples(samples),
           mResolveTexture(0u)
-    {
-    }
+    {}
 
     void FramebufferTestSetUp() { MultiviewTestBase::MultiviewTestBaseSetUp(); }
 
@@ -296,8 +295,7 @@ class MultiviewRenderTest : public MultiviewFramebufferTestBase,
   protected:
     MultiviewRenderTest()
         : MultiviewFramebufferTestBase(GetParam(), GetParam().mMultiviewLayout, GetParam().mSamples)
-    {
-    }
+    {}
     void SetUp() override { MultiviewFramebufferTestBase::FramebufferTestSetUp(); }
     void TearDown() override { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
 
@@ -495,8 +493,7 @@ class MultiviewSideBySideRenderTest : public MultiviewFramebufferTestBase,
   protected:
     MultiviewSideBySideRenderTest()
         : MultiviewFramebufferTestBase(GetParam(), GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, 0)
-    {
-    }
+    {}
 
     void SetUp() final { MultiviewFramebufferTestBase::FramebufferTestSetUp(); }
     void TearDown() final { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
@@ -512,8 +509,7 @@ class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase,
   protected:
     MultiviewLayeredRenderTest()
         : MultiviewFramebufferTestBase(GetParam(), GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, 0)
-    {
-    }
+    {}
     void SetUp() final { MultiviewFramebufferTestBase::FramebufferTestSetUp(); }
     void TearDown() final { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
     void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) final

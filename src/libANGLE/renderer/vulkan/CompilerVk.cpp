@@ -14,13 +14,9 @@
 namespace rx
 {
 
-CompilerVk::CompilerVk() : CompilerImpl()
-{
-}
+CompilerVk::CompilerVk() : CompilerImpl() {}
 
-CompilerVk::~CompilerVk()
-{
-}
+CompilerVk::~CompilerVk() {}
 
 ShShaderOutput CompilerVk::getTranslatorOutputType() const
 {

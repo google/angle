@@ -55,6 +55,6 @@ class Device final : public LabeledObject, angle::NonCopyable
     DeviceExtensions mDeviceExtensions;
     std::string mDeviceExtensionString;
 };
-}
+}  // namespace egl
 
 #endif  // LIBANGLE_DEVICE_H_

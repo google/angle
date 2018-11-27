@@ -135,4 +135,4 @@ class MockEGLFactory : public EGLImplFactory
 
 }  // namespace rx
 
-#endif // TESTS_ANGLE_UNITTESTS_UTILS_H_
+#endif  // TESTS_ANGLE_UNITTESTS_UTILS_H_

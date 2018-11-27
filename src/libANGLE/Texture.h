@@ -30,14 +30,14 @@ namespace egl
 {
 class Surface;
 class Stream;
-}
+}  // namespace egl
 
 namespace rx
 {
 class GLImplFactory;
 class TextureImpl;
 class TextureGL;
-}
+}  // namespace rx
 
 namespace gl
 {

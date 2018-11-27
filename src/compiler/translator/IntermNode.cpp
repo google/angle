@@ -42,7 +42,7 @@ TConstantUnion *Vectorize(const TConstantUnion &constant, size_t size)
 {
     TConstantUnion *constUnion = new TConstantUnion[size];
     for (unsigned int i = 0; i < size; ++i)
-        constUnion[i]   = constant;
+        constUnion[i] = constant;
 
     return constUnion;
 }
@@ -175,7 +175,7 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
     }
 }
 
-}  // namespace anonymous
+}  // namespace
 
 ////////////////////////////////////////////////////////////////
 //
@@ -183,9 +183,7 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
 //
 ////////////////////////////////////////////////////////////////
 
-TIntermExpression::TIntermExpression(const TType &t) : TIntermTyped(), mType(t)
-{
-}
+TIntermExpression::TIntermExpression(const TType &t) : TIntermTyped(), mType(t) {}
 
 void TIntermExpression::setTypePreservePrecision(const TType &t)
 {
@@ -482,9 +480,7 @@ bool TIntermAggregateBase::insertChildNodes(TIntermSequence::size_type position,
     return true;
 }
 
-TIntermSymbol::TIntermSymbol(const TVariable *variable) : TIntermTyped(), mVariable(variable)
-{
-}
+TIntermSymbol::TIntermSymbol(const TVariable *variable) : TIntermTyped(), mVariable(variable) {}
 
 bool TIntermSymbol::hasConstantValue() const
 {
@@ -531,8 +527,7 @@ TIntermAggregate *TIntermAggregate::CreateBuiltInFunctionCall(const TFunction &f
     return new TIntermAggregate(&func, func.getReturnType(), func.getBuiltInOp(), arguments);
 }
 
-TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type,
-                                                      TIntermSequence *arguments)
+TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type, TIntermSequence *arguments)
 {
     return new TIntermAggregate(nullptr, type, EOpConstruct, arguments);
 }
@@ -1037,8 +1032,8 @@ TIntermSwizzle::TIntermSwizzle(const TIntermSwizzle &node) : TIntermExpression(n
 {
     TIntermTyped *operandCopy = node.mOperand->deepCopy();
     ASSERT(operandCopy != nullptr);
-    mOperand = operandCopy;
-    mSwizzleOffsets = node.mSwizzleOffsets;
+    mOperand                   = operandCopy;
+    mSwizzleOffsets            = node.mSwizzleOffsets;
     mHasFoldedDuplicateOffsets = node.mHasFoldedDuplicateOffsets;
 }
 
@@ -1320,7 +1315,8 @@ TIntermBinary *TIntermBinary::CreateComma(TIntermTyped *left,
     return node;
 }
 
-TIntermInvariantDeclaration::TIntermInvariantDeclaration(TIntermSymbol *symbol, const TSourceLoc &line)
+TIntermInvariantDeclaration::TIntermInvariantDeclaration(TIntermSymbol *symbol,
+                                                         const TSourceLoc &line)
     : TIntermNode(), mSymbol(symbol)
 {
     ASSERT(symbol);
@@ -2318,17 +2314,17 @@ const TConstantUnion *TIntermConstantUnion::FoldBinary(TOperator op,
 
         case EOpBitwiseAnd:
             resultArray = new TConstantUnion[objectSize];
-            for (size_t i      = 0; i < objectSize; i++)
+            for (size_t i = 0; i < objectSize; i++)
                 resultArray[i] = leftArray[i] & rightArray[i];
             break;
         case EOpBitwiseXor:
             resultArray = new TConstantUnion[objectSize];
-            for (size_t i      = 0; i < objectSize; i++)
+            for (size_t i = 0; i < objectSize; i++)
                 resultArray[i] = leftArray[i] ^ rightArray[i];
             break;
         case EOpBitwiseOr:
             resultArray = new TConstantUnion[objectSize];
-            for (size_t i      = 0; i < objectSize; i++)
+            for (size_t i = 0; i < objectSize; i++)
                 resultArray[i] = leftArray[i] | rightArray[i];
             break;
         case EOpBitShiftLeft:
@@ -3061,7 +3057,7 @@ void TIntermConstantUnion::foldFloatTypeUnary(const TConstantUnion &parameter,
 TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *aggregate,
                                                            TDiagnostics *diagnostics)
 {
-    TOperator op              = aggregate->getOp();
+    TOperator op               = aggregate->getOp();
     TIntermSequence *arguments = aggregate->getSequence();
     unsigned int argsCount     = static_cast<unsigned int>(arguments->size());
     std::vector<const TConstantUnion *> unionArrays(argsCount);
@@ -3749,8 +3745,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
 TIntermPreprocessorDirective::TIntermPreprocessorDirective(PreprocessorDirective directive,
                                                            ImmutableString command)
     : mDirective(directive), mCommand(std::move(command))
-{
-}
+{}
 
 TIntermPreprocessorDirective::~TIntermPreprocessorDirective() = default;
 

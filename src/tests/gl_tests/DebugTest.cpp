@@ -116,7 +116,7 @@ TEST_P(DebugTest, InsertMessage)
     GLenum typeBuf     = 0;
     GLenum idBuf       = 0;
     GLenum severityBuf = 0;
-    GLsizei lengthBuf = 0;
+    GLsizei lengthBuf  = 0;
     std::vector<char> messageBuf(messageLength + 1);
     GLuint ret =
         glGetDebugMessageLogKHR(1, static_cast<GLsizei>(messageBuf.size()), &sourceBuf, &typeBuf,
@@ -173,7 +173,7 @@ TEST_P(DebugTest, InsertMessageMultiple)
         GLenum typeBuf     = 0;
         GLenum idBuf       = 0;
         GLenum severityBuf = 0;
-        GLsizei lengthBuf = 0;
+        GLsizei lengthBuf  = 0;
         std::vector<char> messageBuf(messageLength + 1);
         GLuint ret =
             glGetDebugMessageLogKHR(1, static_cast<GLsizei>(messageBuf.size()), &sourceBuf,

@@ -38,8 +38,7 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
   protected:
     FramebufferMultiviewSideBySideClearTest()
         : mMultiviewFBO(0u), mNonMultiviewFBO(0u), mDepthTex(0u), mDepthStencilTex(0u)
-    {
-    }
+    {}
 
     void TearDown() override
     {

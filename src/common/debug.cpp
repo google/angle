@@ -17,7 +17,7 @@
 #include <vector>
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-#include <android/log.h>
+#    include <android/log.h>
 #endif
 
 #include "common/Optional.h"
@@ -187,21 +187,21 @@ void Trace(LogSeverity severity, const char *message)
 
 #if defined(ANGLE_PLATFORM_WINDOWS) && \
     (defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER) || !defined(NDEBUG))
-#if !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
+#    if !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
     if (severity == LOG_ERR)
-#endif  // !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
+#    endif  // !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
     {
         OutputDebugStringA(str.c_str());
     }
 #endif
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
-#if defined(NDEBUG)
+#    if defined(NDEBUG)
     if (severity == LOG_EVENT || severity == LOG_WARN)
     {
         return;
     }
-#endif  // defined(NDEBUG)
+#    endif  // defined(NDEBUG)
     static std::ofstream file(TRACE_OUTPUT_FILE, std::ofstream::app);
     if (file)
     {

@@ -1129,8 +1129,7 @@ TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
 }
 
 class TransformFeedbackTestES31 : public TransformFeedbackTestBase
-{
-};
+{};
 
 // Test that program link fails in case that transform feedback names including same array element.
 TEST_P(TransformFeedbackTestES31, SameArrayElementVaryings)

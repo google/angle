@@ -21,12 +21,12 @@
 #ifndef TCU_ANGLE_WIN32_PLATFORM_H_
 #define TCU_ANGLE_WIN32_PLATFORM_H_
 
+#include "gluPlatform.hpp"
 #include "tcuDefs.hpp"
 #include "tcuPlatform.hpp"
-#include "gluPlatform.hpp"
 
 #ifndef _EGLUPLATFORM_HPP
-#   include "egluPlatform.hpp"
+#    include "egluPlatform.hpp"
 #endif
 
 #include "platform/Platform.h"
@@ -35,9 +35,7 @@
 namespace tcu
 {
 
-class ANGLEPlatform : public tcu::Platform,
-                      private glu::Platform,
-                      private eglu::Platform
+class ANGLEPlatform : public tcu::Platform, private glu::Platform, private eglu::Platform
 {
   public:
     ANGLEPlatform(angle::LogErrorFunc logErrorFunc);
@@ -45,8 +43,14 @@ class ANGLEPlatform : public tcu::Platform,
 
     bool processEvents() override;
 
-    const glu::Platform &getGLPlatform() const override { return static_cast<const glu::Platform&>(*this); }
-    const eglu::Platform &getEGLPlatform() const override { return static_cast<const eglu::Platform&>(*this); }
+    const glu::Platform &getGLPlatform() const override
+    {
+        return static_cast<const glu::Platform &>(*this);
+    }
+    const eglu::Platform &getEGLPlatform() const override
+    {
+        return static_cast<const eglu::Platform &>(*this);
+    }
 
   private:
     // Note: -1 represents EGL_DONT_CARE, but we don't have the EGL headers here.
@@ -59,6 +63,6 @@ class ANGLEPlatform : public tcu::Platform,
     angle::PlatformMethods mPlatformMethods;
 };
 
-} // tcu
+}  // namespace tcu
 
-#endif // TCU_ANGLE_WIN32_PLATFORM_H_
+#endif  // TCU_ANGLE_WIN32_PLATFORM_H_

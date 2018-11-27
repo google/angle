@@ -6,10 +6,10 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include <cstdint>
-#include "com_utils.h"
-#include "OSWindow.h"
 #include <d3d11.h>
+#include <cstdint>
+#include "OSWindow.h"
+#include "com_utils.h"
 
 using namespace angle;
 
@@ -24,8 +24,7 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
           mConfig(0),
           mOSWindow(nullptr),
           mWindowWidth(0)
-    {
-    }
+    {}
 
     void SetUp() override
     {
@@ -48,14 +47,16 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
         ASSERT_NE(nullptr, eglGetPlatformDisplayEXT);
 
         // Set up EGL Display
-        EGLint displayAttribs[] = {
-            EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
-            EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, GetParam().eglParameters.majorVersion,
-            EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, GetParam().eglParameters.majorVersion,
-            EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE,
-            usePresentPathFast ? EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE
-                               : EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE,
-            EGL_NONE};
+        EGLint displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                                   GetParam().getRenderer(),
+                                   EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE,
+                                   GetParam().eglParameters.majorVersion,
+                                   EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE,
+                                   GetParam().eglParameters.majorVersion,
+                                   EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE,
+                                   usePresentPathFast ? EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE
+                                                      : EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE,
+                                   EGL_NONE};
         mDisplay =
             eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, displayAttribs);
         ASSERT_TRUE(EGL_NO_DISPLAY != mDisplay);
@@ -230,14 +231,9 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
 
         GLint positionLocation = glGetAttribLocation(m2DProgram, "position");
         glUseProgram(m2DProgram);
-        const GLfloat vertices[] =
-        {
-            -1.0f,  1.0f, 0.5f,
-            -1.0f, -1.0f, 0.5f,
-             1.0f, -1.0f, 0.5f,
-            -1.0f,  1.0f, 0.5f,
-             1.0f, -1.0f, 0.5f,
-             1.0f,  1.0f, 0.5f,
+        const GLfloat vertices[] = {
+            -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
+            -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
         };
 
         glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
@@ -288,9 +284,9 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
         angle::GLColor *byteData = reinterpret_cast<angle::GLColor *>(mappedSubresource.pData);
 
         // Note that the texture is in BGRA format, although the GLColor struct is RGBA
-        GLColor expectedTopLeftPixel     = GLColor(0,   0, 255, 255);  // Red
-        GLColor expectedTopRightPixel    = GLColor(0, 255,   0, 255);  // Green
-        GLColor expectedBottomLeftPixel  = GLColor(255, 0,   0, 255);  // Blue
+        GLColor expectedTopLeftPixel     = GLColor(0, 0, 255, 255);    // Red
+        GLColor expectedTopRightPixel    = GLColor(0, 255, 0, 255);    // Green
+        GLColor expectedBottomLeftPixel  = GLColor(255, 0, 0, 255);    // Blue
         GLColor expectedBottomRightPixel = GLColor(0, 255, 255, 255);  // Red + Green
 
         if (usingPresentPathFast)

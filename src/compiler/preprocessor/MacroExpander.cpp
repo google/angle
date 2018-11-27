@@ -96,8 +96,7 @@ MacroExpander::MacroExpander(Lexer *lexer,
       mTotalTokensInContexts(0),
       mSettings(settings),
       mDeferReenablingMacros(false)
-{
-}
+{}
 
 MacroExpander::~MacroExpander()
 {
@@ -507,13 +506,9 @@ void MacroExpander::replaceMacroParams(const Macro &macro,
     }
 }
 
-MacroExpander::MacroContext::MacroContext() : macro(0), index(0)
-{
-}
+MacroExpander::MacroContext::MacroContext() : macro(0), index(0) {}
 
-MacroExpander::MacroContext::~MacroContext()
-{
-}
+MacroExpander::MacroContext::~MacroContext() {}
 
 bool MacroExpander::MacroContext::empty() const
 {

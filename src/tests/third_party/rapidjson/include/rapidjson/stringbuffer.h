@@ -24,7 +24,7 @@
 #include "rapidjson.h"
 
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
-#include <utility> // std::move
+#    include <utility>  // std::move
 #endif
 
 #include "internal/stack.h"
@@ -38,15 +38,19 @@ RAPIDJSON_NAMESPACE_BEGIN
     \note implements Stream concept
 */
 template <typename Encoding, typename Allocator = CrtAllocator>
-class GenericStringBuffer {
-public:
+class GenericStringBuffer
+{
+  public:
     typedef typename Encoding::Ch Ch;
 
-    GenericStringBuffer(Allocator* allocator = 0, size_t capacity = kDefaultCapacity) : stack_(allocator, capacity) {}
+    GenericStringBuffer(Allocator *allocator = 0, size_t capacity = kDefaultCapacity)
+        : stack_(allocator, capacity)
+    {}
 
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
-    GenericStringBuffer(GenericStringBuffer&& rhs) : stack_(std::move(rhs.stack_)) {}
-    GenericStringBuffer& operator=(GenericStringBuffer&& rhs) {
+    GenericStringBuffer(GenericStringBuffer &&rhs) : stack_(std::move(rhs.stack_)) {}
+    GenericStringBuffer &operator=(GenericStringBuffer &&rhs)
+    {
         if (&rhs != this)
             stack_ = std::move(rhs.stack_);
         return *this;
@@ -57,16 +61,18 @@ public:
     void Flush() {}
 
     void Clear() { stack_.Clear(); }
-    void ShrinkToFit() {
+    void ShrinkToFit()
+    {
         // Push and pop a null terminator. This is safe.
         *stack_.template Push<Ch>() = '\0';
         stack_.ShrinkToFit();
         stack_.template Pop<Ch>(1);
     }
-    Ch* Push(size_t count) { return stack_.template Push<Ch>(count); }
+    Ch *Push(size_t count) { return stack_.template Push<Ch>(count); }
     void Pop(size_t count) { stack_.template Pop<Ch>(count); }
 
-    const Ch* GetString() const {
+    const Ch *GetString() const
+    {
         // Push and pop a null terminator. This is safe.
         *stack_.template Push<Ch>() = '\0';
         stack_.template Pop<Ch>(1);
@@ -79,21 +85,22 @@ public:
     static const size_t kDefaultCapacity = 256;
     mutable internal::Stack<Allocator> stack_;
 
-private:
+  private:
     // Prohibit copy constructor & assignment operator.
-    GenericStringBuffer(const GenericStringBuffer&);
-    GenericStringBuffer& operator=(const GenericStringBuffer&);
+    GenericStringBuffer(const GenericStringBuffer &);
+    GenericStringBuffer &operator=(const GenericStringBuffer &);
 };
 
 //! String buffer with UTF8 encoding
-typedef GenericStringBuffer<UTF8<> > StringBuffer;
+typedef GenericStringBuffer<UTF8<>> StringBuffer;
 
 //! Implement specialized version of PutN() with memset() for better performance.
-template<>
-inline void PutN(GenericStringBuffer<UTF8<> >& stream, char c, size_t n) {
+template <>
+inline void PutN(GenericStringBuffer<UTF8<>> &stream, char c, size_t n)
+{
     std::memset(stream.stack_.Push<char>(n), c, n * sizeof(c));
 }
 
 RAPIDJSON_NAMESPACE_END
 
-#endif // RAPIDJSON_STRINGBUFFER_H_
+#endif  // RAPIDJSON_STRINGBUFFER_H_

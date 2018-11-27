@@ -35,8 +35,7 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
                   shaderVersion,
                   output,
                   compileOptions)
-{
-}
+{}
 
 // TODO(jmadill): This is not complete.
 void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)

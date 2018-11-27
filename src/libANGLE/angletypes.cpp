@@ -216,8 +216,7 @@ void SamplerState::updateWrapTCompareMode()
 
 ImageUnit::ImageUnit()
     : texture(), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
-{
-}
+{}
 
 ImageUnit::ImageUnit(const ImageUnit &other) = default;
 

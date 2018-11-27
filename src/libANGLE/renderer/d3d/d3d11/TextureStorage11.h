@@ -647,8 +647,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     {
         LevelLayerRangeKey(int mipLevelIn, int layerIn, int numLayersIn)
             : mipLevel(mipLevelIn), layer(layerIn), numLayers(numLayersIn)
-        {
-        }
+        {}
         bool operator<(const LevelLayerRangeKey &other) const
         {
             if (mipLevel != other.mipLevel)
@@ -815,6 +814,6 @@ class TextureStorage11_2DMultisampleArray final : public TextureStorage11Immutab
     unsigned int mSamples;
     GLboolean mFixedSampleLocations;
 };
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_TEXTURESTORAGE11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_TEXTURESTORAGE11_H_

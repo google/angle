@@ -122,8 +122,7 @@ TranslatedAttribute::TranslatedAttribute()
       storage(nullptr),
       serial(0),
       divisor(0)
-{
-}
+{}
 
 TranslatedAttribute::TranslatedAttribute(const TranslatedAttribute &other) = default;
 
@@ -192,7 +191,7 @@ VertexDataManager::CurrentValueState::CurrentValueState(BufferFactoryD3D *factor
     data.FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
     data.FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
     data.FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
-    data.Type = GL_FLOAT;
+    data.Type           = GL_FLOAT;
 }
 
 VertexDataManager::CurrentValueState::CurrentValueState(CurrentValueState &&other)
@@ -202,9 +201,7 @@ VertexDataManager::CurrentValueState::CurrentValueState(CurrentValueState &&othe
     std::swap(offset, other.offset);
 }
 
-VertexDataManager::CurrentValueState::~CurrentValueState()
-{
-}
+VertexDataManager::CurrentValueState::~CurrentValueState() {}
 
 VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
     : mFactory(factory), mStreamingBuffer(factory)
@@ -215,9 +212,7 @@ VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
     }
 }
 
-VertexDataManager::~VertexDataManager()
-{
-}
+VertexDataManager::~VertexDataManager() {}
 
 angle::Result VertexDataManager::initialize(const gl::Context *context)
 {
@@ -253,7 +248,7 @@ angle::Result VertexDataManager::prepareVertexData(
         if (!program->isAttribLocationActive(attribIndex))
             continue;
 
-        const auto &attrib = vertexAttributes[attribIndex];
+        const auto &attrib  = vertexAttributes[attribIndex];
         const auto &binding = vertexBindings[attrib.bindingIndex];
 
         // Resize automatically puts in empty attribs
@@ -317,7 +312,7 @@ void VertexDataManager::StoreDirectAttrib(const gl::Context *context,
     const auto &attrib  = *directAttrib->attribute;
     const auto &binding = *directAttrib->binding;
 
-    gl::Buffer *buffer   = binding.getBuffer().get();
+    gl::Buffer *buffer = binding.getBuffer().get();
     ASSERT(buffer);
     BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
 
@@ -385,7 +380,7 @@ angle::Result VertexDataManager::StoreStaticAttrib(const gl::Context *context,
     ANGLE_CHECK_GL_MATH(GetImplAs<ContextD3D>(context), checkedOffset.IsValid());
 
     translated->vertexBuffer.set(vertexBuffer);
-    translated->serial = vertexBuffer->getSerial();
+    translated->serial     = vertexBuffer->getSerial();
     translated->baseOffset = streamOffset + firstElementOffset;
 
     // Instanced vertices do not apply the 'start' offset
@@ -447,7 +442,7 @@ void VertexDataManager::PromoteDynamicAttribs(
     {
         const auto &dynamicAttrib = translatedAttribs[attribIndex];
         ASSERT(dynamicAttrib.attribute && dynamicAttrib.binding);
-        const auto &binding       = *dynamicAttrib.binding;
+        const auto &binding = *dynamicAttrib.binding;
 
         gl::Buffer *buffer = binding.getBuffer().get();
         if (buffer)
@@ -527,7 +522,7 @@ angle::Result VertexDataManager::storeDynamicAttrib(const gl::Context *context,
     {
         // Attributes using client memory ignore the VERTEX_ATTRIB_BINDING state.
         // https://www.opengl.org/registry/specs/ARB/vertex_attrib_binding.txt
-        sourceData = static_cast<const uint8_t*>(attrib.pointer);
+        sourceData = static_cast<const uint8_t *>(attrib.pointer);
     }
 
     unsigned int streamOffset = 0;
@@ -546,7 +541,7 @@ angle::Result VertexDataManager::storeDynamicAttrib(const gl::Context *context,
     VertexBuffer *vertexBuffer = mStreamingBuffer.getVertexBuffer();
 
     translated->vertexBuffer.set(vertexBuffer);
-    translated->serial = vertexBuffer->getSerial();
+    translated->serial                = vertexBuffer->getSerial();
     translated->baseOffset            = streamOffset;
     translated->usesFirstVertexOffset = false;
 
@@ -559,7 +554,7 @@ angle::Result VertexDataManager::storeCurrentValue(
     TranslatedAttribute *translated,
     size_t attribIndex)
 {
-    CurrentValueState *cachedState = &mCurrentValueCache[attribIndex];
+    CurrentValueState *cachedState         = &mCurrentValueCache[attribIndex];
     StreamingVertexBufferInterface &buffer = *cachedState->buffer;
 
     if (buffer.getBufferSize() == 0)
@@ -575,23 +570,23 @@ angle::Result VertexDataManager::storeCurrentValue(
 
         ANGLE_TRY(buffer.reserveVertexSpace(context, attrib, binding, 1, 0));
 
-        const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(currentValue.FloatValues);
+        const uint8_t *sourceData = reinterpret_cast<const uint8_t *>(currentValue.FloatValues);
         unsigned int streamOffset;
         ANGLE_TRY(buffer.storeDynamicAttribute(context, attrib, binding, currentValue.Type, 0, 1, 0,
                                                &streamOffset, sourceData));
 
         buffer.getVertexBuffer()->hintUnmapResource();
 
-        cachedState->data = currentValue;
+        cachedState->data   = currentValue;
         cachedState->offset = streamOffset;
     }
 
     translated->vertexBuffer.set(buffer.getVertexBuffer());
 
-    translated->storage = nullptr;
+    translated->storage               = nullptr;
     translated->serial                = buffer.getSerial();
-    translated->divisor = 0;
-    translated->stride  = 0;
+    translated->divisor               = 0;
+    translated->stride                = 0;
     translated->baseOffset            = static_cast<unsigned int>(cachedState->offset);
     translated->usesFirstVertexOffset = false;
 
@@ -599,9 +594,7 @@ angle::Result VertexDataManager::storeCurrentValue(
 }
 
 // VertexBufferBinding implementation
-VertexBufferBinding::VertexBufferBinding() : mBoundVertexBuffer(nullptr)
-{
-}
+VertexBufferBinding::VertexBufferBinding() : mBoundVertexBuffer(nullptr) {}
 
 VertexBufferBinding::VertexBufferBinding(const VertexBufferBinding &other)
     : mBoundVertexBuffer(other.mBoundVertexBuffer)

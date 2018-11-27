@@ -546,7 +546,7 @@ class DispatchTableGL : angle::NonCopyable
     PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC drawArraysInstancedBaseInstance     = nullptr;
     PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC drawElementsInstancedBaseInstance = nullptr;
     PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC
-        drawElementsInstancedBaseVertexBaseInstance                                    = nullptr;
+    drawElementsInstancedBaseVertexBaseInstance                                        = nullptr;
     PFNGLDRAWTRANSFORMFEEDBACKINSTANCEDPROC drawTransformFeedbackInstanced             = nullptr;
     PFNGLDRAWTRANSFORMFEEDBACKSTREAMINSTANCEDPROC drawTransformFeedbackStreamInstanced = nullptr;
     PFNGLGETACTIVEATOMICCOUNTERBUFFERIVPROC getActiveAtomicCounterBufferiv             = nullptr;

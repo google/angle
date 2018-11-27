@@ -9,9 +9,9 @@
 
 #include "ANGLEPerfTest.h"
 
+#include "system_utils.h"
 #include "third_party/perf/perf_test.h"
 #include "third_party/trace_event/trace_event.h"
-#include "system_utils.h"
 
 #include <cassert>
 #include <cmath>
@@ -46,9 +46,7 @@ constexpr TraceCategory gTraceCategories[2] = {
     {1, "gpu.angle.gpu"},
 };
 
-void EmptyPlatformMethod(angle::PlatformMethods *, const char *)
-{
-}
+void EmptyPlatformMethod(angle::PlatformMethods *, const char *) {}
 
 void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::WorkaroundsD3D *workaroundsD3D)
 {
@@ -174,8 +172,7 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mNumStepsPerformed(0),
       mIterationsPerStep(iterationsPerStep),
       mRunning(true)
-{
-}
+{}
 
 ANGLEPerfTest::~ANGLEPerfTest()
 {
@@ -246,23 +243,25 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime)
     mTimer->stop();
 }
 
-void ANGLEPerfTest::printResult(const std::string &trace, double value, const std::string &units, bool important) const
+void ANGLEPerfTest::printResult(const std::string &trace,
+                                double value,
+                                const std::string &units,
+                                bool important) const
 {
     perf_test::PrintResult(mName, mSuffix, trace, value, units, important);
 }
 
-void ANGLEPerfTest::printResult(const std::string &trace, size_t value, const std::string &units, bool important) const
+void ANGLEPerfTest::printResult(const std::string &trace,
+                                size_t value,
+                                const std::string &units,
+                                bool important) const
 {
     perf_test::PrintResult(mName, mSuffix, trace, value, units, important);
 }
 
-void ANGLEPerfTest::SetUp()
-{
-}
+void ANGLEPerfTest::SetUp() {}
 
-void ANGLEPerfTest::TearDown()
-{
-}
+void ANGLEPerfTest::TearDown() {}
 
 void ANGLEPerfTest::printResults()
 {
@@ -349,15 +348,15 @@ void ANGLERenderTest::SetUp()
     ASSERT(mEGLWindow != nullptr);
     mEGLWindow->setSwapInterval(0);
 
-    mPlatformMethods.overrideWorkaroundsD3D = OverrideWorkaroundsD3D;
-    mPlatformMethods.logError               = EmptyPlatformMethod;
-    mPlatformMethods.logWarning             = EmptyPlatformMethod;
-    mPlatformMethods.logInfo                = EmptyPlatformMethod;
+    mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
+    mPlatformMethods.logError                    = EmptyPlatformMethod;
+    mPlatformMethods.logWarning                  = EmptyPlatformMethod;
+    mPlatformMethods.logInfo                     = EmptyPlatformMethod;
     mPlatformMethods.addTraceEvent               = AddTraceEvent;
     mPlatformMethods.getTraceCategoryEnabledFlag = GetTraceCategoryEnabledFlag;
     mPlatformMethods.updateTraceEventDuration    = UpdateTraceEventDuration;
     mPlatformMethods.monotonicallyIncreasingTime = MonotonicallyIncreasingTime;
-    mPlatformMethods.context                = this;
+    mPlatformMethods.context                     = this;
     mEGLWindow->setPlatformMethods(&mPlatformMethods);
 
     if (!mOSWindow->initialize(mName, mTestParams.windowWidth, mTestParams.windowHeight))

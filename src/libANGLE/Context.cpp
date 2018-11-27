@@ -612,9 +612,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     return egl::NoError();
 }
 
-Context::~Context()
-{
-}
+Context::~Context() {}
 
 void Context::setLabel(EGLLabelKHR label)
 {
@@ -8163,9 +8161,7 @@ void Context::onSubjectStateChange(const Context *context,
 }
 
 // ErrorSet implementation.
-ErrorSet::ErrorSet(Context *context) : mContext(context)
-{
-}
+ErrorSet::ErrorSet(Context *context) : mContext(context) {}
 
 ErrorSet::~ErrorSet() = default;
 
@@ -8233,8 +8229,7 @@ StateCache::StateCache()
       mCachedNonInstancedVertexElementLimit(0),
       mCachedInstancedVertexElementLimit(0),
       mCachedBasicDrawStatesError(kInvalidPointer)
-{
-}
+{}
 
 StateCache::~StateCache() = default;
 

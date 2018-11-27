@@ -246,6 +246,6 @@ class TextureGL : public TextureImpl
 
     GLuint mTextureID;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_TEXTUREGL_H_

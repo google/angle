@@ -26,7 +26,7 @@ struct Extents;
 struct Offset;
 struct Rectangle;
 struct PixelUnpackState;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -103,6 +103,6 @@ class ImageD3D : angle::NonCopyable
 
     bool mDirty;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_IMAGED3D_H_

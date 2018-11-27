@@ -124,8 +124,10 @@ class DepthStencilFormatsTestES3 : public DepthStencilFormatsTestBase
 TEST_P(DepthStencilFormatsTest, DepthTexture)
 {
     bool shouldHaveTextureSupport = extensionEnabled("GL_ANGLE_depth_texture");
-    EXPECT_EQ(shouldHaveTextureSupport, checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT));
-    EXPECT_EQ(shouldHaveTextureSupport, checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_INT));
+    EXPECT_EQ(shouldHaveTextureSupport,
+              checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT));
+    EXPECT_EQ(shouldHaveTextureSupport,
+              checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_INT));
 
     if (extensionEnabled("GL_EXT_texture_storage"))
     {
@@ -137,14 +139,17 @@ TEST_P(DepthStencilFormatsTest, DepthTexture)
 TEST_P(DepthStencilFormatsTest, PackedDepthStencil)
 {
     // Expected to fail in D3D9 if GL_OES_packed_depth_stencil is not present.
-    // Expected to fail in D3D11 if GL_OES_packed_depth_stencil or GL_ANGLE_depth_texture is not present.
+    // Expected to fail in D3D11 if GL_OES_packed_depth_stencil or GL_ANGLE_depth_texture is not
+    // present.
 
     bool shouldHaveRenderbufferSupport = extensionEnabled("GL_OES_packed_depth_stencil");
-    EXPECT_EQ(shouldHaveRenderbufferSupport, checkRenderbufferFormatSupport(GL_DEPTH24_STENCIL8_OES));
+    EXPECT_EQ(shouldHaveRenderbufferSupport,
+              checkRenderbufferFormatSupport(GL_DEPTH24_STENCIL8_OES));
 
     bool shouldHaveTextureSupport = extensionEnabled("GL_OES_packed_depth_stencil") &&
                                     extensionEnabled("GL_ANGLE_depth_texture");
-    EXPECT_EQ(shouldHaveTextureSupport, checkTexImageFormatSupport(GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES));
+    EXPECT_EQ(shouldHaveTextureSupport,
+              checkTexImageFormatSupport(GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES));
 
     if (extensionEnabled("GL_EXT_texture_storage"))
     {
@@ -240,7 +245,8 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

@@ -62,7 +62,8 @@ struct ColorGeneric
         UInt  = 2
     };
 
-    union {
+    union
+    {
         ColorF colorF;
         ColorI colorI;
         ColorUI colorUI;

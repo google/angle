@@ -28,8 +28,8 @@
 #include "platform/Platform.h"
 
 #include <EGL/eglext.h>
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace rx
 {
@@ -38,8 +38,7 @@ class FunctionsGLWindows : public FunctionsGL
 {
   public:
     FunctionsGLWindows(HMODULE openGLModule, PFNWGLGETPROCADDRESSPROC getProcAddressWGL)
-        : mOpenGLModule(openGLModule),
-          mGetProcAddressWGL(getProcAddressWGL)
+        : mOpenGLModule(openGLModule), mGetProcAddressWGL(getProcAddressWGL)
     {
         ASSERT(mOpenGLModule);
         ASSERT(mGetProcAddressWGL);
@@ -50,10 +49,10 @@ class FunctionsGLWindows : public FunctionsGL
   private:
     void *loadProcAddress(const std::string &function) const override
     {
-        void *proc = reinterpret_cast<void*>(mGetProcAddressWGL(function.c_str()));
+        void *proc = reinterpret_cast<void *>(mGetProcAddressWGL(function.c_str()));
         if (!proc)
         {
-            proc = reinterpret_cast<void*>(GetProcAddress(mOpenGLModule, function.c_str()));
+            proc = reinterpret_cast<void *>(GetProcAddress(mOpenGLModule, function.c_str()));
         }
         return proc;
     }
@@ -80,12 +79,9 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mD3d11Module(nullptr),
       mD3D11DeviceHandle(nullptr),
       mD3D11Device(nullptr)
-{
-}
+{}
 
-DisplayWGL::~DisplayWGL()
-{
-}
+DisplayWGL::~DisplayWGL() {}
 
 egl::Error DisplayWGL::initialize(egl::Display *display)
 {
@@ -112,8 +108,9 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
     mFunctionsWGL = new FunctionsWGL();
     mFunctionsWGL->initialize(mOpenGLModule, nullptr);
 
-    // WGL can't grab extensions until it creates a context because it needs to load the driver's DLLs first.
-    // Create a dummy context to load the driver and determine which GL versions are available.
+    // WGL can't grab extensions until it creates a context because it needs to load the driver's
+    // DLLs first. Create a dummy context to load the driver and determine which GL versions are
+    // available.
 
     // Work around compile error from not defining "UNICODE" while Chromium does
     const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
@@ -122,18 +119,18 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
     stream << "ANGLE DisplayWGL " << gl::FmtHex(display) << " Intermediate Window Class";
     std::string className = stream.str();
 
-    WNDCLASSA intermediateClassDesc = { 0 };
-    intermediateClassDesc.style = CS_OWNDC;
-    intermediateClassDesc.lpfnWndProc = DefWindowProcA;
-    intermediateClassDesc.cbClsExtra = 0;
-    intermediateClassDesc.cbWndExtra = 0;
-    intermediateClassDesc.hInstance = GetModuleHandle(nullptr);
-    intermediateClassDesc.hIcon = nullptr;
-    intermediateClassDesc.hCursor = LoadCursorA(nullptr, idcArrow);
+    WNDCLASSA intermediateClassDesc     = {0};
+    intermediateClassDesc.style         = CS_OWNDC;
+    intermediateClassDesc.lpfnWndProc   = DefWindowProcA;
+    intermediateClassDesc.cbClsExtra    = 0;
+    intermediateClassDesc.cbWndExtra    = 0;
+    intermediateClassDesc.hInstance     = GetModuleHandle(nullptr);
+    intermediateClassDesc.hIcon         = nullptr;
+    intermediateClassDesc.hCursor       = LoadCursorA(nullptr, idcArrow);
     intermediateClassDesc.hbrBackground = 0;
-    intermediateClassDesc.lpszMenuName = nullptr;
+    intermediateClassDesc.lpszMenuName  = nullptr;
     intermediateClassDesc.lpszClassName = className.c_str();
-    mWindowClass = RegisterClassA(&intermediateClassDesc);
+    mWindowClass                        = RegisterClassA(&intermediateClassDesc);
     if (!mWindowClass)
     {
         return egl::EglNotInitialized()
@@ -197,7 +194,7 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
     DestroyWindow(dummyWindow);
 
     const egl::AttributeMap &displayAttributes = display->getAttributeMap();
-    EGLint requestedDisplayType = static_cast<EGLint>(displayAttributes.get(
+    EGLint requestedDisplayType                = static_cast<EGLint>(displayAttributes.get(
         EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
     if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
         !mFunctionsWGL->hasExtension("WGL_EXT_create_context_es2_profile") &&
@@ -295,7 +292,8 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
         }
         else
         {
-            // Want to use DXGI swap chains but WGL_NV_DX_interop2 is not present, fail initialization
+            // Want to use DXGI swap chains but WGL_NV_DX_interop2 is not present, fail
+            // initialization
             return egl::EglNotInitialized() << "WGL_NV_DX_interop2 is required but not present.";
         }
     }
@@ -592,7 +590,7 @@ egl::Error DisplayWGL::initializeD3DDevice()
     }
 
     PFN_D3D11_CREATE_DEVICE d3d11CreateDevice = nullptr;
-    d3d11CreateDevice = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
+    d3d11CreateDevice                         = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
         GetProcAddress(mD3d11Module, "D3D11CreateDevice"));
     if (d3d11CreateDevice == nullptr)
     {
@@ -867,4 +865,4 @@ egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererWGL> *outRenderer)
 
     return egl::NoError();
 }
-}
+}  // namespace rx

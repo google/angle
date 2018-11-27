@@ -15,14 +15,14 @@ using namespace angle;
 namespace
 {
 
-const GLint kWidth = 64;
+const GLint kWidth  = 64;
 const GLint kHeight = 64;
 
 // test drawing with GL_MULTISAMPLE_EXT enabled/disabled.
 class EXTMultisampleCompatibilityTest : public ANGLETest
 {
 
-protected:
+  protected:
     EXTMultisampleCompatibilityTest()
     {
         setWindowWidth(64);
@@ -69,19 +69,17 @@ protected:
 
         glGenRenderbuffers(1, &mSampleRB);
         glBindRenderbuffer(GL_RENDERBUFFER, mSampleRB);
-        glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, num_samples,
-                                             GL_RGBA8_OES, kWidth, kHeight);
+        glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, num_samples, GL_RGBA8_OES, kWidth,
+                                              kHeight);
         GLint param = 0;
-        glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES,
-                                 &param);
+        glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES, &param);
         EXPECT_GE(param, num_samples);
 
         glGenFramebuffers(1, &mSampleFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mSampleFBO);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                              GL_RENDERBUFFER, mSampleRB);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mSampleRB);
         EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER_COMPLETE),
-          glCheckFramebufferStatus(GL_FRAMEBUFFER));
+                  glCheckFramebufferStatus(GL_FRAMEBUFFER));
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Create another FBO to resolve the multisample buffer into.
@@ -95,10 +93,9 @@ protected:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glGenFramebuffers(1, &mResolveFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mResolveFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           mResolveTex, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mResolveTex, 0);
         EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER_COMPLETE),
-          glCheckFramebufferStatus(GL_FRAMEBUFFER));
+                  glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
         glUseProgram(mProgram);
         glViewport(0, 0, kWidth, kHeight);
@@ -116,8 +113,8 @@ protected:
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mResolveFBO);
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glBlitFramebufferANGLE(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight,
-          GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebufferANGLE(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT,
+                               GL_NEAREST);
         glBindFramebuffer(GL_READ_FRAMEBUFFER, mResolveFBO);
 
         ASSERT_GL_NO_ERROR();
@@ -132,15 +129,13 @@ protected:
         glDeleteRenderbuffers(1, &mSampleRB);
 
         ASSERT_GL_NO_ERROR();
-
     }
 
     bool isApplicable() const
     {
         return extensionEnabled("GL_EXT_multisample_compatibility") &&
-             extensionEnabled("GL_ANGLE_framebuffer_multisample") &&
-             extensionEnabled("GL_OES_rgb8_rgba8") &&
-             !IsAMD();
+               extensionEnabled("GL_ANGLE_framebuffer_multisample") &&
+               extensionEnabled("GL_OES_rgb8_rgba8") && !IsAMD();
     }
     GLuint mSampleFBO;
     GLuint mResolveFBO;
@@ -152,7 +147,7 @@ protected:
     GLuint mVBO;
 };
 
-} //
+}  // namespace
 
 // Test simple state tracking
 TEST_P(EXTMultisampleCompatibilityTest, TestStateTracking)
@@ -181,9 +176,9 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAndResolve)
     if (!isApplicable())
         return;
 
-    static const float kBlue[] = {0.0f, 0.0f, 1.0f, 1.0f};
+    static const float kBlue[]  = {0.0f, 0.0f, 1.0f, 1.0f};
     static const float kGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
-    static const float kRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    static const float kRed[]   = {1.0f, 0.0f, 0.0f, 1.0f};
 
     // Different drivers seem to behave differently with respect to resulting
     // values. These might be due to different MSAA sample counts causing
@@ -216,8 +211,7 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAndResolve)
         prepareForVerify();
         results[pass].reset(new uint8_t[kResultSize]);
         memset(results[pass].get(), 123u, kResultSize);
-        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-                   results[pass].get());
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, results[pass].get());
 
         cleanup();
     }
@@ -239,9 +233,9 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
     // SAMPLE_ALPHA_TO_ONE is specified to transform alpha values of
     // covered samples to 1.0. In order to detect it, we use non-1.0
     // alpha.
-    static const float kBlue[] = {0.0f, 0.0f, 1.0f, 0.5f};
+    static const float kBlue[]  = {0.0f, 0.0f, 1.0f, 0.5f};
     static const float kGreen[] = {0.0f, 1.0f, 0.0f, 0.5f};
-    static const float kRed[] = {1.0f, 0.0f, 0.0f, 0.5f};
+    static const float kRed[]   = {1.0f, 0.0f, 0.0f, 0.5f};
 
     // Different drivers seem to behave differently with respect to resulting
     // alpha value. These might be due to different MSAA sample counts causing
@@ -273,8 +267,7 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
         prepareForVerify();
         results[pass].reset(new uint8_t[kResultSize]);
         memset(results[pass].get(), 123u, kResultSize);
-        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-            results[pass].get());
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, results[pass].get());
         if (pass == 1)
         {
             glDisable(GL_SAMPLE_ALPHA_TO_ONE_EXT);

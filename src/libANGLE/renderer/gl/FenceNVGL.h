@@ -52,6 +52,6 @@ class FenceNVSyncGL : public FenceNVImpl
 
     const FunctionsGL *mFunctions;
 };
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_FENCENVGL_H_
+#endif  // LIBANGLE_RENDERER_GL_FENCENVGL_H_

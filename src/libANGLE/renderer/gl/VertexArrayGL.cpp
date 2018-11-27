@@ -79,9 +79,7 @@ VertexArrayGL::VertexArrayGL(const VertexArrayState &state,
     }
 }
 
-VertexArrayGL::~VertexArrayGL()
-{
-}
+VertexArrayGL::~VertexArrayGL() {}
 
 void VertexArrayGL::destroy(const gl::Context *context)
 {

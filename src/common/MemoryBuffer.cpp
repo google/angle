@@ -78,13 +78,9 @@ MemoryBuffer &MemoryBuffer::operator=(MemoryBuffer &&other)
 
 // ScratchBuffer implementation.
 
-ScratchBuffer::ScratchBuffer(uint32_t lifetime) : mLifetime(lifetime), mResetCounter(lifetime)
-{
-}
+ScratchBuffer::ScratchBuffer(uint32_t lifetime) : mLifetime(lifetime), mResetCounter(lifetime) {}
 
-ScratchBuffer::~ScratchBuffer()
-{
-}
+ScratchBuffer::~ScratchBuffer() {}
 
 bool ScratchBuffer::get(size_t requestedSize, MemoryBuffer **memoryBufferOut)
 {

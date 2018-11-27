@@ -137,14 +137,11 @@ Clear11::ShaderManager::ShaderManager()
                CLEARPS(Uint6), CLEARPS(Uint7), CLEARPS(Uint8)}},
       mPsSInt{{CLEARPS(Sint1), CLEARPS(Sint2), CLEARPS(Sint3), CLEARPS(Sint4), CLEARPS(Sint5),
                CLEARPS(Sint6), CLEARPS(Sint7), CLEARPS(Sint8)}}
-{
-}
+{}
 
 #undef CLEARPS
 
-Clear11::ShaderManager::~ShaderManager()
-{
-}
+Clear11::ShaderManager::~ShaderManager() {}
 
 angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *context,
                                                           Renderer11 *renderer,
@@ -238,12 +235,9 @@ Clear11::Clear11(Renderer11 *renderer)
       mConstantBuffer(),
       mVertexBuffer(),
       mShaderData({})
-{
-}
+{}
 
-Clear11::~Clear11()
-{
-}
+Clear11::~Clear11() {}
 
 angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
 {

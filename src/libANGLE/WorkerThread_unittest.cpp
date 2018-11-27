@@ -6,8 +6,8 @@
 // WorkerThread_unittest:
 //   Simple tests for the worker thread class.
 
-#include <array>
 #include <gtest/gtest.h>
+#include <array>
 
 #include "libANGLE/WorkerThread.h"
 

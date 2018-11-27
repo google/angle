@@ -13,9 +13,9 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/renderer/EGLImplFactory.h"
 #include "libANGLE/Stream.h"
 #include "libANGLE/Version.h"
+#include "libANGLE/renderer/EGLImplFactory.h"
 
 #include <set>
 #include <vector>
@@ -30,7 +30,7 @@ struct Config;
 class Surface;
 class ImageSibling;
 class Thread;
-}
+}  // namespace egl
 
 namespace gl
 {
@@ -52,13 +52,15 @@ class DisplayImpl : public EGLImplFactory
     ~DisplayImpl() override;
 
     virtual egl::Error initialize(egl::Display *display) = 0;
-    virtual void terminate() = 0;
+    virtual void terminate()                             = 0;
 
-    virtual egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) = 0;
+    virtual egl::Error makeCurrent(egl::Surface *drawSurface,
+                                   egl::Surface *readSurface,
+                                   gl::Context *context) = 0;
 
     virtual egl::ConfigSet generateConfigs() = 0;
 
-    virtual bool testDeviceLost() = 0;
+    virtual bool testDeviceLost()                                     = 0;
     virtual egl::Error restoreLostDevice(const egl::Display *display) = 0;
 
     virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;
@@ -77,7 +79,7 @@ class DisplayImpl : public EGLImplFactory
 
     virtual egl::Error waitClient(const gl::Context *context)                = 0;
     virtual egl::Error waitNative(const gl::Context *context, EGLint engine) = 0;
-    virtual gl::Version getMaxSupportedESVersion() const           = 0;
+    virtual gl::Version getMaxSupportedESVersion() const                     = 0;
     const egl::Caps &getCaps() const;
 
     virtual void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) {}
@@ -92,7 +94,7 @@ class DisplayImpl : public EGLImplFactory
 
   private:
     virtual void generateExtensions(egl::DisplayExtensions *outExtensions) const = 0;
-    virtual void generateCaps(egl::Caps *outCaps) const = 0;
+    virtual void generateCaps(egl::Caps *outCaps) const                          = 0;
 
     mutable bool mExtensionsInitialized;
     mutable egl::DisplayExtensions mExtensions;
@@ -103,6 +105,6 @@ class DisplayImpl : public EGLImplFactory
     egl::BlobCache *mBlobCache;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_DISPLAYIMPL_H_
+#endif  // LIBANGLE_RENDERER_DISPLAYIMPL_H_

@@ -141,4 +141,4 @@ ANGLE_INSTANTIATE_TEST(MemorySizeTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
                        ES2_VULKAN());
-}  // namespace
+}  // namespace angle

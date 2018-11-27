@@ -130,4 +130,4 @@ class SwapChain11 final : public SwapChainD3D
 };
 
 }  // namespace rx
-#endif // LIBANGLE_RENDERER_D3D_D3D11_SWAPCHAIN11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_SWAPCHAIN11_H_

@@ -46,8 +46,7 @@ TEST_P(AtomicCounterBufferTest, AtomicCounterBufferBindings)
 }
 
 class AtomicCounterBufferTest31 : public AtomicCounterBufferTest
-{
-};
+{};
 
 // Linking should fail if counters in vertex shader exceed gl_MaxVertexAtomicCounters.
 TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)

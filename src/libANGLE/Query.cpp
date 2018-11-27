@@ -11,9 +11,7 @@
 
 namespace gl
 {
-Query::Query(rx::QueryImpl *impl, GLuint id) : RefCountObject(id), mQuery(impl), mLabel()
-{
-}
+Query::Query(rx::QueryImpl *impl, GLuint id) : RefCountObject(id), mQuery(impl), mLabel() {}
 
 Query::~Query()
 {
@@ -90,4 +88,4 @@ const rx::QueryImpl *Query::getImplementation() const
 {
     return mQuery;
 }
-}
+}  // namespace gl

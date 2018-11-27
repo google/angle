@@ -49,9 +49,7 @@ NativeDisplay::NativeDisplay(Capability capabilities)
     DE_ASSERT(capabilities & CAPABILITY_GET_DISPLAY_LEGACY);
 }
 
-NativeDisplay::~NativeDisplay(void)
-{
-}
+NativeDisplay::~NativeDisplay(void) {}
 
 EGLNativeDisplayType NativeDisplay::getLegacyNative(void)
 {
@@ -107,8 +105,6 @@ NativeDisplayFactory::NativeDisplayFactory(const std::string &name,
     DE_ASSERT(capabilities & NativeDisplay::CAPABILITY_GET_DISPLAY_LEGACY);
 }
 
-NativeDisplayFactory::~NativeDisplayFactory(void)
-{
-}
+NativeDisplayFactory::~NativeDisplayFactory(void) {}
 
-}  // eglu
+}  // namespace eglu

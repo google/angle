@@ -28,7 +28,7 @@ namespace gl
 {
 class Context;
 class Texture;
-}
+}  // namespace gl
 
 namespace egl
 {

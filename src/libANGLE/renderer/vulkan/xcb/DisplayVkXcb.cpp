@@ -19,8 +19,7 @@ namespace rx
 
 DisplayVkXcb::DisplayVkXcb(const egl::DisplayState &state)
     : DisplayVk(state), mXcbConnection(nullptr)
-{
-}
+{}
 
 egl::Error DisplayVkXcb::initialize(egl::Display *display)
 {

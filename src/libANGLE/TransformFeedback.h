@@ -19,7 +19,7 @@ namespace rx
 {
 class GLImplFactory;
 class TransformFeedbackImpl;
-}
+}  // namespace rx
 
 namespace gl
 {

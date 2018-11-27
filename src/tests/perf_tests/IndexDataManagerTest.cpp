@@ -27,8 +27,7 @@ class MockIndexBuffer : public rx::IndexBuffer
   public:
     MockIndexBuffer(unsigned int bufferSize, GLenum indexType)
         : mBufferSize(bufferSize), mIndexType(indexType)
-    {
-    }
+    {}
 
     MOCK_METHOD4(initialize, angle::Result(const gl::Context *, unsigned int, GLenum, bool));
     MOCK_METHOD4(mapBuffer,
@@ -51,8 +50,7 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
   public:
     MockBufferFactoryD3D(unsigned int bufferSize, GLenum indexType)
         : mBufferSize(bufferSize), mIndexType(indexType)
-    {
-    }
+    {}
 
     MOCK_METHOD0(createVertexBuffer, rx::VertexBuffer *());
     MOCK_CONST_METHOD1(getVertexConversionType, rx::VertexConversionType(angle::FormatID));

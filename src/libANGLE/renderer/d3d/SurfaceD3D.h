@@ -136,4 +136,4 @@ class PbufferSurfaceD3D : public SurfaceD3D
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_SURFACED3D_H_
+#endif  // LIBANGLE_RENDERER_D3D_SURFACED3D_H_

@@ -19,16 +19,13 @@
 namespace angle
 {
 namespace
-{
-}  // anonymous namespace
+{}  // anonymous namespace
 
 // Observer implementation.
 ObserverInterface::~ObserverInterface() = default;
 
 // Subject implementation.
-Subject::Subject()
-{
-}
+Subject::Subject() {}
 
 Subject::~Subject()
 {
