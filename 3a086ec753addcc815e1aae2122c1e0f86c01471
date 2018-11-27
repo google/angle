@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "ecd1170f_e4d6e88b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T16:34:57Z",
+      "side": 1,
+      "message": "Prior to this commit, `DynamicBuffer` was just giving out `VkBuffer`s, i.e. there was no RecordableGraphResource involved and as you can see on the left, upon `release()`, the current queue serial was used to schedule the removal of the object.\n\nThe reason for this is that the buffers created by `DynamicBuffer` were purely written to by the CPU and they could persist for many frames without anyone updating any associated serial.\n\nWith the change to BufferHelper, there _is_ an associated serial, but if the buffer is still managed by the CPU (i.e. doesn\u0027t record commands), that serial is never updated.",
+      "parentUuid": "35f8e64c_cdcb6269",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 53
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0a166cc_6a333399",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 6
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "b961cad1_97eabf3d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T16:34:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0a166cc_6a333399",
+      "range": {
+        "startLine": 240,
+        "startChar": 8,
+        "endLine": 240,
+        "endChar": 69
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0dd92812_199c9108",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 6
@@ -82,6 +130,30 @@
       "writtenOn": "2018-11-27T15:30:06Z",
       "side": 1,
       "message": "I\u0027m not sure this is safe. releaseRetainedBuffers is called in a lot of places under the assumption that the dynamic buffer is not used in the command graph. I think it\u0027s possible that there could be outstanding dependencies involving this buffer in the graph that aren\u0027t ready for the buffer graph resource to disappear.\n\nMaybe it would make more sense to use a single BufferHelper (non-pointer) in DynamicBuffer and when a new buffer is allocated we internally swap out the BufferHelper\u0027s buffer+memory for a fresh set.\n\nMight have to ponder on this for a bit.",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df3bc277_422a3fd4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T16:34:57Z",
+      "side": 1,
+      "message": "I\u0027m not too happy about `new`ing BufferHelpers and deleting them like this either, so I am open to suggestions. Extracting the `BufferAndMemory` (now with view) out of the current buffer and doing the release like it used to be is an option, but that doesn\u0027t address the first part of your comment either way.\n\nAnd about the first paragraph, even though it \"looks\" risky, I\u0027m not sure if there actually can be an issue. The actual vk resources are going to live until the serial is finished, and any nodes the buffer may have recorded doesn\u0027t have a reference back to the object.\n\nBut I\u0027ll go through all the callers to see if I notice anything dangerous.",
+      "parentUuid": "0dd92812_199c9108",
       "range": {
         "startLine": 241,
         "startChar": 8,
@@ -114,6 +186,30 @@
       "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "247986ad_d9c857e0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T16:34:57Z",
+      "side": 1,
+      "message": "It\u0027s used in an upcoming CL. If I don\u0027t add it in this commit, it will be in a few after it. WIP context:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/1336307/13/src/libANGLE/renderer/vulkan/VertexArrayVk.cpp\n\nline 574.",
+      "parentUuid": "8645436b_c0e9ddab",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 63
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
