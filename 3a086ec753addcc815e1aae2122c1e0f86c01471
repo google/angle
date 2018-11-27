@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae74e896_4422ecec",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T15:30:06Z",
+      "side": 1,
+      "message": "Hoping we can keep this private. See other comments.",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 47
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35f8e64c_cdcb6269",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T15:30:06Z",
+      "side": 1,
+      "message": "can you elaborate? I\u0027m not sure I follow.",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 53
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0a166cc_6a333399",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T15:30:06Z",
+      "side": 1,
+      "message": "same comment here.",
+      "range": {
+        "startLine": 240,
+        "startChar": 8,
+        "endLine": 240,
+        "endChar": 69
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dd92812_199c9108",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T15:30:06Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is safe. releaseRetainedBuffers is called in a lot of places under the assumption that the dynamic buffer is not used in the command graph. I think it\u0027s possible that there could be outstanding dependencies involving this buffer in the graph that aren\u0027t ready for the buffer graph resource to disappear.\n\nMaybe it would make more sense to use a single BufferHelper (non-pointer) in DynamicBuffer and when a new buffer is allocated we internally swap out the BufferHelper\u0027s buffer+memory for a fresh set.\n\nMight have to ponder on this for a bit.",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8645436b_c0e9ddab",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T15:30:06Z",
+      "side": 1,
+      "message": "is this used anywhere in this CL? I\u0027m thinking we might not need it. But would have to see it in context to understand. If we could remove it at least temporarily that would be good.",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 63
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
