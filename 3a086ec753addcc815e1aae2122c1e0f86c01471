@@ -401,6 +401,30 @@
       "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fa02f42_34e541ec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-27T21:05:45Z",
+      "side": 1,
+      "message": "Cool, now that we are in agreement, in my original comment I suggested that map() is the getter for mMappedMemory.",
+      "parentUuid": "169582a1_e1b8036a",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 27
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
