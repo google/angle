@@ -238,6 +238,30 @@
     },
     {
       "key": {
+        "uuid": "64065f13_34462965",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T20:59:49Z",
+      "side": 1,
+      "message": "`VkDevice mHandle` can\u0027t be templated because there\u0027s an array of those objects, so they need to be the same. A type that has enough size for every handle would work though. Probably a union of all the types would be best (and avoids the casts we currently have to set and get the handle). We can add generic pointers there too, why not.\n\nI discussed with Jamie and and eventually we think it\u0027s best to keep things as it already is for now, and make RecordableCommandGraph movable so these objects are not `new`ed.",
+      "parentUuid": "43f5a337_206f7698",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8645436b_c0e9ddab",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6
@@ -344,6 +368,30 @@
       "side": 1,
       "message": "I was also considering removing it from here first, but decided removing the one in DynamicBuffer is better, since it\u0027s nice that BufferHelper encapsulates everything related to the buffer, including the mapped memory.\nThe tracking of when to unmap the memory in DynamicBuffer could be complicated (like we are discussing when is it safe to delete the BufferHelper objects themselves), but BufferHelper is a kind of \"smart pointer\", which would unmap the memory when it\u0027s deleted (like smart pointer going out of scope).",
       "parentUuid": "5bd9f829_88d90b82",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 27
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "169582a1_e1b8036a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T20:59:49Z",
+      "side": 1,
+      "message": "I mistakenly thought your comment was on the DynamicBuffer class, so we are in agreement! The second paragraph in my previous comment should now make sense.",
+      "parentUuid": "4d659d64_4366e43c",
       "range": {
         "startLine": 434,
         "startChar": 0,
