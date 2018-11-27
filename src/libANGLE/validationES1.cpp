@@ -16,15 +16,16 @@
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationES.h"
 
-#define ANGLE_VALIDATE_IS_GLES1(context)                                 \
-    if (context->getClientMajorVersion() > 1)                            \
-    {                                                                    \
-        context->validationError(GL_INVALID_OPERATION, kErrorGLES1Only); \
-        return false;                                                    \
+#define ANGLE_VALIDATE_IS_GLES1(context)                            \
+    if (context->getClientMajorVersion() > 1)                       \
+    {                                                               \
+        context->validationError(GL_INVALID_OPERATION, kGLES1Only); \
+        return false;                                               \
     }
 
 namespace gl
 {
+using namespace err;
 
 bool ValidateAlphaFuncCommon(Context *context, AlphaTestFunc func)
 {
@@ -40,7 +41,7 @@ bool ValidateAlphaFuncCommon(Context *context, AlphaTestFunc func)
         case AlphaTestFunc::NotEqual:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorEnumNotSupported);
+            context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
     }
 }
@@ -58,12 +59,12 @@ bool ValidateClientStateCommon(Context *context, ClientVertexArrayType arrayType
         case ClientVertexArrayType::PointSize:
             if (!context->getExtensions().pointSizeArray)
             {
-                context->validationError(GL_INVALID_ENUM, kErrorPointSizeArrayExtensionNotEnabled);
+                context->validationError(GL_INVALID_ENUM, kPointSizeArrayExtensionNotEnabled);
                 return false;
             }
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidClientState);
+            context->validationError(GL_INVALID_ENUM, kInvalidClientState);
             return false;
     }
 }
@@ -79,7 +80,7 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
 
     if (stride < 0)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidVertexPointerStride);
+        context->validationError(GL_INVALID_VALUE, kInvalidVertexPointerStride);
         return false;
     }
 
@@ -104,7 +105,7 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
         case ClientVertexArrayType::PointSize:
             if (!context->getExtensions().pointSizeArray)
             {
-                context->validationError(GL_INVALID_ENUM, kErrorPointSizeArrayExtensionNotEnabled);
+                context->validationError(GL_INVALID_ENUM, kPointSizeArrayExtensionNotEnabled);
                 return false;
             }
 
@@ -118,7 +119,7 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
 
     if (size < minSize || size > maxSize)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidVertexPointerSize);
+        context->validationError(GL_INVALID_VALUE, kInvalidVertexPointerSize);
         return false;
     }
 
@@ -127,7 +128,7 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
         case GL_BYTE:
             if (arrayType == ClientVertexArrayType::PointSize)
             {
-                context->validationError(GL_INVALID_ENUM, kErrorInvalidVertexPointerType);
+                context->validationError(GL_INVALID_ENUM, kInvalidVertexPointerType);
                 return false;
             }
             break;
@@ -135,7 +136,7 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
             if (arrayType == ClientVertexArrayType::PointSize ||
                 arrayType == ClientVertexArrayType::Color)
             {
-                context->validationError(GL_INVALID_ENUM, kErrorInvalidVertexPointerType);
+                context->validationError(GL_INVALID_ENUM, kInvalidVertexPointerType);
                 return false;
             }
             break;
@@ -143,7 +144,7 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
         case GL_FLOAT:
             break;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidVertexPointerType);
+            context->validationError(GL_INVALID_ENUM, kInvalidVertexPointerType);
             return false;
     }
 
@@ -154,7 +155,7 @@ bool ValidateLightCaps(Context *context, GLenum light)
 {
     if (light < GL_LIGHT0 || light >= GL_LIGHT0 + context->getCaps().maxLights)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidLight);
+        context->validationError(GL_INVALID_ENUM, kInvalidLight);
         return false;
     }
 
@@ -185,7 +186,7 @@ bool ValidateLightCommon(Context *context,
         case LightParameter::SpotExponent:
             if (params[0] < 0.0f || params[0] > 128.0f)
             {
-                context->validationError(GL_INVALID_VALUE, kErrorLightParameterOutOfRange);
+                context->validationError(GL_INVALID_VALUE, kLightParameterOutOfRange);
                 return false;
             }
             return true;
@@ -196,7 +197,7 @@ bool ValidateLightCommon(Context *context,
             }
             if (params[0] < 0.0f || params[0] > 90.0f)
             {
-                context->validationError(GL_INVALID_VALUE, kErrorLightParameterOutOfRange);
+                context->validationError(GL_INVALID_VALUE, kLightParameterOutOfRange);
                 return false;
             }
             return true;
@@ -205,12 +206,12 @@ bool ValidateLightCommon(Context *context,
         case LightParameter::QuadraticAttenuation:
             if (params[0] < 0.0f)
             {
-                context->validationError(GL_INVALID_VALUE, kErrorLightParameterOutOfRange);
+                context->validationError(GL_INVALID_VALUE, kLightParameterOutOfRange);
                 return false;
             }
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidLightParameter);
+            context->validationError(GL_INVALID_ENUM, kInvalidLightParameter);
             return false;
     }
 }
@@ -227,7 +228,7 @@ bool ValidateLightSingleComponent(Context *context,
 
     if (GetLightParameterCount(pname) > 1)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidLightParameter);
+        context->validationError(GL_INVALID_ENUM, kInvalidLightParameter);
         return false;
     }
 
@@ -249,12 +250,12 @@ bool ValidateMaterialCommon(Context *context,
         case MaterialParameter::Shininess:
             if (params[0] < 0.0f || params[0] > 128.0f)
             {
-                context->validationError(GL_INVALID_VALUE, kErrorMaterialParameterOutOfRange);
+                context->validationError(GL_INVALID_VALUE, kMaterialParameterOutOfRange);
                 return false;
             }
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidMaterialParameter);
+            context->validationError(GL_INVALID_ENUM, kInvalidMaterialParameter);
             return false;
     }
 }
@@ -268,7 +269,7 @@ bool ValidateMaterialSetting(Context *context,
 
     if (face != GL_FRONT_AND_BACK)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidMaterialFace);
+        context->validationError(GL_INVALID_ENUM, kInvalidMaterialFace);
         return false;
     }
 
@@ -281,7 +282,7 @@ bool ValidateMaterialQuery(Context *context, GLenum face, MaterialParameter pnam
 
     if (face != GL_FRONT && face != GL_BACK)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidMaterialFace);
+        context->validationError(GL_INVALID_ENUM, kInvalidMaterialFace);
         return false;
     }
 
@@ -302,7 +303,7 @@ bool ValidateMaterialSingleComponent(Context *context,
 
     if (GetMaterialParameterCount(pname) > 1)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidMaterialParameter);
+        context->validationError(GL_INVALID_ENUM, kInvalidMaterialParameter);
         return false;
     }
 
@@ -318,7 +319,7 @@ bool ValidateLightModelCommon(Context *context, GLenum pname)
         case GL_LIGHT_MODEL_TWO_SIDE:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidLightModelParameter);
+            context->validationError(GL_INVALID_ENUM, kInvalidLightModelParameter);
             return false;
     }
 }
@@ -335,7 +336,7 @@ bool ValidateLightModelSingleComponent(Context *context, GLenum pname)
         case GL_LIGHT_MODEL_TWO_SIDE:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidLightModelParameter);
+            context->validationError(GL_INVALID_ENUM, kInvalidLightModelParameter);
             return false;
     }
 }
@@ -346,7 +347,7 @@ bool ValidateClipPlaneCommon(Context *context, GLenum plane)
 
     if (plane < GL_CLIP_PLANE0 || plane >= GL_CLIP_PLANE0 + context->getCaps().maxClipPlanes)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidClipPlane);
+        context->validationError(GL_INVALID_ENUM, kInvalidClipPlane);
         return false;
     }
 
@@ -369,7 +370,7 @@ bool ValidateFogCommon(Context *context, GLenum pname, const GLfloat *params)
                 case GL_LINEAR:
                     return true;
                 default:
-                    context->validationError(GL_INVALID_VALUE, kErrorInvalidFogMode);
+                    context->validationError(GL_INVALID_VALUE, kInvalidFogMode);
                     return false;
             }
         }
@@ -381,12 +382,12 @@ bool ValidateFogCommon(Context *context, GLenum pname, const GLfloat *params)
         case GL_FOG_DENSITY:
             if (params[0] < 0.0f)
             {
-                context->validationError(GL_INVALID_VALUE, kErrorInvalidFogDensity);
+                context->validationError(GL_INVALID_VALUE, kInvalidFogDensity);
                 return false;
             }
             break;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidFogParameter);
+            context->validationError(GL_INVALID_ENUM, kInvalidFogParameter);
             return false;
     }
     return true;
@@ -417,7 +418,7 @@ bool ValidateTexEnvCommon(Context *context,
                         case TextureEnvMode::Replace:
                             break;
                         default:
-                            context->validationError(GL_INVALID_VALUE, kErrorInvalidTextureEnvMode);
+                            context->validationError(GL_INVALID_VALUE, kInvalidTextureEnvMode);
                             return false;
                     }
                     break;
@@ -439,13 +440,12 @@ bool ValidateTexEnvCommon(Context *context,
                         case TextureCombine::Dot3Rgba:
                             if (pname == TextureEnvParameter::CombineAlpha)
                             {
-                                context->validationError(GL_INVALID_VALUE,
-                                                         kErrorInvalidTextureCombine);
+                                context->validationError(GL_INVALID_VALUE, kInvalidTextureCombine);
                                 return false;
                             }
                             break;
                         default:
-                            context->validationError(GL_INVALID_VALUE, kErrorInvalidTextureCombine);
+                            context->validationError(GL_INVALID_VALUE, kInvalidTextureCombine);
                             return false;
                     }
                     break;
@@ -466,8 +466,7 @@ bool ValidateTexEnvCommon(Context *context,
                         case TextureSrc::Texture:
                             break;
                         default:
-                            context->validationError(GL_INVALID_VALUE,
-                                                     kErrorInvalidTextureCombineSrc);
+                            context->validationError(GL_INVALID_VALUE, kInvalidTextureCombineSrc);
                             return false;
                     }
                     break;
@@ -491,14 +490,12 @@ bool ValidateTexEnvCommon(Context *context,
                                 pname == TextureEnvParameter::Op1Alpha ||
                                 pname == TextureEnvParameter::Op2Alpha)
                             {
-                                context->validationError(GL_INVALID_VALUE,
-                                                         kErrorInvalidTextureCombine);
+                                context->validationError(GL_INVALID_VALUE, kInvalidTextureCombine);
                                 return false;
                             }
                             break;
                         default:
-                            context->validationError(GL_INVALID_VALUE,
-                                                     kErrorInvalidTextureCombineOp);
+                            context->validationError(GL_INVALID_VALUE, kInvalidTextureCombineOp);
                             return false;
                     }
                     break;
@@ -507,21 +504,21 @@ bool ValidateTexEnvCommon(Context *context,
                 case TextureEnvParameter::AlphaScale:
                     if (params[0] != 1.0f && params[0] != 2.0f && params[0] != 4.0f)
                     {
-                        context->validationError(GL_INVALID_VALUE, kErrorInvalidTextureEnvScale);
+                        context->validationError(GL_INVALID_VALUE, kInvalidTextureEnvScale);
                         return false;
                     }
                     break;
                 case TextureEnvParameter::Color:
                     break;
                 default:
-                    context->validationError(GL_INVALID_ENUM, kErrorInvalidTextureEnvParameter);
+                    context->validationError(GL_INVALID_ENUM, kInvalidTextureEnvParameter);
                     return false;
             }
             break;
         case TextureEnvTarget::PointSprite:
             if (!context->getExtensions().pointSprite)
             {
-                context->validationError(GL_INVALID_ENUM, kErrorInvalidTextureEnvTarget);
+                context->validationError(GL_INVALID_ENUM, kInvalidTextureEnvTarget);
                 return false;
             }
             switch (pname)
@@ -529,12 +526,12 @@ bool ValidateTexEnvCommon(Context *context,
                 case TextureEnvParameter::PointCoordReplace:
                     break;
                 default:
-                    context->validationError(GL_INVALID_ENUM, kErrorInvalidTextureEnvParameter);
+                    context->validationError(GL_INVALID_ENUM, kInvalidTextureEnvParameter);
                     return false;
             }
             break;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidTextureEnvTarget);
+            context->validationError(GL_INVALID_ENUM, kInvalidTextureEnvTarget);
             return false;
     }
     return true;
@@ -594,13 +591,13 @@ bool ValidatePointParameterCommon(Context *context, PointParameter pname, const 
             {
                 if (params[i] < 0.0f)
                 {
-                    context->validationError(GL_INVALID_VALUE, kErrorInvalidPointParameterValue);
+                    context->validationError(GL_INVALID_VALUE, kInvalidPointParameterValue);
                     return false;
                 }
             }
             break;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidPointParameter);
+            context->validationError(GL_INVALID_ENUM, kInvalidPointParameter);
             return false;
     }
 
@@ -613,7 +610,7 @@ bool ValidatePointSizeCommon(Context *context, GLfloat size)
 
     if (size <= 0.0f)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidPointSizeValue);
+        context->validationError(GL_INVALID_VALUE, kInvalidPointSizeValue);
         return false;
     }
 
@@ -626,7 +623,7 @@ bool ValidateDrawTexCommon(Context *context, float width, float height)
 
     if (width <= 0.0f || height <= 0.0f)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorNonPositiveDrawTextureDimension);
+        context->validationError(GL_INVALID_VALUE, kNonPositiveDrawTextureDimension);
         return false;
     }
 
@@ -768,7 +765,7 @@ bool ValidateFrustumf(Context *context,
     ANGLE_VALIDATE_IS_GLES1(context);
     if (l == r || b == t || n == f || n <= 0.0f || f <= 0.0f)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidProjectionMatrix);
+        context->validationError(GL_INVALID_VALUE, kInvalidProjectionMatrix);
     }
     return true;
 }
@@ -784,7 +781,7 @@ bool ValidateFrustumx(Context *context,
     ANGLE_VALIDATE_IS_GLES1(context);
     if (l == r || b == t || n == f || n <= 0 || f <= 0)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidProjectionMatrix);
+        context->validationError(GL_INVALID_VALUE, kInvalidProjectionMatrix);
     }
     return true;
 }
@@ -845,7 +842,7 @@ bool ValidateGetPointerv(Context *context, GLenum pname, void **params)
         case GL_POINT_SIZE_ARRAY_POINTER_OES:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidPointerQuery);
+            context->validationError(GL_INVALID_ENUM, kInvalidPointerQuery);
             return false;
     }
 }
@@ -979,7 +976,7 @@ bool ValidateLogicOp(Context *context, LogicalOperation opcode)
         case LogicalOperation::Xor:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidLogicOp);
+            context->validationError(GL_INVALID_ENUM, kInvalidLogicOp);
             return false;
     }
 }
@@ -1027,7 +1024,7 @@ bool ValidateMatrixMode(Context *context, MatrixType mode)
         case MatrixType::Texture:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidMatrixMode);
+            context->validationError(GL_INVALID_ENUM, kInvalidMatrixMode);
             return false;
     }
 }
@@ -1095,7 +1092,7 @@ bool ValidateOrthof(Context *context,
     ANGLE_VALIDATE_IS_GLES1(context);
     if (l == r || b == t || n == f || n <= 0.0f || f <= 0.0f)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidProjectionMatrix);
+        context->validationError(GL_INVALID_VALUE, kInvalidProjectionMatrix);
     }
     return true;
 }
@@ -1111,7 +1108,7 @@ bool ValidateOrthox(Context *context,
     ANGLE_VALIDATE_IS_GLES1(context);
     if (l == r || b == t || n == f || n <= 0 || f <= 0)
     {
-        context->validationError(GL_INVALID_VALUE, kErrorInvalidProjectionMatrix);
+        context->validationError(GL_INVALID_VALUE, kInvalidProjectionMatrix);
     }
     return true;
 }
@@ -1121,7 +1118,7 @@ bool ValidatePointParameterf(Context *context, PointParameter pname, GLfloat par
     unsigned int paramCount = GetPointParameterCount(pname);
     if (paramCount != 1)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidPointParameter);
+        context->validationError(GL_INVALID_ENUM, kInvalidPointParameter);
         return false;
     }
 
@@ -1138,7 +1135,7 @@ bool ValidatePointParameterx(Context *context, PointParameter pname, GLfixed par
     unsigned int paramCount = GetPointParameterCount(pname);
     if (paramCount != 1)
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidPointParameter);
+        context->validationError(GL_INVALID_ENUM, kInvalidPointParameter);
         return false;
     }
 
@@ -1178,7 +1175,7 @@ bool ValidatePopMatrix(Context *context)
     const auto &stack = context->getGLState().gles1().currentMatrixStack();
     if (stack.size() == 1)
     {
-        context->validationError(GL_STACK_UNDERFLOW, kErrorMatrixStackUnderflow);
+        context->validationError(GL_STACK_UNDERFLOW, kMatrixStackUnderflow);
         return false;
     }
     return true;
@@ -1190,7 +1187,7 @@ bool ValidatePushMatrix(Context *context)
     const auto &stack = context->getGLState().gles1().currentMatrixStack();
     if (stack.size() == stack.max_size())
     {
-        context->validationError(GL_STACK_OVERFLOW, kErrorMatrixStackOverflow);
+        context->validationError(GL_STACK_OVERFLOW, kMatrixStackOverflow);
         return false;
     }
     return true;
@@ -1235,7 +1232,7 @@ bool ValidateShadeModel(Context *context, ShadingModel mode)
         case ShadingModel::Smooth:
             return true;
         default:
-            context->validationError(GL_INVALID_ENUM, kErrorInvalidShadingModel);
+            context->validationError(GL_INVALID_ENUM, kInvalidShadingModel);
             return false;
     }
 }

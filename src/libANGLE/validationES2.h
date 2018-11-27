@@ -32,14 +32,14 @@ ANGLE_INLINE bool ValidateBindBuffer(Context *context, BufferBinding target, GLu
 {
     if (!context->isValidBufferBinding(target))
     {
-        context->validationError(GL_INVALID_ENUM, kErrorInvalidBufferTypes);
+        context->validationError(GL_INVALID_ENUM, err::kInvalidBufferTypes);
         return false;
     }
 
     if (!context->getGLState().isBindGeneratesResourceEnabled() &&
         !context->isBufferGenerated(buffer))
     {
-        context->validationError(GL_INVALID_OPERATION, kErrorObjectNotGenerated);
+        context->validationError(GL_INVALID_OPERATION, err::kObjectNotGenerated);
         return false;
     }
 

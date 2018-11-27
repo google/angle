@@ -228,7 +228,7 @@ ANGLE_INLINE bool ValidateUniformValue(Context *context, GLenum valueType, GLenu
     // Do the cheaper test first, for a little extra speed.
     if (valueType != uniformType && VariableBoolVectorType(valueType) != uniformType)
     {
-        context->validationError(GL_INVALID_OPERATION, kErrorUniformSizeMismatch);
+        context->validationError(GL_INVALID_OPERATION, err::kUniformSizeMismatch);
         return false;
     }
     return true;
@@ -605,7 +605,7 @@ ANGLE_INLINE bool ValidateFramebufferComplete(Context *context, Framebuffer *fra
 {
     if (!framebuffer->isComplete(context))
     {
-        context->validationError(ErrorCode, kErrorFramebufferIncomplete);
+        context->validationError(ErrorCode, err::kFramebufferIncomplete);
         return false;
     }
 
