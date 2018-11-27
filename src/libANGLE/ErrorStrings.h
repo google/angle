@@ -88,6 +88,7 @@ MSG kFramebufferTextureInvalidMipLevel = "Mip level invalid for framebuffer text
 MSG kFramebufferTextureLayerIncorrectTextureType = "Texture is not a three-dimensional or two-dimensionsal array texture.";
 MSG kGLES1Only = "GLES1-only function.";
 MSG kGenerateMipmapNotAllowed = "Texture format does not support mipmap generation.";
+MSG kGenerateMipmapZeroSize = "Cannot generate mipmaps for a zero-size texture in a WebGL context.";
 MSG kGeometryShaderExtensionNotEnabled = "GL_EXT_geometry_shader extension not enabled.";
 MSG kImmutableTextureBound = "The value of TEXTURE_IMMUTABLE_FORMAT for the texture currently bound to target on the active texture unit is true.";
 MSG kIncompatibleDrawModeAgainstGeometryShader = "Primitive mode is incompatible with the input primitive type of the geometry shader.";
