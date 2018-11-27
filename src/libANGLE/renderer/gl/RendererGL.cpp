@@ -145,7 +145,7 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
         ERR() << std::endl
               << "\tSource: " << sourceText << std::endl
               << "\tType: " << typeText << std::endl
-              << "\tID: " << gl::Error(id) << std::endl
+              << "\tID: " << gl::FmtHex(id) << std::endl
               << "\tSeverity: " << severityText << std::endl
               << "\tMessage: " << message;
     }
@@ -158,7 +158,7 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
         WARN() << std::endl
                << "\tSource: " << sourceText << std::endl
                << "\tType: " << typeText << std::endl
-               << "\tID: " << gl::Error(id) << std::endl
+               << "\tID: " << gl::FmtHex(id) << std::endl
                << "\tSeverity: " << severityText << std::endl
                << "\tMessage: " << message;
     }

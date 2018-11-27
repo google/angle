@@ -358,7 +358,7 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
             break;
         case GL_TEXTURE_BASE_LEVEL:
         {
-            context->handleError(texture->setBaseLevel(
+            (void)(texture->setBaseLevel(
                 context, clampCast<GLuint>(CastQueryValueTo<GLint>(pname, params[0]))));
             break;
         }
@@ -1485,12 +1485,12 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
     }
 }
 
-Error QuerySynciv(const Context *context,
-                  const Sync *sync,
-                  GLenum pname,
-                  GLsizei bufSize,
-                  GLsizei *length,
-                  GLint *values)
+angle::Result QuerySynciv(const Context *context,
+                          const Sync *sync,
+                          GLenum pname,
+                          GLsizei bufSize,
+                          GLsizei *length,
+                          GLint *values)
 {
     ASSERT(sync);
 
@@ -1501,7 +1501,7 @@ Error QuerySynciv(const Context *context,
         {
             *length = 0;
         }
-        return NoError();
+        return angle::Result::Continue();
     }
 
     switch (pname)
@@ -1529,7 +1529,7 @@ Error QuerySynciv(const Context *context,
         *length = 1;
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat param)

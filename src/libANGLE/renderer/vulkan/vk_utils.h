@@ -101,7 +101,10 @@ class Context : angle::NonCopyable
     Context(RendererVk *renderer);
     virtual ~Context();
 
-    virtual void handleError(VkResult result, const char *file, unsigned int line) = 0;
+    virtual void handleError(VkResult result,
+                             const char *file,
+                             const char *function,
+                             unsigned int line) = 0;
     VkDevice getDevice() const;
     RendererVk *getRenderer() const { return mRenderer; }
 
@@ -894,15 +897,15 @@ void GetScissor(const gl::State &glState,
 
 }  // namespace rx
 
-#define ANGLE_VK_TRY(context, command)                                 \
-    do                                                                 \
-    {                                                                  \
-        auto ANGLE_LOCAL_VAR = command;                                \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS))             \
-        {                                                              \
-            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__); \
-            return angle::Result::Stop();                              \
-        }                                                              \
+#define ANGLE_VK_TRY(context, command)                                                 \
+    do                                                                                 \
+    {                                                                                  \
+        auto ANGLE_LOCAL_VAR = command;                                                \
+        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS))                             \
+        {                                                                              \
+            context->handleError(ANGLE_LOCAL_VAR, __FILE__, ANGLE_FUNCTION, __LINE__); \
+            return angle::Result::Stop();                                              \
+        }                                                                              \
     } while (0)
 
 #define ANGLE_VK_CHECK(context, test, error) ANGLE_VK_TRY(context, test ? VK_SUCCESS : error)

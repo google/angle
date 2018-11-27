@@ -79,7 +79,10 @@ class DisplayVk : public DisplayImpl, public vk::Context
                                            angle::MemoryBuffer **scratchBufferOut) const;
     angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
 
-    void handleError(VkResult result, const char *file, unsigned int line) override;
+    void handleError(VkResult result,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override;
 
     // TODO(jmadill): Remove this once refactor is done. http://anglebug.com/2491
     egl::Error getEGLError(EGLint errorCode);

@@ -186,11 +186,16 @@ bool DisplayVk::getScratchBuffer(size_t requstedSizeBytes,
     return mScratchBuffer.get(requstedSizeBytes, scratchBufferOut);
 }
 
-void DisplayVk::handleError(VkResult result, const char *file, unsigned int line)
+void DisplayVk::handleError(VkResult result,
+                            const char *file,
+                            const char *function,
+                            unsigned int line)
 {
+    ASSERT(result != VK_SUCCESS);
+
     std::stringstream errorStream;
     errorStream << "Internal Vulkan error: " << VulkanResultString(result) << ", in " << file
-                << ", line " << line << ".";
+                << ", " << function << ":" << line << ".";
     mStoredErrorString = errorStream.str();
 
     if (result == VK_ERROR_DEVICE_LOST)

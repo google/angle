@@ -283,7 +283,7 @@ class Texture final : public RefCountObject,
 
     bool isMipmapComplete() const;
 
-    angle::Result setImage(const Context *context,
+    angle::Result setImage(Context *context,
                            const PixelUnpackState &unpackState,
                            TextureTarget target,
                            GLint level,
@@ -292,7 +292,7 @@ class Texture final : public RefCountObject,
                            GLenum format,
                            GLenum type,
                            const uint8_t *pixels);
-    angle::Result setSubImage(const Context *context,
+    angle::Result setSubImage(Context *context,
                               const PixelUnpackState &unpackState,
                               Buffer *unpackBuffer,
                               TextureTarget target,
@@ -302,7 +302,7 @@ class Texture final : public RefCountObject,
                               GLenum type,
                               const uint8_t *pixels);
 
-    angle::Result setCompressedImage(const Context *context,
+    angle::Result setCompressedImage(Context *context,
                                      const PixelUnpackState &unpackState,
                                      TextureTarget target,
                                      GLint level,
@@ -319,20 +319,20 @@ class Texture final : public RefCountObject,
                                         size_t imageSize,
                                         const uint8_t *pixels);
 
-    angle::Result copyImage(const Context *context,
+    angle::Result copyImage(Context *context,
                             TextureTarget target,
                             GLint level,
                             const Rectangle &sourceArea,
                             GLenum internalFormat,
                             Framebuffer *source);
-    angle::Result copySubImage(const Context *context,
+    angle::Result copySubImage(Context *context,
                                TextureTarget target,
                                GLint level,
                                const Offset &destOffset,
                                const Rectangle &sourceArea,
                                Framebuffer *source);
 
-    angle::Result copyTexture(const Context *context,
+    angle::Result copyTexture(Context *context,
                               TextureTarget target,
                               GLint level,
                               GLenum internalFormat,
@@ -352,26 +352,24 @@ class Texture final : public RefCountObject,
                                  bool unpackPremultiplyAlpha,
                                  bool unpackUnmultiplyAlpha,
                                  Texture *source);
-    angle::Result copyCompressedTexture(const Context *context, const Texture *source);
+    angle::Result copyCompressedTexture(Context *context, const Texture *source);
 
-    angle::Result setStorage(const Context *context,
+    angle::Result setStorage(Context *context,
                              TextureType type,
                              GLsizei levels,
                              GLenum internalFormat,
                              const Extents &size);
 
-    angle::Result setStorageMultisample(const Context *context,
+    angle::Result setStorageMultisample(Context *context,
                                         TextureType type,
                                         GLsizei samples,
                                         GLint internalformat,
                                         const Extents &size,
                                         bool fixedSampleLocations);
 
-    angle::Result setEGLImageTarget(const Context *context,
-                                    TextureType type,
-                                    egl::Image *imageTarget);
+    angle::Result setEGLImageTarget(Context *context, TextureType type, egl::Image *imageTarget);
 
-    angle::Result generateMipmap(const Context *context);
+    angle::Result generateMipmap(Context *context);
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
@@ -461,7 +459,7 @@ class Texture final : public RefCountObject,
 
     // ANGLE-only method, used internally
     friend class egl::Surface;
-    angle::Result bindTexImageFromSurface(const Context *context, egl::Surface *surface);
+    angle::Result bindTexImageFromSurface(Context *context, egl::Surface *surface);
     angle::Result releaseTexImageFromSurface(const Context *context);
 
     // ANGLE-only methods, used internally
@@ -473,14 +471,14 @@ class Texture final : public RefCountObject,
     angle::Result releaseImageFromStream(const Context *context);
 
     void invalidateCompletenessCache() const;
-    angle::Result releaseTexImageInternal(const Context *context);
+    angle::Result releaseTexImageInternal(Context *context);
 
     angle::Result ensureSubImageInitialized(const Context *context,
                                             TextureTarget target,
                                             size_t level,
                                             const gl::Box &area);
 
-    angle::Result handleMipmapGenerationHint(const Context *context, int level);
+    angle::Result handleMipmapGenerationHint(Context *context, int level);
 
     TextureState mState;
     DirtyBits mDirtyBits;

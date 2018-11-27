@@ -179,7 +179,10 @@ class ContextVk : public ContextImpl, public vk::Context
                                        gl::Texture **textureOut);
     void updateColorMask(const gl::BlendState &blendState);
 
-    void handleError(VkResult errorCode, const char *file, unsigned int line) override;
+    void handleError(VkResult errorCode,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override;
     const gl::ActiveTextureArray<TextureVk *> &getActiveTextures() const;
 
     void setIndexBufferDirty() { mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER); }

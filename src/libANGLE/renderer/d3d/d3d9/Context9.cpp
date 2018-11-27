@@ -349,9 +349,8 @@ void Context9::handleResult(HRESULT hr,
     GLenum glErrorCode = DefaultGLErrorCode(hr);
 
     std::stringstream errorStream;
-    errorStream << "Internal D3D9 error: " << gl::FmtHR(hr) << ", in " << file << ", " << function
-                << ":" << line << ". " << message;
+    errorStream << "Internal D3D9 error: " << gl::FmtHR(hr) << ": " << message;
 
-    mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
+    mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
 }
 }  // namespace rx

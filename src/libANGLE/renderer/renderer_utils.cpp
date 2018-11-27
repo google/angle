@@ -431,20 +431,24 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
     gl::Texture *tex = new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
     angle::UniqueObjectPointer<gl::Texture, gl::Context> t(tex, context);
 
+    // This is a bit of a kludge but is necessary to consume the error.
+    gl::Context *mutableContext = const_cast<gl::Context *>(context);
+
     if (createType == gl::TextureType::_2DMultisample)
     {
-        ANGLE_TRY(t->setStorageMultisample(context, createType, 1, GL_RGBA8, colorSize, true));
+        ANGLE_TRY(
+            t->setStorageMultisample(mutableContext, createType, 1, GL_RGBA8, colorSize, true));
     }
     else
     {
-        ANGLE_TRY(t->setStorage(context, createType, 1, GL_RGBA8, colorSize));
+        ANGLE_TRY(t->setStorage(mutableContext, createType, 1, GL_RGBA8, colorSize));
     }
 
     if (type == gl::TextureType::CubeMap)
     {
         for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
         {
-            ANGLE_TRY(t->setSubImage(context, unpack, nullptr, face, 0, area, GL_RGBA,
+            ANGLE_TRY(t->setSubImage(mutableContext, unpack, nullptr, face, 0, area, GL_RGBA,
                                      GL_UNSIGNED_BYTE, color));
         }
     }
@@ -455,7 +459,7 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
     }
     else
     {
-        ANGLE_TRY(t->setSubImage(context, unpack, nullptr,
+        ANGLE_TRY(t->setSubImage(mutableContext, unpack, nullptr,
                                  gl::NonCubeTextureTypeToTarget(createType), 0, area, GL_RGBA,
                                  GL_UNSIGNED_BYTE, color));
     }

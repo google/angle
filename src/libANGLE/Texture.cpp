@@ -970,7 +970,7 @@ void Texture::signalDirty(const Context *context, InitState initState)
     invalidateCompletenessCache();
 }
 
-angle::Result Texture::setImage(const Context *context,
+angle::Result Texture::setImage(Context *context,
                                 const PixelUnpackState &unpackState,
                                 TextureTarget target,
                                 GLint level,
@@ -1001,7 +1001,7 @@ angle::Result Texture::setImage(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::setSubImage(const Context *context,
+angle::Result Texture::setSubImage(Context *context,
                                    const PixelUnpackState &unpackState,
                                    Buffer *unpackBuffer,
                                    TextureTarget target,
@@ -1025,7 +1025,7 @@ angle::Result Texture::setSubImage(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::setCompressedImage(const Context *context,
+angle::Result Texture::setCompressedImage(Context *context,
                                           const PixelUnpackState &unpackState,
                                           TextureTarget target,
                                           GLint level,
@@ -1071,7 +1071,7 @@ angle::Result Texture::setCompressedSubImage(const Context *context,
                                            pixels);
 }
 
-angle::Result Texture::copyImage(const Context *context,
+angle::Result Texture::copyImage(Context *context,
                                  TextureTarget target,
                                  GLint level,
                                  const Rectangle &sourceArea,
@@ -1110,7 +1110,7 @@ angle::Result Texture::copyImage(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::copySubImage(const Context *context,
+angle::Result Texture::copySubImage(Context *context,
                                     TextureTarget target,
                                     GLint level,
                                     const Offset &destOffset,
@@ -1133,7 +1133,7 @@ angle::Result Texture::copySubImage(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::copyTexture(const Context *context,
+angle::Result Texture::copyTexture(Context *context,
                                    TextureTarget target,
                                    GLint level,
                                    GLenum internalFormat,
@@ -1198,7 +1198,7 @@ angle::Result Texture::copySubTexture(const Context *context,
                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
 }
 
-angle::Result Texture::copyCompressedTexture(const Context *context, const Texture *source)
+angle::Result Texture::copyCompressedTexture(Context *context, const Texture *source)
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
@@ -1214,7 +1214,7 @@ angle::Result Texture::copyCompressedTexture(const Context *context, const Textu
     return angle::Result::Continue();
 }
 
-angle::Result Texture::setStorage(const Context *context,
+angle::Result Texture::setStorage(Context *context,
                                   TextureType type,
                                   GLsizei levels,
                                   GLenum internalFormat,
@@ -1246,7 +1246,7 @@ angle::Result Texture::setStorage(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::setStorageMultisample(const Context *context,
+angle::Result Texture::setStorageMultisample(Context *context,
                                              TextureType type,
                                              GLsizei samples,
                                              GLint internalFormat,
@@ -1273,7 +1273,7 @@ angle::Result Texture::setStorageMultisample(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::generateMipmap(const Context *context)
+angle::Result Texture::generateMipmap(Context *context)
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
@@ -1329,7 +1329,7 @@ angle::Result Texture::generateMipmap(const Context *context)
     return angle::Result::Continue();
 }
 
-angle::Result Texture::bindTexImageFromSurface(const Context *context, egl::Surface *surface)
+angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *surface)
 {
     ASSERT(surface);
 
@@ -1406,7 +1406,7 @@ angle::Result Texture::releaseImageFromStream(const Context *context)
     return angle::Result::Continue();
 }
 
-angle::Result Texture::releaseTexImageInternal(const Context *context)
+angle::Result Texture::releaseTexImageInternal(Context *context)
 {
     if (mBoundSurface)
     {
@@ -1415,7 +1415,8 @@ angle::Result Texture::releaseTexImageInternal(const Context *context)
         // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2491
         if (eglErr.isError())
         {
-            context->handleError(Error(eglErr));
+            context->handleError(GL_INVALID_OPERATION, "Error releasing tex image from texture",
+                                 __FILE__, ANGLE_FUNCTION, __LINE__);
         }
 
         // Then, call the same method as from the surface
@@ -1424,7 +1425,7 @@ angle::Result Texture::releaseTexImageInternal(const Context *context)
     return angle::Result::Continue();
 }
 
-angle::Result Texture::setEGLImageTarget(const Context *context,
+angle::Result Texture::setEGLImageTarget(Context *context,
                                          TextureType type,
                                          egl::Image *imageTarget)
 {
@@ -1716,7 +1717,7 @@ angle::Result Texture::ensureSubImageInitialized(const Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Texture::handleMipmapGenerationHint(const Context *context, int level)
+angle::Result Texture::handleMipmapGenerationHint(Context *context, int level)
 {
 
     if (getGenerateMipmapHint() == GL_TRUE && level == 0)

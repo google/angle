@@ -397,13 +397,12 @@ EGLint Surface::getHeight() const
     return mFixedSize ? static_cast<EGLint>(mFixedHeight) : mImplementation->getHeight();
 }
 
-Error Surface::bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer)
+Error Surface::bindTexImage(gl::Context *context, gl::Texture *texture, EGLint buffer)
 {
     ASSERT(!mTexture);
     ANGLE_TRY(mImplementation->bindTexImage(context, texture, buffer));
 
-    auto glErr = texture->bindTexImageFromSurface(context, this);
-    if (glErr.isError())
+    if (texture->bindTexImageFromSurface(context, this) == angle::Result::Stop())
     {
         return Error(EGL_BAD_SURFACE);
     }

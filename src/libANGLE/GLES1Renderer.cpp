@@ -34,7 +34,7 @@ void GLES1Renderer::onDestroy(Context *context, State *state)
 {
     if (mRendererProgramInitialized)
     {
-        context->handleError(state->setProgram(context, 0));
+        (void)state->setProgram(context, 0);
 
         mShaderPrograms->deleteProgram(context, mProgramState.program);
         mShaderPrograms->release(context);

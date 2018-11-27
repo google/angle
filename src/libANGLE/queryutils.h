@@ -12,6 +12,7 @@
 #include "angle_gl.h"
 #include "common/PackedEnums.h"
 #include "common/angleutils.h"
+#include "libANGLE/Error.h"
 
 #include <EGL/egl.h>
 
@@ -19,7 +20,6 @@ namespace gl
 {
 class Buffer;
 class Context;
-class Error;
 class Sync;
 class Framebuffer;
 class GLES1State;
@@ -104,12 +104,12 @@ void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufS
 
 void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, GLint *params);
 
-Error QuerySynciv(const Context *context,
-                  const Sync *sync,
-                  GLenum pname,
-                  GLsizei bufSize,
-                  GLsizei *length,
-                  GLint *values);
+angle::Result QuerySynciv(const Context *context,
+                          const Sync *sync,
+                          GLenum pname,
+                          GLsizei bufSize,
+                          GLsizei *length,
+                          GLint *values);
 
 void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat param);
 void SetTexParameterfv(Context *context, Texture *texture, GLenum pname, const GLfloat *params);

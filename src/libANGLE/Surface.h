@@ -76,7 +76,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
                         EGLint height);
     Error setPresentationTime(EGLnsecsANDROID time);
     Error querySurfacePointerANGLE(EGLint attribute, void **value);
-    Error bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer);
+    Error bindTexImage(gl::Context *context, gl::Texture *texture, EGLint buffer);
     Error releaseTexImage(const gl::Context *context, EGLint buffer);
 
     Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc);

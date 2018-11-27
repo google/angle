@@ -53,7 +53,7 @@ class RefCountObject : angle::NonCopyable
     mutable size_t mRefCount;
 };
 
-template <class ObjectType, typename ContextT, typename ErrorT>
+template <class ObjectType, typename ContextT, typename ErrorT = angle::Result>
 class BindingPointer
 {
   public:
@@ -133,7 +133,7 @@ class Context;
 template <class ObjectType>
 class BindingPointer;
 
-using RefCountObjectNoID = angle::RefCountObject<Context, Error>;
+using RefCountObjectNoID = angle::RefCountObject<Context, angle::Result>;
 
 class RefCountObject : public gl::RefCountObjectNoID
 {
@@ -150,16 +150,15 @@ class RefCountObject : public gl::RefCountObjectNoID
 };
 
 template <class ObjectType>
-class BindingPointer : public angle::BindingPointer<ObjectType, Context, Error>
+class BindingPointer : public angle::BindingPointer<ObjectType, Context>
 {
   public:
-    using ContextType = typename angle::BindingPointer<ObjectType, Context, Error>::ContextType;
-    using ErrorType   = typename angle::BindingPointer<ObjectType, Context, Error>::ErrorType;
+    using ContextType = typename angle::BindingPointer<ObjectType, Context>::ContextType;
+    using ErrorType   = typename angle::BindingPointer<ObjectType, Context>::ErrorType;
 
     BindingPointer() {}
 
-    BindingPointer(ObjectType *object) : angle::BindingPointer<ObjectType, Context, Error>(object)
-    {}
+    BindingPointer(ObjectType *object) : angle::BindingPointer<ObjectType, Context>(object) {}
 
     GLuint id() const
     {

@@ -48,62 +48,6 @@ namespace egl
 class Error;
 }  // namespace egl
 
-namespace gl
-{
-
-class ANGLE_NO_DISCARD Error final
-{
-  public:
-    explicit inline Error(GLenum errorCode);
-    Error(GLenum errorCode, std::string &&message);
-    Error(GLenum errorCode, GLuint id, std::string &&message);
-    inline Error(const Error &other);
-    inline Error(Error &&other);
-    inline ~Error() = default;
-
-    // automatic error type conversion
-    inline Error(egl::Error eglErr);
-
-    inline Error &operator=(const Error &other);
-    inline Error &operator=(Error &&other);
-
-    inline GLenum getCode() const;
-    inline GLuint getID() const;
-    inline bool isError() const;
-
-    const std::string &getMessage() const;
-
-    // Useful for mocking and testing
-    bool operator==(const Error &other) const;
-    bool operator!=(const Error &other) const;
-
-    static inline Error NoError();
-
-  private:
-    void createMessageString() const;
-
-    friend std::ostream &operator<<(std::ostream &os, const Error &err);
-    friend class egl::Error;
-
-    GLenum mCode;
-    GLuint mID;
-    mutable std::unique_ptr<std::string> mMessage;
-};
-
-namespace priv
-{
-
-template <GLenum EnumT>
-using ErrorStream = angle::ErrorStreamBase<Error, GLenum, GL_NO_ERROR, GLenum, EnumT>;
-
-}  // namespace priv
-
-inline Error NoError()
-{
-    return Error::NoError();
-}
-}  // namespace gl
-
 namespace egl
 {
 
@@ -116,10 +60,6 @@ class ANGLE_NO_DISCARD Error final
     inline Error(const Error &other);
     inline Error(Error &&other);
     inline ~Error() = default;
-
-    // automatic error type conversion
-    inline Error(gl::Error &&glErr);
-    inline Error(const gl::Error &glErr);
 
     inline Error &operator=(const Error &other);
     inline Error &operator=(Error &&other);
@@ -136,7 +76,6 @@ class ANGLE_NO_DISCARD Error final
     void createMessageString() const;
 
     friend std::ostream &operator<<(std::ostream &os, const Error &err);
-    friend class gl::Error;
 
     EGLint mCode;
     EGLint mID;
@@ -232,12 +171,12 @@ class ANGLE_NO_DISCARD Result
     static Result Continue() { return Result(Value::Continue); }
     static Result Incomplete() { return Result(Value::Incomplete); }
 
-    // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
-    operator gl::Error() const;
-
     bool operator==(Result other) const { return mValue == other.mValue; }
 
     bool operator!=(Result other) const { return mValue != other.mValue; }
+
+    // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
+    egl::Error toEGL() const;
 
   private:
     enum class Value

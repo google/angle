@@ -1217,13 +1217,17 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int line)
+void ContextVk::handleError(VkResult errorCode,
+                            const char *file,
+                            const char *function,
+                            unsigned int line)
 {
+    ASSERT(errorCode != VK_SUCCESS);
+
     GLenum glErrorCode = DefaultGLErrorCode(errorCode);
 
     std::stringstream errorStream;
-    errorStream << "Internal Vulkan error: " << VulkanResultString(errorCode) << ", in " << file
-                << ", line " << line << ".";
+    errorStream << "Internal Vulkan error: " << VulkanResultString(errorCode) << ".";
 
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
@@ -1231,7 +1235,7 @@ void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int l
         mRenderer->notifyDeviceLost();
     }
 
-    mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
+    mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
 }
 
 angle::Result ContextVk::updateActiveTextures(const gl::Context *context)

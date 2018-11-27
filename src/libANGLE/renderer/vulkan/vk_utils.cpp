@@ -1118,7 +1118,7 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
     }
 
     // TODO(jmadill): Add error message to error.
-    context->handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __LINE__);
+    context->handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, ANGLE_FUNCTION, __LINE__);
     return angle::Result::Stop();
 }
 

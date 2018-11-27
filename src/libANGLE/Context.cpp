@@ -53,7 +53,7 @@ namespace
 {
 
 #define ANGLE_HANDLE_ERR(X) \
-    handleError(X);         \
+    (void)(X);              \
     return;
 #define ANGLE_CONTEXT_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_ERR);
 
@@ -519,7 +519,7 @@ void Context::initialize()
 
     mImplementation->setErrorSet(&mErrors);
 
-    handleError(mImplementation->initialize());
+    ANGLE_CONTEXT_TRY(mImplementation->initialize());
 }
 
 egl::Error Context::onDestroy(const egl::Display *display)
@@ -664,9 +664,7 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     }
 
     // Notify the renderer of a context switch.
-    // TODO(jmadill): Fix this error handling. http://anglebug.com/2491
-    (void)(mImplementation->onMakeCurrent(this));
-    return egl::NoError();
+    return mImplementation->onMakeCurrent(this).toEGL();
 }
 
 egl::Error Context::releaseSurface(const egl::Display *display)
@@ -855,7 +853,7 @@ void Context::pathCommands(GLuint path,
 {
     auto *pathObject = mState.mPaths->getPath(path);
 
-    handleError(pathObject->setCommands(numCommands, commands, numCoords, coordType, coords));
+    ANGLE_CONTEXT_TRY(pathObject->setCommands(numCommands, commands, numCoords, coordType, coords));
 }
 
 void Context::pathParameterf(GLuint path, GLenum pname, GLfloat value)
@@ -1197,7 +1195,8 @@ void Context::endQuery(QueryType target)
     Query *queryObject = mGLState.getActiveQuery(target);
     ASSERT(queryObject);
 
-    handleError(queryObject->end(this));
+    // Intentionally don't call try here. We don't want an early return.
+    (void)(queryObject->end(this));
 
     // Always unbind the query, even if there was an error. This may delete the query object.
     mGLState.setActiveQuery(this, target, nullptr);
@@ -1211,7 +1210,7 @@ void Context::queryCounter(GLuint id, QueryType target)
     Query *queryObject = getQuery(id, true, target);
     ASSERT(queryObject);
 
-    handleError(queryObject->queryCounter(this));
+    ANGLE_CONTEXT_TRY(queryObject->queryCounter(this));
 }
 
 void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
@@ -1253,7 +1252,7 @@ void Context::getQueryivRobust(QueryType target,
 
 void Context::getQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
-    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjectivRobust(GLuint id,
@@ -1267,7 +1266,7 @@ void Context::getQueryObjectivRobust(GLuint id,
 
 void Context::getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
-    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjectuivRobust(GLuint id,
@@ -1281,7 +1280,7 @@ void Context::getQueryObjectuivRobust(GLuint id,
 
 void Context::getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
 {
-    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjecti64vRobust(GLuint id,
@@ -1295,7 +1294,7 @@ void Context::getQueryObjecti64vRobust(GLuint id,
 
 void Context::getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
 {
-    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjectui64vRobust(GLuint id,
@@ -1841,7 +1840,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             break;
 
         default:
-            handleError(mGLState.getIntegerv(this, pname, params));
+            ANGLE_CONTEXT_TRY(mGLState.getIntegerv(this, pname, params));
             break;
     }
 }
@@ -2304,12 +2303,12 @@ void Context::drawElementsIndirect(PrimitiveMode mode, GLenum type, const void *
 
 void Context::flush()
 {
-    handleError(mImplementation->flush(this));
+    ANGLE_CONTEXT_TRY(mImplementation->flush(this));
 }
 
 void Context::finish()
 {
-    handleError(mImplementation->finish(this));
+    ANGLE_CONTEXT_TRY(mImplementation->finish(this));
 }
 
 void Context::insertEventMarker(GLsizei length, const char *marker)
@@ -2612,11 +2611,6 @@ void Context::getProgramInterfaceivRobust(GLuint program,
                                           GLint *params)
 {
     UNIMPLEMENTED();
-}
-
-void Context::handleError(const Error &error) const
-{
-    mErrors.handleError(error);
 }
 
 void Context::handleError(GLenum errorCode,
@@ -3600,7 +3594,7 @@ void Context::blitFramebuffer(GLint srcX0,
 
     ANGLE_CONTEXT_TRY(syncStateForBlit());
 
-    handleError(drawFramebuffer->blit(this, srcArea, dstArea, mask, filter));
+    ANGLE_CONTEXT_TRY(drawFramebuffer->blit(this, srcArea, dstArea, mask, filter));
 }
 
 void Context::clear(GLbitfield mask)
@@ -3709,7 +3703,7 @@ void Context::readPixels(GLint x,
     ASSERT(readFBO);
 
     Rectangle area(x, y, width, height);
-    handleError(readFBO->readPixels(this, area, format, type, pixels));
+    ANGLE_CONTEXT_TRY(readFBO->readPixels(this, area, format, type, pixels));
 }
 
 void Context::readPixelsRobust(GLint x,
@@ -3758,7 +3752,8 @@ void Context::copyTexImage2D(TextureTarget target,
 
     Framebuffer *framebuffer = mGLState.getReadFramebuffer();
     Texture *texture         = getTargetTexture(TextureTargetToType(target));
-    handleError(texture->copyImage(this, target, level, sourceArea, internalformat, framebuffer));
+    ANGLE_CONTEXT_TRY(
+        texture->copyImage(this, target, level, sourceArea, internalformat, framebuffer));
 }
 
 void Context::copyTexSubImage2D(TextureTarget target,
@@ -3783,7 +3778,8 @@ void Context::copyTexSubImage2D(TextureTarget target,
 
     Framebuffer *framebuffer = mGLState.getReadFramebuffer();
     Texture *texture         = getTargetTexture(TextureTargetToType(target));
-    handleError(texture->copySubImage(this, target, level, destOffset, sourceArea, framebuffer));
+    ANGLE_CONTEXT_TRY(
+        texture->copySubImage(this, target, level, destOffset, sourceArea, framebuffer));
 }
 
 void Context::copyTexSubImage3D(TextureType target,
@@ -3809,8 +3805,8 @@ void Context::copyTexSubImage3D(TextureType target,
 
     Framebuffer *framebuffer = mGLState.getReadFramebuffer();
     Texture *texture         = getTargetTexture(target);
-    handleError(texture->copySubImage(this, NonCubeTextureTypeToTarget(target), level, destOffset,
-                                      sourceArea, framebuffer));
+    ANGLE_CONTEXT_TRY(texture->copySubImage(this, NonCubeTextureTypeToTarget(target), level,
+                                            destOffset, sourceArea, framebuffer));
 }
 
 void Context::framebufferTexture2D(GLenum target,
@@ -3991,7 +3987,7 @@ void Context::discardFramebuffer(GLenum target, GLsizei numAttachments, const GL
 
     // The specification isn't clear what should be done when the framebuffer isn't complete.
     // We leave it up to the framebuffer implementation to decide what to do.
-    handleError(framebuffer->discard(this, numAttachments, attachments));
+    ANGLE_CONTEXT_TRY(framebuffer->discard(this, numAttachments, attachments));
 }
 
 void Context::invalidateFramebuffer(GLenum target,
@@ -4009,7 +4005,7 @@ void Context::invalidateFramebuffer(GLenum target,
         return;
     }
 
-    handleError(framebuffer->invalidate(this, numAttachments, attachments));
+    ANGLE_CONTEXT_TRY(framebuffer->invalidate(this, numAttachments, attachments));
 }
 
 void Context::invalidateSubFramebuffer(GLenum target,
@@ -4032,7 +4028,7 @@ void Context::invalidateSubFramebuffer(GLenum target,
     }
 
     Rectangle area(x, y, width, height);
-    handleError(framebuffer->invalidateSub(this, numAttachments, attachments, area));
+    ANGLE_CONTEXT_TRY(framebuffer->invalidateSub(this, numAttachments, attachments, area));
 }
 
 void Context::texImage2D(TextureTarget target,
@@ -4049,8 +4045,9 @@ void Context::texImage2D(TextureTarget target,
 
     Extents size(width, height, 1);
     Texture *texture = getTargetTexture(TextureTargetToType(target));
-    handleError(texture->setImage(this, mGLState.getUnpackState(), target, level, internalformat,
-                                  size, format, type, static_cast<const uint8_t *>(pixels)));
+    ANGLE_CONTEXT_TRY(texture->setImage(this, mGLState.getUnpackState(), target, level,
+                                        internalformat, size, format, type,
+                                        static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texImage2DRobust(TextureTarget target,
@@ -4082,9 +4079,9 @@ void Context::texImage3D(TextureType target,
 
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setImage(this, mGLState.getUnpackState(),
-                                  NonCubeTextureTypeToTarget(target), level, internalformat, size,
-                                  format, type, static_cast<const uint8_t *>(pixels)));
+    ANGLE_CONTEXT_TRY(texture->setImage(this, mGLState.getUnpackState(),
+                                        NonCubeTextureTypeToTarget(target), level, internalformat,
+                                        size, format, type, static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texImage3DRobust(TextureType target,
@@ -4125,8 +4122,9 @@ void Context::texSubImage2D(TextureTarget target,
 
     gl::Buffer *unpackBuffer = mGLState.getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
-    handleError(texture->setSubImage(this, mGLState.getUnpackState(), unpackBuffer, target, level,
-                                     area, format, type, static_cast<const uint8_t *>(pixels)));
+    ANGLE_CONTEXT_TRY(texture->setSubImage(this, mGLState.getUnpackState(), unpackBuffer, target,
+                                           level, area, format, type,
+                                           static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texSubImage2DRobust(TextureTarget target,
@@ -4168,9 +4166,9 @@ void Context::texSubImage3D(TextureType target,
 
     gl::Buffer *unpackBuffer = mGLState.getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
-    handleError(texture->setSubImage(this, mGLState.getUnpackState(), unpackBuffer,
-                                     NonCubeTextureTypeToTarget(target), level, area, format, type,
-                                     static_cast<const uint8_t *>(pixels)));
+    ANGLE_CONTEXT_TRY(texture->setSubImage(this, mGLState.getUnpackState(), unpackBuffer,
+                                           NonCubeTextureTypeToTarget(target), level, area, format,
+                                           type, static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texSubImage3DRobust(TextureType target,
@@ -4203,9 +4201,9 @@ void Context::compressedTexImage2D(TextureTarget target,
 
     Extents size(width, height, 1);
     Texture *texture = getTargetTexture(TextureTargetToType(target));
-    handleError(texture->setCompressedImage(this, mGLState.getUnpackState(), target, level,
-                                            internalformat, size, imageSize,
-                                            static_cast<const uint8_t *>(data)));
+    ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, mGLState.getUnpackState(), target, level,
+                                                  internalformat, size, imageSize,
+                                                  static_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexImage2DRobust(TextureTarget target,
@@ -4235,7 +4233,7 @@ void Context::compressedTexImage3D(TextureType target,
 
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setCompressedImage(
+    ANGLE_CONTEXT_TRY(texture->setCompressedImage(
         this, mGLState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, internalformat,
         size, imageSize, static_cast<const uint8_t *>(data)));
 }
@@ -4269,9 +4267,9 @@ void Context::compressedTexSubImage2D(TextureTarget target,
 
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture = getTargetTexture(TextureTargetToType(target));
-    handleError(texture->setCompressedSubImage(this, mGLState.getUnpackState(), target, level, area,
-                                               format, imageSize,
-                                               static_cast<const uint8_t *>(data)));
+    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, mGLState.getUnpackState(), target, level,
+                                                     area, format, imageSize,
+                                                     static_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexSubImage2DRobust(TextureTarget target,
@@ -4311,7 +4309,7 @@ void Context::compressedTexSubImage3D(TextureType target,
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setCompressedSubImage(
+    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(
         this, mGLState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, area, format,
         imageSize, static_cast<const uint8_t *>(data)));
 }
@@ -4336,7 +4334,7 @@ void Context::compressedTexSubImage3DRobust(TextureType target,
 void Context::generateMipmap(TextureType target)
 {
     Texture *texture = getTargetTexture(target);
-    handleError(texture->generateMipmap(this));
+    ANGLE_CONTEXT_TRY(texture->generateMipmap(this));
 }
 
 void Context::copyTexture(GLuint sourceId,
@@ -4354,10 +4352,10 @@ void Context::copyTexture(GLuint sourceId,
 
     gl::Texture *sourceTexture = getTexture(sourceId);
     gl::Texture *destTexture   = getTexture(destId);
-    handleError(destTexture->copyTexture(this, destTarget, destLevel, internalFormat, destType,
-                                         sourceLevel, ConvertToBool(unpackFlipY),
-                                         ConvertToBool(unpackPremultiplyAlpha),
-                                         ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
+    ANGLE_CONTEXT_TRY(
+        destTexture->copyTexture(this, destTarget, destLevel, internalFormat, destType, sourceLevel,
+                                 ConvertToBool(unpackFlipY), ConvertToBool(unpackPremultiplyAlpha),
+                                 ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
 void Context::copySubTexture(GLuint sourceId,
@@ -4387,10 +4385,10 @@ void Context::copySubTexture(GLuint sourceId,
     gl::Texture *destTexture   = getTexture(destId);
     Offset offset(xoffset, yoffset, 0);
     Box box(x, y, 0, width, height, 1);
-    handleError(destTexture->copySubTexture(this, destTarget, destLevel, offset, sourceLevel, box,
-                                            ConvertToBool(unpackFlipY),
-                                            ConvertToBool(unpackPremultiplyAlpha),
-                                            ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
+    ANGLE_CONTEXT_TRY(destTexture->copySubTexture(
+        this, destTarget, destLevel, offset, sourceLevel, box, ConvertToBool(unpackFlipY),
+        ConvertToBool(unpackPremultiplyAlpha), ConvertToBool(unpackUnmultiplyAlpha),
+        sourceTexture));
 }
 
 void Context::copyTexture3D(GLuint sourceId,
@@ -4408,10 +4406,10 @@ void Context::copyTexture3D(GLuint sourceId,
 
     Texture *sourceTexture = getTexture(sourceId);
     Texture *destTexture   = getTexture(destId);
-    handleError(destTexture->copyTexture(this, destTarget, destLevel, internalFormat, destType,
-                                         sourceLevel, ConvertToBool(unpackFlipY),
-                                         ConvertToBool(unpackPremultiplyAlpha),
-                                         ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
+    ANGLE_CONTEXT_TRY(
+        destTexture->copyTexture(this, destTarget, destLevel, internalFormat, destType, sourceLevel,
+                                 ConvertToBool(unpackFlipY), ConvertToBool(unpackPremultiplyAlpha),
+                                 ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
 void Context::copySubTexture3D(GLuint sourceId,
@@ -4444,10 +4442,10 @@ void Context::copySubTexture3D(GLuint sourceId,
     Texture *destTexture   = getTexture(destId);
     Offset offset(xoffset, yoffset, zoffset);
     Box box(x, y, z, width, height, depth);
-    handleError(destTexture->copySubTexture(this, destTarget, destLevel, offset, sourceLevel, box,
-                                            ConvertToBool(unpackFlipY),
-                                            ConvertToBool(unpackPremultiplyAlpha),
-                                            ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
+    ANGLE_CONTEXT_TRY(destTexture->copySubTexture(
+        this, destTarget, destLevel, offset, sourceLevel, box, ConvertToBool(unpackFlipY),
+        ConvertToBool(unpackPremultiplyAlpha), ConvertToBool(unpackUnmultiplyAlpha),
+        sourceTexture));
 }
 
 void Context::compressedCopyTexture(GLuint sourceId, GLuint destId)
@@ -4456,7 +4454,7 @@ void Context::compressedCopyTexture(GLuint sourceId, GLuint destId)
 
     gl::Texture *sourceTexture = getTexture(sourceId);
     gl::Texture *destTexture   = getTexture(destId);
-    handleError(destTexture->copyCompressedTexture(this, sourceTexture));
+    ANGLE_CONTEXT_TRY(destTexture->copyCompressedTexture(this, sourceTexture));
 }
 
 void Context::getBufferPointerv(BufferBinding target, GLenum pname, void **params)
@@ -4481,10 +4479,8 @@ void *Context::mapBuffer(BufferBinding target, GLenum access)
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
 
-    Error error = buffer->map(this, access);
-    if (error.isError())
+    if (buffer->map(this, access) == angle::Result::Stop())
     {
-        handleError(error);
         return nullptr;
     }
 
@@ -4497,10 +4493,8 @@ GLboolean Context::unmapBuffer(BufferBinding target)
     ASSERT(buffer);
 
     GLboolean result;
-    Error error = buffer->unmap(this, &result);
-    if (error.isError())
+    if (buffer->unmap(this, &result) == angle::Result::Stop())
     {
-        handleError(error);
         return GL_FALSE;
     }
 
@@ -4515,10 +4509,8 @@ void *Context::mapBufferRange(BufferBinding target,
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
 
-    Error error = buffer->mapRange(this, offset, length, access);
-    if (error.isError())
+    if (buffer->mapRange(this, offset, length, access) == angle::Result::Stop())
     {
-        handleError(error);
         return nullptr;
     }
 
@@ -5102,7 +5094,7 @@ void Context::bufferData(BufferBinding target, GLsizeiptr size, const void *data
 {
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
-    handleError(buffer->bufferData(this, target, data, size, usage));
+    ANGLE_CONTEXT_TRY(buffer->bufferData(this, target, data, size, usage));
 }
 
 void Context::bufferSubData(BufferBinding target,
@@ -5117,7 +5109,7 @@ void Context::bufferSubData(BufferBinding target,
 
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
-    handleError(buffer->bufferSubData(this, target, data, size, offset));
+    ANGLE_CONTEXT_TRY(buffer->bufferSubData(this, target, data, size, offset));
 }
 
 void Context::attachShader(GLuint program, GLuint shader)
@@ -5149,7 +5141,8 @@ void Context::copyBufferSubData(BufferBinding readTarget,
     Buffer *readBuffer  = mGLState.getTargetBuffer(readTarget);
     Buffer *writeBuffer = mGLState.getTargetBuffer(writeTarget);
 
-    handleError(writeBuffer->copyBufferSubData(this, readBuffer, readOffset, writeOffset, size));
+    ANGLE_CONTEXT_TRY(
+        writeBuffer->copyBufferSubData(this, readBuffer, readOffset, writeOffset, size));
 }
 
 void Context::bindAttribLocation(GLuint program, GLuint index, const GLchar *name)
@@ -5221,8 +5214,8 @@ void Context::texStorage2DMultisample(TextureType target,
 {
     Extents size(width, height, 1);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setStorageMultisample(this, target, samples, internalformat, size,
-                                               ConvertToBool(fixedsamplelocations)));
+    ANGLE_CONTEXT_TRY(texture->setStorageMultisample(this, target, samples, internalformat, size,
+                                                     ConvertToBool(fixedsamplelocations)));
 }
 
 void Context::texStorage3DMultisample(TextureType target,
@@ -5235,8 +5228,8 @@ void Context::texStorage3DMultisample(TextureType target,
 {
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setStorageMultisample(this, target, samples, internalformat, size,
-                                               ConvertToBool(fixedsamplelocations)));
+    ANGLE_CONTEXT_TRY(texture->setStorageMultisample(this, target, samples, internalformat, size,
+                                                     ConvertToBool(fixedsamplelocations)));
 }
 
 void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
@@ -5249,7 +5242,7 @@ void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     switch (pname)
     {
         case GL_SAMPLE_POSITION:
-            handleError(framebuffer->getSamplePosition(this, index, val));
+            ANGLE_CONTEXT_TRY(framebuffer->getSamplePosition(this, index, val));
             break;
         default:
             UNREACHABLE();
@@ -5274,7 +5267,7 @@ void Context::renderbufferStorage(GLenum target,
     GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
 
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
-    handleError(renderbuffer->setStorage(this, convertedInternalFormat, width, height));
+    ANGLE_CONTEXT_TRY(renderbuffer->setStorage(this, convertedInternalFormat, width, height));
 }
 
 void Context::renderbufferStorageMultisample(GLenum target,
@@ -5287,14 +5280,14 @@ void Context::renderbufferStorageMultisample(GLenum target,
     GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
 
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
-    handleError(
+    ANGLE_CONTEXT_TRY(
         renderbuffer->setStorageMultisample(this, samples, convertedInternalFormat, width, height));
 }
 
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
     const Sync *syncObject = getSync(sync);
-    handleError(QuerySynciv(this, syncObject, pname, bufSize, length, values));
+    ANGLE_CONTEXT_TRY(QuerySynciv(this, syncObject, pname, bufSize, length, values));
 }
 
 void Context::getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)
@@ -5350,13 +5343,13 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     }
 
     ANGLE_CONTEXT_TRY(prepareForDispatch());
-    handleError(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
+    ANGLE_CONTEXT_TRY(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
 }
 
 void Context::dispatchComputeIndirect(GLintptr indirect)
 {
     ANGLE_CONTEXT_TRY(prepareForDispatch());
-    handleError(mImplementation->dispatchComputeIndirect(this, indirect));
+    ANGLE_CONTEXT_TRY(mImplementation->dispatchComputeIndirect(this, indirect));
 }
 
 void Context::texStorage2D(TextureType target,
@@ -5367,7 +5360,7 @@ void Context::texStorage2D(TextureType target,
 {
     Extents size(width, height, 1);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setStorage(this, target, levels, internalFormat, size));
+    ANGLE_CONTEXT_TRY(texture->setStorage(this, target, levels, internalFormat, size));
 }
 
 void Context::texStorage3D(TextureType target,
@@ -5379,17 +5372,17 @@ void Context::texStorage3D(TextureType target,
 {
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
-    handleError(texture->setStorage(this, target, levels, internalFormat, size));
+    ANGLE_CONTEXT_TRY(texture->setStorage(this, target, levels, internalFormat, size));
 }
 
 void Context::memoryBarrier(GLbitfield barriers)
 {
-    handleError(mImplementation->memoryBarrier(this, barriers));
+    ANGLE_CONTEXT_TRY(mImplementation->memoryBarrier(this, barriers));
 }
 
 void Context::memoryBarrierByRegion(GLbitfield barriers)
 {
-    handleError(mImplementation->memoryBarrierByRegion(this, barriers));
+    ANGLE_CONTEXT_TRY(mImplementation->memoryBarrierByRegion(this, barriers));
 }
 
 void Context::multiDrawArrays(PrimitiveMode mode,
@@ -5998,7 +5991,7 @@ void Context::linkProgram(GLuint program)
 {
     Program *programObject = getProgramNoResolveLink(program);
     ASSERT(programObject);
-    handleError(programObject->link(this));
+    ANGLE_CONTEXT_TRY(programObject->link(this));
 
     // Don't parallel link a program which is active in any GL contexts. With this assumption, we
     // don't need to worry that:
@@ -6245,7 +6238,7 @@ void Context::getProgramBinary(GLuint program,
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject != nullptr);
 
-    handleError(programObject->saveBinary(this, binaryFormat, binary, bufSize, length));
+    ANGLE_CONTEXT_TRY(programObject->saveBinary(this, binaryFormat, binary, bufSize, length));
 }
 
 void Context::programBinary(GLuint program, GLenum binaryFormat, const void *binary, GLsizei length)
@@ -6253,7 +6246,7 @@ void Context::programBinary(GLuint program, GLenum binaryFormat, const void *bin
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject != nullptr);
 
-    handleError(programObject->loadBinary(this, binaryFormat, binary, length));
+    ANGLE_CONTEXT_TRY(programObject->loadBinary(this, binaryFormat, binary, length));
     if (programObject->isInUse())
     {
         ANGLE_CONTEXT_TRY(mGLState.onProgramExecutableChange(this, programObject));
@@ -6644,11 +6637,9 @@ GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
     GLsync syncHandle = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 
     Sync *syncObject = getSync(syncHandle);
-    Error error      = syncObject->set(this, condition, flags);
-    if (error.isError())
+    if (syncObject->set(this, condition, flags) == angle::Result::Stop())
     {
         deleteSync(syncHandle);
-        handleError(error);
         return nullptr;
     }
 
@@ -6665,14 +6656,17 @@ GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     Sync *syncObject = getSync(sync);
 
     GLenum result = GL_WAIT_FAILED;
-    handleError(syncObject->clientWait(this, flags, timeout, &result));
+    if (syncObject->clientWait(this, flags, timeout, &result) == angle::Result::Stop())
+    {
+        return GL_WAIT_FAILED;
+    }
     return result;
 }
 
 void Context::waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
     Sync *syncObject = getSync(sync);
-    handleError(syncObject->serverWait(this, flags, timeout));
+    ANGLE_CONTEXT_TRY(syncObject->serverWait(this, flags, timeout));
 }
 
 void Context::getInteger64v(GLenum pname, GLint64 *params)
@@ -7067,7 +7061,7 @@ void Context::finishFenceNV(GLuint fence)
     FenceNV *fenceObject = getFenceNV(fence);
 
     ASSERT(fenceObject && fenceObject->isSet());
-    handleError(fenceObject->finish(this));
+    ANGLE_CONTEXT_TRY(fenceObject->finish(this));
 }
 
 void Context::getFenceivNV(GLuint fence, GLenum pname, GLint *params)
@@ -7190,7 +7184,7 @@ void Context::setFenceNV(GLuint fence, GLenum condition)
 
     FenceNV *fenceObject = getFenceNV(fence);
     ASSERT(fenceObject != nullptr);
-    handleError(fenceObject->set(this, condition));
+    ANGLE_CONTEXT_TRY(fenceObject->set(this, condition));
 }
 
 GLboolean Context::testFenceNV(GLuint fence)
@@ -7201,10 +7195,8 @@ GLboolean Context::testFenceNV(GLuint fence)
     ASSERT(fenceObject->isSet() == GL_TRUE);
 
     GLboolean result = GL_TRUE;
-    Error error      = fenceObject->test(this, &result);
-    if (error.isError())
+    if (fenceObject->test(this, &result) == angle::Result::Stop())
     {
-        handleError(error);
         return GL_TRUE;
     }
 
@@ -7215,14 +7207,14 @@ void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)
 {
     Texture *texture        = getTargetTexture(target);
     egl::Image *imageObject = static_cast<egl::Image *>(image);
-    handleError(texture->setEGLImageTarget(this, target, imageObject));
+    ANGLE_CONTEXT_TRY(texture->setEGLImageTarget(this, target, imageObject));
 }
 
 void Context::eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image)
 {
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
     egl::Image *imageObject    = static_cast<egl::Image *>(image);
-    handleError(renderbuffer->setStorageEGLImageTarget(this, imageObject));
+    ANGLE_CONTEXT_TRY(renderbuffer->setStorageEGLImageTarget(this, imageObject));
 }
 
 void Context::texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width)
@@ -8147,49 +8139,32 @@ ErrorSet::ErrorSet(Context *context) : mContext(context) {}
 
 ErrorSet::~ErrorSet() = default;
 
-void ErrorSet::handleError(const Error &error) const
-{
-    // This internal enum is used to filter internal errors that are already handled.
-    // TODO(jmadill): Remove this when refactor is done. http://anglebug.com/2491
-    if (error.getCode() == GL_INTERNAL_ERROR_ANGLEX)
-    {
-        return;
-    }
-
-    if (ANGLE_UNLIKELY(error.isError()))
-    {
-        GLenum code = error.getCode();
-        mErrors.insert(code);
-
-        if (code == GL_OUT_OF_MEMORY && mContext->getWorkarounds().loseContextOnOutOfMemory)
-        {
-            mContext->markContextLost();
-        }
-
-        ASSERT(!error.getMessage().empty());
-        mContext->getGLState().getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR,
-                                                        error.getID(), GL_DEBUG_SEVERITY_HIGH,
-                                                        error.getMessage());
-    }
-}
-
 void ErrorSet::handleError(GLenum errorCode,
                            const char *message,
                            const char *file,
                            const char *function,
                            unsigned int line)
 {
-    // TODO(jmadill): Handle error directly instead of creating object. http://anglebug.com/2491
-    std::stringstream errorStream;
-    errorStream << "Front-end Error: " << gl::FmtHex(errorCode) << ", in " << file << ", "
-                << function << ":" << line << ". " << message;
+    if (errorCode == GL_OUT_OF_MEMORY && mContext->getWorkarounds().loseContextOnOutOfMemory)
+    {
+        mContext->markContextLost();
+    }
 
-    handleError(gl::Error(errorCode, errorCode, errorStream.str()));
+    std::stringstream errorStream;
+    errorStream << "Error: " << gl::FmtHex(errorCode) << ", in " << file << ", " << function << ":"
+                << line << ". " << message;
+
+    // validationError does the necessary work to process the error.
+    validationError(errorCode, errorStream.str().c_str());
 }
 
 void ErrorSet::validationError(GLenum errorCode, const char *message)
 {
-    handleError(gl::Error(errorCode, message));
+    ASSERT(errorCode != GL_NO_ERROR);
+    mErrors.insert(errorCode);
+
+    mContext->getGLState().getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR,
+                                                    errorCode, GL_DEBUG_SEVERITY_HIGH, message);
 }
 
 bool ErrorSet::empty() const

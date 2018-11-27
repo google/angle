@@ -250,10 +250,6 @@ std::string ToString(const T &value)
 #define GL_RGB10_A2_SSCALED_ANGLEX 0x6AEC
 #define GL_RGB10_A2_USCALED_ANGLEX 0x6AED
 
-// This internal enum is used to filter internal errors that are already handled.
-// TODO(jmadill): Remove this when refactor is done. http://anglebug.com/2491
-#define GL_INTERNAL_ERROR_ANGLEX 0x6AEE
-
 #define ANGLE_CHECK_GL_ALLOC(context, result) \
     ANGLE_CHECK(context, result, "Failed to allocate host memory", GL_OUT_OF_MEMORY)
 

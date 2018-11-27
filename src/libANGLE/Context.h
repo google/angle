@@ -70,8 +70,6 @@ class ErrorSet : angle::NonCopyable
     explicit ErrorSet(Context *context);
     ~ErrorSet();
 
-    // TODO(jmadill): Remove const. http://anglebug.com/2491
-    void handleError(const Error &error) const;
     bool empty() const;
     GLenum popError();
 
@@ -85,9 +83,7 @@ class ErrorSet : angle::NonCopyable
 
   private:
     Context *mContext;
-
-    // TODO(jmadill): Remove mutable. http://anglebug.com/2491
-    mutable std::set<GLenum> mErrors;
+    std::set<GLenum> mErrors;
 };
 
 // Helper class for managing cache variables and state changes.
@@ -1597,9 +1593,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     int getFragDataIndex(GLuint program, const char *name);
     int getProgramResourceLocationIndex(GLuint program, GLenum programInterface, const char *name);
 
-    // Consumes the error.
-    // TODO(jmadill): Remove const. http://anglebug.com/2491
-    void handleError(const Error &error) const;
+    // Consumes an error.
     void handleError(GLenum errorCode,
                      const char *message,
                      const char *file,
