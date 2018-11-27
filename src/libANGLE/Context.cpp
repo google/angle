@@ -47,6 +47,8 @@
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/validationES.h"
 
+namespace gl
+{
 namespace
 {
 
@@ -56,12 +58,12 @@ namespace
 #define ANGLE_CONTEXT_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_ERR);
 
 template <typename T>
-std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
-                                    GLsizei numPaths,
-                                    const void *paths,
-                                    GLuint pathBase)
+std::vector<Path *> GatherPaths(PathManager &resourceManager,
+                                GLsizei numPaths,
+                                const void *paths,
+                                GLuint pathBase)
 {
-    std::vector<gl::Path *> ret;
+    std::vector<Path *> ret;
     ret.reserve(numPaths);
 
     const auto *nameArray = static_cast<const T *>(paths);
@@ -76,11 +78,11 @@ std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
     return ret;
 }
 
-std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
-                                    GLsizei numPaths,
-                                    GLenum pathNameType,
-                                    const void *paths,
-                                    GLuint pathBase)
+std::vector<Path *> GatherPaths(PathManager &resourceManager,
+                                GLsizei numPaths,
+                                GLenum pathNameType,
+                                const void *paths,
+                                GLuint pathBase)
 {
     switch (pathNameType)
     {
@@ -104,14 +106,11 @@ std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
     }
 
     UNREACHABLE();
-    return std::vector<gl::Path *>();
+    return std::vector<Path *>();
 }
 
 template <typename T>
-angle::Result GetQueryObjectParameter(const gl::Context *context,
-                                      gl::Query *query,
-                                      GLenum pname,
-                                      T *params)
+angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLenum pname, T *params)
 {
     ASSERT(query != nullptr);
 
@@ -123,7 +122,7 @@ angle::Result GetQueryObjectParameter(const gl::Context *context,
         {
             bool available;
             ANGLE_TRY(query->isResultAvailable(context, &available));
-            *params = gl::CastFromStateValue<T>(pname, static_cast<GLuint>(available));
+            *params = CastFromStateValue<T>(pname, static_cast<GLuint>(available));
             return angle::Result::Continue();
         }
         default:
@@ -132,8 +131,8 @@ angle::Result GetQueryObjectParameter(const gl::Context *context,
     }
 }
 
-ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const gl::Context *context,
-                                                   gl::TransformFeedback *transformFeedback,
+ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const Context *context,
+                                                   TransformFeedback *transformFeedback,
                                                    GLsizei count,
                                                    GLsizei instanceCount)
 {
@@ -154,9 +153,9 @@ EGLint GetClientMinorVersion(const egl::AttributeMap &attribs)
     return static_cast<EGLint>(attribs.get(EGL_CONTEXT_MINOR_VERSION, 0));
 }
 
-gl::Version GetClientVersion(const egl::AttributeMap &attribs)
+Version GetClientVersion(const egl::AttributeMap &attribs)
 {
-    return gl::Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
+    return Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
 }
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
@@ -256,45 +255,31 @@ void LimitCap(CapT *cap, MaxT maximum)
     *cap = std::min(*cap, static_cast<CapT>(maximum));
 }
 
-constexpr angle::PackedEnumMap<gl::PrimitiveMode, GLsizei> kMinimumPrimitiveCounts = {{
-    1, /* Points */
-    2, /* Lines */
-    2, /* LineLoop */
-    2, /* LineStrip */
-    3, /* Triangles */
-    3, /* TriangleStrip */
-    3, /* TriangleFan */
-    2, /* LinesAdjacency */
-    2, /* LineStripAdjacency */
-    3, /* TrianglesAdjacency */
-    3, /* TriangleStripAdjacency */
+constexpr angle::PackedEnumMap<PrimitiveMode, GLsizei> kMinimumPrimitiveCounts = {{
+    {PrimitiveMode::Points, 1},
+    {PrimitiveMode::Lines, 2},
+    {PrimitiveMode::LineLoop, 2},
+    {PrimitiveMode::LineStrip, 2},
+    {PrimitiveMode::Triangles, 3},
+    {PrimitiveMode::TriangleStrip, 3},
+    {PrimitiveMode::TriangleFan, 3},
+    {PrimitiveMode::LinesAdjacency, 2},
+    {PrimitiveMode::LineStripAdjacency, 2},
+    {PrimitiveMode::TrianglesAdjacency, 3},
+    {PrimitiveMode::TriangleStripAdjacency, 3},
 }};
-// Indices above are code-gen'd so make sure they don't change
-//  if any of these static asserts are hit, must update kMinimumPrimitiveCounts abouve
-static_assert(static_cast<gl::PrimitiveMode>(0) == gl::PrimitiveMode::Points,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(1) == gl::PrimitiveMode::Lines,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(2) == gl::PrimitiveMode::LineLoop,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(3) == gl::PrimitiveMode::LineStrip,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(4) == gl::PrimitiveMode::Triangles,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(5) == gl::PrimitiveMode::TriangleStrip,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(6) == gl::PrimitiveMode::TriangleFan,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(7) == gl::PrimitiveMode::LinesAdjacency,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(8) == gl::PrimitiveMode::LineStripAdjacency,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(9) == gl::PrimitiveMode::TrianglesAdjacency,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(10) == gl::PrimitiveMode::TriangleStripAdjacency,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
-static_assert(static_cast<gl::PrimitiveMode>(11) == gl::PrimitiveMode::EnumCount,
-              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+
+// The rest default to false.
+constexpr angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMode>() + 1>
+    kValidBasicDrawModes = {{
+        {PrimitiveMode::Points, true},
+        {PrimitiveMode::Lines, true},
+        {PrimitiveMode::LineLoop, true},
+        {PrimitiveMode::LineStrip, true},
+        {PrimitiveMode::Triangles, true},
+        {PrimitiveMode::TriangleStrip, true},
+        {PrimitiveMode::TriangleFan, true},
+    }};
 
 enum SubjectIndexes : angle::SubjectIndex
 {
@@ -310,9 +295,6 @@ enum SubjectIndexes : angle::SubjectIndex
     kDrawFramebufferSubjectIndex
 };
 }  // anonymous namespace
-
-namespace gl
-{
 
 Context::Context(rx::EGLImplFactory *implFactory,
                  const egl::Config *config,
@@ -8413,20 +8395,7 @@ void StateCache::updateValidDrawModes(Context *context)
     Program *program = context->getGLState().getProgram();
     if (!program || !program->hasLinkedShaderStage(ShaderType::Geometry))
     {
-        mCachedValidDrawModes = {{
-            true,  /* Points */
-            true,  /* Lines */
-            true,  /* LineLoop */
-            true,  /* LineStrip */
-            true,  /* Triangles */
-            true,  /* TriangleStrip */
-            true,  /* TriangleFan */
-            false, /* LinesAdjacency */
-            false, /* LineStripAdjacency */
-            false, /* TrianglesAdjacency */
-            false, /* TriangleStripAdjacency */
-            false, /* InvalidEnum */
-        }};
+        mCachedValidDrawModes = kValidBasicDrawModes;
     }
     else
     {
@@ -8435,18 +8404,17 @@ void StateCache::updateValidDrawModes(Context *context)
         PrimitiveMode gsMode = program->getGeometryShaderInputPrimitiveType();
 
         mCachedValidDrawModes = {{
-            gsMode == PrimitiveMode::Points,             /* Points */
-            gsMode == PrimitiveMode::Lines,              /* Lines */
-            gsMode == PrimitiveMode::Lines,              /* LineLoop */
-            gsMode == PrimitiveMode::Lines,              /* LineStrip */
-            gsMode == PrimitiveMode::Triangles,          /* Triangles */
-            gsMode == PrimitiveMode::Triangles,          /* TriangleStrip */
-            gsMode == PrimitiveMode::Triangles,          /* TriangleFan */
-            gsMode == PrimitiveMode::LinesAdjacency,     /* LinesAdjacency */
-            gsMode == PrimitiveMode::LinesAdjacency,     /* LineStripAdjacency */
-            gsMode == PrimitiveMode::TrianglesAdjacency, /* TrianglesAdjacency */
-            gsMode == PrimitiveMode::TrianglesAdjacency, /* TriangleStripAdjacency */
-            false,                                       /* InvalidEnum */
+            {PrimitiveMode::Points, gsMode == PrimitiveMode::Points},
+            {PrimitiveMode::Lines, gsMode == PrimitiveMode::Lines},
+            {PrimitiveMode::LineLoop, gsMode == PrimitiveMode::Lines},
+            {PrimitiveMode::LineStrip, gsMode == PrimitiveMode::Lines},
+            {PrimitiveMode::Triangles, gsMode == PrimitiveMode::Triangles},
+            {PrimitiveMode::TriangleStrip, gsMode == PrimitiveMode::Triangles},
+            {PrimitiveMode::TriangleFan, gsMode == PrimitiveMode::Triangles},
+            {PrimitiveMode::LinesAdjacency, gsMode == PrimitiveMode::LinesAdjacency},
+            {PrimitiveMode::LineStripAdjacency, gsMode == PrimitiveMode::LinesAdjacency},
+            {PrimitiveMode::TrianglesAdjacency, gsMode == PrimitiveMode::TrianglesAdjacency},
+            {PrimitiveMode::TriangleStripAdjacency, gsMode == PrimitiveMode::TrianglesAdjacency},
         }};
     }
 }
@@ -8458,16 +8426,14 @@ void StateCache::updateValidBindTextureTypes(Context *context)
     bool isGLES31          = context->getClientVersion() >= Version(3, 1);
 
     mCachedValidBindTextureTypes = {{
-        true,                                                    /* _2D */
-        isGLES3,                                                 /* _2DArray */
-        isGLES31 || exts.textureMultisample,                     /* _2DMultisample */
-        exts.textureStorageMultisample2DArray,                   /* _2DMultisampleArray */
-        isGLES3,                                                 /* _3D */
-        exts.eglImageExternal || exts.eglStreamConsumerExternal, /* External */
-        exts.textureRectangle,                                   /* Rectangle */
-        true,                                                    /* CubeMap */
-        false,                                                   /* InvalidEnum */
-
+        {TextureType::_2D, true},
+        {TextureType::_2DArray, isGLES3},
+        {TextureType::_2DMultisample, isGLES31 || exts.textureMultisample},
+        {TextureType::_2DMultisampleArray, exts.textureStorageMultisample2DArray},
+        {TextureType::_3D, isGLES3},
+        {TextureType::External, exts.eglImageExternal || exts.eglStreamConsumerExternal},
+        {TextureType::Rectangle, exts.textureRectangle},
+        {TextureType::CubeMap, true},
     }};
 }
 }  // namespace gl

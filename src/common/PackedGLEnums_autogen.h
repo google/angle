@@ -255,28 +255,6 @@ template <>
 PointParameter FromGLenum<PointParameter>(GLenum from);
 GLenum ToGLenum(PointParameter from);
 
-enum class PrimitiveMode : uint8_t
-{
-    Points                 = 0,
-    Lines                  = 1,
-    LineLoop               = 2,
-    LineStrip              = 3,
-    Triangles              = 4,
-    TriangleStrip          = 5,
-    TriangleFan            = 6,
-    LinesAdjacency         = 7,
-    LineStripAdjacency     = 8,
-    TrianglesAdjacency     = 9,
-    TriangleStripAdjacency = 10,
-
-    InvalidEnum = 11,
-    EnumCount   = 11,
-};
-
-template <>
-PrimitiveMode FromGLenum<PrimitiveMode>(GLenum from);
-GLenum ToGLenum(PrimitiveMode from);
-
 enum class QueryType : uint8_t
 {
     AnySamples                         = 0,

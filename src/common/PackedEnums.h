@@ -74,6 +74,22 @@ class PackedEnumMap
     using Storage        = std::array<T, MaxSize>;
 
   public:
+    using InitPair = std::pair<E, T>;
+
+    constexpr PackedEnumMap() = default;
+
+    constexpr PackedEnumMap(std::initializer_list<InitPair> init) : mPrivateData{}
+    {
+        // We use a for loop instead of range-for to work around a limitation in MSVC.
+        for (const InitPair *it = init.begin(); it != init.end(); ++it)
+        {
+            // This horrible const_cast pattern is necessary to work around a constexpr limitation.
+            // See https://stackoverflow.com/q/34199774/ . Note that it should be fixed with C++17.
+            const_cast<T &>(const_cast<const Storage &>(
+                mPrivateData)[static_cast<UnderlyingType>(it->first)]) = it->second;
+        }
+    }
+
     // types:
     using value_type      = T;
     using pointer         = T *;
@@ -133,8 +149,8 @@ class PackedEnumMap
     T *data() noexcept { return mPrivateData.data(); }
     const T *data() const noexcept { return mPrivateData.data(); }
 
-    // Do not access this variable directly. It unfortunately must be public to use aggregate init.
-    /* private: */ Storage mPrivateData;
+  private:
+    Storage mPrivateData;
 };
 
 // PackedEnumBitSetE> is like an std::bitset<E::EnumCount> but is indexed with enum values. It
@@ -199,6 +215,59 @@ TextureType SamplerTypeToTextureType(GLenum samplerType);
 
 bool IsMultisampled(gl::TextureType type);
 
+enum class PrimitiveMode : uint8_t
+{
+    Points                 = 0x0,
+    Lines                  = 0x1,
+    LineLoop               = 0x2,
+    LineStrip              = 0x3,
+    Triangles              = 0x4,
+    TriangleStrip          = 0x5,
+    TriangleFan            = 0x6,
+    Unused1                = 0x7,
+    Unused2                = 0x8,
+    Unused3                = 0x9,
+    LinesAdjacency         = 0xA,
+    LineStripAdjacency     = 0xB,
+    TrianglesAdjacency     = 0xC,
+    TriangleStripAdjacency = 0xD,
+
+    InvalidEnum = 0xE,
+    EnumCount   = 0xE,
+};
+
+template <>
+constexpr PrimitiveMode FromGLenum<PrimitiveMode>(GLenum from)
+{
+    if (from >= static_cast<GLenum>(PrimitiveMode::EnumCount))
+    {
+        return PrimitiveMode::InvalidEnum;
+    }
+
+    return static_cast<PrimitiveMode>(from);
+}
+
+constexpr GLenum ToGLenum(PrimitiveMode from)
+{
+    return static_cast<GLenum>(from);
+}
+
+static_assert(ToGLenum(PrimitiveMode::Points) == GL_POINTS, "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::Lines) == GL_LINES, "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::LineLoop) == GL_LINE_LOOP, "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::LineStrip) == GL_LINE_STRIP, "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::Triangles) == GL_TRIANGLES, "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::TriangleStrip) == GL_TRIANGLE_STRIP,
+              "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::TriangleFan) == GL_TRIANGLE_FAN, "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::LinesAdjacency) == GL_LINES_ADJACENCY,
+              "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::LineStripAdjacency) == GL_LINE_STRIP_ADJACENCY,
+              "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::TrianglesAdjacency) == GL_TRIANGLES_ADJACENCY,
+              "PrimitiveMode violation");
+static_assert(ToGLenum(PrimitiveMode::TriangleStripAdjacency) == GL_TRIANGLE_STRIP_ADJACENCY,
+              "PrimitiveMode violation");
 }  // namespace gl
 
 namespace egl

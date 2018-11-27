@@ -229,20 +229,6 @@
         "SpotDirection": "GL_SPOT_DIRECTION",
         "SpotExponent": "GL_SPOT_EXPONENT"
     },
-    "PrimitiveMode":
-    {
-        "Points": "GL_POINTS",
-        "Lines": "GL_LINES",
-        "LineLoop": "GL_LINE_LOOP",
-        "LineStrip": "GL_LINE_STRIP",
-        "Triangles": "GL_TRIANGLES",
-        "TriangleStrip": "GL_TRIANGLE_STRIP",
-        "TriangleFan": "GL_TRIANGLE_FAN",
-        "LinesAdjacency": "GL_LINES_ADJACENCY_EXT",
-        "LineStripAdjacency": "GL_LINE_STRIP_ADJACENCY_EXT",
-        "TrianglesAdjacency": "GL_TRIANGLES_ADJACENCY_EXT",
-        "TriangleStripAdjacency": "GL_TRIANGLE_STRIP_ADJACENCY_EXT"
-    },
     "PointParameter":
     {
         "PointSizeMin" : "GL_POINT_SIZE_MIN",

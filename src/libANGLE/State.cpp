@@ -50,26 +50,22 @@ bool GetAlternativeQueryType(QueryType type, QueryType *alternativeType)
 
 // Mapping from a buffer binding type to a dirty bit type.
 constexpr angle::PackedEnumMap<BufferBinding, size_t> kBufferBindingDirtyBits = {{
-    0,                                                 /* Array */
-    State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING,    /* AtomicCounter */
-    0,                                                 /* CopyRead */
-    0,                                                 /* CopyWrite */
-    State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING, /* DispatchIndirect */
-    State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING,     /* DrawIndirect */
-    0,                                                 /* ElementArray */
-    State::DIRTY_BIT_PACK_BUFFER_BINDING,              /* PixelPack */
-    State::DIRTY_BIT_UNPACK_BUFFER_BINDING,            /* PixelUnpack */
-    State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING,    /* ShaderStorage */
-    0,                                                 /* TransformFeedback */
-    State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS,          /* Uniform */
+    {BufferBinding::AtomicCounter, State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING},
+    {BufferBinding::DispatchIndirect, State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING},
+    {BufferBinding::DrawIndirect, State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING},
+    {BufferBinding::PixelPack, State::DIRTY_BIT_PACK_BUFFER_BINDING},
+    {BufferBinding::PixelUnpack, State::DIRTY_BIT_UNPACK_BUFFER_BINDING},
+    {BufferBinding::ShaderStorage, State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING},
+    {BufferBinding::Uniform, State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS},
 }};
 
 // Returns a buffer binding function depending on if a dirty bit is set.
 template <BufferBinding Target>
-constexpr State::BufferBindingSetter GetBufferBindingSetter()
+constexpr std::pair<BufferBinding, State::BufferBindingSetter> GetBufferBindingSetter()
 {
-    return kBufferBindingDirtyBits[Target] != 0 ? &State::setGenericBufferBindingWithBit<Target>
-                                                : &State::setGenericBufferBinding<Target>;
+    return std::make_pair(Target, kBufferBindingDirtyBits[Target] != 0
+                                      ? &State::setGenericBufferBindingWithBit<Target>
+                                      : &State::setGenericBufferBinding<Target>);
 }
 }  // namespace
 

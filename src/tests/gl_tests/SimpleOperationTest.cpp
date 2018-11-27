@@ -1070,6 +1070,36 @@ TEST_P(SimpleOperationTest, RenderbufferAttachment)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests that using desktop GL_QUADS/GL_POLYGONS enums generate the correct error.
+TEST_P(SimpleOperationTest, PrimitiveModeNegativeTest)
+{
+    // Draw a correct quad.
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    glUseProgram(program);
+
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Tests that TRIANGLES works.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Tests that specific invalid enums don't work.
+    glDrawArrays(static_cast<GLenum>(7), 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glDrawArrays(static_cast<GLenum>(8), 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glDrawArrays(static_cast<GLenum>(9), 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
