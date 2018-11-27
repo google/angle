@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "43f5a337_206f7698",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-27T20:46:51Z",
+      "side": 1,
+      "message": "I think it should be technically simple to have HandleType::BufferHelper and cast mHandle to BufferHelper* in GarbageObject::destroy and call BufferHelper::destroy there and delete the pointer. Unless there are non-technical objections to this.\nBTW, \"VkDevice mHandle\" in GarbageObject looks bad to me. Maybe it can be templated?",
+      "parentUuid": "f6dd6ebb_2d4bd834",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8645436b_c0e9ddab",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6
@@ -296,6 +320,30 @@
       "side": 1,
       "message": "If we want to remove one, it should be the one one here. I moved the map, flush and invalidate functionality to BufferHelper so a buffer can be directly mapped (without getting DynamicBuffer involved).\n\nThis was cached so when a new allocation is not necessary, the old mapping would be used, but I can just fix that with a getter in BufferHelper.",
       "parentUuid": "fc175d5a_6691ebac",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 27
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d659d64_4366e43c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-27T20:46:51Z",
+      "side": 1,
+      "message": "I was also considering removing it from here first, but decided removing the one in DynamicBuffer is better, since it\u0027s nice that BufferHelper encapsulates everything related to the buffer, including the mapped memory.\nThe tracking of when to unmap the memory in DynamicBuffer could be complicated (like we are discussing when is it safe to delete the BufferHelper objects themselves), but BufferHelper is a kind of \"smart pointer\", which would unmap the memory when it\u0027s deleted (like smart pointer going out of scope).",
+      "parentUuid": "5bd9f829_88d90b82",
       "range": {
         "startLine": 434,
         "startChar": 0,
