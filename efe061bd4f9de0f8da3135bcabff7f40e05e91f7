@@ -142,6 +142,30 @@
       "revId": "efe061bd4f9de0f8da3135bcabff7f40e05e91f7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f6ef9e8_3f83f036",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-27T16:34:42Z",
+      "side": 0,
+      "message": "Nice! Thanks for checking!",
+      "parentUuid": "e4d716d3_dd7c6f78",
+      "range": {
+        "startLine": 383,
+        "startChar": 4,
+        "endLine": 383,
+        "endChar": 79
+      },
+      "revId": "efe061bd4f9de0f8da3135bcabff7f40e05e91f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
