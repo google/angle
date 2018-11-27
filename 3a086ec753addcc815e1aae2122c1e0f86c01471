@@ -279,6 +279,24 @@
     },
     {
       "key": {
+        "uuid": "013bbf2c_238b8b8b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T21:53:29Z",
+      "side": 1,
+      "message": "Arg. I think I liked your first CL better. Sorry for the back and forth. Pointers would be my preference.",
+      "parentUuid": "dddd92da_c3ef7b3e",
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8645436b_c0e9ddab",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6
@@ -433,6 +451,30 @@
       "side": 1,
       "message": "Cool, now that we are in agreement, in my original comment I suggested that map() is the getter for mMappedMemory.",
       "parentUuid": "169582a1_e1b8036a",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 27
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6635032_9788139a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T21:53:29Z",
+      "side": 1,
+      "message": "Agree with the mMappedMemory change if it makes sense.",
+      "parentUuid": "4fa02f42_34e541ec",
       "range": {
         "startLine": 434,
         "startChar": 0,

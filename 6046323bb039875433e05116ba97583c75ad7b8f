@@ -16,6 +16,24 @@
       "revId": "6046323bb039875433e05116ba97583c75ad7b8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bedcca9_01a9c223",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-27T21:53:29Z",
+      "side": 1,
+      "message": "Yeah you can put this is another CL and TBR me.",
+      "parentUuid": "dcc43ba3_21fd2a28",
+      "revId": "6046323bb039875433e05116ba97583c75ad7b8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
