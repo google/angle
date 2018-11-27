@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "05072bf0_b345a5de",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-27T17:48:33Z",
+      "side": 1,
+      "message": "Can we put them in RendererVk::mGarbage?",
+      "parentUuid": "df3bc277_422a3fd4",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8645436b_c0e9ddab",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6
@@ -210,6 +234,29 @@
       "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc175d5a_6691ebac",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-11-27T17:48:33Z",
+      "side": 1,
+      "message": "I\u0027m worried that this is stored both here and in DynamicBuffer.\nI propose to keep it only here.\nmap() will return mMappedMemory if it\u0027s already mapped.\nWe can remove DynamicBuffer::unmap() and call mBuffer-\u003eunmap() directly.",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 27
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
