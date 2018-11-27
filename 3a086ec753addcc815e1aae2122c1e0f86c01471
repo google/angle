@@ -262,6 +262,23 @@
     },
     {
       "key": {
+        "uuid": "dddd92da_c3ef7b3e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T21:47:37Z",
+      "side": 1,
+      "message": "Had to move two classes around so BufferHelper could be used not as a pointer.",
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8645436b_c0e9ddab",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6

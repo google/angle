@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcc43ba3_21fd2a28",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T21:47:37Z",
+      "side": 1,
+      "message": "Unrelated bugfix that can probably go in a different CL.",
+      "revId": "6046323bb039875433e05116ba97583c75ad7b8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
