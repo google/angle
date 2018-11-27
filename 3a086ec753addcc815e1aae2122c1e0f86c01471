@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "f6dd6ebb_2d4bd834",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T19:51:56Z",
+      "side": 1,
+      "message": "That was my first thought, but mGarbage holds `vk::GarbageObject`s which are only VkType pointers. One idea could be to add a second garbage list that holds generic pointers to be deleted, but I\u0027m hoping there would be a better way.",
+      "parentUuid": "05072bf0_b345a5de",
+      "range": {
+        "startLine": 241,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8645436b_c0e9ddab",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6
@@ -248,6 +272,30 @@
       "writtenOn": "2018-11-27T17:48:33Z",
       "side": 1,
       "message": "I\u0027m worried that this is stored both here and in DynamicBuffer.\nI propose to keep it only here.\nmap() will return mMappedMemory if it\u0027s already mapped.\nWe can remove DynamicBuffer::unmap() and call mBuffer-\u003eunmap() directly.",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 27
+      },
+      "revId": "3a086ec753addcc815e1aae2122c1e0f86c01471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bd9f829_88d90b82",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-27T19:51:56Z",
+      "side": 1,
+      "message": "If we want to remove one, it should be the one one here. I moved the map, flush and invalidate functionality to BufferHelper so a buffer can be directly mapped (without getting DynamicBuffer involved).\n\nThis was cached so when a new allocation is not necessary, the old mapping would be used, but I can just fix that with a getter in BufferHelper.",
+      "parentUuid": "fc175d5a_6691ebac",
       "range": {
         "startLine": 434,
         "startChar": 0,
