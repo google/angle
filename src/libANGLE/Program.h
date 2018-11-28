@@ -497,7 +497,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     GLuint id() const;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     ANGLE_INLINE rx::ProgramImpl *getImplementation() const

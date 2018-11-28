@@ -931,7 +931,7 @@ GLuint Program::id() const
     return mHandle;
 }
 
-void Program::setLabel(const std::string &label)
+void Program::setLabel(const Context *context, const std::string &label)
 {
     ASSERT(mLinkResolved);
     mState.mLabel = label;

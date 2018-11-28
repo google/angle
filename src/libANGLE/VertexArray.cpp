@@ -127,7 +127,7 @@ GLuint VertexArray::id() const
     return mId;
 }
 
-void VertexArray::setLabel(const std::string &label)
+void VertexArray::setLabel(const Context *context, const std::string &label)
 {
     mState.mLabel = label;
 }

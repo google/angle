@@ -98,7 +98,7 @@ TransformFeedback::~TransformFeedback()
     SafeDelete(mImplementation);
 }
 
-void TransformFeedback::setLabel(const std::string &label)
+void TransformFeedback::setLabel(const Context *context, const std::string &label)
 {
     mState.mLabel = label;
 }

@@ -50,7 +50,7 @@ class ProgramPipeline final : public RefCountObject, public LabeledObject
 
     void onDestroy(const Context *context) override;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     rx::ProgramPipelineImpl *getImplementation() const;

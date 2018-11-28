@@ -73,7 +73,7 @@ Sync::~Sync()
     SafeDelete(mFence);
 }
 
-void Sync::setLabel(const std::string &label)
+void Sync::setLabel(const Context *context, const std::string &label)
 {
     mLabel = label;
 }

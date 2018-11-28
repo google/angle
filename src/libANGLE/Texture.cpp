@@ -627,7 +627,7 @@ Texture::~Texture()
     SafeDelete(mTexture);
 }
 
-void Texture::setLabel(const std::string &label)
+void Texture::setLabel(const Context *context, const std::string &label)
 {
     mLabel = label;
     mDirtyBits.set(DIRTY_BIT_LABEL);

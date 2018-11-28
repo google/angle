@@ -186,7 +186,7 @@ Shader::~Shader()
     ASSERT(!mImplementation);
 }
 
-void Shader::setLabel(const std::string &label)
+void Shader::setLabel(const Context *context, const std::string &label)
 {
     mState.mLabel = label;
 }

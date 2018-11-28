@@ -73,7 +73,7 @@ class Buffer final : public RefCountObject,
     ~Buffer() override;
     void onDestroy(const Context *context) override;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     angle::Result bufferData(Context *context,

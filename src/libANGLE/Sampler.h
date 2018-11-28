@@ -32,7 +32,7 @@ class Sampler final : public RefCountObject, public LabeledObject, public angle:
 
     void onDestroy(const Context *context) override;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     void setMinFilter(GLenum minFilter);

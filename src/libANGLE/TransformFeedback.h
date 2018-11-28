@@ -60,7 +60,7 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
     ~TransformFeedback() override;
     void onDestroy(const Context *context) override;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     void begin(const Context *context, PrimitiveMode primitiveMode, Program *program);

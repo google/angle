@@ -69,7 +69,7 @@ class Renderbuffer final : public RefCountObject, public egl::ImageSibling, publ
 
     void onDestroy(const Context *context) override;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     angle::Result setStorage(const Context *context,

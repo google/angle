@@ -106,7 +106,7 @@ class VertexArray final : public angle::ObserverInterface,
 
     GLuint id() const;
 
-    void setLabel(const std::string &label) override;
+    void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
     const VertexBinding &getVertexBinding(size_t bindingIndex) const;

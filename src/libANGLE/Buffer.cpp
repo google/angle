@@ -58,7 +58,7 @@ void Buffer::onDestroy(const Context *context)
         mImpl->destroy(context);
 }
 
-void Buffer::setLabel(const std::string &label)
+void Buffer::setLabel(const Context *context, const std::string &label)
 {
     mState.mLabel = label;
 }
