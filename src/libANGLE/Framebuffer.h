@@ -338,6 +338,8 @@ class Framebuffer final : public angle::ObserverInterface,
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
+    bool hasResourceThatNeedsInit() const { return mState.mResourceNeedsInit.any(); }
+
     angle::Result syncState(const Context *context);
 
     // Observer implementation
