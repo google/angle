@@ -492,9 +492,9 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
                 memoryBarrier.srcAccessMask   = mGlobalMemoryBarrierSrcAccess;
                 memoryBarrier.dstAccessMask   = mGlobalMemoryBarrierDstAccess;
 
-                // Use the top of pipe stage to keep the state management simple.
-                primaryCommandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                                                      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 1,
+                // Use the all pipe stage to keep the state management simple.
+                primaryCommandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                                      VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 1,
                                                       &memoryBarrier, 0, nullptr, 0, nullptr);
             }
 

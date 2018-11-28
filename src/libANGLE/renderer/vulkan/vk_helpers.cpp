@@ -951,7 +951,7 @@ angle::Result BufferHelper::copyFromBuffer(Context *context,
         memoryBarrier.srcAccessMask   = mCurrentReadAccess;
         memoryBarrier.dstAccessMask   = VK_ACCESS_TRANSFER_WRITE_BIT;
 
-        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                        VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 1, &memoryBarrier, 0,
                                        nullptr, 0, nullptr);
 
