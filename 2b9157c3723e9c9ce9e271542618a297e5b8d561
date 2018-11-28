@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f4fe3210_e11f4a78",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-28T17:52:47Z",
+      "side": 1,
+      "message": "I don\u0027t like it because I\u0027d rather the dynamic* helpers manage their own garbage. This is in view of them recycling them internally without ever disposing of them.",
+      "parentUuid": "dda78e98_760b79da",
+      "range": {
+        "startLine": 223,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 0
+      },
+      "revId": "2b9157c3723e9c9ce9e271542618a297e5b8d561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67d03190_58ec7ddb",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 12
