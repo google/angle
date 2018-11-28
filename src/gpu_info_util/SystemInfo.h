@@ -64,6 +64,9 @@ struct SystemInfo
     bool isOptimus       = false;
     bool isAMDSwitchable = false;
 
+    // Only available on Android, when added by the feature support utility
+    std::string machineManufacturer;
+
     // Only available on macOS
     std::string machineModelName;
     std::string machineModelVersion;

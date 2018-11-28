@@ -113,10 +113,16 @@ test("angle_unittests") {
     sources += [ "angle_unittests_main.cpp" ]
   }
 
+  if (is_linux && !is_component_build) {
+    # Set rpath to find shared libs in a non-component build.
+    configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+  }
+
   deps = googletest_deps + [
            angle_root + ":libANGLE",
            angle_root + ":preprocessor",
            angle_root + ":translator",
+           angle_root + ":libfeature_support${angle_libs_suffix}",
          ]
 }
 
