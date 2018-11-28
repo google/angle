@@ -418,6 +418,7 @@ if (angle_use_commit_id) {
 config("libANGLE_config") {
   cflags = []
   defines = []
+  libs = []
   if (angle_enable_d3d9) {
     defines += [ "ANGLE_ENABLE_D3D9" ]
   }
@@ -443,6 +444,14 @@ config("libANGLE_config") {
 
   if (is_win) {
     cflags += [ "/wd4530" ]  # C++ exception handler used, but unwind semantics are not enabled.
+  }
+
+  if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
+    if (ndk_supports_nativewindow) {
+      libs += [ "nativewindow" ]
+    } else {
+      libs += [ "android" ]
+    }
   }
 }
 
@@ -549,12 +558,6 @@ static_library("libANGLE") {
       sources += libangle_gl_egl_sources
       sources += libangle_gl_egl_dl_sources
       sources += libangle_gl_egl_android_sources
-      if (ndk_supports_nativewindow) {
-        libs += [ "nativewindow" ]
-      } else {
-        libs += [ "android" ]
-      }
-      libs += [ "log" ]
     }
     if (ozone_platform_gbm) {
       configs += [ ":libdrm" ]
