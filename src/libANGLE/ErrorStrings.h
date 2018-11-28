@@ -221,7 +221,6 @@ MSG kLightParameterOutOfRange = "Light parameter out of range.";
 MSG kMaterialParameterOutOfRange = "Material parameter out of range.";
 MSG kMatrixStackOverflow = "Current matrix stack is full.";
 MSG kMatrixStackUnderflow = "Current matrix stack has only a single matrix.";
-MSG kMismatchedByteCountType = "Buffer size does not align with data type.";
 MSG kMismatchedFormat = "Format must match internal format.";
 MSG kMismatchedTargetAndFormat = "Invalid texture target and format combination.";
 MSG kMismatchedTypeAndFormat = "Invalid format and type combination.";

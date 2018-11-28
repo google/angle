@@ -3030,10 +3030,10 @@ bool ValidateDrawElementsCommon(Context *context,
     Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     GLuint typeBytes = GetTypeInfo(type).bytes;
+    ASSERT(isPow2(typeBytes) && typeBytes > 0);
 
     if (context->getExtensions().webglCompatibility)
     {
-        ASSERT(isPow2(typeBytes) && typeBytes > 0);
         if ((reinterpret_cast<uintptr_t>(indices) & static_cast<uintptr_t>(typeBytes - 1)) != 0)
         {
             // [WebGL 1.0] Section 6.4 Buffer Offset and Stride Requirements
@@ -3051,19 +3051,7 @@ bool ValidateDrawElementsCommon(Context *context,
             context->validationError(GL_INVALID_VALUE, kNegativeOffset);
             return false;
         }
-    }
-    else if (elementArrayBuffer && elementArrayBuffer->isMapped())
-    {
-        // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
-        // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the WebGL 2.0 API.
-        // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
-        context->validationError(GL_INVALID_OPERATION, "Index buffer is mapped.");
-        return false;
-    }
 
-    if (context->getExtensions().webglCompatibility ||
-        !context->getGLState().areClientArraysEnabled())
-    {
         if (!elementArrayBuffer)
         {
             // [WebGL 1.0] Section 6.2 No Client Side Arrays
@@ -3072,86 +3060,103 @@ bool ValidateDrawElementsCommon(Context *context,
             context->validationError(GL_INVALID_OPERATION, kMustHaveElementArrayBinding);
             return false;
         }
-    }
 
-    if (count > 0 && !elementArrayBuffer && !indices)
-    {
-        // This is an application error that would normally result in a crash, but we catch it and
-        // return an error
-        context->validationError(GL_INVALID_OPERATION, "No element array buffer and no pointer.");
-        return false;
-    }
-
-    if (count > 0 && elementArrayBuffer)
-    {
-        // The max possible type size is 8 and count is on 32 bits so doing the multiplication
-        // in a 64 bit integer is safe. Also we are guaranteed that here count > 0.
-        static_assert(std::is_same<int, GLsizei>::value, "GLsizei isn't the expected type");
-        constexpr uint64_t kMaxTypeSize = 8;
-        constexpr uint64_t kIntMax      = std::numeric_limits<int>::max();
-        constexpr uint64_t kUint64Max   = std::numeric_limits<uint64_t>::max();
-        static_assert(kIntMax < kUint64Max / kMaxTypeSize, "");
-
-        uint64_t typeSize     = typeBytes;
-        uint64_t elementCount = static_cast<uint64_t>(count);
-        ASSERT(elementCount > 0 && typeSize <= kMaxTypeSize);
-
-        // Doing the multiplication here is overflow-safe
-        uint64_t elementDataSizeNoOffset = typeSize * elementCount;
-
-        // The offset can be any value, check for overflows
-        uint64_t offset = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(indices));
-        if (elementDataSizeNoOffset > kUint64Max - offset)
-        {
-            context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
-            return false;
-        }
-
-        uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
-        if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
-        {
-            context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
-            return false;
-        }
-
-        ASSERT(isPow2(typeSize) && typeSize > 0);
-        if ((elementArrayBuffer->getSize() & (typeSize - 1)) != 0)
-        {
-            context->validationError(GL_INVALID_OPERATION, kMismatchedByteCountType);
-            return false;
-        }
-
-        if (context->getExtensions().webglCompatibility &&
-            elementArrayBuffer->isBoundForTransformFeedbackAndOtherUse())
+        if (elementArrayBuffer->isBoundForTransformFeedbackAndOtherUse())
         {
             context->validationError(GL_INVALID_OPERATION,
                                      kElementArrayBufferBoundForTransformFeedback);
             return false;
         }
     }
-
-    if (!context->getExtensions().robustBufferAccessBehavior && count > 0 && primcount > 0)
+    else
     {
-        // Use the parameter buffer to retrieve and cache the index range.
-        IndexRange indexRange;
-        ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
-
-        // If we use an index greater than our maximum supported index range, return an error.
-        // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should always
-        // return an error if possible here.
-        if (static_cast<GLuint64>(indexRange.end) >= context->getCaps().maxElementIndex)
+        if (elementArrayBuffer)
         {
-            context->validationError(GL_INVALID_OPERATION, kExceedsMaxElement);
+            if (elementArrayBuffer->isMapped())
+            {
+                // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
+                // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the
+                // WebGL 2.0 API. https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
+                context->validationError(GL_INVALID_OPERATION, "Index buffer is mapped.");
+                return false;
+            }
+        }
+        else if (!context->getGLState().areClientArraysEnabled())
+        {
+            context->validationError(GL_INVALID_OPERATION, kMustHaveElementArrayBinding);
             return false;
         }
+    }
 
-        if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRange.end)))
+    if (count > 0)
+    {
+        if (!elementArrayBuffer)
         {
-            return false;
+            if (!indices)
+            {
+                // This is an application error that would normally result in a crash, but we catch
+                // it and return an error
+                context->validationError(GL_INVALID_OPERATION,
+                                         "No element array buffer and no pointer.");
+                return false;
+            }
+        }
+        else
+        {
+            // The max possible type size is 8 and count is on 32 bits so doing the multiplication
+            // in a 64 bit integer is safe. Also we are guaranteed that here count > 0.
+            static_assert(std::is_same<int, GLsizei>::value, "GLsizei isn't the expected type");
+            constexpr uint64_t kMaxTypeSize = 8;
+            constexpr uint64_t kIntMax      = std::numeric_limits<int>::max();
+            constexpr uint64_t kUint64Max   = std::numeric_limits<uint64_t>::max();
+            static_assert(kIntMax < kUint64Max / kMaxTypeSize, "");
+
+            uint64_t typeSize     = typeBytes;
+            uint64_t elementCount = static_cast<uint64_t>(count);
+            ASSERT(elementCount > 0 && typeSize <= kMaxTypeSize);
+
+            // Doing the multiplication here is overflow-safe
+            uint64_t elementDataSizeNoOffset = typeSize * elementCount;
+
+            // The offset can be any value, check for overflows
+            uint64_t offset = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(indices));
+            if (elementDataSizeNoOffset > kUint64Max - offset)
+            {
+                context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
+                return false;
+            }
+
+            uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
+            if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
+            {
+                context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
+                return false;
+            }
         }
 
-        // No op if there are no real indices in the index data (all are primitive restart).
-        return (indexRange.vertexIndexCount > 0);
+        if (!context->getExtensions().robustBufferAccessBehavior && primcount > 0)
+        {
+            // Use the parameter buffer to retrieve and cache the index range.
+            IndexRange indexRange;
+            ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
+
+            // If we use an index greater than our maximum supported index range, return an error.
+            // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should
+            // always return an error if possible here.
+            if (static_cast<GLuint64>(indexRange.end) >= context->getCaps().maxElementIndex)
+            {
+                context->validationError(GL_INVALID_OPERATION, kExceedsMaxElement);
+                return false;
+            }
+
+            if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRange.end)))
+            {
+                return false;
+            }
+
+            // No op if there are no real indices in the index data (all are primitive restart).
+            return (indexRange.vertexIndexCount > 0);
+        }
     }
 
     return true;

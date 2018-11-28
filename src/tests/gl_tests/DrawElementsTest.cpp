@@ -64,6 +64,12 @@ class DrawElementsTest : public ANGLETest
     GLuint mProgram;
 };
 
+class WebGLDrawElementsTest : public DrawElementsTest
+{
+  public:
+    WebGLDrawElementsTest() { setWebGLCompatibilityEnabled(true); }
+};
+
 // Test no error is generated when using client-side arrays, indices = nullptr and count = 0
 TEST_P(DrawElementsTest, ClientSideNullptrArrayZeroCount)
 {
@@ -260,7 +266,7 @@ TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
     ASSERT_GL_NO_ERROR();
 }
 // Test that the offset in the index buffer is forced to be a multiple of the element size
-TEST_P(DrawElementsTest, DrawElementsTypeAlignment)
+TEST_P(WebGLDrawElementsTest, DrawElementsTypeAlignment)
 {
     const std::string &vert =
         "attribute vec3 a_pos;\n"
@@ -297,7 +303,7 @@ TEST_P(DrawElementsTest, DrawElementsTypeAlignment)
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, zeroIndices);
     ASSERT_GL_NO_ERROR();
 
-    const GLubyte indices2[] = {0, 0, 0, 0, 0};
+    const GLushort indices2[] = {0, 0, 0, 0, 0, 0};
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices2), indices2, GL_STATIC_DRAW);
 
@@ -306,4 +312,5 @@ TEST_P(DrawElementsTest, DrawElementsTypeAlignment)
 }
 
 ANGLE_INSTANTIATE_TEST(DrawElementsTest, ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(WebGLDrawElementsTest, ES2_OPENGL(), ES2_OPENGLES());
 }  // namespace
