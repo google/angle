@@ -346,7 +346,7 @@ class LineLoopHelper final : angle::NonCopyable
     angle::Result getIndexBufferForDrawArrays(ContextVk *contextVk,
                                               uint32_t clampedVertexCount,
                                               GLint firstVertex,
-                                              VkBuffer *bufferHandleOut,
+                                              vk::BufferHelper **bufferOut,
                                               VkDeviceSize *offsetOut);
 
     angle::Result getIndexBufferForElementArrayBuffer(ContextVk *contextVk,
@@ -354,14 +354,14 @@ class LineLoopHelper final : angle::NonCopyable
                                                       gl::DrawElementsType glIndexType,
                                                       int indexCount,
                                                       intptr_t elementArrayOffset,
-                                                      VkBuffer *bufferHandleOut,
+                                                      vk::BufferHelper **bufferOut,
                                                       VkDeviceSize *bufferOffsetOut);
 
     angle::Result streamIndices(ContextVk *contextVk,
                                 gl::DrawElementsType glIndexType,
                                 GLsizei indexCount,
                                 const uint8_t *srcPtr,
-                                VkBuffer *bufferHandleOut,
+                                vk::BufferHelper **bufferOut,
                                 VkDeviceSize *bufferOffsetOut);
 
     void release(RendererVk *renderer);
@@ -391,8 +391,9 @@ class BufferHelper final : public RecordableGraphResource
     const Buffer &getBuffer() const { return mBuffer; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
-    // Helper for setting the graph dependencies *and* setting the appropriate barrier.
-    void onFramebufferRead(FramebufferHelper *framebuffer, VkAccessFlagBits accessType);
+    // Helpers for setting the graph dependencies *and* setting the appropriate barrier.
+    void onRead(RecordableGraphResource *reader, VkAccessFlagBits readAccessType);
+    void onWrite(VkAccessFlagBits writeAccessType);
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(Context *context,

@@ -235,13 +235,18 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
 }
 
 angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
-                                     VkBuffer destbuffer,
+                                     vk::BufferHelper *destBuffer,
                                      uint32_t copyCount,
                                      const VkBufferCopy *copies)
 {
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(mBuffer.recordCommands(contextVk, &commandBuffer));
-    commandBuffer->copyBuffer(mBuffer.getBuffer().getHandle(), destbuffer, copyCount, copies);
+    commandBuffer->copyBuffer(mBuffer.getBuffer().getHandle(), destBuffer->getBuffer().getHandle(),
+                              copyCount, copies);
+
+    destBuffer->onRead(&mBuffer, VK_ACCESS_TRANSFER_READ_BIT);
+    mBuffer.onWrite(VK_ACCESS_TRANSFER_WRITE_BIT);
+
     return angle::Result::Continue();
 }
 

@@ -434,7 +434,7 @@ angle::Result ContextVk::handleDirtyVertexBuffers(const gl::Context *context,
         vk::BufferHelper *arrayBuffer = arrayBufferResources[attribIndex];
         if (arrayBuffer)
         {
-            arrayBuffer->onFramebufferRead(framebuffer, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT);
+            arrayBuffer->onRead(framebuffer, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT);
         }
     }
 
@@ -444,16 +444,16 @@ angle::Result ContextVk::handleDirtyVertexBuffers(const gl::Context *context,
 angle::Result ContextVk::handleDirtyIndexBuffer(const gl::Context *context,
                                                 vk::CommandBuffer *commandBuffer)
 {
-    commandBuffer->bindIndexBuffer(mVertexArray->getCurrentElementArrayBufferHandle(),
+    vk::BufferHelper *elementArrayBuffer = mVertexArray->getCurrentElementArrayBuffer();
+    ASSERT(elementArrayBuffer != nullptr);
+
+    commandBuffer->bindIndexBuffer(elementArrayBuffer->getBuffer().getHandle(),
                                    mVertexArray->getCurrentElementArrayBufferOffset(),
                                    gl_vk::kIndexTypeMap[mCurrentDrawElementsType]);
 
-    vk::BufferHelper *elementArrayBuffer = mVertexArray->getCurrentElementArrayBuffer();
-    if (elementArrayBuffer)
-    {
-        vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
-        elementArrayBuffer->onFramebufferRead(framebuffer, VK_ACCESS_INDEX_READ_BIT);
-    }
+    vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
+    elementArrayBuffer->onRead(framebuffer, VK_ACCESS_INDEX_READ_BIT);
+
     return angle::Result::Continue();
 }
 

@@ -73,7 +73,7 @@ class BufferVk : public BufferImpl
 
     // Calls copyBuffer internally.
     angle::Result copyToBuffer(ContextVk *contextVk,
-                               VkBuffer destbuffer,
+                               vk::BufferHelper *destBuffer,
                                uint32_t copyCount,
                                const VkBufferCopy *copies);
 
