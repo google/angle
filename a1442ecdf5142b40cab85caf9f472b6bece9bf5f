@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "703e98e6_6178c938",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/README.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-29T15:34:38Z",
+      "side": 1,
+      "message": "thanks for making the doc. Can you put this in vulkan/shaders instead of vulkan/shaders/src?",
+      "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3566c128_130b1d77",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-29T15:34:38Z",
+      "side": 1,
+      "message": "these functions are all identical. i would prefer if you could figure out a way to merge them and make the ASSERTs general instead of verifying all bits.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 1
+      },
+      "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
