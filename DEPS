@@ -12,7 +12,7 @@ vars = {
   'deqp_revision': 'f5637d67a00a1081a13008bb8dc93b2616c935e2',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': '4508a8170a8f62ede770fb1da34c1cc600e0c596',
+  'glslang_revision': 'f9edfdab0e872c674e0a80e083239aa9637871ba',
 
   # Current revision fo the SPIRV-Headers Vulkan support library.
   'spirv_headers_revision': 'd5b2e1255f706ce1f88812217e9a554f299848af',
@@ -21,16 +21,16 @@ vars = {
   'spirv_tools_revision': 'd73b9d8dfbf7761e3fde323af00ec18ebfc0020c',
 
   # Current revision of Khronos Vulkan-Headers.
-  'vulkan_headers_revision': '79ea168fa9e412de9dccb6ca201a3a863e5c850e',
+  'vulkan_headers_revision': 'b65941cc4b2b43b74de00534d110b581c52c394b',
 
   # Current revision of Khronos Vulkan-Loader.
-  'vulkan_loader_revision': '445a45831911fe2639554244fc6bcae6aa5620a4',
+  'vulkan_loader_revision': '2aa6dcc10189f7700824bc5e21120beeff013c3a',
 
   # Current revision of Khronos Vulkan-Tools.
   'vulkan_tools_revision': '2e8d601de618eddf2bab8597fd140b2824a060b2',
 
   # Current revision of Khronos Vulkan-ValidationLayers.
-  'vulkan_validation_revision': '105d64975494a2e06591f2ff6c4f1d6e4fd0bee8',
+  'vulkan_validation_revision': '0fa2823fa693cc22afaa6e6c6d34aadb97104a2d',
 }
 
 deps = {
@@ -61,7 +61,7 @@ deps = {
   },
 
   '{angle_root}/third_party/glslang/src': {
-    'url': '{android_git}/platform/external/shaderc/glslang@{glslang_revision}',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@{glslang_revision}',
   },
 
   '{angle_root}/third_party/googletest/src': {
