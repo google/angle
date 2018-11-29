@@ -373,9 +373,9 @@ class DescriptorSetLayoutDesc final
 };
 
 // The following are for caching descriptor set layouts. Limited to max two descriptor set layouts
-// and two push constants. One push constant per shader stage. This can be extended in the future.
+// and one push constant per shader stage. This can be extended in the future.
 constexpr size_t kMaxDescriptorSetLayouts = 3;
-constexpr size_t kMaxPushConstantRanges   = 2;
+constexpr size_t kMaxPushConstantRanges   = angle::EnumSize<gl::ShaderType>();
 
 struct PackedPushConstantRange
 {

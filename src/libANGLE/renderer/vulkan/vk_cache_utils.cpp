@@ -957,7 +957,8 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
         binding.binding                      = bindingIndex;
         binding.descriptorCount              = packedBinding.count;
         binding.descriptorType               = static_cast<VkDescriptorType>(packedBinding.type);
-        binding.stageFlags         = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+        binding.stageFlags =
+            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT;
         binding.pImmutableSamplers = nullptr;
 
         bindings->push_back(binding);
@@ -1299,11 +1300,20 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
         const vk::PackedPushConstantRange &pushConstantDesc = descPushConstantRanges[shaderIndex];
         if (pushConstantDesc.size > 0)
         {
+            static constexpr VkShaderStageFlagBits kShaderStages[vk::kMaxPushConstantRanges] = {
+                VK_SHADER_STAGE_VERTEX_BIT,
+                VK_SHADER_STAGE_FRAGMENT_BIT,
+                VK_SHADER_STAGE_GEOMETRY_BIT,
+                VK_SHADER_STAGE_COMPUTE_BIT,
+            };
+            static_assert(static_cast<uint32_t>(gl::ShaderType::Vertex) == 0, "Fix this table");
+            static_assert(static_cast<uint32_t>(gl::ShaderType::Fragment) == 1, "Fix this table");
+            static_assert(static_cast<uint32_t>(gl::ShaderType::Geometry) == 2, "Fix this table");
+            static_assert(static_cast<uint32_t>(gl::ShaderType::Compute) == 3, "Fix this table");
             VkPushConstantRange pushConstantRange = {};
-            pushConstantRange.stageFlags =
-                shaderIndex == 0 ? VK_SHADER_STAGE_VERTEX_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
-            pushConstantRange.offset = pushConstantDesc.offset;
-            pushConstantRange.size   = pushConstantDesc.size;
+            pushConstantRange.stageFlags          = kShaderStages[shaderIndex];
+            pushConstantRange.offset              = pushConstantDesc.offset;
+            pushConstantRange.size                = pushConstantDesc.size;
 
             pushConstantRanges.push_back(pushConstantRange);
         }
