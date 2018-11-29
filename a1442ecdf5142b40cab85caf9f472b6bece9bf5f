@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bbe58086_deb81c14",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-29T17:30:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2c33adc_dcb2c072",
+      "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "703e98e6_6178c938",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/README.md",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89dea8eb_642310d0",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/README.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-29T17:30:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "703e98e6_6178c938",
+      "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -56,6 +92,30 @@
       "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c30a287_27b5bf21",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-11-29T17:30:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3566c128_130b1d77",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 1
+      },
+      "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
