@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c2c33adc_dcb2c072",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-29T15:52:30Z",
+      "side": 1,
+      "message": "The line endings I think also changed based on Windows/Linux.\n\nCan you add a rule to .gitattributes for the files in this folder? Similar to the rule \n\n  **/compiled/*.h    eol\u003dcrlf",
+      "revId": "a1442ecdf5142b40cab85caf9f472b6bece9bf5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "703e98e6_6178c938",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/README.md",
         "patchSetId": 9
