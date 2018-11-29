@@ -268,6 +268,47 @@ static_assert(ToGLenum(PrimitiveMode::TrianglesAdjacency) == GL_TRIANGLES_ADJACE
               "PrimitiveMode violation");
 static_assert(ToGLenum(PrimitiveMode::TriangleStripAdjacency) == GL_TRIANGLE_STRIP_ADJACENCY,
               "PrimitiveMode violation");
+
+enum class DrawElementsType : size_t
+{
+    UnsignedByte  = 0,
+    UnsignedShort = 1,
+    UnsignedInt   = 2,
+    InvalidEnum   = 3,
+    EnumCount     = 3,
+};
+
+template <>
+constexpr DrawElementsType FromGLenum<DrawElementsType>(GLenum from)
+{
+    GLenum scaled = (from - GL_UNSIGNED_BYTE);
+    GLenum packed = (scaled >> 1);
+
+    if ((scaled & 1) != 0 || packed >= static_cast<GLenum>(DrawElementsType::EnumCount))
+    {
+        return DrawElementsType::InvalidEnum;
+    }
+
+    return static_cast<DrawElementsType>(packed);
+}
+
+constexpr GLenum ToGLenum(DrawElementsType from)
+{
+    return ((static_cast<GLenum>(from) << 1) + GL_UNSIGNED_BYTE);
+}
+
+static_assert(ToGLenum(DrawElementsType::UnsignedByte) == GL_UNSIGNED_BYTE,
+              "DrawElementsType violation");
+static_assert(ToGLenum(DrawElementsType::UnsignedShort) == GL_UNSIGNED_SHORT,
+              "DrawElementsType violation");
+static_assert(ToGLenum(DrawElementsType::UnsignedInt) == GL_UNSIGNED_INT,
+              "DrawElementsType violation");
+static_assert(FromGLenum<DrawElementsType>(GL_UNSIGNED_BYTE) == DrawElementsType::UnsignedByte,
+              "DrawElementsType violation");
+static_assert(FromGLenum<DrawElementsType>(GL_UNSIGNED_SHORT) == DrawElementsType::UnsignedShort,
+              "DrawElementsType violation");
+static_assert(FromGLenum<DrawElementsType>(GL_UNSIGNED_INT) == DrawElementsType::UnsignedInt,
+              "DrawElementsType violation");
 }  // namespace gl
 
 namespace egl

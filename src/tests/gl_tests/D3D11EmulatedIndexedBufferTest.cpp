@@ -140,7 +140,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLubyteIndices)
 {
     rx::SourceIndexData srcData = {nullptr, mubyteIndices.data(),
                                    static_cast<unsigned int>(mubyteIndices.size()),
-                                   GL_UNSIGNED_BYTE, false};
+                                   gl::DrawElementsType::UnsignedByte, false};
     emulateAndCompare(&srcData);
 }
 
@@ -150,7 +150,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLushortIndices)
 {
     rx::SourceIndexData srcData = {nullptr, mushortIndices.data(),
                                    static_cast<unsigned int>(mushortIndices.size()),
-                                   GL_UNSIGNED_SHORT, false};
+                                   gl::DrawElementsType::UnsignedShort, false};
     emulateAndCompare(&srcData);
 }
 
@@ -159,8 +159,8 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLushortIndices)
 TEST_P(D3D11EmulatedIndexedBufferTest, TestNativeToExpandedUsingGLuintIndices)
 {
     rx::SourceIndexData srcData = {nullptr, muintIndices.data(),
-                                   static_cast<unsigned int>(muintIndices.size()), GL_UNSIGNED_INT,
-                                   false};
+                                   static_cast<unsigned int>(muintIndices.size()),
+                                   gl::DrawElementsType::UnsignedInt, false};
     emulateAndCompare(&srcData);
 }
 
@@ -177,8 +177,8 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
 
     // Do a basic exanded and compare test.
     rx::SourceIndexData srcData = {nullptr, muintIndices.data(),
-                                   static_cast<unsigned int>(muintIndices.size()), GL_UNSIGNED_INT,
-                                   false};
+                                   static_cast<unsigned int>(muintIndices.size()),
+                                   gl::DrawElementsType::UnsignedInt, false};
     emulateAndCompare(&srcData);
 
     const uint8_t *sourceBufferMem = nullptr;

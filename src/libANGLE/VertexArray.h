@@ -256,7 +256,7 @@ class VertexArray final : public angle::ObserverInterface,
     bool hasTransformFeedbackBindingConflict(const gl::Context *context) const;
 
     ANGLE_INLINE angle::Result getIndexRange(const Context *context,
-                                             GLenum type,
+                                             DrawElementsType type,
                                              GLsizei indexCount,
                                              const void *indices,
                                              IndexRange *indexRangeOut) const
@@ -291,7 +291,7 @@ class VertexArray final : public angle::ObserverInterface,
     void updateCachedMappedArrayBuffers(VertexBinding *binding);
 
     angle::Result getIndexRangeImpl(const Context *context,
-                                    GLenum type,
+                                    DrawElementsType type,
                                     GLsizei indexCount,
                                     const void *indices,
                                     IndexRange *indexRangeOut) const;
@@ -315,9 +315,12 @@ class VertexArray final : public angle::ObserverInterface,
       public:
         IndexRangeCache();
 
-        void invalidate() { mTypeKey = GL_NONE; }
+        void invalidate() { mTypeKey = DrawElementsType::InvalidEnum; }
 
-        bool get(GLenum type, GLsizei indexCount, const void *indices, IndexRange *indexRangeOut)
+        bool get(DrawElementsType type,
+                 GLsizei indexCount,
+                 const void *indices,
+                 IndexRange *indexRangeOut)
         {
             size_t offset = reinterpret_cast<uintptr_t>(indices);
             if (mTypeKey == type && mIndexCountKey == indexCount && mOffsetKey == offset)
@@ -329,10 +332,13 @@ class VertexArray final : public angle::ObserverInterface,
             return false;
         }
 
-        void put(GLenum type, GLsizei indexCount, size_t offset, const IndexRange &indexRange);
+        void put(DrawElementsType type,
+                 GLsizei indexCount,
+                 size_t offset,
+                 const IndexRange &indexRange);
 
       private:
-        GLenum mTypeKey;
+        DrawElementsType mTypeKey;
         GLsizei mIndexCountKey;
         size_t mOffsetKey;
         IndexRange mPayload;

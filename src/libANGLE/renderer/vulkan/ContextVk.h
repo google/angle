@@ -53,12 +53,12 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result drawElements(const gl::Context *context,
                                gl::PrimitiveMode mode,
                                GLsizei count,
-                               GLenum type,
+                               gl::DrawElementsType type,
                                const void *indices) override;
     angle::Result drawElementsInstanced(const gl::Context *context,
                                         gl::PrimitiveMode mode,
                                         GLsizei count,
-                                        GLenum type,
+                                        gl::DrawElementsType type,
                                         const void *indices,
                                         GLsizei instances) override;
     angle::Result drawRangeElements(const gl::Context *context,
@@ -66,14 +66,14 @@ class ContextVk : public ContextImpl, public vk::Context
                                     GLuint start,
                                     GLuint end,
                                     GLsizei count,
-                                    GLenum type,
+                                    gl::DrawElementsType type,
                                     const void *indices) override;
     angle::Result drawArraysIndirect(const gl::Context *context,
                                      gl::PrimitiveMode mode,
                                      const void *indirect) override;
     angle::Result drawElementsIndirect(const gl::Context *context,
                                        gl::PrimitiveMode mode,
-                                       GLenum type,
+                                       gl::DrawElementsType type,
                                        const void *indirect) override;
 
     // Device loss
@@ -215,21 +215,21 @@ class ContextVk : public ContextImpl, public vk::Context
                             gl::PrimitiveMode mode,
                             GLint firstVertex,
                             GLsizei vertexOrIndexCount,
-                            GLenum indexTypeOrNone,
+                            gl::DrawElementsType indexTypeOrInvalid,
                             const void *indices,
                             DirtyBits dirtyBitMask,
                             vk::CommandBuffer **commandBufferOut);
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLsizei indexCount,
-                                   GLenum indexType,
+                                   gl::DrawElementsType indexType,
                                    const void *indices,
                                    vk::CommandBuffer **commandBufferOut);
     angle::Result setupLineLoopDraw(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLint firstVertex,
                                     GLsizei vertexOrIndexCount,
-                                    GLenum indexTypeOrNone,
+                                    gl::DrawElementsType indexTypeOrInvalid,
                                     const void *indices,
                                     vk::CommandBuffer **commandBufferOut);
 
@@ -293,7 +293,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;
-    GLenum mCurrentDrawElementsType;
+    gl::DrawElementsType mCurrentDrawElementsType;
 
     // Cached clear value/mask for color and depth/stencil.
     VkClearValue mClearColorValue;

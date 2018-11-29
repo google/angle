@@ -45,7 +45,7 @@ bool ValidateDispatchComputeIndirect(Context *context, GLintptr indirect);
 bool ValidateDrawArraysIndirect(Context *context, PrimitiveMode modePacked, const void *indirect);
 bool ValidateDrawElementsIndirect(Context *context,
                                   PrimitiveMode modePacked,
-                                  GLenum type,
+                                  DrawElementsType typePacked,
                                   const void *indirect);
 bool ValidateFramebufferParameteri(Context *context, GLenum target, GLenum pname, GLint param);
 bool ValidateGenProgramPipelines(Context *context, GLsizei n, GLuint *pipelines);

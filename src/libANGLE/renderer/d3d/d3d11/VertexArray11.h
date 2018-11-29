@@ -36,7 +36,7 @@ class VertexArray11 : public VertexArrayImpl
     angle::Result syncStateForDraw(const gl::Context *context,
                                    GLint firstVertex,
                                    GLsizei vertexOrIndexCount,
-                                   GLenum indexTypeOrNone,
+                                   gl::DrawElementsType indexTypeOrInvalid,
                                    const void *indices,
                                    GLsizei instances,
                                    GLint baseVertex);
@@ -56,7 +56,7 @@ class VertexArray11 : public VertexArrayImpl
     void updateCachedIndexInfo(const TranslatedIndexData &indexInfo);
     bool isCachedIndexInfoValid() const;
 
-    GLenum getCachedDestinationIndexType() const;
+    gl::DrawElementsType getCachedDestinationIndexType() const;
 
   private:
     void updateVertexAttribStorage(const gl::Context *context,
@@ -68,7 +68,7 @@ class VertexArray11 : public VertexArrayImpl
                                        VertexDataManager *vertexDataManager,
                                        GLint firstVertex,
                                        GLsizei vertexOrIndexCount,
-                                       GLenum indexTypeOrNone,
+                                       gl::DrawElementsType indexTypeOrInvalid,
                                        const void *indices,
                                        GLsizei instances,
                                        GLint baseVertex,
@@ -76,7 +76,7 @@ class VertexArray11 : public VertexArrayImpl
 
     angle::Result updateElementArrayStorage(const gl::Context *context,
                                             GLsizei indexCount,
-                                            GLenum indexType,
+                                            gl::DrawElementsType indexType,
                                             const void *indices,
                                             bool restartEnabled);
 
@@ -95,12 +95,12 @@ class VertexArray11 : public VertexArrayImpl
     int mAppliedNumViewsToDivisor;
 
     // If the index buffer needs re-streaming.
-    Optional<GLenum> mLastDrawElementsType;
+    Optional<gl::DrawElementsType> mLastDrawElementsType;
     Optional<const void *> mLastDrawElementsIndices;
     Optional<bool> mLastPrimitiveRestartEnabled;
     IndexStorageType mCurrentElementArrayStorage;
     Optional<TranslatedIndexData> mCachedIndexInfo;
-    GLenum mCachedDestinationIndexType;
+    gl::DrawElementsType mCachedDestinationIndexType;
 };
 
 }  // namespace rx

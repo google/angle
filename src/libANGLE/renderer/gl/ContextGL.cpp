@@ -204,7 +204,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
 
 ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *context,
                                                            GLsizei count,
-                                                           GLenum type,
+                                                           gl::DrawElementsType type,
                                                            const void *indices,
                                                            GLsizei instanceCount,
                                                            const void **outIndices)
@@ -283,7 +283,7 @@ angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
 angle::Result ContextGL::drawElements(const gl::Context *context,
                                       gl::PrimitiveMode mode,
                                       GLsizei count,
-                                      GLenum type,
+                                      gl::DrawElementsType type,
                                       const void *indices)
 {
     const gl::Program *program  = context->getGLState().getProgram();
@@ -294,11 +294,11 @@ angle::Result ContextGL::drawElements(const gl::Context *context,
     ANGLE_TRY(setDrawElementsState(context, count, type, indices, instanceCount, &drawIndexPtr));
     if (!usesMultiview)
     {
-        getFunctions()->drawElements(ToGLenum(mode), count, type, drawIndexPtr);
+        getFunctions()->drawElements(ToGLenum(mode), count, ToGLenum(type), drawIndexPtr);
     }
     else
     {
-        getFunctions()->drawElementsInstanced(ToGLenum(mode), count, type, drawIndexPtr,
+        getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type), drawIndexPtr,
                                               instanceCount);
     }
     return angle::Result::Continue();
@@ -307,7 +307,7 @@ angle::Result ContextGL::drawElements(const gl::Context *context,
 angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
                                                gl::PrimitiveMode mode,
                                                GLsizei count,
-                                               GLenum type,
+                                               gl::DrawElementsType type,
                                                const void *indices,
                                                GLsizei instances)
 {
@@ -321,7 +321,7 @@ angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
 
     ANGLE_TRY(setDrawElementsState(context, count, type, indices, adjustedInstanceCount,
                                    &drawIndexPointer));
-    getFunctions()->drawElementsInstanced(ToGLenum(mode), count, type, drawIndexPointer,
+    getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type), drawIndexPointer,
                                           adjustedInstanceCount);
     return angle::Result::Continue();
 }
@@ -331,7 +331,7 @@ angle::Result ContextGL::drawRangeElements(const gl::Context *context,
                                            GLuint start,
                                            GLuint end,
                                            GLsizei count,
-                                           GLenum type,
+                                           gl::DrawElementsType type,
                                            const void *indices)
 {
     const gl::Program *program   = context->getGLState().getProgram();
@@ -343,13 +343,13 @@ angle::Result ContextGL::drawRangeElements(const gl::Context *context,
         setDrawElementsState(context, count, type, indices, instanceCount, &drawIndexPointer));
     if (!usesMultiview)
     {
-        getFunctions()->drawRangeElements(ToGLenum(mode), start, end, count, type,
+        getFunctions()->drawRangeElements(ToGLenum(mode), start, end, count, ToGLenum(type),
                                           drawIndexPointer);
     }
     else
     {
-        getFunctions()->drawElementsInstanced(ToGLenum(mode), count, type, drawIndexPointer,
-                                              instanceCount);
+        getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type),
+                                              drawIndexPointer, instanceCount);
     }
     return angle::Result::Continue();
 }
@@ -365,11 +365,11 @@ angle::Result ContextGL::drawArraysIndirect(const gl::Context *context,
 
 angle::Result ContextGL::drawElementsIndirect(const gl::Context *context,
                                               gl::PrimitiveMode mode,
-                                              GLenum type,
+                                              gl::DrawElementsType type,
                                               const void *indirect)
 {
     ANGLE_TRY(setDrawIndirectState(context));
-    getFunctions()->drawElementsIndirect(ToGLenum(mode), type, indirect);
+    getFunctions()->drawElementsIndirect(ToGLenum(mode), ToGLenum(type), indirect);
     return angle::Result::Continue();
 }
 

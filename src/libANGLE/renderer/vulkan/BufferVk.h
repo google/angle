@@ -49,7 +49,7 @@ class BufferVk : public BufferImpl
     angle::Result unmap(const gl::Context *context, GLboolean *result) override;
 
     angle::Result getIndexRange(const gl::Context *context,
-                                GLenum type,
+                                gl::DrawElementsType type,
                                 size_t offset,
                                 size_t count,
                                 bool primitiveRestartEnabled,

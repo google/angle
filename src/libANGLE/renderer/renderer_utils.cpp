@@ -586,17 +586,17 @@ angle::Result ComputeStartVertex(ContextImpl *contextImpl,
 angle::Result GetVertexRangeInfo(const gl::Context *context,
                                  GLint firstVertex,
                                  GLsizei vertexOrIndexCount,
-                                 GLenum indexTypeOrNone,
+                                 gl::DrawElementsType indexTypeOrInvalid,
                                  const void *indices,
                                  GLint baseVertex,
                                  GLint *startVertexOut,
                                  size_t *vertexCountOut)
 {
-    if (indexTypeOrNone != GL_NONE)
+    if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {
         gl::IndexRange indexRange;
         ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(
-            context, indexTypeOrNone, vertexOrIndexCount, indices, &indexRange));
+            context, indexTypeOrInvalid, vertexOrIndexCount, indices, &indexRange));
         ANGLE_TRY(ComputeStartVertex(context->getImplementation(), indexRange, baseVertex,
                                      startVertexOut));
         *vertexCountOut = indexRange.vertexCount();

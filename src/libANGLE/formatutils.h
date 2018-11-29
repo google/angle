@@ -40,7 +40,7 @@ struct Type
 {
     Type() : bytes(0), bytesShift(0), specialInterpretation(0) {}
 
-    Type(uint32_t packedTypeInfo)
+    explicit Type(uint32_t packedTypeInfo)
         : bytes(packedTypeInfo & 0xff),
           bytesShift((packedTypeInfo >> 8) & 0xff),
           specialInterpretation((packedTypeInfo >> 16) & 1)
@@ -57,6 +57,21 @@ uint32_t GetPackedTypeInfo(GLenum type);
 ANGLE_INLINE const Type GetTypeInfo(GLenum type)
 {
     return Type(GetPackedTypeInfo(type));
+}
+
+// This helpers use tricks based on the assumption that the type has certain values.
+static_assert(static_cast<GLuint>(DrawElementsType::UnsignedByte) == 0, "Please update this code.");
+static_assert(static_cast<GLuint>(DrawElementsType::UnsignedShort) == 1,
+              "Please update this code.");
+static_assert(static_cast<GLuint>(DrawElementsType::UnsignedInt) == 2, "Please update this code.");
+ANGLE_INLINE GLuint GetDrawElementsTypeSize(DrawElementsType type)
+{
+    return (1 << static_cast<GLuint>(type));
+}
+
+ANGLE_INLINE GLuint GetDrawElementsTypeShift(DrawElementsType type)
+{
+    return static_cast<GLuint>(type);
 }
 
 // Information about an OpenGL internal format.  Can be keyed on the internalFormat and type

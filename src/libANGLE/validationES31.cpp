@@ -520,7 +520,7 @@ bool ValidateDrawArraysIndirect(Context *context, PrimitiveMode mode, const void
 
 bool ValidateDrawElementsIndirect(Context *context,
                                   PrimitiveMode mode,
-                                  GLenum type,
+                                  DrawElementsType type,
                                   const void *indirect)
 {
     if (!ValidateDrawElementsBase(context, mode, type))

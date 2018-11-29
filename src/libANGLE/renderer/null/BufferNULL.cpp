@@ -97,7 +97,7 @@ angle::Result BufferNULL::unmap(const gl::Context *context, GLboolean *result)
 }
 
 angle::Result BufferNULL::getIndexRange(const gl::Context *context,
-                                        GLenum type,
+                                        gl::DrawElementsType type,
                                         size_t offset,
                                         size_t count,
                                         bool primitiveRestartEnabled,

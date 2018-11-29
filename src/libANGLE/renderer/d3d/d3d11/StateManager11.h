@@ -212,7 +212,7 @@ class StateManager11 final : angle::NonCopyable
                               gl::PrimitiveMode mode,
                               GLint firstVertex,
                               GLsizei vertexOrIndexCount,
-                              GLenum indexTypeOrNone,
+                              gl::DrawElementsType indexTypeOrInvalid,
                               const void *indices,
                               GLsizei instanceCount,
                               GLint baseVertex);
@@ -365,14 +365,14 @@ class StateManager11 final : angle::NonCopyable
                                                   gl::PrimitiveMode mode,
                                                   GLint firstVertex,
                                                   GLsizei vertexOrIndexCount,
-                                                  GLenum indexTypeOrNone,
+                                                  gl::DrawElementsType indexTypeOrInvalid,
                                                   GLsizei instanceCount);
 
     bool setInputLayoutInternal(const d3d11::InputLayout *inputLayout);
 
     angle::Result applyVertexBuffers(const gl::Context *context,
                                      gl::PrimitiveMode mode,
-                                     GLenum indexTypeOrNone,
+                                     gl::DrawElementsType indexTypeOrInvalid,
                                      GLint firstVertex);
     // TODO(jmadill): Migrate to d3d11::Buffer.
     bool queueVertexBufferChange(size_t bufferIndex,
@@ -386,7 +386,7 @@ class StateManager11 final : angle::NonCopyable
     // Not handled by an internal dirty bit because it isn't synced on drawArrays calls.
     angle::Result applyIndexBuffer(const gl::Context *context,
                                    GLsizei indexCount,
-                                   GLenum indexType,
+                                   gl::DrawElementsType indexType,
                                    const void *indices);
 
     enum DirtyBitType

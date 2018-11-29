@@ -188,11 +188,12 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
         if (context->skipValidation() ||
-            ValidateDrawElementsIndirect(context, modePacked, type, indirect))
+            ValidateDrawElementsIndirect(context, modePacked, typePacked, indirect))
         {
-            context->drawElementsIndirect(modePacked, type, indirect);
+            context->drawElementsIndirect(modePacked, typePacked, indirect);
         }
     }
 }

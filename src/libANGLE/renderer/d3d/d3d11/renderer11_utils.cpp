@@ -2503,17 +2503,18 @@ bool UsePresentPathFast(const Renderer11 *renderer,
             renderer->presentPathFastEnabled());
 }
 
-bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenum type)
+bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled,
+                                   gl::DrawElementsType type)
 {
     // We should never have to deal with primitive restart workaround issue with GL_UNSIGNED_INT
     // indices, since we restrict it via MAX_ELEMENT_INDEX.
-    return (!primitiveRestartFixedIndexEnabled && type == GL_UNSIGNED_SHORT);
+    return (!primitiveRestartFixedIndexEnabled && type == gl::DrawElementsType::UnsignedShort);
 }
 
 IndexStorageType ClassifyIndexStorage(const gl::State &glState,
                                       const gl::Buffer *elementArrayBuffer,
-                                      GLenum elementType,
-                                      GLenum destElementType,
+                                      gl::DrawElementsType elementType,
+                                      gl::DrawElementsType destElementType,
                                       unsigned int offset)
 {
     // No buffer bound means we are streaming from a client pointer.

@@ -156,6 +156,12 @@ class StateCache final : angle::NonCopyable
         return mCachedValidBindTextureTypes[type];
     }
 
+    // Cannot chance except on Context/Extension init.
+    bool isValidDrawElementsType(DrawElementsType type) const
+    {
+        return mCachedValidDrawElementsTypes[type];
+    }
+
     // State change notifications.
     void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
@@ -181,6 +187,7 @@ class StateCache final : angle::NonCopyable
     void updateBasicDrawStatesError();
     void updateValidDrawModes(Context *context);
     void updateValidBindTextureTypes(Context *context);
+    void updateValidDrawElementsTypes(Context *context);
 
     intptr_t getBasicDrawStatesErrorImpl(Context *context) const;
 
@@ -199,6 +206,8 @@ class StateCache final : angle::NonCopyable
         mCachedValidDrawModes;
     angle::PackedEnumMap<TextureType, bool, angle::EnumSize<TextureType>() + 1>
         mCachedValidBindTextureTypes;
+    angle::PackedEnumMap<DrawElementsType, bool, angle::EnumSize<DrawElementsType>() + 1>
+        mCachedValidDrawElementsTypes;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface
@@ -690,20 +699,23 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void drawArrays(PrimitiveMode mode, GLint first, GLsizei count);
     void drawArraysInstanced(PrimitiveMode mode, GLint first, GLsizei count, GLsizei instanceCount);
 
-    void drawElements(PrimitiveMode mode, GLsizei count, GLenum type, const void *indices);
+    void drawElements(PrimitiveMode mode,
+                      GLsizei count,
+                      DrawElementsType type,
+                      const void *indices);
     void drawElementsInstanced(PrimitiveMode mode,
                                GLsizei count,
-                               GLenum type,
+                               DrawElementsType type,
                                const void *indices,
                                GLsizei instances);
     void drawRangeElements(PrimitiveMode mode,
                            GLuint start,
                            GLuint end,
                            GLsizei count,
-                           GLenum type,
+                           DrawElementsType type,
                            const void *indices);
     void drawArraysIndirect(PrimitiveMode mode, const void *indirect);
-    void drawElementsIndirect(PrimitiveMode mode, GLenum type, const void *indirect);
+    void drawElementsIndirect(PrimitiveMode mode, DrawElementsType type, const void *indirect);
 
     void blitFramebuffer(GLint srcX0,
                          GLint srcY0,
@@ -1572,12 +1584,12 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                   GLsizei drawcount);
     void multiDrawElements(PrimitiveMode mode,
                            const GLsizei *counts,
-                           GLenum type,
+                           DrawElementsType type,
                            const GLvoid *const *indices,
                            GLsizei drawcount);
     void multiDrawElementsInstanced(PrimitiveMode mode,
                                     const GLsizei *counts,
-                                    GLenum type,
+                                    DrawElementsType type,
                                     const GLvoid *const *indices,
                                     const GLsizei *instanceCounts,
                                     GLsizei drawcount);

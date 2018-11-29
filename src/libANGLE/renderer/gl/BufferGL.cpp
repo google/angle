@@ -195,7 +195,7 @@ angle::Result BufferGL::unmap(const gl::Context *context, GLboolean *result)
 }
 
 angle::Result BufferGL::getIndexRange(const gl::Context *context,
-                                      GLenum type,
+                                      gl::DrawElementsType type,
                                       size_t offset,
                                       size_t count,
                                       bool primitiveRestartEnabled,
@@ -212,10 +212,10 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
     {
         mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
 
-        const gl::Type &typeInfo = gl::GetTypeInfo(type);
+        const GLuint typeBytes = gl::GetDrawElementsTypeSize(type);
         const uint8_t *bufferData =
             MapBufferRangeWithFallback(mFunctions, gl::ToGLenum(DestBufferOperationTarget), offset,
-                                       count * typeInfo.bytes, GL_MAP_READ_BIT);
+                                       count * typeBytes, GL_MAP_READ_BIT);
         *outRange = gl::ComputeIndexRange(type, bufferData, count, primitiveRestartEnabled);
         mFunctions->unmapBuffer(gl::ToGLenum(DestBufferOperationTarget));
     }

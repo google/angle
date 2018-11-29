@@ -408,7 +408,7 @@ class Renderer11 : public RendererD3D
                                gl::PrimitiveMode mode,
                                GLint startVertex,
                                GLsizei indexCount,
-                               GLenum indexType,
+                               gl::DrawElementsType indexType,
                                const void *indices,
                                GLsizei instanceCount);
     angle::Result drawArraysIndirect(const gl::Context *context, const void *indirect);
@@ -509,13 +509,13 @@ class Renderer11 : public RendererD3D
 
     angle::Result drawLineLoop(const gl::Context *context,
                                GLuint count,
-                               GLenum type,
+                               gl::DrawElementsType type,
                                const void *indices,
                                int baseVertex,
                                int instances);
     angle::Result drawTriangleFan(const gl::Context *context,
                                   GLuint count,
-                                  GLenum type,
+                                  gl::DrawElementsType type,
                                   const void *indices,
                                   int baseVertex,
                                   int instances);

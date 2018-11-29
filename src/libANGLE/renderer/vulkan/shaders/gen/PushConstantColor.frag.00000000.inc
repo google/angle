@@ -20,16 +20,16 @@ const uint32_t kPushConstantColor_frag_00000000[] = {
 };
 
 #if 0  // Generated from:
-#version 450 core
+#version 450 core
 
-layout(push_constant)uniform block {
-    vec4 colorIn;
-};
+layout(push_constant)uniform block {
+    vec4 colorIn;
+};
 
-layout(location = 0)out vec4 colorOut;
+layout(location = 0)out vec4 colorOut;
 
-void main()
-{
-    colorOut = colorIn;
+void main()
+{
+    colorOut = colorIn;
 }
 #endif  // Preprocessed code

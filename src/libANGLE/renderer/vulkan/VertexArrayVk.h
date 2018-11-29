@@ -46,13 +46,13 @@ class VertexArrayVk : public VertexArrayImpl
     angle::Result updateClientAttribs(const gl::Context *context,
                                       GLint firstVertex,
                                       GLsizei vertexOrIndexCount,
-                                      GLenum indexTypeOrNone,
+                                      gl::DrawElementsType indexTypeOrInvalid,
                                       const void *indices);
 
     angle::Result handleLineLoop(ContextVk *contextVk,
                                  GLint firstVertex,
                                  GLsizei vertexOrIndexCount,
-                                 GLenum indexTypeOrNone,
+                                 gl::DrawElementsType indexTypeOrInvalid,
                                  const void *indices);
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const
@@ -86,7 +86,7 @@ class VertexArrayVk : public VertexArrayImpl
 
     angle::Result updateIndexTranslation(ContextVk *contextVk,
                                          GLsizei indexCount,
-                                         GLenum type,
+                                         gl::DrawElementsType type,
                                          const void *indices);
 
   private:
@@ -101,7 +101,7 @@ class VertexArrayVk : public VertexArrayImpl
                                const gl::VertexAttribute &attrib);
 
     angle::Result streamIndexData(ContextVk *contextVk,
-                                  GLenum indexType,
+                                  gl::DrawElementsType indexType,
                                   size_t indexCount,
                                   const void *sourcePointer,
                                   vk::DynamicBuffer *dynamicBuffer);

@@ -54,12 +54,12 @@ class ContextImpl : public GLImplFactory
     virtual angle::Result drawElements(const gl::Context *context,
                                        gl::PrimitiveMode mode,
                                        GLsizei count,
-                                       GLenum type,
+                                       gl::DrawElementsType type,
                                        const void *indices)        = 0;
     virtual angle::Result drawElementsInstanced(const gl::Context *context,
                                                 gl::PrimitiveMode mode,
                                                 GLsizei count,
-                                                GLenum type,
+                                                gl::DrawElementsType type,
                                                 const void *indices,
                                                 GLsizei instances) = 0;
     virtual angle::Result drawRangeElements(const gl::Context *context,
@@ -67,7 +67,7 @@ class ContextImpl : public GLImplFactory
                                             GLuint start,
                                             GLuint end,
                                             GLsizei count,
-                                            GLenum type,
+                                            gl::DrawElementsType type,
                                             const void *indices)   = 0;
 
     virtual angle::Result drawArraysIndirect(const gl::Context *context,
@@ -75,7 +75,7 @@ class ContextImpl : public GLImplFactory
                                              const void *indirect)   = 0;
     virtual angle::Result drawElementsIndirect(const gl::Context *context,
                                                gl::PrimitiveMode mode,
-                                               GLenum type,
+                                               gl::DrawElementsType type,
                                                const void *indirect) = 0;
 
     // CHROMIUM_path_rendering path drawing methods.

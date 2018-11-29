@@ -107,19 +107,24 @@
         "mode": "PrimitiveMode"
     },
     "glDrawElements": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glDrawElementsIndirect": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glDrawElementsInstanced": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glDrawElementsInstancedANGLE": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glDrawRangeElements": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glEGLImageTargetTexture2DOES": {
         "target": "TextureType"
@@ -299,10 +304,12 @@
         "mode": "PrimitiveMode"
     },
     "glMultiDrawElementsANGLE": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glMultiDrawElementsInstancedANGLE": {
-        "mode": "PrimitiveMode"
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glPointParameterf": {
         "pname" : "PointParameter"

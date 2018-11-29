@@ -736,11 +736,12 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
+        DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
         if (context->skipValidation() ||
-            ValidateDrawElements(context, modePacked, count, type, indices))
+            ValidateDrawElements(context, modePacked, count, typePacked, indices))
         {
-            context->drawElements(modePacked, count, type, indices);
+            context->drawElements(modePacked, count, typePacked, indices);
         }
     }
 }

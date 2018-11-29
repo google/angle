@@ -2052,7 +2052,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                                           gl::PrimitiveMode mode,
                                           GLint firstVertex,
                                           GLsizei vertexOrIndexCount,
-                                          GLenum indexTypeOrNone,
+                                          gl::DrawElementsType indexTypeOrInvalid,
                                           const void *indices,
                                           GLsizei instanceCount,
                                           GLint baseVertex)
@@ -2098,7 +2098,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
     }
 
     ANGLE_TRY(mVertexArray11->syncStateForDraw(context, firstVertex, vertexOrIndexCount,
-                                               indexTypeOrNone, indices, instanceCount,
+                                               indexTypeOrInvalid, indices, instanceCount,
                                                baseVertex));
 
     // Changes in the draw call can affect the vertex buffer translations.
@@ -2108,9 +2108,9 @@ angle::Result StateManager11::updateState(const gl::Context *context,
         invalidateInputLayout();
     }
 
-    if (indexTypeOrNone != GL_NONE)
+    if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {
-        ANGLE_TRY(applyIndexBuffer(context, vertexOrIndexCount, indexTypeOrNone, indices));
+        ANGLE_TRY(applyIndexBuffer(context, vertexOrIndexCount, indexTypeOrInvalid, indices));
     }
 
     if (mLastAppliedDrawMode != mode)
@@ -2185,7 +2185,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 break;
             case DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT:
                 ANGLE_TRY(syncVertexBuffersAndInputLayout(context, mode, firstVertex,
-                                                          vertexOrIndexCount, indexTypeOrNone,
+                                                          vertexOrIndexCount, indexTypeOrInvalid,
                                                           instanceCount));
                 break;
             case DIRTY_BIT_PRIMITIVE_TOPOLOGY:
@@ -2802,12 +2802,13 @@ angle::Result StateManager11::syncProgramForCompute(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-angle::Result StateManager11::syncVertexBuffersAndInputLayout(const gl::Context *context,
-                                                              gl::PrimitiveMode mode,
-                                                              GLint firstVertex,
-                                                              GLsizei vertexOrIndexCount,
-                                                              GLenum indexTypeOrNone,
-                                                              GLsizei instanceCount)
+angle::Result StateManager11::syncVertexBuffersAndInputLayout(
+    const gl::Context *context,
+    gl::PrimitiveMode mode,
+    GLint firstVertex,
+    GLsizei vertexOrIndexCount,
+    gl::DrawElementsType indexTypeOrInvalid,
+    GLsizei instanceCount)
 {
     const auto &vertexArrayAttribs = mVertexArray11->getTranslatedAttribs();
 
@@ -2842,14 +2843,14 @@ angle::Result StateManager11::syncVertexBuffersAndInputLayout(const gl::Context 
     setInputLayoutInternal(inputLayout);
 
     // Update the applied vertex buffers.
-    ANGLE_TRY(applyVertexBuffers(context, mode, indexTypeOrNone, firstVertex));
+    ANGLE_TRY(applyVertexBuffers(context, mode, indexTypeOrInvalid, firstVertex));
 
     return angle::Result::Continue();
 }
 
 angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
                                                  gl::PrimitiveMode mode,
-                                                 GLenum indexTypeOrNone,
+                                                 gl::DrawElementsType indexTypeOrInvalid,
                                                  GLint firstVertex)
 {
     bool programUsesInstancedPointSprites =
@@ -2882,7 +2883,8 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
                 ASSERT(attrib.vertexBuffer.get());
                 buffer = GetAs<VertexBuffer11>(attrib.vertexBuffer.get())->getBuffer().get();
             }
-            else if (instancedPointSpritesActive && indexTypeOrNone != GL_NONE)
+            else if (instancedPointSpritesActive &&
+                     indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
             {
                 ASSERT(mVertexArray11->isCachedIndexInfoValid());
                 TranslatedIndexData indexInfo = mVertexArray11->getCachedIndexInfo();
@@ -2997,7 +2999,7 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
 
 angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
                                                GLsizei indexCount,
-                                               GLenum indexType,
+                                               gl::DrawElementsType indexType,
                                                const void *indices)
 {
     if (!mIndexBufferIsDirty)
@@ -3006,16 +3008,17 @@ angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
         return angle::Result::Continue();
     }
 
-    GLenum destElementType         = mVertexArray11->getCachedDestinationIndexType();
-    gl::Buffer *elementArrayBuffer = mVertexArray11->getState().getElementArrayBuffer();
+    gl::DrawElementsType destElementType = mVertexArray11->getCachedDestinationIndexType();
+    gl::Buffer *elementArrayBuffer       = mVertexArray11->getState().getElementArrayBuffer();
 
     TranslatedIndexData indexInfo;
     ANGLE_TRY(mIndexDataManager.prepareIndexData(context, indexType, destElementType, indexCount,
                                                  elementArrayBuffer, indices, &indexInfo));
 
-    ID3D11Buffer *buffer = nullptr;
-    DXGI_FORMAT bufferFormat =
-        (indexInfo.indexType == GL_UNSIGNED_INT) ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+    ID3D11Buffer *buffer     = nullptr;
+    DXGI_FORMAT bufferFormat = (indexInfo.indexType == gl::DrawElementsType::UnsignedInt)
+                                   ? DXGI_FORMAT_R32_UINT
+                                   : DXGI_FORMAT_R16_UINT;
 
     if (indexInfo.storage)
     {

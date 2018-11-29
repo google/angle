@@ -58,7 +58,7 @@ class BufferD3D : public BufferImpl
     void promoteStaticUsage(const gl::Context *context, size_t dataSize);
 
     angle::Result getIndexRange(const gl::Context *context,
-                                GLenum type,
+                                gl::DrawElementsType type,
                                 size_t offset,
                                 size_t count,
                                 bool primitiveRestartEnabled,

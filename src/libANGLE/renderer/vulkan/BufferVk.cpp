@@ -153,7 +153,7 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
 }
 
 angle::Result BufferVk::getIndexRange(const gl::Context *context,
-                                      GLenum type,
+                                      gl::DrawElementsType type,
                                       size_t offset,
                                       size_t count,
                                       bool primitiveRestartEnabled,
@@ -177,11 +177,11 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());
 
-    const gl::Type &typeInfo = gl::GetTypeInfo(type);
+    const GLuint &typeBytes = gl::GetDrawElementsTypeSize(type);
 
     uint8_t *mapPointer = nullptr;
     ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset,
-                                                          typeInfo.bytes * count, 0, &mapPointer));
+                                                          typeBytes * count, 0, &mapPointer));
 
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 

@@ -175,7 +175,7 @@ void BufferD3D::promoteStaticUsage(const gl::Context *context, size_t dataSize)
 }
 
 angle::Result BufferD3D::getIndexRange(const gl::Context *context,
-                                       GLenum type,
+                                       gl::DrawElementsType type,
                                        size_t offset,
                                        size_t count,
                                        bool primitiveRestartEnabled,

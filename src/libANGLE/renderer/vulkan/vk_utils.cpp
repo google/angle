@@ -1462,21 +1462,6 @@ VkComponentSwizzle GetSwizzle(const GLenum swizzle)
     }
 }
 
-VkIndexType GetIndexType(GLenum elementType)
-{
-    switch (elementType)
-    {
-        case GL_UNSIGNED_BYTE:
-        case GL_UNSIGNED_SHORT:
-            return VK_INDEX_TYPE_UINT16;
-        case GL_UNSIGNED_INT:
-            return VK_INDEX_TYPE_UINT32;
-        default:
-            UNREACHABLE();
-            return VK_INDEX_TYPE_MAX_ENUM;
-    }
-}
-
 void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset)
 {
     vkOffset->x = glOffset.x;

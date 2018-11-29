@@ -103,7 +103,7 @@ class Buffer final : public RefCountObject,
     void onPixelPack(const Context *context);
 
     angle::Result getIndexRange(const gl::Context *context,
-                                GLenum type,
+                                DrawElementsType type,
                                 size_t offset,
                                 size_t count,
                                 bool primitiveRestartEnabled,

@@ -155,7 +155,7 @@ void SetTriangleFanIndices(GLuint *destPtr, size_t numTris)
 template <typename T>
 void CopyLineLoopIndicesWithRestart(const void *indices,
                                     size_t count,
-                                    GLenum indexType,
+                                    gl::DrawElementsType indexType,
                                     std::vector<GLuint> *bufferOut)
 {
     GLuint restartIndex    = gl::GetPrimitiveRestartIndex(indexType);
@@ -195,22 +195,22 @@ void CopyLineLoopIndicesWithRestart(const void *indices,
 }
 
 void GetLineLoopIndices(const void *indices,
-                        GLenum indexType,
+                        gl::DrawElementsType indexType,
                         GLuint count,
                         bool usePrimitiveRestartFixedIndex,
                         std::vector<GLuint> *bufferOut)
 {
-    if (indexType != GL_NONE && usePrimitiveRestartFixedIndex)
+    if (indexType != gl::DrawElementsType::InvalidEnum && usePrimitiveRestartFixedIndex)
     {
         switch (indexType)
         {
-            case GL_UNSIGNED_BYTE:
+            case gl::DrawElementsType::UnsignedByte:
                 CopyLineLoopIndicesWithRestart<GLubyte>(indices, count, indexType, bufferOut);
                 break;
-            case GL_UNSIGNED_SHORT:
+            case gl::DrawElementsType::UnsignedShort:
                 CopyLineLoopIndicesWithRestart<GLushort>(indices, count, indexType, bufferOut);
                 break;
-            case GL_UNSIGNED_INT:
+            case gl::DrawElementsType::UnsignedInt:
                 CopyLineLoopIndicesWithRestart<GLuint>(indices, count, indexType, bufferOut);
                 break;
             default:
@@ -226,16 +226,16 @@ void GetLineLoopIndices(const void *indices,
     switch (indexType)
     {
         // Non-indexed draw
-        case GL_NONE:
+        case gl::DrawElementsType::InvalidEnum:
             SetLineLoopIndices(&(*bufferOut)[0], count);
             break;
-        case GL_UNSIGNED_BYTE:
+        case gl::DrawElementsType::UnsignedByte:
             CopyLineLoopIndices<GLubyte>(indices, &(*bufferOut)[0], count);
             break;
-        case GL_UNSIGNED_SHORT:
+        case gl::DrawElementsType::UnsignedShort:
             CopyLineLoopIndices<GLushort>(indices, &(*bufferOut)[0], count);
             break;
-        case GL_UNSIGNED_INT:
+        case gl::DrawElementsType::UnsignedInt:
             CopyLineLoopIndices<GLuint>(indices, &(*bufferOut)[0], count);
             break;
         default:
@@ -260,11 +260,11 @@ void CopyTriangleFanIndices(const void *indices, GLuint *destPtr, size_t numTris
 template <typename T>
 void CopyTriangleFanIndicesWithRestart(const void *indices,
                                        GLuint indexCount,
-                                       GLenum indexType,
+                                       gl::DrawElementsType indexType,
                                        std::vector<GLuint> *bufferOut)
 {
     GLuint restartIndex    = gl::GetPrimitiveRestartIndex(indexType);
-    GLuint d3dRestartIndex = gl::GetPrimitiveRestartIndex(GL_UNSIGNED_INT);
+    GLuint d3dRestartIndex = gl::GetPrimitiveRestartIndex(gl::DrawElementsType::UnsignedInt);
     const T *srcPtr        = static_cast<const T *>(indices);
     Optional<GLuint> vertexA;
     Optional<GLuint> vertexB;
@@ -303,22 +303,22 @@ void CopyTriangleFanIndicesWithRestart(const void *indices,
 }
 
 void GetTriFanIndices(const void *indices,
-                      GLenum indexType,
+                      gl::DrawElementsType indexType,
                       GLuint count,
                       bool usePrimitiveRestartFixedIndex,
                       std::vector<GLuint> *bufferOut)
 {
-    if (indexType != GL_NONE && usePrimitiveRestartFixedIndex)
+    if (indexType != gl::DrawElementsType::InvalidEnum && usePrimitiveRestartFixedIndex)
     {
         switch (indexType)
         {
-            case GL_UNSIGNED_BYTE:
+            case gl::DrawElementsType::UnsignedByte:
                 CopyTriangleFanIndicesWithRestart<GLubyte>(indices, count, indexType, bufferOut);
                 break;
-            case GL_UNSIGNED_SHORT:
+            case gl::DrawElementsType::UnsignedShort:
                 CopyTriangleFanIndicesWithRestart<GLushort>(indices, count, indexType, bufferOut);
                 break;
-            case GL_UNSIGNED_INT:
+            case gl::DrawElementsType::UnsignedInt:
                 CopyTriangleFanIndicesWithRestart<GLuint>(indices, count, indexType, bufferOut);
                 break;
             default:
@@ -335,16 +335,16 @@ void GetTriFanIndices(const void *indices,
     switch (indexType)
     {
         // Non-indexed draw
-        case GL_NONE:
+        case gl::DrawElementsType::InvalidEnum:
             SetTriangleFanIndices(&(*bufferOut)[0], numTris);
             break;
-        case GL_UNSIGNED_BYTE:
+        case gl::DrawElementsType::UnsignedByte:
             CopyTriangleFanIndices<GLubyte>(indices, &(*bufferOut)[0], numTris);
             break;
-        case GL_UNSIGNED_SHORT:
+        case gl::DrawElementsType::UnsignedShort:
             CopyTriangleFanIndices<GLushort>(indices, &(*bufferOut)[0], numTris);
             break;
-        case GL_UNSIGNED_INT:
+        case gl::DrawElementsType::UnsignedInt:
             CopyTriangleFanIndices<GLuint>(indices, &(*bufferOut)[0], numTris);
             break;
         default:
@@ -1503,11 +1503,11 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
     switch (mode)
     {
         case gl::PrimitiveMode::LineLoop:
-            return drawLineLoop(context, clampedVertexCount, GL_NONE, nullptr, 0,
-                                adjustedInstanceCount);
+            return drawLineLoop(context, clampedVertexCount, gl::DrawElementsType::InvalidEnum,
+                                nullptr, 0, adjustedInstanceCount);
         case gl::PrimitiveMode::TriangleFan:
-            return drawTriangleFan(context, clampedVertexCount, GL_NONE, nullptr, 0,
-                                   adjustedInstanceCount);
+            return drawTriangleFan(context, clampedVertexCount, gl::DrawElementsType::InvalidEnum,
+                                   nullptr, 0, adjustedInstanceCount);
         case gl::PrimitiveMode::Points:
             if (getWorkarounds().useInstancedPointSpriteEmulation)
             {
@@ -1562,7 +1562,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
                                        gl::PrimitiveMode mode,
                                        GLint startVertex,
                                        GLsizei indexCount,
-                                       GLenum indexType,
+                                       gl::DrawElementsType indexType,
                                        const void *indices,
                                        GLsizei instanceCount)
 {
@@ -1694,7 +1694,7 @@ angle::Result Renderer11::drawElementsIndirect(const gl::Context *context, const
 
 angle::Result Renderer11::drawLineLoop(const gl::Context *context,
                                        GLuint count,
-                                       GLenum type,
+                                       gl::DrawElementsType type,
                                        const void *indexPointer,
                                        int baseVertex,
                                        int instances)
@@ -1706,7 +1706,7 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
     const void *indices = indexPointer;
 
     // Get the raw indices for an indexed draw
-    if (type != GL_NONE && elementArrayBuffer)
+    if (type != gl::DrawElementsType::InvalidEnum && elementArrayBuffer)
     {
         BufferD3D *storage = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset    = reinterpret_cast<intptr_t>(indices);
@@ -1720,8 +1720,8 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
     if (!mLineLoopIB)
     {
         mLineLoopIB = new StreamingIndexBufferInterface(this);
-        ANGLE_TRY(
-            mLineLoopIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT));
+        ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE,
+                                                  gl::DrawElementsType::UnsignedInt));
     }
 
     // Checked by Renderer11::applyPrimitiveType
@@ -1737,7 +1737,8 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
 
     unsigned int spaceNeeded =
         static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
-    ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_INT));
+    ANGLE_TRY(
+        mLineLoopIB->reserveBufferSpace(context, spaceNeeded, gl::DrawElementsType::UnsignedInt));
 
     void *mappedMemory = nullptr;
     unsigned int offset;
@@ -1771,7 +1772,7 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
 
 angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
                                           GLuint count,
-                                          GLenum type,
+                                          gl::DrawElementsType type,
                                           const void *indices,
                                           int baseVertex,
                                           int instances)
@@ -1783,7 +1784,7 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
     const void *indexPointer = indices;
 
     // Get the raw indices for an indexed draw
-    if (type != GL_NONE && elementArrayBuffer)
+    if (type != gl::DrawElementsType::InvalidEnum && elementArrayBuffer)
     {
         BufferD3D *storage = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset    = reinterpret_cast<intptr_t>(indices);
@@ -1798,7 +1799,7 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
     {
         mTriangleFanIB = new StreamingIndexBufferInterface(this);
         ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE,
-                                                     GL_UNSIGNED_INT));
+                                                     gl::DrawElementsType::UnsignedInt));
     }
 
     // Checked by Renderer11::applyPrimitiveType
@@ -1818,7 +1819,8 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
 
     const unsigned int spaceNeeded =
         static_cast<unsigned int>(mScratchIndexDataBuffer.size() * sizeof(unsigned int));
-    ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_INT));
+    ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(context, spaceNeeded,
+                                                 gl::DrawElementsType::UnsignedInt));
 
     void *mappedMemory = nullptr;
     unsigned int offset;

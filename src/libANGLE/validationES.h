@@ -303,24 +303,24 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLsizei count,
                                       GLsizei primcount);
 
-bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, GLenum type);
+bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, DrawElementsType type);
 bool ValidateDrawElementsCommon(Context *context,
                                 PrimitiveMode mode,
                                 GLsizei count,
-                                GLenum type,
+                                DrawElementsType type,
                                 const void *indices,
                                 GLsizei primcount);
 
 bool ValidateDrawElementsInstancedCommon(Context *context,
                                          PrimitiveMode mode,
                                          GLsizei count,
-                                         GLenum type,
+                                         DrawElementsType type,
                                          const void *indices,
                                          GLsizei primcount);
 bool ValidateDrawElementsInstancedANGLE(Context *context,
                                         PrimitiveMode mode,
                                         GLsizei count,
-                                        GLenum type,
+                                        DrawElementsType type,
                                         const void *indices,
                                         GLsizei primcount);
 bool ValidateDrawInstancedANGLE(Context *context);

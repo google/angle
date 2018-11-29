@@ -134,12 +134,12 @@ void VertexArrayVk::destroy(const gl::Context *context)
 }
 
 angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
-                                             GLenum indexType,
+                                             gl::DrawElementsType indexType,
                                              size_t indexCount,
                                              const void *sourcePointer,
                                              vk::DynamicBuffer *dynamicBuffer)
 {
-    ASSERT(!mState.getElementArrayBuffer() || indexType == GL_UNSIGNED_BYTE);
+    ASSERT(!mState.getElementArrayBuffer() || indexType == gl::DrawElementsType::UnsignedByte);
 
     dynamicBuffer->releaseRetainedBuffers(contextVk->getRenderer());
 
@@ -148,7 +148,7 @@ angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
 
     ANGLE_TRY(dynamicBuffer->allocate(contextVk, amount, &dst, &mCurrentElementArrayBufferHandle,
                                       &mCurrentElementArrayBufferOffset, nullptr));
-    if (indexType == GL_UNSIGNED_BYTE)
+    if (indexType == gl::DrawElementsType::UnsignedByte)
     {
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
         // memory to a GLushort.
@@ -446,7 +446,7 @@ void VertexArrayVk::updatePackedInputInfo(uint32_t attribIndex,
 angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
                                                  GLint firstVertex,
                                                  GLsizei vertexOrIndexCount,
-                                                 GLenum indexTypeOrNone,
+                                                 gl::DrawElementsType indexTypeOrInvalid,
                                                  const void *indices)
 {
     ContextVk *contextVk                    = vk::GetImpl(context);
@@ -456,8 +456,8 @@ angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
 
     GLint startVertex;
     size_t vertexCount;
-    ANGLE_TRY(GetVertexRangeInfo(context, firstVertex, vertexOrIndexCount, indexTypeOrNone, indices,
-                                 0, &startVertex, &vertexCount));
+    ANGLE_TRY(GetVertexRangeInfo(context, firstVertex, vertexOrIndexCount, indexTypeOrInvalid,
+                                 indices, 0, &startVertex, &vertexCount));
 
     mDynamicVertexData.releaseRetainedBuffers(contextVk->getRenderer());
 
@@ -498,10 +498,10 @@ angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
 angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
                                             GLint firstVertex,
                                             GLsizei vertexOrIndexCount,
-                                            GLenum indexTypeOrNone,
+                                            gl::DrawElementsType indexTypeOrInvalid,
                                             const void *indices)
 {
-    if (indexTypeOrNone != GL_NONE)
+    if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {
         // Handle GL_LINE_LOOP drawElements.
         if (mDirtyLineLoopTranslation)
@@ -511,7 +511,7 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
             if (!elementArrayBuffer)
             {
                 ANGLE_TRY(mLineLoopHelper.streamIndices(
-                    contextVk, indexTypeOrNone, vertexOrIndexCount,
+                    contextVk, indexTypeOrInvalid, vertexOrIndexCount,
                     reinterpret_cast<const uint8_t *>(indices), &mCurrentElementArrayBufferHandle,
                     &mCurrentElementArrayBufferOffset));
             }
@@ -521,7 +521,7 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
                 intptr_t offset                = reinterpret_cast<intptr_t>(indices);
                 BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
                 ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
-                    contextVk, elementArrayBufferVk, indexTypeOrNone, vertexOrIndexCount, offset,
+                    contextVk, elementArrayBufferVk, indexTypeOrInvalid, vertexOrIndexCount, offset,
                     &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
             }
         }
@@ -555,10 +555,10 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
 
 angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
                                                     GLsizei indexCount,
-                                                    GLenum type,
+                                                    gl::DrawElementsType type,
                                                     const void *indices)
 {
-    ASSERT(type != GL_NONE);
+    ASSERT(type != gl::DrawElementsType::InvalidEnum);
 
     gl::Buffer *glBuffer = mState.getElementArrayBuffer();
 
@@ -571,7 +571,7 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
         // Needed before reading buffer or we could get stale data.
         ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
 
-        ASSERT(type == GL_UNSIGNED_BYTE);
+        ASSERT(type == gl::DrawElementsType::UnsignedByte);
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
         // memory to a GLushort.
         BufferVk *bufferVk   = vk::GetImpl(glBuffer);

@@ -351,14 +351,14 @@ class LineLoopHelper final : angle::NonCopyable
 
     angle::Result getIndexBufferForElementArrayBuffer(ContextVk *contextVk,
                                                       BufferVk *elementArrayBufferVk,
-                                                      GLenum glIndexType,
+                                                      gl::DrawElementsType glIndexType,
                                                       int indexCount,
                                                       intptr_t elementArrayOffset,
                                                       VkBuffer *bufferHandleOut,
                                                       VkDeviceSize *bufferOffsetOut);
 
     angle::Result streamIndices(ContextVk *contextVk,
-                                GLenum glIndexType,
+                                gl::DrawElementsType glIndexType,
                                 GLsizei indexCount,
                                 const uint8_t *srcPtr,
                                 VkBuffer *bufferHandleOut,

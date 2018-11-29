@@ -59,7 +59,7 @@ class BufferImpl : public angle::Subject
     virtual angle::Result unmap(const gl::Context *context, GLboolean *result)          = 0;
 
     virtual angle::Result getIndexRange(const gl::Context *context,
-                                        GLenum type,
+                                        gl::DrawElementsType type,
                                         size_t offset,
                                         size_t count,
                                         bool primitiveRestartEnabled,

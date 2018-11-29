@@ -529,7 +529,7 @@ void VertexArray::updateCachedMappedArrayBuffers(VertexBinding *binding)
 }
 
 angle::Result VertexArray::getIndexRangeImpl(const Context *context,
-                                             GLenum type,
+                                             DrawElementsType type,
                                              GLsizei indexCount,
                                              const void *indices,
                                              IndexRange *indexRangeOut) const
@@ -553,12 +553,12 @@ angle::Result VertexArray::getIndexRangeImpl(const Context *context,
 
 VertexArray::IndexRangeCache::IndexRangeCache() = default;
 
-void VertexArray::IndexRangeCache::put(GLenum type,
+void VertexArray::IndexRangeCache::put(DrawElementsType type,
                                        GLsizei indexCount,
                                        size_t offset,
                                        const IndexRange &indexRange)
 {
-    ASSERT(type != GL_NONE);
+    ASSERT(type != DrawElementsType::InvalidEnum);
 
     mTypeKey       = type;
     mIndexCountKey = indexCount;

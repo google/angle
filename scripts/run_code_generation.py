@@ -99,6 +99,7 @@ generators = {
         'inputs': [
             'scripts/entry_point_packed_gl_enums.json',
             'scripts/gl.xml',
+            'scripts/gl_angle_ext.xml',
         ],
         'script': 'scripts/generate_entry_points.py',
     },

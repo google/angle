@@ -63,13 +63,13 @@ const sh::ShaderVariable *FindShaderVarField(const sh::ShaderVariable &var,
 
 // Find the range of index values in the provided indices pointer.  Primitive restart indices are
 // only counted in the range if primitive restart is disabled.
-IndexRange ComputeIndexRange(GLenum indexType,
+IndexRange ComputeIndexRange(DrawElementsType indexType,
                              const GLvoid *indices,
                              size_t count,
                              bool primitiveRestartEnabled);
 
 // Get the primitive restart index value for the given index type.
-GLuint GetPrimitiveRestartIndex(GLenum indexType);
+GLuint GetPrimitiveRestartIndex(DrawElementsType indexType);
 
 bool IsTriangleMode(PrimitiveMode drawMode);
 bool IsLineMode(PrimitiveMode primitiveMode);

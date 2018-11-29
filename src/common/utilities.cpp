@@ -530,22 +530,22 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
     return -1;
 }
 
-IndexRange ComputeIndexRange(GLenum indexType,
+IndexRange ComputeIndexRange(DrawElementsType indexType,
                              const GLvoid *indices,
                              size_t count,
                              bool primitiveRestartEnabled)
 {
     switch (indexType)
     {
-        case GL_UNSIGNED_BYTE:
+        case DrawElementsType::UnsignedByte:
             return ComputeTypedIndexRange(static_cast<const GLubyte *>(indices), count,
                                           primitiveRestartEnabled,
                                           GetPrimitiveRestartIndex(indexType));
-        case GL_UNSIGNED_SHORT:
+        case DrawElementsType::UnsignedShort:
             return ComputeTypedIndexRange(static_cast<const GLushort *>(indices), count,
                                           primitiveRestartEnabled,
                                           GetPrimitiveRestartIndex(indexType));
-        case GL_UNSIGNED_INT:
+        case DrawElementsType::UnsignedInt:
             return ComputeTypedIndexRange(static_cast<const GLuint *>(indices), count,
                                           primitiveRestartEnabled,
                                           GetPrimitiveRestartIndex(indexType));
@@ -555,15 +555,15 @@ IndexRange ComputeIndexRange(GLenum indexType,
     }
 }
 
-GLuint GetPrimitiveRestartIndex(GLenum indexType)
+GLuint GetPrimitiveRestartIndex(DrawElementsType indexType)
 {
     switch (indexType)
     {
-        case GL_UNSIGNED_BYTE:
+        case DrawElementsType::UnsignedByte:
             return 0xFF;
-        case GL_UNSIGNED_SHORT:
+        case DrawElementsType::UnsignedShort:
             return 0xFFFF;
-        case GL_UNSIGNED_INT:
+        case DrawElementsType::UnsignedInt:
             return 0xFFFFFFFF;
         default:
             UNREACHABLE();

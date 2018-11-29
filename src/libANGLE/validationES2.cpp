@@ -5846,7 +5846,7 @@ bool ValidateViewport(Context *context, GLint x, GLint y, GLsizei width, GLsizei
 bool ValidateDrawElements(Context *context,
                           PrimitiveMode mode,
                           GLsizei count,
-                          GLenum type,
+                          DrawElementsType type,
                           const void *indices)
 {
     return ValidateDrawElementsCommon(context, mode, count, type, indices, 1);
@@ -6778,7 +6778,7 @@ bool ValidateMultiDrawArraysANGLE(Context *context,
 bool ValidateMultiDrawElementsANGLE(Context *context,
                                     PrimitiveMode mode,
                                     const GLsizei *counts,
-                                    GLenum type,
+                                    DrawElementsType type,
                                     const GLvoid *const *indices,
                                     GLsizei drawcount)
 {

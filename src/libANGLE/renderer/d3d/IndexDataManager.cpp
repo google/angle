@@ -26,9 +26,9 @@ namespace
 
 template <typename InputT, typename DestT>
 void ConvertIndexArray(const void *input,
-                       GLenum sourceType,
+                       gl::DrawElementsType sourceType,
                        void *output,
-                       GLenum destinationType,
+                       gl::DrawElementsType destinationType,
                        GLsizei count,
                        bool usePrimitiveRestartFixedIndex)
 {
@@ -53,8 +53,8 @@ void ConvertIndexArray(const void *input,
     }
 }
 
-void ConvertIndices(GLenum sourceType,
-                    GLenum destinationType,
+void ConvertIndices(gl::DrawElementsType sourceType,
+                    gl::DrawElementsType destinationType,
                     const void *input,
                     GLsizei count,
                     void *output,
@@ -62,20 +62,20 @@ void ConvertIndices(GLenum sourceType,
 {
     if (sourceType == destinationType)
     {
-        const gl::Type &typeInfo = gl::GetTypeInfo(destinationType);
-        memcpy(output, input, count * typeInfo.bytes);
+        const GLuint dstTypeSize = gl::GetDrawElementsTypeSize(destinationType);
+        memcpy(output, input, count * dstTypeSize);
         return;
     }
 
-    if (sourceType == GL_UNSIGNED_BYTE)
+    if (sourceType == gl::DrawElementsType::UnsignedByte)
     {
-        ASSERT(destinationType == GL_UNSIGNED_SHORT);
+        ASSERT(destinationType == gl::DrawElementsType::UnsignedShort);
         ConvertIndexArray<GLubyte, GLushort>(input, sourceType, output, destinationType, count,
                                              usePrimitiveRestartFixedIndex);
     }
-    else if (sourceType == GL_UNSIGNED_SHORT)
+    else if (sourceType == gl::DrawElementsType::UnsignedShort)
     {
-        ASSERT(destinationType == GL_UNSIGNED_INT);
+        ASSERT(destinationType == gl::DrawElementsType::UnsignedInt);
         ConvertIndexArray<GLushort, GLuint>(input, sourceType, output, destinationType, count,
                                             usePrimitiveRestartFixedIndex);
     }
@@ -87,18 +87,18 @@ angle::Result StreamInIndexBuffer(const gl::Context *context,
                                   IndexBufferInterface *buffer,
                                   const void *data,
                                   unsigned int count,
-                                  GLenum srcType,
-                                  GLenum dstType,
+                                  gl::DrawElementsType srcType,
+                                  gl::DrawElementsType dstType,
                                   bool usePrimitiveRestartFixedIndex,
                                   unsigned int *offset)
 {
-    const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
+    const GLuint dstTypeBytesShift = gl::GetDrawElementsTypeShift(dstType);
 
-    bool check = (count > (std::numeric_limits<unsigned int>::max() >> dstTypeInfo.bytesShift));
+    bool check = (count > (std::numeric_limits<unsigned int>::max() >> dstTypeBytesShift));
     ANGLE_CHECK(GetImplAs<ContextD3D>(context), !check,
                 "Reserving indices exceeds the maximum buffer size.", GL_OUT_OF_MEMORY);
 
-    unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;
+    unsigned int bufferSizeRequired = count << dstTypeBytesShift;
     ANGLE_TRY(buffer->reserveBufferSpace(context, bufferSizeRequired, dstType));
 
     void *output = nullptr;
@@ -109,29 +109,7 @@ angle::Result StreamInIndexBuffer(const gl::Context *context,
     ANGLE_TRY(buffer->unmapBuffer(context));
     return angle::Result::Continue();
 }
-
-unsigned int ElementTypeSize(GLenum elementType)
-{
-    switch (elementType)
-    {
-        case GL_UNSIGNED_BYTE:
-            return sizeof(GLubyte);
-        case GL_UNSIGNED_SHORT:
-            return sizeof(GLushort);
-        case GL_UNSIGNED_INT:
-            return sizeof(GLuint);
-        default:
-            UNREACHABLE();
-            return 0;
-    }
-}
-
 }  // anonymous namespace
-
-bool IsOffsetAligned(GLenum elementType, unsigned int offset)
-{
-    return (offset % ElementTypeSize(elementType) == 0);
-}
 
 // IndexDataManager implementation.
 IndexDataManager::IndexDataManager(BufferFactoryD3D *factory)
@@ -155,15 +133,16 @@ void IndexDataManager::deinitialize()
 // we will start by falling back to streaming, and after a while will start using a static
 // translated copy of the index buffer.
 angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
-                                                 GLenum srcType,
-                                                 GLenum dstType,
+                                                 gl::DrawElementsType srcType,
+                                                 gl::DrawElementsType dstType,
                                                  GLsizei count,
                                                  gl::Buffer *glBuffer,
                                                  const void *indices,
                                                  TranslatedIndexData *translated)
 {
-    const gl::Type &srcTypeInfo = gl::GetTypeInfo(srcType);
-    const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
+    GLuint srcTypeBytes = gl::GetDrawElementsTypeSize(srcType);
+    GLuint srcTypeShift = gl::GetDrawElementsTypeShift(srcType);
+    GLuint dstTypeShift = gl::GetDrawElementsTypeShift(dstType);
 
     BufferD3D *buffer = glBuffer ? GetImplAs<BufferD3D>(glBuffer) : nullptr;
 
@@ -187,7 +166,7 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 
     // Case 2: the indices are already in a buffer
     unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
-    ASSERT(srcTypeInfo.bytes * static_cast<unsigned int>(count) + offset <= buffer->getSize());
+    ASSERT(srcTypeBytes * static_cast<unsigned int>(count) + offset <= buffer->getSize());
 
     bool offsetAligned = IsOffsetAligned(srcType, offset);
 
@@ -197,7 +176,7 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
         translated->storage     = buffer;
         translated->indexBuffer = nullptr;
         translated->serial      = buffer->getSerial();
-        translated->startIndex  = (offset >> srcTypeInfo.bytesShift);
+        translated->startIndex  = (offset >> srcTypeShift);
         translated->startOffset = offset;
         return angle::Result::Continue();
     }
@@ -225,7 +204,7 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 
         ANGLE_TRY(streamIndexData(context, bufferData + offset, count, srcType, dstType,
                                   primitiveRestartFixedIndexEnabled, translated));
-        buffer->promoteStaticUsage(context, count << srcTypeInfo.bytesShift);
+        buffer->promoteStaticUsage(context, count << srcTypeShift);
     }
     else
     {
@@ -236,7 +215,7 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
             ASSERT(bufferData != nullptr);
 
             unsigned int convertCount =
-                static_cast<unsigned int>(buffer->getSize()) >> srcTypeInfo.bytesShift;
+                static_cast<unsigned int>(buffer->getSize()) >> srcTypeShift;
             ANGLE_TRY(StreamInIndexBuffer(context, staticBuffer, bufferData, convertCount, srcType,
                                           dstType, primitiveRestartFixedIndexEnabled, nullptr));
         }
@@ -244,8 +223,8 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 
         translated->indexBuffer = staticBuffer->getIndexBuffer();
         translated->serial      = staticBuffer->getSerial();
-        translated->startIndex  = (offset >> srcTypeInfo.bytesShift);
-        translated->startOffset = (offset >> srcTypeInfo.bytesShift) << dstTypeInfo.bytesShift;
+        translated->startIndex  = (offset >> srcTypeShift);
+        translated->startOffset = (offset >> srcTypeShift) << dstTypeShift;
     }
 
     return angle::Result::Continue();
@@ -254,12 +233,12 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 angle::Result IndexDataManager::streamIndexData(const gl::Context *context,
                                                 const void *data,
                                                 unsigned int count,
-                                                GLenum srcType,
-                                                GLenum dstType,
+                                                gl::DrawElementsType srcType,
+                                                gl::DrawElementsType dstType,
                                                 bool usePrimitiveRestartFixedIndex,
                                                 TranslatedIndexData *translated)
 {
-    const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
+    const GLuint dstTypeShift = gl::GetDrawElementsTypeShift(dstType);
 
     IndexBufferInterface *indexBuffer = nullptr;
     ANGLE_TRY(getStreamingIndexBuffer(context, dstType, &indexBuffer));
@@ -271,21 +250,23 @@ angle::Result IndexDataManager::streamIndexData(const gl::Context *context,
 
     translated->indexBuffer = indexBuffer->getIndexBuffer();
     translated->serial      = indexBuffer->getSerial();
-    translated->startIndex  = (offset >> dstTypeInfo.bytesShift);
+    translated->startIndex  = (offset >> dstTypeShift);
     translated->startOffset = offset;
 
     return angle::Result::Continue();
 }
 
 angle::Result IndexDataManager::getStreamingIndexBuffer(const gl::Context *context,
-                                                        GLenum destinationIndexType,
+                                                        gl::DrawElementsType destinationIndexType,
                                                         IndexBufferInterface **outBuffer)
 {
     ASSERT(outBuffer);
-    ASSERT(destinationIndexType == GL_UNSIGNED_SHORT || destinationIndexType == GL_UNSIGNED_INT);
+    ASSERT(destinationIndexType == gl::DrawElementsType::UnsignedShort ||
+           destinationIndexType == gl::DrawElementsType::UnsignedInt);
 
-    auto &streamingBuffer =
-        (destinationIndexType == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
+    auto &streamingBuffer = (destinationIndexType == gl::DrawElementsType::UnsignedInt)
+                                ? mStreamingBufferInt
+                                : mStreamingBufferShort;
 
     if (!streamingBuffer)
     {
@@ -301,10 +282,10 @@ angle::Result IndexDataManager::getStreamingIndexBuffer(const gl::Context *conte
 
 angle::Result GetIndexTranslationDestType(const gl::Context *context,
                                           GLsizei indexCount,
-                                          GLenum indexType,
+                                          gl::DrawElementsType indexType,
                                           const void *indices,
                                           bool usePrimitiveRestartWorkaround,
-                                          GLenum *destTypeOut)
+                                          gl::DrawElementsType *destTypeOut)
 {
     // Avoid D3D11's primitive restart index value
     // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
@@ -314,7 +295,7 @@ angle::Result GetIndexTranslationDestType(const gl::Context *context,
         // This is a bit of a trick. We assume the count for an indirect draw is zero.
         if (indexCount == 0)
         {
-            *destTypeOut = GL_UNSIGNED_INT;
+            *destTypeOut = gl::DrawElementsType::UnsignedInt;
             return angle::Result::Continue();
         }
 
@@ -323,12 +304,14 @@ angle::Result GetIndexTranslationDestType(const gl::Context *context,
             context, indexType, indexCount, indices, &indexRange));
         if (indexRange.end == gl::GetPrimitiveRestartIndex(indexType))
         {
-            *destTypeOut = GL_UNSIGNED_INT;
+            *destTypeOut = gl::DrawElementsType::UnsignedInt;
             return angle::Result::Continue();
         }
     }
 
-    *destTypeOut = (indexType == GL_UNSIGNED_INT) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
+    *destTypeOut = (indexType == gl::DrawElementsType::UnsignedInt)
+                       ? gl::DrawElementsType::UnsignedInt
+                       : gl::DrawElementsType::UnsignedShort;
     return angle::Result::Continue();
 }
 

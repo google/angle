@@ -1308,13 +1308,13 @@ angle::Result Buffer11::EmulatedIndexedStorage::getBuffer(const gl::Context *con
         size_t indicesDataSize = 0;
         switch (indexInfo->srcIndexType)
         {
-            case GL_UNSIGNED_INT:
+            case gl::DrawElementsType::UnsignedInt:
                 indicesDataSize = sizeof(GLuint) * indexInfo->srcCount;
                 break;
-            case GL_UNSIGNED_SHORT:
+            case gl::DrawElementsType::UnsignedShort:
                 indicesDataSize = sizeof(GLushort) * indexInfo->srcCount;
                 break;
-            case GL_UNSIGNED_BYTE:
+            case gl::DrawElementsType::UnsignedByte:
                 indicesDataSize = sizeof(GLubyte) * indexInfo->srcCount;
                 break;
             default:
@@ -1354,15 +1354,18 @@ angle::Result Buffer11::EmulatedIndexedStorage::getBuffer(const gl::Context *con
 
         switch (indexInfo->srcIndexType)
         {
-            case GL_UNSIGNED_INT:
+            case gl::DrawElementsType::UnsignedInt:
                 readIndexValue = ReadIndexValueFromIndices<GLuint>;
                 break;
-            case GL_UNSIGNED_SHORT:
+            case gl::DrawElementsType::UnsignedShort:
                 readIndexValue = ReadIndexValueFromIndices<GLushort>;
                 break;
-            case GL_UNSIGNED_BYTE:
+            case gl::DrawElementsType::UnsignedByte:
                 readIndexValue = ReadIndexValueFromIndices<GLubyte>;
                 break;
+            default:
+                UNREACHABLE();
+                return angle::Result::Stop();
         }
 
         // Iterate over the cached index data and copy entries indicated into the emulated buffer.

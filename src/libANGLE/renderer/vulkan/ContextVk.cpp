@@ -114,7 +114,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
       mLastIndexBufferOffset(0),
-      mCurrentDrawElementsType(GL_NONE),
+      mCurrentDrawElementsType(gl::DrawElementsType::InvalidEnum),
       mClearColorMask(kAllColorChannelsMask),
       mFlipYForCurrentSurface(false),
       mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16, true),
@@ -264,7 +264,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLint firstVertex,
                                    GLsizei vertexOrIndexCount,
-                                   GLenum indexTypeOrNone,
+                                   gl::DrawElementsType indexTypeOrNone,
                                    const void *indices,
                                    DirtyBits dirtyBitMask,
                                    vk::CommandBuffer **commandBufferOut)
@@ -313,7 +313,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
 angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
                                           gl::PrimitiveMode mode,
                                           GLsizei indexCount,
-                                          GLenum indexType,
+                                          gl::DrawElementsType indexType,
                                           const void *indices,
                                           vk::CommandBuffer **commandBufferOut)
 {
@@ -338,7 +338,7 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
             mVertexArray->updateCurrentElementArrayBufferOffset(mLastIndexBufferOffset);
         }
 
-        if (indexType == GL_UNSIGNED_BYTE && mDirtyBits[DIRTY_BIT_INDEX_BUFFER])
+        if (indexType == gl::DrawElementsType::UnsignedByte && mDirtyBits[DIRTY_BIT_INDEX_BUFFER])
         {
             ANGLE_TRY(mVertexArray->updateIndexTranslation(this, indexCount, indexType, indices));
         }
@@ -352,15 +352,17 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
                                            gl::PrimitiveMode mode,
                                            GLint firstVertex,
                                            GLsizei vertexOrIndexCount,
-                                           GLenum indexTypeOrNone,
+                                           gl::DrawElementsType indexTypeOrInvalid,
                                            const void *indices,
                                            vk::CommandBuffer **commandBufferOut)
 {
-    ANGLE_TRY(mVertexArray->handleLineLoop(this, firstVertex, vertexOrIndexCount, indexTypeOrNone,
-                                           indices));
+    ANGLE_TRY(mVertexArray->handleLineLoop(this, firstVertex, vertexOrIndexCount,
+                                           indexTypeOrInvalid, indices));
     mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-    mCurrentDrawElementsType = indexTypeOrNone != GL_NONE ? indexTypeOrNone : GL_UNSIGNED_INT;
-    return setupDraw(context, mode, firstVertex, vertexOrIndexCount, indexTypeOrNone, indices,
+    mCurrentDrawElementsType = indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum
+                                   ? indexTypeOrInvalid
+                                   : gl::DrawElementsType::UnsignedInt;
+    return setupDraw(context, mode, firstVertex, vertexOrIndexCount, indexTypeOrInvalid, indices,
                      mIndexedDirtyBitsMask, commandBufferOut);
 }
 
@@ -444,7 +446,7 @@ angle::Result ContextVk::handleDirtyIndexBuffer(const gl::Context *context,
 {
     commandBuffer->bindIndexBuffer(mVertexArray->getCurrentElementArrayBufferHandle(),
                                    mVertexArray->getCurrentElementArrayBufferOffset(),
-                                   gl_vk::GetIndexType(mCurrentDrawElementsType));
+                                   gl_vk::kIndexTypeMap[mCurrentDrawElementsType]);
 
     vk::BufferHelper *elementArrayBuffer = mVertexArray->getCurrentElementArrayBuffer();
     if (elementArrayBuffer)
@@ -491,13 +493,14 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
 
     if (mode == gl::PrimitiveMode::LineLoop)
     {
-        ANGLE_TRY(setupLineLoopDraw(context, mode, first, count, GL_NONE, nullptr, &commandBuffer));
+        ANGLE_TRY(setupLineLoopDraw(context, mode, first, count, gl::DrawElementsType::InvalidEnum,
+                                    nullptr, &commandBuffer));
         vk::LineLoopHelper::Draw(clampedVertexCount, commandBuffer);
     }
     else
     {
-        ANGLE_TRY(setupDraw(context, mode, first, count, GL_NONE, nullptr, mNonIndexedDirtyBitsMask,
-                            &commandBuffer));
+        ANGLE_TRY(setupDraw(context, mode, first, count, gl::DrawElementsType::InvalidEnum, nullptr,
+                            mNonIndexedDirtyBitsMask, &commandBuffer));
         commandBuffer->draw(clampedVertexCount, 1, first, 0);
     }
 
@@ -517,7 +520,7 @@ angle::Result ContextVk::drawArraysInstanced(const gl::Context *context,
 angle::Result ContextVk::drawElements(const gl::Context *context,
                                       gl::PrimitiveMode mode,
                                       GLsizei count,
-                                      GLenum type,
+                                      gl::DrawElementsType type,
                                       const void *indices)
 {
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -538,7 +541,7 @@ angle::Result ContextVk::drawElements(const gl::Context *context,
 angle::Result ContextVk::drawElementsInstanced(const gl::Context *context,
                                                gl::PrimitiveMode mode,
                                                GLsizei count,
-                                               GLenum type,
+                                               gl::DrawElementsType type,
                                                const void *indices,
                                                GLsizei instances)
 {
@@ -551,7 +554,7 @@ angle::Result ContextVk::drawRangeElements(const gl::Context *context,
                                            GLuint start,
                                            GLuint end,
                                            GLsizei count,
-                                           GLenum type,
+                                           gl::DrawElementsType type,
                                            const void *indices)
 {
     ANGLE_VK_UNREACHABLE(this);
@@ -573,7 +576,7 @@ angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
 
 angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
                                               gl::PrimitiveMode mode,
-                                              GLenum type,
+                                              gl::DrawElementsType type,
                                               const void *indirect)
 {
     ANGLE_VK_UNREACHABLE(this);
@@ -1159,9 +1162,9 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
 
     // Allocate a new region in the dynamic buffer.
-    uint8_t *ptr            = nullptr;
-    VkBuffer buffer         = VK_NULL_HANDLE;
-    VkDeviceSize offset     = 0;
+    uint8_t *ptr        = nullptr;
+    VkBuffer buffer     = VK_NULL_HANDLE;
+    VkDeviceSize offset = 0;
     ANGLE_TRY(mDriverUniformsBuffer.allocate(this, sizeof(DriverUniforms), &ptr, &buffer, &offset,
                                              nullptr));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;

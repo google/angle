@@ -138,7 +138,7 @@ angle::Result ContextNULL::drawArraysInstanced(const gl::Context *context,
 angle::Result ContextNULL::drawElements(const gl::Context *context,
                                         gl::PrimitiveMode mode,
                                         GLsizei count,
-                                        GLenum type,
+                                        gl::DrawElementsType type,
                                         const void *indices)
 {
     return angle::Result::Continue();
@@ -147,7 +147,7 @@ angle::Result ContextNULL::drawElements(const gl::Context *context,
 angle::Result ContextNULL::drawElementsInstanced(const gl::Context *context,
                                                  gl::PrimitiveMode mode,
                                                  GLsizei count,
-                                                 GLenum type,
+                                                 gl::DrawElementsType type,
                                                  const void *indices,
                                                  GLsizei instances)
 {
@@ -159,7 +159,7 @@ angle::Result ContextNULL::drawRangeElements(const gl::Context *context,
                                              GLuint start,
                                              GLuint end,
                                              GLsizei count,
-                                             GLenum type,
+                                             gl::DrawElementsType type,
                                              const void *indices)
 {
     return angle::Result::Continue();
@@ -174,7 +174,7 @@ angle::Result ContextNULL::drawArraysIndirect(const gl::Context *context,
 
 angle::Result ContextNULL::drawElementsIndirect(const gl::Context *context,
                                                 gl::PrimitiveMode mode,
-                                                GLenum type,
+                                                gl::DrawElementsType type,
                                                 const void *indirect)
 {
     return angle::Result::Continue();

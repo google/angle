@@ -110,7 +110,7 @@ bool ValidateDrawArrays(Context *context, PrimitiveMode modePacked, GLint first,
 bool ValidateDrawElements(Context *context,
                           PrimitiveMode modePacked,
                           GLsizei count,
-                          GLenum type,
+                          DrawElementsType typePacked,
                           const void *indices);
 bool ValidateEnable(Context *context, GLenum cap);
 bool ValidateEnableVertexAttribArray(Context *context, GLuint index);

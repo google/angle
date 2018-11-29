@@ -60,16 +60,17 @@ bool DrawCallHasStreamingVertexArrays(const gl::Context *context, gl::PrimitiveM
     return false;
 }
 
-bool DrawCallHasStreamingElementArray(const gl::Context *context, GLenum srcType)
+bool DrawCallHasStreamingElementArray(const gl::Context *context, gl::DrawElementsType srcType)
 {
     const gl::State &glState       = context->getGLState();
     gl::Buffer *elementArrayBuffer = glState.getVertexArray()->getElementArrayBuffer();
 
     bool primitiveRestartWorkaround =
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);
-    const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
-                               ? GL_UNSIGNED_INT
-                               : GL_UNSIGNED_SHORT;
+    const gl::DrawElementsType dstType =
+        (srcType == gl::DrawElementsType::UnsignedInt || primitiveRestartWorkaround)
+            ? gl::DrawElementsType::UnsignedInt
+            : gl::DrawElementsType::UnsignedShort;
 
     // Not clear where the offset comes from here.
     switch (ClassifyIndexStorage(glState, elementArrayBuffer, srcType, dstType, 0))
@@ -246,8 +247,8 @@ angle::Result Context11::drawArrays(const gl::Context *context,
                                     GLsizei count)
 {
     ASSERT(count > 0);
-    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, first, count, GL_NONE,
-                                                        nullptr, 0, 0));
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(
+        context, mode, first, count, gl::DrawElementsType::InvalidEnum, nullptr, 0, 0));
     return mRenderer->drawArrays(context, mode, first, count, 0);
 }
 
@@ -258,15 +259,15 @@ angle::Result Context11::drawArraysInstanced(const gl::Context *context,
                                              GLsizei instanceCount)
 {
     ASSERT(count > 0);
-    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, first, count, GL_NONE,
-                                                        nullptr, instanceCount, 0));
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(
+        context, mode, first, count, gl::DrawElementsType::InvalidEnum, nullptr, instanceCount, 0));
     return mRenderer->drawArrays(context, mode, first, count, instanceCount);
 }
 
 ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *context,
                                                        gl::PrimitiveMode mode,
                                                        GLsizei indexCount,
-                                                       GLenum indexType,
+                                                       gl::DrawElementsType indexType,
                                                        const void *indices,
                                                        GLsizei instanceCount)
 {
@@ -294,7 +295,7 @@ ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *contex
 angle::Result Context11::drawElements(const gl::Context *context,
                                       gl::PrimitiveMode mode,
                                       GLsizei count,
-                                      GLenum type,
+                                      gl::DrawElementsType type,
                                       const void *indices)
 {
     return drawElementsImpl(context, mode, count, type, indices, 0);
@@ -303,7 +304,7 @@ angle::Result Context11::drawElements(const gl::Context *context,
 angle::Result Context11::drawElementsInstanced(const gl::Context *context,
                                                gl::PrimitiveMode mode,
                                                GLsizei count,
-                                               GLenum type,
+                                               gl::DrawElementsType type,
                                                const void *indices,
                                                GLsizei instances)
 {
@@ -315,7 +316,7 @@ angle::Result Context11::drawRangeElements(const gl::Context *context,
                                            GLuint start,
                                            GLuint end,
                                            GLsizei count,
-                                           GLenum type,
+                                           gl::DrawElementsType type,
                                            const void *indices)
 {
     return drawElementsImpl(context, mode, count, type, indices, 0);
@@ -330,21 +331,22 @@ angle::Result Context11::drawArraysIndirect(const gl::Context *context,
         const gl::DrawArraysIndirectCommand *cmd = nullptr;
         ANGLE_TRY(ReadbackIndirectBuffer(context, indirect, &cmd));
 
-        ANGLE_TRY(mRenderer->getStateManager()->updateState(
-            context, mode, cmd->first, cmd->count, GL_NONE, nullptr, cmd->instanceCount, 0));
+        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, cmd->first, cmd->count,
+                                                            gl::DrawElementsType::InvalidEnum,
+                                                            nullptr, cmd->instanceCount, 0));
         return mRenderer->drawArrays(context, mode, cmd->first, cmd->count, cmd->instanceCount);
     }
     else
     {
-        ANGLE_TRY(
-            mRenderer->getStateManager()->updateState(context, mode, 0, 0, GL_NONE, nullptr, 0, 0));
+        ANGLE_TRY(mRenderer->getStateManager()->updateState(
+            context, mode, 0, 0, gl::DrawElementsType::InvalidEnum, nullptr, 0, 0));
         return mRenderer->drawArraysIndirect(context, indirect);
     }
 }
 
 angle::Result Context11::drawElementsIndirect(const gl::Context *context,
                                               gl::PrimitiveMode mode,
-                                              GLenum type,
+                                              gl::DrawElementsType type,
                                               const void *indirect)
 {
     if (DrawCallHasStreamingVertexArrays(context, mode) ||
@@ -353,9 +355,9 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         const gl::DrawElementsIndirectCommand *cmd = nullptr;
         ANGLE_TRY(ReadbackIndirectBuffer(context, indirect, &cmd));
 
-        const gl::Type &typeInfo = gl::GetTypeInfo(type);
-        const void *indices      = reinterpret_cast<const void *>(
-            static_cast<uintptr_t>(cmd->firstIndex * typeInfo.bytes));
+        const GLuint typeBytes = gl::GetDrawElementsTypeSize(type);
+        const void *indices =
+            reinterpret_cast<const void *>(static_cast<uintptr_t>(cmd->firstIndex * typeBytes));
 
         // We must explicitly resolve the index range for the slow-path indirect drawElements to
         // make sure we are using the correct 'baseVertex'. This parameter does not exist for the

@@ -104,7 +104,7 @@ bool ValidateDrawBuffers(Context *context, GLsizei n, const GLenum *bufs);
 bool ValidateDrawElementsInstanced(Context *context,
                                    PrimitiveMode modePacked,
                                    GLsizei count,
-                                   GLenum type,
+                                   DrawElementsType typePacked,
                                    const void *indices,
                                    GLsizei instancecount);
 bool ValidateDrawRangeElements(Context *context,
@@ -112,7 +112,7 @@ bool ValidateDrawRangeElements(Context *context,
                                GLuint start,
                                GLuint end,
                                GLsizei count,
-                               GLenum type,
+                               DrawElementsType typePacked,
                                const void *indices);
 bool ValidateEndQuery(Context *context, QueryType targetPacked);
 bool ValidateEndTransformFeedback(Context *context);

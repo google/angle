@@ -108,14 +108,14 @@ angle::Result VertexArrayGL::syncClientSideData(const gl::Context *context,
                                                 GLsizei count,
                                                 GLsizei instanceCount) const
 {
-    return syncDrawState(context, activeAttributesMask, first, count, GL_NONE, nullptr,
-                         instanceCount, false, nullptr);
+    return syncDrawState(context, activeAttributesMask, first, count,
+                         gl::DrawElementsType::InvalidEnum, nullptr, instanceCount, false, nullptr);
 }
 
 angle::Result VertexArrayGL::syncDrawElementsState(const gl::Context *context,
                                                    const gl::AttributesMask &activeAttributesMask,
                                                    GLsizei count,
-                                                   GLenum type,
+                                                   gl::DrawElementsType type,
                                                    const void *indices,
                                                    GLsizei instanceCount,
                                                    bool primitiveRestartEnabled,
@@ -140,7 +140,7 @@ angle::Result VertexArrayGL::syncDrawState(const gl::Context *context,
                                            const gl::AttributesMask &activeAttributesMask,
                                            GLint first,
                                            GLsizei count,
-                                           GLenum type,
+                                           gl::DrawElementsType type,
                                            const void *indices,
                                            GLsizei instanceCount,
                                            bool primitiveRestartEnabled,
@@ -154,7 +154,7 @@ angle::Result VertexArrayGL::syncDrawState(const gl::Context *context,
     // Determine if an index buffer needs to be streamed and the range of vertices that need to be
     // copied
     IndexRange indexRange;
-    if (type != GL_NONE)
+    if (type != gl::DrawElementsType::InvalidEnum)
     {
         ANGLE_TRY(syncIndexData(context, count, type, indices, primitiveRestartEnabled,
                                 needsStreamingAttribs.any(), &indexRange, outIndices));
@@ -176,7 +176,7 @@ angle::Result VertexArrayGL::syncDrawState(const gl::Context *context,
 
 angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
                                            GLsizei count,
-                                           GLenum type,
+                                           gl::DrawElementsType type,
                                            const void *indices,
                                            bool primitiveRestartEnabled,
                                            bool attributesNeedStreaming,
@@ -228,8 +228,8 @@ angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
         mAppliedElementArrayBuffer.set(context, nullptr);
 
         // Make sure the element array buffer is large enough
-        const Type &indexTypeInfo          = GetTypeInfo(type);
-        size_t requiredStreamingBufferSize = indexTypeInfo.bytes * count;
+        const GLuint indexTypeBytes        = gl::GetDrawElementsTypeSize(type);
+        size_t requiredStreamingBufferSize = indexTypeBytes * count;
         if (requiredStreamingBufferSize > mStreamingElementArrayBufferSize)
         {
             // Copy the indices in while resizing the buffer
