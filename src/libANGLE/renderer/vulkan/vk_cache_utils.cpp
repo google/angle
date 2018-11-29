@@ -239,7 +239,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
     createInfo.pDependencies          = nullptr;
 
     ANGLE_VK_TRY(context, renderPass->init(context->getDevice(), createInfo));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // Utility for setting a value on a packed 4-bit integer array.
@@ -669,7 +669,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     ANGLE_VK_TRY(context,
                  pipelineOut->initGraphics(context->getDevice(), createInfo, pipelineCacheVk));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void GraphicsPipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
@@ -1048,7 +1048,7 @@ angle::Result RenderPassCache::getCompatibleRenderPass(vk::Context *context,
         // Find the first element and return it.
         innerCache.begin()->second.updateSerial(serial);
         *renderPassOut = &innerCache.begin()->second.get();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Insert some dummy attachment ops.
@@ -1093,7 +1093,7 @@ angle::Result RenderPassCache::getRenderPassWithOps(vk::Context *context,
             // TODO(jmadill): Could possibly use an MRU cache here.
             innerIt->second.updateSerial(serial);
             *renderPassOut = &innerIt->second.get();
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
     else
@@ -1112,7 +1112,7 @@ angle::Result RenderPassCache::getRenderPassWithOps(vk::Context *context,
     *renderPassOut         = &insertPos.first->second.get();
 
     // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // GraphicsPipelineCache implementation.
@@ -1160,7 +1160,7 @@ angle::Result GraphicsPipelineCache::getPipeline(
     if (item != mPayload.end())
     {
         *pipelineOut = &item->second;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     vk::Pipeline newPipeline;
@@ -1178,7 +1178,7 @@ angle::Result GraphicsPipelineCache::getPipeline(
         mPayload.emplace(desc, vk::PipelineAndSerial(std::move(newPipeline), Serial()));
     *pipelineOut = &insertedItem.first->second;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void GraphicsPipelineCache::populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline)
@@ -1222,7 +1222,7 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     {
         vk::SharedDescriptorSetLayout &layout = iter->second;
         descriptorSetLayoutOut->set(&layout);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // We must unpack the descriptor set layout description.
@@ -1242,7 +1242,7 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     vk::SharedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
     descriptorSetLayoutOut->set(&insertedLayout);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // PipelineLayoutCache implementation.
@@ -1275,7 +1275,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     {
         vk::SharedPipelineLayout &layout = iter->second;
         pipelineLayoutOut->set(&layout);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Note this does not handle gaps in descriptor set layouts gracefully.
@@ -1335,6 +1335,6 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     vk::SharedPipelineLayout &insertedLayout = insertedItem.first->second;
     pipelineLayoutOut->set(&insertedLayout);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

@@ -107,7 +107,7 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
     ASSERT(bufferData);
 
     *bufferPtrOut = reinterpret_cast<const IndirectBufferT *>(bufferData + offset);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // anonymous namespace
 
@@ -119,7 +119,7 @@ Context11::~Context11() {}
 
 angle::Result Context11::initialize()
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Context11::onDestroy(const gl::Context *context)
@@ -438,7 +438,7 @@ angle::Result Context11::syncState(const gl::Context *context,
                                    const gl::State::DirtyBits &bitMask)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint Context11::getGPUDisjoint()
@@ -528,7 +528,7 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
 
     if (!recompileVS && !recompileGS && !recompilePS)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Load the compiler if necessary and recompile the programs.
@@ -579,17 +579,17 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
         mMemoryProgramCache->updateProgram(context, program);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Context11::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Context11::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Context11::getIncompleteTexture(const gl::Context *context,

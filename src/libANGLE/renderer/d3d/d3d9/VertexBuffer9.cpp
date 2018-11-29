@@ -54,7 +54,7 @@ angle::Result VertexBuffer9::initialize(const gl::Context *context,
 
     mBufferSize   = size;
     mDynamicUsage = dynamicUsage;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexBuffer9::storeVertexAttributes(const gl::Context *context,
@@ -108,7 +108,7 @@ angle::Result VertexBuffer9::storeVertexAttributes(const gl::Context *context,
 
     mVertexBuffer->Unlock();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 unsigned int VertexBuffer9::getBufferSize() const
@@ -124,7 +124,7 @@ angle::Result VertexBuffer9::setBufferSize(const gl::Context *context, unsigned 
     }
     else
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 }
 
@@ -143,7 +143,7 @@ angle::Result VertexBuffer9::discard(const gl::Context *context)
     result = mVertexBuffer->Unlock();
     ANGLE_TRY_HR(context9, result, "Failed to unlock internal vertex buffer for discarding");
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 IDirect3DVertexBuffer9 *VertexBuffer9::getBuffer() const

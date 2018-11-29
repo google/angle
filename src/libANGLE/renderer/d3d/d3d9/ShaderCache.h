@@ -49,7 +49,7 @@ class ShaderCache : angle::NonCopyable
         {
             it->second->AddRef();
             *outShaderObject = it->second;
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         ShaderObject *shader;
@@ -67,7 +67,7 @@ class ShaderCache : angle::NonCopyable
         mMap[key] = shader;
 
         *outShaderObject = shader;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     void clear()

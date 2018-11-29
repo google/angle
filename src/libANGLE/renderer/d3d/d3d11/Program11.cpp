@@ -29,6 +29,6 @@ angle::Result Program11::syncState(const gl::Context *context,
     // This single flag should be replace by individual dirtyness.
     stateManager->invalidateProgramUniformBuffers();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

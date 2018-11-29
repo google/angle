@@ -37,7 +37,7 @@ class VertexArrayImpl : angle::NonCopyable
                                     const gl::VertexArray::DirtyAttribBitsArray &attribBits,
                                     const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     virtual void destroy(const gl::Context *context) {}

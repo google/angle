@@ -346,7 +346,7 @@ angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *
     {
         context->handleError(GL_OUT_OF_MEMORY, "Failed to allocate path handle range.", __FILE__,
                              ANGLE_FUNCTION, __LINE__);
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
     const auto &paths = context->getImplementation()->createPaths(range);
@@ -355,7 +355,7 @@ angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *
         mHandleAllocator.releaseRange(client, range);
         context->handleError(GL_OUT_OF_MEMORY, "Failed to allocate path objects.", __FILE__,
                              ANGLE_FUNCTION, __LINE__);
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
     for (GLsizei i = 0; i < range; ++i)
@@ -365,7 +365,7 @@ angle::Result PathManager::createPaths(Context *context, GLsizei range, GLuint *
         mPaths.assign(id, new Path(impl));
     }
     *createdOut = client;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void PathManager::deletePaths(GLuint first, GLsizei range)

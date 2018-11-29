@@ -38,7 +38,7 @@ angle::Result WindowSurfaceVkXcb::createSurfaceVk(vk::Context *context, gl::Exte
     ASSERT(reply);
     *extentsOut = gl::Extents(reply->width, reply->height, 0);
     free(reply);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

@@ -50,7 +50,7 @@ angle::Result EGLImageD3D::orphan(const gl::Context *context, egl::ImageSibling 
         ANGLE_TRY(copyToLocalRendertarget(context));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result EGLImageD3D::getRenderTarget(const gl::Context *context,
@@ -63,12 +63,12 @@ angle::Result EGLImageD3D::getRenderTarget(const gl::Context *context,
         ANGLE_TRY(
             mState.source->getAttachmentRenderTarget(context, GL_NONE, mState.imageIndex, &rt));
         *outRT = static_cast<RenderTargetD3D *>(rt);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(mRenderTarget);
     *outRT = mRenderTarget;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)

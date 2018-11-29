@@ -100,7 +100,7 @@ angle::Result TextureStorage9::setData(const gl::Context *context,
                                        const uint8_t *pixelData)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchain)
@@ -177,7 +177,7 @@ angle::Result TextureStorage9_2D::getSurfaceLevel(const gl::Context *context,
         texture->AddDirtyRect(nullptr);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_2D::getRenderTarget(const gl::Context *context,
@@ -207,7 +207,7 @@ angle::Result TextureStorage9_2D::getRenderTarget(const gl::Context *context,
 
     ASSERT(outRT);
     *outRT = mRenderTargets[index.getLevelIndex()];
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_2D::generateMipmap(const gl::Context *context,
@@ -244,7 +244,7 @@ angle::Result TextureStorage9_2D::getBaseTexture(const gl::Context *context,
     }
 
     *outTexture = mTexture;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_2D::copyToStorage(const gl::Context *context,
@@ -267,7 +267,7 @@ angle::Result TextureStorage9_2D::copyToStorage(const gl::Context *context,
             mRenderer->copyToRenderTarget(context, dstSurf.Get(), srcSurf.Get(), isManaged()));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 TextureStorage9_EGLImage::TextureStorage9_EGLImage(Renderer9 *renderer,
@@ -300,7 +300,7 @@ angle::Result TextureStorage9_EGLImage::getSurfaceLevel(const gl::Context *conte
     RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTargetD3D);
 
     *outSurface = renderTarget9->getSurface();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_EGLImage::getRenderTarget(const gl::Context *context,
@@ -323,7 +323,7 @@ angle::Result TextureStorage9_EGLImage::getBaseTexture(const gl::Context *contex
     *outTexture                  = renderTarget9->getTexture();
     ASSERT(*outTexture != nullptr);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_EGLImage::generateMipmap(const gl::Context *context,
@@ -331,7 +331,7 @@ angle::Result TextureStorage9_EGLImage::generateMipmap(const gl::Context *contex
                                                        const gl::ImageIndex &)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureStorage9_EGLImage::copyToStorage(const gl::Context *context,
@@ -363,7 +363,7 @@ angle::Result TextureStorage9_EGLImage::copyToStorage(const gl::Context *context
         destTexture9->AddDirtyRect(nullptr);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer,
@@ -425,7 +425,7 @@ angle::Result TextureStorage9_Cube::getSurfaceLevel(const gl::Context *context,
         texture->AddDirtyRect(face, nullptr);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_Cube::getRenderTarget(const gl::Context *context,
@@ -455,7 +455,7 @@ angle::Result TextureStorage9_Cube::getRenderTarget(const gl::Context *context,
     }
 
     *outRT = mRenderTarget[renderTargetIndex];
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_Cube::generateMipmap(const gl::Context *context,
@@ -492,7 +492,7 @@ angle::Result TextureStorage9_Cube::getBaseTexture(const gl::Context *context,
     }
 
     *outTexture = mTexture;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage9_Cube::copyToStorage(const gl::Context *context,
@@ -518,6 +518,6 @@ angle::Result TextureStorage9_Cube::copyToStorage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

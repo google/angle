@@ -79,7 +79,7 @@ angle::Result RenderStateCache::getBlendState(const gl::Context *context,
     if (keyIter != mBlendStateCache.end())
     {
         *outBlendState = &keyIter->second;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TrimCache(kMaxStates, kGCLimit, "blend state", &mBlendStateCache);
@@ -119,7 +119,7 @@ angle::Result RenderStateCache::getBlendState(const gl::Context *context,
 
     *outBlendState = &iter->second;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderStateCache::getRasterizerState(const gl::Context *context,
@@ -136,7 +136,7 @@ angle::Result RenderStateCache::getRasterizerState(const gl::Context *context,
     if (keyIter != mRasterizerStateCache.end())
     {
         *outRasterizerState = keyIter->second.get();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TrimCache(kMaxStates, kGCLimit, "rasterizer state", &mRasterizerStateCache);
@@ -178,7 +178,7 @@ angle::Result RenderStateCache::getRasterizerState(const gl::Context *context,
     *outRasterizerState = dx11RasterizerState.get();
     mRasterizerStateCache.Put(key, std::move(dx11RasterizerState));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderStateCache::getDepthStencilState(const gl::Context *context,
@@ -190,7 +190,7 @@ angle::Result RenderStateCache::getDepthStencilState(const gl::Context *context,
     if (keyIter != mDepthStencilStateCache.end())
     {
         *outDSState = &keyIter->second;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TrimCache(kMaxStates, kGCLimit, "depth stencil state", &mDepthStencilStateCache);
@@ -218,7 +218,7 @@ angle::Result RenderStateCache::getDepthStencilState(const gl::Context *context,
 
     *outDSState = &iter->second;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderStateCache::getSamplerState(const gl::Context *context,
@@ -230,7 +230,7 @@ angle::Result RenderStateCache::getSamplerState(const gl::Context *context,
     if (keyIter != mSamplerStateCache.end())
     {
         *outSamplerState = keyIter->second.get();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TrimCache(kMaxStates, kGCLimit, "sampler state", &mSamplerStateCache);
@@ -278,7 +278,7 @@ angle::Result RenderStateCache::getSamplerState(const gl::Context *context,
     *outSamplerState = dx11SamplerState.get();
     mSamplerStateCache.Put(samplerState, std::move(dx11SamplerState));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

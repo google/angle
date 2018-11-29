@@ -85,7 +85,7 @@ angle::Result Query11::queryCounter(const gl::Context *context)
     ASSERT(getType() == gl::QueryType::Timestamp);
     mResultSum = 0;
     mPendingQueries.push_back(std::unique_ptr<QueryState>(new QueryState()));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <typename T>
@@ -96,7 +96,7 @@ angle::Result Query11::getResultBase(Context11 *context11, T *params)
     ASSERT(mPendingQueries.empty());
     *params = static_cast<T>(mResultSum);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query11::getResult(const gl::Context *context, GLint *params)
@@ -124,7 +124,7 @@ angle::Result Query11::isResultAvailable(const gl::Context *context, bool *avail
     ANGLE_TRY(flush(GetImplAs<Context11>(context), false));
 
     *available = mPendingQueries.empty();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query11::pause(Context11 *context11)
@@ -189,7 +189,7 @@ angle::Result Query11::resume(Context11 *context11)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query11::flush(Context11 *context11, bool force)
@@ -203,7 +203,7 @@ angle::Result Query11::flush(Context11 *context11, bool force)
             ANGLE_TRY(testQuery(context11, query));
             if (!query->finished && !force)
             {
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
         } while (!query->finished);
 
@@ -211,7 +211,7 @@ angle::Result Query11::flush(Context11 *context11, bool force)
         mPendingQueries.pop_front();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query11::testQuery(Context11 *context11, QueryState *queryState)
@@ -351,7 +351,7 @@ angle::Result Query11::testQuery(Context11 *context11, QueryState *queryState)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

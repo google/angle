@@ -163,7 +163,7 @@ class ProgramImpl : angle::NonCopyable
 inline angle::Result ProgramImpl::syncState(const gl::Context *context,
                                             const gl::Program::DirtyBits &dirtyBits)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

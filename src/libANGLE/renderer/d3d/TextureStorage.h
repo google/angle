@@ -76,13 +76,13 @@ class TextureStorage : angle::NonCopyable
 
 inline angle::Result TextureStorage::onDestroy(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 inline angle::Result TextureStorage::useLevelZeroWorkaroundTexture(const gl::Context *context,
                                                                    bool useLevelZeroTexture)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 using TexStoragePointer = angle::UniqueObjectPointer<TextureStorage, gl::Context>;

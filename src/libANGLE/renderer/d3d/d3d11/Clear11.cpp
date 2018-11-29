@@ -177,7 +177,7 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
         *gs = nullptr;
         *il = &mIl9;
         *ps = &mPsFloat9.getObj();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (!hasLayeredLayout)
@@ -201,7 +201,7 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
     {
         ANGLE_TRY(mPsDepth.resolve(context11, renderer));
         *ps = &mPsDepth.getObj();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     switch (clearType)
@@ -223,7 +223,7 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
             break;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 Clear11::Clear11(Renderer11 *renderer)
@@ -243,7 +243,7 @@ angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
 {
     if (mResourcesInitialized)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TRACE_EVENT0("gpu.angle", "Clear11::ensureResourcesInitialized");
@@ -310,7 +310,7 @@ angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
     mBlendStateKey.blendState.dither                = true;
 
     mResourcesInitialized = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Clear11::useVertexBuffer() const
@@ -322,7 +322,7 @@ angle::Result Clear11::ensureConstantBufferCreated(const gl::Context *context)
 {
     if (mConstantBuffer.valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Create constant buffer for color & depth data
@@ -343,7 +343,7 @@ angle::Result Clear11::ensureConstantBufferCreated(const gl::Context *context)
     ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &initialData,
                                           &mConstantBuffer));
     mConstantBuffer.setDebugName("Clear11 Constant Buffer");
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Clear11::ensureVertexBufferCreated(const gl::Context *context)
@@ -352,7 +352,7 @@ angle::Result Clear11::ensureVertexBufferCreated(const gl::Context *context)
 
     if (mVertexBuffer.valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Create vertex buffer with vertices for a quad covering the entire surface
@@ -381,7 +381,7 @@ angle::Result Clear11::ensureVertexBufferCreated(const gl::Context *context)
     ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &initialData,
                                           &mVertexBuffer));
     mVertexBuffer.setDebugName("Clear11 Vertex Buffer");
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Clear11::clearFramebuffer(const gl::Context *context,
@@ -448,7 +448,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
             // The check assumes that the viewport offsets are not negative as according to the
             // ANGLE_multiview spec.
             // Scissor rect is outside the renderbuffer or is an empty rect.
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (isSideBySideFBO)
@@ -464,7 +464,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
                 clearParams.scissor.y + clearParams.scissor.height <= 0)
             {
                 // Scissor rect is outside the renderbuffer.
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
             needScissoredClear =
                 clearParams.scissor.x > 0 || clearParams.scissor.y > 0 ||
@@ -646,7 +646,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
 
     if (numRtvs == 0 && dsv == nullptr)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Clear the remaining render targets and depth stencil in one pass by rendering a quad:
@@ -820,7 +820,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

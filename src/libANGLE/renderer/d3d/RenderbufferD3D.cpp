@@ -72,7 +72,7 @@ angle::Result RenderbufferD3D::setStorageMultisample(const gl::Context *context,
     mImage        = nullptr;
     mRenderTarget = newRT;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferD3D::setStorageEGLImageTarget(const gl::Context *context,
@@ -81,7 +81,7 @@ angle::Result RenderbufferD3D::setStorageEGLImageTarget(const gl::Context *conte
     mImage = GetImplAs<EGLImageD3D>(image);
     SafeDelete(mRenderTarget);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferD3D::getRenderTarget(const gl::Context *context,
@@ -94,7 +94,7 @@ angle::Result RenderbufferD3D::getRenderTarget(const gl::Context *context,
     else
     {
         *outRenderTarget = mRenderTarget;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 }
 

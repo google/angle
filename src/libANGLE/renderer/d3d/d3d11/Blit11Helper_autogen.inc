@@ -1570,6 +1570,6 @@ angle::Result Blit11::mapBlitShader(const gl::Context *context,
             ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 

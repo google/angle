@@ -20,18 +20,18 @@ FenceNVNULL::~FenceNVNULL() {}
 
 angle::Result FenceNVNULL::set(const gl::Context *context, GLenum condition)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNVNULL::test(const gl::Context *context, GLboolean *outFinished)
 {
     *outFinished = GL_TRUE;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNVNULL::finish(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

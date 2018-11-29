@@ -816,7 +816,7 @@ angle::Result Texture::setBaseLevel(const Context *context, GLuint baseLevel)
         signalDirtyState(context, DIRTY_BIT_BASE_LEVEL);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLuint Texture::getBaseLevel() const
@@ -1002,7 +1002,7 @@ angle::Result Texture::setImage(Context *context,
 
     signalDirtyStorage(context, initState);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::setSubImage(Context *context,
@@ -1026,7 +1026,7 @@ angle::Result Texture::setSubImage(Context *context,
 
     ANGLE_TRY(handleMipmapGenerationHint(context, level));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::setCompressedImage(Context *context,
@@ -1053,7 +1053,7 @@ angle::Result Texture::setCompressedImage(Context *context,
     mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat), initState));
     signalDirtyStorage(context, initState);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::setCompressedSubImage(const Context *context,
@@ -1111,7 +1111,7 @@ angle::Result Texture::copyImage(Context *context,
     // We need to initialize this texture only if the source attachment is not initialized.
     signalDirtyStorage(context, InitState::Initialized);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::copySubImage(Context *context,
@@ -1134,7 +1134,7 @@ angle::Result Texture::copySubImage(Context *context,
     ANGLE_TRY(mTexture->copySubImage(context, index, destOffset, sourceArea, source));
     ANGLE_TRY(handleMipmapGenerationHint(context, level));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::copyTexture(Context *context,
@@ -1173,7 +1173,7 @@ angle::Result Texture::copyTexture(Context *context,
 
     signalDirtyStorage(context, InitState::Initialized);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::copySubTexture(const Context *context,
@@ -1215,7 +1215,7 @@ angle::Result Texture::copyCompressedTexture(Context *context, const Texture *so
         source->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), 0);
     mState.setImageDesc(NonCubeTextureTypeToTarget(getType()), 0, sourceDesc);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::setStorage(Context *context,
@@ -1247,7 +1247,7 @@ angle::Result Texture::setStorage(Context *context,
 
     signalDirtyStorage(context, InitState::MayNeedInit);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::setStorageMultisample(Context *context,
@@ -1274,7 +1274,7 @@ angle::Result Texture::setStorageMultisample(Context *context,
 
     signalDirtyStorage(context, InitState::MayNeedInit);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::generateMipmap(Context *context)
@@ -1294,7 +1294,7 @@ angle::Result Texture::generateMipmap(Context *context)
 
     if (maxLevel <= baseLevel)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (hasAnyDirtyBit())
@@ -1330,7 +1330,7 @@ angle::Result Texture::generateMipmap(Context *context)
 
     signalDirtyStorage(context, InitState::Initialized);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *surface)
@@ -1351,7 +1351,7 @@ angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *s
     ImageDesc desc(size, surface->getBindTexImageFormat(), InitState::Initialized);
     mState.setImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0, desc);
     signalDirtyStorage(context, InitState::Initialized);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::releaseTexImageFromSurface(const Context *context)
@@ -1364,7 +1364,7 @@ angle::Result Texture::releaseTexImageFromSurface(const Context *context)
     ASSERT(mState.mType == TextureType::_2D || mState.mType == TextureType::Rectangle);
     mState.clearImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0);
     signalDirtyStorage(context, InitState::Initialized);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Texture::bindStream(egl::Stream *stream)
@@ -1395,7 +1395,7 @@ angle::Result Texture::acquireImageFromStream(const Context *context,
     mState.setImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0,
                         ImageDesc(size, Format(desc.internalFormat), InitState::Initialized));
     signalDirtyStorage(context, InitState::Initialized);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::releaseImageFromStream(const Context *context)
@@ -1407,7 +1407,7 @@ angle::Result Texture::releaseImageFromStream(const Context *context)
     // Set to incomplete
     mState.clearImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0);
     signalDirtyStorage(context, InitState::Initialized);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::releaseTexImageInternal(Context *context)
@@ -1426,7 +1426,7 @@ angle::Result Texture::releaseTexImageInternal(Context *context)
         // Then, call the same method as from the surface
         ANGLE_TRY(releaseTexImageFromSurface(context));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::setEGLImageTarget(Context *context,
@@ -1454,7 +1454,7 @@ angle::Result Texture::setEGLImageTarget(Context *context,
                         ImageDesc(size, imageTarget->getFormat(), initState));
     signalDirtyStorage(context, initState);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 Extents Texture::getAttachmentSize(const ImageIndex &imageIndex) const
@@ -1582,7 +1582,7 @@ angle::Result Texture::syncState(const Context *context)
     ASSERT(hasAnyDirtyBit());
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits));
     mDirtyBits.reset();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const
@@ -1621,7 +1621,7 @@ angle::Result Texture::ensureInitialized(const Context *context)
 {
     if (!context->isRobustResourceInitEnabled() || mState.mInitState == InitState::Initialized)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool anyDirty = false;
@@ -1648,7 +1648,7 @@ angle::Result Texture::ensureInitialized(const Context *context)
     }
     mState.mInitState = InitState::Initialized;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 InitState Texture::initState(const ImageIndex &imageIndex) const
@@ -1698,7 +1698,7 @@ angle::Result Texture::ensureSubImageInitialized(const Context *context,
 {
     if (!context->isRobustResourceInitEnabled() || mState.mInitState == InitState::Initialized)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Pre-initialize the texture contents if necessary.
@@ -1718,7 +1718,7 @@ angle::Result Texture::ensureSubImageInitialized(const Context *context,
         setInitState(imageIndex, InitState::Initialized);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::handleMipmapGenerationHint(Context *context, int level)
@@ -1729,7 +1729,7 @@ angle::Result Texture::handleMipmapGenerationHint(Context *context, int level)
         ANGLE_TRY(generateMipmap(context));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Texture::onSubjectStateChange(const gl::Context *context,

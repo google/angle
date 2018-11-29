@@ -101,7 +101,7 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
     ANGLE_TRY(image.initImageView(displayVk, gl::TextureType::_2D, aspect, gl::SwizzleState(),
                                   &imageView, 1));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
@@ -145,7 +145,7 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
             displayVk, mWidth, mHeight, renderer->getFormat(config->depthStencilFormat)));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void OffscreenSurfaceVk::destroy(const egl::Display *display)
@@ -241,14 +241,14 @@ angle::Result OffscreenSurfaceVk::getAttachmentRenderTarget(
         *rtOut = &mDepthStencilAttachment.renderTarget;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
                                                      const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 WindowSurfaceVk::SwapchainImage::SwapchainImage()  = default;
@@ -528,7 +528,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
         // We will need to pass depth/stencil image views to the RenderTargetVk in the future.
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
@@ -609,7 +609,7 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
 
     ANGLE_TRY(renderer->syncPipelineCacheVk(displayVk));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
@@ -629,7 +629,7 @@ angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
     // Update RenderTarget pointers.
     mColorRenderTarget.updateSwapchainImage(&image.image, &image.imageView);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 egl::Error WindowSurfaceVk::postSubBuffer(const gl::Context *context,
@@ -707,7 +707,7 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
         *rtOut = &mDepthStencilRenderTarget;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
@@ -720,7 +720,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
     {
         // Validation layers should detect if the render pass is really compatible.
         *framebufferOut = &currentFramebuffer;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     VkFramebufferCreateInfo framebufferInfo = {};
@@ -746,14 +746,14 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
 
     ASSERT(currentFramebuffer.valid());
     *framebufferOut = &currentFramebuffer;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
                                                   const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

@@ -744,14 +744,14 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (memcmp(&identifier, &binaryDeviceIdentifier, sizeof(DeviceIdentifier)) != 0)
     {
         infoLog << "Invalid program binary, device configuration has changed.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     int compileFlags = stream->readInt<int>();
     if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
     {
         infoLog << "Mismatched compilation flags.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     for (int &index : mAttribLocationToD3DSemantic)
@@ -809,7 +809,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     ASSERT(mD3DShaderStorageBlocks.empty());
@@ -827,7 +827,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     const auto &linkedUniforms = mState.getUniforms();
@@ -854,7 +854,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     ASSERT(mD3DUniformBlocks.empty());
@@ -936,7 +936,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
         if (!shaderExecutable)
         {
             infoLog << "Could not create vertex shader.";
-            return angle::Result::Incomplete();
+            return angle::Result::Incomplete;
         }
 
         // generated converted input layout
@@ -971,7 +971,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
         if (!shaderExecutable)
         {
             infoLog << "Could not create pixel shader.";
-            return angle::Result::Incomplete();
+            return angle::Result::Incomplete;
         }
 
         // add new binary
@@ -999,7 +999,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
         if (!geometryExecutable)
         {
             infoLog << "Could not create geometry shader.";
-            return angle::Result::Incomplete();
+            return angle::Result::Incomplete;
         }
 
         geometryExe.reset(geometryExecutable);
@@ -1020,7 +1020,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
         if (!computeExecutable)
         {
             infoLog << "Could not create compute shader.";
-            return angle::Result::Incomplete();
+            return angle::Result::Incomplete;
         }
 
         mComputeExecutable.reset(computeExecutable);
@@ -1030,7 +1030,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
 
     dirtyAllUniforms();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -1227,7 +1227,7 @@ angle::Result ProgramD3D::getPixelExecutableForCachedOutputLayout(
     if (mCachedPixelExecutableIndex.valid())
     {
         *outExecutable = mPixelExecutables[mCachedPixelExecutableIndex.value()]->shaderExecutable();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     std::string finalPixelHLSL = mDynamicHLSL->generatePixelShaderForOutputSignature(
@@ -1258,7 +1258,7 @@ angle::Result ProgramD3D::getPixelExecutableForCachedOutputLayout(
     }
 
     *outExecutable = pixelExecutable;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
@@ -1270,7 +1270,7 @@ angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
     {
         *outExectuable =
             mVertexExecutables[mCachedVertexExecutableIndex.value()]->shaderExecutable();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Generate new dynamic layout with attribute conversions
@@ -1301,7 +1301,7 @@ angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
     }
 
     *outExectuable = vertexExecutable;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *context,
@@ -1318,7 +1318,7 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
     // Return a null shader if the current rendering doesn't use a geometry shader
     if (!usesGeometryShader(drawMode))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     gl::PrimitiveMode geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
@@ -1329,7 +1329,7 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
         {
             *outExecutable = mGeometryExecutables[geometryShaderType].get();
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
@@ -1346,7 +1346,7 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
         angle::CompilerWorkaroundsD3D(), &geometryExecutable);
 
-    if (!infoLog && result == angle::Result::Stop())
+    if (!infoLog && result == angle::Result::Stop)
     {
         ERR() << "Error compiling dynamic geometry executable:" << std::endl
               << tempInfoLog.str() << std::endl;
@@ -1397,7 +1397,7 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
 
   protected:
     ProgramD3D *mProgram  = nullptr;
-    angle::Result mResult = angle::Result::Continue();
+    angle::Result mResult = angle::Result::Continue;
     gl::InfoLog mInfoLog;
     ShaderExecutableD3D *mExecutable = nullptr;
     HRESULT mStoredHR                = S_OK;
@@ -1417,7 +1417,7 @@ class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
 
         ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(this, &mExecutable, &mInfoLog));
 
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 };
 
@@ -1439,7 +1439,7 @@ class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
 
         ANGLE_TRY(mProgram->getPixelExecutableForCachedOutputLayout(this, &mExecutable, &mInfoLog));
 
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 };
 
@@ -1466,7 +1466,7 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
                 this, mCaps, gl::PrimitiveMode::Points, &mExecutable, &mInfoLog));
         }
 
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
   private:
@@ -1480,7 +1480,7 @@ angle::Result ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutab
         *outExecutable = mComputeExecutable.get();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // The LinkEvent implementation for linking a rendering(VS, FS, GS) program.
@@ -1517,11 +1517,11 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
         ANGLE_TRY(checkTask(context, mPixelTask.get()));
         ANGLE_TRY(checkTask(context, mGeometryTask.get()));
 
-        if (mVertexTask.get()->getResult() == angle::Result::Incomplete() ||
-            mPixelTask.get()->getResult() == angle::Result::Incomplete() ||
-            mGeometryTask.get()->getResult() == angle::Result::Incomplete())
+        if (mVertexTask.get()->getResult() == angle::Result::Incomplete ||
+            mPixelTask.get()->getResult() == angle::Result::Incomplete ||
+            mGeometryTask.get()->getResult() == angle::Result::Incomplete)
         {
-            return angle::Result::Incomplete();
+            return angle::Result::Incomplete;
         }
 
         ShaderExecutableD3D *defaultVertexExecutable = mVertexTask->getExecutable();
@@ -1553,7 +1553,7 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
         {
             mInfoLog << "Failed to create D3D Shaders";
         }
-        return isLinked ? angle::Result::Continue() : angle::Result::Incomplete();
+        return isLinked ? angle::Result::Continue : angle::Result::Incomplete;
     }
 
     bool isLinking() override
@@ -1577,14 +1577,14 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
         }
 
         // Continue and Incomplete are not errors. For Stop, pass the error to the ContextD3D.
-        if (task->getResult() != angle::Result::Stop())
+        if (task->getResult() != angle::Result::Stop)
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
         task->popError(contextD3D);
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
     gl::InfoLog &mInfoLog;
@@ -1603,7 +1603,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Conte
 {
     // Ensure the compiler is initialized to avoid race conditions.
     angle::Result result = mRenderer->ensureHLSLCompilerInitialized(GetImplAs<ContextD3D>(context));
-    if (result.isError())
+    if (result != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(result);
     }
@@ -1649,7 +1649,7 @@ angle::Result ProgramD3D::compileComputeExecutable(d3d::Context *context, gl::In
         mComputeExecutable.reset(computeExecutable);
     }
 
-    return mComputeExecutable.get() ? angle::Result::Continue() : angle::Result::Incomplete();
+    return mComputeExecutable.get() ? angle::Result::Continue : angle::Result::Incomplete;
 }
 
 std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
@@ -1674,7 +1674,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         linkResources(resources);
 
         angle::Result result = compileComputeExecutable(GetImplAs<ContextD3D>(context), infoLog);
-        if (result != angle::Result::Continue())
+        if (result != angle::Result::Continue)
         {
             infoLog << "Failed to create D3D compute shader.";
         }
@@ -1703,7 +1703,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
             if (shadersD3D[gl::ShaderType::Fragment]->usesFrontFacing())
             {
                 infoLog << "The current renderer doesn't support gl_FrontFacing";
-                return std::make_unique<LinkEventDone>(angle::Result::Incomplete());
+                return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
             }
         }
 

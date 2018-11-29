@@ -171,7 +171,7 @@ angle::Result VertexArrayGL::syncDrawState(const gl::Context *context,
         ANGLE_TRY(streamAttributes(context, needsStreamingAttribs, instanceCount, indexRange));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
@@ -249,7 +249,7 @@ angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
         *outIndices = nullptr;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &attribsToStream,
@@ -297,7 +297,7 @@ angle::Result VertexArrayGL::streamAttributes(const gl::Context *context,
 
     if (streamingDataSize == 0)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (mStreamingArrayBuffer == 0)
@@ -390,7 +390,7 @@ angle::Result VertexArrayGL::streamAttributes(const gl::Context *context,
 
     ANGLE_CHECK(GetImplAs<ContextGL>(context), unmapResult == GL_TRUE,
                 "Failed to unmap the client data streaming buffer.", GL_OUT_OF_MEMORY);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLuint VertexArrayGL::getVertexArrayID() const
@@ -709,7 +709,7 @@ angle::Result VertexArrayGL::syncState(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void VertexArrayGL::applyNumViewsToDivisor(int numViews)

@@ -110,7 +110,7 @@ angle::Result UniformStorage11::getConstantBuffer(const gl::Context *context,
     }
 
     *bufferOut = &mConstantBuffer;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

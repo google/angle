@@ -94,7 +94,7 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferVk::setStorageMultisample(const gl::Context *context,
@@ -104,14 +104,14 @@ angle::Result RenderbufferVk::setStorageMultisample(const gl::Context *context,
                                                     size_t height)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *context,
                                                        egl::Image *image)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
@@ -121,14 +121,14 @@ angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *conte
 {
     ASSERT(mImage.valid());
     *rtOut = &mRenderTarget;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
                                                  const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

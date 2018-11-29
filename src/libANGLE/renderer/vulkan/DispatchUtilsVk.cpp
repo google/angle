@@ -94,14 +94,14 @@ angle::Result DispatchUtilsVk::ensureResourcesInitialized(vk::Context *context,
 
     ANGLE_TRY(mDescriptorPools[function].init(context, setSizes, setSizesCount));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result DispatchUtilsVk::ensureBufferClearInitialized(vk::Context *context)
 {
     if (mPipelineLayouts[Function::BufferClear].valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     VkDescriptorPoolSize setSizes[1] = {
@@ -116,7 +116,7 @@ angle::Result DispatchUtilsVk::ensureBufferCopyInitialized(vk::Context *context)
 {
     if (mPipelineLayouts[Function::BufferCopy].valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     VkDescriptorPoolSize setSizes[2] = {
@@ -158,7 +158,7 @@ angle::Result DispatchUtilsVk::setupProgram(vk::Context *context,
     commandBuffer->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_COMPUTE_BIT, 0,
                                  sizeof(params), &params);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result DispatchUtilsVk::clearBuffer(vk::Context *context,
@@ -205,7 +205,7 @@ angle::Result DispatchUtilsVk::clearBuffer(vk::Context *context,
 
     descriptorPoolBinding.reset();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result DispatchUtilsVk::copyBuffer(vk::Context *context,
@@ -266,7 +266,7 @@ angle::Result DispatchUtilsVk::copyBuffer(vk::Context *context,
 
     descriptorPoolBinding.reset();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

@@ -441,7 +441,7 @@ angle::Result SurfaceD3D::getAttachmentRenderTarget(const gl::Context *context,
     {
         *rtOut = mSwapChain->getDepthStencilRenderTarget();
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SurfaceD3D::initializeContents(const gl::Context *context,
@@ -455,7 +455,7 @@ angle::Result SurfaceD3D::initializeContents(const gl::Context *context,
     {
         ANGLE_TRY(mRenderer->initRenderTarget(context, mSwapChain->getDepthStencilRenderTarget()));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 WindowSurfaceD3D::WindowSurfaceD3D(const egl::SurfaceState &state,

@@ -89,7 +89,7 @@ angle::Result ImageSibling::orphanImages(const gl::Context *context)
         mSourcesOf.clear();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ImageSibling::addImageSource(egl::Image *imageSource)
@@ -285,7 +285,7 @@ angle::Result Image::orphanSibling(const gl::Context *context, ImageSibling *sib
         mState.targets.erase(sibling);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const gl::Format &Image::getFormat() const

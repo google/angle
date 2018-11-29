@@ -316,7 +316,7 @@ angle::Result FramebufferAttachment::initializeContents(const Context *context)
     ASSERT(mResource);
     ANGLE_TRY(mResource->initializeContents(context, mTarget.textureIndex()));
     setInitState(InitState::Initialized);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void FramebufferAttachment::setInitState(InitState initState) const

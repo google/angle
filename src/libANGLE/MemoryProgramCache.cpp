@@ -221,7 +221,7 @@ angle::Result MemoryProgramCache::Deserialize(const Context *context,
         0)
     {
         infoLog << "Invalid program binary version.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     int majorVersion = stream.readInt<int>();
@@ -230,7 +230,7 @@ angle::Result MemoryProgramCache::Deserialize(const Context *context,
         minorVersion != context->getClientMinorVersion())
     {
         infoLog << "Cannot load program binaries across different ES context versions.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     state->mComputeShaderLocalSize[0] = stream.readInt<int>();
@@ -342,7 +342,7 @@ angle::Result MemoryProgramCache::Deserialize(const Context *context,
         context->getWorkarounds().disableProgramCachingForTransformFeedback)
     {
         infoLog << "Current driver does not support transform feedback in binary programs.";
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     ASSERT(state->mLinkedTransformFeedbackVaryings.empty());
@@ -683,11 +683,11 @@ angle::Result MemoryProgramCache::getProgram(const Context *context,
         angle::Result result = Deserialize(context, program, state, binaryProgram.data(),
                                            binaryProgram.size(), infoLog);
         ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess",
-                                result == angle::Result::Continue());
+                                result == angle::Result::Continue);
         ANGLE_TRY(result);
 
-        if (result == angle::Result::Continue())
-            return angle::Result::Continue();
+        if (result == angle::Result::Continue)
+            return angle::Result::Continue;
 
         // Cache load failed, evict.
         if (mIssuedWarnings++ < kWarningLimit)
@@ -702,7 +702,7 @@ angle::Result MemoryProgramCache::getProgram(const Context *context,
         }
         remove(*hashOut);
     }
-    return angle::Result::Incomplete();
+    return angle::Result::Incomplete;
 }
 
 bool MemoryProgramCache::get(const Context *context,

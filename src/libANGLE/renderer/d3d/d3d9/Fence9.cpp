@@ -36,7 +36,7 @@ angle::Result FenceNV9::set(const gl::Context *context, GLenum condition)
         SafeRelease(mQuery);
     }
     ANGLE_TRY_HR(GetImplAs<Context9>(context), result, "Failed to end event query");
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNV9::test(const gl::Context *context, GLboolean *outFinished)
@@ -53,7 +53,7 @@ angle::Result FenceNV9::finish(const gl::Context *context)
         Sleep(0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNV9::testHelper(Context9 *context9,
@@ -67,7 +67,7 @@ angle::Result FenceNV9::testHelper(Context9 *context9,
     ANGLE_TRY_HR(context9, result, "Failed to get query data");
     ASSERT(result == S_OK || result == S_FALSE);
     *outFinished = ((result == S_OK) ? GL_TRUE : GL_FALSE);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

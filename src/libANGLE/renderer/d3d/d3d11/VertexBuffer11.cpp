@@ -66,7 +66,7 @@ angle::Result VertexBuffer11::initialize(const gl::Context *context,
     mBufferSize   = size;
     mDynamicUsage = dynamicUsage;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexBuffer11::mapResource(const gl::Context *context)
@@ -81,7 +81,7 @@ angle::Result VertexBuffer11::mapResource(const gl::Context *context)
         mMappedResourceData = static_cast<uint8_t *>(mappedResource.pData);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void VertexBuffer11::hintUnmapResource()
@@ -128,7 +128,7 @@ angle::Result VertexBuffer11::storeVertexAttributes(const gl::Context *context,
     ASSERT(vertexFormatInfo.copyFunction != nullptr);
     vertexFormatInfo.copyFunction(input, inputStride, count, output);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 unsigned int VertexBuffer11::getBufferSize() const
@@ -143,7 +143,7 @@ angle::Result VertexBuffer11::setBufferSize(const gl::Context *context, unsigned
         return initialize(context, size, mDynamicUsage);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexBuffer11::discard(const gl::Context *context)
@@ -156,7 +156,7 @@ angle::Result VertexBuffer11::discard(const gl::Context *context)
 
     mRenderer->getDeviceContext()->Unmap(mBuffer.get(), 0);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const d3d11::Buffer &VertexBuffer11::getBuffer() const

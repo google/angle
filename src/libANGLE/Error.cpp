@@ -57,9 +57,9 @@ std::ostream &operator<<(std::ostream &os, const Error &err)
 
 namespace angle
 {
-egl::Error angle::Result::toEGL() const
+egl::Error ResultToEGL(Result result)
 {
-    if (mValue == Value::Continue)
+    if (result == Result::Continue)
         return egl::NoError();
 
     return egl::Error(EGL_BAD_ACCESS);

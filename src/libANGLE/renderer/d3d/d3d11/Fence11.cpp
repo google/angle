@@ -36,7 +36,7 @@ angle::Result FenceSetHelper(const gl::Context *context, FenceClass *fence)
     }
 
     fence->mRenderer->getDeviceContext()->End(fence->mQuery);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <class FenceClass>
@@ -56,7 +56,7 @@ angle::Result FenceTestHelper(const gl::Context *context,
 
     ASSERT(result == S_OK || result == S_FALSE);
     *outFinished = ((result == S_OK) ? GL_TRUE : GL_FALSE);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 //
@@ -100,7 +100,7 @@ angle::Result FenceNV11::finish(const gl::Context *context)
         ScheduleYield();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 //
@@ -155,13 +155,13 @@ angle::Result Sync11::clientWait(const gl::Context *context,
     if (result == GL_TRUE)
     {
         *outResult = GL_ALREADY_SIGNALED;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (timeout == 0)
     {
         *outResult = GL_TIMEOUT_EXPIRED;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     LARGE_INTEGER currentCounter = {};
@@ -207,7 +207,7 @@ angle::Result Sync11::clientWait(const gl::Context *context,
         *outResult = GL_CONDITION_SATISFIED;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Sync11::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
@@ -215,7 +215,7 @@ angle::Result Sync11::serverWait(const gl::Context *context, GLbitfield flags, G
     // Because our API is currently designed to be called from a single thread, we don't need to do
     // extra work for a server-side fence. GPU commands issued after the fence is created will
     // always be processed after the fence is signaled.
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Sync11::getStatus(const gl::Context *context, GLint *outResult)
@@ -228,7 +228,7 @@ angle::Result Sync11::getStatus(const gl::Context *context, GLint *outResult)
     ANGLE_TRY(FenceTestHelper(context, this, false, &result));
 
     *outResult = (result ? GL_SIGNALED : GL_UNSIGNALED);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

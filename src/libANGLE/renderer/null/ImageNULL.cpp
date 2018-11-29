@@ -25,7 +25,7 @@ egl::Error ImageNULL::initialize(const egl::Display *display)
 
 angle::Result ImageNULL::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

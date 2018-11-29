@@ -30,6 +30,6 @@ egl::Error ImageVk::initialize(const egl::Display *display)
 angle::Result ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 }  // namespace rx

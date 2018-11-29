@@ -123,11 +123,11 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
             bool available;
             ANGLE_TRY(query->isResultAvailable(context, &available));
             *params = CastFromStateValue<T>(pname, static_cast<GLuint>(available));
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
         default:
             UNREACHABLE();
-            return angle::Result::Stop();
+            return angle::Result::Stop;
     }
 }
 
@@ -672,7 +672,7 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     }
 
     // Notify the renderer of a context switch.
-    return mImplementation->onMakeCurrent(this).toEGL();
+    return angle::ResultToEGL(mImplementation->onMakeCurrent(this));
 }
 
 egl::Error Context::releaseSurface(const egl::Display *display)
@@ -3523,7 +3523,7 @@ ANGLE_INLINE angle::Result Context::syncDirtyBits()
     const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
     mGLState.clearDirtyBits();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
@@ -3531,7 +3531,7 @@ ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMas
     const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
     mGLState.clearDirtyBits(dirtyBits);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
@@ -3557,7 +3557,7 @@ angle::Result Context::prepareForClear(GLbitfield mask)
     ANGLE_TRY(syncDirtyObjects(mClearDirtyObjects));
     ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureClearAttachmentsInitialized(this, mask));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
@@ -3566,7 +3566,7 @@ angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
     ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureClearBufferAttachmentsInitialized(this, buffer,
                                                                                      drawbuffer));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result Context::prepareForDispatch()
@@ -3580,7 +3580,7 @@ angle::Result Context::syncState(const State::DirtyBits &bitMask,
 {
     ANGLE_TRY(syncDirtyObjects(objectMask));
     ANGLE_TRY(syncDirtyBits(bitMask));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Context::blitFramebuffer(GLint srcX0,
@@ -4494,7 +4494,7 @@ void *Context::mapBuffer(BufferBinding target, GLenum access)
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
 
-    if (buffer->map(this, access) == angle::Result::Stop())
+    if (buffer->map(this, access) == angle::Result::Stop)
     {
         return nullptr;
     }
@@ -4508,7 +4508,7 @@ GLboolean Context::unmapBuffer(BufferBinding target)
     ASSERT(buffer);
 
     GLboolean result;
-    if (buffer->unmap(this, &result) == angle::Result::Stop())
+    if (buffer->unmap(this, &result) == angle::Result::Stop)
     {
         return GL_FALSE;
     }
@@ -4524,7 +4524,7 @@ void *Context::mapBufferRange(BufferBinding target,
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
 
-    if (buffer->mapRange(this, offset, length, access) == angle::Result::Stop())
+    if (buffer->mapRange(this, offset, length, access) == angle::Result::Stop)
     {
         return nullptr;
     }
@@ -4561,7 +4561,7 @@ angle::Result Context::syncStateForPathOperation()
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     ANGLE_TRY(syncDirtyBits());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Context::activeShaderProgram(GLuint pipeline, GLuint program)
@@ -6638,7 +6638,7 @@ GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
     GLsync syncHandle = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 
     Sync *syncObject = getSync(syncHandle);
-    if (syncObject->set(this, condition, flags) == angle::Result::Stop())
+    if (syncObject->set(this, condition, flags) == angle::Result::Stop)
     {
         deleteSync(syncHandle);
         return nullptr;
@@ -6657,7 +6657,7 @@ GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     Sync *syncObject = getSync(sync);
 
     GLenum result = GL_WAIT_FAILED;
-    if (syncObject->clientWait(this, flags, timeout, &result) == angle::Result::Stop())
+    if (syncObject->clientWait(this, flags, timeout, &result) == angle::Result::Stop)
     {
         return GL_WAIT_FAILED;
     }
@@ -7189,7 +7189,7 @@ GLboolean Context::testFenceNV(GLuint fence)
     ASSERT(fenceObject->isSet() == GL_TRUE);
 
     GLboolean result = GL_TRUE;
-    if (fenceObject->test(this, &result) == angle::Result::Stop())
+    if (fenceObject->test(this, &result) == angle::Result::Stop)
     {
         return GL_TRUE;
     }

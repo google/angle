@@ -393,7 +393,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
     // None of those are changes in sampler, so there is no need to set the GL_PROGRAM dirty.
     // Otherwise, put the dirtying here.
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static
@@ -500,10 +500,10 @@ angle::Result GLES1Renderer::compileShader(Context *context,
 
         ERR() << "Internal GLES 1 shader compile failed. Info log: " << infoLog.data();
         ANGLE_CHECK(context, false, "GLES1Renderer shader compile failed.", GL_INVALID_OPERATION);
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result GLES1Renderer::linkProgram(Context *context,
@@ -543,20 +543,20 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
 
         ERR() << "Internal GLES 1 shader link failed. Info log: " << infoLog.data();
         ANGLE_CHECK(context, false, "GLES1Renderer program link failed.", GL_INVALID_OPERATION);
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
     programObject->detachShader(context, getShader(vertexShader));
     programObject->detachShader(context, getShader(fragmentShader));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
 {
     if (mRendererProgramInitialized)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     mShaderPrograms = new ShaderProgramManager();
@@ -719,7 +719,7 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     glState->setObjectDirty(GL_PROGRAM);
 
     mRendererProgramInitialized = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void GLES1Renderer::setUniform1i(Context *context, Program *programObject, GLint loc, GLint value)

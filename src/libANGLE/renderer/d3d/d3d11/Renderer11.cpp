@@ -1198,7 +1198,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 angle::Result Renderer11::flush(Context11 *context11)
 {
     mDeviceContext->Flush();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::finish(Context11 *context11)
@@ -1242,7 +1242,7 @@ angle::Result Renderer11::finish(Context11 *context11)
         }
     } while (result == S_FALSE);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Renderer11::isValidNativeWindow(EGLNativeWindowType window) const
@@ -1447,7 +1447,7 @@ angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(Context11 *
     // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
     if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     mStateManager.setPixelShader(&GetAs<ShaderExecutable11>(pixelExe)->getPixelShader());
@@ -1468,7 +1468,7 @@ angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(Context11 *
         mDeviceContext->Draw(vertexCount, 0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::drawArrays(const gl::Context *context,
@@ -1479,7 +1479,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
 {
     if (mStateManager.getCullEverything())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ProgramD3D *programD3D        = mStateManager.getProgramD3D();
@@ -1520,7 +1520,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
                 if (adjustedInstanceCount == 0)
                 {
                     mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
-                    return angle::Result::Continue();
+                    return angle::Result::Continue;
                 }
 
                 // If pointsprite emulation is used with glDrawArraysInstanced then we need to take
@@ -1539,7 +1539,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
                 // This required by updateVertexOffsets... above but is outside of the loop for
                 // speed.
                 mStateManager.invalidateVertexBuffer();
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
             break;
         default:
@@ -1555,7 +1555,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
     {
         mDeviceContext->DrawInstanced(clampedVertexCount, adjustedInstanceCount, 0, 0);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::drawElements(const gl::Context *context,
@@ -1568,7 +1568,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
 {
     if (mStateManager.getCullEverything())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
@@ -1606,7 +1606,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
             mDeviceContext->DrawIndexedInstanced(indexCount, adjustedInstanceCount, 0, baseVertex,
                                                  0);
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // This code should not be reachable by multi-view programs.
@@ -1625,7 +1625,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
     if (instanceCount == 0)
     {
         mDeviceContext->DrawIndexedInstanced(6, indexCount, 0, 0, 0);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // If pointsprite emulation is used with glDrawElementsInstanced then we need to take a less
@@ -1646,14 +1646,14 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
         mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
     }
     mStateManager.invalidateVertexBuffer();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::drawArraysIndirect(const gl::Context *context, const void *indirect)
 {
     if (mStateManager.getCullEverything())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const gl::State &glState = context->getGLState();
@@ -1668,14 +1668,14 @@ angle::Result Renderer11::drawArraysIndirect(const gl::Context *context, const v
     ID3D11Buffer *buffer = nullptr;
     ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));
     mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::drawElementsIndirect(const gl::Context *context, const void *indirect)
 {
     if (mStateManager.getCullEverything())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const gl::State &glState = context->getGLState();
@@ -1689,7 +1689,7 @@ angle::Result Renderer11::drawElementsIndirect(const gl::Context *context, const
     ID3D11Buffer *buffer = nullptr;
     ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));
     mDeviceContext->DrawIndexedInstancedIndirect(buffer, static_cast<unsigned int>(offset));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::drawLineLoop(const gl::Context *context,
@@ -1767,7 +1767,7 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
         mDeviceContext->DrawIndexed(indexCount, 0, baseVertex);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
@@ -1847,7 +1847,7 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
         mDeviceContext->DrawIndexed(indexCount, 0, baseVertex);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Renderer11::releaseDeviceResources()
@@ -2254,7 +2254,7 @@ angle::Result Renderer11::copyImageInternal(const gl::Context *context,
                                      destArea, destSize, nullptr, gl::GetUnsizedFormat(destFormat),
                                      GL_NONE, GL_NEAREST, false, false, false));
 
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(!sourceRenderTarget->isMultisampled());
@@ -2266,7 +2266,7 @@ angle::Result Renderer11::copyImageInternal(const gl::Context *context,
                                  destArea, destSize, nullptr, gl::GetUnsizedFormat(destFormat),
                                  GL_NONE, GL_NEAREST, false, false, false));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyImage2D(const gl::Context *context,
@@ -2290,7 +2290,7 @@ angle::Result Renderer11::copyImage2D(const gl::Context *context,
 
     storage11->markLevelDirty(level);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyImageCube(const gl::Context *context,
@@ -2315,7 +2315,7 @@ angle::Result Renderer11::copyImageCube(const gl::Context *context,
 
     storage11->markLevelDirty(level);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyImage3D(const gl::Context *context,
@@ -2339,7 +2339,7 @@ angle::Result Renderer11::copyImage3D(const gl::Context *context,
 
     storage11->markLevelDirty(level);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyImage2DArray(const gl::Context *context,
@@ -2362,7 +2362,7 @@ angle::Result Renderer11::copyImage2DArray(const gl::Context *context,
                                 destRenderTarget));
     storage11->markLevelDirty(level);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyTexture(const gl::Context *context,
@@ -2509,7 +2509,7 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
 
     destStorage11->markLevelDirty(destLevel);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyCompressedTexture(const gl::Context *context,
@@ -2545,7 +2545,7 @@ angle::Result Renderer11::copyCompressedTexture(const gl::Context *context,
     mDeviceContext->CopySubresourceRegion(destResource->get(), destSubresource, 0, 0, 0,
                                           sourceResource->get(), sourceSubresource, nullptr);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::createRenderTarget(const gl::Context *context,
@@ -2686,7 +2686,7 @@ angle::Result Renderer11::createRenderTarget(const gl::Context *context,
                                            width, height, 1, supportedSamples);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::createRenderTargetCopy(const gl::Context *context,
@@ -2706,7 +2706,7 @@ angle::Result Renderer11::createRenderTargetCopy(const gl::Context *context,
                                           0, 0, 0, source11->getTexture().get(),
                                           source11->getSubresourceIndex(), nullptr);
     *outRT = newRT;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::loadExecutable(d3d::Context *context,
@@ -2780,7 +2780,7 @@ angle::Result Renderer11::loadExecutable(d3d::Context *context,
             ANGLE_HR_UNREACHABLE(context11);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::compileToExecutable(d3d::Context *context,
@@ -2861,7 +2861,7 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
     if (!binary)
     {
         *outExectuable = nullptr;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     angle::Result error = loadExecutable(
@@ -2869,7 +2869,7 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
         type, streamOutVaryings, separatedOutputBuffers, outExectuable);
 
     SafeRelease(binary);
-    if (error == angle::Result::Stop())
+    if (error == angle::Result::Stop)
     {
         return error;
     }
@@ -2879,7 +2879,7 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
         (*outExectuable)->appendDebugInfo(debugInfo);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::ensureHLSLCompilerInitialized(d3d::Context *context)
@@ -2996,7 +2996,7 @@ angle::Result Renderer11::generateMipmapUsingD3D(const gl::Context *context,
 
     mDeviceContext->GenerateMips(srv->get());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::copyImage(const gl::Context *context,
@@ -3147,7 +3147,7 @@ angle::Result Renderer11::readFromAttachment(const gl::Context *context,
     if (safeArea.width == 0 || safeArea.height == 0)
     {
         // no work to do
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     gl::Extents safeSize(safeArea.width, safeArea.height, 1);
@@ -3233,7 +3233,7 @@ angle::Result Renderer11::packPixels(const gl::Context *context,
 
     mDeviceContext->Unmap(readResource, 0);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
@@ -3333,7 +3333,7 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
     gl::Rectangle inBoundsReadRect;
     if (!gl::ClipRectangle(readRect, readBounds, &inBoundsReadRect))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     {
@@ -3368,7 +3368,7 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
         gl::Rectangle scissoredDrawRect;
         if (!gl::ClipRectangle(drawRect, *scissor, &scissoredDrawRect))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
         scissorNeeded = scissoredDrawRect != drawRect;
     }
@@ -3503,7 +3503,7 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Renderer11::isES3Capable() const
@@ -3608,7 +3608,7 @@ angle::Result Renderer11::resolveMultisampledTexture(const gl::Context *context,
                                        renderTarget->getTexture().get(),
                                        renderTarget->getSubresourceIndex(), formatSet.texFormat);
     *textureOut = mCachedResolveTexture;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Renderer11::getLUID(LUID *adapterLuid) const
@@ -3654,7 +3654,7 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
     if (!attrib.enabled)
     {
         *bytesRequiredOut = 16u;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     unsigned int elementCount  = 0;
@@ -3684,7 +3684,7 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
                 "New vertex buffer size would result in an overflow.", GL_OUT_OF_MEMORY);
 
     *bytesRequiredOut = elementSize * elementCount;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Renderer11::generateCaps(gl::Caps *outCaps,
@@ -3721,7 +3721,7 @@ angle::Result Renderer11::getScratchMemoryBuffer(Context11 *context11,
                                                  angle::MemoryBuffer **bufferOut)
 {
     ANGLE_CHECK_GL_ALLOC(context11, mScratchMemoryBuffer.get(requestedSize, bufferOut));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::Version Renderer11::getMaxSupportedESVersion() const
@@ -3742,7 +3742,7 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
     ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
     mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
@@ -3764,7 +3764,7 @@ angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GL
     ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));
 
     mDeviceContext->DispatchIndirect(buffer, static_cast<UINT>(indirect));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::createStagingTexture(const gl::Context *context,
@@ -3797,7 +3797,7 @@ angle::Result Renderer11::createStagingTexture(const gl::Context *context,
         }
 
         ANGLE_TRY(allocateTexture(context11, stagingDesc, formatSet, textureOut));
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     ASSERT(textureType == ResourceType::Texture3D);
 
@@ -3813,7 +3813,7 @@ angle::Result Renderer11::createStagingTexture(const gl::Context *context,
     stagingDesc.MiscFlags      = 0;
 
     ANGLE_TRY(allocateTexture(context11, stagingDesc, formatSet, textureOut));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::allocateTexture(d3d::Context *context,
@@ -3825,7 +3825,7 @@ angle::Result Renderer11::allocateTexture(d3d::Context *context,
     d3d11::Texture2D texture;
     ANGLE_TRY(mResourceManager11.allocate(context, this, &desc, initData, &texture));
     textureOut->init(std::move(texture), desc, format);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::allocateTexture(d3d::Context *context,
@@ -3837,7 +3837,7 @@ angle::Result Renderer11::allocateTexture(d3d::Context *context,
     d3d11::Texture3D texture;
     ANGLE_TRY(mResourceManager11.allocate(context, this, &desc, initData, &texture));
     textureOut->init(std::move(texture), desc, format);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::getBlendState(const gl::Context *context,
@@ -3888,7 +3888,7 @@ angle::Result Renderer11::clearRenderTarget(const gl::Context *context,
         mDeviceContext->ClearDepthStencilView(rt11->getDepthStencilView().get(), clearFlags,
                                               clearDepthValue,
                                               static_cast<UINT8>(clearStencilValue));
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(rt11->getRenderTargetView().valid());
@@ -3909,7 +3909,7 @@ angle::Result Renderer11::clearRenderTarget(const gl::Context *context,
     }
 
     mDeviceContext->ClearRenderTargetView(rtv, &safeClearColor.red);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Renderer11::canSelectViewInVertexShader() const
@@ -3927,7 +3927,7 @@ angle::Result Renderer11::mapResource(const gl::Context *context,
 {
     HRESULT hr = mDeviceContext->Map(resource, subResource, mapType, mapFlags, mappedResource);
     ANGLE_TRY_HR(GetImplAs<Context11>(context), hr, "Failed to map D3D11 resource.");
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::markTransformFeedbackUsage(const gl::Context *context)
@@ -3945,7 +3945,7 @@ angle::Result Renderer11::markTransformFeedbackUsage(const gl::Context *context)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::getIncompleteTexture(const gl::Context *context,

@@ -51,7 +51,7 @@ angle::Result MarkAttachmentsDirty(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // anonymous namespace
 
@@ -79,7 +79,7 @@ angle::Result Framebuffer11::markAttachmentsDirty(const gl::Context *context) co
         ANGLE_TRY(MarkAttachmentsDirty(context, dsAttachment));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer11::clearImpl(const gl::Context *context,
@@ -108,7 +108,7 @@ angle::Result Framebuffer11::clearImpl(const gl::Context *context,
 
     ANGLE_TRY(markAttachmentsDirty(context));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer11::invalidate(const gl::Context *context,
@@ -135,7 +135,7 @@ angle::Result Framebuffer11::invalidateBase(const gl::Context *context,
     if (!deviceContext1)
     {
         // DiscardView() is only supported on ID3D11DeviceContext1
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool foundDepth   = false;
@@ -214,7 +214,7 @@ angle::Result Framebuffer11::invalidateBase(const gl::Context *context,
         ANGLE_TRY(invalidateAttachment(context, mState.getStencilAttachment()));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer11::invalidateSub(const gl::Context *context,
@@ -223,7 +223,7 @@ angle::Result Framebuffer11::invalidateSub(const gl::Context *context,
                                            const gl::Rectangle &area)
 {
     // A no-op implementation conforms to the spec, so don't call UNIMPLEMENTED()
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer11::invalidateAttachment(const gl::Context *context,
@@ -242,7 +242,7 @@ angle::Result Framebuffer11::invalidateAttachment(const gl::Context *context,
         deviceContext1->DiscardView(rtv.get());
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer11::readPixelsImpl(const gl::Context *context,
@@ -368,7 +368,7 @@ angle::Result Framebuffer11::blitImpl(const gl::Context *context,
     }
 
     ANGLE_TRY(markAttachmentsDirty(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const
@@ -392,7 +392,7 @@ angle::Result Framebuffer11::syncState(const gl::Context *context,
         mRenderer->getStateManager()->invalidateViewport(context);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer11::getSamplePosition(const gl::Context *context,
@@ -404,7 +404,7 @@ angle::Result Framebuffer11::getSamplePosition(const gl::Context *context,
     GLsizei sampleCount = attachment->getSamples();
 
     d3d11_gl::GetSamplePosition(sampleCount, index, xy);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 RenderTarget11 *Framebuffer11::getFirstRenderTarget() const

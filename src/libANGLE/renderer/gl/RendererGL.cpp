@@ -227,7 +227,7 @@ RendererGL::~RendererGL()
 angle::Result RendererGL::flush()
 {
     mFunctions->flush();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererGL::finish()
@@ -244,7 +244,7 @@ angle::Result RendererGL::finish()
         mFunctions->disable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void RendererGL::stencilFillPath(const gl::ContextState &state,
@@ -543,24 +543,24 @@ angle::Result RendererGL::dispatchCompute(const gl::Context *context,
                                           GLuint numGroupsZ)
 {
     mFunctions->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererGL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
     mFunctions->dispatchComputeIndirect(indirect);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererGL::memoryBarrier(GLbitfield barriers)
 {
     mFunctions->memoryBarrier(barriers);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 angle::Result RendererGL::memoryBarrierByRegion(GLbitfield barriers)
 {
     mFunctions->memoryBarrierByRegion(barriers);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

@@ -44,7 +44,7 @@ namespace angle
 {
 egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
 {
-    if (result.isError())
+    if (result != angle::Result::Continue)
     {
         return displayVk->getEGLError(errorCode);
     }
@@ -115,7 +115,7 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
     allocInfo.allocationSize       = memoryRequirements.size;
 
     ANGLE_VK_TRY(context, deviceMemoryOut->allocate(context->getDevice(), allocInfo));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <typename T>
@@ -135,7 +135,7 @@ angle::Result AllocateBufferOrImageMemory(vk::Context *context,
                                               requestedMemoryPropertyFlags, memoryPropertyFlagsOut,
                                               memoryRequirements, deviceMemoryOut));
     ANGLE_VK_TRY(context, bufferOrImage->bindMemory(context->getDevice(), *deviceMemoryOut));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 uint32_t GetImageLayerCount(gl::TextureType textureType)
@@ -1095,13 +1095,13 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
         {
             *memoryPropertyFlagsOut = mMemoryProperties.memoryTypes[memoryIndex].propertyFlags;
             *typeIndexOut           = static_cast<uint32_t>(memoryIndex);
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
     // TODO(jmadill): Add error message to error.
     context->handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, ANGLE_FUNCTION, __LINE__);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 // StagingBuffer implementation.
@@ -1132,7 +1132,7 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     VkMemoryPropertyFlags flagsOut = 0;
     ANGLE_TRY(AllocateBufferMemory(context, flags, &flagsOut, &mBuffer, &mDeviceMemory));
     mSize = static_cast<size_t>(size);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
@@ -1204,7 +1204,7 @@ angle::Result InitShaderAndSerial(Context *context,
 
     ANGLE_VK_TRY(context, shaderAndSerial->get().init(context->getDevice(), createInfo));
     shaderAndSerial->updateSerial(context->getRenderer()->issueShaderSerial());
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // GarbageObject implementation.

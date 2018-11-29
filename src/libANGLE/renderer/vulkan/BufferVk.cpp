@@ -76,7 +76,7 @@ angle::Result BufferVk::setData(const gl::Context *context,
         ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::setSubData(const gl::Context *context,
@@ -90,7 +90,7 @@ angle::Result BufferVk::setSubData(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, offset));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::copySubData(const gl::Context *context,
@@ -100,7 +100,7 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
                                     GLsizeiptr size)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr)
@@ -116,7 +116,7 @@ angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
     ANGLE_VK_TRY(contextVk,
                  mBuffer.getDeviceMemory().map(contextVk->getDevice(), 0, mState.getSize(), 0,
                                                reinterpret_cast<uint8_t **>(mapPtr)));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint64 BufferVk::getSize()
@@ -136,7 +136,7 @@ angle::Result BufferVk::mapRange(const gl::Context *context,
 
     ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset, length, 0,
                                                           reinterpret_cast<uint8_t **>(mapPtr)));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::unmap(const gl::Context *context, GLboolean *result)
@@ -150,7 +150,7 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
 
     mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::getIndexRange(const gl::Context *context,
@@ -169,7 +169,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     {
         outRange->start = 0;
         outRange->end   = 0;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Needed before reading buffer or we could get stale data.
@@ -187,7 +187,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 
     mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
@@ -232,7 +232,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         mBuffer.getDeviceMemory().unmap(device);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
@@ -248,7 +248,7 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
     destBuffer->onRead(&mBuffer, VK_ACCESS_TRANSFER_READ_BIT);
     mBuffer.onWrite(VK_ACCESS_TRANSFER_WRITE_BIT);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

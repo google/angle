@@ -112,7 +112,7 @@ angle::Result TransformFeedback11::getSOBuffers(const gl::Context *context,
     }
 
     *buffersOut = &mBuffers;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const std::vector<UINT> &TransformFeedback11::getSOBufferOffsets() const

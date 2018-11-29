@@ -46,7 +46,7 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
     beginInfo.pInheritanceInfo         = &inheritanceInfo;
 
     ANGLE_VK_TRY(context, commandBuffer->begin(beginInfo));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const char *GetResourceTypeName(CommandGraphResourceType resourceType,
@@ -146,7 +146,7 @@ angle::Result RecordableGraphResource::recordCommands(Context *context,
         *commandBufferOut = outsideRenderPassCommands;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool RecordableGraphResource::appendToStartedRenderPass(RendererVk *renderer,
@@ -333,7 +333,7 @@ angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context
                                         &mOutsideRenderPassCommands));
 
     *commandsOut = &mOutsideRenderPassCommands;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
@@ -362,7 +362,7 @@ angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
         VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT, &mInsideRenderPassCommands));
 
     *commandsOut = &mInsideRenderPassCommands;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void CommandGraphNode::storeRenderPassInfo(const Framebuffer &framebuffer,
@@ -566,7 +566,7 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
     }
 
     mVisitedState = VisitedState::Visited;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const std::vector<CommandGraphNode *> &CommandGraphNode::getParentsForDiagnostics() const
@@ -709,7 +709,7 @@ angle::Result CommandGraph::submitCommands(Context *context,
 
     clear();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool CommandGraph::empty() const

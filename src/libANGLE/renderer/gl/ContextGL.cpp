@@ -40,7 +40,7 @@ ContextGL::~ContextGL() {}
 
 angle::Result ContextGL::initialize()
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 CompilerImpl *ContextGL::createCompiler()
@@ -199,7 +199,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
         framebufferGL->maskOutInactiveOutputDrawBuffers(context);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *context,
@@ -226,7 +226,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
         framebufferGL->maskOutInactiveOutputDrawBuffers(context);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result ContextGL::setDrawIndirectState(const gl::Context *context)
@@ -238,7 +238,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawIndirectState(const gl::Context *co
         framebufferGL->maskOutInactiveOutputDrawBuffers(context);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawArrays(const gl::Context *context,
@@ -259,7 +259,7 @@ angle::Result ContextGL::drawArrays(const gl::Context *context,
     {
         getFunctions()->drawArraysInstanced(ToGLenum(mode), first, count, instanceCount);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
@@ -277,7 +277,7 @@ angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
 
     ANGLE_TRY(setDrawArraysState(context, first, count, adjustedInstanceCount));
     getFunctions()->drawArraysInstanced(ToGLenum(mode), first, count, adjustedInstanceCount);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawElements(const gl::Context *context,
@@ -301,7 +301,7 @@ angle::Result ContextGL::drawElements(const gl::Context *context,
         getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type), drawIndexPtr,
                                               instanceCount);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
@@ -323,7 +323,7 @@ angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
                                    &drawIndexPointer));
     getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type), drawIndexPointer,
                                           adjustedInstanceCount);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawRangeElements(const gl::Context *context,
@@ -351,7 +351,7 @@ angle::Result ContextGL::drawRangeElements(const gl::Context *context,
         getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type),
                                               drawIndexPointer, instanceCount);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawArraysIndirect(const gl::Context *context,
@@ -360,7 +360,7 @@ angle::Result ContextGL::drawArraysIndirect(const gl::Context *context,
 {
     ANGLE_TRY(setDrawIndirectState(context));
     getFunctions()->drawArraysIndirect(ToGLenum(mode), indirect);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextGL::drawElementsIndirect(const gl::Context *context,
@@ -370,7 +370,7 @@ angle::Result ContextGL::drawElementsIndirect(const gl::Context *context,
 {
     ANGLE_TRY(setDrawIndirectState(context));
     getFunctions()->drawElementsIndirect(ToGLenum(mode), ToGLenum(type), indirect);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ContextGL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
@@ -512,7 +512,7 @@ angle::Result ContextGL::syncState(const gl::Context *context,
                                    const gl::State::DirtyBits &bitMask)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits, bitMask);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint ContextGL::getGPUDisjoint()

@@ -98,7 +98,7 @@ class Context : angle::NonCopyable
         if (ANGLE_UNLIKELY(FAILED(ANGLE_LOCAL_VAR)))                                             \
         {                                                                                        \
             CONTEXT->handleResult(ANGLE_LOCAL_VAR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
-            return angle::Result::Stop();                                                        \
+            return angle::Result::Stop;                                                          \
         }                                                                                        \
     }
 
@@ -107,7 +107,7 @@ class Context : angle::NonCopyable
         if (ANGLE_UNLIKELY(!(EXPR)))                                                   \
         {                                                                              \
             CONTEXT->handleResult(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
-            return angle::Result::Stop();                                              \
+            return angle::Result::Stop;                                                \
         }                                                                              \
     }
 

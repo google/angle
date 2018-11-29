@@ -118,14 +118,14 @@ inline Error NoError()
 #define ANGLE_CONCAT2(x, y) ANGLE_CONCAT1(x, y)
 #define ANGLE_LOCAL_VAR ANGLE_CONCAT2(_localVar, __LINE__)
 
-#define ANGLE_TRY_TEMPLATE(EXPR, FUNC)                 \
-    do                                                 \
-    {                                                  \
-        auto ANGLE_LOCAL_VAR = EXPR;                   \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
-        {                                              \
-            FUNC(ANGLE_LOCAL_VAR);                     \
-        }                                              \
+#define ANGLE_TRY_TEMPLATE(EXPR, FUNC)                \
+    do                                                \
+    {                                                 \
+        auto ANGLE_LOCAL_VAR = EXPR;                  \
+        if (ANGLE_UNLIKELY(IsError(ANGLE_LOCAL_VAR))) \
+        {                                             \
+            FUNC(ANGLE_LOCAL_VAR);                    \
+        }                                             \
     } while (0)
 
 #define ANGLE_RETURN(X) return X;
@@ -136,7 +136,7 @@ inline Error NoError()
     do                                                                \
     {                                                                 \
         auto ANGLE_LOCAL_VAR = EXPR;                                  \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError()))                \
+        if (ANGLE_UNLIKELY(IsError(ANGLE_LOCAL_VAR)))                 \
         {                                                             \
             ERR() << "Unhandled internal error: " << ANGLE_LOCAL_VAR; \
         }                                                             \
@@ -151,45 +151,38 @@ inline Error NoError()
         if (ANGLE_UNLIKELY(!(EXPR)))                                                  \
         {                                                                             \
             CONTEXT->handleError(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
-            return angle::Result::Stop();                                             \
+            return angle::Result::Stop;                                               \
         }                                                                             \
     }
 
 namespace angle
 {
-// Result signals if calling code should continue running or early exit. A value of Stop() can
-// either indicate an Error or a non-Error early exit condition such as a detected no-op.  A few
-// other values exist to signal special cases that are neither success nor failure but require
+// Result signals if calling code should continue running or early exit. A value of Stop can
+// either indicate an Error or a non-Error early exit condition such as a detected no-op.
+// Incomplete signals special cases that are neither success nor failure but require
 // special attention.
-class ANGLE_NO_DISCARD Result
+enum class ANGLE_NO_DISCARD Result
 {
-  public:
-    // TODO(jmadill): Rename when refactor is complete. http://anglebug.com/2491
-    bool isError() const { return mValue == Value::Stop; }
-
-    static Result Stop() { return Result(Value::Stop); }
-    static Result Continue() { return Result(Value::Continue); }
-    static Result Incomplete() { return Result(Value::Incomplete); }
-
-    bool operator==(Result other) const { return mValue == other.mValue; }
-
-    bool operator!=(Result other) const { return mValue != other.mValue; }
-
-    // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
-    egl::Error toEGL() const;
-
-  private:
-    enum class Value
-    {
-        Continue,
-        Stop,
-        Incomplete,
-    };
-
-    Result(Value value) : mValue(value) {}
-    Value mValue;
+    Continue,
+    Stop,
+    Incomplete,
 };
+
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/2491
+egl::Error ResultToEGL(Result result);
 }  // namespace angle
+
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/2491
+inline bool IsError(angle::Result result)
+{
+    return result == angle::Result::Stop;
+}
+
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/2491
+inline bool IsError(const egl::Error &err)
+{
+    return err.isError();
+}
 
 #include "Error.inl"
 

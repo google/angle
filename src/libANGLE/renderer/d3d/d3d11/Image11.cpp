@@ -71,7 +71,7 @@ angle::Result Image11::GenerateMipmap(const gl::Context *context,
 
     dest->markDirty();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static
@@ -118,7 +118,7 @@ angle::Result Image11::CopyImage(const gl::Context *context,
 
     dest->markDirty();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Image11::isDirty() const
@@ -176,7 +176,7 @@ angle::Result Image11::copyToStorage(const gl::Context *context,
         mAssociatedImageIndex = index;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Image11::verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const
@@ -202,7 +202,7 @@ angle::Result Image11::recoverFromAssociatedStorage(const gl::Context *context)
         disassociateStorage();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Image11::disassociateStorage()
@@ -304,7 +304,7 @@ angle::Result Image11::loadData(const gl::Context *context,
 
     unmap();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image11::loadCompressedData(const gl::Context *context,
@@ -348,7 +348,7 @@ angle::Result Image11::loadCompressedData(const gl::Context *context,
 
     unmap();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image11::copyFromTexStorage(const gl::Context *context,
@@ -410,20 +410,20 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     const auto &destD3D11Format =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    auto loadFunction   = destD3D11Format.getLoadFunctions()(destFormatInfo.type);
-    angle::Result error = angle::Result::Continue();
+    auto loadFunction    = destD3D11Format.getLoadFunctions()(destFormatInfo.type);
+    angle::Result result = angle::Result::Continue;
     if (loadFunction.requiresConversion)
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        error = mRenderer->getScratchMemoryBuffer(GetImplAs<Context11>(context), bufferSize,
-                                                  &memoryBuffer);
+        result = mRenderer->getScratchMemoryBuffer(GetImplAs<Context11>(context), bufferSize,
+                                                   &memoryBuffer);
 
-        if (!error.isError())
+        if (result == angle::Result::Continue)
         {
             GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
 
-            error = mRenderer->readFromAttachment(
+            result = mRenderer->readFromAttachment(
                 context, *srcAttachment, sourceArea, destFormatInfo.format, destFormatInfo.type,
                 memoryBufferRowPitch, gl::PixelPackState(), memoryBuffer->data());
 
@@ -434,7 +434,7 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     }
     else
     {
-        error = mRenderer->readFromAttachment(
+        result = mRenderer->readFromAttachment(
             context, *srcAttachment, sourceArea, destFormatInfo.format, destFormatInfo.type,
             mappedImage.RowPitch, gl::PixelPackState(), dataOffset);
     }
@@ -442,7 +442,7 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     unmap();
     mDirty = true;
 
-    return error;
+    return result;
 }
 
 angle::Result Image11::copyWithoutConversion(const gl::Context *context,
@@ -502,7 +502,7 @@ angle::Result Image11::copyWithoutConversion(const gl::Context *context,
     }
 
     mDirty = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image11::getStagingTexture(const gl::Context *context,
@@ -513,7 +513,7 @@ angle::Result Image11::getStagingTexture(const gl::Context *context,
 
     *outStagingTexture   = &mStagingTexture;
     *outSubresourceIndex = mStagingSubresource;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Image11::releaseStagingTexture()
@@ -525,7 +525,7 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
 {
     if (mStagingTexture.valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(mWidth > 0 && mHeight > 0 && mDepth > 0);
@@ -622,7 +622,7 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
     }
 
     mDirty = false;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image11::map(const gl::Context *context,
@@ -643,7 +643,7 @@ angle::Result Image11::map(const gl::Context *context,
 
     mDirty = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Image11::unmap()

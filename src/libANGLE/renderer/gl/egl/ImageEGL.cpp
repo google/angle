@@ -101,7 +101,7 @@ egl::Error ImageEGL::initialize(const egl::Display *display)
 angle::Result ImageEGL::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     // Nothing to do, the native EGLImage will orphan automatically.
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ImageEGL::setTexture2D(const gl::Context *context,
@@ -119,7 +119,7 @@ angle::Result ImageEGL::setTexture2D(const gl::Context *context,
     functionsGL->eGLImageTargetTexture2DOES(ToGLenum(type), mImage);
     *outInternalFormat = mNativeInternalFormat;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ImageEGL::setRenderbufferStorage(const gl::Context *context,
@@ -136,7 +136,7 @@ angle::Result ImageEGL::setRenderbufferStorage(const gl::Context *context,
     functionsGL->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
     *outInternalFormat = mNativeInternalFormat;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

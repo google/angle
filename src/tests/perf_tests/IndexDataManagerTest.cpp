@@ -92,7 +92,7 @@ class MockBufferD3D : public rx::BufferD3D
         {
             memcpy(&mData[0], data, size);
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     MOCK_METHOD5(
@@ -114,7 +114,7 @@ class MockBufferD3D : public rx::BufferD3D
     angle::Result getData(const gl::Context *context, const uint8_t **outData) override
     {
         *outData = &mData[0];
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
   private:
@@ -171,10 +171,10 @@ IndexDataManagerPerfTest::IndexDataManagerPerfTest()
     {
         indexData[index] = static_cast<GLushort>(index);
     }
-    EXPECT_FALSE(mIndexBuffer
-                     .bufferData(nullptr, gl::BufferBinding::Array, &indexData[0],
-                                 indexData.size() * sizeof(GLushort), gl::BufferUsage::StaticDraw)
-                     .isError());
+    EXPECT_EQ(
+        angle::Result::Continue,
+        mIndexBuffer.bufferData(nullptr, gl::BufferBinding::Array, &indexData[0],
+                                indexData.size() * sizeof(GLushort), gl::BufferUsage::StaticDraw));
 }
 
 void IndexDataManagerPerfTest::step()

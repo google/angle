@@ -26,14 +26,14 @@ angle::Result FramebufferNULL::discard(const gl::Context *context,
                                        size_t count,
                                        const GLenum *attachments)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::invalidate(const gl::Context *context,
                                           size_t count,
                                           const GLenum *attachments)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::invalidateSub(const gl::Context *context,
@@ -41,12 +41,12 @@ angle::Result FramebufferNULL::invalidateSub(const gl::Context *context,
                                              const GLenum *attachments,
                                              const gl::Rectangle &area)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::clear(const gl::Context *context, GLbitfield mask)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::clearBufferfv(const gl::Context *context,
@@ -54,7 +54,7 @@ angle::Result FramebufferNULL::clearBufferfv(const gl::Context *context,
                                              GLint drawbuffer,
                                              const GLfloat *values)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::clearBufferuiv(const gl::Context *context,
@@ -62,7 +62,7 @@ angle::Result FramebufferNULL::clearBufferuiv(const gl::Context *context,
                                               GLint drawbuffer,
                                               const GLuint *values)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::clearBufferiv(const gl::Context *context,
@@ -70,7 +70,7 @@ angle::Result FramebufferNULL::clearBufferiv(const gl::Context *context,
                                              GLint drawbuffer,
                                              const GLint *values)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::clearBufferfi(const gl::Context *context,
@@ -79,7 +79,7 @@ angle::Result FramebufferNULL::clearBufferfi(const gl::Context *context,
                                              GLfloat depth,
                                              GLint stencil)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLenum FramebufferNULL::getImplementationColorReadFormat(const gl::Context *context) const
@@ -137,7 +137,7 @@ angle::Result FramebufferNULL::readPixels(const gl::Context *context,
     if (!ClipRectangle(origArea, fbRect, &area))
     {
         // nothing to read
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Compute size of unclipped rows and initial skip
@@ -167,7 +167,7 @@ angle::Result FramebufferNULL::readPixels(const gl::Context *context,
         pixels += rowBytes;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::blit(const gl::Context *context,
@@ -176,7 +176,7 @@ angle::Result FramebufferNULL::blit(const gl::Context *context,
                                     GLbitfield mask,
                                     GLenum filter)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool FramebufferNULL::checkStatus(const gl::Context *context) const
@@ -187,14 +187,14 @@ bool FramebufferNULL::checkStatus(const gl::Context *context) const
 angle::Result FramebufferNULL::syncState(const gl::Context *context,
                                          const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferNULL::getSamplePosition(const gl::Context *context,
                                                  size_t index,
                                                  GLfloat *xy) const
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

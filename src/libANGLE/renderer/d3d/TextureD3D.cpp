@@ -66,7 +66,7 @@ angle::Result GetUnpackPointer(const gl::Context *context,
         *pointerOut += layerOffset;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool IsRenderTargetUsage(GLenum usage)
@@ -102,7 +102,7 @@ angle::Result TextureD3D::getNativeTexture(const gl::Context *context, TextureSt
     ASSERT(outStorage);
 
     *outStorage = mTexStorage;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::getImageAndSyncFromStorage(const gl::Context *context,
@@ -116,7 +116,7 @@ angle::Result TextureD3D::getImageAndSyncFromStorage(const gl::Context *context,
         mDirtyImages = true;
     }
     *outImage = image;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint TextureD3D::getLevelZeroWidth() const
@@ -170,7 +170,7 @@ angle::Result TextureD3D::setStorage(const gl::Context *context,
                                      const gl::Extents &size)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::setStorageMultisample(const gl::Context *context,
@@ -181,7 +181,7 @@ angle::Result TextureD3D::setStorageMultisample(const gl::Context *context,
                                                 bool fixedSampleLocations)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D::shouldUseSetData(const ImageD3D *image) const
@@ -224,7 +224,7 @@ angle::Result TextureD3D::setImageImpl(const gl::Context *context,
     // No-op
     if (image->getWidth() == 0 || image->getHeight() == 0 || image->getDepth() == 0)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format
@@ -251,7 +251,7 @@ angle::Result TextureD3D::setImageImpl(const gl::Context *context,
         mDirtyImages = true;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::subImage(const gl::Context *context,
@@ -283,7 +283,7 @@ angle::Result TextureD3D::subImage(const gl::Context *context,
         mDirtyImages = true;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::setCompressedImageImpl(const gl::Context *context,
@@ -297,7 +297,7 @@ angle::Result TextureD3D::setCompressedImageImpl(const gl::Context *context,
 
     if (image->getWidth() == 0 || image->getHeight() == 0 || image->getDepth() == 0)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format
@@ -316,7 +316,7 @@ angle::Result TextureD3D::setCompressedImageImpl(const gl::Context *context,
         mDirtyImages = true;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::subImageCompressed(const gl::Context *context,
@@ -342,7 +342,7 @@ angle::Result TextureD3D::subImageCompressed(const gl::Context *context,
         mDirtyImages = true;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D::isFastUnpackable(const gl::Buffer *unpackBuffer, GLenum sizedInternalFormat)
@@ -367,7 +367,7 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
     // No-op
     if (destArea.width <= 0 && destArea.height <= 0 && destArea.depth <= 0)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // In order to perform the fast copy through the shader, we must have the right format, and be
@@ -380,7 +380,7 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
                                                  destRenderTarget, sizedInternalFormat, type,
                                                  destArea));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint TextureD3D::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
@@ -420,7 +420,7 @@ angle::Result TextureD3D::setImageExternal(const gl::Context *context,
 {
     // Only external images can accept external textures
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::generateMipmap(const gl::Context *context)
@@ -453,7 +453,7 @@ angle::Result TextureD3D::generateMipmap(const gl::Context *context)
         ANGLE_TRY(generateMipmapUsingImages(context, maxLevel));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
@@ -524,7 +524,7 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
         ANGLE_TRY(updateStorage(context));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D::isBaseImageZeroSize() const
@@ -558,7 +558,7 @@ angle::Result TextureD3D::ensureRenderTarget(const gl::Context *context)
     if (!mTexStorage)
     {
         ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
     if (!isBaseImageZeroSize())
@@ -575,7 +575,7 @@ angle::Result TextureD3D::ensureRenderTarget(const gl::Context *context)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D::canCreateRenderTargetForImage(const gl::ImageIndex &index) const
@@ -605,7 +605,7 @@ angle::Result TextureD3D::commitRegion(const gl::Context *context,
         image->markClean();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::getAttachmentRenderTarget(const gl::Context *context,
@@ -616,7 +616,7 @@ angle::Result TextureD3D::getAttachmentRenderTarget(const gl::Context *context,
     RenderTargetD3D *rtD3D = nullptr;
     ANGLE_TRY(getRenderTarget(context, imageIndex, &rtD3D));
     *rtOut = static_cast<FramebufferAttachmentRenderTarget *>(rtD3D);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLevel)
@@ -641,21 +641,21 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
         ANGLE_TRY(releaseTexStorage(context));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::syncState(const gl::Context *context,
                                     const gl::Texture::DirtyBits &dirtyBits)
 {
     // This could be improved using dirty bits.
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::releaseTexStorage(const gl::Context *context)
 {
     if (!mTexStorage)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     auto err = mTexStorage->onDestroy(context);
@@ -693,7 +693,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
         {
             ANGLE_TRY(initializeContents(context, iterator.next()));
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     else if (index.getType() == gl::TextureType::_2DMultisampleArray && !index.hasLayer())
     {
@@ -707,7 +707,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
         {
             ANGLE_TRY(initializeContents(context, iterator.next()));
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Force image clean.
@@ -727,7 +727,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
         RenderTargetD3D *renderTarget = nullptr;
         ANGLE_TRY(mTexStorage->getRenderTarget(context, index, &renderTarget));
         ANGLE_TRY(mRenderer->initRenderTarget(context, renderTarget));
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Slow path: non-renderable texture or the texture levels aren't set up.
@@ -766,7 +766,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
             mDirtyImages = true;
         }
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 TextureD3D_2D::TextureD3D_2D(const gl::TextureState &state, RendererD3D *renderer)
@@ -893,7 +893,7 @@ angle::Result TextureD3D_2D::setImage(const gl::Context *context,
         ANGLE_TRY(setImageImpl(context, index, type, unpack, pixels, 0));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::setSubImage(const gl::Context *context,
@@ -988,7 +988,7 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
         // Empty source area, nothing to do.
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
@@ -1014,7 +1014,7 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::copySubImage(const gl::Context *context,
@@ -1029,7 +1029,7 @@ angle::Result TextureD3D_2D::copySubImage(const gl::Context *context,
     gl::Rectangle clippedArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     const gl::Offset clippedOffset(destOffset.x + clippedArea.x - sourceArea.x,
                                    destOffset.y + clippedArea.y - sourceArea.y, 0);
@@ -1059,7 +1059,7 @@ angle::Result TextureD3D_2D::copySubImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::copyTexture(const gl::Context *context,
@@ -1118,7 +1118,7 @@ angle::Result TextureD3D_2D::copyTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, index, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::copySubTexture(const gl::Context *context,
@@ -1166,7 +1166,7 @@ angle::Result TextureD3D_2D::copySubTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, index, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::copyCompressedTexture(const gl::Context *context,
@@ -1189,7 +1189,7 @@ angle::Result TextureD3D_2D::copyCompressedTexture(const gl::Context *context,
     ANGLE_TRY(
         mRenderer->copyCompressedTexture(context, source, sourceLevel, mTexStorage, destLevel));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::setStorage(const gl::Context *context,
@@ -1225,7 +1225,7 @@ angle::Result TextureD3D_2D::setStorage(const gl::Context *context,
 
     mImmutable = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surface *surface)
@@ -1246,7 +1246,7 @@ angle::Result TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surfa
     mDirtyImages = false;
     mImageArray[0]->markClean();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::releaseTexImage(const gl::Context *context)
@@ -1261,7 +1261,7 @@ angle::Result TextureD3D_2D::releaseTexImage(const gl::Context *context)
         ANGLE_TRY(redefineImage(context, i, GL_NONE, gl::Extents(0, 0, 1), true));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::setEGLImageTarget(const gl::Context *context,
@@ -1291,7 +1291,7 @@ angle::Result TextureD3D_2D::setEGLImageTarget(const gl::Context *context,
     mTexStorage     = mRenderer->createTextureStorageEGLImage(eglImaged3d, renderTargetD3D);
     mEGLImageTarget = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::initMipmapImages(const gl::Context *context)
@@ -1307,7 +1307,7 @@ angle::Result TextureD3D_2D::initMipmapImages(const gl::Context *context)
 
         ANGLE_TRY(redefineImage(context, level, getBaseLevelInternalFormat(), levelSize, false));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::getRenderTarget(const gl::Context *context,
@@ -1382,13 +1382,13 @@ angle::Result TextureD3D_2D::initializeStorage(const gl::Context *context, bool 
     // Only initialize the first time this texture is used as a render target or shader resource
     if (mTexStorage)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // do not attempt to create storage for nonexistant data
     if (!isLevelComplete(getBaseLevel()))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
@@ -1404,7 +1404,7 @@ angle::Result TextureD3D_2D::initializeStorage(const gl::Context *context, bool 
     // flush image data to the storage
     ANGLE_TRY(updateStorage(context));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::createCompleteStorage(bool renderTarget,
@@ -1435,7 +1435,7 @@ angle::Result TextureD3D_2D::createCompleteStorage(bool renderTarget,
     outStorage->reset(mRenderer->createTextureStorage2D(internalFormat, renderTarget, width, height,
                                                         levels, hintLevelZeroOnly));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::setCompleteTexStorage(const gl::Context *context,
@@ -1455,14 +1455,14 @@ angle::Result TextureD3D_2D::setCompleteTexStorage(const gl::Context *context,
 
     mDirtyImages = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::updateStorage(const gl::Context *context)
 {
     if (!mDirtyImages)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(mTexStorage != nullptr);
@@ -1476,7 +1476,7 @@ angle::Result TextureD3D_2D::updateStorage(const gl::Context *context)
     }
 
     mDirtyImages = false;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::updateStorageLevel(const gl::Context *context, int level)
@@ -1491,7 +1491,7 @@ angle::Result TextureD3D_2D::updateStorageLevel(const gl::Context *context, int 
         ANGLE_TRY(commitRegion(context, index, region));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2D::redefineImage(const gl::Context *context,
@@ -1534,7 +1534,7 @@ angle::Result TextureD3D_2D::redefineImage(const gl::Context *context,
     // Can't be an EGL image target after being redefined
     mEGLImageTarget = false;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::ImageIndexIterator TextureD3D_2D::imageIterator() const
@@ -1635,7 +1635,7 @@ angle::Result TextureD3D_Cube::setEGLImageTarget(const gl::Context *context,
                                                  egl::Image *image)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::setImage(const gl::Context *context,
@@ -1736,7 +1736,7 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
         // Empty source area, nothing to do.
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
@@ -1764,7 +1764,7 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::copySubImage(const gl::Context *context,
@@ -1777,7 +1777,7 @@ angle::Result TextureD3D_Cube::copySubImage(const gl::Context *context,
     gl::Rectangle clippedArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     const gl::Offset clippedOffset(destOffset.x + clippedArea.x - sourceArea.x,
                                    destOffset.y + clippedArea.y - sourceArea.y, 0);
@@ -1804,7 +1804,7 @@ angle::Result TextureD3D_Cube::copySubImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::copyTexture(const gl::Context *context,
@@ -1864,7 +1864,7 @@ angle::Result TextureD3D_Cube::copyTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, index, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::copySubTexture(const gl::Context *context,
@@ -1914,7 +1914,7 @@ angle::Result TextureD3D_Cube::copySubTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, index, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::setStorage(const gl::Context *context,
@@ -1959,7 +1959,7 @@ angle::Result TextureD3D_Cube::setStorage(const gl::Context *context,
 
     mImmutable = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -1991,13 +1991,13 @@ bool TextureD3D_Cube::isCubeComplete() const
 angle::Result TextureD3D_Cube::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::releaseTexImage(const gl::Context *context)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::initMipmapImages(const gl::Context *context)
@@ -2017,7 +2017,7 @@ angle::Result TextureD3D_Cube::initMipmapImages(const gl::Context *context)
                                     gl::Extents(faceLevelSize, faceLevelSize, 1), false));
         }
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::getRenderTarget(const gl::Context *context,
@@ -2038,13 +2038,13 @@ angle::Result TextureD3D_Cube::initializeStorage(const gl::Context *context, boo
     // Only initialize the first time this texture is used as a render target or shader resource
     if (mTexStorage)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // do not attempt to create storage for nonexistant data
     if (!isFaceLevelComplete(0, getBaseLevel()))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
@@ -2060,7 +2060,7 @@ angle::Result TextureD3D_Cube::initializeStorage(const gl::Context *context, boo
     // flush image data to the storage
     ANGLE_TRY(updateStorage(context));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
@@ -2093,7 +2093,7 @@ angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
     outStorage->reset(mRenderer->createTextureStorageCube(
         getBaseLevelInternalFormat(), renderTarget, size, levels, hintLevelZeroOnly));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::setCompleteTexStorage(const gl::Context *context,
@@ -2115,14 +2115,14 @@ angle::Result TextureD3D_Cube::setCompleteTexStorage(const gl::Context *context,
     mTexStorage = newCompleteTexStorage;
 
     mDirtyImages = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::updateStorage(const gl::Context *context)
 {
     if (!mDirtyImages)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(mTexStorage != nullptr);
@@ -2139,7 +2139,7 @@ angle::Result TextureD3D_Cube::updateStorage(const gl::Context *context)
     }
 
     mDirtyImages = false;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D_Cube::isValidFaceLevel(int faceIndex, int level) const
@@ -2215,7 +2215,7 @@ angle::Result TextureD3D_Cube::updateStorageFaceLevel(const gl::Context *context
         ANGLE_TRY(commitRegion(context, index, region));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_Cube::redefineImage(const gl::Context *context,
@@ -2247,7 +2247,7 @@ angle::Result TextureD3D_Cube::redefineImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::ImageIndexIterator TextureD3D_Cube::imageIterator() const
@@ -2371,7 +2371,7 @@ angle::Result TextureD3D_3D::setEGLImageTarget(const gl::Context *context,
                                                egl::Image *image)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::setImage(const gl::Context *context,
@@ -2418,7 +2418,7 @@ angle::Result TextureD3D_3D::setImage(const gl::Context *context,
         ANGLE_TRY(setImageImpl(context, index, type, unpack, pixels, 0));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::setSubImage(const gl::Context *context,
@@ -2487,7 +2487,7 @@ angle::Result TextureD3D_3D::copyImage(const gl::Context *context,
                                        gl::Framebuffer *source)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::copySubImage(const gl::Context *context,
@@ -2503,7 +2503,7 @@ angle::Result TextureD3D_3D::copySubImage(const gl::Context *context,
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     const gl::Offset clippedDestOffset(destOffset.x + clippedSourceArea.x - sourceArea.x,
                                        destOffset.y + clippedSourceArea.y - sourceArea.y,
@@ -2529,7 +2529,7 @@ angle::Result TextureD3D_3D::copySubImage(const gl::Context *context,
         ANGLE_TRY(updateStorageLevel(context, index.getLevelIndex()));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::copyTexture(const gl::Context *context,
@@ -2590,7 +2590,7 @@ angle::Result TextureD3D_3D::copyTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, destIndex, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 angle::Result TextureD3D_3D::copySubTexture(const gl::Context *context,
                                             const gl::ImageIndex &index,
@@ -2640,7 +2640,7 @@ angle::Result TextureD3D_3D::copySubTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, destIndex, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::setStorage(const gl::Context *context,
@@ -2677,19 +2677,19 @@ angle::Result TextureD3D_3D::setStorage(const gl::Context *context,
 
     mImmutable = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::releaseTexImage(const gl::Context *context)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::initMipmapImages(const gl::Context *context)
@@ -2706,7 +2706,7 @@ angle::Result TextureD3D_3D::initMipmapImages(const gl::Context *context)
         ANGLE_TRY(redefineImage(context, level, getBaseLevelInternalFormat(), levelSize, false));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::getRenderTarget(const gl::Context *context,
@@ -2733,13 +2733,13 @@ angle::Result TextureD3D_3D::initializeStorage(const gl::Context *context, bool 
     // Only initialize the first time this texture is used as a render target or shader resource
     if (mTexStorage)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // do not attempt to create storage for nonexistant data
     if (!isLevelComplete(getBaseLevel()))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
@@ -2755,7 +2755,7 @@ angle::Result TextureD3D_3D::initializeStorage(const gl::Context *context, bool 
     // flush image data to the storage
     ANGLE_TRY(updateStorage(context));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::createCompleteStorage(bool renderTarget,
@@ -2776,7 +2776,7 @@ angle::Result TextureD3D_3D::createCompleteStorage(bool renderTarget,
     outStorage->reset(mRenderer->createTextureStorage3D(internalFormat, renderTarget, width, height,
                                                         depth, levels));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::setCompleteTexStorage(const gl::Context *context,
@@ -2789,14 +2789,14 @@ angle::Result TextureD3D_3D::setCompleteTexStorage(const gl::Context *context,
     // We do not support managed 3D storage, as that is D3D9/ES2-only
     ASSERT(!mTexStorage->isManaged());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::updateStorage(const gl::Context *context)
 {
     if (!mDirtyImages)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(mTexStorage != nullptr);
@@ -2810,7 +2810,7 @@ angle::Result TextureD3D_3D::updateStorage(const gl::Context *context)
     }
 
     mDirtyImages = false;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D_3D::isValidLevel(int level) const
@@ -2885,7 +2885,7 @@ angle::Result TextureD3D_3D::updateStorageLevel(const gl::Context *context, int 
         ANGLE_TRY(commitRegion(context, index, region));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_3D::redefineImage(const gl::Context *context,
@@ -2916,7 +2916,7 @@ angle::Result TextureD3D_3D::redefineImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::ImageIndexIterator TextureD3D_3D::imageIterator() const
@@ -3035,7 +3035,7 @@ angle::Result TextureD3D_2DArray::setEGLImageTarget(const gl::Context *context,
                                                     egl::Image *image)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::setImage(const gl::Context *context,
@@ -3068,7 +3068,7 @@ angle::Result TextureD3D_2DArray::setImage(const gl::Context *context,
         ANGLE_TRY(setImageImpl(context, layerIndex, type, unpack, pixels, layerOffset));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::setSubImage(const gl::Context *context,
@@ -3102,7 +3102,7 @@ angle::Result TextureD3D_2DArray::setSubImage(const gl::Context *context,
                                        unpackBuffer, pixels, layerOffset));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::setCompressedImage(const gl::Context *context,
@@ -3135,7 +3135,7 @@ angle::Result TextureD3D_2DArray::setCompressedImage(const gl::Context *context,
         ANGLE_TRY(setCompressedImageImpl(context, layerIndex, unpack, pixels, layerOffset));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::setCompressedSubImage(const gl::Context *context,
@@ -3169,7 +3169,7 @@ angle::Result TextureD3D_2DArray::setCompressedSubImage(const gl::Context *conte
         ANGLE_TRY(commitRegion(context, layerIndex, layerArea));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::copyImage(const gl::Context *context,
@@ -3179,7 +3179,7 @@ angle::Result TextureD3D_2DArray::copyImage(const gl::Context *context,
                                             gl::Framebuffer *source)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::copySubImage(const gl::Context *context,
@@ -3195,7 +3195,7 @@ angle::Result TextureD3D_2DArray::copySubImage(const gl::Context *context,
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     const gl::Offset clippedDestOffset(destOffset.x + clippedSourceArea.x - sourceArea.x,
                                        destOffset.y + clippedSourceArea.y - sourceArea.y,
@@ -3221,7 +3221,7 @@ angle::Result TextureD3D_2DArray::copySubImage(const gl::Context *context,
                                             clippedDestOffset, mTexStorage, index.getLevelIndex()));
         }
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::copyTexture(const gl::Context *context,
@@ -3294,7 +3294,7 @@ angle::Result TextureD3D_2DArray::copyTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, destIndex, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::copySubTexture(const gl::Context *context,
@@ -3358,7 +3358,7 @@ angle::Result TextureD3D_2DArray::copySubTexture(const gl::Context *context,
         ANGLE_TRY(commitRegion(context, destIndex, destRegion));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::setStorage(const gl::Context *context,
@@ -3406,19 +3406,19 @@ angle::Result TextureD3D_2DArray::setStorage(const gl::Context *context,
 
     mImmutable = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::releaseTexImage(const gl::Context *context)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::initMipmapImages(const gl::Context *context)
@@ -3440,7 +3440,7 @@ angle::Result TextureD3D_2DArray::initMipmapImages(const gl::Context *context)
         ANGLE_TRY(redefineImage(context, level, baseFormat, levelLayerSize, false));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::getRenderTarget(const gl::Context *context,
@@ -3458,13 +3458,13 @@ angle::Result TextureD3D_2DArray::initializeStorage(const gl::Context *context, 
     // Only initialize the first time this texture is used as a render target or shader resource
     if (mTexStorage)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // do not attempt to create storage for nonexistant data
     if (!isLevelComplete(getBaseLevel()))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
@@ -3480,7 +3480,7 @@ angle::Result TextureD3D_2DArray::initializeStorage(const gl::Context *context, 
     // flush image data to the storage
     ANGLE_TRY(updateStorage(context));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::createCompleteStorage(bool renderTarget,
@@ -3500,7 +3500,7 @@ angle::Result TextureD3D_2DArray::createCompleteStorage(bool renderTarget,
     outStorage->reset(mRenderer->createTextureStorage2DArray(internalFormat, renderTarget, width,
                                                              height, depth, levels));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::setCompleteTexStorage(const gl::Context *context,
@@ -3513,14 +3513,14 @@ angle::Result TextureD3D_2DArray::setCompleteTexStorage(const gl::Context *conte
     // We do not support managed 2D array storage, as managed storage is ES2/D3D9 only
     ASSERT(!mTexStorage->isManaged());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DArray::updateStorage(const gl::Context *context)
 {
     if (!mDirtyImages)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ASSERT(mTexStorage != nullptr);
@@ -3534,7 +3534,7 @@ angle::Result TextureD3D_2DArray::updateStorage(const gl::Context *context)
     }
 
     mDirtyImages = false;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D_2DArray::isValidLevel(int level) const
@@ -3617,7 +3617,7 @@ angle::Result TextureD3D_2DArray::updateStorageLevel(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void TextureD3D_2DArray::deleteImages()
@@ -3696,7 +3696,7 @@ angle::Result TextureD3D_2DArray::redefineImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::ImageIndexIterator TextureD3D_2DArray::imageIterator() const
@@ -3762,7 +3762,7 @@ angle::Result TextureD3DImmutableBase::setImage(const gl::Context *context,
                                                 const uint8_t *pixels)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::setSubImage(const gl::Context *context,
@@ -3775,7 +3775,7 @@ angle::Result TextureD3DImmutableBase::setSubImage(const gl::Context *context,
                                                    const uint8_t *pixels)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::setCompressedImage(const gl::Context *context,
@@ -3787,7 +3787,7 @@ angle::Result TextureD3DImmutableBase::setCompressedImage(const gl::Context *con
                                                           const uint8_t *pixels)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::setCompressedSubImage(const gl::Context *context,
@@ -3799,7 +3799,7 @@ angle::Result TextureD3DImmutableBase::setCompressedSubImage(const gl::Context *
                                                              const uint8_t *pixels)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::copyImage(const gl::Context *context,
@@ -3809,7 +3809,7 @@ angle::Result TextureD3DImmutableBase::copyImage(const gl::Context *context,
                                                  gl::Framebuffer *source)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::copySubImage(const gl::Context *context,
@@ -3819,20 +3819,20 @@ angle::Result TextureD3DImmutableBase::copySubImage(const gl::Context *context,
                                                     gl::Framebuffer *source)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::bindTexImage(const gl::Context *context,
                                                     egl::Surface *surface)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3DImmutableBase::releaseTexImage(const gl::Context *context)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 TextureD3D_External::TextureD3D_External(const gl::TextureState &state, RendererD3D *renderer)
@@ -3861,7 +3861,7 @@ angle::Result TextureD3D_External::setImageExternal(const gl::Context *context,
         mTexStorage = mRenderer->createTextureStorageExternal(stream, desc);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_External::setEGLImageTarget(const gl::Context *context,
@@ -3877,13 +3877,13 @@ angle::Result TextureD3D_External::setEGLImageTarget(const gl::Context *context,
     ANGLE_TRY(releaseTexStorage(context));
     mTexStorage = mRenderer->createTextureStorageEGLImage(eglImaged3d, renderTargetD3D);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_External::initMipmapImages(const gl::Context *context)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureD3D_External::getRenderTarget(const gl::Context *context,
@@ -3891,7 +3891,7 @@ angle::Result TextureD3D_External::getRenderTarget(const gl::Context *context,
                                                    RenderTargetD3D **outRT)
 {
     UNREACHABLE();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 bool TextureD3D_External::isImageComplete(const gl::ImageIndex &index) const
@@ -3903,21 +3903,21 @@ angle::Result TextureD3D_External::initializeStorage(const gl::Context *context,
 {
     // Texture storage is created when an external image is bound
     ASSERT(mTexStorage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_External::createCompleteStorage(bool renderTarget,
                                                          TexStoragePointer *outStorage) const
 {
     UNREACHABLE();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_External::setCompleteTexStorage(const gl::Context *context,
                                                          TextureStorage *newCompleteTexStorage)
 {
     UNREACHABLE();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_External::updateStorage(const gl::Context *context)
@@ -3925,7 +3925,7 @@ angle::Result TextureD3D_External::updateStorage(const gl::Context *context)
     // Texture storage does not need to be updated since it is already loaded with the latest
     // external image
     ASSERT(mTexStorage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::ImageIndexIterator TextureD3D_External::imageIterator() const
@@ -3978,7 +3978,7 @@ angle::Result TextureD3D_2DMultisample::setStorageMultisample(const gl::Context 
 
     mImmutable = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisample::setEGLImageTarget(const gl::Context *context,
@@ -3986,7 +3986,7 @@ angle::Result TextureD3D_2DMultisample::setEGLImageTarget(const gl::Context *con
                                                           egl::Image *image)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisample::getRenderTarget(const gl::Context *context,
@@ -4030,7 +4030,7 @@ angle::Result TextureD3D_2DMultisample::initializeStorage(const gl::Context *con
     // initializeStorage should only be called in a situation where the texture already has storage
     // associated with it (storage is created in setStorageMultisample).
     ASSERT(mTexStorage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisample::createCompleteStorage(bool renderTarget,
@@ -4038,7 +4038,7 @@ angle::Result TextureD3D_2DMultisample::createCompleteStorage(bool renderTarget,
 {
     UNREACHABLE();
     outStorage->reset(mTexStorage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisample::setCompleteTexStorage(const gl::Context *context,
@@ -4047,18 +4047,18 @@ angle::Result TextureD3D_2DMultisample::setCompleteTexStorage(const gl::Context 
     // These textures are immutable, so this should only be ever called once.
     ASSERT(!mTexStorage);
     mTexStorage = newCompleteTexStorage;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisample::updateStorage(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisample::initMipmapImages(const gl::Context *context)
 {
     UNREACHABLE();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D_2DMultisample::isImageComplete(const gl::ImageIndex &index) const
@@ -4094,7 +4094,7 @@ angle::Result TextureD3D_2DMultisampleArray::setStorageMultisample(const gl::Con
 
     mImmutable = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisampleArray::setEGLImageTarget(const gl::Context *context,
@@ -4102,7 +4102,7 @@ angle::Result TextureD3D_2DMultisampleArray::setEGLImageTarget(const gl::Context
                                                                egl::Image *image)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisampleArray::getRenderTarget(const gl::Context *context,
@@ -4144,7 +4144,7 @@ angle::Result TextureD3D_2DMultisampleArray::initializeStorage(const gl::Context
     // initializeStorage should only be called in a situation where the texture already has storage
     // associated with it (storage is created in setStorageMultisample).
     ASSERT(mTexStorage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisampleArray::createCompleteStorage(
@@ -4153,7 +4153,7 @@ angle::Result TextureD3D_2DMultisampleArray::createCompleteStorage(
 {
     UNREACHABLE();
     outStorage->reset(mTexStorage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisampleArray::setCompleteTexStorage(
@@ -4163,18 +4163,18 @@ angle::Result TextureD3D_2DMultisampleArray::setCompleteTexStorage(
     // These textures are immutable, so this should only be ever called once.
     ASSERT(!mTexStorage);
     mTexStorage = newCompleteTexStorage;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisampleArray::updateStorage(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D_2DMultisampleArray::initMipmapImages(const gl::Context *context)
 {
     UNIMPLEMENTED();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureD3D_2DMultisampleArray::isImageComplete(const gl::ImageIndex &index) const

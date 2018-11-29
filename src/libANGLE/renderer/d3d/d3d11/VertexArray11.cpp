@@ -116,7 +116,7 @@ angle::Result VertexArray11::syncState(const gl::Context *context,
         stateManager->invalidateVertexBuffer();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexArray11::syncStateForDraw(const gl::Context *context,
@@ -183,7 +183,7 @@ angle::Result VertexArray11::syncStateForDraw(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *context,
@@ -204,7 +204,7 @@ angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *contex
         ClassifyIndexStorage(context->getGLState(), mState.getElementArrayBuffer(), indexType,
                              mCachedDestinationIndexType, offset);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void VertexArray11::updateVertexAttribStorage(const gl::Context *context,
@@ -279,7 +279,7 @@ angle::Result VertexArray11::updateDirtyAttribs(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
@@ -319,7 +319,7 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
     VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
                                              vertexCount);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const std::vector<TranslatedAttribute> &VertexArray11::getTranslatedAttribs() const

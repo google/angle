@@ -41,7 +41,7 @@ angle::Result Path::setCommands(GLsizei numCommands,
 
     mHasData = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Path::setStrokeWidth(GLfloat width)

@@ -1502,7 +1502,7 @@ angle::Result QuerySynciv(const Context *context,
         {
             *length = 0;
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     switch (pname)
@@ -1530,7 +1530,7 @@ angle::Result QuerySynciv(const Context *context,
         *length = 1;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat param)

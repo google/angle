@@ -88,7 +88,7 @@ angle::Result Image9::GenerateMip(Context9 *context9,
     destSurface->UnlockRect();
     sourceSurface->UnlockRect();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static
@@ -104,7 +104,7 @@ angle::Result Image9::GenerateMipmap(Context9 *context9, Image9 *dest, Image9 *s
 
     dest->markDirty();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static
@@ -148,7 +148,7 @@ angle::Result Image9::CopyLockableSurfaces(Context9 *context9,
     source->UnlockRect();
     dest->UnlockRect();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static
@@ -214,7 +214,7 @@ angle::Result Image9::CopyImage(const gl::Context *context,
     destSurface->UnlockRect();
     sourceSurface->UnlockRect();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Image9::redefine(gl::TextureType type,
@@ -255,7 +255,7 @@ angle::Result Image9::createSurface(Context9 *context9)
 {
     if (mSurface)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     IDirect3DTexture9 *newTexture = nullptr;
@@ -307,7 +307,7 @@ angle::Result Image9::createSurface(Context9 *context9)
     mDirty   = false;
     mD3DPool = poolToUse;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image9::lock(Context9 *context9, D3DLOCKED_RECT *lockedRect, const RECT &rect)
@@ -322,7 +322,7 @@ angle::Result Image9::lock(Context9 *context9, D3DLOCKED_RECT *lockedRect, const
         mDirty = true;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Image9::unlock()
@@ -356,7 +356,7 @@ angle::Result Image9::getSurface(Context9 *context9, IDirect3DSurface9 **outSurf
 {
     ANGLE_TRY(createSurface(context9));
     *outSurface = mSurface;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image9::setManagedSurface2D(const gl::Context *context,
@@ -400,7 +400,7 @@ angle::Result Image9::setManagedSurface(Context9 *context9, IDirect3DSurface9 *s
         mD3DPool = desc.Pool;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image9::copyToStorage(const gl::Context *context,
@@ -467,7 +467,7 @@ angle::Result Image9::copyToSurface(Context9 *context9,
         ANGLE_TRY_HR(context9, result, "Internal UpdateSurface call failed");
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as
@@ -506,7 +506,7 @@ angle::Result Image9::loadData(const gl::Context *context,
 
     unlock();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image9::loadCompressedData(const gl::Context *context,
@@ -545,7 +545,7 @@ angle::Result Image9::loadCompressedData(const gl::Context *context,
 
     unlock();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete
@@ -594,7 +594,7 @@ angle::Result Image9::copyFromRTInternal(Context9 *context9,
 
     D3DLOCKED_RECT destLock = {0};
     angle::Result result    = lock(context9, &destLock, destRect);
-    if (result == angle::Result::Stop())
+    if (result == angle::Result::Stop)
     {
         renderTargetData->UnlockRect();
     }
@@ -761,7 +761,7 @@ angle::Result Image9::copyFromRTInternal(Context9 *context9,
     renderTargetData->UnlockRect();
 
     mDirty = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Image9::copyFromTexStorage(const gl::Context *context,

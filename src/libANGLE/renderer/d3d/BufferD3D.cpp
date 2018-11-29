@@ -185,7 +185,7 @@ angle::Result BufferD3D::getIndexRange(const gl::Context *context,
     ANGLE_TRY(getData(context, &data));
 
     *outRange = gl::ComputeIndexRange(type, data + offset, count, primitiveRestartEnabled);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

@@ -60,7 +60,7 @@ angle::Result RenderbufferGL::setStorage(const gl::Context *context,
 
     mNativeInternalFormat = renderbufferFormat.internalFormat;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
@@ -94,7 +94,7 @@ angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
 
     mNativeInternalFormat = renderbufferFormat.internalFormat;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferGL::setStorageEGLImageTarget(const gl::Context *context,

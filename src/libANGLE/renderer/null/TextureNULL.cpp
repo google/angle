@@ -29,7 +29,7 @@ angle::Result TextureNULL::setImage(const gl::Context *context,
 {
     // TODO(geofflang): Read all incoming pixel data (maybe hash it?) to make sure we don't read out
     // of bounds due to validation bugs.
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setSubImage(const gl::Context *context,
@@ -41,7 +41,7 @@ angle::Result TextureNULL::setSubImage(const gl::Context *context,
                                        gl::Buffer *unpackBuffer,
                                        const uint8_t *pixels)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setCompressedImage(const gl::Context *context,
@@ -52,7 +52,7 @@ angle::Result TextureNULL::setCompressedImage(const gl::Context *context,
                                               size_t imageSize,
                                               const uint8_t *pixels)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setCompressedSubImage(const gl::Context *context,
@@ -63,7 +63,7 @@ angle::Result TextureNULL::setCompressedSubImage(const gl::Context *context,
                                                  size_t imageSize,
                                                  const uint8_t *pixels)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::copyImage(const gl::Context *context,
@@ -72,7 +72,7 @@ angle::Result TextureNULL::copyImage(const gl::Context *context,
                                      GLenum internalFormat,
                                      gl::Framebuffer *source)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::copySubImage(const gl::Context *context,
@@ -81,7 +81,7 @@ angle::Result TextureNULL::copySubImage(const gl::Context *context,
                                         const gl::Rectangle &sourceArea,
                                         gl::Framebuffer *source)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setStorage(const gl::Context *context,
@@ -90,14 +90,14 @@ angle::Result TextureNULL::setStorage(const gl::Context *context,
                                       GLenum internalFormat,
                                       const gl::Extents &size)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setEGLImageTarget(const gl::Context *context,
                                              gl::TextureType type,
                                              egl::Image *image)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setImageExternal(const gl::Context *context,
@@ -105,33 +105,33 @@ angle::Result TextureNULL::setImageExternal(const gl::Context *context,
                                             egl::Stream *stream,
                                             const egl::Stream::GLTextureDescription &desc)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::generateMipmap(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::releaseTexImage(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::syncState(const gl::Context *context,
                                      const gl::Texture::DirtyBits &dirtyBits)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::setStorageMultisample(const gl::Context *context,
@@ -141,13 +141,13 @@ angle::Result TextureNULL::setStorageMultisample(const gl::Context *context,
                                                  const gl::Extents &size,
                                                  bool fixedSampleLocations)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureNULL::initializeContents(const gl::Context *context,
                                               const gl::ImageIndex &imageIndex)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

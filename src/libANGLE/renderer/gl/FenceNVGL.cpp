@@ -31,20 +31,20 @@ angle::Result FenceNVGL::set(const gl::Context *context, GLenum condition)
 {
     ASSERT(condition == GL_ALL_COMPLETED_NV);
     mFunctions->setFenceNV(mFence, condition);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNVGL::test(const gl::Context *context, GLboolean *outFinished)
 {
     ASSERT(outFinished);
     *outFinished = mFunctions->testFenceNV(mFence);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNVGL::finish(const gl::Context *context)
 {
     mFunctions->finishFenceNV(mFence);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static
@@ -72,7 +72,7 @@ angle::Result FenceNVSyncGL::set(const gl::Context *context, GLenum condition)
     mSyncObject = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     ANGLE_CHECK(GetImplAs<ContextGL>(context), mSyncObject != 0,
                 "glFenceSync failed to create a GLsync object.", GL_OUT_OF_MEMORY);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNVSyncGL::test(const gl::Context *context, GLboolean *outFinished)
@@ -81,7 +81,7 @@ angle::Result FenceNVSyncGL::test(const gl::Context *context, GLboolean *outFini
     GLint result = 0;
     mFunctions->getSynciv(mSyncObject, GL_SYNC_STATUS, 1, nullptr, &result);
     *outFinished = (result == GL_SIGNALED);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNVSyncGL::finish(const gl::Context *context)
@@ -93,7 +93,7 @@ angle::Result FenceNVSyncGL::finish(const gl::Context *context)
                 result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED,
                 "glClientWaitSync did not return GL_ALREADY_SIGNALED or GL_CONDITION_SATISFIED.",
                 GL_OUT_OF_MEMORY);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // static

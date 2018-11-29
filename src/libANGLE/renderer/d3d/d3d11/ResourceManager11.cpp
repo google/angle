@@ -266,7 +266,7 @@ angle::Result ClearResource(d3d::Context *context,
                             ResourceT *texture)
 {
     // No-op.
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <>
@@ -316,7 +316,7 @@ angle::Result ClearResource(d3d::Context *context,
         deviceContext->ClearRenderTargetView(rtv.get(), kDebugColorInitClearValue);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <>
@@ -334,7 +334,7 @@ angle::Result ClearResource(d3d::Context *context,
     ANGLE_TRY(renderer->allocateResourceNoDesc(context, texture, &rtv));
 
     deviceContext->ClearRenderTargetView(rtv.get(), kDebugColorInitClearValue);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 #define ANGLE_RESOURCE_STRINGIFY_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) \
@@ -400,7 +400,7 @@ angle::Result ResourceManager11::allocate(d3d::Context *context,
     ASSERT(resource);
     incrResource(GetResourceTypeFromD3D11<T>(), ComputeMemoryUsage(desc));
     *resourceOut = std::move(Resource11<T>(resource, this));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ResourceManager11::incrResource(ResourceType resourceType, uint64_t memorySize)

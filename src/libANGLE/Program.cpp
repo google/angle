@@ -1103,7 +1103,7 @@ angle::Result Program::link(const Context *context)
     // Validate we have properly attached shaders before checking the cache.
     if (!linkValidateShaders(mInfoLog))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     egl::BlobCache::Key programHash = {0};
@@ -1112,7 +1112,7 @@ angle::Result Program::link(const Context *context)
     if (cache)
     {
         angle::Result result = cache->getProgram(context, this, &mState, &programHash);
-        mLinked              = (result == angle::Result::Continue());
+        mLinked              = (result == angle::Result::Continue);
         ANGLE_TRY(result);
     }
 
@@ -1121,7 +1121,7 @@ angle::Result Program::link(const Context *context)
         double delta = platform->currentTime(platform) - startTime;
         int us       = static_cast<int>(delta * 1000000.0);
         ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Cache load failed, fall through to normal linking.
@@ -1144,7 +1144,7 @@ angle::Result Program::link(const Context *context)
         if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
                           &combinedImageUniforms, &resources->unusedUniforms))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
@@ -1152,7 +1152,7 @@ angle::Result Program::link(const Context *context)
                                  context->getExtensions().webglCompatibility, mInfoLog,
                                  &combinedShaderStorageBlocks))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         // [OpenGL ES 3.1] Chapter 8.22 Page 203:
@@ -1168,7 +1168,7 @@ angle::Result Program::link(const Context *context)
                    "and active fragment shader outputs exceeds "
                    "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
                 << context->getCaps().maxCombinedShaderOutputResources << ")";
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         InitUniformBlockLinker(mState, &resources->uniformBlockLinker);
@@ -1198,19 +1198,19 @@ angle::Result Program::link(const Context *context)
 
         if (!linkAttributes(context->getCaps(), mInfoLog))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (!linkVaryings(mInfoLog))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         GLuint combinedImageUniforms = 0u;
         if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
                           &combinedImageUniforms, &resources->unusedUniforms))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
@@ -1218,19 +1218,19 @@ angle::Result Program::link(const Context *context)
                                  context->getExtensions().webglCompatibility, mInfoLog,
                                  &combinedShaderStorageBlocks))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (!linkValidateGlobalNames(mInfoLog))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (!linkOutputVariables(context->getCaps(), context->getExtensions(),
                                  context->getClientVersion(), combinedImageUniforms,
                                  combinedShaderStorageBlocks))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         const auto &mergedVaryings = getMergedVaryings();
@@ -1244,13 +1244,13 @@ angle::Result Program::link(const Context *context)
         if (!linkValidateTransformFeedback(context->getClientVersion(), mInfoLog, mergedVaryings,
                                            context->getCaps()))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (!resources->varyingPacking.collectAndPackUserVaryings(
                 mInfoLog, mergedVaryings, mState.getTransformFeedbackVaryingNames()))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         gatherTransformFeedbackVaryings(mergedVaryings);
@@ -1263,7 +1263,7 @@ angle::Result Program::link(const Context *context)
     mLinkingState->resources   = std::move(resources);
     mLinkResolved              = false;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Program::isLinking() const
@@ -1277,7 +1277,7 @@ void Program::resolveLinkImpl(const Context *context)
 
     angle::Result result = mLinkingState->linkEvent->wait(context);
 
-    mLinked           = result == angle::Result::Continue();
+    mLinked           = result == angle::Result::Continue;
     mLinkResolved     = true;
     auto linkingState = std::move(mLinkingState);
     if (!mLinked)
@@ -1429,19 +1429,19 @@ angle::Result Program::loadBinary(const Context *context,
     unlink();
 
 #if ANGLE_PROGRAM_BINARY_LOAD != ANGLE_ENABLED
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 #else
     ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
     if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
     {
         mInfoLog << "Invalid program binary format.";
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const uint8_t *bytes = reinterpret_cast<const uint8_t *>(binary);
     angle::Result result =
         MemoryProgramCache::Deserialize(context, this, &mState, bytes, length, mInfoLog);
-    mLinked = result == angle::Result::Continue();
+    mLinked = result == angle::Result::Continue;
     ANGLE_TRY(result);
 
     // Currently we require the full shader text to compute the program hash.
@@ -1453,7 +1453,7 @@ angle::Result Program::loadBinary(const Context *context,
         mDirtyBits.set(uniformBlockIndex);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
 
@@ -1503,7 +1503,7 @@ angle::Result Program::saveBinary(Context *context,
         *length = streamLength;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint Program::getBinaryLength(Context *context) const
@@ -1517,7 +1517,7 @@ GLint Program::getBinaryLength(Context *context) const
     GLint length;
     angle::Result result =
         saveBinary(context, nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
-    if (result != angle::Result::Continue())
+    if (result != angle::Result::Continue)
     {
         return 0;
     }
@@ -4104,6 +4104,6 @@ angle::Result Program::syncState(const Context *context)
         mDirtyBits.reset();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace gl

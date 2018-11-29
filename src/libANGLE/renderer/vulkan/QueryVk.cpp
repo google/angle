@@ -59,7 +59,7 @@ angle::Result QueryVk::begin(const gl::Context *context)
         mQueryHelper.beginQuery(contextVk, mQueryHelper.getQueryPool(), mQueryHelper.getQuery());
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::end(const gl::Context *context)
@@ -76,7 +76,7 @@ angle::Result QueryVk::end(const gl::Context *context)
         mQueryHelper.endQuery(contextVk, mQueryHelper.getQueryPool(), mQueryHelper.getQuery());
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::queryCounter(const gl::Context *context)
@@ -94,14 +94,14 @@ angle::Result QueryVk::queryCounter(const gl::Context *context)
 
     mQueryHelper.writeTimestamp(contextVk, mQueryHelper.getQueryPool(), mQueryHelper.getQuery());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
 {
     if (mCachedResultValid)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ContextVk *contextVk = vk::GetImpl(context);
@@ -127,7 +127,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     {
         if (!wait)
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
         ANGLE_TRY(renderer->finishToSerial(contextVk, mQueryHelper.getStoredQueueSerial()));
     }
@@ -142,7 +142,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     {
         // If VK_QUERY_RESULT_WAIT_BIT was given, VK_NOT_READY cannot have been returned.
         ASSERT(!wait);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     ANGLE_VK_TRY(contextVk, result);
 
@@ -177,34 +177,34 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     }
 
     mCachedResultValid = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 angle::Result QueryVk::getResult(const gl::Context *context, GLint *params)
 {
     ANGLE_TRY(getResult(context, true));
     *params = static_cast<GLint>(mCachedResult);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::getResult(const gl::Context *context, GLuint *params)
 {
     ANGLE_TRY(getResult(context, true));
     *params = static_cast<GLuint>(mCachedResult);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::getResult(const gl::Context *context, GLint64 *params)
 {
     ANGLE_TRY(getResult(context, true));
     *params = static_cast<GLint64>(mCachedResult);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::getResult(const gl::Context *context, GLuint64 *params)
 {
     ANGLE_TRY(getResult(context, true));
     *params = mCachedResult;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result QueryVk::isResultAvailable(const gl::Context *context, bool *available)
@@ -212,7 +212,7 @@ angle::Result QueryVk::isResultAvailable(const gl::Context *context, bool *avail
     ANGLE_TRY(getResult(context, false));
     *available = mCachedResultValid;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

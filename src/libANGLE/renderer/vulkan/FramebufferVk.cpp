@@ -140,7 +140,7 @@ angle::Result FramebufferVk::discard(const gl::Context *context,
                                      const GLenum *attachments)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::invalidate(const gl::Context *context,
@@ -148,7 +148,7 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
                                         const GLenum *attachments)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
@@ -157,7 +157,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
                                            const gl::Rectangle &area)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
@@ -230,7 +230,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
             ANGLE_TRY(clearWithClearAttachments(contextVk, false, clearDepth, clearStencil,
                                                 clearDepthStencilValue));
         }
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (glState.isScissorTestEnabled())
@@ -240,7 +240,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         // scissor region instead.
         ANGLE_TRY(clearWithClearAttachments(contextVk, clearColor, clearDepth, clearStencil,
                                             clearDepthStencilValue));
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Standard Depth/stencil clear without scissor.
@@ -268,7 +268,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     if (!clearColor)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const auto *attachment = mState.getFirstNonNullAttachment();
@@ -304,7 +304,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
                                colorRenderTarget->getLayerIndex(), 1, commandBuffer);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
@@ -313,7 +313,7 @@ angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
                                            const GLfloat *values)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::clearBufferuiv(const gl::Context *context,
@@ -322,7 +322,7 @@ angle::Result FramebufferVk::clearBufferuiv(const gl::Context *context,
                                             const GLuint *values)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::clearBufferiv(const gl::Context *context,
@@ -331,7 +331,7 @@ angle::Result FramebufferVk::clearBufferiv(const gl::Context *context,
                                            const GLint *values)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
@@ -341,7 +341,7 @@ angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
                                            GLint stencil)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 GLenum FramebufferVk::getImplementationColorReadFormat(const gl::Context *context) const
@@ -370,7 +370,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
     if (!ClipRectangle(area, fbRect, &clippedArea))
     {
         // nothing to read
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     gl::Rectangle flippedArea = clippedArea;
     if (contextVk->isViewportFlipEnabledForReadFBO())
@@ -407,7 +407,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
                              getColorReadRenderTarget(),
                              static_cast<uint8_t *>(pixels) + outputSkipBytes));
     mReadPixelBuffer.releaseRetainedBuffers(renderer);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
@@ -435,7 +435,7 @@ angle::Result FramebufferVk::blitWithCopy(ContextVk *contextVk,
     vk::ImageHelper::Copy(readImage, writeImage, gl::Offset(), gl::Offset(),
                           gl::Extents(copyArea.width, copyArea.height, 1), aspectMask,
                           commandBuffer);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
@@ -515,7 +515,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     mBlitPixelBuffer.releaseRetainedBuffers(renderer);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::blit(const gl::Context *context,
@@ -545,12 +545,12 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         const gl::Rectangle scissorRect = glState.getScissor();
         if (!ClipRectangle(sourceArea, scissorRect, &readRect))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (!ClipRectangle(destArea, scissorRect, &drawRect))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -563,7 +563,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         gl::Rectangle readRenderTargetRect;
         if (!ClipToRenderTarget(readRect, readRenderTarget, &readRenderTargetRect))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         for (size_t colorAttachment : mState.getEnabledDrawBuffers())
@@ -575,7 +575,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             gl::Rectangle drawRenderTargetRect;
             if (!ClipToRenderTarget(drawRect, drawRenderTarget, &drawRenderTargetRect))
             {
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
 
             ANGLE_TRY(blitWithCommand(contextVk, readRenderTargetRect, drawRenderTargetRect,
@@ -592,7 +592,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         gl::Rectangle readRenderTargetRect;
         if (!ClipToRenderTarget(readRect, readRenderTarget, &readRenderTargetRect))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getDepthStencil();
@@ -601,7 +601,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         gl::Rectangle drawRenderTargetRect;
         if (!ClipToRenderTarget(drawRect, drawRenderTarget, &drawRenderTargetRect))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         ASSERT(readRenderTargetRect == drawRenderTargetRect);
@@ -638,7 +638,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
@@ -711,7 +711,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
                              dstImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
                              gl_vk::GetFilter(filter));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool FramebufferVk::checkStatus(const gl::Context *context) const
@@ -795,7 +795,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     // No need to notify the ContextVk. A new command buffer will be started automatically.
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc()
@@ -833,7 +833,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     if (mFramebuffer.valid())
     {
         *framebufferOut = &mFramebuffer.getFramebuffer();
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const vk::RenderPassDesc &desc = getRenderPassDesc();
@@ -889,7 +889,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     ANGLE_TRY(mFramebuffer.init(contextVk, framebufferInfo));
 
     *framebufferOut = &mFramebuffer.getFramebuffer();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::clearWithClearAttachments(
@@ -920,7 +920,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(
                            mFramebuffer.getRenderPassRenderArea(), &intersection))
     {
         // There is nothing to clear since the scissor is outside of the render area.
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     clearRect.rect = gl_vk::GetRect(intersection);
@@ -968,7 +968,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(
         VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
         clearAttachment.aspectMask      = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
         clearAttachment.colorAttachment = VK_ATTACHMENT_UNUSED;
-        clearAttachment.clearValue         = depthStencilClearValue;
+        clearAttachment.clearValue      = depthStencilClearValue;
         ++clearAttachmentIndex;
     }
     else
@@ -994,7 +994,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(
 
     commandBuffer->clearAttachments(static_cast<uint32_t>(clearAttachmentIndex),
                                     clearAttachments.data(), 1, &clearRect);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
@@ -1073,7 +1073,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
 
     drawCommands->draw(6, 1, 0, 0);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
@@ -1081,7 +1081,7 @@ angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
                                                GLfloat *xy) const
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
@@ -1094,7 +1094,7 @@ angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
     if (appendToStartedRenderPass(renderer, commandBufferOut))
     {
         *modeOut = vk::RecordingMode::Append;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     return startNewRenderPass(contextVk, commandBufferOut);
@@ -1215,7 +1215,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes, readPixelBuffer,
                static_cast<uint8_t *>(pixels));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const gl::Extents &FramebufferVk::getReadImageExtents() const

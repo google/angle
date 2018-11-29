@@ -72,7 +72,7 @@ angle::Result GetShader(Context *context,
 
     if (shader.get().valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Create shader lazily. Access will need to be locked for multi-threading.

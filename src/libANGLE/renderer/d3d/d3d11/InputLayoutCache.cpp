@@ -187,7 +187,7 @@ angle::Result InputLayoutCache::getInputLayout(
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result InputLayoutCache::createInputLayout(
@@ -300,7 +300,7 @@ angle::Result InputLayoutCache::createInputLayout(
 
     ANGLE_TRY(renderer->allocateResource(context11, inputElementArray, &vertexShaderData,
                                          inputLayoutOut));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void InputLayoutCache::setCacheSize(size_t newCacheSize)

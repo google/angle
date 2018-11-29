@@ -96,7 +96,7 @@ EGLint SurfaceNULL::getSwapBehavior() const
 angle::Result SurfaceNULL::initializeContents(const gl::Context *context,
                                               const gl::ImageIndex &imageIndex)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

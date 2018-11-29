@@ -35,7 +35,7 @@ angle::Result FenceNV::set(const Context *context, GLenum condition)
     mStatus    = GL_FALSE;
     mIsSet     = true;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNV::test(const Context *context, GLboolean *outResult)
@@ -44,7 +44,7 @@ angle::Result FenceNV::test(const Context *context, GLboolean *outResult)
     ANGLE_TRY(mFence->test(context, &mStatus));
 
     *outResult = mStatus;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FenceNV::finish(const Context *context)
@@ -55,7 +55,7 @@ angle::Result FenceNV::finish(const Context *context)
 
     mStatus = GL_TRUE;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 Sync::Sync(rx::SyncImpl *impl, GLuint id)
@@ -89,7 +89,7 @@ angle::Result Sync::set(const Context *context, GLenum condition, GLbitfield fla
 
     mCondition = condition;
     mFlags     = flags;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Sync::clientWait(const Context *context,

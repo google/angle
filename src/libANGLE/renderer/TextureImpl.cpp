@@ -27,7 +27,7 @@ angle::Result TextureImpl::copyTexture(const gl::Context *context,
                                        const gl::Texture *source)
 {
     UNREACHABLE();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureImpl::copySubTexture(const gl::Context *context,
@@ -41,14 +41,14 @@ angle::Result TextureImpl::copySubTexture(const gl::Context *context,
                                           const gl::Texture *source)
 {
     UNREACHABLE();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureImpl::copyCompressedTexture(const gl::Context *context,
                                                  const gl::Texture *source)
 {
     UNREACHABLE();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureImpl::copy3DTexture(const gl::Context *context,
@@ -63,7 +63,7 @@ angle::Result TextureImpl::copy3DTexture(const gl::Context *context,
                                          const gl::Texture *source)
 {
     UNREACHABLE();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureImpl::copy3DSubTexture(const gl::Context *context,
@@ -78,6 +78,6 @@ angle::Result TextureImpl::copy3DSubTexture(const gl::Context *context,
                                             const gl::Texture *source)
 {
     UNREACHABLE();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 }  // namespace rx

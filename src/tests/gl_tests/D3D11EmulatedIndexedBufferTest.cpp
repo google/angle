@@ -38,7 +38,7 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
         GLfloat testData[]  = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
         angle::Result error = mSourceBuffer->setData(nullptr, gl::BufferBinding::Array, testData,
                                                      sizeof(testData), gl::BufferUsage::StaticDraw);
-        ASSERT_EQ(angle::Result::Continue(), error);
+        ASSERT_EQ(angle::Result::Continue, error);
 
         mTranslatedAttribute.baseOffset            = 0;
         mTranslatedAttribute.usesFirstVertexOffset = false;
@@ -117,7 +117,7 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
         ID3D11Buffer *emulatedBuffer = nullptr;
         angle::Result error          = mSourceBuffer->getEmulatedIndexedBuffer(
             mContext, srcData, mTranslatedAttribute, 0, &emulatedBuffer);
-        ASSERT_EQ(angle::Result::Continue(), error);
+        ASSERT_EQ(angle::Result::Continue, error);
         ASSERT_TRUE(emulatedBuffer != nullptr);
         compareContents(emulatedBuffer);
     }
@@ -171,9 +171,8 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     // Copy the original source buffer before any expand calls have been made
     gl::BufferState cleanSourceState;
     rx::Buffer11 *cleanSourceBuffer = new rx::Buffer11(cleanSourceState, mRenderer);
-    ASSERT_FALSE(
-        cleanSourceBuffer->copySubData(nullptr, mSourceBuffer, 0, 0, mSourceBuffer->getSize())
-            .isError());
+    ASSERT_EQ(angle::Result::Continue, cleanSourceBuffer->copySubData(nullptr, mSourceBuffer, 0, 0,
+                                                                      mSourceBuffer->getSize()));
 
     // Do a basic exanded and compare test.
     rx::SourceIndexData srcData = {nullptr, muintIndices.data(),
@@ -184,14 +183,10 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     const uint8_t *sourceBufferMem = nullptr;
     const uint8_t *cleanBufferMem  = nullptr;
 
-    angle::Result error = mSourceBuffer->getData(mContext, &sourceBufferMem);
-    ASSERT_EQ(angle::Result::Continue(), error);
+    ASSERT_EQ(angle::Result::Continue, mSourceBuffer->getData(mContext, &sourceBufferMem));
+    ASSERT_EQ(angle::Result::Continue, cleanSourceBuffer->getData(mContext, &cleanBufferMem));
 
-    error = cleanSourceBuffer->getData(mContext, &cleanBufferMem);
-    ASSERT_FALSE(error.isError());
-
-    int result = memcmp(sourceBufferMem, cleanBufferMem, cleanSourceBuffer->getSize());
-    ASSERT_EQ(result, 0);
+    ASSERT_EQ(0, memcmp(sourceBufferMem, cleanBufferMem, cleanSourceBuffer->getSize()));
 
     SafeDelete(cleanSourceBuffer);
 }

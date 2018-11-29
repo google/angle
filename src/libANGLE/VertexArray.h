@@ -264,7 +264,7 @@ class VertexArray final : public angle::ObserverInterface,
         Buffer *elementArrayBuffer = mState.mElementArrayBuffer.get();
         if (elementArrayBuffer && mIndexRangeCache.get(type, indexCount, indices, indexRangeOut))
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         return getIndexRangeImpl(context, type, indexCount, indices, indexRangeOut);

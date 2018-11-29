@@ -23,7 +23,7 @@ angle::Result RenderbufferNULL::setStorage(const gl::Context *context,
                                            size_t width,
                                            size_t height)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferNULL::setStorageMultisample(const gl::Context *context,
@@ -32,19 +32,19 @@ angle::Result RenderbufferNULL::setStorageMultisample(const gl::Context *context
                                                       size_t width,
                                                       size_t height)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferNULL::setStorageEGLImageTarget(const gl::Context *context,
                                                          egl::Image *image)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RenderbufferNULL::initializeContents(const gl::Context *context,
                                                    const gl::ImageIndex &imageIndex)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

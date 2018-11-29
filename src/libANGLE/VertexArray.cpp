@@ -377,7 +377,7 @@ angle::Result VertexArray::syncState(const Context *context)
         memset(&mDirtyAttribBits, 0, sizeof(mDirtyAttribBits));
         memset(&mDirtyBindingBits, 0, sizeof(mDirtyBindingBits));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void VertexArray::onBindingChanged(const Context *context, int incr)
@@ -539,7 +539,7 @@ angle::Result VertexArray::getIndexRangeImpl(const Context *context,
     {
         *indexRangeOut = ComputeIndexRange(type, indices, indexCount,
                                            context->getGLState().isPrimitiveRestartEnabled());
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     size_t offset = reinterpret_cast<uintptr_t>(indices);
@@ -548,7 +548,7 @@ angle::Result VertexArray::getIndexRangeImpl(const Context *context,
                                                 indexRangeOut));
 
     mIndexRangeCache.put(type, indexCount, offset, *indexRangeOut);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 VertexArray::IndexRangeCache::IndexRangeCache() = default;

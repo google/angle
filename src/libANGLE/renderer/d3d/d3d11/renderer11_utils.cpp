@@ -2152,7 +2152,7 @@ angle::Result GenerateInitialTextureData(
         outSubresourceData->at(i).SysMemSlicePitch = mipDepthPitch;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 UINT GetPrimitiveRestartIndex()
@@ -2267,7 +2267,7 @@ angle::Result LazyResource<ResourceT>::resolveImpl(d3d::Context *context,
         ANGLE_TRY(renderer->allocateResource(context, desc, initData, &mResource));
         mResource.setDebugName(name);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template angle::Result LazyResource<ResourceType::BlendState>::resolveImpl(

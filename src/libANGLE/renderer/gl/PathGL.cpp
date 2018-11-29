@@ -22,7 +22,7 @@ angle::Result PathGL::setCommands(GLsizei numCommands,
                                   const void *coords)
 {
     mFunctions->pathCommandsNV(mPathID, numCommands, commands, numCoords, coordType, coords);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void PathGL::setPathParameter(GLenum pname, GLfloat value)

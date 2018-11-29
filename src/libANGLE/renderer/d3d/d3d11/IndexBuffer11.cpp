@@ -61,7 +61,7 @@ angle::Result IndexBuffer11::initialize(const gl::Context *context,
     mIndexType    = indexType;
     mDynamicUsage = dynamic;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result IndexBuffer11::mapBuffer(const gl::Context *context,
@@ -83,7 +83,7 @@ angle::Result IndexBuffer11::mapBuffer(const gl::Context *context,
                                      &mappedResource));
 
     *outMappedMemory = static_cast<char *>(mappedResource.pData) + offset;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result IndexBuffer11::unmapBuffer(const gl::Context *context)
@@ -94,7 +94,7 @@ angle::Result IndexBuffer11::unmapBuffer(const gl::Context *context)
 
     ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
     dxContext->Unmap(mBuffer.get(), 0);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 gl::DrawElementsType IndexBuffer11::getIndexType() const
@@ -116,7 +116,7 @@ angle::Result IndexBuffer11::setSize(const gl::Context *context,
         return initialize(context, bufferSize, indexType, mDynamicUsage);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result IndexBuffer11::discard(const gl::Context *context)
@@ -133,7 +133,7 @@ angle::Result IndexBuffer11::discard(const gl::Context *context)
 
     dxContext->Unmap(mBuffer.get(), 0);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 DXGI_FORMAT IndexBuffer11::getIndexFormat() const

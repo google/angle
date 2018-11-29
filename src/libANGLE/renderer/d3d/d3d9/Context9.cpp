@@ -35,7 +35,7 @@ Context9::~Context9() {}
 
 angle::Result Context9::initialize()
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Context9::onDestroy(const gl::Context *context)
@@ -195,7 +195,7 @@ angle::Result Context9::drawArraysIndirect(const gl::Context *context,
                                            const void *indirect)
 {
     ANGLE_HR_UNREACHABLE(this);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Context9::drawElementsIndirect(const gl::Context *context,
@@ -204,7 +204,7 @@ angle::Result Context9::drawElementsIndirect(const gl::Context *context,
                                              const void *indirect)
 {
     ANGLE_HR_UNREACHABLE(this);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 GLenum Context9::getResetStatus()
@@ -261,7 +261,7 @@ angle::Result Context9::syncState(const gl::Context *context,
                                   const gl::State::DirtyBits &bitMask)
 {
     mRenderer->getStateManager()->syncState(mState.getState(), dirtyBits);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint Context9::getGPUDisjoint()
@@ -305,25 +305,25 @@ angle::Result Context9::dispatchCompute(const gl::Context *context,
                                         GLuint numGroupsZ)
 {
     ANGLE_HR_UNREACHABLE(this);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Context9::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
     ANGLE_HR_UNREACHABLE(this);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Context9::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
     ANGLE_HR_UNREACHABLE(this);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Context9::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
 {
     ANGLE_HR_UNREACHABLE(this);
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Context9::getIncompleteTexture(const gl::Context *context,

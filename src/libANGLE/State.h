@@ -752,7 +752,7 @@ ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,
     }
 
     mDirtyObjects &= ~dirtyObjects;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace gl

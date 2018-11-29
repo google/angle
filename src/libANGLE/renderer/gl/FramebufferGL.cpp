@@ -245,7 +245,7 @@ angle::Result FramebufferGL::invalidate(const gl::Context *context,
                                          finalAttachmentsPtr);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::invalidateSub(const gl::Context *context,
@@ -275,7 +275,7 @@ angle::Result FramebufferGL::invalidateSub(const gl::Context *context,
                                             area.height);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
@@ -298,7 +298,7 @@ angle::Result FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
                                             GL_NONE, 0, nullptr, 0.0f, 0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::clearBufferfv(const gl::Context *context,
@@ -325,7 +325,7 @@ angle::Result FramebufferGL::clearBufferfv(const gl::Context *context,
                                             reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::clearBufferuiv(const gl::Context *context,
@@ -352,7 +352,7 @@ angle::Result FramebufferGL::clearBufferuiv(const gl::Context *context,
                                             reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::clearBufferiv(const gl::Context *context,
@@ -379,7 +379,7 @@ angle::Result FramebufferGL::clearBufferiv(const gl::Context *context,
                                             reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::clearBufferfi(const gl::Context *context,
@@ -407,7 +407,7 @@ angle::Result FramebufferGL::clearBufferfi(const gl::Context *context,
                                             nullptr, depth, stencil);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLenum FramebufferGL::getImplementationColorReadFormat(const gl::Context *context) const
@@ -442,7 +442,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
     if (!ClipRectangle(area, fbRect, &clippedArea))
     {
         // nothing to read
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     PixelPackState packState = context->getGLState().getPackState();
@@ -581,7 +581,7 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
 
     if (blitMask == 0)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(sourceFramebuffer);
@@ -592,7 +592,7 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
                                destArea.x, destArea.y, destArea.x1(), destArea.y1(), blitMask,
                                filter);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::getSamplePosition(const gl::Context *context,
@@ -604,7 +604,7 @@ angle::Result FramebufferGL::getSamplePosition(const gl::Context *context,
 
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     functions->getMultisamplefv(GL_SAMPLE_POSITION, static_cast<GLuint>(index), xy);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool FramebufferGL::checkStatus(const gl::Context *context) const
@@ -627,7 +627,7 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
     // Don't need to sync state for the default FBO.
     if (mIsDefault)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const FunctionsGL *functions = GetFunctionsGL(context);
@@ -721,7 +721,7 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
                                                                getState());
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLuint FramebufferGL::getFramebufferID() const
@@ -898,7 +898,7 @@ angle::Result FramebufferGL::readPixelsRowByRow(const gl::Context *context,
         pixels += rowBytes;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
@@ -940,6 +940,6 @@ angle::Result FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
                               pixels);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

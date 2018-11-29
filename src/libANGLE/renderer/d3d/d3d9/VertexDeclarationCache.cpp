@@ -215,7 +215,7 @@ angle::Result VertexDeclarationCache::applyDeclaration(
                 mLastSetVDecl = entry->vertexDeclaration;
             }
 
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -245,7 +245,7 @@ angle::Result VertexDeclarationCache::applyDeclaration(
     mLastSetVDecl       = lastCache->vertexDeclaration;
     lastCache->lruCount = ++mMaxLru;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void VertexDeclarationCache::markStateDirty()

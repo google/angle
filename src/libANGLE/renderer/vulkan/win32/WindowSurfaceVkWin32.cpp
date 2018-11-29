@@ -37,7 +37,7 @@ angle::Result WindowSurfaceVkWin32::createSurfaceVk(vk::Context *context, gl::Ex
                    VK_ERROR_INITIALIZATION_FAILED);
 
     *extentsOut = gl::Extents(rect.right - rect.left, rect.bottom - rect.top, 0);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

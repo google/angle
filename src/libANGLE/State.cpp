@@ -1343,7 +1343,7 @@ angle::Result State::setProgram(const Context *context, Program *newProgram)
         mDirtyBits.set(DIRTY_BIT_PROGRAM_BINDING);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void State::setTransformFeedbackBinding(const Context *context,
@@ -1941,7 +1941,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         *params = drawBuffer < framebuffer->getDrawbufferStateCount()
                       ? framebuffer->getDrawBufferState(drawBuffer)
                       : GL_NONE;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
@@ -2340,7 +2340,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             break;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void State::getPointerv(const Context *context, GLenum pname, void **params) const
@@ -2513,7 +2513,7 @@ angle::Result State::syncDrawAttachments(const Context *context)
 angle::Result State::syncTextures(const Context *context)
 {
     if (mDirtyTextures.none())
-        return angle::Result::Continue();
+        return angle::Result::Continue;
 
     for (size_t textureIndex : mDirtyTextures)
     {
@@ -2525,13 +2525,13 @@ angle::Result State::syncTextures(const Context *context)
     }
 
     mDirtyTextures.reset();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result State::syncImages(const Context *context)
 {
     if (mDirtyImages.none())
-        return angle::Result::Continue();
+        return angle::Result::Continue;
 
     for (size_t imageUnitIndex : mDirtyImages)
     {
@@ -2542,13 +2542,13 @@ angle::Result State::syncImages(const Context *context)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result State::syncSamplers(const Context *context)
 {
     if (mDirtySamplers.none())
-        return angle::Result::Continue();
+        return angle::Result::Continue;
 
     for (size_t samplerIndex : mDirtySamplers)
     {
@@ -2561,7 +2561,7 @@ angle::Result State::syncSamplers(const Context *context)
 
     mDirtySamplers.reset();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result State::syncVertexArray(const Context *context)
@@ -2580,7 +2580,7 @@ angle::Result State::syncTexturesInit(const Context *context)
     ASSERT(mRobustResourceInit);
 
     if (!mProgram)
-        return angle::Result::Continue();
+        return angle::Result::Continue;
 
     for (size_t textureUnitIndex : mProgram->getActiveSamplersMask())
     {
@@ -2590,7 +2590,7 @@ angle::Result State::syncTexturesInit(const Context *context)
             ANGLE_TRY(texture->ensureInitialized(context));
         }
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result State::syncImagesInit(const Context *context)
@@ -2605,7 +2605,7 @@ angle::Result State::syncImagesInit(const Context *context)
             ANGLE_TRY(texture->ensureInitialized(context));
         }
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result State::syncDirtyObject(const Context *context, GLenum target)
@@ -2712,7 +2712,7 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void State::setTextureDirty(size_t textureUnitIndex)

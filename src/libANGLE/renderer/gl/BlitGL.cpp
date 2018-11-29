@@ -46,7 +46,7 @@ angle::Result CheckCompileStatus(ContextGL *contextGL,
     ANGLE_CHECK(contextGL, compileStatus == GL_TRUE, "Failed to compile internal blit shader.",
                 GL_OUT_OF_MEMORY);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result CheckLinkStatus(ContextGL *contextGL,
@@ -59,7 +59,7 @@ angle::Result CheckLinkStatus(ContextGL *contextGL,
     ANGLE_CHECK(contextGL, linkStatus == GL_TRUE, "Failed to link internal blit program.",
                 GL_OUT_OF_MEMORY);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 class ScopedGLState : angle::NonCopyable
@@ -151,7 +151,7 @@ angle::Result SetClearState(StateManagerGL *stateManager,
 
     stateManager->setScissorTestEnabled(false);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 using ClearBindTargetVector = angle::FixedVector<GLenum, 3>;
@@ -183,7 +183,7 @@ angle::Result PrepareForClear(StateManagerGL *stateManager,
 
     ANGLE_TRY(SetClearState(stateManager, bindColor, bindDepth, bindStencil, outClearMask));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void UnbindAttachments(const FunctionsGL *functions,
@@ -369,7 +369,7 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     orphanScratchTextures();
 
     ANGLE_TRY(scopedState.exit(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
@@ -404,7 +404,7 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
         {
             // Early out when the sampled part is empty as the blit will be a noop,
             // and it prevents a division by zero in later computations.
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -481,7 +481,7 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
     mFunctions->drawArrays(GL_TRIANGLES, 0, 3);
 
     ANGLE_TRY(scopedState.exit(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::copySubTexture(const gl::Context *context,
@@ -514,7 +514,7 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
         *copySucceededOut = false;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     BlitProgramType blitProgramType = getBlitProgramType(sourceComponentType, destComponentType);
@@ -586,7 +586,7 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
 
     *copySucceededOut = true;
     ANGLE_TRY(scopedState.exit(context));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
@@ -673,7 +673,7 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
                               destOffset.y, sourceArea.width, sourceArea.height,
                               texSubImageFormat.format, texSubImageFormat.type, destMemory);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::copyTexSubImage(TextureGL *source,
@@ -695,7 +695,7 @@ angle::Result BlitGL::copyTexSubImage(TextureGL *source,
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
         *copySucceededOut = false;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     mStateManager->bindTexture(dest->getType(), dest->getTextureID());
@@ -705,7 +705,7 @@ angle::Result BlitGL::copyTexSubImage(TextureGL *source,
                                   sourceArea.height);
 
     *copySucceededOut = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::clearRenderableTexture(TextureGL *source,
@@ -741,7 +741,7 @@ angle::Result BlitGL::clearRenderableTexture(TextureGL *source,
         {
             UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
             *clearSucceededOut = false;
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
     else
@@ -766,7 +766,7 @@ angle::Result BlitGL::clearRenderableTexture(TextureGL *source,
             {
                 UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
                 *clearSucceededOut = false;
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
         }
         else
@@ -797,7 +797,7 @@ angle::Result BlitGL::clearRenderableTexture(TextureGL *source,
                 {
                     UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
                     *clearSucceededOut = false;
-                    return angle::Result::Continue();
+                    return angle::Result::Continue;
                 }
             }
         }
@@ -805,7 +805,7 @@ angle::Result BlitGL::clearRenderableTexture(TextureGL *source,
 
     UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
     *clearSucceededOut = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::clearRenderbuffer(RenderbufferGL *source, GLenum sizedInternalFormat)
@@ -830,7 +830,7 @@ angle::Result BlitGL::clearRenderbuffer(RenderbufferGL *source, GLenum sizedInte
         mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, bindTarget, GL_RENDERBUFFER, 0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::clearFramebuffer(FramebufferGL *source)
@@ -844,7 +844,7 @@ angle::Result BlitGL::clearFramebuffer(FramebufferGL *source)
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, source->getFramebufferID());
     mFunctions->clear(clearMask);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BlitGL::initializeResources()
@@ -895,7 +895,7 @@ angle::Result BlitGL::initializeResources()
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void BlitGL::orphanScratchTextures()
@@ -1140,7 +1140,7 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
     }
 
     *program = &result;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

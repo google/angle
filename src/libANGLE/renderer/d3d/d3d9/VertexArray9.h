@@ -45,7 +45,7 @@ inline angle::Result VertexArray9::syncState(
     ASSERT(dirtyBits.any());
     Renderer9 *renderer = GetImplAs<Context9>(context)->getRenderer();
     mCurrentStateSerial = renderer->generateSerial();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx
 

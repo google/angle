@@ -78,7 +78,7 @@ angle::Result BufferGL::setData(const gl::Context *context,
 
     mBufferSize = size;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferGL::setSubData(const gl::Context *context,
@@ -95,7 +95,7 @@ angle::Result BufferGL::setSubData(const gl::Context *context,
         memcpy(mShadowCopy.data() + offset, data, size);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferGL::copySubData(const gl::Context *context,
@@ -119,7 +119,7 @@ angle::Result BufferGL::copySubData(const gl::Context *context,
         memcpy(mShadowCopy.data() + destOffset, sourceGL->mShadowCopy.data() + sourceOffset, size);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferGL::map(const gl::Context *context, GLenum access, void **mapPtr)
@@ -145,7 +145,7 @@ angle::Result BufferGL::map(const gl::Context *context, GLenum access, void **ma
     mMapOffset = 0;
     mMapSize   = mBufferSize;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferGL::mapRange(const gl::Context *context,
@@ -169,7 +169,7 @@ angle::Result BufferGL::mapRange(const gl::Context *context,
     mMapOffset = offset;
     mMapSize   = length;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferGL::unmap(const gl::Context *context, GLboolean *result)
@@ -191,7 +191,7 @@ angle::Result BufferGL::unmap(const gl::Context *context, GLboolean *result)
     }
 
     mIsMapped = false;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferGL::getIndexRange(const gl::Context *context,
@@ -220,7 +220,7 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
         mFunctions->unmapBuffer(gl::ToGLenum(DestBufferOperationTarget));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLuint BufferGL::getBufferID() const

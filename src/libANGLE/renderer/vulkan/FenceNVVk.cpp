@@ -24,19 +24,19 @@ FenceNVVk::~FenceNVVk() {}
 angle::Result FenceNVVk::set(const gl::Context *context, GLenum condition)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FenceNVVk::test(const gl::Context *context, GLboolean *outFinished)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result FenceNVVk::finish(const gl::Context *context)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 }  // namespace rx

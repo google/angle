@@ -202,7 +202,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat(const gl::Context *conte
 
     RenderTargetD3D *attachmentRenderTarget = nullptr;
     angle::Result error = readAttachment->getRenderTarget(context, &attachmentRenderTarget);
-    if (error != angle::Result::Continue())
+    if (error != angle::Result::Continue)
     {
         return GL_NONE;
     }
@@ -225,7 +225,7 @@ GLenum FramebufferD3D::getImplementationColorReadType(const gl::Context *context
 
     RenderTargetD3D *attachmentRenderTarget = nullptr;
     angle::Result error = readAttachment->getRenderTarget(context, &attachmentRenderTarget);
-    if (error != angle::Result::Continue())
+    if (error != angle::Result::Continue)
     {
         return GL_NONE;
     }
@@ -250,7 +250,7 @@ angle::Result FramebufferD3D::readPixels(const gl::Context *context,
     if (!ClipRectangle(area, fbRect, &clippedArea))
     {
         // nothing to read
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const gl::PixelPackState &packState = context->getGLState().getPackState();
@@ -287,7 +287,7 @@ angle::Result FramebufferD3D::blit(const gl::Context *context,
                        (mask & GL_DEPTH_BUFFER_BIT) != 0, (mask & GL_STENCIL_BUFFER_BIT) != 0,
                        filter, sourceFramebuffer));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool FramebufferD3D::checkStatus(const gl::Context *context) const
@@ -325,7 +325,7 @@ angle::Result FramebufferD3D::syncState(const gl::Context *context,
 {
     if (!mColorAttachmentsForRender.valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     for (auto dirtyBit : dirtyBits)
@@ -338,7 +338,7 @@ angle::Result FramebufferD3D::syncState(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl::Context *context)

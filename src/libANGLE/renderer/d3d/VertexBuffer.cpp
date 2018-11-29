@@ -107,7 +107,7 @@ angle::Result VertexBufferInterface::getSpaceRequired(const gl::Context *context
     ANGLE_CHECK_GL_ALLOC(GetImplAs<ContextD3D>(context), alignedSpaceRequired >= spaceRequired);
 
     *spaceInBytesOut = alignedSpaceRequired;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result VertexBufferInterface::discard(const gl::Context *context)
@@ -159,7 +159,7 @@ angle::Result StreamingVertexBufferInterface::reserveSpace(const gl::Context *co
         mWritePosition = 0;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StreamingVertexBufferInterface::storeDynamicAttribute(
@@ -195,7 +195,7 @@ angle::Result StreamingVertexBufferInterface::storeDynamicAttribute(
 
     mWritePosition += spaceRequired;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StreamingVertexBufferInterface::reserveVertexSpace(const gl::Context *context,
@@ -217,7 +217,7 @@ angle::Result StreamingVertexBufferInterface::reserveVertexSpace(const gl::Conte
 
     mReservedSpace = alignedRequiredSpace.ValueOrDie();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // StaticVertexBufferInterface Implementation
@@ -290,7 +290,7 @@ angle::Result StaticVertexBufferInterface::storeStaticAttribute(const gl::Contex
 
     mSignature.set(attrib, binding);
     mVertexBuffer->hintUnmapResource();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

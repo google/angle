@@ -96,7 +96,7 @@ angle::Result RenderTargetCache<RenderTargetT>::update(const gl::Context *contex
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <typename RenderTargetT>
@@ -143,7 +143,7 @@ angle::Result RenderTargetCache<RenderTargetT>::updateCachedRenderTarget(
         ANGLE_TRY(attachment->getRenderTarget(context, &newRenderTarget));
     }
     *cachedRenderTarget = newRenderTarget;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <typename RenderTargetT>

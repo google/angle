@@ -77,7 +77,7 @@ angle::Result IndexBufferInterface::mapBuffer(const gl::Context *context,
                 GL_OUT_OF_MEMORY);
 
     angle::Result error = mIndexBuffer->mapBuffer(context, mWritePosition, size, outMappedMemory);
-    if (error == angle::Result::Stop())
+    if (error == angle::Result::Stop)
     {
         if (outMappedMemory)
         {
@@ -92,7 +92,7 @@ angle::Result IndexBufferInterface::mapBuffer(const gl::Context *context,
     }
 
     mWritePosition += size;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result IndexBufferInterface::unmapBuffer(const gl::Context *context)
@@ -157,7 +157,7 @@ angle::Result StreamingIndexBufferInterface::reserveBufferSpace(const gl::Contex
         setWritePosition(0);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 StaticIndexBufferInterface::StaticIndexBufferInterface(BufferFactoryD3D *factory)
@@ -177,7 +177,7 @@ angle::Result StaticIndexBufferInterface::reserveBufferSpace(const gl::Context *
     }
 
     ASSERT(curSize >= size && indexType == getIndexType());
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

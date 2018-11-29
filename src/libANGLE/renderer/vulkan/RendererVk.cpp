@@ -34,10 +34,10 @@
 // Consts
 namespace
 {
-const uint32_t kMockVendorID            = 0xba5eba11;
-const uint32_t kMockDeviceID            = 0xf005ba11;
-constexpr char kMockDeviceName[]        = "Vulkan Mock Device";
-constexpr size_t kInFlightCommandsLimit = 100u;
+const uint32_t kMockVendorID                              = 0xba5eba11;
+const uint32_t kMockDeviceID                              = 0xf005ba11;
+constexpr char kMockDeviceName[]                          = "Vulkan Mock Device";
+constexpr size_t kInFlightCommandsLimit                   = 100u;
 constexpr VkFormatFeatureFlags kInvalidFormatFeatureFlags = static_cast<VkFormatFeatureFlags>(-1);
 }  // anonymous namespace
 
@@ -550,7 +550,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -664,7 +664,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         ANGLE_TRY(synchronizeCpuGpuTime(displayVk));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
@@ -686,7 +686,7 @@ angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
         if (supportsPresent == VK_TRUE)
         {
             *presentQueueOut = mCurrentQueueFamilyIndex;
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -715,7 +715,7 @@ angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
     ANGLE_TRY(initializeDevice(displayVk, newPresentQueue.value()));
 
     *presentQueueOut = newPresentQueue.value();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 std::string RendererVk::getVendorString() const
@@ -828,7 +828,7 @@ angle::Result RendererVk::initPipelineCache(DisplayVk *display)
     pipelineCacheCreateInfo.pInitialData    = success ? initialData.data() : nullptr;
 
     ANGLE_VK_TRY(display, mPipelineCache.init(mDevice, pipelineCacheCreateInfo));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void RendererVk::ensureCapsInitialized() const
@@ -950,7 +950,7 @@ angle::Result RendererVk::finish(vk::Context *context)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void RendererVk::freeAllInFlightResources()
@@ -1014,7 +1014,7 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
         mGarbage.erase(mGarbage.begin(), mGarbage.begin() + freeIndex);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::submitFrame(vk::Context *context,
@@ -1066,7 +1066,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     poolInfo.queueFamilyIndex        = mCurrentQueueFamilyIndex;
 
     ANGLE_VK_TRY(context, mCommandPool.init(mDevice, poolInfo));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool RendererVk::isSerialInUse(Serial serial) const
@@ -1078,7 +1078,7 @@ angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 {
     if (!isSerialInUse(serial) || mInFlightCommands.empty())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Find the first batch with serial equal to or bigger than given serial (note that
@@ -1133,7 +1133,7 @@ angle::Result RendererVk::flush(vk::Context *context)
 {
     if (mCommandGraph.empty())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TRACE_EVENT0("gpu.angle", "RendererVk::flush");
@@ -1161,7 +1161,7 @@ angle::Result RendererVk::flush(vk::Context *context)
 
     ANGLE_TRY(submitFrame(context, submitInfo, commandBatch.release()));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 Serial RendererVk::issueShaderSerial()
@@ -1193,7 +1193,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 
     if (--mPipelineCacheVkUpdateTimeout > 0)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
@@ -1229,7 +1229,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
 
     displayVk->getBlobCache()->putApplication(mPipelineCacheVkBlobKey, *pipelineCacheData);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::allocateSubmitWaitSemaphore(vk::Context *context,
@@ -1243,7 +1243,7 @@ angle::Result RendererVk::allocateSubmitWaitSemaphore(vk::Context *context,
     mSubmitWaitSemaphores.push_back(std::move(semaphore));
     *outSemaphore = mSubmitWaitSemaphores.back().getSemaphore();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const vk::Semaphore *RendererVk::getSubmitLastSignaledSemaphore(vk::Context *context)
@@ -1274,7 +1274,7 @@ angle::Result RendererVk::getFullScreenClearShaderProgram(vk::Context *context,
     }
 
     *programOut = &mFullScreenClearShaderProgram;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestampOut)
@@ -1367,7 +1367,7 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
 
     timestampQueryPool.get().freeQuery(context, &timestampQuery);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // These functions look at the mandatory format for support, and fallback to querying the device (if
@@ -1611,7 +1611,7 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
     mGpuClockSync.gpuTimestampS = TgpuS;
     mGpuClockSync.cpuTimestampS = TcpuS;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::traceGpuEventImpl(vk::Context *context,
@@ -1637,7 +1637,7 @@ angle::Result RendererVk::traceGpuEventImpl(vk::Context *context,
 
     mInFlightGpuEventQueries.push_back(std::move(event));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::checkCompletedGpuEvents(vk::Context *context)
@@ -1684,7 +1684,7 @@ angle::Result RendererVk::checkCompletedGpuEvents(vk::Context *context)
     mInFlightGpuEventQueries.erase(mInFlightGpuEventQueries.begin(),
                                    mInFlightGpuEventQueries.begin() + finishedCount);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void RendererVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS)

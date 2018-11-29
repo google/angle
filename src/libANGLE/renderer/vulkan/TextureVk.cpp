@@ -152,7 +152,7 @@ angle::Result PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
@@ -173,7 +173,7 @@ angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
                        &clippedRectangle))
     {
         // Empty source area, nothing to do.
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     bool isViewportFlipEnabled = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -249,7 +249,7 @@ angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
 
     // 3- enqueue the destination image subresource update
     mSubresourceUpdates.emplace_back(bufferHandle, copyToImage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result PixelBuffer::allocate(ContextVk *contextVk,
@@ -270,7 +270,7 @@ angle::Result PixelBuffer::flushUpdatesToImage(ContextVk *contextVk,
 {
     if (mSubresourceUpdates.empty())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mStagingBuffer.flush(contextVk));
@@ -316,7 +316,7 @@ angle::Result PixelBuffer::flushUpdatesToImage(ContextVk *contextVk,
                   "extra images defined in the Texture.";
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool PixelBuffer::empty() const
@@ -350,7 +350,7 @@ angle::Result PixelBuffer::stageSubresourceUpdateAndGetData(ContextVk *contextVk
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
@@ -398,7 +398,7 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         previousLevelRowPitch = destRowPitch;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE) {}
@@ -448,7 +448,7 @@ angle::Result TextureVk::setImage(const gl::Context *context,
     // Early-out on empty textures, don't create a zero-sized storage.
     if (size.empty())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Create a new graph node to store image initialization commands.
@@ -461,7 +461,7 @@ angle::Result TextureVk::setImage(const gl::Context *context,
                                                       formatInfo, unpack, type, pixels));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setSubImage(const gl::Context *context,
@@ -482,7 +482,7 @@ angle::Result TextureVk::setSubImage(const gl::Context *context,
     // Create a new graph node to store image initialization commands.
     mImage.finishCurrentCommands(contextVk->getRenderer());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setCompressedImage(const gl::Context *context,
@@ -494,7 +494,7 @@ angle::Result TextureVk::setCompressedImage(const gl::Context *context,
                                             const uint8_t *pixels)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::setCompressedSubImage(const gl::Context *context,
@@ -506,7 +506,7 @@ angle::Result TextureVk::setCompressedSubImage(const gl::Context *context,
                                                const uint8_t *pixels)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::copyImage(const gl::Context *context,
@@ -587,7 +587,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const gl::Offset modifiedDestOffset(destOffset.x + sourceArea.x - sourceArea.x,
@@ -608,7 +608,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
     mImage.finishCurrentCommands(renderer);
     framebufferVk->getFramebuffer()->addReadDependency(&mImage);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
@@ -627,7 +627,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     if (sourceLevel != 0)
     {
         WARN() << "glCopyTextureCHROMIUM with sourceLevel != 0 not implemented.";
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
 
     // Read back the requested region of the source texture
@@ -678,7 +678,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     // Create a new graph node to store image initialization commands.
     mImage.finishCurrentCommands(contextVk->getRenderer());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setStorage(const gl::Context *context,
@@ -699,7 +699,7 @@ angle::Result TextureVk::setStorage(const gl::Context *context,
     }
 
     ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels), commandBuffer));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
@@ -707,7 +707,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
                                            egl::Image *image)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::setImageExternal(const gl::Context *context,
@@ -716,7 +716,7 @@ angle::Result TextureVk::setImageExternal(const gl::Context *context,
                                           const egl::Stream::GLTextureDescription &desc)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::redefineImage(const gl::Context *context,
@@ -744,7 +744,7 @@ angle::Result TextureVk::redefineImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
@@ -796,7 +796,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     // Explicitly finish. If new use cases arise where we don't want to block we can change this.
     ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
@@ -849,7 +849,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         else
         {
             // There is nothing to generate if there is nothing uploaded so far.
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -871,25 +871,25 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     // We're changing this textureVk content, make sure we let the graph know.
     mImage.finishCurrentCommands(renderer);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::releaseTexImage(const gl::Context *context)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
@@ -916,14 +916,14 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
             UNREACHABLE();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk)
 {
     if (mImage.valid() && mPixelBuffer.empty())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     RendererVk *renderer             = contextVk->getRenderer();
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -948,7 +948,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
 {
     // Lazy init. Check if already initialized.
     if (!mCubeMapFaceImageViews.empty())
-        return angle::Result::Continue();
+        return angle::Result::Continue;
 
     mCubeMapFaceImageViews.resize(gl::kCubeFaceCount);
 
@@ -960,7 +960,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
                                             &imageView, 1, cubeMapFaceIndex, 1));
         mCubeMapRenderTargets.emplace_back(&mImage, &imageView, cubeMapFaceIndex);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::syncState(const gl::Context *context,
@@ -968,7 +968,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 {
     if (dirtyBits.none() && mSampler.valid())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ContextVk *contextVk = vk::GetImpl(context);
@@ -1005,7 +1005,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
     ANGLE_VK_TRY(contextVk, mSampler.init(contextVk->getDevice(), samplerInfo));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
@@ -1016,14 +1016,14 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
                                                bool fixedSampleLocations)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureVk::initializeContents(const gl::Context *context,
                                             const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 const vk::ImageView &TextureVk::getImageView() const
@@ -1079,7 +1079,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
     VkClearColorValue black = {{0, 0, 0, 1.0f}};
     mImage.clearColor(black, 0, levelCount, commandBuffer);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)

@@ -30,11 +30,11 @@ ANGLE_NOINLINE angle::Result ExternalCall()
     if (gThing != 0)
     {
         printf("Something very slow");
-        return angle::Result::Stop();
+        return angle::Result::Stop;
     }
     else
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 }
 

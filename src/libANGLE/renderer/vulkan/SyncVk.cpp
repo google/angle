@@ -24,7 +24,7 @@ SyncVk::~SyncVk() {}
 angle::Result SyncVk::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result SyncVk::clientWait(const gl::Context *context,
@@ -33,19 +33,19 @@ angle::Result SyncVk::clientWait(const gl::Context *context,
                                  GLenum *outResult)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result SyncVk::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result SyncVk::getStatus(const gl::Context *context, GLint *outResult)
 {
     ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 }  // namespace rx

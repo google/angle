@@ -107,7 +107,7 @@ angle::Result HLSLCompiler::ensureInitialized(d3d::Context *context)
 {
     if (mInitialized)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     TRACE_EVENT0("gpu.angle", "HLSLCompiler::initialize");
@@ -159,7 +159,7 @@ angle::Result HLSLCompiler::ensureInitialized(d3d::Context *context)
                    E_OUTOFMEMORY);
 
     mInitialized = true;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void HLSLCompiler::release()
@@ -284,7 +284,7 @@ angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
             ANGLE_TRY(disassembleBinary(context, binary, &disassembly));
             (*outDebugInfo) += "\n" + disassembly + "\n// ASSEMBLY END\n";
 #endif  // ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO == ANGLE_ENABLED
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         if (result == E_OUTOFMEMORY)
@@ -305,7 +305,7 @@ angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
     // None of the configurations succeeded in compiling this shader but the compiler is still
     // intact
     *outCompiledBlob = nullptr;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result HLSLCompiler::disassembleBinary(d3d::Context *context,
@@ -333,7 +333,7 @@ angle::Result HLSLCompiler::disassembleBinary(d3d::Context *context,
 
     SafeRelease(disassembly);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

@@ -153,7 +153,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
 
         if (size.width == 0 || size.height == 0 || size.depth == 0)
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
 
         gl::Box area(0, 0, 0, size.width, size.height, size.depth);
@@ -176,7 +176,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
 
             if (size.width == 0 || size.height == 0 || size.depth == 0)
             {
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
 
             gl::Box area(0, 0, 0, size.width, size.height, size.depth);
@@ -187,7 +187,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
 
     setImageHelper(context, target, level, internalFormat, size, format, type, pixels);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void TextureGL::setImageHelper(const gl::Context *context,
@@ -307,7 +307,7 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
                                  texSubImageFormat.format, texSubImageFormat.type, pixels);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *context,
@@ -369,7 +369,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
                                      row + area.y, area.width, 1, format, type, rowPixels);
         }
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context,
@@ -457,7 +457,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
                                  lastRowPixels);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setCompressedImage(const gl::Context *context,
@@ -499,7 +499,7 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
     ASSERT(!levelInfo.lumaWorkaround.enabled);
     setLevelInfo(context, target, level, 1, levelInfo);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
@@ -541,7 +541,7 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
     ASSERT(!getLevelInfo(target, level).lumaWorkaround.enabled &&
            !GetLevelInfo(format, compressedTexSubImageFormat.format).lumaWorkaround.enabled);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::copyImage(const gl::Context *context,
@@ -647,7 +647,7 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
         setLevelInfo(context, target, level, 1, levelInfo);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::copySubImage(const gl::Context *context,
@@ -669,7 +669,7 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
         // nothing to do
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     gl::Offset clippedOffset(destOffset.x + clippedArea.x - sourceArea.x,
                              destOffset.y + clippedArea.y - sourceArea.y, destOffset.z);
@@ -704,7 +704,7 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::copyTexture(const gl::Context *context,
@@ -793,7 +793,7 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
                                            destOffset, &copySucceeded));
         if (copySucceeded)
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -810,7 +810,7 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
             unpackUnmultiplyAlpha, &copySucceeded));
         if (copySucceeded)
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -982,7 +982,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
     setLevelInfo(context, type, 0, levels,
                  GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
@@ -1031,7 +1031,7 @@ angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
     setLevelInfo(context, type, 0, 1,
                  GetLevelInfo(internalformat, texStorageFormat.internalFormat));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setImageExternal(const gl::Context *context,
@@ -1040,7 +1040,7 @@ angle::Result TextureGL::setImageExternal(const gl::Context *context,
                                           const egl::Stream::GLTextureDescription &desc)
 {
     ANGLE_GL_UNREACHABLE(GetImplAs<ContextGL>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result TextureGL::generateMipmap(const gl::Context *context)
@@ -1057,7 +1057,7 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
     setLevelInfo(context, getType(), effectiveBaseLevel, maxLevel - effectiveBaseLevel,
                  getBaseLevelInfo());
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::bindTexImage(const gl::Context *context, egl::Surface *surface)
@@ -1070,7 +1070,7 @@ angle::Result TextureGL::bindTexImage(const gl::Context *context, egl::Surface *
     stateManager->bindTexture(getType(), mTextureID);
 
     setLevelInfo(context, getType(), 0, 1, LevelInfoGL());
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::releaseTexImage(const gl::Context *context)
@@ -1085,7 +1085,7 @@ angle::Result TextureGL::releaseTexImage(const gl::Context *context)
     ASSERT(nativegl::UseTexImage2D(getType()));
     functions->texImage2D(ToGLenum(getType()), 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                           nullptr);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setEGLImageTarget(const gl::Context *context,
@@ -1100,7 +1100,7 @@ angle::Result TextureGL::setEGLImageTarget(const gl::Context *context,
     setLevelInfo(context, type, 0, 1,
                  GetLevelInfo(image->getFormat().info->internalFormat, imageNativeInternalFormat));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::syncState(const gl::Context *context,
@@ -1108,7 +1108,7 @@ angle::Result TextureGL::syncState(const gl::Context *context,
 {
     if (dirtyBits.none() && mLocalDirtyBits.none())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const FunctionsGL *functions = GetFunctionsGL(context);
@@ -1261,7 +1261,7 @@ angle::Result TextureGL::syncState(const gl::Context *context,
     }
 
     mLocalDirtyBits.reset();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool TextureGL::hasAnyDirtyBit() const
@@ -1285,7 +1285,7 @@ angle::Result TextureGL::setBaseLevel(const gl::Context *context, GLuint baseLev
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_BASE_LEVEL, baseLevel);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void TextureGL::setMinFilter(const gl::Context *context, GLenum filter)
@@ -1545,7 +1545,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
                                                   imageIndex, &clearSucceeded));
         if (clearSucceeded)
         {
-            return angle::Result::Continue();
+            return angle::Result::Continue;
         }
     }
 
@@ -1618,7 +1618,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

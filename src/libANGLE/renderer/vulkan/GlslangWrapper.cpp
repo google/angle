@@ -391,6 +391,6 @@ angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
     glslang::GlslangToSpv(*vertexStage, *vertexCodeOut);
     glslang::GlslangToSpv(*fragmentStage, *fragmentCodeOut);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

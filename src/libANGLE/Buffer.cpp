@@ -96,7 +96,7 @@ angle::Result Buffer::bufferData(Context *context,
     // Notify when storage changes.
     onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer::bufferSubData(const Context *context,
@@ -113,7 +113,7 @@ angle::Result Buffer::bufferSubData(const Context *context,
     // Notify when data changes.
     onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer::copyBufferSubData(const Context *context,
@@ -131,7 +131,7 @@ angle::Result Buffer::copyBufferSubData(const Context *context,
     // Notify when data changes.
     onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer::map(const Context *context, GLenum access)
@@ -153,7 +153,7 @@ angle::Result Buffer::map(const Context *context, GLenum access)
     // Notify when state changes.
     onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer::mapRange(const Context *context,
@@ -187,7 +187,7 @@ angle::Result Buffer::mapRange(const Context *context,
     // Notify when state changes.
     onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer::unmap(const Context *context, GLboolean *result)
@@ -207,7 +207,7 @@ angle::Result Buffer::unmap(const Context *context, GLboolean *result)
     // Notify when data changes.
     onStateChange(context, angle::SubjectMessage::RESOURCE_UNMAPPED);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Buffer::onTransformFeedback(const Context *context)
@@ -235,7 +235,7 @@ angle::Result Buffer::getIndexRange(const gl::Context *context,
 {
     if (mIndexRangeCache.findRange(type, offset, count, primitiveRestartEnabled, outRange))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(
@@ -243,7 +243,7 @@ angle::Result Buffer::getIndexRange(const gl::Context *context,
 
     mIndexRangeCache.addRange(type, offset, count, primitiveRestartEnabled, *outRange);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLint64 Buffer::getMemorySize() const

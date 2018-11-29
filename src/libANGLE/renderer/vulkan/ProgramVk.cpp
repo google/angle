@@ -130,7 +130,7 @@ angle::Result SyncDefaultUniformBlock(ContextVk *contextVk,
     *outOffset = static_cast<uint32_t>(offset);
     memcpy(data, bufferData.data(), bufferData.size());
     ANGLE_TRY(dynamicBuffer->flush(contextVk));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
@@ -167,7 +167,7 @@ angle::Result ProgramVk::ShaderInfo::initShaders(ContextVk *contextVk,
         mProgramHelper.setShader(gl::ShaderType::Fragment, &mShaders[gl::ShaderType::Fragment]);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ProgramVk::ShaderInfo::release(RendererVk *renderer)
@@ -239,7 +239,7 @@ angle::Result ProgramVk::load(const gl::Context *context,
                               gl::BinaryInputStream *stream)
 {
     UNIMPLEMENTED();
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -343,7 +343,7 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext,
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
@@ -445,7 +445,7 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
@@ -745,7 +745,7 @@ angle::Result ProgramVk::initShaders(ContextVk *contextVk,
         *programOut = &mDefaultShaderInfo.getShaderProgram();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex)
@@ -765,7 +765,7 @@ angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t de
     ANGLE_TRY(dynamicDescriptorPool->allocateSets(contextVk, descriptorSetLayout.ptr(), 1,
                                                   &mDescriptorPoolBindings[descriptorSetIndex],
                                                   &mDescriptorSets[descriptorSetIndex]));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ProgramVk::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
@@ -816,7 +816,7 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
         ANGLE_TRY(updateDefaultUniformsDescriptorSet(contextVk));
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
@@ -858,7 +858,7 @@ angle::Result ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk
 
     vkUpdateDescriptorSets(device, 2, writeDescriptorInfo.data(), 0, nullptr);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
@@ -917,7 +917,7 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
     ASSERT(writeCount > 0);
     vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
@@ -934,7 +934,7 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
     // Can probably use better dirty bits here.
 
     if (mUsedDescriptorSetRange.empty())
-        return angle::Result::Continue();
+        return angle::Result::Continue;
 
     ASSERT(!mDescriptorSets.empty());
 
@@ -957,6 +957,6 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
                                           &mDescriptorSets[low], 0, nullptr);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

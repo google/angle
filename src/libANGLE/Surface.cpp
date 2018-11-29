@@ -402,7 +402,7 @@ Error Surface::bindTexImage(gl::Context *context, gl::Texture *texture, EGLint b
     ASSERT(!mTexture);
     ANGLE_TRY(mImplementation->bindTexImage(context, texture, buffer));
 
-    if (texture->bindTexImageFromSurface(context, this) == angle::Result::Stop())
+    if (texture->bindTexImageFromSurface(context, this) == angle::Result::Stop)
     {
         return Error(EGL_BAD_SURFACE);
     }
@@ -419,11 +419,7 @@ Error Surface::releaseTexImage(const gl::Context *context, EGLint buffer)
     ANGLE_TRY(mImplementation->releaseTexImage(context, buffer));
 
     ASSERT(mTexture);
-    auto glErr = mTexture->releaseTexImageFromSurface(context);
-    if (glErr.isError())
-    {
-        return Error(EGL_BAD_SURFACE);
-    }
+    ANGLE_TRY(ResultToEGL(mTexture->releaseTexImageFromSurface(context)));
 
     return releaseTexImageFromTexture(context);
 }

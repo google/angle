@@ -222,7 +222,7 @@ angle::Result InitAttachment(const Context *context, FramebufferAttachment *atta
     {
         ANGLE_TRY(attachment->initializeContents(context));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool IsColorMaskedOut(const BlendState &blend)
@@ -989,7 +989,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
     if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
     {
         angle::Result err = syncState(context);
-        if (err != angle::Result::Continue())
+        if (err != angle::Result::Continue)
         {
             return 0;
         }
@@ -1345,12 +1345,12 @@ angle::Result Framebuffer::clear(const Context *context, GLbitfield mask)
     const auto &glState = context->getGLState();
     if (glState.isRasterizerDiscardEnabled())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mImpl->clear(context, mask));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::clearBufferfv(const Context *context,
@@ -1361,12 +1361,12 @@ angle::Result Framebuffer::clearBufferfv(const Context *context,
     if (context->getGLState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mImpl->clearBufferfv(context, buffer, drawbuffer, values));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::clearBufferuiv(const Context *context,
@@ -1377,12 +1377,12 @@ angle::Result Framebuffer::clearBufferuiv(const Context *context,
     if (context->getGLState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mImpl->clearBufferuiv(context, buffer, drawbuffer, values));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::clearBufferiv(const Context *context,
@@ -1393,12 +1393,12 @@ angle::Result Framebuffer::clearBufferiv(const Context *context,
     if (context->getGLState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mImpl->clearBufferiv(context, buffer, drawbuffer, values));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::clearBufferfi(const Context *context,
@@ -1410,12 +1410,12 @@ angle::Result Framebuffer::clearBufferfi(const Context *context,
     if (context->getGLState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mImpl->clearBufferfi(context, buffer, drawbuffer, depth, stencil));
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::getImplementationColorReadFormat(const Context *context,
@@ -1423,14 +1423,14 @@ angle::Result Framebuffer::getImplementationColorReadFormat(const Context *conte
 {
     ANGLE_TRY(syncState(context));
     *formatOut = mImpl->getImplementationColorReadFormat(context);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::getImplementationColorReadType(const Context *context, GLenum *typeOut)
 {
     ANGLE_TRY(syncState(context));
     *typeOut = mImpl->getImplementationColorReadType(context);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::readPixels(const Context *context,
@@ -1448,7 +1448,7 @@ angle::Result Framebuffer::readPixels(const Context *context,
         unpackBuffer->onPixelPack(context);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::blit(const Context *context,
@@ -1478,7 +1478,7 @@ angle::Result Framebuffer::blit(const Context *context,
 
     if (!blitMask)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     auto *sourceFBO = context->getGLState().getReadFramebuffer();
@@ -1522,7 +1522,7 @@ angle::Result Framebuffer::getSamplePosition(const Context *context,
                                              GLfloat *xy) const
 {
     ANGLE_TRY(mImpl->getSamplePosition(context, index, xy));
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Framebuffer::hasValidDepthStencil() const
@@ -1807,7 +1807,7 @@ angle::Result Framebuffer::syncState(const Context *context)
         mDirtyBits.reset();
         mDirtyBitsGuard.reset();
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Framebuffer::onSubjectStateChange(const Context *context,
@@ -2017,7 +2017,7 @@ angle::Result Framebuffer::ensureClearAttachmentsInitialized(const Context *cont
     const auto &glState = context->getGLState();
     if (!context->isRobustResourceInitEnabled() || glState.isRasterizerDiscardEnabled())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     const BlendState &blend               = glState.getBlendState();
@@ -2029,7 +2029,7 @@ angle::Result Framebuffer::ensureClearAttachmentsInitialized(const Context *cont
 
     if (!color && !depth && !stencil)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (partialClearNeedsInit(context, color, depth, stencil))
@@ -2042,7 +2042,7 @@ angle::Result Framebuffer::ensureClearAttachmentsInitialized(const Context *cont
     // the clear.
     markDrawAttachmentsInitialized(color, depth, stencil);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::ensureClearBufferAttachmentsInitialized(const Context *context,
@@ -2053,7 +2053,7 @@ angle::Result Framebuffer::ensureClearBufferAttachmentsInitialized(const Context
         context->getGLState().isRasterizerDiscardEnabled() ||
         IsClearBufferMaskedOut(context, buffer))
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if (partialBufferClearNeedsInit(context, buffer))
@@ -2066,14 +2066,14 @@ angle::Result Framebuffer::ensureClearBufferAttachmentsInitialized(const Context
     // the clear.
     markBufferInitialized(buffer, drawbuffer);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::ensureDrawAttachmentsInitialized(const Context *context)
 {
     if (!context->isRobustResourceInitEnabled())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // Note: we don't actually filter by the draw attachment enum. Just init everything.
@@ -2094,7 +2094,7 @@ angle::Result Framebuffer::ensureDrawAttachmentsInitialized(const Context *conte
     }
 
     mState.mResourceNeedsInit.reset();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::ensureReadAttachmentInitialized(const Context *context,
@@ -2102,7 +2102,7 @@ angle::Result Framebuffer::ensureReadAttachmentInitialized(const Context *contex
 {
     if (!context->isRobustResourceInitEnabled() || mState.mResourceNeedsInit.none())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     if ((blitMask & GL_COLOR_BUFFER_BIT) != 0 && mState.mReadBufferState != GL_NONE)
@@ -2133,7 +2133,7 @@ angle::Result Framebuffer::ensureReadAttachmentInitialized(const Context *contex
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void Framebuffer::markDrawAttachmentsInitialized(bool color, bool depth, bool stencil)
@@ -2228,7 +2228,7 @@ angle::Result Framebuffer::ensureBufferInitialized(const Context *context,
 
     if (mState.mResourceNeedsInit.none())
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     switch (bufferType)
@@ -2280,7 +2280,7 @@ angle::Result Framebuffer::ensureBufferInitialized(const Context *context,
             break;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 bool Framebuffer::partialBufferClearNeedsInit(const Context *context, GLenum bufferType)

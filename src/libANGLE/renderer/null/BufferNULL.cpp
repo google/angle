@@ -44,7 +44,7 @@ angle::Result BufferNULL::setData(const gl::Context *context,
     {
         memcpy(mData.data(), data, size);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferNULL::setSubData(const gl::Context *context,
@@ -57,7 +57,7 @@ angle::Result BufferNULL::setSubData(const gl::Context *context,
     {
         memcpy(mData.data() + offset, data, size);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferNULL::copySubData(const gl::Context *context,
@@ -71,13 +71,13 @@ angle::Result BufferNULL::copySubData(const gl::Context *context,
     {
         memcpy(mData.data() + destOffset, sourceNULL->mData.data() + sourceOffset, size);
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferNULL::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     *mapPtr = mData.data();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferNULL::mapRange(const gl::Context *context,
@@ -87,13 +87,13 @@ angle::Result BufferNULL::mapRange(const gl::Context *context,
                                    void **mapPtr)
 {
     *mapPtr = mData.data() + offset;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferNULL::unmap(const gl::Context *context, GLboolean *result)
 {
     *result = GL_TRUE;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferNULL::getIndexRange(const gl::Context *context,
@@ -104,7 +104,7 @@ angle::Result BufferNULL::getIndexRange(const gl::Context *context,
                                         gl::IndexRange *outRange)
 {
     *outRange = gl::ComputeIndexRange(type, mData.data() + offset, count, primitiveRestartEnabled);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 uint8_t *BufferNULL::getDataPtr()

@@ -23,7 +23,7 @@ angle::Result PathNULL::setCommands(GLsizei numCommands,
                                     GLenum coordType,
                                     const void *coords)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void PathNULL::setPathParameter(GLenum pname, GLfloat value) {}

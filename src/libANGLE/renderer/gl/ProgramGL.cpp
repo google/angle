@@ -70,13 +70,13 @@ angle::Result ProgramGL::load(const gl::Context *context,
     // Verify that the program linked
     if (!checkLinkStatus(infoLog))
     {
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     postLink();
     reapplyUBOBindingsIfNeeded(context);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -337,7 +337,7 @@ angle::Result ProgramGL::linkImpl(const gl::Context *context,
     // Verify the link
     if (!checkLinkStatus(infoLog))
     {
-        return angle::Result::Incomplete();
+        return angle::Result::Incomplete;
     }
 
     if (mWorkarounds.alwaysCallUseProgramAfterLink)
@@ -348,7 +348,7 @@ angle::Result ProgramGL::linkImpl(const gl::Context *context,
     linkResources(resources);
     postLink();
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)
@@ -1088,6 +1088,6 @@ angle::Result ProgramGL::syncState(const gl::Context *context,
         GLuint binding = static_cast<GLuint>(dirtyBit);
         setUniformBlockBinding(binding, mState.getUniformBlockBinding(binding));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

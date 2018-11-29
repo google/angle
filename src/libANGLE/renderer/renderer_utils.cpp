@@ -414,7 +414,7 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
     *textureOut = mIncompleteTextures[type].get();
     if (*textureOut != nullptr)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ContextImpl *implFactory = context->getImplementation();
@@ -468,7 +468,7 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
 
     mIncompleteTextures[type].set(context, t.release());
     *textureOut = mIncompleteTextures[type].get();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 #define ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(cols, rows)                            \
@@ -580,7 +580,7 @@ angle::Result ComputeStartVertex(ContextImpl *contextImpl,
     ANGLE_CHECK_GL_MATH(contextImpl, startVertexInt64 <= std::numeric_limits<GLint>::max())
 
     *firstVertexOut = static_cast<GLint>(startVertexInt64);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result GetVertexRangeInfo(const gl::Context *context,
@@ -606,6 +606,6 @@ angle::Result GetVertexRangeInfo(const gl::Context *context,
         *startVertexOut = firstVertex;
         *vertexCountOut = vertexOrIndexCount;
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

@@ -409,6 +409,7 @@ class BufferHelper final : public RecordableGraphResource
         ASSERT(mBufferView.valid());
         return mBufferView;
     }
+
     const Format &getViewFormat() const
     {
         ASSERT(mViewFormat);
@@ -422,7 +423,7 @@ class BufferHelper final : public RecordableGraphResource
             ANGLE_TRY(mapImpl(context));
         }
         *ptrOut = mMappedMemory;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     void unmap(VkDevice device);
 

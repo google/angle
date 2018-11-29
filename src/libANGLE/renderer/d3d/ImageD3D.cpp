@@ -27,7 +27,7 @@ angle::Result ImageD3D::setManagedSurface2D(const gl::Context *context,
                                             TextureStorage *storage,
                                             int level)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ImageD3D::setManagedSurfaceCube(const gl::Context *context,
@@ -35,14 +35,14 @@ angle::Result ImageD3D::setManagedSurfaceCube(const gl::Context *context,
                                               int face,
                                               int level)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ImageD3D::setManagedSurface3D(const gl::Context *context,
                                             TextureStorage *storage,
                                             int level)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result ImageD3D::setManagedSurface2DArray(const gl::Context *context,
@@ -50,7 +50,7 @@ angle::Result ImageD3D::setManagedSurface2DArray(const gl::Context *context,
                                                  int layer,
                                                  int level)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

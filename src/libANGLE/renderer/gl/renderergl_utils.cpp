@@ -1596,7 +1596,7 @@ angle::Result ShouldApplyLastRowPaddingWorkaround(ContextGL *contextGL,
     if (pixelBuffer == nullptr)
     {
         *shouldApplyOut = false;
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     // We are using an pack or unpack buffer, compute what the driver thinks is going to be the
@@ -1626,7 +1626,7 @@ angle::Result ShouldApplyLastRowPaddingWorkaround(ContextGL *contextGL,
     ANGLE_CHECK_GL_MATH(contextGL, checkedEndByte.IsValid());
 
     *shouldApplyOut = checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelBuffer->getSize());
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedType, bool isMesaGLX)

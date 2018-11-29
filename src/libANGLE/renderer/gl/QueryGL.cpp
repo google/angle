@@ -104,7 +104,7 @@ angle::Result StandardQueryGL::queryCounter(const gl::Context *context)
     mFunctions->queryCounter(query, GL_TIMESTAMP);
     mPendingQueries.push_back(query);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <typename T>
@@ -116,7 +116,7 @@ angle::Result StandardQueryGL::getResultBase(const gl::Context *context, T *para
     ASSERT(mPendingQueries.empty());
     *params = static_cast<T>(mResultSum);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StandardQueryGL::getResult(const gl::Context *context, GLint *params)
@@ -145,7 +145,7 @@ angle::Result StandardQueryGL::isResultAvailable(const gl::Context *context, boo
 
     ANGLE_TRY(flush(context, false));
     *available = mPendingQueries.empty();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StandardQueryGL::pause(const gl::Context *context)
@@ -172,7 +172,7 @@ angle::Result StandardQueryGL::resume(const gl::Context *context)
         mStateManager->beginQuery(mType, this, mActiveQuery);
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StandardQueryGL::flush(const gl::Context *context, bool force)
@@ -186,7 +186,7 @@ angle::Result StandardQueryGL::flush(const gl::Context *context, bool force)
             mFunctions->getQueryObjectuiv(id, GL_QUERY_RESULT_AVAILABLE, &resultAvailable);
             if (resultAvailable == GL_FALSE)
             {
-                return angle::Result::Continue();
+                return angle::Result::Continue;
             }
         }
 
@@ -211,7 +211,7 @@ angle::Result StandardQueryGL::flush(const gl::Context *context, bool force)
         mPendingQueries.pop_front();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 class SyncProviderGL
@@ -220,7 +220,7 @@ class SyncProviderGL
     virtual ~SyncProviderGL() {}
     virtual angle::Result init(const gl::Context *context, gl::QueryType queryType)
     {
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
     virtual angle::Result flush(const gl::Context *context, bool force, bool *finished) = 0;
 };
@@ -249,7 +249,7 @@ class SyncProviderGLSync : public SyncProviderGL
             *finished = (value == GL_SIGNALED);
         }
 
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
   private:
@@ -290,7 +290,7 @@ class SyncProviderGLQuery : public SyncProviderGL
             *finished = (available == GL_TRUE);
         }
 
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
   private:
@@ -314,7 +314,7 @@ bool SyncQueryGL::IsSupported(const FunctionsGL *functions)
 
 angle::Result SyncQueryGL::begin(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SyncQueryGL::end(const gl::Context *context)
@@ -332,13 +332,13 @@ angle::Result SyncQueryGL::end(const gl::Context *context)
     {
         ANGLE_GL_UNREACHABLE(GetImplAs<ContextGL>(context));
     }
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SyncQueryGL::queryCounter(const gl::Context *context)
 {
     UNREACHABLE();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SyncQueryGL::getResult(const gl::Context *context, GLint *params)
@@ -365,17 +365,17 @@ angle::Result SyncQueryGL::isResultAvailable(const gl::Context *context, bool *a
 {
     ANGLE_TRY(flush(context, false));
     *available = mFinished;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SyncQueryGL::pause(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SyncQueryGL::resume(const gl::Context *context)
 {
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result SyncQueryGL::flush(const gl::Context *context, bool force)
@@ -383,7 +383,7 @@ angle::Result SyncQueryGL::flush(const gl::Context *context, bool force)
     if (mSyncProvider == nullptr)
     {
         ASSERT(mFinished);
-        return angle::Result::Continue();
+        return angle::Result::Continue;
     }
 
     ANGLE_TRY(mSyncProvider->flush(context, force, &mFinished));
@@ -392,7 +392,7 @@ angle::Result SyncQueryGL::flush(const gl::Context *context, bool force)
         mSyncProvider.reset();
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 template <typename T>
@@ -400,6 +400,6 @@ angle::Result SyncQueryGL::getResultBase(const gl::Context *context, T *params)
 {
     ANGLE_TRY(flush(context, true));
     *params = static_cast<T>(mFinished ? GL_TRUE : GL_FALSE);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 }  // namespace rx

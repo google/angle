@@ -49,7 +49,7 @@ angle::Result Query9::begin(const gl::Context *context)
         ANGLE_TRY_HR(context9, result, "Failed to begin internal query");
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query9::end(const gl::Context *context)
@@ -63,7 +63,7 @@ angle::Result Query9::end(const gl::Context *context)
     mQueryFinished = false;
     mResult        = GL_FALSE;
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query9::queryCounter(const gl::Context *context)
@@ -86,7 +86,7 @@ angle::Result Query9::getResultBase(Context9 *context9, T *params)
 
     ASSERT(mQueryFinished);
     *params = static_cast<T>(mResult);
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query9::getResult(const gl::Context *context, GLint *params)
@@ -113,7 +113,7 @@ angle::Result Query9::isResultAvailable(const gl::Context *context, bool *availa
 {
     ANGLE_TRY(testQuery(GetImplAs<Context9>(context)));
     *available = mQueryFinished;
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Query9::testQuery(Context9 *context9)
@@ -170,7 +170,7 @@ angle::Result Query9::testQuery(Context9 *context9)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

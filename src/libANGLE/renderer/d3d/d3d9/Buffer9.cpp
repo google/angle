@@ -54,13 +54,13 @@ angle::Result Buffer9::setData(const gl::Context *context,
 
     invalidateStaticData(context);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer9::getData(const gl::Context *context, const uint8_t **outData)
 {
     *outData = mMemory.data();
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer9::setSubData(const gl::Context *context,
@@ -82,7 +82,7 @@ angle::Result Buffer9::setSubData(const gl::Context *context,
 
     invalidateStaticData(context);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result Buffer9::copySubData(const gl::Context *context,
@@ -99,14 +99,14 @@ angle::Result Buffer9::copySubData(const gl::Context *context,
 
     invalidateStaticData(context);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 // We do not support buffer mapping in D3D9
 angle::Result Buffer9::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Buffer9::mapRange(const gl::Context *context,
@@ -116,19 +116,19 @@ angle::Result Buffer9::mapRange(const gl::Context *context,
                                 void **mapPtr)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Buffer9::unmap(const gl::Context *context, GLboolean *result)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 angle::Result Buffer9::markTransformFeedbackUsage(const gl::Context *context)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
-    return angle::Result::Stop();
+    return angle::Result::Stop;
 }
 
 }  // namespace rx

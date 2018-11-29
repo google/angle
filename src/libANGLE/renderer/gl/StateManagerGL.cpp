@@ -714,7 +714,7 @@ angle::Result StateManagerGL::pauseAllQueries(const gl::Context *context)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StateManagerGL::pauseQuery(const gl::Context *context, gl::QueryType type)
@@ -728,7 +728,7 @@ angle::Result StateManagerGL::pauseQuery(const gl::Context *context, gl::QueryTy
         mQueries[type]                = nullptr;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StateManagerGL::resumeAllQueries(const gl::Context *context)
@@ -745,7 +745,7 @@ angle::Result StateManagerGL::resumeAllQueries(const gl::Context *context)
         }
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StateManagerGL::resumeQuery(const gl::Context *context, gl::QueryType type)
@@ -758,7 +758,7 @@ angle::Result StateManagerGL::resumeQuery(const gl::Context *context, gl::QueryT
         mTemporaryPausedQueries[type] = nullptr;
     }
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
@@ -803,7 +803,7 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
     // this state here since MakeCurrent is expected to be called less frequently than draw calls.
     setTextureCubemapSeamlessEnabled(context->getClientMajorVersion() >= 3);
 
-    return angle::Result::Continue();
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
