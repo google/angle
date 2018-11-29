@@ -965,9 +965,16 @@ if (is_android) {
       "src/feature_support_util/a4a_rules.json",
     ]
   }
+
+  android_resources("angle_apk_resources") {
+    resource_dirs = [ "android/res" ]
+    custom_package = "com.google.android.angle"
+  }
+
   android_apk("angle_apk") {
     deps = [
       ":angle_apk_assets",
+      ":angle_apk_resources",
     ]
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
       secondary_abi_shared_libraries = [

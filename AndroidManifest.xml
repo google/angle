@@ -13,6 +13,7 @@
     </uses-sdk>
 
     <application android:label="Android System Angle"
+        android:icon="@com.google.android.angle:drawable/icon"
         android:extractNativeLibs="false"
         android:multiArch="true"
         android:hasCode="false">
