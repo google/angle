@@ -353,7 +353,7 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     // Copy the swizzled texture to the destination texture
     mStateManager->bindTexture(textureType, texture);
 
-    if (target == gl::TextureTarget::_3D || target == gl::TextureTarget::_2DArray)
+    if (nativegl::UseTexImage3D(textureType))
     {
         mFunctions->copyTexSubImage3D(ToGLenum(target), static_cast<GLint>(level), destOffset.x,
                                       destOffset.y, destOffset.z, 0, 0, sourceArea.width,
@@ -361,6 +361,7 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     }
     else
     {
+        ASSERT(nativegl::UseTexImage2D(textureType));
         mFunctions->copyTexSubImage2D(ToGLenum(target), static_cast<GLint>(level), destOffset.x,
                                       destOffset.y, 0, 0, sourceArea.width, sourceArea.height);
     }

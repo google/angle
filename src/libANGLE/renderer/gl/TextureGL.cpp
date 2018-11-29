@@ -83,6 +83,21 @@ gl::Texture::DirtyBits GetLevelWorkaroundDirtyBits()
     return bits;
 }
 
+size_t GetMaxLevelInfoCountForTextureType(gl::TextureType type)
+{
+    switch (type)
+    {
+        case gl::TextureType::CubeMap:
+            return (gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) * gl::kCubeFaceCount;
+
+        case gl::TextureType::External:
+            return 1;
+
+        default:
+            return gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1;
+    }
+}
+
 }  // anonymous namespace
 
 LUMAWorkaroundGL::LUMAWorkaroundGL() : LUMAWorkaroundGL(false, GL_NONE) {}
@@ -111,8 +126,7 @@ TextureGL::TextureGL(const gl::TextureState &state, GLuint id)
       mAppliedMaxLevel(state.getEffectiveMaxLevel()),
       mTextureID(id)
 {
-    mLevelInfo.resize((gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) *
-                      (getType() == gl::TextureType::CubeMap ? gl::kCubeFaceCount : 1));
+    mLevelInfo.resize(GetMaxLevelInfoCountForTextureType(getType()));
 }
 
 TextureGL::~TextureGL()

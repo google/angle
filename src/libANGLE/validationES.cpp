@@ -760,14 +760,19 @@ bool ValidMipLevel(const Context *context, TextureType type, GLint level)
             // level-of-detail" for multisample textures should be. Could maybe make it zero.
             maxDimension = caps.max2DTextureSize;
             break;
+
         case TextureType::CubeMap:
             maxDimension = caps.maxCubeMapTextureSize;
             break;
+
+        case TextureType::External:
         case TextureType::Rectangle:
             return level == 0;
+
         case TextureType::_3D:
             maxDimension = caps.max3DTextureSize;
             break;
+
         default:
             UNREACHABLE();
     }

@@ -1118,10 +1118,9 @@ void GenerateCaps(const FunctionsGL *functions,
                               functions->hasGLESExtension("GL_KHR_debug") ||
                               functions->hasGLESExtension("GL_EXT_debug_marker");
     extensions->eglImage = functions->hasGLESExtension("GL_OES_EGL_image");
-    // TODO(geofflang): Support external texture targets in TextureGL. http://anglebug.com/2507
-    // extensions->eglImageExternal = functions->hasGLESExtension("GL_OES_EGL_image_external");
-    // extensions->eglImageExternalEssl3 =
-    //    functions->hasGLESExtension("GL_OES_EGL_image_external_essl3");
+    extensions->eglImageExternal = functions->hasGLESExtension("GL_OES_EGL_image_external");
+    extensions->eglImageExternalEssl3 =
+        functions->hasGLESExtension("GL_OES_EGL_image_external_essl3");
 
     if (functions->isAtLeastGL(gl::Version(3, 3)) ||
         functions->hasGLExtension("GL_ARB_timer_query") ||
@@ -1497,7 +1496,8 @@ bool UseTexImage2D(gl::TextureType textureType)
 {
     return textureType == gl::TextureType::_2D || textureType == gl::TextureType::CubeMap ||
            textureType == gl::TextureType::Rectangle ||
-           textureType == gl::TextureType::_2DMultisample;
+           textureType == gl::TextureType::_2DMultisample ||
+           textureType == gl::TextureType::External;
 }
 
 bool UseTexImage3D(gl::TextureType textureType)
