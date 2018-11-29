@@ -32,6 +32,29 @@ constexpr ShaderBlob kFullScreenQuad_vert_shaders[] = {
 constexpr ShaderBlob kPushConstantColor_frag_shaders[] = {
     {kPushConstantColor_frag_00000000, sizeof(kPushConstantColor_frag_00000000)},
 };
+
+angle::Result GetShader(Context *context,
+                        RefCounted<ShaderAndSerial> *shaders,
+                        const ShaderBlob *shaderBlobs,
+                        size_t shadersCount,
+                        uint32_t shaderFlags,
+                        RefCounted<ShaderAndSerial> **shaderOut)
+{
+    ASSERT(shaderFlags < shadersCount);
+    RefCounted<ShaderAndSerial> &shader = shaders[shaderFlags];
+    *shaderOut                          = &shader;
+
+    if (shader.get().valid())
+    {
+        return angle::Result::Continue();
+    }
+
+    // Create shader lazily. Access will need to be locked for multi-threading.
+    const ShaderBlob &shaderCode = shaderBlobs[shaderFlags];
+    ASSERT(shaderCode.code != nullptr);
+
+    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
+}
 }  // anonymous namespace
 
 ShaderLibrary::ShaderLibrary() {}
@@ -54,36 +77,16 @@ angle::Result ShaderLibrary::getFullScreenQuad_vert(Context *context,
                                                     uint32_t shaderFlags,
                                                     RefCounted<ShaderAndSerial> **shaderOut)
 {
-    ASSERT(shaderFlags < ArraySize(kFullScreenQuad_vert_shaders));
-    RefCounted<ShaderAndSerial> &shader = mFullScreenQuad_vert_shaders[shaderFlags];
-    *shaderOut                          = &shader;
-
-    if (shader.get().valid())
-    {
-        return angle::Result::Continue();
-    }
-
-    // Create shader lazily. Access will need to be locked for multi-threading.
-    const ShaderBlob &shaderCode = kFullScreenQuad_vert_shaders[shaderFlags];
-    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
+    return GetShader(context, mFullScreenQuad_vert_shaders, kFullScreenQuad_vert_shaders,
+                     ArraySize(kFullScreenQuad_vert_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getPushConstantColor_frag(Context *context,
                                                        uint32_t shaderFlags,
                                                        RefCounted<ShaderAndSerial> **shaderOut)
 {
-    ASSERT(shaderFlags < ArraySize(kPushConstantColor_frag_shaders));
-    RefCounted<ShaderAndSerial> &shader = mPushConstantColor_frag_shaders[shaderFlags];
-    *shaderOut                          = &shader;
-
-    if (shader.get().valid())
-    {
-        return angle::Result::Continue();
-    }
-
-    // Create shader lazily. Access will need to be locked for multi-threading.
-    const ShaderBlob &shaderCode = kPushConstantColor_frag_shaders[shaderFlags];
-    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
+    return GetShader(context, mPushConstantColor_frag_shaders, kPushConstantColor_frag_shaders,
+                     ArraySize(kPushConstantColor_frag_shaders), shaderFlags, shaderOut);
 }
 
 }  // namespace vk

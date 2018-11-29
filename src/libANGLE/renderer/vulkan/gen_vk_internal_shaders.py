@@ -47,6 +47,29 @@ struct ShaderBlob
 }};
 
 {shader_tables_cpp}
+
+angle::Result GetShader(Context *context,
+                        RefCounted<ShaderAndSerial> *shaders,
+                        const ShaderBlob *shaderBlobs,
+                        size_t shadersCount,
+                        uint32_t shaderFlags,
+                        RefCounted<ShaderAndSerial> **shaderOut)
+{{
+    ASSERT(shaderFlags < shadersCount);
+    RefCounted<ShaderAndSerial> &shader = shaders[shaderFlags];
+    *shaderOut                          = &shader;
+
+    if (shader.get().valid())
+    {{
+        return angle::Result::Continue();
+    }}
+
+    // Create shader lazily. Access will need to be locked for multi-threading.
+    const ShaderBlob &shaderCode = shaderBlobs[shaderFlags];
+    ASSERT(shaderCode.code != nullptr);
+
+    return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);
+}}
 }}  // anonymous namespace
 
 
@@ -472,21 +495,8 @@ def get_get_function_cpp(shader_and_variation):
 
     definition = 'angle::Result ShaderLibrary::%s' % function_name
     definition += '(Context *context, uint32_t shaderFlags, RefCounted<ShaderAndSerial> **shaderOut)\n{\n'
-    definition += 'ASSERT(shaderFlags < ArraySize(%s));\n' % constant_table_name
-
-    definition += ''.join(['ASSERT((shaderFlags & %s::k%sMask) >= %s::k%s &&' %
-        (namespace_name, enums[e][0], namespace_name, enums[e][1][0]) +
-        '(shaderFlags & %s::k%sMask) <= %s::k%s);\n' %
-        (namespace_name, enums[e][0], namespace_name, enums[e][1][-1])
-        for e in range(len(enums))])
-
-    definition += 'RefCounted<ShaderAndSerial> &shader = %s[shaderFlags];\n' % member_table_name
-    definition += '*shaderOut              = &shader;\n\n'
-    definition += 'if (shader.get().valid())\n{\nreturn angle::Result::Continue();\n}\n\n'
-    definition += '// Create shader lazily. Access will need to be locked for multi-threading.\n'
-    definition += 'const ShaderBlob &shaderCode = %s[shaderFlags];\n' % constant_table_name
-    definition += 'return InitShaderAndSerial(context, &shader.get(), shaderCode.code, shaderCode.codeSize);\n'
-    definition += '}\n'
+    definition += 'return GetShader(context, %s, %s, ArraySize(%s), shaderFlags, shaderOut);\n}\n' % (
+            member_table_name, constant_table_name, constant_table_name)
 
     return definition
 

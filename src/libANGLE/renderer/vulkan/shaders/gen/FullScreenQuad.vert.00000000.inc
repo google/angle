@@ -37,19 +37,19 @@ const uint32_t kFullScreenQuad_vert_00000000[] = {
 };
 
 #if 0  // Generated from:
-#version 450 core
+#version 450 core
 
-const vec4 kQuadVertices[]= {
-    vec4(- 1, 1, 0, 1),
-    vec4(- 1, - 1, 0, 1),
-    vec4(1, - 1, 0, 1),
-    vec4(- 1, 1, 0, 1),
-    vec4(1, - 1, 0, 1),
-    vec4(1, 1, 0, 1),
-};
+const vec4 kQuadVertices[]= {
+    vec4(- 1, 1, 0, 1),
+    vec4(- 1, - 1, 0, 1),
+    vec4(1, - 1, 0, 1),
+    vec4(- 1, 1, 0, 1),
+    vec4(1, - 1, 0, 1),
+    vec4(1, 1, 0, 1),
+};
 
-void main()
-{
-    gl_Position = kQuadVertices[gl_VertexIndex];
+void main()
+{
+    gl_Position = kQuadVertices[gl_VertexIndex];
 }
 #endif  // Preprocessed code
