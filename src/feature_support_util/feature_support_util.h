@@ -17,49 +17,6 @@ extern "C" {
 
 /**************************************************************************************************
  *
- * The following is the "version 1" private API for the Android EGL loader:
- *
- **************************************************************************************************/
-
-// Callers of the ANGLE feature-support-utility API (e.g. the Android EGL loader) will call this
-// function in order to determine what version of the API it can use (if any).
-//
-// The caller supplies the highest version of the API that it knows about.  If that version is
-// supported by the feature-support-utility, true is returned and the version isn't changed.  If
-// the supplied version is higher than supported by the feature-support-utility, true is
-// returned and the version is changed to the highest supported by the feature-support-utility.
-// If the supplied version is lower than supported by the feature-support-utility, false is
-// returned.
-//
-// Parameters:
-//
-// - versionToUse (IN/OUT) - The application supplies the highest version of the interface that
-//   it knows about.  If successful, the output value is either unchanged or is the highest
-//   supported by the interface.
-//
-ANGLE_EXPORT bool ANGLEGetUtilityAPI(unsigned int *versionToUse);
-
-// The Android EGL loader will call this function in order to determine whether
-// to use ANGLE instead of a native OpenGL-ES (GLES) driver.
-//
-// Parameters:
-// - rules_fd - File descriptor of the rules file to use
-// - rules_offset - Offset into the fd before finding the contents of the rules file
-// - rules_length - length of the rules file content
-// - appName - Java name of the application (e.g. "com.google.android.apps.maps")
-// - deviceMfr - Device manufacturer, from the "ro.product.manufacturer"com.google.android"
-//   property
-// - deviceModel - Device model, from the "ro.product.model"com.google.android" property
-//
-ANGLE_EXPORT bool AndroidUseANGLEForApplication(int rules_fd,
-                                                long rules_offset,
-                                                long rules_length,
-                                                const char *appName,
-                                                const char *deviceMfr,
-                                                const char *deviceModel);
-
-/**************************************************************************************************
- *
  * The following is the "version 2" private API for the Android EGL loader:
  *
  **************************************************************************************************/
@@ -165,7 +122,7 @@ ANGLE_EXPORT void ANGLEFreeSystemInfoHandle(const SystemInfoHandle systemInfoHan
 
 // The following are internal versions supported by the current  feature-support-utility API.
 
-constexpr unsigned int kFeatureVersion_LowestSupported  = 1;
+constexpr unsigned int kFeatureVersion_LowestSupported  = 2;
 constexpr unsigned int kFeatureVersion_HighestSupported = 2;
 
 #ifdef __cplusplus
