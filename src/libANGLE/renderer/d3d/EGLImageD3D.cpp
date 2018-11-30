@@ -82,7 +82,7 @@ angle::Result EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
     // Invalidate FBOs with this Image attached. Only currently applies to D3D11.
     for (egl::ImageSibling *target : mState.targets)
     {
-        target->getSubject()->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+        target->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     }
 
     return mRenderer->createRenderTargetCopy(context, curRenderTarget, &mRenderTarget);

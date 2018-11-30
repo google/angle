@@ -18,7 +18,7 @@ namespace rx
 {
 class FramebufferAttachmentRenderTarget;
 
-class FramebufferAttachmentObjectImpl : public angle::Subject
+class FramebufferAttachmentObjectImpl : angle::NonCopyable
 {
   public:
     FramebufferAttachmentObjectImpl() {}

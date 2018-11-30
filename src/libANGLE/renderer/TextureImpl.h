@@ -40,7 +40,7 @@ namespace rx
 {
 class ContextImpl;
 
-class TextureImpl : public FramebufferAttachmentObjectImpl
+class TextureImpl : public FramebufferAttachmentObjectImpl, public angle::Subject
 {
   public:
     TextureImpl(const gl::TextureState &state);

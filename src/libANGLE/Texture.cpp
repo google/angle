@@ -966,7 +966,7 @@ GLint Texture::getLevelMemorySize(TextureTarget target, GLint level) const
 void Texture::signalDirty(const Context *context, InitState initState)
 {
     mState.mInitState = initState;
-    onStorageChange(context);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     invalidateCompletenessCache();
 }
 
