@@ -41,9 +41,8 @@ namespace rx
 namespace vk
 {{
 
-void Format::initialize(VkPhysicalDevice physicalDevice,
-                        const angle::Format &angleFormat,
-                        const angle::FeaturesVk &featuresVk)
+void Format::initialize(RendererVk *renderer,
+                        const angle::Format &angleFormat)
 {{
     switch (angleFormat.id)
     {{
@@ -79,7 +78,7 @@ texture_struct_template="{{{texture}, {vk_texture_format}, {texture_initializer}
 
 texture_fallback_template = """{{
 static constexpr TextureFormatInitInfo kInfo[] = {{{texture_list}}};
-initTextureFallback(physicalDevice, kInfo, ArraySize(kInfo), featuresVk);
+initTextureFallback(renderer, kInfo, ArraySize(kInfo));
 }}"""
 
 buffer_basic_template = """bufferFormatID = {buffer};
@@ -93,7 +92,7 @@ buffer_struct_template="""{{{buffer}, {vk_buffer_format}, {vk_buffer_format_is_p
 
 buffer_fallback_template = """{{
 static constexpr BufferFormatInitInfo kInfo[] = {{{buffer_list}}};
-initBufferFallback(physicalDevice, kInfo, ArraySize(kInfo));
+initBufferFallback(renderer, kInfo, ArraySize(kInfo));
 }}"""
 
 def is_packed(format_id):

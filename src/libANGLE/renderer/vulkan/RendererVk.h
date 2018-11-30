@@ -183,6 +183,13 @@ class RendererVk : angle::NonCopyable
 
     const vk::PipelineCache &getPipelineCache() const { return mPipelineCache; }
 
+    // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
+    // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
+    // device (first time only).
+    bool hasLinearTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    bool hasTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
     // image acquire.
@@ -213,6 +220,9 @@ class RendererVk : angle::NonCopyable
                                     const char *name);
     angle::Result checkCompletedGpuEvents(vk::Context *context);
     void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
+
+    template <VkFormatFeatureFlags VkFormatProperties::*features>
+    bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
     egl::Display *mDisplay;
 
@@ -267,6 +277,9 @@ class RendererVk : angle::NonCopyable
     vk::PipelineCache mPipelineCache;
     egl::BlobCache::Key mPipelineCacheVkBlobKey;
     uint32_t mPipelineCacheVkUpdateTimeout;
+
+    // A cache of VkFormatProperties as queried from the device over time.
+    std::array<VkFormatProperties, vk::kNumVkFormats> mFormatProperties;
 
     // mSubmitWaitSemaphores is a list of specifically requested semaphores to be waited on before a
     // command buffer submission, for example, semaphores signaled by vkAcquireNextImageKHR.

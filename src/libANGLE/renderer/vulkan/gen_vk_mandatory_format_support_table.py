@@ -31,18 +31,19 @@ template_table_autogen_cpp = """// GENERATED FILE - DO NOT EDIT.
 
 using namespace angle;
 
-namespace
-{{
-constexpr std::array<VkFormatProperties, {num_formats}> kFormatProperties = {{{{
-    {format_case_data}
-}}}};
-}}  // anonymous namespace
-
 namespace rx
 {{
 
 namespace vk
 {{
+
+namespace
+{{
+static_assert({num_formats} == kNumVkFormats, "Update kNumVkFormats");
+constexpr std::array<VkFormatProperties, kNumVkFormats> kFormatProperties = {{{{
+    {format_case_data}
+}}}};
+}}  // anonymous namespace
 
 const VkFormatProperties& GetMandatoryFormatSupport(VkFormat vkFormat)
 {{
@@ -58,7 +59,7 @@ const VkFormatProperties& GetMandatoryFormatSupport(VkFormat vkFormat)
 
 template_format_property = """
 /* {vk_format} */
-{{{{}}, {optimal_features}, {buffer_features}}}"""
+{{0, {optimal_features}, {buffer_features}}}"""
 
 
 def script_relative(path):

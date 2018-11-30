@@ -49,23 +49,16 @@ bool ClipToRenderTarget(const gl::Rectangle &area,
     return ClipRectangle(area, renderTargetRect, rectOut);
 }
 
-bool HasSrcAndDstBlitProperties(const VkPhysicalDevice &physicalDevice,
+bool HasSrcAndDstBlitProperties(RendererVk *renderer,
                                 RenderTargetVk *srcRenderTarget,
                                 RenderTargetVk *dstRenderTarget)
 {
-    VkFormatProperties drawImageProperties;
-    vk::GetFormatProperties(physicalDevice, srcRenderTarget->getImageFormat().vkTextureFormat,
-                            &drawImageProperties);
-
-    VkFormatProperties readImageProperties;
-    vk::GetFormatProperties(physicalDevice, dstRenderTarget->getImageFormat().vkTextureFormat,
-                            &readImageProperties);
+    const VkFormat srcFormat = srcRenderTarget->getImageFormat().vkTextureFormat;
+    const VkFormat dstFormat = dstRenderTarget->getImageFormat().vkTextureFormat;
 
     // Verifies if the draw and read images have the necessary prerequisites for blitting.
-    return (IsMaskFlagSet<VkFormatFeatureFlags>(drawImageProperties.optimalTilingFeatures,
-                                                VK_FORMAT_FEATURE_BLIT_DST_BIT) &&
-            IsMaskFlagSet<VkFormatFeatureFlags>(readImageProperties.optimalTilingFeatures,
-                                                VK_FORMAT_FEATURE_BLIT_SRC_BIT));
+    return renderer->hasTextureFormatFeatureBits(srcFormat, VK_FORMAT_FEATURE_BLIT_SRC_BIT) &&
+           renderer->hasTextureFormatFeatureBits(dstFormat, VK_FORMAT_FEATURE_BLIT_DST_BIT);
 }
 
 // Special rules apply to VkBufferImageCopy with depth/stencil. The components are tightly packed
@@ -577,8 +570,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         {
             RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorAttachment];
             ASSERT(drawRenderTarget);
-            ASSERT(HasSrcAndDstBlitProperties(renderer->getPhysicalDevice(), readRenderTarget,
-                                              drawRenderTarget));
+            ASSERT(HasSrcAndDstBlitProperties(renderer, readRenderTarget, drawRenderTarget));
 
             gl::Rectangle drawRenderTargetRect;
             if (!ClipToRenderTarget(drawRect, drawRenderTarget, &drawRenderTargetRect))
@@ -615,8 +607,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         ASSERT(readRenderTargetRect == drawRenderTargetRect);
         ASSERT(filter == GL_NEAREST);
 
-        if (HasSrcAndDstBlitProperties(renderer->getPhysicalDevice(), readRenderTarget,
-                                       drawRenderTarget))
+        if (HasSrcAndDstBlitProperties(renderer, readRenderTarget, drawRenderTarget))
         {
             ANGLE_TRY(blitWithCommand(contextVk, readRenderTargetRect, drawRenderTargetRect,
                                       readRenderTarget, drawRenderTarget, filter, false,

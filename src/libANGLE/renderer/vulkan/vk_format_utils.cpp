@@ -10,25 +10,13 @@
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/load_functions_table.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 
 namespace rx
 {
 namespace
 {
-constexpr VkFormatFeatureFlags kNecessaryBitsFullSupportDepthStencil =
-    VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
-    VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-constexpr VkFormatFeatureFlags kNecessaryBitsFullSupportColor =
-    VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
-    VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-
-bool HasFormatFeatureBits(const VkFormatFeatureFlags featureBits,
-                          const VkFormatProperties &formatProperties)
-{
-    return IsMaskFlagSet(formatProperties.optimalTilingFeatures, featureBits);
-}
-
 void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *outSet)
 {
     // The possible bits are VK_SAMPLE_COUNT_n_BIT = n, with n = 1 << b.  At the time of this
@@ -42,27 +30,31 @@ void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *ou
     }
 }
 
-void FillTextureFormatCaps(const VkPhysicalDeviceLimits &physicalDeviceLimits,
-                           const VkFormatProperties &formatProperties,
-                           gl::TextureCaps *outTextureCaps)
+void FillTextureFormatCaps(RendererVk *renderer, VkFormat format, gl::TextureCaps *outTextureCaps)
 {
+    const VkPhysicalDeviceLimits &physicalDeviceLimits =
+        renderer->getPhysicalDeviceProperties().limits;
+    bool hasColorAttachmentFeatureBit =
+        renderer->hasTextureFormatFeatureBits(format, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
+    bool hasDepthAttachmentFeatureBit = renderer->hasTextureFormatFeatureBits(
+        format, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+
     outTextureCaps->texturable =
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT, formatProperties);
-    outTextureCaps->filterable =
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, formatProperties);
+        renderer->hasTextureFormatFeatureBits(format, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
+    outTextureCaps->filterable = renderer->hasTextureFormatFeatureBits(
+        format, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
     outTextureCaps->textureAttachment =
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties) ||
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
+        hasColorAttachmentFeatureBit || hasDepthAttachmentFeatureBit;
     outTextureCaps->renderbuffer = outTextureCaps->textureAttachment;
 
     if (outTextureCaps->renderbuffer)
     {
-        if (HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties))
+        if (hasColorAttachmentFeatureBit)
         {
             AddSampleCounts(physicalDeviceLimits.framebufferColorSampleCounts,
                             &outTextureCaps->sampleCounts);
         }
-        if (HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties))
+        if (hasDepthAttachmentFeatureBit)
         {
             AddSampleCounts(physicalDeviceLimits.framebufferDepthSampleCounts,
                             &outTextureCaps->sampleCounts);
@@ -72,31 +64,26 @@ void FillTextureFormatCaps(const VkPhysicalDeviceLimits &physicalDeviceLimits,
     }
 }
 
-bool HasFullTextureFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
+bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat)
 {
-    VkFormatProperties formatProperties;
-    vk::GetFormatProperties(physicalDevice, vkFormat, &formatProperties);
+    constexpr uint32_t kBitsColor = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
+                                    VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+                                    VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    constexpr uint32_t kBitsDepth = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
-    constexpr uint32_t kBitsColor =
-        (VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
-         VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
-    constexpr uint32_t kBitsDepth = (VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
-
-    return HasFormatFeatureBits(kBitsColor, formatProperties) ||
-           HasFormatFeatureBits(kBitsDepth, formatProperties);
+    return renderer->hasTextureFormatFeatureBits(vkFormat, kBitsColor) ||
+           renderer->hasTextureFormatFeatureBits(vkFormat, kBitsDepth);
 }
 
-bool HasFullBufferFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
+bool HasFullBufferFormatSupport(RendererVk *renderer, VkFormat vkFormat)
 {
-    VkFormatProperties formatProperties;
-    vk::GetFormatProperties(physicalDevice, vkFormat, &formatProperties);
-    return formatProperties.bufferFeatures & VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT;
+    return renderer->hasBufferFormatFeatureBits(vkFormat, VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT);
 }
 
-using SupportTest = bool (*)(VkPhysicalDevice physicalDevice, VkFormat vkFormat);
+using SupportTest = bool (*)(RendererVk *renderer, VkFormat vkFormat);
 
 template <class FormatInitInfo>
-int FindSupportedFormat(VkPhysicalDevice physicalDevice,
+int FindSupportedFormat(RendererVk *renderer,
                         const FormatInitInfo *info,
                         int numInfo,
                         SupportTest hasSupport)
@@ -107,13 +94,13 @@ int FindSupportedFormat(VkPhysicalDevice physicalDevice,
     for (int i = 0; i < last; ++i)
     {
         ASSERT(info[i].format != angle::FormatID::NONE);
-        if (hasSupport(physicalDevice, info[i].vkFormat))
+        if (hasSupport(renderer, info[i].vkFormat))
             return i;
     }
 
     // List must contain a supported item.  We failed on all the others so the last one must be it.
     ASSERT(info[last].format != angle::FormatID::NONE);
-    ASSERT(hasSupport(physicalDevice, info[last].vkFormat));
+    ASSERT(hasSupport(renderer, info[last].vkFormat));
     return last;
 }
 
@@ -121,29 +108,6 @@ int FindSupportedFormat(VkPhysicalDevice physicalDevice,
 
 namespace vk
 {
-
-void GetFormatProperties(VkPhysicalDevice physicalDevice,
-                         VkFormat vkFormat,
-                         VkFormatProperties *propertiesOut)
-{
-    // Try filling out the info from our hard coded format data, if we can't find the
-    // information we need, we'll make the call to Vulkan.
-    const VkFormatProperties &formatProperties = vk::GetMandatoryFormatSupport(vkFormat);
-
-    // Once we filled what we could with the mandatory texture caps, we verify if
-    // all the bits we need to satify all our checks are present, and if so we can
-    // skip the device call.
-    if (!IsMaskFlagSet(formatProperties.optimalTilingFeatures, kNecessaryBitsFullSupportColor) &&
-        !IsMaskFlagSet(formatProperties.optimalTilingFeatures,
-                       kNecessaryBitsFullSupportDepthStencil))
-    {
-        vkGetPhysicalDeviceFormatProperties(physicalDevice, vkFormat, propertiesOut);
-    }
-    else
-    {
-        *propertiesOut = formatProperties;
-    }
-}
 
 // Format implementation.
 Format::Format()
@@ -153,19 +117,18 @@ Format::Format()
       vkTextureFormat(VK_FORMAT_UNDEFINED),
       bufferFormatID(angle::FormatID::NONE),
       vkBufferFormat(VK_FORMAT_UNDEFINED),
-      vkBufferFormatIsPacked(false),
       textureInitializerFunction(nullptr),
-      textureLoadFunctions()
+      textureLoadFunctions(),
+      vertexLoadRequiresConversion(false),
+      vkBufferFormatIsPacked(false)
 {}
 
-void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
+void Format::initTextureFallback(RendererVk *renderer,
                                  const TextureFormatInitInfo *info,
-                                 int numInfo,
-                                 const angle::FeaturesVk &featuresVk)
+                                 int numInfo)
 {
-    size_t skip = featuresVk.forceFallbackFormat ? 1 : 0;
-    int i       = FindSupportedFormat(physicalDevice, info + skip, numInfo - skip,
-                                HasFullTextureFormatSupport);
+    size_t skip = renderer->getFeatures().forceFallbackFormat ? 1 : 0;
+    int i = FindSupportedFormat(renderer, info + skip, numInfo - skip, HasFullTextureFormatSupport);
     i += skip;
 
     textureFormatID            = info[i].format;
@@ -173,11 +136,9 @@ void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
     textureInitializerFunction = info[i].initializer;
 }
 
-void Format::initBufferFallback(VkPhysicalDevice physicalDevice,
-                                const BufferFormatInitInfo *info,
-                                int numInfo)
+void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo)
 {
-    int i          = FindSupportedFormat(physicalDevice, info, numInfo, HasFullBufferFormatSupport);
+    int i          = FindSupportedFormat(renderer, info, numInfo, HasFullBufferFormatSupport);
     bufferFormatID = info[i].format;
     vkBufferFormat = info[i].vkFormat;
     vkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
@@ -215,35 +176,28 @@ FormatTable::FormatTable() {}
 
 FormatTable::~FormatTable() {}
 
-void FormatTable::initialize(VkPhysicalDevice physicalDevice,
-                             const VkPhysicalDeviceProperties &physicalDeviceProperties,
-                             const angle::FeaturesVk &featuresVk,
+void FormatTable::initialize(RendererVk *renderer,
                              gl::TextureCapsMap *outTextureCapsMap,
                              std::vector<GLenum> *outCompressedTextureFormats)
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
+        vk::Format &format               = mFormatData[formatIndex];
         const auto formatID              = static_cast<angle::FormatID>(formatIndex);
         const angle::Format &angleFormat = angle::Format::Get(formatID);
-        mFormatData[formatIndex].initialize(physicalDevice, angleFormat, featuresVk);
-        const GLenum internalFormat = mFormatData[formatIndex].internalFormat;
-        mFormatData[formatIndex].textureLoadFunctions =
-            GetLoadFunctionsMap(internalFormat, mFormatData[formatIndex].textureFormatID);
-        mFormatData[formatIndex].angleFormatID = formatID;
 
-        if (!mFormatData[formatIndex].valid())
+        format.initialize(renderer, angleFormat);
+        const GLenum internalFormat = format.internalFormat;
+        format.textureLoadFunctions = GetLoadFunctionsMap(internalFormat, format.textureFormatID);
+        format.angleFormatID        = formatID;
+
+        if (!format.valid())
         {
             continue;
         }
 
-        const VkFormat vkFormat = mFormatData[formatIndex].vkTextureFormat;
-
-        // Try filling out the info from our hard coded format data, if we can't find the
-        // information we need, we'll make the call to Vulkan.
-        VkFormatProperties formatProperties;
-        GetFormatProperties(physicalDevice, vkFormat, &formatProperties);
         gl::TextureCaps textureCaps;
-        FillTextureFormatCaps(physicalDeviceProperties.limits, formatProperties, &textureCaps);
+        FillTextureFormatCaps(renderer, format.vkTextureFormat, &textureCaps);
         outTextureCapsMap->set(formatID, textureCaps);
 
         if (angleFormat.isBlock)

@@ -38,6 +38,7 @@ const uint32_t kMockVendorID            = 0xba5eba11;
 const uint32_t kMockDeviceID            = 0xf005ba11;
 constexpr char kMockDeviceName[]        = "Vulkan Mock Device";
 constexpr size_t kInFlightCommandsLimit = 100u;
+constexpr VkFormatFeatureFlags kInvalidFormatFeatureFlags = static_cast<VkFormatFeatureFlags>(-1);
 }  // anonymous namespace
 
 namespace rx
@@ -314,7 +315,10 @@ RendererVk::RendererVk()
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0)
-{}
+{
+    VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
+    mFormatProperties.fill(invalid);
+}
 
 RendererVk::~RendererVk() {}
 
@@ -542,8 +546,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     GlslangWrapper::Initialize();
 
     // Initialize the format table.
-    mFormatTable.initialize(mPhysicalDevice, mPhysicalDeviceProperties, mFeatures,
-                            &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
+    mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
 
     return angle::Result::Continue();
 }
@@ -1365,6 +1368,25 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
     return angle::Result::Continue();
 }
 
+// These functions look at the mandatory format for support, and fallback to querying the device (if
+// necessary) to test the availability of the bits.
+bool RendererVk::hasLinearTextureFormatFeatureBits(VkFormat format,
+                                                   const VkFormatFeatureFlags featureBits)
+{
+    return hasFormatFeatureBits<&VkFormatProperties::linearTilingFeatures>(format, featureBits);
+}
+
+bool RendererVk::hasTextureFormatFeatureBits(VkFormat format,
+                                             const VkFormatFeatureFlags featureBits)
+{
+    return hasFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(format, featureBits);
+}
+
+bool RendererVk::hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+{
+    return hasFormatFeatureBits<&VkFormatProperties::bufferFeatures>(format, featureBits);
+}
+
 angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
 {
     ASSERT(mGpuEventsEnabled);
@@ -1708,6 +1730,29 @@ void RendererVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpu
     }
 
     mGpuEvents.clear();
+}
+
+template <VkFormatFeatureFlags VkFormatProperties::*features>
+bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+{
+    ASSERT(static_cast<uint32_t>(format) < vk::kNumVkFormats);
+    VkFormatProperties &deviceProperties = mFormatProperties[format];
+
+    if (deviceProperties.bufferFeatures == kInvalidFormatFeatureFlags)
+    {
+        // If we don't have the actual device features, see if the requested features are mandatory.
+        // If so, there's no need to query the device.
+        const VkFormatProperties &mandatoryProperties = vk::GetMandatoryFormatSupport(format);
+        if (IsMaskFlagSet(mandatoryProperties.*features, featureBits))
+        {
+            return true;
+        }
+
+        // Otherwise query the format features and cache it.
+        vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, format, &deviceProperties);
+    }
+
+    return IsMaskFlagSet(deviceProperties.*features, featureBits);
 }
 
 uint32_t GetUniformBufferDescriptorCount()
