@@ -491,6 +491,8 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_IMAGES,    // Top-level dirty bit. Also see mDirtyImages.
         DIRTY_OBJECT_SAMPLERS,  // Top-level dirty bit. Also see mDirtySamplers.
         DIRTY_OBJECT_PROGRAM,
+        DIRTY_OBJECT_TEXTURES_INIT,
+        DIRTY_OBJECT_IMAGES_INIT,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
@@ -543,8 +545,6 @@ class State : angle::NonCopyable
 
     void onUniformBufferStateChange(size_t uniformBufferIndex);
 
-    angle::Result clearUnclearedActiveTextures(const Context *context);
-
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const
     {
         return tf == mTransformFeedback.get();
@@ -581,12 +581,15 @@ class State : angle::NonCopyable
     angle::Result syncImages(const Context *context);
     angle::Result syncSamplers(const Context *context);
     angle::Result syncProgram(const Context *context);
+    angle::Result syncTexturesInit(const Context *context);
+    angle::Result syncImagesInit(const Context *context);
 
     using DirtyObjectHandler = angle::Result (State::*)(const Context *context);
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {
         &State::syncReadFramebuffer, &State::syncDrawFramebuffer, &State::syncDrawAttachments,
         &State::syncVertexArray,     &State::syncTextures,        &State::syncImages,
-        &State::syncSamplers,        &State::syncProgram};
+        &State::syncSamplers,        &State::syncProgram,         &State::syncTexturesInit,
+        &State::syncImagesInit};
 
     static_assert(DIRTY_OBJECT_READ_FRAMEBUFFER == 0, "check DIRTY_OBJECT_READ_FRAMEBUFFER index");
     static_assert(DIRTY_OBJECT_DRAW_FRAMEBUFFER == 1, "check DIRTY_OBJECT_DRAW_FRAMEBUFFER index");
@@ -596,6 +599,9 @@ class State : angle::NonCopyable
     static_assert(DIRTY_OBJECT_IMAGES == 5, "check DIRTY_OBJECT_IMAGES index");
     static_assert(DIRTY_OBJECT_SAMPLERS == 6, "check DIRTY_OBJECT_SAMPLERS index");
     static_assert(DIRTY_OBJECT_PROGRAM == 7, "check DIRTY_OBJECT_PROGRAM index");
+    static_assert(DIRTY_OBJECT_TEXTURES_INIT == 8, "check DIRTY_OBJECT_TEXTURES_INIT index");
+    static_assert(DIRTY_OBJECT_IMAGES_INIT == 9, "check DIRTY_OBJECT_IMAGES_INIT index");
+    static_assert(DIRTY_OBJECT_MAX == 10, "check DIRTY_OBJECT_MAX");
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
@@ -671,9 +677,6 @@ class State : angle::NonCopyable
     // Also stores a notification channel to the texture itself to handle texture change events.
     ActiveTexturePointerArray mActiveTexturesCache;
     std::vector<angle::ObserverBinding> mCompleteTextureBindings;
-    InitState mCachedTexturesInitState;
-
-    InitState mCachedImageTexturesInitState;
 
     SamplerBindingVector mSamplers;
 

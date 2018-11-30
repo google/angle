@@ -3476,10 +3476,13 @@ void Context::updateCaps()
     mThreadPool = angle::WorkerThreadPool::Create(mExtensions.parallelShaderCompile);
 
     // Reinitialize some dirty bits that depend on extensions.
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS,
-                          mGLState.isRobustResourceInitEnabled());
-    mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS,
-                          mGLState.isRobustResourceInitEnabled());
+    bool robustInit = mGLState.isRobustResourceInitEnabled();
+    mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS, robustInit);
+    mDrawDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT, robustInit);
+    mDrawDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT, robustInit);
+    mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS, robustInit);
+    mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT, robustInit);
+    mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT, robustInit);
 
     // Reinitialize state cache after extension changes.
     mStateCache.initialize(this);
@@ -3515,7 +3518,28 @@ bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei insta
     return (instanceCount == 0) || noopDraw(mode, count);
 }
 
-angle::Result Context::prepareForDraw(PrimitiveMode mode)
+ANGLE_INLINE angle::Result Context::syncDirtyBits()
+{
+    const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
+    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
+    mGLState.clearDirtyBits();
+    return angle::Result::Continue();
+}
+
+ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
+{
+    const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
+    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
+    mGLState.clearDirtyBits(dirtyBits);
+    return angle::Result::Continue();
+}
+
+ANGLE_INLINE angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
+{
+    return mGLState.syncDirtyObjects(this, objectMask);
+}
+
+ANGLE_INLINE angle::Result Context::prepareForDraw(PrimitiveMode mode)
 {
     if (mGLES1Renderer)
     {
@@ -3523,15 +3547,9 @@ angle::Result Context::prepareForDraw(PrimitiveMode mode)
     }
 
     ANGLE_TRY(syncDirtyObjects(mDrawDirtyObjects));
-
-    if (isRobustResourceInitEnabled())
-    {
-        ANGLE_TRY(mGLState.clearUnclearedActiveTextures(this));
-        ASSERT(!mGLState.getDrawFramebuffer()->hasResourceThatNeedsInit());
-    }
-
-    ANGLE_TRY(syncDirtyBits());
-    return angle::Result::Continue();
+    ASSERT(!isRobustResourceInitEnabled() ||
+           !mGLState.getDrawFramebuffer()->hasResourceThatNeedsInit());
+    return syncDirtyBits();
 }
 
 angle::Result Context::prepareForClear(GLbitfield mask)
@@ -3551,27 +3569,17 @@ angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
     return angle::Result::Continue();
 }
 
+ANGLE_INLINE angle::Result Context::prepareForDispatch()
+{
+    ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects));
+    return syncDirtyBits(mComputeDirtyBits);
+}
+
 angle::Result Context::syncState(const State::DirtyBits &bitMask,
                                  const State::DirtyObjects &objectMask)
 {
     ANGLE_TRY(syncDirtyObjects(objectMask));
     ANGLE_TRY(syncDirtyBits(bitMask));
-    return angle::Result::Continue();
-}
-
-angle::Result Context::syncDirtyBits()
-{
-    const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
-    mGLState.clearDirtyBits();
-    return angle::Result::Continue();
-}
-
-angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
-{
-    const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
-    mGLState.clearDirtyBits(dirtyBits);
     return angle::Result::Continue();
 }
 
@@ -5328,18 +5336,6 @@ bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
                                   angle::MemoryBuffer **zeroBufferOut) const
 {
     return mZeroFilledBuffer.getInitialized(requstedSizeBytes, zeroBufferOut, 0);
-}
-
-angle::Result Context::prepareForDispatch()
-{
-    ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects));
-
-    if (isRobustResourceInitEnabled())
-    {
-        ANGLE_TRY(mGLState.clearUnclearedActiveTextures(this));
-    }
-
-    return syncDirtyBits(mComputeDirtyBits);
 }
 
 void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
