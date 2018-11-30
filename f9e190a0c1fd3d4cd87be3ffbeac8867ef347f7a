@@ -1,0 +1,366 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "365662c2_7c672744",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "nit: you can use \u003d default.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 38
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74183122_6183989e",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "nit: can you put these in a namespace {} block for style guide purposes?",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 54
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7fd5e21_dad17022",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "if we\u0027re not planning on using clear, it might be good to cut out the resource utilization parts of it.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 87
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33c8bb49_cf9104e5",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "if there was some way to make this into a helper it would maybe make the bit packing a bit clearer?",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 0
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27c17a81_d21865d8",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "is this a roundup call? I think we have a helper for that.",
+      "range": {
+        "startLine": 180,
+        "startChar": 28,
+        "endLine": 180,
+        "endChar": 51
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d6f6e0c_b6d9ad24",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "similar comment here.",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 0
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "075862c0_83c65e85",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "same comment here.",
+      "range": {
+        "startLine": 246,
+        "startChar": 28,
+        "endLine": 246,
+        "endChar": 51
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b025ee46_fd98dd6a",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "maybe add a note here about what clients use which APIs?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 61
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe008975_b3922a73",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "I\u0027d be tempted just to pass these arguments rather than packing them into structs. But not a big preference.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 6
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08b40eb6_1bd25780",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "maybe add default init for these?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 6
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b17fb979_21aadb46",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "if you make this an enum class you can use PackedEnumMap for the arrays. Also you can use the AllEnums helper for range-for loops.",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 6
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e1b7b19_a1e21840",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "you can return a reference if you would prefer. we\u0027re allowed to return references, just not pass them as parameters.",
+      "range": {
+        "startLine": 167,
+        "startChar": 4,
+        "endLine": 167,
+        "endChar": 67
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cdc5020_a58881fe",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "you can always file a new bug if you want to close 2958 before finishing this fairly low priority task.",
+      "range": {
+        "startLine": 611,
+        "startChar": 11,
+        "endLine": 611,
+        "endChar": 35
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c265bdd_1380b5ab",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "These new values somewhat overlap with angle::Format\u0027s \"componentType\". Currently we have \n\n* GL_SIGNED_NORMALIZED for SNORM\n* GL_UNSIGNED_NORMALIZED for UNORM\n* GL_INT for SINT and SSCALED\n* GL_UNSIGNED_INT for UINT and USCALED\n\nif you need to distinguish SCALED from INT, could you add a \"bool isScaled\" to angle::Format, similar to \"bool isBlock\"? Preference for storing this information with angle::Format.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 0
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25880901_ed2e7b92",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp",
+        "patchSetId": 27
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "really great.",
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdb651d9_8288dbfa",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 27
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-11-30T20:11:45Z",
+      "side": 1,
+      "message": "good catch. could be a split patch",
+      "range": {
+        "startLine": 202,
+        "startChar": 9,
+        "endLine": 202,
+        "endChar": 30
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
