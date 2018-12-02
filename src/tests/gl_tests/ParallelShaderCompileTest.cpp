@@ -54,8 +54,8 @@ class ParallelShaderCompileTest : public ANGLETest
         bool compile()
         {
             mVertexShader =
-                compileShader(GL_VERTEX_SHADER, insertRandomString(essl1_shaders::vs::Simple()));
-            mFragmentShader = compileShader(GL_FRAGMENT_SHADER,
+                CompileShader(GL_VERTEX_SHADER, insertRandomString(essl1_shaders::vs::Simple()));
+            mFragmentShader = CompileShader(GL_FRAGMENT_SHADER,
                                             insertRandomString(essl1_shaders::fs::UniformColor()));
             return (mVertexShader != 0 && mFragmentShader != 0);
         }
@@ -123,7 +123,7 @@ class ParallelShaderCompileTest : public ANGLETest
             return ostream.str();
         }
 
-        GLuint compileShader(GLenum type, const std::string &source)
+        GLuint CompileShader(GLenum type, const std::string &source)
         {
             GLuint shader = glCreateShader(type);
 

@@ -176,9 +176,8 @@ TEST_P(EGLProgramCacheControlTest, SaveAndReload)
 {
     ANGLE_SKIP_TEST_IF(!extensionAvailable() || !programBinaryAvailable());
 
-    const std::string vertexShader =
-        "attribute vec4 position; void main() { gl_Position = position; }";
-    const std::string fragmentShader = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
+    constexpr char kVS[] = "attribute vec4 position; void main() { gl_Position = position; }";
+    constexpr char kFS[] = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
 
     // Link a program, which will miss the cache.
     {
@@ -186,7 +185,7 @@ TEST_P(EGLProgramCacheControlTest, SaveAndReload)
         glClear(GL_COLOR_BUFFER_BIT);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-        ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
         drawQuad(program, "position", 0.5f);
         EXPECT_GL_NO_ERROR();
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
@@ -229,7 +228,7 @@ TEST_P(EGLProgramCacheControlTest, SaveAndReload)
         glClear(GL_COLOR_BUFFER_BIT);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-        ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
         drawQuad(program, "position", 0.5f);
         EXPECT_GL_NO_ERROR();
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);

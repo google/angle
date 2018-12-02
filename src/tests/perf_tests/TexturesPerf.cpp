@@ -151,7 +151,7 @@ void TexturesBenchmark::initShaders()
     fstrstr << ";\n"
                "}\n";
 
-    mProgram = CompileProgram(vs, fstrstr.str());
+    mProgram = CompileProgram(vs.c_str(), fstrstr.str().c_str());
     ASSERT_NE(0u, mProgram);
 
     for (size_t i = 0; i < params.numTextures; ++i)

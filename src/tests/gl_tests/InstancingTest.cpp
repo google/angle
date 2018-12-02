@@ -53,13 +53,15 @@ class InstancingTest : public ANGLETest
         )";
 
         // attrib 0 is instanced
-        mProgram0 = CompileProgram(inst + pos + main, essl1_shaders::fs::Red());
+        const std::string inst0 = inst + pos + main;
+        mProgram0               = CompileProgram(inst0.c_str(), essl1_shaders::fs::Red());
         ASSERT_NE(0u, mProgram0);
         ASSERT_EQ(0, glGetAttribLocation(mProgram0, "a_instance"));
         ASSERT_EQ(1, glGetAttribLocation(mProgram0, "a_position"));
 
         // attrib 1 is instanced
-        mProgram1 = CompileProgram(pos + inst + main, essl1_shaders::fs::Red());
+        const std::string inst1 = pos + inst + main;
+        mProgram1               = CompileProgram(inst1.c_str(), essl1_shaders::fs::Red());
         ASSERT_NE(0u, mProgram1);
         ASSERT_EQ(1, glGetAttribLocation(mProgram1, "a_instance"));
         ASSERT_EQ(0, glGetAttribLocation(mProgram1, "a_position"));
@@ -360,7 +362,7 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
 // Verify that a large divisor that also changes doesn't cause issues and renders correctly.
 TEST_P(InstancingTestES3, LargeDivisor)
 {
-    const std::string &vs = R"(#version 300 es
+    constexpr char kVS[] = R"(#version 300 es
 layout(location = 0) in vec4 a_position;
 layout(location = 1) in vec4 a_color;
 out vec4 v_color;
@@ -371,7 +373,7 @@ void main()
     v_color = a_color;
 })";
 
-    const std::string &fs = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 precision highp float;
 in vec4 v_color;
 out vec4 my_FragColor;
@@ -380,7 +382,7 @@ void main()
     my_FragColor = v_color;
 })";
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
 
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);

@@ -15,10 +15,10 @@
 
 #include "SampleApplication.h"
 
-#include "shader_utils.h"
 #include "texture_utils.h"
-#include "geometry_utils.h"
-#include "Matrix.h"
+#include "util/Matrix.h"
+#include "util/geometry_utils.h"
+#include "util/shader_utils.h"
 
 #include <cmath>
 
@@ -27,31 +27,28 @@ class SimpleVertexShaderSample : public SampleApplication
   public:
     SimpleVertexShaderSample(int argc, char **argv)
         : SampleApplication("SimpleVertexShader", argc, argv)
+    {}
+
+    bool initialize() override
     {
-    }
+        constexpr char kVS[] = R"(uniform mat4 u_mvpMatrix;
+attribute vec4 a_position;
+attribute vec2 a_texcoord;
+varying vec2 v_texcoord;
+void main()
+{
+    gl_Position = u_mvpMatrix * a_position;
+    v_texcoord = a_texcoord;
+})";
 
-    virtual bool initialize()
-    {
-        const std::string vs =
-            R"(uniform mat4 u_mvpMatrix;
-            attribute vec4 a_position;
-            attribute vec2 a_texcoord;
-            varying vec2 v_texcoord;
-            void main()
-            {
-                gl_Position = u_mvpMatrix * a_position;
-                v_texcoord = a_texcoord;
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+varying vec2 v_texcoord;
+void main()
+{
+    gl_FragColor = vec4(v_texcoord.x, v_texcoord.y, 1.0, 1.0);
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            varying vec2 v_texcoord;
-            void main()
-            {
-                gl_FragColor = vec4(v_texcoord.x, v_texcoord.y, 1.0, 1.0);
-            })";
-
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
@@ -77,17 +74,14 @@ class SimpleVertexShaderSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void step(float dt, double totalTime)
+    void step(float dt, double totalTime) override
     {
         mRotation = fmod(mRotation + (dt * 40.0f), 360.0f);
 
-        Matrix4 perspectiveMatrix = Matrix4::perspective(60.0f, float(getWindow()->getWidth()) / getWindow()->getHeight(),
-                                                         1.0f, 20.0f);
+        Matrix4 perspectiveMatrix = Matrix4::perspective(
+            60.0f, float(getWindow()->getWidth()) / getWindow()->getHeight(), 1.0f, 20.0f);
 
         Matrix4 modelMatrix = Matrix4::translate(angle::Vector3(0.0f, 0.0f, -2.0f)) *
                               Matrix4::rotate(mRotation, angle::Vector3(1.0f, 0.0f, 1.0f));
@@ -100,7 +94,7 @@ class SimpleVertexShaderSample : public SampleApplication
         glUniformMatrix4fv(mMVPMatrixLoc, 1, GL_FALSE, mvpMatrix.data);
     }
 
-    virtual void draw()
+    void draw() override
     {
         // Set the viewport
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());

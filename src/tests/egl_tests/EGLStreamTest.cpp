@@ -658,7 +658,8 @@ TEST_P(EGLStreamTest, StreamProducerTextureNV12End2End)
         getClientMajorVersion() >= 3 && extensionEnabled("GL_OES_EGL_image_external_essl3");
 
     // yuv to rgb conversion shader using Microsoft's given conversion formulas
-    std::string yuvVS, yuvPS;
+    const char *yuvVS = nullptr;
+    const char *yuvPS = nullptr;
     if (useESSL3Shaders)
     {
         yuvVS =
@@ -721,8 +722,7 @@ TEST_P(EGLStreamTest, StreamProducerTextureNV12End2End)
             "}\n";
     }
 
-    GLuint program = CompileProgram(yuvVS, yuvPS);
-    ASSERT_NE(0u, program);
+    ANGLE_GL_PROGRAM(program, yuvVS, yuvPS);
     GLuint yUniform  = glGetUniformLocation(program, "y");
     GLuint uvUniform = glGetUniformLocation(program, "uv");
 

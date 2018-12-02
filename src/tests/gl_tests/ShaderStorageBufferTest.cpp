@@ -149,7 +149,7 @@ class ShaderStorageBufferTest31 : public ANGLETest
 // declarations with the same sequence of types.
 TEST_P(ShaderStorageBufferTest31, MatchedBlockNameWithDifferentMemberType)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "buffer blockName {\n"
         "    float data;\n"
@@ -157,7 +157,7 @@ TEST_P(ShaderStorageBufferTest31, MatchedBlockNameWithDifferentMemberType)
         "void main()\n"
         "{\n"
         "}\n";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "buffer blockName {\n"
         "    uint data;\n"
@@ -166,7 +166,7 @@ TEST_P(ShaderStorageBufferTest31, MatchedBlockNameWithDifferentMemberType)
         "{\n"
         "}\n";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(kVS, kFS);
     EXPECT_EQ(0u, program);
 }
 
@@ -189,13 +189,13 @@ TEST_P(ShaderStorageBufferTest31, ExceedMaxVertexShaderStorageBlocks)
         "void main()\n"
         "{\n"
         "}\n";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(vertexShaderSource.c_str(), kFS);
     EXPECT_EQ(0u, program);
 }
 
@@ -250,14 +250,14 @@ TEST_P(ShaderStorageBufferTest31, ExceedMaxCombinedShaderStorageBlocks)
         "{\n"
         "}\n";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(vertexShaderSource.c_str(), fragmentShaderSource.c_str());
     EXPECT_EQ(0u, program);
 }
 
 // Test shader storage buffer read write.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 {
-    const std::string &csSource =
+    constexpr char kCS[] =
         "#version 310 es\n"
         "layout(local_size_x=1, local_size_y=1, local_size_z=1) in;\n"
         "layout(std140, binding = 1) buffer blockName {\n"
@@ -269,7 +269,7 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
         "    instanceName.data[1] = 4u;\n"
         "}\n";
 
-    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
 
     glUseProgram(program.get());
 
@@ -797,8 +797,7 @@ void main()
 // Test that access/write to array of array structure data in shader storage buffer.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferStructureArrayOfArray)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 struct S
 {
@@ -914,8 +913,7 @@ void main()
 // Test that access/write to vector data in std430 shader storage block.
 TEST_P(ShaderStorageBufferTest31, VectorArrayInSSBOWithStd430Qualifier)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(std430, binding = 0) buffer blockIn {
     uvec2 data[2];
@@ -973,8 +971,7 @@ void main()
 // Test that access/write to matrix data in std430 shader storage block.
 TEST_P(ShaderStorageBufferTest31, MatrixInSSBOWithStd430Qualifier)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(std430, binding = 0) buffer blockIn {
     mat2 data;
@@ -1004,8 +1001,7 @@ void main()
 // Test that access/write to structure data in std430 shader storage block.
 TEST_P(ShaderStorageBufferTest31, StructureInSSBOWithStd430Qualifier)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 struct S
 {
@@ -1084,8 +1080,7 @@ void main()
 // Test that access/write to structure of structure data in std430 shader storage block.
 TEST_P(ShaderStorageBufferTest31, StructureOfStructureInSSBOWithStd430Qualifier)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 struct S2
 {
@@ -1182,24 +1177,21 @@ TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
     // supported on d3d backend. http://anglebug.com/1951
 
     ANGLE_SKIP_TEST_IF(IsD3D11());
-    const std::string &csSource =
-        R"(#version 310 es
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std140, binding = 1) buffer blockName {
+    uint data[2];
+} instanceName;
 
-        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
-        layout(std140, binding = 1) buffer blockName {
-            uint data[2];
-        } instanceName;
+void main()
+{
+    instanceName.data[0] = 0u;
+    instanceName.data[1] = 0u;
+    atomicAdd(instanceName.data[0], 5u);
+    atomicMax(instanceName.data[1], 7u);
+})";
 
-        void main()
-        {
-            instanceName.data[0] = 0u;
-            instanceName.data[1] = 0u;
-            atomicAdd(instanceName.data[0], 5u);
-            atomicMax(instanceName.data[1], 7u);
-
-        })";
-
-    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
 
     glUseProgram(program.get());
 
@@ -1241,37 +1233,35 @@ TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 // bindings again.
 TEST_P(ShaderStorageBufferTest31, MultiStorageBuffersForMultiPrograms)
 {
-    const std::string &csSource1 =
-        R"(#version 310 es
-        layout(local_size_x=3, local_size_y=1, local_size_z=1) in;
-        layout(binding = 1) buffer Output {
-            uint result1[];
-        } sb_out1;
-        void main()
-        {
-            highp uint offset = gl_LocalInvocationID.x;
-            sb_out1.result1[gl_LocalInvocationIndex] = gl_LocalInvocationIndex + 1u;
-        })";
+    constexpr char kCS1[] = R"(#version 310 es
+layout(local_size_x=3, local_size_y=1, local_size_z=1) in;
+layout(binding = 1) buffer Output {
+    uint result1[];
+} sb_out1;
+void main()
+{
+    highp uint offset = gl_LocalInvocationID.x;
+    sb_out1.result1[gl_LocalInvocationIndex] = gl_LocalInvocationIndex + 1u;
+})";
 
-    const std::string &csSource2 =
-        R"(#version 310 es
-        layout(local_size_x=3, local_size_y=1, local_size_z=1) in;
-        layout(binding = 2) buffer Output {
-            uint result2[];
-        } sb_out2;
-        void main()
-        {
-            highp uint offset = gl_LocalInvocationID.x;
-            sb_out2.result2[gl_LocalInvocationIndex] = gl_LocalInvocationIndex + 2u;
-        })";
+    constexpr char kCS2[] = R"(#version 310 es
+layout(local_size_x=3, local_size_y=1, local_size_z=1) in;
+layout(binding = 2) buffer Output {
+    uint result2[];
+} sb_out2;
+void main()
+{
+    highp uint offset = gl_LocalInvocationID.x;
+    sb_out2.result2[gl_LocalInvocationIndex] = gl_LocalInvocationIndex + 2u;
+})";
 
     constexpr unsigned int numInvocations = 3;
     int arrayStride1 = 0, arrayStride2 = 0;
     GLenum props[] = {GL_ARRAY_STRIDE};
     GLBuffer shaderStorageBuffer1, shaderStorageBuffer2;
 
-    ANGLE_GL_COMPUTE_PROGRAM(program1, csSource1);
-    ANGLE_GL_COMPUTE_PROGRAM(program2, csSource2);
+    ANGLE_GL_COMPUTE_PROGRAM(program1, kCS1);
+    ANGLE_GL_COMPUTE_PROGRAM(program2, kCS2);
     EXPECT_GL_NO_ERROR();
 
     unsigned int outVarIndex1 =
@@ -1327,8 +1317,7 @@ TEST_P(ShaderStorageBufferTest31, MultiStorageBuffersForMultiPrograms)
 // Test that function calling is supported in SSBO access chain.
 TEST_P(ShaderStorageBufferTest31, FunctionCallInSSBOAccessChain)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=4) in;
 highp uint getIndex (in highp uvec2 localID, uint element)
 {
@@ -1352,8 +1341,7 @@ void main()
 // Test that unary operator is supported in SSBO access chain.
 TEST_P(ShaderStorageBufferTest31, UnaryOperatorInSSBOAccessChain)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=4) in;
 layout(binding=0, std430) buffer Storage
 {
@@ -1374,8 +1362,7 @@ void main()
 // Test that ternary operator is supported in SSBO access chain.
 TEST_P(ShaderStorageBufferTest31, TernaryOperatorInSSBOAccessChain)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=4) in;
 layout(binding=0, std430) buffer Storage
 {
@@ -1399,8 +1386,7 @@ TEST_P(ShaderStorageBufferTest31, LoadAndStoreBooleanValue)
     // http://anglebug.com/1951
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
 
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=1) in;
 layout(binding=0, std140) buffer Storage0
 {
@@ -1464,8 +1450,7 @@ void main()
 // Test that non-structure array of arrays is supported in SSBO.
 TEST_P(ShaderStorageBufferTest31, SimpleArrayOfArrays)
 {
-    constexpr char kComputeShaderSource[] =
-        R"(#version 310 es
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=1) in;
 layout(binding=0, std140) buffer Storage0
 {

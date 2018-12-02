@@ -8,6 +8,27 @@
 
 using namespace angle;
 
+namespace
+{
+constexpr char kVS[] = R"(attribute vec4 aTest;
+attribute vec2 aPosition;
+varying vec4 vTest;
+
+void main()
+{
+    vTest        = aTest;
+    gl_Position  = vec4(aPosition, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+
+constexpr char kFS[] = R"(precision mediump float;
+varying vec4 vTest;
+void main()
+{
+    gl_FragColor = vTest;
+})";
+}  // namespace
+
 class PBOExtensionTest : public ANGLETest
 {
   protected:
@@ -21,7 +42,7 @@ class PBOExtensionTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -33,27 +54,7 @@ class PBOExtensionTest : public ANGLETest
                          GL_STATIC_DRAW);
             glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
-            const char *vertexShaderSrc =
-                R"(attribute vec4 aTest;
-                attribute vec2 aPosition;
-                varying vec4 vTest;
-
-                void main()
-                {
-                    vTest        = aTest;
-                    gl_Position  = vec4(aPosition, 0.0, 1.0);
-                    gl_PointSize = 1.0;
-                })";
-
-            const char *fragmentShaderSrc =
-                R"(precision mediump float;
-                varying vec4 vTest;
-                void main()
-                {
-                    gl_FragColor = vTest;
-                })";
-
-            mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
+            mProgram = CompileProgram(kVS, kFS);
 
             glGenBuffers(1, &mPositionVBO);
             glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
@@ -63,7 +64,7 @@ class PBOExtensionTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         ANGLETest::TearDown();
 

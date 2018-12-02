@@ -78,7 +78,7 @@ void InterleavedAttributeDataBenchmark::initializeBenchmark()
     const auto &params = GetParam();
 
     // Compile point sprite shaders
-    const std::string vs =
+    constexpr char kVS[] =
         "attribute vec4 aPosition;"
         "attribute vec4 aColor;"
         "varying vec4 vColor;"
@@ -89,7 +89,7 @@ void InterleavedAttributeDataBenchmark::initializeBenchmark()
         "    vColor = aColor;"
         "}";
 
-    const std::string fs =
+    constexpr char kFS[] =
         "precision mediump float;"
         "varying vec4 vColor;"
         "void main()"
@@ -97,7 +97,7 @@ void InterleavedAttributeDataBenchmark::initializeBenchmark()
         "    gl_FragColor = vColor;"
         "}";
 
-    mPointSpriteProgram = CompileProgram(vs, fs);
+    mPointSpriteProgram = CompileProgram(kVS, kFS);
     ASSERT_NE(0u, mPointSpriteProgram);
 
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);

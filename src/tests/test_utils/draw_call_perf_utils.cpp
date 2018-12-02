@@ -15,63 +15,44 @@
 
 namespace
 {
-
-const char *SimpleScaleAndOffsetVertexShaderSource()
+constexpr char kSimpleScaleAndOffsetVS[] = R"(attribute vec2 vPosition;
+uniform float uScale;
+uniform float uOffset;
+void main()
 {
-    return
-        R"(attribute vec2 vPosition;
-        uniform float uScale;
-        uniform float uOffset;
-        void main()
-        {
-            gl_Position = vec4(vPosition * vec2(uScale) + vec2(uOffset), 0, 1);
-        })";
-}
+    gl_Position = vec4(vPosition * vec2(uScale) + vec2(uOffset), 0, 1);
+})";
 
-const char *SimpleDrawVertexShaderSource()
+constexpr char kSimpleDrawVS[] = R"(attribute vec2 vPosition;
+const float scale = 0.5;
+const float offset = -0.5;
+
+void main()
 {
-    return
-        R"(attribute vec2 vPosition;
-        const float scale = 0.5;
-        const float offset = -0.5;
+    gl_Position = vec4(vPosition * vec2(scale) + vec2(offset), 0, 1);
+})";
 
-        void main()
-        {
-            gl_Position = vec4(vPosition * vec2(scale) + vec2(offset), 0, 1);
-        })";
-}
-
-const char *SimpleTexCoordVertexShaderSource()
-{
-    return R"(attribute vec2 vPosition;
+constexpr char kSimpleTexCoordVS[] = R"(attribute vec2 vPosition;
 varying vec2 texCoord;
 void main()
 {
     gl_Position = vec4(vPosition, 0, 1);
     texCoord = vPosition * 0.5 + vec2(0.5);
 })";
-}
 
-const char *SimpleFragmentShaderSource()
+constexpr char kSimpleFS[] = R"(precision mediump float;
+void main()
 {
-    return
-        R"(precision mediump float;
-        void main()
-        {
-            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        })";
-}
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
-const char *SimpleTextureFragmentShaderSource()
-{
-    return R"(precision mediump float;
+constexpr char kSimpleTextureFS[] = R"(precision mediump float;
 varying vec2 texCoord;
 uniform sampler2D tex;
 void main()
 {
     gl_FragColor = texture2D(tex, texCoord);
 })";
-}
 
 void Generate2DTriangleData(size_t numTris, std::vector<float> *floatData)
 {
@@ -92,9 +73,7 @@ void Generate2DTriangleData(size_t numTris, std::vector<float> *floatData)
 
 GLuint SetupSimpleScaleAndOffsetProgram()
 {
-    const std::string vs = SimpleScaleAndOffsetVertexShaderSource();
-    const std::string fs = SimpleFragmentShaderSource();
-    GLuint program       = CompileProgram(vs, fs);
+    GLuint program = CompileProgram(kSimpleScaleAndOffsetVS, kSimpleFS);
     if (program == 0u)
     {
         return program;
@@ -113,9 +92,7 @@ GLuint SetupSimpleScaleAndOffsetProgram()
 
 GLuint SetupSimpleDrawProgram()
 {
-    const std::string vs = SimpleDrawVertexShaderSource();
-    const std::string fs = SimpleFragmentShaderSource();
-    GLuint program       = CompileProgram(vs, fs);
+    GLuint program = CompileProgram(kSimpleDrawVS, kSimpleFS);
     if (program == 0u)
     {
         return program;
@@ -129,9 +106,7 @@ GLuint SetupSimpleDrawProgram()
 
 GLuint SetupSimpleTextureProgram()
 {
-    const std::string vs = SimpleTexCoordVertexShaderSource();
-    const std::string fs = SimpleTextureFragmentShaderSource();
-    GLuint program       = CompileProgram(vs, fs);
+    GLuint program = CompileProgram(kSimpleTexCoordVS, kSimpleTextureFS);
     if (program == 0u)
     {
         return program;

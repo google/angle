@@ -51,20 +51,20 @@ class AtomicCounterBufferTest31 : public AtomicCounterBufferTest
 // Linking should fail if counters in vertex shader exceed gl_MaxVertexAtomicCounters.
 TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "layout(binding = 0) uniform atomic_uint foo[gl_MaxVertexAtomicCounters + 1];\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(foo[0]);\n"
         "}\n";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(kVS, kFS);
     EXPECT_EQ(0u, program);
 }
 
@@ -72,21 +72,21 @@ TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 // GLSL ES Spec 3.10.4, section 9.2.1.
 TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "layout(binding = 0, offset = 4) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(foo);\n"
         "}\n";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "layout(binding = 0) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(kVS, kFS);
     EXPECT_EQ(0u, program);
 }
 
@@ -94,21 +94,21 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 // value.
 TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "layout(binding = 0, offset = 4) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(foo);\n"
         "}\n";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "layout(binding = 0, offset = 8) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(kVS, kFS);
     EXPECT_EQ(0u, program);
 }
 
@@ -145,7 +145,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
     // http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &fragShader =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 0, offset = 4) uniform atomic_uint ac;\n"
@@ -157,7 +157,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
         "    if (a1 == 3u) my_color = vec4(1.0);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragShader);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
 
     glUseProgram(program.get());
 
@@ -181,7 +181,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
     // http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &csSource =
+    constexpr char kCS[] =
         "#version 310 es\n"
         "layout(local_size_x=1, local_size_y=1, local_size_z=1) in;\n"
         "layout(binding = 0, offset = 4) uniform atomic_uint ac[2];\n"
@@ -191,7 +191,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
         "    atomicCounterDecrement(ac[1]);\n"
         "}\n";
 
-    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
 
     glUseProgram(program.get());
 

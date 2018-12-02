@@ -64,28 +64,26 @@ class SwizzleTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec4 position;
-            varying vec2 texcoord;
+        constexpr char kVS[] = R"(precision highp float;
+attribute vec4 position;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_Position = position;
-                texcoord = (position.xy * 0.5) + 0.5;
-            })";
+void main()
+{
+    gl_Position = position;
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
 
-        const std::string fragmentShaderSource =
-            R"(precision highp float;
-            uniform sampler2D tex;
-            varying vec2 texcoord;
+        constexpr char kFS[] = R"(precision highp float;
+uniform sampler2D tex;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_FragColor = texture2D(tex, texcoord);
-            })";
+void main()
+{
+    gl_FragColor = texture2D(tex, texcoord);
+})";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         mTextureUniformLocation = glGetUniformLocation(mProgram, "tex");
@@ -210,7 +208,7 @@ class SwizzleIntegerTest : public SwizzleTest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
+        constexpr char kVS[] =
             "#version 300 es\n"
             "precision highp float;\n"
             "in vec4 position;\n"
@@ -222,7 +220,7 @@ class SwizzleIntegerTest : public SwizzleTest
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
             "}\n";
 
-        const std::string fragmentShaderSource =
+        constexpr char kFS[] =
             "#version 300 es\n"
             "precision highp float;\n"
             "precision highp usampler2D;\n"
@@ -240,7 +238,7 @@ class SwizzleIntegerTest : public SwizzleTest
             "    my_FragColor = vec4(s) / 255.0;\n"
             "}\n";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         mTextureUniformLocation = glGetUniformLocation(mProgram, "tex");

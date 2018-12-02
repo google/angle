@@ -178,14 +178,13 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
     GLfloat maxPointSize = pointSizeRange[1];
     ANGLE_SKIP_TEST_IF(maxPointSize < kMinMaxPointSize);
 
-    const std::string vs =
-        R"(void main()
-        {
-            gl_PointSize = 2.0;
-            gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-        })";
+    constexpr char kVS[] = R"(void main()
+{
+    gl_PointSize = 2.0;
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+})";
 
-    ANGLE_GL_PROGRAM(program, vs, essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Blue());
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -210,35 +209,33 @@ TEST_P(PointSpritesTest, PointCoordRegressionTest)
     GLfloat maxPointSize = pointSizeRange[1];
     ANGLE_SKIP_TEST_IF(maxPointSize < kMinMaxPointSize);
 
-    const std::string fs =
-        R"(precision mediump float;
-        varying vec4 v_color;
-        void main()
-        {
-            // It seems as long as this mathematical expression references
-            // gl_PointCoord, the fragment's color is incorrect.
-            vec2 diff = gl_PointCoord - vec2(.5, .5);
-            if (length(diff) > 0.5)
-                discard;
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec4 v_color;
+void main()
+{
+    // It seems as long as this mathematical expression references
+    // gl_PointCoord, the fragment's color is incorrect.
+    vec2 diff = gl_PointCoord - vec2(.5, .5);
+    if (length(diff) > 0.5)
+        discard;
 
-            // The point should be a solid color.
-            gl_FragColor = v_color;
-        })";
+    // The point should be a solid color.
+    gl_FragColor = v_color;
+})";
 
-    const std::string vs =
-        R"(varying vec4 v_color;
-        // The X and Y coordinates of the center of the point.
-        attribute vec2 a_vertex;
-        uniform float u_pointSize;
-        void main()
-        {
-            gl_PointSize = u_pointSize;
-            gl_Position  = vec4(a_vertex, 0.0, 1.0);
-            // The color of the point.
-            v_color = vec4(0.0, 1.0, 0.0, 1.0);
-        })";
+    constexpr char kVS[] = R"(varying vec4 v_color;
+// The X and Y coordinates of the center of the point.
+attribute vec2 a_vertex;
+uniform float u_pointSize;
+void main()
+{
+    gl_PointSize = u_pointSize;
+    gl_Position  = vec4(a_vertex, 0.0, 1.0);
+    // The color of the point.
+    v_color = vec4(0.0, 1.0, 0.0, 1.0);
+})";
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -283,32 +280,30 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
     // http://anglebug.com/1643
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
-    const std::string fs =
-        R"(precision mediump float;
-        varying vec4 color;
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec4 color;
 
-        void main()
-        {
-            gl_FragColor = color;
-        })";
+void main()
+{
+    gl_FragColor = color;
+})";
 
-    const std::string vs =
-        R"(attribute vec3 pos;
-        attribute vec4 colorIn;
-        uniform float pointSize;
-        varying vec4 color;
+    constexpr char kVS[] = R"(attribute vec3 pos;
+attribute vec4 colorIn;
+uniform float pointSize;
+varying vec4 color;
 
-        void main()
-        {
-            gl_PointSize = pointSize;
-            color        = colorIn;
-            gl_Position  = vec4(pos, 1.0);
-        })";
+void main()
+{
+    gl_PointSize = pointSize;
+    color        = colorIn;
+    gl_Position  = vec4(pos, 1.0);
+})";
 
     // The WebGL test is drawn on a 2x2 canvas. Emulate this by setting a 2x2 viewport.
     glViewport(0, 0, 2, 2);
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -401,16 +396,14 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
 // Verify that rendering works correctly when gl_PointSize is declared in a shader but isn't used
 TEST_P(PointSpritesTest, PointSizeDeclaredButUnused)
 {
-    const std::string vs =
-        R"(attribute highp vec4 position;
+    constexpr char kVS[] = R"(attribute highp vec4 position;
+void main(void)
+{
+    gl_PointSize = 1.0;
+    gl_Position  = position;
+})";
 
-        void main(void)
-        {
-            gl_PointSize = 1.0;
-            gl_Position  = position;
-        })";
-
-    ANGLE_GL_PROGRAM(program, vs, essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -431,16 +424,14 @@ TEST_P(PointSpritesTest, PointSpriteAlternatingDrawTypes)
     GLfloat maxPointSize = pointSizeRange[1];
     ANGLE_SKIP_TEST_IF(maxPointSize < kMinMaxPointSize);
 
-    const std::string pointVS =
-        R"(uniform float u_pointSize;
+    constexpr char kVS[] = R"(uniform float u_pointSize;
+void main()
+{
+    gl_PointSize = u_pointSize;
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+})";
 
-        void main()
-        {
-            gl_PointSize = u_pointSize;
-            gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-        })";
-
-    ANGLE_GL_PROGRAM(pointProgram, pointVS, essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(pointProgram, kVS, essl1_shaders::fs::Blue());
 
     ANGLE_GL_PROGRAM(quadProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     ASSERT_GL_NO_ERROR();
@@ -501,7 +492,7 @@ TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
         return;
     }
 
-    const std::string &vs =
+    constexpr char kVS[] =
         "attribute vec4 vPosition;\n"
         "uniform float uPointSize;\n"
         "void main()\n"
@@ -509,7 +500,7 @@ TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
         "    gl_PointSize = uPointSize;\n"
         "    gl_Position  = vPosition;\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, vs, essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
 

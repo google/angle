@@ -73,14 +73,14 @@ class WebGLDrawElementsTest : public DrawElementsTest
 // Test no error is generated when using client-side arrays, indices = nullptr and count = 0
 TEST_P(DrawElementsTest, ClientSideNullptrArrayZeroCount)
 {
-    const std::string &vert =
+    constexpr char kVS[] =
         "attribute vec3 a_pos;\n"
         "void main()\n"
         "{\n"
         "    gl_Position = vec4(a_pos, 1.0);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Blue());
 
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
     ASSERT_NE(-1, posLocation);
@@ -112,7 +112,7 @@ TEST_P(DrawElementsTest, ClientSideNullptrArrayZeroCount)
 TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
 {
     // Init program
-    const std::string &vertexShader =
+    constexpr char kVS[] =
         "attribute vec2 position;\n"
         "attribute vec2 testFlag;\n"
         "varying vec2 v_data;\n"
@@ -121,13 +121,13 @@ TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
         "  v_data = testFlag;\n"
         "}";
 
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         "varying highp vec2 v_data;\n"
         "void main() {\n"
         "  gl_FragColor = vec4(v_data, 0, 1);\n"
         "}";
 
-    mProgram = CompileProgram(vertexShader, fragmentShader);
+    mProgram = CompileProgram(kVS, kFS);
     ASSERT_NE(0u, mProgram);
     glUseProgram(mProgram);
 
@@ -268,14 +268,14 @@ TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
 // Test that the offset in the index buffer is forced to be a multiple of the element size
 TEST_P(WebGLDrawElementsTest, DrawElementsTypeAlignment)
 {
-    const std::string &vert =
+    constexpr char kVS[] =
         "attribute vec3 a_pos;\n"
         "void main()\n"
         "{\n"
         "    gl_Position = vec4(a_pos, 1.0);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Blue());
 
     GLint posLocation = glGetAttribLocation(program, "a_pos");
     ASSERT_NE(-1, posLocation);

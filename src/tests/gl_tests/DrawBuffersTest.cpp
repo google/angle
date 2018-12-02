@@ -115,7 +115,7 @@ class DrawBuffersTest : public ANGLETest
 
         strstr << "}\n";
 
-        *programOut = CompileProgram(essl3_shaders::vs::Simple(), strstr.str());
+        *programOut = CompileProgram(essl3_shaders::vs::Simple(), strstr.str().c_str());
         if (*programOut == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -146,7 +146,7 @@ class DrawBuffersTest : public ANGLETest
 
         strstr << "}\n";
 
-        *programOut = CompileProgram(essl1_shaders::vs::Simple(), strstr.str());
+        *programOut = CompileProgram(essl1_shaders::vs::Simple(), strstr.str().c_str());
         if (*programOut == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -533,7 +533,7 @@ TEST_P(DrawBuffersTest, BroadcastGLFragColor)
 
     const GLenum bufs[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
 
-    const std::string fragmentShaderSource =
+    constexpr char kFS[] =
         "#extension GL_EXT_draw_buffers : enable\n"
         "precision highp float;\n"
         "uniform float u_zero;\n"
@@ -546,7 +546,7 @@ TEST_P(DrawBuffersTest, BroadcastGLFragColor)
         "    }\n"
         "}\n";
 
-    GLuint program = CompileProgram(essl1_shaders::vs::Simple(), fragmentShaderSource);
+    GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kFS);
     if (program == 0)
     {
         FAIL() << "shader compilation failed.";

@@ -227,14 +227,14 @@ class VertexAttributeTest : public ANGLETest
         }
         shaderStream << "}" << std::endl;
 
-        constexpr char testFragmentShaderSource[] =
+        constexpr char kFS[] =
             "varying mediump float color;\n"
             "void main(void)\n"
             "{\n"
             "    gl_FragColor = vec4(color, 0.0, 0.0, 1.0);\n"
             "}\n";
 
-        return CompileProgram(shaderStream.str(), testFragmentShaderSource);
+        return CompileProgram(shaderStream.str().c_str(), kFS);
     }
 
     void setupMultiAttribs(GLuint program, GLint attribCount, GLfloat value)
@@ -253,7 +253,7 @@ class VertexAttributeTest : public ANGLETest
 
     void initBasicProgram()
     {
-        constexpr char testVertexShaderSource[] =
+        constexpr char kVS[] =
             "attribute mediump vec4 position;\n"
             "attribute mediump vec4 test;\n"
             "attribute mediump vec4 expected;\n"
@@ -265,14 +265,14 @@ class VertexAttributeTest : public ANGLETest
             "    color = vec4(lessThanEqual(abs(test - expected), threshold));\n"
             "}\n";
 
-        constexpr char testFragmentShaderSource[] =
+        constexpr char kFS[] =
             "varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
             "    gl_FragColor = color;\n"
             "}\n";
 
-        mProgram = CompileProgram(testVertexShaderSource, testFragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         mTestAttrib = glGetAttribLocation(mProgram, "test");
@@ -953,7 +953,7 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
     // TODO: Support this test on Vulkan.  http://anglebug.com/2797
     ANGLE_SKIP_TEST_IF(IsLinux() && IsVulkan() && IsIntel());
 
-    constexpr char vsSource[] =
+    constexpr char kVS[] =
         "attribute vec4 a_position;\n"
         "attribute vec4 a_color;\n"
         "varying vec4 v_color;\n"
@@ -965,7 +965,7 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
         "    v_color = isCorrectColor(a_color) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
         "}";
 
-    constexpr char fsSource[] =
+    constexpr char kFS[] =
         "varying mediump vec4 v_color;\n"
         "void main() {\n"
         "    gl_FragColor = v_color;\n"
@@ -976,7 +976,7 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
 
     for (GLint colorIndex = 0; colorIndex < maxVertexAttribs; ++colorIndex)
     {
-        GLuint program = CompileProgram(vsSource, fsSource, [&](GLuint program) {
+        GLuint program = CompileProgram(kVS, kFS, [&](GLuint program) {
             glBindAttribLocation(program, colorIndex, "a_color");
         });
         ASSERT_NE(0u, program);
@@ -1467,7 +1467,7 @@ class VertexAttributeCachingTest : public VertexAttributeTest
 
     void initDoubleAttribProgram()
     {
-        constexpr char testVertexShaderSource[] =
+        constexpr char kVS[] =
             "attribute mediump vec4 position;\n"
             "attribute mediump vec4 test;\n"
             "attribute mediump vec4 expected;\n"
@@ -1483,14 +1483,14 @@ class VertexAttributeCachingTest : public VertexAttributeTest
             "    color += vec4(lessThanEqual(abs(test2 - expected2), threshold2));\n"
             "}\n";
 
-        constexpr char testFragmentShaderSource[] =
+        constexpr char kFS[] =
             "varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
             "    gl_FragColor = color;\n"
             "}\n";
 
-        mProgram = CompileProgram(testVertexShaderSource, testFragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         mTestAttrib = glGetAttribLocation(mProgram, "test");

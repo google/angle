@@ -29,17 +29,16 @@ class UniformBufferTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        mFragmentShaderSource =
-            R"(#version 300 es
-            precision highp float;
-            uniform uni { vec4 color; };
-            out vec4 fragColor;
-            void main()
-            {
-                fragColor = color;
-            })";
+        mkFS = R"(#version 300 es
+precision highp float;
+uniform uni { vec4 color; };
+out vec4 fragColor;
+void main()
+{
+    fragColor = color;
+})";
 
-        mProgram = CompileProgram(essl3_shaders::vs::Simple(), mFragmentShaderSource);
+        mProgram = CompileProgram(essl3_shaders::vs::Simple(), mkFS);
         ASSERT_NE(mProgram, 0u);
 
         mUniformBufferIndex = glGetUniformBlockIndex(mProgram, "uni");
@@ -57,7 +56,7 @@ class UniformBufferTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    std::string mFragmentShaderSource;
+    const char *mkFS;
     GLuint mProgram;
     GLint mUniformBufferIndex;
     GLuint mUniformBuffer;
@@ -323,7 +322,7 @@ TEST_P(UniformBufferTest, ManyUniformBufferRange)
 // Tests that active uniforms have the right names.
 TEST_P(UniformBufferTest, ActiveUniformNames)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in vec2 position;\n"
         "out vec2 v;\n"
@@ -338,7 +337,7 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
         "  gl_Position = vec4(position, 0, 1);\n"
         "}";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "in vec2 v;\n"
@@ -347,8 +346,7 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
         "  color = vec4(v, 0, 1);\n"
         "}";
 
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
-    ASSERT_NE(0u, program);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLint activeUniformBlocks;
     glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &activeUniformBlocks);
@@ -397,7 +395,7 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
 // Tests active uniforms and blocks when the layout is std140, shared and packed.
 TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in vec2 position;\n"
         "out float v;\n"
@@ -426,7 +424,7 @@ TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
         "  gl_Position = vec4(position, 0, 1);\n"
         "}";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "in float v;\n"
@@ -435,7 +433,7 @@ TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
         "  color = vec4(v, 0, 0, 1);\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     // Note that the packed |blockName3| might (or might not) be optimized out.
     GLint activeUniforms;
@@ -650,21 +648,21 @@ TEST_P(UniformBufferTest31, MaxUniformBufferBindingsExceeded)
              "{\n"
              "    gl_Position = position;\n"
              "}";
-    GLuint shader = CompileShader(GL_VERTEX_SHADER, source);
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, source.c_str());
     EXPECT_EQ(0u, shader);
 }
 
 // Test uniform block bindings specified by layout in shader work properly.
 TEST_P(UniformBufferTest31, UniformBufferBindings)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "in vec4 position;\n"
         "void main()\n"
         "{\n"
         "    gl_Position = position;\n"
         "}";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 2) uniform uni {\n"
@@ -676,7 +674,7 @@ TEST_P(UniformBufferTest31, UniformBufferBindings)
         "    fragColor = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     GLuint uniformBufferIndex = glGetUniformBlockIndex(program, "uni");
     ASSERT_NE(GL_INVALID_INDEX, uniformBufferIndex);
     GLBuffer uniformBuffer;
@@ -722,7 +720,7 @@ TEST_P(UniformBufferTest31, UniformBufferBindings)
 // Test uniform blocks used as instanced array take next binding point for each subsequent element.
 TEST_P(UniformBufferTest31, ConsecutiveBindingsForBlockArray)
 {
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 2) uniform uni {\n"
@@ -734,7 +732,7 @@ TEST_P(UniformBufferTest31, ConsecutiveBindingsForBlockArray)
         "    fragColor = blocks[0].color + blocks[1].color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     std::array<GLBuffer, 2> uniformBuffers;
 
     int px = getWindowWidth() / 2;
@@ -770,7 +768,7 @@ TEST_P(UniformBufferTest31, ConsecutiveBindingsForBlockArray)
 // Test the layout qualifier binding must be both specified(ESSL 3.10.4 section 9.2).
 TEST_P(UniformBufferTest31, BindingMustBeBothSpecified)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "in vec4 position;\n"
         "uniform uni\n"
@@ -781,7 +779,7 @@ TEST_P(UniformBufferTest31, BindingMustBeBothSpecified)
         "{\n"
         "    gl_Position = position + block.color;\n"
         "}";
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 0) uniform uni\n"
@@ -793,14 +791,14 @@ TEST_P(UniformBufferTest31, BindingMustBeBothSpecified)
         "{\n"
         "    fragColor = block.color;\n"
         "}";
-    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    GLuint program = CompileProgram(kVS, kFS);
     ASSERT_EQ(0u, program);
 }
 
 // Test with a block containing an array of structs.
 TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "out vec4 my_FragColor;\n"
@@ -823,7 +821,7 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
         "    my_FragColor = lighting;\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -848,7 +846,7 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
 // Test with a block instance array containing an array of structs.
 TEST_P(UniformBufferTest, BlockArrayContainingArrayOfStructs)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
 
         precision highp float;
@@ -872,7 +870,7 @@ TEST_P(UniformBufferTest, BlockArrayContainingArrayOfStructs)
             my_FragColor = lighting;
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex  = glGetUniformBlockIndex(program, "lightData[0]");
     GLint uniformBuffer2Index = glGetUniformBlockIndex(program, "lightData[1]");
 
@@ -908,7 +906,7 @@ TEST_P(UniformBufferTest, BlockArrayContainingArrayOfStructs)
 // Test with a block containing an array of structs containing arrays.
 TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
         precision highp float;
         out vec4 my_FragColor;
@@ -930,7 +928,7 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
             my_FragColor = lighting;
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -956,7 +954,7 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
 // Test with a block containing nested structs.
 TEST_P(UniformBufferTest, BlockContainingNestedStructs)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "out vec4 my_FragColor;\n"
@@ -982,7 +980,7 @@ TEST_P(UniformBufferTest, BlockContainingNestedStructs)
         "    my_FragColor = lighting;\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1013,7 +1011,7 @@ TEST_P(UniformBufferTest, GetUniformBlockIndexDefaultReturn)
 // Block names can be reserved names in GLSL, as long as they're not reserved in GLSL ES.
 TEST_P(UniformBufferTest, UniformBlockReservedOpenGLName)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "out vec4 my_FragColor;\n"
@@ -1023,7 +1021,7 @@ TEST_P(UniformBufferTest, UniformBlockReservedOpenGLName)
         "    my_FragColor = color;\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "buffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1046,7 +1044,7 @@ TEST_P(UniformBufferTest, UniformBlockReservedOpenGLName)
 // Block instance names can be reserved names in GLSL, as long as they're not reserved in GLSL ES.
 TEST_P(UniformBufferTest, UniformBlockInstanceReservedOpenGLName)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "out vec4 my_FragColor;\n"
@@ -1056,7 +1054,7 @@ TEST_P(UniformBufferTest, UniformBlockInstanceReservedOpenGLName)
         "    my_FragColor = buffer.color;\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "dmat2");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1086,7 +1084,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockInstanceWithNestedStructsContainingV
     // http://anglebug.com/2217
     ANGLE_SKIP_TEST_IF(IsAndroid() && !IsNVIDIA());
 
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
 
         precision highp float;
@@ -1113,7 +1111,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockInstanceWithNestedStructsContainingV
             accessStruct(buffer.s);
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "structBuffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1141,19 +1139,19 @@ TEST_P(UniformBufferTest, DetachShaders)
 {
     GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
     ASSERT_NE(0u, vertexShader);
-    GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, mFragmentShaderSource);
-    ASSERT_NE(0u, fragmentShader);
+    GLuint kFS = CompileShader(GL_FRAGMENT_SHADER, mkFS);
+    ASSERT_NE(0u, kFS);
 
     GLuint program = glCreateProgram();
     glAttachShader(program, vertexShader);
-    glAttachShader(program, fragmentShader);
+    glAttachShader(program, kFS);
 
     ASSERT_TRUE(LinkAttachedProgram(program));
 
     glDetachShader(program, vertexShader);
-    glDetachShader(program, fragmentShader);
+    glDetachShader(program, kFS);
     glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    glDeleteShader(kFS);
 
     glClear(GL_COLOR_BUFFER_BIT);
     float floatData[4] = {0.5f, 0.75f, 0.25f, 1.0f};
@@ -1182,7 +1180,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
     // http://anglebug.com/2273
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
 
         precision highp float;
@@ -1199,7 +1197,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
             my_FragColor = vec4(buffer.m);
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1230,7 +1228,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
     // http://anglebug.com/2273
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
 
         precision highp float;
@@ -1247,7 +1245,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
             my_FragColor = vec4(buffer.m);
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1274,7 +1272,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
 // block is set as row-major.
 TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberColumnMajorQualifier)
 {
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
 
         precision highp float;
@@ -1292,7 +1290,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberColumnMajorQualifier)
             my_FragColor = vec4(buffer.m);
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
@@ -1324,7 +1322,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
     // http://anglebug.com/2273
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
-    const std::string &fragmentShader =
+    constexpr char kFS[] =
         R"(#version 300 es
 
         precision highp float;
@@ -1346,7 +1344,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
             my_FragColor = vec4(buffer.s.m);
         })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);

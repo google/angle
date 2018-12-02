@@ -75,56 +75,51 @@ class MipmapTest : public BaseMipmapTest
     void setUp2DProgram()
     {
         // Vertex Shader source
-        const std::string vs =
-            R"(attribute vec4 position;
-            varying vec2 vTexCoord;
+        constexpr char kVS[] = R"(attribute vec4 position;
+varying vec2 vTexCoord;
 
-            void main()
-            {
-                gl_Position = position;
-                vTexCoord   = (position.xy * 0.5) + 0.5;
-            })";
+void main()
+{
+    gl_Position = position;
+    vTexCoord   = (position.xy * 0.5) + 0.5;
+})";
 
         // Fragment Shader source
-        const std::string fs =
-            R"(precision mediump float;
+        constexpr char kFS[] = R"(precision mediump float;
+uniform sampler2D uTexture;
+varying vec2 vTexCoord;
 
-            uniform sampler2D uTexture;
-            varying vec2 vTexCoord;
+void main()
+{
+    gl_FragColor = texture2D(uTexture, vTexCoord);
+})";
 
-            void main()
-            {
-                gl_FragColor = texture2D(uTexture, vTexCoord);
-            })";
-
-        m2DProgram = CompileProgram(vs, fs);
+        m2DProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, m2DProgram);
     }
 
     void setUpCubeProgram()
     {
         // A simple vertex shader for the texture cube
-        const std::string cubeVS =
-            R"(attribute vec4 position;
-            varying vec4 vPosition;
-            void main()
-            {
-                gl_Position = position;
-                vPosition = position;
-            })";
+        constexpr char kVS[] = R"(attribute vec4 position;
+varying vec4 vPosition;
+void main()
+{
+    gl_Position = position;
+    vPosition = position;
+})";
 
         // A very simple fragment shader to sample from the negative-Y face of a texture cube.
-        const std::string cubeFS =
-            R"(precision mediump float;
-            uniform samplerCube uTexture;
-            varying vec4 vPosition;
+        constexpr char kFS[] = R"(precision mediump float;
+uniform samplerCube uTexture;
+varying vec4 vPosition;
 
-            void main()
-            {
-                gl_FragColor = textureCube(uTexture, vec3(vPosition.x, -1, vPosition.y));
-            })";
+void main()
+{
+    gl_FragColor = textureCube(uTexture, vec3(vPosition.x, -1, vPosition.y));
+})";
 
-        mCubeProgram = CompileProgram(cubeVS, cubeFS);
+        mCubeProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mCubeProgram);
     }
 
@@ -251,40 +246,39 @@ class MipmapTestES3 : public BaseMipmapTest
         setConfigAlphaBits(8);
     }
 
-    std::string vertexShaderSource()
+    const char *vertexShaderSource()
     {
         // Don't put "#version ..." on its own line. See [cpp]p1:
         // "If there are sequences of preprocessing tokens within the list of arguments that
         //  would otherwise act as preprocessing directives, the behavior is undefined"
         return
             R"(#version 300 es
-            precision highp float;
-            in vec4 position;
-            out vec2 texcoord;
+precision highp float;
+in vec4 position;
+out vec2 texcoord;
 
-            void main()
-            {
-                gl_Position = vec4(position.xy, 0.0, 1.0);
-                texcoord = (position.xy * 0.5) + 0.5;
-            })";
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
     }
 
     void setUpArrayProgram()
     {
-        const std::string fragmentShaderSourceArray =
-            R"(#version 300 es
-            precision highp float;
-            uniform highp sampler2DArray tex;
-            uniform int slice;
-            in vec2 texcoord;
-            out vec4 out_FragColor;
+        constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2DArray tex;
+uniform int slice;
+in vec2 texcoord;
+out vec4 out_FragColor;
 
-            void main()
-            {
-                out_FragColor = texture(tex, vec3(texcoord, float(slice)));
-            })";
+void main()
+{
+    out_FragColor = texture(tex, vec3(texcoord, float(slice)));
+})";
 
-        mArrayProgram = CompileProgram(vertexShaderSource(), fragmentShaderSourceArray);
+        mArrayProgram = CompileProgram(vertexShaderSource(), kFS);
         if (mArrayProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -300,21 +294,20 @@ class MipmapTestES3 : public BaseMipmapTest
 
     void setUp3DProgram()
     {
-        const std::string fragmentShaderSource3D =
-            R"(#version 300 es
-            precision highp float;
-            uniform highp sampler3D tex;
-            uniform float slice;
-            uniform float lod;
-            in vec2 texcoord;
-            out vec4 out_FragColor;
+        constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler3D tex;
+uniform float slice;
+uniform float lod;
+in vec2 texcoord;
+out vec4 out_FragColor;
 
-            void main()
-            {
-                out_FragColor = textureLod(tex, vec3(texcoord, slice), lod);
-            })";
+void main()
+{
+    out_FragColor = textureLod(tex, vec3(texcoord, slice), lod);
+})";
 
-        m3DProgram = CompileProgram(vertexShaderSource(), fragmentShaderSource3D);
+        m3DProgram = CompileProgram(vertexShaderSource(), kFS);
         if (m3DProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -334,19 +327,18 @@ class MipmapTestES3 : public BaseMipmapTest
 
     void setUp2DProgram()
     {
-        const std::string fragmentShaderSource2D =
-            R"(#version 300 es
-            precision highp float;
-            uniform highp sampler2D tex;
-            in vec2 texcoord;
-            out vec4 out_FragColor;
+        constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2D tex;
+in vec2 texcoord;
+out vec4 out_FragColor;
 
-            void main()
-            {
-                out_FragColor = texture(tex, texcoord);
-            })";
+void main()
+{
+    out_FragColor = texture(tex, texcoord);
+})";
 
-        m2DProgram = CompileProgram(vertexShaderSource(), fragmentShaderSource2D);
+        m2DProgram = CompileProgram(vertexShaderSource(), kFS);
         ASSERT_NE(0u, m2DProgram);
 
         ASSERT_GL_NO_ERROR();
@@ -355,19 +347,18 @@ class MipmapTestES3 : public BaseMipmapTest
     void setUpCubeProgram()
     {
         // A very simple fragment shader to sample from the negative-Y face of a texture cube.
-        const std::string cubeFS =
-            R"(#version 300 es
-            precision mediump float;
-            uniform samplerCube uTexture;
-            in vec2 texcoord;
-            out vec4 out_FragColor;
+        constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform samplerCube uTexture;
+in vec2 texcoord;
+out vec4 out_FragColor;
 
-            void main()
-            {
-                out_FragColor = texture(uTexture, vec3(texcoord.x, -1, texcoord.y));
-            })";
+void main()
+{
+    out_FragColor = texture(uTexture, vec3(texcoord.x, -1, texcoord.y));
+})";
 
-        mCubeProgram = CompileProgram(vertexShaderSource(), cubeFS);
+        mCubeProgram = CompileProgram(vertexShaderSource(), kFS);
         ASSERT_NE(0u, mCubeProgram);
 
         ASSERT_GL_NO_ERROR();

@@ -269,7 +269,7 @@ void ProgramBinaryES3Test::testBinaryAndUBOBlockIndexes(bool drawWithProgramFirs
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
     ANGLE_SKIP_TEST_IF(!binaryFormatCount);
 
-    const std::string &vertexShader =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "uniform block {\n"
         "    float f;\n"
@@ -280,7 +280,8 @@ void ProgramBinaryES3Test::testBinaryAndUBOBlockIndexes(bool drawWithProgramFirs
         "    gl_Position = position;\n"
         "    color = vec4(f, f, f, 1);\n"
         "}";
-    const std::string &fragmentShader =
+
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
         "in vec4 color;\n"
@@ -290,7 +291,7 @@ void ProgramBinaryES3Test::testBinaryAndUBOBlockIndexes(bool drawWithProgramFirs
         "}";
 
     // Init and draw with the program.
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     float fData[4]   = {1.0f, 1.0f, 1.0f, 1.0f};
     GLuint bindIndex = 2;
@@ -378,7 +379,7 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
     ANGLE_SKIP_TEST_IF(!binaryFormatCount);
 
-    const std::string &computeShader =
+    constexpr char kCS[] =
         "#version 310 es\n"
         "layout(local_size_x=4, local_size_y=3, local_size_z=1) in;\n"
         "uniform block {\n"
@@ -390,7 +391,7 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
         "    vec4 color = texture(tex, f + g);\n"
         "}";
 
-    ANGLE_GL_COMPUTE_PROGRAM(program, computeShader);
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
 
     // Read back the binary.
     GLint programLength = 0;
@@ -494,30 +495,27 @@ class ProgramBinaryTransformFeedbackTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(#version 300 es
-            in vec4 inputAttribute;
-            out vec4 outputVarying;
-            void main()
-            {
-                outputVarying = inputAttribute;
-            })";
+        constexpr char kVS[] = R"(#version 300 es
+in vec4 inputAttribute;
+out vec4 outputVarying;
+void main()
+{
+    outputVarying = inputAttribute;
+})";
 
-        const std::string fragmentShaderSource =
-            R"(#version 300 es
-            precision highp float;
-            out vec4 outputColor;
-            void main()
-            {
-                outputColor = vec4(1,0,0,1);
-            })";
+        constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outputColor;
+void main()
+{
+    outputColor = vec4(1,0,0,1);
+})";
 
         std::vector<std::string> transformFeedbackVaryings;
         transformFeedbackVaryings.push_back("outputVarying");
 
-        mProgram =
-            CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
-                                                transformFeedbackVaryings, GL_SEPARATE_ATTRIBS);
+        mProgram = CompileProgramWithTransformFeedback(kVS, kFS, transformFeedbackVaryings,
+                                                       GL_SEPARATE_ATTRIBS);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -707,7 +705,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
         SafeDelete(mOSWindow);
     }
 
-    OSWindow *mOSWindow;
+    OSWindow *mOSWindow = nullptr;
 };
 
 // Tries to create a program binary using one set of platform params, then load it using a different

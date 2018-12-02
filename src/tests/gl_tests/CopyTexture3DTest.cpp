@@ -38,8 +38,8 @@ class CopyTexture3DTest : public ANGLETest
                 eglGetProcAddress("glCopySubTexture3DANGLE"));
         }
 
-        const std::string vertexShaderSource   = getVertexShaderSource();
-        const std::string fragmentShaderSource = getFragmentShaderSource();
+        const char *vertexShaderSource   = getVertexShaderSource();
+        const char *fragmentShaderSource = getFragmentShaderSource();
 
         mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
         ASSERT_NE(0u, mProgram);
@@ -49,17 +49,16 @@ class CopyTexture3DTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    std::string getVertexShaderSource()
+    const char *getVertexShaderSource()
     {
-        return std::string(
-            "#version 300 es\n"
-            "out vec3 texcoord;\n"
-            "in vec4 position;\n"
-            "void main()\n"
-            "{\n"
-            "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
-            "    texcoord = (position.xyz * 0.5) + 0.5;\n"
-            "}\n");
+        return "#version 300 es\n"
+               "out vec3 texcoord;\n"
+               "in vec4 position;\n"
+               "void main()\n"
+               "{\n"
+               "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+               "    texcoord = (position.xyz * 0.5) + 0.5;\n"
+               "}\n";
     }
 
     void TearDown() override { ANGLETest::TearDown(); }
@@ -231,7 +230,7 @@ class CopyTexture3DTest : public ANGLETest
         }
     }
 
-    virtual std::string getFragmentShaderSource() = 0;
+    virtual const char *getFragmentShaderSource() = 0;
 
     GLuint mProgram = 0;
     GLTexture sourceTexture;
@@ -246,18 +245,17 @@ class Texture3DCopy : public CopyTexture3DTest
   protected:
     Texture3DCopy() {}
 
-    std::string getFragmentShaderSource() override
+    const char *getFragmentShaderSource() override
     {
-        return std::string(
-            "#version 300 es\n"
-            "precision highp float;\n"
-            "uniform highp sampler3D tex3D;\n"
-            "in vec3 texcoord;\n"
-            "out vec4 fragColor;\n"
-            "void main()\n"
-            "{\n"
-            "    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
-            "}\n");
+        return "#version 300 es\n"
+               "precision highp float;\n"
+               "uniform highp sampler3D tex3D;\n"
+               "in vec3 texcoord;\n"
+               "out vec4 fragColor;\n"
+               "void main()\n"
+               "{\n"
+               "    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
+               "}\n";
     }
 };
 
@@ -266,18 +264,17 @@ class Texture2DArrayCopy : public CopyTexture3DTest
   protected:
     Texture2DArrayCopy() {}
 
-    std::string getFragmentShaderSource() override
+    const char *getFragmentShaderSource() override
     {
-        return std::string(
-            "#version 300 es\n"
-            "precision highp float;\n"
-            "uniform highp sampler2DArray tex2DArray;\n"
-            "in vec3 texcoord;\n"
-            "out vec4 fragColor;\n"
-            "void main()\n"
-            "{\n"
-            "    fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
-            "}\n");
+        return "#version 300 es\n"
+               "precision highp float;\n"
+               "uniform highp sampler2DArray tex2DArray;\n"
+               "in vec3 texcoord;\n"
+               "out vec4 fragColor;\n"
+               "void main()\n"
+               "{\n"
+               "    fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
+               "}\n";
     }
 };
 
@@ -784,7 +781,7 @@ TEST_P(Texture3DCopy, IntFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    std::string fragmentShader(
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "uniform highp isampler3D tex3D;\n"
@@ -793,9 +790,9 @@ TEST_P(Texture3DCopy, IntFormats)
         "void main()\n"
         "{\n"
         "    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
-        "}\n");
+        "}\n";
 
-    mProgram = CompileProgram(getVertexShaderSource(), fragmentShader);
+    mProgram = CompileProgram(getVertexShaderSource(), kFS);
     ASSERT_NE(0u, mProgram);
     ASSERT_GL_NO_ERROR();
 
@@ -894,7 +891,7 @@ TEST_P(Texture3DCopy, UintFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    std::string fragmentShader(
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "uniform highp usampler3D tex3D;\n"
@@ -903,9 +900,9 @@ TEST_P(Texture3DCopy, UintFormats)
         "void main()\n"
         "{\n"
         "    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
-        "}\n");
+        "}\n";
 
-    mProgram = CompileProgram(getVertexShaderSource(), fragmentShader);
+    mProgram = CompileProgram(getVertexShaderSource(), kFS);
     ASSERT_NE(0u, mProgram);
     ASSERT_GL_NO_ERROR();
 
@@ -1523,7 +1520,7 @@ TEST_P(Texture2DArrayCopy, IntFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    std::string fragmentShader(
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "uniform highp isampler2DArray tex2DArray;\n"
@@ -1532,9 +1529,9 @@ TEST_P(Texture2DArrayCopy, IntFormats)
         "void main()\n"
         "{\n"
         "    fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
-        "}\n");
+        "}\n";
 
-    mProgram = CompileProgram(getVertexShaderSource(), fragmentShader);
+    mProgram = CompileProgram(getVertexShaderSource(), kFS);
     ASSERT_NE(0u, mProgram);
     ASSERT_GL_NO_ERROR();
 
@@ -1633,7 +1630,7 @@ TEST_P(Texture2DArrayCopy, UintFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    std::string fragmentShader(
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
         "uniform highp usampler2DArray tex2DArray;\n"
@@ -1642,9 +1639,9 @@ TEST_P(Texture2DArrayCopy, UintFormats)
         "void main()\n"
         "{\n"
         "    fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.z, texcoord.y));\n"
-        "}\n");
+        "}\n";
 
-    mProgram = CompileProgram(getVertexShaderSource(), fragmentShader);
+    mProgram = CompileProgram(getVertexShaderSource(), kFS);
     ASSERT_NE(0u, mProgram);
     ASSERT_GL_NO_ERROR();
 

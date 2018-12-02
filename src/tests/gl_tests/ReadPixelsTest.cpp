@@ -286,7 +286,7 @@ class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
     {
         ReadPixelsPBOTest::SetUp();
 
-        const char *vertexShaderSrc =
+        constexpr char kVS[] =
             "attribute vec4 aTest; attribute vec2 aPosition; varying vec4 vTest;\n"
             "void main()\n"
             "{\n"
@@ -295,14 +295,14 @@ class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
             "    gl_PointSize = 1.0;\n"
             "}";
 
-        const char *fragmentShaderSrc =
+        constexpr char kFS[] =
             "precision mediump float; varying vec4 vTest;\n"
             "void main()\n"
             "{\n"
             "    gl_FragColor = vTest;\n"
             "}";
 
-        mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         glGenBuffers(1, &mPositionVBO);

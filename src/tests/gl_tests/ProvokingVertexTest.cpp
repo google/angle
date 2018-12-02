@@ -40,7 +40,7 @@ class ProvokingVertexTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string &vertexShader =
+        constexpr char kVS[] =
             "#version 300 es\n"
             "in int intAttrib;\n"
             "in vec2 position;\n"
@@ -50,7 +50,7 @@ class ProvokingVertexTest : public ANGLETest
             "  attrib = intAttrib;\n"
             "}";
 
-        const std::string &fragmentShader =
+        constexpr char kFS[] =
             "#version 300 es\n"
             "flat in int attrib;\n"
             "out int fragColor;\n"
@@ -60,8 +60,7 @@ class ProvokingVertexTest : public ANGLETest
 
         std::vector<std::string> tfVaryings;
         tfVaryings.push_back("attrib");
-        mProgram = CompileProgramWithTransformFeedback(vertexShader, fragmentShader, tfVaryings,
-                                                       GL_SEPARATE_ATTRIBS);
+        mProgram = CompileProgramWithTransformFeedback(kVS, kFS, tfVaryings, GL_SEPARATE_ATTRIBS);
         ASSERT_NE(0u, mProgram);
 
         glGenTextures(1, &mTexture);

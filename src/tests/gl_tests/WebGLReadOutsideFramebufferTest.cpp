@@ -235,16 +235,14 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        // TODO(fjhenigman): Factor out this shader and others like it in other tests, into
-        // ANGLETest.
-        const std::string vertexShader =
+        constexpr char kVS[] =
             "attribute vec3 a_position;\n"
             "varying vec2 v_texCoord;\n"
             "void main() {\n"
             "    v_texCoord = a_position.xy * 0.5 + 0.5;\n"
             "    gl_Position = vec4(a_position, 1);\n"
             "}\n";
-        const std::string fragmentShader =
+        constexpr char kFS[] =
             "precision mediump float;\n"
             "varying vec2 v_texCoord;\n"
             "uniform sampler2D u_texture;\n"
@@ -252,7 +250,7 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
             "    gl_FragColor = texture2D(u_texture, v_texCoord);\n"
             "}\n";
 
-        mProgram = CompileProgram(vertexShader, fragmentShader);
+        mProgram = CompileProgram(kVS, kFS);
         glUseProgram(mProgram);
         GLint uniformLoc = glGetUniformLocation(mProgram, "u_texture");
         ASSERT_NE(-1, uniformLoc);

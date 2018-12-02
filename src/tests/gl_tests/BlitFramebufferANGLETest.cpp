@@ -1168,7 +1168,7 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
 
-    const std::string &fragment =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "out mediump vec4 red;\n"
         "void main() {\n"
@@ -1176,7 +1176,7 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
         "   gl_FragDepth = 0.5;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), fragment);
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), kFS);
 
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());

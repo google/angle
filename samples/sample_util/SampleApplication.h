@@ -7,9 +7,9 @@
 #ifndef SAMPLE_UTIL_SAMPLE_APPLICATION_H
 #define SAMPLE_UTIL_SAMPLE_APPLICATION_H
 
+#include <stdint.h>
 #include <list>
 #include <memory>
-#include <stdint.h>
 #include <string>
 
 #include <EGL/egl.h>
@@ -62,4 +62,4 @@ class SampleApplication
     std::unique_ptr<OSWindow> mOSWindow;
 };
 
-#endif // SAMPLE_UTIL_SAMPLE_APPLICATION_H
+#endif  // SAMPLE_UTIL_SAMPLE_APPLICATION_H

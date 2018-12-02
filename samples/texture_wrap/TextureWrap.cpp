@@ -14,38 +14,37 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "shader_utils.h"
+
 #include "texture_utils.h"
+#include "util/shader_utils.h"
 
 class TextureWrapSample : public SampleApplication
 {
   public:
     TextureWrapSample(int argc, char **argv) : SampleApplication("TextureWrap", argc, argv) {}
 
-    virtual bool initialize()
+    bool initialize() override
     {
-        const std::string vs =
-            R"(uniform float u_offset;
-            attribute vec4 a_position;
-            attribute vec2 a_texCoord;
-            varying vec2 v_texCoord;
-            void main()
-            {
-                gl_Position = a_position;
-                gl_Position.x += u_offset;
-                v_texCoord = a_texCoord;
-            })";
+        constexpr char kVS[] = R"(uniform float u_offset;
+attribute vec4 a_position;
+attribute vec2 a_texCoord;
+varying vec2 v_texCoord;
+void main()
+{
+    gl_Position = a_position;
+    gl_Position.x += u_offset;
+    v_texCoord = a_texCoord;
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            varying vec2 v_texCoord;
-            uniform sampler2D s_texture;
-            void main()
-            {
-                gl_FragColor = texture2D(s_texture, v_texCoord);
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+varying vec2 v_texCoord;
+uniform sampler2D s_texture;
+void main()
+{
+    gl_FragColor = texture2D(s_texture, v_texCoord);
+})";
 
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
@@ -69,25 +68,21 @@ class TextureWrapSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void draw()
+    void draw() override
     {
-        GLfloat vertices[] =
-        {
-            -0.3f,  0.3f, 0.0f, 1.0f, // Position 0
-            -1.0f, -1.0f,             // TexCoord 0 
-            -0.3f, -0.3f, 0.0f, 1.0f, // Position 1
-            -1.0f,  2.0f,             // TexCoord 1
-             0.3f, -0.3f, 0.0f, 1.0f, // Position 2
-             2.0f,  2.0f,             // TexCoord 2
-             0.3f,  0.3f, 0.0f, 1.0f, // Position 3
-             2.0f, -1.0f              // TexCoord 3
+        GLfloat vertices[] = {
+            -0.3f, 0.3f,  0.0f, 1.0f,  // Position 0
+            -1.0f, -1.0f,              // TexCoord 0
+            -0.3f, -0.3f, 0.0f, 1.0f,  // Position 1
+            -1.0f, 2.0f,               // TexCoord 1
+            0.3f,  -0.3f, 0.0f, 1.0f,  // Position 2
+            2.0f,  2.0f,               // TexCoord 2
+            0.3f,  0.3f,  0.0f, 1.0f,  // Position 3
+            2.0f,  -1.0f               // TexCoord 3
         };
-        GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+        GLushort indices[] = {0, 1, 2, 0, 2, 3};
 
         // Set the viewport
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
@@ -103,7 +98,8 @@ class TextureWrapSample : public SampleApplication
         glEnableVertexAttribArray(mPositionLoc);
 
         // Load the texture coordinate
-        glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), vertices + 4);
+        glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
+                              vertices + 4);
         glEnableVertexAttribArray(mTexCoordLoc);
 
         // Set the sampler texture unit to 0
@@ -128,22 +124,22 @@ class TextureWrapSample : public SampleApplication
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
     }
 
-private:
+  private:
     // Handle to a program object
-     GLuint mProgram;
+    GLuint mProgram;
 
-     // Attribute locations
-     GLint mPositionLoc;
-     GLint mTexCoordLoc;
+    // Attribute locations
+    GLint mPositionLoc;
+    GLint mTexCoordLoc;
 
-     // Sampler location
-     GLint mSamplerLoc;
+    // Sampler location
+    GLint mSamplerLoc;
 
-     // Offset location
-     GLint mOffsetLoc;
+    // Offset location
+    GLint mOffsetLoc;
 
-     // Texture handle
-     GLuint mTexture;
+    // Texture handle
+    GLuint mTexture;
 };
 
 int main(int argc, char **argv)

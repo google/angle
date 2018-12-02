@@ -25,37 +25,33 @@ class MaxTextureSizeTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vsSource =
-            R"(precision highp float;
-            attribute vec4 position;
-            varying vec2 texcoord;
+        constexpr char kVS[] = R"(precision highp float;
+attribute vec4 position;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_Position = position;
-                texcoord = (position.xy * 0.5) + 0.5;
-            })";
+void main()
+{
+    gl_Position = position;
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
 
-        const std::string textureFSSource =
-            R"(precision highp float;
-            uniform sampler2D tex;
-            varying vec2 texcoord;
+        constexpr char kTextureFS[] = R"(precision highp float;
+uniform sampler2D tex;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_FragColor = texture2D(tex, texcoord);
-            })";
+void main()
+{
+    gl_FragColor = texture2D(tex, texcoord);
+})";
 
-        const std::string blueFSSource =
-            R"(precision highp float;
+        constexpr char kBlueFS[] = R"(precision highp float;
+void main()
+{
+    gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+})";
 
-            void main()
-            {
-                gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-            })";
-
-        mTextureProgram = CompileProgram(vsSource, textureFSSource);
-        mBlueProgram    = CompileProgram(vsSource, blueFSSource);
+        mTextureProgram = CompileProgram(kVS, kTextureFS);
+        mBlueProgram    = CompileProgram(kVS, kBlueFS);
         if (mTextureProgram == 0 || mBlueProgram == 0)
         {
             FAIL() << "shader compilation failed.";

@@ -28,7 +28,7 @@ class IndexBufferOffsetTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
+        constexpr char kVS[] =
             R"(precision highp float;
             attribute vec2 position;
 
@@ -37,7 +37,7 @@ class IndexBufferOffsetTest : public ANGLETest
                 gl_Position = vec4(position, 0.0, 1.0);
             })";
 
-        const std::string fragmentShaderSource =
+        constexpr char kFS[] =
             R"(precision highp float;
             uniform vec4 color;
 
@@ -46,7 +46,7 @@ class IndexBufferOffsetTest : public ANGLETest
                 gl_FragColor = color;
             })";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         mColorUniformLocation      = glGetUniformLocation(mProgram, "color");

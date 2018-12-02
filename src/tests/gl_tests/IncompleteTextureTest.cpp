@@ -28,28 +28,26 @@ class IncompleteTextureTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec4 position;
-            varying vec2 texcoord;
+        constexpr char kVS[] = R"(precision highp float;
+attribute vec4 position;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_Position = position;
-                texcoord = (position.xy * 0.5) + 0.5;
-            })";
+void main()
+{
+    gl_Position = position;
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
 
-        const std::string fragmentShaderSource =
-            R"(precision highp float;
-            uniform sampler2D tex;
-            varying vec2 texcoord;
+        constexpr char kFS[] = R"(precision highp float;
+uniform sampler2D tex;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_FragColor = texture2D(tex, texcoord);
-            })";
+void main()
+{
+    gl_FragColor = texture2D(tex, texcoord);
+})";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -195,17 +193,16 @@ TEST_P(IncompleteTextureTestES3, UnpackBufferBound)
 // Tests that the incomplete multisample texture has the correct alpha value.
 TEST_P(IncompleteTextureTestES31, MultisampleTexture)
 {
-    const std::string vertexShader = R"(#version 310 es
+    constexpr char kVS[] = R"(#version 310 es
 in vec2 position;
 out vec2 texCoord;
 void main()
 {
     gl_Position = vec4(position, 0, 1);
     texCoord = (position * 0.5) + 0.5;
-}
-)";
+})";
 
-    const std::string fragmentShader = R"(#version 310 es
+    constexpr char kFS[] = R"(#version 310 es
 precision mediump float;
 in vec2 texCoord;
 out vec4 color;
@@ -215,15 +212,14 @@ void main()
     ivec2 texSize = textureSize(tex);
     ivec2 texel = ivec2(vec2(texSize) * texCoord);
     color = texelFetch(tex, texel, 0);
-}
-)";
+})";
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     // The zero texture will be incomplete by default.
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     drawQuad(program, "position", 0.5f);
     ASSERT_GL_NO_ERROR();
 

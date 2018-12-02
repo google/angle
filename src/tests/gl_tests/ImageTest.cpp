@@ -42,7 +42,7 @@ class ImageTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vsSource =
+        constexpr char kVS[] =
             "precision highp float;\n"
             "attribute vec4 position;\n"
             "varying vec2 texcoord;\n"
@@ -53,7 +53,7 @@ class ImageTest : public ANGLETest
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
             "    texcoord.y = 1.0 - texcoord.y;\n"
             "}\n";
-        const std::string vsESSL3Source =
+        constexpr char kVSESSL3[] =
             "#version 300 es\n"
             "precision highp float;\n"
             "in vec4 position;\n"
@@ -66,7 +66,7 @@ class ImageTest : public ANGLETest
             "    texcoord.y = 1.0 - texcoord.y;\n"
             "}\n";
 
-        const std::string textureFSSource =
+        constexpr char kTextureFS[] =
             "precision highp float;\n"
             "uniform sampler2D tex;\n"
             "varying vec2 texcoord;\n"
@@ -75,7 +75,7 @@ class ImageTest : public ANGLETest
             "{\n"
             "    gl_FragColor = texture2D(tex, texcoord);\n"
             "}\n";
-        const std::string textureExternalFSSource =
+        constexpr char kTextureExternalFS[] =
             "#extension GL_OES_EGL_image_external : require\n"
             "precision highp float;\n"
             "uniform samplerExternalOES tex;\n"
@@ -85,7 +85,7 @@ class ImageTest : public ANGLETest
             "{\n"
             "    gl_FragColor = texture2D(tex, texcoord);\n"
             "}\n";
-        const std::string textureExternalESSL3FSSource =
+        constexpr char kTextureExternalESSL3FS[] =
             "#version 300 es\n"
             "#extension GL_OES_EGL_image_external_essl3 : require\n"
             "precision highp float;\n"
@@ -98,7 +98,7 @@ class ImageTest : public ANGLETest
             "    color = texture(tex, texcoord);\n"
             "}\n";
 
-        mTextureProgram = CompileProgram(vsSource, textureFSSource);
+        mTextureProgram = CompileProgram(kVS, kTextureFS);
         if (mTextureProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -108,7 +108,7 @@ class ImageTest : public ANGLETest
 
         if (extensionEnabled("GL_OES_EGL_image_external"))
         {
-            mTextureExternalProgram = CompileProgram(vsSource, textureExternalFSSource);
+            mTextureExternalProgram = CompileProgram(kVS, kTextureExternalFS);
             ASSERT_NE(0u, mTextureExternalProgram) << "shader compilation failed.";
 
             mTextureExternalUniformLocation = glGetUniformLocation(mTextureExternalProgram, "tex");
@@ -116,8 +116,7 @@ class ImageTest : public ANGLETest
 
         if (extensionEnabled("GL_OES_EGL_image_external_essl3"))
         {
-            mTextureExternalESSL3Program =
-                CompileProgram(vsESSL3Source, textureExternalESSL3FSSource);
+            mTextureExternalESSL3Program = CompileProgram(kVSESSL3, kTextureExternalESSL3FS);
             ASSERT_NE(0u, mTextureExternalESSL3Program) << "shader compilation failed.";
 
             mTextureExternalESSL3UniformLocation =

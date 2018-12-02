@@ -325,7 +325,7 @@ TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationAPI)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
 
-    const std::string &kFragColorShader = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
 uniform vec4 src0;
@@ -337,7 +337,7 @@ void main() {
     outSrc1 = src1;
 })";
 
-    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFragColorShader, [](GLuint program) {
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFS, [](GLuint program) {
         glBindFragDataLocationIndexedEXT(program, 0, 0, "outSrc0");
         glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1");
     });
@@ -356,7 +356,7 @@ TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsAPIAndAutomatic)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
 
-    const std::string &kFragColorShader = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
 uniform vec4 src0;
@@ -368,7 +368,7 @@ void main() {
     outSrc1 = src1;
 })";
 
-    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFragColorShader, [](GLuint program) {
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFS, [](GLuint program) {
         glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1");
     });
 
@@ -389,7 +389,7 @@ TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentArrayOutputLocationsAPI)
     // TODO: Investigate this mac-only failure.  http://angleproject.com/1085
     ANGLE_SKIP_TEST_IF(IsOSX());
 
-    const std::string &kFragColorShader = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
 uniform vec4 src0;
@@ -401,7 +401,7 @@ void main() {
     outSrc1[0] = src1;
 })";
 
-    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFragColorShader, [](GLuint program) {
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFS, [](GLuint program) {
         // Specs aren't very clear on what kind of name should be used when binding location for
         // array variables. We only allow names that do include the "[0]" suffix.
         glBindFragDataLocationIndexedEXT(program, 0, 0, "outSrc0[0]");
@@ -430,7 +430,7 @@ TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationConflict)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
 
-    const std::string &kFragShader = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
 uniform vec4 src0;
@@ -443,7 +443,7 @@ void main() {
 })";
 
     GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFragShader);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
     ASSERT_NE(0u, vs);
     ASSERT_NE(0u, fs);
 
@@ -471,7 +471,7 @@ TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationForNonexistentOutput)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
 
-    const std::string &kFragShader = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
 uniform vec4 src0;
@@ -481,7 +481,7 @@ void main() {
 })";
 
     GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFragShader);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
     ASSERT_NE(0u, vs);
     ASSERT_NE(0u, fs);
 
@@ -514,7 +514,7 @@ TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationsPartiallyAutomatic)
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
     ANGLE_SKIP_TEST_IF(maxDrawBuffers < 4);
 
-    const std::string &kFragShader = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
 uniform vec4 src0;
@@ -531,7 +531,7 @@ void main() {
     out3 = src3;
 })";
 
-    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFS);
     ASSERT_NE(0u, program);
 
     GLint location = glGetFragDataLocation(program, "out0");
@@ -566,7 +566,7 @@ void main() {
 })";
 
     GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fragShader.str());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fragShader.str().c_str());
     ASSERT_NE(0u, vs);
     ASSERT_NE(0u, fs);
 

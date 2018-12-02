@@ -977,13 +977,13 @@ TEST_P(FramebufferMultiviewSideBySideClearTest, DepthBufferClear)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     // Create program to draw a quad.
-    const std::string &vs =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in vec3 vPos;\n"
         "void main(){\n"
         "   gl_Position = vec4(vPos, 1.);\n"
         "}\n";
-    const std::string &fs =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
         "uniform vec3 uCol;\n"
@@ -991,7 +991,7 @@ TEST_P(FramebufferMultiviewSideBySideClearTest, DepthBufferClear)
         "void main(){\n"
         "   col = vec4(uCol,1.);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
     GLuint mColorUniformLoc = glGetUniformLocation(program, "uCol");
 
@@ -1030,13 +1030,13 @@ TEST_P(FramebufferMultiviewSideBySideClearTest, StencilBufferClear)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     // Create program to draw a quad.
-    const std::string &vs =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in vec3 vPos;\n"
         "void main(){\n"
         "   gl_Position = vec4(vPos, 1.);\n"
         "}\n";
-    const std::string &fs =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
         "uniform vec3 uCol;\n"
@@ -1044,7 +1044,7 @@ TEST_P(FramebufferMultiviewSideBySideClearTest, StencilBufferClear)
         "void main(){\n"
         "   col = vec4(uCol,1.);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
     GLuint mColorUniformLoc = glGetUniformLocation(program, "uCol");
 
@@ -1185,13 +1185,13 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ClearBufferfi)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     // Create program to draw a quad.
-    const std::string &vs =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in vec3 vPos;\n"
         "void main(){\n"
         "   gl_Position = vec4(vPos, 1.);\n"
         "}\n";
-    const std::string &fs =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
         "uniform vec3 uCol;\n"
@@ -1199,7 +1199,7 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ClearBufferfi)
         "void main(){\n"
         "   col = vec4(uCol,1.);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
     GLuint mColorUniformLoc = glGetUniformLocation(program, "uCol");
 
@@ -1313,13 +1313,13 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ScissoredClearBufferfi)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     // Create program to draw a quad.
-    const std::string &vs =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in vec3 vPos;\n"
         "void main(){\n"
         "   gl_Position = vec4(vPos, 1.);\n"
         "}\n";
-    const std::string &fs =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
         "uniform vec3 uCol;\n"
@@ -1327,7 +1327,7 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ScissoredClearBufferfi)
         "void main(){\n"
         "   col = vec4(uCol,1.);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
     GLuint mColorUniformLoc = glGetUniformLocation(program, "uCol");
 

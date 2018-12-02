@@ -14,9 +14,10 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "shader_utils.h"
-#include "system_utils.h"
+
 #include "texture_utils.h"
+#include "util/shader_utils.h"
+#include "util/system_utils.h"
 
 #include <cstring>
 #include <iostream>
@@ -26,13 +27,12 @@ class MultipleDrawBuffersSample : public SampleApplication
   public:
     MultipleDrawBuffersSample(int argc, char **argv)
         : SampleApplication("MultipleDrawBuffers", argc, argv)
-    {
-    }
+    {}
 
     virtual bool initialize()
     {
         // Check EXT_draw_buffers is supported
-        char *extensionString = (char*)glGetString(GL_EXTENSIONS);
+        char *extensionString = (char *)glGetString(GL_EXTENSIONS);
         if (strstr(extensionString, "GL_EXT_draw_buffers") != nullptr)
         {
             // Retrieve the address of glDrawBuffersEXT from EGL
@@ -118,25 +118,20 @@ class MultipleDrawBuffersSample : public SampleApplication
 
     virtual void draw()
     {
-        GLfloat vertices[] =
-        {
-            -0.8f,  0.8f, 0.0f,  // Position 0
-             0.0f,  0.0f,        // TexCoord 0
+        GLfloat vertices[] = {
+            -0.8f, 0.8f,  0.0f,  // Position 0
+            0.0f,  0.0f,         // TexCoord 0
             -0.8f, -0.8f, 0.0f,  // Position 1
-             0.0f,  1.0f,        // TexCoord 1
-             0.8f, -0.8f, 0.0f,  // Position 2
-             1.0f,  1.0f,        // TexCoord 2
-             0.8f,  0.8f, 0.0f,  // Position 3
-             1.0f,  0.0f         // TexCoord 3
+            0.0f,  1.0f,         // TexCoord 1
+            0.8f,  -0.8f, 0.0f,  // Position 2
+            1.0f,  1.0f,         // TexCoord 2
+            0.8f,  0.8f,  0.0f,  // Position 3
+            1.0f,  0.0f          // TexCoord 3
         };
-        GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
-        GLenum drawBuffers[mFramebufferAttachmentCount] =
-        {
-            GL_COLOR_ATTACHMENT0_EXT,
-            GL_COLOR_ATTACHMENT1_EXT,
-            GL_COLOR_ATTACHMENT2_EXT,
-            GL_COLOR_ATTACHMENT3_EXT
-        };
+        GLushort indices[]                              = {0, 1, 2, 0, 2, 3};
+        GLenum drawBuffers[mFramebufferAttachmentCount] = {
+            GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT,
+            GL_COLOR_ATTACHMENT3_EXT};
 
         // Enable drawing to the four color attachments of the user framebuffer
         glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
@@ -158,7 +153,8 @@ class MultipleDrawBuffersSample : public SampleApplication
         glEnableVertexAttribArray(mPositionLoc);
 
         // Load the texture coordinate
-        glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), vertices + 3);
+        glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
+                              vertices + 3);
         glEnableVertexAttribArray(mTexCoordLoc);
 
         // Bind the texture

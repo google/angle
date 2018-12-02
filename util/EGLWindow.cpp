@@ -20,8 +20,7 @@ EGLPlatformParameters::EGLPlatformParameters()
       minorVersion(EGL_DONT_CARE),
       deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE),
       presentPath(EGL_DONT_CARE)
-{
-}
+{}
 
 EGLPlatformParameters::EGLPlatformParameters(EGLint renderer)
     : renderer(renderer),
@@ -29,8 +28,7 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer)
       minorVersion(EGL_DONT_CARE),
       deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE),
       presentPath(EGL_DONT_CARE)
-{
-}
+{}
 
 EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
                                              EGLint majorVersion,
@@ -41,8 +39,7 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
       minorVersion(minorVersion),
       deviceType(deviceType),
       presentPath(EGL_DONT_CARE)
-{
-}
+{}
 
 EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
                                              EGLint majorVersion,
@@ -54,8 +51,7 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
       minorVersion(minorVersion),
       deviceType(deviceType),
       presentPath(presentPath)
-{
-}
+{}
 
 bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
 {
@@ -122,8 +118,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mContextProgramCacheEnabled(),
       mContextVirtualization(),
       mPlatformMethods(nullptr)
-{
-}
+{}
 
 EGLWindow::~EGLWindow()
 {
@@ -290,7 +285,8 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 
     surfaceAttributes.push_back(EGL_NONE);
 
-    mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(), &surfaceAttributes[0]);
+    mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(),
+                                      &surfaceAttributes[0]);
     if (eglGetError() != EGL_SUCCESS)
     {
         destroyGL();
@@ -484,9 +480,7 @@ void EGLWindow::destroyGL()
 
 bool EGLWindow::isGLInitialized() const
 {
-    return mSurface != EGL_NO_SURFACE &&
-           mContext != EGL_NO_CONTEXT &&
-           mDisplay != EGL_NO_DISPLAY;
+    return mSurface != EGL_NO_SURFACE && mContext != EGL_NO_CONTEXT && mDisplay != EGL_NO_DISPLAY;
 }
 
 // Find an EGLConfig that is an exact match for the specified attributes. EGL_FALSE is returned if

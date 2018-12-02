@@ -486,18 +486,18 @@ class StateChangeRenderTest : public StateChangeTest
     {
         StateChangeTest::SetUp();
 
-        const std::string vertexShaderSource =
+        constexpr char kVS[] =
             "attribute vec2 position;\n"
             "void main() {\n"
             "    gl_Position = vec4(position, 0, 1);\n"
             "}";
-        const std::string fragmentShaderSource =
+        constexpr char kFS[] =
             "uniform highp vec4 uniformColor;\n"
             "void main() {\n"
             "    gl_FragColor = uniformColor;\n"
             "}";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         glGenRenderbuffers(1, &mRenderbuffer);
@@ -699,7 +699,7 @@ TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
     // http://anglebug.com/2664.
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
 
-    const std::string vs =
+    constexpr char kVS[] =
         "attribute vec2 position;\n"
         "attribute vec4 color;\n"
         "varying vec4 outcolor;\n"
@@ -708,14 +708,14 @@ TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
         "    gl_Position = vec4(position, 0, 1);\n"
         "    outcolor = color;\n"
         "}";
-    const std::string fs =
+    constexpr char kFS[] =
         "varying mediump vec4 outcolor;\n"
         "void main()\n"
         "{\n"
         "    gl_FragColor = outcolor;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
 
     GLint colorLoc = glGetAttribLocation(program, "color");
@@ -755,12 +755,11 @@ TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
 // Test that switching VAOs keeps the disabled "current value" attributes up-to-date.
 TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
 {
-    const std::string singleVertexShader =
-        "attribute vec4 position; void main() { gl_Position = position; }";
-    const std::string singleFragmentShader = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
-    ANGLE_GL_PROGRAM(singleProgram, singleVertexShader, singleFragmentShader);
+    constexpr char kSingleVS[] = "attribute vec4 position; void main() { gl_Position = position; }";
+    constexpr char kSingleFS[] = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
+    ANGLE_GL_PROGRAM(singleProgram, kSingleVS, kSingleFS);
 
-    const std::string dualVertexShader =
+    constexpr char kDualVS[] =
         "#version 300 es\n"
         "in vec4 position;\n"
         "in vec4 color;\n"
@@ -770,7 +769,7 @@ TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
         "    gl_Position = position;\n"
         "    varyColor = color;\n"
         "}";
-    const std::string dualFragmentShader =
+    constexpr char kDualFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
         "in vec4 varyColor;\n"
@@ -779,7 +778,7 @@ TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
         "{\n"
         "    colorOut = varyColor;\n"
         "}";
-    ANGLE_GL_PROGRAM(dualProgram, dualVertexShader, dualFragmentShader);
+    ANGLE_GL_PROGRAM(dualProgram, kDualVS, kDualFS);
     GLint positionLocation = glGetAttribLocation(dualProgram, "position");
     ASSERT_NE(-1, positionLocation);
     GLint colorLocation = glGetAttribLocation(dualProgram, "color");

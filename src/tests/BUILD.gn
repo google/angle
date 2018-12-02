@@ -238,7 +238,10 @@ if (is_win || is_linux || is_android || is_mac) {
   import("angle_perftests.gni")
 
   test("angle_perftests") {
-    include_dirs = [ "../../src/tests" ]
+    include_dirs = [
+      ".",
+      "../..",
+    ]
 
     sources = angle_perf_tests_sources
 

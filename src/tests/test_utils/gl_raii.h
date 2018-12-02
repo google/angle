@@ -103,25 +103,22 @@ class GLProgram
 
     void makeEmpty() { mHandle = glCreateProgram(); }
 
-    void makeCompute(const std::string &computeShader)
-    {
-        mHandle = CompileComputeProgram(computeShader);
-    }
+    void makeCompute(const char *computeShader) { mHandle = CompileComputeProgram(computeShader); }
 
-    void makeRaster(const std::string &vertexShader, const std::string &fragmentShader)
+    void makeRaster(const char *vertexShader, const char *fragmentShader)
     {
         mHandle = CompileProgram(vertexShader, fragmentShader);
     }
 
-    void makeRaster(const std::string &vertexShader,
-                    const std::string &geometryShader,
-                    const std::string &fragmentShader)
+    void makeRaster(const char *vertexShader,
+                    const char *geometryShader,
+                    const char *fragmentShader)
     {
         mHandle = CompileProgramWithGS(vertexShader, geometryShader, fragmentShader);
     }
 
-    void makeRasterWithTransformFeedback(const std::string &vertexShader,
-                                         const std::string &fragmentShader,
+    void makeRasterWithTransformFeedback(const char *vertexShader,
+                                         const char *fragmentShader,
                                          const std::vector<std::string> &tfVaryings,
                                          GLenum bufferMode)
     {

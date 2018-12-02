@@ -711,12 +711,12 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
         glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         glEnable(GL_STENCIL_TEST);
 
-        static const char *kVertexShaderSource =
+        constexpr char kVertexShaderSource[] =
             "void main() {\n"
             "  gl_Position = vec4(1.0); \n"
             "}";
 
-        static const char *kFragmentShaderSource =
+        constexpr char kFragmentShaderSource[] =
             "precision mediump float;\n"
             "uniform vec4 color;\n"
             "void main() {\n"
@@ -1085,7 +1085,7 @@ class CHROMIUMPathRenderingWithTexturingTest : public ANGLETest
     //  varying vec4 color;
     //
     //  (? can be anything)
-    void compileProgram(const char *vertexShaderSource, const char *fragmentShaderSource)
+    void CompileProgram(const char *vertexShaderSource, const char *fragmentShaderSource)
     {
         glViewport(0, 0, kResolution, kResolution);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -1097,8 +1097,8 @@ class CHROMIUMPathRenderingWithTexturingTest : public ANGLETest
 
         ASSERT_GL_NO_ERROR();
 
-        GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
-        GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+        GLuint vShader = CompileShader(GL_VERTEX_SHADER, vertexShaderSource);
+        GLuint fShader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
         ASSERT_NE(0u, vShader);
         ASSERT_NE(0u, fShader);
 
@@ -1266,7 +1266,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestBindFragmentInputLocation)
         "}\n";
 
     // clang-format on
-    compileProgram(kVertexShaderSource, kFragmentShaderSource);
+    CompileProgram(kVertexShaderSource, kFragmentShaderSource);
 
     enum kBindLocations
     {
@@ -1337,7 +1337,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestProgramPathFragmentInputGenCH
         "}\n";
     // clang-format on
 
-    compileProgram(kVertexShaderSource, kFragmentShaderSource);
+    CompileProgram(kVertexShaderSource, kFragmentShaderSource);
     bindProgram();
     ASSERT_TRUE(linkProgram() == true);
 
@@ -1434,7 +1434,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestProgramPathFragmentInputGenCH
         "}";
     // clang-format on
 
-    compileProgram(kVertexShaderSource, kFragmentShaderSource);
+    CompileProgram(kVertexShaderSource, kFragmentShaderSource);
     bindProgram();
     ASSERT_TRUE(linkProgram() == true);
 
@@ -1564,7 +1564,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestProgramPathFragmentInputGenAr
         {kMat4Location, "mat4_var", -1},
     };
 
-    compileProgram(kVertexShaderSource, kFragmentShaderSource);
+    CompileProgram(kVertexShaderSource, kFragmentShaderSource);
 
     for (size_t i = 0; i < ArraySize(variables); ++i)
     {
@@ -1713,7 +1713,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestConflictingBind)
     const GLint kColorALocation = 3;
     const GLint kColorBLocation = 4;
 
-    compileProgram(kVertexShaderSource, kFragmentShaderSource);
+    CompileProgram(kVertexShaderSource, kFragmentShaderSource);
 
     glBindFragmentInputLocationCHROMIUM(mProgram, kColorALocation, "colorA");
     // Bind colorB to location a, causing conflicts. Linking should fail.
@@ -1779,7 +1779,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, BindFragmentInputArray)
 
     for (int pass = 0; pass < 2; ++pass)
     {
-        compileProgram(kVertexShaderSource, kFragmentShaderSource);
+        CompileProgram(kVertexShaderSource, kFragmentShaderSource);
         if (pass == 0)
         {
             glBindFragmentInputLocationCHROMIUM(mProgram, kUnusedLocation, "colorA[0]");
@@ -1876,7 +1876,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, DISABLED_BindFragmentInputArrayNo
     const GLfloat kColor[]       = {0.2f, 0.2f, 0.2f, 0.2f};
     const GLfloat kFillCoords[6] = {59.0f, 50.0f, 50.0f, 28.0f, 66.0f, 63.0f};
 
-    compileProgram(kVertexShaderSource, kFragmentShaderSource);
+    CompileProgram(kVertexShaderSource, kFragmentShaderSource);
 
     glBindFragmentInputLocationCHROMIUM(mProgram, kUnusedLocation, "colorA[0]");
     glBindFragmentInputLocationCHROMIUM(mProgram, kColorA1Location, "colorA[1]");
@@ -1953,7 +1953,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, UnusedFragmentInputUpdate)
     const GLint kNonexistingLocation = 5;
     const GLint kUnboundLocation     = 6;
 
-    compileProgram(kVertexShaderString, kFragmentShaderString);
+    CompileProgram(kVertexShaderString, kFragmentShaderString);
 
     glBindFragmentInputLocationCHROMIUM(mProgram, kColorULocation, "u_colorU");
 

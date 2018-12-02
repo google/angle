@@ -109,7 +109,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    const std::string vs =
+    const char kVS[] =
         "attribute vec2 aPosition;\n"
         "attribute vec3 aTranslate;\n"
         "attribute float aScale;\n"
@@ -125,7 +125,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
         "    vColor = aColor;\n"
         "}\n";
 
-    const std::string fs =
+    constexpr char kFS[] =
         "precision mediump float;\n"
         "varying vec3 vColor;\n"
         "void main()\n"
@@ -133,7 +133,7 @@ void InstancingPerfBenchmark::initializeBenchmark()
         "    gl_FragColor = vec4(vColor, 1.0);\n"
         "}\n";
 
-    mProgram = CompileProgram(vs, fs);
+    mProgram = CompileProgram(kVS, kFS);
     ASSERT_NE(0u, mProgram);
 
     glUseProgram(mProgram);

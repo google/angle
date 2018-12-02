@@ -28,14 +28,14 @@ class FloatingPointSurfaceTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string fsSource =
+        constexpr char kFS[] =
             "precision highp float;\n"
             "void main()\n"
             "{\n"
             "   gl_FragColor = vec4(1.0, 2.0, 3.0, 4.0);\n"
             "}\n";
 
-        mProgram = CompileProgram(essl1_shaders::vs::Simple(), fsSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), kFS);
         ASSERT_NE(0u, mProgram) << "shader compilation failed.";
 
         ASSERT_GL_NO_ERROR();

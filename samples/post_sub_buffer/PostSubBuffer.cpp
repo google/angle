@@ -13,11 +13,11 @@
 // URLs:      http://safari.informit.com/9780321563835
 //            http://www.opengles-book.com
 
+#include "Matrix.h"
 #include "SampleApplication.h"
+#include "geometry_utils.h"
 #include "shader_utils.h"
 #include "texture_utils.h"
-#include "geometry_utils.h"
-#include "Matrix.h"
 
 #include <cmath>
 #include <iostream>
@@ -27,7 +27,7 @@ class PostSubBufferSample : public SampleApplication
   public:
     PostSubBufferSample(int argc, char **argv) : SampleApplication("PostSubBuffer", argc, argv) {}
 
-    virtual bool initialize()
+    bool initialize() override
     {
         mPostSubBufferNV = (PFNEGLPOSTSUBBUFFERNVPROC)eglGetProcAddress("eglPostSubBufferNV");
         if (!mPostSubBufferNV)
@@ -36,26 +36,24 @@ class PostSubBufferSample : public SampleApplication
             return false;
         }
 
-        const std::string vs =
-            R"(uniform mat4 u_mvpMatrix;
-            attribute vec4 a_position;
-            attribute vec2 a_texcoord;
-            varying vec2 v_texcoord;
-            void main()
-            {
-                gl_Position = u_mvpMatrix * a_position;
-                v_texcoord = a_texcoord;
-            })";
+        constexpr char kVS[] = R"(uniform mat4 u_mvpMatrix;
+attribute vec4 a_position;
+attribute vec2 a_texcoord;
+varying vec2 v_texcoord;
+void main()
+{
+    gl_Position = u_mvpMatrix * a_position;
+    v_texcoord = a_texcoord;
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            varying vec2 v_texcoord;
-            void main()
-            {
-                gl_FragColor = vec4(v_texcoord.x, v_texcoord.y, 1.0, 1.0);
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+varying vec2 v_texcoord;
+void main()
+{
+    gl_FragColor = vec4(v_texcoord.x, v_texcoord.y, 1.0, 1.0);
+})";
 
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
@@ -86,17 +84,14 @@ class PostSubBufferSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void step(float dt, double totalTime)
+    void step(float dt, double totalTime) override
     {
         mRotation = fmod(mRotation + (dt * 40.0f), 360.0f);
 
-        Matrix4 perspectiveMatrix = Matrix4::perspective(60.0f, float(getWindow()->getWidth()) / getWindow()->getHeight(),
-                                                         1.0f, 20.0f);
+        Matrix4 perspectiveMatrix = Matrix4::perspective(
+            60.0f, float(getWindow()->getWidth()) / getWindow()->getHeight(), 1.0f, 20.0f);
 
         Matrix4 modelMatrix = Matrix4::translate(angle::Vector3(0.0f, 0.0f, -2.0f)) *
                               Matrix4::rotate(mRotation, angle::Vector3(1.0f, 0.0f, 1.0f));
@@ -109,7 +104,7 @@ class PostSubBufferSample : public SampleApplication
         glUniformMatrix4fv(mMVPMatrixLoc, 1, GL_FALSE, mvpMatrix.data);
     }
 
-    virtual void draw()
+    void draw() override
     {
         // Set the viewport
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
@@ -133,13 +128,14 @@ class PostSubBufferSample : public SampleApplication
                        mCube.indices.data());
     }
 
-    virtual void swap()
+    void swap() override
     {
-        // Instead of letting the application call eglSwapBuffers, call eglPostSubBufferNV here instead
+        // Instead of letting the application call eglSwapBuffers, call eglPostSubBufferNV here
+        // instead
         EGLint windowWidth  = static_cast<EGLint>(getWindow()->getWidth());
         EGLint windowHeight = static_cast<EGLint>(getWindow()->getHeight());
-        EGLDisplay display = getDisplay();
-        EGLSurface surface = getSurface();
+        EGLDisplay display  = getDisplay();
+        EGLSurface surface  = getSurface();
         mPostSubBufferNV(display, surface, 60, 60, windowWidth - 120, windowHeight - 120);
     }
 

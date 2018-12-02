@@ -76,14 +76,14 @@ TEST_P(ClientArraysTest, ForbidsClientSideElementBuffer)
 {
     ASSERT_GL_FALSE(glIsEnabled(GL_CLIENT_ARRAYS_ANGLE));
 
-    const std::string &vert =
+    constexpr char kVS[] =
         "attribute vec3 a_pos;\n"
         "void main()\n"
         "{\n"
         "    gl_Position = vec4(a_pos, 1.0);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
 
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
     ASSERT_NE(-1, posLocation);

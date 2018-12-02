@@ -14,34 +14,32 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "shader_utils.h"
+
+#include "util/shader_utils.h"
 
 class StencilOperationsSample : public SampleApplication
 {
   public:
     StencilOperationsSample(int argc, char **argv)
         : SampleApplication("StencilOperations", argc, argv)
+    {}
+
+    bool initialize() override
     {
-    }
+        constexpr char kVS[] = R"(attribute vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
 
-    virtual bool initialize()
-    {
-        const std::string vs =
-            R"(attribute vec4 a_position;
-            void main()
-            {
-                gl_Position = a_position;
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+uniform vec4 u_color;
+void main()
+{
+    gl_FragColor = u_color;
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            uniform vec4 u_color;
-            void main()
-            {
-                gl_FragColor = u_color;
-            })";
-
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
@@ -69,61 +67,44 @@ class StencilOperationsSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void draw()
+    void draw() override
     {
-        GLfloat vertices[] =
-        {
-            -0.75f,  0.25f, 0.50f, // Quad #0
-            -0.25f,  0.25f, 0.50f,
-            -0.25f,  0.75f, 0.50f,
-            -0.75f,  0.75f, 0.50f,
-             0.25f,  0.25f, 0.90f, // Quad #1
-             0.75f,  0.25f, 0.90f,
-             0.75f,  0.75f, 0.90f,
-             0.25f,  0.75f, 0.90f,
-            -0.75f, -0.75f, 0.50f, // Quad #2
-            -0.25f, -0.75f, 0.50f,
-            -0.25f, -0.25f, 0.50f,
-            -0.75f, -0.25f, 0.50f,
-             0.25f, -0.75f, 0.50f, // Quad #3
-             0.75f, -0.75f, 0.50f,
-             0.75f, -0.25f, 0.50f,
-             0.25f, -0.25f, 0.50f,
-            -1.00f, -1.00f, 0.00f, // Big Quad
-             1.00f, -1.00f, 0.00f,
-             1.00f,  1.00f, 0.00f,
-            -1.00f,  1.00f, 0.00f,
+        GLfloat vertices[] = {
+            -0.75f, 0.25f,  0.50f,  // Quad #0
+            -0.25f, 0.25f,  0.50f, -0.25f, 0.75f,  0.50f, -0.75f, 0.75f,  0.50f,
+            0.25f,  0.25f,  0.90f,  // Quad #1
+            0.75f,  0.25f,  0.90f, 0.75f,  0.75f,  0.90f, 0.25f,  0.75f,  0.90f,
+            -0.75f, -0.75f, 0.50f,  // Quad #2
+            -0.25f, -0.75f, 0.50f, -0.25f, -0.25f, 0.50f, -0.75f, -0.25f, 0.50f,
+            0.25f,  -0.75f, 0.50f,  // Quad #3
+            0.75f,  -0.75f, 0.50f, 0.75f,  -0.25f, 0.50f, 0.25f,  -0.25f, 0.50f,
+            -1.00f, -1.00f, 0.00f,  // Big Quad
+            1.00f,  -1.00f, 0.00f, 1.00f,  1.00f,  0.00f, -1.00f, 1.00f,  0.00f,
         };
 
-        GLubyte indices[][6] =
-        {
-            {  0,  1,  2,  0,  2,  3 }, // Quad #0
-            {  4,  5,  6,  4,  6,  7 }, // Quad #1
-            {  8,  9, 10,  8, 10, 11 }, // Quad #2
-            { 12, 13, 14, 12, 14, 15 }, // Quad #3
-            { 16, 17, 18, 16, 18, 19 }, // Big Quad
+        GLubyte indices[][6] = {
+            {0, 1, 2, 0, 2, 3},        // Quad #0
+            {4, 5, 6, 4, 6, 7},        // Quad #1
+            {8, 9, 10, 8, 10, 11},     // Quad #2
+            {12, 13, 14, 12, 14, 15},  // Quad #3
+            {16, 17, 18, 16, 18, 19},  // Big Quad
         };
 
         static const size_t testCount = 4;
-        GLfloat colors[testCount][4] =
-        {
-            { 1.0f, 0.0f, 0.0f, 1.0f },
-            { 0.0f, 1.0f, 0.0f, 1.0f },
-            { 0.0f, 0.0f, 1.0f, 1.0f },
-            { 1.0f, 1.0f, 0.0f, 0.0f },
+        GLfloat colors[testCount][4]  = {
+            {1.0f, 0.0f, 0.0f, 1.0f},
+            {0.0f, 1.0f, 0.0f, 1.0f},
+            {0.0f, 0.0f, 1.0f, 1.0f},
+            {1.0f, 1.0f, 0.0f, 0.0f},
         };
 
-        GLuint stencilValues[testCount] =
-        {
-            0x7, // Result of test 0
-            0x0, // Result of test 1
-            0x2, // Result of test 2
-            0xff // Result of test 3.  We need to fill this value in at run-time
+        GLuint stencilValues[testCount] = {
+            0x7,  // Result of test 0
+            0x0,  // Result of test 1
+            0x2,  // Result of test 2
+            0xff  // Result of test 3.  We need to fill this value in at run-time
         };
 
         // Set the viewport

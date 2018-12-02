@@ -68,28 +68,26 @@ class DepthStencilFormatsTestBase : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec4 position;
-            varying vec2 texcoord;
+        constexpr char kVS[] = R"(precision highp float;
+attribute vec4 position;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_Position = position;
-                texcoord = (position.xy * 0.5) + 0.5;
-            })";
+void main()
+{
+    gl_Position = position;
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
 
-        const std::string fragmentShaderSource =
-            R"(precision highp float;
-            uniform sampler2D tex;
-            varying vec2 texcoord;
+        constexpr char kFS[] = R"(precision highp float;
+uniform sampler2D tex;
+varying vec2 texcoord;
 
-            void main()
-            {
-                gl_FragColor = texture2D(tex, texcoord);
-            })";
+void main()
+{
+    gl_FragColor = texture2D(tex, texcoord);
+})";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -279,16 +277,16 @@ class TinyDepthStencilWorkaroundTest : public ANGLETest
 // http://anglebug.com/1664
 TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
 {
-    const std::string &drawVS =
+    constexpr char kDrawVS[] =
         "#version 100\n"
         "attribute vec3 vertex;\n"
         "void main () {\n"
         "  gl_Position = vec4(vertex.x, vertex.y, vertex.z * 2.0 - 1.0, 1);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(drawProgram, drawVS, essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(drawProgram, kDrawVS, essl1_shaders::fs::Red());
 
-    const std::string &blitVS =
+    constexpr char kBlitVS[] =
         "#version 100\n"
         "attribute vec2 vertex;\n"
         "varying vec2 position;\n"
@@ -297,7 +295,7 @@ TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
         "  gl_Position = vec4(vertex, 0, 1);\n"
         "}\n";
 
-    const std::string &blitFS =
+    constexpr char kBlitFS[] =
         "#version 100\n"
         "precision mediump float;\n"
         "uniform sampler2D texture;\n"
@@ -306,7 +304,7 @@ TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
         "  gl_FragColor = vec4 (texture2D (texture, position).rrr, 1.);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(blitProgram, blitVS, blitFS);
+    ANGLE_GL_PROGRAM(blitProgram, kBlitVS, kBlitFS);
 
     GLint blitTextureLocation = glGetUniformLocation(blitProgram.get(), "texture");
     ASSERT_NE(-1, blitTextureLocation);

@@ -16,10 +16,10 @@
 #include "SampleApplication.h"
 
 #include "common/vector_utils.h"
-#include "shader_utils.h"
-#include "random_utils.h"
-#include "system_utils.h"
 #include "tga_utils.h"
+#include "util/random_utils.h"
+#include "util/shader_utils.h"
+#include "util/system_utils.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -33,59 +33,57 @@ class ParticleSystemSample : public SampleApplication
 
     bool initialize() override
     {
-        const std::string vs =
-            R"(uniform float u_time;
-            uniform vec3 u_centerPosition;
-            attribute float a_lifetime;
-            attribute vec3 a_startPosition;
-            attribute vec3 a_endPosition;
-            varying float v_lifetime;
-            void main()
-            {
-                if (u_time <= a_lifetime)
-                {
-                    gl_Position.xyz = a_startPosition + (u_time * a_endPosition);
-                    gl_Position.xyz += u_centerPosition;
-                    gl_Position.w = 1.0;
-                }
-                else
-                {
-                    gl_Position = vec4(-1000, -1000, 0, 0);
-                }
-                v_lifetime = 1.0 - (u_time / a_lifetime);
-                v_lifetime = clamp(v_lifetime, 0.0, 1.0);
-                gl_PointSize = (v_lifetime * v_lifetime) * 40.0;
-            })";
+        constexpr char kVS[] = R"(uniform float u_time;
+uniform vec3 u_centerPosition;
+attribute float a_lifetime;
+attribute vec3 a_startPosition;
+attribute vec3 a_endPosition;
+varying float v_lifetime;
+void main()
+{
+    if (u_time <= a_lifetime)
+    {
+        gl_Position.xyz = a_startPosition + (u_time * a_endPosition);
+        gl_Position.xyz += u_centerPosition;
+        gl_Position.w = 1.0;
+    }
+    else
+    {
+        gl_Position = vec4(-1000, -1000, 0, 0);
+    }
+    v_lifetime = 1.0 - (u_time / a_lifetime);
+    v_lifetime = clamp(v_lifetime, 0.0, 1.0);
+    gl_PointSize = (v_lifetime * v_lifetime) * 40.0;
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            uniform vec4 u_color;
-            varying float v_lifetime;
-            uniform sampler2D s_texture;
-            void main()
-            {
-                vec4 texColor;
-                texColor = texture2D(s_texture, gl_PointCoord);
-                gl_FragColor = vec4(u_color) * texColor;
-                gl_FragColor.a *= v_lifetime;
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+uniform vec4 u_color;
+varying float v_lifetime;
+uniform sampler2D s_texture;
+void main()
+{
+    vec4 texColor;
+    texColor = texture2D(s_texture, gl_PointCoord);
+    gl_FragColor = vec4(u_color) * texColor;
+    gl_FragColor.a *= v_lifetime;
+})";
 
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
         }
 
         // Get the attribute locations
-        mLifetimeLoc = glGetAttribLocation(mProgram, "a_lifetime");
+        mLifetimeLoc      = glGetAttribLocation(mProgram, "a_lifetime");
         mStartPositionLoc = glGetAttribLocation(mProgram, "a_startPosition");
-        mEndPositionLoc = glGetAttribLocation(mProgram, "a_endPosition");
+        mEndPositionLoc   = glGetAttribLocation(mProgram, "a_endPosition");
 
         // Get the uniform locations
-        mTimeLoc = glGetUniformLocation(mProgram, "u_time");
+        mTimeLoc           = glGetUniformLocation(mProgram, "u_time");
         mCenterPositionLoc = glGetUniformLocation(mProgram, "u_centerPosition");
-        mColorLoc = glGetUniformLocation(mProgram, "u_color");
-        mSamplerLoc = glGetUniformLocation(mProgram, "s_texture");
+        mColorLoc          = glGetUniformLocation(mProgram, "u_color");
+        mSamplerLoc        = glGetUniformLocation(mProgram, "s_texture");
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -166,9 +164,12 @@ class ParticleSystemSample : public SampleApplication
         glUseProgram(mProgram);
 
         // Load the vertex attributes
-        glVertexAttribPointer(mLifetimeLoc, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), &mParticles[0].lifetime);
-        glVertexAttribPointer(mEndPositionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), &mParticles[0].endPosition);
-        glVertexAttribPointer(mStartPositionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), &mParticles[0].startPosition);
+        glVertexAttribPointer(mLifetimeLoc, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                              &mParticles[0].lifetime);
+        glVertexAttribPointer(mEndPositionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                              &mParticles[0].endPosition);
+        glVertexAttribPointer(mStartPositionLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                              &mParticles[0].startPosition);
 
         glEnableVertexAttribArray(mLifetimeLoc);
         glEnableVertexAttribArray(mEndPositionLoc);

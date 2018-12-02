@@ -679,7 +679,7 @@ GLuint ANGLETestBase::get2DTexturedQuadProgram()
         return m2DTexturedQuadProgram;
     }
 
-    const std::string &vs =
+    constexpr char kVS[] =
         "attribute vec2 position;\n"
         "varying mediump vec2 texCoord;\n"
         "void main()\n"
@@ -688,7 +688,7 @@ GLuint ANGLETestBase::get2DTexturedQuadProgram()
         "    texCoord = position * 0.5 + vec2(0.5);\n"
         "}\n";
 
-    const std::string &fs =
+    constexpr char kFS[] =
         "varying mediump vec2 texCoord;\n"
         "uniform sampler2D tex;\n"
         "void main()\n"
@@ -696,7 +696,7 @@ GLuint ANGLETestBase::get2DTexturedQuadProgram()
         "    gl_FragColor = texture2D(tex, texCoord);\n"
         "}\n";
 
-    m2DTexturedQuadProgram = CompileProgram(vs, fs);
+    m2DTexturedQuadProgram = CompileProgram(kVS, kFS);
     return m2DTexturedQuadProgram;
 }
 
@@ -707,32 +707,30 @@ GLuint ANGLETestBase::get3DTexturedQuadProgram()
         return m3DTexturedQuadProgram;
     }
 
-    const std::string &vs =
-        R"(#version 300 es
-        in vec2 position;
-        out vec2 texCoord;
-        void main()
-        {
-            gl_Position = vec4(position, 0, 1);
-            texCoord = position * 0.5 + vec2(0.5);
-        })";
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+out vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
 
-    const std::string &fs =
-        R"(#version 300 es
-        precision highp float;
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
 
-        in vec2 texCoord;
-        out vec4 my_FragColor;
+in vec2 texCoord;
+out vec4 my_FragColor;
 
-        uniform highp sampler3D tex;
-        uniform float u_layer;
+uniform highp sampler3D tex;
+uniform float u_layer;
 
-        void main()
-        {
-            my_FragColor = texture(tex, vec3(texCoord, u_layer));
-        })";
+void main()
+{
+    my_FragColor = texture(tex, vec3(texCoord, u_layer));
+})";
 
-    m3DTexturedQuadProgram = CompileProgram(vs, fs);
+    m3DTexturedQuadProgram = CompileProgram(kVS, kFS);
     return m3DTexturedQuadProgram;
 }
 
@@ -766,41 +764,6 @@ void ANGLETestBase::draw3DTexturedQuad(GLfloat positionAttribZ,
     {
         glUseProgram(static_cast<GLuint>(activeProgram));
     }
-}
-
-GLuint ANGLETestBase::compileShader(GLenum type, const std::string &source)
-{
-    GLuint shader = glCreateShader(type);
-
-    const char *sourceArray[1] = {source.c_str()};
-    glShaderSource(shader, 1, sourceArray, nullptr);
-    glCompileShader(shader);
-
-    GLint compileResult;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
-
-    if (compileResult == 0)
-    {
-        GLint infoLogLength;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        if (infoLogLength == 0)
-        {
-            std::cerr << "shader compilation failed with empty log." << std::endl;
-        }
-        else
-        {
-            std::vector<GLchar> infoLog(infoLogLength);
-            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
-
-            std::cerr << "shader compilation failed: " << &infoLog[0] << std::endl;
-        }
-
-        glDeleteShader(shader);
-        shader = 0;
-    }
-
-    return shader;
 }
 
 void ANGLETestBase::checkD3D11SDKLayersMessages()

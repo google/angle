@@ -501,7 +501,7 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 // flush or finish after ClearBufferfv or each draw.
 TEST_P(ClearTestES3, RepeatedClear)
 {
-    const std::string &vertexSource =
+    constexpr char kVS[] =
         "#version 300 es\n"
         "in highp vec2 position;\n"
         "out highp vec2 v_coord;\n"
@@ -512,7 +512,7 @@ TEST_P(ClearTestES3, RepeatedClear)
         "    v_coord = texCoord;\n"
         "}\n";
 
-    const std::string &fragmentSource =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "in highp vec2 v_coord;\n"
         "out highp vec4 color;\n"
@@ -522,7 +522,7 @@ TEST_P(ClearTestES3, RepeatedClear)
         "    color = texture(tex, v_coord);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vertexSource, fragmentSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     mTextures.resize(1, 0);
     glGenTextures(1, mTextures.data());

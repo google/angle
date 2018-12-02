@@ -211,14 +211,14 @@ class IOSurfaceClientBufferTest : public ANGLETest
         GLTexture texture;
         bindIOSurfaceToTexture(ioSurface, 1, 1, 0, internalFormat, type, &pbuffer, &texture);
 
-        const std::string vs =
+        constexpr char kVS[] =
             "attribute vec4 position;\n"
             "void main()\n"
             "{\n"
             "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
             "}\n";
 
-        const std::string fs =
+        constexpr char kFS[] =
             "#extension GL_ARB_texture_rectangle : require\n"
             "precision mediump float;\n"
             "uniform sampler2DRect tex;\n"
@@ -227,7 +227,7 @@ class IOSurfaceClientBufferTest : public ANGLETest
             "    gl_FragColor = texture2DRect(tex, vec2(0, 0));\n"
             "}\n";
 
-        ANGLE_GL_PROGRAM(program, vs, fs);
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
         glUseProgram(program);
 
         GLint location = glGetUniformLocation(program, "tex");

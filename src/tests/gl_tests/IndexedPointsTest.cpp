@@ -27,52 +27,47 @@ class IndexedPointsTest : public ANGLETest
 
     float getIndexPositionY(size_t idx) { return (idx == 2 || idx == 3) ? -0.5f : 0.5f; }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec2 position;
+        constexpr char kVS[] = R"(precision highp float;
+attribute vec2 position;
 
-            void main() {
-                gl_PointSize = 5.0;
-                gl_Position  = vec4(position, 0.0, 1.0);
-            })";
+void main() {
+    gl_PointSize = 5.0;
+    gl_Position  = vec4(position, 0.0, 1.0);
+})";
 
-        const std::string fragmentShaderSource =
-            R"(precision highp float;
+        constexpr char kFS[] = R"(precision highp float;
+void main()
+{
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
-            void main()
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
-
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
-        const std::string vertexShaderSource2 =
-            R"(precision highp float;
-            attribute vec2 position;
-            attribute vec4 color;
-            varying vec4 vcolor;
+        constexpr char kVS2[] = R"(precision highp float;
+attribute vec2 position;
+attribute vec4 color;
+varying vec4 vcolor;
 
-            void main() {
-                gl_PointSize = 5.0;
-                gl_Position  = vec4(position, 0.0, 1.0);
-                vcolor       = color;
-            })";
+void main() {
+    gl_PointSize = 5.0;
+    gl_Position  = vec4(position, 0.0, 1.0);
+    vcolor       = color;
+})";
 
-        const std::string fragmentShaderSource2 =
-            R"(precision highp float;
-            varying vec4 vcolor;
+        constexpr char kFS2[] = R"(precision highp float;
+varying vec4 vcolor;
 
-            void main()
-            {
-                gl_FragColor = vec4(vcolor.xyz, 1.0);
-            })";
+void main()
+{
+    gl_FragColor = vec4(vcolor.xyz, 1.0);
+})";
 
-        mVertexWithColorBufferProgram = CompileProgram(vertexShaderSource2, fragmentShaderSource2);
+        mVertexWithColorBufferProgram = CompileProgram(kVS2, kFS2);
         ASSERT_NE(0u, mVertexWithColorBufferProgram);
 
         // Construct a vertex buffer of position values and color values
@@ -105,7 +100,7 @@ class IndexedPointsTest : public ANGLETest
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteBuffers(1, &mVertexBuffer);
         glDeleteBuffers(1, &mIndexBuffer);

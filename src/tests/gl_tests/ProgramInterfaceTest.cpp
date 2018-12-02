@@ -32,7 +32,7 @@ class ProgramInterfaceTestES31 : public ANGLETest
 // Tests glGetProgramResourceIndex.
 TEST_P(ProgramInterfaceTestES31, GetResourceIndex)
 {
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -42,7 +42,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceIndex)
         "    oColor = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
 
     GLuint index =
         glGetProgramResourceIndex(program, GL_PROGRAM_INPUT, essl31_shaders::PositionAttrib());
@@ -68,7 +68,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceIndex)
 // Tests glGetProgramResourceName.
 TEST_P(ProgramInterfaceTestES31, GetResourceName)
 {
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -78,7 +78,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceName)
         "    oColor[0] = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
 
     GLuint index =
         glGetProgramResourceIndex(program, GL_PROGRAM_INPUT, essl31_shaders::PositionAttrib());
@@ -122,7 +122,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceName)
 // Tests glGetProgramResourceLocation.
 TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(location = 3) in highp vec4 position;\n"
@@ -132,7 +132,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
         "    gl_Position = position;\n"
         "}";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -142,7 +142,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
         "    oColor[0] = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLenum invalidInterfaces[] = {GL_UNIFORM_BLOCK, GL_TRANSFORM_FEEDBACK_VARYING,
                                   GL_BUFFER_VARIABLE, GL_SHADER_STORAGE_BLOCK,
@@ -181,7 +181,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
 // Tests glGetProgramResource.
 TEST_P(ProgramInterfaceTestES31, GetResource)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(location = 3) in highp vec4 position;\n"
@@ -190,7 +190,7 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
         "    gl_Position = position;\n"
         "}";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -200,7 +200,7 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
         "    oColor[0] = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLuint index = glGetProgramResourceIndex(program, GL_PROGRAM_INPUT, "position");
     EXPECT_GL_NO_ERROR();
@@ -257,7 +257,7 @@ TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
     // http://anglebug.com/1951
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -279,7 +279,7 @@ TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
         "    blockInstance2[0].target = vec3(1, 1, 1);\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
 
     GLint num;
     glGetProgramInterfaceiv(program, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &num);
@@ -347,7 +347,7 @@ TEST_P(ProgramInterfaceTestES31, GetUniformProperties)
     // backend. http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform layout(location=12) vec4 color;\n"
@@ -357,7 +357,7 @@ TEST_P(ProgramInterfaceTestES31, GetUniformProperties)
         "    atomicCounterIncrement(foo);\n"
         "}";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -367,7 +367,7 @@ TEST_P(ProgramInterfaceTestES31, GetUniformProperties)
         "    oColor = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLuint index = glGetProgramResourceIndex(program, GL_UNIFORM, "color");
     EXPECT_GL_NO_ERROR();
@@ -452,7 +452,7 @@ TEST_P(ProgramInterfaceTestES31, GetUniformProperties)
 // Tests the resource property query for uniform block can be done correctly.
 TEST_P(ProgramInterfaceTestES31, GetUniformBlockProperties)
 {
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "in vec2 position;\n"
         "out vec2 v;\n"
@@ -465,7 +465,7 @@ TEST_P(ProgramInterfaceTestES31, GetUniformBlockProperties)
         "  gl_Position = vec4(position, 0, 1);\n"
         "}";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "in vec2 v;\n"
@@ -474,7 +474,7 @@ TEST_P(ProgramInterfaceTestES31, GetUniformBlockProperties)
         "  color = vec4(v, 0, 1);\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLuint index = glGetProgramResourceIndex(program, GL_UNIFORM_BLOCK, "blockName");
     EXPECT_GL_NO_ERROR();
@@ -540,7 +540,7 @@ TEST_P(ProgramInterfaceTestES31, QueryAtomicCounteBuffer)
     // backend. http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &vertShader =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 2, offset = 0) uniform atomic_uint vcounter;\n"
@@ -551,7 +551,7 @@ TEST_P(ProgramInterfaceTestES31, QueryAtomicCounteBuffer)
         "    gl_Position = a_position;\n"
         "}\n";
 
-    const std::string &fragShader =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 2, offset = 4) uniform atomic_uint fcounter;\n"
@@ -562,7 +562,7 @@ TEST_P(ProgramInterfaceTestES31, QueryAtomicCounteBuffer)
         "    my_color = vec4(0.0);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vertShader, fragShader);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     GLint num;
     glGetProgramInterfaceiv(program, GL_ATOMIC_COUNTER_BUFFER, GL_ACTIVE_RESOURCES, &num);
     EXPECT_GL_NO_ERROR();
@@ -595,7 +595,7 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
     // on d3d backend. http://anglebug.com/1951
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "struct S {\n"
@@ -617,7 +617,7 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
         "    gl_Position = vec4(instanceName1[0].f1, s1[0].a);\n"
         "}\n";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "layout(binding = 1) buffer blockName1 {\n"
@@ -630,7 +630,7 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
         "    oColor = vec4(instanceName1[0].f1, 0, 0, 1);\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLuint index = glGetProgramResourceIndex(program, GL_BUFFER_VARIABLE, "blockName1.f1");
     EXPECT_GL_NO_ERROR();
@@ -719,7 +719,7 @@ TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
     // on d3d backend. http://anglebug.com/1951
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    const std::string &vertexShaderSource =
+    constexpr char kVS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "struct S {\n"
@@ -745,7 +745,7 @@ TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
         "    gl_Position = vec4(instanceName1[0].f1, s1[0].a);\n"
         "}\n";
 
-    const std::string &fragmentShaderSource =
+    constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
@@ -755,7 +755,7 @@ TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
         "    oColor = color;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 
     GLuint index = glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, "blockName0");
     EXPECT_GL_NO_ERROR();
@@ -812,32 +812,28 @@ TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
 // Tests transform feedback varying qeury works correctly.
 TEST_P(ProgramInterfaceTestES31, QueryTransformFeedbackVarying)
 {
-    const std::string &vertexShaderSource =
-        R"(#version 310 es
+    constexpr char kVS[] = R"(#version 310 es
+in vec3 position;
+out float outSingleType;
+out vec2 outWholeArray[2];
+out vec3 outArrayElements[16];
+void main() {
+    outSingleType = 0.0;
+    outWholeArray[0] = vec2(position);
+    outArrayElements[7] = vec3(0, 0, 0);
+    outArrayElements[15] = position;
+    gl_Position = vec4(position, 1);
+})";
 
-        in vec3 position;\
-        out float outSingleType;
-        out vec2 outWholeArray[2];
-        out vec3 outArrayElements[16];
-        void main() {
-          outSingleType = 0.0;
-          outWholeArray[0] = vec2(position);
-          outArrayElements[7] = vec3(0, 0, 0);
-          outArrayElements[15] = position;
-          gl_Position = vec4(position, 1);
-        })";
-
-    const std::string &fragmentShaderSource =
-        R"(#version 310 es
-
-        precision mediump float;
-        out vec4 color;
-        in float outSingleType;
-        in vec2 outWholeArray[2];
-        in vec3 outArrayElements[16];
-        void main() {
-          color = vec4(0);
-        })";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 color;
+in float outSingleType;
+in vec2 outWholeArray[2];
+in vec3 outArrayElements[16];
+void main() {
+    color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outArrayElements[7]");
@@ -845,8 +841,8 @@ TEST_P(ProgramInterfaceTestES31, QueryTransformFeedbackVarying)
     tfVaryings.push_back("outSingleType");
     tfVaryings.push_back("outWholeArray");
 
-    GLuint program = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
-                                                         tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    GLuint program =
+        CompileProgramWithTransformFeedback(kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
     ASSERT_NE(0u, program);
 
     GLint num;

@@ -10,6 +10,8 @@
 #include "ANGLEPerfTest.h"
 #include "shader_utils.h"
 
+#include "angle_gl.h"
+
 namespace
 {
 unsigned int kIterationsPerStep = 50;
@@ -94,22 +96,21 @@ void DispatchComputePerfBenchmark::initializeBenchmark()
 
 void DispatchComputePerfBenchmark::initComputeShader()
 {
-    const std::string &csSource =
-        R"(#version 310 es
-        #define LOCAL_SIZE_X 16
-        #define LOCAL_SIZE_Y 16
-        layout(local_size_x=LOCAL_SIZE_X, local_size_y=LOCAL_SIZE_Y) in;
-        precision highp float;
-        uniform sampler2D readTexture;
-        layout(r32f, binding = 4) writeonly uniform highp image2D  outImage;
+    constexpr char kCS[] = R"(#version 310 es
+#define LOCAL_SIZE_X 16
+#define LOCAL_SIZE_Y 16
+layout(local_size_x=LOCAL_SIZE_X, local_size_y=LOCAL_SIZE_Y) in;
+precision highp float;
+uniform sampler2D readTexture;
+layout(r32f, binding = 4) writeonly uniform highp image2D  outImage;
 
-        void main() {
-            float sum = 0.;
-            sum += texelFetch(readTexture, ivec2(gl_GlobalInvocationID.xy), 0).r;
-            imageStore(outImage, ivec2(gl_GlobalInvocationID.xy), vec4(sum));
-        })";
+void main() {
+    float sum = 0.;
+    sum += texelFetch(readTexture, ivec2(gl_GlobalInvocationID.xy), 0).r;
+    imageStore(outImage, ivec2(gl_GlobalInvocationID.xy), vec4(sum));
+})";
 
-    mProgram = CompileComputeProgram(csSource, false);
+    mProgram = CompileComputeProgram(kCS, false);
     ASSERT_NE(0u, mProgram);
 }
 

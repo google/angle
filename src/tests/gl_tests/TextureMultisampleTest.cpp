@@ -574,30 +574,28 @@ TEST_P(TextureMultisampleArrayWebGLTest, BindMultisampleArrayTextureWithoutExten
 // not enabled.
 TEST_P(TextureMultisampleArrayWebGLTest, ShaderWithoutExtension)
 {
-    const std::string &fragmentShaderRequireExtension = R"(#version 310 es
-        #extension GL_OES_texture_storage_multisample_2d_array : require
-        out highp vec4 my_FragColor;
+    constexpr char kFSRequiresExtension[] = R"(#version 310 es
+#extension GL_OES_texture_storage_multisample_2d_array : require
+out highp vec4 my_FragColor;
 
-        void main() {
-             my_FragColor = vec4(0.0);
-        }
-    )";
+void main() {
+        my_FragColor = vec4(0.0);
+})";
 
-    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), fragmentShaderRequireExtension);
+    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), kFSRequiresExtension);
     EXPECT_EQ(0u, program);
 
-    const std::string &fragmentShaderEnableAndUseExtension = R"(#version 310 es
-        #extension GL_OES_texture_storage_multisample_2d_array : enable
+    constexpr char kFSEnableAndUseExtension[] = R"(#version 310 es
+#extension GL_OES_texture_storage_multisample_2d_array : enable
 
-        uniform highp sampler2DMSArray tex;
-        out highp ivec4 outSize;
+uniform highp sampler2DMSArray tex;
+out highp ivec4 outSize;
 
-        void main() {
-             outSize = ivec4(textureSize(tex), 0);
-        }
-    )";
+void main() {
+        outSize = ivec4(textureSize(tex), 0);
+})";
 
-    program = CompileProgram(essl31_shaders::vs::Simple(), fragmentShaderEnableAndUseExtension);
+    program = CompileProgram(essl31_shaders::vs::Simple(), kFSEnableAndUseExtension);
     EXPECT_EQ(0u, program);
 }
 
@@ -878,18 +876,17 @@ TEST_P(TextureMultisampleArrayWebGLTest, TextureSizeInShader)
 {
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
-    const std::string &fragmentShader = R"(#version 310 es
-        #extension GL_OES_texture_storage_multisample_2d_array : require
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_OES_texture_storage_multisample_2d_array : require
 
-        uniform highp sampler2DMSArray tex;
-        out highp vec4 my_FragColor;
+uniform highp sampler2DMSArray tex;
+out highp vec4 my_FragColor;
 
-        void main() {
-             my_FragColor = (textureSize(tex) == ivec3(8, 4, 2)) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
-        }
-    )";
+void main() {
+        my_FragColor = (textureSize(tex) == ivec3(8, 4, 2)) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
 
-    ANGLE_GL_PROGRAM(texSizeProgram, essl31_shaders::vs::Simple(), fragmentShader);
+    ANGLE_GL_PROGRAM(texSizeProgram, essl31_shaders::vs::Simple(), kFS);
 
     GLint texLocation = glGetUniformLocation(texSizeProgram, "tex");
     ASSERT_GE(texLocation, 0);

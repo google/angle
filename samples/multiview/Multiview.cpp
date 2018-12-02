@@ -6,8 +6,9 @@
 // This sample shows basic usage of the GL_ANGLE_multiview extension.
 
 #include "SampleApplication.h"
+
 #include "geometry_utils.h"
-#include "shader_utils.h"
+#include "util/shader_utils.h"
 
 #include <iostream>
 
@@ -59,10 +60,9 @@ class MultiviewSample : public SampleApplication
           mCubeNormalVBO(0),
           mCubeIBO(0),
           mCombineProgram(0)
-    {
-    }
+    {}
 
-    virtual bool initialize()
+    bool initialize() override
     {
         // Check whether the GL_ANGLE_multiview extension is supported. If not, abort
         // initialization.
@@ -111,7 +111,7 @@ class MultiviewSample : public SampleApplication
         // The program has two code paths based on the gl_ViewID_OVR attribute which tells us which
         // view is currently being rendered to. Based on it we decide which eye's camera matrix to
         // use.
-        const std::string multiviewVS =
+        constexpr char kMultiviewVS[] =
             "#version 300 es\n"
             "#extension GL_OVR_multiview : require\n"
             "layout(num_views = 2) in;\n"
@@ -134,7 +134,7 @@ class MultiviewSample : public SampleApplication
             "   gl_Position = uPerspective * p;\n"
             "}\n";
 
-        const std::string multiviewFS =
+        constexpr char kMultiviewFS[] =
             "#version 300 es\n"
             "#extension GL_OVR_multiview : require\n"
             "precision mediump float;\n"
@@ -146,7 +146,7 @@ class MultiviewSample : public SampleApplication
             "   color = vec4(col, 1.);\n"
             "}\n";
 
-        mMultiviewProgram = CompileProgram(multiviewVS, multiviewFS);
+        mMultiviewProgram = CompileProgram(kMultiviewVS, kMultiviewFS);
         if (!mMultiviewProgram)
         {
             return false;
@@ -159,7 +159,7 @@ class MultiviewSample : public SampleApplication
         mMultiviewTranslationUniformLoc = glGetUniformLocation(mMultiviewProgram, "uTranslation");
 
         // Create a normal program to combine both layers of the color array texture.
-        const std::string combineVS =
+        constexpr char kCombineVS[] =
             "#version 300 es\n"
             "in vec2 vIn;\n"
             "out vec2 uv;\n"
@@ -169,7 +169,7 @@ class MultiviewSample : public SampleApplication
             "   uv = vIn * .5 + vec2(.5);\n"
             "}\n";
 
-        const std::string combineFS =
+        constexpr char kCombineFS[] =
             "#version 300 es\n"
             "precision mediump float;\n"
             "precision mediump sampler2DArray;\n"
@@ -185,7 +185,7 @@ class MultiviewSample : public SampleApplication
             "   color = vec4(texColor, 1.);\n"
             "}\n";
 
-        mCombineProgram = CompileProgram(combineVS, combineFS);
+        mCombineProgram = CompileProgram(kCombineVS, kCombineFS);
         if (!mCombineProgram)
         {
             return false;
@@ -235,7 +235,7 @@ class MultiviewSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
+    void destroy() override
     {
         glDeleteProgram(mMultiviewProgram);
         glDeleteFramebuffers(1, &mMultiviewFBO);
@@ -251,7 +251,7 @@ class MultiviewSample : public SampleApplication
         glDeleteProgram(mCombineProgram);
     }
 
-    virtual void draw()
+    void draw() override
     {
         // Draw to multiview fbo.
         {

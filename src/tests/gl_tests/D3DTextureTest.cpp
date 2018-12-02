@@ -36,7 +36,7 @@ class D3DTextureTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vsSource =
+        constexpr char kVS[] =
             R"(precision highp float;
             attribute vec4 position;
             varying vec2 texcoord;
@@ -48,7 +48,7 @@ class D3DTextureTest : public ANGLETest
                 texcoord.y = 1.0 - texcoord.y;
             })";
 
-        const std::string textureFSSource =
+        constexpr char kTextureFS[] =
             R"(precision highp float;
             uniform sampler2D tex;
             varying vec2 texcoord;
@@ -58,7 +58,7 @@ class D3DTextureTest : public ANGLETest
                 gl_FragColor = texture2D(tex, texcoord);
             })";
 
-        const std::string textureFSSourceNoSampling =
+        constexpr char kTextureFSNoSampling[] =
             R"(precision highp float;
 
             void main()
@@ -66,13 +66,13 @@ class D3DTextureTest : public ANGLETest
                 gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
             })";
 
-        mTextureProgram = CompileProgram(vsSource, textureFSSource);
+        mTextureProgram = CompileProgram(kVS, kTextureFS);
         ASSERT_NE(0u, mTextureProgram) << "shader compilation failed.";
 
         mTextureUniformLocation = glGetUniformLocation(mTextureProgram, "tex");
         ASSERT_NE(-1, mTextureUniformLocation);
 
-        mTextureProgramNoSampling = CompileProgram(vsSource, textureFSSourceNoSampling);
+        mTextureProgramNoSampling = CompileProgram(kVS, kTextureFSNoSampling);
         ASSERT_NE(0u, mTextureProgramNoSampling) << "shader compilation failed.";
 
         mD3D11Module = LoadLibrary(TEXT("d3d11.dll"));

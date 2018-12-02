@@ -14,33 +14,31 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "shader_utils.h"
+
+#include "util/shader_utils.h"
 
 class HelloTriangleSample : public SampleApplication
 {
   public:
     HelloTriangleSample(int argc, char **argv)
         : SampleApplication("HelloTriangle", argc, argv, 2, 0)
+    {}
+
+    bool initialize() override
     {
-    }
+        constexpr char kVS[] = R"(attribute vec4 vPosition;
+void main()
+{
+    gl_Position = vPosition;
+})";
 
-    virtual bool initialize()
-    {
-        const std::string vs =
-            R"(attribute vec4 vPosition;
-            void main()
-            {
-                gl_Position = vPosition;
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            void main()
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
-
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
@@ -51,18 +49,12 @@ class HelloTriangleSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
-    {
-        glDeleteProgram(mProgram);
-    }
+    void destroy() override { glDeleteProgram(mProgram); }
 
-    virtual void draw()
+    void draw() override
     {
-        GLfloat vertices[] =
-        {
-             0.0f,  0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
+        GLfloat vertices[] = {
+            0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
         };
 
         // Set the viewport

@@ -68,20 +68,13 @@ TEST_P(LinkAndRelinkTest, RenderingProgramFailsWithProgramInstalled)
 
     // Install a render program in current GL state via UseProgram, then render.
     // It should succeed.
-    const std::string vsSource =
-        R"(void main()
-        {
-        })";
-
-    const std::string fsSource =
-        R"(void main()
-        {
-        })";
+    constexpr char kVS[] = "void main() {}";
+    constexpr char kFS[] = "void main() {}";
 
     GLuint program = glCreateProgram();
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
 
     EXPECT_NE(0u, vs);
     EXPECT_NE(0u, fs);
@@ -195,7 +188,7 @@ TEST_P(LinkAndRelinkTestES31, ComputeProgramFailsWithProgramInstalled)
 {
     // Install a compute program in the GL state via UseProgram, then dispatch
     // compute. It should succeed.
-    const std::string csSource =
+    constexpr char kCS[] =
         R"(#version 310 es
         layout(local_size_x=1) in;
         void main()
@@ -204,7 +197,7 @@ TEST_P(LinkAndRelinkTestES31, ComputeProgramFailsWithProgramInstalled)
 
     GLuint program = glCreateProgram();
 
-    GLuint cs = CompileShader(GL_COMPUTE_SHADER, csSource);
+    GLuint cs = CompileShader(GL_COMPUTE_SHADER, kCS);
     EXPECT_NE(0u, cs);
 
     glAttachShader(program, cs);
@@ -290,16 +283,15 @@ TEST_P(LinkAndRelinkTestES31, ComputeProgramFailsWithProgramInstalled)
 // then dispatching compute will fail, but starting rendering can succeed.
 TEST_P(LinkAndRelinkTestES31, RelinkProgramSucceedsFromComputeToRendering)
 {
-    const std::string csSource =
-        R"(#version 310 es
-        layout(local_size_x=1) in;
-        void main()
-        {
-        })";
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+void main()
+{
+})";
 
     GLuint program = glCreateProgram();
 
-    GLuint cs = CompileShader(GL_COMPUTE_SHADER, csSource);
+    GLuint cs = CompileShader(GL_COMPUTE_SHADER, kCS);
     EXPECT_NE(0u, cs);
 
     glAttachShader(program, cs);
@@ -321,18 +313,11 @@ TEST_P(LinkAndRelinkTestES31, RelinkProgramSucceedsFromComputeToRendering)
     glDrawArrays(GL_POINTS, 0, 1);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    const std::string vsSource =
-        R"(void main()
-        {
-        })";
+    constexpr char kVS[] = "void main() {}";
+    constexpr char kFS[] = "void main() {}";
 
-    const std::string fsSource =
-        R"(void main()
-        {
-        })";
-
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
     EXPECT_NE(0u, vs);
     EXPECT_NE(0u, fs);
 
@@ -363,20 +348,13 @@ TEST_P(LinkAndRelinkTestES31, RelinkProgramSucceedsFromComputeToRendering)
 // then starting rendering will fail, but dispatching compute can succeed.
 TEST_P(LinkAndRelinkTestES31, RelinkProgramSucceedsFromRenderingToCompute)
 {
-    const std::string vsSource =
-        R"(void main()
-        {
-        })";
-
-    const std::string fsSource =
-        R"(void main()
-        {
-        })";
+    constexpr char kVS[] = "void main() {}";
+    constexpr char kFS[] = "void main() {}";
 
     GLuint program = glCreateProgram();
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
 
     EXPECT_NE(0u, vs);
     EXPECT_NE(0u, fs);
@@ -404,14 +382,13 @@ TEST_P(LinkAndRelinkTestES31, RelinkProgramSucceedsFromRenderingToCompute)
     glDispatchCompute(8, 4, 2);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    const std::string csSource =
-        R"(#version 310 es
-        layout(local_size_x=1) in;
-        void main()
-        {
-        })";
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+void main()
+{
+})";
 
-    GLuint cs = CompileShader(GL_COMPUTE_SHADER, csSource);
+    GLuint cs = CompileShader(GL_COMPUTE_SHADER, kCS);
     EXPECT_NE(0u, cs);
 
     glAttachShader(program, cs);

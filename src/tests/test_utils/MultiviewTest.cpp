@@ -29,7 +29,7 @@ GLuint CreateSimplePassthroughProgram(int numViews)
         "   gl_Position = vec4(vPosition.xy, 0.0, 1.0);\n"
         "}\n";
 
-    const std::string fsSource =
+    constexpr char kFS[] =
         "#version 300 es\n"
         "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
@@ -38,7 +38,7 @@ GLuint CreateSimplePassthroughProgram(int numViews)
         "{\n"
         "   col = vec4(0,1,0,1);\n"
         "}\n";
-    return CompileProgram(vsSource, fsSource);
+    return CompileProgram(vsSource.c_str(), kFS);
 }
 
 void CreateMultiviewBackingTextures(GLenum multiviewLayout,

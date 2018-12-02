@@ -14,12 +14,13 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "shader_utils.h"
+
+#include "util/shader_utils.h"
 
 #include <cstring>
 #include <iostream>
 
-// This small sample compares the per-frame render time for a series of 
+// This small sample compares the per-frame render time for a series of
 // squares drawn with TRIANGLE_FANS versus squares drawn with TRIANGLES.
 // To exacerbate differences between the two, we use a large collection
 // of short buffers with pre-translated vertex data.
@@ -29,35 +30,34 @@ class TriangleFanBenchSample : public SampleApplication
   public:
     TriangleFanBenchSample(int argc, char **argv)
         : SampleApplication("Microbench", argc, argv, 2, 0, 1280, 1280), mFrameCount(0)
-    {
-    }
+    {}
 
     void createVertexBuffers()
     {
-        const unsigned int slices = 8;
+        const unsigned int slices         = 8;
         const unsigned int numFanVertices = slices + 2;
-        const unsigned int fanFloats = numFanVertices * 3;
+        const unsigned int fanFloats      = numFanVertices * 3;
 
         mNumFanVerts = numFanVertices;
 
         const GLfloat halfDim = 0.0625;
-        GLfloat fanVertices[] =
-            {    0.0f,     0.0f,  0.0f,  // center
-             -halfDim, -halfDim,  0.0f,  // LL
-             -halfDim,     0.0f,  0.0f,  // CL
-             -halfDim,  halfDim,  0.0f,  // UL
-                 0.0f,  halfDim,  0.0f,  // UC
-              halfDim,  halfDim,  0.0f,  // UR
-              halfDim,     0.0f,  0.0f,  // CR
-              halfDim, -halfDim,  0.0f,  // LR
-                 0.0f, -halfDim,  0.0f,  // LC
-             -halfDim, -halfDim,  0.0f   // LL (closes the fan)
-            };
+        GLfloat fanVertices[] = {
+            0.0f,     0.0f,     0.0f,  // center
+            -halfDim, -halfDim, 0.0f,  // LL
+            -halfDim, 0.0f,     0.0f,  // CL
+            -halfDim, halfDim,  0.0f,  // UL
+            0.0f,     halfDim,  0.0f,  // UC
+            halfDim,  halfDim,  0.0f,  // UR
+            halfDim,  0.0f,     0.0f,  // CR
+            halfDim,  -halfDim, 0.0f,  // LR
+            0.0f,     -halfDim, 0.0f,  // LC
+            -halfDim, -halfDim, 0.0f   // LL (closes the fan)
+        };
 
-        const GLfloat xMin = -1.0f; // We leave viewport/worldview untransformed in this sample
+        const GLfloat xMin = -1.0f;  // We leave viewport/worldview untransformed in this sample
         const GLfloat xMax = 1.0f;
         const GLfloat yMin = -1.0f;
-        //const GLfloat yMax = 1.0f;
+        // const GLfloat yMax = 1.0f;
 
         glGenBuffers(mNumSquares, mFanBufId);
 
@@ -65,10 +65,10 @@ class TriangleFanBenchSample : public SampleApplication
         GLfloat yOffset = yMin;
         for (unsigned int i = 0; i < mNumSquares; ++i)
         {
-            GLfloat tempVerts[fanFloats] = { 0 };
+            GLfloat tempVerts[fanFloats] = {0};
             for (unsigned int j = 0; j < numFanVertices; ++j)
             {
-                tempVerts[j * 3] = fanVertices[j * 3] + xOffset;
+                tempVerts[j * 3]     = fanVertices[j * 3] + xOffset;
                 tempVerts[j * 3 + 1] = fanVertices[j * 3 + 1] + yOffset;
                 tempVerts[j * 3 + 2] = 0.0f;
             }
@@ -85,7 +85,7 @@ class TriangleFanBenchSample : public SampleApplication
         }
 
         const unsigned int numTriVertices = slices * 3;
-        const unsigned int triFloats = numTriVertices * 3;
+        const unsigned int triFloats      = numTriVertices * 3;
         GLfloat triVertices[triFloats];
         GLfloat *triPointer = triVertices;
 
@@ -93,17 +93,19 @@ class TriangleFanBenchSample : public SampleApplication
 
         for (unsigned int i = 0; i < slices; ++i)
         {
-            memcpy(triPointer, fanVertices, 3 * sizeof(GLfloat)); // copy center point as first vertex for this slice
+            memcpy(triPointer, fanVertices,
+                   3 * sizeof(GLfloat));  // copy center point as first vertex for this slice
             triPointer += 3;
             for (unsigned int j = 1; j < 3; ++j)
             {
-                GLfloat *vertex = &(fanVertices[(i + j) * 3]); // copy two outer vertices for this point
+                GLfloat *vertex =
+                    &(fanVertices[(i + j) * 3]);  // copy two outer vertices for this point
                 memcpy(triPointer, vertex, 3 * sizeof(GLfloat));
                 triPointer += 3;
             }
         }
 
-        //GLfloat triVertices2[triFloats];
+        // GLfloat triVertices2[triFloats];
         glGenBuffers(mNumSquares, mTriBufId);
         xOffset = xMin;
         yOffset = yMin;
@@ -114,7 +116,7 @@ class TriangleFanBenchSample : public SampleApplication
             GLfloat tempVerts[triFloats];
             for (unsigned int j = 0; j < numTriVertices; ++j)
             {
-                tempVerts[j * 3] = triPointer[0] + xOffset;
+                tempVerts[j * 3]     = triPointer[0] + xOffset;
                 tempVerts[j * 3 + 1] = triPointer[1] + yOffset;
                 tempVerts[j * 3 + 2] = 0.0f;
                 triPointer += 3;
@@ -131,23 +133,21 @@ class TriangleFanBenchSample : public SampleApplication
         }
     }
 
-    virtual bool initialize()
+    bool initialize() override
     {
-        const std::string vs =
-            R"(attribute vec4 vPosition;
-            void main()
-            {
-                gl_Position = vPosition;
-            })";
+        constexpr char kVS[] = R"(attribute vec4 vPosition;
+void main()
+{
+    gl_Position = vPosition;
+})";
 
-        const std::string fs =
-            R"(precision mediump float;
-            void main()
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
+        constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         if (!mProgram)
         {
             return false;
@@ -157,22 +157,26 @@ class TriangleFanBenchSample : public SampleApplication
 
         createVertexBuffers();
 
-        mFanTimer = CreateTimer();
-        mTriTimer = CreateTimer();
+        mFanTimer     = CreateTimer();
+        mTriTimer     = CreateTimer();
         mFanTotalTime = 0;
         mTriTotalTime = 0;
 
         return true;
     }
 
-    virtual void destroy()
+    void destroy() override
     {
-        std::cout << "Total draw time using TRIANGLE_FAN: " << mFanTotalTime << "ms (" << (float)mFanTotalTime / (float)mFrameCount << " average per frame)" << std::endl;
-        std::cout << "Total draw time using TRIANGLES: " << mTriTotalTime << "ms (" << (float)mTriTotalTime / (float)mFrameCount << " average per frame)" << std::endl;
+        std::cout << "Total draw time using TRIANGLE_FAN: " << mFanTotalTime << "ms ("
+                  << (float)mFanTotalTime / (float)mFrameCount << " average per frame)"
+                  << std::endl;
+        std::cout << "Total draw time using TRIANGLES: " << mTriTotalTime << "ms ("
+                  << (float)mTriTotalTime / (float)mFrameCount << " average per frame)"
+                  << std::endl;
         glDeleteProgram(mProgram);
     }
 
-    virtual void draw()
+    void draw() override
     {
         // Set the viewport
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
@@ -196,11 +200,12 @@ class TriangleFanBenchSample : public SampleApplication
         }
         mFanTimer->stop();
 
-        mFanTotalTime += static_cast<unsigned int>(mFanTimer->getElapsedTime() * 1000); // convert from usec to msec when accumulating
+        mFanTotalTime += static_cast<unsigned int>(
+            mFanTimer->getElapsedTime() * 1000);  // convert from usec to msec when accumulating
 
         // Clear to eliminate driver-side gains from occlusion
         glClear(GL_COLOR_BUFFER_BIT);
-        
+
         // Draw using triangles, stored in VBO
         mTriTimer->start();
         for (unsigned i = 1; i < mNumSquares; ++i)
@@ -211,7 +216,8 @@ class TriangleFanBenchSample : public SampleApplication
         }
         mTriTimer->stop();
 
-        mTriTotalTime += static_cast<unsigned int>(mTriTimer->getElapsedTime() * 1000); // convert from usec to msec when accumulating
+        mTriTotalTime += static_cast<unsigned int>(
+            mTriTimer->getElapsedTime() * 1000);  // convert from usec to msec when accumulating
 
         mFrameCount++;
     }

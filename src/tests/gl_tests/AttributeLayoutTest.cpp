@@ -251,7 +251,7 @@ class AttributeLayoutTest : public ANGLETest
 
         glDisable(GL_DEPTH_TEST);
 
-        const std::string vertexSource =
+        constexpr char kVS[] =
             "attribute mediump vec2 coord;\n"
             "attribute mediump vec3 color;\n"
             "varying mediump vec3 vcolor;\n"
@@ -261,14 +261,14 @@ class AttributeLayoutTest : public ANGLETest
             "    vcolor = color;\n"
             "}\n";
 
-        const std::string fragmentSource =
+        constexpr char kFS[] =
             "varying mediump vec3 vcolor;\n"
             "void main(void)\n"
             "{\n"
             "    gl_FragColor = vec4(vcolor, 0);\n"
             "}\n";
 
-        mProgram = CompileProgram(vertexSource, fragmentSource);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
         glUseProgram(mProgram);
 

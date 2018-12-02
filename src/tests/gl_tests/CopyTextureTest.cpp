@@ -1222,7 +1222,7 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
     }
 
     auto testOutput = [this](GLuint texture, const GLColor &expectedColor) {
-        const std::string vs =
+        constexpr char kVS[] =
             "#version 300 es\n"
             "in vec4 position;\n"
             "out vec2 texcoord;\n"
@@ -1232,7 +1232,7 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
             "}\n";
 
-        const std::string fs =
+        constexpr char kFS[] =
             "#version 300 es\n"
             "precision mediump float;\n"
             "uniform sampler2D tex;\n"
@@ -1243,7 +1243,7 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
             "    color = texture(tex, texcoord);\n"
             "}\n";
 
-        ANGLE_GL_PROGRAM(program, vs, fs);
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
         glUseProgram(program);
 
         GLRenderbuffer rbo;
@@ -1361,7 +1361,7 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_color_buffer_float"));
 
     auto testOutput = [this](GLuint texture, const GLColor32F &expectedColor) {
-        const std::string vs =
+        constexpr char kVS[] =
             "#version 300 es\n"
             "in vec4 position;\n"
             "out vec2 texcoord;\n"
@@ -1371,7 +1371,7 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
             "}\n";
 
-        const std::string fs =
+        constexpr char kFS[] =
             "#version 300 es\n"
             "precision mediump float;\n"
             "uniform sampler2D tex;\n"
@@ -1382,7 +1382,7 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
             "    color = texture(tex, texcoord);\n"
             "}\n";
 
-        ANGLE_GL_PROGRAM(program, vs, fs);
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
         glUseProgram(program);
 
         GLRenderbuffer rbo;
@@ -1484,7 +1484,7 @@ TEST_P(CopyTextureTestES3, ES3UintFormats)
     using GLColor32U = std::tuple<GLuint, GLuint, GLuint, GLuint>;
 
     auto testOutput = [this](GLuint texture, const GLColor32U &expectedColor) {
-        const std::string vs =
+        constexpr char kVS[] =
             "#version 300 es\n"
             "in vec4 position;\n"
             "out vec2 texcoord;\n"
@@ -1494,7 +1494,7 @@ TEST_P(CopyTextureTestES3, ES3UintFormats)
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
             "}\n";
 
-        std::string fs =
+        constexpr char kFS[] =
             "#version 300 es\n"
             "precision mediump float;\n"
             "precision mediump usampler2D;\n"
@@ -1506,7 +1506,7 @@ TEST_P(CopyTextureTestES3, ES3UintFormats)
             "    color = texture(tex, texcoord);\n"
             "}\n";
 
-        ANGLE_GL_PROGRAM(program, vs, fs);
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
         glUseProgram(program);
 
         GLRenderbuffer rbo;

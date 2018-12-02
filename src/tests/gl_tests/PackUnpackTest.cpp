@@ -32,50 +32,47 @@ class PackUnpackTest : public ANGLETest
         ANGLETest::SetUp();
 
         // Fragment Shader source
-        const std::string sNormFS =
-            R"(#version 300 es
-            precision mediump float;
-            uniform mediump vec2 v;
-            layout(location = 0) out mediump vec4 fragColor;
+        constexpr char kSNormFS[] = R"(#version 300 es
+precision mediump float;
+uniform mediump vec2 v;
+layout(location = 0) out mediump vec4 fragColor;
 
-            void main()
-            {
-                uint u = packSnorm2x16(v);
-                vec2 r = unpackSnorm2x16(u);
-                fragColor = vec4(r, 0.0, 1.0);
-            })";
-
-        // Fragment Shader source
-        const std::string uNormFS =
-            R"(#version 300 es
-            precision mediump float;
-            uniform mediump vec2 v;
-            layout(location = 0) out mediump vec4 fragColor;
-
-            void main()
-            {
-                uint u = packUnorm2x16(v);
-                vec2 r = unpackUnorm2x16(u);
-                fragColor = vec4(r, 0.0, 1.0);
-            })";
+void main()
+{
+    uint u = packSnorm2x16(v);
+    vec2 r = unpackSnorm2x16(u);
+    fragColor = vec4(r, 0.0, 1.0);
+})";
 
         // Fragment Shader source
-        const std::string halfFS =
-            R"(#version 300 es
-            precision mediump float;
-            uniform mediump vec2 v;
-            layout(location = 0) out mediump vec4 fragColor;
+        constexpr char kUNormFS[] = R"(#version 300 es
+precision mediump float;
+uniform mediump vec2 v;
+layout(location = 0) out mediump vec4 fragColor;
 
-             void main()
-             {
-                 uint u = packHalf2x16(v);
-                 vec2 r = unpackHalf2x16(u);
-                 fragColor = vec4(r, 0.0, 1.0);
-             })";
+void main()
+{
+    uint u = packUnorm2x16(v);
+    vec2 r = unpackUnorm2x16(u);
+    fragColor = vec4(r, 0.0, 1.0);
+})";
 
-        mSNormProgram = CompileProgram(essl3_shaders::vs::Simple(), sNormFS);
-        mUNormProgram = CompileProgram(essl3_shaders::vs::Simple(), uNormFS);
-        mHalfProgram  = CompileProgram(essl3_shaders::vs::Simple(), halfFS);
+        // Fragment Shader source
+        constexpr char kHalfFS[] = R"(#version 300 es
+precision mediump float;
+uniform mediump vec2 v;
+layout(location = 0) out mediump vec4 fragColor;
+
+void main()
+{
+    uint u = packHalf2x16(v);
+    vec2 r = unpackHalf2x16(u);
+    fragColor = vec4(r, 0.0, 1.0);
+})";
+
+        mSNormProgram = CompileProgram(essl3_shaders::vs::Simple(), kSNormFS);
+        mUNormProgram = CompileProgram(essl3_shaders::vs::Simple(), kUNormFS);
+        mHalfProgram  = CompileProgram(essl3_shaders::vs::Simple(), kHalfFS);
         if (mSNormProgram == 0 || mUNormProgram == 0 || mHalfProgram == 0)
         {
             FAIL() << "shader compilation failed.";

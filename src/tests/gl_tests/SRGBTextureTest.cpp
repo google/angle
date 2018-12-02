@@ -27,7 +27,7 @@ class SRGBTextureTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vs =
+        constexpr char kVS[] =
             "precision highp float;\n"
             "attribute vec4 position;\n"
             "varying vec2 texcoord;\n"
@@ -38,7 +38,7 @@ class SRGBTextureTest : public ANGLETest
             "   texcoord = (position.xy * 0.5) + 0.5;\n"
             "}\n";
 
-        const std::string fs =
+        constexpr char kFS[] =
             "precision highp float;\n"
             "uniform sampler2D tex;\n"
             "varying vec2 texcoord;\n"
@@ -48,7 +48,7 @@ class SRGBTextureTest : public ANGLETest
             "   gl_FragColor = texture2D(tex, texcoord);\n"
             "}\n";
 
-        mProgram = CompileProgram(vs, fs);
+        mProgram = CompileProgram(kVS, kFS);
         ASSERT_NE(0u, mProgram);
 
         mTextureLocation = glGetUniformLocation(mProgram, "tex");

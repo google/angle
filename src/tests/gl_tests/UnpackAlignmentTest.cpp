@@ -31,15 +31,13 @@ class UnpackAlignmentTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string fragmentShaderSource =
-            R"(uniform sampler2D tex;
+        constexpr char kFS[] = R"(uniform sampler2D tex;
+void main()
+{
+    gl_FragColor = texture2D(tex, vec2(0.0, 1.0));
+})";
 
-            void main()
-            {
-                gl_FragColor = texture2D(tex, vec2(0.0, 1.0));
-            })";
-
-        mProgram = CompileProgram(essl1_shaders::vs::Simple(), fragmentShaderSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), kFS);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";

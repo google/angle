@@ -19,28 +19,29 @@
 #include <string>
 #include <vector>
 
+struct ShaderFuncs;
+
 ANGLE_EXPORT GLuint CheckLinkStatusAndReturnProgram(GLuint program, bool outputErrorMessages);
-ANGLE_EXPORT GLuint CompileShader(GLenum type, const std::string &source);
+ANGLE_EXPORT GLuint CompileShader(GLenum type, const char *source);
 ANGLE_EXPORT GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath);
 
 ANGLE_EXPORT GLuint
-CompileProgramWithTransformFeedback(const std::string &vsSource,
-                                    const std::string &fsSource,
+CompileProgramWithTransformFeedback(const char *vsSource,
+                                    const char *fsSource,
                                     const std::vector<std::string> &transformFeedbackVaryings,
                                     GLenum bufferMode);
 
-ANGLE_EXPORT GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource);
+ANGLE_EXPORT GLuint CompileProgram(const char *vsSource, const char *fsSource);
 
-ANGLE_EXPORT GLuint CompileProgram(const std::string &vsSource,
-                                   const std::string &fsSource,
+ANGLE_EXPORT GLuint CompileProgram(const char *vsSource,
+                                   const char *fsSource,
                                    const std::function<void(GLuint)> &preLinkCallback);
 
-ANGLE_EXPORT GLuint CompileProgramWithGS(const std::string &vsSource,
-                                         const std::string &gsSource,
-                                         const std::string &fsSource);
+ANGLE_EXPORT GLuint CompileProgramWithGS(const char *vsSource,
+                                         const char *gsSource,
+                                         const char *fsSource);
 ANGLE_EXPORT GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath);
-ANGLE_EXPORT GLuint CompileComputeProgram(const std::string &csSource,
-                                          bool outputErrorMessages = true);
+ANGLE_EXPORT GLuint CompileComputeProgram(const char *csSource, bool outputErrorMessages = true);
 ANGLE_EXPORT bool LinkAttachedProgram(GLuint program);
 
 ANGLE_EXPORT GLuint LoadBinaryProgramOES(const std::vector<uint8_t> &binary, GLenum binaryFormat);

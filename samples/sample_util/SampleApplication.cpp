@@ -5,10 +5,10 @@
 //
 
 #include "SampleApplication.h"
-#include "EGLWindow.h"
-#include "random_utils.h"
 
 #include "angle_gl.h"
+#include "util/EGLWindow.h"
+#include "util/random_utils.h"
 
 #include <string.h>
 #include <iostream>
@@ -73,26 +73,18 @@ SampleApplication::SampleApplication(std::string name,
     mEGLWindow->setSwapInterval(0);
 }
 
-SampleApplication::~SampleApplication()
-{
-}
+SampleApplication::~SampleApplication() {}
 
 bool SampleApplication::initialize()
 {
     return true;
 }
 
-void SampleApplication::destroy()
-{
-}
+void SampleApplication::destroy() {}
 
-void SampleApplication::step(float dt, double totalTime)
-{
-}
+void SampleApplication::step(float dt, double totalTime) {}
 
-void SampleApplication::draw()
-{
-}
+void SampleApplication::draw() {}
 
 void SampleApplication::swap()
 {
@@ -138,13 +130,13 @@ int SampleApplication::run()
         return -1;
     }
 
-    mRunning = true;
+    mRunning   = true;
     int result = 0;
 
     if (!initialize())
     {
         mRunning = false;
-        result = -1;
+        result   = -1;
     }
 
     mTimer->start();
@@ -153,7 +145,7 @@ int SampleApplication::run()
     while (mRunning)
     {
         double elapsedTime = mTimer->getElapsedTime();
-        double deltaTime = elapsedTime - prevTime;
+        double deltaTime   = elapsedTime - prevTime;
 
         step(static_cast<float>(deltaTime), elapsedTime);
 

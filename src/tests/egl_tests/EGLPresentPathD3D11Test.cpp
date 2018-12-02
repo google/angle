@@ -183,7 +183,7 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
         GLuint m2DProgram;
         GLint mTexture2DUniformLocation;
 
-        const std::string vertexShaderSource =
+        constexpr char kVS[] =
             R"(precision highp float;
             attribute vec4 position;
             varying vec2 texcoord;
@@ -194,7 +194,7 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
                 texcoord = (position.xy * 0.5) + 0.5;
             })";
 
-        const std::string fragmentShaderSource2D =
+        constexpr char kFS[] =
             R"(precision highp float;
             uniform sampler2D tex;
             varying vec2 texcoord;
@@ -204,7 +204,7 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
                 gl_FragColor = texture2D(tex, texcoord);
             })";
 
-        m2DProgram                = CompileProgram(vertexShaderSource, fragmentShaderSource2D);
+        m2DProgram                = CompileProgram(kVS, kFS);
         mTexture2DUniformLocation = glGetUniformLocation(m2DProgram, "tex");
 
         uint8_t textureInitData[16] = {

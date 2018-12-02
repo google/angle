@@ -15,6 +15,8 @@
 
 #include "shader_utils.h"
 
+#include "angle_gl.h"
+
 namespace angle
 {
 constexpr unsigned int kIterationsPerStep = 128;
