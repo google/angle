@@ -7,6 +7,7 @@
 # https://github.com/KhronosGroup/Vulkan-Tools
 
 import("../../gni/angle.gni")
+
 import("$angle_root/third_party/vulkan-headers/vulkan_headers_script_deps.gni")
 
 vulkan_undefine_configs = []
@@ -185,26 +186,25 @@ if (!is_android) {
 
   action("vulkan_gen_icd_json_file") {
     script = "$angle_root/scripts/generate_vulkan_layers_json.py"
+    sources = [
+      "../vulkan-headers/src/include/vulkan/vulkan_core.h",
+    ]
+    args = [ "--icd" ]
     if (is_win) {
-      sources = [
-        "src/icd/windows/VkICD_mock_icd.json",
-      ]
-      args = [ "$raw_vulkan_icd_dir/icd/windows" ]
+      sources += [ "src/icd/windows/VkICD_mock_icd.json" ]
+      args += [ "$raw_vulkan_icd_dir/icd/windows" ]
     }
     if (is_linux) {
-      sources = [
-        "src/icd/linux/VkICD_mock_icd.json",
-      ]
-      args = [ "$raw_vulkan_icd_dir/icd/linux" ]
+      sources += [ "src/icd/linux/VkICD_mock_icd.json" ]
+      args += [ "$raw_vulkan_icd_dir/icd/linux" ]
     }
 
     # The layer JSON files are part of the necessary data deps.
     outputs = [
       "$root_out_dir/$data_dir/VkICD_mock_icd.json",
     ]
-    data = [
-      "$root_out_dir/$data_dir/VkICD_mock_icd.json",
-    ]
-    args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
+    data = outputs
+    args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ] +
+            rebase_path(sources, root_build_dir)
   }
 }
