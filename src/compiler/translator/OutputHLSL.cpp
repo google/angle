@@ -1837,6 +1837,13 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             // tested in GLSLTest and results are consistent with GL.
             outputTriplet(out, visit, "firstbithigh(", "", ")");
             break;
+        case EOpArrayLength:
+        {
+            TIntermTyped *operand = node->getOperand();
+            ASSERT(IsInShaderStorageBlock(operand));
+            mSSBOOutputHLSL->outputLengthFunctionCall(operand);
+            return false;
+        }
         default:
             UNREACHABLE();
     }

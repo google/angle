@@ -87,8 +87,10 @@ void GetBlockLayoutInfo(TIntermTyped *node,
 }
 
 // It's possible that the current type has lost the original layout information. So we should pass
-// the right layout information to GetMatrixStride.
-unsigned int GetMatrixStride(const TType &type, TLayoutBlockStorage storage, bool rowMajor)
+// the right layout information to GetBlockMemberInfoByType.
+const BlockMemberInfo GetBlockMemberInfoByType(const TType &type,
+                                               TLayoutBlockStorage storage,
+                                               bool rowMajor)
 {
     sh::Std140BlockEncoder std140Encoder;
     sh::Std430BlockEncoder std430Encoder;
@@ -114,9 +116,7 @@ unsigned int GetMatrixStride(const TType &type, TLayoutBlockStorage storage, boo
     {
         arraySizes.assign(typeArraySizes->begin(), typeArraySizes->end());
     }
-    const BlockMemberInfo &memberInfo =
-        encoder->encodeType(GLVariableType(type), arraySizes, rowMajor);
-    return memberInfo.matrixStride;
+    return encoder->encodeType(GLVariableType(type), arraySizes, rowMajor);
 }
 
 const TField *GetFieldMemberInShaderStorageBlock(const TInterfaceBlock *interfaceBlock,
@@ -299,7 +299,7 @@ ShaderStorageBlockOutputHLSL::ShaderStorageBlockOutputHLSL(OutputHLSL *outputHLS
     : TIntermTraverser(true, true, true, symbolTable),
       mMatrixStride(0),
       mRowMajor(false),
-      mIsLoadFunctionCall(false),
+      mLocationAsTheLastArgument(false),
       mOutputHLSL(outputHLSL),
       mResourcesHLSL(resourcesHLSL)
 {
@@ -313,14 +313,20 @@ ShaderStorageBlockOutputHLSL::~ShaderStorageBlockOutputHLSL()
 
 void ShaderStorageBlockOutputHLSL::outputStoreFunctionCallPrefix(TIntermTyped *node)
 {
-    mIsLoadFunctionCall = false;
+    mLocationAsTheLastArgument = false;
     traverseSSBOAccess(node, SSBOMethod::STORE);
 }
 
 void ShaderStorageBlockOutputHLSL::outputLoadFunctionCall(TIntermTyped *node)
 {
-    mIsLoadFunctionCall = true;
+    mLocationAsTheLastArgument = true;
     traverseSSBOAccess(node, SSBOMethod::LOAD);
+}
+
+void ShaderStorageBlockOutputHLSL::outputLengthFunctionCall(TIntermTyped *node)
+{
+    mLocationAsTheLastArgument = true;
+    traverseSSBOAccess(node, SSBOMethod::LENGTH);
 }
 
 // Note that we must calculate the matrix stride here instead of ShaderStorageBlockFunctionHLSL.
@@ -332,7 +338,7 @@ void ShaderStorageBlockOutputHLSL::setMatrixStride(TIntermTyped *node,
 {
     if (node->getType().isMatrix())
     {
-        mMatrixStride = GetMatrixStride(node->getType(), storage, rowMajor);
+        mMatrixStride = GetBlockMemberInfoByType(node->getType(), storage, rowMajor).matrixStride;
         mRowMajor     = rowMajor;
         return;
     }
@@ -366,10 +372,17 @@ void ShaderStorageBlockOutputHLSL::traverseSSBOAccess(TIntermTyped *node, SSBOMe
     TLayoutBlockStorage storage;
     bool rowMajor;
     GetBlockLayoutInfo(node, false, &storage, &rowMajor);
+    int unsizedArrayStride = 0;
+    if (node->getType().isUnsizedArray())
+    {
+        unsizedArrayStride =
+            GetBlockMemberInfoByType(node->getType(), storage, rowMajor).arrayStride;
+    }
     setMatrixStride(node, storage, rowMajor);
 
     const TString &functionName = mSSBOFunctionHLSL->registerShaderStorageBlockFunction(
-        node->getType(), method, storage, mRowMajor, mMatrixStride, node->getAsSwizzleNode());
+        node->getType(), method, storage, mRowMajor, mMatrixStride, unsizedArrayStride,
+        node->getAsSwizzleNode());
     TInfoSinkBase &out = mOutputHLSL->getInfoSink();
     out << functionName;
     out << "(";
@@ -488,7 +501,7 @@ bool ShaderStorageBlockOutputHLSL::visitSwizzle(Visit visit, TIntermSwizzle *nod
         TInfoSinkBase &out = mOutputHLSL->getInfoSink();
         // TODO(jiajia.qin@intel.com): add swizzle process if the swizzle node is not the last node
         // of ssbo access chain. Such as, data.xy[0]
-        if (mIsLoadFunctionCall && isEndOfSSBOAccessChain())
+        if (mLocationAsTheLastArgument && isEndOfSSBOAccessChain())
         {
             out << ")";
         }
@@ -657,7 +670,7 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
         {
             out << ")";
         }
-        if (mIsLoadFunctionCall && isEndOfSSBOAccessChain())
+        if (mLocationAsTheLastArgument && isEndOfSSBOAccessChain())
         {
             out << ")";
         }
@@ -683,7 +696,7 @@ void ShaderStorageBlockOutputHLSL::writeDotOperatorOutput(TInfoSinkBase &out, co
             out << " * (";
         }
     }
-    if (mIsLoadFunctionCall && isEndOfSSBOAccessChain())
+    if (mLocationAsTheLastArgument && isEndOfSSBOAccessChain())
     {
         out << ")";
     }

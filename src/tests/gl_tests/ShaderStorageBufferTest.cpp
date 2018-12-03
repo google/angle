@@ -1539,6 +1539,68 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that the length of unsized array is supported.
+TEST_P(ShaderStorageBufferTest31, UnsizedArrayLength)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=1) in;
+layout(std430, binding = 0) buffer Storage0 {
+  uint buf1[2];
+  uint buf2[];
+} sb_load;
+layout(std430, binding = 1) buffer Storage1 {
+  int unsizedArrayLength;
+  uint buf1[2];
+  uint buf2[];
+} sb_store;
+
+void main()
+{
+  sb_store.unsizedArrayLength = sb_store.buf2.length();
+  for (int i = 0; i < sb_load.buf1.length(); i++) {
+    sb_store.buf1[i] = sb_load.buf1[i];
+  }
+  for (int i = 0; i < sb_load.buf2.length(); i++) {
+    sb_store.buf2[i] = sb_load.buf2[i];
+  }
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    glUseProgram(program);
+
+    constexpr unsigned int kBytesPerComponent                       = sizeof(unsigned int);
+    constexpr unsigned int kLoadBlockElementCount                   = 5;
+    constexpr unsigned int kStoreBlockElementCount                  = 6;
+    constexpr unsigned int kInputValues[kLoadBlockElementCount]     = {1u, 2u, 3u, 4u, 5u};
+    constexpr unsigned int kExpectedValues[kStoreBlockElementCount] = {3u, 1u, 2u, 3u, 4u, 5u};
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kLoadBlockElementCount * kBytesPerComponent,
+                 &kInputValues, GL_STATIC_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kStoreBlockElementCount * kBytesPerComponent, nullptr,
+                 GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kStoreBlockElementCount * kBytesPerComponent,
+                         GL_MAP_READ_BIT));
+    for (unsigned int i = 0; i < kStoreBlockElementCount; i++)
+    {
+        EXPECT_EQ(kExpectedValues[i], *(ptr + i));
+    }
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that compond assignment operator for buffer variable is correctly handled.
 TEST_P(ShaderStorageBufferTest31, CompoundAssignmentOperator)
 {
