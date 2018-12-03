@@ -243,7 +243,7 @@ void TextureManager::signalAllTexturesDirty(const Context *context) const
         {
             // We don't know if the Texture needs init, but that's ok, since it will only force
             // a re-check, and will not initialize the pixels if it's not needed.
-            texture.second->signalDirty(context, InitState::MayNeedInit);
+            texture.second->signalDirtyStorage(context, InitState::MayNeedInit);
         }
     }
 }

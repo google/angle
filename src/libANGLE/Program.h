@@ -625,7 +625,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform4fv(GLint location, GLsizei count, const GLfloat *v);
-    SetUniformResult setUniform1iv(GLint location, GLsizei count, const GLint *v);
+    void setUniform1iv(Context *context, GLint location, GLsizei count, const GLint *v);
     void setUniform2iv(GLint location, GLsizei count, const GLint *v);
     void setUniform3iv(GLint location, GLsizei count, const GLint *v);
     void setUniform4iv(GLint location, GLsizei count, const GLint *v);
@@ -932,7 +932,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     template <size_t cols, size_t rows, typename T>
     GLsizei clampMatrixUniformCount(GLint location, GLsizei count, GLboolean transpose, const T *v);
 
-    void updateSamplerUniform(const VariableLocation &locationInfo,
+    void updateSamplerUniform(Context *context,
+                              const VariableLocation &locationInfo,
                               GLsizei clampedCount,
                               const GLint *v);
 

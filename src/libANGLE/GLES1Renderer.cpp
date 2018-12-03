@@ -164,12 +164,12 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
             }
         }
 
-        setUniform1iv(programObject, mProgramState.enableTexture2DLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.enableTexture2DLoc, kTexUnitCount,
                       tex2DEnables.data());
-        setUniform1iv(programObject, mProgramState.enableTextureCubeMapLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.enableTextureCubeMapLoc, kTexUnitCount,
                       texCubeEnables.data());
 
-        setUniform1iv(programObject, mProgramState.textureFormatLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.textureFormatLoc, kTexUnitCount,
                       tex2DFormats.data());
 
         setUniform4fv(programObject, mProgramState.drawTextureNormalizedCropRectLoc, kTexUnitCount,
@@ -208,37 +208,37 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
             uniformBuffers.pointSpriteCoordReplaces[i] = env.pointSpriteCoordReplace;
         }
 
-        setUniform1iv(programObject, mProgramState.textureEnvModeLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.textureEnvModeLoc, kTexUnitCount,
                       uniformBuffers.texEnvModes.data());
-        setUniform1iv(programObject, mProgramState.combineRgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.combineRgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineRgbs.data());
-        setUniform1iv(programObject, mProgramState.combineAlphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.combineAlphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineAlphas.data());
 
-        setUniform1iv(programObject, mProgramState.src0rgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.src0rgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineSrc0Rgbs.data());
-        setUniform1iv(programObject, mProgramState.src0alphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.src0alphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineSrc0Alphas.data());
-        setUniform1iv(programObject, mProgramState.src1rgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.src1rgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineSrc1Rgbs.data());
-        setUniform1iv(programObject, mProgramState.src1alphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.src1alphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineSrc1Alphas.data());
-        setUniform1iv(programObject, mProgramState.src2rgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.src2rgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineSrc2Rgbs.data());
-        setUniform1iv(programObject, mProgramState.src2alphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.src2alphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineSrc2Alphas.data());
 
-        setUniform1iv(programObject, mProgramState.op0rgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.op0rgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineOp0Rgbs.data());
-        setUniform1iv(programObject, mProgramState.op0alphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.op0alphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineOp0Alphas.data());
-        setUniform1iv(programObject, mProgramState.op1rgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.op1rgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineOp1Rgbs.data());
-        setUniform1iv(programObject, mProgramState.op1alphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.op1alphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineOp1Alphas.data());
-        setUniform1iv(programObject, mProgramState.op2rgbLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.op2rgbLoc, kTexUnitCount,
                       uniformBuffers.texCombineOp2Rgbs.data());
-        setUniform1iv(programObject, mProgramState.op2alphaLoc, kTexUnitCount,
+        setUniform1iv(context, programObject, mProgramState.op2alphaLoc, kTexUnitCount,
                       uniformBuffers.texCombineOp2Alphas.data());
 
         setUniform4fv(programObject, mProgramState.textureEnvColorLoc, kTexUnitCount,
@@ -248,30 +248,30 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
         setUniform1fv(programObject, mProgramState.alphaScaleLoc, kTexUnitCount,
                       uniformBuffers.texEnvAlphaScales.data());
 
-        setUniform1iv(programObject, mProgramState.pointSpriteCoordReplaceLoc, kTexUnitCount,
-                      uniformBuffers.pointSpriteCoordReplaces.data());
+        setUniform1iv(context, programObject, mProgramState.pointSpriteCoordReplaceLoc,
+                      kTexUnitCount, uniformBuffers.pointSpriteCoordReplaces.data());
     }
 
     // Alpha test
     {
-        setUniform1i(programObject, mProgramState.enableAlphaTestLoc,
+        setUniform1i(context, programObject, mProgramState.enableAlphaTestLoc,
                      glState->getEnableFeature(GL_ALPHA_TEST));
-        setUniform1i(programObject, mProgramState.alphaFuncLoc,
+        setUniform1i(context, programObject, mProgramState.alphaFuncLoc,
                      ToGLenum(gles1State.mAlphaTestFunc));
         setUniform1f(programObject, mProgramState.alphaTestRefLoc, gles1State.mAlphaTestRef);
     }
 
     // Shading, materials, and lighting
     {
-        setUniform1i(programObject, mProgramState.shadeModelFlatLoc,
+        setUniform1i(context, programObject, mProgramState.shadeModelFlatLoc,
                      gles1State.mShadeModel == ShadingModel::Flat);
-        setUniform1i(programObject, mProgramState.enableLightingLoc,
+        setUniform1i(context, programObject, mProgramState.enableLightingLoc,
                      glState->getEnableFeature(GL_LIGHTING));
-        setUniform1i(programObject, mProgramState.enableRescaleNormalLoc,
+        setUniform1i(context, programObject, mProgramState.enableRescaleNormalLoc,
                      glState->getEnableFeature(GL_RESCALE_NORMAL));
-        setUniform1i(programObject, mProgramState.enableNormalizeLoc,
+        setUniform1i(context, programObject, mProgramState.enableNormalizeLoc,
                      glState->getEnableFeature(GL_NORMALIZE));
-        setUniform1i(programObject, mProgramState.enableColorMaterialLoc,
+        setUniform1i(context, programObject, mProgramState.enableColorMaterialLoc,
                      glState->getEnableFeature(GL_COLOR_MATERIAL));
 
         const auto &material = gles1State.mMaterial;
@@ -314,7 +314,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
             uniformBuffers.attenuationQuadratics[i] = light.attenuationQuadratic;
         }
 
-        setUniform1iv(programObject, mProgramState.lightEnablesLoc, kLightCount,
+        setUniform1iv(context, programObject, mProgramState.lightEnablesLoc, kLightCount,
                       uniformBuffers.lightEnables.data());
         setUniform4fv(programObject, mProgramState.lightAmbientsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.lightAmbients.data()));
@@ -341,8 +341,9 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
     // Fog
     {
         const FogParameters &fog = gles1State.fogParameters();
-        setUniform1i(programObject, mProgramState.fogEnableLoc, glState->getEnableFeature(GL_FOG));
-        setUniform1i(programObject, mProgramState.fogModeLoc, ToGLenum(fog.mode));
+        setUniform1i(context, programObject, mProgramState.fogEnableLoc,
+                     glState->getEnableFeature(GL_FOG));
+        setUniform1i(context, programObject, mProgramState.fogModeLoc, ToGLenum(fog.mode));
         setUniform1f(programObject, mProgramState.fogDensityLoc, fog.density);
         setUniform1f(programObject, mProgramState.fogStartLoc, fog.start);
         setUniform1f(programObject, mProgramState.fogEndLoc, fog.end);
@@ -360,8 +361,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
                 i, reinterpret_cast<float *>(uniformBuffers.clipPlanes.data() + i));
         }
 
-        setUniform1i(programObject, mProgramState.enableClipPlanesLoc, enableClipPlanes);
-        setUniform1iv(programObject, mProgramState.clipPlaneEnablesLoc, kClipPlaneCount,
+        setUniform1i(context, programObject, mProgramState.enableClipPlanesLoc, enableClipPlanes);
+        setUniform1iv(context, programObject, mProgramState.clipPlaneEnablesLoc, kClipPlaneCount,
                       uniformBuffers.clipPlaneEnables.data());
         setUniform4fv(programObject, mProgramState.clipPlanesLoc, kClipPlaneCount,
                       reinterpret_cast<float *>(uniformBuffers.clipPlanes.data()));
@@ -371,9 +372,9 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
     {
         const PointParameters &pointParams = gles1State.mPointParameters;
 
-        setUniform1i(programObject, mProgramState.pointRasterizationLoc,
+        setUniform1i(context, programObject, mProgramState.pointRasterizationLoc,
                      mode == PrimitiveMode::Points);
-        setUniform1i(programObject, mProgramState.pointSpriteEnabledLoc,
+        setUniform1i(context, programObject, mProgramState.pointSpriteEnabledLoc,
                      glState->getEnableFeature(GL_POINT_SPRITE_OES));
         setUniform1f(programObject, mProgramState.pointSizeMinLoc, pointParams.pointSizeMin);
         setUniform1f(programObject, mProgramState.pointSizeMaxLoc, pointParams.pointSizeMax);
@@ -383,7 +384,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
 
     // Draw texture
     {
-        setUniform1i(programObject, mProgramState.enableDrawTextureLoc,
+        setUniform1i(context, programObject, mProgramState.enableDrawTextureLoc,
                      mDrawTextureEnabled ? 1 : 0);
         setUniform4fv(programObject, mProgramState.drawTextureCoordsLoc, 1, mDrawTextureCoords);
         setUniform2fv(programObject, mProgramState.drawTextureDimsLoc, 1, mDrawTextureDims);
@@ -710,8 +711,9 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
 
     for (int i = 0; i < kTexUnitCount; i++)
     {
-        setUniform1i(programObject, mProgramState.tex2DSamplerLocs[i], i);
-        setUniform1i(programObject, mProgramState.texCubeSamplerLocs[i], i + kTexUnitCount);
+        setUniform1i(context, programObject, mProgramState.tex2DSamplerLocs[i], i);
+        setUniform1i(context, programObject, mProgramState.texCubeSamplerLocs[i],
+                     i + kTexUnitCount);
     }
 
     glState->setObjectDirty(GL_PROGRAM);
@@ -720,21 +722,22 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     return angle::Result::Continue();
 }
 
-void GLES1Renderer::setUniform1i(Program *programObject, GLint loc, GLint value)
+void GLES1Renderer::setUniform1i(Context *context, Program *programObject, GLint loc, GLint value)
 {
     if (loc == -1)
         return;
-    programObject->setUniform1iv(loc, 1, &value);
+    programObject->setUniform1iv(context, loc, 1, &value);
 }
 
-void GLES1Renderer::setUniform1iv(Program *programObject,
+void GLES1Renderer::setUniform1iv(Context *context,
+                                  Program *programObject,
                                   GLint loc,
                                   GLint count,
                                   const GLint *value)
 {
     if (loc == -1)
         return;
-    programObject->setUniform1iv(loc, count, value);
+    programObject->setUniform1iv(context, loc, count, value);
 }
 
 void GLES1Renderer::setUniformMatrix4fv(Program *programObject,

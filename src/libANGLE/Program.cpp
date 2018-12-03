@@ -2052,7 +2052,7 @@ void Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     mProgram->setUniform4fv(location, clampedCount, v);
 }
 
-Program::SetUniformResult Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
+void Program::setUniform1iv(Context *context, GLint location, GLsizei count, const GLint *v)
 {
     ASSERT(mLinkResolved);
     const VariableLocation &locationInfo = mState.mUniformLocations[location];
@@ -2062,11 +2062,8 @@ Program::SetUniformResult Program::setUniform1iv(GLint location, GLsizei count, 
 
     if (mState.isSamplerUniformIndex(locationInfo.index))
     {
-        updateSamplerUniform(locationInfo, clampedCount, v);
-        return SetUniformResult::SamplerChanged;
+        updateSamplerUniform(context, locationInfo, clampedCount, v);
     }
-
-    return SetUniformResult::NoSamplerChange;
 }
 
 void Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
@@ -3858,7 +3855,10 @@ void Program::setUniformValuesFromBindingQualifiers()
             {
                 boundTextureUnits.push_back(samplerUniform.binding + elementIndex);
             }
-            setUniform1iv(location, static_cast<GLsizei>(boundTextureUnits.size()),
+
+            // Here we pass nullptr to avoid a large chain of calls that need a non-const Context.
+            // We know it's safe not to notify the Context because this is only called after link.
+            setUniform1iv(nullptr, location, static_cast<GLsizei>(boundTextureUnits.size()),
                           boundTextureUnits.data());
         }
     }
@@ -3874,7 +3874,8 @@ void Program::initInterfaceBlockBindings()
     }
 }
 
-void Program::updateSamplerUniform(const VariableLocation &locationInfo,
+void Program::updateSamplerUniform(Context *context,
+                                   const VariableLocation &locationInfo,
                                    GLsizei clampedCount,
                                    const GLint *v)
 {
@@ -3889,30 +3890,30 @@ void Program::updateSamplerUniform(const VariableLocation &locationInfo,
     // Update the sampler uniforms.
     for (GLsizei arrayIndex = 0; arrayIndex < clampedCount; ++arrayIndex)
     {
-        GLint oldSamplerIndex = boundTextureUnits[arrayIndex + locationInfo.arrayIndex];
-        GLint newSamplerIndex = v[arrayIndex];
+        GLint oldTextureUnit = boundTextureUnits[arrayIndex + locationInfo.arrayIndex];
+        GLint newTextureUnit = v[arrayIndex];
 
-        if (oldSamplerIndex == newSamplerIndex)
+        if (oldTextureUnit == newTextureUnit)
             continue;
 
-        boundTextureUnits[arrayIndex + locationInfo.arrayIndex] = newSamplerIndex;
+        boundTextureUnits[arrayIndex + locationInfo.arrayIndex] = newTextureUnit;
 
         // Update the reference counts.
-        uint32_t &oldRefCount = mState.mActiveSamplerRefCounts[oldSamplerIndex];
-        uint32_t &newRefCount = mState.mActiveSamplerRefCounts[newSamplerIndex];
+        uint32_t &oldRefCount = mState.mActiveSamplerRefCounts[oldTextureUnit];
+        uint32_t &newRefCount = mState.mActiveSamplerRefCounts[newTextureUnit];
         ASSERT(oldRefCount > 0);
         ASSERT(newRefCount < std::numeric_limits<uint32_t>::max());
         oldRefCount--;
         newRefCount++;
 
         // Check for binding type change.
-        TextureType &newSamplerType = mState.mActiveSamplerTypes[newSamplerIndex];
-        TextureType &oldSamplerType = mState.mActiveSamplerTypes[oldSamplerIndex];
+        TextureType &newSamplerType = mState.mActiveSamplerTypes[newTextureUnit];
+        TextureType &oldSamplerType = mState.mActiveSamplerTypes[oldTextureUnit];
 
         if (newRefCount == 1)
         {
             newSamplerType = samplerBinding.textureType;
-            mState.mActiveSamplersMask.set(newSamplerIndex);
+            mState.mActiveSamplersMask.set(newTextureUnit);
         }
         else if (newSamplerType != samplerBinding.textureType)
         {
@@ -3924,12 +3925,19 @@ void Program::updateSamplerUniform(const VariableLocation &locationInfo,
         if (oldRefCount == 0)
         {
             oldSamplerType = TextureType::InvalidEnum;
-            mState.mActiveSamplersMask.reset(oldSamplerIndex);
+            mState.mActiveSamplersMask.reset(oldTextureUnit);
         }
         else if (oldSamplerType == TextureType::InvalidEnum)
         {
             // Previous conflict. Check if this new change fixed the conflict.
-            oldSamplerType = mState.getSamplerUniformTextureType(oldSamplerIndex);
+            oldSamplerType = mState.getSamplerUniformTextureType(oldTextureUnit);
+        }
+
+        // Notify context.
+        if (context)
+        {
+            context->onSamplerUniformChange(newTextureUnit);
+            context->onSamplerUniformChange(oldTextureUnit);
         }
     }
 

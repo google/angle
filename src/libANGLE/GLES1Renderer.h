@@ -70,8 +70,12 @@ class GLES1Renderer final : angle::NonCopyable
                               GLuint *programOut);
     angle::Result initializeRendererProgram(Context *context, State *glState);
 
-    void setUniform1i(Program *programObject, GLint loc, GLint value);
-    void setUniform1iv(Program *programObject, GLint loc, GLint count, const GLint *value);
+    void setUniform1i(Context *context, Program *programObject, GLint loc, GLint value);
+    void setUniform1iv(Context *context,
+                       Program *programObject,
+                       GLint loc,
+                       GLint count,
+                       const GLint *value);
     void setUniformMatrix4fv(Program *programObject,
                              GLint loc,
                              GLint count,

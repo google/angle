@@ -284,12 +284,14 @@ constexpr angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMod
 enum SubjectIndexes : angle::SubjectIndex
 {
     kTexture0SubjectIndex       = 0,
-    kTextureMaxSubjectIndex     = kTexture0SubjectIndex + gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
-    kUniformBuffer0SubjectIndex = kTextureMaxSubjectIndex,
+    kTextureMaxSubjectIndex     = kTexture0SubjectIndex + IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
+    kImage0SubjectIndex         = kTextureMaxSubjectIndex,
+    kImageMaxSubjectIndex       = kImage0SubjectIndex + IMPLEMENTATION_MAX_IMAGE_UNITS,
+    kUniformBuffer0SubjectIndex = kImageMaxSubjectIndex,
     kUniformBufferMaxSubjectIndex =
-        kUniformBuffer0SubjectIndex + gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
+        kUniformBuffer0SubjectIndex + IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
     kSampler0SubjectIndex    = kUniformBufferMaxSubjectIndex,
-    kSamplerMaxSubjectIndex  = kSampler0SubjectIndex + gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
+    kSamplerMaxSubjectIndex  = kSampler0SubjectIndex + IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
     kVertexArraySubjectIndex = kSamplerMaxSubjectIndex,
     kReadFramebufferSubjectIndex,
     kDrawFramebufferSubjectIndex
@@ -356,6 +358,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
          samplerIndex < kSamplerMaxSubjectIndex; ++samplerIndex)
     {
         mSamplerObserverBindings.emplace_back(this, samplerIndex);
+    }
+
+    for (angle::SubjectIndex imageIndex = kImage0SubjectIndex; imageIndex < kImageMaxSubjectIndex;
+         ++imageIndex)
+    {
+        mImageObserverBindings.emplace_back(this, imageIndex);
     }
 }
 
@@ -463,13 +471,13 @@ void Context::initialize()
 
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_VERTEX_ARRAY);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_TEXTURES);
+    mDrawDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
 
     mPathOperationDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
     mPathOperationDirtyObjects.set(State::DIRTY_OBJECT_VERTEX_ARRAY);
-    mPathOperationDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_TEXTURES);
+    mPathOperationDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
     mPathOperationDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
 
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_STATE);
@@ -513,7 +521,7 @@ void Context::initialize()
     mComputeDirtyBits.set(State::DIRTY_BIT_SAMPLER_BINDINGS);
     mComputeDirtyBits.set(State::DIRTY_BIT_IMAGE_BINDINGS);
     mComputeDirtyBits.set(State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_TEXTURES);
+    mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
 
@@ -1090,7 +1098,7 @@ void Context::bindTexture(TextureType target, GLuint handle)
     }
 
     ASSERT(texture);
-    ANGLE_CONTEXT_TRY(mGLState.setSamplerTexture(this, target, texture));
+    mGLState.setSamplerTexture(this, target, texture);
     mStateCache.onActiveTextureChange(this);
 }
 
@@ -1148,6 +1156,7 @@ void Context::bindImageTexture(GLuint unit,
 {
     Texture *tex = mState.mTextures->getTexture(texture);
     mGLState.setImageUnit(this, unit, tex, level, layered, layer, access, format);
+    mImageObserverBindings[unit].bind(tex);
 }
 
 void Context::useProgram(GLuint program)
@@ -2139,14 +2148,12 @@ void Context::texParameterf(TextureType target, GLenum pname, GLfloat param)
 {
     Texture *const texture = getTargetTexture(target);
     SetTexParameterf(this, texture, pname, param);
-    onTextureChange(texture);
 }
 
 void Context::texParameterfv(TextureType target, GLenum pname, const GLfloat *params)
 {
     Texture *const texture = getTargetTexture(target);
     SetTexParameterfv(this, texture, pname, params);
-    onTextureChange(texture);
 }
 
 void Context::texParameterfvRobust(TextureType target,
@@ -2161,28 +2168,24 @@ void Context::texParameteri(TextureType target, GLenum pname, GLint param)
 {
     Texture *const texture = getTargetTexture(target);
     SetTexParameteri(this, texture, pname, param);
-    onTextureChange(texture);
 }
 
 void Context::texParameteriv(TextureType target, GLenum pname, const GLint *params)
 {
     Texture *const texture = getTargetTexture(target);
     SetTexParameteriv(this, texture, pname, params);
-    onTextureChange(texture);
 }
 
 void Context::texParameterIiv(TextureType target, GLenum pname, const GLint *params)
 {
     Texture *const texture = getTargetTexture(target);
     SetTexParameterIiv(this, texture, pname, params);
-    onTextureChange(texture);
 }
 
 void Context::texParameterIuiv(TextureType target, GLenum pname, const GLuint *params)
 {
     Texture *const texture = getTargetTexture(target);
     SetTexParameterIuiv(this, texture, pname, params);
-    onTextureChange(texture);
 }
 
 void Context::texParameterivRobust(TextureType target,
@@ -3145,7 +3148,7 @@ void Context::requestExtension(const char *name)
     {
         if (zeroTexture.get() != nullptr)
         {
-            zeroTexture->signalDirty(this, InitState::Initialized);
+            zeroTexture->signalDirtyStorage(this, InitState::Initialized);
         }
     }
 
@@ -3330,6 +3333,8 @@ void Context::initCaps()
              IMPLEMENTATION_MAX_ACTIVE_TEXTURES / 2);
     LimitCap(&mCaps.maxShaderTextureImageUnits[ShaderType::Fragment],
              IMPLEMENTATION_MAX_ACTIVE_TEXTURES / 2);
+
+    LimitCap(&mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
 
     mCaps.maxSampleMaskWords = std::min<GLuint>(mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 
@@ -6093,11 +6098,13 @@ void Context::uniform1fv(GLint location, GLsizei count, const GLfloat *v)
 
 void Context::setUniform1iImpl(Program *program, GLint location, GLsizei count, const GLint *v)
 {
-    if (program->setUniform1iv(location, count, v) == Program::SetUniformResult::SamplerChanged)
-    {
-        mGLState.setObjectDirty(GL_PROGRAM);
-        mStateCache.onActiveTextureChange(this);
-    }
+    program->setUniform1iv(this, location, count, v);
+}
+
+void Context::onSamplerUniformChange(size_t textureUnitIndex)
+{
+    mGLState.onActiveTextureChange(this, textureUnitIndex);
+    mStateCache.onActiveTextureChange(this);
 }
 
 void Context::uniform1i(GLint location, GLint x)
@@ -7011,13 +7018,6 @@ void Context::programUniformMatrix4x3fv(GLuint program,
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
     programObject->setUniformMatrix4x3fv(location, count, transpose, value);
-}
-
-void Context::onTextureChange(const Texture *texture)
-{
-    // Conservatively assume all textures are dirty.
-    // TODO(jmadill): More fine-grained update.
-    mGLState.setObjectDirty(GL_TEXTURE);
 }
 
 bool Context::isCurrentTransformFeedback(const TransformFeedback *tf) const
@@ -8117,8 +8117,12 @@ void Context::onSubjectStateChange(const Context *context,
         default:
             if (index < kTextureMaxSubjectIndex)
             {
-                mGLState.onActiveTextureStateChange(index);
+                mGLState.onActiveTextureStateChange(this, index);
                 mStateCache.onActiveTextureChange(this);
+            }
+            else if (index < kImageMaxSubjectIndex)
+            {
+                mGLState.onImageStateChange(this, index - kImage0SubjectIndex);
             }
             else if (index < kUniformBufferMaxSubjectIndex)
             {

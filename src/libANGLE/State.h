@@ -179,7 +179,7 @@ class State : angle::NonCopyable
     void setActiveSampler(unsigned int active);
     unsigned int getActiveSampler() const { return static_cast<unsigned int>(mActiveSampler); }
 
-    angle::Result setSamplerTexture(const Context *context, TextureType type, Texture *texture);
+    void setSamplerTexture(const Context *context, TextureType type, Texture *texture);
     Texture *getTargetTexture(TextureType type) const;
 
     Texture *getSamplerTexture(unsigned int sampler, TextureType type) const
@@ -487,10 +487,9 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_DRAW_FRAMEBUFFER,
         DIRTY_OBJECT_DRAW_ATTACHMENTS,
         DIRTY_OBJECT_VERTEX_ARRAY,
-        DIRTY_OBJECT_SAMPLERS,
-        // Use a very coarse bit for any program or texture change.
-        // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
-        DIRTY_OBJECT_PROGRAM_TEXTURES,
+        DIRTY_OBJECT_TEXTURES,  // Top-level dirty bit. Also see mDirtyTextures.
+        DIRTY_OBJECT_IMAGES,    // Top-level dirty bit. Also see mDirtyImages.
+        DIRTY_OBJECT_SAMPLERS,  // Top-level dirty bit. Also see mDirtySamplers.
         DIRTY_OBJECT_PROGRAM,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
@@ -508,6 +507,7 @@ class State : angle::NonCopyable
     angle::Result syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
     angle::Result syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
+    void setTextureDirty(size_t textureUnitIndex);
     void setSamplerDirty(size_t samplerIndex);
 
     ANGLE_INLINE void setDrawFramebufferDirty()
@@ -533,7 +533,14 @@ class State : angle::NonCopyable
     const ActiveTexturePointerArray &getActiveTexturesCache() const { return mActiveTexturesCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
-    void onActiveTextureStateChange(size_t textureIndex);
+    // "onActiveTextureChange" is called when a texture binding changes.
+    void onActiveTextureChange(const Context *context, size_t textureUnit);
+
+    // "onActiveTextureStateChange" calls when the Texture itself changed but the binding did not.
+    void onActiveTextureStateChange(const Context *context, size_t textureUnit);
+
+    void onImageStateChange(const Context *context, size_t unit);
+
     void onUniformBufferStateChange(size_t uniformBufferIndex);
 
     angle::Result clearUnclearedActiveTextures(const Context *context);
@@ -559,32 +566,36 @@ class State : angle::NonCopyable
 
   private:
     void unsetActiveTextures(ActiveTextureMask textureMask);
-    angle::Result updateActiveTexture(const Context *context,
-                                      size_t textureIndex,
-                                      Texture *texture);
+    void updateActiveTexture(const Context *context, size_t textureIndex, Texture *texture);
+    void updateActiveTextureState(const Context *context,
+                                  size_t textureIndex,
+                                  const Sampler *sampler,
+                                  Texture *texture);
 
     // Functions to synchronize dirty states
     angle::Result syncReadFramebuffer(const Context *context);
     angle::Result syncDrawFramebuffer(const Context *context);
     angle::Result syncDrawAttachments(const Context *context);
     angle::Result syncVertexArray(const Context *context);
+    angle::Result syncTextures(const Context *context);
+    angle::Result syncImages(const Context *context);
     angle::Result syncSamplers(const Context *context);
-    angle::Result syncProgramTextures(const Context *context);
     angle::Result syncProgram(const Context *context);
 
     using DirtyObjectHandler = angle::Result (State::*)(const Context *context);
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {
         &State::syncReadFramebuffer, &State::syncDrawFramebuffer, &State::syncDrawAttachments,
-        &State::syncVertexArray,     &State::syncSamplers,        &State::syncProgramTextures,
-        &State::syncProgram};
+        &State::syncVertexArray,     &State::syncTextures,        &State::syncImages,
+        &State::syncSamplers,        &State::syncProgram};
 
     static_assert(DIRTY_OBJECT_READ_FRAMEBUFFER == 0, "check DIRTY_OBJECT_READ_FRAMEBUFFER index");
     static_assert(DIRTY_OBJECT_DRAW_FRAMEBUFFER == 1, "check DIRTY_OBJECT_DRAW_FRAMEBUFFER index");
     static_assert(DIRTY_OBJECT_DRAW_ATTACHMENTS == 2, "check DIRTY_OBJECT_DRAW_ATTACHMENTS index");
     static_assert(DIRTY_OBJECT_VERTEX_ARRAY == 3, "check DIRTY_OBJECT_VERTEX_ARRAY index");
-    static_assert(DIRTY_OBJECT_SAMPLERS == 4, "check DIRTY_OBJECT_SAMPLERS index");
-    static_assert(DIRTY_OBJECT_PROGRAM_TEXTURES == 5, "check DIRTY_OBJECT_PROGRAM_TEXTURES index");
-    static_assert(DIRTY_OBJECT_PROGRAM == 6, "check DIRTY_OBJECT_PROGRAM index");
+    static_assert(DIRTY_OBJECT_TEXTURES == 4, "check DIRTY_OBJECT_TEXTURES index");
+    static_assert(DIRTY_OBJECT_IMAGES == 5, "check DIRTY_OBJECT_IMAGES index");
+    static_assert(DIRTY_OBJECT_SAMPLERS == 6, "check DIRTY_OBJECT_SAMPLERS index");
+    static_assert(DIRTY_OBJECT_PROGRAM == 7, "check DIRTY_OBJECT_PROGRAM index");
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
@@ -666,8 +677,8 @@ class State : angle::NonCopyable
 
     SamplerBindingVector mSamplers;
 
-    using ImageUnitVector = std::vector<ImageUnit>;
-    ImageUnitVector mImageUnits;
+    // It would be nice to merge the image and observer binding. Same for textures.
+    std::vector<ImageUnit> mImageUnits;
 
     using ActiveQueryMap = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
     ActiveQueryMap mActiveQueries;
@@ -722,7 +733,9 @@ class State : angle::NonCopyable
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;
     mutable AttributesMask mDirtyCurrentValues;
+    ActiveTextureMask mDirtyTextures;
     ActiveTextureMask mDirtySamplers;
+    ImageUnitMask mDirtyImages;
 };
 
 ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,
