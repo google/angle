@@ -58,3 +58,4 @@ for dll in ['libGLESv2.dll', 'libEGL.dll']:
         if not os.path.exists(backup):
             shutil.copyfile(src, backup)
         shutil.copyfile(src, os.path.join(dest_folder, dll))
+        shutil.copyfile(src + ".pdb", os.path.join(dest_folder, dll + ".pdb"))
