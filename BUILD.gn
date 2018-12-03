@@ -284,7 +284,7 @@ static_library("angle_gpu_info_util") {
     defines += [ "GPU_INFO_USE_SETUPAPI" ]
   }
 
-  if (is_linux) {
+  if (is_linux || is_fuchsia) {
     sources += libangle_gpu_info_util_linux_sources
 
     if (use_x11) {
