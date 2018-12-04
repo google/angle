@@ -306,6 +306,101 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests modifying an existing shader storage buffer
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteSame)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std140, binding = 0) buffer block {
+    uint data;
+} instance;
+void main()
+{
+    uint temp = instance.data;
+    instance.data = temp + 1u;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+
+    glUseProgram(program);
+
+    constexpr unsigned int kBytesPerComponent = sizeof(GLuint);
+    constexpr unsigned int kInitialData       = 123u;
+
+    // Create shader storage buffer
+    GLBuffer shaderStorageBuffer;
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBytesPerComponent, &kInitialData, GL_STATIC_DRAW);
+
+    // Bind shader storage buffer
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer);
+
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    const void *bufferData =
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBytesPerComponent, GL_MAP_READ_BIT);
+
+    constexpr unsigned int kExpectedData = 124u;
+    EXPECT_EQ(kExpectedData, *static_cast<const GLuint *>(bufferData));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    // Running shader twice to make sure that the buffer gets updated correctly 123->124->125
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    bufferData = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBytesPerComponent, GL_MAP_READ_BIT);
+
+    constexpr unsigned int kExpectedData2 = 125u;
+    EXPECT_EQ(kExpectedData2, *static_cast<const GLuint *>(bufferData));
+
+    // Verify re-using the SSBO buffer with a PBO contains expected data.
+    // This will read-back from FBO using a PBO into the same SSBO buffer.
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, shaderStorageBuffer);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_NO_ERROR();
+
+    void *mappedPtr =
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kBytesPerComponent, GL_MAP_READ_BIT);
+    GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::red, dataColor[0]);
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that binding the buffer back to the SSBO keeps the expected data.
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    const GLColor *ptr = reinterpret_cast<GLColor *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBytesPerComponent, GL_MAP_READ_BIT));
+    EXPECT_EQ(GLColor::red, *ptr);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that access/write to vector data in shader storage buffer.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
 {
