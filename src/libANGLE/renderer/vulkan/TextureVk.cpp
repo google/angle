@@ -757,7 +757,8 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
     const angle::Format &imageFormat = getImage().getFormat().textureFormat();
-    size_t sourceCopyAllocationSize = sourceArea.width * sourceArea.height * imageFormat.pixelBytes;
+    size_t sourceCopyAllocationSize =
+        sourceArea.width * sourceArea.height * imageFormat.pixelBytes * layerCount;
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mImage.recordCommands(contextVk, &commandBuffer));
