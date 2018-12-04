@@ -59,6 +59,7 @@ angle_end2end_tests_sources = [
   "gl_tests/gles1/MatrixStackTest.cpp",
   "gl_tests/gles1/LightsTest.cpp",
   "gl_tests/gles1/PointParameterTest.cpp",
+  "gl_tests/gles1/PointSpriteTest.cpp",
   "gl_tests/gles1/ShadeModelTest.cpp",
   "gl_tests/gles1/TextureEnvTest.cpp",
   "gl_tests/gles1/TextureParameterTest.cpp",
