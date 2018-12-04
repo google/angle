@@ -684,6 +684,30 @@
     },
     {
       "key": {
+        "uuid": "4bbd580e_d5197732",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-04T11:36:02Z",
+      "side": 1,
+      "message": "Also FWIW componentType is unused right now for all vertex formats, including SCALED. So if you wanted to make SCALED formats have a componentType of FLOAT that\u0027s fine too. And FYI SCALED formats are only used in the Vulkan back-end.",
+      "parentUuid": "9cb3de2a_21ff2580",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 0
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25880901_ed2e7b92",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp",
         "patchSetId": 27
