@@ -732,6 +732,30 @@
     },
     {
       "key": {
+        "uuid": "a55b94a0_cd5f3229",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-04T15:16:39Z",
+      "side": 1,
+      "message": "Oh, my bad. I misinterpreted your comment as \"let\u0027s go with the original plan of int/uint\". SGTM.",
+      "parentUuid": "2ed128a9_1ca1fd24",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 0
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25880901_ed2e7b92",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp",
         "patchSetId": 27
