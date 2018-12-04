@@ -175,7 +175,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::ASTC_12x12_SRGB_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
+            textureFormatID              = angle::FormatID::ASTC_12x12_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::ASTC_12x12_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::ASTC_12x12_UNORM_BLOCK:
