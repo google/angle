@@ -22,6 +22,30 @@
       "revId": "de39530cca93a19033966d791e183fc32f02fc08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "144ca6c0_00f14150",
+        "filename": "src/libANGLE/renderer/vulkan/DispatchUtilsVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-12-04T15:30:59Z",
+      "side": 1,
+      "message": "Yes they could be. Done.",
+      "parentUuid": "660d6fb5_53b6eeca",
+      "range": {
+        "startLine": 151,
+        "startChar": 26,
+        "endLine": 151,
+        "endChar": 45
+      },
+      "revId": "de39530cca93a19033966d791e183fc32f02fc08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
