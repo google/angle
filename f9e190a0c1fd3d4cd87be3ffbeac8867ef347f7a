@@ -708,6 +708,30 @@
     },
     {
       "key": {
+        "uuid": "2ed128a9_1ca1fd24",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-12-04T15:10:57Z",
+      "side": 1,
+      "message": "I removed the redundant data and went with GL_INT and GL_UNSIGNED_INT (which is what I meant by \"let\u0027s go with this\"). My comment was that this may or may not be correct for scaled types, but we have no usage, so I let it be for now.\n\nI could change scaled to float, but can we defer it to another CL? I have to see exactly where it\u0027s used to make sure it doesn\u0027t break any assumptions.",
+      "parentUuid": "4bbd580e_d5197732",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 0
+      },
+      "revId": "f9e190a0c1fd3d4cd87be3ffbeac8867ef347f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25880901_ed2e7b92",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp",
         "patchSetId": 27
