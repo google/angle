@@ -48,11 +48,34 @@ class GlobalSettings
         }
     }
 
+    Boolean getShowAngleInUseDialogBox()
+    {
+        ContentResolver contentResolver = mContext.getContentResolver();
+        try
+        {
+            int showAngleInUseDialogBox = Settings.Global.getInt(contentResolver,
+                    mContext.getString(R.string.global_settings_angle_in_use_dialog_box));
+            return (showAngleInUseDialogBox == 1);
+        }
+        catch (Settings.SettingNotFoundException e)
+        {
+            return false;
+        }
+    }
+
     static void updateAllUseAngle(Context context, Boolean allUseAngle)
     {
         ContentResolver contentResolver = context.getContentResolver();
         Settings.Global.putInt(contentResolver,
                 context.getString(R.string.global_settings_driver_all_angle), allUseAngle ? 1 : 0);
+    }
+
+    static void updateShowAngleInUseDialog(Context context, Boolean showAngleInUseDialog)
+    {
+        ContentResolver contentResolver = context.getContentResolver();
+        Settings.Global.putInt(contentResolver,
+                context.getString(R.string.global_settings_angle_in_use_dialog_box),
+                showAngleInUseDialog ? 1 : 0);
     }
 
     void updatePkg(String pkgName, String driver)

@@ -40,6 +40,7 @@ public class MainFragment extends PreferenceFragment implements OnSharedPreferen
     private GlobalSettings mGlobalSettings;
     private Receiver mRefreshReceiver;
     private SwitchPreference mAllAngleSwitchPref;
+    private SwitchPreference mShowAngleInUseDialogSwitchPref;
     private List<PackageInfo> mInstalledPkgs      = new ArrayList<>();
     private List<ListPreference> mDriverListPrefs = new ArrayList<>();
 
@@ -83,6 +84,22 @@ public class MainFragment extends PreferenceFragment implements OnSharedPreferen
                     public boolean onPreferenceClick(Preference preference)
                     {
                         Receiver.updateAllUseAngle(getContext());
+                        return true;
+                    }
+                });
+
+        String showAngleInUseDialogKey =
+                getContext().getString(R.string.pref_key_angle_in_use_dialog);
+        Boolean showAngleInUseDialogBox = mPrefs.getBoolean(showAngleInUseDialogKey, false);
+        mShowAngleInUseDialogSwitchPref =
+                (SwitchPreference) findPreference(showAngleInUseDialogKey);
+        mShowAngleInUseDialogSwitchPref.setChecked(mGlobalSettings.getShowAngleInUseDialogBox());
+        mShowAngleInUseDialogSwitchPref.setOnPreferenceClickListener(
+                new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference)
+                    {
+                        Receiver.updateShowAngleInUseDialogBox(getContext());
                         return true;
                     }
                 });

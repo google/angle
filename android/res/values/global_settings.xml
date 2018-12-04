@@ -7,6 +7,7 @@
 
 <resources>
     <string name="global_settings_driver_all_angle">angle_gl_driver_all_angle</string>
+    <string name="global_settings_angle_in_use_dialog_box">angle_in_use_dialog_box</string>
     <string name="global_settings_driver_selection_pkgs">angle_gl_driver_selection_pkgs</string>
     <string name="global_settings_driver_selection_values">angle_gl_driver_selection_values</string>
 </resources>

@@ -32,6 +32,18 @@ public class Receiver extends BroadcastReceiver
 
         GlobalSettings.updateAllUseAngle(context, allUseAngle);
 
-        Log.v(TAG, "Use Rules File set to: " + allUseAngle);
+        Log.v(TAG, "All PKGs use ANGLE set to: " + allUseAngle);
+    }
+
+    static void updateShowAngleInUseDialogBox(Context context)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String showAngleInUseDialogBoxKey =
+                context.getString(R.string.pref_key_angle_in_use_dialog);
+        boolean showAngleInUseDialogBox = prefs.getBoolean(showAngleInUseDialogBoxKey, false);
+
+        GlobalSettings.updateShowAngleInUseDialog(context, showAngleInUseDialogBox);
+
+        Log.v(TAG, "Show 'ANGLE In Use' dialog box set to: " + showAngleInUseDialogBox);
     }
 }
