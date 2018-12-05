@@ -858,6 +858,16 @@ ProcEntry g_procTable[] = {
     {"glMultMatrixfContextANGLE", P(gl::MultMatrixfContextANGLE)},
     {"glMultMatrixx", P(gl::MultMatrixx)},
     {"glMultMatrixxContextANGLE", P(gl::MultMatrixxContextANGLE)},
+    {"glMultiDrawArraysANGLE", P(gl::MultiDrawArraysANGLE)},
+    {"glMultiDrawArraysANGLEContextANGLE", P(gl::MultiDrawArraysANGLEContextANGLE)},
+    {"glMultiDrawArraysInstancedANGLE", P(gl::MultiDrawArraysInstancedANGLE)},
+    {"glMultiDrawArraysInstancedANGLEContextANGLE",
+     P(gl::MultiDrawArraysInstancedANGLEContextANGLE)},
+    {"glMultiDrawElementsANGLE", P(gl::MultiDrawElementsANGLE)},
+    {"glMultiDrawElementsANGLEContextANGLE", P(gl::MultiDrawElementsANGLEContextANGLE)},
+    {"glMultiDrawElementsInstancedANGLE", P(gl::MultiDrawElementsInstancedANGLE)},
+    {"glMultiDrawElementsInstancedANGLEContextANGLE",
+     P(gl::MultiDrawElementsInstancedANGLEContextANGLE)},
     {"glMultiTexCoord4f", P(gl::MultiTexCoord4f)},
     {"glMultiTexCoord4fContextANGLE", P(gl::MultiTexCoord4fContextANGLE)},
     {"glMultiTexCoord4x", P(gl::MultiTexCoord4x)},
@@ -1277,5 +1287,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1209;
+size_t g_numProcs = 1217;
 }  // namespace egl

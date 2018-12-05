@@ -526,6 +526,13 @@
         "glGetQueryObjectui64vRobustANGLE"
     ],
 
+    "GL_ANGLE_multi_draw": [
+      "glMultiDrawArraysANGLE",
+      "glMultiDrawArraysInstancedANGLE",
+      "glMultiDrawElementsANGLE",
+      "glMultiDrawElementsInstancedANGLE"
+    ],
+
     "GL_ANGLE_multiview": [
         "glFramebufferTextureMultiviewLayeredANGLE",
         "glFramebufferTextureMultiviewSideBySideANGLE"
