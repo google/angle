@@ -46,12 +46,13 @@ angle::Result StreamVertexData(ContextVk *contextVk,
                                size_t vertexCount,
                                size_t stride,
                                VertexCopyFunction vertexLoadFunction,
-                               VkBuffer *bufferHandleOut,
+                               vk::BufferHelper **bufferOut,
                                VkDeviceSize *bufferOffsetOut)
 {
     uint8_t *dst = nullptr;
-    ANGLE_TRY(dynamicBuffer->allocate(contextVk, bytesToAllocate, &dst, bufferHandleOut,
-                                      bufferOffsetOut, nullptr));
+    ANGLE_TRY(dynamicBuffer->allocate(contextVk, bytesToAllocate, &dst, nullptr, bufferOffsetOut,
+                                      nullptr));
+    *bufferOut = dynamicBuffer->getCurrentBuffer();
     dst += destOffset;
     vertexLoadFunction(sourceData, stride, vertexCount, dst);
 
@@ -208,10 +209,12 @@ angle::Result VertexArrayVk::convertVertexBuffer(ContextVk *contextVk,
     ANGLE_TRY(StreamVertexData(contextVk, &mCurrentArrayBufferConversion[attribIndex], srcBytes,
                                numVertices * dstFormatSize, 0, numVertices, binding.getStride(),
                                mCurrentArrayBufferFormats[attribIndex]->vertexLoadFunction,
-                               &mCurrentArrayBufferHandles[attribIndex],
+                               &mCurrentArrayBuffers[attribIndex],
                                &mCurrentArrayBufferOffsets[attribIndex]));
     ANGLE_TRY(srcBuffer->unmapImpl(contextVk));
 
+    mCurrentArrayBufferHandles[attribIndex] =
+        mCurrentArrayBuffers[attribIndex]->getBuffer().getHandle();
     mCurrentArrayBufferConversionCanRelease[attribIndex] = true;
 
     return angle::Result::Continue();
@@ -341,7 +344,6 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
 
                 ANGLE_TRY(convertVertexBuffer(contextVk, bufferVk, binding, attribIndex));
 
-                mCurrentArrayBuffers[attribIndex] = nullptr;
                 releaseConversion                 = false;
             }
             else
@@ -487,7 +489,9 @@ angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
         ANGLE_TRY(StreamVertexData(
             contextVk, &mDynamicVertexData, src, bytesToAllocate, destOffset, vertexCount,
             binding.getStride(), mCurrentArrayBufferFormats[attribIndex]->vertexLoadFunction,
-            &mCurrentArrayBufferHandles[attribIndex], &mCurrentArrayBufferOffsets[attribIndex]));
+            &mCurrentArrayBuffers[attribIndex], &mCurrentArrayBufferOffsets[attribIndex]));
+        mCurrentArrayBufferHandles[attribIndex] =
+            mCurrentArrayBuffers[attribIndex]->getBuffer().getHandle();
     }
 
     return angle::Result::Continue();
