@@ -13,8 +13,28 @@
 
 using namespace angle;
 
+constexpr char kMfr[]   = "MfrFoo";
+constexpr char kModel[] = "ModelX";
+
+class FeatureSupportUtilTest : public testing::Test
+{
+  protected:
+    FeatureSupportUtilTest()
+    {
+        mSystemInfo.machineManufacturer = kMfr;
+        mSystemInfo.machineModelName    = kModel;
+        mSystemInfo.gpus.resize(1);
+        mSystemInfo.gpus[0].vendorId              = 123;
+        mSystemInfo.gpus[0].deviceId              = 234;
+        mSystemInfo.gpus[0].driverVendor          = "GPUVendorA";
+        mSystemInfo.gpus[0].detailedDriverVersion = {1, 2, 3, 4};
+    }
+
+    SystemInfo mSystemInfo;
+};
+
 // Test the ANGLEGetFeatureSupportUtilAPIVersion function
-TEST(FeatureSupportUtilTest, APIVersion)
+TEST_F(FeatureSupportUtilTest, APIVersion)
 {
     unsigned int versionToUse;
     unsigned int zero = 0;
@@ -37,45 +57,100 @@ TEST(FeatureSupportUtilTest, APIVersion)
 }
 
 // Test the ANGLEAddDeviceInfoToSystemInfo function
-TEST(FeatureSupportUtilTest, SystemInfo)
+TEST_F(FeatureSupportUtilTest, SystemInfo)
 {
-    // TODO(ianelliott): Replace this with a gtest "fixture", per review feedback.
-    SystemInfo systemInfo;
+    SystemInfo systemInfo = mSystemInfo;
     systemInfo.machineManufacturer = "BAD";
     systemInfo.machineModelName    = "BAD";
-    systemInfo.gpus.resize(1);
-    systemInfo.gpus[0].vendorId              = 123;
-    systemInfo.gpus[0].deviceId              = 234;
-    systemInfo.gpus[0].driverVendor          = "DriverVendorA";
-    systemInfo.gpus[0].detailedDriverVersion = {1, 2, 3, 4};
 
-    char mfr[]   = "Google";
-    char model[] = "Pixel1";
-
-    ANGLEAddDeviceInfoToSystemInfo(mfr, model, &systemInfo);
-    EXPECT_EQ("Google", systemInfo.machineManufacturer);
-    EXPECT_EQ("Pixel1", systemInfo.machineModelName);
+    ANGLEAddDeviceInfoToSystemInfo(kMfr, kModel, &systemInfo);
+    EXPECT_EQ(kMfr, systemInfo.machineManufacturer);
+    EXPECT_EQ(kModel, systemInfo.machineModelName);
 }
 
 // Test the ANGLEAndroidParseRulesString function
-TEST(FeatureSupportUtilTest, ParseRules)
+TEST_F(FeatureSupportUtilTest, ParseRules)
 {
-    // TODO(ianelliott): Replace this with a gtest "fixture", per review feedback.
-    SystemInfo systemInfo;
-    systemInfo.machineManufacturer = "Google";
-    systemInfo.machineModelName    = "Pixel1";
-    systemInfo.gpus.resize(1);
-    systemInfo.gpus[0].vendorId              = 123;
-    systemInfo.gpus[0].deviceId              = 234;
-    systemInfo.gpus[0].driverVendor          = "DriverVendorA";
-    systemInfo.gpus[0].detailedDriverVersion = {1, 2, 3, 4};
-
-    constexpr char rulesFileContents[] =
-        "{\"Rules\":[{\"Rule\":\"Default Rule (i.e. use native driver)\", \"AppChoice\":true, "
-        "\"NonChoice\":false}]}\n";
+    constexpr char kRulesFileContents[] = R"rulefile(
+{
+    "Rules" : [
+        {
+            "Rule" : "Default Rule (i.e. do not use ANGLE)",
+            "UseANGLE" : false
+        }
+    ]
+}
+)rulefile";
     RulesHandle rulesHandle = nullptr;
     int rulesVersion        = 0;
-    EXPECT_TRUE(ANGLEAndroidParseRulesString(rulesFileContents, &rulesHandle, &rulesVersion));
+    EXPECT_TRUE(ANGLEAndroidParseRulesString(kRulesFileContents, &rulesHandle, &rulesVersion));
     EXPECT_NE(nullptr, rulesHandle);
+    ANGLEFreeRulesHandle(rulesHandle);
+}
+
+// Test the ANGLEAndroidParseRulesString and ANGLEShouldBeUsedForApplication functions
+TEST_F(FeatureSupportUtilTest, TestRuleProcessing)
+{
+    SystemInfo systemInfo = mSystemInfo;
+
+    constexpr char kRulesFileContents[] = R"rulefile(
+{
+    "Rules" : [
+        {
+            "Rule" : "Default Rule (i.e. do not use ANGLE)",
+            "UseANGLE" : false
+        },
+        {
+            "Rule" : "Supported application(s)",
+            "UseANGLE" : true,
+            "Applications" : [
+                {
+                    "AppName" : "com.isvA.app1"
+                }
+            ]
+        },
+        {
+            "Rule" : "Exceptions for bad drivers(s)",
+            "UseANGLE" : false,
+            "Applications" : [
+                {
+                    "AppName" : "com.isvA.app1"
+                }
+            ],
+            "Devices" : [
+                {
+                    "Manufacturer" : "MfrFoo",
+                    "Model" : "ModelX",
+                    "GPUs" : [
+                        {
+                            "Vendor" : "GPUVendorA",
+                            "DeviceId" : 234,
+                            "VerMajor" : 1, "VerMinor" : 2, "VerSubMinor" : 3, "VerPatch" : 4}
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+)rulefile";
+    RulesHandle rulesHandle = nullptr;
+    int rulesVersion        = 0;
+    EXPECT_TRUE(ANGLEAndroidParseRulesString(kRulesFileContents, &rulesHandle, &rulesVersion));
+    EXPECT_NE(nullptr, rulesHandle);
+
+    // Test app1 with a SystemInfo that has an unsupported driver--should fail:
+    constexpr char kApp1[] = "com.isvA.app1";
+    EXPECT_FALSE(ANGLEShouldBeUsedForApplication(rulesHandle, rulesVersion, &systemInfo, kApp1));
+
+    // Test app1 with a SystemInfo that has a supported driver--should pass:
+    systemInfo.gpus[0].detailedDriverVersion = {1, 2, 3, 5};
+    EXPECT_TRUE(ANGLEShouldBeUsedForApplication(rulesHandle, rulesVersion, &systemInfo, kApp1));
+
+    // Test unsupported app2--should fail:
+    constexpr char kApp2[] = "com.isvB.app2";
+    EXPECT_FALSE(ANGLEShouldBeUsedForApplication(rulesHandle, rulesVersion, &systemInfo, kApp2));
+
+    // Free the rules data structures:
     ANGLEFreeRulesHandle(rulesHandle);
 }
