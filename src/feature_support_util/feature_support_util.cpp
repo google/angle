@@ -186,7 +186,24 @@ class ListOf
         }
         return false;
     }
-    const T &front() const { return (mList.front()); }
+    bool match(const ListOf<T> &toCheck) const
+    {
+        VERBOSE("\t\t Within ListOf<%s> match: wildcards are %s and %s,\n", mListType.c_str(),
+                mWildcard ? "true" : "false", toCheck.mWildcard ? "true" : "false");
+        if (mWildcard || toCheck.mWildcard)
+        {
+            return true;
+        }
+        // If we make it to here, both this and toCheck have at least one item in their mList
+        for (const T &it : toCheck.mList)
+        {
+            if (match(it))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     void logListOf(const std::string prefix, const std::string name) const
     {
         if (mWildcard)
@@ -561,9 +578,7 @@ class Device
         return ((mWildcard || toCheck.mWildcard ||
                  // The wildcards can override the Manufacturer/Model check, but not the GPU check
                  (toCheck.mManufacturer.match(mManufacturer) && toCheck.mModel.match(mModel))) &&
-                // Note: toCheck.mGpuList is for the device and must contain exactly one item,
-                // where mGpuList may contain zero or more items:
-                mGpuList.match(toCheck.mGpuList.front()));
+                mGpuList.match(toCheck.mGpuList));
     }
     void logItem() const
     {
