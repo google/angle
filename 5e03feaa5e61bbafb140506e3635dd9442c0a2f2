@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "22d8778c_0676c2b8",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-06T18:15:12Z",
+      "side": 1,
+      "message": "1. For that reason having for() loop looks wrong to me.\n2. I can easily imagine Android running on Chromebook having multiple GPUs.",
+      "parentUuid": "4a2d845e_0058f9ae",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 0
+      },
+      "revId": "5e03feaa5e61bbafb140506e3635dd9442c0a2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ae4b4b3_b0b63052",
         "filename": "src/feature_support_util/feature_support_util.cpp",
         "patchSetId": 2
