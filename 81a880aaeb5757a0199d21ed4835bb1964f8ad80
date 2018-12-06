@@ -46,6 +46,30 @@
       "revId": "81a880aaeb5757a0199d21ed4835bb1964f8ad80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adee0e2e_b75e2e9d",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-12-06T18:23:51Z",
+      "side": 0,
+      "message": "My meeting didn\u0027t show up, and so I\u0027ve looked into this more.  In my detailed unit testing, I tried things that went beyond what can happen with Android (e.g. a Scenario with no GPU).  Thus, you are correct that my analysis isn\u0027t correct.",
+      "parentUuid": "e57d9f8b_d1e0cf8d",
+      "range": {
+        "startLine": 564,
+        "startChar": 25,
+        "endLine": 564,
+        "endChar": 93
+      },
+      "revId": "81a880aaeb5757a0199d21ed4835bb1964f8ad80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
