@@ -22,6 +22,21 @@ namespace sh
 {
 namespace
 {
+
+bool IsIncrementOrDecrementOperator(TOperator op)
+{
+    switch (op)
+    {
+        case EOpPostIncrement:
+        case EOpPostDecrement:
+        case EOpPreIncrement:
+        case EOpPreDecrement:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool IsCompoundAssignment(TOperator op)
 {
     switch (op)
@@ -106,6 +121,8 @@ class RewriteExpressionsWithShaderStorageBlockTraverser : public TIntermTraverse
   private:
     bool visitBinary(Visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitUnary(Visit visit, TIntermUnary *node) override;
+
     TIntermSymbol *insertInitStatementAndReturnTempSymbol(TIntermTyped *node,
                                                           TIntermSequence *insertions);
 
@@ -310,6 +327,64 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
         queueReplacement(tempSymbol->deepCopy(), OriginalNode::IS_DROPPED);
     }
 
+    return false;
+}
+
+bool RewriteExpressionsWithShaderStorageBlockTraverser::visitUnary(Visit visit, TIntermUnary *node)
+{
+    if (mFoundSSBO)
+    {
+        return false;
+    }
+
+    if (!IsInShaderStorageBlock(node->getOperand()))
+    {
+        return true;
+    }
+
+    // .length() is processed in OutputHLSL.
+    if (node->getOp() == EOpArrayLength)
+    {
+        return true;
+    }
+
+    mFoundSSBO = true;
+
+    // case 4: ssbo as the operand of ++/--
+    //  original:
+    //      ++ssbo * expr;
+    //  new:
+    //      var temp1 = ssbo;
+    //      var temp2 = ++temp1;
+    //      ssbo = temp1;
+    //      temp2 * expr;
+    if (IsIncrementOrDecrementOperator(node->getOp()))
+    {
+        TIntermSequence insertions;
+        TIntermSymbol *temp1 =
+            insertInitStatementAndReturnTempSymbol(node->getOperand(), &insertions);
+        TIntermUnary *newUnary = new TIntermUnary(node->getOp(), temp1->deepCopy(), nullptr);
+        TIntermSymbol *temp2   = insertInitStatementAndReturnTempSymbol(newUnary, &insertions);
+        TIntermBinary *readBackToSSBO =
+            new TIntermBinary(EOpAssign, node->getOperand()->deepCopy(), temp1->deepCopy());
+        insertions.push_back(readBackToSSBO);
+        insertStatementsInParentBlock(insertions);
+        queueReplacement(temp2->deepCopy(), OriginalNode::IS_DROPPED);
+    }
+    // case 5: ssbo as the operand of readonly unary operator
+    //  original:
+    //      ~ssbo * expr;
+    //  new:
+    //      var temp = ssbo;
+    //      ~temp * expr;
+    else
+    {
+        TIntermSequence insertions;
+        TIntermSymbol *temp =
+            insertInitStatementAndReturnTempSymbol(node->getOperand(), &insertions);
+        insertStatementsInParentBlock(insertions);
+        node->replaceChildNode(node->getOperand(), temp->deepCopy());
+    }
     return false;
 }
 

@@ -1783,6 +1783,56 @@ void main(void)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that ssbo as unary operand works well.
+TEST_P(ShaderStorageBufferTest31, SSBOAsUnaryOperand)
+{
+    // http://anglebug.com/2990
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=1) in;
+layout(binding=0, std140) buffer Storage0
+{
+    uint b;
+} sb_load;
+layout(binding=1, std140) buffer Storage1
+{
+    uint i;
+} sb_store;
+void main()
+{
+    sb_store.i = +sb_load.b;
+    ++sb_store.i;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    glUseProgram(program);
+
+    constexpr unsigned int kBytesPerComponent = sizeof(unsigned int);
+    constexpr unsigned kInputValue            = 1u;
+    constexpr unsigned int kExpectedValue     = 2u;
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBytesPerComponent, &kInputValue, GL_STATIC_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBytesPerComponent, &kInputValue, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBytesPerComponent, GL_MAP_READ_BIT));
+    EXPECT_EQ(kExpectedValue, *ptr);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace
