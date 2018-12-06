@@ -141,9 +141,12 @@ void Format::initTextureFallback(RendererVk *renderer,
 
 void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo)
 {
-    int i          = FindSupportedFormat(renderer, info, numInfo, HasFullBufferFormatSupport);
-    bufferFormatID = info[i].format;
-    vkBufferFormat = info[i].vkFormat;
+    size_t skip = renderer->getFeatures().forceFallbackFormat ? 1 : 0;
+    int i = FindSupportedFormat(renderer, info + skip, numInfo - skip, HasFullBufferFormatSupport);
+    i += skip;
+
+    bufferFormatID               = info[i].format;
+    vkBufferFormat               = info[i].vkFormat;
     vkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
     vertexLoadFunction           = info[i].vertexLoadFunction;
     vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;

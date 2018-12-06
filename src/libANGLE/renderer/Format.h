@@ -35,7 +35,8 @@ struct Format final : private angle::NonCopyable
                      GLuint depthBits,
                      GLuint stencilBits,
                      GLuint pixelBytes,
-                     bool isBlock);
+                     bool isBlock,
+                     bool isFixed);
 
     static const Format &Get(FormatID id);
     static FormatID InternalFormatToID(GLenum internalFormat);
@@ -75,6 +76,7 @@ struct Format final : private angle::NonCopyable
     GLuint pixelBytes;
 
     bool isBlock;
+    bool isFixed;
 };
 
 constexpr Format::Format(FormatID id,
@@ -92,7 +94,8 @@ constexpr Format::Format(FormatID id,
                          GLuint depthBits,
                          GLuint stencilBits,
                          GLuint pixelBytes,
-                         bool isBlock)
+                         bool isBlock,
+                         bool isFixed)
     : id(id),
       glInternalFormat(glFormat),
       fboImplementationInternalFormat(fboFormat),
@@ -108,7 +111,8 @@ constexpr Format::Format(FormatID id,
       depthBits(depthBits),
       stencilBits(stencilBits),
       pixelBytes(pixelBytes),
-      isBlock(isBlock)
+      isBlock(isBlock),
+      isFixed(isFixed)
 {}
 
 constexpr bool Format::hasDepthOrStencilBits() const

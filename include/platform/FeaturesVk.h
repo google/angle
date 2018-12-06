@@ -48,6 +48,11 @@ struct FeaturesVk
     // actual behavior. Clamp the point size to the value from the API to fix this.
     // Tracked in http://anglebug.com/2970.
     bool clampPointSize = false;
+
+    // On some android devices, the memory barrier between the compute shader that converts vertex
+    // attributes and the vertex shader that reads from it is ineffective.  Only known workaround is
+    // to perform a flush after the conversion.  http://anglebug.com/3016
+    bool flushAfterVertexConversion = false;
 };
 
 }  // namespace angle

@@ -18,6 +18,15 @@
 namespace rx
 {
 
+namespace
+{
+// Vertex attribute buffers are used as storage buffers for conversion in compute, where access to
+// the buffer is made in 4-byte chunks.  Assume the size of the buffer is 4k+n where n is in [0, 3).
+// On some hardware, reading 4 bytes from address 4k returns 0, making it impossible to read the
+// last n bytes.  By rounding up the buffer sizes to a multiple of 4, the problem is alleviated.
+constexpr size_t kBufferSizeGranularity = 4;
+}  // namespace
+
 BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state) {}
 
 BufferVk::~BufferVk() {}
@@ -53,12 +62,12 @@ angle::Result BufferVk::setData(const gl::Context *context,
         const VkImageUsageFlags usageFlags =
             VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
-            VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT;
+            VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT;
 
         VkBufferCreateInfo createInfo    = {};
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         createInfo.flags                 = 0;
-        createInfo.size                  = size;
+        createInfo.size                  = roundUp(size, kBufferSizeGranularity);
         createInfo.usage                 = usageFlags;
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;

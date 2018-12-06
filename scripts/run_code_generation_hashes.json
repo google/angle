@@ -6,7 +6,7 @@
   "ANGLE format:src/libANGLE/renderer/angle_format_map.json":
     "be9f9bdbdf785dda05920146e8c55dbb",
   "ANGLE format:src/libANGLE/renderer/gen_angle_format_table.py":
-    "9de29b6ca59a05747623c0dc32344b14",
+    "c215a4284425ea888f95d084a3d52e51",
   "ANGLE load functions table:src/libANGLE/renderer/gen_load_functions_table.py":
     "8afc7eecce2a3ba9f0b4beacb1aa7fe2",
   "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
@@ -34,7 +34,7 @@
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
     "8ea01df6cb7f160772d3c85dd5164890",
   "DXGI format:src/libANGLE/renderer/gen_angle_format_table.py":
-    "9de29b6ca59a05747623c0dc32344b14",
+    "c215a4284425ea888f95d084a3d52e51",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
     "e5e567406476306ea06984d885be028d",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
@@ -76,9 +76,11 @@
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
     "84f988ff75f4d5b8f2a5d572ee8c51cc",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
-    "3faf63ba4dac90b949c96a3e382ba81b",
+    "1c64f7187357d7561c984ec57d251e74",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp":
     "0c8c050841543da0d7faca2559212aa8",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp":
+    "93649f61036c2fa4739988ad71f413df",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
     "1743adf55153edf91363fa7b4350d859",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/PushConstantColor.frag":

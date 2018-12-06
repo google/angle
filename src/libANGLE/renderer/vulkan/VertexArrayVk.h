@@ -103,10 +103,14 @@ class VertexArrayVk : public VertexArrayImpl
                                   size_t indexCount,
                                   const void *sourcePointer,
                                   vk::DynamicBuffer *dynamicBuffer);
-    angle::Result convertVertexBuffer(ContextVk *contextVk,
-                                      BufferVk *srcBuffer,
-                                      const gl::VertexBinding &binding,
-                                      size_t attribIndex);
+    angle::Result convertVertexBufferGpu(ContextVk *contextVk,
+                                         BufferVk *srcBuffer,
+                                         const gl::VertexBinding &binding,
+                                         size_t attribIndex);
+    angle::Result convertVertexBufferCpu(ContextVk *contextVk,
+                                         BufferVk *srcBuffer,
+                                         const gl::VertexBinding &binding,
+                                         size_t attribIndex);
     void ensureConversionReleased(RendererVk *renderer, size_t attribIndex);
 
     angle::Result syncDirtyAttrib(ContextVk *contextVk,

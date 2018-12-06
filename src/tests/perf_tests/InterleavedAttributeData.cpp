@@ -185,7 +185,6 @@ void InterleavedAttributeDataBenchmark::drawBenchmark()
 
             // Then draw the colored pointsprites
             glDrawArrays(GL_POINTS, 0, GetParam().numSprites);
-            glFlush();
 
             glDisableVertexAttribArray(positionLocation);
             glDisableVertexAttribArray(colorLocation);

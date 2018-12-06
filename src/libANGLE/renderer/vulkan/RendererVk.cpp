@@ -791,6 +791,13 @@ void RendererVk::initFeatures()
     {
         mFeatures.clampPointSize = true;
     }
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // Work around ineffective compute-graphics barrier in android.
+    // TODO(syoussefi): Figure out which vendors and driver versions are affected.
+    // http://anglebug.com/3009
+    mFeatures.flushAfterVertexConversion = true;
+#endif
 }
 
 void RendererVk::initPipelineCacheVkKey()
@@ -1040,7 +1047,8 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
     // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done on
     // swap() though, and there could be multiple submissions in between (through glFlush() calls),
-    // so the limit is larger than the expected number of images.
+    // so the limit is larger than the expected number of images.  The
+    // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
     ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
 
     // Increment the queue serial. If this fails, we should restart ANGLE.

@@ -164,7 +164,7 @@ class RendererVk : angle::NonCopyable
     vk::ShaderLibrary &getShaderLibrary() { return mShaderLibrary; }
     angle::Result getFullScreenClearShaderProgram(vk::Context *context,
                                                   vk::ShaderProgramHelper **programOut);
-    DispatchUtilsVk *getDispatchUtils() { return &mDispatchUtils; }
+    DispatchUtilsVk &getDispatchUtils() { return mDispatchUtils; }
     const angle::FeaturesVk &getFeatures() const { return mFeatures; }
 
     angle::Result getTimestamp(vk::Context *context, uint64_t *timestampOut);
