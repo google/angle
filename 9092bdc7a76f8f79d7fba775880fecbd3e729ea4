@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea2ae997_3930b760",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-07T17:51:06Z",
+      "side": 1,
+      "message": "Missing \"Bug: angleproject\" here.",
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
