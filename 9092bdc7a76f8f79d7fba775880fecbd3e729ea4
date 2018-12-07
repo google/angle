@@ -16,6 +16,52 @@
       "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5c359fa_e97ccff1",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-07T18:14:51Z",
+      "side": 1,
+      "message": "Here you call getUseANGLE without GPU, so I think this is where the crash is coming from.\nThe best solution is to remove this API ASAP (and to have a specialized ScenarioDevice class with exactly one GPU).",
+      "range": {
+        "startLine": 858,
+        "startChar": 0,
+        "endLine": 858,
+        "endChar": 39
+      },
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7a15d43_e9a92a70",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-07T18:14:51Z",
+      "side": 1,
+      "message": "Here you always add GPU to scenario, so mGpuList.front() can\u0027t crash.",
+      "range": {
+        "startLine": 955,
+        "startChar": 0,
+        "endLine": 959,
+        "endChar": 44
+      },
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
