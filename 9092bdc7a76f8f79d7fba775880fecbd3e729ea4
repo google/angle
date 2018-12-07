@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "335e380d_5bfde6dd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-12-07T18:43:58Z",
+      "side": 1,
+      "message": "Is there a way to retroactively add this?",
+      "parentUuid": "ea2ae997_3930b760",
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e5c359fa_e97ccff1",
         "filename": "src/feature_support_util/feature_support_util.cpp",
         "patchSetId": 6
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "bd12f154_66d83597",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-12-07T18:43:58Z",
+      "side": 1,
+      "message": "You are correct.  We\u0027re trying to land the new ANGLE APK (with the version-2 API) in the Android tree.  I believe that Cody said that unrelated build issues that were preventing all of the APK \"architectures\" from building, which prevents us from landing it.  Once we land the new APK, we can remove this version-1 API.  I already have the CL, but haven\u0027t started the review yet since the version-2 API hasn\u0027t landed in Android yet.",
+      "parentUuid": "e5c359fa_e97ccff1",
+      "range": {
+        "startLine": 858,
+        "startChar": 0,
+        "endLine": 858,
+        "endChar": 39
+      },
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7a15d43_e9a92a70",
         "filename": "src/feature_support_util/feature_support_util.cpp",
         "patchSetId": 6
@@ -62,6 +104,30 @@
       "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3171bbe_e57d63ae",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-12-07T18:43:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a7a15d43_e9a92a70",
+      "range": {
+        "startLine": 955,
+        "startChar": 0,
+        "endLine": 959,
+        "endChar": 44
+      },
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
