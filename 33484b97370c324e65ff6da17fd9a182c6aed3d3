@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "327b4583_43096e13",
+        "filename": "src/feature_support_util/feature_support_util_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-07T19:04:50Z",
+      "side": 1,
+      "message": "Looks fishy",
+      "range": {
+        "startLine": 128,
+        "startChar": 93,
+        "endLine": 128,
+        "endChar": 94
+      },
+      "revId": "33484b97370c324e65ff6da17fd9a182c6aed3d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
