@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "60bbb1db_539ac963",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-07T19:06:45Z",
+      "side": 1,
+      "message": "Unfortunately not, short of reverting and relanding, but it\u0027s not that important.\nWe should just pay more attention in the future (or maybe add a presubmit rule?).",
+      "parentUuid": "335e380d_5bfde6dd",
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e5c359fa_e97ccff1",
         "filename": "src/feature_support_util/feature_support_util.cpp",
         "patchSetId": 6
