@@ -2037,6 +2037,37 @@ TEST_F(CollectVertexVariablesTest, StaticallyUsedButNotActiveInstancedInterfaceB
     EXPECT_FALSE(field.active);
 }
 
+// Test an interface block member variable that is statically used. The variable is used to call
+// array length method.
+TEST_F(CollectVertexVariablesTest, StaticallyUsedInArrayLengthOp)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        uniform b
+        {
+            float f[3];
+        };
+        void main() {
+            if (f.length() > 1)
+            {
+                gl_Position = vec4(1.0);
+            }
+            else
+            {
+                gl_Position = vec4(0.0);
+            }
+        })";
+
+    compile(shaderString);
+
+    const std::vector<InterfaceBlock> &interfaceBlocks = mTranslator->getInterfaceBlocks();
+    ASSERT_EQ(1u, interfaceBlocks.size());
+    const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
+
+    EXPECT_EQ("b", interfaceBlock.name);
+    EXPECT_TRUE(interfaceBlock.staticUse);
+}
+
 // Test a varying that is declared invariant but not otherwise used.
 TEST_F(CollectVertexVariablesTest, VaryingOnlyDeclaredInvariant)
 {

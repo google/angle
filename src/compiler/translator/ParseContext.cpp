@@ -5848,6 +5848,7 @@ TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc
     else
     {
         TIntermUnary *node = new TIntermUnary(EOpArrayLength, thisNode, nullptr);
+        markStaticReadIfSymbol(thisNode);
         node->setLine(loc);
         return node->fold(mDiagnostics);
     }
