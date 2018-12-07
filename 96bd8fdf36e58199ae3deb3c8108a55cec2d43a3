@@ -22,6 +22,30 @@
       "revId": "96bd8fdf36e58199ae3deb3c8108a55cec2d43a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51e46f6b_ef890aa8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-12-07T23:34:53Z",
+      "side": 1,
+      "message": "Yes that\u0027s a bug fix.\n\nThis is already merged, so removing that function would have to wait for another CL!",
+      "parentUuid": "b997ad6e_bbaf5daa",
+      "range": {
+        "startLine": 860,
+        "startChar": 18,
+        "endLine": 860,
+        "endChar": 45
+      },
+      "revId": "96bd8fdf36e58199ae3deb3c8108a55cec2d43a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
