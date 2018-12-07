@@ -328,7 +328,7 @@ def compile_variation(shader_file, shader_basename, flags, enums,
         if result != 0:
             raise Exception("Error compiling " + shader_file)
 
-        with open(output_path, 'a') as incfile:
+        with open(output_path, 'ab') as incfile:
             shader_text = subprocess.check_output(glslang_preprocessor_output_args)
 
             incfile.write('\n\n#if 0  // Generated from:\n')
