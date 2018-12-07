@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b997ad6e_bbaf5daa",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-07T17:10:03Z",
+      "side": 1,
+      "message": "Reading the review comments, using hasTextureFormatFeatureBits instead of hasLinearTextureFormatFeatureBits here is a bug fix?\nThen, looks like hasLinearTextureFormatFeatureBits is unused otherwise, maybe it can be removed?",
+      "range": {
+        "startLine": 860,
+        "startChar": 18,
+        "endLine": 860,
+        "endChar": 45
+      },
+      "revId": "96bd8fdf36e58199ae3deb3c8108a55cec2d43a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
