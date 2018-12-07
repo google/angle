@@ -1286,7 +1286,7 @@ void ContextVk::invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask)
 {
     if (dirtyMask.any())
     {
-        mDirtyDefaultAttribsMask = dirtyMask;
+        mDirtyDefaultAttribsMask |= dirtyMask;
         mDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
     }
 }
