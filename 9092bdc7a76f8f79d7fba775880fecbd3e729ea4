@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "7eab821c_93573901",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-12-07T21:55:55Z",
+      "side": 1,
+      "message": "I\u0027m sure I\u0027ll get used to it, but a presubmit rule would be good.",
+      "parentUuid": "60bbb1db_539ac963",
+      "revId": "9092bdc7a76f8f79d7fba775880fecbd3e729ea4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5c359fa_e97ccff1",
         "filename": "src/feature_support_util/feature_support_util.cpp",
         "patchSetId": 6
