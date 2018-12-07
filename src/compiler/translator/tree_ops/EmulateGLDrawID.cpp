@@ -29,21 +29,22 @@ constexpr const ImmutableString kEmulatedGLDrawIDName("angle_DrawID");
 class FindGLDrawIDTraverser : public TIntermTraverser
 {
   public:
-    FindGLDrawIDTraverser() : TIntermTraverser(true, false, false), mFound(false) {}
+    FindGLDrawIDTraverser() : TIntermTraverser(true, false, false), mVariable(nullptr) {}
 
-    bool isGLDrawIDUsed() const { return mFound; }
+    const TVariable *getGLDrawIDBuiltinVariable() { return mVariable; }
 
   protected:
     void visitSymbol(TIntermSymbol *node) override
     {
-        if (&node->variable() == BuiltInVariable::gl_DrawID())
+        if (&node->variable() == BuiltInVariable::gl_DrawID() ||
+            &node->variable() == BuiltInVariable::gl_DrawIDESSL1())
         {
-            mFound = true;
+            mVariable = &node->variable();
         }
     }
 
   private:
-    bool mFound;
+    const TVariable *mVariable;
 };
 
 }  // namespace
@@ -55,7 +56,8 @@ void EmulateGLDrawID(TIntermBlock *root,
 {
     FindGLDrawIDTraverser traverser;
     root->traverse(&traverser);
-    if (traverser.isGLDrawIDUsed())
+    const TVariable *builtInVariable = traverser.getGLDrawIDBuiltinVariable();
+    if (builtInVariable)
     {
         const TType *type = StaticType::Get<EbtInt, EbpHigh, EvqUniform, 1, 1>();
         const TVariable *drawID =
@@ -69,7 +71,7 @@ void EmulateGLDrawID(TIntermBlock *root,
             uniform.mappedName = kEmulatedGLDrawIDName.data();
             uniform.type       = GLVariableType(*type);
             uniform.precision  = GLVariablePrecision(*type);
-            uniform.staticUse  = symbolTable->isStaticallyUsed(*BuiltInVariable::gl_DrawID());
+            uniform.staticUse  = symbolTable->isStaticallyUsed(*builtInVariable);
             uniform.active     = true;
             uniform.binding    = type->getLayoutQualifier().binding;
             uniform.location   = type->getLayoutQualifier().location;
@@ -80,7 +82,7 @@ void EmulateGLDrawID(TIntermBlock *root,
         }
 
         DeclareGlobalVariable(root, drawID);
-        ReplaceVariable(root, BuiltInVariable::gl_DrawID(), drawID);
+        ReplaceVariable(root, builtInVariable, drawID);
     }
 }
 

@@ -52,6 +52,21 @@ TEST_F(EmulateGLDrawIDTest, RequiresEmulation)
         "extension is not supported");
 }
 
+// Check that compiling with emulation with gl_DrawID works with different shader versions
+TEST_F(EmulateGLDrawIDTest, CheckCompile)
+{
+    const std::string shaderString =
+        "#extension GL_ANGLE_multi_draw : require\n"
+        "void main() {\n"
+        "   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    compile(shaderString, SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_DRAW_ID);
+    compile("#version 100\n" + shaderString, SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_DRAW_ID);
+    compile("#version 300 es\n" + shaderString,
+            SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_DRAW_ID);
+}
+
 // Check that gl_DrawID is properly emulated
 TEST_F(EmulateGLDrawIDTest, EmulatesUniform)
 {
