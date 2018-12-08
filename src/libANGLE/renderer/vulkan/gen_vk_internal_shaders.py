@@ -253,11 +253,19 @@ shaders_dir = os.path.join('shaders', 'src')
 if not os.path.isdir(shaders_dir):
     raise Exception("Could not find shaders directory")
 
+print_inputs = len(sys.argv) == 2 and sys.argv[1] == 'inputs'
+print_outputs = len(sys.argv) == 2 and sys.argv[1] == 'outputs'
+# If an argument X is given that's not inputs or outputs, compile shaders that match *X*.
+# This is useful in development to build only the shader of interest.
+shader_files_to_compile = os.listdir(shaders_dir)
+if not (print_inputs or print_outputs or len(sys.argv) < 2):
+    shader_files_to_compile = [f for f in shader_files_to_compile if f.find(sys.argv[1]) != -1]
+
 valid_extensions = ['.vert', '.frag', '.comp']
 input_shaders = sorted([os.path.join(shaders_dir, shader)
     for shader in os.listdir(shaders_dir)
     if any([os.path.splitext(shader)[1] == ext for ext in valid_extensions])])
-if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
+if print_inputs:
     print(",".join(input_shaders))
     sys.exit(0)
 
@@ -344,8 +352,6 @@ class ShaderAndVariations:
 
 input_shaders_and_variations = [ShaderAndVariations(shader_file) for shader_file in input_shaders]
 
-print_outputs = len(sys.argv) == 2 and sys.argv[1] == 'outputs'
-
 for shader_and_variation in input_shaders_and_variations:
     shader_file = shader_and_variation.shader_file
     flags = shader_and_variation.flags
@@ -360,11 +366,12 @@ for shader_and_variation in input_shaders_and_variations:
     output_name = os.path.basename(shader_file)
 
     while True:
+        do_compile = not print_outputs and output_name in shader_files_to_compile
         # a number where each bit says whether a flag is active or not,
         # with values in [0, 2^len(flags))
         for flags_active in range(1 << len(flags)):
             compile_variation(shader_file, output_name, flags, enums,
-                    flags_active, enum_indices, flags_bits, enum_bits, not print_outputs)
+                    flags_active, enum_indices, flags_bits, enum_bits, do_compile)
 
         if not next_enum_variation(enums, enum_indices):
             break
