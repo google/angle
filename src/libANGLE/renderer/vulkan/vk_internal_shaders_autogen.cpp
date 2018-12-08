@@ -45,7 +45,7 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000E.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000F.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/PushConstantColor.frag.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000000.inc"
 
 // This is SPIR-V binary blob and the size.
 struct ShaderBlob
@@ -89,8 +89,8 @@ constexpr ShaderBlob kConvertVertex_comp_shaders[] = {
 constexpr ShaderBlob kFullScreenQuad_vert_shaders[] = {
     {kFullScreenQuad_vert_00000000, sizeof(kFullScreenQuad_vert_00000000)},
 };
-constexpr ShaderBlob kPushConstantColor_frag_shaders[] = {
-    {kPushConstantColor_frag_00000000, sizeof(kPushConstantColor_frag_00000000)},
+constexpr ShaderBlob kImageClear_frag_shaders[] = {
+    {kImageClear_frag_00000000, sizeof(kImageClear_frag_00000000)},
 };
 
 angle::Result GetShader(Context *context,
@@ -135,7 +135,7 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
-    for (RefCounted<ShaderAndSerial> &shader : mPushConstantColor_frag_shaders)
+    for (RefCounted<ShaderAndSerial> &shader : mImageClear_frag_shaders)
     {
         shader.get().destroy(device);
     }
@@ -165,12 +165,12 @@ angle::Result ShaderLibrary::getFullScreenQuad_vert(Context *context,
                      ArraySize(kFullScreenQuad_vert_shaders), shaderFlags, shaderOut);
 }
 
-angle::Result ShaderLibrary::getPushConstantColor_frag(Context *context,
-                                                       uint32_t shaderFlags,
-                                                       RefCounted<ShaderAndSerial> **shaderOut)
+angle::Result ShaderLibrary::getImageClear_frag(Context *context,
+                                                uint32_t shaderFlags,
+                                                RefCounted<ShaderAndSerial> **shaderOut)
 {
-    return GetShader(context, mPushConstantColor_frag_shaders, kPushConstantColor_frag_shaders,
-                     ArraySize(kPushConstantColor_frag_shaders), shaderFlags, shaderOut);
+    return GetShader(context, mImageClear_frag_shaders, kImageClear_frag_shaders,
+                     ArraySize(kImageClear_frag_shaders), shaderFlags, shaderOut);
 }
 
 }  // namespace vk

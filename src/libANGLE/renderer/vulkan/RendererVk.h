@@ -17,8 +17,8 @@
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
-#include "libANGLE/renderer/vulkan/DispatchUtilsVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
+#include "libANGLE/renderer/vulkan/UtilsVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
@@ -162,9 +162,7 @@ class RendererVk : angle::NonCopyable
     Serial issueShaderSerial();
 
     vk::ShaderLibrary &getShaderLibrary() { return mShaderLibrary; }
-    angle::Result getFullScreenClearShaderProgram(vk::Context *context,
-                                                  vk::ShaderProgramHelper **programOut);
-    DispatchUtilsVk &getDispatchUtils() { return mDispatchUtils; }
+    UtilsVk &getUtils() { return mUtils; }
     const angle::FeaturesVk &getFeatures() const
     {
         ASSERT(mFeaturesInitialized);
@@ -320,8 +318,7 @@ class RendererVk : angle::NonCopyable
 
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;
-    vk::ShaderProgramHelper mFullScreenClearShaderProgram;
-    DispatchUtilsVk mDispatchUtils;
+    UtilsVk mUtils;
 
     // The GpuEventQuery struct holds together a timestamp query and enough data to create a
     // trace event based on that. Use traceGpuEvent to insert such queries.  They will be readback

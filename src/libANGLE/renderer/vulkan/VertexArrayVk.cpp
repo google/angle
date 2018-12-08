@@ -222,7 +222,7 @@ angle::Result VertexArrayVk::convertVertexBufferGpu(ContextVk *contextVk,
     mCurrentArrayBuffers[attribIndex] =
         mCurrentArrayBufferConversion[attribIndex].getCurrentBuffer();
 
-    DispatchUtilsVk::ConvertVertexParameters params;
+    UtilsVk::ConvertVertexParameters params;
     params.vertexCount = numVertices;
     params.srcFormat   = &srcFormat;
     params.destFormat  = &destFormat;
@@ -230,8 +230,8 @@ angle::Result VertexArrayVk::convertVertexBufferGpu(ContextVk *contextVk,
     params.srcOffset   = binding.getOffset();
     params.destOffset  = static_cast<size_t>(mCurrentArrayBufferOffsets[attribIndex]);
 
-    ANGLE_TRY(renderer->getDispatchUtils().convertVertexBuffer(
-        contextVk, mCurrentArrayBuffers[attribIndex], &srcBuffer->getBuffer(), params));
+    ANGLE_TRY(renderer->getUtils().convertVertexBuffer(contextVk, mCurrentArrayBuffers[attribIndex],
+                                                       &srcBuffer->getBuffer(), params));
 
     mCurrentArrayBufferHandles[attribIndex] =
         mCurrentArrayBuffers[attribIndex]->getBuffer().getHandle();
@@ -670,7 +670,7 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
         // Copy relevant section of the source into destination at allocated offset.  Note that the
         // offset returned by allocate() above is in bytes, while our allocated array is of
         // GLushorts.
-        DispatchUtilsVk::CopyParameters params = {};
+        UtilsVk::CopyParameters params = {};
         params.destOffset =
             static_cast<size_t>(mCurrentElementArrayBufferOffset) / sizeof(GLushort);
         params.srcOffset = offsetIntoSrcData;
@@ -679,7 +679,7 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
         // Note: this is a copy, which implicitly converts between formats.  Once support for
         // primitive restart is added, a specialized shader is likely needed to special case 0xFF ->
         // 0xFFFF.
-        ANGLE_TRY(renderer->getDispatchUtils().copyBuffer(contextVk, dest, src, params));
+        ANGLE_TRY(renderer->getUtils().copyBuffer(contextVk, dest, src, params));
     }
     else
     {

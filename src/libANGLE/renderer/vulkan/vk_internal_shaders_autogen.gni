@@ -38,5 +38,5 @@ angle_vulkan_internal_shaders = [
   "shaders/gen/ConvertVertex.comp.0000000E.inc",
   "shaders/gen/ConvertVertex.comp.0000000F.inc",
   "shaders/gen/FullScreenQuad.vert.00000000.inc",
-  "shaders/gen/PushConstantColor.frag.00000000.inc",
+  "shaders/gen/ImageClear.frag.00000000.inc",
 ]

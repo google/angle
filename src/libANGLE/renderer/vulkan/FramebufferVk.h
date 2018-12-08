@@ -103,7 +103,7 @@ class FramebufferVk : public FramebufferImpl
 
     const gl::Extents &getReadImageExtents() const;
 
-    gl::DrawBufferMask getEmulatedAlphaAttachmentMask();
+    const gl::DrawBufferMask &getEmulatedAlphaAttachmentMask() const;
     RenderTargetVk *getColorReadRenderTarget() const;
 
     // This will clear the current write operation if it is complete.

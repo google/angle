@@ -206,7 +206,7 @@ class RecordableGraphResource : public CommandGraphResource
     angle::Result recordCommands(Context *context, CommandBuffer **commandBufferOut);
 
     // Begins a command buffer on the current graph node for in-RenderPass rendering.
-    // Currently only called from FramebufferVk::getCommandBufferForDraw.
+    // Currently only called from FramebufferVk::startNewRenderPass.
     angle::Result beginRenderPass(Context *context,
                                   const Framebuffer &framebuffer,
                                   const gl::Rectangle &renderArea,

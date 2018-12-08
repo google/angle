@@ -65,8 +65,8 @@ enum Conversion
 namespace FullScreenQuad_vert
 {}  // namespace FullScreenQuad_vert
 
-namespace PushConstantColor_frag
-{}  // namespace PushConstantColor_frag
+namespace ImageClear_frag
+{}  // namespace ImageClear_frag
 
 }  // namespace InternalShader
 
@@ -87,9 +87,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getFullScreenQuad_vert(Context *context,
                                          uint32_t shaderFlags,
                                          RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getPushConstantColor_frag(Context *context,
-                                            uint32_t shaderFlags,
-                                            RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getImageClear_frag(Context *context,
+                                     uint32_t shaderFlags,
+                                     RefCounted<ShaderAndSerial> **shaderOut);
 
   private:
     RefCounted<ShaderAndSerial>
@@ -100,7 +100,7 @@ class ShaderLibrary final : angle::NonCopyable
         mConvertVertex_comp_shaders[InternalShader::ConvertVertex_comp::kFlagsMask |
                                     InternalShader::ConvertVertex_comp::kConversionMask];
     RefCounted<ShaderAndSerial> mFullScreenQuad_vert_shaders[1];
-    RefCounted<ShaderAndSerial> mPushConstantColor_frag_shaders[1];
+    RefCounted<ShaderAndSerial> mImageClear_frag_shaders[1];
 };
 }  // namespace vk
 }  // namespace rx

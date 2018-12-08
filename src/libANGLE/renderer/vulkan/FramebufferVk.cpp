@@ -287,8 +287,8 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         VkClearColorValue modifiedClearColorValue = clearColorValue;
         RenderTargetVk *colorRenderTarget         = colorRenderTargets[colorIndex];
 
-        // Its possible we're clearing a render target that has no alpha channel but we represent it
-        // with a texture that has one. We must not affect its alpha channel no matter what the
+        // It's possible we're clearing a render target that has no alpha channel but we represent
+        // it with a texture that has one. We must not affect its alpha channel no matter what the
         // clear value is in that case.
         if (mEmulatedAlphaAttachmentMask[colorIndex])
         {
@@ -1002,78 +1002,26 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    vk::ShaderProgramHelper *fullScreenClear = nullptr;
-    ANGLE_TRY(renderer->getFullScreenClearShaderProgram(contextVk, &fullScreenClear));
-
-    // Trigger a new command node to ensure overlapping writes happen sequentially.
-    mFramebuffer.finishCurrentCommands(renderer);
-
-    // The shader uses a simple pipeline layout with a push constant range.
-    vk::PipelineLayoutDesc pipelineLayoutDesc;
-    pipelineLayoutDesc.updatePushConstantRange(gl::ShaderType::Fragment, 0,
-                                               sizeof(VkClearColorValue));
-
-    // The shader does not use any descriptor sets.
-    vk::DescriptorSetLayoutPointerArray descriptorSetLayouts;
-
-    vk::BindingPointer<vk::PipelineLayout> pipelineLayout;
-    ANGLE_TRY(renderer->getPipelineLayout(contextVk, pipelineLayoutDesc, descriptorSetLayouts,
-                                          &pipelineLayout));
-
-    vk::RecordingMode recordingMode = vk::RecordingMode::Start;
-    vk::CommandBuffer *drawCommands = nullptr;
-    ANGLE_TRY(getCommandBufferForDraw(contextVk, &drawCommands, &recordingMode));
-
-    const gl::Rectangle &renderArea = mFramebuffer.getRenderPassRenderArea();
-    bool invertViewport             = contextVk->isViewportFlipEnabledForDrawFBO();
-
-    // This pipeline desc could be cached.
-    vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults();
-    pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
-    pipelineDesc.updateRenderPassDesc(getRenderPassDesc());
-
-    vk::PipelineAndSerial *pipeline = nullptr;
-    ANGLE_TRY(fullScreenClear->getGraphicsPipeline(contextVk, pipelineLayout.get(), pipelineDesc,
-                                                   gl::AttributesMask(), &pipeline));
-    pipeline->updateSerial(renderer->getCurrentQueueSerial());
-
-    vk::CommandBuffer *writeCommands = nullptr;
-    ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &writeCommands));
-
-    // If the format of the framebuffer does not have an alpha channel, we need to make sure we does
+    // If the format of the framebuffer does not have an alpha channel, we need to make sure we do
     // not affect the alpha channel of the type we're using to emulate the format.
     // TODO(jmadill): Implement EXT_draw_buffers http://anglebug.com/2394
     RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[0];
     ASSERT(renderTarget);
 
-    const vk::Format &imageFormat     = renderTarget->getImageFormat();
-    VkClearColorValue clearColorValue = contextVk->getClearColorValue().color;
+    UtilsVk::ClearImageParameters params = {};
+    params.colorMaskFlags                = colorMaskFlags;
+    params.alphaMask                     = &getEmulatedAlphaAttachmentMask();
+    params.renderPassDesc                = &getRenderPassDesc();
+
+    const vk::Format &imageFormat = renderTarget->getImageFormat();
+    params.clearValue             = contextVk->getClearColorValue().color;
     bool overrideAlphaWithOne =
         imageFormat.textureFormat().alphaBits > 0 && imageFormat.angleFormat().alphaBits == 0;
-    clearColorValue.float32[3] = overrideAlphaWithOne ? 1.0f : clearColorValue.float32[3];
+    params.clearValue.float32[3] = overrideAlphaWithOne ? 1.0f : params.clearValue.float32[3];
 
-    drawCommands->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_FRAGMENT_BIT, 0,
-                                sizeof(VkClearColorValue), clearColorValue.float32);
+    params.renderAreaHeight = mState.getDimensions().height;
 
-    // TODO(jmadill): Masked combined color and depth/stencil clear. http://anglebug.com/2455
-    // Any active queries submitted by the user should also be paused here.
-    drawCommands->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->get());
-
-    GLint renderAreaHeight = mState.getDimensions().height;
-
-    VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, invertViewport, renderAreaHeight, &viewport);
-    drawCommands->setViewport(0, 1, &viewport);
-
-    VkRect2D scissor;
-    const gl::State &glState = contextVk->getGLState();
-    gl_vk::GetScissor(glState, invertViewport, renderArea, &scissor);
-    drawCommands->setScissor(0, 1, &scissor);
-
-    drawCommands->draw(6, 1, 0, 0);
-
-    return angle::Result::Continue;
+    return renderer->getUtils().clearImage(contextVk, this, params);
 }
 
 angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
@@ -1149,7 +1097,7 @@ void FramebufferVk::updateActiveColorMasks(size_t colorIndex, bool r, bool g, bo
     mActiveColorComponentMasksForClear[3].set(colorIndex, a);
 }
 
-gl::DrawBufferMask FramebufferVk::getEmulatedAlphaAttachmentMask()
+const gl::DrawBufferMask &FramebufferVk::getEmulatedAlphaAttachmentMask() const
 {
     return mEmulatedAlphaAttachmentMask;
 }

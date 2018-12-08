@@ -3,9 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// DispatchUtilsVk.h:
-//    Defines the DispatchUtilsVk class, a helper for various internal dispatch utilities such as
-//    buffer clear and copy, texture mip map generation, etc.
+// UtilsVk.h:
+//    Defines the UtilsVk class, a helper for various internal draw/dispatch utilities such as
+//    buffer clear and copy, image clear and copy, texture mip map generation, etc.
 //
 //    - Buffer clear: Implemented, but no current users
 //    - Buffer copy:
@@ -13,11 +13,13 @@
 //    - Convert vertex attribute:
 //      * Used by VertexArrayVk::convertVertexBuffer() to convert vertex attributes from unsupported
 //        formats to their fallbacks.
+//    - Image clear: Used by FramebufferVk::clearWithDraw().
+//    - Image copy: Not yet implemented
 //    - Mipmap generation: Not yet implemented
 //
 
-#ifndef LIBANGLE_RENDERER_VULKAN_DISPATCHUTILSVK_H_
-#define LIBANGLE_RENDERER_VULKAN_DISPATCHUTILSVK_H_
+#ifndef LIBANGLE_RENDERER_VULKAN_UTILSVK_H_
+#define LIBANGLE_RENDERER_VULKAN_UTILSVK_H_
 
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -25,11 +27,11 @@
 
 namespace rx
 {
-class DispatchUtilsVk : angle::NonCopyable
+class UtilsVk : angle::NonCopyable
 {
   public:
-    DispatchUtilsVk();
-    ~DispatchUtilsVk();
+    UtilsVk();
+    ~UtilsVk();
 
     void destroy(VkDevice device);
 
@@ -57,6 +59,15 @@ class DispatchUtilsVk : angle::NonCopyable
         size_t destOffset;
     };
 
+    struct ClearImageParameters
+    {
+        VkClearColorValue clearValue;
+        VkColorComponentFlags colorMaskFlags;
+        GLint renderAreaHeight;
+        const gl::DrawBufferMask *alphaMask;
+        const vk::RenderPassDesc *renderPassDesc;
+    };
+
     angle::Result clearBuffer(vk::Context *context,
                               vk::BufferHelper *dest,
                               const ClearParameters &params);
@@ -68,6 +79,13 @@ class DispatchUtilsVk : angle::NonCopyable
                                       vk::BufferHelper *dest,
                                       vk::BufferHelper *src,
                                       const ConvertVertexParameters &params);
+
+    // Note: this function takes a FramebufferVk instead of ImageHelper, as that's the only user,
+    // which avoids recreating a framebuffer.  An overload taking ImageHelper can be added when
+    // necessary.
+    angle::Result clearImage(ContextVk *contextVk,
+                             FramebufferVk *framebuffer,
+                             const ClearImageParameters &params);
 
   private:
     struct BufferUtilsShaderParams
@@ -97,39 +115,42 @@ class DispatchUtilsVk : angle::NonCopyable
         uint32_t Ed             = 0;
     };
 
+    struct ImageClearShaderParams
+    {
+        // Structure matching PushConstants in ImageClear.frag
+        VkClearColorValue clearValue = {};
+    };
+
     // Functions implemented by the class:
     enum class Function
     {
-        BufferClear         = 0,
-        BufferCopy          = 1,
-        ConvertVertexBuffer = 2,
+        // Functions implemented in graphics
+        ImageClear = 0,
 
-        InvalidEnum = 3,
-        EnumCount   = 3,
+        // Functions implemented in compute
+        ComputeStartIndex   = 1,  // Special value to separate draw and dispatch functions.
+        BufferClear         = 1,
+        BufferCopy          = 2,
+        ConvertVertexBuffer = 3,
+
+        InvalidEnum = 4,
+        EnumCount   = 4,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
-    // the dispatch call. The possible values of `flags` comes from
-    // vk::InternalShader::* defined in vk_internal_shaders_autogen.h
-    angle::Result setupProgramCommon(vk::Context *context,
-                                     Function function,
-                                     vk::RefCounted<vk::ShaderAndSerial> *shader,
-                                     vk::ShaderProgramHelper *program,
-                                     const VkDescriptorSet descriptorSet,
-                                     const void *pushConstants,
-                                     size_t pushConstantsSize,
-                                     vk::CommandBuffer *commandBuffer);
-
-    using GetShader = angle::Result (vk::ShaderLibrary::*)(vk::Context *,
-                                                           uint32_t,
-                                                           vk::RefCounted<vk::ShaderAndSerial> **);
-
-    template <GetShader getShader, Function function, typename ShaderParams>
+    // the draw/dispatch call.  If function >= ComputeStartIndex, fsCsShader is expected to be a
+    // compute shader, vsShader and pipelineDesc should be nullptr, and this will set up a dispatch
+    // call. Otherwise fsCsShader is expected to be a fragment shader and this will set up a draw
+    // call.
     angle::Result setupProgram(vk::Context *context,
+                               Function function,
+                               vk::RefCounted<vk::ShaderAndSerial> *fsCsShader,
+                               vk::RefCounted<vk::ShaderAndSerial> *vsShader,
                                vk::ShaderProgramHelper *program,
-                               uint32_t flags,
-                               const VkDescriptorSet &descriptorSet,
-                               const ShaderParams &params,
+                               const vk::GraphicsPipelineDesc *pipelineDesc,
+                               const VkDescriptorSet descriptorSet,
+                               const void *pushConstants,
+                               size_t pushConstantsSize,
                                vk::CommandBuffer *commandBuffer);
 
     // Initializes descriptor set layout, pipeline layout and descriptor pool corresponding to given
@@ -145,9 +166,10 @@ class DispatchUtilsVk : angle::NonCopyable
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.
-    angle::Result ensureBufferClearInitialized(vk::Context *context);
-    angle::Result ensureBufferCopyInitialized(vk::Context *context);
-    angle::Result ensureConvertVertexInitialized(vk::Context *context);
+    angle::Result ensureBufferClearResourcesInitialized(vk::Context *context);
+    angle::Result ensureBufferCopyResourcesInitialized(vk::Context *context);
+    angle::Result ensureConvertVertexResourcesInitialized(vk::Context *context);
+    angle::Result ensureImageClearResourcesInitialized(vk::Context *context);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
@@ -160,8 +182,9 @@ class DispatchUtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper
         mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kFlagsMask |
                                vk::InternalShader::ConvertVertex_comp::kConversionMask];
+    vk::ShaderProgramHelper mImageClearProgram;
 };
 
 }  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_VULKAN_DISPATCHUTILSVK_H_
+#endif  // LIBANGLE_RENDERER_VULKAN_UTILSVK_H_

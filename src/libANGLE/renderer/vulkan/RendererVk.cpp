@@ -344,12 +344,10 @@ void RendererVk::onDestroy(vk::Context *context)
         (void)finish(context);
     }
 
-    mDispatchUtils.destroy(mDevice);
+    mUtils.destroy(mDevice);
 
     mPipelineLayoutCache.destroy(mDevice);
     mDescriptorSetLayoutCache.destroy(mDevice);
-
-    mFullScreenClearShaderProgram.destroy(mDevice);
 
     mRenderPassCache.destroy(mDevice);
     mPipelineCache.destroy(mDevice);
@@ -1317,25 +1315,6 @@ const vk::Semaphore *RendererVk::getSubmitLastSignaledSemaphore(vk::Context *con
     mSubmitSemaphorePool.freeSemaphore(context, &mSubmitLastSignaledSemaphore);
 
     return semaphore;
-}
-
-angle::Result RendererVk::getFullScreenClearShaderProgram(vk::Context *context,
-                                                          vk::ShaderProgramHelper **programOut)
-{
-    if (!mFullScreenClearShaderProgram.valid())
-    {
-        vk::RefCounted<vk::ShaderAndSerial> *fullScreenQuad = nullptr;
-        ANGLE_TRY(mShaderLibrary.getFullScreenQuad_vert(context, 0, &fullScreenQuad));
-
-        vk::RefCounted<vk::ShaderAndSerial> *pushConstantColor = nullptr;
-        ANGLE_TRY(mShaderLibrary.getPushConstantColor_frag(context, 0, &pushConstantColor));
-
-        mFullScreenClearShaderProgram.setShader(gl::ShaderType::Vertex, fullScreenQuad);
-        mFullScreenClearShaderProgram.setShader(gl::ShaderType::Fragment, pushConstantColor);
-    }
-
-    *programOut = &mFullScreenClearShaderProgram;
-    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestampOut)
