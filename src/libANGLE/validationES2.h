@@ -45,6 +45,15 @@ ANGLE_INLINE bool ValidateBindBuffer(Context *context, BufferBinding target, GLu
 
     return true;
 }
+
+ANGLE_INLINE bool ValidateDrawElements(Context *context,
+                                       PrimitiveMode mode,
+                                       GLsizei count,
+                                       DrawElementsType type,
+                                       const void *indices)
+{
+    return ValidateDrawElementsCommon(context, mode, count, type, indices, 1);
+}
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES2_H_

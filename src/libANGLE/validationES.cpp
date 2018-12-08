@@ -2823,36 +2823,6 @@ bool ValidateDrawMode(Context *context, PrimitiveMode mode)
     return true;
 }
 
-bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
-{
-    if (!context->getStateCache().isValidDrawMode(mode))
-    {
-        return ValidateDrawMode(context, mode);
-    }
-
-    if (count < 0)
-    {
-        context->validationError(GL_INVALID_VALUE, kNegativeCount);
-        return false;
-    }
-
-    intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesError(context);
-    if (drawStatesError)
-    {
-        const char *errorMessage = reinterpret_cast<const char *>(drawStatesError);
-
-        // All errors from ValidateDrawStates should return INVALID_OPERATION except Framebuffer
-        // Incomplete.
-        GLenum errorCode =
-            (errorMessage == kDrawFramebufferIncomplete ? GL_INVALID_FRAMEBUFFER_OPERATION
-                                                        : GL_INVALID_OPERATION);
-        context->validationError(errorCode, errorMessage);
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateDrawArraysCommon(Context *context,
                               PrimitiveMode mode,
                               GLint first,
@@ -2865,9 +2835,8 @@ bool ValidateDrawArraysCommon(Context *context,
         return false;
     }
 
-    if (count < 0)
+    if (!ValidateDrawBase(context, mode, count))
     {
-        context->validationError(GL_INVALID_VALUE, kNegativeCount);
         return false;
     }
 
@@ -2888,25 +2857,6 @@ bool ValidateDrawArraysCommon(Context *context,
             context->validationError(GL_INVALID_OPERATION, kTransformFeedbackBufferTooSmall);
             return false;
         }
-    }
-
-    if (!context->getStateCache().isValidDrawMode(mode))
-    {
-        return ValidateDrawMode(context, mode);
-    }
-
-    intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesError(context);
-    if (drawStatesError)
-    {
-        const char *errorMessage = reinterpret_cast<const char *>(drawStatesError);
-
-        // All errors from ValidateDrawStates should return INVALID_OPERATION except Framebuffer
-        // Incomplete.
-        GLenum errorCode =
-            (errorMessage == kDrawFramebufferIncomplete ? GL_INVALID_FRAMEBUFFER_OPERATION
-                                                        : GL_INVALID_OPERATION);
-        context->validationError(errorCode, errorMessage);
-        return false;
     }
 
     // Check the computation of maxVertex doesn't overflow.
@@ -2967,6 +2917,7 @@ bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, DrawElements
         return false;
     }
 
+    // TODO(jmadill): Cache all of these into fast checks. http://anglebug.com/2966
     const State &state = context->getGLState();
 
     TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
@@ -2995,6 +2946,42 @@ bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, DrawElements
         }
     }
 
+    const VertexArray *vao     = state.getVertexArray();
+    Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
+
+    if (elementArrayBuffer)
+    {
+        if (context->getExtensions().webglCompatibility)
+        {
+            if (elementArrayBuffer->isBoundForTransformFeedbackAndOtherUse())
+            {
+                context->validationError(GL_INVALID_OPERATION,
+                                         kElementArrayBufferBoundForTransformFeedback);
+                return false;
+            }
+        }
+        else if (elementArrayBuffer->isMapped())
+        {
+            // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
+            // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the
+            // WebGL 2.0 API. https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
+            context->validationError(GL_INVALID_OPERATION, kBufferMapped);
+            return false;
+        }
+    }
+    else
+    {
+        // [WebGL 1.0] Section 6.2 No Client Side Arrays
+        // If an indexed draw command (drawElements) is called and no WebGLBuffer is bound to
+        // the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
+        if (!context->getGLState().areClientArraysEnabled() ||
+            context->getExtensions().webglCompatibility)
+        {
+            context->validationError(GL_INVALID_OPERATION, kMustHaveElementArrayBinding);
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -3006,15 +2993,16 @@ bool ValidateDrawElementsCommon(Context *context,
                                 GLsizei primcount)
 {
     if (!ValidateDrawElementsBase(context, mode, type))
+    {
         return false;
-
-    const State &state = context->getGLState();
+    }
 
     if (!ValidateDrawBase(context, mode, count))
     {
         return false;
     }
 
+    const State &state         = context->getGLState();
     const VertexArray *vao     = state.getVertexArray();
     Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
@@ -3040,111 +3028,79 @@ bool ValidateDrawElementsCommon(Context *context,
             context->validationError(GL_INVALID_VALUE, kNegativeOffset);
             return false;
         }
+    }
 
-        if (!elementArrayBuffer)
-        {
-            // [WebGL 1.0] Section 6.2 No Client Side Arrays
-            // If an indexed draw command (drawElements) is called and no WebGLBuffer is bound to
-            // the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
-            context->validationError(GL_INVALID_OPERATION, kMustHaveElementArrayBinding);
-            return false;
-        }
+    // Early exit.
+    if (count == 0)
+    {
+        return true;
+    }
 
-        if (elementArrayBuffer->isBoundForTransformFeedbackAndOtherUse())
+    if (!elementArrayBuffer)
+    {
+        if (!indices)
         {
-            context->validationError(GL_INVALID_OPERATION,
-                                     kElementArrayBufferBoundForTransformFeedback);
+            // This is an application error that would normally result in a crash, but we catch
+            // it and return an error
+            context->validationError(GL_INVALID_OPERATION, kElementArrayNoBufferOrPointer);
             return false;
         }
     }
     else
     {
-        if (elementArrayBuffer)
+        // The max possible type size is 8 and count is on 32 bits so doing the multiplication
+        // in a 64 bit integer is safe. Also we are guaranteed that here count > 0.
+        static_assert(std::is_same<int, GLsizei>::value, "GLsizei isn't the expected type");
+        constexpr uint64_t kMaxTypeSize = 8;
+        constexpr uint64_t kIntMax      = std::numeric_limits<int>::max();
+        constexpr uint64_t kUint64Max   = std::numeric_limits<uint64_t>::max();
+        static_assert(kIntMax < kUint64Max / kMaxTypeSize, "");
+
+        uint64_t typeSize     = typeBytes;
+        uint64_t elementCount = static_cast<uint64_t>(count);
+        ASSERT(elementCount > 0 && typeSize <= kMaxTypeSize);
+
+        // Doing the multiplication here is overflow-safe
+        uint64_t elementDataSizeNoOffset = typeSize * elementCount;
+
+        // The offset can be any value, check for overflows
+        uint64_t offset = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(indices));
+        if (elementDataSizeNoOffset > kUint64Max - offset)
         {
-            if (elementArrayBuffer->isMapped())
-            {
-                // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
-                // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the
-                // WebGL 2.0 API. https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
-                context->validationError(GL_INVALID_OPERATION, kBufferMapped);
-                return false;
-            }
+            context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
+            return false;
         }
-        else if (!context->getGLState().areClientArraysEnabled())
+
+        uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
+        if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
         {
-            context->validationError(GL_INVALID_OPERATION, kMustHaveElementArrayBinding);
+            context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
             return false;
         }
     }
 
-    if (count > 0)
+    if (!context->getExtensions().robustBufferAccessBehavior && primcount > 0)
     {
-        if (!elementArrayBuffer)
+        // Use the parameter buffer to retrieve and cache the index range.
+        IndexRange indexRange;
+        ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
+
+        // If we use an index greater than our maximum supported index range, return an error.
+        // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should
+        // always return an error if possible here.
+        if (static_cast<GLuint64>(indexRange.end) >= context->getCaps().maxElementIndex)
         {
-            if (!indices)
-            {
-                // This is an application error that would normally result in a crash, but we catch
-                // it and return an error
-                context->validationError(GL_INVALID_OPERATION, kElementArrayNoBufferOrPointer);
-                return false;
-            }
-        }
-        else
-        {
-            // The max possible type size is 8 and count is on 32 bits so doing the multiplication
-            // in a 64 bit integer is safe. Also we are guaranteed that here count > 0.
-            static_assert(std::is_same<int, GLsizei>::value, "GLsizei isn't the expected type");
-            constexpr uint64_t kMaxTypeSize = 8;
-            constexpr uint64_t kIntMax      = std::numeric_limits<int>::max();
-            constexpr uint64_t kUint64Max   = std::numeric_limits<uint64_t>::max();
-            static_assert(kIntMax < kUint64Max / kMaxTypeSize, "");
-
-            uint64_t typeSize     = typeBytes;
-            uint64_t elementCount = static_cast<uint64_t>(count);
-            ASSERT(elementCount > 0 && typeSize <= kMaxTypeSize);
-
-            // Doing the multiplication here is overflow-safe
-            uint64_t elementDataSizeNoOffset = typeSize * elementCount;
-
-            // The offset can be any value, check for overflows
-            uint64_t offset = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(indices));
-            if (elementDataSizeNoOffset > kUint64Max - offset)
-            {
-                context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
-                return false;
-            }
-
-            uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
-            if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
-            {
-                context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
-                return false;
-            }
+            context->validationError(GL_INVALID_OPERATION, kExceedsMaxElement);
+            return false;
         }
 
-        if (!context->getExtensions().robustBufferAccessBehavior && primcount > 0)
+        if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRange.end)))
         {
-            // Use the parameter buffer to retrieve and cache the index range.
-            IndexRange indexRange;
-            ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
-
-            // If we use an index greater than our maximum supported index range, return an error.
-            // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should
-            // always return an error if possible here.
-            if (static_cast<GLuint64>(indexRange.end) >= context->getCaps().maxElementIndex)
-            {
-                context->validationError(GL_INVALID_OPERATION, kExceedsMaxElement);
-                return false;
-            }
-
-            if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRange.end)))
-            {
-                return false;
-            }
-
-            // No op if there are no real indices in the index data (all are primitive restart).
-            return (indexRange.vertexIndexCount > 0);
+            return false;
         }
+
+        // No op if there are no real indices in the index data (all are primitive restart).
+        return (indexRange.vertexIndexCount > 0);
     }
 
     return true;

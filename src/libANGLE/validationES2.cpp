@@ -5771,15 +5771,6 @@ bool ValidateViewport(Context *context, GLint x, GLint y, GLsizei width, GLsizei
     return true;
 }
 
-bool ValidateDrawElements(Context *context,
-                          PrimitiveMode mode,
-                          GLsizei count,
-                          DrawElementsType type,
-                          const void *indices)
-{
-    return ValidateDrawElementsCommon(context, mode, count, type, indices, 1);
-}
-
 bool ValidateGetFramebufferAttachmentParameteriv(Context *context,
                                                  GLenum target,
                                                  GLenum attachment,
