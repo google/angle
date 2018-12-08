@@ -24,7 +24,7 @@ Status
 
 Version
 
-    Last Modified Date: July 31, 2018
+    Last Modified Date: December 8, 2018
     Author Revision: 1
 
 Number
@@ -115,8 +115,8 @@ Additions to Chapter 2 of the OpenGL ES 3.0 Specification (OpenGL ES Operation)
     - Add another bullet point:
     "
         * by any Draw* command if the number of views in the draw
-          framebuffer is greater than 1 and there is an active transform
-          feedback object.
+          framebuffer is greater than 1 and there is an active and not
+          paused transform feedback object.
     "
 
 Additions to Chapter 3 of the OpenGL ES 3.0 Specification (Rasterization)

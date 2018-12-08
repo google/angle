@@ -524,10 +524,7 @@ class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase,
 // 2) does not generate any error if the draw framebuffer has exactly 1 view.
 TEST_P(MultiviewDrawValidationTest, IndirectDraw)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     const GLint viewportOffsets[4] = {0, 0, 2, 0};
 
@@ -604,10 +601,7 @@ TEST_P(MultiviewDrawValidationTest, IndirectDraw)
 // 2) does not generate any error if the number of views is the same.
 TEST_P(MultiviewDrawValidationTest, NumViewsMismatch)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     const GLint viewportOffsets[4] = {0, 0, 2, 0};
 
@@ -710,14 +704,11 @@ TEST_P(MultiviewDrawValidationTest, NumViewsMismatchForNonMultiviewProgram)
 
 // The test verifies that glDraw*:
 // 1) generates an INVALID_OPERATION error if the number of views in the active draw framebuffer is
-// greater than 1 and there is an active transform feedback object.
+// greater than 1 and there is an active not paused transform feedback object.
 // 2) does not generate any error if the number of views in the draw framebuffer is 1.
 TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
     const GLint viewportOffsets[4] = {0, 0, 2, 0};
 
@@ -784,23 +775,23 @@ void main()
         EXPECT_GL_NO_ERROR();
     }
 
-    // A paused transform feedback should still trigger an error.
+    // A paused transform feedback should not trigger an error.
     glBeginTransformFeedback(GL_TRIANGLES);
     glPauseTransformFeedback();
     ASSERT_GL_NO_ERROR();
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    ASSERT_GL_NO_ERROR();
 
     // Unbind transform feedback - should succeed.
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     ASSERT_GL_NO_ERROR();
 
-    // Rebind paused transform feedback - should fail.
+    // Rebind paused transform feedback - should succeed.
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    ASSERT_GL_NO_ERROR();
 
     glResumeTransformFeedback();
     glEndTransformFeedback();
@@ -828,13 +819,7 @@ void main()
 TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
-
-    if (extensionRequestable("GL_EXT_disjoint_timer_query"))
-    {
-        glRequestExtensionANGLE("GL_EXT_disjoint_timer_query");
-    }
-
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_disjoint_timer_query"));
+    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_disjoint_timer_query"));
 
     ANGLE_GL_PROGRAM(dualViewProgram, kDualViewVSSource, kDualViewFSSource);
 
@@ -918,10 +903,8 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 // The test checks that glDrawArrays can be used to render into two views.
 TEST_P(MultiviewRenderDualViewTest, DrawArrays)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
+
     drawQuad(mProgram, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
@@ -931,10 +914,8 @@ TEST_P(MultiviewRenderDualViewTest, DrawArrays)
 // The test checks that glDrawElements can be used to render into two views.
 TEST_P(MultiviewRenderDualViewTest, DrawElements)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
+
     drawIndexedQuad(mProgram, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
@@ -944,10 +925,8 @@ TEST_P(MultiviewRenderDualViewTest, DrawElements)
 // The test checks that glDrawRangeElements can be used to render into two views.
 TEST_P(MultiviewRenderDualViewTest, DrawRangeElements)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
+
     drawIndexedQuad(mProgram, "vPosition", 0.0f, 1.0f, true, true);
     ASSERT_GL_NO_ERROR();
 
@@ -957,10 +936,7 @@ TEST_P(MultiviewRenderDualViewTest, DrawRangeElements)
 // The test checks that glDrawArrays can be used to render into four views.
 TEST_P(MultiviewRenderTest, DrawArraysFourViews)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -1018,10 +994,7 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
 // The test checks that glDrawArraysInstanced can be used to render into two views.
 TEST_P(MultiviewRenderTest, DrawArraysInstanced)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -1087,10 +1060,7 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
 // not by 3.
 TEST_P(MultiviewRenderTest, AttribDivisor)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
 
     // Looks like an incorrect D3D debug layer message is generated on Windows AMD and NVIDIA.
     // May be specific to Windows 7 / Windows Server 2008. http://anglebug.com/2778
@@ -1174,10 +1144,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
 // multi-view context propagate the correct divisor to the driver.
 TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
 {
-    if (!requestMultiviewExtension(isMultisampled()))
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
 
     updateFBOs(1, 1, 2);
 

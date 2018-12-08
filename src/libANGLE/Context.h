@@ -176,7 +176,7 @@ class StateCache final : angle::NonCopyable
     void onDefaultVertexAttributeChange(Context *context);
     void onActiveTextureChange(Context *context);
     void onQueryChange(Context *context);
-    void onTransformFeedbackChange(Context *context);
+    void onActiveTransformFeedbackChange(Context *context);
     void onUniformBufferStateChange(Context *context);
     void onBufferBindingChange(Context *context);
 

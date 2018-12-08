@@ -1176,7 +1176,6 @@ void Context::bindTransformFeedback(GLenum target, GLuint transformFeedbackHandl
     TransformFeedback *transformFeedback =
         checkTransformFeedbackAllocation(transformFeedbackHandle);
     mGLState.setTransformFeedbackBinding(this, transformFeedback);
-    mStateCache.onTransformFeedbackChange(this);
 }
 
 void Context::bindProgramPipeline(GLuint pipelineHandle)
@@ -3167,7 +3166,7 @@ void Context::beginTransformFeedback(PrimitiveMode primitiveMode)
     ASSERT(!transformFeedback->isPaused());
 
     transformFeedback->begin(this, primitiveMode, mGLState.getProgram());
-    mStateCache.onTransformFeedbackChange(this);
+    mStateCache.onActiveTransformFeedbackChange(this);
 }
 
 bool Context::hasActiveTransformFeedback(GLuint program) const
@@ -6440,7 +6439,7 @@ void Context::endTransformFeedback()
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
     transformFeedback->end(this);
-    mStateCache.onTransformFeedbackChange(this);
+    mStateCache.onActiveTransformFeedbackChange(this);
 }
 
 void Context::transformFeedbackVaryings(GLuint program,
@@ -6517,12 +6516,14 @@ void Context::pauseTransformFeedback()
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
     transformFeedback->pause();
+    mStateCache.onActiveTransformFeedbackChange(this);
 }
 
 void Context::resumeTransformFeedback()
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
     transformFeedback->resume();
+    mStateCache.onActiveTransformFeedbackChange(this);
 }
 
 void Context::getUniformuiv(GLuint program, GLint location, GLuint *params)
@@ -8351,7 +8352,7 @@ void StateCache::onQueryChange(Context *context)
     updateBasicDrawStatesError();
 }
 
-void StateCache::onTransformFeedbackChange(Context *context)
+void StateCache::onActiveTransformFeedbackChange(Context *context)
 {
     updateBasicDrawStatesError();
 }
