@@ -2888,6 +2888,31 @@ void ProgramD3D::linkResources(const gl::ProgramLinkedResources &resources)
     resources.shaderStorageBlockLinker.linkBlocks(getShaderStorageBlockSize,
                                                   getShaderStorageBlockMemberInfo);
     initializeShaderStorageBlocks();
+
+    std::map<int, unsigned int> sizeMap;
+    getAtomicCounterBufferSizeMap(sizeMap);
+    resources.atomicCounterBufferLinker.link(sizeMap);
+}
+
+void ProgramD3D::getAtomicCounterBufferSizeMap(std::map<int, unsigned int> &sizeMapOut) const
+{
+    for (unsigned int index : mState.getAtomicCounterUniformRange())
+    {
+        const gl::LinkedUniform &glUniform = mState.getUniforms()[index];
+
+        auto &bufferDataSize = sizeMapOut[glUniform.binding];
+
+        // Calculate the size of the buffer by finding the end of the last uniform with the same
+        // binding. The end of the uniform is calculated by finding the initial offset of the
+        // uniform and adding size of the uniform. For arrays, the size is the number of elements
+        // times the element size (should always by 4 for atomic_units).
+        unsigned dataOffset =
+            glUniform.offset + (glUniform.getBasicTypeElementCount() * glUniform.getElementSize());
+        if (dataOffset > bufferDataSize)
+        {
+            bufferDataSize = dataOffset;
+        }
+    }
 }
 
 }  // namespace rx
