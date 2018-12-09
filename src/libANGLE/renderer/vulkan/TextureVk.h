@@ -204,7 +204,11 @@ class TextureVk : public TextureImpl
         return mImage;
     }
 
-    const vk::ImageView &getImageView() const;
+    const vk::ImageView &getReadImageView() const;
+    angle::Result getLayerLevelDrawImageView(vk::Context *context,
+                                             size_t layer,
+                                             size_t level,
+                                             vk::ImageView **imageViewOut);
     const vk::Sampler &getSampler() const;
 
     angle::Result ensureImageInitialized(ContextVk *contextVk);
@@ -240,6 +244,13 @@ class TextureVk : public TextureImpl
                                    const gl::InternalFormat &internalFormat,
                                    gl::Framebuffer *source);
 
+    angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
+                                           const gl::ImageIndex &index,
+                                           const gl::Offset &destOffset,
+                                           const gl::Offset &srcOffset,
+                                           const gl::Extents &extents,
+                                           FramebufferVk *source);
+
     angle::Result copySubTextureImpl(ContextVk *contextVk,
                                      const gl::ImageIndex &index,
                                      const gl::Offset &destOffset,
@@ -260,13 +271,19 @@ class TextureVk : public TextureImpl
     uint32_t getLevelCount() const;
     angle::Result initCubeMapRenderTargets(ContextVk *contextVk);
 
+    angle::Result ensureImageInitializedImpl(ContextVk *contextVk,
+                                             const gl::Extents &baseLevelExtents,
+                                             uint32_t levelCount,
+                                             const vk::Format &format);
+
     vk::ImageHelper mImage;
-    vk::ImageView mBaseLevelImageView;
-    vk::ImageView mMipmapImageView;
+    vk::ImageView mDrawBaseLevelImageView;
+    vk::ImageView mReadBaseLevelImageView;
+    vk::ImageView mReadMipmapImageView;
+    std::vector<std::vector<vk::ImageView>> mLayerLevelDrawImageViews;
     vk::Sampler mSampler;
 
     RenderTargetVk mRenderTarget;
-    std::vector<vk::ImageView> mCubeMapFaceImageViews;
     std::vector<RenderTargetVk> mCubeMapRenderTargets;
 
     PixelBuffer mPixelBuffer;

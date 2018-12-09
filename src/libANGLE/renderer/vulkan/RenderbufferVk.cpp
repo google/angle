@@ -77,6 +77,8 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
 
         VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 
+        // Note that LUMA textures are not color-renderable, so a read-view with swizzle is not
+        // needed.
         ANGLE_TRY(mImage.initImageView(contextVk, gl::TextureType::_2D, aspect, gl::SwizzleState(),
                                        &mImageView, 1));
 

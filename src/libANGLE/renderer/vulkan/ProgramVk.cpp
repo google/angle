@@ -861,7 +861,8 @@ angle::Result ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk
     return angle::Result::Continue;
 }
 
-angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
+angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
+                                                     vk::FramebufferHelper *framebuffer)
 {
     ASSERT(hasTextures());
     ANGLE_TRY(allocateDescriptorSet(contextVk, kTextureDescriptorSetIndex));
@@ -887,12 +888,29 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
         {
             GLuint textureUnit           = samplerBinding.boundTextureUnits[arrayElement];
             TextureVk *textureVk         = activeTextures[textureUnit];
-            const vk::ImageHelper &image = textureVk->getImage();
+
+            // Ensure any writes to the textures are flushed before we read from them.
+            ANGLE_TRY(textureVk->ensureImageInitialized(contextVk));
+            vk::ImageHelper &image = textureVk->getImage();
+
+            // Ensure the image is in read-only layout
+            if (image.getCurrentLayout() != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+            {
+                vk::CommandBuffer *srcLayoutChange;
+                ANGLE_TRY(image.recordCommands(contextVk, &srcLayoutChange));
+
+                image.changeLayoutWithStages(
+                    VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+                    srcLayoutChange);
+            }
+
+            image.addReadDependency(framebuffer);
 
             VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
 
             imageInfo.sampler     = textureVk->getSampler().getHandle();
-            imageInfo.imageView   = textureVk->getImageView().getHandle();
+            imageInfo.imageView   = textureVk->getReadImageView().getHandle();
             imageInfo.imageLayout = image.getCurrentLayout();
 
             VkWriteDescriptorSet &writeInfo = writeDescriptorInfo[writeCount];

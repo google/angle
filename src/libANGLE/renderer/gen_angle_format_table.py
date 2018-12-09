@@ -63,7 +63,7 @@ static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
 
 constexpr Format g_formatInfoTable[] = {{
     // clang-format off
-    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, false, false }},
+    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, 0, false, false }},
 {angle_format_info_cases}    // clang-format on
 }};
 
@@ -170,7 +170,7 @@ def get_color_write_function(angle_format):
     return 'WriteColor<' + channel_struct + ', '+ write_component_type + '>'
 
 
-format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {D}, {S}, {pixelBytes}, {isBlock}, {isFixed} }},
+format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {L}, {D}, {S}, {pixelBytes}, {isBlock}, {isFixed} }},
 """
 
 def get_named_component_type(component_type):

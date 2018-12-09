@@ -21,6 +21,7 @@
 
 namespace gl
 {
+struct SwizzleState;
 class TextureCapsMap;
 }  // namespace gl
 
@@ -115,6 +116,10 @@ const VkFormatProperties &GetMandatoryFormatSupport(VkFormat vkFormat);
 // Returns the alignment for a buffer to be used with the vertex input stage in Vulkan. This
 // calculation is listed in the Vulkan spec at the end of the section 'Vertex Input Description'.
 size_t GetVertexInputAlignment(const vk::Format &format);
+
+void MapSwizzleState(const vk::Format &format,
+                     const gl::SwizzleState &swizzleState,
+                     gl::SwizzleState *swizzleStateOut);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_

@@ -30,7 +30,7 @@ class RenderPassDesc;
 
 // This is a very light-weight class that does not own to the resources it points to.
 // It's meant only to copy across some information from a FramebufferAttachment to the
-// business rendering logic. It stores Images and ImageView by pointer for performance.
+// business rendering logic. It stores Images and ImageViews by pointer for performance.
 class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 {
   public:
@@ -48,6 +48,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                             vk::CommandBuffer *commandBuffer,
                             vk::RenderPassDesc *renderPassDesc);
 
+    vk::ImageHelper &getImage();
     const vk::ImageHelper &getImage() const;
 
     // getImageForRead will also transition the resource to the given layout.
@@ -55,7 +56,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                                      VkImageLayout layout,
                                      vk::CommandBuffer *commandBuffer);
     vk::ImageHelper *getImageForWrite(vk::RecordableGraphResource *writingResource) const;
-    vk::ImageView *getImageView() const;
+
+    vk::ImageView *getDrawImageView() const;
+    vk::ImageView *getReadImageView() const;
 
     const vk::Format &getImageFormat() const;
     const gl::Extents &getImageExtents() const;
@@ -67,6 +70,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
   private:
     vk::ImageHelper *mImage;
+    // Note that the draw and read image views are the same, given the requirements of a render
+    // target.
     vk::ImageView *mImageView;
     size_t mLayerIndex;
 };

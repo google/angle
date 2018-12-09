@@ -32,6 +32,7 @@ struct Format final : private angle::NonCopyable
                      GLuint greenBits,
                      GLuint blueBits,
                      GLuint alphaBits,
+                     GLuint luminanceBits,
                      GLuint depthBits,
                      GLuint stencilBits,
                      GLuint pixelBytes,
@@ -42,7 +43,14 @@ struct Format final : private angle::NonCopyable
     static FormatID InternalFormatToID(GLenum internalFormat);
 
     constexpr bool hasDepthOrStencilBits() const;
+    constexpr bool isLUMA() const;
     constexpr GLuint channelCount() const;
+
+    constexpr bool isInt() const;
+    constexpr bool isUint() const;
+    constexpr bool isSnorm() const;
+    constexpr bool isUnorm() const;
+    constexpr bool isFloat() const;
 
     bool operator==(const Format &other) const { return this->id == other.id; }
 
@@ -70,6 +78,7 @@ struct Format final : private angle::NonCopyable
     GLuint greenBits;
     GLuint blueBits;
     GLuint alphaBits;
+    GLuint luminanceBits;
     GLuint depthBits;
     GLuint stencilBits;
 
@@ -91,6 +100,7 @@ constexpr Format::Format(FormatID id,
                          GLuint greenBits,
                          GLuint blueBits,
                          GLuint alphaBits,
+                         GLuint luminanceBits,
                          GLuint depthBits,
                          GLuint stencilBits,
                          GLuint pixelBytes,
@@ -108,6 +118,7 @@ constexpr Format::Format(FormatID id,
       greenBits(greenBits),
       blueBits(blueBits),
       alphaBits(alphaBits),
+      luminanceBits(luminanceBits),
       depthBits(depthBits),
       stencilBits(stencilBits),
       pixelBytes(pixelBytes),
@@ -120,11 +131,44 @@ constexpr bool Format::hasDepthOrStencilBits() const
     return depthBits > 0 || stencilBits > 0;
 }
 
+constexpr bool Format::isLUMA() const
+{
+    // There's no format with G or B without R
+    ASSERT(redBits > 0 || (greenBits == 0 && blueBits == 0));
+    return redBits == 0 && (luminanceBits > 0 || alphaBits > 0);
+}
+
 constexpr GLuint Format::channelCount() const
 {
-    return (redBits > 0) + (greenBits > 0) + (blueBits > 0) + (alphaBits > 0) + (depthBits > 0) +
-           (stencilBits > 0);
+    return (redBits > 0) + (greenBits > 0) + (blueBits > 0) + (alphaBits > 0) +
+           (luminanceBits > 0) + (depthBits > 0) + (stencilBits > 0);
 }
+
+constexpr bool Format::isInt() const
+{
+    return componentType == GL_INT;
+}
+
+constexpr bool Format::isUint() const
+{
+    return componentType == GL_UNSIGNED_INT;
+}
+
+constexpr bool Format::isSnorm() const
+{
+    return componentType == GL_SIGNED_NORMALIZED;
+}
+
+constexpr bool Format::isUnorm() const
+{
+    return componentType == GL_UNSIGNED_NORMALIZED;
+}
+
+constexpr bool Format::isFloat() const
+{
+    return componentType == GL_FLOAT;
+}
+
 }  // namespace angle
 
 #include "libANGLE/renderer/FormatID_autogen.inc"

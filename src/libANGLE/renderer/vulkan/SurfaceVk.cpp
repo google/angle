@@ -68,7 +68,7 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
 constexpr VkImageUsageFlags kSurfaceVKImageUsageFlags =
     VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 constexpr VkImageUsageFlags kSurfaceVKColorImageUsageFlags =
-    kSurfaceVKImageUsageFlags | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    kSurfaceVKImageUsageFlags | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 constexpr VkImageUsageFlags kSurfaceVKDepthStencilImageUsageFlags =
     kSurfaceVKImageUsageFlags | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
@@ -487,6 +487,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     {
         SwapchainImage &member = mSwapchainImages[imageIndex];
         member.image.init2DWeakReference(swapchainImages[imageIndex], extents, format, 1);
+
         ANGLE_TRY(member.image.initImageView(displayVk, gl::TextureType::_2D,
                                              VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
                                              &member.imageView, 1));

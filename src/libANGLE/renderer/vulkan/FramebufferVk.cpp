@@ -856,7 +856,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
-        attachments.push_back(colorRenderTarget->getImageView()->getHandle());
+        attachments.push_back(colorRenderTarget->getDrawImageView()->getHandle());
 
         ASSERT(attachmentsSize.empty() || attachmentsSize == colorRenderTarget->getImageExtents());
         attachmentsSize = colorRenderTarget->getImageExtents();
@@ -865,7 +865,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
     if (depthStencilRenderTarget)
     {
-        attachments.push_back(depthStencilRenderTarget->getImageView()->getHandle());
+        attachments.push_back(depthStencilRenderTarget->getDrawImageView()->getHandle());
 
         ASSERT(attachmentsSize.empty() ||
                attachmentsSize == depthStencilRenderTarget->getImageExtents());

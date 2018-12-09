@@ -18,6 +18,7 @@ namespace rx
 
 namespace BufferUtils_comp   = vk::InternalShader::BufferUtils_comp;
 namespace ConvertVertex_comp = vk::InternalShader::ConvertVertex_comp;
+namespace ImageCopy_frag     = vk::InternalShader::ImageCopy_frag;
 
 namespace
 {
@@ -29,32 +30,32 @@ constexpr uint32_t kBufferCopyDestinationBinding    = 0;
 constexpr uint32_t kBufferCopySourceBinding         = 1;
 constexpr uint32_t kConvertVertexDestinationBinding = 0;
 constexpr uint32_t kConvertVertexSourceBinding      = 1;
+constexpr uint32_t kImageCopySourceBinding          = 0;
 
 uint32_t GetBufferUtilsFlags(size_t dispatchSize, const vk::Format &format)
 {
     uint32_t flags                    = dispatchSize % 64 == 0 ? BufferUtils_comp::kIsAligned : 0;
     const angle::Format &bufferFormat = format.bufferFormat();
 
-    flags |= bufferFormat.componentType == GL_INT
+    flags |= bufferFormat.isInt()
                  ? BufferUtils_comp::kIsInt
-                 : bufferFormat.componentType == GL_UNSIGNED_INT ? BufferUtils_comp::kIsUint
-                                                                 : BufferUtils_comp::kIsFloat;
+                 : bufferFormat.isUint() ? BufferUtils_comp::kIsUint : BufferUtils_comp::kIsFloat;
 
     return flags;
 }
 
 uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 {
-    bool srcIsInt   = params.srcFormat->componentType == GL_INT;
-    bool srcIsUint  = params.srcFormat->componentType == GL_UNSIGNED_INT;
-    bool srcIsSnorm = params.srcFormat->componentType == GL_SIGNED_NORMALIZED;
-    bool srcIsUnorm = params.srcFormat->componentType == GL_UNSIGNED_NORMALIZED;
+    bool srcIsInt   = params.srcFormat->isInt();
+    bool srcIsUint  = params.srcFormat->isUint();
+    bool srcIsSnorm = params.srcFormat->isSnorm();
+    bool srcIsUnorm = params.srcFormat->isUnorm();
     bool srcIsFixed = params.srcFormat->isFixed;
-    bool srcIsFloat = params.srcFormat->componentType == GL_FLOAT;
+    bool srcIsFloat = params.srcFormat->isFloat();
 
-    bool destIsInt   = params.destFormat->componentType == GL_INT;
-    bool destIsUint  = params.destFormat->componentType == GL_UNSIGNED_INT;
-    bool destIsFloat = params.destFormat->componentType == GL_FLOAT;
+    bool destIsInt   = params.destFormat->isInt();
+    bool destIsUint  = params.destFormat->isUint();
+    bool destIsFloat = params.destFormat->isFloat();
 
     // Assert on the types to make sure the shader supports its.  These are based on
     // ConvertVertex_comp::Conversion values.
@@ -115,6 +116,23 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     return flags;
 }
+
+uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &destFormat)
+{
+    const angle::Format &srcAngleFormat  = srcFormat.angleFormat();
+    const angle::Format &destAngleFormat = destFormat.angleFormat();
+
+    uint32_t flags = 0;
+
+    flags |= srcAngleFormat.isInt() ? ImageCopy_frag::kSrcIsInt
+                                    : srcAngleFormat.isUint() ? ImageCopy_frag::kSrcIsUint
+                                                              : ImageCopy_frag::kSrcIsFloat;
+    flags |= destAngleFormat.isInt() ? ImageCopy_frag::kDestIsInt
+                                     : destAngleFormat.isUint() ? ImageCopy_frag::kDestIsUint
+                                                                : ImageCopy_frag::kDestIsFloat;
+
+    return flags;
+}
 }  // namespace
 
 UtilsVk::UtilsVk() = default;
@@ -142,6 +160,10 @@ void UtilsVk::destroy(VkDevice device)
         program.destroy(device);
     }
     mImageClearProgram.destroy(device);
+    for (vk::ShaderProgramHelper &program : mImageCopyPrograms)
+    {
+        program.destroy(device);
+    }
 }
 
 angle::Result UtilsVk::ensureResourcesInitialized(vk::Context *context,
@@ -242,6 +264,21 @@ angle::Result UtilsVk::ensureImageClearResourcesInitialized(vk::Context *context
     // The shader does not use any descriptor sets.
     return ensureResourcesInitialized(context, Function::ImageClear, nullptr, 0,
                                       sizeof(ImageClearShaderParams));
+}
+
+angle::Result UtilsVk::ensureImageCopyResourcesInitialized(vk::Context *context)
+{
+    if (mPipelineLayouts[Function::ImageCopy].valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    VkDescriptorPoolSize setSizes[1] = {
+        {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
+    };
+
+    return ensureResourcesInitialized(context, Function::ImageCopy, setSizes, ArraySize(setSizes),
+                                      sizeof(ImageCopyShaderParams));
 }
 
 angle::Result UtilsVk::setupProgram(vk::Context *context,
@@ -504,6 +541,44 @@ angle::Result UtilsVk::convertVertexBuffer(vk::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result UtilsVk::startRenderPass(vk::Context *context,
+                                       vk::ImageHelper *image,
+                                       vk::ImageView *imageView,
+                                       const vk::RenderPassDesc &renderPassDesc,
+                                       const gl::Rectangle &renderArea,
+                                       vk::CommandBuffer **commandBufferOut)
+{
+    RendererVk *renderer = context->getRenderer();
+
+    vk::RenderPass *renderPass = nullptr;
+    ANGLE_TRY(renderer->getCompatibleRenderPass(context, renderPassDesc, &renderPass));
+
+    VkFramebufferCreateInfo framebufferInfo = {};
+
+    framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.flags           = 0;
+    framebufferInfo.renderPass      = renderPass->getHandle();
+    framebufferInfo.attachmentCount = 1;
+    framebufferInfo.pAttachments    = imageView->ptr();
+    framebufferInfo.width           = renderArea.x + renderArea.width;
+    framebufferInfo.height          = renderArea.y + renderArea.height;
+    framebufferInfo.layers          = 1;
+
+    vk::Framebuffer framebuffer;
+    ANGLE_VK_TRY(context, framebuffer.init(context->getDevice(), framebufferInfo));
+
+    // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
+    std::vector<VkClearValue> clearValues = {{}};
+    ASSERT(clearValues.size() == 1);
+
+    ANGLE_TRY(image->beginRenderPass(context, framebuffer, renderArea, renderPassDesc, clearValues,
+                                     commandBufferOut));
+
+    renderer->releaseObject(renderer->getCurrentQueueSerial(), &framebuffer);
+
+    return angle::Result::Continue;
+}
+
 angle::Result UtilsVk::clearImage(ContextVk *contextVk,
                                   FramebufferVk *framebuffer,
                                   const ClearImageParameters &params)
@@ -548,6 +623,122 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     commandBuffer->setViewport(0, 1, &viewport);
     commandBuffer->setScissor(0, 1, &scissor);
     commandBuffer->draw(6, 1, 0, 0);
+
+    return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::copyImage(vk::Context *context,
+                                 vk::ImageHelper *dest,
+                                 vk::ImageView *destView,
+                                 vk::ImageHelper *src,
+                                 vk::ImageView *srcView,
+                                 const CopyImageParameters &params)
+{
+    RendererVk *renderer = context->getRenderer();
+
+    ANGLE_TRY(ensureImageCopyResourcesInitialized(context));
+
+    const vk::Format &srcFormat  = src->getFormat();
+    const vk::Format &destFormat = dest->getFormat();
+
+    ImageCopyShaderParams shaderParams;
+    shaderParams.flipY            = params.flipY;
+    shaderParams.destHasLuminance = destFormat.angleFormat().luminanceBits > 0;
+    shaderParams.destIsAlpha =
+        destFormat.angleFormat().isLUMA() && destFormat.angleFormat().alphaBits > 0;
+    shaderParams.srcMip        = params.srcMip;
+    shaderParams.srcOffset[0]  = params.srcOffset[0];
+    shaderParams.srcOffset[1]  = params.srcOffset[1];
+    shaderParams.destOffset[0] = params.destOffset[0];
+    shaderParams.destOffset[1] = params.destOffset[1];
+
+    if (params.flipY)
+    {
+        // If viewport is flipped, the shader expects srcOffset[1] to have the
+        // last row's index instead of the first's.
+        shaderParams.srcOffset[1] = params.srcHeight - shaderParams.srcOffset[1] - 1;
+    }
+
+    uint32_t flags = GetImageCopyFlags(srcFormat, destFormat);
+
+    VkDescriptorSet descriptorSet;
+    vk::SharedDescriptorPoolBinding descriptorPoolBinding;
+    ANGLE_TRY(mDescriptorPools[Function::ImageCopy].allocateSets(
+        context, mDescriptorSetLayouts[Function::ImageCopy][kSetIndex].get().ptr(), 1,
+        &descriptorPoolBinding, &descriptorSet));
+    descriptorPoolBinding.get().updateSerial(context->getRenderer()->getCurrentQueueSerial());
+
+    vk::RenderPassDesc renderPassDesc;
+    renderPassDesc.setSamples(dest->getSamples());
+    renderPassDesc.packAttachment(destFormat);
+
+    vk::GraphicsPipelineDesc pipelineDesc;
+    pipelineDesc.initDefaults();
+    pipelineDesc.updateRenderPassDesc(renderPassDesc);
+
+    gl::Rectangle renderArea;
+    renderArea.x      = params.destOffset[0];
+    renderArea.y      = params.destOffset[1];
+    renderArea.width  = params.srcExtents[0];
+    renderArea.height = params.srcExtents[1];
+
+    // Change source layout outside render pass
+    vk::CommandBuffer *srcLayoutChange;
+    ANGLE_TRY(src->recordCommands(context, &srcLayoutChange));
+
+    src->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                                VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, srcLayoutChange);
+
+    // Change destination layout outside render pass as well
+    vk::CommandBuffer *destLayoutChange;
+    ANGLE_TRY(dest->recordCommands(context, &destLayoutChange));
+
+    dest->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
+                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                 VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, destLayoutChange);
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(startRenderPass(context, dest, destView, renderPassDesc, renderArea, &commandBuffer));
+
+    // Source's layout change should happen before rendering
+    src->addReadDependency(dest);
+
+    VkDescriptorImageInfo imageInfo = {};
+    imageInfo.imageView             = srcView->getHandle();
+    imageInfo.imageLayout           = src->getCurrentLayout();
+
+    VkWriteDescriptorSet writeInfo = {};
+    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo.dstSet               = descriptorSet;
+    writeInfo.dstBinding           = kImageCopySourceBinding;
+    writeInfo.descriptorCount      = 1;
+    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+    writeInfo.pImageInfo           = &imageInfo;
+
+    vkUpdateDescriptorSets(context->getDevice(), 1, &writeInfo, 0, nullptr);
+
+    vk::ShaderLibrary &shaderLibrary                    = renderer->getShaderLibrary();
+    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(context, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getImageCopy_frag(context, flags, &fragmentShader));
+
+    ANGLE_TRY(setupProgram(context, Function::ImageCopy, fragmentShader, vertexShader,
+                           &mImageCopyPrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
+                           sizeof(shaderParams), commandBuffer));
+
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, dest->getExtents().height, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(renderArea);
+
+    commandBuffer->setViewport(0, 1, &viewport);
+    commandBuffer->setScissor(0, 1, &scissor);
+    commandBuffer->draw(6, 1, 0, 0);
+
+    descriptorPoolBinding.reset();
 
     return angle::Result::Continue;
 }

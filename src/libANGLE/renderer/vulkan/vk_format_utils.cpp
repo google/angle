@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
+#include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/load_functions_table.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -234,5 +235,45 @@ size_t GetVertexInputAlignment(const vk::Format &format)
     const angle::Format &bufferFormat = format.bufferFormat();
     size_t pixelBytes                 = bufferFormat.pixelBytes;
     return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount());
+}
+
+void MapSwizzleState(const vk::Format &format,
+                     const gl::SwizzleState &swizzleState,
+                     gl::SwizzleState *swizzleStateOut)
+{
+    const angle::Format &angleFormat = format.angleFormat();
+
+    switch (format.internalFormat)
+    {
+        case GL_LUMINANCE8_OES:
+            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleGreen = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleBlue  = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleAlpha = GL_ONE;
+            break;
+        case GL_LUMINANCE8_ALPHA8_OES:
+            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleGreen = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleBlue  = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleAlpha = swizzleState.swizzleGreen;
+            break;
+        case GL_ALPHA8_OES:
+            swizzleStateOut->swizzleRed   = GL_ZERO;
+            swizzleStateOut->swizzleGreen = GL_ZERO;
+            swizzleStateOut->swizzleBlue  = GL_ZERO;
+            swizzleStateOut->swizzleAlpha = swizzleState.swizzleRed;
+            break;
+        default:
+            // Set any missing channel to default in case the emulated format has that channel.
+            swizzleStateOut->swizzleRed =
+                angleFormat.redBits > 0 ? swizzleState.swizzleRed : GL_ZERO;
+            swizzleStateOut->swizzleGreen =
+                angleFormat.greenBits > 0 ? swizzleState.swizzleGreen : GL_ZERO;
+            swizzleStateOut->swizzleBlue =
+                angleFormat.blueBits > 0 ? swizzleState.swizzleBlue : GL_ZERO;
+            swizzleStateOut->swizzleAlpha =
+                angleFormat.alphaBits > 0 ? swizzleState.swizzleAlpha : GL_ONE;
+            break;
+    }
 }
 }  // namespace rx

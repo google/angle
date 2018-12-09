@@ -68,6 +68,16 @@ class UtilsVk : angle::NonCopyable
         const vk::RenderPassDesc *renderPassDesc;
     };
 
+    struct CopyImageParameters
+    {
+        int srcOffset[2];
+        int srcExtents[2];
+        int destOffset[2];
+        int srcMip;
+        int srcHeight;
+        bool flipY;
+    };
+
     angle::Result clearBuffer(vk::Context *context,
                               vk::BufferHelper *dest,
                               const ClearParameters &params);
@@ -86,6 +96,13 @@ class UtilsVk : angle::NonCopyable
     angle::Result clearImage(ContextVk *contextVk,
                              FramebufferVk *framebuffer,
                              const ClearImageParameters &params);
+
+    angle::Result copyImage(vk::Context *context,
+                            vk::ImageHelper *dest,
+                            vk::ImageView *destView,
+                            vk::ImageHelper *src,
+                            vk::ImageView *srcView,
+                            const CopyImageParameters &params);
 
   private:
     struct BufferUtilsShaderParams
@@ -121,20 +138,32 @@ class UtilsVk : angle::NonCopyable
         VkClearColorValue clearValue = {};
     };
 
+    struct ImageCopyShaderParams
+    {
+        // Structure matching PushConstants in ImageCopy.frag
+        uint32_t flipY            = 0;
+        uint32_t destHasLuminance = 0;
+        uint32_t destIsAlpha      = 0;
+        int32_t srcMip            = 0;
+        int32_t srcOffset[2]      = {};
+        int32_t destOffset[2]     = {};
+    };
+
     // Functions implemented by the class:
     enum class Function
     {
         // Functions implemented in graphics
         ImageClear = 0,
+        ImageCopy  = 1,
 
         // Functions implemented in compute
-        ComputeStartIndex   = 1,  // Special value to separate draw and dispatch functions.
-        BufferClear         = 1,
-        BufferCopy          = 2,
-        ConvertVertexBuffer = 3,
+        ComputeStartIndex   = 2,  // Special value to separate draw and dispatch functions.
+        BufferClear         = 2,
+        BufferCopy          = 3,
+        ConvertVertexBuffer = 4,
 
-        InvalidEnum = 4,
-        EnumCount   = 4,
+        InvalidEnum = 5,
+        EnumCount   = 5,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -170,6 +199,14 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureBufferCopyResourcesInitialized(vk::Context *context);
     angle::Result ensureConvertVertexResourcesInitialized(vk::Context *context);
     angle::Result ensureImageClearResourcesInitialized(vk::Context *context);
+    angle::Result ensureImageCopyResourcesInitialized(vk::Context *context);
+
+    angle::Result startRenderPass(vk::Context *context,
+                                  vk::ImageHelper *image,
+                                  vk::ImageView *imageView,
+                                  const vk::RenderPassDesc &renderPassDesc,
+                                  const gl::Rectangle &renderArea,
+                                  vk::CommandBuffer **commandBufferOut);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
@@ -183,6 +220,8 @@ class UtilsVk : angle::NonCopyable
         mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kFlagsMask |
                                vk::InternalShader::ConvertVertex_comp::kConversionMask];
     vk::ShaderProgramHelper mImageClearProgram;
+    vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
+                                               vk::InternalShader::ImageCopy_frag::kDestFormatMask];
 };
 
 }  // namespace rx

@@ -67,16 +67,27 @@ void RenderTargetVk::onDepthStencilDraw(vk::FramebufferHelper *framebufferVk,
     mImage->addWriteDependency(framebufferVk);
 }
 
+vk::ImageHelper &RenderTargetVk::getImage()
+{
+    ASSERT(mImage && mImage->valid());
+    return *mImage;
+}
+
 const vk::ImageHelper &RenderTargetVk::getImage() const
 {
     ASSERT(mImage && mImage->valid());
     return *mImage;
 }
 
-vk::ImageView *RenderTargetVk::getImageView() const
+vk::ImageView *RenderTargetVk::getDrawImageView() const
 {
     ASSERT(mImageView && mImageView->valid());
     return mImageView;
+}
+
+vk::ImageView *RenderTargetVk::getReadImageView() const
+{
+    return getDrawImageView();
 }
 
 const vk::Format &RenderTargetVk::getImageFormat() const

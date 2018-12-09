@@ -99,7 +99,8 @@ class ProgramVk : public ProgramImpl
     // Also initializes the pipeline layout, descriptor set layouts, and used descriptor ranges.
 
     angle::Result updateUniforms(ContextVk *contextVk);
-    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk,
+                                              vk::FramebufferHelper *framebuffer);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
 

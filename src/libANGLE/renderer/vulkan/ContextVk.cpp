@@ -401,18 +401,9 @@ angle::Result ContextVk::handleDirtyTextures(const gl::Context *context,
 {
     ANGLE_TRY(updateActiveTextures(context));
 
-    // TODO(jmadill): Should probably merge this for loop with programVk's descriptor update.
-    for (size_t textureIndex : mProgram->getState().getActiveSamplersMask())
-    {
-        // Ensure any writes to the textures are flushed before we read from them.
-        TextureVk *textureVk = mActiveTextures[textureIndex];
-        ANGLE_TRY(textureVk->ensureImageInitialized(this));
-        textureVk->getImage().addReadDependency(mDrawFramebuffer->getFramebuffer());
-    }
-
     if (mProgram->hasTextures())
     {
-        ANGLE_TRY(mProgram->updateTexturesDescriptorSet(this));
+        ANGLE_TRY(mProgram->updateTexturesDescriptorSet(this, mDrawFramebuffer->getFramebuffer()));
     }
     return angle::Result::Continue;
 }

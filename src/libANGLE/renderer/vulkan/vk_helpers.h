@@ -474,6 +474,7 @@ class ImageHelper final : public RecordableGraphResource
                                      VkImageAspectFlags aspectMask,
                                      const gl::SwizzleState &swizzleMap,
                                      ImageView *imageViewOut,
+                                     uint32_t baseMipLevel,
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount);
@@ -507,6 +508,8 @@ class ImageHelper final : public RecordableGraphResource
     const DeviceMemory &getDeviceMemory() const;
 
     const gl::Extents &getExtents() const;
+    uint32_t getLayerCount() const { return mLayerCount; }
+    uint32_t getLevelCount() const { return mLevelCount; }
     const Format &getFormat() const;
     GLint getSamples() const;
 
@@ -561,6 +564,7 @@ class ImageHelper final : public RecordableGraphResource
 
     // Cached properties.
     uint32_t mLayerCount;
+    uint32_t mLevelCount;
 };
 
 class FramebufferHelper : public RecordableGraphResource
