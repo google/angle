@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5867435a_a776e098",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2959,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-10T23:35:41Z",
+      "side": 1,
+      "message": "Fixed. It was.",
+      "parentUuid": "2e6b32a0_6138254a",
+      "range": {
+        "startLine": 2959,
+        "startChar": 0,
+        "endLine": 2959,
+        "endChar": 74
+      },
+      "revId": "733c9d5490bb5781466c9c1e0dc6e5ae252d8917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4568475f_c11305eb",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "733c9d5490bb5781466c9c1e0dc6e5ae252d8917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2d931d0_2a5be9b2",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2961,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-10T23:35:41Z",
+      "side": 1,
+      "message": "Nope, fixed. It\u0027s not an error but slightly faster to do the if once.",
+      "parentUuid": "4568475f_c11305eb",
+      "range": {
+        "startLine": 2954,
+        "startChar": 0,
+        "endLine": 2961,
+        "endChar": 9
+      },
+      "revId": "733c9d5490bb5781466c9c1e0dc6e5ae252d8917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
