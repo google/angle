@@ -22,6 +22,29 @@
       "revId": "733c9d5490bb5781466c9c1e0dc6e5ae252d8917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4568475f_c11305eb",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2961,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-12-10T21:03:31Z",
+      "side": 1,
+      "message": "Looks like this was previously only checked if !webgl, was that a bug?",
+      "range": {
+        "startLine": 2954,
+        "startChar": 0,
+        "endLine": 2961,
+        "endChar": 9
+      },
+      "revId": "733c9d5490bb5781466c9c1e0dc6e5ae252d8917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
