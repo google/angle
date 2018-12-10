@@ -129,8 +129,10 @@ void TranslatorHLSL::translate(TIntermBlock *root,
 
     if (getShaderVersion() >= 310)
     {
-        sh::RewriteAtomicFunctionExpressions(root, &getSymbolTable(), getShaderVersion());
+        // Due to ssbo also can be used as the argument of atomic memory functions, we should put
+        // RewriteExpressionsWithShaderStorageBlock before RewriteAtomicFunctionExpressions.
         sh::RewriteExpressionsWithShaderStorageBlock(root, &getSymbolTable());
+        sh::RewriteAtomicFunctionExpressions(root, &getSymbolTable(), getShaderVersion());
     }
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),

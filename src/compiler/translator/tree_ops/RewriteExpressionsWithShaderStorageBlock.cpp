@@ -269,7 +269,9 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
         return false;
     }
 
-    if (IsAtomicFunction(node->getOp()))
+    // We still need to process the ssbo as the non-first argument of atomic memory functions.
+    if (IsAtomicFunction(node->getOp()) &&
+        IsInShaderStorageBlock((*node->getSequence())[0]->getAsTyped()))
     {
         return true;
     }

@@ -329,6 +329,43 @@ void ShaderStorageBlockOutputHLSL::outputLengthFunctionCall(TIntermTyped *node)
     traverseSSBOAccess(node, SSBOMethod::LENGTH);
 }
 
+void ShaderStorageBlockOutputHLSL::outputAtomicMemoryFunctionCallPrefix(TIntermTyped *node,
+                                                                        TOperator op)
+{
+    mLocationAsTheLastArgument = false;
+
+    switch (op)
+    {
+        case EOpAtomicAdd:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_ADD);
+            break;
+        case EOpAtomicMin:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_MIN);
+            break;
+        case EOpAtomicMax:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_MAX);
+            break;
+        case EOpAtomicAnd:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_AND);
+            break;
+        case EOpAtomicOr:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_OR);
+            break;
+        case EOpAtomicXor:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_XOR);
+            break;
+        case EOpAtomicExchange:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_EXCHANGE);
+            break;
+        case EOpAtomicCompSwap:
+            traverseSSBOAccess(node, SSBOMethod::ATOMIC_COMPSWAP);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 // Note that we must calculate the matrix stride here instead of ShaderStorageBlockFunctionHLSL.
 // It's because that if the current node's type is a vector which comes from a matrix, we will
 // lose the matrix type info once we enter ShaderStorageBlockFunctionHLSL.

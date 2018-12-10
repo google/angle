@@ -1173,10 +1173,6 @@ void main()
 // Test atomic memory functions.
 TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 {
-    // TODO(jiajia.qin@intel.com): Don't skip this test once atomic memory functions for SSBO is
-    // supported on d3d backend. http://anglebug.com/1951
-
-    ANGLE_SKIP_TEST_IF(IsD3D11());
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(std140, binding = 1) buffer blockName {

@@ -51,6 +51,8 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
     void outputLoadFunctionCall(TIntermTyped *node);
     // This writes the function call to get the lengh of unsized array member of SSBO.
     void outputLengthFunctionCall(TIntermTyped *node);
+    // Writes the atomic memory function calls for SSBO.
+    void outputAtomicMemoryFunctionCallPrefix(TIntermTyped *node, TOperator op);
 
     void writeShaderStorageBlocksHeader(TInfoSinkBase &out) const;
 

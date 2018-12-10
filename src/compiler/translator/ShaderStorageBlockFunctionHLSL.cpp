@@ -198,6 +198,45 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOLengthFunctionBody(TInfoSinkBase 
     out << "    return int((dim - loc)/uint(" << unsizedArrayStride << "));\n";
 }
 
+// static
+void ShaderStorageBlockFunctionHLSL::OutputSSBOAtomicMemoryFunctionBody(
+    TInfoSinkBase &out,
+    const ShaderStorageBlockFunction &ssboFunction)
+{
+    out << "    " << ssboFunction.typeString << " original_value;\n";
+    switch (ssboFunction.method)
+    {
+        case SSBOMethod::ATOMIC_ADD:
+            out << "    buffer.InterlockedAdd(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_MIN:
+            out << "    buffer.InterlockedMin(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_MAX:
+            out << "    buffer.InterlockedMax(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_AND:
+            out << "    buffer.InterlockedAnd(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_OR:
+            out << "    buffer.InterlockedOr(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_XOR:
+            out << "    buffer.InterlockedXor(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_EXCHANGE:
+            out << "    buffer.InterlockedExchange(loc, value, original_value);\n";
+            break;
+        case SSBOMethod::ATOMIC_COMPSWAP:
+            out << "    buffer.InterlockedCompareExchange(loc, compare_value, value, "
+                   "original_value);\n";
+            break;
+        default:
+            UNREACHABLE();
+    }
+    out << "    return original_value;\n";
+}
+
 bool ShaderStorageBlockFunctionHLSL::ShaderStorageBlockFunction::operator<(
     const ShaderStorageBlockFunction &rhs) const
 {
@@ -214,6 +253,7 @@ TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
     TIntermSwizzle *swizzleNode)
 {
     ShaderStorageBlockFunction ssboFunction;
+    ssboFunction.typeString = TypeString(type);
     ssboFunction.method     = method;
     switch (method)
     {
@@ -228,11 +268,42 @@ TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
             ssboFunction.functionName       = "_Length_" + str(unsizedArrayStride);
             mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
             return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_ADD:
+            ssboFunction.functionName = "_ssbo_atomicAdd_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_MIN:
+            ssboFunction.functionName = "_ssbo_atomicMin_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_MAX:
+            ssboFunction.functionName = "_ssbo_atomicMax_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_AND:
+            ssboFunction.functionName = "_ssbo_atomicAnd_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_OR:
+            ssboFunction.functionName = "_ssbo_atomicOr_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_XOR:
+            ssboFunction.functionName = "_ssbo_atomicXor_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_EXCHANGE:
+            ssboFunction.functionName = "_ssbo_atomicExchange_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
+        case SSBOMethod::ATOMIC_COMPSWAP:
+            ssboFunction.functionName = "_ssbo_atomicCompSwap_" + ssboFunction.typeString;
+            mRegisteredShaderStorageBlockFunctions.insert(ssboFunction);
+            return ssboFunction.functionName;
         default:
             UNREACHABLE();
     }
 
-    ssboFunction.typeString = TypeString(type);
     ssboFunction.functionName += ssboFunction.typeString;
     ssboFunction.type       = type;
     if (swizzleNode != nullptr)
@@ -298,29 +369,64 @@ void ShaderStorageBlockFunctionHLSL::shaderStorageBlockFunctionHeader(TInfoSinkB
 {
     for (const ShaderStorageBlockFunction &ssboFunction : mRegisteredShaderStorageBlockFunctions)
     {
-        if (ssboFunction.method == SSBOMethod::LOAD)
+        switch (ssboFunction.method)
         {
-            // Function header
-            out << ssboFunction.typeString << " " << ssboFunction.functionName
-                << "(RWByteAddressBuffer buffer, uint loc)\n";
-            out << "{\n";
-            OutputSSBOLoadFunctionBody(out, ssboFunction);
-        }
-        else if (ssboFunction.method == SSBOMethod::STORE)
-        {
-            // Function header
-            out << "void " << ssboFunction.functionName << "(RWByteAddressBuffer buffer, uint loc, "
-                << ssboFunction.typeString << " value)\n";
-            out << "{\n";
-            OutputSSBOStoreFunctionBody(out, ssboFunction);
-        }
-        else
-        {
-            ASSERT(ssboFunction.method == SSBOMethod::LENGTH);
-            out << "int " << ssboFunction.functionName
-                << "(RWByteAddressBuffer buffer, uint loc)\n";
-            out << "{\n";
-            OutputSSBOLengthFunctionBody(out, ssboFunction.unsizedArrayStride);
+            case SSBOMethod::LOAD:
+            {
+                // Function header
+                out << ssboFunction.typeString << " " << ssboFunction.functionName
+                    << "(RWByteAddressBuffer buffer, uint loc)\n";
+                out << "{\n";
+                OutputSSBOLoadFunctionBody(out, ssboFunction);
+                break;
+            }
+            case SSBOMethod::STORE:
+            {
+                // Function header
+                out << "void " << ssboFunction.functionName
+                    << "(RWByteAddressBuffer buffer, uint loc, " << ssboFunction.typeString
+                    << " value)\n";
+                out << "{\n";
+                OutputSSBOStoreFunctionBody(out, ssboFunction);
+                break;
+            }
+            case SSBOMethod::LENGTH:
+            {
+                out << "int " << ssboFunction.functionName
+                    << "(RWByteAddressBuffer buffer, uint loc)\n";
+                out << "{\n";
+                OutputSSBOLengthFunctionBody(out, ssboFunction.unsizedArrayStride);
+                break;
+            }
+            case SSBOMethod::ATOMIC_ADD:
+            case SSBOMethod::ATOMIC_MIN:
+            case SSBOMethod::ATOMIC_MAX:
+            case SSBOMethod::ATOMIC_AND:
+            case SSBOMethod::ATOMIC_OR:
+            case SSBOMethod::ATOMIC_XOR:
+            case SSBOMethod::ATOMIC_EXCHANGE:
+            {
+                out << ssboFunction.typeString << " " << ssboFunction.functionName
+                    << "(RWByteAddressBuffer buffer, uint loc, " << ssboFunction.typeString
+                    << " value)\n";
+                ;
+                out << "{\n";
+
+                OutputSSBOAtomicMemoryFunctionBody(out, ssboFunction);
+                break;
+            }
+            case SSBOMethod::ATOMIC_COMPSWAP:
+            {
+                out << ssboFunction.typeString << " " << ssboFunction.functionName
+                    << "(RWByteAddressBuffer buffer, uint loc, " << ssboFunction.typeString
+                    << " compare_value, " << ssboFunction.typeString << " value)\n";
+                ;
+                out << "{\n";
+                OutputSSBOAtomicMemoryFunctionBody(out, ssboFunction);
+                break;
+            }
+            default:
+                UNREACHABLE();
         }
 
         out << "}\n"

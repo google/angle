@@ -110,10 +110,20 @@ const char *GetHLSLAtomicFunctionStringAndLeftParenthesis(TOperator op)
     }
 }
 
-bool IsAtomicFunctionDirectAssign(const TIntermBinary &node)
+bool IsAtomicFunctionForSharedVariableDirectAssign(const TIntermBinary &node)
 {
-    return node.getOp() == EOpAssign && node.getRight()->getAsAggregate() &&
-           IsAtomicFunction(node.getRight()->getAsAggregate()->getOp());
+    TIntermAggregate *aggregateNode = node.getRight()->getAsAggregate();
+    if (aggregateNode == nullptr)
+    {
+        return false;
+    }
+
+    if (node.getOp() == EOpAssign && IsAtomicFunction(aggregateNode->getOp()))
+    {
+        return !IsInShaderStorageBlock((*aggregateNode->getSequence())[0]->getAsTyped());
+    }
+
+    return false;
 }
 
 const char *kZeros       = "_ANGLE_ZEROS_";
@@ -1271,7 +1281,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             // function calls in HLSL.
             // e.g. original_value = atomicAdd(dest, value) should be translated into
             //      InterlockedAdd(dest, value, original_value);
-            else if (IsAtomicFunctionDirectAssign(*node))
+            else if (IsAtomicFunctionForSharedVariableDirectAssign(*node))
             {
                 TIntermAggregate *atomicFunctionNode = node->getRight()->getAsAggregate();
                 TOperator atomicFunctionOp           = atomicFunctionNode->getOp();
@@ -2400,20 +2410,60 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpAtomicAnd:
         case EOpAtomicOr:
         case EOpAtomicXor:
-            outputTriplet(out, visit, GetHLSLAtomicFunctionStringAndLeftParenthesis(node->getOp()),
-                          ",", ")");
-            break;
-
-        // The parameter 'original_value' of InterlockedExchange(dest, value, original_value) and
-        // InterlockedCompareExchange(dest, compare_value, value, original_value) is not optional.
+        // The parameter 'original_value' of InterlockedExchange(dest, value, original_value)
+        // and InterlockedCompareExchange(dest, compare_value, value, original_value) is not
+        // optional.
         // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/interlockedexchange
         // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/interlockedcompareexchange
-        // So all the call of atomicExchange(dest, value) and atomicCompSwap(dest, compare_value,
-        // value) should all be modified into the form of "int temp; temp = atomicExchange(dest,
-        // value);" and "int temp; temp = atomicCompSwap(dest, compare_value, value);" in the
-        // intermediate tree before traversing outputHLSL.
+        // So all the call of atomicExchange(dest, value) and atomicCompSwap(dest,
+        // compare_value, value) should all be modified into the form of "int temp; temp =
+        // atomicExchange(dest, value);" and "int temp; temp = atomicCompSwap(dest,
+        // compare_value, value);" in the intermediate tree before traversing outputHLSL.
         case EOpAtomicExchange:
         case EOpAtomicCompSwap:
+        {
+            ASSERT(node->getChildCount() > 1);
+            TIntermTyped *memNode = (*node->getSequence())[0]->getAsTyped();
+            if (IsInShaderStorageBlock(memNode))
+            {
+                // Atomic memory functions for SSBO.
+                // "_ssbo_atomicXXX_TYPE(RWByteAddressBuffer buffer, uint loc" is written to |out|.
+                mSSBOOutputHLSL->outputAtomicMemoryFunctionCallPrefix(memNode, node->getOp());
+                // Write the rest argument list to |out|.
+                for (size_t i = 1; i < node->getChildCount(); i++)
+                {
+                    out << ", ";
+                    TIntermTyped *argument = (*node->getSequence())[i]->getAsTyped();
+                    if (IsInShaderStorageBlock(argument))
+                    {
+                        mSSBOOutputHLSL->outputLoadFunctionCall(argument);
+                    }
+                    else
+                    {
+                        argument->traverse(this);
+                    }
+                }
+
+                out << ")";
+                return false;
+            }
+            else
+            {
+                // Atomic memory functions for shared variable.
+                if (node->getOp() != EOpAtomicExchange && node->getOp() != EOpAtomicCompSwap)
+                {
+                    outputTriplet(out, visit,
+                                  GetHLSLAtomicFunctionStringAndLeftParenthesis(node->getOp()), ",",
+                                  ")");
+                }
+                else
+                {
+                    UNREACHABLE();
+                }
+            }
+
+            break;
+        }
         default:
             UNREACHABLE();
     }
