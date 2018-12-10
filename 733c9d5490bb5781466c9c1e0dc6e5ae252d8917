@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e6b32a0_6138254a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2959,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-10T21:02:05Z",
+      "side": 1,
+      "message": "I thought this check is only for !context-\u003egetExtensions().webglCompatibility?",
+      "range": {
+        "startLine": 2959,
+        "startChar": 0,
+        "endLine": 2959,
+        "endChar": 74
+      },
+      "revId": "733c9d5490bb5781466c9c1e0dc6e5ae252d8917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
