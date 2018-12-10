@@ -16,6 +16,24 @@
       "revId": "677dda17cf10618486c16516a5897a7f9f68534b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16c9ac1e_d70e0e4f",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2928,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-10T23:35:48Z",
+      "side": 1,
+      "message": "Done on the first. I\u0027d like to leave off the geometry shader stuff as it\u0027s beyond 3.1 and not exposed anywhere yet. One option is we can ask Intel to contribute tests. They wrote the code originally.",
+      "parentUuid": "efb45211_fe20c98d",
+      "revId": "677dda17cf10618486c16516a5897a7f9f68534b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
