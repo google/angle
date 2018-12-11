@@ -793,10 +793,11 @@ void RendererVk::initFeatures()
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    // Work around ineffective compute-graphics barrier in android.
-    // TODO(syoussefi): Figure out which vendors and driver versions are affected.
-    // http://anglebug.com/3009
-    mFeatures.flushAfterVertexConversion = true;
+    // Work around ineffective compute-graphics barriers on Nexus 5X.
+    // TODO(syoussefi): Figure out which other vendors and driver versions are affected.
+    // http://anglebug.com/3019
+    mFeatures.flushAfterVertexConversion =
+        IsNexus5X(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 #endif
 }
 
