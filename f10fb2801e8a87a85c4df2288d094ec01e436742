@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e428701c_da9a184a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 8439,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-11T20:48:44Z",
+      "side": 1,
+      "message": "Would be nice if this was visually similar to the one above. Maybe have a helper populating the modes based on PrimitiveMode argument?",
+      "range": {
+        "startLine": 8427,
+        "startChar": 0,
+        "endLine": 8439,
+        "endChar": 7
+      },
+      "revId": "f10fb2801e8a87a85c4df2288d094ec01e436742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
