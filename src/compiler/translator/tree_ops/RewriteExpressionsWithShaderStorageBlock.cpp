@@ -174,21 +174,21 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitBinary(Visit visit,
         if (leftSSBO)
         {
             TIntermSymbol *tempSymbol =
-                insertInitStatementAndReturnTempSymbol(node->getLeft(), &insertions);
+                insertInitStatementAndReturnTempSymbol(node->getLeft()->deepCopy(), &insertions);
             TIntermBinary *tempCompoundOperate =
-                new TIntermBinary(node->getOp(), tempSymbol, rightNode);
+                new TIntermBinary(node->getOp(), tempSymbol->deepCopy(), rightNode->deepCopy());
             insertions.push_back(tempCompoundOperate);
             insertStatementsInParentBlock(insertions);
 
             TIntermBinary *assignTempValueToSSBO =
-                new TIntermBinary(EOpAssign, node->getLeft(), tempSymbol);
+                new TIntermBinary(EOpAssign, node->getLeft(), tempSymbol->deepCopy());
             queueReplacement(assignTempValueToSSBO, OriginalNode::IS_DROPPED);
         }
         else
         {
             insertStatementsInParentBlock(insertions);
             TIntermBinary *compoundAssignRValueToLValue =
-                new TIntermBinary(node->getOp(), node->getLeft(), rightNode);
+                new TIntermBinary(node->getOp(), node->getLeft(), rightNode->deepCopy());
             queueReplacement(compoundAssignRValueToLValue, OriginalNode::IS_DROPPED);
         }
     }
@@ -216,7 +216,8 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitBinary(Visit visit,
         }
 
         insertStatementsInParentBlock(insertions);
-        TIntermBinary *newExpr = new TIntermBinary(node->getOp(), leftNode, rightNode);
+        TIntermBinary *newExpr =
+            new TIntermBinary(node->getOp(), leftNode->deepCopy(), rightNode->deepCopy());
         queueReplacement(newExpr, OriginalNode::IS_DROPPED);
     }
     return !mFoundSSBO;
@@ -282,7 +283,7 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
                     readBackToSSBOs.push_back(readBackToSSBO);
                 }
             }
-            node->replaceChildNode(ssboArgument, argumentCopy);
+            node->replaceChildNode(ssboArgument->deepCopy(), argumentCopy);
         }
     }
 
@@ -306,7 +307,7 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
             insertions.insert(insertions.end(), readBackToSSBOs.begin(), readBackToSSBOs.end());
         }
         insertStatementsInParentBlock(insertions);
-        queueReplacement(tempSymbol, OriginalNode::IS_DROPPED);
+        queueReplacement(tempSymbol->deepCopy(), OriginalNode::IS_DROPPED);
     }
 
     return false;
