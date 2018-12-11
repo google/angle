@@ -1200,6 +1200,64 @@ class SimpleStateChangeTest : public ANGLETest
 class SimpleStateChangeTestES3 : public SimpleStateChangeTest
 {};
 
+class SimpleStateChangeTestES31 : public SimpleStateChangeTest
+{
+  protected:
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glGenFramebuffers(1, &mFramebuffer);
+        glGenTextures(1, &mTexture);
+
+        glBindTexture(GL_TEXTURE_2D, mTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+        EXPECT_GL_NO_ERROR();
+
+        constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=2, local_size_y=2) in;
+layout (rgba8, binding = 0) readonly uniform highp image2D srcImage;
+layout (rgba8, binding = 1) writeonly uniform highp image2D dstImage;
+void main()
+{
+    imageStore(dstImage, ivec2(gl_LocalInvocationID.xy),
+               imageLoad(srcImage, ivec2(gl_LocalInvocationID.xy)));
+})";
+
+        mProgram = CompileComputeProgram(kCS);
+        ASSERT_NE(mProgram, 0u);
+
+        glBindImageTexture(1, mTexture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture,
+                               0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        if (mFramebuffer != 0)
+        {
+            glDeleteFramebuffers(1, &mFramebuffer);
+            mFramebuffer = 0;
+        }
+
+        if (mTexture != 0)
+        {
+            glDeleteTextures(1, &mTexture);
+            mTexture = 0;
+        }
+        glDeleteProgram(mProgram);
+        ANGLETest::TearDown();
+    }
+
+    GLuint mProgram;
+    GLuint mFramebuffer = 0;
+    GLuint mTexture     = 0;
+};
+
 constexpr char kSimpleVertexShader[] = R"(attribute vec2 position;
 attribute vec4 color;
 varying vec4 vColor;
@@ -2223,6 +2281,163 @@ void main()
     EXPECT_PIXEL_RECT_EQ(kHalfSize, kHalfSize, kHalfSize, kHalfSize, GLColor::yellow);
 }
 
+// Tests that deleting an in-flight image texture does not immediately delete the resource.
+TEST_P(SimpleStateChangeTestES31, DeleteImageTextureInUse)
+{
+    std::array<GLColor, 4> colors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    GLTexture texRead;
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+
+    glBindImageTexture(0, texRead, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+    texRead.reset();
+
+    std::array<GLColor, 4> results;
+    glReadPixels(0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, results.data());
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < 4; i++)
+    {
+        EXPECT_EQ(colors[i], results[i]);
+    }
+}
+
+// Tests that bind the same image texture all the time between different dispatch calls.
+TEST_P(SimpleStateChangeTestES31, RebindImageTextureDispatchAgain)
+{
+    std::array<GLColor, 4> colors = {{GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
+    GLTexture texRead;
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+
+    glUseProgram(mProgram);
+
+    glBindImageTexture(0, texRead, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+
+    // Bind again
+    glBindImageTexture(0, texRead, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, 2, 2, GLColor::cyan);
+}
+
+// Tests that we can dispatch with an image texture, modify the image texture with a texSubImage,
+// and then dispatch again correctly.
+TEST_P(SimpleStateChangeTestES31, DispatchWithImageTextureTexSubImageThenDispatchAgain)
+{
+    std::array<GLColor, 4> colors    = {{GLColor::red, GLColor::red, GLColor::red, GLColor::red}};
+    std::array<GLColor, 4> subColors = {
+        {GLColor::green, GLColor::green, GLColor::green, GLColor::green}};
+
+    GLTexture texRead;
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+
+    glUseProgram(mProgram);
+
+    glBindImageTexture(0, texRead, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+
+    // Update bottom-half of image texture with green.
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 1, GL_RGBA, GL_UNSIGNED_BYTE, subColors.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Dispatch again, should still work.
+    glDispatchCompute(1, 1, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Validate first half of the image is red and the bottom is green.
+    std::array<GLColor, 4> results;
+    glReadPixels(0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, results.data());
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::green, results[0]);
+    EXPECT_EQ(GLColor::green, results[1]);
+    EXPECT_EQ(GLColor::red, results[2]);
+    EXPECT_EQ(GLColor::red, results[3]);
+}
+
+// Test updating an image texture's contents while in use by GL works as expected.
+TEST_P(SimpleStateChangeTestES31, UpdateImageTextureInUse)
+{
+    std::array<GLColor, 4> rgby = {{GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+
+    GLTexture texRead;
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, rgby.data());
+
+    glUseProgram(mProgram);
+
+    glBindImageTexture(0, texRead, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+
+    // Update the texture to be YBGR, while the Texture is in-use. Should not affect the dispatch.
+    glBindTexture(GL_TEXTURE_2D, texRead);
+    std::array<GLColor, 4> ybgr = {{GLColor::yellow, GLColor::blue, GLColor::green, GLColor::red}};
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, ybgr.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Check the Framebuffer. The dispatch call should have completed with the original RGBY data.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::yellow);
+
+    // Dispatch again. The second dispatch call should use the updated YBGR data.
+    glDispatchCompute(1, 1, 1);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that we can alternate between image textures between different dispatchs.
+TEST_P(SimpleStateChangeTestES31, DispatchImageTextureAThenTextureBThenTextureA)
+{
+    std::array<GLColor, 4> colorsTexA = {
+        {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
+
+    std::array<GLColor, 4> colorsTexB = {
+        {GLColor::magenta, GLColor::magenta, GLColor::magenta, GLColor::magenta}};
+
+    GLTexture texA;
+    glBindTexture(GL_TEXTURE_2D, texA);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colorsTexA.data());
+    GLTexture texB;
+    glBindTexture(GL_TEXTURE_2D, texB);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colorsTexB.data());
+
+    glUseProgram(mProgram);
+
+    glBindImageTexture(0, texA, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+
+    glBindImageTexture(0, texB, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+
+    glBindImageTexture(0, texA, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, 2, 2, GLColor::cyan);
+    ASSERT_GL_NO_ERROR();
+}
+
 static constexpr char kColorVS[] = R"(attribute vec2 position;
 attribute vec4 color;
 varying vec4 vColor;
@@ -3096,6 +3311,7 @@ ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_VULKAN(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES3, ES3_OPENGL(), ES3_D3D11());
+ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES31, ES31_OPENGL(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(WebGL2ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(ValidationStateChangeTestES31, ES31_OPENGL());
+ANGLE_INSTANTIATE_TEST(ValidationStateChangeTestES31, ES31_OPENGL(), ES31_D3D11());

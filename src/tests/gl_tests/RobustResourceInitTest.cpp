@@ -1043,6 +1043,18 @@ TEST_P(RobustResourceInitTestES31, ImageTextureInit_R32UI)
     EXPECT_GL_NO_ERROR();
 
     EXPECT_EQ(200u, outputValue);
+
+    outputValue = 0u;
+    // Write to another uninitialized texture.
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+    EXPECT_GL_NO_ERROR();
+    glBindImageTexture(1, texture2, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    glDispatchCompute(1, 1, 1);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+    glReadPixels(0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &outputValue);
+    EXPECT_EQ(200u, outputValue);
 }
 
 // Basic test that renderbuffers are initialized correctly.
