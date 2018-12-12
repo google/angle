@@ -108,13 +108,15 @@ const std::string &TransformFeedback::getLabel() const
     return mState.mLabel;
 }
 
-void TransformFeedback::begin(const Context *context, PrimitiveMode primitiveMode, Program *program)
+angle::Result TransformFeedback::begin(const Context *context,
+                                       PrimitiveMode primitiveMode,
+                                       Program *program)
 {
+    ANGLE_TRY(mImplementation->begin(context, primitiveMode));
     mState.mActive        = true;
     mState.mPrimitiveMode = primitiveMode;
     mState.mPaused        = false;
     mState.mVerticesDrawn = 0;
-    mImplementation->begin(primitiveMode);
     bindProgram(context, program);
 
     if (program)
@@ -135,33 +137,37 @@ void TransformFeedback::begin(const Context *context, PrimitiveMode primitiveMod
     {
         mState.mVertexCapacity = 0;
     }
+    return angle::Result::Continue;
 }
 
-void TransformFeedback::end(const Context *context)
+angle::Result TransformFeedback::end(const Context *context)
 {
+    ANGLE_TRY(mImplementation->end(context));
     mState.mActive         = false;
     mState.mPrimitiveMode  = PrimitiveMode::InvalidEnum;
     mState.mPaused         = false;
     mState.mVerticesDrawn  = 0;
     mState.mVertexCapacity = 0;
-    mImplementation->end();
     if (mState.mProgram)
     {
         mState.mProgram->release(context);
         mState.mProgram = nullptr;
     }
+    return angle::Result::Continue;
 }
 
-void TransformFeedback::pause()
+angle::Result TransformFeedback::pause(const Context *context)
 {
+    ANGLE_TRY(mImplementation->pause(context));
     mState.mPaused = true;
-    mImplementation->pause();
+    return angle::Result::Continue;
 }
 
-void TransformFeedback::resume()
+angle::Result TransformFeedback::resume(const Context *context)
 {
+    ANGLE_TRY(mImplementation->resume(context));
     mState.mPaused = false;
-    mImplementation->resume();
+    return angle::Result::Continue;
 }
 
 bool TransformFeedback::isPaused() const
@@ -219,7 +225,7 @@ bool TransformFeedback::hasBoundProgram(GLuint program) const
     return mState.mProgram != nullptr && mState.mProgram->id() == program;
 }
 
-void TransformFeedback::detachBuffer(const Context *context, GLuint bufferName)
+angle::Result TransformFeedback::detachBuffer(const Context *context, GLuint bufferName)
 {
     bool isBound = context->isCurrentTransformFeedback(this);
     for (size_t index = 0; index < mState.mIndexedBuffers.size(); index++)
@@ -231,16 +237,19 @@ void TransformFeedback::detachBuffer(const Context *context, GLuint bufferName)
                 mState.mIndexedBuffers[index]->onTFBindingChanged(context, false, true);
             }
             mState.mIndexedBuffers[index].set(context, nullptr, 0, 0);
-            mImplementation->bindIndexedBuffer(index, mState.mIndexedBuffers[index]);
+            ANGLE_TRY(
+                mImplementation->bindIndexedBuffer(context, index, mState.mIndexedBuffers[index]));
         }
     }
+
+    return angle::Result::Continue;
 }
 
-void TransformFeedback::bindIndexedBuffer(const Context *context,
-                                          size_t index,
-                                          Buffer *buffer,
-                                          size_t offset,
-                                          size_t size)
+angle::Result TransformFeedback::bindIndexedBuffer(const Context *context,
+                                                   size_t index,
+                                                   Buffer *buffer,
+                                                   size_t offset,
+                                                   size_t size)
 {
     ASSERT(index < mState.mIndexedBuffers.size());
     bool isBound = context && context->isCurrentTransformFeedback(this);
@@ -254,7 +263,7 @@ void TransformFeedback::bindIndexedBuffer(const Context *context,
         buffer->onTFBindingChanged(context, true, true);
     }
 
-    mImplementation->bindIndexedBuffer(index, mState.mIndexedBuffers[index]);
+    return mImplementation->bindIndexedBuffer(context, index, mState.mIndexedBuffers[index]);
 }
 
 const OffsetBindingPointer<Buffer> &TransformFeedback::getIndexedBuffer(size_t index) const

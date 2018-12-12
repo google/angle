@@ -36,35 +36,46 @@ TransformFeedbackGL::~TransformFeedbackGL()
     mTransformFeedbackID = 0;
 }
 
-void TransformFeedbackGL::begin(gl::PrimitiveMode primitiveMode)
+angle::Result TransformFeedbackGL::begin(const gl::Context *context,
+                                         gl::PrimitiveMode primitiveMode)
 {
     mStateManager->onTransformFeedbackStateChange();
+    return angle::Result::Continue;
 }
 
-void TransformFeedbackGL::end()
+angle::Result TransformFeedbackGL::end(const gl::Context *context)
 {
     mStateManager->onTransformFeedbackStateChange();
 
     // Immediately end the transform feedback so that the results are visible.
     syncActiveState(false, gl::PrimitiveMode::InvalidEnum);
+    return angle::Result::Continue;
 }
 
-void TransformFeedbackGL::pause()
+angle::Result TransformFeedbackGL::pause(const gl::Context *context)
 {
     mStateManager->onTransformFeedbackStateChange();
 
     syncPausedState(true);
+    return angle::Result::Continue;
 }
 
-void TransformFeedbackGL::resume()
+angle::Result TransformFeedbackGL::resume(const gl::Context *context)
 {
     mStateManager->onTransformFeedbackStateChange();
+    return angle::Result::Continue;
 }
 
-void TransformFeedbackGL::bindGenericBuffer(const gl::BindingPointer<gl::Buffer> &binding) {}
+angle::Result TransformFeedbackGL::bindGenericBuffer(const gl::Context *context,
+                                                     const gl::BindingPointer<gl::Buffer> &binding)
+{
+    return angle::Result::Continue;
+}
 
-void TransformFeedbackGL::bindIndexedBuffer(size_t index,
-                                            const gl::OffsetBindingPointer<gl::Buffer> &binding)
+angle::Result TransformFeedbackGL::bindIndexedBuffer(
+    const gl::Context *context,
+    size_t index,
+    const gl::OffsetBindingPointer<gl::Buffer> &binding)
 {
     // Directly bind buffer (not through the StateManager methods) because the buffer bindings are
     // tracked per transform feedback object
@@ -88,6 +99,7 @@ void TransformFeedbackGL::bindIndexedBuffer(size_t index,
     {
         mFunctions->bindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, static_cast<GLuint>(index), 0);
     }
+    return angle::Result::Continue;
 }
 
 GLuint TransformFeedbackGL::getTransformFeedbackID() const

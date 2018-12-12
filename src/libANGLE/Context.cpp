@@ -2785,7 +2785,7 @@ void Context::detachBuffer(Buffer *buffer)
     // Attachments to unbound container objects, such as
     // deletion of a buffer attached to a vertex array object which is not bound to the context,
     // are not affected and continue to act as references on the deleted object
-    mGLState.detachBuffer(this, buffer);
+    ANGLE_CONTEXT_TRY(mGLState.detachBuffer(this, buffer));
 }
 
 void Context::detachFramebuffer(GLuint framebuffer)
@@ -3165,7 +3165,7 @@ void Context::beginTransformFeedback(PrimitiveMode primitiveMode)
     ASSERT(transformFeedback != nullptr);
     ASSERT(!transformFeedback->isPaused());
 
-    transformFeedback->begin(this, primitiveMode, mGLState.getProgram());
+    ANGLE_CONTEXT_TRY(transformFeedback->begin(this, primitiveMode, mGLState.getProgram()));
     mStateCache.onActiveTransformFeedbackChange(this);
 }
 
@@ -5186,7 +5186,7 @@ void Context::bindBufferRange(BufferBinding target,
                               GLsizeiptr size)
 {
     Buffer *object = mState.mBuffers->checkBufferAllocation(mImplementation.get(), buffer);
-    mGLState.setIndexedBufferBinding(this, target, index, object, offset, size);
+    ANGLE_CONTEXT_TRY(mGLState.setIndexedBufferBinding(this, target, index, object, offset, size));
     if (target == BufferBinding::Uniform)
     {
         mUniformBufferObserverBindings[index].bind(object);
@@ -6438,7 +6438,7 @@ bool Context::isVertexArray(GLuint array)
 void Context::endTransformFeedback()
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
-    transformFeedback->end(this);
+    ANGLE_CONTEXT_TRY(transformFeedback->end(this));
     mStateCache.onActiveTransformFeedbackChange(this);
 }
 
@@ -6515,14 +6515,14 @@ bool Context::isTransformFeedback(GLuint id)
 void Context::pauseTransformFeedback()
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
-    transformFeedback->pause();
+    ANGLE_CONTEXT_TRY(transformFeedback->pause(this));
     mStateCache.onActiveTransformFeedbackChange(this);
 }
 
 void Context::resumeTransformFeedback()
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
-    transformFeedback->resume();
+    ANGLE_CONTEXT_TRY(transformFeedback->resume(this));
     mStateCache.onActiveTransformFeedbackChange(this);
 }
 

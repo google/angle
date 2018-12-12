@@ -283,19 +283,19 @@ class State : angle::NonCopyable
     }
 
     Buffer *getTargetBuffer(BufferBinding target) const;
-    void setIndexedBufferBinding(const Context *context,
-                                 BufferBinding target,
-                                 GLuint index,
-                                 Buffer *buffer,
-                                 GLintptr offset,
-                                 GLsizeiptr size);
+    angle::Result setIndexedBufferBinding(const Context *context,
+                                          BufferBinding target,
+                                          GLuint index,
+                                          Buffer *buffer,
+                                          GLintptr offset,
+                                          GLsizeiptr size);
 
     const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
 
     // Detach a buffer from all bindings
-    void detachBuffer(const Context *context, const Buffer *buffer);
+    angle::Result detachBuffer(const Context *context, const Buffer *buffer);
 
     // Vertex attrib manipulation
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);

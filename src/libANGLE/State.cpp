@@ -1429,19 +1429,19 @@ Query *State::getActiveQuery(QueryType type) const
     return mActiveQueries[type].get();
 }
 
-void State::setIndexedBufferBinding(const Context *context,
-                                    BufferBinding target,
-                                    GLuint index,
-                                    Buffer *buffer,
-                                    GLintptr offset,
-                                    GLsizeiptr size)
+angle::Result State::setIndexedBufferBinding(const Context *context,
+                                             BufferBinding target,
+                                             GLuint index,
+                                             Buffer *buffer,
+                                             GLintptr offset,
+                                             GLsizeiptr size)
 {
     setBufferBinding(context, target, buffer);
 
     switch (target)
     {
         case BufferBinding::TransformFeedback:
-            mTransformFeedback->bindIndexedBuffer(context, index, buffer, offset, size);
+            ANGLE_TRY(mTransformFeedback->bindIndexedBuffer(context, index, buffer, offset, size));
             setBufferBinding(context, target, buffer);
             break;
         case BufferBinding::Uniform:
@@ -1460,6 +1460,8 @@ void State::setIndexedBufferBinding(const Context *context,
             UNREACHABLE();
             break;
     }
+
+    return angle::Result::Continue;
 }
 
 const OffsetBindingPointer<Buffer> &State::getIndexedUniformBuffer(size_t index) const
@@ -1491,11 +1493,11 @@ Buffer *State::getTargetBuffer(BufferBinding target) const
     }
 }
 
-void State::detachBuffer(const Context *context, const Buffer *buffer)
+angle::Result State::detachBuffer(const Context *context, const Buffer *buffer)
 {
     if (!buffer->isBound())
     {
-        return;
+        return angle::Result::Continue;
     }
     GLuint bufferName = buffer->id();
     for (auto target : angle::AllEnums<BufferBinding>())
@@ -1509,7 +1511,7 @@ void State::detachBuffer(const Context *context, const Buffer *buffer)
     TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
     if (curTransformFeedback)
     {
-        curTransformFeedback->detachBuffer(context, bufferName);
+        ANGLE_TRY(curTransformFeedback->detachBuffer(context, bufferName));
     }
 
     getVertexArray()->detachBuffer(context, bufferName);
@@ -1537,6 +1539,8 @@ void State::detachBuffer(const Context *context, const Buffer *buffer)
             UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, 0, 0);
         }
     }
+
+    return angle::Result::Continue;
 }
 
 void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
