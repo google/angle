@@ -2776,6 +2776,19 @@ const char *ValidateDrawStates(Context *context)
 
 bool ValidateDrawMode(Context *context, PrimitiveMode mode)
 {
+    const State &state                      = context->getGLState();
+    TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
+    if (curTransformFeedback && curTransformFeedback->isActive() &&
+        !curTransformFeedback->isPaused())
+    {
+        if (!ValidateTransformFeedbackPrimitiveMode(context,
+                                                    curTransformFeedback->getPrimitiveMode(), mode))
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidDrawModeTransformFeedback);
+            return false;
+        }
+    }
+
     const Extensions &extensions = context->getExtensions();
 
     switch (mode)
@@ -2807,8 +2820,6 @@ bool ValidateDrawMode(Context *context, PrimitiveMode mode)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-        const State &state = context->getGLState();
-
         Program *program = state.getLinkedProgram(context);
         ASSERT(program);
 
@@ -2850,13 +2861,6 @@ bool ValidateDrawArraysCommon(Context *context,
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
-        if (!ValidateTransformFeedbackPrimitiveMode(context,
-                                                    curTransformFeedback->getPrimitiveMode(), mode))
-        {
-            context->validationError(GL_INVALID_OPERATION, kInvalidDrawModeTransformFeedback);
-            return false;
-        }
-
         if (!curTransformFeedback->checkBufferSpaceForDraw(count, primcount))
         {
             context->validationError(GL_INVALID_OPERATION, kTransformFeedbackBufferTooSmall);
@@ -2931,16 +2935,7 @@ bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, DrawElements
     {
         // EXT_geometry_shader allows transform feedback to work with all draw commands.
         // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
-        if (context->getExtensions().geometryShader)
-        {
-            if (!ValidateTransformFeedbackPrimitiveMode(
-                    context, curTransformFeedback->getPrimitiveMode(), mode))
-            {
-                context->validationError(GL_INVALID_OPERATION, kInvalidDrawModeTransformFeedback);
-                return false;
-            }
-        }
-        else
+        if (!context->getExtensions().geometryShader)
         {
             // It is an invalid operation to call DrawElements, DrawRangeElements or
             // DrawElementsInstanced while transform feedback is active, (3.0.2, section 2.14, pg
@@ -2949,6 +2944,8 @@ bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, DrawElements
                                      kUnsupportedDrawModeForTransformFeedback);
             return false;
         }
+
+        // Note that we are missing overflow checks for the transform feedback buffers.
     }
 
     const VertexArray *vao     = state.getVertexArray();

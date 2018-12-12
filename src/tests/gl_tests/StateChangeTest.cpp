@@ -2857,6 +2857,90 @@ void main()
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Simultaneous pack buffer binding should fail";
 }
 
+// Tests that we retain the correct draw mode settings with transform feedback changes.
+TEST_P(ValidationStateChangeTest, TransformFeedbackDrawModes)
+{
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOSX());
+
+    std::vector<std::string> tfVaryings = {"gl_Position"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, essl3_shaders::vs::Simple(),
+                                        essl3_shaders::fs::Red(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(program);
+
+    std::vector<Vector4> positionData;
+    for (const Vector3 &quadVertex : GetQuadVertices())
+    {
+        positionData.emplace_back(quadVertex.x(), quadVertex.y(), quadVertex.z(), 1.0f);
+    }
+
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, positionData.size() * sizeof(Vector4), positionData.data(),
+                 GL_STATIC_DRAW);
+
+    GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLoc);
+
+    glVertexAttribPointer(positionLoc, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+
+    // Set up transform feedback.
+    GLTransformFeedback transformFeedback;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
+
+    constexpr size_t kTransformFeedbackSize = 6 * sizeof(Vector4);
+
+    GLBuffer transformFeedbackBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, transformFeedbackBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, kTransformFeedbackSize * 2, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, transformFeedbackBuffer);
+
+    GLTransformFeedback pointsXFB;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, pointsXFB);
+    GLBuffer pointsXFBBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, pointsXFBBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 1024, nullptr, GL_STREAM_DRAW);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pointsXFBBuffer);
+
+    // Begin TRIANGLES, switch to paused POINTS, should be valid.
+    glBeginTransformFeedback(GL_POINTS);
+    glPauseTransformFeedback();
+    ASSERT_GL_NO_ERROR() << "Starting point transform feedback should succeed";
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR() << "Triangle rendering should succeed";
+    glDrawArrays(GL_POINTS, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Point rendering should fail";
+    glDrawArrays(GL_LINES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Lines rendering should fail";
+    glPauseTransformFeedback();
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, pointsXFB);
+    glResumeTransformFeedback();
+    glDrawArrays(GL_POINTS, 0, 6);
+    EXPECT_GL_NO_ERROR() << "Point rendering should succeed";
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Triangle rendering should fail";
+    glDrawArrays(GL_LINES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Lines rendering should fail";
+
+    glEndTransformFeedback();
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
+    glEndTransformFeedback();
+    ASSERT_GL_NO_ERROR() << "Ending transform feeback should pass";
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+
+    glDrawArrays(GL_POINTS, 0, 6);
+    EXPECT_GL_NO_ERROR() << "Point rendering should succeed";
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR() << "Triangle rendering should succeed";
+    glDrawArrays(GL_LINES, 0, 6);
+    EXPECT_GL_NO_ERROR() << "Line rendering should succeed";
+}
+
 // Tests a valid rendering setup with two textures. Followed by a draw with conflicting samplers.
 TEST_P(ValidationStateChangeTest, TextureConflict)
 {
