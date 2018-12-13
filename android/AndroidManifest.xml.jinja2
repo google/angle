@@ -29,6 +29,13 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.INFO"/>
             </intent-filter>
+
+            <!-- Indicate that this PKG is ANGLE. -->
+            <intent-filter android:priority="1">
+                <action android:name="android.app.action.ANGLE_FOR_ANDROID" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
