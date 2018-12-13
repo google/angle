@@ -2383,6 +2383,7 @@ angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps
     workarounds.flushAfterEndingTransformFeedback = IsNvidia(adapterDesc.VendorId);
     workarounds.getDimensionsIgnoresBaseLevel     = IsNvidia(adapterDesc.VendorId);
     workarounds.skipVSConstantRegisterZero        = IsNvidia(adapterDesc.VendorId);
+    workarounds.forceAtomicValueResolution        = IsNvidia(adapterDesc.VendorId);
 
     if (IsIntel(adapterDesc.VendorId))
     {

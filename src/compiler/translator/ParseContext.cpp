@@ -2366,11 +2366,6 @@ void TParseContext::checkAtomicCounterOffsetDoesNotOverlap(bool forceAppend,
                                                            const TSourceLoc &loc,
                                                            TType *type)
 {
-    if (!IsAtomicCounter(type->getBasicType()))
-    {
-        return;
-    }
-
     const size_t size = type->isArray() ? kAtomicCounterArrayStride * type->getArraySizeProduct()
                                         : kAtomicCounterSize;
     TLayoutQualifier layoutQualifier = type->getLayoutQualifier();
@@ -2391,6 +2386,17 @@ void TParseContext::checkAtomicCounterOffsetDoesNotOverlap(bool forceAppend,
     }
     layoutQualifier.offset = offset;
     type->setLayoutQualifier(layoutQualifier);
+}
+
+void TParseContext::checkAtomicCounterOffsetAlignment(const TSourceLoc &location, const TType &type)
+{
+    TLayoutQualifier layoutQualifier = type.getLayoutQualifier();
+
+    // OpenGL ES 3.1 Table 6.5, Atomic counter offset must be a multiple of 4
+    if (layoutQualifier.offset % 4 != 0)
+    {
+        error(location, "Offset must be multiple of 4", "atomic counter");
+    }
 }
 
 void TParseContext::checkGeometryShaderInputAndSetArraySize(const TSourceLoc &location,
@@ -2495,7 +2501,12 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
 
         checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, type);
 
-        checkAtomicCounterOffsetDoesNotOverlap(false, identifierOrTypeLocation, type);
+        if (IsAtomicCounter(type->getBasicType()))
+        {
+            checkAtomicCounterOffsetDoesNotOverlap(false, identifierOrTypeLocation, type);
+
+            checkAtomicCounterOffsetAlignment(identifierOrTypeLocation, *type);
+        }
 
         TVariable *variable = nullptr;
         if (declareVariable(identifierOrTypeLocation, identifier, type, &variable))
@@ -2537,7 +2548,12 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, arrayType);
 
-    checkAtomicCounterOffsetDoesNotOverlap(false, identifierLocation, arrayType);
+    if (IsAtomicCounter(arrayType->getBasicType()))
+    {
+        checkAtomicCounterOffsetDoesNotOverlap(false, identifierLocation, arrayType);
+
+        checkAtomicCounterOffsetAlignment(identifierLocation, *arrayType);
+    }
 
     TIntermDeclaration *declaration = new TIntermDeclaration();
     declaration->setLine(identifierLocation);
@@ -2695,7 +2711,12 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, type);
 
-    checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, type);
+    if (IsAtomicCounter(type->getBasicType()))
+    {
+        checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, type);
+
+        checkAtomicCounterOffsetAlignment(identifierLocation, *type);
+    }
 
     TVariable *variable = nullptr;
     if (declareVariable(identifierLocation, identifier, type, &variable))
@@ -2732,7 +2753,12 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
 
         checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, arrayType);
 
-        checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, arrayType);
+        if (IsAtomicCounter(arrayType->getBasicType()))
+        {
+            checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, arrayType);
+
+            checkAtomicCounterOffsetAlignment(identifierLocation, *arrayType);
+        }
 
         TVariable *variable = nullptr;
         if (declareVariable(identifierLocation, identifier, arrayType, &variable))

@@ -131,6 +131,13 @@ struct WorkaroundsD3D
     // This is targeted to work around a bug in NVIDIA D3D driver version 388.59 where in very
     // specific cases the driver would not handle constant register zero correctly.
     bool skipVSConstantRegisterZero = false;
+
+    // Forces the value returned from an atomic operations to be always be resolved. This is
+    // targeted to workaround a bug in NVIDIA D3D driver where the return value from
+    // RWByteAddressBuffer.InterlockedAdd does not get resolved when used in the .yzw components of
+    // a RWByteAddressBuffer.Store operation. Only has an effect on HLSL translation.
+    // http://anglebug.com/3246
+    bool forceAtomicValueResolution = false;
 };
 
 inline WorkaroundsD3D::WorkaroundsD3D()                            = default;

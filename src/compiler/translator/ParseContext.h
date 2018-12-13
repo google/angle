@@ -515,6 +515,8 @@ class TParseContext : angle::NonCopyable
     void checkAtomicCounterOffsetDoesNotOverlap(bool forceAppend,
                                                 const TSourceLoc &loc,
                                                 TType *type);
+    void checkAtomicCounterOffsetAlignment(const TSourceLoc &location, const TType &type);
+
     void checkIndexIsNotSpecified(const TSourceLoc &location, int index);
     void checkBindingIsValid(const TSourceLoc &identifierLocation, const TType &type);
     void checkBindingIsNotSpecified(const TSourceLoc &location, int binding);

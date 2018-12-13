@@ -285,10 +285,11 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
 
     mExcessiveLoopIndex = nullptr;
 
-    mStructureHLSL             = new StructureHLSL;
-    mTextureFunctionHLSL       = new TextureFunctionHLSL;
-    mImageFunctionHLSL         = new ImageFunctionHLSL;
-    mAtomicCounterFunctionHLSL = new AtomicCounterFunctionHLSL;
+    mStructureHLSL       = new StructureHLSL;
+    mTextureFunctionHLSL = new TextureFunctionHLSL;
+    mImageFunctionHLSL   = new ImageFunctionHLSL;
+    mAtomicCounterFunctionHLSL =
+        new AtomicCounterFunctionHLSL((compileOptions & SH_FORCE_ATOMIC_VALUE_RESOLUTION) != 0);
 
     unsigned int firstUniformRegister =
         ((compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0) ? 1u : 0u;
