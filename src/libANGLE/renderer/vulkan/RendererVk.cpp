@@ -745,7 +745,10 @@ std::string RendererVk::getRendererDescription() const
         strstr << GetVendorString(mPhysicalDeviceProperties.vendorID) << " ";
     }
 
-    strstr << mPhysicalDeviceProperties.deviceName << ")";
+    strstr << mPhysicalDeviceProperties.deviceName;
+    strstr << " (" << gl::FmtHex(mPhysicalDeviceProperties.deviceID) << ")";
+
+    strstr << ")";
 
     return strstr.str();
 }
