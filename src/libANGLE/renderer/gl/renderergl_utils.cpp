@@ -59,6 +59,27 @@ VendorID GetVendorID(const FunctionsGL *functions)
     }
 }
 
+uint32_t GetDeviceID(const FunctionsGL *functions)
+{
+    std::string nativeRendererString(
+        reinterpret_cast<const char *>(functions->getString(GL_RENDERER)));
+    constexpr std::pair<const char *, uint32_t> kKnownDeviceIDs[] = {
+        {"Adreno (TM) 418", ANDROID_DEVICE_ID_NEXUS5X},
+        {"Adreno (TM) 530", ANDROID_DEVICE_ID_PIXEL1XL},
+        {"Adreno (TM) 540", ANDROID_DEVICE_ID_PIXEL2},
+    };
+
+    for (const auto &knownDeviceID : kKnownDeviceIDs)
+    {
+        if (nativeRendererString.find(knownDeviceID.first) != std::string::npos)
+        {
+            return knownDeviceID.second;
+        }
+    }
+
+    return 0;
+}
+
 namespace nativegl_gl
 {
 
@@ -1133,10 +1154,15 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLESExtension("GL_EXT_disjoint_timer_query"))
     {
         extensions->disjointTimerQuery = true;
-        extensions->queryCounterBitsTimeElapsed =
-            QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
-        extensions->queryCounterBitsTimestamp =
-            QueryQueryValue(functions, GL_TIMESTAMP, GL_QUERY_COUNTER_BITS);
+
+        // If we can't query the counter bits, leave them at 0.
+        if (!workarounds.queryCounterBitsGeneratesErrors)
+        {
+            extensions->queryCounterBitsTimeElapsed =
+                QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
+            extensions->queryCounterBitsTimestamp =
+                QueryQueryValue(functions, GL_TIMESTAMP, GL_QUERY_COUNTER_BITS);
+        }
     }
 
     // the EXT_multisample_compatibility is written against ES3.1 but can apply
@@ -1333,6 +1359,7 @@ void GenerateCaps(const FunctionsGL *functions,
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)
 {
     VendorID vendor = GetVendorID(functions);
+    uint32_t device = GetDeviceID(functions);
 
     workarounds->dontRemoveInvariantForFragmentInput =
         functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor);
@@ -1409,6 +1436,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->disableBlendFuncExtended = IsAMD(vendor) || IsIntel(vendor);
 
     workarounds->unsizedsRGBReadPixelsDoesntTransform = IsAndroid() && IsQualcomm(vendor);
+
+    workarounds->queryCounterBitsGeneratesErrors = IsNexus5X(vendor, device);
 }
 
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)

@@ -163,6 +163,10 @@ struct WorkaroundsGL
     // glReadPixels on unsized sRGB texture formats. http://crbug.com/550292 and
     // http://crbug.com/565179
     bool unsizedsRGBReadPixelsDoesntTransform = false;
+
+    // Older Qualcomm drivers generate errors when querying the number of bits in timer queries, ex:
+    // GetQueryivEXT(GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS).  http://anglebug.com/3027
+    bool queryCounterBitsGeneratesErrors = false;
 };
 
 inline WorkaroundsGL::WorkaroundsGL() = default;
