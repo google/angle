@@ -11,7 +11,6 @@
 
 #include "ANGLEPerfTest.h"
 #include "DrawCallPerfParams.h"
-#include "common/utilities.h"
 #include "test_utils/draw_call_perf_utils.h"
 
 namespace
@@ -96,6 +95,21 @@ DrawElementsPerfBenchmark::DrawElementsPerfBenchmark()
     }
 }
 
+GLsizei ElementTypeSize(GLenum elementType)
+{
+    switch (elementType)
+    {
+        case GL_UNSIGNED_BYTE:
+            return sizeof(GLubyte);
+        case GL_UNSIGNED_SHORT:
+            return sizeof(GLushort);
+        case GL_UNSIGNED_INT:
+            return sizeof(GLuint);
+        default:
+            return 0;
+    }
+}
+
 void DrawElementsPerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
@@ -117,7 +131,7 @@ void DrawElementsPerfBenchmark::initializeBenchmark()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 
-    mBufferSize = gl::ElementTypeSize(params.type) * mCount;
+    mBufferSize = ElementTypeSize(params.type) * mCount;
 
     if (params.type == GL_UNSIGNED_INT)
     {

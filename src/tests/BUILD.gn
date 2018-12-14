@@ -66,6 +66,7 @@ if (build_with_chromium) {
       "//src/tests:angle_end2end_tests",
       "//src/tests:angle_perftests",
       "//src/tests:angle_unittests",
+      "//src/tests:angle_white_box_perftests",
       "//src/tests:angle_white_box_tests",
     ]
     if (build_angle_deqp_tests) {
@@ -188,7 +189,7 @@ if (is_win || is_linux || is_mac || is_android) {
   import("angle_white_box_tests.gni")
 
   test("angle_white_box_tests") {
-    include_dirs = [ "../../src/tests" ]
+    include_dirs = [ "." ]
 
     if (is_android) {
       use_native_activity = true
@@ -237,13 +238,11 @@ if (is_win || is_linux || is_mac || is_android) {
 if (is_win || is_linux || is_android || is_mac) {
   import("angle_perftests.gni")
 
-  test("angle_perftests") {
-    include_dirs = [
-      ".",
-      "../..",
-    ]
+  # This test suite is for perf tests that use ANGLE's internals in some direct way.
+  test("angle_white_box_perftests") {
+    include_dirs = [ "." ]
 
-    sources = angle_perf_tests_sources
+    sources = angle_white_box_perf_tests_sources
 
     deps = googletest_deps + [
              angle_root + ":angle_util_static",
@@ -259,13 +258,51 @@ if (is_win || is_linux || is_android || is_mac) {
     }
 
     if (is_win) {
-      sources += angle_perf_tests_win_sources
+      sources += angle_white_box_perf_tests_win_sources
     }
 
     if (angle_enable_vulkan) {
-      sources += angle_perf_tests_vulkan_sources
+      sources += angle_white_box_perf_tests_vulkan_sources
       deps += [ "$angle_root/third_party/glslang:glslang" ]
       public_configs = [ "$angle_root/third_party/glslang:glslang_config" ]
+    }
+
+    if (build_with_chromium) {
+      sources += [ "//gpu/angle_perftests_main.cc" ]
+    } else {
+      sources += [ "angle_perftests_main.cpp" ]
+    }
+
+    configs += [
+      angle_root + ":internal_config",
+      angle_root + ":libANGLE_config",
+    ]
+
+    if (is_linux && !is_component_build) {
+      # Set rpath to find *.so files even in a non-component build.
+      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+    }
+  }
+
+  # This test suite is designed to run against a generic GL implementation.
+  test("angle_perftests") {
+    include_dirs = [
+      ".",
+      "../..",
+    ]
+
+    sources = angle_perf_tests_sources
+
+    deps = googletest_deps + [
+             angle_root + ":angle_util_static",
+             angle_root + ":libEGL",
+             angle_root + ":libGLESv2",
+             angle_root + "/third_party/jsoncpp:jsoncpp",
+           ]
+
+    if (is_android) {
+      use_native_activity = true
+      configs -= [ "//build/config/android:hide_all_but_jni" ]
     }
 
     if (build_with_chromium) {
