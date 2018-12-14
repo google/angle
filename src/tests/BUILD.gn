@@ -240,7 +240,10 @@ if (is_win || is_linux || is_android || is_mac) {
 
   # This test suite is for perf tests that use ANGLE's internals in some direct way.
   test("angle_white_box_perftests") {
-    include_dirs = [ "." ]
+    include_dirs = [
+      ".",
+      "../..",
+    ]
 
     sources = angle_white_box_perf_tests_sources
 
