@@ -2727,6 +2727,11 @@ const char *ValidateDrawStates(Context *context)
         // Do some additonal WebGL-specific validation
         if (extensions.webglCompatibility)
         {
+            if (!state.validateSamplerFormats())
+            {
+                return kSamplerFormatMismatch;
+            }
+
             const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
             if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
                 transformFeedbackObject->buffersBoundForOtherUse())

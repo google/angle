@@ -281,6 +281,7 @@ State::State(ContextID contextIn,
       mVertexArray(nullptr),
       mActiveSampler(0),
       mActiveTexturesCache{},
+      mTexturesIncompatibleWithSamplers(0),
       mPrimitiveRestart(false),
       mDebug(debug),
       mMultiSampling(false),
@@ -535,6 +536,10 @@ ANGLE_INLINE void State::updateActiveTextureState(const Context *context,
             mDirtyObjects.set(DIRTY_OBJECT_TEXTURES_INIT);
         }
     }
+
+    mTexturesIncompatibleWithSamplers[textureIndex] =
+        !texture->getTextureState().compatibleWithSamplerFormat(
+            mProgram->getState().getSamplerFormatForTextureUnitIndex(textureIndex));
 
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
 }

@@ -3075,6 +3075,67 @@ void main()
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Simultaneous pack buffer binding should fail";
 }
 
+// Test sampler format validation caching works.
+TEST_P(WebGL2ValidationStateChangeTest, SamplerFormatCache)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform sampler2D sampler;
+out vec4 colorOut;
+void main()
+{
+    colorOut = texture(sampler, vec2(0));
+})";
+
+    std::vector<std::string> tfVaryings = {"gl_Position"};
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    std::array<GLColor, 4> colors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+
+    const auto &quadVertices = GetQuadVertices();
+
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(Vector3), quadVertices.data(),
+                 GL_STATIC_DRAW);
+
+    GLint samplerLoc = glGetUniformLocation(program, "sampler");
+    ASSERT_NE(-1, samplerLoc);
+    glUniform1i(samplerLoc, 0);
+
+    GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // TexImage2D should update the sampler format cache.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8UI, 2, 2, 0, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE,
+                 colors.data());
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Sampling integer texture with a float sampler.";
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 2, 2, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_INT, colors.data());
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR() << "Depth texture with no compare mode.";
+
+    // TexParameteri should update the sampler format cache.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Depth texture with compare mode set.";
+}
+
 // Tests that we retain the correct draw mode settings with transform feedback changes.
 TEST_P(ValidationStateChangeTest, TransformFeedbackDrawModes)
 {

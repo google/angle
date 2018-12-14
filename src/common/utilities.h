@@ -85,6 +85,17 @@ unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes);
 // GL_INVALID_INDEX and write the length of the original string.
 unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutArrayIndexOut);
 
+enum class SamplerFormat : uint8_t
+{
+    Float    = 0,
+    Unsigned = 1,
+    Signed   = 2,
+    Shadow   = 3,
+
+    InvalidEnum = 4,
+    EnumCount   = 4,
+};
+
 struct UniformTypeInfo final : angle::NonCopyable
 {
     constexpr UniformTypeInfo(GLenum type,
@@ -92,6 +103,7 @@ struct UniformTypeInfo final : angle::NonCopyable
                               GLenum textureType,
                               GLenum transposedMatrixType,
                               GLenum boolVectorType,
+                              SamplerFormat samplerFormat,
                               int rowCount,
                               int columnCount,
                               int componentCount,
@@ -106,6 +118,7 @@ struct UniformTypeInfo final : angle::NonCopyable
           textureType(textureType),
           transposedMatrixType(transposedMatrixType),
           boolVectorType(boolVectorType),
+          samplerFormat(samplerFormat),
           rowCount(rowCount),
           columnCount(columnCount),
           componentCount(componentCount),
@@ -122,6 +135,7 @@ struct UniformTypeInfo final : angle::NonCopyable
     GLenum textureType;
     GLenum transposedMatrixType;
     GLenum boolVectorType;
+    SamplerFormat samplerFormat;
     int rowCount;
     int columnCount;
     int componentCount;

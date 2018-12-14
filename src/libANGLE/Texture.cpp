@@ -106,7 +106,9 @@ TextureState::TextureState(TextureType type)
       mImageDescs((IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) * (type == TextureType::CubeMap ? 6 : 1)),
       mCropRect(0, 0, 0, 0),
       mGenerateMipmapHint(GL_FALSE),
-      mInitState(InitState::MayNeedInit)
+      mInitState(InitState::MayNeedInit),
+      mCachedSamplerFormat(SamplerFormat::InvalidEnum),
+      mCachedSamplerFormatValid(false)
 {}
 
 TextureState::~TextureState() {}
@@ -237,6 +239,33 @@ void TextureState::setGenerateMipmapHint(GLenum hint)
 GLenum TextureState::getGenerateMipmapHint() const
 {
     return mGenerateMipmapHint;
+}
+
+SamplerFormat TextureState::computeRequiredSamplerFormat() const
+{
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
+    if ((baseImageDesc.format.info->format == GL_DEPTH_COMPONENT ||
+         baseImageDesc.format.info->format == GL_DEPTH_STENCIL) &&
+        mSamplerState.getCompareMode() != GL_NONE)
+    {
+        return SamplerFormat::Shadow;
+    }
+    else
+    {
+        switch (baseImageDesc.format.info->componentType)
+        {
+            case GL_UNSIGNED_NORMALIZED:
+            case GL_SIGNED_NORMALIZED:
+            case GL_FLOAT:
+                return SamplerFormat::Float;
+            case GL_INT:
+                return SamplerFormat::Signed;
+            case GL_UNSIGNED_INT:
+                return SamplerFormat::Unsigned;
+            default:
+                return SamplerFormat::InvalidEnum;
+        }
+    }
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
@@ -964,6 +993,7 @@ void Texture::signalDirtyStorage(const Context *context, InitState initState)
 {
     mState.mInitState = initState;
     invalidateCompletenessCache();
+    mState.mCachedSamplerFormatValid = false;
     onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
 }
 
@@ -971,6 +1001,7 @@ void Texture::signalDirtyState(const Context *context, size_t dirtyBit)
 {
     mDirtyBits.set(dirtyBit);
     invalidateCompletenessCache();
+    mState.mCachedSamplerFormatValid = false;
     onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 }
 

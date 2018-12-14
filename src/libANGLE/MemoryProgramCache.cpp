@@ -414,10 +414,10 @@ angle::Result MemoryProgramCache::Deserialize(const Context *context,
     for (unsigned int samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
     {
         TextureType textureType = stream.readEnum<TextureType>();
+        SamplerFormat format    = stream.readEnum<SamplerFormat>();
         size_t bindingCount     = stream.readInt<size_t>();
         bool unreferenced       = stream.readBool();
-        state->mSamplerBindings.emplace_back(
-            SamplerBinding(textureType, bindingCount, unreferenced));
+        state->mSamplerBindings.emplace_back(textureType, format, bindingCount, unreferenced);
     }
 
     unsigned int imageRangeLow     = stream.readInt<unsigned int>();
@@ -611,6 +611,7 @@ void MemoryProgramCache::Serialize(const Context *context,
     for (const auto &samplerBinding : state.getSamplerBindings())
     {
         stream.writeEnum(samplerBinding.textureType);
+        stream.writeEnum(samplerBinding.format);
         stream.writeInt(samplerBinding.boundTextureUnits.size());
         stream.writeInt(samplerBinding.unreferenced);
     }

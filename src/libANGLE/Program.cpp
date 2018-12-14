@@ -724,8 +724,14 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
 }
 
 // SamplerBindings implementation.
-SamplerBinding::SamplerBinding(TextureType textureTypeIn, size_t elementCount, bool unreferenced)
-    : textureType(textureTypeIn), boundTextureUnits(elementCount, 0), unreferenced(unreferenced)
+SamplerBinding::SamplerBinding(TextureType textureTypeIn,
+                               SamplerFormat formatIn,
+                               size_t elementCount,
+                               bool unreferenced)
+    : textureType(textureTypeIn),
+      format(formatIn),
+      boundTextureUnits(elementCount, 0),
+      unreferenced(unreferenced)
 {}
 
 SamplerBinding::SamplerBinding(const SamplerBinding &other) = default;
@@ -1356,6 +1362,8 @@ void ProgramState::updateTransformFeedbackStrides()
 
 void ProgramState::updateActiveSamplers()
 {
+    mActiveSamplerRefCounts.fill(0);
+
     for (SamplerBinding &samplerBinding : mSamplerBindings)
     {
         if (samplerBinding.unreferenced)
@@ -1363,8 +1371,22 @@ void ProgramState::updateActiveSamplers()
 
         for (GLint textureUnit : samplerBinding.boundTextureUnits)
         {
-            mActiveSamplerRefCounts[textureUnit]++;
-            mActiveSamplerTypes[textureUnit] = getSamplerUniformTextureType(textureUnit);
+            if (++mActiveSamplerRefCounts[textureUnit] == 1)
+            {
+                mActiveSamplerTypes[textureUnit]   = samplerBinding.textureType;
+                mActiveSamplerFormats[textureUnit] = samplerBinding.format;
+            }
+            else
+            {
+                if (mActiveSamplerTypes[textureUnit] != samplerBinding.textureType)
+                {
+                    mActiveSamplerTypes[textureUnit] = TextureType::InvalidEnum;
+                }
+                if (mActiveSamplerFormats[textureUnit] != samplerBinding.format)
+                {
+                    mActiveSamplerFormats[textureUnit] = SamplerFormat::InvalidEnum;
+                }
+            }
             mActiveSamplersMask.set(textureUnit);
         }
     }
@@ -2895,7 +2917,8 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         const auto &samplerUniform = mState.mUniforms[samplerIndex];
         TextureType textureType    = SamplerTypeToTextureType(samplerUniform.type);
         unsigned int elementCount  = samplerUniform.getBasicTypeElementCount();
-        mState.mSamplerBindings.emplace_back(textureType, elementCount, false);
+        SamplerFormat format       = samplerUniform.typeInfo->samplerFormat;
+        mState.mSamplerBindings.emplace_back(textureType, format, elementCount, false);
     }
 }
 
@@ -3896,30 +3919,45 @@ void Program::updateSamplerUniform(Context *context,
         newRefCount++;
 
         // Check for binding type change.
-        TextureType &newSamplerType = mState.mActiveSamplerTypes[newTextureUnit];
-        TextureType &oldSamplerType = mState.mActiveSamplerTypes[oldTextureUnit];
+        TextureType &newSamplerType     = mState.mActiveSamplerTypes[newTextureUnit];
+        TextureType &oldSamplerType     = mState.mActiveSamplerTypes[oldTextureUnit];
+        SamplerFormat &newSamplerFormat = mState.mActiveSamplerFormats[newTextureUnit];
+        SamplerFormat &oldSamplerFormat = mState.mActiveSamplerFormats[oldTextureUnit];
 
         if (newRefCount == 1)
         {
-            newSamplerType = samplerBinding.textureType;
+            newSamplerType   = samplerBinding.textureType;
+            newSamplerFormat = samplerBinding.format;
             mState.mActiveSamplersMask.set(newTextureUnit);
         }
-        else if (newSamplerType != samplerBinding.textureType)
+        else
         {
-            // Conflict detected. Ensure we reset it properly.
-            newSamplerType = TextureType::InvalidEnum;
+            if (newSamplerType != samplerBinding.textureType)
+            {
+                // Conflict detected. Ensure we reset it properly.
+                newSamplerType = TextureType::InvalidEnum;
+            }
+            if (newSamplerFormat != samplerBinding.format)
+            {
+                newSamplerFormat = SamplerFormat::InvalidEnum;
+            }
         }
 
         // Unset previously active sampler.
         if (oldRefCount == 0)
         {
-            oldSamplerType = TextureType::InvalidEnum;
+            oldSamplerType   = TextureType::InvalidEnum;
+            oldSamplerFormat = SamplerFormat::InvalidEnum;
             mState.mActiveSamplersMask.reset(oldTextureUnit);
         }
-        else if (oldSamplerType == TextureType::InvalidEnum)
+        else
         {
-            // Previous conflict. Check if this new change fixed the conflict.
-            oldSamplerType = mState.getSamplerUniformTextureType(oldTextureUnit);
+            if (oldSamplerType == TextureType::InvalidEnum ||
+                oldSamplerFormat == SamplerFormat::InvalidEnum)
+            {
+                // Previous conflict. Check if this new change fixed the conflict.
+                mState.setSamplerUniformTextureTypeAndFormat(oldTextureUnit);
+            }
         }
 
         // Notify context.
@@ -3934,9 +3972,11 @@ void Program::updateSamplerUniform(Context *context,
     mCachedValidateSamplersResult.reset();
 }
 
-TextureType ProgramState::getSamplerUniformTextureType(size_t textureUnitIndex) const
+void ProgramState::setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex)
 {
-    TextureType foundType = TextureType::InvalidEnum;
+    bool foundBinding         = false;
+    TextureType foundType     = TextureType::InvalidEnum;
+    SamplerFormat foundFormat = SamplerFormat::InvalidEnum;
 
     for (const SamplerBinding &binding : mSamplerBindings)
     {
@@ -3949,19 +3989,29 @@ TextureType ProgramState::getSamplerUniformTextureType(size_t textureUnitIndex) 
         {
             if (textureUnit == textureUnitIndex)
             {
-                if (foundType == TextureType::InvalidEnum)
+                if (!foundBinding)
                 {
-                    foundType = binding.textureType;
+                    foundBinding = true;
+                    foundType    = binding.textureType;
+                    foundFormat  = binding.format;
                 }
-                else if (foundType != binding.textureType)
+                else
                 {
-                    return TextureType::InvalidEnum;
+                    if (foundType != binding.textureType)
+                    {
+                        foundType = TextureType::InvalidEnum;
+                    }
+                    if (foundFormat != binding.format)
+                    {
+                        foundFormat = SamplerFormat::InvalidEnum;
+                    }
                 }
             }
         }
     }
 
-    return foundType;
+    mActiveSamplerTypes[textureUnitIndex]   = foundType;
+    mActiveSamplerFormats[textureUnitIndex] = foundFormat;
 }
 
 template <typename T>

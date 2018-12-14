@@ -15,6 +15,7 @@
 #include "angle_gl.h"
 #include "common/Optional.h"
 #include "common/debug.h"
+#include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Debug.h"
@@ -109,6 +110,17 @@ struct TextureState final : private angle::NonCopyable
 
     bool isCubeComplete() const;
 
+    ANGLE_INLINE bool compatibleWithSamplerFormat(SamplerFormat format) const
+    {
+        if (!mCachedSamplerFormatValid)
+        {
+            mCachedSamplerFormat      = computeRequiredSamplerFormat();
+            mCachedSamplerFormatValid = true;
+        }
+        // Incomplete textures are compatible with any sampler format.
+        return mCachedSamplerFormat == SamplerFormat::InvalidEnum || format == mCachedSamplerFormat;
+    }
+
     const ImageDesc &getImageDesc(TextureTarget target, size_t level) const;
     const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
 
@@ -139,6 +151,7 @@ struct TextureState final : private angle::NonCopyable
     bool computeSamplerCompleteness(const SamplerState &samplerState, const State &data) const;
     bool computeMipmapCompleteness() const;
     bool computeLevelCompleteness(TextureTarget target, size_t level) const;
+    SamplerFormat computeRequiredSamplerFormat() const;
 
     TextureTarget getBaseImageTarget() const;
 
@@ -184,6 +197,9 @@ struct TextureState final : private angle::NonCopyable
     GLenum mGenerateMipmapHint;
 
     InitState mInitState;
+
+    mutable SamplerFormat mCachedSamplerFormat;
+    mutable bool mCachedSamplerFormatValid;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);

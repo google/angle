@@ -23,6 +23,7 @@
 #include "common/Optional.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
+#include "common/utilities.h"
 
 #include "libANGLE/Constants.h"
 #include "libANGLE/Debug.h"
@@ -209,12 +210,17 @@ struct BindingInfo
 // This small structure encapsulates binding sampler uniforms to active GL textures.
 struct SamplerBinding
 {
-    SamplerBinding(TextureType textureTypeIn, size_t elementCount, bool unreferenced);
+    SamplerBinding(TextureType textureTypeIn,
+                   SamplerFormat formatIn,
+                   size_t elementCount,
+                   bool unreferenced);
     SamplerBinding(const SamplerBinding &other);
     ~SamplerBinding();
 
     // Necessary for retrieving active textures from the GL state.
     TextureType textureType;
+
+    SamplerFormat format;
 
     // List of all textures bound to this sampler, of type textureType.
     std::vector<GLuint> boundTextureUnits;
@@ -359,6 +365,10 @@ class ProgramState final : angle::NonCopyable
     bool hasAttachedShader() const;
 
     const ActiveTextureMask &getActiveSamplersMask() const { return mActiveSamplersMask; }
+    SamplerFormat getSamplerFormatForTextureUnitIndex(size_t textureUnitIndex) const
+    {
+        return mActiveSamplerFormats[textureUnitIndex];
+    }
 
   private:
     friend class MemoryProgramCache;
@@ -369,7 +379,7 @@ class ProgramState final : angle::NonCopyable
     void updateActiveImages();
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
-    TextureType getSamplerUniformTextureType(size_t textureUnitIndex) const;
+    void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex);
 
     std::string mLabel;
 
@@ -456,6 +466,7 @@ class ProgramState final : angle::NonCopyable
     ActiveTextureMask mActiveSamplersMask;
     ActiveTextureArray<uint32_t> mActiveSamplerRefCounts;
     ActiveTextureArray<TextureType> mActiveSamplerTypes;
+    ActiveTextureArray<SamplerFormat> mActiveSamplerFormats;
 
     // Cached mask of active images.
     ActiveTextureMask mActiveImagesMask;

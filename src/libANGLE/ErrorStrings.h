@@ -421,6 +421,7 @@ MSG kRenderableInternalFormat = "SizedInternalformat must be color-renderable = 
 MSG kRenderbufferNotBound = "A renderbuffer must be bound.";
 MSG kResourceMaxRenderbufferSize = "Desired resource size is greater than max renderbuffer size.";
 MSG kResourceMaxTextureSize = "Desired resource size is greater than max texture size.";
+MSG kSamplerFormatMismatch = "Mismatch between texture format and sampler type (signed/unsigned/float/shadow).";
 MSG kSamplerUniformValueOutOfRange = "Sampler uniform value out of range.";
 MSG kSamplesOutOfRange = "Samples must not be greater than maximum supported value for the format.";
 MSG kSamplesZero = "Samples may not be zero.";

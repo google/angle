@@ -138,7 +138,7 @@ const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType)
 }}  // namespace gl
 """
 
-type_info_data_template = """{{{type}, {component_type}, {texture_type}, {transposed_type}, {bool_type}, {rows}, {columns}, {components}, {component_size}, {internal_size}, {external_size}, {is_sampler}, {is_matrix}, {is_image} }}"""
+type_info_data_template = """{{{type}, {component_type}, {texture_type}, {transposed_type}, {bool_type}, {sampler_format}, {rows}, {columns}, {components}, {component_size}, {internal_size}, {external_size}, {is_sampler}, {is_matrix}, {is_image} }}"""
 type_index_case_template = """case {enum_value}: return {index_value};"""
 
 def cpp_bool(value):
@@ -180,6 +180,18 @@ def get_bool_type(uniform_type):
         return "GL_BOOL_VEC" + uniform_type[-1]
     else:
         return "GL_NONE"
+
+def get_sampler_format(uniform_type):
+    if not "_SAMPLER_" in uniform_type:
+        return "SamplerFormat::InvalidEnum"
+    elif "_SHADOW" in uniform_type:
+        return "SamplerFormat::Shadow"
+    elif "GL_UNSIGNED_INT_SAMPLER_" in uniform_type:
+        return "SamplerFormat::Unsigned"
+    elif "GL_INT_SAMPLER_" in uniform_type:
+        return "SamplerFormat::Signed"
+    else:
+        return "SamplerFormat::Float"
 
 def get_rows(uniform_type):
     if uniform_type == "GL_NONE":
@@ -239,6 +251,7 @@ def gen_type_info(uniform_type):
         texture_type = get_texture_type(uniform_type),
         transposed_type = get_transposed_type(uniform_type),
         bool_type = get_bool_type(uniform_type),
+        sampler_format = get_sampler_format(uniform_type),
         rows = get_rows(uniform_type),
         columns = get_columns(uniform_type),
         components = get_components(uniform_type),
