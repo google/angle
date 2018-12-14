@@ -298,8 +298,8 @@ if (is_win || is_linux || is_android || is_mac) {
 
     deps = googletest_deps + [
              angle_root + ":angle_util_static",
-             angle_root + ":libEGL",
-             angle_root + ":libGLESv2",
+             angle_root + ":libEGL${angle_libs_suffix}",
+             angle_root + ":libGLESv2${angle_libs_suffix}",
              angle_root + "/third_party/jsoncpp:jsoncpp",
            ]
 
