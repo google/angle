@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_DRIVER_UTILS_H_
 #define LIBANGLE_RENDERER_DRIVER_UTILS_H_
 
+#include "common/platform.h"
 #include "libANGLE/angletypes.h"
 
 namespace rx
@@ -93,6 +94,43 @@ bool IsCherryView(uint32_t DeviceId);
 bool IsSkylake(uint32_t DeviceId);
 bool IsBroxton(uint32_t DeviceId);
 bool IsKabylake(uint32_t DeviceId);
+
+// Platform helpers
+inline bool IsWindows()
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    return true;
+#else
+    return false;
+#endif
+}
+
+inline bool IsLinux()
+{
+#if defined(ANGLE_PLATFORM_LINUX)
+    return true;
+#else
+    return false;
+#endif
+}
+
+inline bool IsApple()
+{
+#if defined(ANGLE_PLATFORM_APPLE)
+    return true;
+#else
+    return false;
+#endif
+}
+
+inline bool IsAndroid()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return true;
+#else
+    return false;
+#endif
+}
 
 }  // namespace rx
 #endif  // LIBANGLE_RENDERER_DRIVER_UTILS_H_
