@@ -8155,8 +8155,13 @@ void ErrorSet::handleError(GLenum errorCode,
     errorStream << "Error: " << gl::FmtHex(errorCode) << ", in " << file << ", " << function << ":"
                 << line << ". " << message;
 
+    std::string formattedMessage = errorStream.str();
+
+    // Always log a warning, this function is only called on unexpected internal errors.
+    WARN() << formattedMessage;
+
     // validationError does the necessary work to process the error.
-    validationError(errorCode, errorStream.str().c_str());
+    validationError(errorCode, formattedMessage.c_str());
 }
 
 void ErrorSet::validationError(GLenum errorCode, const char *message)
