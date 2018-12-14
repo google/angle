@@ -70,7 +70,11 @@ class Buffer11 : public BufferD3D
     angle::Result getSRV(const gl::Context *context,
                          DXGI_FORMAT srvFormat,
                          const d3d11::ShaderResourceView **srvOut);
-    angle::Result getRawUAV(const gl::Context *context, d3d11::UnorderedAccessView **uavOut);
+    angle::Result getRawUAVRange(const gl::Context *context,
+                                 GLintptr offset,
+                                 GLsizeiptr size,
+                                 d3d11::UnorderedAccessView **uavOut);
+
     bool isMapped() const { return mMappedStorage != nullptr; }
     angle::Result packPixels(const gl::Context *context,
                              const gl::FramebufferAttachment &readAttachment,
@@ -131,6 +135,9 @@ class Buffer11 : public BufferD3D
                                       BufferStorage *storage,
                                       size_t sourceOffset,
                                       size_t storageSize);
+
+    angle::Result getNativeStorageForUAV(const gl::Context *context,
+                                         Buffer11::NativeStorage **storageOut);
 
     template <typename StorageOutT>
     angle::Result getBufferStorage(const gl::Context *context,

@@ -3585,6 +3585,7 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
 {
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
+    angle::FixedVector<Buffer11 *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> previouslyBound;
     for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
          blockIndex++)
     {
@@ -3595,10 +3596,31 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
             continue;
         }
 
-        Buffer11 *bufferStorage            = GetImplAs<Buffer11>(shaderStorageBuffer.get());
+        Buffer11 *bufferStorage = GetImplAs<Buffer11>(shaderStorageBuffer.get());
+        if (std::find(previouslyBound.begin(), previouslyBound.end(), bufferStorage) !=
+            previouslyBound.end())
+        {
+            // D3D11 doesn't support binding a buffer multiple times
+            // http://anglebug.com/3032
+            ERR() << "Writing to multiple blocks on the same buffer is not allowed.";
+            return angle::Result::Stop;
+        }
+        previouslyBound.push_back(bufferStorage);
+
         d3d11::UnorderedAccessView *uavPtr = nullptr;
-        // TODO(jiajia.qin@intel.com): add buffer offset support. http://anglebug.com/1951
-        ANGLE_TRY(bufferStorage->getRawUAV(context, &uavPtr));
+        GLsizeiptr viewSize                = 0;
+        // Bindings only have a valid size if bound using glBindBufferRange
+        if (shaderStorageBuffer.getSize() > 0)
+        {
+            viewSize = shaderStorageBuffer.getSize();
+        }
+        // We use the buffer size for glBindBufferBase
+        else
+        {
+            viewSize = bufferStorage->getSize();
+        }
+        ANGLE_TRY(bufferStorage->getRawUAVRange(context, shaderStorageBuffer.getOffset(), viewSize,
+                                                &uavPtr));
 
         // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
         // is not bound on SRV.

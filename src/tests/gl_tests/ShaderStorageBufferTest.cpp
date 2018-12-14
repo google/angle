@@ -404,6 +404,82 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests reading and writing to a shader storage buffer bound at an offset.
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteOffset)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+
+layout(std140, binding = 0) buffer block0 {
+    uint data[2];
+} instance0;
+
+void main()
+{
+    instance0.data[0] = 3u;
+    instance0.data[1] = 4u;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+
+    glUseProgram(program);
+
+    constexpr unsigned int kElementCount = 2;
+    // The array stride are rounded up to the base alignment of a vec4 for std140 layout.
+    constexpr unsigned int kArrayStride = 16;
+    // Create shader storage buffer
+    GLBuffer shaderStorageBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+
+    int bufferAlignOffset;
+    glGetIntegerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &bufferAlignOffset);
+
+    constexpr int kBufferSize = kElementCount * kArrayStride;
+    const int kBufferOffset   = kBufferSize + (kBufferSize % bufferAlignOffset);
+
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferOffset + kBufferSize, nullptr, GL_STATIC_DRAW);
+
+    // Bind shader storage buffer at an offset
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer, kBufferOffset, kBufferSize);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+
+    // Bind the buffer at a separate location
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer, 0, kBufferSize);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    // Read back shader storage buffer
+    constexpr unsigned int kExpectedValues[2] = {3u, 4u};
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    for (unsigned int idx = 0; idx < kElementCount; idx++)
+    {
+        EXPECT_EQ(kExpectedValues[idx],
+                  *(reinterpret_cast<const GLuint *>(reinterpret_cast<const GLbyte *>(ptr) +
+                                                     idx * kArrayStride)));
+    }
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, kBufferOffset, kBufferSize, GL_MAP_READ_BIT);
+    for (unsigned int idx = 0; idx < kElementCount; idx++)
+    {
+        EXPECT_EQ(kExpectedValues[idx],
+                  *(reinterpret_cast<const GLuint *>(reinterpret_cast<const GLbyte *>(ptr) +
+                                                     idx * kArrayStride)));
+    }
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that access/write to vector data in shader storage buffer.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
 {
