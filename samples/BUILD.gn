@@ -34,7 +34,10 @@ static_library("sample_util") {
     "../:libGLESv1_CM${angle_libs_suffix}",
     "../:libGLESv2${angle_libs_suffix}",
   ]
-  public_configs = [ ":sample_util_config" ]
+  public_configs = [
+    ":sample_util_config",
+    "../:gl_prototypes",
+  ]
 }
 
 template("angle_sample") {

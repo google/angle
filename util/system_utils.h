@@ -29,7 +29,6 @@ ANGLE_EXPORT void WriteDebugMessage(const char *format, ...);
 
 // Set thread affinity and priority.
 ANGLE_EXPORT bool StabilizeCPUForBenchmarking();
-
-} // namespace angle
+}  // namespace angle
 
 #endif  // UTIL_SYSTEM_UTILS_H_

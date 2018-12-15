@@ -8,9 +8,9 @@
 
 #include "system_utils.h"
 
-#include <sys/resource.h>
 #include <dlfcn.h>
 #include <sched.h>
+#include <sys/resource.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -27,9 +27,8 @@ void Sleep(unsigned int milliseconds)
     }
     else
     {
-        timespec sleepTime =
-        {
-            .tv_sec = milliseconds / 1000,
+        timespec sleepTime = {
+            .tv_sec  = milliseconds / 1000,
             .tv_nsec = (milliseconds % 1000) * 1000000,
         };
 
@@ -80,5 +79,4 @@ bool StabilizeCPUForBenchmarking()
 
     return success;
 }
-
-} // namespace angle
+}  // namespace angle

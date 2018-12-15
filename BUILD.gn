@@ -59,6 +59,23 @@ config("external_config") {
   include_dirs = [ "include" ]
 }
 
+# Prevent the GL headers from redeclaring ANGLE entry points.
+config("no_gl_prototypes") {
+  defines = [
+    "GL_GLES_PROTOTYPES=0",
+    "EGL_EGL_PROTOTYPES=0",
+  ]
+}
+
+config("gl_prototypes") {
+  defines = [
+    "GL_GLES_PROTOTYPES=1",
+    "EGL_EGL_PROTOTYPES=1",
+    "GL_GLEXT_PROTOTYPES",
+    "EGL_EGLEXT_PROTOTYPES",
+  ]
+}
+
 # This config is applied to internal Angle targets (not pushed to dependents).
 config("internal_config") {
   include_dirs = [
@@ -66,11 +83,7 @@ config("internal_config") {
     "src",
   ]
 
-  # Prevent the GL headers from redeclaring ANGLE entry points.
-  defines = [
-    "GL_GLEXT_PROTOTYPES",
-    "EGL_EGLEXT_PROTOTYPES",
-  ]
+  defines = []
 
   if (angle_64bit_current_cpu) {
     defines += [ "ANGLE_IS_64_BIT_CPU" ]
@@ -182,20 +195,18 @@ config("angle_common_config") {
   }
 }
 
+source_set("angle_system_utils") {
+  sources = angle_system_utils_sources
+
+  configs -= angle_undefine_configs
+  configs += [
+    ":extra_warnings",
+    ":internal_config",
+  ]
+}
+
 static_library("angle_common") {
   sources = libangle_common_sources
-
-  if (is_linux || is_android || is_fuchsia) {
-    sources += libangle_common_linux_sources
-  }
-
-  if (is_mac) {
-    sources += libangle_common_mac_sources
-  }
-
-  if (is_win) {
-    sources += libangle_common_win_sources
-  }
 
   configs -= angle_undefine_configs
   configs += [
@@ -206,6 +217,7 @@ static_library("angle_common") {
   ]
 
   public_deps = [
+    ":angle_system_utils",
     ":commit_id",
     ":includes",
   ]
@@ -631,6 +643,13 @@ config("shared_library_public_config") {
   }
 }
 
+config("library_name_config") {
+  defines = [
+    "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
+    "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}\"",
+  ]
+}
+
 # This config controls export definitions on ANGLE API calls.
 config("angle_static") {
   defines = [
@@ -668,6 +687,7 @@ shared_library("libGLESv2${angle_libs_suffix}") {
     ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
+    ":gl_prototypes",
     ":internal_config",
   ]
 
@@ -750,6 +770,28 @@ static_library("libGLESv1_CM_static") {
   ]
 }
 
+config("libEGL_egl_loader_config") {
+  defines = [ "ANGLE_USE_EGL_LOADER" ]
+}
+
+source_set("libEGL_egl_loader") {
+  sources = [
+    "src/libEGL/egl_loader_autogen.cpp",
+    "src/libEGL/egl_loader_autogen.h",
+  ]
+
+  public_configs = [
+    ":libEGL_egl_loader_config",
+    ":gl_prototypes",
+    ":extra_warnings",
+    ":internal_config",
+  ]
+
+  deps = [
+    ":includes",
+  ]
+}
+
 shared_library("libEGL${angle_libs_suffix}") {
   sources = libegl_sources
 
@@ -763,6 +805,7 @@ shared_library("libEGL${angle_libs_suffix}") {
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
+    ":library_name_config",
   ]
 
   defines = [ "LIBEGL_IMPLEMENTATION" ]
@@ -785,7 +828,12 @@ shared_library("libEGL${angle_libs_suffix}") {
   }
 
   deps = [
+    ":angle_system_utils",
     ":includes",
+    ":libEGL_egl_loader",
+  ]
+
+  data_deps = [
     ":libGLESv2${angle_libs_suffix}",
   ]
 }
@@ -799,6 +847,7 @@ static_library("libEGL_static") {
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
+    ":library_name_config",
   ]
 
   public_configs = [ ":angle_static" ]
@@ -883,6 +932,7 @@ foreach(is_shared_library,
     configs += [
       ":debug_annotations_config",
       ":extra_warnings",
+      ":gl_prototypes",
     ]
 
     public_configs = [

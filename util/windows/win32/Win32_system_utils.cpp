@@ -36,5 +36,4 @@ bool StabilizeCPUForBenchmarking()
 
     return true;
 }
-
 }  // namespace angle
