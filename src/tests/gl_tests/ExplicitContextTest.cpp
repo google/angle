@@ -52,10 +52,10 @@ TEST_P(ExplicitContextTest, GetProcAddress)
 
     EGLContext context = getEGLWindow()->getContext();
 
-    PFNGLCLEARCOLORCONTEXTANGLEPROC clearColor = reinterpret_cast<PFNGLCLEARCOLORCONTEXTANGLEPROC>(
+    PFNGLCLEARCOLORCONTEXTANGLE clearColor = reinterpret_cast<PFNGLCLEARCOLORCONTEXTANGLE>(
         eglGetProcAddress("glClearColorContextANGLE"));
-    PFNGLCLEARCONTEXTANGLEPROC clear =
-        reinterpret_cast<PFNGLCLEARCONTEXTANGLEPROC>(eglGetProcAddress("glClearContextANGLE"));
+    PFNGLCLEARCONTEXTANGLE clear =
+        reinterpret_cast<PFNGLCLEARCONTEXTANGLE>(eglGetProcAddress("glClearContextANGLE"));
 
     // Clear to green
     clearColor(context, 1.0f, 0, 0, 1.0f);

@@ -24,4 +24,5 @@ bool StabilizeCPUForBenchmarking()
     // No equivalent to this in WinRT
     return true;
 }
+
 }  // namespace angle

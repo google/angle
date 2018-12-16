@@ -6,7 +6,7 @@
     found in the LICENSE file.
 
     gl_angle_ext.xml
-        Includes data used to auto-generate ANGLE classes.
+        Includes data used to generate ANGLE extension entry points using generate_entry_points.py
     </comment>
     <!-- SECTION: GL command definitions. -->
     <commands namespace="GL">
@@ -917,19 +917,19 @@
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
-        <extension name="GL_CHROMIUM_bind_uniform_location" supported='gles2'>
+        <extension name="GL_CHROMIUM_bind_uniform_location" supported='gl'>
             <require>
                 <command name="glBindUniformLocationCHROMIUM"/>
             </require>
         </extension>
-        <extension name="GL_CHROMIUM_framebuffer_mixed_samples" supported='gles2'>
+        <extension name="GL_CHROMIUM_framebuffer_mixed_samples" supported='gl'>
             <require>
                 <command name="glMatrixLoadfCHROMIUM"/>
                 <command name="glMatrixLoadIdentityCHROMIUM"/>
                 <command name="glCoverageModulationCHROMIUM"/>
             </require>
         </extension>
-        <extension name="GL_CHROMIUM_path_rendering" supported='gles2'>
+        <extension name="GL_CHROMIUM_path_rendering" supported='gl'>
         <require>
             <command name="glGenPathsCHROMIUM"/>
             <command name="glDeletePathsCHROMIUM"/>
@@ -956,23 +956,23 @@
             <command name="glProgramPathFragmentInputGenCHROMIUM"/>
         </require>
         </extension>
-        <extension name="GL_CHROMIUM_copy_texture" supported='gles2'>
+        <extension name="GL_CHROMIUM_copy_texture" supported='gl'>
             <require>
                 <command name="glCopyTextureCHROMIUM"/>
                 <command name="glCopySubTextureCHROMIUM"/>
             </require>
         </extension>
-        <extension name="GL_CHROMIUM_copy_compressed_texture" supported='gles2'>
+        <extension name="GL_CHROMIUM_copy_compressed_texture" supported='gl'>
             <require>
                 <command name="glCompressedCopyTextureCHROMIUM"/>
             </require>
         </extension>
-        <extension name="GL_ANGLE_request_extension" supported='gles2'>
+        <extension name="GL_ANGLE_request_extension" supported='gl'>
             <require>
                 <command name="glRequestExtensionANGLE"/>
             </require>
         </extension>
-        <extension name="GL_ANGLE_robust_client_memory" supported='gles2'>
+        <extension name="GL_ANGLE_robust_client_memory" supported='gl'>
             <require>
                 <command name="glGetBooleanvRobustANGLE"/>
                 <command name="glGetBufferParameterivRobustANGLE"/>
@@ -1040,19 +1040,19 @@
                 <command name="glGetQueryObjectui64vRobustANGLE"/>
             </require>
         </extension>
-        <extension name="GL_ANGLE_multiview" supported='gles2'>
+        <extension name="GL_ANGLE_multiview" supported='gl'>
             <require>
                 <command name="glFramebufferTextureMultiviewSideBySideANGLE"/>
                 <command name="glFramebufferTextureMultiviewLayeredANGLE"/>
             </require>
         </extension>
-        <extension name="GL_ANGLE_copy_texture_3d" supported='gles2'>
+        <extension name="GL_ANGLE_copy_texture_3d" supported='gl'>
             <require>
                 <command name="glCopyTexture3DANGLE"/>
                 <command name="glCopySubTexture3DANGLE"/>
             </require>
         </extension>
-        <extension name="GL_ANGLE_texture_multisample" supported='gles2'>
+        <extension name="GL_ANGLE_texture_multisample" supported='gl'>
             <require>
                 <command name="glTexStorage2DMultisampleANGLE"/>
                 <command name="glGetTexLevelParameterivANGLE"/>
@@ -1061,7 +1061,7 @@
                 <command name="glSampleMaskiANGLE"/>
             </require>
         </extension>
-        <extension name="GL_ANGLE_multi_draw" supported='gles2'>
+        <extension name="GL_ANGLE_multi_draw" supported='gl|gles2'>
             <require>
                 <command name="glMultiDrawArraysANGLE"/>
                 <command name="glMultiDrawArraysInstancedANGLE"/>

@@ -14,6 +14,7 @@
 
 namespace angle
 {
+
 const char *GetExecutablePath();
 const char *GetExecutableDirectory();
 const char *GetSharedLibraryExtension();
@@ -25,14 +26,6 @@ std::string GetEnvironmentVar(const char *variableName);
 const char *GetPathSeparator();
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path);
 
-class Library : angle::NonCopyable
-{
-  public:
-    virtual ~Library() {}
-    virtual void *getSymbol(const char *symbolName) = 0;
-};
-
-Library *OpenSharedLibrary(const char *libraryName);
 }  // namespace angle
 
 #endif  // COMMON_SYSTEM_UTILS_H_

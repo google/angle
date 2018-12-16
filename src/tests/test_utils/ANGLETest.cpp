@@ -1163,8 +1163,7 @@ bool IsAndroid()
 
 bool IsVulkan()
 {
-    const char *renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
-    std::string rendererString(renderer);
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("Vulkan") != std::string::npos);
 }
 

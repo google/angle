@@ -67,7 +67,7 @@ for description, functions in json_data.iteritems():
             if support_egl_ANGLE_explicit_context:
                 all_functions[function + "ContextANGLE"] = "gl::" + function[2:] + "ContextANGLE"
         elif function.startswith("egl"):
-            all_functions[function] = "EGL_" + function[3:]
+            all_functions[function] = "egl::" + function[3:]
         else:
             all_functions[function] = function
 
