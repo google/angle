@@ -31,16 +31,18 @@ bool InterpolationTypesMatch(InterpolationType a, InterpolationType b)
     return (GetNonAuxiliaryInterpolationType(a) == GetNonAuxiliaryInterpolationType(b));
 }
 
-ShaderVariable::ShaderVariable()
-    : type(0), precision(0), flattenedOffsetInParentArrays(0), staticUse(false), active(false)
-{}
+ShaderVariable::ShaderVariable() : ShaderVariable(GL_NONE) {}
 
 ShaderVariable::ShaderVariable(GLenum typeIn)
-    : type(typeIn), precision(0), flattenedOffsetInParentArrays(0), staticUse(false), active(false)
+    : type(typeIn),
+      precision(0),
+      staticUse(false),
+      active(false),
+      isRowMajorLayout(false),
+      flattenedOffsetInParentArrays(-1)
 {}
 
-ShaderVariable::ShaderVariable(GLenum typeIn, unsigned int arraySizeIn)
-    : type(typeIn), precision(0), flattenedOffsetInParentArrays(0), staticUse(false), active(false)
+ShaderVariable::ShaderVariable(GLenum typeIn, unsigned int arraySizeIn) : ShaderVariable(typeIn)
 {
     ASSERT(arraySizeIn != 0);
     arraySizes.push_back(arraySizeIn);
@@ -54,11 +56,12 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       name(other.name),
       mappedName(other.mappedName),
       arraySizes(other.arraySizes),
-      flattenedOffsetInParentArrays(other.flattenedOffsetInParentArrays),
       staticUse(other.staticUse),
       active(other.active),
       fields(other.fields),
-      structName(other.structName)
+      structName(other.structName),
+      isRowMajorLayout(other.isRowMajorLayout),
+      flattenedOffsetInParentArrays(other.flattenedOffsetInParentArrays)
 {}
 
 ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
@@ -70,9 +73,10 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     arraySizes                    = other.arraySizes;
     staticUse                     = other.staticUse;
     active                        = other.active;
-    flattenedOffsetInParentArrays = other.flattenedOffsetInParentArrays;
     fields                        = other.fields;
     structName                    = other.structName;
+    isRowMajorLayout              = other.isRowMajorLayout;
+    flattenedOffsetInParentArrays = other.flattenedOffsetInParentArrays;
     return *this;
 }
 
@@ -81,7 +85,8 @@ bool ShaderVariable::operator==(const ShaderVariable &other) const
     if (type != other.type || precision != other.precision || name != other.name ||
         mappedName != other.mappedName || arraySizes != other.arraySizes ||
         staticUse != other.staticUse || active != other.active ||
-        fields.size() != other.fields.size() || structName != other.structName)
+        fields.size() != other.fields.size() || structName != other.structName ||
+        isRowMajorLayout != other.isRowMajorLayout)
     {
         return false;
     }
@@ -110,8 +115,7 @@ unsigned int ShaderVariable::getArraySizeProduct() const
 void ShaderVariable::indexIntoArray(unsigned int arrayIndex)
 {
     ASSERT(isArray());
-    flattenedOffsetInParentArrays =
-        arrayIndex + getOutermostArraySize() * flattenedOffsetInParentArrays;
+    flattenedOffsetInParentArrays = arrayIndex + getOutermostArraySize() * parentArrayIndex();
     arraySizes.pop_back();
 }
 
@@ -228,6 +232,8 @@ bool ShaderVariable::isSameVariableAtLinkTime(const ShaderVariable &other,
         return false;
     ASSERT(!matchName || mappedName == other.mappedName);
     if (arraySizes != other.arraySizes)
+        return false;
+    if (isRowMajorLayout != other.isRowMajorLayout)
         return false;
     if (fields.size() != other.fields.size())
         return false;
@@ -347,31 +353,28 @@ bool OutputVariable::operator==(const OutputVariable &other) const
     return VariableWithLocation::operator==(other) && index == other.index;
 }
 
-InterfaceBlockField::InterfaceBlockField() : isRowMajorLayout(false) {}
+InterfaceBlockField::InterfaceBlockField() {}
 
 InterfaceBlockField::~InterfaceBlockField() {}
 
-InterfaceBlockField::InterfaceBlockField(const InterfaceBlockField &other)
-    : ShaderVariable(other), isRowMajorLayout(other.isRowMajorLayout)
+InterfaceBlockField::InterfaceBlockField(const InterfaceBlockField &other) : ShaderVariable(other)
 {}
 
 InterfaceBlockField &InterfaceBlockField::operator=(const InterfaceBlockField &other)
 {
     ShaderVariable::operator=(other);
-    isRowMajorLayout        = other.isRowMajorLayout;
     return *this;
 }
 
 bool InterfaceBlockField::operator==(const InterfaceBlockField &other) const
 {
-    return (ShaderVariable::operator==(other) && isRowMajorLayout == other.isRowMajorLayout);
+    return ShaderVariable::operator==(other);
 }
 
 bool InterfaceBlockField::isSameInterfaceBlockFieldAtLinkTime(
     const InterfaceBlockField &other) const
 {
-    return (ShaderVariable::isSameVariableAtLinkTime(other, true, true) &&
-            isRowMajorLayout == other.isRowMajorLayout);
+    return (ShaderVariable::isSameVariableAtLinkTime(other, true, true));
 }
 
 Varying::Varying() : interpolation(INTERPOLATION_SMOOTH), isInvariant(false) {}

@@ -144,6 +144,8 @@ class ProgramD3DMetadata final : angle::NonCopyable
     const gl::ShaderMap<const ShaderD3D *> mAttachedShaders;
 };
 
+using D3DUniformMap = std::map<std::string, D3DUniform *>;
+
 class ProgramD3D : public ProgramImpl
 {
   public:
@@ -385,39 +387,12 @@ class ProgramD3D : public ProgramImpl
         GLint logicalImageUnit;
     };
 
-    typedef std::map<std::string, D3DUniform *> D3DUniformMap;
-
     void initializeUniformStorage(const gl::ShaderBitSet &availableShaderStages);
 
     void defineUniformsAndAssignRegisters();
     void defineUniformBase(const gl::Shader *shader,
                            const sh::Uniform &uniform,
                            D3DUniformMap *uniformMap);
-    void defineStructUniformFields(gl::ShaderType shaderType,
-                                   const std::vector<sh::ShaderVariable> &fields,
-                                   const std::string &namePrefix,
-                                   const HLSLRegisterType regType,
-                                   sh::HLSLBlockEncoder *encoder,
-                                   D3DUniformMap *uniformMap);
-    void defineArrayOfStructsUniformFields(gl::ShaderType shaderType,
-                                           const sh::ShaderVariable &uniform,
-                                           unsigned int arrayNestingIndex,
-                                           const std::string &prefix,
-                                           const HLSLRegisterType regType,
-                                           sh::HLSLBlockEncoder *encoder,
-                                           D3DUniformMap *uniformMap);
-    void defineArrayUniformElements(gl::ShaderType shaderType,
-                                    const sh::ShaderVariable &uniform,
-                                    const std::string &fullName,
-                                    const HLSLRegisterType regType,
-                                    sh::HLSLBlockEncoder *encoder,
-                                    D3DUniformMap *uniformMap);
-    void defineUniform(gl::ShaderType shaderType,
-                       const sh::ShaderVariable &uniform,
-                       const std::string &fullName,
-                       const HLSLRegisterType regType,
-                       sh::HLSLBlockEncoder *encoder,
-                       D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
     void assignSamplerRegisters(size_t uniformIndex);
 

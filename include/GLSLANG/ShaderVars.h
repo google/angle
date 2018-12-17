@@ -106,7 +106,7 @@ struct ShaderVariable
     // If no match is found, return false.
     bool findInfoByMappedName(const std::string &mappedFullName,
                               const ShaderVariable **leafVar,
-                              std::string* originalFullName) const;
+                              std::string *originalFullName) const;
 
     bool isBuiltIn() const;
     bool isEmulatedBuiltIn() const;
@@ -125,7 +125,14 @@ struct ShaderVariable
     //   int a[3][4];
     // then the flattenedOffsetInParentArrays of a[2] would be 2.
     // and flattenedOffsetInParentArrays of a[2][1] would be 2*4 + 1 = 9.
-    unsigned int flattenedOffsetInParentArrays;
+    int parentArrayIndex() const
+    {
+        return hasParentArrayIndex() ? flattenedOffsetInParentArrays : 0;
+    }
+
+    void setParentArrayIndex(int index) { flattenedOffsetInParentArrays = index; }
+
+    bool hasParentArrayIndex() const { return flattenedOffsetInParentArrays != -1; }
 
     // Static use means that the variable is accessed somewhere in the shader source.
     bool staticUse;
@@ -136,16 +143,18 @@ struct ShaderVariable
     std::vector<ShaderVariable> fields;
     std::string structName;
 
+    // Only applies to interface block fields. Kept here for simplicity.
+    bool isRowMajorLayout;
+
   protected:
     bool isSameVariableAtLinkTime(const ShaderVariable &other,
                                   bool matchPrecision,
                                   bool matchName) const;
 
     bool operator==(const ShaderVariable &other) const;
-    bool operator!=(const ShaderVariable &other) const
-    {
-        return !operator==(other);
-    }
+    bool operator!=(const ShaderVariable &other) const { return !operator==(other); }
+
+    int flattenedOffsetInParentArrays;
 };
 
 // A variable with an integer location to pass back to the GL API: either uniform (can have location
@@ -169,10 +178,7 @@ struct Uniform : public VariableWithLocation
     Uniform(const Uniform &other);
     Uniform &operator=(const Uniform &other);
     bool operator==(const Uniform &other) const;
-    bool operator!=(const Uniform &other) const
-    {
-        return !operator==(other);
-    }
+    bool operator!=(const Uniform &other) const { return !operator==(other); }
 
     int binding;
     int offset;
@@ -216,19 +222,13 @@ struct InterfaceBlockField : public ShaderVariable
     InterfaceBlockField(const InterfaceBlockField &other);
     InterfaceBlockField &operator=(const InterfaceBlockField &other);
     bool operator==(const InterfaceBlockField &other) const;
-    bool operator!=(const InterfaceBlockField &other) const
-    {
-        return !operator==(other);
-    }
+    bool operator!=(const InterfaceBlockField &other) const { return !operator==(other); }
 
     // Decide whether two InterfaceBlock fields are the same at shader
     // link time, assuming one from vertex shader and the other from
     // fragment shader.
     // See GLSL ES Spec 3.00.3, sec 4.3.7.
-    bool isSameInterfaceBlockFieldAtLinkTime(
-        const InterfaceBlockField &other) const;
-
-    bool isRowMajorLayout;
+    bool isSameInterfaceBlockFieldAtLinkTime(const InterfaceBlockField &other) const;
 };
 
 struct Varying : public VariableWithLocation
@@ -238,10 +238,7 @@ struct Varying : public VariableWithLocation
     Varying(const Varying &other);
     Varying &operator=(const Varying &other);
     bool operator==(const Varying &other) const;
-    bool operator!=(const Varying &other) const
-    {
-        return !operator==(other);
-    }
+    bool operator!=(const Varying &other) const { return !operator==(other); }
 
     // Decide whether two varyings are the same at shader link time,
     // assuming one from vertex shader and the other from fragment shader.
@@ -299,8 +296,7 @@ struct WorkGroupSize
     WorkGroupSize() = default;
     explicit constexpr WorkGroupSize(int initialSize)
         : localSizeQualifiers{initialSize, initialSize, initialSize}
-    {
-    }
+    {}
 
     void fill(int fillValue);
     void setLocalSize(int localSizeX, int localSizeY, int localSizeZ);
@@ -328,4 +324,4 @@ struct WorkGroupSize
 
 }  // namespace sh
 
-#endif // GLSLANG_SHADERVARS_H_
+#endif  // GLSLANG_SHADERVARS_H_

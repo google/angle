@@ -85,8 +85,8 @@ class BlockLayoutEncoder
     static const size_t BytesPerComponent           = 4u;
     static const unsigned int ComponentsPerRegister = 4u;
 
-    static size_t getBlockRegister(const BlockMemberInfo &info);
-    static size_t getBlockRegisterElement(const BlockMemberInfo &info);
+    static size_t GetBlockRegister(const BlockMemberInfo &info);
+    static size_t GetBlockRegisterElement(const BlockMemberInfo &info);
 
   protected:
     size_t mCurrentOffset;
@@ -104,6 +104,34 @@ class BlockLayoutEncoder
                                bool isRowMajorMatrix,
                                int arrayStride,
                                int matrixStride)          = 0;
+};
+
+// Will return default values for everything.
+class DummyBlockEncoder : public BlockLayoutEncoder
+{
+  public:
+    DummyBlockEncoder() = default;
+
+    void enterAggregateType() override {}
+    void exitAggregateType() override {}
+
+  protected:
+    void getBlockLayoutInfo(GLenum type,
+                            const std::vector<unsigned int> &arraySizes,
+                            bool isRowMajorMatrix,
+                            int *arrayStrideOut,
+                            int *matrixStrideOut) override
+    {
+        *arrayStrideOut  = 0;
+        *matrixStrideOut = 0;
+    }
+
+    void advanceOffset(GLenum type,
+                       const std::vector<unsigned int> &arraySizes,
+                       bool isRowMajorMatrix,
+                       int arrayStride,
+                       int matrixStride) override
+    {}
 };
 
 // Block layout according to the std140 block layout
@@ -148,15 +176,118 @@ using BlockLayoutMap = std::map<std::string, BlockMemberInfo>;
 
 void GetInterfaceBlockInfo(const std::vector<InterfaceBlockField> &fields,
                            const std::string &prefix,
-                           sh::BlockLayoutEncoder *encoder,
+                           BlockLayoutEncoder *encoder,
                            BlockLayoutMap *blockInfoOut);
 
 // Used for laying out the default uniform block on the Vulkan backend.
 void GetUniformBlockInfo(const std::vector<Uniform> &uniforms,
                          const std::string &prefix,
-                         sh::BlockLayoutEncoder *encoder,
+                         BlockLayoutEncoder *encoder,
                          BlockLayoutMap *blockInfoOut);
 
+class ShaderVariableVisitor
+{
+  public:
+    virtual ~ShaderVariableVisitor() {}
+
+    virtual void enterStruct(const ShaderVariable &structVar) {}
+    virtual void exitStruct(const ShaderVariable &structVar) {}
+
+    virtual void enterStructAccess(const ShaderVariable &structVar) {}
+    virtual void exitStructAccess(const ShaderVariable &structVar) {}
+
+    virtual void enterArray(const ShaderVariable &arrayVar) {}
+    virtual void exitArray(const ShaderVariable &arrayVar) {}
+
+    virtual void enterArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) {}
+    virtual void exitArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) {}
+
+    virtual void visitSampler(const sh::ShaderVariable &sampler) {}
+
+    virtual void visitVariable(const ShaderVariable &variable, bool isRowMajor) = 0;
+
+  protected:
+    ShaderVariableVisitor() {}
+};
+
+class VariableNameVisitor : public ShaderVariableVisitor
+{
+  public:
+    VariableNameVisitor(const std::string &namePrefix, const std::string &mappedNamePrefix);
+    ~VariableNameVisitor();
+
+    void enterStruct(const ShaderVariable &structVar) override;
+    void exitStruct(const ShaderVariable &structVar) override;
+    void enterStructAccess(const ShaderVariable &structVar) override;
+    void exitStructAccess(const ShaderVariable &structVar) override;
+    void enterArray(const ShaderVariable &arrayVar) override;
+    void exitArray(const ShaderVariable &arrayVar) override;
+    void enterArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) override;
+    void exitArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) override
+    {
+        mNameStack.pop_back();
+        mMappedNameStack.pop_back();
+    }
+
+  protected:
+    virtual void visitNamedSampler(const sh::ShaderVariable &sampler,
+                                   const std::string &name,
+                                   const std::string &mappedName)
+    {}
+    virtual void visitNamedVariable(const ShaderVariable &variable,
+                                    bool isRowMajor,
+                                    const std::string &name,
+                                    const std::string &mappedName) = 0;
+
+  private:
+    void visitSampler(const sh::ShaderVariable &sampler) final;
+    void visitVariable(const ShaderVariable &variable, bool isRowMajor) final;
+    std::string collapseNameStack() const;
+    std::string collapseMappedNameStack() const;
+
+    std::vector<std::string> mNameStack;
+    std::vector<std::string> mMappedNameStack;
+};
+
+class BlockEncoderVisitor : public VariableNameVisitor
+{
+  public:
+    BlockEncoderVisitor(const std::string &namePrefix,
+                        const std::string &mappedNamePrefix,
+                        BlockLayoutEncoder *encoder);
+    ~BlockEncoderVisitor();
+
+    void enterStructAccess(const ShaderVariable &structVar) override;
+    void exitStructAccess(const ShaderVariable &structVar) override;
+
+    void visitNamedVariable(const ShaderVariable &variable,
+                            bool isRowMajor,
+                            const std::string &name,
+                            const std::string &mappedName) override;
+
+    virtual void encodeVariable(const ShaderVariable &variable,
+                                const BlockMemberInfo &variableInfo,
+                                const std::string &name,
+                                const std::string &mappedName) = 0;
+
+  private:
+    BlockLayoutEncoder *mEncoder;
+};
+
+void TraverseShaderVariable(const ShaderVariable &variable,
+                            bool isRowMajorLayout,
+                            ShaderVariableVisitor *visitor);
+
+template <typename T>
+void TraverseShaderVariables(const std::vector<T> &vars,
+                             bool isRowMajorLayout,
+                             ShaderVariableVisitor *visitor)
+{
+    for (const T &var : vars)
+    {
+        TraverseShaderVariable(var, isRowMajorLayout, visitor);
+    }
+}
 }  // namespace sh
 
 #endif  // COMMON_BLOCKLAYOUT_H_
