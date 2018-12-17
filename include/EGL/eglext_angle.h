@@ -162,7 +162,7 @@ EGLAPI EGLBoolean EGLAPIENTRY eglReleaseDeviceANGLE(EGLDeviceEXT device);
 #define EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE 0x3459
 typedef EGLint (EGLAPIENTRYP PFNEGLPROGRAMCACHEGETATTRIBANGLEPROC) (EGLDisplay dpy, EGLenum attrib);
 typedef void (EGLAPIENTRYP PFNEGLPROGRAMCACHEQUERYANGLEPROC) (EGLDisplay dpy, EGLint index, void *key, EGLint *keysize, void *binary, EGLint *binarysize);
-typedef void (EGLAPIENTRYP PFNEGPROGRAMCACHELPOPULATEANGLEPROC) (EGLDisplay dpy, const void *key, EGLint keysize, const void *binary, EGLint binarysize);
+typedef void (EGLAPIENTRYP PFNEGLPROGRAMCACHEPOPULATEANGLEPROC) (EGLDisplay dpy, const void *key, EGLint keysize, const void *binary, EGLint binarysize);
 typedef EGLint (EGLAPIENTRYP PFNEGLPROGRAMCACHERESIZEANGLEPROC) (EGLDisplay dpy, EGLint limit, EGLenum mode);
 #ifdef EGL_EGLEXT_PROTOTYPES
 EGLAPI EGLint EGLAPIENTRY eglProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib);
@@ -185,6 +185,22 @@ EGLAPI EGLint EGLAPIENTRY eglProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limi
 #define EGL_ANGLE_create_context_extensions_enabled 1
 #define EGL_EXTENSIONS_ENABLED_ANGLE 0x345F
 #endif /* EGL_ANGLE_create_context_extensions_enabled */
+
+#ifndef EGL_CHROMIUM_get_sync_values
+#define EGL_CHROMIUM_get_sync_values 1
+typedef EGLBoolean (EGLAPIENTRYP PFNEGLGETSYNCVALUESCHROMIUMPROC) (EGLDisplay dpy,
+                                                             EGLSurface surface,
+                                                             EGLuint64KHR *ust,
+                                                             EGLuint64KHR *msc,
+                                                             EGLuint64KHR *sbc);
+#ifdef EGL_EGLEXT_PROTOTYPES
+EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
+                                                             EGLSurface surface,
+                                                             EGLuint64KHR *ust,
+                                                             EGLuint64KHR *msc,
+                                                             EGLuint64KHR *sbc);
+#endif
+#endif /* EGL_CHROMIUM_get_sync_values */
 
 // clang-format on
 

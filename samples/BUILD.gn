@@ -36,7 +36,10 @@ static_library("sample_util") {
   public_deps = [
     "../:angle_common",
   ]
-  public_configs = [ ":sample_util_config" ]
+  public_configs = [
+    ":sample_util_config",
+    "../:gl_prototypes",
+  ]
 }
 
 template("angle_sample") {

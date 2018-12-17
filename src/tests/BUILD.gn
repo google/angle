@@ -132,10 +132,6 @@ if (is_win || is_linux || is_mac || is_android) {
 
   test("angle_end2end_tests") {
     include_dirs = [ "../../src/tests" ]
-    defines = [
-      "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
-      "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}\"",
-    ]
 
     if (is_android) {
       use_native_activity = true
@@ -166,8 +162,10 @@ if (is_win || is_linux || is_mac || is_android) {
     }
 
     configs += [
+      angle_root + ":gl_prototypes",
       angle_root + ":internal_config",
       angle_root + ":libANGLE_config",
+      angle_root + ":library_name_config",
     ]
 
     if (is_linux && !is_component_build) {
@@ -215,6 +213,7 @@ if (is_win || is_linux || is_mac || is_android) {
     }
 
     configs += [
+      angle_root + ":gl_prototypes",
       angle_root + ":internal_config",
       angle_root + ":libANGLE_config",
     ]
@@ -278,6 +277,7 @@ if (is_win || is_linux || is_android || is_mac) {
 
     configs += [
       angle_root + ":internal_config",
+      angle_root + ":gl_prototypes",
       angle_root + ":libANGLE_config",
     ]
 
@@ -317,6 +317,7 @@ if (is_win || is_linux || is_android || is_mac) {
 
     configs += [
       angle_root + ":internal_config",
+      angle_root + ":gl_prototypes",
       angle_root + ":libANGLE_config",
     ]
 
@@ -523,6 +524,7 @@ if (build_angle_gles1_conform_tests) {
     configs += [
       angle_root + ":internal_config",
       angle_root + ":libANGLE_config",
+      angle_root + ":gl_prototypes",
     ]
 
     if (build_with_chromium) {
@@ -662,9 +664,8 @@ if (build_angle_deqp_tests) {
       "//third_party/libpng:libpng",
     ]
 
-    defines = [ "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"" ]
-
     configs -= deqp_undefine_configs
+    configs += [ angle_root + ":library_name_config" ]
     public_configs = [ ":angle_deqp_libtester_config" ]
     sources = deqp_libtester_sources
     if (is_win) {

@@ -64,42 +64,4 @@ const char *GetSharedLibraryExtension()
 {
     return "so";
 }
-
-Optional<std::string> GetCWD()
-{
-    std::array<char, 4096> pathBuf;
-    char *result = getcwd(pathBuf.data(), pathBuf.size());
-    if (result == nullptr)
-    {
-        return Optional<std::string>::Invalid();
-    }
-    return std::string(pathBuf.data());
-}
-
-bool SetCWD(const char *dirName)
-{
-    return (chdir(dirName) == 0);
-}
-
-bool UnsetEnvironmentVar(const char *variableName)
-{
-    return (unsetenv(variableName) == 0);
-}
-
-bool SetEnvironmentVar(const char *variableName, const char *value)
-{
-    return (setenv(variableName, value, 1) == 0);
-}
-
-std::string GetEnvironmentVar(const char *variableName)
-{
-    const char *value = getenv(variableName);
-    return (value == nullptr ? std::string() : std::string(value));
-}
-
-const char *GetPathSeparator()
-{
-    return ":";
-}
-
 }  // namespace angle

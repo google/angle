@@ -32,8 +32,6 @@ libangle_common_sources = [
   "src/common/platform.h",
   "src/common/string_utils.cpp",
   "src/common/string_utils.h",
-  "src/common/system_utils.cpp",
-  "src/common/system_utils.h",
   "src/common/third_party/base/anglebase/base_export.h",
   "src/common/third_party/base/anglebase/containers/mru_cache.h",
   "src/common/third_party/base/anglebase/logging.h",
@@ -56,9 +54,33 @@ libangle_common_sources = [
   "src/common/utilities.h",
   "src/common/vector_utils.h",
 ]
-libangle_common_linux_sources = [ "src/common/system_utils_linux.cpp" ]
-libangle_common_mac_sources = [ "src/common/system_utils_mac.cpp" ]
-libangle_common_win_sources = [ "src/common/system_utils_win.cpp" ]
+
+angle_system_utils_sources = [
+  "src/common/Optional.h",
+  "src/common/angleutils.h",
+  "src/common/platform.h",
+  "src/common/system_utils.cpp",
+  "src/common/system_utils.h",
+]
+
+if (is_linux || is_android || is_fuchsia) {
+  angle_system_utils_sources += [
+    "src/common/system_utils_linux.cpp",
+    "src/common/system_utils_posix.cpp",
+  ]
+}
+
+if (is_mac) {
+  angle_system_utils_sources += [
+    "src/common/system_utils_mac.cpp",
+    "src/common/system_utils_posix.cpp",
+  ]
+}
+
+if (is_win) {
+  angle_system_utils_sources += [ "src/common/system_utils_win.cpp" ]
+}
+
 libangle_image_util_sources = [
   "src/image_util/copyimage.cpp",
   "src/image_util/copyimage.h",

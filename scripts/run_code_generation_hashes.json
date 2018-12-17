@@ -49,20 +49,34 @@
     "54608f6f7d9aa7c59a8458ccf3ab9935",
   "GL copy conversion table:src/libANGLE/gen_copy_conversion_table.py":
     "ac1afe23d9578bd1d2ef74f4a7aa927a",
-  "GL entry point:scripts/entry_point_packed_gl_enums.json":
-    "0554a67f70407e82c872010014721099",
-  "GL entry point:scripts/generate_entry_points.py":
-    "460bbd980ec533628c5866142d22214d",
-  "GL entry point:scripts/gl.xml":
-    "b470cb06b06cbbe7adb2c8129ec85708",
-  "GL entry point:scripts/gl_angle_ext.xml":
-    "9fd7020b8c63816320df0bdcd4582741",
   "GL format map:src/libANGLE/es3_format_type_combinations.json":
     "a232823cd6430f14e28793ccabb968ee",
   "GL format map:src/libANGLE/format_map_data.json":
     "779798d4879e5f73a5a108e3e3fd3095",
   "GL format map:src/libANGLE/gen_format_map.py":
     "a383ee79a7bf929d145165f3e76c1079",
+  "GL/EGL entry points:scripts/egl.xml":
+    "842e24514c4cfe09fba703c17a0fd292",
+  "GL/EGL entry points:scripts/egl_angle_ext.xml":
+    "745534010f31fbe8e1a1fcddce15ed2d",
+  "GL/EGL entry points:scripts/entry_point_packed_gl_enums.json":
+    "0554a67f70407e82c872010014721099",
+  "GL/EGL entry points:scripts/generate_entry_points.py":
+    "9fc8f8bd28f5511108b9046d9066774c",
+  "GL/EGL entry points:scripts/gl.xml":
+    "b470cb06b06cbbe7adb2c8129ec85708",
+  "GL/EGL entry points:scripts/gl_angle_ext.xml":
+    "35df932f522cd92fe1d4127bb9ab2c04",
+  "GL/EGL entry points:scripts/registry_xml.py":
+    "fcc6e75568f9c25b70f6692b9080a447",
+  "GL/EGL/WGL loader:scripts/egl.xml":
+    "842e24514c4cfe09fba703c17a0fd292",
+  "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
+    "745534010f31fbe8e1a1fcddce15ed2d",
+  "GL/EGL/WGL loader:scripts/generate_loader.py":
+    "408e48ccb03f7a92bcd49cd376943474",
+  "GL/EGL/WGL loader:scripts/registry_xml.py":
+    "fcc6e75568f9c25b70f6692b9080a447",
   "OpenGL dispatch table:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/generate_gl_dispatch_table.py":
@@ -100,7 +114,7 @@
   "packed enum:src/common/packed_gl_enums.json":
     "b54346c106ab4a7b0acb69eb65123c1a",
   "proc table:src/libGLESv2/gen_proc_table.py":
-    "027bfd5a8a8dffe91f492bf199029cde",
+    "ee265eada3dd238646010dd03874d242",
   "proc table:src/libGLESv2/proc_table_data.json":
     "bcb5dbd7b57c0d56d5e8849c46d9c36e",
   "uniform type:src/common/gen_uniform_type_table.py":
