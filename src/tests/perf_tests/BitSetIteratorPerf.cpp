@@ -11,7 +11,6 @@
 
 #include <gmock/gmock.h>
 
-#include "angle_unittests_utils.h"
 #include "common/bitset_utils.h"
 
 using namespace testing;

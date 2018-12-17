@@ -28,11 +28,13 @@ static_library("sample_util") {
     "sample_util/tga_utils.h",
   ]
   deps = [
-    "../:angle_common",
     "../:angle_util",
     "../:libEGL${angle_libs_suffix}",
     "../:libGLESv1_CM${angle_libs_suffix}",
     "../:libGLESv2${angle_libs_suffix}",
+  ]
+  public_deps = [
+    "../:angle_common",
   ]
   public_configs = [ ":sample_util_config" ]
 }

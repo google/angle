@@ -24,18 +24,6 @@
 namespace angle
 {
 
-struct CompilerParameters
-{
-    CompilerParameters();
-    CompilerParameters(ShShaderOutput output);
-
-    const char *str() const;
-
-    ShShaderOutput output;
-};
-
-std::ostream &operator<<(std::ostream &stream, const CompilerParameters &pp);
-
 struct PlatformParameters
 {
     PlatformParameters();

@@ -297,6 +297,7 @@ if (is_win || is_linux || is_android || is_mac) {
     sources = angle_perf_tests_sources
 
     deps = googletest_deps + [
+             angle_root + ":angle_common",
              angle_root + ":angle_util_static",
              angle_root + ":libEGL${angle_libs_suffix}",
              angle_root + ":libGLESv2${angle_libs_suffix}",

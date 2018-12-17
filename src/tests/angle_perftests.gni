@@ -33,9 +33,11 @@ angle_perf_tests_sources = [
   "test_utils/angle_test_instantiate.h",
   "test_utils/draw_call_perf_utils.cpp",
   "test_utils/draw_call_perf_utils.h",
+  "test_utils/gl_raii.h",
 ]
 
 angle_white_box_perf_tests_sources = [
+  "angle_unittests_utils.h",
   "perf_tests/ANGLEPerfTest.cpp",
   "perf_tests/ANGLEPerfTest.h",
   "perf_tests/BitSetIteratorPerf.cpp",
@@ -48,6 +50,7 @@ angle_white_box_perf_tests_sources = [
   "test_utils/angle_test_configs.h",
   "test_utils/angle_test_instantiate.cpp",
   "test_utils/angle_test_instantiate.h",
+  "test_utils/gl_raii.h",
 ]
 
 angle_white_box_perf_tests_win_sources =

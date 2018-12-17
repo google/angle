@@ -109,7 +109,7 @@ deps = {
   },
 
   '{angle_root}/third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@c44fb7248079cc3d5563b14b3f758aee60d6b415',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@f95aeb0fa7f136ef4a457a6d9ba6f3c2701a444b',
     'condition': 'not build_with_chromium',
   },
 

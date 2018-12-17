@@ -383,6 +383,13 @@ source_set("translator_fuzzer") {
 
 config("commit_id_config") {
   include_dirs = [ "$root_gen_dir/angle" ]
+  visibility = [ ":commit_id" ]
+}
+
+source_set("angle_version") {
+  sources = [
+    "src/common/version.h",
+  ]
 }
 
 commit_id_output_file = "$root_gen_dir/angle/id/commit.h"
@@ -405,6 +412,9 @@ if (angle_use_commit_id) {
     ]
 
     public_configs = [ ":commit_id_config" ]
+    public_deps = [
+      ":angle_version",
+    ]
   }
 } else {
   copy("commit_id") {
@@ -500,13 +510,13 @@ static_library("libANGLE") {
   }
   public_deps = [
     ":angle_common",
+    ":angle_gpu_info_util",
+    ":commit_id",
+    ":translator",
   ]
   deps = [
-    ":angle_gpu_info_util",
     ":angle_image_util",
-    ":commit_id",
     ":includes",
-    ":translator",
   ]
 
   # Shared D3D sources.
@@ -603,7 +613,6 @@ static_library("libANGLE") {
   configs -= angle_undefine_configs
 
   configs += [
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
@@ -665,7 +674,6 @@ shared_library("libGLESv2${angle_libs_suffix}") {
   configs -= angle_undefine_configs
   configs += [
     ":angle_gl_visibility_config",
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
@@ -677,6 +685,10 @@ shared_library("libGLESv2${angle_libs_suffix}") {
     ":includes",
     ":libANGLE",
   ]
+
+  public_deps = [
+    ":commit_id",
+  ]
 }
 
 static_library("libGLESv2_static") {
@@ -684,7 +696,6 @@ static_library("libGLESv2_static") {
 
   configs -= angle_undefine_configs
   configs += [
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
@@ -694,6 +705,9 @@ static_library("libGLESv2_static") {
 
   deps = [
     ":includes",
+  ]
+
+  public_deps = [
     ":libANGLE",
   ]
 }
@@ -717,7 +731,6 @@ shared_library("libGLESv1_CM${angle_libs_suffix}") {
   configs -= angle_undefine_configs
   configs += [
     ":angle_gl_visibility_config",
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
@@ -736,7 +749,6 @@ static_library("libGLESv1_CM_static") {
 
   configs -= angle_undefine_configs
   configs += [
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
@@ -759,7 +771,6 @@ shared_library("libEGL${angle_libs_suffix}") {
   }
   configs -= angle_undefine_configs
   configs += [
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
@@ -785,8 +796,11 @@ shared_library("libEGL${angle_libs_suffix}") {
   }
 
   deps = [
-    ":includes",
     ":libGLESv2${angle_libs_suffix}",
+  ]
+
+  public_deps = [
+    ":includes",
   ]
 }
 
@@ -795,7 +809,6 @@ static_library("libEGL_static") {
 
   configs -= angle_undefine_configs
   configs += [
-    ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",

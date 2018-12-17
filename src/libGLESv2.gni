@@ -55,7 +55,6 @@ libangle_common_sources = [
   "src/common/utilities.cpp",
   "src/common/utilities.h",
   "src/common/vector_utils.h",
-  "src/common/version.h",
 ]
 libangle_common_linux_sources = [ "src/common/system_utils_linux.cpp" ]
 libangle_common_mac_sources = [ "src/common/system_utils_mac.cpp" ]
