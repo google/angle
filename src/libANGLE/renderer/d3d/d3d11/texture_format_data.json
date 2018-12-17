@@ -514,6 +514,7 @@
   "R8G8B8A8_SINT": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
+    "uavFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
     "channels": "rgba",
     "componentType": "int",
