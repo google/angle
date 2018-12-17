@@ -1396,7 +1396,7 @@ ImmutableString TextureFunctionHLSL::useTextureFunction(const ImmutableString &n
 
         bool bias = (argumentCount > mandatoryArgumentCount);  // Bias argument is optional
 
-        if (lod0 || shaderType == GL_VERTEX_SHADER)
+        if (lod0 || shaderType == GL_VERTEX_SHADER || shaderType == GL_COMPUTE_SHADER)
         {
             if (bias)
             {
