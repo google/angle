@@ -332,6 +332,40 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
     runVectorTest(vectorCase);
 }
 
+// Test that the shader works well with an active SSBO but not statically used.
+TEST_P(ShaderStorageBufferTest31, ActiveSSBOButNotStaticallyUsed)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+ layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+ layout(std140, binding = 0) buffer blockIn {
+     uvec2 data;
+ } instanceIn;
+ layout(std140, binding = 1) buffer blockOut {
+     uvec2 data;
+ } instanceOut;
+ layout(std140, binding = 2) buffer blockC {
+     uvec2 data;
+ } instanceC;
+ void main()
+ {
+     instanceOut.data[0] = instanceIn.data[0];
+     instanceOut.data[1] = instanceIn.data[1];
+ }
+ )";
+
+    GLBuffer shaderStorageBufferC;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBufferC);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 32, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, shaderStorageBufferC);
+
+    constexpr unsigned int kComponentCount         = 2;
+    constexpr GLuint kInputValues[kComponentCount] = {3u, 4u};
+
+    VectorCase vectorCase(kComponentCount, kComputeShaderSource, kInputValues, kInputValues);
+    runVectorTest(vectorCase);
+}
+
 // Test that access/write to swizzle scalar data in shader storage block.
 TEST_P(ShaderStorageBufferTest31, ScalarSwizzleTest)
 {

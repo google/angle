@@ -3514,6 +3514,13 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
 
         const unsigned int registerIndex = mProgramD3D->getShaderStorageBufferRegisterIndex(
             static_cast<GLuint>(blockIndex), shaderType);
+
+        // It means this block is active but not statically used.
+        if (registerIndex == GL_INVALID_INDEX)
+        {
+            continue;
+        }
+
         switch (shaderType)
         {
             case gl::ShaderType::Compute:
