@@ -43,52 +43,25 @@ template("angle_apk") {
       "//third_party/android_deps:android_support_v14_preference_java",
       "//third_party/android_deps:android_support_v7_preference_java",
     ]
-    if (symbol_level != 0) {
-      deps += [ ":compressed_symbols" ]
-      if (build_apk_secondary_abi && android_64bit_target_cpu) {
-        deps += [ ":compressed_symbols($android_secondary_abi_toolchain)" ]
-      }
-    }
 
     uncompress_shared_libraries = true
 
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
-      if (symbol_level == 0) {
-        secondary_abi_shared_libraries = [
-          "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
-          "//third_party/angle:libGLESv1_CM${angle_libs_suffix}($android_secondary_abi_toolchain)",
-          "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
-          "//third_party/angle:libfeature_support${angle_libs_suffix}" +
-              "($android_secondary_abi_toolchain)",
-        ]
-      } else {
-        _secondary_out_dir = get_label_info(
-                ":compressed_symbols($android_secondary_abi_toolchain)",
-                "root_out_dir")
-        secondary_abi_loadable_modules = [
-          "$_secondary_out_dir/lib.compressed/libEGL${angle_libs_suffix}.so",
-          "$_secondary_out_dir/lib.compressed/libGLESv1_CM${angle_libs_suffix}.so",
-          "$_secondary_out_dir/lib.compressed/libGLESv2${angle_libs_suffix}.so",
-          "$_secondary_out_dir/lib.compressed/libfeature_support${angle_libs_suffix}.so",
-        ]
-      }
+      secondary_abi_shared_libraries = [
+        "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
+        "//third_party/angle:libGLESv1_CM${angle_libs_suffix}($android_secondary_abi_toolchain)",
+        "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
+        "//third_party/angle:libfeature_support${angle_libs_suffix}" +
+            "($android_secondary_abi_toolchain)",
+      ]
     }
 
-    if (symbol_level == 0) {
-      shared_libraries = [
-        "//third_party/angle:libEGL${angle_libs_suffix}",
-        "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
-        "//third_party/angle:libGLESv2${angle_libs_suffix}",
-        "//third_party/angle:libfeature_support${angle_libs_suffix}",
-      ]
-    } else {
-      loadable_modules = [
-        "$root_out_dir/lib.compressed/libEGL${angle_libs_suffix}.so",
-        "$root_out_dir/lib.compressed/libGLESv1_CM${angle_libs_suffix}.so",
-        "$root_out_dir/lib.compressed/libGLESv2${angle_libs_suffix}.so",
-        "$root_out_dir/lib.compressed/libfeature_support${angle_libs_suffix}.so",
-      ]
-    }
+    shared_libraries = [
+      "//third_party/angle:libEGL${angle_libs_suffix}",
+      "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
+      "//third_party/angle:libGLESv2${angle_libs_suffix}",
+      "//third_party/angle:libfeature_support${angle_libs_suffix}",
+    ]
 
     # Common files required by all builds
     java_files = [
