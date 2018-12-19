@@ -1256,3 +1256,8 @@ void ANGLETestEnvironment::TearDown()
 {
     ANGLETestBase::DestroyTestWindow();
 }
+
+void ANGLEProcessTestArgs(int *argc, char *argv[])
+{
+    testing::AddGlobalTestEnvironment(new ANGLETestEnvironment());
+}
