@@ -539,22 +539,22 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *co
 }
 
 egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
-                                           EGLint * /*rects*/,
-                                           EGLint /*n_rects*/)
+                                           EGLint *rects,
+                                           EGLint n_rects)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());
-    angle::Result result = swapImpl(displayVk);
+    angle::Result result = swapImpl(displayVk, rects, n_rects);
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());
-    angle::Result result = swapImpl(displayVk);
+    angle::Result result = swapImpl(displayVk, nullptr, 0);
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 
-angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
+angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects)
 {
     RendererVk *renderer = displayVk->getRenderer();
 
@@ -596,6 +596,31 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
     presentInfo.pSwapchains    = &mSwapchain;
     presentInfo.pImageIndices  = &mCurrentSwapchainImageIndex;
     presentInfo.pResults       = nullptr;
+
+    VkPresentRegionsKHR presentRegions = {};
+    if (renderer->getFeatures().supportsIncrementalPresent && (n_rects > 0))
+    {
+        VkPresentRegionKHR presentRegion = {};
+        std::vector<VkRectLayerKHR> vk_rects(n_rects);
+        EGLint *egl_rects = rects;
+        presentRegion.rectangleCount = n_rects;
+        for (EGLint rect = 0; rect < n_rects; rect++)
+        {
+            vk_rects[rect].offset.x      = *egl_rects++;
+            vk_rects[rect].offset.y      = *egl_rects++;
+            vk_rects[rect].extent.width  = *egl_rects++;
+            vk_rects[rect].extent.height = *egl_rects++;
+            vk_rects[rect].layer         = 0;
+        }
+        presentRegion.pRectangles = vk_rects.data();
+
+        presentRegions.sType          = VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR;
+        presentRegions.pNext          = nullptr;
+        presentRegions.swapchainCount = 1;
+        presentRegions.pRegions       = &presentRegion;
+
+        presentInfo.pNext = &presentRegions;
+    }
 
     ANGLE_VK_TRY(displayVk, vkQueuePresentKHR(renderer->getQueue(), &presentInfo));
 

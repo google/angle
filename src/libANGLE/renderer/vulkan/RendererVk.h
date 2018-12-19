@@ -165,7 +165,11 @@ class RendererVk : angle::NonCopyable
     angle::Result getFullScreenClearShaderProgram(vk::Context *context,
                                                   vk::ShaderProgramHelper **programOut);
     DispatchUtilsVk &getDispatchUtils() { return mDispatchUtils; }
-    const angle::FeaturesVk &getFeatures() const { return mFeatures; }
+    const angle::FeaturesVk &getFeatures() const
+    {
+        ASSERT(mFeaturesInitialized);
+        return mFeatures;
+    }
 
     angle::Result getTimestamp(vk::Context *context, uint64_t *timestampOut);
 
@@ -212,7 +216,7 @@ class RendererVk : angle::NonCopyable
                               vk::CommandBuffer &&commandBuffer);
     void freeAllInFlightResources();
     angle::Result flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch);
-    void initFeatures();
+    void initFeatures(const std::vector<VkExtensionProperties> &deviceExtensionProps);
     void initPipelineCacheVkKey();
     angle::Result initPipelineCache(DisplayVk *display);
 
@@ -234,6 +238,7 @@ class RendererVk : angle::NonCopyable
     mutable gl::TextureCapsMap mNativeTextureCaps;
     mutable gl::Extensions mNativeExtensions;
     mutable gl::Limitations mNativeLimitations;
+    mutable bool mFeaturesInitialized;
     mutable angle::FeaturesVk mFeatures;
 
     VkInstance mInstance;

@@ -143,7 +143,7 @@ class WindowSurfaceVk : public SurfaceImpl
     virtual angle::Result createSurfaceVk(vk::Context *context, gl::Extents *extentsOut) = 0;
     angle::Result initializeImpl(DisplayVk *displayVk);
     angle::Result nextSwapchainImage(DisplayVk *displayVk);
-    angle::Result swapImpl(DisplayVk *displayVk);
+    angle::Result swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects);
 
     VkSwapchainKHR mSwapchain;
     VkPresentModeKHR mSwapchainPresentMode;

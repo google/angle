@@ -270,6 +270,19 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
 
 // Initially dumping the command graphs is disabled.
 constexpr bool kEnableCommandGraphDiagnostics = false;
+
+bool ExtensionFound(const char *extensionName,
+                    const std::vector<VkExtensionProperties> &extensionProps)
+{
+    for (const auto &extensionProp : extensionProps)
+    {
+        if (strcmp(extensionProp.extensionName, extensionName) == 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 }  // anonymous namespace
 
 // CommandBatch implementation.
@@ -299,6 +312,7 @@ void RendererVk::CommandBatch::destroy(VkDevice device)
 RendererVk::RendererVk()
     : mDisplay(nullptr),
       mCapsInitialized(false),
+      mFeaturesInitialized(false),
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnableMockICD(false),
@@ -533,8 +547,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     ANGLE_VK_CHECK(displayVk, graphicsQueueFamilyCount > 0, VK_ERROR_INITIALIZATION_FAILED);
 
-    initFeatures();
-
     // If only one queue family, go ahead and initialize the device. If there is more than one
     // queue, we'll have to wait until we see a WindowSurface to know which supports present.
     if (graphicsQueueFamilyCount == 1)
@@ -589,10 +601,17 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     std::vector<const char *> enabledDeviceExtensions;
     enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
+    initFeatures(deviceExtensionProps);
+    mFeaturesInitialized = true;
+
     // Selectively enable KHR_MAINTENANCE1 to support viewport flipping.
     if (getFeatures().flipViewportY)
     {
         enabledDeviceExtensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
+    }
+    if (getFeatures().supportsIncrementalPresent)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME);
     }
 
     ANGLE_VK_TRY(displayVk, VerifyExtensionsPresent(deviceExtensionProps, enabledDeviceExtensions));
@@ -766,7 +785,7 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     return gl::Version(3, 0);
 }
 
-void RendererVk::initFeatures()
+void RendererVk::initFeatures(const std::vector<VkExtensionProperties> &deviceExtensionProps)
 {
 // Use OpenGL line rasterization rules by default.
 // TODO(jmadill): Fix Android support. http://anglebug.com/2830
@@ -802,6 +821,11 @@ void RendererVk::initFeatures()
     mFeatures.flushAfterVertexConversion =
         IsNexus5X(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 #endif
+
+    if (ExtensionFound(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME, deviceExtensionProps))
+    {
+        mFeatures.supportsIncrementalPresent = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()

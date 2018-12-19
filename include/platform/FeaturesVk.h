@@ -53,6 +53,10 @@ struct FeaturesVk
     // attributes and the vertex shader that reads from it is ineffective.  Only known workaround is
     // to perform a flush after the conversion.  http://anglebug.com/3016
     bool flushAfterVertexConversion = false;
+
+    // Whether the VkDevice supports the VK_KHR_incremental_present extension, on which the
+    // EGL_KHR_swap_buffers_with_damage extension can be layered.
+    bool supportsIncrementalPresent = false;
 };
 
 }  // namespace angle
