@@ -107,8 +107,8 @@ TIntermTyped *CreateFoldedNode(const TConstantUnion *constArray, const TIntermTy
 }
 
 angle::Matrix<float> GetMatrix(const TConstantUnion *paramArray,
-                               const unsigned int &rows,
-                               const unsigned int &cols)
+                               const unsigned int rows,
+                               const unsigned int cols)
 {
     std::vector<float> elements;
     for (size_t i = 0; i < rows * cols; i++)
@@ -119,7 +119,7 @@ angle::Matrix<float> GetMatrix(const TConstantUnion *paramArray,
     return angle::Matrix<float>(elements, cols, rows).transpose();
 }
 
-angle::Matrix<float> GetMatrix(const TConstantUnion *paramArray, const unsigned int &size)
+angle::Matrix<float> GetMatrix(const TConstantUnion *paramArray, const unsigned int size)
 {
     std::vector<float> elements;
     for (size_t i = 0; i < size * size; i++)
@@ -3435,10 +3435,12 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             ASSERT(basicType == EbtFloat && (*arguments)[0]->getAsTyped()->isMatrix() &&
                    (*arguments)[1]->getAsTyped()->isMatrix());
             // Perform component-wise matrix multiplication.
-            resultArray = new TConstantUnion[maxObjectSize];
-            int size    = (*arguments)[0]->getAsTyped()->getNominalSize();
-            angle::Matrix<float> result =
-                GetMatrix(unionArrays[0], size).compMult(GetMatrix(unionArrays[1], size));
+            resultArray                 = new TConstantUnion[maxObjectSize];
+            int rows                    = (*arguments)[0]->getAsTyped()->getRows();
+            int cols                    = (*arguments)[0]->getAsTyped()->getCols();
+            angle::Matrix<float> lhs    = GetMatrix(unionArrays[0], rows, cols);
+            angle::Matrix<float> rhs    = GetMatrix(unionArrays[1], rows, cols);
+            angle::Matrix<float> result = lhs.compMult(rhs);
             SetUnionArrayFromMatrix(result, resultArray);
             break;
         }
