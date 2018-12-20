@@ -795,9 +795,12 @@ void RendererVk::initFeatures(const std::vector<VkExtensionProperties> &deviceEx
     mFeatures.basicGLLineRasterization = true;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
-    // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
-    // investigation. http://anglebug.com/2728
-    mFeatures.flipViewportY = !IsIntel(mPhysicalDeviceProperties.vendorID);
+    if (ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionProps))
+    {
+        // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
+        // investigation. http://anglebug.com/2728
+        mFeatures.flipViewportY = !IsIntel(mPhysicalDeviceProperties.vendorID);
+    }
 
 #ifdef ANGLE_PLATFORM_WINDOWS
     // http://anglebug.com/2838
