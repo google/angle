@@ -27,21 +27,21 @@ template <typename T>
 class Matrix
 {
   public:
-    Matrix(const std::vector<T> &elements, const unsigned int &numRows, const unsigned int &numCols)
+    Matrix(const std::vector<T> &elements, const unsigned int numRows, const unsigned int numCols)
         : mElements(elements), mRows(numRows), mCols(numCols)
     {
         ASSERT(rows() >= 1 && rows() <= 4);
         ASSERT(columns() >= 1 && columns() <= 4);
     }
 
-    Matrix(const std::vector<T> &elements, const unsigned int &size)
+    Matrix(const std::vector<T> &elements, const unsigned int size)
         : mElements(elements), mRows(size), mCols(size)
     {
         ASSERT(rows() >= 1 && rows() <= 4);
         ASSERT(columns() >= 1 && columns() <= 4);
     }
 
-    Matrix(const T *elements, const unsigned int &size) : mRows(size), mCols(size)
+    Matrix(const T *elements, const unsigned int size) : mRows(size), mCols(size)
     {
         ASSERT(rows() >= 1 && rows() <= 4);
         ASSERT(columns() >= 1 && columns() <= 4);
@@ -49,18 +49,24 @@ class Matrix
             mElements.push_back(elements[i]);
     }
 
-    const T &operator()(const unsigned int &rowIndex, const unsigned int &columnIndex) const
+    const T &operator()(const unsigned int rowIndex, const unsigned int columnIndex) const
     {
+        ASSERT(rowIndex < mRows);
+        ASSERT(columnIndex < mCols);
         return mElements[rowIndex * columns() + columnIndex];
     }
 
-    T &operator()(const unsigned int &rowIndex, const unsigned int &columnIndex)
+    T &operator()(const unsigned int rowIndex, const unsigned int columnIndex)
     {
+        ASSERT(rowIndex < mRows);
+        ASSERT(columnIndex < mCols);
         return mElements[rowIndex * columns() + columnIndex];
     }
 
-    const T &at(const unsigned int &rowIndex, const unsigned int &columnIndex) const
+    const T &at(const unsigned int rowIndex, const unsigned int columnIndex) const
     {
+        ASSERT(rowIndex < mRows);
+        ASSERT(columnIndex < mCols);
         return operator()(rowIndex, columnIndex);
     }
 
@@ -131,10 +137,16 @@ class Matrix
 
     Matrix<T> compMult(const Matrix<T> &mat1) const
     {
-        Matrix result(std::vector<T>(mElements.size()), size());
-        for (unsigned int i = 0; i < columns(); i++)
-            for (unsigned int j = 0; j < rows(); j++)
-                result(i, j) = at(i, j) * mat1(i, j);
+        Matrix result(std::vector<T>(mElements.size()), rows(), columns());
+        for (unsigned int i = 0; i < rows(); i++)
+        {
+            for (unsigned int j = 0; j < columns(); j++)
+            {
+                T lhs        = at(i, j);
+                T rhs        = mat1(i, j);
+                result(i, j) = rhs * lhs;
+            }
+        }
 
         return result;
     }
