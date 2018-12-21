@@ -754,6 +754,11 @@ angle::Result StateManager11::updateStateForCompute(const gl::Context *context,
         mDirtySwizzles = false;
     }
 
+    if (mProgramD3D->anyShaderUniformsDirty())
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORMS);
+    }
+
     auto dirtyBitsCopy = mInternalDirtyBits & mComputeDirtyBitsMask;
     mInternalDirtyBits &= ~mComputeDirtyBitsMask;
     for (auto dirtyBit : dirtyBitsCopy)

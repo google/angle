@@ -2323,6 +2323,77 @@ void main()
                                       expectedValues);
 }
 
+// Test uniform dirty in compute shader, and verify the contents.
+TEST_P(ComputeShaderTest, UniformDirty)
+{
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+uniform uint factor;
+void main()
+{
+    uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+    imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value * factor);
+})";
+
+    constexpr int kWidth = 1, kHeight = 1;
+    constexpr GLuint kInputValues[2][1] = {{200}, {100}};
+
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues[0]);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues[1]);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    glBindImageTexture(0, texture[0], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(1, texture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glUniform1ui(glGetUniformLocation(program, "factor"), 2);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+
+    glUniform1ui(glGetUniformLocation(program, "factor"), 3);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    GLuint outputValues[kWidth * kHeight];
+    GLuint expectedValue = 600;
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture[1], 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < kWidth * kHeight; i++)
+    {
+        EXPECT_EQ(expectedValue, outputValues[i]);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11());
