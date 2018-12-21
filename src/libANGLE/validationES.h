@@ -287,6 +287,7 @@ bool ValidateCopyTexImageParametersBase(Context *context,
                                         Format *textureFormatOut);
 
 bool ValidateDrawMode(Context *context, PrimitiveMode mode);
+const char *ValidateDrawElementsStates(Context *context);
 
 ANGLE_INLINE bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
 {

@@ -289,6 +289,8 @@ class ANGLETestBase
 
     static std::array<angle::Vector3, 6> GetQuadVertices();
     static std::array<GLushort, 6> GetQuadIndices();
+    static std::array<angle::Vector3, 4> GetIndexedQuadVertices();
+
     void drawIndexedQuad(GLuint program,
                          const std::string &positionAttribName,
                          GLfloat positionAttribZ);

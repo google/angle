@@ -42,7 +42,7 @@ GLubyte ColorDenorm(float colorValue)
     return static_cast<GLubyte>(colorValue * 255.0f);
 }
 
-void TestPlatform_logError(angle::PlatformMethods *platform, const char *errorMessage)
+void TestPlatform_logError(PlatformMethods *platform, const char *errorMessage)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->ignoreMessages)
@@ -51,7 +51,7 @@ void TestPlatform_logError(angle::PlatformMethods *platform, const char *errorMe
     FAIL() << errorMessage;
 }
 
-void TestPlatform_logWarning(angle::PlatformMethods *platform, const char *warningMessage)
+void TestPlatform_logWarning(PlatformMethods *platform, const char *warningMessage)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->ignoreMessages)
@@ -60,17 +60,16 @@ void TestPlatform_logWarning(angle::PlatformMethods *platform, const char *warni
     std::cerr << "Warning: " << warningMessage << std::endl;
 }
 
-void TestPlatform_logInfo(angle::PlatformMethods *platform, const char *infoMessage)
+void TestPlatform_logInfo(PlatformMethods *platform, const char *infoMessage)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->ignoreMessages)
         return;
 
-    angle::WriteDebugMessage("%s\n", infoMessage);
+    WriteDebugMessage("%s\n", infoMessage);
 }
 
-void TestPlatform_overrideWorkaroundsD3D(angle::PlatformMethods *platform,
-                                         WorkaroundsD3D *workaroundsD3D)
+void TestPlatform_overrideWorkaroundsD3D(PlatformMethods *platform, WorkaroundsD3D *workaroundsD3D)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->currentTest)
@@ -79,8 +78,7 @@ void TestPlatform_overrideWorkaroundsD3D(angle::PlatformMethods *platform,
     }
 }
 
-void TestPlatform_overrideFeaturesVk(angle::PlatformMethods *platform,
-                                     FeaturesVk *workaroundsVulkan)
+void TestPlatform_overrideFeaturesVk(PlatformMethods *platform, FeaturesVk *workaroundsVulkan)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->currentTest)
@@ -89,17 +87,23 @@ void TestPlatform_overrideFeaturesVk(angle::PlatformMethods *platform,
     }
 }
 
-std::array<angle::Vector3, 4> GetIndexedQuadVertices()
-{
-    std::array<angle::Vector3, 4> vertices;
-    vertices[0] = angle::Vector3(-1.0f, 1.0f, 0.5f);
-    vertices[1] = angle::Vector3(-1.0f, -1.0f, 0.5f);
-    vertices[2] = angle::Vector3(1.0f, -1.0f, 0.5f);
-    vertices[3] = angle::Vector3(1.0f, 1.0f, 0.5f);
-    return vertices;
-}
+const std::array<Vector3, 6> kQuadVertices = {{
+    Vector3(-1.0f, 1.0f, 0.5f),
+    Vector3(-1.0f, -1.0f, 0.5f),
+    Vector3(1.0f, -1.0f, 0.5f),
+    Vector3(-1.0f, 1.0f, 0.5f),
+    Vector3(1.0f, -1.0f, 0.5f),
+    Vector3(1.0f, 1.0f, 0.5f),
+}};
 
-static constexpr std::array<GLushort, 6> IndexedQuadIndices = {{0, 1, 2, 0, 2, 3}};
+const std::array<Vector3, 4> kIndexedQuadVertices = {{
+    Vector3(-1.0f, 1.0f, 0.5f),
+    Vector3(-1.0f, -1.0f, 0.5f),
+    Vector3(1.0f, -1.0f, 0.5f),
+    Vector3(1.0f, 1.0f, 0.5f),
+}};
+
+constexpr std::array<GLushort, 6> kIndexedQuadIndices = {{0, 1, 2, 0, 2, 3}};
 
 const char *GetColorName(GLColor color)
 {
@@ -156,7 +160,7 @@ GLColorRGB::GLColorRGB() : R(0), G(0), B(0) {}
 
 GLColorRGB::GLColorRGB(GLubyte r, GLubyte g, GLubyte b) : R(r), G(g), B(b) {}
 
-GLColorRGB::GLColorRGB(const angle::Vector3 &floatColor)
+GLColorRGB::GLColorRGB(const Vector3 &floatColor)
     : R(ColorDenorm(floatColor.x())), G(ColorDenorm(floatColor.y())), B(ColorDenorm(floatColor.z()))
 {}
 
@@ -164,7 +168,7 @@ GLColor::GLColor() : R(0), G(0), B(0), A(0) {}
 
 GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b), A(a) {}
 
-GLColor::GLColor(const angle::Vector4 &floatColor)
+GLColor::GLColor(const Vector4 &floatColor)
     : R(ColorDenorm(floatColor.x())),
       G(ColorDenorm(floatColor.y())),
       B(ColorDenorm(floatColor.z())),
@@ -201,9 +205,9 @@ void CreatePixelCenterWindowCoords(const std::vector<Vector2> &pixelPoints,
     }
 }
 
-angle::Vector4 GLColor::toNormalizedVector() const
+Vector4 GLColor::toNormalizedVector() const
 {
-    return angle::Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
+    return Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
 }
 
 GLColor ReadColor(GLint x, GLint y)
@@ -262,20 +266,19 @@ GLColor32F ReadColor32F(GLint x, GLint y)
 // static
 std::array<angle::Vector3, 6> ANGLETestBase::GetQuadVertices()
 {
-    std::array<angle::Vector3, 6> vertices;
-    vertices[0] = angle::Vector3(-1.0f, 1.0f, 0.5f);
-    vertices[1] = angle::Vector3(-1.0f, -1.0f, 0.5f);
-    vertices[2] = angle::Vector3(1.0f, -1.0f, 0.5f);
-    vertices[3] = angle::Vector3(-1.0f, 1.0f, 0.5f);
-    vertices[4] = angle::Vector3(1.0f, -1.0f, 0.5f);
-    vertices[5] = angle::Vector3(1.0f, 1.0f, 0.5f);
-    return vertices;
+    return angle::kQuadVertices;
 }
 
 // static
 std::array<GLushort, 6> ANGLETestBase::GetQuadIndices()
 {
-    return angle::IndexedQuadIndices;
+    return angle::kIndexedQuadIndices;
+}
+
+// static
+std::array<angle::Vector3, 4> ANGLETestBase::GetIndexedQuadVertices()
+{
+    return angle::kIndexedQuadVertices;
 }
 
 ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
@@ -454,7 +457,7 @@ void ANGLETestBase::setupIndexedQuadVertexBuffer(GLfloat positionAttribZ,
         glGenBuffers(1, &mQuadVertexBuffer);
     }
 
-    auto quadVertices = angle::GetIndexedQuadVertices();
+    auto quadVertices = angle::kIndexedQuadVertices;
     for (angle::Vector3 &vertex : quadVertices)
     {
         vertex.x() *= positionAttribXYScale;
@@ -474,8 +477,8 @@ void ANGLETestBase::setupIndexedQuadIndexBuffer()
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mQuadIndexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(angle::IndexedQuadIndices),
-                 angle::IndexedQuadIndices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(angle::kIndexedQuadIndices),
+                 angle::kIndexedQuadIndices.data(), GL_STATIC_DRAW);
 }
 
 // static
@@ -646,7 +649,7 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
     }
     else
     {
-        indices = angle::IndexedQuadIndices.data();
+        indices = angle::kIndexedQuadIndices.data();
     }
 
     if (!restrictedRange)

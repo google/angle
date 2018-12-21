@@ -438,8 +438,8 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
             if (!IsElementArrayBufferSubjectIndex(index))
             {
                 updateCachedMappedArrayBuffers(&mState.mVertexBindings[index]);
-                onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
             }
+            onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
             break;
 
         case angle::SubjectMessage::RESOURCE_UNMAPPED:
@@ -448,8 +448,8 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
             if (!IsElementArrayBufferSubjectIndex(index))
             {
                 updateCachedMappedArrayBuffers(&mState.mVertexBindings[index]);
-                onStateChange(context, angle::SubjectMessage::RESOURCE_UNMAPPED);
             }
+            onStateChange(context, angle::SubjectMessage::RESOURCE_UNMAPPED);
             break;
 
         default:

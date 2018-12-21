@@ -3038,6 +3038,47 @@ void main()
     glDrawArrays(GL_TRIANGLES, 0, 6);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
+
+// Tests that mapping the element array buffer triggers errors.
+TEST_P(ValidationStateChangeTest, MapElementArrayBuffer)
+{
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(program);
+
+    std::array<GLushort, 6> quadIndices = GetQuadIndices();
+    std::array<Vector3, 4> quadVertices = GetIndexedQuadVertices();
+
+    GLsizei elementBufferSize = sizeof(quadIndices[0]) * quadIndices.size();
+
+    GLBuffer elementArrayBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBufferSize, quadIndices.data(), GL_STATIC_DRAW);
+
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices[0]) * quadVertices.size(),
+                 quadVertices.data(), GL_STATIC_DRAW);
+
+    GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    void *ptr = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, elementBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, ptr);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());

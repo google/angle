@@ -8191,7 +8191,8 @@ StateCache::StateCache()
     : mCachedHasAnyEnabledClientAttrib(false),
       mCachedNonInstancedVertexElementLimit(0),
       mCachedInstancedVertexElementLimit(0),
-      mCachedBasicDrawStatesError(kInvalidPointer)
+      mCachedBasicDrawStatesError(kInvalidPointer),
+      mCachedBasicDrawElementsError(kInvalidPointer)
 {}
 
 StateCache::~StateCache() = default;
@@ -8201,6 +8202,8 @@ void StateCache::initialize(Context *context)
     updateValidDrawModes(context);
     updateValidBindTextureTypes(context);
     updateValidDrawElementsTypes(context);
+    updateBasicDrawStatesError();
+    updateBasicDrawElementsError();
 }
 
 void StateCache::updateActiveAttribsMask(Context *context)
@@ -8277,11 +8280,23 @@ void StateCache::updateBasicDrawStatesError()
     mCachedBasicDrawStatesError = kInvalidPointer;
 }
 
+void StateCache::updateBasicDrawElementsError()
+{
+    mCachedBasicDrawElementsError = kInvalidPointer;
+}
+
 intptr_t StateCache::getBasicDrawStatesErrorImpl(Context *context) const
 {
     ASSERT(mCachedBasicDrawStatesError == kInvalidPointer);
     mCachedBasicDrawStatesError = reinterpret_cast<intptr_t>(ValidateDrawStates(context));
     return mCachedBasicDrawStatesError;
+}
+
+intptr_t StateCache::getBasicDrawElementsErrorImpl(Context *context) const
+{
+    ASSERT(mCachedBasicDrawElementsError == kInvalidPointer);
+    mCachedBasicDrawElementsError = reinterpret_cast<intptr_t>(ValidateDrawElementsStates(context));
+    return mCachedBasicDrawElementsError;
 }
 
 void StateCache::onVertexArrayBindingChange(Context *context)
@@ -8320,6 +8335,7 @@ void StateCache::onVertexArrayStateChange(Context *context)
 void StateCache::onVertexArrayBufferStateChange(Context *context)
 {
     updateBasicDrawStatesError();
+    updateBasicDrawElementsError();
 }
 
 void StateCache::onGLES1ClientStateChange(Context *context)
@@ -8360,6 +8376,7 @@ void StateCache::onQueryChange(Context *context)
 void StateCache::onActiveTransformFeedbackChange(Context *context)
 {
     updateBasicDrawStatesError();
+    updateBasicDrawElementsError();
     updateValidDrawModes(context);
 }
 
@@ -8371,6 +8388,7 @@ void StateCache::onUniformBufferStateChange(Context *context)
 void StateCache::onBufferBindingChange(Context *context)
 {
     updateBasicDrawStatesError();
+    updateBasicDrawElementsError();
 }
 
 void StateCache::setValidDrawModes(bool pointsOK,
