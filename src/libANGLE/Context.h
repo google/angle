@@ -171,10 +171,17 @@ class StateCache final : angle::NonCopyable
         return mCachedValidBindTextureTypes[type];
     }
 
-    // Cannot chance except on Context/Extension init.
+    // Cannot change except on Context/Extension init.
     bool isValidDrawElementsType(DrawElementsType type) const
     {
         return mCachedValidDrawElementsTypes[type];
+    }
+
+    // Places that can trigger updateTransformFeedbackActiveUnpaused:
+    // 1. onActiveTransformFeedbackChange.
+    bool isTransformFeedbackActiveUnpaused() const
+    {
+        return mCachedTransformFeedbackActiveUnpaused;
     }
 
     // State change notifications.
@@ -204,6 +211,7 @@ class StateCache final : angle::NonCopyable
     void updateValidDrawElementsTypes(Context *context);
     void updateBasicDrawStatesError();
     void updateBasicDrawElementsError();
+    void updateTransformFeedbackActiveUnpaused(Context *context);
 
     void setValidDrawModes(bool pointsOK, bool linesOK, bool trisOK, bool lineAdjOK, bool triAdjOK);
 
@@ -220,6 +228,7 @@ class StateCache final : angle::NonCopyable
     GLint64 mCachedInstancedVertexElementLimit;
     mutable intptr_t mCachedBasicDrawStatesError;
     mutable intptr_t mCachedBasicDrawElementsError;
+    bool mCachedTransformFeedbackActiveUnpaused;
 
     // Reserve an extra slot at the end of these maps for invalid enum.
     angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMode>() + 1>

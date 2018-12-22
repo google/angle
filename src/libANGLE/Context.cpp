@@ -132,12 +132,12 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
 }
 
 ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const Context *context,
-                                                   TransformFeedback *transformFeedback,
                                                    GLsizei count,
                                                    GLsizei instanceCount)
 {
-    if (transformFeedback && transformFeedback->isActive() && !transformFeedback->isPaused())
+    if (context->getStateCache().isTransformFeedbackActiveUnpaused())
     {
+        TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
         transformFeedback->onVerticesDrawn(context, count, instanceCount);
     }
 }
@@ -2221,7 +2221,7 @@ void Context::drawArrays(PrimitiveMode mode, GLint first, GLsizei count)
 
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawArrays(this, mode, first, count));
-    MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(), count, 1);
+    MarkTransformFeedbackBufferUsage(this, count, 1);
 }
 
 void Context::drawArraysInstanced(PrimitiveMode mode,
@@ -2238,8 +2238,7 @@ void Context::drawArraysInstanced(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(
         mImplementation->drawArraysInstanced(this, mode, first, count, instanceCount));
-    MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(), count,
-                                     instanceCount);
+    MarkTransformFeedbackBufferUsage(this, count, instanceCount);
 }
 
 void Context::drawElements(PrimitiveMode mode,
@@ -5406,8 +5405,7 @@ void Context::multiDrawArrays(PrimitiveMode mode,
             programObject->setDrawIDUniform(drawID);
             ANGLE_CONTEXT_TRY(
                 mImplementation->drawArrays(this, mode, firsts[drawID], counts[drawID]));
-            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
-                                             counts[drawID], 1);
+            MarkTransformFeedbackBufferUsage(this, counts[drawID], 1);
         }
     }
     else
@@ -5420,8 +5418,7 @@ void Context::multiDrawArrays(PrimitiveMode mode,
             }
             ANGLE_CONTEXT_TRY(
                 mImplementation->drawArrays(this, mode, firsts[drawID], counts[drawID]));
-            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
-                                             counts[drawID], 1);
+            MarkTransformFeedbackBufferUsage(this, counts[drawID], 1);
         }
     }
 }
@@ -5446,8 +5443,7 @@ void Context::multiDrawArraysInstanced(PrimitiveMode mode,
             programObject->setDrawIDUniform(drawID);
             ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstanced(
                 this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID]));
-            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
-                                             counts[drawID], instanceCounts[drawID]);
+            MarkTransformFeedbackBufferUsage(this, counts[drawID], instanceCounts[drawID]);
         }
     }
     else
@@ -5460,8 +5456,7 @@ void Context::multiDrawArraysInstanced(PrimitiveMode mode,
             }
             ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstanced(
                 this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID]));
-            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
-                                             counts[drawID], instanceCounts[drawID]);
+            MarkTransformFeedbackBufferUsage(this, counts[drawID], instanceCounts[drawID]);
         }
     }
 }
@@ -8192,7 +8187,8 @@ StateCache::StateCache()
       mCachedNonInstancedVertexElementLimit(0),
       mCachedInstancedVertexElementLimit(0),
       mCachedBasicDrawStatesError(kInvalidPointer),
-      mCachedBasicDrawElementsError(kInvalidPointer)
+      mCachedBasicDrawElementsError(kInvalidPointer),
+      mCachedTransformFeedbackActiveUnpaused(false)
 {}
 
 StateCache::~StateCache() = default;
@@ -8375,6 +8371,7 @@ void StateCache::onQueryChange(Context *context)
 
 void StateCache::onActiveTransformFeedbackChange(Context *context)
 {
+    updateTransformFeedbackActiveUnpaused(context);
     updateBasicDrawStatesError();
     updateBasicDrawElementsError();
     updateValidDrawModes(context);
@@ -8415,10 +8412,10 @@ void StateCache::updateValidDrawModes(Context *context)
     const State &state = context->getGLState();
     Program *program   = state.getProgram();
 
-    TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
-    if (curTransformFeedback && curTransformFeedback->isActive() &&
-        !curTransformFeedback->isPaused())
+    if (mCachedTransformFeedbackActiveUnpaused)
     {
+        TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
+
         // ES Spec 3.0 validation text:
         // When transform feedback is active and not paused, all geometric primitives generated must
         // match the value of primitiveMode passed to BeginTransformFeedback. The error
@@ -8494,5 +8491,11 @@ void StateCache::updateValidDrawElementsTypes(Context *context)
         {DrawElementsType::UnsignedShort, true},
         {DrawElementsType::UnsignedInt, supportsUint},
     }};
+}
+
+void StateCache::updateTransformFeedbackActiveUnpaused(Context *context)
+{
+    TransformFeedback *xfb = context->getGLState().getCurrentTransformFeedback();
+    mCachedTransformFeedbackActiveUnpaused = xfb && xfb->isActive() && !xfb->isPaused();
 }
 }  // namespace gl

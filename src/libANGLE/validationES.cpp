@@ -2856,11 +2856,10 @@ bool ValidateDrawArraysCommon(Context *context,
         return false;
     }
 
-    const State &state                      = context->getGLState();
-    TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
-    if (curTransformFeedback && curTransformFeedback->isActive() &&
-        !curTransformFeedback->isPaused())
+    if (context->getStateCache().isTransformFeedbackActiveUnpaused())
     {
+        const State &state = context->getGLState();
+        TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
         if (!curTransformFeedback->checkBufferSpaceForDraw(count, primcount))
         {
             context->validationError(GL_INVALID_OPERATION, kTransformFeedbackBufferTooSmall);
@@ -2943,9 +2942,7 @@ const char *ValidateDrawElementsStates(Context *context)
 {
     const State &state = context->getGLState();
 
-    TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
-    if (curTransformFeedback && curTransformFeedback->isActive() &&
-        !curTransformFeedback->isPaused())
+    if (context->getStateCache().isTransformFeedbackActiveUnpaused())
     {
         // EXT_geometry_shader allows transform feedback to work with all draw commands.
         // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
