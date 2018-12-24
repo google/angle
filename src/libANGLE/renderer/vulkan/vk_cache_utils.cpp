@@ -606,9 +606,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     viewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     viewportState.flags         = 0;
     viewportState.viewportCount = 1;
-    viewportState.pViewports    = nullptr;
+    viewportState.pViewports    = &mViewport;
     viewportState.scissorCount  = 1;
-    viewportState.pScissors     = nullptr;
+    viewportState.pScissors     = &mScissor;
 
     const PackedRasterizationAndMultisampleStateInfo &rasterAndMS =
         mRasterizationAndMultisampleStateInfo;
@@ -689,13 +689,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         UnpackBlendAttachmentState(inputAndBlend.attachments[colorIndex], &state);
     }
 
-    std::array<VkDynamicState, 2> dynamicStates = {
-        {VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_VIEWPORT}};
-
-    VkPipelineDynamicStateCreateInfo dynamicState = {};
-    dynamicState.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
-    dynamicState.pDynamicStates    = dynamicStates.data();
+    // We would define dynamic state here if it were to be used.
 
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.flags               = 0;
@@ -709,7 +703,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.pMultisampleState   = &multisampleState;
     createInfo.pDepthStencilState  = &depthStencilState;
     createInfo.pColorBlendState    = &blendState;
-    createInfo.pDynamicState       = &dynamicState;
+    createInfo.pDynamicState       = nullptr;
     createInfo.layout              = pipelineLayout.getHandle();
     createInfo.renderPass          = compatibleRenderPass.getHandle();
     createInfo.subpass             = 0;
@@ -1004,6 +998,50 @@ void GraphicsPipelineDesc::updatePolygonOffset(GraphicsPipelineTransitionBits *t
 void GraphicsPipelineDesc::setRenderPassDesc(const RenderPassDesc &renderPassDesc)
 {
     mRenderPassDesc = renderPassDesc;
+}
+
+void GraphicsPipelineDesc::setViewport(const VkViewport &viewport)
+{
+    mViewport = viewport;
+}
+
+void GraphicsPipelineDesc::updateViewport(GraphicsPipelineTransitionBits *transition,
+                                          const VkViewport &viewport)
+{
+    mViewport = viewport;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, x));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, y));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, width));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, height));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, minDepth));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, maxDepth));
+}
+
+void GraphicsPipelineDesc::updateDepthRange(GraphicsPipelineTransitionBits *transition,
+                                            float nearPlane,
+                                            float farPlane)
+{
+    // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
+    // arguments of type clampf.
+    mViewport.minDepth = gl::clamp01(nearPlane);
+    mViewport.maxDepth = gl::clamp01(farPlane);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, minDepth));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, maxDepth));
+}
+
+void GraphicsPipelineDesc::setScissor(const VkRect2D &scissor)
+{
+    mScissor = scissor;
+}
+
+void GraphicsPipelineDesc::updateScissor(GraphicsPipelineTransitionBits *transition,
+                                         const VkRect2D &scissor)
+{
+    mScissor = scissor;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, offset.x));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, offset.y));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, extent.width));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, extent.height));
 }
 
 void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,

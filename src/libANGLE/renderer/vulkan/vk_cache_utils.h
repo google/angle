@@ -281,7 +281,7 @@ static_assert(kPackedInputAssemblyAndColorBlendStateSize == 56, "Size check fail
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kPackedInputAssemblyAndColorBlendStateSize +
     kPackedRasterizationAndMultisampleStateSize + kPackedDepthStencilStateSize +
-    kRenderPassDescSize;
+    kRenderPassDescSize + sizeof(VkViewport) + sizeof(VkRect2D);
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -402,13 +402,23 @@ class GraphicsPipelineDesc final
     void updatePolygonOffset(GraphicsPipelineTransitionBits *transition,
                              const gl::RasterizerState &rasterState);
 
+    // Viewport and scissor.
+    void setViewport(const VkViewport &viewport);
+    void updateViewport(GraphicsPipelineTransitionBits *transition, const VkViewport &viewport);
+    void updateDepthRange(GraphicsPipelineTransitionBits *transition,
+                          float nearPlane,
+                          float farPlane);
+    void setScissor(const VkRect2D &scissor);
+    void updateScissor(GraphicsPipelineTransitionBits *transition, const VkRect2D &scissor);
+
   private:
     VertexInputAttributes mVertexInputAttribs;
     RenderPassDesc mRenderPassDesc;
     PackedRasterizationAndMultisampleStateInfo mRasterizationAndMultisampleStateInfo;
     PackedDepthStencilStateInfo mDepthStencilStateInfo;
     PackedInputAssemblyAndColorBlendStateInfo mInputAssemblyAndColorBlendStateInfo;
-    // Viewport and scissor are applied as dynamic state.
+    VkViewport mViewport;
+    VkRect2D mScissor;
 };
 
 // Verify the packed pipeline description has no gaps in the packing.

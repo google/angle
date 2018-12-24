@@ -121,9 +121,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16, true),
       mDriverUniformsDescriptorSet(VK_NULL_HANDLE),
       mDefaultAttribBuffers{{INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT,
-                             INIT, INIT, INIT, INIT}},
-      mViewport{},
-      mScissor{}
+                             INIT, INIT, INIT, INIT}}
 {
     TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
@@ -139,8 +137,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-    mNewCommandBufferDirtyBits.set(DIRTY_BIT_VIEWPORT);
-    mNewCommandBufferDirtyBits.set(DIRTY_BIT_SCISSOR);
 
     mDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] = &ContextVk::handleDirtyDefaultAttribs;
     mDirtyBitHandlers[DIRTY_BIT_PIPELINE]        = &ContextVk::handleDirtyPipeline;
@@ -149,8 +145,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mDirtyBitHandlers[DIRTY_BIT_INDEX_BUFFER]    = &ContextVk::handleDirtyIndexBuffer;
     mDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] = &ContextVk::handleDirtyDriverUniforms;
     mDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] = &ContextVk::handleDirtyDescriptorSets;
-    mDirtyBitHandlers[DIRTY_BIT_VIEWPORT]        = &ContextVk::handleDirtyViewport;
-    mDirtyBitHandlers[DIRTY_BIT_SCISSOR]         = &ContextVk::handleDirtyScissor;
 
     mDirtyBits = mNewCommandBufferDirtyBits;
 }
@@ -465,20 +459,6 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyViewport(const gl::Context *context,
-                                             vk::CommandBuffer *commandBuffer)
-{
-    commandBuffer->setViewport(0, 1, &mViewport);
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::handleDirtyScissor(const gl::Context *context,
-                                            vk::CommandBuffer *commandBuffer)
-{
-    commandBuffer->setScissor(0, 1, &mScissor);
-    return angle::Result::Continue;
-}
-
 angle::Result ContextVk::drawArrays(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLint first,
@@ -655,20 +635,17 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
                                float farPlane,
                                bool invertViewport)
 {
+    VkViewport vkViewport;
     gl_vk::GetViewport(viewport, nearPlane, farPlane, invertViewport,
-                       framebufferVk->getState().getDimensions().height, &mViewport);
+                       framebufferVk->getState().getDimensions().height, &vkViewport);
+    mGraphicsPipelineDesc->updateViewport(&mGraphicsPipelineTransition, vkViewport);
     invalidateDriverUniforms();
-    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
 }
 
 void ContextVk::updateDepthRange(float nearPlane, float farPlane)
 {
-    // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
-    // arguments of type clampf.
-    mViewport.minDepth = gl::clamp01(nearPlane);
-    mViewport.maxDepth = gl::clamp01(farPlane);
     invalidateDriverUniforms();
-    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+    mGraphicsPipelineDesc->updateDepthRange(&mGraphicsPipelineTransition, nearPlane, farPlane);
 }
 
 void ContextVk::updateScissor(const gl::State &glState)
@@ -677,8 +654,9 @@ void ContextVk::updateScissor(const gl::State &glState)
     gl::Box dimensions           = framebufferVk->getState().getDimensions();
     gl::Rectangle renderArea(0, 0, dimensions.width, dimensions.height);
 
-    gl_vk::GetScissor(glState, isViewportFlipEnabledForDrawFBO(), renderArea, &mScissor);
-    mDirtyBits.set(DIRTY_BIT_SCISSOR);
+    VkRect2D scissor;
+    gl_vk::GetScissor(glState, isViewportFlipEnabledForDrawFBO(), renderArea, &scissor);
+    mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition, scissor);
 }
 
 angle::Result ContextVk::syncState(const gl::Context *context,

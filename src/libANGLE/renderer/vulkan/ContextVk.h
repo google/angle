@@ -194,7 +194,6 @@ class ContextVk : public ContextImpl, public vk::Context
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
     VkColorComponentFlags getClearColorMask() const;
-    const VkRect2D &getScissor() const { return mScissor; }
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
                                        gl::Texture **textureOut);
@@ -219,8 +218,6 @@ class ContextVk : public ContextImpl, public vk::Context
         DIRTY_BIT_INDEX_BUFFER,
         DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_DESCRIPTOR_SETS,
-        DIRTY_BIT_VIEWPORT,
-        DIRTY_BIT_SCISSOR,
         DIRTY_BIT_MAX,
     };
 
@@ -266,12 +263,7 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
-    ANGLE_INLINE void invalidateCurrentPipeline()
-    {
-        mDirtyBits.set(DIRTY_BIT_PIPELINE);
-        mDirtyBits.set(DIRTY_BIT_VIEWPORT);
-        mDirtyBits.set(DIRTY_BIT_SCISSOR);
-    }
+    ANGLE_INLINE void invalidateCurrentPipeline() { mDirtyBits.set(DIRTY_BIT_PIPELINE); }
 
     void invalidateCurrentTextures();
     void invalidateDriverUniforms();
@@ -288,8 +280,6 @@ class ContextVk : public ContextImpl, public vk::Context
                                             vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDescriptorSets(const gl::Context *context,
                                             vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyViewport(const gl::Context *context, vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyScissor(const gl::Context *context, vk::CommandBuffer *commandBuffer);
 
     vk::PipelineHelper *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -361,10 +351,6 @@ class ContextVk : public ContextImpl, public vk::Context
     // "Current Value" aka default vertex attribute state.
     gl::AttributesMask mDirtyDefaultAttribsMask;
     gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
-
-    // Viewport and scissor are handled as dynamic state.
-    VkViewport mViewport;
-    VkRect2D mScissor;
 };
 }  // namespace rx
 
