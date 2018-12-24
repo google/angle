@@ -363,6 +363,9 @@ if (build_angle_gles1_conform_tests) {
         "-Wno-unused-const-variable",
         "-Wno-unused-variable",
         "-Wno-int-to-pointer-cast",
+
+        # Upstream tests do null pointer arithmetic, so disable those warnings.
+        "-Wno-null-pointer-arithmetic",
       ]
     }
   }
