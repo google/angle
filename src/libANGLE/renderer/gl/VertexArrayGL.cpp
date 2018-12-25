@@ -112,19 +112,6 @@ angle::Result VertexArrayGL::syncClientSideData(const gl::Context *context,
                          gl::DrawElementsType::InvalidEnum, nullptr, instanceCount, false, nullptr);
 }
 
-angle::Result VertexArrayGL::syncDrawElementsState(const gl::Context *context,
-                                                   const gl::AttributesMask &activeAttributesMask,
-                                                   GLsizei count,
-                                                   gl::DrawElementsType type,
-                                                   const void *indices,
-                                                   GLsizei instanceCount,
-                                                   bool primitiveRestartEnabled,
-                                                   const void **outIndices) const
-{
-    return syncDrawState(context, activeAttributesMask, 0, count, type, indices, instanceCount,
-                         primitiveRestartEnabled, outIndices);
-}
-
 void VertexArrayGL::updateElementArrayBufferBinding(const gl::Context *context) const
 {
     gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();

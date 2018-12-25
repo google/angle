@@ -8,6 +8,7 @@
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Context.inl.h"
 
 #include <string.h>
 #include <iterator>
@@ -25,7 +26,6 @@
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/GLES1Renderer.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
@@ -42,7 +42,6 @@
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/renderer/BufferImpl.h"
-#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/validationES.h"
@@ -2241,21 +2240,6 @@ void Context::drawArraysInstanced(PrimitiveMode mode,
     MarkTransformFeedbackBufferUsage(this, count, instanceCount);
 }
 
-void Context::drawElements(PrimitiveMode mode,
-                           GLsizei count,
-                           DrawElementsType type,
-                           const void *indices)
-{
-    // No-op if count draws no primitives for given mode
-    if (noopDraw(mode, count))
-    {
-        return;
-    }
-
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
-    ANGLE_CONTEXT_TRY(mImplementation->drawElements(this, mode, count, type, indices));
-}
-
 void Context::drawElementsInstanced(PrimitiveMode mode,
                                     GLsizei count,
                                     DrawElementsType type,
@@ -3514,40 +3498,6 @@ bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
 bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount)
 {
     return (instanceCount == 0) || noopDraw(mode, count);
-}
-
-ANGLE_INLINE angle::Result Context::syncDirtyBits()
-{
-    const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
-    mGLState.clearDirtyBits();
-    return angle::Result::Continue;
-}
-
-ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
-{
-    const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
-    mGLState.clearDirtyBits(dirtyBits);
-    return angle::Result::Continue;
-}
-
-ANGLE_INLINE angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
-{
-    return mGLState.syncDirtyObjects(this, objectMask);
-}
-
-ANGLE_INLINE angle::Result Context::prepareForDraw(PrimitiveMode mode)
-{
-    if (mGLES1Renderer)
-    {
-        ANGLE_TRY(mGLES1Renderer->prepareForDraw(mode, this, &mGLState));
-    }
-
-    ANGLE_TRY(syncDirtyObjects(mDrawDirtyObjects));
-    ASSERT(!isRobustResourceInitEnabled() ||
-           !mGLState.getDrawFramebuffer()->hasResourceThatNeedsInit());
-    return syncDirtyBits();
 }
 
 angle::Result Context::prepareForClear(GLbitfield mask)
@@ -8495,7 +8445,7 @@ void StateCache::updateValidDrawElementsTypes(Context *context)
 
 void StateCache::updateTransformFeedbackActiveUnpaused(Context *context)
 {
-    TransformFeedback *xfb = context->getGLState().getCurrentTransformFeedback();
+    TransformFeedback *xfb                 = context->getGLState().getCurrentTransformFeedback();
     mCachedTransformFeedbackActiveUnpaused = xfb && xfb->isActive() && !xfb->isPaused();
 }
 }  // namespace gl

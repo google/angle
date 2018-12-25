@@ -580,7 +580,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLint getFragDataLocation(const std::string &name) const;
     size_t getOutputResourceCount() const;
     const std::vector<GLenum> &getOutputVariableTypes() const;
-    DrawBufferMask getActiveOutputVariables() const;
+    DrawBufferMask getActiveOutputVariables() const
+    {
+        ASSERT(mLinkResolved);
+        return mState.mActiveOutputVariables;
+    }
 
     // EXT_blend_func_extended
     GLint getFragDataIndex(const std::string &name) const;
@@ -817,7 +821,12 @@ class Program final : angle::NonCopyable, public LabeledObject
     const ProgramBindings &getUniformLocationBindings() const;
     const ProgramBindings &getFragmentInputBindings() const;
 
-    int getNumViews() const;
+    int getNumViews() const
+    {
+        ASSERT(mLinkResolved);
+        return mState.getNumViews();
+    }
+
     bool usesMultiview() const { return mState.usesMultiview(); }
 
     ComponentTypeMask getDrawBufferTypeMask() const;

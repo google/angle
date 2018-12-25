@@ -214,11 +214,19 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
     const gl::Program *program = glState.getProgram();
 
     const gl::VertexArray *vao = glState.getVertexArray();
-    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    ANGLE_TRY(vaoGL->syncDrawElementsState(context, program->getActiveAttribLocationsMask(), count,
-                                           type, indices, instanceCount,
-                                           glState.isPrimitiveRestartEnabled(), outIndices));
+    const gl::StateCache &stateCache = context->getStateCache();
+    if (stateCache.hasAnyActiveClientAttrib() || vao->getElementArrayBuffer() == nullptr)
+    {
+        const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+        ANGLE_TRY(vaoGL->syncDrawElementsState(context, program->getActiveAttribLocationsMask(),
+                                               count, type, indices, instanceCount,
+                                               glState.isPrimitiveRestartEnabled(), outIndices));
+    }
+    else
+    {
+        *outIndices = indices;
+    }
 
     if (context->getExtensions().webglCompatibility)
     {
@@ -286,7 +294,8 @@ angle::Result ContextGL::drawElements(const gl::Context *context,
                                       gl::DrawElementsType type,
                                       const void *indices)
 {
-    const gl::Program *program  = context->getGLState().getProgram();
+    const gl::State &glState    = context->getGLState();
+    const gl::Program *program  = glState.getProgram();
     const bool usesMultiview    = program->usesMultiview();
     const GLsizei instanceCount = usesMultiview ? program->getNumViews() : 0;
     const void *drawIndexPtr    = nullptr;

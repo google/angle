@@ -254,6 +254,7 @@ template_header_includes = """#include <GLES{major}/gl{major}{minor}.h>
 template_sources_includes = """#include "libGLESv2/entry_points_gles_{}_autogen.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Context.inl.h"
 #include "libANGLE/validationES{}{}.h"
 #include "libGLESv2/entry_points_utils.h"
 #include "libGLESv2/global_state.h"

@@ -11,6 +11,7 @@
 #include "libGLESv2/entry_points_gles_3_0_autogen.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Context.inl.h"
 #include "libANGLE/validationES3.h"
 #include "libGLESv2/entry_points_utils.h"
 #include "libGLESv2/global_state.h"

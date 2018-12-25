@@ -1741,11 +1741,6 @@ const std::vector<GLenum> &Program::getOutputVariableTypes() const
     ASSERT(mLinkResolved);
     return mState.mOutputVariableTypes;
 }
-DrawBufferMask Program::getActiveOutputVariables() const
-{
-    ASSERT(mLinkResolved);
-    return mState.mActiveOutputVariables;
-}
 
 template <typename T>
 void Program::getResourceName(GLuint index,
@@ -1840,12 +1835,6 @@ const ProgramBindings &Program::getFragmentInputBindings() const
 {
     ASSERT(mLinkResolved);
     return mFragmentInputBindings;
-}
-
-int Program::getNumViews() const
-{
-    ASSERT(mLinkResolved);
-    return mState.getNumViews();
 }
 
 ComponentTypeMask Program::getDrawBufferTypeMask() const

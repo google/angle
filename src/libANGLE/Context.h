@@ -1912,6 +1912,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     std::shared_ptr<angle::WorkerThreadPool> mThreadPool;
 };
+
 }  // namespace gl
 
 #endif  // LIBANGLE_CONTEXT_H_

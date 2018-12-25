@@ -11,6 +11,10 @@
 
 #include "libANGLE/renderer/VertexArrayImpl.h"
 
+#include "common/mathutil.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
+
 namespace rx
 {
 
@@ -131,6 +135,21 @@ class VertexArrayGL : public VertexArrayImpl
     mutable size_t mStreamingArrayBufferSize;
     mutable GLuint mStreamingArrayBuffer;
 };
+
+ANGLE_INLINE angle::Result VertexArrayGL::syncDrawElementsState(
+    const gl::Context *context,
+    const gl::AttributesMask &activeAttributesMask,
+    GLsizei count,
+    gl::DrawElementsType type,
+    const void *indices,
+    GLsizei instanceCount,
+    bool primitiveRestartEnabled,
+    const void **outIndices) const
+{
+    return syncDrawState(context, activeAttributesMask, 0, count, type, indices, instanceCount,
+                         primitiveRestartEnabled, outIndices);
+}
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_VERTEXARRAYGL_H_
