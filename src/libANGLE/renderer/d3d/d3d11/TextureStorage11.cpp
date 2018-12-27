@@ -702,6 +702,11 @@ angle::Result TextureStorage11::copyToStorage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+void TextureStorage11::invalidateTextures()
+{
+    mRenderer->getStateManager()->invalidateTexturesAndSamplers();
+}
+
 angle::Result TextureStorage11::setData(const gl::Context *context,
                                         const gl::ImageIndex &index,
                                         ImageD3D *image,

@@ -569,6 +569,9 @@ angle::Result TextureD3D::ensureRenderTarget(const gl::Context *context)
             ANGLE_TRY(mTexStorage->copyToStorage(context, newRenderTargetStorage.get()));
             ANGLE_TRY(setCompleteTexStorage(context, newRenderTargetStorage.get()));
             newRenderTargetStorage.release();
+            // If this texture is used in compute shader, we should invalidate this texture so that
+            // the UAV/SRV is rebound again with this new texture storage in next dispatch call.
+            mTexStorage->invalidateTextures();
         }
     }
 
