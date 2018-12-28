@@ -15,72 +15,12 @@ class CopyTexImageTest : public ANGLETest
   protected:
     CopyTexImageTest()
     {
-        setWindowWidth(16);
-        setWindowHeight(16);
+        setWindowWidth(32);
+        setWindowHeight(32);
         setConfigRedBits(8);
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-    }
-
-    GLuint createFramebuffer(GLenum format, GLenum type, GLfloat color[4]) const
-    {
-        GLuint fbo;
-        glGenFramebuffers(1, &fbo);
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-        GLuint texture = createTexture(format, type);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-
-        glClearColor(color[0], color[1], color[2], color[3]);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        return fbo;
-    }
-
-    GLuint createTexture(GLenum format, GLenum type) const
-    {
-        GLuint tex;
-        glGenTextures(1, &tex);
-        glBindTexture(GL_TEXTURE_2D, tex);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, 16, 16, 0, format, type, nullptr);
-
-        // Disable mipmapping
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        return tex;
-    }
-
-    GLuint createTextureFromCopyTexImage(GLuint fbo, GLenum format) const
-    {
-        GLuint tex;
-        glGenTextures(1, &tex);
-        glBindTexture(GL_TEXTURE_2D, tex);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glCopyTexImage2D(GL_TEXTURE_2D, 0, format, 0, 0, 16, 16, 0);
-
-        // Disable mipmapping
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        return tex;
-    }
-
-    void copyTextureWithCopyTexSubImage(GLuint fbo,
-                                        GLuint texture,
-                                        GLint xoffset,
-                                        GLint yoffset,
-                                        GLint x,
-                                        GLint y,
-                                        GLsizei w,
-                                        GLsizei h) const
-    {
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, yoffset, x, y, w, h);
     }
 
     void SetUp() override
@@ -96,7 +36,6 @@ class CopyTexImageTest : public ANGLETest
             "{\n"
             "    gl_Position = position;\n"
             "    texcoord = (position.xy * 0.5) + 0.5;\n"
-            "    texcoord.y = 1.0 - texcoord.y;\n"
             "}\n";
 
         constexpr char kFS[] =
@@ -127,9 +66,38 @@ class CopyTexImageTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void verifyResults(GLuint texture, GLubyte data[4], GLint x, GLint y)
+    void initializeResources(GLenum format, GLenum type)
     {
-        glViewport(0, 0, 16, 16);
+        for (size_t i = 0; i < kFboCount; ++i)
+        {
+            glBindTexture(GL_TEXTURE_2D, mFboTextures[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, kFboSizes[i], kFboSizes[i], 0, format, type,
+                         nullptr);
+
+            // Disable mipmapping
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, mFbos[i]);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   mFboTextures[i], 0);
+
+            glClearColor(kFboColors[i][0], kFboColors[i][1], kFboColors[i][2], kFboColors[i][3]);
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void verifyResults(GLuint texture,
+                       GLubyte data[4],
+                       GLint fboSize,
+                       GLint xs,
+                       GLint ys,
+                       GLint xe,
+                       GLint ye)
+    {
+        glViewport(0, 0, fboSize, fboSize);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -141,206 +109,236 @@ class CopyTexImageTest : public ANGLETest
         drawQuad(mTextureProgram, "position", 0.5f);
 
         // Expect that the rendered quad has the same color as the source texture
-        EXPECT_PIXEL_NEAR(x, y, data[0], data[1], data[2], data[3], 1.0);
+        EXPECT_PIXEL_NEAR(xs, ys, data[0], data[1], data[2], data[3], 1.0);
+        EXPECT_PIXEL_NEAR(xs, ye - 1, data[0], data[1], data[2], data[3], 1.0);
+        EXPECT_PIXEL_NEAR(xe - 1, ys, data[0], data[1], data[2], data[3], 1.0);
+        EXPECT_PIXEL_NEAR(xe - 1, ye - 1, data[0], data[1], data[2], data[3], 1.0);
+        EXPECT_PIXEL_NEAR((xs + xe) / 2, (ys + ye) / 2, data[0], data[1], data[2], data[3], 1.0);
+    }
+
+    void runCopyTexImageTest(GLenum format, GLubyte expected[3][4])
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+
+        // Disable mipmapping
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Perform the copy multiple times.
+        //
+        // - The first time, a new texture is created
+        // - The second time, as the fbo size is the same as previous, the texture storage is not
+        //   recreated.
+        // - The third time, the fbo size is different, so a new texture is created.
+        for (size_t i = 0; i < kFboCount; ++i)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, mFbos[i]);
+
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, format, 0, 0, kFboSizes[i], kFboSizes[i], 0);
+            ASSERT_GL_NO_ERROR();
+
+            verifyResults(tex, expected[i], kFboSizes[i], 0, 0, kFboSizes[i], kFboSizes[i]);
+        }
+    }
+
+    void runCopyTexSubImageTest(GLenum format, GLubyte expected[3][4])
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+
+        // Disable mipmapping
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Create the texture with copy of the first fbo.
+        glBindFramebuffer(GL_FRAMEBUFFER, mFbos[0]);
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, format, 0, 0, kFboSizes[0], kFboSizes[0], 0);
+        ASSERT_GL_NO_ERROR();
+
+        verifyResults(tex, expected[0], kFboSizes[0], 0, 0, kFboSizes[0], kFboSizes[0]);
+
+        // Make sure out-of-bound writes to the texture return invalid value.
+        glBindFramebuffer(GL_FRAMEBUFFER, mFbos[1]);
+
+        // xoffset < 0 and yoffset < 0
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, -1, -1, 0, 0, kFboSizes[0], kFboSizes[0]);
+        ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+        // xoffset + width > w and yoffset + height > h
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 1, 1, 0, 0, kFboSizes[0], kFboSizes[0]);
+        ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+        // Copy the second fbo over a portion of the image.
+        GLint offset = kFboSizes[0] / 2;
+        GLint extent = kFboSizes[0] - offset;
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, offset, offset, kFboSizes[1] / 2, kFboSizes[1] / 2,
+                            extent, extent);
+        ASSERT_GL_NO_ERROR();
+
+        verifyResults(tex, expected[1], kFboSizes[0], offset, offset, kFboSizes[0], kFboSizes[0]);
+
+        // The rest of the image should be untouched
+        verifyResults(tex, expected[0], kFboSizes[0], 0, 0, offset, offset);
+        verifyResults(tex, expected[0], kFboSizes[0], offset, 0, kFboSizes[0], offset);
+        verifyResults(tex, expected[0], kFboSizes[0], 0, offset, offset, kFboSizes[0]);
+
+        // Copy the third fbo over another portion of the image.
+        glBindFramebuffer(GL_FRAMEBUFFER, mFbos[2]);
+
+        offset = kFboSizes[0] / 4;
+        extent = kFboSizes[0] - offset;
+
+        // While width and height are set as 3/4 of the size, the fbo offset is given such that
+        // after clipping, width and height are effectively 1/2 of the size.
+        GLint srcOffset       = kFboSizes[2] - kFboSizes[0] / 2;
+        GLint effectiveExtent = kFboSizes[0] / 2;
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, offset, offset, srcOffset, srcOffset, extent, extent);
+        ASSERT_GL_NO_ERROR();
+
+        verifyResults(tex, expected[2], kFboSizes[0], offset, offset, effectiveExtent,
+                      effectiveExtent);
+
+        // The rest of the image should be untouched
+        verifyResults(tex, expected[1], kFboSizes[0], offset + effectiveExtent, kFboSizes[0] / 2,
+                      kFboSizes[0], kFboSizes[0]);
+        verifyResults(tex, expected[1], kFboSizes[0], kFboSizes[0] / 2, offset + effectiveExtent,
+                      kFboSizes[0], kFboSizes[0]);
+
+        verifyResults(tex, expected[0], kFboSizes[0], 0, 0, kFboSizes[0], offset);
+        verifyResults(tex, expected[0], kFboSizes[0], 0, 0, offset, kFboSizes[0]);
+        verifyResults(tex, expected[0], kFboSizes[0], offset + effectiveExtent, 0, kFboSizes[0],
+                      kFboSizes[0] / 2);
+        verifyResults(tex, expected[0], kFboSizes[0], 0, offset + effectiveExtent, kFboSizes[0] / 2,
+                      kFboSizes[0]);
     }
 
     GLuint mTextureProgram;
     GLint mTextureUniformLocation;
+
+    static constexpr uint32_t kFboCount = 3;
+    GLFramebuffer mFbos[kFboCount];
+    GLTexture mFboTextures[kFboCount];
+
+    static constexpr uint32_t kFboSizes[kFboCount]    = {16, 16, 32};
+    static constexpr GLfloat kFboColors[kFboCount][4] = {{0.25f, 1.0f, 0.75f, 0.5f},
+                                                         {1.0f, 0.75f, 0.5f, 0.25f},
+                                                         {0.5f, 0.25f, 1.0f, 0.75f}};
 };
+
+// Until C++17, need to redundantly declare the constexpr members outside the class (only the
+// arrays, because the others are already const-propagated and not needed by the linker).
+constexpr uint32_t CopyTexImageTest::kFboSizes[];
+constexpr GLfloat CopyTexImageTest::kFboColors[][4];
+
+TEST_P(CopyTexImageTest, RGBAToRGB)
+{
+    GLubyte expected[3][4] = {
+        {64, 255, 191, 255},
+        {255, 191, 127, 255},
+        {127, 64, 255, 255},
+    };
+
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexImageTest(GL_RGB, expected);
+}
 
 TEST_P(CopyTexImageTest, RGBAToL)
 {
-    GLfloat color[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 255},
+        {255, 255, 255, 255},
+        {127, 127, 127, 255},
     };
 
-    GLuint fbo = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color);
-    GLuint tex = createTextureFromCopyTexImage(fbo, GL_LUMINANCE);
-
-    GLubyte expected[] = {
-        64,
-        64,
-        64,
-        255,
-    };
-    verifyResults(tex, expected, 0, 0);
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexImageTest(GL_LUMINANCE, expected);
 }
 
 TEST_P(CopyTexImageTest, RGBToL)
 {
-    GLfloat color[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 255},
+        {255, 255, 255, 255},
+        {127, 127, 127, 255},
     };
 
-    GLuint fbo = createFramebuffer(GL_RGB, GL_UNSIGNED_BYTE, color);
-    GLuint tex = createTextureFromCopyTexImage(fbo, GL_LUMINANCE);
-
-    GLubyte expected[] = {
-        64,
-        64,
-        64,
-        255,
-    };
-    verifyResults(tex, expected, 0, 0);
+    initializeResources(GL_RGB, GL_UNSIGNED_BYTE);
+    runCopyTexImageTest(GL_LUMINANCE, expected);
 }
 
 TEST_P(CopyTexImageTest, RGBAToLA)
 {
-    GLfloat color[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 127},
+        {255, 255, 255, 64},
+        {127, 127, 127, 191},
     };
 
-    GLuint fbo = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color);
-    GLuint tex = createTextureFromCopyTexImage(fbo, GL_LUMINANCE_ALPHA);
-
-    GLubyte expected[] = {
-        64,
-        64,
-        64,
-        127,
-    };
-    verifyResults(tex, expected, 0, 0);
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexImageTest(GL_LUMINANCE_ALPHA, expected);
 }
 
 TEST_P(CopyTexImageTest, RGBAToA)
 {
-    GLfloat color[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {0, 0, 0, 127},
+        {0, 0, 0, 64},
+        {0, 0, 0, 191},
     };
 
-    GLuint fbo = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color);
-    GLuint tex = createTextureFromCopyTexImage(fbo, GL_ALPHA);
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexImageTest(GL_ALPHA, expected);
+}
 
-    GLubyte expected[] = {
-        0,
-        0,
-        0,
-        127,
+TEST_P(CopyTexImageTest, SubImageRGBAToRGB)
+{
+    GLubyte expected[3][4] = {
+        {64, 255, 191, 255},
+        {255, 191, 127, 255},
+        {127, 64, 255, 255},
     };
-    verifyResults(tex, expected, 0, 0);
+
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexSubImageTest(GL_RGB, expected);
 }
 
 TEST_P(CopyTexImageTest, SubImageRGBAToL)
 {
-    GLfloat color0[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 255},
+        {255, 255, 255, 255},
+        {127, 127, 127, 255},
     };
-    GLuint fbo0 = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color0);
-    GLuint tex  = createTextureFromCopyTexImage(fbo0, GL_LUMINANCE);
 
-    GLfloat color1[] = {
-        0.5f,
-        0.25f,
-        1.0f,
-        0.75f,
-    };
-    GLuint fbo1 = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color1);
-    copyTextureWithCopyTexSubImage(fbo1, tex, 2, 4, 5, 6, 8, 8);
-
-    GLubyte expected0[] = {
-        64,
-        64,
-        64,
-        255,
-    };
-    verifyResults(tex, expected0, 0, 0);
-
-    GLubyte expected1[] = {
-        127,
-        127,
-        127,
-        255,
-    };
-    verifyResults(tex, expected1, 7, 7);
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexSubImageTest(GL_LUMINANCE, expected);
 }
 
 TEST_P(CopyTexImageTest, SubImageRGBAToLA)
 {
-    GLfloat color0[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 127},
+        {255, 255, 255, 64},
+        {127, 127, 127, 191},
     };
-    GLuint fbo0 = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color0);
-    GLuint tex  = createTextureFromCopyTexImage(fbo0, GL_LUMINANCE_ALPHA);
 
-    GLfloat color1[] = {
-        0.5f,
-        0.25f,
-        1.0f,
-        0.75f,
-    };
-    GLuint fbo1 = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color1);
-    copyTextureWithCopyTexSubImage(fbo1, tex, 2, 4, 5, 6, 8, 8);
-
-    GLubyte expected0[] = {
-        64,
-        64,
-        64,
-        127,
-    };
-    verifyResults(tex, expected0, 0, 0);
-
-    GLubyte expected1[] = {
-        127,
-        127,
-        127,
-        192,
-    };
-    verifyResults(tex, expected1, 7, 7);
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexSubImageTest(GL_LUMINANCE_ALPHA, expected);
 }
 
 TEST_P(CopyTexImageTest, SubImageRGBToL)
 {
-    GLfloat color0[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 255},
+        {255, 255, 255, 255},
+        {127, 127, 127, 255},
     };
-    GLuint fbo0 = createFramebuffer(GL_RGB, GL_UNSIGNED_BYTE, color0);
-    GLuint tex  = createTextureFromCopyTexImage(fbo0, GL_LUMINANCE);
 
-    GLfloat color1[] = {
-        0.5f,
-        0.25f,
-        1.0f,
-        0.75f,
-    };
-    GLuint fbo1 = createFramebuffer(GL_RGB, GL_UNSIGNED_BYTE, color1);
-    copyTextureWithCopyTexSubImage(fbo1, tex, 2, 4, 5, 6, 8, 8);
-
-    GLubyte expected0[] = {
-        64,
-        64,
-        64,
-        255,
-    };
-    verifyResults(tex, expected0, 0, 0);
-
-    GLubyte expected1[] = {
-        127,
-        127,
-        127,
-        255,
-    };
-    verifyResults(tex, expected1, 7, 7);
+    initializeResources(GL_RGB, GL_UNSIGNED_BYTE);
+    runCopyTexSubImageTest(GL_LUMINANCE, expected);
 }
 
 // Read default framebuffer with glCopyTexImage2D().
@@ -383,27 +381,21 @@ class CopyTexImageTestES3 : public CopyTexImageTest
 //  Reference: GLES 3.0.4, Section 3.8.5 Alternate Texture Image Specification Commands
 TEST_P(CopyTexImageTestES3, ReadBufferIsNone)
 {
-    GLfloat color[] = {
-        0.25f,
-        1.0f,
-        0.75f,
-        0.5f,
-    };
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
 
-    GLuint fbo = createFramebuffer(GL_RGBA, GL_UNSIGNED_BYTE, color);
-    GLuint tex = createTextureFromCopyTexImage(fbo, GL_RGBA);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFbos[0]);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kFboSizes[0], kFboSizes[0], 0);
 
     glReadBuffer(GL_NONE);
 
     EXPECT_GL_NO_ERROR();
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 4, 4);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    glDeleteFramebuffers(1, &fbo);
-    glDeleteTextures(1, &tex);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
