@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "6abc79cf_4f2ce5c8",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-28T19:13:19Z",
+      "side": 1,
+      "message": "Will \"int\" be sufficient? \"unsigned int\" is 2 times bigger.",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 7
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6dacc46d_89b5cf5d",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 12
@@ -41,6 +64,52 @@
         "startChar": 20,
         "endLine": 39,
         "endChar": 28
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7b9b5e1_3c583b77",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-28T19:13:19Z",
+      "side": 1,
+      "message": "is?",
+      "range": {
+        "startLine": 46,
+        "startChar": 32,
+        "endLine": 46,
+        "endChar": 34
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e199d5fa_a6c453d2",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-28T19:13:19Z",
+      "side": 1,
+      "message": "is?",
+      "range": {
+        "startLine": 66,
+        "startChar": 38,
+        "endLine": 66,
+        "endChar": 40
       },
       "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",

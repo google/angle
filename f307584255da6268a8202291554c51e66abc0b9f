@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "016ccf8a_e2c7a3c0",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-28T19:13:19Z",
+      "side": 0,
+      "message": "Do you want to keep this TODO somewhere?",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 65
+      },
+      "revId": "f307584255da6268a8202291554c51e66abc0b9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12c79849_8bbea045",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2253,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-28T19:13:19Z",
+      "side": 0,
+      "message": "Looks like this happens in BlockEncoderVisitor only for structs, but not for arrays.",
+      "range": {
+        "startLine": 2252,
+        "startChar": 0,
+        "endLine": 2253,
+        "endChar": 38
+      },
+      "revId": "f307584255da6268a8202291554c51e66abc0b9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "254e025b_6d923d70",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2298,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-12-28T19:13:19Z",
+      "side": 0,
+      "message": "here, too",
+      "range": {
+        "startLine": 2294,
+        "startChar": 0,
+        "endLine": 2298,
+        "endChar": 5
+      },
+      "revId": "f307584255da6268a8202291554c51e66abc0b9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
