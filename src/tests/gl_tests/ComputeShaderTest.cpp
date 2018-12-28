@@ -2394,6 +2394,91 @@ void main()
     }
 }
 
+// Test storage buffer bound is unchanged, shader writes it, buffer content should be updated.
+TEST_P(ComputeShaderTest, StorageBufferBoundUnchanged)
+{
+    // TODO(xinghua.cao@intel.com): Fix this. http://anglebug.com/3037
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=16, local_size_y=16) in;
+precision highp usampler2D;
+uniform usampler2D tex;
+uniform uint factor;
+layout(std140, binding = 0) buffer buf {
+    uint outData[16][16];
+};
+
+void main()
+{
+    uint x = gl_LocalInvocationID.x;
+    uint y = gl_LocalInvocationID.y;
+    float xCoord = float(x) / float(16);
+    float yCoord = float(y) / float(16);
+    outData[y][x] = texture(tex, vec2(xCoord, yCoord)).x + factor;
+})";
+
+    constexpr unsigned int kWidth  = 16;
+    constexpr unsigned int kHeight = 16;
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+    GLuint texels[kHeight][kWidth] = {{0}};
+    for (unsigned int y = 0; y < kHeight; ++y)
+    {
+        for (unsigned int x = 0; x < kWidth; ++x)
+        {
+            texels[y][x] = x + y * kWidth;
+        }
+    }
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    texels);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // The array stride are rounded up to the base alignment of a vec4 for std140 layout.
+    constexpr unsigned int kArrayStride = 16;
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kWidth * kHeight * kArrayStride, nullptr,
+                 GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glUniform1i(glGetUniformLocation(program, "tex"), 0);
+    glUniform1ui(glGetUniformLocation(program, "factor"), 2);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+
+    glDispatchCompute(1, 1, 1);
+
+    const GLuint *ptr1 = reinterpret_cast<const GLuint *>(glMapBufferRange(
+        GL_SHADER_STORAGE_BUFFER, 0, kWidth * kHeight * kArrayStride, GL_MAP_READ_BIT));
+    EXPECT_GL_NO_ERROR();
+    for (unsigned int idx = 0; idx < kWidth * kHeight; idx++)
+    {
+        EXPECT_EQ(idx + 2, *(ptr1 + idx * kArrayStride / 4));
+    }
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glUniform1ui(glGetUniformLocation(program, "factor"), 3);
+    glDispatchCompute(1, 1, 1);
+
+    const GLuint *ptr2 = reinterpret_cast<const GLuint *>(glMapBufferRange(
+        GL_SHADER_STORAGE_BUFFER, 0, kWidth * kHeight * kArrayStride, GL_MAP_READ_BIT));
+    EXPECT_GL_NO_ERROR();
+    for (unsigned int idx = 0; idx < kWidth * kHeight; idx++)
+    {
+        EXPECT_EQ(idx + 3, *(ptr2 + idx * kArrayStride / 4));
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11());
