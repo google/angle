@@ -14,15 +14,13 @@
 
 #include <d3d11.h>
 
+#include "OSWindow.h"
+#include "com_utils.h"
 #include "test_utils/ANGLETest.h"
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
-#include "util/com_utils.h"
-#include "util/gles_loader_autogen.h"
 
 using namespace angle;
 
-class EGLDeviceCreationTest : public EGLTest
+class EGLDeviceCreationTest : public testing::Test
 {
   protected:
     EGLDeviceCreationTest()
@@ -41,8 +39,6 @@ class EGLDeviceCreationTest : public EGLTest
 
     void SetUp() override
     {
-        EGLTest::SetUp();
-
         mD3D11Module = LoadLibrary(TEXT("d3d11.dll"));
         if (mD3D11Module == nullptr)
         {
@@ -233,8 +229,13 @@ TEST_F(EGLDeviceCreationTest, BasicD3D11DeviceViaFuncPointer)
 
     CreateD3D11Device();
 
+    PFNEGLCREATEDEVICEANGLEPROC createDeviceANGLE =
+        (PFNEGLCREATEDEVICEANGLEPROC)eglGetProcAddress("eglCreateDeviceANGLE");
+    PFNEGLRELEASEDEVICEANGLEPROC releaseDeviceANGLE =
+        (PFNEGLRELEASEDEVICEANGLEPROC)eglGetProcAddress("eglReleaseDeviceANGLE");
+
     EGLDeviceEXT eglDevice =
-        eglCreateDeviceANGLE(EGL_D3D11_DEVICE_ANGLE, reinterpret_cast<void *>(mDevice), nullptr);
+        createDeviceANGLE(EGL_D3D11_DEVICE_ANGLE, reinterpret_cast<void *>(mDevice), nullptr);
     ASSERT_NE(EGL_NO_DEVICE_EXT, eglDevice);
     ASSERT_EGL_SUCCESS();
 
@@ -245,7 +246,7 @@ TEST_F(EGLDeviceCreationTest, BasicD3D11DeviceViaFuncPointer)
     ID3D11Device *queriedDevice = reinterpret_cast<ID3D11Device *>(deviceAttrib);
     ASSERT_EQ(mFeatureLevel, queriedDevice->GetFeatureLevel());
 
-    eglReleaseDeviceANGLE(eglDevice);
+    releaseDeviceANGLE(eglDevice);
 }
 
 // Test that creating a EGLDeviceEXT from D3D11 device works, and can be used for rendering
@@ -448,6 +449,9 @@ class EGLDeviceQueryTest : public ANGLETest
   protected:
     EGLDeviceQueryTest()
     {
+        mQueryDisplayAttribEXT = nullptr;
+        mQueryDeviceAttribEXT  = nullptr;
+        mQueryDeviceStringEXT  = nullptr;
     }
 
     void SetUp() override
@@ -456,20 +460,29 @@ class EGLDeviceQueryTest : public ANGLETest
 
         const char *extensionString =
             static_cast<const char *>(eglQueryString(getEGLWindow()->getDisplay(), EGL_EXTENSIONS));
+        if (strstr(extensionString, "EGL_EXT_device_query"))
+        {
+            mQueryDisplayAttribEXT =
+                (PFNEGLQUERYDISPLAYATTRIBEXTPROC)eglGetProcAddress("eglQueryDisplayAttribEXT");
+            mQueryDeviceAttribEXT =
+                (PFNEGLQUERYDEVICEATTRIBEXTPROC)eglGetProcAddress("eglQueryDeviceAttribEXT");
+            mQueryDeviceStringEXT =
+                (PFNEGLQUERYDEVICESTRINGEXTPROC)eglGetProcAddress("eglQueryDeviceStringEXT");
+        }
 
-        if (!eglQueryDeviceStringEXT)
+        if (!mQueryDeviceStringEXT)
         {
             FAIL() << "ANGLE extension EGL_EXT_device_query export eglQueryDeviceStringEXT was not "
                       "found";
         }
 
-        if (!eglQueryDisplayAttribEXT)
+        if (!mQueryDisplayAttribEXT)
         {
             FAIL() << "ANGLE extension EGL_EXT_device_query export eglQueryDisplayAttribEXT was "
                       "not found";
         }
 
-        if (!eglQueryDeviceAttribEXT)
+        if (!mQueryDeviceAttribEXT)
         {
             FAIL() << "ANGLE extension EGL_EXT_device_query export eglQueryDeviceAttribEXT was not "
                       "found";
@@ -477,14 +490,20 @@ class EGLDeviceQueryTest : public ANGLETest
 
         EGLAttrib angleDevice = 0;
         EXPECT_EGL_TRUE(
-            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
         extensionString = static_cast<const char *>(
-            eglQueryDeviceStringEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice), EGL_EXTENSIONS));
+            mQueryDeviceStringEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice), EGL_EXTENSIONS));
         if (strstr(extensionString, "EGL_ANGLE_device_d3d") == nullptr)
         {
             FAIL() << "ANGLE extension EGL_ANGLE_device_d3d was not found";
         }
     }
+
+    void TearDown() override { ANGLETest::TearDown(); }
+
+    PFNEGLQUERYDISPLAYATTRIBEXTPROC mQueryDisplayAttribEXT;
+    PFNEGLQUERYDEVICEATTRIBEXTPROC mQueryDeviceAttribEXT;
+    PFNEGLQUERYDEVICESTRINGEXTPROC mQueryDeviceStringEXT;
 };
 
 // This test attempts to obtain a D3D11 device and a D3D9 device using the eglQueryDeviceAttribEXT
@@ -498,9 +517,9 @@ TEST_P(EGLDeviceQueryTest, QueryDevice)
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
         EXPECT_EGL_TRUE(
-            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
-        EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                EGL_D3D11_DEVICE_ANGLE, &device));
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_TRUE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                              EGL_D3D11_DEVICE_ANGLE, &device));
         ID3D11Device *d3d11Device = reinterpret_cast<ID3D11Device *>(device);
         IDXGIDevice *dxgiDevice   = DynamicCastComObject<IDXGIDevice>(d3d11Device);
         EXPECT_TRUE(dxgiDevice != nullptr);
@@ -510,9 +529,9 @@ TEST_P(EGLDeviceQueryTest, QueryDevice)
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
     {
         EXPECT_EGL_TRUE(
-            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
-        EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                EGL_D3D9_DEVICE_ANGLE, &device));
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_TRUE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                              EGL_D3D9_DEVICE_ANGLE, &device));
         IDirect3DDevice9 *d3d9Device = reinterpret_cast<IDirect3DDevice9 *>(device);
         IDirect3D9 *d3d9             = nullptr;
         EXPECT_EQ(S_OK, d3d9Device->GetDirect3D(&d3d9));
@@ -532,17 +551,17 @@ TEST_P(EGLDeviceQueryTest, QueryDeviceBadAttribute)
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
         EXPECT_EGL_TRUE(
-            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
-        EXPECT_EGL_FALSE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                 EGL_D3D9_DEVICE_ANGLE, &device));
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_FALSE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                               EGL_D3D9_DEVICE_ANGLE, &device));
     }
 
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
     {
         EXPECT_EGL_TRUE(
-            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
-        EXPECT_EGL_FALSE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
-                                                 EGL_D3D11_DEVICE_ANGLE, &device));
+            mQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
+        EXPECT_EGL_FALSE(mQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
+                                               EGL_D3D11_DEVICE_ANGLE, &device));
     }
 }
 
@@ -551,7 +570,7 @@ TEST_P(EGLDeviceQueryTest, QueryDeviceBadAttribute)
 //    - extracting the EGLDeviceEXT from the EGLDisplay
 //    - calling getPlatformDisplayEXT with this EGLDeviceEXT
 // results in the same EGLDisplay being returned from getPlatformDisplayEXT both times
-TEST_P(EGLDeviceQueryTest, GetPlatformDisplayDeviceReuse)
+TEST_P(EGLDeviceQueryTest, getPlatformDisplayDeviceReuse)
 {
     EGLAttrib eglDevice = 0;
     EXPECT_EGL_TRUE(

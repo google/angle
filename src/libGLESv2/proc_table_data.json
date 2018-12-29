@@ -343,45 +343,6 @@
         "glGetTranslatedShaderSourceANGLE"
     ],
 
-    "GL_CHROMIUM_framebuffer_mixed_samples": [
-         "glMatrixLoadfCHROMIUM",
-         "glMatrixLoadIdentityCHROMIUM",
-         "glCoverageModulationCHROMIUM"
-    ],
-
-    "GL_CHROMIUM_path_rendering": [
-         "glGenPathsCHROMIUM",
-         "glDeletePathsCHROMIUM",
-         "glIsPathCHROMIUM",
-         "glPathCommandsCHROMIUM",
-         "glPathParameterfCHROMIUM",
-         "glPathParameteriCHROMIUM",
-         "glGetPathParameterfvCHROMIUM",
-         "glGetPathParameterivCHROMIUM",
-         "glPathStencilFuncCHROMIUM",
-         "glStencilFillPathCHROMIUM",
-         "glStencilStrokePathCHROMIUM",
-         "glCoverFillPathCHROMIUM",
-         "glCoverStrokePathCHROMIUM",
-         "glStencilThenCoverFillPathCHROMIUM",
-         "glStencilThenCoverStrokePathCHROMIUM",
-         "glCoverFillPathInstancedCHROMIUM",
-         "glCoverStrokePathInstancedCHROMIUM",
-         "glStencilFillPathInstancedCHROMIUM",
-         "glStencilStrokePathInstancedCHROMIUM",
-         "glStencilThenCoverFillPathInstancedCHROMIUM",
-         "glStencilThenCoverStrokePathInstancedCHROMIUM",
-         "glBindFragmentInputLocationCHROMIUM",
-         "glProgramPathFragmentInputGenCHROMIUM"
-    ],
-
-    "GL_EXT_blend_func_extended": [
-        "glBindFragDataLocationIndexedEXT",
-        "glBindFragDataLocationEXT",
-        "glGetProgramResourceLocationIndexEXT",
-        "glGetFragDataIndexEXT"
-    ],
-
     "GL_EXT_texture_storage": [
         "glTexStorage2DEXT",
         "glTexStorage3DEXT"

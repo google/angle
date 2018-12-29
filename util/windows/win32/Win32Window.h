@@ -12,8 +12,8 @@
 #include <windows.h>
 #include <string>
 
-#include "util/OSWindow.h"
-#include "util/Timer.h"
+#include "OSWindow.h"
+#include "Timer.h"
 
 class Win32Window : public OSWindow
 {

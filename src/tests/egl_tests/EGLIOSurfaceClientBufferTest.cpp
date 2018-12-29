@@ -10,7 +10,6 @@
 
 #include "common/mathutil.h"
 #include "test_utils/gl_raii.h"
-#include "util/EGLWindow.h"
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOSurface/IOSurface.h>

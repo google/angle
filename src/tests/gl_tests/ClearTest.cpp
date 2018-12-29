@@ -7,9 +7,9 @@
 #include "test_utils/ANGLETest.h"
 
 #include "platform/FeaturesVk.h"
+#include "random_utils.h"
+#include "shader_utils.h"
 #include "test_utils/gl_raii.h"
-#include "util/random_utils.h"
-#include "util/shader_utils.h"
 
 using namespace angle;
 

@@ -15,18 +15,20 @@
 
 #include "SampleApplication.h"
 
-#include <algorithm>
+#include <GLES/gl.h>
+#include <GLES/glext.h>
 
-#include "util/gles_loader_autogen.h"
+#include <algorithm>
 
 class FlatShadingSample : public SampleApplication
 {
   public:
     FlatShadingSample(int argc, char **argv)
         : SampleApplication("FlatShadingSample", argc, argv, 1, 0)
-    {}
+    {
+    }
 
-    bool initialize() override
+    virtual bool initialize()
     {
         glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
         mRotDeg = 0.0f;
@@ -34,7 +36,9 @@ class FlatShadingSample : public SampleApplication
         return true;
     }
 
-    void draw() override
+    virtual void destroy() {}
+
+    virtual void draw()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -93,7 +97,7 @@ class FlatShadingSample : public SampleApplication
     }
 
   private:
-    float mRotDeg = 0.0f;
+    float mRotDeg;
 };
 
 int main(int argc, char **argv)

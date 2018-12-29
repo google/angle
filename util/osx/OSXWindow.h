@@ -11,22 +11,24 @@
 
 #import <Cocoa/Cocoa.h>
 
-#include "util/OSWindow.h"
+#include "OSWindow.h"
 
 class OSXWindow;
 
-@interface WindowDelegate : NSObject {
+@interface WindowDelegate : NSObject
+{
     OSXWindow *mWindow;
 }
-- (id)initWithWindow:(OSXWindow *)window;
+- (id) initWithWindow: (OSXWindow*) window;
 @end
 
-@interface ContentView : NSView {
+@interface ContentView : NSView
+{
     OSXWindow *mWindow;
     NSTrackingArea *mTrackingArea;
     int mCurrentModifier;
 }
-- (id)initWithWindow:(OSXWindow *)window;
+- (id) initWithWindow: (OSXWindow*) window;
 @end
 
 class OSXWindow : public OSWindow
@@ -58,4 +60,4 @@ class OSXWindow : public OSWindow
     ContentView *mView;
 };
 
-#endif  // UTIL_OSX_WINDOW_H_
+#endif // UTIL_OSX_WINDOW_H_

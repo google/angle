@@ -14,12 +14,12 @@
 #include <random>
 #include <vector>
 
-#include "util/util_export.h"
+#include <export.h>
 
 namespace angle
 {
 
-class ANGLE_UTIL_EXPORT RNG
+class ANGLE_EXPORT RNG
 {
   public:
     // Seed from clock

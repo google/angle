@@ -7,7 +7,7 @@
 
 #include "SampleApplication.h"
 
-#include "util/geometry_utils.h"
+#include "geometry_utils.h"
 #include "util/shader_utils.h"
 
 #include <iostream>

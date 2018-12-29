@@ -18,7 +18,6 @@
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_instantiate.h"
-#include "util/EGLWindow.h"
 
 using namespace angle;
 

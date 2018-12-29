@@ -6,10 +6,9 @@
 
 #include "SampleApplication.h"
 
+#include "angle_gl.h"
 #include "util/EGLWindow.h"
-#include "util/gles_loader_autogen.h"
 #include "util/random_utils.h"
-#include "util/system_utils.h"
 
 #include <string.h>
 #include <iostream>
@@ -57,9 +56,6 @@ SampleApplication::SampleApplication(std::string name,
     {
         requestedRenderer = GetDisplayTypeFromArg(argv[1] + strlen(kUseAngleArg));
     }
-
-    // Load EGL library so we can initialize the display.
-    mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
 
     mEGLWindow.reset(new EGLWindow(glesMajorVersion, glesMinorVersion,
                                    EGLPlatformParameters(requestedRenderer)));
@@ -129,12 +125,10 @@ int SampleApplication::run()
 
     mOSWindow->setVisible(true);
 
-    if (!mEGLWindow->initializeGL(mOSWindow.get(), mEntryPointsLib.get()))
+    if (!mEGLWindow->initializeGL(mOSWindow.get()))
     {
         return -1;
     }
-
-    angle::LoadGLES(eglGetProcAddress);
 
     mRunning   = true;
     int result = 0;

@@ -10,8 +10,6 @@
 
 #include "ANGLEPerfTest.h"
 
-#include "util/gles_loader_autogen.h"
-
 namespace
 {
 constexpr unsigned int kIterationsPerStep = 5;

@@ -14,14 +14,17 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "util/shader_utils.h"
+#include "shader_utils.h"
+
+#include <GLES/gl.h>
 
 class GLES1HelloTriangleSample : public SampleApplication
 {
   public:
     GLES1HelloTriangleSample(int argc, char **argv)
         : SampleApplication("GLES1HelloTriangle", argc, argv, 1, 0)
-    {}
+    {
+    }
 
     bool initialize() override
     {
@@ -29,6 +32,8 @@ class GLES1HelloTriangleSample : public SampleApplication
 
         return true;
     }
+
+    void destroy() override {}
 
     void draw() override
     {

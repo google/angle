@@ -14,8 +14,8 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
+#include "shader_utils.h"
 #include "texture_utils.h"
-#include "util/shader_utils.h"
 #include "util/system_utils.h"
 
 #include <GLES/gl.h>
@@ -26,7 +26,8 @@ class GLES1DrawTextureSample : public SampleApplication
   public:
     GLES1DrawTextureSample(int argc, char **argv)
         : SampleApplication("GLES1DrawTexture", argc, argv, 1, 0, 1280, 800)
-    {}
+    {
+    }
 
     bool initialize() override
     {

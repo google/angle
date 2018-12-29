@@ -7,11 +7,11 @@
 #ifndef SAMPLE_UTIL_TEXTURE_UTILS_H
 #define SAMPLE_UTIL_TEXTURE_UTILS_H
 
-#include "util/gles_loader_autogen.h"
+#include <GLES2/gl2.h>
 
 GLuint CreateSimpleTexture2D();
 GLuint CreateSimpleTextureCubemap();
 
 GLuint CreateMipMappedTexture2D();
 
-#endif  // SAMPLE_UTIL_TEXTURE_UTILS_H
+#endif // SAMPLE_UTIL_TEXTURE_UTILS_H

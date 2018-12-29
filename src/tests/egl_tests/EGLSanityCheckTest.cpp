@@ -11,11 +11,8 @@
 
 #include "test_utils/ANGLETest.h"
 
-class EGLSanityCheckTest : public EGLTest
-{};
-
 // Checks the tests are running against ANGLE
-TEST_F(EGLSanityCheckTest, IsRunningOnANGLE)
+TEST(EGLSanityCheckTest, IsRunningOnANGLE)
 {
     const char *extensionString =
         static_cast<const char *>(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
@@ -23,13 +20,17 @@ TEST_F(EGLSanityCheckTest, IsRunningOnANGLE)
 }
 
 // Checks that getting function pointer works
-TEST_F(EGLSanityCheckTest, HasGetPlatformDisplayEXT)
+TEST(EGLSanityCheckTest, HasGetPlatformDisplayEXT)
 {
+    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
+        reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
+            eglGetProcAddress("eglGetPlatformDisplayEXT"));
+
     ASSERT_NE(eglGetPlatformDisplayEXT, nullptr);
 }
 
 // Checks that calling GetProcAddress for a non-existant function fails.
-TEST_F(EGLSanityCheckTest, GetProcAddressNegativeTest)
+TEST(EGLSanityCheckTest, GetProcAddressNegativeTest)
 {
     auto check = eglGetProcAddress("WigglyWombats");
     EXPECT_EQ(nullptr, check);

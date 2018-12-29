@@ -7,7 +7,7 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
-#include "util/random_utils.h"
+#include "random_utils.h"
 
 #include <stdint.h>
 
@@ -208,7 +208,7 @@ TEST_P(BufferDataTest, RepeatedDrawDynamicBug)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     // Set up color value so black is drawn
-    std::fill(data.begin(), data.end(), 0.0f);
+    std::fill(data.begin(), data.end(), 0);
 
     // Update the data, changing back to DYNAMIC mode.
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), GL_DYNAMIC_DRAW);

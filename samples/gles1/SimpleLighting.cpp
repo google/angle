@@ -15,16 +15,18 @@
 
 #include "SampleApplication.h"
 
-#include <algorithm>
+#include <GLES/gl.h>
+#include <GLES/glext.h>
 
-#include "util/gles_loader_autogen.h"
+#include <algorithm>
 
 class SimpleLightingSample : public SampleApplication
 {
   public:
     SimpleLightingSample(int argc, char **argv)
         : SampleApplication("SimpleLightingSample", argc, argv, 1, 0)
-    {}
+    {
+    }
 
     virtual bool initialize()
     {

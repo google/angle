@@ -10,8 +10,6 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include "util/EGLWindow.h"
-
 namespace angle
 {
 

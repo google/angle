@@ -15,7 +15,6 @@
 #include <math.h>
 #include <string>
 #include <vector>
-
 #include "angle_gl.h"
 
 #include "common/PackedEnums.h"

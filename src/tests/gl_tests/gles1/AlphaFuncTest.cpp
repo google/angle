@@ -9,7 +9,7 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
-#include "util/random_utils.h"
+#include "random_utils.h"
 
 #include <stdint.h>
 

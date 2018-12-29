@@ -53,7 +53,7 @@ class PixelRect
         }
         else
         {
-            ASSERT_TRUE(target == GL_TEXTURE_2D);
+            ASSERT(target == GL_TEXTURE_2D);
             glTexImage2D(target, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                          mData.data());
         }

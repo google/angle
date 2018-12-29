@@ -8,7 +8,7 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include "util/shader_utils.h"
+#include "shader_utils.h"
 
 #include <algorithm>
 #include <cmath>

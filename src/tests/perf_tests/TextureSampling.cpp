@@ -16,7 +16,7 @@
 #include <random>
 #include <sstream>
 
-#include "util/shader_utils.h"
+#include "shader_utils.h"
 
 using namespace angle;
 

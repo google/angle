@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "util/OSPixmap.h"
+#include "OSPixmap.h"
 
 OSPixmap *CreateOSPixmap()
 {

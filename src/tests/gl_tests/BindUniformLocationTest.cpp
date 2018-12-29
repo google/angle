@@ -29,6 +29,13 @@ class BindUniformLocationTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+        mBindUniformLocation = reinterpret_cast<PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC>(
+            eglGetProcAddress("glBindUniformLocationCHROMIUM"));
+    }
+
     void TearDown() override
     {
         if (mProgram != 0)
@@ -38,6 +45,11 @@ class BindUniformLocationTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
+    typedef void(GL_APIENTRYP PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC)(GLuint mProgram,
+                                                                    GLint location,
+                                                                    const GLchar *name);
+    PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC mBindUniformLocation = nullptr;
+
     GLuint mProgram = 0;
 };
 
@@ -45,6 +57,8 @@ class BindUniformLocationTest : public ANGLETest
 TEST_P(BindUniformLocationTest, Basic)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
+
+    ASSERT_NE(mBindUniformLocation, nullptr);
 
     constexpr char kFS[] = R"(precision mediump float;
 uniform vec4 u_colorC;
@@ -60,9 +74,9 @@ void main()
     GLint colorCLocation = 5;
 
     mProgram = CompileProgram(essl1_shaders::vs::Simple(), kFS, [&](GLuint program) {
-        glBindUniformLocationCHROMIUM(program, colorALocation, "u_colorA");
-        glBindUniformLocationCHROMIUM(program, colorBLocation, "u_colorB[0]");
-        glBindUniformLocationCHROMIUM(program, colorCLocation, "u_colorC");
+        mBindUniformLocation(program, colorALocation, "u_colorA");
+        mBindUniformLocation(program, colorBLocation, "u_colorB[0]");
+        mBindUniformLocation(program, colorCLocation, "u_colorC");
     });
     ASSERT_NE(0u, mProgram);
 
@@ -87,6 +101,8 @@ TEST_P(BindUniformLocationTest, SamplerLocation)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
+    ASSERT_NE(mBindUniformLocation, nullptr);
+
     constexpr char kFS[] = R"(precision mediump float;
 uniform vec4 u_colorA;
 uniform vec4 u_colorB[2];
@@ -101,9 +117,9 @@ void main()
     GLint samplerLocation = 1;
 
     mProgram = CompileProgram(essl1_shaders::vs::Simple(), kFS, [&](GLuint program) {
-        glBindUniformLocationCHROMIUM(program, colorALocation, "u_colorA");
-        glBindUniformLocationCHROMIUM(program, colorBLocation, "u_colorB[0]");
-        glBindUniformLocationCHROMIUM(program, samplerLocation, "u_sampler");
+        mBindUniformLocation(program, colorALocation, "u_colorA");
+        mBindUniformLocation(program, colorBLocation, "u_colorB[0]");
+        mBindUniformLocation(program, samplerLocation, "u_sampler");
     });
     ASSERT_NE(0u, mProgram);
 
@@ -136,6 +152,8 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
+    ASSERT_NE(nullptr, mBindUniformLocation);
+
     constexpr char kFS[] =
         R"(precision mediump float;
         uniform vec4 u_colorA;
@@ -157,16 +175,16 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
     glAttachShader(mProgram, fs);
     glDeleteShader(fs);
 
-    glBindUniformLocationCHROMIUM(mProgram, colorALocation, "u_colorA");
+    mBindUniformLocation(mProgram, colorALocation, "u_colorA");
     // Bind u_colorB to location a, causing conflicts, link should fail.
-    glBindUniformLocationCHROMIUM(mProgram, colorALocation, "u_colorB");
+    mBindUniformLocation(mProgram, colorALocation, "u_colorB");
     glLinkProgram(mProgram);
     GLint linked = 0;
     glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
     ASSERT_EQ(0, linked);
 
     // Bind u_colorB to location b, no conflicts, link should succeed.
-    glBindUniformLocationCHROMIUM(mProgram, colorBLocation, "u_colorB");
+    mBindUniformLocation(mProgram, colorBLocation, "u_colorB");
     glLinkProgram(mProgram);
     linked = 0;
     glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
@@ -177,6 +195,8 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
 TEST_P(BindUniformLocationTest, Compositor)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
+
+    ASSERT_NE(nullptr, mBindUniformLocation);
 
     constexpr char kVS[] =
         R"(attribute vec4 a_position;
@@ -224,12 +244,12 @@ TEST_P(BindUniformLocationTest, Compositor)
     int colorCLocation     = counter++;
 
     mProgram = CompileProgram(kVS, kFS, [&](GLuint program) {
-        glBindUniformLocationCHROMIUM(program, matrixLocation, "matrix");
-        glBindUniformLocationCHROMIUM(program, colorALocation, "color_a");
-        glBindUniformLocationCHROMIUM(program, colorBLocation, "color_b");
-        glBindUniformLocationCHROMIUM(program, alphaLocation, "alpha");
-        glBindUniformLocationCHROMIUM(program, multiplierLocation, "multiplier");
-        glBindUniformLocationCHROMIUM(program, colorCLocation, "color_c");
+        mBindUniformLocation(program, matrixLocation, "matrix");
+        mBindUniformLocation(program, colorALocation, "color_a");
+        mBindUniformLocation(program, colorBLocation, "color_b");
+        mBindUniformLocation(program, alphaLocation, "alpha");
+        mBindUniformLocation(program, multiplierLocation, "multiplier");
+        mBindUniformLocation(program, colorCLocation, "color_c");
     });
     ASSERT_NE(0u, mProgram);
 
@@ -267,7 +287,7 @@ TEST_P(BindUniformLocationTest, UnusedUniformUpdate)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
-    ASSERT_NE(nullptr, glBindUniformLocationCHROMIUM);
+    ASSERT_NE(nullptr, mBindUniformLocation);
 
     constexpr char kFS[] = R"(precision mediump float;
 uniform vec4 u_colorA;
@@ -283,10 +303,10 @@ void main()
     const GLint unboundLocation     = 6;
 
     mProgram = CompileProgram(essl1_shaders::vs::Simple(), kFS, [&](GLuint program) {
-        glBindUniformLocationCHROMIUM(program, colorULocation, "u_colorU");
+        mBindUniformLocation(program, colorULocation, "u_colorU");
         // The non-existing uniform should behave like existing, but optimized away
         // uniform.
-        glBindUniformLocationCHROMIUM(program, nonexistingLocation, "nonexisting");
+        mBindUniformLocation(program, nonexistingLocation, "nonexisting");
         // Let A and C be assigned automatic locations.
     });
     ASSERT_NE(0u, mProgram);
@@ -351,6 +371,8 @@ TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
+    ASSERT_NE(nullptr, mBindUniformLocation);
+
     constexpr char kFS[] =
         R"(uniform sampler2D tex;
         void main()
@@ -361,7 +383,7 @@ TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
     const GLuint texLocation = 54;
 
     mProgram = CompileProgram(essl1_shaders::vs::Simple(), kFS, [&](GLuint program) {
-        glBindUniformLocationCHROMIUM(program, texLocation, "tex");
+        mBindUniformLocation(program, texLocation, "tex");
     });
     ASSERT_NE(0u, mProgram);
 
@@ -376,6 +398,8 @@ TEST_P(BindUniformLocationTest, SameLocationForUsedAndUnusedUniform)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
+    ASSERT_NE(nullptr, mBindUniformLocation);
+
     constexpr char kFS[] =
         R"(precision mediump float;
         uniform vec4 a;
@@ -388,8 +412,8 @@ TEST_P(BindUniformLocationTest, SameLocationForUsedAndUnusedUniform)
     const GLuint location = 54;
 
     mProgram = CompileProgram(essl1_shaders::vs::Zero(), kFS, [&](GLuint program) {
-        glBindUniformLocationCHROMIUM(program, location, "a");
-        glBindUniformLocationCHROMIUM(program, location, "b");
+        mBindUniformLocation(program, location, "a");
+        mBindUniformLocation(program, location, "b");
     });
     ASSERT_NE(0u, mProgram);
 
@@ -409,7 +433,7 @@ class BindUniformLocationES31Test : public BindUniformLocationTest
                                         GLint uniformLocation)
     {
         mProgram = CompileProgram(vs, fs, [&](GLuint program) {
-            glBindUniformLocationCHROMIUM(program, uniformLocation, uniformName);
+            mBindUniformLocation(program, uniformLocation, uniformName);
         });
     }
 };

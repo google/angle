@@ -7,9 +7,9 @@
 #ifndef SAMPLE_UTIL_TIMER_H
 #define SAMPLE_UTIL_TIMER_H
 
-#include "util/util_export.h"
+#include <export.h>
 
-class ANGLE_UTIL_EXPORT Timer
+class ANGLE_EXPORT Timer
 {
   public:
     virtual ~Timer() {}
@@ -17,8 +17,8 @@ class ANGLE_UTIL_EXPORT Timer
     // Timer functionality: Use start() and stop() to record the duration and use getElapsedTime()
     // to query that duration.  If getElapsedTime() is called in between, it will report the elapsed
     // time since start().
-    virtual void start()                  = 0;
-    virtual void stop()                   = 0;
+    virtual void start() = 0;
+    virtual void stop() = 0;
     virtual double getElapsedTime() const = 0;
 
     // Timestamp functionality: Use getAbsoluteTime() to get an absolute time with an unknown
@@ -26,6 +26,6 @@ class ANGLE_UTIL_EXPORT Timer
     virtual double getAbsoluteTime() = 0;
 };
 
-ANGLE_UTIL_EXPORT Timer *CreateTimer();
+ANGLE_EXPORT Timer *CreateTimer();
 
-#endif  // SAMPLE_UTIL_TIMER_H
+#endif // SAMPLE_UTIL_TIMER_H

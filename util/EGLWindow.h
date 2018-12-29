@@ -12,21 +12,48 @@
 #include <memory>
 #include <string>
 
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <GLES3/gl3.h>
+#include <export.h>
+
 #include "common/Optional.h"
 #include "common/angleutils.h"
-#include "util/EGLPlatformParameters.h"
-#include "util/util_export.h"
-#include "util/util_gl.h"
 
 class OSWindow;
 
 namespace angle
 {
-class Library;
 struct PlatformMethods;
-}  // namespace angle
+}
 
-class ANGLE_UTIL_EXPORT EGLWindow : angle::NonCopyable
+struct ANGLE_EXPORT EGLPlatformParameters
+{
+    EGLint renderer;
+    EGLint majorVersion;
+    EGLint minorVersion;
+    EGLint deviceType;
+    EGLint presentPath;
+
+    EGLPlatformParameters();
+    explicit EGLPlatformParameters(EGLint renderer);
+    EGLPlatformParameters(EGLint renderer,
+                          EGLint majorVersion,
+                          EGLint minorVersion,
+                          EGLint deviceType);
+    EGLPlatformParameters(EGLint renderer,
+                          EGLint majorVersion,
+                          EGLint minorVersion,
+                          EGLint deviceType,
+                          EGLint presentPath);
+};
+
+ANGLE_EXPORT bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+ANGLE_EXPORT bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+
+class ANGLE_EXPORT EGLWindow : angle::NonCopyable
 {
   public:
     EGLWindow(EGLint glesMajorVersion,
@@ -90,10 +117,10 @@ class ANGLE_UTIL_EXPORT EGLWindow : angle::NonCopyable
     const angle::PlatformMethods *getPlatformMethods() const { return mPlatformMethods; }
 
     // Internally initializes the Display, Surface and Context.
-    bool initializeGL(OSWindow *osWindow, angle::Library *eglLibrary);
+    bool initializeGL(OSWindow *osWindow);
 
     // Only initializes the Display and Surface.
-    bool initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *eglLibrary);
+    bool initializeDisplayAndSurface(OSWindow *osWindow);
 
     // Create an EGL context with this window's configuration
     EGLContext createContext(EGLContext share) const;
@@ -143,6 +170,6 @@ class ANGLE_UTIL_EXPORT EGLWindow : angle::NonCopyable
     angle::PlatformMethods *mPlatformMethods;
 };
 
-ANGLE_UTIL_EXPORT bool CheckExtensionExists(const char *allExtensions, const std::string &extName);
+ANGLE_EXPORT bool CheckExtensionExists(const char *allExtensions, const std::string &extName);
 
 #endif  // UTIL_EGLWINDOW_H_

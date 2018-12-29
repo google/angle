@@ -11,7 +11,7 @@
 
 #include <array>
 
-#include "util/random_utils.h"
+#include "random_utils.h"
 
 using namespace angle;
 

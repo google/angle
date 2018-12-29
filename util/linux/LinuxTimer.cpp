@@ -6,10 +6,13 @@
 
 // LinuxTimer.cpp: Implementation of a high precision timer class on Linux
 
-#include "util/linux/LinuxTimer.h"
+#include "linux/LinuxTimer.h"
 #include <iostream>
 
-LinuxTimer::LinuxTimer() : mRunning(false) {}
+LinuxTimer::LinuxTimer()
+    : mRunning(false)
+{
+}
 
 namespace
 {
@@ -24,13 +27,13 @@ uint64_t getCurrentTimeNs()
 void LinuxTimer::start()
 {
     mStartTimeNs = getCurrentTimeNs();
-    mRunning     = true;
+    mRunning = true;
 }
 
 void LinuxTimer::stop()
 {
     mStopTimeNs = getCurrentTimeNs();
-    mRunning    = false;
+    mRunning = false;
 }
 
 double LinuxTimer::getElapsedTime() const

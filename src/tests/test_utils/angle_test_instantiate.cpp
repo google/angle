@@ -12,11 +12,9 @@
 #include <iostream>
 #include <map>
 
-#include "angle_gl.h"
+#include "EGLWindow.h"
+#include "OSWindow.h"
 #include "test_utils/angle_test_configs.h"
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
-#include "util/system_utils.h"
 
 namespace angle
 {
@@ -80,15 +78,9 @@ bool IsPlatformAvailable(const PlatformParameters &param)
 
         if (result)
         {
-            std::unique_ptr<angle::Library> eglLibrary;
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-            eglLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
-
             EGLWindow *eglWindow =
                 new EGLWindow(param.majorVersion, param.minorVersion, param.eglParameters);
-            result = eglWindow->initializeGL(osWindow, eglLibrary.get());
+            result = eglWindow->initializeGL(osWindow);
 
             eglWindow->destroyGL();
             SafeDelete(eglWindow);

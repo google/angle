@@ -4,17 +4,15 @@
 // found in the LICENSE file.
 //
 
-#include "util/EGLWindow.h"
-
+#include <string.h>
 #include <cassert>
 #include <iostream>
 #include <vector>
 
-#include <string.h>
-
+#include "EGLWindow.h"
+#include "OSWindow.h"
+#include "common/debug.h"
 #include "platform/Platform.h"
-#include "util/OSWindow.h"
-#include "util/system_utils.h"
 
 EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
@@ -152,27 +150,15 @@ EGLContext EGLWindow::getContext() const
     return mContext;
 }
 
-bool EGLWindow::initializeGL(OSWindow *osWindow, angle::Library *eglLibrary)
+bool EGLWindow::initializeGL(OSWindow *osWindow)
 {
-    if (!initializeDisplayAndSurface(osWindow, eglLibrary))
+    if (!initializeDisplayAndSurface(osWindow))
         return false;
     return initializeContext();
 }
 
-bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *eglLibrary)
+bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 {
-#if defined(ANGLE_USE_UTIL_LOADER)
-    PFNEGLGETPROCADDRESSPROC getProcAddress;
-    eglLibrary->getAs("eglGetProcAddress", &getProcAddress);
-    if (!getProcAddress)
-    {
-        return false;
-    }
-
-    // Likely we will need to use a fallback to Library::getAs on non-ANGLE platforms.
-    angle::LoadEGL(getProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
-
     std::vector<EGLAttrib> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     displayAttributes.push_back(mPlatform.renderer);
@@ -301,12 +287,12 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *
 
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(),
                                       &surfaceAttributes[0]);
-    if (eglGetError() != EGL_SUCCESS || (mSurface == EGL_NO_SURFACE))
+    if (eglGetError() != EGL_SUCCESS)
     {
         destroyGL();
         return false;
     }
-
+    ASSERT(mSurface != EGL_NO_SURFACE);
     return true;
 }
 

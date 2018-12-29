@@ -5,14 +5,15 @@
 //
 // EGLThreadTest.h: Tests multi-threaded uses of EGL.
 
-#include <gtest/gtest.h>
-
-#include "test_utils/ANGLETest.h"
-#include "util/system_utils.h"
+#include "gtest/gtest.h"
+#include "system_utils.h"
 
 #include <thread>
 
-class EGLThreadTest : public EGLTest
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+
+class EGLThreadTest : public testing::Test
 {
   public:
     void threadingTest();

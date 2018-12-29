@@ -12,9 +12,9 @@
 #include <stdint.h>
 #include <time.h>
 
-#include "util/Timer.h"
+#include "Timer.h"
 
-class ANGLE_UTIL_EXPORT OSXTimer : public Timer
+class OSXTimer : public Timer
 {
   public:
     OSXTimer();
@@ -34,4 +34,4 @@ class ANGLE_UTIL_EXPORT OSXTimer : public Timer
     double mSecondCoeff;
 };
 
-#endif  // UTIL_OSX_TIMER_H_
+#endif // UTIL_OSX_TIMER_H_

@@ -25,13 +25,13 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
+#include "OSPixmap.h"
+#include "OSWindow.h"
 #include "deClock.h"
 #include "deMemory.h"
 #include "egluDefs.hpp"
 #include "eglwLibrary.hpp"
 #include "tcuTexture.hpp"
-#include "util/OSPixmap.h"
-#include "util/OSWindow.h"
 
 // clang-format off
 #if (DE_OS == DE_OS_WIN32)

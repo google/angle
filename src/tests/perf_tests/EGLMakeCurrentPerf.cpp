@@ -11,7 +11,6 @@
 #include "platform/Platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
-#include "util/system_utils.h"
 
 #define ITERATIONS 20
 
@@ -35,11 +34,10 @@ class EGLMakeCurrentPerfTest : public ANGLEPerfTest,
     EGLSurface mSurface;
     EGLConfig mConfig;
     std::array<EGLContext, 2> mContexts;
-    std::unique_ptr<angle::Library> mEGLLibrary;
 };
 
 EGLMakeCurrentPerfTest::EGLMakeCurrentPerfTest()
-    : ANGLEPerfTest("EGLMakeCurrent", "_run", ITERATIONS),
+    : ANGLEPerfTest("EGLMakeCurrent", "_run", 1),
       mOSWindow(nullptr),
       mDisplay(EGL_NO_DISPLAY),
       mSurface(EGL_NO_SURFACE),
@@ -62,30 +60,9 @@ EGLMakeCurrentPerfTest::EGLMakeCurrentPerfTest()
     mOSWindow = CreateOSWindow();
     mOSWindow->initialize("EGLMakeCurrent Test", 64, 64);
 
-    mEGLLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
-
-    angle::LoadProc getProc =
-        reinterpret_cast<angle::LoadProc>(mEGLLibrary->getSymbol("eglGetProcAddress"));
-
-    if (!getProc)
-    {
-        abortTest();
-    }
-    else
-    {
-        angle::LoadEGL(getProc);
-
-        if (!eglGetPlatformDisplayEXT)
-        {
-            abortTest();
-        }
-        else
-        {
-            mDisplay = eglGetPlatformDisplayEXT(
-                EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
-                &displayAttributes[0]);
-        }
-    }
+    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
+                                        reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
+                                        &displayAttributes[0]);
 }
 
 void EGLMakeCurrentPerfTest::SetUp()

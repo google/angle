@@ -9,11 +9,11 @@
 #include <stdint.h>
 #include <memory>
 
+#include "EGLWindow.h"
+#include "OSWindow.h"
 #include "common/string_utils.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
 
 using namespace angle;
 
@@ -639,22 +639,18 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
         {
             FAIL() << "Failed to create OS window";
         }
-
-        mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
     }
 
     EGLWindow *createAndInitEGLWindow(angle::PlatformParameters &param)
     {
         EGLWindow *eglWindow =
             new EGLWindow(param.majorVersion, param.minorVersion, param.eglParameters);
-        bool result = eglWindow->initializeGL(mOSWindow, mEntryPointsLib.get());
+        bool result = eglWindow->initializeGL(mOSWindow);
         if (result == false)
         {
             SafeDelete(eglWindow);
             eglWindow = nullptr;
         }
-
-        angle::LoadGLES(eglGetProcAddress);
 
         return eglWindow;
     }
@@ -710,7 +706,6 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
     }
 
     OSWindow *mOSWindow = nullptr;
-    std::unique_ptr<angle::Library> mEntryPointsLib;
 };
 
 // Tries to create a program binary using one set of platform params, then load it using a different

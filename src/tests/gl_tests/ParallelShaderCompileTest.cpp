@@ -8,7 +8,7 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include "util/random_utils.h"
+#include "random_utils.h"
 
 using namespace angle;
 
@@ -190,8 +190,7 @@ TEST_P(ParallelShaderCompileTest, LinkAndDrawManyPrograms)
     constexpr int kTaskCount = 32;
     for (int i = 0; i < kTaskCount; ++i)
     {
-        std::unique_ptr<ClearColorWithDraw> task(
-            new ClearColorWithDraw(static_cast<GLubyte>(i * 255 / kTaskCount)));
+        std::unique_ptr<ClearColorWithDraw> task(new ClearColorWithDraw(i * 255 / kTaskCount));
         bool isCompiling = task->compile();
         ASSERT_TRUE(isCompiling);
         compileTasks.push_back(std::move(task));

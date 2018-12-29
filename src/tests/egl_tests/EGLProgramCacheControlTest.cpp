@@ -9,7 +9,6 @@
 #include "common/angleutils.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
-#include "util/EGLWindow.h"
 
 using namespace angle;
 

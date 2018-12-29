@@ -12,16 +12,13 @@
 #include <memory>
 #include <string>
 
-#include "util/OSWindow.h"
-#include "util/Timer.h"
-#include "util/egl_loader_autogen.h"
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+
+#include "OSWindow.h"
+#include "Timer.h"
 
 class EGLWindow;
-
-namespace angle
-{
-class Library;
-}  // namespace angle
 
 class SampleApplication
 {
@@ -63,9 +60,6 @@ class SampleApplication
     std::unique_ptr<Timer> mTimer;
     std::unique_ptr<EGLWindow> mEGLWindow;
     std::unique_ptr<OSWindow> mOSWindow;
-
-    // Handle to the entry point binding library.
-    std::unique_ptr<angle::Library> mEntryPointsLib;
 };
 
 #endif  // SAMPLE_UTIL_SAMPLE_APPLICATION_H

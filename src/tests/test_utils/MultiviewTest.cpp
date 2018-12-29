@@ -55,7 +55,7 @@ void CreateMultiviewBackingTextures(GLenum multiviewLayout,
     textureData.resize(viewWidth * height * numLayers * 4, 0u);
 
     // Multisampling is only supported for layered framebuffers.
-    ASSERT_TRUE((samples == 0) || multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE);
+    ASSERT((samples == 0) || multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE);
 
     // We can't upload data to multisample textures, so we clear them using a temporary framebuffer
     // instead. The current framebuffer binding is stored so we can restore it once we're done with
@@ -177,7 +177,7 @@ void CreateMultiviewBackingTextures(GLenum multiviewLayout,
             break;
         }
         default:
-            ASSERT_TRUE(false);
+            UNREACHABLE();
     }
     ASSERT_GL_NO_ERROR();
 
@@ -193,7 +193,7 @@ void CreateMultiviewBackingTextures(GLenum multiviewLayout,
                                     GLuint depthTexture,
                                     GLuint depthStencilTexture)
 {
-    ASSERT_TRUE(colorTexture != 0u);
+    ASSERT(colorTexture != 0u);
     std::vector<GLuint> colorTextures(1, colorTexture);
     CreateMultiviewBackingTextures(multiviewLayout, samples, viewWidth, height, numLayers,
                                    colorTextures, depthTexture, depthStencilTexture);
@@ -208,8 +208,8 @@ void AttachMultiviewTextures(GLenum target,
                              GLuint depthTexture,
                              GLuint depthStencilTexture)
 {
-    ASSERT_TRUE(multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE || (baseViewIndex == 0));
-    ASSERT_TRUE(depthTexture == 0u || depthStencilTexture == 0u);
+    ASSERT(multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE || (baseViewIndex == 0));
+    ASSERT(depthTexture == 0u || depthStencilTexture == 0u);
     switch (multiviewLayout)
     {
         case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
@@ -259,7 +259,7 @@ void AttachMultiviewTextures(GLenum target,
             }
             break;
         default:
-            ASSERT_TRUE(false);
+            UNREACHABLE();
     }
 }
 
@@ -272,7 +272,7 @@ void AttachMultiviewTextures(GLenum target,
                              GLuint depthTexture,
                              GLuint depthStencilTexture)
 {
-    ASSERT_TRUE(colorTexture != 0u);
+    ASSERT(colorTexture != 0u);
     std::vector<GLuint> colorTextures(1, colorTexture);
     AttachMultiviewTextures(target, multiviewLayout, viewWidth, numViews, baseViewIndex,
                             colorTextures, depthTexture, depthStencilTexture);

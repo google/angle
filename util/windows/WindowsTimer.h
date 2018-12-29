@@ -11,9 +11,9 @@
 
 #include <windows.h>
 
-#include "util/Timer.h"
+#include "Timer.h"
 
-class ANGLE_UTIL_EXPORT WindowsTimer : public Timer
+class WindowsTimer : public Timer
 {
   public:
     WindowsTimer();

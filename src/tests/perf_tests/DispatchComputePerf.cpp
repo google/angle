@@ -8,7 +8,9 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "util/shader_utils.h"
+#include "shader_utils.h"
+
+#include "angle_gl.h"
 
 namespace
 {

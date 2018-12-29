@@ -167,7 +167,7 @@ struct Attrib
 template <class T>
 void Store(double value, void *dest)
 {
-    T v = static_cast<T>(value);
+    T v = value;
     memcpy(dest, &v, sizeof(v));
 }
 

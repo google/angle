@@ -6,7 +6,7 @@
 
 // Posix_system_utils.cpp: Implementation of OS-specific functions for Posix systems
 
-#include "util/system_utils.h"
+#include "system_utils.h"
 
 #include <dlfcn.h>
 #include <sched.h>

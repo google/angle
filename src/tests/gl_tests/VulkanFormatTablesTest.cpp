@@ -19,7 +19,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
-#include "util/EGLWindow.h"
 
 using namespace angle;
 

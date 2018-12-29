@@ -11,11 +11,10 @@
 
 #include <vector>
 
+#include "OSWindow.h"
 #include "media/yuvtest.inl"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
 
 using namespace angle;
 

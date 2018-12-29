@@ -73,9 +73,7 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
 
     void initializeFBOs(size_t numColorBuffers, bool stencil, bool depth)
     {
-        ASSERT_TRUE(mColorTex.empty());
-        ASSERT_EQ(0u, mDepthStencilTex);
-        ASSERT_EQ(0u, mDepthTex);
+        ASSERT(mColorTex.empty() && mDepthStencilTex == 0u && mDepthTex == 0u);
         const std::vector<GLenum> &drawBuffers = GetDrawBufferRange(numColorBuffers);
 
         // Generate textures.
@@ -217,10 +215,8 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
                         bool stencil,
                         bool depth)
     {
-        ASSERT_TRUE(mColorTex.empty());
-        ASSERT_EQ(0u, mDepthStencilTex);
-        ASSERT_EQ(0u, mDepthTex);
-        ASSERT_LE(baseViewIndex + numViews, numLayers);
+        ASSERT(mColorTex.empty() && mDepthStencilTex == 0u && mDepthTex == 0u);
+        ASSERT(baseViewIndex + numViews <= numLayers);
 
         // Generate textures.
         mColorTex.resize(numColorAttachments);
@@ -278,7 +274,7 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 
     GLColor getLayerColor(size_t layer, GLenum attachment, GLint x, GLint y)
     {
-        EXPECT_LT(layer, mNonMultiviewFBO.size());
+        ASSERT(layer < mNonMultiviewFBO.size());
         glBindFramebuffer(GL_FRAMEBUFFER, mNonMultiviewFBO[layer]);
         glReadBuffer(attachment);
         return angle::ReadColor(x, y);

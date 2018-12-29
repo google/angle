@@ -14,17 +14,18 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-
+#include "shader_utils.h"
 #include "texture_utils.h"
-#include "util/gles_loader_autogen.h"
-#include "util/shader_utils.h"
+
+#include <GLES/gl.h>
 
 class GLES1SimpleTexture2DSample : public SampleApplication
 {
   public:
     GLES1SimpleTexture2DSample(int argc, char **argv)
         : SampleApplication("GLES1SimpleTexture2D", argc, argv, 1, 0)
-    {}
+    {
+    }
 
     bool initialize() override
     {

@@ -11,7 +11,7 @@
 
 #include "common/matrix_utils.h"
 #include "common/vector_utils.h"
-#include "util/random_utils.h"
+#include "random_utils.h"
 
 #include <stdint.h>
 

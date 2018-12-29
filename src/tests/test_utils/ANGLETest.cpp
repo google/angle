@@ -8,9 +8,8 @@
 //
 
 #include "ANGLETest.h"
-
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
+#include "EGLWindow.h"
+#include "OSWindow.h"
 
 namespace angle
 {
@@ -361,8 +360,7 @@ void ANGLETestBase::ANGLETestSetUp()
     mPlatformMethods.context                = &mPlatformContext;
     mEGLWindow->setPlatformMethods(&mPlatformMethods);
 
-    if (!mEGLWindow->initializeDisplayAndSurface(mOSWindow,
-                                                 ANGLETestEnvironment::GetEntryPointsLib()))
+    if (!mEGLWindow->initializeDisplayAndSurface(mOSWindow))
     {
         FAIL() << "egl display or surface init failed.";
     }
@@ -371,10 +369,6 @@ void ANGLETestBase::ANGLETestSetUp()
     {
         FAIL() << "GL Context init failed.";
     }
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-    angle::LoadGLES(eglGetProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
 
     if (needSwap)
     {
@@ -1253,21 +1247,12 @@ ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
 OSWindow *ANGLETestBase::mOSWindow = nullptr;
 Optional<EGLint> ANGLETestBase::mLastRendererType;
 
-std::unique_ptr<angle::Library> ANGLETestEnvironment::gEntryPointsLib;
-
 void ANGLETestEnvironment::SetUp()
 {
     if (!ANGLETestBase::InitTestWindow())
     {
         FAIL() << "Failed to create ANGLE test window.";
     }
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-    if (!gEntryPointsLib)
-    {
-        gEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
-    }
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
 }
 
 void ANGLETestEnvironment::TearDown()
@@ -1278,25 +1263,4 @@ void ANGLETestEnvironment::TearDown()
 void ANGLEProcessTestArgs(int *argc, char *argv[])
 {
     testing::AddGlobalTestEnvironment(new ANGLETestEnvironment());
-}
-
-EGLTest::EGLTest() = default;
-
-EGLTest::~EGLTest() = default;
-
-void EGLTest::SetUp()
-{
-#if defined(ANGLE_USE_UTIL_LOADER)
-    PFNEGLGETPROCADDRESSPROC getProcAddress;
-    ANGLETestEnvironment::GetEntryPointsLib()->getAs("eglGetProcAddress", &getProcAddress);
-    ASSERT_NE(nullptr, getProcAddress);
-
-    angle::LoadEGL(getProcAddress);
-    angle::LoadGLES(getProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
-}
-
-bool IsDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
-{
-    return CheckExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
 }

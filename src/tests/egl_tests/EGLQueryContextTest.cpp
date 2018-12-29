@@ -6,18 +6,24 @@
 
 #include <gtest/gtest.h>
 
-#include "test_utils/ANGLETest.h"
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+
+#include "test_utils/angle_test_configs.h"
 
 using namespace angle;
 
-class EGLQueryContextTest : public EGLTest, public testing::WithParamInterface<PlatformParameters>
+class EGLQueryContextTest : public testing::TestWithParam<PlatformParameters>
 {
   public:
     void SetUp() override
     {
-        EGLTest::SetUp();
-
         int clientVersion = GetParam().majorVersion;
+
+        PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
+            reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
+                eglGetProcAddress("eglGetPlatformDisplayEXT"));
+        EXPECT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
         EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
         mDisplay           = eglGetPlatformDisplayEXT(

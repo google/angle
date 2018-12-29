@@ -21,7 +21,7 @@
 #include "common/string_utils.h"
 #include "gpu_test_expectations_parser.h"
 #include "platform/Platform.h"
-#include "util/system_utils.h"
+#include "system_utils.h"
 
 namespace
 {

@@ -8,10 +8,10 @@
 //
 
 #include "ANGLEPerfTest.h"
+#include "Timer.h"
 #include "platform/Platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
-#include "util/Timer.h"
 
 using namespace testing;
 

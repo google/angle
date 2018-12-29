@@ -12,6 +12,8 @@
 
 #include <gtest/gtest.h>
 
+#include "common/debug.h"
+
 namespace angle
 {
 

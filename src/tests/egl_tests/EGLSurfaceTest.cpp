@@ -11,9 +11,8 @@
 
 #include <vector>
 
+#include "OSWindow.h"
 #include "test_utils/ANGLETest.h"
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
 
 #if defined(ANGLE_ENABLE_D3D11)
 #    define INITGUID
@@ -26,7 +25,7 @@
 namespace
 {
 
-class EGLSurfaceTest : public EGLTest
+class EGLSurfaceTest : public testing::Test
 {
   protected:
     EGLSurfaceTest()
@@ -40,8 +39,6 @@ class EGLSurfaceTest : public EGLTest
 
     void SetUp() override
     {
-        EGLTest::SetUp();
-
         mOSWindow = CreateOSWindow();
         mOSWindow->initialize("EGLSurfaceTest", 64, 64);
     }

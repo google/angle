@@ -74,6 +74,8 @@ angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
     static_assert(offsetof(TraceCategory, enabled) == 0,
                   "|enabled| must be the first field of the TraceCategory class.");
     const TraceCategory *category = reinterpret_cast<const TraceCategory *>(categoryEnabledFlag);
+    ptrdiff_t categoryIndex       = category - gTraceCategories;
+    ASSERT(categoryIndex >= 0 && static_cast<size_t>(categoryIndex) < ArraySize(gTraceCategories));
 
     ANGLERenderTest *renderTest     = static_cast<ANGLERenderTest *>(platform->context);
     std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
@@ -343,13 +345,7 @@ void ANGLERenderTest::SetUp()
     angle::StabilizeCPUForBenchmarking();
 
     mOSWindow = CreateOSWindow();
-
-    if (!mEGLWindow)
-    {
-        abortTest();
-        return;
-    }
-
+    ASSERT(mEGLWindow != nullptr);
     mEGLWindow->setSwapInterval(0);
 
     mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
@@ -369,20 +365,11 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    // Load EGL library so we can initialize the display.
-#if defined(ANGLE_USE_UTIL_LOADER)
-    mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
-
-    if (!mEGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get()))
+    if (!mEGLWindow->initializeGL(mOSWindow))
     {
         FAIL() << "Failed initializing EGLWindow";
         return;
     }
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-    angle::LoadGLES(eglGetProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
 
     if (!areExtensionPrerequisitesFulfilled())
     {
