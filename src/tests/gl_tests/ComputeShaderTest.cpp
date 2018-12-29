@@ -2489,9 +2489,6 @@ void main()
 // Test storage buffer bound is unchanged, shader writes it, buffer content should be updated.
 TEST_P(ComputeShaderTest, StorageBufferBoundUnchanged)
 {
-    // TODO(xinghua.cao@intel.com): Fix this. http://anglebug.com/3037
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=16, local_size_y=16) in;
 precision highp usampler2D;

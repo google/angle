@@ -3734,6 +3734,14 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
                                           GLuint numGroupsY,
                                           GLuint numGroupsZ)
 {
+    const gl::State &glState   = context->getState();
+    const gl::Program *program = glState.getProgram();
+    if (program->getActiveShaderStorageBlockCount() > 0 ||
+        program->getActiveAtomicCounterBufferCount() > 0)
+    {
+        ANGLE_TRY(markRawBufferUsage(context));
+    }
+
     ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
     mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
@@ -3742,6 +3750,13 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
 angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
     const auto &glState          = context->getState();
+    const gl::Program *program   = glState.getProgram();
+    if (program->getActiveShaderStorageBlockCount() > 0 ||
+        program->getActiveAtomicCounterBufferCount() > 0)
+    {
+        ANGLE_TRY(markRawBufferUsage(context));
+    }
+
     auto *dispatchIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DispatchIndirect);
     ASSERT(dispatchIndirectBuffer);
 
@@ -3922,6 +3937,36 @@ angle::Result Renderer11::mapResource(const gl::Context *context,
 {
     HRESULT hr = mDeviceContext->Map(resource, subResource, mapType, mapFlags, mappedResource);
     ANGLE_TRY_HR(GetImplAs<Context11>(context), hr, "Failed to map D3D11 resource.");
+    return angle::Result::Continue;
+}
+
+angle::Result Renderer11::markRawBufferUsage(const gl::Context *context)
+{
+    const gl::State &glState   = context->getState();
+    const gl::Program *program = glState.getProgram();
+    for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
+         blockIndex++)
+    {
+        GLuint binding = program->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
+        const auto &shaderStorageBuffer = glState.getIndexedShaderStorageBuffer(binding);
+        if (shaderStorageBuffer.get() != nullptr)
+        {
+            Buffer11 *bufferStorage = GetImplAs<Buffer11>(shaderStorageBuffer.get());
+            ANGLE_TRY(bufferStorage->markRawBufferUsage(context));
+        }
+    }
+
+    for (const auto &atomicCounterBuffer : program->getState().getAtomicCounterBuffers())
+    {
+        GLuint binding     = atomicCounterBuffer.binding;
+        const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
+
+        if (buffer.get() != nullptr)
+        {
+            Buffer11 *bufferStorage = GetImplAs<Buffer11>(buffer.get());
+            ANGLE_TRY(bufferStorage->markRawBufferUsage(context));
+        }
+    }
     return angle::Result::Continue;
 }
 

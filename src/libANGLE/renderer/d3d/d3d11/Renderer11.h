@@ -549,6 +549,8 @@ class Renderer11 : public RendererD3D
 
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
 
+    // Make sure that the raw buffer is the latest buffer.
+    angle::Result markRawBufferUsage(const gl::Context *context);
     angle::Result markTransformFeedbackUsage(const gl::Context *context);
     angle::Result drawWithGeometryShaderAndTransformFeedback(Context11 *context11,
                                                              gl::PrimitiveMode mode,
