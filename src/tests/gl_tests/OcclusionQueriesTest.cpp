@@ -4,9 +4,10 @@
 // found in the LICENSE file.
 //
 
-#include "random_utils.h"
-#include "system_utils.h"
 #include "test_utils/ANGLETest.h"
+#include "util/EGLWindow.h"
+#include "util/random_utils.h"
+#include "util/system_utils.h"
 
 using namespace angle;
 

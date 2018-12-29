@@ -231,7 +231,7 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
         float viewport[2];
         glGetFloatv(GL_MAX_VIEWPORT_DIMS, viewport);
 
-        glViewport(0, 0, viewport[0], viewport[1]);
+        glViewport(0, 0, static_cast<GLsizei>(viewport[0]), static_cast<GLsizei>(viewport[1]));
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
 
         drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f);

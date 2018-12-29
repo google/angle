@@ -10,7 +10,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "common/angleutils.h"
-#include "shader_utils.h"
+#include "util/shader_utils.h"
 
 #include <cmath>
 #include <cstddef>

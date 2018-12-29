@@ -719,7 +719,7 @@ TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
 
     GLint max3DSize;
     glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DSize);
-    GLint max3DLevel = std::log2(max3DSize);
+    GLint max3DLevel = static_cast<GLint>(std::log2(max3DSize));
     glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, max3DLevel + 1);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }

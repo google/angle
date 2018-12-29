@@ -13,11 +13,11 @@
 // URLs:      http://safari.informit.com/9780321563835
 //            http://www.opengles-book.com
 
-#include "Matrix.h"
 #include "SampleApplication.h"
-#include "geometry_utils.h"
-#include "shader_utils.h"
 #include "texture_utils.h"
+#include "util/Matrix.h"
+#include "util/geometry_utils.h"
+#include "util/shader_utils.h"
 
 #include <cmath>
 #include <iostream>

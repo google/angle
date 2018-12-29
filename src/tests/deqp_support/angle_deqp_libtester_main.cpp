@@ -13,7 +13,6 @@
 #include "deMath.h"
 #include "deUniquePtr.hpp"
 #include "platform/Platform.h"
-#include "system_utils.h"
 #include "tcuApp.hpp"
 #include "tcuCommandLine.hpp"
 #include "tcuDefs.hpp"
@@ -21,6 +20,7 @@
 #include "tcuRandomOrderExecutor.h"
 #include "tcuResource.hpp"
 #include "tcuTestLog.hpp"
+#include "util/system_utils.h"
 
 #if (DE_OS == DE_OS_WIN32)
 #    include <Windows.h>

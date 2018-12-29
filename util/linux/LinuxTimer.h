@@ -12,9 +12,9 @@
 #include <stdint.h>
 #include <time.h>
 
-#include "Timer.h"
+#include "util/Timer.h"
 
-class LinuxTimer : public Timer
+class ANGLE_UTIL_EXPORT LinuxTimer : public Timer
 {
   public:
     LinuxTimer();
@@ -31,4 +31,4 @@ class LinuxTimer : public Timer
     uint64_t mStopTimeNs;
 };
 
-#endif // UTIL_LINUX_TIMER_H
+#endif  // UTIL_LINUX_TIMER_H

@@ -9,6 +9,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
+#include "util/EGLWindow.h"
 
 namespace angle
 {
@@ -52,14 +53,9 @@ TEST_P(ExplicitContextTest, GetProcAddress)
 
     EGLContext context = getEGLWindow()->getContext();
 
-    PFNGLCLEARCOLORCONTEXTANGLEPROC clearColor = reinterpret_cast<PFNGLCLEARCOLORCONTEXTANGLEPROC>(
-        eglGetProcAddress("glClearColorContextANGLE"));
-    PFNGLCLEARCONTEXTANGLEPROC clear =
-        reinterpret_cast<PFNGLCLEARCONTEXTANGLEPROC>(eglGetProcAddress("glClearContextANGLE"));
-
     // Clear to green
-    clearColor(context, 1.0f, 0, 0, 1.0f);
-    clear(context, GL_COLOR_BUFFER_BIT);
+    glClearColorContextANGLE(context, 1.0f, 0, 0, 1.0f);
+    glClearContextANGLE(context, GL_COLOR_BUFFER_BIT);
 
     // Check for green
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);

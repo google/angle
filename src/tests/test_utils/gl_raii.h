@@ -11,7 +11,7 @@
 
 #include <functional>
 
-#include "angle_gl.h"
+#include "util/shader_utils.h"
 
 namespace angle
 {
@@ -22,12 +22,11 @@ namespace angle
 using GLGen    = decltype(glGenBuffers);
 using GLDelete = decltype(glDeleteBuffers);
 
-template <GLGen GenF, GLDelete DeleteF>
 class GLWrapper : angle::NonCopyable
 {
   public:
-    GLWrapper() {}
-    ~GLWrapper() { DeleteF(1, &mHandle); }
+    GLWrapper(GLGen *genFunc, GLDelete *deleteFunc) : mGenFunc(genFunc), mDeleteFunc(deleteFunc) {}
+    ~GLWrapper() { (*mDeleteFunc)(1, &mHandle); }
 
     // The move-constructor and move-assignment operators are necessary so that the data within a
     // GLWrapper object can be relocated.
@@ -45,7 +44,7 @@ class GLWrapper : angle::NonCopyable
     {
         if (mHandle != 0u)
         {
-            DeleteF(1, &mHandle);
+            (*mDeleteFunc)(1, &mHandle);
             mHandle = 0u;
         }
     }
@@ -54,7 +53,7 @@ class GLWrapper : angle::NonCopyable
     {
         if (!mHandle)
         {
-            GenF(1, &mHandle);
+            (*mGenFunc)(1, &mHandle);
         }
         return mHandle;
     }
@@ -62,18 +61,56 @@ class GLWrapper : angle::NonCopyable
     operator GLuint() { return get(); }
 
   private:
+    GLGen *mGenFunc;
+    GLDelete *mDeleteFunc;
     GLuint mHandle = 0u;
 };
 
-using GLVertexArray       = GLWrapper<glGenVertexArrays, glDeleteVertexArrays>;
-using GLBuffer            = GLWrapper<glGenBuffers, glDeleteBuffers>;
-using GLTexture           = GLWrapper<glGenTextures, glDeleteTextures>;
-using GLFramebuffer       = GLWrapper<glGenFramebuffers, glDeleteFramebuffers>;
-using GLRenderbuffer      = GLWrapper<glGenRenderbuffers, glDeleteRenderbuffers>;
-using GLSampler           = GLWrapper<glGenSamplers, glDeleteSamplers>;
-using GLTransformFeedback = GLWrapper<glGenTransformFeedbacks, glDeleteTransformFeedbacks>;
-using GLProgramPipeline   = GLWrapper<glGenProgramPipelines, glDeleteProgramPipelines>;
-using GLQueryEXT          = GLWrapper<glGenQueriesEXT, glDeleteQueriesEXT>;
+class GLVertexArray : public GLWrapper
+{
+  public:
+    GLVertexArray() : GLWrapper(&glGenVertexArrays, &glDeleteVertexArrays) {}
+};
+class GLBuffer : public GLWrapper
+{
+  public:
+    GLBuffer() : GLWrapper(&glGenBuffers, &glDeleteBuffers) {}
+};
+class GLTexture : public GLWrapper
+{
+  public:
+    GLTexture() : GLWrapper(&glGenTextures, &glDeleteTextures) {}
+};
+class GLFramebuffer : public GLWrapper
+{
+  public:
+    GLFramebuffer() : GLWrapper(&glGenFramebuffers, &glDeleteFramebuffers) {}
+};
+class GLRenderbuffer : public GLWrapper
+{
+  public:
+    GLRenderbuffer() : GLWrapper(&glGenRenderbuffers, &glDeleteRenderbuffers) {}
+};
+class GLSampler : public GLWrapper
+{
+  public:
+    GLSampler() : GLWrapper(&glGenSamplers, &glDeleteSamplers) {}
+};
+class GLTransformFeedback : public GLWrapper
+{
+  public:
+    GLTransformFeedback() : GLWrapper(&glGenTransformFeedbacks, &glDeleteTransformFeedbacks) {}
+};
+class GLProgramPipeline : public GLWrapper
+{
+  public:
+    GLProgramPipeline() : GLWrapper(&glGenProgramPipelines, &glDeleteProgramPipelines) {}
+};
+class GLQueryEXT : public GLWrapper
+{
+  public:
+    GLQueryEXT() : GLWrapper(&glGenQueriesEXT, &glDeleteQueriesEXT) {}
+};
 
 class GLShader : angle::NonCopyable
 {
@@ -138,11 +175,7 @@ class GLProgram
 
     bool valid() const { return mHandle != 0; }
 
-    GLuint get()
-    {
-        ASSERT(valid());
-        return mHandle;
-    }
+    GLuint get() { return mHandle; }
 
     operator GLuint() { return get(); }
 

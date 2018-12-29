@@ -7,8 +7,6 @@
 // EGLDirectCompositionTest.cpp:
 //   Tests pertaining to DirectComposition and WindowsUIComposition.
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
 #include <d3d11.h>
 #include "test_utils/ANGLETest.h"
 
@@ -21,10 +19,10 @@
 #include <wrl.h>
 #include <memory>
 
-#include "OSWindow.h"
-#include "com_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
 #include "test_utils/ANGLETest.h"
+#include "util/OSWindow.h"
+#include "util/com_utils.h"
 
 using namespace angle;
 using namespace ABI::Windows::System;

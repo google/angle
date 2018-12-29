@@ -679,7 +679,7 @@ TEST_P(MipmapTest, DefineValidExtraLevelAndUseItLater)
     GLubyte *levels[] = {mLevelZeroBlueInitData.data(), mLevelOneGreenInitData.data(),
                          mLevelTwoRedInitData.data()};
 
-    int maxLevel = 1 + floor(log2(std::max(getWindowWidth(), getWindowHeight())));
+    int maxLevel = 1 + static_cast<int>(floor(log2(std::max(getWindowWidth(), getWindowHeight()))));
 
     for (int i = 0; i < maxLevel; i++)
     {

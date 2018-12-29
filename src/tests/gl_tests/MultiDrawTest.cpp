@@ -28,8 +28,9 @@ constexpr std::array<GLfloat, 2> kTileSize = {
 };
 constexpr std::array<uint32_t, 2> kTilePixelSize  = {kWidth / kCountX, kHeight / kCountY};
 constexpr std::array<GLfloat, 2> kQuadRadius      = {0.25f * kTileSize[0], 0.25f * kTileSize[1]};
-constexpr std::array<uint32_t, 2> kPixelCheckSize = {kQuadRadius[0] * kWidth,
-                                                     kQuadRadius[1] * kHeight};
+constexpr std::array<uint32_t, 2> kPixelCheckSize = {
+    static_cast<uint32_t>(kQuadRadius[0] * kWidth),
+    static_cast<uint32_t>(kQuadRadius[1] * kHeight)};
 
 constexpr std::array<GLfloat, 2> getTileCenter(uint32_t x, uint32_t y)
 {
@@ -239,7 +240,7 @@ void main()
     {
         if (getClientMajorVersion() <= 2)
         {
-            ASSERT(extensionEnabled("GL_ANGLE_instanced_arrays"));
+            ASSERT_TRUE(extensionEnabled("GL_ANGLE_instanced_arrays"));
             glVertexAttribDivisorANGLE(location, divisor);
         }
         else

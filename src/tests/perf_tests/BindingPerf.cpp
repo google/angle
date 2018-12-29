@@ -13,9 +13,7 @@
 #include <random>
 #include <sstream>
 
-#include "shader_utils.h"
-
-#include "angle_gl.h"
+#include "util/shader_utils.h"
 
 namespace angle
 {
@@ -69,7 +67,8 @@ std::string BindingsParams::suffix() const
             strstr << "_allocated_at_initialization";
             break;
         default:
-            UNREACHABLE();
+            strstr << "_err";
+            break;
     }
 
     return strstr.str();

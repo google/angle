@@ -3002,7 +3002,7 @@ class TextureBorderClampIntegerTestES3 : public Texture2DTest
             })";
     }
 
-    const char *getFragmentShaderSource()
+    const char *getFragmentShaderSource() override
     {
         if (isUnsignedIntTest)
         {

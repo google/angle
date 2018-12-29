@@ -27,18 +27,21 @@ static_library("sample_util") {
     "sample_util/tga_utils.cpp",
     "sample_util/tga_utils.h",
   ]
-  deps = [
-    "../:angle_util",
+  data_deps = [
     "../:libEGL${angle_libs_suffix}",
     "../:libGLESv1_CM${angle_libs_suffix}",
     "../:libGLESv2${angle_libs_suffix}",
   ]
   public_deps = [
     "../:angle_common",
+    "../:angle_util",
+    "../:angle_util_loader_headers",
   ]
+  configs += [ "../:library_name_config" ]
   public_configs = [
     ":sample_util_config",
-    "../:gl_prototypes",
+    "../:internal_config",
+    "../:no_gl_prototypes",
   ]
 }
 
@@ -55,7 +58,6 @@ template("angle_sample") {
   executable(target_name) {
     deps = [
       ":sample_util",
-      "../:angle_util",
     ]
     if (defined(invoker.data)) {
       deps += [ ":${target_name}_data" ]
@@ -211,6 +213,11 @@ angle_sample("gles1_draw_texture") {
 group("all") {
   testonly = true
   deps = [
+    ":gles1_draw_texture",
+    ":gles1_flat_shading",
+    ":gles1_hello_triangle",
+    ":gles1_simple_lighting",
+    ":gles1_simple_texture_2d",
     ":hello_triangle",
     ":mip_map_2d",
     ":multi_texture",

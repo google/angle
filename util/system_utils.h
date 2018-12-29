@@ -11,24 +11,21 @@
 
 #include <string>
 
-#include <export.h>
-
-#include "common/angleutils.h"
 #include "common/system_utils.h"
+#include "util/util_export.h"
 
 namespace angle
 {
-
 // Cross platform equivalent of the Windows Sleep function
-ANGLE_EXPORT void Sleep(unsigned int milliseconds);
+ANGLE_UTIL_EXPORT void Sleep(unsigned int milliseconds);
 
-ANGLE_EXPORT void SetLowPriorityProcess();
+ANGLE_UTIL_EXPORT void SetLowPriorityProcess();
 
 // Write a debug message, either to a standard output or Debug window.
-ANGLE_EXPORT void WriteDebugMessage(const char *format, ...);
+ANGLE_UTIL_EXPORT void WriteDebugMessage(const char *format, ...);
 
 // Set thread affinity and priority.
-ANGLE_EXPORT bool StabilizeCPUForBenchmarking();
+ANGLE_UTIL_EXPORT bool StabilizeCPUForBenchmarking();
 }  // namespace angle
 
 #endif  // UTIL_SYSTEM_UTILS_H_

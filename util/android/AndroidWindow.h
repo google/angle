@@ -9,7 +9,7 @@
 #ifndef UTIL_ANDROID_WINDOW_H_
 #define UTIL_ANDROID_WINDOW_H_
 
-#include "OSWindow.h"
+#include "util/OSWindow.h"
 
 class AndroidWindow : public OSWindow
 {

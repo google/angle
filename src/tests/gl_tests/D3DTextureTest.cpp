@@ -12,7 +12,8 @@
 #include <d3d11.h>
 #include <windows.h>
 
-#include "com_utils.h"
+#include "util/EGLWindow.h"
+#include "util/com_utils.h"
 
 namespace angle
 {
@@ -156,7 +157,7 @@ class D3DTextureTest : public ANGLETest
         EGLDisplay display = window->getDisplay();
         EGLConfig config   = window->getConfig();
 
-        ASSERT(mD3D11Device);
+        EXPECT_TRUE(mD3D11Device != nullptr);
         ID3D11Texture2D *texture = nullptr;
         CD3D11_TEXTURE2D_DESC desc(format, static_cast<UINT>(width), static_cast<UINT>(height), 1,
                                    1, bindFlags);
@@ -215,8 +216,8 @@ class D3DTextureTest : public ANGLETest
             };
 
             // Multisampled textures are not supported on D3D9.
-            ASSERT(sampleCount <= 1);
-            ASSERT(sampleQuality == 0);
+            EXPECT_TRUE(sampleCount <= 1);
+            EXPECT_TRUE(sampleQuality == 0);
 
             IDirect3DTexture9 *texture = nullptr;
             EXPECT_TRUE(SUCCEEDED(mD3D9Device->CreateTexture(
@@ -699,7 +700,7 @@ TEST_P(D3DTextureTest, TypelessD3DTextureNotSupported)
 TEST_P(D3DTextureTest, UnnecessaryWidthHeightAttributes)
 {
     ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
-    ASSERT(mD3D11Device);
+    ASSERT_TRUE(mD3D11Device != nullptr);
     ID3D11Texture2D *texture = nullptr;
     CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, 1, 1, D3D11_BIND_RENDER_TARGET);
     desc.SampleDesc.Count   = 1;

@@ -175,7 +175,7 @@ class CopyTexture3DTest : public ANGLETest
                 renderType = GL_RGBA32F;
                 break;
             default:
-                UNREACHABLE();
+                ASSERT_TRUE(false);
         }
 
         glRenderbufferStorage(GL_RENDERBUFFER, renderType, 1, 1);
@@ -214,19 +214,27 @@ class CopyTexture3DTest : public ANGLETest
         }
         else if (renderType == GL_RGBA8UI)
         {
-            GLint pixel[4] = {0};
+            GLuint pixel[4] = {0};
             glReadPixels(0, 0, 1, 1, GL_RGBA_INTEGER, GL_UNSIGNED_INT, pixel);
-            EXPECT_COLOR_NEAR(expectedColor, GLColor(pixel[0], pixel[1], pixel[2], pixel[3]), 0.2);
+            EXPECT_COLOR_NEAR(
+                expectedColor,
+                GLColor(static_cast<GLubyte>(pixel[0]), static_cast<GLubyte>(pixel[1]),
+                        static_cast<GLubyte>(pixel[2]), static_cast<GLubyte>(pixel[3])),
+                0.2);
         }
         else if (renderType == GL_RGBA8I)
         {
             GLint pixel[4] = {0};
             glReadPixels(0, 0, 1, 1, GL_RGBA_INTEGER, GL_INT, pixel);
-            EXPECT_COLOR_NEAR(expectedColor, GLColor(pixel[0], pixel[1], pixel[2], pixel[3]), 0.2);
+            EXPECT_COLOR_NEAR(
+                expectedColor,
+                GLColor(static_cast<GLubyte>(pixel[0]), static_cast<GLubyte>(pixel[1]),
+                        static_cast<GLubyte>(pixel[2]), static_cast<GLubyte>(pixel[3])),
+                0.2);
         }
         else
         {
-            UNREACHABLE();
+            ASSERT_TRUE(false);
         }
     }
 

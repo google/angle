@@ -7,24 +7,23 @@
 #ifndef SAMPLE_UTIL_WINDOW_H
 #define SAMPLE_UTIL_WINDOW_H
 
-#include <list>
 #include <stdint.h>
+#include <list>
 #include <string>
 
-#include <export.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
+#include <EGL/eglplatform.h>
 
-#include "Event.h"
+#include "util/Event.h"
+#include "util/util_export.h"
 
-class ANGLE_EXPORT OSWindow
+class ANGLE_UTIL_EXPORT OSWindow
 {
   public:
     OSWindow();
     virtual ~OSWindow();
 
     virtual bool initialize(const std::string &name, size_t width, size_t height) = 0;
-    virtual void destroy() = 0;
+    virtual void destroy()                                                        = 0;
 
     int getX() const;
     int getY() const;
@@ -37,7 +36,7 @@ class ANGLE_EXPORT OSWindow
     // just grab the pixels of the window. Returns if it was successful.
     virtual bool takeScreenshot(uint8_t *pixelData);
 
-    virtual EGLNativeWindowType getNativeWindow() const = 0;
+    virtual EGLNativeWindowType getNativeWindow() const   = 0;
     virtual EGLNativeDisplayType getNativeDisplay() const = 0;
 
     virtual void messageLoop() = 0;
@@ -46,9 +45,9 @@ class ANGLE_EXPORT OSWindow
     virtual void pushEvent(Event event);
 
     virtual void setMousePosition(int x, int y) = 0;
-    virtual bool setPosition(int x, int y) = 0;
-    virtual bool resize(int width, int height) = 0;
-    virtual void setVisible(bool isVisible) = 0;
+    virtual bool setPosition(int x, int y)      = 0;
+    virtual bool resize(int width, int height)  = 0;
+    virtual void setVisible(bool isVisible)     = 0;
 
     virtual void signalTestEvent() = 0;
 
@@ -64,6 +63,6 @@ class ANGLE_EXPORT OSWindow
     std::list<Event> mEvents;
 };
 
-ANGLE_EXPORT OSWindow *CreateOSWindow();
+ANGLE_UTIL_EXPORT OSWindow *CreateOSWindow();
 
-#endif // SAMPLE_UTIL_WINDOW_H
+#endif  // SAMPLE_UTIL_WINDOW_H

@@ -16,4 +16,4 @@ The EGL headers ANGLE uses are generated using the Khronos tools but modified to
 1. Set your working directory to `EGL-Registry/api/`.
 1. Run `python genheaders.py -registry egl.xml EGL/egl.h`
 1. The generated header will now be in `EGL-Registry/api/EGL/egl.h`. You can copy the header over to this folder.
-1. Also update `egl.xml` with the latest version from `EGL-Registry/api/`.
+1. Also update `scripts/egl.xml` with the latest version from `EGL-Registry/api/`.

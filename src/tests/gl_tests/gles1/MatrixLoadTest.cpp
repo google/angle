@@ -10,7 +10,7 @@
 #include "test_utils/gl_raii.h"
 
 #include "common/matrix_utils.h"
-#include "random_utils.h"
+#include "util/random_utils.h"
 
 #include <stdint.h>
 

@@ -9,16 +9,15 @@
 #ifndef UTIL_X11_WINDOW_H
 #define UTIL_X11_WINDOW_H
 
-#include <string>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <X11/Xresource.h>
+#include <X11/Xutil.h>
+#include <string>
 
-#include <export.h>
+#include "util/OSWindow.h"
+#include "util/util_export.h"
 
-#include "OSWindow.h"
-
-class ANGLE_EXPORT X11Window : public OSWindow
+class ANGLE_UTIL_EXPORT X11Window : public OSWindow
 {
   public:
     X11Window();
@@ -53,4 +52,4 @@ class ANGLE_EXPORT X11Window : public OSWindow
     bool mVisible;
 };
 
-#endif // UTIL_X11_WINDOW_H
+#endif  // UTIL_X11_WINDOW_H
