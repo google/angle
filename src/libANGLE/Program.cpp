@@ -1098,6 +1098,7 @@ void Program::pathFragmentInputGen(GLint index,
 // The code gets compiled into binaries.
 angle::Result Program::link(const Context *context)
 {
+    ASSERT(mLinkResolved);
     const auto &data = context->getState();
 
     auto *platform   = ANGLEPlatformCurrent();

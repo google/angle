@@ -1442,6 +1442,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->unsizedsRGBReadPixelsDoesntTransform = IsAndroid() && IsQualcomm(vendor);
 
     workarounds->queryCounterBitsGeneratesErrors = IsNexus5X(vendor, device);
+
+    workarounds->dontRelinkProgramsInParallel = IsAndroid() || (IsWindows() && IsIntel(vendor));
 }
 
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)

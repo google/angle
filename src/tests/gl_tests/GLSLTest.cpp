@@ -1912,7 +1912,9 @@ TEST_P(GLSLTest_ES3, AmbiguousFunctionCall2x2)
 TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
 {
     std::stringstream vertexShaderStream;
-    const unsigned int paramCount = 1024u;
+    // This fails on Macos if the number of parameters is larger than 978 when linking in parallel.
+    // http://anglebug.com/3047
+    const unsigned int paramCount = (IsOSX() ? 978u : 1024u);
 
     vertexShaderStream << "#version 300 es\n"
                           "precision highp float;\n"

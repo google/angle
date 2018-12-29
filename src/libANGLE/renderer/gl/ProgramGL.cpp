@@ -16,9 +16,11 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/Uniform.h"
+#include "libANGLE/WorkerThread.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
@@ -31,14 +33,17 @@ ProgramGL::ProgramGL(const gl::ProgramState &data,
                      const FunctionsGL *functions,
                      const WorkaroundsGL &workarounds,
                      StateManagerGL *stateManager,
-                     bool enablePathRendering)
+                     bool enablePathRendering,
+                     const std::shared_ptr<RendererGL> &renderer)
     : ProgramImpl(data),
       mFunctions(functions),
       mWorkarounds(workarounds),
       mStateManager(stateManager),
       mEnablePathRendering(enablePathRendering),
       mMultiviewBaseViewLayerIndexUniformLocation(-1),
-      mProgramID(0)
+      mProgramID(0),
+      mRenderer(renderer),
+      mLinkedInParallel(false)
 {
     ASSERT(mFunctions);
     ASSERT(mStateManager);
@@ -125,17 +130,53 @@ void ProgramGL::setSeparable(bool separable)
     mFunctions->programParameteri(mProgramID, GL_PROGRAM_SEPARABLE, separable ? GL_TRUE : GL_FALSE);
 }
 
+using LinkImplFunctor = std::function<bool()>;
+class ProgramGL::LinkTask final : public angle::Closure
+{
+  public:
+    LinkTask(LinkImplFunctor &&functor) : mLinkImplFunctor(functor), mFallbackToMainContext(false)
+    {}
+
+    void operator()() override { mFallbackToMainContext = mLinkImplFunctor(); }
+    bool fallbackToMainContext() { return mFallbackToMainContext; }
+
+  private:
+    LinkImplFunctor mLinkImplFunctor;
+    bool mFallbackToMainContext;
+};
+
+using PostLinkImplFunctor = std::function<angle::Result(bool)>;
+class ProgramGL::LinkEventGL final : public LinkEvent
+{
+  public:
+    LinkEventGL(std::shared_ptr<angle::WorkerThreadPool> workerPool,
+                std::shared_ptr<ProgramGL::LinkTask> linkTask,
+                PostLinkImplFunctor &&functor)
+        : mWorkerPool(workerPool),
+          mLinkTask(linkTask),
+          mWaitableEvent(
+              std::shared_ptr<angle::WaitableEvent>(workerPool->postWorkerTask(mLinkTask))),
+          mPostLinkImplFunctor(functor)
+    {}
+
+    angle::Result wait(const gl::Context *context) override
+    {
+        mWaitableEvent->wait();
+        return mPostLinkImplFunctor(mLinkTask->fallbackToMainContext());
+    }
+
+    bool isLinking() override { return !mWaitableEvent->isReady(); }
+
+  private:
+    std::shared_ptr<angle::WorkerThreadPool> mWorkerPool;
+    std::shared_ptr<ProgramGL::LinkTask> mLinkTask;
+    std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
+    PostLinkImplFunctor mPostLinkImplFunctor;
+};
+
 std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog)
-{
-    // TODO(jie.a.chen@intel.com): Parallelize linking.
-    return std::make_unique<LinkEventDone>(linkImpl(context, resources, infoLog));
-}
-
-angle::Result ProgramGL::linkImpl(const gl::Context *context,
-                                  const gl::ProgramLinkedResources &resources,
-                                  gl::InfoLog &infoLog)
 {
     preLink();
 
@@ -145,12 +186,6 @@ angle::Result ProgramGL::linkImpl(const gl::Context *context,
             GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Compute));
 
         mFunctions->attachShader(mProgramID, computeShaderGL->getShaderID());
-
-        // Link and verify
-        mFunctions->linkProgram(mProgramID);
-
-        // Detach the shaders
-        mFunctions->detachShader(mProgramID, computeShaderGL->getShaderID());
     }
     else
     {
@@ -321,34 +356,85 @@ angle::Result ProgramGL::linkImpl(const gl::Context *context,
                 }
             }
         }
+    }
+    auto workerPool = context->getWorkerThreadPool();
+    auto linkTask   = std::make_shared<LinkTask>([this]() {
+        std::string infoLog;
+        ScopedWorkerContextGL worker(mRenderer.get(), &infoLog);
+        if (!worker())
+        {
+#if !defined(NDEBUG)
+            WARN() << "bindWorkerContext failed." << std::endl << infoLog;
+#endif
+            // Fallback to the main context.
+            return true;
+        }
 
-        // Link and verify
         mFunctions->linkProgram(mProgramID);
 
-        // Detach the shaders
-        mFunctions->detachShader(mProgramID, vertexShaderGL->getShaderID());
-        mFunctions->detachShader(mProgramID, fragmentShaderGL->getShaderID());
-        if (geometryShaderGL)
+        // Make sure the driver actually does the link job.
+        GLint linkStatus = GL_FALSE;
+        mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
+
+        return false;
+    });
+
+    auto postLinkImplTask = [this, &infoLog, &resources](bool fallbackToMainContext) {
+        if (fallbackToMainContext)
         {
-            mFunctions->detachShader(mProgramID, geometryShaderGL->getShaderID());
+            mFunctions->linkProgram(mProgramID);
         }
-    }
 
-    // Verify the link
-    if (!checkLinkStatus(infoLog))
+        if (mState.getAttachedShader(gl::ShaderType::Compute))
+        {
+            const ShaderGL *computeShaderGL =
+                GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Compute));
+
+            mFunctions->detachShader(mProgramID, computeShaderGL->getShaderID());
+        }
+        else
+        {
+            const ShaderGL *vertexShaderGL =
+                GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Vertex));
+            const ShaderGL *fragmentShaderGL =
+                GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Fragment));
+            const ShaderGL *geometryShaderGL = rx::SafeGetImplAs<ShaderGL, gl::Shader>(
+                mState.getAttachedShader(gl::ShaderType::Geometry));
+
+            // Detach the shaders
+            mFunctions->detachShader(mProgramID, vertexShaderGL->getShaderID());
+            mFunctions->detachShader(mProgramID, fragmentShaderGL->getShaderID());
+            if (geometryShaderGL)
+            {
+                mFunctions->detachShader(mProgramID, geometryShaderGL->getShaderID());
+            }
+        }
+        // Verify the link
+        if (!checkLinkStatus(infoLog))
+        {
+            return angle::Result::Incomplete;
+        }
+
+        if (mWorkarounds.alwaysCallUseProgramAfterLink)
+        {
+            mStateManager->forceUseProgram(mProgramID);
+        }
+
+        linkResources(resources);
+        postLink();
+
+        return angle::Result::Continue;
+    };
+
+    if (workerPool->isAsync() && (!mWorkarounds.dontRelinkProgramsInParallel || !mLinkedInParallel))
     {
-        return angle::Result::Incomplete;
+        mLinkedInParallel = true;
+        return std::make_unique<LinkEventGL>(workerPool, linkTask, postLinkImplTask);
     }
-
-    if (mWorkarounds.alwaysCallUseProgramAfterLink)
+    else
     {
-        mStateManager->forceUseProgram(mProgramID);
+        return std::make_unique<LinkEventDone>(postLinkImplTask(true));
     }
-
-    linkResources(resources);
-    postLink();
-
-    return angle::Result::Continue;
 }
 
 GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)

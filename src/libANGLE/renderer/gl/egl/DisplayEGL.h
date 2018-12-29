@@ -11,9 +11,12 @@
 
 #include "libANGLE/renderer/gl/DisplayGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGL.h"
+#include "libANGLE/renderer/gl/egl/egl_utils.h"
 
 namespace rx
 {
+
+class WorkerContext;
 
 class DisplayEGL : public DisplayGL
 {
@@ -32,10 +35,15 @@ class DisplayEGL : public DisplayGL
 
     virtual void destroyNativeContext(EGLContext context) = 0;
 
+    virtual WorkerContext *createWorkerContext(std::string *infoLog,
+                                               EGLContext sharedContext,
+                                               const native_egl::AttributeVector workerAttribs) = 0;
+
   protected:
     egl::Error initializeContext(EGLContext shareContext,
                                  const egl::AttributeMap &eglAttributes,
-                                 EGLContext *outContext) const;
+                                 EGLContext *outContext,
+                                 native_egl::AttributeVector *outAttribs) const;
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 

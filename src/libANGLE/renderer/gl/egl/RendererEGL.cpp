@@ -14,8 +14,12 @@ namespace rx
 RendererEGL::RendererEGL(std::unique_ptr<FunctionsGL> functionsGL,
                          const egl::AttributeMap &attribMap,
                          DisplayEGL *display,
-                         EGLContext context)
-    : RendererGL(std::move(functionsGL), attribMap), mDisplay(display), mContext(context)
+                         EGLContext context,
+                         const native_egl::AttributeVector attribs)
+    : RendererGL(std::move(functionsGL), attribMap),
+      mDisplay(display),
+      mContext(context),
+      mAttribs(attribs)
 {}
 
 RendererEGL::~RendererEGL()
@@ -27,6 +31,11 @@ RendererEGL::~RendererEGL()
 EGLContext RendererEGL::getContext() const
 {
     return mContext;
+}
+
+WorkerContext *RendererEGL::createWorkerContext(std::string *infoLog)
+{
+    return mDisplay->createWorkerContext(infoLog, mContext, mAttribs);
 }
 
 }  // namespace rx

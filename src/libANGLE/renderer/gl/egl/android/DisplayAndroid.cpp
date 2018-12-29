@@ -602,7 +602,8 @@ egl::Error DisplayAndroid::createRenderer(EGLContext shareContext,
                                           std::shared_ptr<RendererEGL> *outRenderer)
 {
     EGLContext context = EGL_NO_CONTEXT;
-    ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context));
+    native_egl::AttributeVector attribs;
+    ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context, &attribs));
 
     if (mEGL->makeCurrent(mDummyPbuffer, context) == EGL_FALSE)
     {
@@ -613,7 +614,8 @@ egl::Error DisplayAndroid::createRenderer(EGLContext shareContext,
     std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
     functionsGL->initialize(mDisplayAttributes);
 
-    outRenderer->reset(new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context));
+    outRenderer->reset(
+        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs));
 
     CurrentNativeContext &currentContext = mCurrentNativeContext[std::this_thread::get_id()];
     if (makeNewContextCurrent)
@@ -632,6 +634,60 @@ egl::Error DisplayAndroid::createRenderer(EGLContext shareContext,
     }
 
     return egl::NoError();
+}
+
+class WorkerContextAndroid final : public WorkerContext
+{
+  public:
+    WorkerContextAndroid(EGLContext context, FunctionsEGL *functions, EGLSurface pbuffer);
+    ~WorkerContextAndroid() override;
+
+    bool makeCurrent() override;
+    void unmakeCurrent() override;
+
+  private:
+    EGLContext mContext;
+    FunctionsEGL *mFunctions;
+    EGLSurface mPbuffer;
+};
+
+WorkerContextAndroid::WorkerContextAndroid(EGLContext context,
+                                           FunctionsEGL *functions,
+                                           EGLSurface pbuffer)
+    : mContext(context), mFunctions(functions), mPbuffer(pbuffer)
+{}
+
+WorkerContextAndroid::~WorkerContextAndroid()
+{
+    mFunctions->destroyContext(mContext);
+}
+
+bool WorkerContextAndroid::makeCurrent()
+{
+    if (mFunctions->makeCurrent(mPbuffer, mContext) == EGL_FALSE)
+    {
+        ERR() << "Unable to make the EGL context current.";
+        return false;
+    }
+    return true;
+}
+
+void WorkerContextAndroid::unmakeCurrent()
+{
+    mFunctions->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
+}
+
+WorkerContext *DisplayAndroid::createWorkerContext(std::string *infoLog,
+                                                   EGLContext sharedContext,
+                                                   const native_egl::AttributeVector workerAttribs)
+{
+    EGLContext context = mEGL->createContext(mConfig, sharedContext, workerAttribs.data());
+    if (context == EGL_NO_CONTEXT)
+    {
+        *infoLog += "Unable to create the EGL context.";
+        return nullptr;
+    }
+    return new WorkerContextAndroid(context, mEGL, mDummyPbuffer);
 }
 
 }  // namespace rx

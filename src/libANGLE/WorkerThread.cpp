@@ -49,6 +49,7 @@ class SingleThreadedWorkerPool final : public WorkerThreadPool
   public:
     std::shared_ptr<WaitableEvent> postWorkerTask(std::shared_ptr<Closure> task) override;
     void setMaxThreads(size_t maxThreads) override;
+    bool isAsync() override;
 };
 
 // SingleThreadedWorkerPool implementation.
@@ -60,6 +61,11 @@ std::shared_ptr<WaitableEvent> SingleThreadedWorkerPool::postWorkerTask(
 }
 
 void SingleThreadedWorkerPool::setMaxThreads(size_t maxThreads) {}
+
+bool SingleThreadedWorkerPool::isAsync()
+{
+    return false;
+}
 
 #if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
 class AsyncWaitableEvent final : public WaitableEvent
@@ -120,6 +126,7 @@ class AsyncWorkerPool final : public WorkerThreadPool
 
     std::shared_ptr<WaitableEvent> postWorkerTask(std::shared_ptr<Closure> task) override;
     void setMaxThreads(size_t maxThreads) override;
+    bool isAsync() override;
 
   private:
     void checkToRunPendingTasks();
@@ -154,6 +161,11 @@ void AsyncWorkerPool::setMaxThreads(size_t maxThreads)
         mMaxThreads = (maxThreads == 0xFFFFFFFF ? std::thread::hardware_concurrency() : maxThreads);
     }
     checkToRunPendingTasks();
+}
+
+bool AsyncWorkerPool::isAsync()
+{
+    return true;
 }
 
 void AsyncWorkerPool::checkToRunPendingTasks()

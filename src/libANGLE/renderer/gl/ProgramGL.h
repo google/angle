@@ -19,6 +19,7 @@ namespace rx
 {
 
 class FunctionsGL;
+class RendererGL;
 class StateManagerGL;
 
 class ProgramGL : public ProgramImpl
@@ -28,7 +29,8 @@ class ProgramGL : public ProgramImpl
               const FunctionsGL *functions,
               const WorkaroundsGL &workarounds,
               StateManagerGL *stateManager,
-              bool enablePathRendering);
+              bool enablePathRendering,
+              const std::shared_ptr<RendererGL> &renderer);
     ~ProgramGL() override;
 
     angle::Result load(const gl::Context *context,
@@ -114,12 +116,12 @@ class ProgramGL : public ProgramImpl
                             const gl::Program::DirtyBits &dirtyBits) override;
 
   private:
+    class LinkTask;
+    class LinkEventGL;
+
     void preLink();
     bool checkLinkStatus(gl::InfoLog &infoLog);
     void postLink();
-    angle::Result linkImpl(const gl::Context *contextImpl,
-                           const gl::ProgramLinkedResources &resources,
-                           gl::InfoLog &infoLog);
 
     void reapplyUBOBindingsIfNeeded(const gl::Context *context);
 
@@ -161,6 +163,10 @@ class ProgramGL : public ProgramImpl
     GLint mMultiviewBaseViewLayerIndexUniformLocation;
 
     GLuint mProgramID;
+
+    std::shared_ptr<RendererGL> mRenderer;
+
+    bool mLinkedInParallel;
 };
 
 }  // namespace rx

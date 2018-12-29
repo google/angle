@@ -23,11 +23,13 @@ namespace rx
 ShaderGL::ShaderGL(const gl::ShaderState &data,
                    GLuint shaderID,
                    MultiviewImplementationTypeGL multiviewImplementationType,
-                   const FunctionsGL *functions)
+                   const std::shared_ptr<RendererGL> &renderer)
     : ShaderImpl(data),
       mShaderID(shaderID),
       mMultiviewImplementationType(multiviewImplementationType),
-      mFunctions(functions)
+      mRenderer(renderer),
+      mFallbackToMainThread(true),
+      mCompileStatus(GL_FALSE)
 {}
 
 ShaderGL::~ShaderGL()
@@ -37,7 +39,7 @@ ShaderGL::~ShaderGL()
 
 void ShaderGL::destroy()
 {
-    mFunctions->deleteShader(mShaderID);
+    mRenderer->getFunctions()->deleteShader(mShaderID);
     mShaderID = 0;
 }
 
@@ -138,41 +140,70 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(const gl::Context *cont
         options |= SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER;
     }
 
+    mFallbackToMainThread = true;
+
     return options;
 }
 
-bool ShaderGL::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
+void ShaderGL::compileAndCheckShader(const char *source)
 {
-    // Translate the ESSL into GLSL
-    const char *translatedSourceCString = mData.getTranslatedSource().c_str();
-
-    // Set the source
-    mFunctions->shaderSource(mShaderID, 1, &translatedSourceCString, nullptr);
-    mFunctions->compileShader(mShaderID);
+    const FunctionsGL *functions = mRenderer->getFunctions();
+    functions->shaderSource(mShaderID, 1, &source, nullptr);
+    functions->compileShader(mShaderID);
 
     // Check for compile errors from the native driver
-    GLint compileStatus = GL_FALSE;
-    mFunctions->getShaderiv(mShaderID, GL_COMPILE_STATUS, &compileStatus);
-    if (compileStatus == GL_FALSE)
+    mCompileStatus = GL_FALSE;
+    functions->getShaderiv(mShaderID, GL_COMPILE_STATUS, &mCompileStatus);
+    if (mCompileStatus == GL_FALSE)
     {
         // Compilation failed, put the error into the info log
         GLint infoLogLength = 0;
-        mFunctions->getShaderiv(mShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+        functions->getShaderiv(mShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
         // Info log length includes the null terminator, so 1 means that the info log is an empty
         // string.
         if (infoLogLength > 1)
         {
             std::vector<char> buf(infoLogLength);
-            mFunctions->getShaderInfoLog(mShaderID, infoLogLength, nullptr, &buf[0]);
+            functions->getShaderInfoLog(mShaderID, infoLogLength, nullptr, &buf[0]);
 
-            *infoLog = &buf[0];
-            WARN() << std::endl << *infoLog;
+            mInfoLog = &buf[0];
+            WARN() << std::endl << mInfoLog;
         }
         else
         {
             WARN() << std::endl << "Shader compilation failed with no info log.";
         }
+    }
+}
+
+void ShaderGL::compileAsync(const std::string &source)
+{
+    std::string infoLog;
+    ScopedWorkerContextGL worker(mRenderer.get(), &infoLog);
+    if (worker())
+    {
+        compileAndCheckShader(source.c_str());
+        mFallbackToMainThread = false;
+    }
+    else
+    {
+#if !defined(NDEBUG)
+        WARN() << "bindWorkerContext failed." << std::endl << infoLog;
+#endif
+    }
+}
+
+bool ShaderGL::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
+{
+    if (mFallbackToMainThread)
+    {
+        const char *translatedSourceCString = mData.getTranslatedSource().c_str();
+        compileAndCheckShader(translatedSourceCString);
+    }
+    if (mCompileStatus == GL_FALSE)
+    {
+        *infoLog = mInfoLog;
         return false;
     }
 

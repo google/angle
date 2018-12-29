@@ -228,6 +228,7 @@ class ContextGL : public ContextImpl
 
     angle::Result setDrawIndirectState(const gl::Context *context);
 
+  protected:
     std::shared_ptr<RendererGL> mRenderer;
 };
 

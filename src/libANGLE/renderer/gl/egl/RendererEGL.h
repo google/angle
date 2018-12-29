@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_GL_EGL_RENDEREREGL_H_
 
 #include "libANGLE/renderer/gl/RendererGL.h"
+#include "libANGLE/renderer/gl/egl/egl_utils.h"
 
 namespace rx
 {
@@ -21,14 +22,18 @@ class RendererEGL : public RendererGL
     RendererEGL(std::unique_ptr<FunctionsGL> functionsGL,
                 const egl::AttributeMap &attribMap,
                 DisplayEGL *display,
-                EGLContext context);
+                EGLContext context,
+                const native_egl::AttributeVector attribs);
     ~RendererEGL() override;
 
     EGLContext getContext() const;
 
+    WorkerContext *createWorkerContext(std::string *infoLog) override;
+
   private:
     DisplayEGL *mDisplay;
     EGLContext mContext;
+    const native_egl::AttributeVector mAttribs;
 };
 }  // namespace rx
 

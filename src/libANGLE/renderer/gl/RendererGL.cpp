@@ -222,6 +222,11 @@ RendererGL::~RendererGL()
     SafeDelete(mBlitter);
     SafeDelete(mMultiviewClearer);
     SafeDelete(mStateManager);
+
+    std::lock_guard<std::mutex> lock(mWorkerMutex);
+
+    ASSERT(mCurrentWorkerContexts.empty());
+    mWorkerContextPool.clear();
 }
 
 angle::Result RendererGL::flush()
@@ -557,6 +562,73 @@ angle::Result RendererGL::memoryBarrierByRegion(GLbitfield barriers)
 {
     mFunctions->memoryBarrierByRegion(barriers);
     return angle::Result::Continue;
+}
+
+bool RendererGL::bindWorkerContext(std::string *infoLog)
+{
+    std::thread::id threadID = std::this_thread::get_id();
+    std::lock_guard<std::mutex> lock(mWorkerMutex);
+    std::unique_ptr<WorkerContext> workerContext;
+    if (!mWorkerContextPool.empty())
+    {
+        auto it       = mWorkerContextPool.begin();
+        workerContext = std::move(*it);
+        mWorkerContextPool.erase(it);
+    }
+    else
+    {
+        WorkerContext *newContext = createWorkerContext(infoLog);
+        if (newContext == nullptr)
+        {
+            return false;
+        }
+        workerContext.reset(newContext);
+    }
+
+    if (!workerContext->makeCurrent())
+    {
+        mWorkerContextPool.push_back(std::move(workerContext));
+        return false;
+    }
+    mCurrentWorkerContexts[threadID] = std::move(workerContext);
+    return true;
+}
+
+void RendererGL::unbindWorkerContext()
+{
+    std::thread::id threadID = std::this_thread::get_id();
+    std::lock_guard<std::mutex> lock(mWorkerMutex);
+
+    auto it = mCurrentWorkerContexts.find(threadID);
+    ASSERT(it != mCurrentWorkerContexts.end());
+    (*it).second->unmakeCurrent();
+    mWorkerContextPool.push_back(std::move((*it).second));
+    mCurrentWorkerContexts.erase(it);
+}
+
+unsigned int RendererGL::getMaxWorkerContexts()
+{
+    // No more than 16 worker contexts.
+    return std::min(16u, std::thread::hardware_concurrency());
+}
+
+ScopedWorkerContextGL::ScopedWorkerContextGL(RendererGL *renderer, std::string *infoLog)
+    : mRenderer(renderer)
+{
+    mValid = mRenderer->bindWorkerContext(infoLog);
+}
+
+ScopedWorkerContextGL::~ScopedWorkerContextGL()
+{
+    if (mValid)
+    {
+        mRenderer->unbindWorkerContext();
+    }
+}
+
+bool ScopedWorkerContextGL::operator()() const
+{
+    return mValid;
 }
 
 }  // namespace rx

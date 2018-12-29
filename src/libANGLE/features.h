@@ -53,13 +53,8 @@
 #endif
 
 // Controls if our threading code uses std::async or falls back to single-threaded operations.
-// TODO(jmadill): Enable on Linux once STL chrono headers are updated.
 #if !defined(ANGLE_STD_ASYNC_WORKERS)
-#    if defined(ANGLE_PLATFORM_WINDOWS)
-#        define ANGLE_STD_ASYNC_WORKERS ANGLE_ENABLED
-#    else
-#        define ANGLE_STD_ASYNC_WORKERS ANGLE_DISABLED
-#    endif  // defined(ANGLE_PLATFORM_WINDOWS)
+#    define ANGLE_STD_ASYNC_WORKERS ANGLE_ENABLED
 #endif      // !defined(ANGLE_STD_ASYNC_WORKERS)
 
 // Force thread safety in all of ANGLE by locking a global mutex in every ANGLE entry point.

@@ -15,9 +15,9 @@
 #include "common/debug.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
-#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
 #include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
+#include "libANGLE/renderer/gl/cgl/RendererCGL.h"
 #include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
 namespace
@@ -49,7 +49,7 @@ class FunctionsGLCGL : public FunctionsGL
 };
 
 DisplayCGL::DisplayCGL(const egl::DisplayState &state)
-    : DisplayGL(state), mEGLDisplay(nullptr), mContext(nullptr)
+    : DisplayGL(state), mEGLDisplay(nullptr), mContext(nullptr), mPixelFormat(nullptr)
 {}
 
 DisplayCGL::~DisplayCGL() {}
@@ -58,22 +58,21 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
 {
     mEGLDisplay = display;
 
-    CGLPixelFormatObj pixelFormat;
     {
         // TODO(cwallez) investigate which pixel format we want
         CGLPixelFormatAttribute attribs[] = {
             kCGLPFAOpenGLProfile, static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core),
             static_cast<CGLPixelFormatAttribute>(0)};
         GLint nVirtualScreens = 0;
-        CGLChoosePixelFormat(attribs, &pixelFormat, &nVirtualScreens);
+        CGLChoosePixelFormat(attribs, &mPixelFormat, &nVirtualScreens);
 
-        if (pixelFormat == nullptr)
+        if (mPixelFormat == nullptr)
         {
             return egl::EglNotInitialized() << "Could not create the context's pixel format.";
         }
     }
 
-    CGLCreateContext(pixelFormat, nullptr, &mContext);
+    CGLCreateContext(mPixelFormat, nullptr, &mContext);
     if (mContext == nullptr)
     {
         return egl::EglNotInitialized() << "Could not create the CGL context.";
@@ -94,7 +93,7 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
     std::unique_ptr<FunctionsGL> functionsGL(new FunctionsGLCGL(handle));
     functionsGL->initialize(display->getAttributeMap());
 
-    mRenderer.reset(new RendererGL(std::move(functionsGL), display->getAttributeMap()));
+    mRenderer.reset(new RendererCGL(std::move(functionsGL), display->getAttributeMap(), this));
 
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
@@ -315,5 +314,56 @@ egl::Error DisplayCGL::makeCurrentSurfaceless(gl::Context *context)
     // We have nothing to do as mContext is always current, and that CGL is surfaceless by
     // default.
     return egl::NoError();
+}
+
+class WorkerContextCGL final : public WorkerContext
+{
+  public:
+    WorkerContextCGL(CGLContextObj context);
+    ~WorkerContextCGL() override;
+
+    bool makeCurrent() override;
+    void unmakeCurrent() override;
+
+  private:
+    CGLContextObj mContext;
+};
+
+WorkerContextCGL::WorkerContextCGL(CGLContextObj context) : mContext(context) {}
+
+WorkerContextCGL::~WorkerContextCGL()
+{
+    CGLSetCurrentContext(nullptr);
+    CGLReleaseContext(mContext);
+    mContext = nullptr;
+}
+
+bool WorkerContextCGL::makeCurrent()
+{
+    CGLError error = CGLSetCurrentContext(mContext);
+    if (error != kCGLNoError)
+    {
+        ERR() << "Unable to make gl context current.";
+        return false;
+    }
+    return true;
+}
+
+void WorkerContextCGL::unmakeCurrent()
+{
+    CGLSetCurrentContext(nullptr);
+}
+
+WorkerContext *DisplayCGL::createWorkerContext(std::string *infoLog)
+{
+    CGLContextObj context = nullptr;
+    CGLCreateContext(mPixelFormat, mContext, &context);
+    if (context == nullptr)
+    {
+        *infoLog += "Could not create the CGL context.";
+        return nullptr;
+    }
+
+    return new WorkerContextCGL(context);
 }
 }

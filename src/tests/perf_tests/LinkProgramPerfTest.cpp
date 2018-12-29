@@ -19,7 +19,7 @@ using namespace angle;
 namespace
 {
 
-enum class LinkProgramOption
+enum class TaskOption
 {
     CompileOnly,
     CompileAndLink,
@@ -27,9 +27,17 @@ enum class LinkProgramOption
     Unspecified
 };
 
+enum class ThreadOption
+{
+    SingleThread,
+    MultiThread,
+
+    Unspecified
+};
+
 struct LinkProgramParams final : public RenderTestParams
 {
-    LinkProgramParams(LinkProgramOption optionIn)
+    LinkProgramParams(TaskOption taskOptionIn, ThreadOption threadOptionIn)
     {
         iterationsPerStep = 1;
 
@@ -37,7 +45,8 @@ struct LinkProgramParams final : public RenderTestParams
         minorVersion = 0;
         windowWidth  = 256;
         windowHeight = 256;
-        option       = optionIn;
+        taskOption   = taskOptionIn;
+        threadOption = threadOptionIn;
     }
 
     std::string suffix() const override
@@ -45,9 +54,22 @@ struct LinkProgramParams final : public RenderTestParams
         std::stringstream strstr;
         strstr << RenderTestParams::suffix();
 
-        if (option == LinkProgramOption::CompileOnly)
+        if (taskOption == TaskOption::CompileOnly)
         {
             strstr << "_compile_only";
+        }
+        else if (taskOption == TaskOption::CompileAndLink)
+        {
+            strstr << "_compile_and_link";
+        }
+
+        if (threadOption == ThreadOption::SingleThread)
+        {
+            strstr << "_single_thread";
+        }
+        else if (threadOption == ThreadOption::MultiThread)
+        {
+            strstr << "_multi_thread";
         }
 
         if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
@@ -58,7 +80,8 @@ struct LinkProgramParams final : public RenderTestParams
         return strstr.str();
     }
 
-    LinkProgramOption option;
+    TaskOption taskOption;
+    ThreadOption threadOption;
 };
 
 std::ostream &operator<<(std::ostream &os, const LinkProgramParams &params)
@@ -85,6 +108,11 @@ LinkProgramBenchmark::LinkProgramBenchmark() : ANGLERenderTest("LinkProgram", Ge
 
 void LinkProgramBenchmark::initializeBenchmark()
 {
+    if (GetParam().threadOption == ThreadOption::SingleThread)
+    {
+        glMaxShaderCompilerThreadsKHR(0);
+    }
+
     std::array<Vector3, 6> vertices = {{Vector3(-1.0f, 1.0f, 0.5f), Vector3(-1.0f, -1.0f, 0.5f),
                                         Vector3(1.0f, -1.0f, 0.5f), Vector3(-1.0f, 1.0f, 0.5f),
                                         Vector3(1.0f, -1.0f, 0.5f), Vector3(1.0f, 1.0f, 0.5f)}};
@@ -117,7 +145,7 @@ void LinkProgramBenchmark::drawBenchmark()
 
     ASSERT_NE(0u, vs);
     ASSERT_NE(0u, fs);
-    if (GetParam().option == LinkProgramOption::CompileOnly)
+    if (GetParam().taskOption == TaskOption::CompileOnly)
     {
         glDeleteShader(vs);
         glDeleteShader(fs);
@@ -146,30 +174,30 @@ void LinkProgramBenchmark::drawBenchmark()
 
 using namespace egl_platform;
 
-LinkProgramParams LinkProgramD3D11Params(LinkProgramOption option)
+LinkProgramParams LinkProgramD3D11Params(TaskOption taskOption, ThreadOption threadOption)
 {
-    LinkProgramParams params(option);
+    LinkProgramParams params(taskOption, threadOption);
     params.eglParameters = D3D11();
     return params;
 }
 
-LinkProgramParams LinkProgramD3D9Params(LinkProgramOption option)
+LinkProgramParams LinkProgramD3D9Params(TaskOption taskOption, ThreadOption threadOption)
 {
-    LinkProgramParams params(option);
+    LinkProgramParams params(taskOption, threadOption);
     params.eglParameters = D3D9();
     return params;
 }
 
-LinkProgramParams LinkProgramOpenGLOrGLESParams(LinkProgramOption option)
+LinkProgramParams LinkProgramOpenGLOrGLESParams(TaskOption taskOption, ThreadOption threadOption)
 {
-    LinkProgramParams params(option);
+    LinkProgramParams params(taskOption, threadOption);
     params.eglParameters = OPENGL_OR_GLES(false);
     return params;
 }
 
-LinkProgramParams LinkProgramVulkanParams(LinkProgramOption option)
+LinkProgramParams LinkProgramVulkanParams(TaskOption taskOption, ThreadOption threadOption)
 {
-    LinkProgramParams params(option);
+    LinkProgramParams params(taskOption, threadOption);
     params.eglParameters = VULKAN();
     return params;
 }
@@ -179,14 +207,23 @@ TEST_P(LinkProgramBenchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(LinkProgramBenchmark,
-                       LinkProgramD3D11Params(LinkProgramOption::CompileOnly),
-                       LinkProgramD3D9Params(LinkProgramOption::CompileOnly),
-                       LinkProgramOpenGLOrGLESParams(LinkProgramOption::CompileOnly),
-                       LinkProgramVulkanParams(LinkProgramOption::CompileOnly),
-                       LinkProgramD3D11Params(LinkProgramOption::CompileAndLink),
-                       LinkProgramD3D9Params(LinkProgramOption::CompileAndLink),
-                       LinkProgramOpenGLOrGLESParams(LinkProgramOption::CompileAndLink),
-                       LinkProgramVulkanParams(LinkProgramOption::CompileAndLink));
+ANGLE_INSTANTIATE_TEST(
+    LinkProgramBenchmark,
+    LinkProgramD3D11Params(TaskOption::CompileOnly, ThreadOption::MultiThread),
+    LinkProgramD3D9Params(TaskOption::CompileOnly, ThreadOption::MultiThread),
+    LinkProgramOpenGLOrGLESParams(TaskOption::CompileOnly, ThreadOption::MultiThread),
+    LinkProgramVulkanParams(TaskOption::CompileOnly, ThreadOption::MultiThread),
+    LinkProgramD3D11Params(TaskOption::CompileAndLink, ThreadOption::MultiThread),
+    LinkProgramD3D9Params(TaskOption::CompileAndLink, ThreadOption::MultiThread),
+    LinkProgramOpenGLOrGLESParams(TaskOption::CompileAndLink, ThreadOption::MultiThread),
+    LinkProgramVulkanParams(TaskOption::CompileAndLink, ThreadOption::MultiThread),
+    LinkProgramD3D11Params(TaskOption::CompileOnly, ThreadOption::SingleThread),
+    LinkProgramD3D9Params(TaskOption::CompileOnly, ThreadOption::SingleThread),
+    LinkProgramOpenGLOrGLESParams(TaskOption::CompileOnly, ThreadOption::SingleThread),
+    LinkProgramVulkanParams(TaskOption::CompileOnly, ThreadOption::SingleThread),
+    LinkProgramD3D11Params(TaskOption::CompileAndLink, ThreadOption::SingleThread),
+    LinkProgramD3D9Params(TaskOption::CompileAndLink, ThreadOption::SingleThread),
+    LinkProgramOpenGLOrGLESParams(TaskOption::CompileAndLink, ThreadOption::SingleThread),
+    LinkProgramVulkanParams(TaskOption::CompileAndLink, ThreadOption::SingleThread));
 
 }  // anonymous namespace
