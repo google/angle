@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ec37426c_f05ec87d",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "016ccf8a_e2c7a3c0",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 65
+      },
+      "revId": "f307584255da6268a8202291554c51e66abc0b9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12c79849_8bbea045",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 12
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6dfdf305_65123ce5",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 0,
+      "message": "Yeah, seems like it\u0027s not necessary.",
+      "parentUuid": "12c79849_8bbea045",
+      "range": {
+        "startLine": 2252,
+        "startChar": 0,
+        "endLine": 2253,
+        "endChar": 38
+      },
+      "revId": "f307584255da6268a8202291554c51e66abc0b9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "254e025b_6d923d70",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 12
@@ -68,6 +116,30 @@
       "revId": "f307584255da6268a8202291554c51e66abc0b9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50153787_2340ca8d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2298,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "254e025b_6d923d70",
+      "range": {
+        "startLine": 2294,
+        "startChar": 0,
+        "endLine": 2298,
+        "endChar": 5
+      },
+      "revId": "f307584255da6268a8202291554c51e66abc0b9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

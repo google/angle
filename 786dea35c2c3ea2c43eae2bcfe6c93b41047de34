@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f1ae57ea_e6be45a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c7f6a22_7dcfcffc",
+      "range": {
+        "startLine": 23,
+        "startChar": 38,
+        "endLine": 23,
+        "endChar": 42
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6abc79cf_4f2ce5c8",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 12
@@ -45,6 +69,30 @@
       "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a9aaa3d_60ae4751",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 1,
+      "message": "Well, either it\u0027s fine or we don\u0027t have a test for it, thus it\u0027s fine. :)",
+      "parentUuid": "6abc79cf_4f2ce5c8",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 7
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "827602c4_ddd92f07",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 1,
+      "message": "I\u0027d prefer not to because some implementations of BlockEncoderVisitor don\u0027t output to a BlockLayoutMap. (See UniformEncodingVisitorD3D).",
+      "parentUuid": "6dacc46d_89b5cf5d",
+      "range": {
+        "startLine": 39,
+        "startChar": 20,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7b9b5e1_3c583b77",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 12
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "6ed21725_4246b23d",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 1,
+      "message": "This was intentional... \"are we inside a row major layout specifier\"?",
+      "parentUuid": "d7b9b5e1_3c583b77",
+      "range": {
+        "startLine": 46,
+        "startChar": 32,
+        "endLine": 46,
+        "endChar": 34
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e199d5fa_a6c453d2",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 12
@@ -114,6 +210,30 @@
       "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7ee3741_d0049845",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-12-29T00:25:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e199d5fa_a6c453d2",
+      "range": {
+        "startLine": 66,
+        "startChar": 38,
+        "endLine": 66,
+        "endChar": 40
+      },
+      "revId": "786dea35c2c3ea2c43eae2bcfe6c93b41047de34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
