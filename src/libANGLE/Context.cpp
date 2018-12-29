@@ -130,17 +130,6 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
     }
 }
 
-ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const Context *context,
-                                                   GLsizei count,
-                                                   GLsizei instanceCount)
-{
-    if (context->getStateCache().isTransformFeedbackActiveUnpaused())
-    {
-        TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        transformFeedback->onVerticesDrawn(context, count, instanceCount);
-    }
-}
-
 // Attribute map queries.
 EGLint GetClientMajorVersion(const egl::AttributeMap &attribs)
 {
@@ -253,20 +242,6 @@ void LimitCap(CapT *cap, MaxT maximum)
 {
     *cap = std::min(*cap, static_cast<CapT>(maximum));
 }
-
-constexpr angle::PackedEnumMap<PrimitiveMode, GLsizei> kMinimumPrimitiveCounts = {{
-    {PrimitiveMode::Points, 1},
-    {PrimitiveMode::Lines, 2},
-    {PrimitiveMode::LineLoop, 2},
-    {PrimitiveMode::LineStrip, 2},
-    {PrimitiveMode::Triangles, 3},
-    {PrimitiveMode::TriangleStrip, 3},
-    {PrimitiveMode::TriangleFan, 3},
-    {PrimitiveMode::LinesAdjacency, 2},
-    {PrimitiveMode::LineStripAdjacency, 2},
-    {PrimitiveMode::TrianglesAdjacency, 3},
-    {PrimitiveMode::TriangleStripAdjacency, 3},
-}};
 
 // The rest default to false.
 constexpr angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMode>() + 1>
@@ -2201,19 +2176,6 @@ void Context::texParameterIuivRobust(TextureType target,
     UNIMPLEMENTED();
 }
 
-void Context::drawArrays(PrimitiveMode mode, GLint first, GLsizei count)
-{
-    // No-op if count draws no primitives for given mode
-    if (noopDraw(mode, count))
-    {
-        return;
-    }
-
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
-    ANGLE_CONTEXT_TRY(mImplementation->drawArrays(this, mode, first, count));
-    MarkTransformFeedbackBufferUsage(this, count, 1);
-}
-
 void Context::drawArraysInstanced(PrimitiveMode mode,
                                   GLint first,
                                   GLsizei count,
@@ -3476,14 +3438,6 @@ void Context::initWorkarounds()
         mTexImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
         mTexImageDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
     }
-}
-
-// Return true if the draw is a no-op, else return false.
-//  A no-op draw occurs if the count of vertices is less than the minimum required to
-//  have a valid primitive for this mode (0 for points, 0-1 for lines, 0-2 for tris).
-bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
-{
-    return count < kMinimumPrimitiveCounts[mode];
 }
 
 bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount)
@@ -5105,13 +5059,6 @@ void Context::bindAttribLocation(GLuint program, GLuint index, const GLchar *nam
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
     programObject->bindAttributeLocation(index, name);
-}
-
-void Context::bindBuffer(BufferBinding target, GLuint buffer)
-{
-    Buffer *bufferObject = mState.mBuffers->checkBufferAllocation(mImplementation.get(), buffer);
-    mGLState.setBufferBinding(this, target, bufferObject);
-    mStateCache.onBufferBindingChange(this);
 }
 
 void Context::bindBufferBase(BufferBinding target, GLuint index, GLuint buffer)
@@ -8317,12 +8264,6 @@ void StateCache::onActiveTransformFeedbackChange(Context *context)
 void StateCache::onUniformBufferStateChange(Context *context)
 {
     updateBasicDrawStatesError();
-}
-
-void StateCache::onBufferBindingChange(Context *context)
-{
-    updateBasicDrawStatesError();
-    updateBasicDrawElementsError();
 }
 
 void StateCache::setValidDrawModes(bool pointsOK,
