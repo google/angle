@@ -12,9 +12,9 @@
 #include <EGL/eglext.h>
 #include <X11/Xlib.h>
 
-#include "OSWindow.h"
 #include "test_utils/ANGLETest.h"
-#include "x11/X11Window.h"
+#include "util/OSWindow.h"
+#include "util/x11/X11Window.h"
 
 using namespace angle;
 
@@ -24,14 +24,13 @@ namespace
 const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 }
 
-class EGLX11VisualHintTest : public ::testing::TestWithParam<angle::PlatformParameters>
+class EGLX11VisualHintTest : public EGLTest,
+                             public ::testing::WithParamInterface<angle::PlatformParameters>
 {
   public:
     void SetUp() override
     {
-        mEglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-            eglGetProcAddress("eglGetPlatformDisplayEXT"));
-
+        EGLTest::SetUp();
         mDisplay = XOpenDisplay(nullptr);
     }
 
@@ -68,12 +67,11 @@ class EGLX11VisualHintTest : public ::testing::TestWithParam<angle::PlatformPara
             }
         }
 
-        UNREACHABLE();
+        EXPECT_TRUE(false);
         return -1;
     }
 
   protected:
-    PFNEGLGETPLATFORMDISPLAYEXTPROC mEglGetPlatformDisplayEXT;
     Display *mDisplay;
 };
 
@@ -84,7 +82,7 @@ TEST_P(EGLX11VisualHintTest, InvalidVisualID)
     auto attributes                   = getDisplayAttributes(gInvalidVisualId);
 
     EGLDisplay display =
-        mEglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, attributes.data());
+        eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, attributes.data());
     ASSERT_TRUE(display != EGL_NO_DISPLAY);
 
     ASSERT_TRUE(EGL_FALSE == eglInitialize(display, nullptr, nullptr));
@@ -109,7 +107,7 @@ TEST_P(EGLX11VisualHintTest, ValidVisualIDAndClear)
 
     auto attributes = getDisplayAttributes(visualId);
     EGLDisplay display =
-        mEglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, attributes.data());
+        eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, attributes.data());
     ASSERT_NE(EGL_NO_DISPLAY, display);
 
     ASSERT_TRUE(EGL_TRUE == eglInitialize(display, nullptr, nullptr));
@@ -182,7 +180,7 @@ TEST_P(EGLX11VisualHintTest, InvalidWindowVisualID)
 
     auto attributes = getDisplayAttributes(visualId);
     EGLDisplay display =
-        mEglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, attributes.data());
+        eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, attributes.data());
     ASSERT_NE(EGL_NO_DISPLAY, display);
 
     ASSERT_TRUE(EGL_TRUE == eglInitialize(display, nullptr, nullptr));

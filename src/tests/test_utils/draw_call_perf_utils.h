@@ -12,7 +12,7 @@
 
 #include <stddef.h>
 
-#include "angle_gl.h"
+#include "util/gles_loader_autogen.h"
 
 // Returns program ID. The program is left in use, no uniforms.
 GLuint SetupSimpleDrawProgram();

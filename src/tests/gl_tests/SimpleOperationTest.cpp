@@ -10,8 +10,8 @@
 
 #include <vector>
 
-#include "random_utils.h"
 #include "test_utils/gl_raii.h"
+#include "util/random_utils.h"
 
 using namespace angle;
 
@@ -991,7 +991,8 @@ void main()
         center *= 0.5f;
         center += Vector2(0.5f);
         center *= Vector2(getWindowWidth(), getWindowHeight());
-        EXPECT_PIXEL_COLOR_EQ(center.x(), center.y(), colors[faceIndex][0]);
+        EXPECT_PIXEL_COLOR_EQ(static_cast<GLint>(center.x()), static_cast<GLint>(center.y()),
+                              colors[faceIndex][0]);
     }
 }
 

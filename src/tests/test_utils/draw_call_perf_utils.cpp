@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#include "shader_utils.h"
+#include "util/shader_utils.h"
 
 namespace
 {

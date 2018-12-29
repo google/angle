@@ -8,6 +8,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
+#include "util/EGLWindow.h"
 
 namespace angle
 {
@@ -1748,9 +1749,6 @@ TEST_P(RobustResourceInitTestES31, Multisample2DTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    const GLsizei kWidth  = 128;
-    const GLsizei kHeight = 128;
-
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
     glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 2, GL_RGBA8, kWidth, kHeight, false);
@@ -1790,8 +1788,6 @@ TEST_P(RobustResourceInitTestES31, Multisample2DTextureArray)
     }
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
 
-    const GLsizei kWidth  = 128;
-    const GLsizei kHeight = 128;
     const GLsizei kLayers = 4;
 
     GLTexture texture;

@@ -13,6 +13,8 @@ util_sources = [
   "util/shader_utils.cpp",
   "util/shader_utils.h",
   "util/system_utils.h",
+  "util/util_export.h",
+  "util/util_gl.h",
   "util/Event.h",
   "util/EGLWindow.cpp",
   "util/EGLWindow.h",
@@ -23,6 +25,7 @@ util_sources = [
   "util/OSWindow.h",
   "util/Timer.h",
 ]
+
 util_win32_sources = [
   "util/windows/win32/Win32_system_utils.cpp",
   "util/windows/win32/Win32Pixmap.cpp",
@@ -33,6 +36,7 @@ util_win32_sources = [
   "util/windows/WindowsTimer.cpp",
   "util/windows/WindowsTimer.h",
 ]
+
 util_winrt_sources = [
   "util/windows/winrt/WinRT_system_utils.cpp",
   "util/windows/winrt/WinRTPixmap.cpp",
@@ -42,22 +46,26 @@ util_winrt_sources = [
   "util/windows/WindowsTimer.cpp",
   "util/windows/WindowsTimer.h",
 ]
+
 util_linux_sources = [
   "util/linux/LinuxTimer.cpp",
   "util/linux/LinuxTimer.h",
   "util/posix/Posix_system_utils.cpp",
 ]
+
 util_x11_sources = [
   "util/x11/X11Pixmap.cpp",
   "util/x11/X11Pixmap.h",
   "util/x11/X11Window.cpp",
   "util/x11/X11Window.h",
 ]
+
 util_ozone_sources = [
   "util/ozone/OzonePixmap.cpp",
   "util/ozone/OzoneWindow.cpp",
   "util/ozone/OzoneWindow.h",
 ]
+
 util_osx_sources = [
   "util/osx/OSXTimer.cpp",
   "util/osx/OSXTimer.h",
@@ -67,6 +75,7 @@ util_osx_sources = [
   "util/osx/OSXWindow.h",
   "util/posix/Posix_system_utils.cpp",
 ]
+
 util_android_sources = [
   "util/android/AndroidPixmap.cpp",
   "util/android/AndroidWindow.cpp",

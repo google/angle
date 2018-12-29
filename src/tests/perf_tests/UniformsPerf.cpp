@@ -14,8 +14,8 @@
 #include <random>
 #include <sstream>
 
-#include "Matrix.h"
-#include "shader_utils.h"
+#include "util/Matrix.h"
+#include "util/shader_utils.h"
 
 using namespace angle;
 
@@ -90,7 +90,6 @@ std::string UniformsParams::suffix() const
     }
     else
     {
-        ASSERT(dataType == DataType::MAT4);
         strstr << "_matrix";
     }
 

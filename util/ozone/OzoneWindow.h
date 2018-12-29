@@ -11,7 +11,7 @@
 
 #include <string>
 
-#include "OSWindow.h"
+#include "util/OSWindow.h"
 
 class OzoneWindow : public OSWindow
 {

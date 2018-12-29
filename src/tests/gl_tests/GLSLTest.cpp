@@ -4713,7 +4713,8 @@ void main()
 
     GLint uniLoc = glGetUniformLocation(program, "viewportSize");
     ASSERT_NE(-1, uniLoc);
-    glUniform2f(uniLoc, getWindowWidth(), getWindowHeight());
+    glUniform2f(uniLoc, static_cast<GLfloat>(getWindowWidth()),
+                static_cast<GLfloat>(getWindowHeight()));
 
     // Draw to backbuffer.
     glDrawArrays(GL_POINTS, 0, 1);
@@ -4781,7 +4782,8 @@ void main()
 
     GLint uniLoc = glGetUniformLocation(program, "viewportSize");
     ASSERT_NE(-1, uniLoc);
-    glUniform2f(uniLoc, getWindowWidth(), getWindowHeight());
+    glUniform2f(uniLoc, static_cast<GLfloat>(getWindowWidth()),
+                static_cast<GLfloat>(getWindowHeight()));
 
     // Draw to backbuffer.
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);

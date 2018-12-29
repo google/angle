@@ -6,6 +6,8 @@
 
 #include "test_utils/angle_test_configs.h"
 
+#include "util/util_gl.h"
+
 namespace angle
 {
 
@@ -109,7 +111,7 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             break;
 
         default:
-            UNREACHABLE();
+            stream << "_ERR";
             break;
     }
 
@@ -128,7 +130,7 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             break;
 
         default:
-            UNREACHABLE();
+            stream << "_ERR";
             break;
     }
 

@@ -8,25 +8,22 @@
 
 #include <gtest/gtest.h>
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
-#include "OSWindow.h"
 #include "test_utils/ANGLETest.h"
+#include "util/OSWindow.h"
 
 using namespace angle;
 
-class EGLRobustnessTest : public ::testing::TestWithParam<angle::PlatformParameters>
+class EGLRobustnessTest : public EGLTest,
+                          public ::testing::WithParamInterface<angle::PlatformParameters>
 {
   public:
     void SetUp() override
     {
+        EGLTest::SetUp();
+
         mOSWindow = CreateOSWindow();
         mOSWindow->initialize("EGLRobustnessTest", 500, 500);
         mOSWindow->setVisible(true);
-
-        auto eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-            eglGetProcAddress("eglGetPlatformDisplayEXT"));
 
         const auto &platform = GetParam().eglParameters;
 
@@ -99,10 +96,6 @@ class EGLRobustnessTest : public ::testing::TestWithParam<angle::PlatformParamet
 
         const char *extensionString = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
         ASSERT_NE(nullptr, strstr(extensionString, "GL_ANGLE_instanced_arrays"));
-
-        mDrawElementsInstancedANGLE =
-            (PFNGLDRAWELEMENTSINSTANCEDANGLEPROC)eglGetProcAddress("glDrawElementsInstancedANGLE");
-        ASSERT_NE(nullptr, mDrawElementsInstancedANGLE);
     }
 
     void forceContextReset()
@@ -141,17 +134,16 @@ class EGLRobustnessTest : public ::testing::TestWithParam<angle::PlatformParamet
         glViewport(0, 0, mOSWindow->getWidth(), mOSWindow->getHeight());
         glClearColor(1.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
-        mDrawElementsInstancedANGLE(GL_TRIANGLES, kNumQuads * 6, GL_UNSIGNED_SHORT, indices.data(),
-                                    10000);
+        glDrawElementsInstancedANGLE(GL_TRIANGLES, kNumQuads * 6, GL_UNSIGNED_SHORT, indices.data(),
+                                     10000);
 
         glFinish();
     }
 
   protected:
-    EGLDisplay mDisplay                                             = EGL_NO_DISPLAY;
-    EGLSurface mWindow                                              = EGL_NO_SURFACE;
-    bool mInitialized                                               = false;
-    PFNGLDRAWELEMENTSINSTANCEDANGLEPROC mDrawElementsInstancedANGLE = nullptr;
+    EGLDisplay mDisplay = EGL_NO_DISPLAY;
+    EGLSurface mWindow  = EGL_NO_SURFACE;
+    bool mInitialized   = false;
 
   private:
     EGLContext mContext = EGL_NO_CONTEXT;

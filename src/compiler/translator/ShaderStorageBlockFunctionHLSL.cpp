@@ -305,7 +305,7 @@ TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
     }
 
     ssboFunction.functionName += ssboFunction.typeString;
-    ssboFunction.type       = type;
+    ssboFunction.type = type;
     if (swizzleNode != nullptr)
     {
         ssboFunction.swizzleOffsets   = swizzleNode->getSwizzleOffsets();

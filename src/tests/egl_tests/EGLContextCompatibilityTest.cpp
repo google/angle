@@ -10,13 +10,11 @@
 //   rendering works, otherwise it checks an error is generated one MakeCurrent.
 #include <gtest/gtest.h>
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
 #include <vector>
 
-#include "OSWindow.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_configs.h"
+#include "util/OSWindow.h"
 
 using namespace angle;
 
@@ -26,16 +24,16 @@ namespace
 const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 }
 
-class EGLContextCompatibilityTest : public ANGLETest
+class EGLContextCompatibilityTest : public EGLTest,
+                                    public testing::WithParamInterface<PlatformParameters>
 {
   public:
     EGLContextCompatibilityTest() : mDisplay(0) {}
 
     void SetUp() override
     {
-        PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
-            reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-                eglGetProcAddress("eglGetPlatformDisplayEXT"));
+        EGLTest::SetUp();
+
         ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
         EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
@@ -100,7 +98,7 @@ class EGLContextCompatibilityTest : public ANGLETest
 
         EGLint colorComponentType1 = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
         EGLint colorComponentType2 = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
-        if (eglDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
+        if (IsDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
         {
             eglGetConfigAttrib(mDisplay, c1, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType1);
             eglGetConfigAttrib(mDisplay, c2, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType2);
@@ -194,7 +192,7 @@ class EGLContextCompatibilityTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
 
         EGLint surfaceCompontentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
-        if (eglDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
+        if (IsDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
         {
             eglGetConfigAttrib(mDisplay, surfaceConfig, EGL_COLOR_COMPONENT_TYPE_EXT,
                                &surfaceCompontentType);
@@ -363,4 +361,4 @@ ANGLE_INSTANTIATE_TEST(EGLContextCompatibilityTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN());
-#endif
+#endif  // defined(NDEBUG)

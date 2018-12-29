@@ -9,7 +9,7 @@
 #include "ANGLEPerfTest.h"
 
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
-#include "random_utils.h"
+#include "util/random_utils.h"
 
 using namespace rx;
 

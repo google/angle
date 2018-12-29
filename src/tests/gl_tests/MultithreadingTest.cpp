@@ -8,6 +8,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
+#include "util/EGLWindow.h"
 
 #include <mutex>
 #include <thread>

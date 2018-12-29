@@ -167,7 +167,8 @@ struct SizedFloat
     {
         constexpr int eBias = (1 << (kEBits - 1)) - 1;
         constexpr int mDiv  = 1 << kMBits;
-        float ret = powf(-1, sVal) * powf(2, int(eVal) - eBias) * (1.0f + float(mVal) / mDiv);
+        float ret           = powf(-1.0f, static_cast<float>(sVal)) *
+                    powf(2.0f, static_cast<float>(int(eVal) - eBias)) * (1.0f + float(mVal) / mDiv);
         return ret;
     }
 };
@@ -187,8 +188,8 @@ struct RGB9_E5 final
         // GLES 3.0.5 p129
         constexpr int eMax = 31;  // max allowed biased exponent value
 
-        const float twoToN       = powf(2, N);
-        const float sharedExpMax = (twoToN - 1) / twoToN * powf(2, eMax - B);
+        const float twoToN       = powf(2.0f, static_cast<float>(N));
+        const float sharedExpMax = (twoToN - 1.0f) / twoToN * powf(2.0f, eMax - B);
 
         const auto fnClampColor = [&](const float color) {
             return std::max(0.0f, std::min(color, sharedExpMax));
@@ -203,12 +204,12 @@ struct RGB9_E5 final
         const auto fnColorS = [&](const float colorC, const float exp) {
             return floori(colorC / powf(2, exp - B - N) + 0.5f);
         };
-        const int maxS = fnColorS(maxC, expP);
+        const int maxS = fnColorS(maxC, static_cast<float>(expP));
         const int expS = expP + ((maxS == (1 << N)) ? 1 : 0);
 
-        const int redS   = fnColorS(redC, expS);
-        const int greenS = fnColorS(greenC, expS);
-        const int blueS  = fnColorS(blueC, expS);
+        const int redS   = fnColorS(redC, static_cast<float>(expS));
+        const int greenS = fnColorS(greenC, static_cast<float>(expS));
+        const int blueS  = fnColorS(blueC, static_cast<float>(expS));
 
         // Pack as u32 EGBR.
         uint32_t ret = expS & 0x1f;
@@ -237,10 +238,12 @@ struct RGB9_E5 final
         // These are *not* IEEE-like UFloat14s.
         // GLES 3.0.5 p165:
         // red = redS*pow(2,expS-B-N)
-        const auto fnToFloat = [&](const uint32_t x) { return x * powf(2, int(expS) - B - N); };
-        *out_red             = fnToFloat(redS);
-        *out_green           = fnToFloat(greenS);
-        *out_blue            = fnToFloat(blueS);
+        const auto fnToFloat = [&](const uint32_t x) {
+            return x * powf(2.0f, static_cast<float>(int(expS) - B - N));
+        };
+        *out_red   = fnToFloat(redS);
+        *out_green = fnToFloat(greenS);
+        *out_blue  = fnToFloat(blueS);
     }
 };
 

@@ -4,15 +4,17 @@
 // found in the LICENSE file.
 //
 
-#include <string.h>
+#include "util/EGLWindow.h"
+
 #include <cassert>
 #include <iostream>
 #include <vector>
 
-#include "EGLWindow.h"
-#include "OSWindow.h"
-#include "common/debug.h"
+#include <string.h>
+
 #include "platform/Platform.h"
+#include "util/OSWindow.h"
+#include "util/system_utils.h"
 
 EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
@@ -150,15 +152,27 @@ EGLContext EGLWindow::getContext() const
     return mContext;
 }
 
-bool EGLWindow::initializeGL(OSWindow *osWindow)
+bool EGLWindow::initializeGL(OSWindow *osWindow, angle::Library *eglLibrary)
 {
-    if (!initializeDisplayAndSurface(osWindow))
+    if (!initializeDisplayAndSurface(osWindow, eglLibrary))
         return false;
     return initializeContext();
 }
 
-bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
+bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *eglLibrary)
 {
+#if defined(ANGLE_USE_UTIL_LOADER)
+    PFNEGLGETPROCADDRESSPROC getProcAddress;
+    eglLibrary->getAs("eglGetProcAddress", &getProcAddress);
+    if (!getProcAddress)
+    {
+        return false;
+    }
+
+    // Likely we will need to use a fallback to Library::getAs on non-ANGLE platforms.
+    angle::LoadEGL(getProcAddress);
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+
     std::vector<EGLAttrib> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     displayAttributes.push_back(mPlatform.renderer);
@@ -287,12 +301,12 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(),
                                       &surfaceAttributes[0]);
-    if (eglGetError() != EGL_SUCCESS)
+    if (eglGetError() != EGL_SUCCESS || (mSurface == EGL_NO_SURFACE))
     {
         destroyGL();
         return false;
     }
-    ASSERT(mSurface != EGL_NO_SURFACE);
+
     return true;
 }
 

@@ -83,7 +83,6 @@ class InstancingTest : public ANGLETest
         // The instance data array selects all the slices in order.
         // 'lastDrawn' is the index (zero-based) of the last slice into which we draw.
         const unsigned lastDrawn = (numInstance - 1) / divisor;
-        ASSERT(lastDrawn < kMaxDrawn);
 
         const int instanceAttrib = attribZeroInstanced ? 0 : 1;
         const int positionAttrib = attribZeroInstanced ? 1 : 0;
@@ -129,11 +128,12 @@ class InstancingTest : public ANGLETest
     {
         for (unsigned i = 0; i < kMaxDrawn; ++i)
         {
-            float y = -1.0 + kDrawSize / 2.0 + i * kDrawSize;
-            int iy  = (y + 1.0) / 2.0 * getWindowHeight();
+            float y =
+                -1.0f + static_cast<float>(kDrawSize) / 2.0f + static_cast<float>(i * kDrawSize);
+            int iy = static_cast<int>((y + 1.0f) / 2.0f * getWindowHeight());
             for (unsigned j = 0; j < 8; j += 2)
             {
-                int ix = (kPointVertices[j] + 1.0) / 2.0 * getWindowWidth();
+                int ix = static_cast<int>((kPointVertices[j] + 1.0f) / 2.0f * getWindowWidth());
                 EXPECT_PIXEL_COLOR_EQ(ix, iy, i <= lastDrawn ? GLColor::red : GLColor::blue);
             }
         }
@@ -305,7 +305,6 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
     const unsigned numInstance = 4;
     const unsigned divisor     = 1;
     const unsigned lastDrawn   = (numInstance - 1) / divisor;
-    ASSERT(lastDrawn < kMaxDrawn);
 
     // Set the formats by VertexAttribFormat
     glVertexAttribFormat(positionLoc, 2, GL_FLOAT, GL_FALSE, 0);

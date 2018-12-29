@@ -43,8 +43,8 @@ struct MultiviewRenderTestParams final : public MultiviewImplementationParams
           mMultiviewLayout(multiviewLayout),
           mSamples(samples)
     {
-        ASSERT(multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE ||
-               multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
+        EXPECT_TRUE(multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE ||
+                    multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
     }
     GLenum mMultiviewLayout;
     int mSamples;
@@ -64,7 +64,8 @@ std::ostream &operator<<(std::ostream &os, const MultiviewRenderTestParams &para
             os << "_side_by_side";
             break;
         default:
-            UNREACHABLE();
+            os << "_error";
+            break;
     }
     if (params.mSamples > 0)
     {
@@ -101,7 +102,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
 
     void updateFBOs(int viewWidth, int height, int numViews, int numLayers, int baseViewIndex)
     {
-        ASSERT(numViews + baseViewIndex <= numLayers);
+        ASSERT_TRUE(numViews + baseViewIndex <= numLayers);
 
         freeFBOs();
 
@@ -151,7 +152,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
                 }
                 break;
             default:
-                UNREACHABLE();
+                ASSERT_TRUE(false);
         }
 
         // Clear the buffers.
@@ -182,7 +183,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
         int numLayers = mReadFramebuffer.size();
         if (mResolveFramebuffer.empty())
         {
-            ASSERT(mResolveTexture == 0u);
+            ASSERT_TRUE(mResolveTexture == 0u);
             glGenTextures(1, &mResolveTexture);
             CreateMultiviewBackingTextures(mMultiviewLayout, 0, mViewWidth, mViewHeight, numLayers,
                                            mResolveTexture, 0u, 0u);
@@ -216,10 +217,10 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
                 glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[0]);
                 return ReadColor(view * mViewWidth + x, y);
             case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
-                ASSERT(static_cast<size_t>(view) < mReadFramebuffer.size());
+                EXPECT_TRUE(static_cast<size_t>(view) < mReadFramebuffer.size());
                 if (mSamples > 0)
                 {
-                    ASSERT(static_cast<size_t>(view) < mResolveFramebuffer.size());
+                    EXPECT_TRUE(static_cast<size_t>(view) < mResolveFramebuffer.size());
                     glBindFramebuffer(GL_READ_FRAMEBUFFER, mResolveFramebuffer[view]);
                 }
                 else
@@ -228,7 +229,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
                 }
                 return ReadColor(x, y);
             default:
-                UNREACHABLE();
+                EXPECT_TRUE(false);
         }
         return GLColor(0, 0, 0, 0);
     }

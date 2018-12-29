@@ -664,6 +664,7 @@ config("library_name_config") {
 config("angle_static") {
   defines = [
     "ANGLE_EXPORT=",
+    "ANGLE_UTIL_EXPORT=",
     "EGLAPI=",
     "GL_APICALL=",
     "GL_API=",
@@ -754,6 +755,7 @@ shared_library("libGLESv1_CM${angle_libs_suffix}") {
     ":angle_gl_visibility_config",
     ":debug_annotations_config",
     ":extra_warnings",
+    ":gl_prototypes",
     ":internal_config",
   ]
 
@@ -915,8 +917,45 @@ static_library("libEGL_static") {
 
 import("util/util.gni")
 
+config("angle_util_loader_config") {
+  defines = [ "ANGLE_USE_UTIL_LOADER" ]
+}
+
+source_set("angle_util_loader_headers") {
+  sources = [
+    "util/egl_loader_autogen.h",
+    "util/gles_loader_autogen.h",
+    "util/util_export.h",
+  ]
+
+  public_configs = [
+    ":angle_util_config",
+    ":angle_util_loader_config",
+    ":extra_warnings",
+    ":internal_config",
+    ":no_gl_prototypes",
+  ]
+
+  public_deps = [
+    ":includes",
+  ]
+}
+
+source_set("angle_util_loader") {
+  defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
+
+  sources = [
+    "util/egl_loader_autogen.cpp",
+    "util/gles_loader_autogen.cpp",
+  ]
+
+  public_deps = [
+    ":angle_util_loader_headers",
+  ]
+}
+
 config("angle_util_config") {
-  include_dirs = [ "util" ]
+  include_dirs = [ "." ]
   if (is_linux && use_x11) {
     libs = [ "X11" ]
   }
@@ -987,7 +1026,6 @@ foreach(is_shared_library,
     configs += [
       ":debug_annotations_config",
       ":extra_warnings",
-      ":gl_prototypes",
     ]
 
     public_configs = [
@@ -997,8 +1035,6 @@ foreach(is_shared_library,
 
     deps = [
       ":angle_common",
-      ":libEGL${dep_suffix}",
-      ":libGLESv2${dep_suffix}",
     ]
 
     if (is_shared_library) {
@@ -1011,6 +1047,14 @@ foreach(is_shared_library,
         ]
         public_configs += [ ":shared_library_public_config" ]
       }
+
+      deps += [ ":angle_util_loader" ]
+      public_configs += [ ":no_gl_prototypes" ]
+    } else {
+      public_configs += [
+        ":angle_static",
+        ":gl_prototypes",
+      ]
     }
   }
 }
