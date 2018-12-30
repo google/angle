@@ -17,7 +17,7 @@ namespace rx
 class ContextWGL : public ContextGL
 {
   public:
-    ContextWGL(const gl::ContextState &state, const std::shared_ptr<RendererWGL> &renderer);
+    ContextWGL(const gl::State &state, const std::shared_ptr<RendererWGL> &renderer);
     ~ContextWGL() override;
 
     HGLRC getContext() const;

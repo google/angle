@@ -154,7 +154,7 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 
     // Context can be nullptr in perf tests.
     bool primitiveRestartFixedIndexEnabled =
-        context ? context->getGLState().isPrimitiveRestartEnabled() : false;
+        context ? context->getState().isPrimitiveRestartEnabled() : false;
 
     // Case 1: the indices are passed by pointer, which forces the streaming of index data
     if (glBuffer == nullptr)
@@ -300,7 +300,7 @@ angle::Result GetIndexTranslationDestType(const gl::Context *context,
         }
 
         gl::IndexRange indexRange;
-        ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(
+        ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
             context, indexType, indexCount, indices, &indexRange));
         if (indexRange.end == gl::GetPrimitiveRestartIndex(indexType))
         {

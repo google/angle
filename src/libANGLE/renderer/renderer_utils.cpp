@@ -595,7 +595,7 @@ angle::Result GetVertexRangeInfo(const gl::Context *context,
     if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {
         gl::IndexRange indexRange;
-        ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(
+        ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
             context, indexTypeOrInvalid, vertexOrIndexCount, indices, &indexRange));
         ANGLE_TRY(ComputeStartVertex(context->getImplementation(), indexRange, baseVertex,
                                      startVertexOut));

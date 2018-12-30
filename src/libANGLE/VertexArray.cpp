@@ -538,13 +538,13 @@ angle::Result VertexArray::getIndexRangeImpl(const Context *context,
     if (!elementArrayBuffer)
     {
         *indexRangeOut = ComputeIndexRange(type, indices, indexCount,
-                                           context->getGLState().isPrimitiveRestartEnabled());
+                                           context->getState().isPrimitiveRestartEnabled());
         return angle::Result::Continue;
     }
 
     size_t offset = reinterpret_cast<uintptr_t>(indices);
     ANGLE_TRY(elementArrayBuffer->getIndexRange(context, type, offset, indexCount,
-                                                context->getGLState().isPrimitiveRestartEnabled(),
+                                                context->getState().isPrimitiveRestartEnabled(),
                                                 indexRangeOut));
 
     mIndexRangeCache.put(type, indexCount, offset, *indexRangeOut);

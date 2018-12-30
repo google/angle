@@ -807,7 +807,7 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
     return egl::NoError();
 }
 
-ContextImpl *Renderer9::createContext(const gl::ContextState &state)
+ContextImpl *Renderer9::createContext(const gl::State &state)
 {
     return new Context9(state, this);
 }
@@ -1025,7 +1025,7 @@ angle::Result Renderer9::setTexture(const gl::Context *context,
 
 angle::Result Renderer9::updateState(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
 
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
@@ -1076,7 +1076,7 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 angle::Result Renderer9::setBlendDepthRasterStates(const gl::Context *context,
                                                    gl::PrimitiveMode drawMode)
 {
-    const auto &glState              = context->getGLState();
+    const auto &glState              = context->getState();
     gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
     ASSERT(!drawFramebuffer->hasAnyDirtyBit());
     // Since framebuffer->getSamples will return the original samples which may be different with
@@ -1287,7 +1287,7 @@ angle::Result Renderer9::applyVertexBuffer(const gl::Context *context,
                                            GLsizei instances,
                                            TranslatedIndexData * /*indexInfo*/)
 {
-    const gl::State &state = context->getGLState();
+    const gl::State &state = context->getState();
     ANGLE_TRY(mVertexDataManager->prepareVertexData(context, first, count, &mTranslatedAttribCache,
                                                     instances));
 
@@ -1304,7 +1304,7 @@ angle::Result Renderer9::applyIndexBuffer(const gl::Context *context,
                                           gl::DrawElementsType type,
                                           TranslatedIndexData *indexInfo)
 {
-    gl::VertexArray *vao           = context->getGLState().getVertexArray();
+    gl::VertexArray *vao           = context->getState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     gl::DrawElementsType dstType = gl::DrawElementsType::InvalidEnum;
@@ -1333,7 +1333,7 @@ angle::Result Renderer9::drawArraysImpl(const gl::Context *context,
                                         GLsizei count,
                                         GLsizei instances)
 {
-    ASSERT(!context->getGLState().isTransformFeedbackActiveUnpaused());
+    ASSERT(!context->getState().isTransformFeedbackActiveUnpaused());
 
     startScene();
 
@@ -1380,8 +1380,8 @@ angle::Result Renderer9::drawElementsImpl(const gl::Context *context,
     ANGLE_TRY(applyIndexBuffer(context, indices, count, mode, type, &indexInfo));
 
     gl::IndexRange indexRange;
-    ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(context, type, count, indices,
-                                                                    &indexRange));
+    ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(context, type, count, indices,
+                                                                  &indexRange));
 
     size_t vertexCount = indexRange.vertexCount();
     ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),
@@ -1391,7 +1391,7 @@ angle::Result Renderer9::drawElementsImpl(const gl::Context *context,
 
     int minIndex = static_cast<int>(indexRange.start);
 
-    gl::VertexArray *vao           = context->getGLState().getVertexArray();
+    gl::VertexArray *vao           = context->getState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     if (mode == gl::PrimitiveMode::Points)
@@ -1680,7 +1680,7 @@ angle::Result Renderer9::getCountingIB(const gl::Context *context,
 
 angle::Result Renderer9::applyShaders(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
-    const gl::State &state   = context->getContextState().getState();
+    const gl::State &state   = context->getState();
     d3d::Context *contextD3D = GetImplAs<ContextD3D>(context);
 
     // This method is called single-threaded.
@@ -2980,8 +2980,8 @@ angle::Result Renderer9::genericDrawElements(const gl::Context *context,
                                              const void *indices,
                                              GLsizei instances)
 {
-    const auto &data     = context->getContextState();
-    gl::Program *program = context->getGLState().getProgram();
+    const gl::State &state = context->getState();
+    gl::Program *program   = context->getState().getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
@@ -2997,7 +2997,7 @@ angle::Result Renderer9::genericDrawElements(const gl::Context *context,
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
 
-    if (!skipDraw(data.getState(), mode))
+    if (!skipDraw(state, mode))
     {
         ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
     }
@@ -3011,7 +3011,7 @@ angle::Result Renderer9::genericDrawArrays(const gl::Context *context,
                                            GLsizei count,
                                            GLsizei instances)
 {
-    gl::Program *program = context->getGLState().getProgram();
+    gl::Program *program = context->getState().getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
@@ -3028,7 +3028,7 @@ angle::Result Renderer9::genericDrawArrays(const gl::Context *context,
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
 
-    if (!skipDraw(context->getGLState(), mode))
+    if (!skipDraw(context->getState(), mode))
     {
         ANGLE_TRY(drawArraysImpl(context, mode, first, count, instances));
     }
@@ -3112,7 +3112,7 @@ bool Renderer9::canSelectViewInVertexShader() const
 // Sampler mapping needs to be up-to-date on the program object before this is called.
 angle::Result Renderer9::applyTextures(const gl::Context *context, gl::ShaderType shaderType)
 {
-    const auto &glState    = context->getGLState();
+    const auto &glState    = context->getState();
     const auto &caps       = context->getCaps();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 

@@ -91,7 +91,7 @@ class FramebufferGL : public FramebufferImpl
         ASSERT(context->getExtensions().webglCompatibility);
 
         const gl::DrawBufferMask &maxSet =
-            context->getGLState().getProgram()->getActiveOutputVariables();
+            context->getState().getProgram()->getActiveOutputVariables();
 
         gl::DrawBufferMask targetAppliedDrawBuffers = mState.getEnabledDrawBuffers() & maxSet;
         if (mAppliedEnabledDrawBuffers != targetAppliedDrawBuffers)

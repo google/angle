@@ -8,7 +8,7 @@
 
 namespace rx
 {
-ContextEGL::ContextEGL(const gl::ContextState &state, const std::shared_ptr<RendererEGL> &renderer)
+ContextEGL::ContextEGL(const gl::State &state, const std::shared_ptr<RendererEGL> &renderer)
     : ContextGL(state, renderer), mRenderer(renderer)
 {}
 

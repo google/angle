@@ -114,8 +114,8 @@ angle::Result FramebufferNULL::readPixels(const gl::Context *context,
                                           GLenum type,
                                           void *ptrOrOffset)
 {
-    const gl::PixelPackState &packState = context->getGLState().getPackState();
-    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
+    const gl::PixelPackState &packState = context->getState().getPackState();
+    gl::Buffer *packBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
     // Get the pointer to write to from the argument or the pack buffer
     GLubyte *pixels = nullptr;

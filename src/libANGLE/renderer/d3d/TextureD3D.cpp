@@ -216,9 +216,8 @@ angle::Result TextureD3D::setImageImpl(const gl::Context *context,
                                        const uint8_t *pixels,
                                        ptrdiff_t layerOffset)
 {
-    ImageD3D *image = getImage(index);
-    gl::Buffer *unpackBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+    ImageD3D *image          = getImage(index);
+    gl::Buffer *unpackBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ASSERT(image);
 
     // No-op
@@ -304,8 +303,7 @@ angle::Result TextureD3D::setCompressedImageImpl(const gl::Context *context,
     // "pixels" contains. From our image internal format we know how many channels to expect, and
     // "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
-    gl::Buffer *unpackBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+    gl::Buffer *unpackBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
@@ -328,8 +326,7 @@ angle::Result TextureD3D::subImageCompressed(const gl::Context *context,
                                              ptrdiff_t layerOffset)
 {
     const uint8_t *pixelData = nullptr;
-    gl::Buffer *unpackBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+    gl::Buffer *unpackBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
@@ -867,8 +864,7 @@ angle::Result TextureD3D_2D::setImage(const gl::Context *context,
                             size, false));
 
     // Attempt a fast gpu copy of the pixel data to the surface
-    gl::Buffer *unpackBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+    gl::Buffer *unpackBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) &&
         isLevelComplete(index.getLevelIndex()))
     {
@@ -2392,8 +2388,7 @@ angle::Result TextureD3D_3D::setImage(const gl::Context *context,
     bool fastUnpacked = false;
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    gl::Buffer *unpackBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+    gl::Buffer *unpackBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) && !size.empty() &&
         isLevelComplete(index.getLevelIndex()))
     {

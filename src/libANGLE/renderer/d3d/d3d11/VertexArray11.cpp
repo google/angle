@@ -130,7 +130,7 @@ angle::Result VertexArray11::syncStateForDraw(const gl::Context *context,
     Renderer11 *renderer         = GetImplAs<Context11>(context)->getRenderer();
     StateManager11 *stateManager = renderer->getStateManager();
 
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
     ASSERT(program);
     mAppliedNumViewsToDivisor = (program->usesMultiview() ? program->getNumViews() : 1);
@@ -164,7 +164,7 @@ angle::Result VertexArray11::syncStateForDraw(const gl::Context *context,
 
     if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {
-        bool restartEnabled = context->getGLState().isPrimitiveRestartEnabled();
+        bool restartEnabled = context->getState().isPrimitiveRestartEnabled();
         if (!mLastDrawElementsType.valid() || mLastDrawElementsType.value() != indexTypeOrInvalid ||
             mLastDrawElementsIndices.value() != indices ||
             mLastPrimitiveRestartEnabled.value() != restartEnabled)
@@ -201,7 +201,7 @@ angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *contex
     unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
 
     mCurrentElementArrayStorage =
-        ClassifyIndexStorage(context->getGLState(), mState.getElementArrayBuffer(), indexType,
+        ClassifyIndexStorage(context->getState(), mState.getElementArrayBuffer(), indexType,
                              mCachedDestinationIndexType, offset);
 
     return angle::Result::Continue;
@@ -233,8 +233,7 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context,
 
 bool VertexArray11::hasActiveDynamicAttrib(const gl::Context *context)
 {
-    const auto &activeLocations =
-        context->getGLState().getProgram()->getActiveAttribLocationsMask();
+    const auto &activeLocations = context->getState().getProgram()->getActiveAttribLocationsMask();
     gl::AttributesMask activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
     return activeDynamicAttribs.any();
 }
@@ -242,7 +241,7 @@ bool VertexArray11::hasActiveDynamicAttrib(const gl::Context *context)
 angle::Result VertexArray11::updateDirtyAttribs(const gl::Context *context,
                                                 const gl::AttributesMask &activeDirtyAttribs)
 {
-    const auto &glState  = context->getGLState();
+    const auto &glState  = context->getState();
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
 
@@ -292,7 +291,7 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
                                                   GLint baseVertex,
                                                   const gl::AttributesMask &activeDynamicAttribs)
 {
-    const auto &glState  = context->getGLState();
+    const auto &glState  = context->getState();
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
 

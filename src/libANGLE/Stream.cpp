@@ -128,7 +128,7 @@ Error Stream::createConsumerGLTextureExternal(const AttributeMap &attributes, gl
     ASSERT(mProducerType == ProducerType::NoProducer);
     ASSERT(context != nullptr);
 
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
     EGLenum bufferType  = attributes.getAsInt(EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER);
     if (bufferType == EGL_RGB_BUFFER)
     {

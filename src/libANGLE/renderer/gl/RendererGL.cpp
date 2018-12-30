@@ -13,8 +13,8 @@
 #include "common/debug.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/ContextState.h"
 #include "libANGLE/Path.h"
+#include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
@@ -247,7 +247,7 @@ angle::Result RendererGL::finish()
     return angle::Result::Continue;
 }
 
-void RendererGL::stencilFillPath(const gl::ContextState &state,
+void RendererGL::stencilFillPath(const gl::State &state,
                                  const gl::Path *path,
                                  GLenum fillMode,
                                  GLuint mask)
@@ -259,7 +259,7 @@ void RendererGL::stencilFillPath(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::stencilStrokePath(const gl::ContextState &state,
+void RendererGL::stencilStrokePath(const gl::State &state,
                                    const gl::Path *path,
                                    GLint reference,
                                    GLuint mask)
@@ -271,9 +271,7 @@ void RendererGL::stencilStrokePath(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::coverFillPath(const gl::ContextState &state,
-                               const gl::Path *path,
-                               GLenum coverMode)
+void RendererGL::coverFillPath(const gl::State &state, const gl::Path *path, GLenum coverMode)
 {
 
     const auto *pathObj = GetImplAs<PathGL>(path);
@@ -282,9 +280,7 @@ void RendererGL::coverFillPath(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::coverStrokePath(const gl::ContextState &state,
-                                 const gl::Path *path,
-                                 GLenum coverMode)
+void RendererGL::coverStrokePath(const gl::State &state, const gl::Path *path, GLenum coverMode)
 {
     const auto *pathObj = GetImplAs<PathGL>(path);
     mFunctions->coverStrokePathNV(pathObj->getPathID(), coverMode);
@@ -292,7 +288,7 @@ void RendererGL::coverStrokePath(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::stencilThenCoverFillPath(const gl::ContextState &state,
+void RendererGL::stencilThenCoverFillPath(const gl::State &state,
                                           const gl::Path *path,
                                           GLenum fillMode,
                                           GLuint mask,
@@ -305,7 +301,7 @@ void RendererGL::stencilThenCoverFillPath(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::stencilThenCoverStrokePath(const gl::ContextState &state,
+void RendererGL::stencilThenCoverStrokePath(const gl::State &state,
                                             const gl::Path *path,
                                             GLint reference,
                                             GLuint mask,
@@ -318,7 +314,7 @@ void RendererGL::stencilThenCoverStrokePath(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::coverFillPathInstanced(const gl::ContextState &state,
+void RendererGL::coverFillPathInstanced(const gl::State &state,
                                         const std::vector<gl::Path *> &paths,
                                         GLenum coverMode,
                                         GLenum transformType,
@@ -332,7 +328,7 @@ void RendererGL::coverFillPathInstanced(const gl::ContextState &state,
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
-void RendererGL::coverStrokePathInstanced(const gl::ContextState &state,
+void RendererGL::coverStrokePathInstanced(const gl::State &state,
                                           const std::vector<gl::Path *> &paths,
                                           GLenum coverMode,
                                           GLenum transformType,
@@ -346,7 +342,7 @@ void RendererGL::coverStrokePathInstanced(const gl::ContextState &state,
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
-void RendererGL::stencilFillPathInstanced(const gl::ContextState &state,
+void RendererGL::stencilFillPathInstanced(const gl::State &state,
                                           const std::vector<gl::Path *> &paths,
                                           GLenum fillMode,
                                           GLuint mask,
@@ -361,7 +357,7 @@ void RendererGL::stencilFillPathInstanced(const gl::ContextState &state,
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
-void RendererGL::stencilStrokePathInstanced(const gl::ContextState &state,
+void RendererGL::stencilStrokePathInstanced(const gl::State &state,
                                             const std::vector<gl::Path *> &paths,
                                             GLint reference,
                                             GLuint mask,
@@ -377,7 +373,7 @@ void RendererGL::stencilStrokePathInstanced(const gl::ContextState &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-void RendererGL::stencilThenCoverFillPathInstanced(const gl::ContextState &state,
+void RendererGL::stencilThenCoverFillPathInstanced(const gl::State &state,
                                                    const std::vector<gl::Path *> &paths,
                                                    GLenum coverMode,
                                                    GLenum fillMode,
@@ -393,7 +389,7 @@ void RendererGL::stencilThenCoverFillPathInstanced(const gl::ContextState &state
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
-void RendererGL::stencilThenCoverStrokePathInstanced(const gl::ContextState &state,
+void RendererGL::stencilThenCoverStrokePathInstanced(const gl::State &state,
                                                      const std::vector<gl::Path *> &paths,
                                                      GLenum coverMode,
                                                      GLint reference,

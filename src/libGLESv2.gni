@@ -157,8 +157,6 @@ libangle_sources = [
   "src/libANGLE/Context_gles_1_0.cpp",
   "src/libANGLE/Context_gles_1_0_autogen.h",
   "src/libANGLE/Context.h",
-  "src/libANGLE/ContextState.cpp",
-  "src/libANGLE/ContextState.h",
   "src/libANGLE/Debug.cpp",
   "src/libANGLE/Debug.h",
   "src/libANGLE/Device.cpp",

@@ -542,7 +542,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     gl_vk::GetViewport(renderArea, 0.0f, 1.0f, invertViewport, params.renderAreaHeight, &viewport);
 
     VkRect2D scissor;
-    const gl::State &glState = contextVk->getGLState();
+    const gl::State &glState = contextVk->getState();
     gl_vk::GetScissor(glState, invertViewport, renderArea, &scissor);
 
     commandBuffer->setViewport(0, 1, &viewport);

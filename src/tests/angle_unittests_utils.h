@@ -82,7 +82,7 @@ class NullFactory : public GLImplFactory
 class MockGLFactory : public GLImplFactory
 {
   public:
-    MOCK_METHOD1(createContext, ContextImpl *(const gl::ContextState &));
+    MOCK_METHOD1(createContext, ContextImpl *(const gl::State &));
     MOCK_METHOD0(createCompiler, CompilerImpl *());
     MOCK_METHOD1(createShader, ShaderImpl *(const gl::ShaderState &));
     MOCK_METHOD1(createProgram, ProgramImpl *(const gl::ProgramState &));
@@ -125,7 +125,7 @@ class MockEGLFactory : public EGLImplFactory
                              EGLenum,
                              const egl::AttributeMap &));
     MOCK_METHOD4(createContext,
-                 ContextImpl *(const gl::ContextState &,
+                 ContextImpl *(const gl::State &,
                                const egl::Config *,
                                const gl::Context *,
                                const egl::AttributeMap &));

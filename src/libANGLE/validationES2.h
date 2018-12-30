@@ -36,7 +36,7 @@ ANGLE_INLINE bool ValidateBindBuffer(Context *context, BufferBinding target, GLu
         return false;
     }
 
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+    if (!context->getState().isBindGeneratesResourceEnabled() &&
         !context->isBufferGenerated(buffer))
     {
         context->validationError(GL_INVALID_OPERATION, err::kObjectNotGenerated);

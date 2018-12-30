@@ -1092,7 +1092,7 @@ void Program::pathFragmentInputGen(GLint index,
 // The code gets compiled into binaries.
 angle::Result Program::link(const Context *context)
 {
-    const auto &data = context->getContextState();
+    const auto &data = context->getState();
 
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);

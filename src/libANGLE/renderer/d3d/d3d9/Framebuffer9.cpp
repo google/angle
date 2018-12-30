@@ -63,7 +63,7 @@ angle::Result Framebuffer9::clearImpl(const gl::Context *context,
     ANGLE_TRY(mRenderer->applyRenderTarget(context, mRenderTargetCache.getColors()[0],
                                            mRenderTargetCache.getDepthStencil()));
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
     float nearZ              = glState.getNearPlane();
     float farZ               = glState.getFarPlane();
     mRenderer->setViewport(glState.getViewport(), nearZ, farZ, gl::PrimitiveMode::Triangles,

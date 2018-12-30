@@ -713,7 +713,7 @@ void StateManager11::checkPresentPath(const gl::Context *context)
     if (!mRenderer->presentPathFastEnabled())
         return;
 
-    const auto *framebuffer          = context->getGLState().getDrawFramebuffer();
+    const auto *framebuffer          = context->getState().getDrawFramebuffer();
     const auto *firstColorAttachment = framebuffer->getFirstColorbuffer();
     const bool presentPathFastActive = UsePresentPathFast(mRenderer, firstColorAttachment);
 
@@ -800,7 +800,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
         return;
     }
 
-    const gl::State &state = context->getGLState();
+    const gl::State &state = context->getState();
 
     for (size_t dirtyBit : dirtyBits)
     {
@@ -1111,7 +1111,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
 
 void StateManager11::handleMultiviewDrawFramebufferChange(const gl::Context *context)
 {
-    const auto &glState                    = context->getGLState();
+    const auto &glState                    = context->getState();
     const gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
     ASSERT(drawFramebuffer != nullptr);
 
@@ -1192,7 +1192,7 @@ angle::Result StateManager11::syncBlendState(const gl::Context *context,
 
 angle::Result StateManager11::syncDepthStencilState(const gl::Context *context)
 {
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
 
     mCurDepthStencilState = glState.getDepthStencilState();
     mCurStencilRef        = glState.getStencilRef();
@@ -1260,7 +1260,7 @@ angle::Result StateManager11::syncRasterizerState(const gl::Context *context,
                                                   gl::PrimitiveMode mode)
 {
     // TODO: Remove pointDrawMode and multiSample from gl::RasterizerState.
-    gl::RasterizerState rasterState = context->getGLState().getRasterizerState();
+    gl::RasterizerState rasterState = context->getState().getRasterizerState();
     rasterState.pointDrawMode       = (mode == gl::PrimitiveMode::Points);
     rasterState.multiSample         = mCurRasterState.multiSample;
 
@@ -1330,7 +1330,7 @@ void StateManager11::syncScissorRectangle(const gl::Rectangle &scissor, bool ena
 
 void StateManager11::syncViewport(const gl::Context *context)
 {
-    const auto &glState          = context->getGLState();
+    const auto &glState          = context->getState();
     gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
     float actualZNear            = gl::clamp01(glState.getNearPlane());
     float actualZFar             = gl::clamp01(glState.getFarPlane());
@@ -1444,7 +1444,7 @@ void StateManager11::processFramebufferInvalidation(const gl::Context *context)
     // The D3D11 blend state is heavily dependent on the current render target.
     mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
 
-    gl::Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
+    gl::Framebuffer *fbo = context->getState().getDrawFramebuffer();
     ASSERT(fbo);
 
     // Disable the depth test/depth write if we are using a stencil-only attachment.
@@ -1644,7 +1644,7 @@ angle::Result StateManager11::onMakeCurrent(const gl::Context *context)
 {
     ANGLE_TRY(ensureInitialized(context));
 
-    const gl::State &state = context->getGLState();
+    const gl::State &state = context->getState();
 
     Context11 *context11 = GetImplAs<Context11>(context);
 
@@ -2062,7 +2062,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                                           GLsizei instanceCount,
                                           GLint baseVertex)
 {
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
 
     // TODO(jmadill): Use dirty bits.
     if (mRenderTargetIsDirty)
@@ -2588,7 +2588,7 @@ angle::Result StateManager11::setTextureForSampler(const gl::Context *context,
 angle::Result StateManager11::applyTexturesForSRVs(const gl::Context *context,
                                                    gl::ShaderType shaderType)
 {
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
     const auto &caps    = context->getCaps();
 
     ASSERT(!mProgramD3D->isSamplerMappingDirty());
@@ -2659,7 +2659,7 @@ angle::Result StateManager11::applyTexturesForUAVs(const gl::Context *context,
                                                    gl::ShaderType shaderType)
 {
     ASSERT(shaderType == gl::ShaderType::Compute);
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
     const auto &caps    = context->getCaps();
 
     const gl::RangeUI imageRange = mProgramD3D->getUsedImageRange(shaderType, false);
@@ -2746,7 +2746,7 @@ angle::Result StateManager11::syncProgram(const gl::Context *context, gl::Primit
     Context11 *context11 = GetImplAs<Context11>(context);
     ANGLE_TRY(context11->triggerDrawCallProgramRecompilation(context, drawMode));
 
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
 
     mProgramD3D->updateCachedInputLayout(mVertexArray11->getCurrentStateSerial(), glState);
 
@@ -2840,7 +2840,7 @@ angle::Result StateManager11::syncVertexBuffersAndInputLayout(
     }
 
     // Update the applied input layout by querying the cache.
-    const gl::State &state                = context->getGLState();
+    const gl::State &state                = context->getState();
     const d3d11::InputLayout *inputLayout = nullptr;
     ANGLE_TRY(mInputLayoutCache.getInputLayout(GetImplAs<Context11>(context), state,
                                                mCurrentAttributes, sortedSemanticIndices, mode,
@@ -3129,7 +3129,7 @@ angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Te
 angle::Result StateManager11::generateSwizzlesForShader(const gl::Context *context,
                                                         gl::ShaderType type)
 {
-    const gl::State &glState       = context->getGLState();
+    const gl::State &glState       = context->getState();
     const gl::RangeUI samplerRange = mProgramD3D->getUsedSamplerRange(type);
 
     for (unsigned int i = samplerRange.low(); i < samplerRange.high(); i++)
@@ -3353,7 +3353,7 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
 {
     gl::ShaderMap<unsigned int> shaderReservedUBOs = mRenderer->getReservedShaderUniformBuffers();
 
-    const auto &glState                  = context->getGLState();
+    const auto &glState                  = context->getState();
     ID3D11DeviceContext *deviceContext   = mRenderer->getDeviceContext();
     ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
 
@@ -3488,7 +3488,7 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
 angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Context *context,
                                                                 gl::ShaderType shaderType)
 {
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
     for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
          blockIndex++)
@@ -3578,7 +3578,7 @@ angle::Result StateManager11::syncShaderStorageBuffers(const gl::Context *contex
 
 angle::Result StateManager11::syncTransformFeedbackBuffers(const gl::Context *context)
 {
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 

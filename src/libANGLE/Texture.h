@@ -41,9 +41,9 @@ class TextureGL;
 
 namespace gl
 {
-class ContextState;
 class Framebuffer;
 class Sampler;
+class State;
 class Texture;
 
 bool IsMipmapFiltered(const SamplerState &samplerState);
@@ -136,8 +136,7 @@ struct TextureState final : private angle::NonCopyable
     friend class rx::TextureGL;
     friend bool operator==(const TextureState &a, const TextureState &b);
 
-    bool computeSamplerCompleteness(const SamplerState &samplerState,
-                                    const ContextState &data) const;
+    bool computeSamplerCompleteness(const SamplerState &samplerState, const State &data) const;
     bool computeMipmapCompleteness() const;
     bool computeLevelCompleteness(TextureTarget target, size_t level) const;
 

@@ -22,8 +22,8 @@
 
 namespace gl
 {
-class ContextState;
-}
+class State;
+}  // namespace gl
 
 namespace rx
 {

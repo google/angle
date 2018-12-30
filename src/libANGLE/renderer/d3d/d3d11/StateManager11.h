@@ -11,7 +11,6 @@
 
 #include <array>
 
-#include "libANGLE/ContextState.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"

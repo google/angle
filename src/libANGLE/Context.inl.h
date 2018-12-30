@@ -41,7 +41,7 @@ ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const Context *context,
 {
     if (context->getStateCache().isTransformFeedbackActiveUnpaused())
     {
-        TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+        TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
         transformFeedback->onVerticesDrawn(context, count, instanceCount);
     }
 }
@@ -56,35 +56,35 @@ ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
 
 ANGLE_INLINE angle::Result Context::syncDirtyBits()
 {
-    const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
+    const State::DirtyBits &dirtyBits = mState.getDirtyBits();
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
-    mGLState.clearDirtyBits();
+    mState.clearDirtyBits();
     return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
 {
-    const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
+    const State::DirtyBits &dirtyBits = (mState.getDirtyBits() & bitMask);
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
-    mGLState.clearDirtyBits(dirtyBits);
+    mState.clearDirtyBits(dirtyBits);
     return angle::Result::Continue;
 }
 
 ANGLE_INLINE angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
 {
-    return mGLState.syncDirtyObjects(this, objectMask);
+    return mState.syncDirtyObjects(this, objectMask);
 }
 
 ANGLE_INLINE angle::Result Context::prepareForDraw(PrimitiveMode mode)
 {
     if (mGLES1Renderer)
     {
-        ANGLE_TRY(mGLES1Renderer->prepareForDraw(mode, this, &mGLState));
+        ANGLE_TRY(mGLES1Renderer->prepareForDraw(mode, this, &mState));
     }
 
     ANGLE_TRY(syncDirtyObjects(mDrawDirtyObjects));
     ASSERT(!isRobustResourceInitEnabled() ||
-           !mGLState.getDrawFramebuffer()->hasResourceThatNeedsInit());
+           !mState.getDrawFramebuffer()->hasResourceThatNeedsInit());
     return syncDirtyBits();
 }
 
@@ -124,8 +124,9 @@ ANGLE_INLINE void StateCache::onBufferBindingChange(Context *context)
 
 ANGLE_INLINE void Context::bindBuffer(BufferBinding target, GLuint buffer)
 {
-    Buffer *bufferObject = mState.mBuffers->checkBufferAllocation(mImplementation.get(), buffer);
-    mGLState.setBufferBinding(this, target, bufferObject);
+    Buffer *bufferObject =
+        mState.mBufferManager->checkBufferAllocation(mImplementation.get(), buffer);
+    mState.setBufferBinding(this, target, bufferObject);
     mStateCache.onBufferBindingChange(this);
 }
 

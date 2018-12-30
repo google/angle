@@ -10,8 +10,8 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/ContextState.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/State.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/TransformFeedbackImpl.h"
 

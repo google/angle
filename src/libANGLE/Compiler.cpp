@@ -9,7 +9,7 @@
 #include "libANGLE/Compiler.h"
 
 #include "common/debug.h"
-#include "libANGLE/ContextState.h"
+#include "libANGLE/State.h"
 #include "libANGLE/renderer/CompilerImpl.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 
@@ -47,7 +47,7 @@ ShShaderSpec SelectShaderSpec(GLint majorVersion, GLint minorVersion, bool isWeb
 
 }  // anonymous namespace
 
-Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
+Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     : mImplementation(implFactory->createCompiler()),
       mSpec(SelectShaderSpec(state.getClientMajorVersion(),
                              state.getClientMinorVersion(),

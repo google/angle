@@ -28,7 +28,7 @@ class RendererVk;
 class ContextVk : public ContextImpl, public vk::Context
 {
   public:
-    ContextVk(const gl::ContextState &state, RendererVk *renderer);
+    ContextVk(const gl::State &state, RendererVk *renderer);
     ~ContextVk() override;
 
     angle::Result initialize() override;

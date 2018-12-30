@@ -20,9 +20,8 @@
 namespace gl
 {
 struct Caps;
-class ContextState;
-class State;
 class FramebufferState;
+class State;
 }  // namespace gl
 
 namespace rx

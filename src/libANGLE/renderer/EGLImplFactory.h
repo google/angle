@@ -24,7 +24,7 @@ struct SurfaceState;
 namespace gl
 {
 class Context;
-class ContextState;
+class State;
 }  // namespace gl
 
 namespace rx
@@ -58,7 +58,7 @@ class EGLImplFactory : angle::NonCopyable
                                    EGLenum target,
                                    const egl::AttributeMap &attribs) = 0;
 
-    virtual ContextImpl *createContext(const gl::ContextState &state,
+    virtual ContextImpl *createContext(const gl::State &state,
                                        const egl::Config *configuration,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs) = 0;

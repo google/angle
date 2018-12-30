@@ -162,7 +162,7 @@ ImageImpl *DisplayNULL::createImage(const egl::ImageState &state,
     return new ImageNULL(state);
 }
 
-ContextImpl *DisplayNULL::createContext(const gl::ContextState &state,
+ContextImpl *DisplayNULL::createContext(const gl::State &state,
                                         const egl::Config *configuration,
                                         const gl::Context *shareContext,
                                         const egl::AttributeMap &attribs)

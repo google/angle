@@ -286,14 +286,14 @@ angle::Result FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
     syncClearState(context, mask);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getState().isScissorTestEnabled()))
     {
         functions->clear(mask);
     }
     else
     {
         ClearMultiviewGL *multiviewClearer = GetMultiviewClearer(context);
-        multiviewClearer->clearMultiviewFBO(mState, context->getGLState().getScissor(),
+        multiviewClearer->clearMultiviewFBO(mState, context->getState().getScissor(),
                                             ClearMultiviewGL::ClearCommandType::Clear, mask,
                                             GL_NONE, 0, nullptr, 0.0f, 0);
     }
@@ -312,14 +312,14 @@ angle::Result FramebufferGL::clearBufferfv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getState().isScissorTestEnabled()))
     {
         functions->clearBufferfv(buffer, drawbuffer, values);
     }
     else
     {
         ClearMultiviewGL *multiviewClearer = GetMultiviewClearer(context);
-        multiviewClearer->clearMultiviewFBO(mState, context->getGLState().getScissor(),
+        multiviewClearer->clearMultiviewFBO(mState, context->getState().getScissor(),
                                             ClearMultiviewGL::ClearCommandType::ClearBufferfv,
                                             static_cast<GLbitfield>(0u), buffer, drawbuffer,
                                             reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
@@ -339,14 +339,14 @@ angle::Result FramebufferGL::clearBufferuiv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getState().isScissorTestEnabled()))
     {
         functions->clearBufferuiv(buffer, drawbuffer, values);
     }
     else
     {
         ClearMultiviewGL *multiviewClearer = GetMultiviewClearer(context);
-        multiviewClearer->clearMultiviewFBO(mState, context->getGLState().getScissor(),
+        multiviewClearer->clearMultiviewFBO(mState, context->getState().getScissor(),
                                             ClearMultiviewGL::ClearCommandType::ClearBufferuiv,
                                             static_cast<GLbitfield>(0u), buffer, drawbuffer,
                                             reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
@@ -366,14 +366,14 @@ angle::Result FramebufferGL::clearBufferiv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getState().isScissorTestEnabled()))
     {
         functions->clearBufferiv(buffer, drawbuffer, values);
     }
     else
     {
         ClearMultiviewGL *multiviewClearer = GetMultiviewClearer(context);
-        multiviewClearer->clearMultiviewFBO(mState, context->getGLState().getScissor(),
+        multiviewClearer->clearMultiviewFBO(mState, context->getState().getScissor(),
                                             ClearMultiviewGL::ClearCommandType::ClearBufferiv,
                                             static_cast<GLbitfield>(0u), buffer, drawbuffer,
                                             reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
@@ -394,14 +394,14 @@ angle::Result FramebufferGL::clearBufferfi(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getState().isScissorTestEnabled()))
     {
         functions->clearBufferfi(buffer, drawbuffer, depth, stencil);
     }
     else
     {
         ClearMultiviewGL *multiviewClearer = GetMultiviewClearer(context);
-        multiviewClearer->clearMultiviewFBO(mState, context->getGLState().getScissor(),
+        multiviewClearer->clearMultiviewFBO(mState, context->getState().getScissor(),
                                             ClearMultiviewGL::ClearCommandType::ClearBufferfi,
                                             static_cast<GLbitfield>(0u), buffer, drawbuffer,
                                             nullptr, depth, stencil);
@@ -445,9 +445,9 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    PixelPackState packState = context->getGLState().getPackState();
+    PixelPackState packState = context->getState().getPackState();
     const gl::Buffer *packBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
+        context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
     nativegl::ReadPixelsFormat readPixelsFormat =
         nativegl::GetReadPixelsFormat(functions, workarounds, format, type);
@@ -512,8 +512,8 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
-    const Framebuffer *sourceFramebuffer = context->getGLState().getReadFramebuffer();
-    const Framebuffer *destFramebuffer   = context->getGLState().getDrawFramebuffer();
+    const Framebuffer *sourceFramebuffer = context->getState().getReadFramebuffer();
+    const Framebuffer *destFramebuffer   = context->getState().getDrawFramebuffer();
 
     const FramebufferAttachment *colorReadAttachment = sourceFramebuffer->getReadColorbuffer();
 
@@ -712,12 +712,12 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
         }
     }
 
-    if (attachment && mState.id() == context->getGLState().getDrawFramebuffer()->id())
+    if (attachment && mState.id() == context->getState().getDrawFramebuffer()->id())
     {
         const bool isSideBySide =
             (attachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
         stateManager->setSideBySide(isSideBySide);
-        stateManager->updateMultiviewBaseViewLayerIndexUniform(context->getGLState().getProgram(),
+        stateManager->updateMultiviewBaseViewLayerIndexUniform(context->getState().getProgram(),
                                                                getState());
     }
 

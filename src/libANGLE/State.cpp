@@ -67,6 +67,47 @@ constexpr std::pair<BufferBinding, State::BufferBindingSetter> GetBufferBindingS
                                       ? &State::setGenericBufferBindingWithBit<Target>
                                       : &State::setGenericBufferBinding<Target>);
 }
+
+template <typename T>
+using ContextStateMember = T *(State::*);
+
+template <typename T>
+T *AllocateOrGetSharedResourceManager(const State *shareContextState, ContextStateMember<T> member)
+{
+    if (shareContextState)
+    {
+        T *resourceManager = (*shareContextState).*member;
+        resourceManager->addRef();
+        return resourceManager;
+    }
+    else
+    {
+        return new T();
+    }
+}
+
+TextureManager *AllocateOrGetSharedTextureManager(const State *shareContextState,
+                                                  TextureManager *shareTextures,
+                                                  ContextStateMember<TextureManager> member)
+{
+    if (shareContextState)
+    {
+        TextureManager *textureManager = (*shareContextState).*member;
+        ASSERT(shareTextures == nullptr || textureManager == shareTextures);
+        textureManager->addRef();
+        return textureManager;
+    }
+    else if (shareTextures)
+    {
+        TextureManager *textureManager = shareTextures;
+        textureManager->addRef();
+        return textureManager;
+    }
+    else
+    {
+        return new TextureManager();
+    }
+}
 }  // namespace
 
 template <typename BindingT, typename... ArgsT>
@@ -190,12 +231,32 @@ const angle::PackedEnumMap<BufferBinding, State::BufferBindingSetter> State::kBu
     GetBufferBindingSetter<BufferBinding::Uniform>(),
 }};
 
-State::State(bool debug,
+State::State(ContextID contextIn,
+             const State *shareContextState,
+             TextureManager *shareTextures,
+             const Version &clientVersion,
+             bool debug,
              bool bindGeneratesResource,
              bool clientArraysEnabled,
              bool robustResourceInit,
              bool programBinaryCacheEnabled)
-    : mMaxDrawBuffers(0),
+    : mClientVersion(clientVersion),
+      mContext(contextIn),
+      mBufferManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mBufferManager)),
+      mShaderProgramManager(
+          AllocateOrGetSharedResourceManager(shareContextState, &State::mShaderProgramManager)),
+      mTextureManager(AllocateOrGetSharedTextureManager(shareContextState,
+                                                        shareTextures,
+                                                        &State::mTextureManager)),
+      mRenderbufferManager(
+          AllocateOrGetSharedResourceManager(shareContextState, &State::mRenderbufferManager)),
+      mSamplerManager(
+          AllocateOrGetSharedResourceManager(shareContextState, &State::mSamplerManager)),
+      mSyncManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mSyncManager)),
+      mPathManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mPathManager)),
+      mFramebufferManager(new FramebufferManager()),
+      mProgramPipelineManager(new ProgramPipelineManager()),
+      mMaxDrawBuffers(0),
       mMaxCombinedTextureImageUnits(0),
       mDepthClearValue(0),
       mStencilClearValue(0),

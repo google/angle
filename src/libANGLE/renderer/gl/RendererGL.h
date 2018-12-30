@@ -17,9 +17,9 @@
 
 namespace gl
 {
-class ContextState;
 struct IndexRange;
 class Path;
+class State;
 struct Workarounds;
 }  // namespace gl
 
@@ -51,57 +51,57 @@ class RendererGL : angle::NonCopyable
     angle::Result finish();
 
     // CHROMIUM_path_rendering implementation
-    void stencilFillPath(const gl::ContextState &state,
+    void stencilFillPath(const gl::State &state,
                          const gl::Path *path,
                          GLenum fillMode,
                          GLuint mask);
-    void stencilStrokePath(const gl::ContextState &state,
+    void stencilStrokePath(const gl::State &state,
                            const gl::Path *path,
                            GLint reference,
                            GLuint mask);
-    void coverFillPath(const gl::ContextState &state, const gl::Path *path, GLenum coverMode);
-    void coverStrokePath(const gl::ContextState &state, const gl::Path *path, GLenum coverMode);
-    void stencilThenCoverFillPath(const gl::ContextState &state,
+    void coverFillPath(const gl::State &state, const gl::Path *path, GLenum coverMode);
+    void coverStrokePath(const gl::State &state, const gl::Path *path, GLenum coverMode);
+    void stencilThenCoverFillPath(const gl::State &state,
                                   const gl::Path *path,
                                   GLenum fillMode,
                                   GLuint mask,
                                   GLenum coverMode);
-    void stencilThenCoverStrokePath(const gl::ContextState &state,
+    void stencilThenCoverStrokePath(const gl::State &state,
                                     const gl::Path *path,
                                     GLint reference,
                                     GLuint mask,
                                     GLenum coverMode);
-    void coverFillPathInstanced(const gl::ContextState &state,
+    void coverFillPathInstanced(const gl::State &state,
                                 const std::vector<gl::Path *> &paths,
                                 GLenum coverMode,
                                 GLenum transformType,
                                 const GLfloat *transformValues);
-    void coverStrokePathInstanced(const gl::ContextState &state,
+    void coverStrokePathInstanced(const gl::State &state,
                                   const std::vector<gl::Path *> &paths,
                                   GLenum coverMode,
                                   GLenum transformType,
                                   const GLfloat *transformValues);
-    void stencilFillPathInstanced(const gl::ContextState &state,
+    void stencilFillPathInstanced(const gl::State &state,
                                   const std::vector<gl::Path *> &paths,
                                   GLenum fillMode,
                                   GLuint mask,
                                   GLenum transformType,
                                   const GLfloat *transformValues);
-    void stencilStrokePathInstanced(const gl::ContextState &state,
+    void stencilStrokePathInstanced(const gl::State &state,
                                     const std::vector<gl::Path *> &paths,
                                     GLint reference,
                                     GLuint mask,
                                     GLenum transformType,
                                     const GLfloat *transformValues);
 
-    void stencilThenCoverFillPathInstanced(const gl::ContextState &state,
+    void stencilThenCoverFillPathInstanced(const gl::State &state,
                                            const std::vector<gl::Path *> &paths,
                                            GLenum coverMode,
                                            GLenum fillMode,
                                            GLuint mask,
                                            GLenum transformType,
                                            const GLfloat *transformValues);
-    void stencilThenCoverStrokePathInstanced(const gl::ContextState &state,
+    void stencilThenCoverStrokePathInstanced(const gl::State &state,
                                              const std::vector<gl::Path *> &paths,
                                              GLenum coverMode,
                                              GLint reference,

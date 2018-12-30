@@ -59,7 +59,7 @@ bool AllocationTrackerNULL::updateMemoryAllocation(size_t oldSize, size_t newSiz
     return true;
 }
 
-ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *allocationTracker)
+ContextNULL::ContextNULL(const gl::State &state, AllocationTrackerNULL *allocationTracker)
     : ContextImpl(state), mAllocationTracker(allocationTracker)
 {
     ASSERT(mAllocationTracker != nullptr);

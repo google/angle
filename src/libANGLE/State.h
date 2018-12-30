@@ -30,15 +30,34 @@
 
 namespace gl
 {
-class Query;
-class VertexArray;
-class Context;
+class BufferManager;
 struct Caps;
+class Context;
+class FramebufferManager;
+class PathManager;
+class ProgramPipelineManager;
+class Query;
+class RenderbufferManager;
+class SamplerManager;
+class ShaderProgramManager;
+class SyncManager;
+class TextureManager;
+class VertexArray;
+
+static constexpr Version ES_2_0 = Version(2, 0);
+static constexpr Version ES_3_0 = Version(3, 0);
+static constexpr Version ES_3_1 = Version(3, 1);
+
+using ContextID = uintptr_t;
 
 class State : angle::NonCopyable
 {
   public:
-    State(bool debug,
+    State(ContextID contextIn,
+          const State *shareContextState,
+          TextureManager *shareTextures,
+          const Version &clientVersion,
+          bool debug,
           bool bindGeneratesResource,
           bool clientArraysEnabled,
           bool robustResourceInit,
@@ -47,6 +66,25 @@ class State : angle::NonCopyable
 
     void initialize(Context *context);
     void reset(const Context *context);
+
+    // Getters
+    ContextID getContextID() const { return mContext; }
+    GLint getClientMajorVersion() const { return mClientVersion.major; }
+    GLint getClientMinorVersion() const { return mClientVersion.minor; }
+    const Version &getClientVersion() const { return mClientVersion; }
+    const Caps &getCaps() const { return mCaps; }
+    const TextureCapsMap &getTextureCaps() const { return mTextureCaps; }
+    const Extensions &getExtensions() const { return mExtensions; }
+    const Limitations &getLimitations() const { return mLimitations; }
+
+    bool isWebGL() const { return mExtensions.webglCompatibility; }
+
+    bool isWebGL1() const { return (isWebGL() && mClientVersion.major == 2); }
+
+    const TextureCaps &getTextureCap(GLenum internalFormat) const
+    {
+        return mTextureCaps.get(internalFormat);
+    }
 
     // State chunk getters
     const RasterizerState &getRasterizerState() const;
@@ -564,6 +602,8 @@ class State : angle::NonCopyable
     using BufferBindingSetter = void (State::*)(const Context *, Buffer *);
 
   private:
+    friend class Context;
+
     void unsetActiveTextures(ActiveTextureMask textureMask);
     void updateActiveTexture(const Context *context, size_t textureIndex, Texture *texture);
     void updateActiveTextureState(const Context *context,
@@ -601,6 +641,26 @@ class State : angle::NonCopyable
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
+
+    Version mClientVersion;
+    ContextID mContext;
+
+    // Caps to use for validation
+    Caps mCaps;
+    TextureCapsMap mTextureCaps;
+    Extensions mExtensions;
+    Limitations mLimitations;
+
+    // Resource managers.
+    BufferManager *mBufferManager;
+    ShaderProgramManager *mShaderProgramManager;
+    TextureManager *mTextureManager;
+    RenderbufferManager *mRenderbufferManager;
+    SamplerManager *mSamplerManager;
+    SyncManager *mSyncManager;
+    PathManager *mPathManager;
+    FramebufferManager *mFramebufferManager;
+    ProgramPipelineManager *mProgramPipelineManager;
 
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;

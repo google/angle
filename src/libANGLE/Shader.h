@@ -41,11 +41,11 @@ class WorkerThreadPool;
 
 namespace gl
 {
-class ContextState;
+class CompileTask;
+class Context;
 struct Limitations;
 class ShaderProgramManager;
-class Context;
-class CompileTask;
+class State;
 
 // We defer the compile until link time, or until properties are queried.
 enum class CompileStatus

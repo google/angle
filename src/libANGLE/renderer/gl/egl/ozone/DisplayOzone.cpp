@@ -927,7 +927,7 @@ SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-ContextImpl *DisplayOzone::createContext(const gl::ContextState &state,
+ContextImpl *DisplayOzone::createContext(const gl::State &state,
                                          const egl::Config *configuration,
                                          const gl::Context *shareContext,
                                          const egl::AttributeMap &attribs)

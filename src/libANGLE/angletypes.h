@@ -605,8 +605,7 @@ using UniqueObjectPointer = UniqueObjectPointerBase<ObjT, DestroyThenDelete<ObjT
 
 namespace gl
 {
-class ContextState;
-
+class State;
 }  // namespace gl
 
 #endif  // LIBANGLE_ANGLETYPES_H_

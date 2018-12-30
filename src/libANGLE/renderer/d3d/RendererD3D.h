@@ -14,8 +14,8 @@
 #include "common/Color.h"
 #include "common/MemoryBuffer.h"
 #include "common/debug.h"
-#include "libANGLE/ContextState.h"
 #include "libANGLE/Device.h"
+#include "libANGLE/State.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -155,7 +155,7 @@ class RendererD3D : public BufferFactoryD3D
     virtual egl::ConfigSet generateConfigs()                                            = 0;
     virtual void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const = 0;
 
-    virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
+    virtual ContextImpl *createContext(const gl::State &state) = 0;
 
     std::string getVendorString() const;
 

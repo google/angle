@@ -33,7 +33,7 @@ class AllocationTrackerNULL : angle::NonCopyable
 class ContextNULL : public ContextImpl
 {
   public:
-    ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *allocationTracker);
+    ContextNULL(const gl::State &state, AllocationTrackerNULL *allocationTracker);
     ~ContextNULL() override;
 
     angle::Result initialize() override;

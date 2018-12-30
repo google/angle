@@ -40,17 +40,16 @@ struct TranslatedAttribute;
 
 namespace gl
 {
-struct UnusedUniform;
+class Buffer;
 struct Caps;
-struct Extensions;
 class Context;
-class ContextState;
+struct Extensions;
+class Framebuffer;
+class InfoLog;
 class Shader;
 class ShaderProgramManager;
 class State;
-class InfoLog;
-class Buffer;
-class Framebuffer;
+struct UnusedUniform;
 struct Version;
 
 extern const char *const g_fakepath;

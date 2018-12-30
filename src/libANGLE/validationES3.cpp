@@ -548,7 +548,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
 
         if (width > 0 && height > 0 && depth > 0 && pixels == nullptr &&
-            context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack) == nullptr)
+            context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack) == nullptr)
         {
             context->validationError(GL_INVALID_VALUE, kPixelDataNull);
             return false;
@@ -563,8 +563,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
     }
 
     // Check for pixel unpack buffer related API errors
-    gl::Buffer *pixelUnpackBuffer =
-        context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
+    gl::Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (pixelUnpackBuffer != nullptr)
     {
         // ...data is not evenly divisible into the number of bytes needed to store in memory a
@@ -924,7 +923,7 @@ bool ValidateES3CopyTexImageParametersBase(Context *context,
     }
     ASSERT(textureFormat.valid() || !isSubImage);
 
-    const auto &state            = context->getGLState();
+    const auto &state            = context->getState();
     gl::Framebuffer *framebuffer = state.getReadFramebuffer();
     GLuint readFramebufferID     = framebuffer->id();
 
@@ -1355,10 +1354,10 @@ bool ValidateInvalidateFramebuffer(Context *context,
     {
         case GL_DRAW_FRAMEBUFFER:
         case GL_FRAMEBUFFER:
-            defaultFramebuffer = context->getGLState().getDrawFramebuffer()->id() == 0;
+            defaultFramebuffer = context->getState().getDrawFramebuffer()->id() == 0;
             break;
         case GL_READ_FRAMEBUFFER:
-            defaultFramebuffer = context->getGLState().getReadFramebuffer()->id() == 0;
+            defaultFramebuffer = context->getState().getReadFramebuffer()->id() == 0;
             break;
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
@@ -1395,7 +1394,7 @@ bool ValidateClearBuffer(Context *context)
         return false;
     }
 
-    if (!ValidateFramebufferComplete(context, context->getGLState().getDrawFramebuffer()))
+    if (!ValidateFramebufferComplete(context, context->getState().getDrawFramebuffer()))
     {
         return false;
     }
@@ -1436,8 +1435,8 @@ bool ValidateDrawRangeElements(Context *context,
 
     // Note that resolving the index range is a bit slow. We should probably optimize this.
     IndexRange indexRange;
-    ANGLE_VALIDATION_TRY(context->getGLState().getVertexArray()->getIndexRange(
-        context, type, count, indices, &indexRange));
+    ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(context, type, count,
+                                                                             indices, &indexRange));
 
     if (indexRange.end > end || indexRange.start < start)
     {
@@ -1467,7 +1466,7 @@ bool ValidateReadBuffer(Context *context, GLenum src)
         return false;
     }
 
-    const Framebuffer *readFBO = context->getGLState().getReadFramebuffer();
+    const Framebuffer *readFBO = context->getState().getReadFramebuffer();
 
     if (readFBO == nullptr)
     {
@@ -1638,7 +1637,7 @@ static bool ValidateBindBufferCommon(Context *context,
         return false;
     }
 
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+    if (!context->getState().isBindGeneratesResourceEnabled() &&
         !context->isBufferGenerated(buffer))
     {
         context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
@@ -1663,7 +1662,7 @@ static bool ValidateBindBufferCommon(Context *context,
             }
 
             TransformFeedback *curTransformFeedback =
-                context->getGLState().getCurrentTransformFeedback();
+                context->getState().getCurrentTransformFeedback();
             if (curTransformFeedback && curTransformFeedback->isActive())
             {
                 context->validationError(GL_INVALID_OPERATION, kTransformFeedbackTargetActive);
@@ -2424,7 +2423,7 @@ bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveMod
             return false;
     }
 
-    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
     if (transformFeedback->isActive())
@@ -2454,7 +2453,7 @@ bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveMod
         }
     }
 
-    Program *program = context->getGLState().getLinkedProgram(context);
+    Program *program = context->getState().getLinkedProgram(context);
 
     if (!program)
     {
@@ -2802,8 +2801,8 @@ bool ValidateCopyBufferSubData(Context *context,
         return false;
     }
 
-    Buffer *readBuffer  = context->getGLState().getTargetBuffer(readTarget);
-    Buffer *writeBuffer = context->getGLState().getTargetBuffer(writeTarget);
+    Buffer *readBuffer  = context->getState().getTargetBuffer(readTarget);
+    Buffer *writeBuffer = context->getState().getTargetBuffer(writeTarget);
 
     if (!readBuffer || !writeBuffer)
     {
@@ -3011,8 +3010,8 @@ bool ValidateVertexAttribIPointer(Context *context,
     // An INVALID_OPERATION error is generated when a non-zero vertex array object
     // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
     // and the pointer argument is not NULL.
-    if (context->getGLState().getVertexArrayId() != 0 &&
-        context->getGLState().getTargetBuffer(BufferBinding::Array) == 0 && pointer != nullptr)
+    if (context->getState().getVertexArrayId() != 0 &&
+        context->getState().getTargetBuffer(BufferBinding::Array) == 0 && pointer != nullptr)
     {
         context->validationError(GL_INVALID_OPERATION, kClientDataInVertexArray);
         return false;
@@ -3385,7 +3384,7 @@ bool ValidateEndTransformFeedback(Context *context)
         return false;
     }
 
-    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
     if (!transformFeedback->isActive())
@@ -3494,7 +3493,7 @@ bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id)
             // Cannot bind a transform feedback object if the current one is started and not
             // paused (3.0.2 pg 85 section 2.14.1)
             TransformFeedback *curTransformFeedback =
-                context->getGLState().getCurrentTransformFeedback();
+                context->getState().getCurrentTransformFeedback();
             if (curTransformFeedback && curTransformFeedback->isActive() &&
                 !curTransformFeedback->isPaused())
             {
@@ -3539,7 +3538,7 @@ bool ValidatePauseTransformFeedback(Context *context)
         return false;
     }
 
-    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
     // Current transform feedback must be active and not paused in order to pause (3.0.2 pg 86)
@@ -3566,7 +3565,7 @@ bool ValidateResumeTransformFeedback(Context *context)
         return false;
     }
 
-    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
     // Current transform feedback must be active and paused in order to resume (3.0.2 pg 86)

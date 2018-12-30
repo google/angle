@@ -56,9 +56,9 @@ bool IsPartialBlit(gl::Context *context,
         return true;
     }
 
-    if (context->getGLState().isScissorTestEnabled())
+    if (context->getState().isScissorTestEnabled())
     {
-        const Rectangle &scissor = context->getGLState().getScissor();
+        const Rectangle &scissor = context->getState().getScissor();
         return scissor.x > 0 || scissor.y > 0 || scissor.width < writeSize.width ||
                scissor.height < writeSize.height;
     }
@@ -490,7 +490,7 @@ bool ValidateES2CopyTexImageParameters(Context *context,
         return false;
     }
 
-    const gl::Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
+    const gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
     GLenum colorbufferFormat =
         framebuffer->getReadColorbuffer()->getFormat().info->sizedInternalFormat;
     const auto &formatInfo = *textureFormat.info;
@@ -1291,7 +1291,7 @@ bool ValidateES2TexImageParameters(Context *context,
         }
 
         if (width > 0 && height > 0 && pixels == nullptr &&
-            context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack) == nullptr)
+            context->getState().getTargetBuffer(BufferBinding::PixelUnpack) == nullptr)
         {
             context->validationError(GL_INVALID_VALUE, kPixelDataNull);
             return false;
@@ -1928,7 +1928,7 @@ bool ValidateDiscardFramebufferEXT(Context *context,
     {
         case GL_FRAMEBUFFER:
             defaultFramebuffer =
-                (context->getGLState().getTargetFramebuffer(GL_FRAMEBUFFER)->id() == 0);
+                (context->getState().getTargetFramebuffer(GL_FRAMEBUFFER)->id() == 0);
             break;
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
@@ -2133,7 +2133,7 @@ bool ValidateDebugMessageInsertKHR(Context *context,
         return false;
     }
 
-    if (!context->getGLState().getDebug().isOutputEnabled())
+    if (!context->getState().getDebug().isOutputEnabled())
     {
         // If the DEBUG_OUTPUT state is disabled calls to DebugMessageInsert are discarded and do
         // not generate an error.
@@ -2231,7 +2231,7 @@ bool ValidatePushDebugGroupKHR(Context *context,
         return false;
     }
 
-    size_t currentStackSize = context->getGLState().getDebug().getGroupStackDepth();
+    size_t currentStackSize = context->getState().getDebug().getGroupStackDepth();
     if (currentStackSize >= context->getExtensions().maxDebugGroupStackDepth)
     {
         context->validationError(GL_STACK_OVERFLOW, kExceedsMaxDebugGroupStackDepth);
@@ -2249,7 +2249,7 @@ bool ValidatePopDebugGroupKHR(Context *context)
         return false;
     }
 
-    size_t currentStackSize = context->getGLState().getDebug().getGroupStackDepth();
+    size_t currentStackSize = context->getState().getDebug().getGroupStackDepth();
     if (currentStackSize <= 1)
     {
         context->validationError(GL_STACK_UNDERFLOW, kCannotPopDefaultDebugGroup);
@@ -2551,8 +2551,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
         return false;
     }
 
-    Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
-    Framebuffer *drawFramebuffer = context->getGLState().getDrawFramebuffer();
+    Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
+    Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
@@ -2649,7 +2649,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
 bool ValidateClear(Context *context, GLbitfield mask)
 {
-    Framebuffer *fbo             = context->getGLState().getDrawFramebuffer();
+    Framebuffer *fbo             = context->getState().getDrawFramebuffer();
     const Extensions &extensions = context->getExtensions();
 
     if (!ValidateFramebufferComplete(context, fbo))
@@ -2681,7 +2681,7 @@ bool ValidateClear(Context *context, GLbitfield mask)
 
     if (extensions.multiview && extensions.disjointTimerQuery)
     {
-        const State &state       = context->getGLState();
+        const State &state       = context->getState();
         Framebuffer *framebuffer = state.getDrawFramebuffer();
         if (framebuffer->getNumViews() > 1 && state.isQueryActive(QueryType::TimeElapsed))
         {
@@ -2980,7 +2980,7 @@ bool ValidateMapBufferOES(Context *context, BufferBinding target, GLenum access)
         return false;
     }
 
-    Buffer *buffer = context->getGLState().getTargetBuffer(target);
+    Buffer *buffer = context->getState().getTargetBuffer(target);
 
     if (buffer == nullptr)
     {
@@ -3031,11 +3031,11 @@ bool ValidateMapBufferRangeEXT(Context *context,
 
 bool ValidateMapBufferBase(Context *context, BufferBinding target)
 {
-    Buffer *buffer = context->getGLState().getTargetBuffer(target);
+    Buffer *buffer = context->getState().getTargetBuffer(target);
     ASSERT(buffer != nullptr);
 
     // Check if this buffer is currently being used as a transform feedback output buffer
-    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     if (transformFeedback != nullptr && transformFeedback->isActive())
     {
         for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
@@ -3093,7 +3093,7 @@ bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
         return false;
     }
 
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+    if (!context->getState().isBindGeneratesResourceEnabled() &&
         !context->isTextureGenerated(texture))
     {
         context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
@@ -4314,7 +4314,7 @@ bool ValidateBufferData(Context *context,
         return false;
     }
 
-    Buffer *buffer = context->getGLState().getTargetBuffer(target);
+    Buffer *buffer = context->getState().getTargetBuffer(target);
 
     if (!buffer)
     {
@@ -4356,7 +4356,7 @@ bool ValidateBufferSubData(Context *context,
         return false;
     }
 
-    Buffer *buffer = context->getGLState().getTargetBuffer(target);
+    Buffer *buffer = context->getState().getTargetBuffer(target);
 
     if (!buffer)
     {
@@ -4495,7 +4495,7 @@ bool ValidateBindFramebuffer(Context *context, GLenum target, GLuint framebuffer
         return false;
     }
 
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+    if (!context->getState().isBindGeneratesResourceEnabled() &&
         !context->isFramebufferGenerated(framebuffer))
     {
         context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
@@ -4513,7 +4513,7 @@ bool ValidateBindRenderbuffer(Context *context, GLenum target, GLuint renderbuff
         return false;
     }
 
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+    if (!context->getState().isBindGeneratesResourceEnabled() &&
         !context->isRenderbufferGenerated(renderbuffer))
     {
         context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
@@ -4714,9 +4714,9 @@ bool ValidateVertexAttribPointer(Context *context,
     // An INVALID_OPERATION error is generated when a non-zero vertex array object
     // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
     // and the pointer argument is not NULL.
-    bool nullBufferAllowed = context->getGLState().areClientArraysEnabled() &&
-                             context->getGLState().getVertexArray()->id() == 0;
-    if (!nullBufferAllowed && context->getGLState().getTargetBuffer(BufferBinding::Array) == 0 &&
+    bool nullBufferAllowed = context->getState().areClientArraysEnabled() &&
+                             context->getState().getVertexArray()->id() == 0;
+    if (!nullBufferAllowed && context->getState().getTargetBuffer(BufferBinding::Array) == 0 &&
         ptr != nullptr)
     {
         context->validationError(GL_INVALID_OPERATION, kClientDataInVertexArray);
@@ -6323,7 +6323,7 @@ bool ValidateUseProgram(Context *context, GLuint program)
             return false;
         }
     }
-    if (context->getGLState().isTransformFeedbackActiveUnpaused())
+    if (context->getState().isTransformFeedbackActiveUnpaused())
     {
         // ES 3.0.4 section 2.15 page 91
         context->validationError(GL_INVALID_OPERATION, kTransformFeedbackUseProgram);

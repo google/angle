@@ -148,7 +148,7 @@ class DynamicHLSL : angle::NonCopyable
                                            const bool pointSpriteEmulation,
                                            const std::string &preambleString) const;
 
-    void getPixelShaderOutputKey(const gl::ContextState &data,
+    void getPixelShaderOutputKey(const gl::State &data,
                                  const gl::ProgramState &programData,
                                  const ProgramD3DMetadata &metadata,
                                  std::vector<PixelShaderOutputVariable> *outPixelShaderKey);

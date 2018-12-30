@@ -232,7 +232,7 @@ angle::Result VertexDataManager::prepareVertexData(
     std::vector<TranslatedAttribute> *translatedAttribs,
     GLsizei instances)
 {
-    const gl::State &state             = context->getGLState();
+    const gl::State &state             = context->getState();
     const gl::VertexArray *vertexArray = state.getVertexArray();
     const auto &vertexAttributes       = vertexArray->getVertexAttributes();
     const auto &vertexBindings         = vertexArray->getVertexBindings();

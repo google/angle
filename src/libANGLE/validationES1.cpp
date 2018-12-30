@@ -1172,7 +1172,7 @@ bool ValidatePolygonOffsetx(Context *context, GLfixed factor, GLfixed units)
 bool ValidatePopMatrix(Context *context)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    const auto &stack = context->getGLState().gles1().currentMatrixStack();
+    const auto &stack = context->getState().gles1().currentMatrixStack();
     if (stack.size() == 1)
     {
         context->validationError(GL_STACK_UNDERFLOW, kMatrixStackUnderflow);
@@ -1184,7 +1184,7 @@ bool ValidatePopMatrix(Context *context)
 bool ValidatePushMatrix(Context *context)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    const auto &stack = context->getGLState().gles1().currentMatrixStack();
+    const auto &stack = context->getState().gles1().currentMatrixStack();
     if (stack.size() == stack.max_size())
     {
         context->validationError(GL_STACK_OVERFLOW, kMatrixStackOverflow);

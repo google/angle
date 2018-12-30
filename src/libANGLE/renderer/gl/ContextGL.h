@@ -30,7 +30,7 @@ struct WorkaroundsGL;
 class ContextGL : public ContextImpl
 {
   public:
-    ContextGL(const gl::ContextState &state, const std::shared_ptr<RendererGL> &renderer);
+    ContextGL(const gl::State &state, const std::shared_ptr<RendererGL> &renderer);
     ~ContextGL() override;
 
     angle::Result initialize() override;

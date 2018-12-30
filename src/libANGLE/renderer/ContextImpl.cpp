@@ -14,7 +14,7 @@
 namespace rx
 {
 
-ContextImpl::ContextImpl(const gl::ContextState &state)
+ContextImpl::ContextImpl(const gl::State &state)
     : mState(state), mMemoryProgramCache(nullptr), mErrors(nullptr)
 {}
 

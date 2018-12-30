@@ -20,7 +20,7 @@ class Renderer9;
 class Context9 : public ContextD3D
 {
   public:
-    Context9(const gl::ContextState &state, Renderer9 *renderer);
+    Context9(const gl::State &state, Renderer9 *renderer);
     ~Context9() override;
 
     angle::Result initialize() override;

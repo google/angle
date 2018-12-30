@@ -106,7 +106,7 @@ constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
         kVertexBufferUsage, kDefaultBufferSize, true \
     }
 
-ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
+ContextVk::ContextVk(const gl::State &state, RendererVk *renderer)
     : ContextImpl(state),
       vk::Context(renderer),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
@@ -648,7 +648,7 @@ void ContextVk::updateColorMask(const gl::BlendState &blendState)
         gl_vk::GetColorComponentFlags(blendState.colorMaskRed, blendState.colorMaskGreen,
                                       blendState.colorMaskBlue, blendState.colorMaskAlpha);
 
-    FramebufferVk *framebufferVk = vk::GetImpl(mState.getState().getDrawFramebuffer());
+    FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
     mGraphicsPipelineDesc->updateColorWriteMask(mClearColorMask,
                                                 framebufferVk->getEmulatedAlphaAttachmentMask());
 }
@@ -694,7 +694,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
         invalidateVertexAndIndexBuffers();
     }
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
 
     for (size_t dirtyBit : dirtyBits)
     {
@@ -830,7 +830,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                 break;
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
-                updateFlipViewportReadFramebuffer(context->getGLState());
+                updateFlipViewportReadFramebuffer(context->getState());
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
@@ -943,7 +943,7 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
         drawSurface != nullptr && mRenderer->getFeatures().flipViewportY &&
         !IsMaskFlagSet(drawSurface->getOrientation(), EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE);
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
     invalidateDriverUniforms();
@@ -1157,7 +1157,7 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
     // Release any previously retained buffers.
     mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
 
-    const gl::Rectangle &glViewport = mState.getState().getViewport();
+    const gl::Rectangle &glViewport = mState.getViewport();
     float halfRenderAreaHeight =
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
 
@@ -1169,8 +1169,8 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
                                              nullptr));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
 
-    float depthRangeNear = mState.getState().getNearPlane();
-    float depthRangeFar  = mState.getState().getFarPlane();
+    float depthRangeNear = mState.getNearPlane();
+    float depthRangeFar  = mState.getFarPlane();
     float depthRangeDiff = depthRangeFar - depthRangeNear;
 
     // Copy and flush to the device.
@@ -1245,7 +1245,7 @@ void ContextVk::handleError(VkResult errorCode,
 
 angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 {
-    const gl::State &glState   = mState.getState();
+    const gl::State &glState   = mState;
     const gl::Program *program = glState.getProgram();
 
     mActiveTextures.fill(nullptr);
@@ -1303,7 +1303,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     ANGLE_TRY(
         defaultBuffer.allocate(this, kDefaultValueSize, &ptr, &bufferHandle, &offset, nullptr));
 
-    const gl::State &glState = mState.getState();
+    const gl::State &glState = mState;
     const gl::VertexAttribCurrentValueData &defaultValue =
         glState.getVertexAttribCurrentValues()[attribIndex];
 

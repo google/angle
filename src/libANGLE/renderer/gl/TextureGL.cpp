@@ -153,7 +153,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
     const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
 
     const gl::Buffer *unpackBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+        context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());

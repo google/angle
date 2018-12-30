@@ -122,7 +122,7 @@ class Renderer11 : public RendererD3D
     egl::ConfigSet generateConfigs() override;
     void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const override;
 
-    ContextImpl *createContext(const gl::ContextState &state) override;
+    ContextImpl *createContext(const gl::State &state) override;
 
     angle::Result flush(Context11 *context11);
     angle::Result finish(Context11 *context11);

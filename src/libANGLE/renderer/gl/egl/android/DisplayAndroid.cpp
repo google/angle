@@ -246,7 +246,7 @@ SurfaceImpl *DisplayAndroid::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-ContextImpl *DisplayAndroid::createContext(const gl::ContextState &state,
+ContextImpl *DisplayAndroid::createContext(const gl::State &state,
                                            const egl::Config *configuration,
                                            const gl::Context *shareContext,
                                            const egl::AttributeMap &attribs)

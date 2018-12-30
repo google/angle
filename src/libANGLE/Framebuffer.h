@@ -38,17 +38,16 @@ class Surface;
 
 namespace gl
 {
+struct Caps;
 class Context;
-class ContextState;
+struct Extensions;
 class Framebuffer;
 class ImageIndex;
+struct Rectangle;
 class Renderbuffer;
 class State;
 class Texture;
 class TextureCapsMap;
-struct Caps;
-struct Extensions;
-struct Rectangle;
 
 class FramebufferState final : angle::NonCopyable
 {

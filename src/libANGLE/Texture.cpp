@@ -12,8 +12,8 @@
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/ContextState.h"
 #include "libANGLE/Image.h"
+#include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/GLImplFactory.h"
@@ -43,7 +43,7 @@ InitState DetermineInitState(const Context *context, const uint8_t *pixels)
     if (!context || !context->isRobustResourceInitEnabled())
         return InitState::Initialized;
 
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
     return (pixels == nullptr && glState.getTargetBuffer(gl::BufferBinding::PixelUnpack) == nullptr)
                ? InitState::MayNeedInit
                : InitState::Initialized;
@@ -240,7 +240,7 @@ GLenum TextureState::getGenerateMipmapHint() const
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
-                                              const ContextState &data) const
+                                              const State &data) const
 {
     if (mBaseLevel > mMaxLevel)
     {
@@ -1594,12 +1594,12 @@ bool Texture::isSamplerComplete(const Context *context, const Sampler *optionalS
 {
     const auto &samplerState =
         optionalSampler ? optionalSampler->getSamplerState() : mState.mSamplerState;
-    const auto &contextState = context->getContextState();
+    const auto &contextState = context->getState();
 
     if (contextState.getContextID() != mCompletenessCache.context ||
         !mCompletenessCache.samplerState.sameCompleteness(samplerState))
     {
-        mCompletenessCache.context      = context->getContextState().getContextID();
+        mCompletenessCache.context      = context->getState().getContextID();
         mCompletenessCache.samplerState = samplerState;
         mCompletenessCache.samplerComplete =
             mState.computeSamplerCompleteness(samplerState, contextState);

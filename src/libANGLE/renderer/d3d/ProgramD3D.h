@@ -118,7 +118,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
                        const gl::ShaderMap<const ShaderD3D *> &attachedShaders);
 
     int getRendererMajorShaderModel() const;
-    bool usesBroadcast(const gl::ContextState &data) const;
+    bool usesBroadcast(const gl::State &data) const;
     bool usesFragDepth() const;
     bool usesPointCoord() const;
     bool usesFragCoord() const;

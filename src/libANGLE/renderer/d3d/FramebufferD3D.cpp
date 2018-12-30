@@ -100,7 +100,7 @@ FramebufferD3D::~FramebufferD3D() {}
 
 angle::Result FramebufferD3D::clear(const gl::Context *context, GLbitfield mask)
 {
-    ClearParameters clearParams = GetClearParameters(context->getGLState(), mask);
+    ClearParameters clearParams = GetClearParameters(context->getState(), mask);
     return clearImpl(context, clearParams);
 }
 
@@ -110,7 +110,7 @@ angle::Result FramebufferD3D::clearBufferfv(const gl::Context *context,
                                             const GLfloat *values)
 {
     // glClearBufferfv can be called to clear the color buffer or depth buffer
-    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
 
     if (buffer == GL_COLOR)
     {
@@ -137,7 +137,7 @@ angle::Result FramebufferD3D::clearBufferuiv(const gl::Context *context,
                                              const GLuint *values)
 {
     // glClearBufferuiv can only be called to clear a color buffer
-    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
         clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
@@ -154,7 +154,7 @@ angle::Result FramebufferD3D::clearBufferiv(const gl::Context *context,
                                             const GLint *values)
 {
     // glClearBufferiv can be called to clear the color buffer or stencil buffer
-    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
 
     if (buffer == GL_COLOR)
     {
@@ -182,7 +182,7 @@ angle::Result FramebufferD3D::clearBufferfi(const gl::Context *context,
                                             GLint stencil)
 {
     // glClearBufferfi can only be called to clear a depth stencil buffer
-    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
     clearParams.clearDepth      = true;
     clearParams.depthValue      = depth;
     clearParams.clearStencil    = true;
@@ -253,7 +253,7 @@ angle::Result FramebufferD3D::readPixels(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    const gl::PixelPackState &packState = context->getGLState().getPackState();
+    const gl::PixelPackState &packState = context->getState().getPackState();
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
@@ -280,7 +280,7 @@ angle::Result FramebufferD3D::blit(const gl::Context *context,
                                    GLbitfield mask,
                                    GLenum filter)
 {
-    const auto &glState                      = context->getGLState();
+    const auto &glState                      = context->getState();
     const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
     const gl::Rectangle *scissor = glState.isScissorTestEnabled() ? &glState.getScissor() : nullptr;
     ANGLE_TRY(blitImpl(context, sourceArea, destArea, scissor, (mask & GL_COLOR_BUFFER_BIT) != 0,
@@ -344,7 +344,7 @@ angle::Result FramebufferD3D::syncState(const gl::Context *context,
 const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl::Context *context)
 {
     gl::DrawBufferMask activeProgramOutputs =
-        context->getContextState().getState().getProgram()->getActiveOutputVariables();
+        context->getState().getProgram()->getActiveOutputVariables();
 
     if (mColorAttachmentsForRender.valid() && mCurrentActiveProgramOutputs == activeProgramOutputs)
     {

@@ -172,7 +172,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     ASSERT(!clearDepth || depthAttachment->isAttached());
 
     // If depth write is disabled, pretend that GL_DEPTH_BUFFER_BIT is not specified altogether.
-    clearDepth = clearDepth && contextVk->getGLState().getDepthStencilState().depthMask;
+    clearDepth = clearDepth && contextVk->getState().getDepthStencilState().depthMask;
 
     const gl::FramebufferAttachment *stencilAttachment = mState.getStencilAttachment();
     bool clearStencil = (stencilAttachment && (mask & GL_STENCIL_BUFFER_BIT) != 0);
@@ -180,14 +180,13 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     bool clearColor = IsMaskFlagSet(static_cast<int>(mask), GL_COLOR_BUFFER_BIT);
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
 
     VkClearDepthStencilValue clearDepthStencilValue =
         contextVk->getClearDepthStencilValue().depthStencil;
 
     // Apply the stencil mask to the clear value.
-    clearDepthStencilValue.stencil &=
-        contextVk->getGLState().getDepthStencilState().stencilWritemask;
+    clearDepthStencilValue.stencil &= contextVk->getState().getDepthStencilState().stencilWritemask;
 
     // If the depth or stencil is being cleared, and the image was originally requested to have a
     // single aspect, but it's emulated with a depth/stencil format, clear both aspects, setting the
@@ -378,7 +377,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
         flippedArea.y = fbRect.height - flippedArea.y - flippedArea.height;
     }
 
-    const gl::State &glState            = context->getGLState();
+    const gl::State &glState            = context->getState();
     const gl::PixelPackState &packState = glState.getPackState();
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
@@ -527,7 +526,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    const gl::State &glState                 = context->getGLState();
+    const gl::State &glState                 = context->getState();
     const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
     bool blitColorBuffer                     = (mask & GL_COLOR_BUFFER_BIT) != 0;
     bool blitDepthBuffer                     = (mask & GL_DEPTH_BUFFER_BIT) != 0;
@@ -771,7 +770,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                     mEmulatedAlphaAttachmentMask.set(
                         colorIndex, sourceFormat.alphaBits == 0 && emulatedFormat.alphaBits > 0);
 
-                    contextVk->updateColorMask(context->getGLState().getBlendState());
+                    contextVk->updateColorMask(context->getState().getBlendState());
                 }
                 else
                 {
@@ -916,7 +915,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(
     // When clearing, the scissor region must be clipped to the renderArea per the validation rules
     // in Vulkan.
     gl::Rectangle intersection;
-    if (!gl::ClipRectangle(contextVk->getGLState().getScissor(),
+    if (!gl::ClipRectangle(contextVk->getState().getScissor(),
                            mFramebuffer.getRenderPassRenderArea(), &intersection))
     {
         // There is nothing to clear since the scissor is outside of the render area.

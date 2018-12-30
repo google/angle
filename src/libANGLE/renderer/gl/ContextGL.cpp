@@ -32,7 +32,7 @@
 namespace rx
 {
 
-ContextGL::ContextGL(const gl::ContextState &state, const std::shared_ptr<RendererGL> &renderer)
+ContextGL::ContextGL(const gl::State &state, const std::shared_ptr<RendererGL> &renderer)
     : ContextImpl(state), mRenderer(renderer)
 {}
 
@@ -183,7 +183,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
 {
     if (context->getStateCache().hasAnyActiveClientAttrib())
     {
-        const gl::State &glState   = context->getGLState();
+        const gl::State &glState   = context->getState();
         const gl::Program *program = glState.getProgram();
         const gl::VertexArray *vao = glState.getVertexArray();
         const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
@@ -194,7 +194,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
 
     if (context->getExtensions().webglCompatibility)
     {
-        const gl::State &glState     = context->getGLState();
+        const gl::State &glState     = context->getState();
         FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(glState.getDrawFramebuffer());
         framebufferGL->maskOutInactiveOutputDrawBuffers(context);
     }
@@ -209,7 +209,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
                                                            GLsizei instanceCount,
                                                            const void **outIndices)
 {
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
 
     const gl::Program *program = glState.getProgram();
 
@@ -241,7 +241,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawIndirectState(const gl::Context *co
 {
     if (context->getExtensions().webglCompatibility)
     {
-        const gl::State &glState     = context->getGLState();
+        const gl::State &glState     = context->getState();
         FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(glState.getDrawFramebuffer());
         framebufferGL->maskOutInactiveOutputDrawBuffers(context);
     }
@@ -254,7 +254,7 @@ angle::Result ContextGL::drawArrays(const gl::Context *context,
                                     GLint first,
                                     GLsizei count)
 {
-    const gl::Program *program  = context->getGLState().getProgram();
+    const gl::Program *program  = context->getState().getProgram();
     const bool usesMultiview    = program->usesMultiview();
     const GLsizei instanceCount = usesMultiview ? program->getNumViews() : 0;
 
@@ -277,7 +277,7 @@ angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
                                              GLsizei instanceCount)
 {
     GLsizei adjustedInstanceCount = instanceCount;
-    const gl::Program *program    = context->getGLState().getProgram();
+    const gl::Program *program    = context->getState().getProgram();
     if (program->usesMultiview())
     {
         adjustedInstanceCount *= program->getNumViews();
@@ -294,7 +294,7 @@ angle::Result ContextGL::drawElements(const gl::Context *context,
                                       gl::DrawElementsType type,
                                       const void *indices)
 {
-    const gl::State &glState    = context->getGLState();
+    const gl::State &glState    = context->getState();
     const gl::Program *program  = glState.getProgram();
     const bool usesMultiview    = program->usesMultiview();
     const GLsizei instanceCount = usesMultiview ? program->getNumViews() : 0;
@@ -321,7 +321,7 @@ angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
                                                GLsizei instances)
 {
     GLsizei adjustedInstanceCount = instances;
-    const gl::Program *program    = context->getGLState().getProgram();
+    const gl::Program *program    = context->getState().getProgram();
     if (program->usesMultiview())
     {
         adjustedInstanceCount *= program->getNumViews();
@@ -343,7 +343,7 @@ angle::Result ContextGL::drawRangeElements(const gl::Context *context,
                                            gl::DrawElementsType type,
                                            const void *indices)
 {
-    const gl::Program *program   = context->getGLState().getProgram();
+    const gl::Program *program   = context->getState().getProgram();
     const bool usesMultiview     = program->usesMultiview();
     const GLsizei instanceCount  = usesMultiview ? program->getNumViews() : 0;
     const void *drawIndexPointer = nullptr;

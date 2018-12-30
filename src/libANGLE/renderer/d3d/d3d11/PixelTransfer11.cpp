@@ -164,7 +164,7 @@ angle::Result PixelTransfer11::copyBufferToTexture(const gl::Context *context,
            destArea.z + destArea.depth <= destSize.depth);
 
     const gl::Buffer &sourceBuffer =
-        *context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+        *context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     ASSERT(mRenderer->supportsFastCopyBufferToTexture(destinationFormat));
 

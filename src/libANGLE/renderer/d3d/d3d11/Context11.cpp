@@ -36,7 +36,7 @@ namespace
 {
 ANGLE_INLINE bool DrawCallHasDynamicAttribs(const gl::Context *context)
 {
-    VertexArray11 *vertexArray11 = GetImplAs<VertexArray11>(context->getGLState().getVertexArray());
+    VertexArray11 *vertexArray11 = GetImplAs<VertexArray11>(context->getState().getVertexArray());
     return vertexArray11->hasActiveDynamicAttrib(context);
 }
 
@@ -51,7 +51,7 @@ bool DrawCallHasStreamingVertexArrays(const gl::Context *context, gl::PrimitiveM
         return true;
     }
 
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(context->getGLState().getProgram());
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(context->getState().getProgram());
     if (InstancedPointSpritesActive(programD3D, mode))
     {
         return true;
@@ -62,7 +62,7 @@ bool DrawCallHasStreamingVertexArrays(const gl::Context *context, gl::PrimitiveM
 
 bool DrawCallHasStreamingElementArray(const gl::Context *context, gl::DrawElementsType srcType)
 {
-    const gl::State &glState       = context->getGLState();
+    const gl::State &glState       = context->getState();
     gl::Buffer *elementArrayBuffer = glState.getVertexArray()->getElementArrayBuffer();
 
     bool primitiveRestartWorkaround =
@@ -96,7 +96,7 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
                                      const void *indirect,
                                      const IndirectBufferT **bufferPtrOut)
 {
-    const gl::State &glState       = context->getGLState();
+    const gl::State &glState       = context->getState();
     gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
     ASSERT(drawIndirectBuffer);
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
@@ -111,7 +111,7 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
 }
 }  // anonymous namespace
 
-Context11::Context11(const gl::ContextState &state, Renderer11 *renderer)
+Context11::Context11(const gl::State &state, Renderer11 *renderer)
     : ContextD3D(state), mRenderer(renderer)
 {}
 
@@ -276,7 +276,7 @@ ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *contex
     if (DrawCallHasDynamicAttribs(context))
     {
         gl::IndexRange indexRange;
-        ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(
+        ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
             context, indexType, indexCount, indices, &indexRange));
         ANGLE_TRY(mRenderer->getStateManager()->updateState(
             context, mode, indexRange.start, indexCount, indexType, indices, instanceCount, 0));
@@ -363,8 +363,8 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         // make sure we are using the correct 'baseVertex'. This parameter does not exist for the
         // direct drawElements.
         gl::IndexRange indexRange;
-        ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(context, type, cmd->count,
-                                                                        indices, &indexRange));
+        ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(context, type, cmd->count,
+                                                                      indices, &indexRange));
 
         GLint startVertex;
         ANGLE_TRY(ComputeStartVertex(GetImplAs<Context11>(context), indexRange, cmd->baseVertex,
@@ -513,7 +513,7 @@ angle::Result Context11::dispatchComputeIndirect(const gl::Context *context, GLi
 angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *context,
                                                              gl::PrimitiveMode drawMode)
 {
-    const auto &glState    = context->getGLState();
+    const auto &glState    = context->getState();
     const auto *va11       = GetImplAs<VertexArray11>(glState.getVertexArray());
     const auto *drawFBO    = glState.getDrawFramebuffer();
     gl::Program *program   = glState.getProgram();

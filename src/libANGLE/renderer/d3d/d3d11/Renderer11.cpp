@@ -1423,7 +1423,7 @@ angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(Context11 *
                                                                      UINT instanceCount,
                                                                      UINT vertexCount)
 {
-    const gl::State &glState = context11->getGLState();
+    const gl::State &glState = context11->getState();
     ProgramD3D *programD3D   = mStateManager.getProgramD3D();
 
     // Since we use a geometry if-and-only-if we rewrite vertex streams, transform feedback
@@ -1488,7 +1488,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
     // Note: vertex indexes can be arbitrarily large.
     UINT clampedVertexCount = gl::GetClampedVertexCount<UINT>(vertexCount);
 
-    const auto &glState = context->getGLState();
+    const auto &glState = context->getState();
     if (glState.getCurrentTransformFeedback() && glState.isTransformFeedbackActiveUnpaused())
     {
         ANGLE_TRY(markTransformFeedbackUsage(context));
@@ -1573,7 +1573,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
 
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
     // API validation layer.
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     // If this draw call is coming from an indirect call, offset by the indirect call's base vertex.
@@ -1656,7 +1656,7 @@ angle::Result Renderer11::drawArraysIndirect(const gl::Context *context, const v
         return angle::Result::Continue;
     }
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
@@ -1678,7 +1678,7 @@ angle::Result Renderer11::drawElementsIndirect(const gl::Context *context, const
         return angle::Result::Continue;
     }
 
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
@@ -1699,7 +1699,7 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
                                        int baseVertex,
                                        int instances)
 {
-    const gl::State &glState       = context->getGLState();
+    const gl::State &glState       = context->getState();
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
@@ -1777,7 +1777,7 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
                                           int baseVertex,
                                           int instances)
 {
-    const gl::State &glState       = context->getGLState();
+    const gl::State &glState       = context->getState();
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
@@ -3207,7 +3207,7 @@ angle::Result Renderer11::readFromAttachment(const gl::Context *context,
                                           sourceSubResource, &srcBox);
 
     const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
-    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
+    gl::Buffer *packBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
     PackPixelsParams packParams(safeArea, angleFormat, outputPitch, reverseRowOrder, packBuffer, 0);
     return packPixels(context, stagingHelper, packParams, pixelsOut);
@@ -3706,7 +3706,7 @@ DeviceImpl *Renderer11::createEGLDevice()
     return new DeviceD3D(EGL_D3D11_DEVICE_ANGLE, mDevice);
 }
 
-ContextImpl *Renderer11::createContext(const gl::ContextState &state)
+ContextImpl *Renderer11::createContext(const gl::State &state)
 {
     return new Context11(state, this);
 }
@@ -3746,7 +3746,7 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
 }
 angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    const auto &glState          = context->getGLState();
+    const auto &glState          = context->getState();
     auto *dispatchIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DispatchIndirect);
     ASSERT(dispatchIndirectBuffer);
 
@@ -3932,7 +3932,7 @@ angle::Result Renderer11::mapResource(const gl::Context *context,
 
 angle::Result Renderer11::markTransformFeedbackUsage(const gl::Context *context)
 {
-    const gl::State &glState                       = context->getGLState();
+    const gl::State &glState                       = context->getState();
     const gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
     for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
     {

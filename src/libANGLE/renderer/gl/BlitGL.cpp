@@ -268,7 +268,7 @@ angle::Result BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *contex
     gl::PixelUnpackState unpack;
     mStateManager->setPixelUnpackState(unpack);
     mStateManager->setPixelUnpackBuffer(
-        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack));
+        context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack));
     mFunctions->texImage2D(ToGLenum(target), static_cast<GLint>(level), internalFormat,
                            sourceArea.width, sourceArea.height, 0, format, readType, nullptr);
 

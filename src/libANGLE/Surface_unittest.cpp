@@ -9,7 +9,6 @@
 
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Config.h"
-#include "libANGLE/ContextState.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/angletypes.h"

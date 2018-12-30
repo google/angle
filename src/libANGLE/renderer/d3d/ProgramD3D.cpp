@@ -420,7 +420,7 @@ int ProgramD3DMetadata::getRendererMajorShaderModel() const
     return mRendererMajorShaderModel;
 }
 
-bool ProgramD3DMetadata::usesBroadcast(const gl::ContextState &data) const
+bool ProgramD3DMetadata::usesBroadcast(const gl::State &data) const
 {
     return (mAttachedShaders[gl::ShaderType::Fragment]->usesFragColor() &&
             mAttachedShaders[gl::ShaderType::Fragment]->usesMultipleRenderTargets() &&
@@ -1716,7 +1716,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog)
 {
-    const auto &data = context->getContextState();
+    const auto &data = context->getState();
 
     reset();
 

@@ -672,7 +672,7 @@ void StateManagerGL::endQuery(gl::QueryType type, QueryGL *queryObject, GLuint q
 void StateManagerGL::updateDrawIndirectBufferBinding(const gl::Context *context)
 {
     gl::Buffer *drawIndirectBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::DrawIndirect);
+        context->getState().getTargetBuffer(gl::BufferBinding::DrawIndirect);
     if (drawIndirectBuffer != nullptr)
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(drawIndirectBuffer);
@@ -683,7 +683,7 @@ void StateManagerGL::updateDrawIndirectBufferBinding(const gl::Context *context)
 void StateManagerGL::updateDispatchIndirectBufferBinding(const gl::Context *context)
 {
     gl::Buffer *dispatchIndirectBuffer =
-        context->getGLState().getTargetBuffer(gl::BufferBinding::DispatchIndirect);
+        context->getState().getTargetBuffer(gl::BufferBinding::DispatchIndirect);
     if (dispatchIndirectBuffer != nullptr)
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(dispatchIndirectBuffer);
@@ -763,7 +763,7 @@ angle::Result StateManagerGL::resumeQuery(const gl::Context *context, gl::QueryT
 
 angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 {
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context->getState();
 
 #if defined(ANGLE_ENABLE_ASSERTS)
     // Temporarily pausing queries during context switch is not supported
@@ -774,7 +774,7 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 #endif
 
     // If the context has changed, pause the previous context's queries
-    auto contextID = context->getContextState().getContextID();
+    auto contextID = context->getState().getContextID();
     if (contextID != mPrevDrawContext)
     {
         for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
@@ -808,7 +808,7 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 
 void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
     // It is possible there is no active program during a path operation.
@@ -844,7 +844,7 @@ void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
 
 void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
     // It is possible there is no active program during a path operation.
@@ -877,7 +877,7 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
 void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *context)
 {
     // Sync the current program state
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
     // It is possible there is no active program during a path operation.
@@ -909,7 +909,7 @@ void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *conte
 
 void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
     // It is possible there is no active program during a path operation.
@@ -940,7 +940,7 @@ void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context 
 
 void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getGLState();
+    const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
 
     // It is possible there is no active program during a path operation.
@@ -1576,7 +1576,7 @@ void StateManagerGL::syncState(const gl::Context *context,
                                const gl::State::DirtyBits &glDirtyBits,
                                const gl::State::DirtyBits &bitMask)
 {
-    const gl::State &state = context->getGLState();
+    const gl::State &state = context->getState();
 
     // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
     if (glDirtyBits[gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING])
@@ -2203,7 +2203,7 @@ void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(
 
 void StateManagerGL::syncSamplersState(const gl::Context *context)
 {
-    const gl::State::SamplerBindingVector &samplers = context->getGLState().getSamplers();
+    const gl::State::SamplerBindingVector &samplers = context->getState().getSamplers();
 
     // This could be optimized by using a separate binding dirty bit per sampler.
     for (size_t samplerIndex = 0; samplerIndex < samplers.size(); ++samplerIndex)
@@ -2224,7 +2224,7 @@ void StateManagerGL::syncSamplersState(const gl::Context *context)
 void StateManagerGL::syncTransformFeedbackState(const gl::Context *context)
 {
     // Set the current transform feedback state
-    gl::TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     if (transformFeedback)
     {
         TransformFeedbackGL *transformFeedbackGL =
