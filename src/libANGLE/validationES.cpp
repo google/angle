@@ -2858,7 +2858,7 @@ bool ValidateDrawArraysCommon(Context *context,
 
     if (context->getStateCache().isTransformFeedbackActiveUnpaused())
     {
-        const State &state = context->getGLState();
+        const State &state                      = context->getGLState();
         TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
         if (!curTransformFeedback->checkBufferSpaceForDraw(count, primcount))
         {
@@ -3007,15 +3007,12 @@ bool ValidateDrawElementsCommon(Context *context,
         return false;
     }
 
-    const State &state         = context->getGLState();
-    const VertexArray *vao     = state.getVertexArray();
-    Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
-
-    GLuint typeBytes = GetDrawElementsTypeSize(type);
-    ASSERT(isPow2(typeBytes) && typeBytes > 0);
+    ASSERT(isPow2(GetDrawElementsTypeSize(type)) && GetDrawElementsTypeSize(type) > 0);
 
     if (context->getExtensions().webglCompatibility)
     {
+        GLuint typeBytes = GetDrawElementsTypeSize(type);
+
         if ((reinterpret_cast<uintptr_t>(indices) & static_cast<uintptr_t>(typeBytes - 1)) != 0)
         {
             // [WebGL 1.0] Section 6.4 Buffer Offset and Stride Requirements
@@ -3041,6 +3038,10 @@ bool ValidateDrawElementsCommon(Context *context,
         return true;
     }
 
+    const State &state         = context->getGLState();
+    const VertexArray *vao     = state.getVertexArray();
+    Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
+
     if (!elementArrayBuffer)
     {
         if (!indices)
@@ -3061,22 +3062,21 @@ bool ValidateDrawElementsCommon(Context *context,
         constexpr uint64_t kUint64Max   = std::numeric_limits<uint64_t>::max();
         static_assert(kIntMax < kUint64Max / kMaxTypeSize, "");
 
-        uint64_t typeSize     = typeBytes;
         uint64_t elementCount = static_cast<uint64_t>(count);
-        ASSERT(elementCount > 0 && typeSize <= kMaxTypeSize);
+        ASSERT(elementCount > 0 && GetDrawElementsTypeSize(type) <= kMaxTypeSize);
 
         // Doing the multiplication here is overflow-safe
-        uint64_t elementDataSizeNoOffset = typeSize * elementCount;
+        uint64_t elementDataSizeNoOffset = elementCount << GetDrawElementsTypeShift(type);
 
         // The offset can be any value, check for overflows
         uint64_t offset = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(indices));
-        if (elementDataSizeNoOffset > kUint64Max - offset)
+        uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
+        if (elementDataSizeWithOffset < elementDataSizeNoOffset)
         {
             context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
             return false;
         }
 
-        uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
         if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
         {
             context->validationError(GL_INVALID_OPERATION, kInsufficientBufferSize);
@@ -3087,7 +3087,7 @@ bool ValidateDrawElementsCommon(Context *context,
     if (!context->getExtensions().robustBufferAccessBehavior && primcount > 0)
     {
         // Use the parameter buffer to retrieve and cache the index range.
-        IndexRange indexRange;
+        IndexRange indexRange{IndexRange::Undefined()};
         ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
 
         // If we use an index greater than our maximum supported index range, return an error.

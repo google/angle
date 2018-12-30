@@ -718,6 +718,9 @@ typedef Range<unsigned int> RangeUI;
 
 struct IndexRange
 {
+    struct Undefined
+    {};
+    IndexRange(Undefined) {}
     IndexRange() : IndexRange(0, 0, 0) {}
     IndexRange(size_t start_, size_t end_, size_t vertexIndexCount_)
         : start(start_), end(end_), vertexIndexCount(vertexIndexCount_)

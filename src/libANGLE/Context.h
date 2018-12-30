@@ -133,6 +133,19 @@ class StateCache final : angle::NonCopyable
     // 12. onActiveTransformFeedbackChange.
     // 13. onUniformBufferStateChange.
     // 14. onBufferBindingChange.
+    bool hasBasicDrawStatesError(Context *context) const
+    {
+        if (mCachedBasicDrawStatesError == 0)
+        {
+            return false;
+        }
+        if (mCachedBasicDrawStatesError != kInvalidPointer)
+        {
+            return true;
+        }
+        return getBasicDrawStatesErrorImpl(context) != 0;
+    }
+
     intptr_t getBasicDrawStatesError(Context *context) const
     {
         if (mCachedBasicDrawStatesError != kInvalidPointer)
@@ -1695,7 +1708,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     GLint getClientMajorVersion() const { return mState.getClientMajorVersion(); }
     GLint getClientMinorVersion() const { return mState.getClientMinorVersion(); }
     const Version &getClientVersion() const { return mState.getClientVersion(); }
-    const State &getGLState() const { return mState.getState(); }
+    const State &getGLState() const { return mGLState; }
     const Caps &getCaps() const { return mState.getCaps(); }
     const TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }
     const Extensions &getExtensions() const { return mState.getExtensions(); }

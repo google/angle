@@ -281,13 +281,19 @@ enum class DrawElementsType : size_t
 template <>
 constexpr DrawElementsType FromGLenum<DrawElementsType>(GLenum from)
 {
-    GLenum scaled = (from - GL_UNSIGNED_BYTE);
-    GLenum packed = (scaled >> 1);
 
-    if ((scaled & 1) != 0 || packed >= static_cast<GLenum>(DrawElementsType::EnumCount))
-    {
-        return DrawElementsType::InvalidEnum;
-    }
+    GLenum scaled = (from - GL_UNSIGNED_BYTE);
+    // This code sequence generates a ROR instruction on x86/arm. We want to check if the lowest bit
+    // of scaled is set and if (scaled >> 1) is greater than a non-pot value. If we rotate the
+    // lowest bit to the hightest bit both conditions can be checked with a single test.
+    static_assert(sizeof(GLenum) == 4, "Update (scaled << 31) to sizeof(GLenum) * 8 - 1");
+    GLenum packed = (scaled >> 1) | (scaled << 31);
+
+    // operator ? with a simple assignment usually translates to a cmov instruction and thus avoids
+    // a branch.
+    packed = (packed >= static_cast<GLenum>(DrawElementsType::EnumCount))
+                 ? static_cast<GLenum>(DrawElementsType::InvalidEnum)
+                 : packed;
 
     return static_cast<DrawElementsType>(packed);
 }
