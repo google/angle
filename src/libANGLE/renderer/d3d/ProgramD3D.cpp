@@ -238,7 +238,7 @@ bool InterfaceBlockInfo::getBlockMemberInfo(const std::string &name,
     auto infoIter = mBlockLayout.find(name);
     if (infoIter == mBlockLayout.end())
     {
-        *infoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
+        *infoOut = sh::kDefaultBlockMemberInfo;
         return false;
     }
 

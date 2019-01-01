@@ -523,7 +523,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
         {
             LinkedUniform linkedUniform(variable.type, variable.precision, fullNameWithArrayIndex,
                                         variable.arraySizes, getBinding(), getOffset(), mLocation,
-                                        -1, sh::BlockMemberInfo::getDefaultBlockInfo());
+                                        -1, sh::kDefaultBlockMemberInfo);
             linkedUniform.mappedName = fullMappedNameWithArrayIndex;
             linkedUniform.active     = mMarkActive;
             linkedUniform.staticUse  = mMarkStaticUse;

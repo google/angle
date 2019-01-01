@@ -715,7 +715,7 @@ bool ProgramGL::getUniformBlockMemberInfo(const std::string & /* memberUniformNa
 
     if (uniformIndex == GL_INVALID_INDEX)
     {
-        *memberInfoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
+        *memberInfoOut = sh::kDefaultBlockMemberInfo;
         return false;
     }
 
@@ -744,7 +744,7 @@ bool ProgramGL::getShaderStorageBlockMemberInfo(const std::string & /* memberNam
 
     if (index == GL_INVALID_INDEX)
     {
-        *memberInfoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
+        *memberInfoOut = sh::kDefaultBlockMemberInfo;
         return false;
     }
 

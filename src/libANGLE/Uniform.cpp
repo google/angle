@@ -48,7 +48,7 @@ GLuint ActiveVariable::activeShaderCount() const
 }
 
 LinkedUniform::LinkedUniform()
-    : typeInfo(nullptr), bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
+    : typeInfo(nullptr), bufferIndex(-1), blockInfo(sh::kDefaultBlockMemberInfo)
 {}
 
 LinkedUniform::LinkedUniform(GLenum typeIn,
@@ -77,7 +77,7 @@ LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
     : sh::Uniform(uniform),
       typeInfo(&GetUniformTypeInfo(type)),
       bufferIndex(-1),
-      blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
+      blockInfo(sh::kDefaultBlockMemberInfo)
 {
     ASSERT(!isArrayOfArrays());
     ASSERT(!isArray() || !isStruct());
@@ -139,7 +139,7 @@ size_t LinkedUniform::getElementComponents() const
 }
 
 BufferVariable::BufferVariable()
-    : bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo()), topLevelArraySize(-1)
+    : bufferIndex(-1), blockInfo(sh::kDefaultBlockMemberInfo), topLevelArraySize(-1)
 {}
 
 BufferVariable::BufferVariable(GLenum typeIn,

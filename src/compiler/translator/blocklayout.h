@@ -27,27 +27,20 @@ struct InterfaceBlock;
 
 struct BlockMemberInfo
 {
-    BlockMemberInfo()
-        : offset(-1),
-          arrayStride(-1),
-          matrixStride(-1),
-          isRowMajorMatrix(false),
-          topLevelArrayStride(-1)
-    {}
+    constexpr BlockMemberInfo() = default;
 
-    BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
+    constexpr BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
         : offset(offset),
           arrayStride(arrayStride),
           matrixStride(matrixStride),
-          isRowMajorMatrix(isRowMajorMatrix),
-          topLevelArrayStride(-1)
+          isRowMajorMatrix(isRowMajorMatrix)
     {}
 
-    BlockMemberInfo(int offset,
-                    int arrayStride,
-                    int matrixStride,
-                    bool isRowMajorMatrix,
-                    int topLevelArrayStride)
+    constexpr BlockMemberInfo(int offset,
+                              int arrayStride,
+                              int matrixStride,
+                              bool isRowMajorMatrix,
+                              int topLevelArrayStride)
         : offset(offset),
           arrayStride(arrayStride),
           matrixStride(matrixStride),
@@ -55,14 +48,25 @@ struct BlockMemberInfo
           topLevelArrayStride(topLevelArrayStride)
     {}
 
-    static BlockMemberInfo getDefaultBlockInfo() { return BlockMemberInfo(-1, -1, -1, false, -1); }
+    // A single integer identifying the offset of an active variable.
+    int offset = -1;
 
-    int offset;
-    int arrayStride;
-    int matrixStride;
-    bool isRowMajorMatrix;
-    int topLevelArrayStride;  // Only used for shader storage block members.
+    // A single integer identifying the stride between array elements in an active variable.
+    int arrayStride = -1;
+
+    // A single integer identifying the stride between columns of a column-major matrix or rows of a
+    // row-major matrix.
+    int matrixStride = -1;
+
+    // A single integer identifying whether an active variable is a row-major matrix.
+    bool isRowMajorMatrix = false;
+
+    // A single integer identifying the number of active array elements of the top-level shader
+    // storage block member containing the active variable.
+    int topLevelArrayStride = -1;
 };
+
+constexpr BlockMemberInfo kDefaultBlockMemberInfo;
 
 class BlockLayoutEncoder
 {
