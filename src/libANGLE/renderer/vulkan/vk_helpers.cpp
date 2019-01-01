@@ -458,8 +458,6 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
         if (!mDescriptorPools[poolIndex]->isReferenced() &&
             !renderer->isSerialInUse(mDescriptorPools[poolIndex]->get().getSerial()))
         {
-            // The newly allocated pool must be a different index from the current pool.
-            ASSERT(poolIndex != mCurrentPoolIndex);
             mCurrentPoolIndex = poolIndex;
             found             = true;
             break;

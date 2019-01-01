@@ -74,8 +74,12 @@ class UtilsVk : angle::NonCopyable
         int srcExtents[2];
         int destOffset[2];
         int srcMip;
+        int srcLayer;
         int srcHeight;
-        bool flipY;
+        bool srcPremultiplyAlpha;
+        bool srcUnmultiplyAlpha;
+        bool srcFlipY;
+        bool destFlipY;
     };
 
     angle::Result clearBuffer(vk::Context *context,
@@ -99,9 +103,9 @@ class UtilsVk : angle::NonCopyable
 
     angle::Result copyImage(vk::Context *context,
                             vk::ImageHelper *dest,
-                            vk::ImageView *destView,
+                            const vk::ImageView *destView,
                             vk::ImageHelper *src,
-                            vk::ImageView *srcView,
+                            const vk::ImageView *srcView,
                             const CopyImageParameters &params);
 
   private:
@@ -141,12 +145,16 @@ class UtilsVk : angle::NonCopyable
     struct ImageCopyShaderParams
     {
         // Structure matching PushConstants in ImageCopy.frag
-        uint32_t flipY            = 0;
-        uint32_t destHasLuminance = 0;
-        uint32_t destIsAlpha      = 0;
-        int32_t srcMip            = 0;
-        int32_t srcOffset[2]      = {};
-        int32_t destOffset[2]     = {};
+        int32_t srcOffset[2]             = {};
+        int32_t destOffset[2]            = {};
+        int32_t srcMip                   = 0;
+        int32_t srcLayer                 = 0;
+        uint32_t flipY                   = 0;
+        uint32_t premultiplyAlpha        = 0;
+        uint32_t unmultiplyAlpha         = 0;
+        uint32_t destHasLuminance        = 0;
+        uint32_t destIsAlpha             = 0;
+        uint32_t destDefaultChannelsMask = 0;
     };
 
     // Functions implemented by the class:
@@ -203,7 +211,7 @@ class UtilsVk : angle::NonCopyable
 
     angle::Result startRenderPass(vk::Context *context,
                                   vk::ImageHelper *image,
-                                  vk::ImageView *imageView,
+                                  const vk::ImageView *imageView,
                                   const vk::RenderPassDesc &renderPassDesc,
                                   const gl::Rectangle &renderArea,
                                   vk::CommandBuffer **commandBufferOut);
@@ -220,7 +228,8 @@ class UtilsVk : angle::NonCopyable
         mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kFlagsMask |
                                vk::InternalShader::ConvertVertex_comp::kConversionMask];
     vk::ShaderProgramHelper mImageClearProgram;
-    vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
+    vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kFlagsMask |
+                                               vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
                                                vk::InternalShader::ImageCopy_frag::kDestFormatMask];
 };
 

@@ -49,12 +49,21 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000002.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000003.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000004.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000005.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000006.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000008.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000009.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000B.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000C.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000D.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000010.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000011.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000012.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000013.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000014.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000015.inc"
 
 // This is SPIR-V binary blob and the size.
 struct ShaderBlob
@@ -105,14 +114,25 @@ constexpr ShaderBlob kImageCopy_frag_shaders[] = {
     {kImageCopy_frag_00000000, sizeof(kImageCopy_frag_00000000)},
     {kImageCopy_frag_00000001, sizeof(kImageCopy_frag_00000001)},
     {kImageCopy_frag_00000002, sizeof(kImageCopy_frag_00000002)},
-    {nullptr, 0},  // 0x00000003
+    {kImageCopy_frag_00000003, sizeof(kImageCopy_frag_00000003)},
     {kImageCopy_frag_00000004, sizeof(kImageCopy_frag_00000004)},
     {kImageCopy_frag_00000005, sizeof(kImageCopy_frag_00000005)},
-    {kImageCopy_frag_00000006, sizeof(kImageCopy_frag_00000006)},
+    {nullptr, 0},  // 0x00000006
     {nullptr, 0},  // 0x00000007
     {kImageCopy_frag_00000008, sizeof(kImageCopy_frag_00000008)},
     {kImageCopy_frag_00000009, sizeof(kImageCopy_frag_00000009)},
     {kImageCopy_frag_0000000A, sizeof(kImageCopy_frag_0000000A)},
+    {kImageCopy_frag_0000000B, sizeof(kImageCopy_frag_0000000B)},
+    {kImageCopy_frag_0000000C, sizeof(kImageCopy_frag_0000000C)},
+    {kImageCopy_frag_0000000D, sizeof(kImageCopy_frag_0000000D)},
+    {nullptr, 0},  // 0x0000000E
+    {nullptr, 0},  // 0x0000000F
+    {kImageCopy_frag_00000010, sizeof(kImageCopy_frag_00000010)},
+    {kImageCopy_frag_00000011, sizeof(kImageCopy_frag_00000011)},
+    {kImageCopy_frag_00000012, sizeof(kImageCopy_frag_00000012)},
+    {kImageCopy_frag_00000013, sizeof(kImageCopy_frag_00000013)},
+    {kImageCopy_frag_00000014, sizeof(kImageCopy_frag_00000014)},
+    {kImageCopy_frag_00000015, sizeof(kImageCopy_frag_00000015)},
 };
 
 angle::Result GetShader(Context *context,

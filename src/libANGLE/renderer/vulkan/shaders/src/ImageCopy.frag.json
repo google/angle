@@ -6,6 +6,9 @@
         "",
         "ImageCopy.frag.json: Build parameters for ImageCopy.frag."
     ],
+    "Flags": [
+        "SrcIsArray"
+    ],
     "SrcFormat": [
         "SrcIsFloat",
         "SrcIsInt",

@@ -825,6 +825,9 @@ void RendererVk::initFeatures(const std::vector<VkExtensionProperties> &deviceEx
 #ifdef ANGLE_PLATFORM_WINDOWS
     // http://anglebug.com/2838
     mFeatures.extraCopyBufferRegion = IsIntel(mPhysicalDeviceProperties.vendorID);
+
+    // http://anglebug.com/3055
+    mFeatures.forceCpuPathForCubeMapCopy = IsIntel(mPhysicalDeviceProperties.vendorID);
 #endif
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();

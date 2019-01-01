@@ -244,13 +244,6 @@ class TextureVk : public TextureImpl
                                    const gl::InternalFormat &internalFormat,
                                    gl::Framebuffer *source);
 
-    angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
-                                           const gl::ImageIndex &index,
-                                           const gl::Offset &destOffset,
-                                           const gl::Offset &srcOffset,
-                                           const gl::Extents &extents,
-                                           FramebufferVk *source);
-
     angle::Result copySubTextureImpl(ContextVk *contextVk,
                                      const gl::ImageIndex &index,
                                      const gl::Offset &destOffset,
@@ -261,6 +254,18 @@ class TextureVk : public TextureImpl
                                      bool unpackPremultiplyAlpha,
                                      bool unpackUnmultiplyAlpha,
                                      TextureVk *source);
+
+    angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
+                                           const gl::ImageIndex &index,
+                                           const gl::Offset &destOffset,
+                                           size_t sourceLevel,
+                                           const gl::Rectangle &sourceArea,
+                                           bool isSrcFlipY,
+                                           bool unpackFlipY,
+                                           bool unpackPremultiplyAlpha,
+                                           bool unpackUnmultiplyAlpha,
+                                           vk::ImageHelper *srcImage,
+                                           const vk::ImageView *srcView);
 
     angle::Result initImage(ContextVk *contextVk,
                             const vk::Format &format,

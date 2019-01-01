@@ -133,6 +133,23 @@ uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &destFo
 
     return flags;
 }
+
+uint32_t GetFormatDefaultChannelMask(const vk::Format &format)
+{
+    uint32_t mask = 0;
+
+    const angle::Format &angleFormat   = format.angleFormat();
+    const angle::Format &textureFormat = format.textureFormat();
+
+    // Red can never be introduced due to format emulation (except for luma which is handled
+    // especially)
+    ASSERT(((angleFormat.redBits > 0) == (textureFormat.redBits > 0)) || angleFormat.isLUMA());
+    mask |= angleFormat.greenBits == 0 && textureFormat.greenBits > 0 ? 2 : 0;
+    mask |= angleFormat.blueBits == 0 && textureFormat.blueBits > 0 ? 4 : 0;
+    mask |= angleFormat.alphaBits == 0 && textureFormat.alphaBits > 0 ? 8 : 0;
+
+    return mask;
+}
 }  // namespace
 
 UtilsVk::UtilsVk() = default;
@@ -547,7 +564,7 @@ angle::Result UtilsVk::convertVertexBuffer(vk::Context *context,
 
 angle::Result UtilsVk::startRenderPass(vk::Context *context,
                                        vk::ImageHelper *image,
-                                       vk::ImageView *imageView,
+                                       const vk::ImageView *imageView,
                                        const vk::RenderPassDesc &renderPassDesc,
                                        const gl::Rectangle &renderArea,
                                        vk::CommandBuffer **commandBufferOut)
@@ -633,9 +650,9 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
 angle::Result UtilsVk::copyImage(vk::Context *context,
                                  vk::ImageHelper *dest,
-                                 vk::ImageView *destView,
+                                 const vk::ImageView *destView,
                                  vk::ImageHelper *src,
-                                 vk::ImageView *srcView,
+                                 const vk::ImageView *srcView,
                                  const CopyImageParameters &params)
 {
     RendererVk *renderer = context->getRenderer();
@@ -646,24 +663,36 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
     const vk::Format &destFormat = dest->getFormat();
 
     ImageCopyShaderParams shaderParams;
-    shaderParams.flipY            = params.flipY;
+    shaderParams.flipY            = params.srcFlipY || params.destFlipY;
+    shaderParams.premultiplyAlpha = params.srcPremultiplyAlpha;
+    shaderParams.unmultiplyAlpha  = params.srcUnmultiplyAlpha;
     shaderParams.destHasLuminance = destFormat.angleFormat().luminanceBits > 0;
     shaderParams.destIsAlpha =
         destFormat.angleFormat().isLUMA() && destFormat.angleFormat().alphaBits > 0;
-    shaderParams.srcMip        = params.srcMip;
-    shaderParams.srcOffset[0]  = params.srcOffset[0];
-    shaderParams.srcOffset[1]  = params.srcOffset[1];
-    shaderParams.destOffset[0] = params.destOffset[0];
-    shaderParams.destOffset[1] = params.destOffset[1];
+    shaderParams.destDefaultChannelsMask = GetFormatDefaultChannelMask(destFormat);
+    shaderParams.srcMip                  = params.srcMip;
+    shaderParams.srcLayer                = params.srcLayer;
+    shaderParams.srcOffset[0]            = params.srcOffset[0];
+    shaderParams.srcOffset[1]            = params.srcOffset[1];
+    shaderParams.destOffset[0]           = params.destOffset[0];
+    shaderParams.destOffset[1]           = params.destOffset[1];
 
-    if (params.flipY)
+    ASSERT(!(params.srcFlipY && params.destFlipY));
+    if (params.srcFlipY)
     {
         // If viewport is flipped, the shader expects srcOffset[1] to have the
         // last row's index instead of the first's.
-        shaderParams.srcOffset[1] = params.srcHeight - shaderParams.srcOffset[1] - 1;
+        shaderParams.srcOffset[1] = params.srcHeight - params.srcOffset[1] - 1;
+    }
+    else if (params.destFlipY)
+    {
+        // If image is flipped during copy, the shader uses the same code path as above,
+        // with srcOffset being set to the last row's index instead of the first's.
+        shaderParams.srcOffset[1] = params.srcOffset[1] + params.srcExtents[1] - 1;
     }
 
     uint32_t flags = GetImageCopyFlags(srcFormat, destFormat);
+    flags |= src->getLayerCount() > 1 ? ImageCopy_frag::kSrcIsArray : 0;
 
     VkDescriptorSet descriptorSet;
     vk::SharedDescriptorPoolBinding descriptorPoolBinding;

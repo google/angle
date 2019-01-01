@@ -70,19 +70,24 @@ namespace ImageClear_frag
 
 namespace ImageCopy_frag
 {
+enum flags
+{
+    kSrcIsArray = 0x00000001,
+    kFlagsMask  = 0x00000001,
+};
 enum SrcFormat
 {
     kSrcIsFloat    = 0x00000000,
-    kSrcIsInt      = 0x00000001,
-    kSrcIsUint     = 0x00000002,
-    kSrcFormatMask = 0x00000003,
+    kSrcIsInt      = 0x00000002,
+    kSrcIsUint     = 0x00000004,
+    kSrcFormatMask = 0x00000006,
 };
 enum DestFormat
 {
     kDestIsFloat    = 0x00000000,
-    kDestIsInt      = 0x00000004,
-    kDestIsUint     = 0x00000008,
-    kDestFormatMask = 0x0000000C,
+    kDestIsInt      = 0x00000008,
+    kDestIsUint     = 0x00000010,
+    kDestFormatMask = 0x00000018,
 };
 }  // namespace ImageCopy_frag
 
@@ -123,7 +128,8 @@ class ShaderLibrary final : angle::NonCopyable
     RefCounted<ShaderAndSerial> mFullScreenQuad_vert_shaders[1];
     RefCounted<ShaderAndSerial> mImageClear_frag_shaders[1];
     RefCounted<ShaderAndSerial>
-        mImageCopy_frag_shaders[InternalShader::ImageCopy_frag::kSrcFormatMask |
+        mImageCopy_frag_shaders[InternalShader::ImageCopy_frag::kFlagsMask |
+                                InternalShader::ImageCopy_frag::kSrcFormatMask |
                                 InternalShader::ImageCopy_frag::kDestFormatMask];
 };
 }  // namespace vk

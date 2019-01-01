@@ -57,6 +57,11 @@ struct FeaturesVk
     // Whether the VkDevice supports the VK_KHR_incremental_present extension, on which the
     // EGL_KHR_swap_buffers_with_damage extension can be layered.
     bool supportsIncrementalPresent = false;
+
+    // Whether texture copies on cube map targets should be done on GPU.  This is a workaround for
+    // Intel drivers on windows that have an issue with creating single-layer views on cube map
+    // textures.
+    bool forceCpuPathForCubeMapCopy = false;
 };
 
 }  // namespace angle
