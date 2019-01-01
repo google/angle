@@ -9,8 +9,8 @@
 #include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
 #import <Cocoa/Cocoa.h>
-#include <dlfcn.h>
 #include <EGL/eglext.h>
+#include <dlfcn.h>
 
 #include "common/debug.h"
 #include "libANGLE/Display.h"
@@ -50,12 +50,9 @@ class FunctionsGLCGL : public FunctionsGL
 
 DisplayCGL::DisplayCGL(const egl::DisplayState &state)
     : DisplayGL(state), mEGLDisplay(nullptr), mContext(nullptr)
-{
-}
+{}
 
-DisplayCGL::~DisplayCGL()
-{
-}
+DisplayCGL::~DisplayCGL() {}
 
 egl::Error DisplayCGL::initialize(egl::Display *display)
 {
@@ -156,11 +153,12 @@ SurfaceImpl *DisplayCGL::createPixmapSurface(const egl::SurfaceState &state,
 }
 
 ContextImpl *DisplayCGL::createContext(const gl::State &state,
+                                       gl::ErrorSet *errorSet,
                                        const egl::Config *configuration,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs)
 {
-    return new ContextGL(state, mRenderer);
+    return new ContextGL(state, errorSet, mRenderer);
 }
 
 DeviceImpl *DisplayCGL::createDevice()
@@ -282,7 +280,7 @@ CGLContextObj DisplayCGL::getCGLContext() const
 void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->iosurfaceClientBuffer = true;
-    outExtensions->surfacelessContext = true;
+    outExtensions->surfacelessContext    = true;
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;

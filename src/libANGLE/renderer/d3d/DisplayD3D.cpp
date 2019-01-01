@@ -197,13 +197,14 @@ DeviceImpl *DisplayD3D::createDevice()
     return mRenderer->createEGLDevice();
 }
 
-ContextImpl *DisplayD3D::createContext(const gl::State &state,
-                                       const egl::Config *configuration,
-                                       const gl::Context *shareContext,
-                                       const egl::AttributeMap &attribs)
+rx::ContextImpl *DisplayD3D::createContext(const gl::State &state,
+                                           gl::ErrorSet *errorSet,
+                                           const egl::Config *configuration,
+                                           const gl::Context *shareContext,
+                                           const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return mRenderer->createContext(state);
+    return mRenderer->createContext(state, errorSet);
 }
 
 StreamProducerImpl *DisplayD3D::createStreamProducerD3DTexture(

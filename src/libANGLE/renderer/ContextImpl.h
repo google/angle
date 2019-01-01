@@ -29,7 +29,7 @@ namespace rx
 class ContextImpl : public GLImplFactory
 {
   public:
-    ContextImpl(const gl::State &state);
+    ContextImpl(const gl::State &state, gl::ErrorSet *errorSet);
     ~ContextImpl() override;
 
     virtual void onDestroy(const gl::Context *context) {}
@@ -183,9 +183,6 @@ class ContextImpl : public GLImplFactory
     // based on the current render states. We store a mutable pointer to the program cache so
     // on draw calls we can store the refreshed shaders in the cache.
     void setMemoryProgramCache(gl::MemoryProgramCache *memoryProgramCache);
-
-    // TODO(jmadill): Move init into the constructor. http://anglebug.com/2491
-    void setErrorSet(gl::ErrorSet *errorSet);
 
     void handleError(GLenum errorCode,
                      const char *message,

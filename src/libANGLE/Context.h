@@ -1824,6 +1824,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool mSkipValidation;
     bool mDisplayTextureShareGroup;
 
+    // Recorded errors
+    ErrorSet mErrors;
+
     // Stores for each buffer binding type whether is it allowed to be used in this context.
     angle::PackedEnumBitSet<BufferBinding> mValidBufferBindings;
 
@@ -1862,9 +1865,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     std::vector<const char *> mExtensionStrings;
     const char *mRequestableExtensionString;
     std::vector<const char *> mRequestableExtensionStrings;
-
-    // Recorded errors
-    ErrorSet mErrors;
 
     // GLES1 renderer state
     std::unique_ptr<GLES1Renderer> mGLES1Renderer;

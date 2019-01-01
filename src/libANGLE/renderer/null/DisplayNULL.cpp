@@ -162,12 +162,13 @@ ImageImpl *DisplayNULL::createImage(const egl::ImageState &state,
     return new ImageNULL(state);
 }
 
-ContextImpl *DisplayNULL::createContext(const gl::State &state,
-                                        const egl::Config *configuration,
-                                        const gl::Context *shareContext,
-                                        const egl::AttributeMap &attribs)
+rx::ContextImpl *DisplayNULL::createContext(const gl::State &state,
+                                            gl::ErrorSet *errorSet,
+                                            const egl::Config *configuration,
+                                            const gl::Context *shareContext,
+                                            const egl::AttributeMap &attribs)
 {
-    return new ContextNULL(state, mAllocationTracker.get());
+    return new ContextNULL(state, errorSet, mAllocationTracker.get());
 }
 
 StreamProducerImpl *DisplayNULL::createStreamProducerD3DTexture(

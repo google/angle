@@ -111,8 +111,8 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
 }
 }  // anonymous namespace
 
-Context11::Context11(const gl::State &state, Renderer11 *renderer)
-    : ContextD3D(state), mRenderer(renderer)
+Context11::Context11(const gl::State &state, gl::ErrorSet *errorSet, Renderer11 *renderer)
+    : ContextD3D(state, errorSet), mRenderer(renderer)
 {}
 
 Context11::~Context11() {}

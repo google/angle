@@ -103,7 +103,7 @@ class Renderer9 : public RendererD3D
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;
 
-    ContextImpl *createContext(const gl::State &state) override;
+    ContextImpl *createContext(const gl::State &state, gl::ErrorSet *errorSet) override;
 
     angle::Result allocateEventQuery(const gl::Context *context, IDirect3DQuery9 **outQuery);
     void freeEventQuery(IDirect3DQuery9 *query);

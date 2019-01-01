@@ -928,12 +928,13 @@ SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
 }
 
 ContextImpl *DisplayOzone::createContext(const gl::State &state,
+                                         gl::ErrorSet *errorSet,
                                          const egl::Config *configuration,
                                          const gl::Context *shareContext,
                                          const egl::AttributeMap &attribs)
 {
     // All contexts on Ozone are virtualized and share the same renderer.
-    return new ContextEGL(state, mRenderer);
+    return new ContextEGL(state, errorSet, mRenderer);
 }
 
 DeviceImpl *DisplayOzone::createDevice()

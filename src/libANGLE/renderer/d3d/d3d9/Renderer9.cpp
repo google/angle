@@ -807,9 +807,9 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
     return egl::NoError();
 }
 
-ContextImpl *Renderer9::createContext(const gl::State &state)
+ContextImpl *Renderer9::createContext(const gl::State &state, gl::ErrorSet *errorSet)
 {
-    return new Context9(state, this);
+    return new Context9(state, errorSet, this);
 }
 
 void *Renderer9::getD3DDevice()

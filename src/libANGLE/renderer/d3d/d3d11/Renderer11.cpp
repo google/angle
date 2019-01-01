@@ -3706,9 +3706,9 @@ DeviceImpl *Renderer11::createEGLDevice()
     return new DeviceD3D(EGL_D3D11_DEVICE_ANGLE, mDevice);
 }
 
-ContextImpl *Renderer11::createContext(const gl::State &state)
+ContextImpl *Renderer11::createContext(const gl::State &state, gl::ErrorSet *errorSet)
 {
-    return new Context11(state, this);
+    return new Context11(state, errorSet, this);
 }
 
 FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::FramebufferState &state)

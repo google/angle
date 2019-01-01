@@ -1416,7 +1416,7 @@ angle::Result Texture::releaseTexImageInternal(Context *context)
     {
         // Notify the surface
         egl::Error eglErr = mBoundSurface->releaseTexImageFromTexture(context);
-        // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2491
+        // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/3041
         if (eglErr.isError())
         {
             context->handleError(GL_INVALID_OPERATION, "Error releasing tex image from texture",

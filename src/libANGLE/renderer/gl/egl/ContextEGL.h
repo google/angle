@@ -17,7 +17,9 @@ namespace rx
 class ContextEGL : public ContextGL
 {
   public:
-    ContextEGL(const gl::State &state, const std::shared_ptr<RendererEGL> &renderer);
+    ContextEGL(const gl::State &state,
+               gl::ErrorSet *errorSet,
+               const std::shared_ptr<RendererEGL> &renderer);
     ~ContextEGL() override;
 
     EGLContext getContext() const;

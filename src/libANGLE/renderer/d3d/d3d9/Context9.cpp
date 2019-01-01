@@ -27,8 +27,8 @@
 namespace rx
 {
 
-Context9::Context9(const gl::State &state, Renderer9 *renderer)
-    : ContextD3D(state), mRenderer(renderer)
+Context9::Context9(const gl::State &state, gl::ErrorSet *errorSet, Renderer9 *renderer)
+    : ContextD3D(state, errorSet), mRenderer(renderer)
 {}
 
 Context9::~Context9() {}

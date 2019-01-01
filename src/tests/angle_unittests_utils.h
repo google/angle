@@ -124,8 +124,9 @@ class MockEGLFactory : public EGLImplFactory
                              const gl::Context *,
                              EGLenum,
                              const egl::AttributeMap &));
-    MOCK_METHOD4(createContext,
+    MOCK_METHOD5(createContext,
                  ContextImpl *(const gl::State &,
+                               gl::ErrorSet *,
                                const egl::Config *,
                                const gl::Context *,
                                const egl::AttributeMap &));

@@ -155,7 +155,7 @@ class RendererD3D : public BufferFactoryD3D
     virtual egl::ConfigSet generateConfigs()                                            = 0;
     virtual void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const = 0;
 
-    virtual ContextImpl *createContext(const gl::State &state) = 0;
+    virtual ContextImpl *createContext(const gl::State &state, gl::ErrorSet *errorSet) = 0;
 
     std::string getVendorString() const;
 

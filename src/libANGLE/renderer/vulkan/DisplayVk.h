@@ -60,6 +60,7 @@ class DisplayVk : public DisplayImpl, public vk::Context
                            const egl::AttributeMap &attribs) override;
 
     ContextImpl *createContext(const gl::State &state,
+                               gl::ErrorSet *errorSet,
                                const egl::Config *configuration,
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
@@ -84,7 +85,7 @@ class DisplayVk : public DisplayImpl, public vk::Context
                      const char *function,
                      unsigned int line) override;
 
-    // TODO(jmadill): Remove this once refactor is done. http://anglebug.com/2491
+    // TODO(jmadill): Remove this once refactor is done. http://anglebug.com/3041
     egl::Error getEGLError(EGLint errorCode);
 
   private:

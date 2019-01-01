@@ -289,12 +289,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
              memoryProgramCache != nullptr),
       mSkipValidation(GetNoError(attribs)),
       mDisplayTextureShareGroup(shareTextures != nullptr),
-      mImplementation(implFactory->createContext(mState, config, shareContext, attribs)),
+      mErrors(this),
+      mImplementation(implFactory->createContext(mState, &mErrors, config, shareContext, attribs)),
       mLabel(nullptr),
       mCompiler(),
       mConfig(config),
       mClientType(EGL_OPENGL_ES_API),
-      mErrors(this),
       mHasBeenCurrent(false),
       mContextLost(false),
       mResetStatus(GL_NO_ERROR),
@@ -485,8 +485,6 @@ void Context::initialize()
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
-
-    mImplementation->setErrorSet(&mErrors);
 
     ANGLE_CONTEXT_TRY(mImplementation->initialize());
 }

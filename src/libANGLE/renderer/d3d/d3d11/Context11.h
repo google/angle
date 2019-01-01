@@ -21,7 +21,7 @@ class Renderer11;
 class Context11 : public ContextD3D, public MultisampleTextureInitializer
 {
   public:
-    Context11(const gl::State &state, Renderer11 *renderer);
+    Context11(const gl::State &state, gl::ErrorSet *errorSet, Renderer11 *renderer);
     ~Context11() override;
 
     angle::Result initialize() override;

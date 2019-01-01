@@ -32,8 +32,10 @@
 namespace rx
 {
 
-ContextGL::ContextGL(const gl::State &state, const std::shared_ptr<RendererGL> &renderer)
-    : ContextImpl(state), mRenderer(renderer)
+ContextGL::ContextGL(const gl::State &state,
+                     gl::ErrorSet *errorSet,
+                     const std::shared_ptr<RendererGL> &renderer)
+    : ContextImpl(state, errorSet), mRenderer(renderer)
 {}
 
 ContextGL::~ContextGL() {}

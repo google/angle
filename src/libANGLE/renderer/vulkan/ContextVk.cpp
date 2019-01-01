@@ -106,8 +106,8 @@ constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
         kVertexBufferUsage, kDefaultBufferSize, true \
     }
 
-ContextVk::ContextVk(const gl::State &state, RendererVk *renderer)
-    : ContextImpl(state),
+ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer)
+    : ContextImpl(state, errorSet),
       vk::Context(renderer),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mVertexArray(nullptr),

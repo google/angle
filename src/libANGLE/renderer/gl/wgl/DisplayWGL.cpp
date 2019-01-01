@@ -435,12 +435,13 @@ SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-ContextImpl *DisplayWGL::createContext(const gl::State &state,
-                                       const egl::Config *configuration,
-                                       const gl::Context *shareContext,
-                                       const egl::AttributeMap &attribs)
+rx::ContextImpl *DisplayWGL::createContext(const gl::State &state,
+                                           gl::ErrorSet *errorSet,
+                                           const egl::Config *configuration,
+                                           const gl::Context *shareContext,
+                                           const egl::AttributeMap &attribs)
 {
-    return new ContextWGL(state, mRenderer);
+    return new ContextWGL(state, errorSet, mRenderer);
 }
 
 DeviceImpl *DisplayWGL::createDevice()

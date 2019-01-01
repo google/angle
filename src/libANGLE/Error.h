@@ -131,7 +131,7 @@ inline Error NoError()
 #define ANGLE_RETURN(X) return X;
 #define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN);
 
-// TODO(jmadill): Introduce way to store errors to a const Context. http://anglebug.com/2491
+// TODO(jmadill): Remove after EGL error refactor. http://anglebug.com/3041
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \
     do                                                                \
     {                                                                 \
@@ -168,17 +168,17 @@ enum class ANGLE_NO_DISCARD Result
     Incomplete,
 };
 
-// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/2491
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041
 egl::Error ResultToEGL(Result result);
 }  // namespace angle
 
-// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/2491
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041
 inline bool IsError(angle::Result result)
 {
     return result == angle::Result::Stop;
 }
 
-// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/2491
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041
 inline bool IsError(const egl::Error &err)
 {
     return err.isError();

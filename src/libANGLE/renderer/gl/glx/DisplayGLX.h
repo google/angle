@@ -62,6 +62,7 @@ class DisplayGLX : public DisplayGL
                                      const egl::AttributeMap &attribs) override;
 
     ContextImpl *createContext(const gl::State &state,
+                               gl::ErrorSet *errorSet,
                                const egl::Config *configuration,
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
