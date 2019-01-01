@@ -1605,8 +1605,7 @@ void StateManagerGL::syncState(const gl::Context *context,
         }
     }
 
-    const gl::State::DirtyBits &glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits) & bitMask;
-
+    const gl::State::DirtyBits glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits) & bitMask;
     if (!glAndLocalDirtyBits.any())
     {
         return;

@@ -531,21 +531,27 @@ template <size_t N, typename BitsT, typename ParamT>
 inline angle::BitSetT<N, BitsT, ParamT> operator&(const angle::BitSetT<N, BitsT, ParamT> &lhs,
                                                   const angle::BitSetT<N, BitsT, ParamT> &rhs)
 {
-    return angle::BitSetT<N, BitsT, ParamT>(lhs.bits() & rhs.bits());
+    angle::BitSetT<N, BitsT, ParamT> result(lhs);
+    result &= rhs.bits();
+    return result;
 }
 
 template <size_t N, typename BitsT, typename ParamT>
 inline angle::BitSetT<N, BitsT, ParamT> operator|(const angle::BitSetT<N, BitsT, ParamT> &lhs,
                                                   const angle::BitSetT<N, BitsT, ParamT> &rhs)
 {
-    return angle::BitSetT<N, BitsT, ParamT>(lhs.bits() | rhs.bits());
+    angle::BitSetT<N, BitsT, ParamT> result(lhs);
+    result |= rhs.bits();
+    return result;
 }
 
 template <size_t N, typename BitsT, typename ParamT>
 inline angle::BitSetT<N, BitsT, ParamT> operator^(const angle::BitSetT<N, BitsT, ParamT> &lhs,
                                                   const angle::BitSetT<N, BitsT, ParamT> &rhs)
 {
-    return angle::BitSetT<N, BitsT, ParamT>(lhs.bits() ^ rhs.bits());
+    angle::BitSetT<N, BitsT, ParamT> result(lhs);
+    result ^= rhs.bits();
+    return result;
 }
 
 #endif  // COMMON_BITSETITERATOR_H_
