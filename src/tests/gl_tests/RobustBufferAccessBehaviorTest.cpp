@@ -153,8 +153,9 @@ TEST_P(RobustBufferAccessBehaviorTest, DrawElementsIndexOutOfRangeWithStaticDraw
 {
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsWindows() && IsOpenGL());
 
-    // Failing after changing the shard count of angle_end2end_tests. http://anglebug.com/2799
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsD3D11_FL93());
+    // Failing on NV after changing shard count of angle_end2end_tests. http://anglebug.com/2799
+    // Also failing on AMD after a validation change. http://anglebug.com/3042
+    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     ANGLE_SKIP_TEST_IF(!initExtension());
 
