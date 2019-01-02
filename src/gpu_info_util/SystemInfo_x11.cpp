@@ -30,7 +30,7 @@ bool GetNvidiaDriverVersionWithXNVCtrl(std::string *version)
 
     Display *display = XOpenDisplay(nullptr);
 
-    if (XNVCTRLQueryExtension(display, &eventBase, &errorBase))
+    if (display && XNVCTRLQueryExtension(display, &eventBase, &errorBase))
     {
         int screenCount = ScreenCount(display);
         for (int screen = 0; screen < screenCount; ++screen)

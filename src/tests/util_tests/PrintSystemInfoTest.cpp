@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "common/platform.h"
+#include "common/system_utils.h"
 #include "gpu_info_util/SystemInfo.h"
 
 using namespace angle;
@@ -96,6 +97,33 @@ TEST(PrintSystemInfoTest, Print)
     std::cout << std::endl;
 #else
     std::cerr << "GetSystemInfo not implemented, skipping" << std::endl;
+#endif
+}
+
+TEST(PrintSystemInfoTest, GetSystemInfoNoCrashOnInvalidDisplay)
+{
+#if defined(SYSTEM_INFO_IMPLEMENTED) && defined(ANGLE_USE_X11)
+    const char kX11DisplayEnvVar[] = "DISPLAY";
+    const char kInvalidDisplay[]   = "124:";
+    std::string previous_display   = GetEnvironmentVar(kX11DisplayEnvVar);
+    SetEnvironmentVar(kX11DisplayEnvVar, kInvalidDisplay);
+    SystemInfo info;
+
+    // This should not crash.
+    GetSystemInfo(&info);
+
+    if (previous_display.empty())
+    {
+        UnsetEnvironmentVar(kX11DisplayEnvVar);
+    }
+    else
+    {
+        SetEnvironmentVar(kX11DisplayEnvVar, previous_display.c_str());
+    }
+#elif defined(SYSTEM_INFO_IMPLEMENTED)
+    std::cerr << "GetSystemInfo not implemented, skipping" << std::endl;
+#else
+    std::cerr << "GetSystemInfo X11 test not applicable, skipping" << std::endl;
 #endif
 }
 
