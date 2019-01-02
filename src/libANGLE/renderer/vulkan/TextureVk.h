@@ -26,7 +26,7 @@ class PixelBuffer final : angle::NonCopyable
 
     void release(RendererVk *renderer);
 
-    void removeStagedUpdates(const gl::ImageIndex &index);
+    void removeStagedUpdates(RendererVk *renderer, const gl::ImageIndex &index);
 
     angle::Result stageSubresourceUpdate(ContextVk *contextVk,
                                          const gl::ImageIndex &index,
@@ -52,6 +52,11 @@ class PixelBuffer final : angle::NonCopyable
                                                         const gl::InternalFormat &formatInfo,
                                                         FramebufferVk *framebufferVk);
 
+    void stageSubresourceUpdateFromImage(vk::ImageHelper *image,
+                                         const gl::ImageIndex &index,
+                                         const gl::Offset &destOffset,
+                                         const gl::Extents &extents);
+
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.
     angle::Result allocate(ContextVk *contextVk,
@@ -73,10 +78,40 @@ class PixelBuffer final : angle::NonCopyable
     {
         SubresourceUpdate();
         SubresourceUpdate(VkBuffer bufferHandle, const VkBufferImageCopy &copyRegion);
+        SubresourceUpdate(vk::ImageHelper *image, const VkImageCopy &copyRegion);
         SubresourceUpdate(const SubresourceUpdate &other);
 
-        VkBuffer bufferHandle;
-        VkBufferImageCopy copyRegion;
+        void release(RendererVk *renderer);
+
+        const VkImageSubresourceLayers &dstSubresource() const
+        {
+            return updateSource == UpdateSource::Buffer ? buffer.copyRegion.imageSubresource
+                                                        : image.copyRegion.dstSubresource;
+        }
+        bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndex) const;
+
+        enum class UpdateSource
+        {
+            Buffer,
+            Image,
+        };
+        struct BufferUpdate
+        {
+            VkBuffer bufferHandle;
+            VkBufferImageCopy copyRegion;
+        };
+        struct ImageUpdate
+        {
+            vk::ImageHelper *image;
+            VkImageCopy copyRegion;
+        };
+
+        UpdateSource updateSource;
+        union
+        {
+            BufferUpdate buffer;
+            ImageUpdate image;
+        };
     };
 
     vk::DynamicBuffer mStagingBuffer;
@@ -258,6 +293,7 @@ class TextureVk : public TextureImpl
     angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
                                            const gl::ImageIndex &index,
                                            const gl::Offset &destOffset,
+                                           const vk::Format &destFormat,
                                            size_t sourceLevel,
                                            const gl::Rectangle &sourceArea,
                                            bool isSrcFlipY,

@@ -28,22 +28,6 @@ constexpr int kLineLoopDynamicBufferMinSize = 1024 * 1024;
 // This is an arbitrary max. We can change this later if necessary.
 constexpr uint32_t kDefaultDescriptorPoolMaxSets = 2048;
 
-VkImageUsageFlags GetStagingImageUsageFlags(StagingUsage usage)
-{
-    switch (usage)
-    {
-        case StagingUsage::Read:
-            return VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-        case StagingUsage::Write:
-            return VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-        case StagingUsage::Both:
-            return (VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
-        default:
-            UNREACHABLE();
-            return 0;
-    }
-}
-
 // Gets access flags based on layout.
 VkAccessFlags GetSrcLayoutAccessFlags(VkImageLayout layout)
 {
@@ -1119,14 +1103,21 @@ angle::Result ImageHelper::init(Context *context,
                                 const Format &format,
                                 GLint samples,
                                 VkImageUsageFlags usage,
-                                uint32_t mipLevels)
+                                uint32_t mipLevels,
+                                uint32_t layerCount)
 {
     ASSERT(!valid());
+
+    // Validate that the input layerCount is compatible with the texture type
+    ASSERT(textureType != gl::TextureType::_3D || layerCount == 1);
+    ASSERT(textureType != gl::TextureType::External || layerCount == 1);
+    ASSERT(textureType != gl::TextureType::Rectangle || layerCount == 1);
+    ASSERT(textureType != gl::TextureType::CubeMap || layerCount == gl::kCubeFaceCount);
 
     mExtents    = extents;
     mFormat     = &format;
     mSamples    = samples;
-    mLayerCount = GetImageLayerCount(textureType);
+    mLayerCount = layerCount;
     mLevelCount = mipLevels;
 
     VkImageCreateInfo imageInfo     = {};
@@ -1251,22 +1242,20 @@ void ImageHelper::init2DWeakReference(VkImage handle,
 
 angle::Result ImageHelper::init2DStaging(Context *context,
                                          const MemoryProperties &memoryProperties,
-                                         const Format &format,
                                          const gl::Extents &extents,
-                                         StagingUsage usage)
+                                         const Format &format,
+                                         VkImageUsageFlags usage,
+                                         uint32_t layerCount)
 {
     ASSERT(!valid());
 
     mExtents    = extents;
     mFormat     = &format;
     mSamples    = 1;
-    mLayerCount = 1;
+    mLayerCount = layerCount;
     mLevelCount = 1;
 
-    // Use Preinitialized for writable staging images - in these cases we want to map the memory
-    // before we do a copy. For readback images, use an undefined layout.
-    mCurrentLayout =
-        usage == StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED : VK_IMAGE_LAYOUT_PREINITIALIZED;
+    mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
     VkImageCreateInfo imageInfo     = {};
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -1277,10 +1266,10 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
     imageInfo.extent.depth          = 1;
     imageInfo.mipLevels             = 1;
-    imageInfo.arrayLayers           = 1;
+    imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(mSamples);
-    imageInfo.tiling                = VK_IMAGE_TILING_LINEAR;
-    imageInfo.usage                 = GetStagingImageUsageFlags(usage);
+    imageInfo.tiling                = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.usage                 = usage;
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;
     imageInfo.pQueueFamilyIndices   = nullptr;
@@ -1288,13 +1277,8 @@ angle::Result ImageHelper::init2DStaging(Context *context,
 
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
-    // Allocate and bind host visible and coherent Image memory.
-    // TODO(ynovikov): better approach would be to request just visible memory,
-    // and call vkInvalidateMappedMemoryRanges if the allocated memory is not coherent.
-    // This would solve potential issues of:
-    // 1) not having (enough) coherent memory and 2) coherent memory being slower
-    VkMemoryPropertyFlags memoryPropertyFlags =
-        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    // Allocate and bind device-local memory.
+    VkMemoryPropertyFlags memoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(initMemory(context, memoryProperties, memoryPropertyFlags));
 
     return angle::Result::Continue;

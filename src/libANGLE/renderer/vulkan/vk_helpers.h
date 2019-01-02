@@ -475,7 +475,8 @@ class ImageHelper final : public RecordableGraphResource
                        const Format &format,
                        GLint samples,
                        VkImageUsageFlags usage,
-                       uint32_t mipLevels);
+                       uint32_t mipLevels,
+                       uint32_t layerCount);
     angle::Result initMemory(Context *context,
                              const MemoryProperties &memoryProperties,
                              VkMemoryPropertyFlags flags);
@@ -494,11 +495,16 @@ class ImageHelper final : public RecordableGraphResource
                                 const gl::SwizzleState &swizzleMap,
                                 ImageView *imageViewOut,
                                 uint32_t levelCount);
+    // Create a 2D[Array] for staging purposes.  Used by:
+    //
+    // - TextureVk::copySubImageImplWithDraw
+    //
     angle::Result init2DStaging(Context *context,
                                 const MemoryProperties &memoryProperties,
-                                const Format &format,
                                 const gl::Extents &extent,
-                                StagingUsage usage);
+                                const Format &format,
+                                VkImageUsageFlags usage,
+                                uint32_t layerCount);
 
     void release(RendererVk *renderer);
 

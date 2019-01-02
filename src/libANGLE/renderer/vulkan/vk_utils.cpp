@@ -138,18 +138,6 @@ angle::Result AllocateBufferOrImageMemory(vk::Context *context,
     return angle::Result::Continue;
 }
 
-uint32_t GetImageLayerCount(gl::TextureType textureType)
-{
-    if (textureType == gl::TextureType::CubeMap)
-    {
-        return gl::kCubeFaceCount;
-    }
-    else
-    {
-        return 1;
-    }
-}
-
 const char *g_VkLoaderLayersPathEnv = "VK_LAYER_PATH";
 const char *g_VkICDPathEnv          = "VK_ICD_FILENAMES";
 
@@ -1484,9 +1472,13 @@ VkImageType GetImageType(gl::TextureType textureType)
     switch (textureType)
     {
         case gl::TextureType::_2D:
-            return VK_IMAGE_TYPE_2D;
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisample:
+        case gl::TextureType::_2DMultisampleArray:
         case gl::TextureType::CubeMap:
             return VK_IMAGE_TYPE_2D;
+        case gl::TextureType::_3D:
+            return VK_IMAGE_TYPE_3D;
         default:
             // We will need to implement all the texture types for ES3+.
             UNIMPLEMENTED();
@@ -1499,7 +1491,13 @@ VkImageViewType GetImageViewType(gl::TextureType textureType)
     switch (textureType)
     {
         case gl::TextureType::_2D:
+        case gl::TextureType::_2DMultisample:
             return VK_IMAGE_VIEW_TYPE_2D;
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisampleArray:
+            return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+        case gl::TextureType::_3D:
+            return VK_IMAGE_VIEW_TYPE_3D;
         case gl::TextureType::CubeMap:
             return VK_IMAGE_VIEW_TYPE_CUBE;
         default:

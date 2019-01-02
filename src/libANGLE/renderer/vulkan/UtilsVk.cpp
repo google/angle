@@ -716,12 +716,16 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
     renderArea.height = params.srcExtents[1];
 
     // Change source layout outside render pass
-    vk::CommandBuffer *srcLayoutChange;
-    ANGLE_TRY(src->recordCommands(context, &srcLayoutChange));
+    if (src->getCurrentLayout() != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    {
+        vk::CommandBuffer *srcLayoutChange;
+        ANGLE_TRY(src->recordCommands(context, &srcLayoutChange));
 
-    src->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                                VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, srcLayoutChange);
+        src->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
+                                    VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                                    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, srcLayoutChange);
+    }
 
     // Change destination layout outside render pass as well
     vk::CommandBuffer *destLayoutChange;
