@@ -232,10 +232,12 @@ DrawElementsPerfParams DrawElementsPerfD3D9Params(bool indexBufferChanged)
     return params;
 }
 
-DrawElementsPerfParams DrawElementsPerfOpenGLOrGLESParams(bool indexBufferChanged, GLenum indexType)
+DrawElementsPerfParams DrawElementsPerfOpenGLOrGLESParams(bool indexBufferChanged,
+                                                          bool useNullDevice,
+                                                          GLenum indexType)
 {
     DrawElementsPerfParams params;
-    params.eglParameters      = angle::egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters      = angle::egl_platform::OPENGL_OR_GLES(useNullDevice);
     params.indexBufferChanged = indexBufferChanged;
     params.type               = indexType;
 
@@ -277,10 +279,11 @@ ANGLE_INSTANTIATE_TEST(DrawElementsPerfBenchmark,
                        DrawElementsPerfD3D11Params(true, false, GL_UNSIGNED_INT),
                        DrawElementsPerfD3D11Params(false, false, GL_UNSIGNED_SHORT),
                        DrawElementsPerfD3D11Params(false, true, GL_UNSIGNED_SHORT),
-                       DrawElementsPerfOpenGLOrGLESParams(false, GL_UNSIGNED_SHORT),
-                       DrawElementsPerfOpenGLOrGLESParams(true, GL_UNSIGNED_SHORT),
-                       DrawElementsPerfOpenGLOrGLESParams(false, GL_UNSIGNED_INT),
-                       DrawElementsPerfOpenGLOrGLESParams(true, GL_UNSIGNED_INT),
+                       DrawElementsPerfOpenGLOrGLESParams(false, false, GL_UNSIGNED_SHORT),
+                       DrawElementsPerfOpenGLOrGLESParams(false, true, GL_UNSIGNED_SHORT),
+                       DrawElementsPerfOpenGLOrGLESParams(true, false, GL_UNSIGNED_SHORT),
+                       DrawElementsPerfOpenGLOrGLESParams(false, false, GL_UNSIGNED_INT),
+                       DrawElementsPerfOpenGLOrGLESParams(true, false, GL_UNSIGNED_INT),
                        DrawElementsPerfVulkanParams(false, false, GL_UNSIGNED_SHORT),
                        DrawElementsPerfVulkanParams(false, true, GL_UNSIGNED_SHORT),
                        DrawElementsPerfVulkanParams(false, false, GL_UNSIGNED_INT),

@@ -216,8 +216,16 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
         const uint8_t *bufferData =
             MapBufferRangeWithFallback(mFunctions, gl::ToGLenum(DestBufferOperationTarget), offset,
                                        count * typeBytes, GL_MAP_READ_BIT);
-        *outRange = gl::ComputeIndexRange(type, bufferData, count, primitiveRestartEnabled);
-        mFunctions->unmapBuffer(gl::ToGLenum(DestBufferOperationTarget));
+        if (bufferData)
+        {
+            *outRange = gl::ComputeIndexRange(type, bufferData, count, primitiveRestartEnabled);
+            mFunctions->unmapBuffer(gl::ToGLenum(DestBufferOperationTarget));
+        }
+        else
+        {
+            // Workaround the null driver not having map support.
+            *outRange = gl::IndexRange(0, 0, 1);
+        }
     }
 
     return angle::Result::Continue;

@@ -413,6 +413,12 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         caps->maxElementIndex = QuerySingleGLInt64(functions, GL_MAX_ELEMENT_INDEX);
+
+        // Work around the null driver limitations.
+        if (caps->maxElementIndex == 0)
+        {
+            caps->maxElementIndex = 0xFFFF;
+        }
     }
     else
     {
@@ -1117,7 +1123,7 @@ void GenerateCaps(const FunctionsGL *functions,
                               functions->isAtLeastGLES(gl::Version(3, 2)) ||
                               functions->hasGLESExtension("GL_KHR_debug") ||
                               functions->hasGLESExtension("GL_EXT_debug_marker");
-    extensions->eglImage = functions->hasGLESExtension("GL_OES_EGL_image");
+    extensions->eglImage         = functions->hasGLESExtension("GL_OES_EGL_image");
     extensions->eglImageExternal = functions->hasGLESExtension("GL_OES_EGL_image_external");
     extensions->eglImageExternalEssl3 =
         functions->hasGLESExtension("GL_OES_EGL_image_external_essl3");
