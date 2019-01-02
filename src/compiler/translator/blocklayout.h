@@ -78,7 +78,7 @@ class BlockLayoutEncoder
                                const std::vector<unsigned int> &arraySizes,
                                bool isRowMajorMatrix);
 
-    size_t getBlockSize() const { return mCurrentOffset * BytesPerComponent; }
+    size_t getBlockSize() const { return mCurrentOffset * kBytesPerComponent; }
     size_t getStructureBaseAlignment() const { return mStructureBaseAlignment; }
     void increaseCurrentOffset(size_t offsetInBytes);
     void setStructureBaseAlignment(size_t baseAlignment);
@@ -86,8 +86,8 @@ class BlockLayoutEncoder
     virtual void enterAggregateType() = 0;
     virtual void exitAggregateType()  = 0;
 
-    static const size_t BytesPerComponent           = 4u;
-    static const unsigned int ComponentsPerRegister = 4u;
+    static constexpr size_t kBytesPerComponent           = 4u;
+    static constexpr unsigned int kComponentsPerRegister = 4u;
 
     static size_t GetBlockRegister(const BlockMemberInfo &info);
     static size_t GetBlockRegisterElement(const BlockMemberInfo &info);

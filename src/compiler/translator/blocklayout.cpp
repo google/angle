@@ -158,9 +158,9 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
 
     getBlockLayoutInfo(type, arraySizes, isRowMajorMatrix, &arrayStride, &matrixStride);
 
-    const BlockMemberInfo memberInfo(static_cast<int>(mCurrentOffset * BytesPerComponent),
-                                     static_cast<int>(arrayStride * BytesPerComponent),
-                                     static_cast<int>(matrixStride * BytesPerComponent),
+    const BlockMemberInfo memberInfo(static_cast<int>(mCurrentOffset * kBytesPerComponent),
+                                     static_cast<int>(arrayStride * kBytesPerComponent),
+                                     static_cast<int>(matrixStride * kBytesPerComponent),
                                      isRowMajorMatrix);
 
     advanceOffset(type, arraySizes, isRowMajorMatrix, arrayStride, matrixStride);
@@ -170,7 +170,7 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
 
 void BlockLayoutEncoder::increaseCurrentOffset(size_t offsetInBytes)
 {
-    mCurrentOffset += (offsetInBytes / BytesPerComponent);
+    mCurrentOffset += (offsetInBytes / kBytesPerComponent);
 }
 
 void BlockLayoutEncoder::setStructureBaseAlignment(size_t baseAlignment)
@@ -181,18 +181,18 @@ void BlockLayoutEncoder::setStructureBaseAlignment(size_t baseAlignment)
 // static
 size_t BlockLayoutEncoder::GetBlockRegister(const BlockMemberInfo &info)
 {
-    return (info.offset / BytesPerComponent) / ComponentsPerRegister;
+    return (info.offset / kBytesPerComponent) / kComponentsPerRegister;
 }
 
 // static
 size_t BlockLayoutEncoder::GetBlockRegisterElement(const BlockMemberInfo &info)
 {
-    return (info.offset / BytesPerComponent) % ComponentsPerRegister;
+    return (info.offset / kBytesPerComponent) % kComponentsPerRegister;
 }
 
 void BlockLayoutEncoder::nextRegister()
 {
-    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, ComponentsPerRegister);
+    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, kComponentsPerRegister);
 }
 
 Std140BlockEncoder::Std140BlockEncoder() {}
@@ -214,7 +214,7 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
                                             int *matrixStrideOut)
 {
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
-    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == BytesPerComponent);
+    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == kBytesPerComponent);
 
     size_t baseAlignment = 0;
     int matrixStride     = 0;
@@ -222,19 +222,19 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
 
     if (gl::IsMatrixType(type))
     {
-        baseAlignment = ComponentsPerRegister;
-        matrixStride  = ComponentsPerRegister;
+        baseAlignment = kComponentsPerRegister;
+        matrixStride  = kComponentsPerRegister;
 
         if (!arraySizes.empty())
         {
             const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-            arrayStride            = ComponentsPerRegister * numRegisters;
+            arrayStride            = kComponentsPerRegister * numRegisters;
         }
     }
     else if (!arraySizes.empty())
     {
-        baseAlignment = ComponentsPerRegister;
-        arrayStride   = ComponentsPerRegister;
+        baseAlignment = kComponentsPerRegister;
+        arrayStride   = kComponentsPerRegister;
     }
     else
     {
@@ -283,7 +283,7 @@ void Std430BlockEncoder::getBlockLayoutInfo(GLenum type,
                                             int *matrixStrideOut)
 {
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
-    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == BytesPerComponent);
+    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == kBytesPerComponent);
 
     size_t baseAlignment = 0;
     int matrixStride     = 0;

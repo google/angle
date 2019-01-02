@@ -672,7 +672,7 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
             {
                 if (mRowMajor)
                 {
-                    out << " + " << str(BlockLayoutEncoder::BytesPerComponent);
+                    out << " + " << str(BlockLayoutEncoder::kBytesPerComponent);
                 }
                 else
                 {
@@ -687,7 +687,7 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
                 }
                 else
                 {
-                    out << " + " << str(BlockLayoutEncoder::BytesPerComponent);
+                    out << " + " << str(BlockLayoutEncoder::kBytesPerComponent);
                 }
             }
 
