@@ -427,7 +427,7 @@ bool ValidateDrawIndirectBase(Context *context, PrimitiveMode mode, const void *
     }
 
     // Here the third parameter 1 is only to pass the count validation.
-    if (!ValidateDrawBase(context, mode, 1))
+    if (!ValidateDrawBase(context, mode))
     {
         return false;
     }
