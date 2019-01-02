@@ -44,8 +44,8 @@ VkImageUsageFlags GetStagingImageUsageFlags(StagingUsage usage)
     }
 }
 
-// Gets access flags that are common between source and dest layouts.
-VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
+// Gets access flags based on layout.
+VkAccessFlags GetSrcLayoutAccessFlags(VkImageLayout layout)
 {
     switch (layout)
     {
@@ -55,13 +55,56 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
             return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
         case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
             return VK_ACCESS_TRANSFER_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_PREINITIALIZED:
+            return VK_ACCESS_HOST_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_GENERAL:
+            return VK_ACCESS_MEMORY_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_UNDEFINED:
+        // Note: source access mask never needs a READ bit, as WAR hazards
+        // don't need memory barriers (just execution barriers).
+        case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+        case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
         case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
-            return VK_ACCESS_MEMORY_READ_BIT;
+            return 0;
+        default:
+            // TODO(jmadill): Investigate other flags.
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+VkAccessFlags GetDstLayoutAccessFlags(VkImageLayout layout)
+{
+    switch (layout)
+    {
+        case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+            return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+            return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT |
+                   VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
         case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
             return VK_ACCESS_TRANSFER_READ_BIT;
-        case VK_IMAGE_LAYOUT_UNDEFINED:
+        case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+            return VK_ACCESS_TRANSFER_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+            // vkQueuePresentKHR automatically performs the appropriate memory barriers:
+            //
+            // > Any writes to memory backing the images referenced by the pImageIndices and
+            // > pSwapchains members of pPresentInfo, that are available before vkQueuePresentKHR
+            // > is executed, are automatically made visible to the read access performed by the
+            // > presentation engine.
+            return 0;
+        case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+            return VK_ACCESS_SHADER_READ_BIT;
         case VK_IMAGE_LAYOUT_GENERAL:
+            // NOTE(syoussefi): compute writes to images require them to be in GENERAL layout,
+            // and in those cases VK_ACCESS_SHADER_READ/WRITE_BIT are sufficient.  However, the
+            // GENERAL layout covers so many cases that we can't narrow the access flags here.
+            // The possible solutions are either adding VK_IMAGE_LAYOUT_SHADER_WRITE_OPTIMAL to
+            // Vulkan, or tracking the necessary access mask alongside the old layout.
+            return VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
         case VK_IMAGE_LAYOUT_PREINITIALIZED:
+        case VK_IMAGE_LAYOUT_UNDEFINED:
             return 0;
         default:
             // TODO(jmadill): Investigate other flags.
@@ -1322,26 +1365,9 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
     imageMemoryBarrier.subresourceRange.layerCount     = mLayerCount;
 
     // TODO(jmadill): Test all the permutations of the access flags.
-    imageMemoryBarrier.srcAccessMask = GetBasicLayoutAccessFlags(mCurrentLayout);
+    imageMemoryBarrier.srcAccessMask = GetSrcLayoutAccessFlags(mCurrentLayout);
 
-    if (mCurrentLayout == VK_IMAGE_LAYOUT_PREINITIALIZED)
-    {
-        imageMemoryBarrier.srcAccessMask |= VK_ACCESS_HOST_WRITE_BIT;
-    }
-
-    imageMemoryBarrier.dstAccessMask = GetBasicLayoutAccessFlags(newLayout);
-
-    if (newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-    {
-        imageMemoryBarrier.srcAccessMask |=
-            (VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT);
-        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_SHADER_READ_BIT;
-    }
-
-    if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-    {
-        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    }
+    imageMemoryBarrier.dstAccessMask = GetDstLayoutAccessFlags(newLayout);
 
     commandBuffer->pipelineBarrier(srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1,
                                    &imageMemoryBarrier);
