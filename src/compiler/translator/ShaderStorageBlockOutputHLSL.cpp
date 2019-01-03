@@ -155,9 +155,9 @@ std::string StripArrayIndices(const std::string &nameIn)
     while (pos != std::string::npos)
     {
         size_t closePos = name.find(']', pos);
-        ASSERT(closePos != std::string::npos && closePos > pos);
+        ASSERT(closePos != std::string::npos);
         name.erase(pos, closePos - pos + 1);
-        pos = name.find('[');
+        pos = name.find('[', pos);
     }
     ASSERT(name.find(']') == std::string::npos);
     return name;
