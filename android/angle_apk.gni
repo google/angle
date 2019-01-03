@@ -5,6 +5,21 @@
 import("//build/config/android/rules.gni")
 import("//third_party/angle/gni/angle.gni")
 
+vulkan_validation_layers = [
+  "VkLayer_core_validation",
+  "VkLayer_object_tracker",
+  "VkLayer_parameter_validation",
+  "VkLayer_threading",
+  "VkLayer_unique_objects",
+]
+
+angle_libraries = [
+  "EGL",
+  "GLESv1_CM",
+  "GLESv2",
+  "feature_support",
+]
+
 template("angle_apk") {
   manifest_target_name = "${target_name}__manifest"
   manifest_path = "${target_gen_dir}/${target_name}/android/AndroidManifest.xml"
@@ -54,40 +69,62 @@ template("angle_apk") {
 
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
       if (symbol_level == 0) {
-        secondary_abi_shared_libraries = [
-          "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
-          "//third_party/angle:libGLESv1_CM${angle_libs_suffix}($android_secondary_abi_toolchain)",
-          "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
-          "//third_party/angle:libfeature_support${angle_libs_suffix}" +
-              "($android_secondary_abi_toolchain)",
-        ]
+        secondary_abi_shared_libraries = []
+        foreach(_library, angle_libraries) {
+          secondary_abi_shared_libraries +=
+              [ "${angle_root}:lib${_library}${angle_libs_suffix}" +
+                "($android_secondary_abi_toolchain)" ]
+        }
+        if (angle_enable_vulkan_validation_layers) {
+          foreach(_layer, vulkan_validation_layers) {
+            secondary_abi_shared_libraries +=
+                [ "${angle_root}/third_party/vulkan-validation-layers:${_layer}" +
+                  "($android_secondary_abi_toolchain)" ]
+          }
+        }
       } else {
         _secondary_out_dir = get_label_info(
                 ":compressed_symbols($android_secondary_abi_toolchain)",
                 "root_out_dir")
-        secondary_abi_loadable_modules = [
-          "$_secondary_out_dir/lib.compressed/libEGL${angle_libs_suffix}.so",
-          "$_secondary_out_dir/lib.compressed/libGLESv1_CM${angle_libs_suffix}.so",
-          "$_secondary_out_dir/lib.compressed/libGLESv2${angle_libs_suffix}.so",
-          "$_secondary_out_dir/lib.compressed/libfeature_support${angle_libs_suffix}.so",
-        ]
+        secondary_abi_loadable_modules = []
+        foreach(_library, angle_libraries) {
+          secondary_abi_loadable_modules +=
+            [ "${_secondary_out_dir}/lib.compressed/lib${_library}${angle_libs_suffix}.so" ]
+        }
+        if (angle_enable_vulkan_validation_layers) {
+          foreach(_layer, vulkan_validation_layers) {
+            secondary_abi_loadable_modules +=
+                [ "${_secondary_out_dir}/lib.compressed/lib${_layer}.so" ]
+          }
+        }
       }
     }
 
     if (symbol_level == 0) {
-      shared_libraries = [
-        "//third_party/angle:libEGL${angle_libs_suffix}",
-        "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
-        "//third_party/angle:libGLESv2${angle_libs_suffix}",
-        "//third_party/angle:libfeature_support${angle_libs_suffix}",
-      ]
+      shared_libraries = []
+      foreach(_library, angle_libraries) {
+        shared_libraries +=
+            [ "${angle_root}:lib${_library}${angle_libs_suffix}" ]
+      }
+      if (angle_enable_vulkan_validation_layers) {
+        foreach(_layer, vulkan_validation_layers) {
+          shared_libraries +=
+              [ "${angle_root}/third_party/vulkan-validation-layers:${_layer}" ]
+        }
+      }
     } else {
-      loadable_modules = [
-        "$root_out_dir/lib.compressed/libEGL${angle_libs_suffix}.so",
-        "$root_out_dir/lib.compressed/libGLESv1_CM${angle_libs_suffix}.so",
-        "$root_out_dir/lib.compressed/libGLESv2${angle_libs_suffix}.so",
-        "$root_out_dir/lib.compressed/libfeature_support${angle_libs_suffix}.so",
-      ]
+      loadable_modules = []
+      foreach(_library, angle_libraries) {
+        loadable_modules += [
+          "${root_out_dir}/lib.compressed/lib${_library}${angle_libs_suffix}.so",
+        ]
+      }
+      if (angle_enable_vulkan_validation_layers) {
+        foreach(_layer, vulkan_validation_layers) {
+          loadable_modules +=
+              [ "${root_out_dir}/lib.compressed/lib${_layer}.so" ]
+        }
+      }
     }
 
     # Common files required by all builds

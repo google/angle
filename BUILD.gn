@@ -1096,22 +1096,31 @@ shared_library("libfeature_support${angle_libs_suffix}") {
 
 if (!is_component_build && is_android && symbol_level != 0) {
   action_foreach("compressed_symbols") {
-    sources = [
-      "${root_out_dir}/libEGL${angle_libs_suffix}.so",
-      "${root_out_dir}/libGLESv1_CM${angle_libs_suffix}.so",
-      "${root_out_dir}/libGLESv2${angle_libs_suffix}.so",
-      "${root_out_dir}/libfeature_support${angle_libs_suffix}.so",
-    ]
+    sources = []
+    foreach(_library, angle_libraries) {
+      sources += [ "${root_out_dir}/lib${_library}${angle_libs_suffix}.so" ]
+    }
+    if (angle_enable_vulkan_validation_layers) {
+      foreach(_layer, vulkan_validation_layers) {
+        sources += [ "${root_out_dir}/lib${_layer}.so" ]
+      }
+    }
 
     script = rebase_path("${root_build_dir}/android/compress_symbols.py",
                          root_build_dir)
 
-    deps = [
-      "//third_party/angle:libEGL${angle_libs_suffix}",
-      "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
-      "//third_party/angle:libGLESv2${angle_libs_suffix}",
-      "//third_party/angle:libfeature_support${angle_libs_suffix}",
-    ]
+    deps = []
+    foreach(_library, angle_libraries) {
+      deps += [ "${angle_root}:lib${_library}${angle_libs_suffix}" ]
+    }
+
+    if (angle_enable_vulkan_validation_layers) {
+      foreach(_layer, vulkan_validation_layers) {
+        deps += [
+          "${angle_root}/third_party/vulkan-validation-layers:${_layer}",
+        ]
+      }
+    }
 
     outputs = [
       "$root_out_dir/lib.compressed/{{source_file_part}}",
