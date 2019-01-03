@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "test_utils/gl_raii.h"
+#include "util/EGLWindow.h"
 #include "util/random_utils.h"
 
 using namespace angle;
@@ -191,7 +192,7 @@ TEST_P(SimpleOperationTest, ClearAndSwap)
     // Can't check the pixel result after the swap, and checking the pixel result affects the
     // behaviour of the test on the Vulkan back-end, so don't bother checking correctness.
     ASSERT_GL_NO_ERROR();
-    EXPECT_EGL_SUCCESS();
+    ASSERT_FALSE(getGLWindow()->hasError());
 }
 
 // Simple case of setting a scissor, enabled or disabled.
@@ -1093,6 +1094,7 @@ ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
+                       ES2_WGL(),
                        ES2_VULKAN());
 
 }  // namespace

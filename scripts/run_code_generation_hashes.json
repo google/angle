@@ -6,7 +6,7 @@
   "ANGLE format:src/libANGLE/renderer/angle_format_map.json":
     "be9f9bdbdf785dda05920146e8c55dbb",
   "ANGLE format:src/libANGLE/renderer/gen_angle_format_table.py":
-    "c215a4284425ea888f95d084a3d52e51",
+    "01c2f2a74d2575f65f4f61c05e81c26a",
   "ANGLE load functions table:src/libANGLE/renderer/gen_load_functions_table.py":
     "8afc7eecce2a3ba9f0b4beacb1aa7fe2",
   "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
@@ -34,7 +34,7 @@
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
     "8ea01df6cb7f160772d3c85dd5164890",
   "DXGI format:src/libANGLE/renderer/gen_angle_format_table.py":
-    "c215a4284425ea888f95d084a3d52e51",
+    "01c2f2a74d2575f65f4f61c05e81c26a",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
     "e5e567406476306ea06984d885be028d",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
@@ -74,9 +74,11 @@
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
     "745534010f31fbe8e1a1fcddce15ed2d",
   "GL/EGL/WGL loader:scripts/generate_loader.py":
-    "d68873f69d0ab0104460808c7b6a34ab",
+    "39c383a2cb8e7d216b3ce660217bd830",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
     "fcc6e75568f9c25b70f6692b9080a447",
+  "GL/EGL/WGL loader:scripts/wgl.xml":
+    "aa96419c582af2f6673430e2847693f4",
   "OpenGL dispatch table:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/generate_gl_dispatch_table.py":
@@ -97,8 +99,10 @@
     "93649f61036c2fa4739988ad71f413df",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
     "1743adf55153edf91363fa7b4350d859",
-  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/PushConstantColor.frag":
-    "d4edeca8fcb5fc02aa5236c8d8b77a4d",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ImageClear.frag":
+    "98d490413d20118e92dd2b160c1dfc6e",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ImageCopy.frag":
+    "096ccb0e3c25067ddd0347556a12d7d6",
   "Vulkan mandatory format support table:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":

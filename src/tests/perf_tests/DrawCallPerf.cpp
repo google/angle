@@ -278,6 +278,9 @@ ANGLE_INSTANTIATE_TEST(
     DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::VertexBuffer),
     DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::VertexBuffer),
     DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::Texture));
+    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::Texture),
+    DrawArrays(DrawCallPerfWGLParams(false), StateChange::NoChange),
+    DrawArrays(DrawCallPerfWGLParams(false), StateChange::VertexBuffer),
+    DrawArrays(DrawCallPerfWGLParams(false), StateChange::Texture));
 
 }  // anonymous namespace

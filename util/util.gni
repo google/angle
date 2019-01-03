@@ -37,6 +37,13 @@ util_win32_sources = [
   "util/windows/WindowsTimer.h",
 ]
 
+util_wgl_sources = [
+  "util/windows/WGLWindow.cpp",
+  "util/windows/WGLWindow.h",
+  "util/windows/wgl_loader_autogen.cpp",
+  "util/windows/wgl_loader_autogen.h",
+]
+
 util_winrt_sources = [
   "util/windows/winrt/WinRT_system_utils.cpp",
   "util/windows/winrt/WinRTPixmap.cpp",

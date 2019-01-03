@@ -550,6 +550,11 @@ void EGLWindow::makeCurrent()
     eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
 }
 
+bool EGLWindow::hasError() const
+{
+    return eglGetError() != EGL_SUCCESS;
+}
+
 // static
 bool EGLWindow::ClientExtensionEnabled(const std::string &extName)
 {

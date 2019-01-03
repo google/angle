@@ -807,46 +807,6 @@ source_set("libEGL_egl_loader") {
   ]
 }
 
-if (!is_component_build && is_android && symbol_level != 0) {
-  action_foreach("compressed_symbols") {
-    sources = [
-      "${root_out_dir}/libEGL${angle_libs_suffix}.so",
-      "${root_out_dir}/libGLESv1_CM${angle_libs_suffix}.so",
-      "${root_out_dir}/libGLESv2${angle_libs_suffix}.so",
-      "${root_out_dir}/libfeature_support${angle_libs_suffix}.so",
-    ]
-
-    script = rebase_path("${root_build_dir}/android/compress_symbols.py",
-                         root_build_dir)
-
-    deps = [
-      "//third_party/angle:libEGL${angle_libs_suffix}",
-      "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
-      "//third_party/angle:libGLESv2${angle_libs_suffix}",
-      "//third_party/angle:libfeature_support${angle_libs_suffix}",
-    ]
-
-    outputs = [
-      "$root_out_dir/lib.compressed/{{source_file_part}}",
-    ]
-
-    android_nm = "${android_tool_prefix}nm"
-
-    args = [
-      "--objcopy",
-      rebase_path(android_objcopy, root_build_dir),
-      "--nm",
-      rebase_path(android_nm, root_build_dir),
-      "--sofile",
-      "{{source}}",
-      "--unstrippedsofile",
-      "{{source_dir}}/lib.unstripped/{{source_file_part}}",
-      "--output",
-      "{{source_dir}}/lib.compressed/{{source_file_part}}",
-    ]
-  }
-}
-
 shared_library("libEGL${angle_libs_suffix}") {
   sources = libegl_sources
 
@@ -948,6 +908,10 @@ source_set("angle_util_loader") {
     "util/egl_loader_autogen.cpp",
     "util/gles_loader_autogen.cpp",
   ]
+
+  if (is_win) {
+    sources += util_wgl_sources
+  }
 
   public_deps = [
     ":angle_util_loader_headers",
@@ -1118,6 +1082,46 @@ shared_library("libfeature_support${angle_libs_suffix}") {
     ":angle_gpu_info_util",
     "third_party/jsoncpp:jsoncpp",
   ]
+}
+
+if (!is_component_build && is_android && symbol_level != 0) {
+  action_foreach("compressed_symbols") {
+    sources = [
+      "${root_out_dir}/libEGL${angle_libs_suffix}.so",
+      "${root_out_dir}/libGLESv1_CM${angle_libs_suffix}.so",
+      "${root_out_dir}/libGLESv2${angle_libs_suffix}.so",
+      "${root_out_dir}/libfeature_support${angle_libs_suffix}.so",
+    ]
+
+    script = rebase_path("${root_build_dir}/android/compress_symbols.py",
+                         root_build_dir)
+
+    deps = [
+      "//third_party/angle:libEGL${angle_libs_suffix}",
+      "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
+      "//third_party/angle:libGLESv2${angle_libs_suffix}",
+      "//third_party/angle:libfeature_support${angle_libs_suffix}",
+    ]
+
+    outputs = [
+      "$root_out_dir/lib.compressed/{{source_file_part}}",
+    ]
+
+    android_nm = "${android_tool_prefix}nm"
+
+    args = [
+      "--objcopy",
+      rebase_path(android_objcopy, root_build_dir),
+      "--nm",
+      rebase_path(android_nm, root_build_dir),
+      "--sofile",
+      "{{source}}",
+      "--unstrippedsofile",
+      "{{source_dir}}/lib.unstripped/{{source_file_part}}",
+      "--output",
+      "{{source_dir}}/lib.compressed/{{source_file_part}}",
+    ]
+  }
 }
 
 if (!is_component_build && is_android &&

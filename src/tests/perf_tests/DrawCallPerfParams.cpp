@@ -97,3 +97,11 @@ DrawCallPerfParams DrawCallPerfVulkanParams(bool useNullDevice, bool renderToTex
     params.useFBO        = renderToTexture;
     return params;
 }
+
+DrawCallPerfParams DrawCallPerfWGLParams(bool renderToTexture)
+{
+    DrawCallPerfParams params;
+    params.useFBO = renderToTexture;
+    params.driver = angle::GLESDriverType::SystemWGL;
+    return params;
+}

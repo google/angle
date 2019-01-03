@@ -21,6 +21,10 @@
 
 #include <json/json.h>
 
+#if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
+#    include "util/windows/WGLWindow.h"
+#endif  // defined(ANGLE_USE_UTIL_LOADER) &&defined(ANGLE_PLATFORM_WINDOWS)
+
 namespace
 {
 constexpr size_t kInitialTraceEventBufferSize = 50000;
@@ -288,6 +292,19 @@ double ANGLEPerfTest::normalizedTime(size_t value) const
 
 std::string RenderTestParams::suffix() const
 {
+    switch (driver)
+    {
+        case angle::GLESDriverType::AngleEGL:
+            break;
+        case angle::GLESDriverType::SystemEGL:
+            return "_native";
+        case angle::GLESDriverType::SystemWGL:
+            return "_wgl";
+        default:
+            assert(0);
+            return "_unk";
+    }
+
     switch (getRenderer())
     {
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
@@ -323,7 +340,30 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
     // Try to ensure we don't trigger allocation during execution.
     mTraceEventBuffer.reserve(kInitialTraceEventBufferSize);
 
-    mGLWindow = createEGLWindow(testParams);
+    switch (testParams.driver)
+    {
+        case angle::GLESDriverType::AngleEGL:
+            mGLWindow = createEGLWindow(testParams);
+            mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
+            break;
+        case angle::GLESDriverType::SystemEGL:
+            std::cerr << "Not implemented." << std::endl;
+            mSkipTest = true;
+            break;
+        case angle::GLESDriverType::SystemWGL:
+#if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
+            mGLWindow = WGLWindow::New(testParams.majorVersion, testParams.minorVersion);
+            mEntryPointsLib.reset(angle::OpenSharedLibrary("opengl32"));
+#else
+            std::cout << "WGL driver not available. Skipping test." << std::endl;
+            mSkipTest = true;
+#endif  // defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
+            break;
+        default:
+            std::cerr << "Error in switch." << std::endl;
+            mSkipTest = true;
+            break;
+    }
 }
 
 ANGLERenderTest::~ANGLERenderTest()
@@ -339,6 +379,11 @@ void ANGLERenderTest::addExtensionPrerequisite(const char *extensionName)
 
 void ANGLERenderTest::SetUp()
 {
+    if (mSkipTest)
+    {
+        return;
+    }
+
     ANGLEPerfTest::SetUp();
 
     // Set a consistent CPU core affinity and high priority.
@@ -367,24 +412,17 @@ void ANGLERenderTest::SetUp()
 
     if (!mOSWindow->initialize(mName, mTestParams.windowWidth, mTestParams.windowHeight))
     {
+        mSkipTest = true;
         FAIL() << "Failed initializing OSWindow";
-        return;
+        // FAIL returns.
     }
-
-    // Load EGL library so we can initialize the display.
-#if defined(ANGLE_USE_UTIL_LOADER)
-    mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
 
     if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get()))
     {
+        mSkipTest = true;
         FAIL() << "Failed initializing GL Window";
-        return;
+        // FAIL returns.
     }
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-    angle::LoadGLES(eglGetProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
 
     if (!areExtensionPrerequisitesFulfilled())
     {
@@ -400,9 +438,9 @@ void ANGLERenderTest::SetUp()
 
     if (mTestParams.iterationsPerStep == 0)
     {
+        mSkipTest = true;
         FAIL() << "Please initialize 'iterationsPerStep'.";
-        abortTest();
-        return;
+        // FAIL returns.
     }
 }
 

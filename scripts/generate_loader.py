@@ -18,6 +18,7 @@ if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
         'egl.xml',
         'egl_angle_ext.xml',
         'registry_xml.py',
+        'wgl.xml',
     ]
 
     print(",".join(inputs))
@@ -146,11 +147,38 @@ def gen_egl_loader():
     write_header(data_source_name, all_cmds, "egl", util_egl_preamble, path, "UTIL", export=ex)
     write_source(data_source_name, all_cmds, "egl", path, export=ex)
 
+def gen_wgl_loader():
+
+    supported_wgl_extensions = [
+        "WGL_ARB_create_context",
+        "WGL_ARB_extensions_string",
+        "WGL_EXT_swap_control",
+    ]
+
+    source = "wgl.xml"
+    xml = registry_xml.RegistryXML(source)
+
+    for major_version, minor_version in [[1, 0]]:
+        annotation = "{}_{}".format(major_version, minor_version)
+        name_prefix = "WGL_VERSION_"
+
+        feature_name = "{}{}".format(name_prefix, annotation)
+
+        xml.AddCommands(feature_name, annotation)
+
+    xml.AddExtensionCommands(supported_wgl_extensions, ['wgl'])
+
+    all_cmds = xml.all_cmd_names.get_all_commands()
+
+    path = os.path.join("..", "util", "windows")
+    write_header(source, all_cmds, "wgl", util_wgl_preamble, path, "UTIL_WINDOWS", "_")
+    write_source(source, all_cmds, "wgl", path, "_")
 
 def main():
     gen_libegl_loader()
     gen_gl_loader()
     gen_egl_loader()
+    gen_wgl_loader()
 
 
 libegl_preamble = """#include <EGL/egl.h>
@@ -169,6 +197,15 @@ util_egl_preamble = """#include "util/util_export.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+"""
+
+util_wgl_preamble = """
+#include <WGL/wgl.h>
+#include <GLES2/gl2.h>
+
+// We add an underscore before each function name to ensure common names like "ChoosePixelFormat"
+// and "SwapBuffers" don't conflict with our function pointers. We can't use a namespace because
+// some functions conflict with preprocessor definitions.
 """
 
 template_loader_h = """// GENERATED FILE - DO NOT EDIT.

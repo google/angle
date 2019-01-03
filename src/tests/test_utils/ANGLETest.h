@@ -239,6 +239,7 @@ class ANGLETestBase;
 class EGLWindow;
 class GLWindowBase;
 class OSWindow;
+class WGLWindow;
 
 struct TestPlatformContext final : private angle::NonCopyable
 {
@@ -357,6 +358,7 @@ class ANGLETestBase
     int getClientMajorVersion() const;
     int getClientMinorVersion() const;
 
+    GLWindowBase *getGLWindow() const;
     EGLWindow *getEGLWindow() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
@@ -396,9 +398,8 @@ class ANGLETestBase
                   bool useInstancedDrawCalls,
                   GLuint numInstances);
 
-    GLWindowBase *getGLWindow() const;
-
     EGLWindow *mEGLWindow;
+    WGLWindow *mWGLWindow;
     int mWidth;
     int mHeight;
 
@@ -438,11 +439,13 @@ class ANGLETestEnvironment : public testing::Environment
     void SetUp() override;
     void TearDown() override;
 
-    static angle::Library *GetEntryPointsLib() { return gEntryPointsLib.get(); }
+    static angle::Library *GetEGLLibrary();
+    static angle::Library *GetWGLLibrary();
 
   private:
     // For loading entry points.
-    static std::unique_ptr<angle::Library> gEntryPointsLib;
+    static std::unique_ptr<angle::Library> gEGLLibrary;
+    static std::unique_ptr<angle::Library> gWGLLibrary;
 };
 
 // This base fixture loads the EGL entry points.

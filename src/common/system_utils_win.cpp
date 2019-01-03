@@ -132,6 +132,8 @@ class Win32Library : public Library
         return reinterpret_cast<void *>(GetProcAddress(mModule, symbolName));
     }
 
+    void *getNative() const override { return reinterpret_cast<void *>(mModule); }
+
   private:
     HMODULE mModule = nullptr;
 };

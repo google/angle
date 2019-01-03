@@ -60,11 +60,12 @@ class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable
     EGLint getClientMajorVersion() const { return mClientMajorVersion; }
     EGLint getClientMinorVersion() const { return mClientMinorVersion; }
 
-    virtual bool initializeGL(OSWindow *osWindow, angle::Library *glLibrary) = 0;
-    virtual bool isGLInitialized() const                                     = 0;
-    virtual void swap()                                                      = 0;
-    virtual void destroyGL()                                                 = 0;
-    virtual void makeCurrent()                                               = 0;
+    virtual bool initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibrary) = 0;
+    virtual bool isGLInitialized() const                                              = 0;
+    virtual void swap()                                                               = 0;
+    virtual void destroyGL()                                                          = 0;
+    virtual void makeCurrent()                                                        = 0;
+    virtual bool hasError() const                                                     = 0;
 
   protected:
     GLWindowBase(EGLint glesMajorVersion, EGLint glesMinorVersion);
@@ -137,6 +138,7 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     void destroyGL() override;
     bool isGLInitialized() const override;
     void makeCurrent() override;
+    bool hasError() const override;
 
     static bool ClientExtensionEnabled(const std::string &extName);
 
