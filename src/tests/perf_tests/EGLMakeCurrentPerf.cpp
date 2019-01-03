@@ -59,7 +59,7 @@ EGLMakeCurrentPerfTest::EGLMakeCurrentPerfTest()
     displayAttributes.push_back(platform.deviceType);
     displayAttributes.push_back(EGL_NONE);
 
-    mOSWindow = CreateOSWindow();
+    mOSWindow = OSWindow::New();
     mOSWindow->initialize("EGLMakeCurrent Test", 64, 64);
 
     mEGLLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));

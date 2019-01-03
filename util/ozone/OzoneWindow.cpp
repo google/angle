@@ -64,7 +64,8 @@ void OzoneWindow::setVisible(bool isVisible)
 
 void OzoneWindow::signalTestEvent() {}
 
-OSWindow *CreateOSWindow()
+// static
+OSWindow *OSWindow::New()
 {
     return new OzoneWindow();
 }

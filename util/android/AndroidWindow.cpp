@@ -86,16 +86,6 @@ void AndroidWindow::signalTestEvent()
     UNIMPLEMENTED();
 }
 
-OSWindow *CreateOSWindow()
-{
-    // There should be only one live instance of AndroidWindow at a time,
-    // as there is only one Activity Surface behind it.
-    // Creating a new AndroidWindow each time works for ANGLETest,
-    // as it destroys an old window before creating a new one.
-    // TODO: use GLSurfaceView to support multiple windows
-    return new AndroidWindow();
-}
-
 static void onAppCmd(struct android_app *app, int32_t cmd)
 {
     switch (cmd)
@@ -143,4 +133,15 @@ void android_main(struct android_app *app)
             source->process(app, source);
         }
     }
+}
+
+// static
+OSWindow *OSWindow::New()
+{
+    // There should be only one live instance of AndroidWindow at a time,
+    // as there is only one Activity Surface behind it.
+    // Creating a new AndroidWindow each time works for ANGLETest,
+    // as it destroys an old window before creating a new one.
+    // TODO: use GLSurfaceView to support multiple windows
+    return new AndroidWindow();
 }

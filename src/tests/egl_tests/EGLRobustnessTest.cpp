@@ -21,7 +21,7 @@ class EGLRobustnessTest : public EGLTest,
     {
         EGLTest::SetUp();
 
-        mOSWindow = CreateOSWindow();
+        mOSWindow = OSWindow::New();
         mOSWindow->initialize("EGLRobustnessTest", 500, 500);
         mOSWindow->setVisible(true);
 
@@ -80,7 +80,7 @@ class EGLRobustnessTest : public EGLTest,
         eglTerminate(mDisplay);
         EXPECT_EGL_SUCCESS();
 
-        SafeDelete(mOSWindow);
+        OSWindow::Delete(&mOSWindow);
     }
 
     void createContext(EGLint resetStrategy)

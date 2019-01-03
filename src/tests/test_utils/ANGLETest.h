@@ -235,9 +235,10 @@ GLColor32F ReadColor32F(GLint x, GLint y);
 #define EXPECT_PIXEL_COLOR32F_NEAR(x, y, angleColor, abs_error) \
     EXPECT_PIXEL32F_NEAR(x, y, angleColor.R, angleColor.G, angleColor.B, angleColor.A, abs_error)
 
-class EGLWindow;
-class OSWindow;
 class ANGLETestBase;
+class EGLWindow;
+class GLWindowBase;
+class OSWindow;
 
 struct TestPlatformContext final : private angle::NonCopyable
 {
@@ -385,8 +386,6 @@ class ANGLETestBase
     };
 
   private:
-    bool destroyEGLContext();
-
     void checkD3D11SDKLayersMessages();
 
     void drawQuad(GLuint program,
@@ -396,6 +395,8 @@ class ANGLETestBase
                   bool useVertexBuffer,
                   bool useInstancedDrawCalls,
                   GLuint numInstances);
+
+    GLWindowBase *getGLWindow() const;
 
     EGLWindow *mEGLWindow;
     int mWidth;

@@ -95,7 +95,7 @@ EGLInitializePerfTest::EGLInitializePerfTest()
     }
     displayAttributes.push_back(EGL_NONE);
 
-    mOSWindow = CreateOSWindow();
+    mOSWindow = OSWindow::New();
     mOSWindow->initialize("EGLInitialize Test", 64, 64);
 
     auto eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
@@ -125,7 +125,7 @@ void EGLInitializePerfTest::SetUp()
 
 EGLInitializePerfTest::~EGLInitializePerfTest()
 {
-    SafeDelete(mOSWindow);
+    OSWindow::Delete(&mOSWindow);
 }
 
 void EGLInitializePerfTest::step()

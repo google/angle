@@ -736,11 +736,6 @@ void Win32Window::setMousePosition(int x, int y)
     SetCursorPos(topLeft.x + x, topLeft.y + y);
 }
 
-OSWindow *CreateOSWindow()
-{
-    return new Win32Window();
-}
-
 bool Win32Window::setPosition(int x, int y)
 {
     if (mX == x && mY == y)
@@ -829,4 +824,10 @@ void Win32Window::pushEvent(Event event)
 void Win32Window::signalTestEvent()
 {
     PostMessage(mNativeWindow, WM_USER, 0, 0);
+}
+
+// static
+OSWindow *OSWindow::New()
+{
+    return new Win32Window();
 }

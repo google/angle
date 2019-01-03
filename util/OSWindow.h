@@ -3,9 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// OSWindow:
+//   Operating system window integration base class.
 
-#ifndef SAMPLE_UTIL_WINDOW_H
-#define SAMPLE_UTIL_WINDOW_H
+#ifndef UTIL_OSWINDOW_H_
+#define UTIL_OSWINDOW_H_
 
 #include <stdint.h>
 #include <list>
@@ -20,8 +22,8 @@
 class ANGLE_UTIL_EXPORT OSWindow
 {
   public:
-    OSWindow();
-    virtual ~OSWindow();
+    static OSWindow *New();
+    static void Delete(OSWindow **osWindow);
 
     virtual bool initialize(const std::string &name, size_t width, size_t height) = 0;
     virtual void destroy()                                                        = 0;
@@ -56,6 +58,10 @@ class ANGLE_UTIL_EXPORT OSWindow
     bool didTestEventFire();
 
   protected:
+    OSWindow();
+    virtual ~OSWindow();
+    friend ANGLE_UTIL_EXPORT void FreeOSWindow(OSWindow *window);
+
     int mX;
     int mY;
     int mWidth;
@@ -64,6 +70,4 @@ class ANGLE_UTIL_EXPORT OSWindow
     std::list<Event> mEvents;
 };
 
-ANGLE_UTIL_EXPORT OSWindow *CreateOSWindow();
-
-#endif  // SAMPLE_UTIL_WINDOW_H
+#endif  // UTIL_OSWINDOW_H_

@@ -61,8 +61,8 @@ class SampleApplication
     bool mRunning;
 
     std::unique_ptr<Timer> mTimer;
-    std::unique_ptr<EGLWindow> mEGLWindow;
-    std::unique_ptr<OSWindow> mOSWindow;
+    EGLWindow *mEGLWindow;
+    OSWindow *mOSWindow;
 
     // Handle to the entry point binding library.
     std::unique_ptr<angle::Library> mEntryPointsLib;

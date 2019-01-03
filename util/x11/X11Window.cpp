@@ -413,11 +413,6 @@ void X11Window::setMousePosition(int x, int y)
     XWarpPointer(mDisplay, None, mWindow, 0, 0, 0, 0, x, y);
 }
 
-OSWindow *CreateOSWindow()
-{
-    return new X11Window();
-}
-
 bool X11Window::setPosition(int x, int y)
 {
     XMoveWindow(mDisplay, mWindow, x, y);
@@ -705,4 +700,10 @@ void X11Window::processEvent(const XEvent &xEvent)
             }
             break;
     }
+}
+
+// static
+OSWindow *OSWindow::New()
+{
+    return new X11Window();
 }

@@ -42,7 +42,7 @@ class EGLSurfaceTest : public EGLTest
     {
         EGLTest::SetUp();
 
-        mOSWindow = CreateOSWindow();
+        mOSWindow = OSWindow::New();
         mOSWindow->initialize("EGLSurfaceTest", 64, 64);
     }
 
@@ -82,7 +82,7 @@ class EGLSurfaceTest : public EGLTest
         }
 
         mOSWindow->destroy();
-        SafeDelete(mOSWindow);
+        OSWindow::Delete(&mOSWindow);
 
         ASSERT_TRUE(mWindowSurface == EGL_NO_SURFACE && mContext == EGL_NO_CONTEXT);
     }

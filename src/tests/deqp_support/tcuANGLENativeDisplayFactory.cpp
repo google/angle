@@ -272,7 +272,7 @@ eglu::NativeWindow *NativeWindowFactory::createWindow(eglu::NativeDisplay *nativ
 NativeWindow::NativeWindow(ANGLENativeDisplay *nativeDisplay,
                            const eglu::WindowParams &params,
                            EventState *eventState)
-    : eglu::NativeWindow(kWindowCapabilities), mWindow(CreateOSWindow()), mEvents(eventState)
+    : eglu::NativeWindow(kWindowCapabilities), mWindow(OSWindow::New()), mEvents(eventState)
 {
     bool initialized = mWindow->initialize(
         "dEQP ANGLE Tests",
@@ -305,7 +305,7 @@ void NativeWindow::setVisibility(eglu::WindowParams::Visibility visibility)
 
 NativeWindow::~NativeWindow()
 {
-    delete mWindow;
+    OSWindow::Delete(&mWindow);
 }
 
 eglw::EGLNativeWindowType NativeWindow::getLegacyNative()

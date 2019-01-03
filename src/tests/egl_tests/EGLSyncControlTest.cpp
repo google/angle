@@ -64,7 +64,7 @@ class EGLSyncControlTest : public testing::Test
         SafeRelease(mDevice);
         SafeRelease(mDeviceContext);
 
-        SafeDelete(mOSWindow);
+        OSWindow::Delete(&mOSWindow);
 
         if (mSurface != EGL_NO_SURFACE)
         {
@@ -110,7 +110,7 @@ class EGLSyncControlTest : public testing::Test
                                    EGL_NONE};
 
         // Create an OS Window
-        mOSWindow = CreateOSWindow();
+        mOSWindow = OSWindow::New();
         mOSWindow->initialize("EGLSyncControlTest", 64, 64);
         mOSWindow->setVisible(true);
 

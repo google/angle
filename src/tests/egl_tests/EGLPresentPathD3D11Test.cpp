@@ -31,7 +31,7 @@ class EGLPresentPathD3D11 : public EGLTest, public testing::WithParamInterface<P
     {
         EGLTest::SetUp();
 
-        mOSWindow    = CreateOSWindow();
+        mOSWindow    = OSWindow::New();
         mWindowWidth = 64;
         mOSWindow->initialize("EGLPresentPathD3D11", mWindowWidth, mWindowWidth);
     }
@@ -169,7 +169,7 @@ class EGLPresentPathD3D11 : public EGLTest, public testing::WithParamInterface<P
         }
 
         mOSWindow->destroy();
-        SafeDelete(mOSWindow);
+        OSWindow::Delete(&mOSWindow);
     }
 
     void drawQuadUsingGL()

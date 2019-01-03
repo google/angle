@@ -777,7 +777,8 @@ NSWindow *OSXWindow::getNSWindow() const
     return mWindow;
 }
 
-OSWindow *CreateOSWindow()
+// static
+OSWindow *OSWindow::New()
 {
     return new OSXWindow;
 }

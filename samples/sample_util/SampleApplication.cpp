@@ -49,7 +49,12 @@ SampleApplication::SampleApplication(std::string name,
                                      EGLint glesMinorVersion,
                                      size_t width,
                                      size_t height)
-    : mName(std::move(name)), mWidth(width), mHeight(height), mRunning(false)
+    : mName(std::move(name)),
+      mWidth(width),
+      mHeight(height),
+      mRunning(false),
+      mEGLWindow(nullptr),
+      mOSWindow(nullptr)
 {
     EGLint requestedRenderer = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
 
@@ -61,10 +66,10 @@ SampleApplication::SampleApplication(std::string name,
     // Load EGL library so we can initialize the display.
     mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
 
-    mEGLWindow.reset(new EGLWindow(glesMajorVersion, glesMinorVersion,
-                                   EGLPlatformParameters(requestedRenderer)));
+    mEGLWindow = EGLWindow::New(glesMajorVersion, glesMinorVersion,
+                                EGLPlatformParameters(requestedRenderer));
     mTimer.reset(CreateTimer());
-    mOSWindow.reset(CreateOSWindow());
+    mOSWindow = OSWindow::New();
 
     mEGLWindow->setConfigRedBits(8);
     mEGLWindow->setConfigGreenBits(8);
@@ -77,7 +82,11 @@ SampleApplication::SampleApplication(std::string name,
     mEGLWindow->setSwapInterval(0);
 }
 
-SampleApplication::~SampleApplication() {}
+SampleApplication::~SampleApplication()
+{
+    EGLWindow::Delete(&mEGLWindow);
+    OSWindow::Delete(&mOSWindow);
+}
 
 bool SampleApplication::initialize()
 {
@@ -97,7 +106,7 @@ void SampleApplication::swap()
 
 OSWindow *SampleApplication::getWindow() const
 {
-    return mOSWindow.get();
+    return mOSWindow;
 }
 
 EGLConfig SampleApplication::getConfig() const
@@ -129,7 +138,7 @@ int SampleApplication::run()
 
     mOSWindow->setVisible(true);
 
-    if (!mEGLWindow->initializeGL(mOSWindow.get(), mEntryPointsLib.get()))
+    if (!mEGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get()))
     {
         return -1;
     }

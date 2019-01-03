@@ -58,7 +58,7 @@ void main()
         {
             window window;
 
-            window.osWindow = CreateOSWindow();
+            window.osWindow = OSWindow::New();
             if (!window.osWindow->initialize("MultiWindow", 256, 256))
             {
                 return false;

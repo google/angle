@@ -76,7 +76,7 @@ class EGLDeviceCreationTest : public EGLTest
         SafeRelease(mDevice);
         SafeRelease(mDeviceContext);
 
-        SafeDelete(mOSWindow);
+        OSWindow::Delete(&mOSWindow);
 
         if (mSurface != EGL_NO_SURFACE)
         {
@@ -138,7 +138,7 @@ class EGLDeviceCreationTest : public EGLTest
         ASSERT_EGL_TRUE(eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount));
 
         // Create an OS Window
-        mOSWindow = CreateOSWindow();
+        mOSWindow = OSWindow::New();
         mOSWindow->initialize("EGLSurfaceTest", 64, 64);
 
         // Create window surface

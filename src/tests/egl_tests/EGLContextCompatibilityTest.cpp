@@ -116,7 +116,7 @@ class EGLContextCompatibilityTest : public EGLTest,
                                  EGLConfig contextConfig,
                                  bool compatible) const
     {
-        OSWindow *osWindow = CreateOSWindow();
+        OSWindow *osWindow = OSWindow::New();
         ASSERT_TRUE(osWindow != nullptr);
         osWindow->initialize("EGLContextCompatibilityTest", 500, 500);
         osWindow->setVisible(true);
@@ -144,7 +144,7 @@ class EGLContextCompatibilityTest : public EGLTest,
         eglDestroyContext(mDisplay, context);
         ASSERT_EGL_SUCCESS();
 
-        SafeDelete(osWindow);
+        OSWindow::Delete(&osWindow);
     }
 
     void testPbufferCompatibility(EGLConfig pbufferConfig,

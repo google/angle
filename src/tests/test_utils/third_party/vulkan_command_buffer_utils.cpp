@@ -557,7 +557,7 @@ void destroy_window(struct sample_info &info)
 void init_window_size(struct sample_info &info, int32_t default_width, int32_t default_height)
 {
 #ifdef __ANDROID__
-    info.mOSWindow = CreateOSWindow();
+    info.mOSWindow = OSWindow::New();
     assert(info.mOSWindow != nullptr);
     info.mOSWindow->initialize("VulkanTest", default_width, default_height);
 #endif

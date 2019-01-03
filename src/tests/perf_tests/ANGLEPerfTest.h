@@ -151,7 +151,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     static EGLWindow *createEGLWindow(const RenderTestParams &testParams);
 
-    EGLWindow *mEGLWindow;
+    GLWindowBase *mGLWindow;
     OSWindow *mOSWindow;
     std::vector<const char *> mExtensionPrerequisites;
     angle::PlatformMethods mPlatformMethods;

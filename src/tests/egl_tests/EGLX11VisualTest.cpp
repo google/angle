@@ -95,7 +95,7 @@ TEST_P(EGLX11VisualHintTest, ValidVisualIDAndClear)
 {
     // We'll test the extension with one visual ID but we don't care which one. This means we
     // can use OSWindow to create a window and just grab its visual.
-    OSWindow *osWindow = CreateOSWindow();
+    OSWindow *osWindow = OSWindow::New();
     osWindow->initialize("EGLX11VisualHintTest", 500, 500);
     osWindow->setVisible(true);
 
@@ -151,7 +151,7 @@ TEST_P(EGLX11VisualHintTest, ValidVisualIDAndClear)
     eglDestroyContext(display, context);
     ASSERT_EGL_SUCCESS();
 
-    SafeDelete(osWindow);
+    OSWindow::Delete(&osWindow);
 
     eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglTerminate(display);
@@ -165,7 +165,7 @@ TEST_P(EGLX11VisualHintTest, InvalidWindowVisualID)
     // creation will succeed.
     int visualId;
     {
-        OSWindow *osWindow = CreateOSWindow();
+        OSWindow *osWindow = OSWindow::New();
         osWindow->initialize("EGLX11VisualHintTest", 500, 500);
         osWindow->setVisible(true);
 
@@ -175,7 +175,7 @@ TEST_P(EGLX11VisualHintTest, InvalidWindowVisualID)
         ASSERT_NE(0, XGetWindowAttributes(mDisplay, xWindow, &windowAttributes));
         visualId = windowAttributes.visual->visualid;
 
-        SafeDelete(osWindow);
+        OSWindow::Delete(&osWindow);
     }
 
     auto attributes = getDisplayAttributes(visualId);
@@ -205,7 +205,7 @@ TEST_P(EGLX11VisualHintTest, InvalidWindowVisualID)
     ASSERT_EQ(EGL_NO_SURFACE, window);
     ASSERT_EGL_ERROR(EGL_BAD_MATCH);
 
-    SafeDelete(osWindow);
+    OSWindow::Delete(&osWindow);
 }
 
 ANGLE_INSTANTIATE_TEST(EGLX11VisualHintTest, ES2_OPENGL());

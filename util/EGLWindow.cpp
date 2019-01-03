@@ -87,39 +87,45 @@ bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
            (a.presentPath == b.presentPath);
 }
 
-EGLWindow::EGLWindow(EGLint glesMajorVersion,
-                     EGLint glesMinorVersion,
-                     const EGLPlatformParameters &platform)
-    : mDisplay(EGL_NO_DISPLAY),
-      mSurface(EGL_NO_SURFACE),
-      mContext(EGL_NO_CONTEXT),
-      mClientMajorVersion(glesMajorVersion),
+// GLWindowBase implementation.
+GLWindowBase::GLWindowBase(EGLint glesMajorVersion, EGLint glesMinorVersion)
+    : mClientMajorVersion(glesMajorVersion),
       mClientMinorVersion(glesMinorVersion),
-      mEGLMajorVersion(0),
-      mEGLMinorVersion(0),
-      mPlatform(platform),
       mRedBits(-1),
       mGreenBits(-1),
       mBlueBits(-1),
       mAlphaBits(-1),
       mDepthBits(-1),
       mStencilBits(-1),
+      mSwapInterval(-1),
+      mPlatformMethods(nullptr)
+{}
+
+GLWindowBase::~GLWindowBase() = default;
+
+// EGLWindow implementation.
+EGLWindow::EGLWindow(EGLint glesMajorVersion,
+                     EGLint glesMinorVersion,
+                     const EGLPlatformParameters &platform)
+    : GLWindowBase(glesMajorVersion, glesMinorVersion),
+      mDisplay(EGL_NO_DISPLAY),
+      mSurface(EGL_NO_SURFACE),
+      mContext(EGL_NO_CONTEXT),
+      mEGLMajorVersion(0),
+      mEGLMinorVersion(0),
+      mPlatform(platform),
       mComponentType(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT),
       mMultisample(false),
       mDebug(false),
       mNoError(false),
-      mWebGLCompatibility(false),
       mExtensionsEnabled(),
       mBindGeneratesResource(true),
       mClientArraysEnabled(true),
       mRobustAccess(false),
-      mRobustResourceInit(),
-      mSwapInterval(-1),
       mSamples(-1),
       mDebugLayersEnabled(),
       mContextProgramCacheEnabled(),
-      mContextVirtualization(),
-      mPlatformMethods(nullptr)
+      mContextVirtualization()
 {}
 
 EGLWindow::~EGLWindow()
@@ -152,18 +158,18 @@ EGLContext EGLWindow::getContext() const
     return mContext;
 }
 
-bool EGLWindow::initializeGL(OSWindow *osWindow, angle::Library *eglLibrary)
+bool EGLWindow::initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibrary)
 {
-    if (!initializeDisplayAndSurface(osWindow, eglLibrary))
+    if (!initializeDisplayAndSurface(osWindow, glWindowingLibrary))
         return false;
     return initializeContext();
 }
 
-bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *eglLibrary)
+bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *glWindowingLibrary)
 {
 #if defined(ANGLE_USE_UTIL_LOADER)
     PFNEGLGETPROCADDRESSPROC getProcAddress;
-    eglLibrary->getAs("eglGetProcAddress", &getProcAddress);
+    glWindowingLibrary->getAs("eglGetProcAddress", &getProcAddress);
     if (!getProcAddress)
     {
         return false;
@@ -307,6 +313,10 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *
         return false;
     }
 
+#if defined(ANGLE_USE_UTIL_LOADER)
+    angle::LoadGLES(eglGetProcAddress);
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+
     return true;
 }
 
@@ -324,7 +334,7 @@ EGLContext EGLWindow::createContext(EGLContext share) const
 
     bool hasWebGLCompatibility =
         strstr(displayExtensions, "EGL_ANGLE_create_context_webgl_compatibility") != nullptr;
-    if (mWebGLCompatibility && !hasWebGLCompatibility)
+    if (mWebGLCompatibility.valid() && !hasWebGLCompatibility)
     {
         return EGL_NO_CONTEXT;
     }
@@ -389,10 +399,10 @@ EGLContext EGLWindow::createContext(EGLContext share) const
         contextAttributes.push_back(EGL_CONTEXT_OPENGL_NO_ERROR_KHR);
         contextAttributes.push_back(mNoError ? EGL_TRUE : EGL_FALSE);
 
-        if (hasWebGLCompatibility)
+        if (mWebGLCompatibility.valid())
         {
             contextAttributes.push_back(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE);
-            contextAttributes.push_back(mWebGLCompatibility ? EGL_TRUE : EGL_FALSE);
+            contextAttributes.push_back(mWebGLCompatibility.value() ? EGL_TRUE : EGL_FALSE);
         }
 
         if (mExtensionsEnabled.valid())
@@ -551,4 +561,26 @@ bool CheckExtensionExists(const char *allExtensions, const std::string &extName)
     const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
     return paddedExtensions.find(std::string(" ") + extName + std::string(" ")) !=
            std::string::npos;
+}
+
+// static
+void GLWindowBase::Delete(GLWindowBase **window)
+{
+    delete *window;
+    *window = nullptr;
+}
+
+// static
+EGLWindow *EGLWindow::New(EGLint glesMajorVersion,
+                          EGLint glesMinorVersion,
+                          const EGLPlatformParameters &platform)
+{
+    return new EGLWindow(glesMajorVersion, glesMinorVersion, platform);
+}
+
+// static
+void EGLWindow::Delete(EGLWindow **window)
+{
+    delete *window;
+    *window = nullptr;
 }

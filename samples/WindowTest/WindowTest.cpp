@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[])
 {
-    OSWindow *window = CreateOSWindow();
+    OSWindow *window = OSWindow::New();
     int width        = 400;
     int height       = 400;
     int x            = 0;

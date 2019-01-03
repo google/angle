@@ -20,6 +20,25 @@
 
 namespace angle
 {
+namespace
+{
+bool IsANGLEConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
+{
+    std::unique_ptr<angle::Library> eglLibrary;
+
+#if defined(ANGLE_USE_UTIL_LOADER)
+    eglLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
+#endif
+
+    EGLWindow *eglWindow =
+        EGLWindow::New(param.majorVersion, param.minorVersion, param.eglParameters);
+    bool result = eglWindow->initializeGL(osWindow, eglLibrary.get());
+    eglWindow->destroyGL();
+    EGLWindow::Delete(&eglWindow);
+    return result;
+}
+}  // namespace
+
 bool IsPlatformAvailable(const PlatformParameters &param)
 {
     switch (param.getRenderer())
@@ -75,27 +94,16 @@ bool IsPlatformAvailable(const PlatformParameters &param)
     }
     else
     {
-        OSWindow *osWindow = CreateOSWindow();
+        OSWindow *osWindow = OSWindow::New();
         bool result        = osWindow->initialize("CONFIG_TESTER", 1, 1);
 
         if (result)
         {
-            std::unique_ptr<angle::Library> eglLibrary;
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-            eglLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
-
-            EGLWindow *eglWindow =
-                new EGLWindow(param.majorVersion, param.minorVersion, param.eglParameters);
-            result = eglWindow->initializeGL(osWindow, eglLibrary.get());
-
-            eglWindow->destroyGL();
-            SafeDelete(eglWindow);
+            result = IsANGLEConfigSupported(param, osWindow);
         }
 
         osWindow->destroy();
-        SafeDelete(osWindow);
+        OSWindow::Delete(&osWindow);
 
         paramAvailabilityCache[param] = result;
 

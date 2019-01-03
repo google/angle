@@ -632,7 +632,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
   public:
     void SetUp() override
     {
-        mOSWindow   = CreateOSWindow();
+        mOSWindow   = OSWindow::New();
         bool result = mOSWindow->initialize("ProgramBinariesAcrossRenderersTests", 100, 100);
 
         if (result == false)
@@ -646,12 +646,11 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
     EGLWindow *createAndInitEGLWindow(angle::PlatformParameters &param)
     {
         EGLWindow *eglWindow =
-            new EGLWindow(param.majorVersion, param.minorVersion, param.eglParameters);
+            EGLWindow::New(param.majorVersion, param.minorVersion, param.eglParameters);
         bool result = eglWindow->initializeGL(mOSWindow, mEntryPointsLib.get());
         if (result == false)
         {
-            SafeDelete(eglWindow);
-            eglWindow = nullptr;
+            EGLWindow::Delete(&eglWindow);
         }
 
         angle::LoadGLES(eglGetProcAddress);
@@ -663,8 +662,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
     {
         ASSERT_NE(nullptr, *eglWindow);
         (*eglWindow)->destroyGL();
-        SafeDelete(*eglWindow);
-        *eglWindow = nullptr;
+        EGLWindow::Delete(eglWindow);
     }
 
     GLuint createES2ProgramFromSource()
@@ -706,7 +704,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
     void TearDown() override
     {
         mOSWindow->destroy();
-        SafeDelete(mOSWindow);
+        OSWindow::Delete(&mOSWindow);
     }
 
     OSWindow *mOSWindow = nullptr;
