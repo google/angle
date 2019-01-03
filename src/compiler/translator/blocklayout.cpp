@@ -46,10 +46,6 @@ void GetInterfaceBlockInfo(const std::vector<VarT> &fields,
                            bool inRowMajorLayout,
                            BlockLayoutMap *blockInfoOut)
 {
-    // TODO(jiajia.qin@intel.com):we need to set the right structure base alignment before
-    // enterAggregateType for std430 layout just like GetShaderStorageBlockFieldMemberInfo did in
-    // ShaderStorageBlockOutputHLSL.cpp. http://anglebug.com/1920
-
     BlockLayoutMapVisitor visitor(blockInfoOut, prefix, encoder);
     TraverseShaderVariables(fields, inRowMajorLayout, &visitor);
 }
@@ -60,13 +56,12 @@ void TraverseStructVariable(const ShaderVariable &variable,
 {
     const std::vector<ShaderVariable> &fields = variable.fields;
 
-    visitor->enterStructAccess(variable);
+    visitor->enterStructAccess(variable, isRowMajorLayout);
     TraverseShaderVariables(fields, isRowMajorLayout, visitor);
-    visitor->exitStructAccess(variable);
+    visitor->exitStructAccess(variable, isRowMajorLayout);
 }
 
 void TraverseStructArrayVariable(const ShaderVariable &variable,
-                                 unsigned int arrayNestingIndex,
                                  bool inRowMajorLayout,
                                  ShaderVariableVisitor *visitor)
 {
@@ -74,7 +69,7 @@ void TraverseStructArrayVariable(const ShaderVariable &variable,
 
     // Nested arrays are processed starting from outermost (arrayNestingIndex 0u) and ending at the
     // innermost. We make a special case for unsized arrays.
-    const unsigned int currentArraySize = variable.getNestedArraySize(arrayNestingIndex);
+    const unsigned int currentArraySize = variable.getNestedArraySize(0);
     unsigned int count                  = std::max(currentArraySize, 1u);
     for (unsigned int arrayElement = 0u; arrayElement < count; ++arrayElement)
     {
@@ -83,9 +78,9 @@ void TraverseStructArrayVariable(const ShaderVariable &variable,
         ShaderVariable elementVar = variable;
         elementVar.indexIntoArray(arrayElement);
 
-        if (arrayNestingIndex + 1u < variable.arraySizes.size())
+        if (variable.arraySizes.size() > 1u)
         {
-            TraverseStructArrayVariable(elementVar, arrayNestingIndex, inRowMajorLayout, visitor);
+            TraverseStructArrayVariable(elementVar, inRowMajorLayout, visitor);
         }
         else
         {
@@ -145,9 +140,34 @@ std::string CollapseNameStack(const std::vector<std::string> &nameStack)
     }
     return strstr.str();
 }
+
+size_t GetStd430BaseAlignment(GLenum variableType, bool isRowMajor)
+{
+    GLenum flippedType   = isRowMajor ? variableType : gl::TransposeMatrixType(variableType);
+    size_t numComponents = static_cast<size_t>(gl::VariableColumnCount(flippedType));
+    return ComponentAlignment(numComponents);
+}
+
+class BaseAlignmentVisitor : public ShaderVariableVisitor
+{
+  public:
+    BaseAlignmentVisitor() = default;
+    void visitVariable(const ShaderVariable &variable, bool isRowMajor) override
+    {
+        size_t baseAlignment = GetStd430BaseAlignment(variable.type, isRowMajor);
+        mCurrentAlignment    = std::max(mCurrentAlignment, baseAlignment);
+    }
+
+    // This is in components rather than bytes.
+    size_t getBaseAlignment() const { return mCurrentAlignment; }
+
+  private:
+    size_t mCurrentAlignment = 0;
+};
 }  // anonymous namespace
 
-BlockLayoutEncoder::BlockLayoutEncoder() : mCurrentOffset(0), mStructureBaseAlignment(0) {}
+// BlockLayoutEncoder implementation.
+BlockLayoutEncoder::BlockLayoutEncoder() : mCurrentOffset(0) {}
 
 BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
                                                const std::vector<unsigned int> &arraySizes,
@@ -168,16 +188,6 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
     return memberInfo;
 }
 
-void BlockLayoutEncoder::increaseCurrentOffset(size_t offsetInBytes)
-{
-    mCurrentOffset += (offsetInBytes / kBytesPerComponent);
-}
-
-void BlockLayoutEncoder::setStructureBaseAlignment(size_t baseAlignment)
-{
-    mStructureBaseAlignment = baseAlignment;
-}
-
 // static
 size_t BlockLayoutEncoder::GetBlockRegister(const BlockMemberInfo &info)
 {
@@ -190,21 +200,22 @@ size_t BlockLayoutEncoder::GetBlockRegisterElement(const BlockMemberInfo &info)
     return (info.offset / kBytesPerComponent) % kComponentsPerRegister;
 }
 
-void BlockLayoutEncoder::nextRegister()
+void BlockLayoutEncoder::align(size_t baseAlignment)
 {
-    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, kComponentsPerRegister);
+    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, baseAlignment);
 }
 
+// Std140BlockEncoder implementation.
 Std140BlockEncoder::Std140BlockEncoder() {}
 
-void Std140BlockEncoder::enterAggregateType()
+void Std140BlockEncoder::enterAggregateType(const ShaderVariable &structVar)
 {
-    nextRegister();
+    align(getBaseAlignment(structVar));
 }
 
-void Std140BlockEncoder::exitAggregateType()
+void Std140BlockEncoder::exitAggregateType(const ShaderVariable &structVar)
 {
-    nextRegister();
+    align(getBaseAlignment(structVar));
 }
 
 void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
@@ -222,24 +233,24 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
 
     if (gl::IsMatrixType(type))
     {
-        baseAlignment = kComponentsPerRegister;
-        matrixStride  = kComponentsPerRegister;
+        baseAlignment = getTypeBaseAlignment(type, isRowMajorMatrix);
+        matrixStride  = getTypeBaseAlignment(type, isRowMajorMatrix);
 
         if (!arraySizes.empty())
         {
             const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-            arrayStride            = kComponentsPerRegister * numRegisters;
+            arrayStride            = getTypeBaseAlignment(type, isRowMajorMatrix) * numRegisters;
         }
     }
     else if (!arraySizes.empty())
     {
-        baseAlignment = kComponentsPerRegister;
-        arrayStride   = kComponentsPerRegister;
+        baseAlignment = getTypeBaseAlignment(type, false);
+        arrayStride   = getTypeBaseAlignment(type, false);
     }
     else
     {
-        const int numComponents = gl::VariableComponentCount(type);
-        baseAlignment           = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
+        const size_t numComponents = static_cast<size_t>(gl::VariableComponentCount(type));
+        baseAlignment              = ComponentAlignment(numComponents);
     }
 
     mCurrentOffset = rx::roundUp(mCurrentOffset, baseAlignment);
@@ -269,52 +280,24 @@ void Std140BlockEncoder::advanceOffset(GLenum type,
     }
 }
 
+// Std430BlockEncoder implementation.
 Std430BlockEncoder::Std430BlockEncoder() {}
 
-void Std430BlockEncoder::nextRegister()
+size_t Std430BlockEncoder::getBaseAlignment(const ShaderVariable &shaderVar) const
 {
-    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, mStructureBaseAlignment);
+    if (shaderVar.isStruct())
+    {
+        BaseAlignmentVisitor visitor;
+        TraverseShaderVariables(shaderVar.fields, false, &visitor);
+        return visitor.getBaseAlignment();
+    }
+
+    return GetStd430BaseAlignment(shaderVar.type, shaderVar.isRowMajorLayout);
 }
 
-void Std430BlockEncoder::getBlockLayoutInfo(GLenum type,
-                                            const std::vector<unsigned int> &arraySizes,
-                                            bool isRowMajorMatrix,
-                                            int *arrayStrideOut,
-                                            int *matrixStrideOut)
+size_t Std430BlockEncoder::getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const
 {
-    // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
-    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == kBytesPerComponent);
-
-    size_t baseAlignment = 0;
-    int matrixStride     = 0;
-    int arrayStride      = 0;
-
-    if (gl::IsMatrixType(type))
-    {
-        const int numComponents = gl::MatrixComponentCount(type, isRowMajorMatrix);
-        baseAlignment           = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
-        matrixStride            = baseAlignment;
-
-        if (!arraySizes.empty())
-        {
-            const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-            arrayStride            = matrixStride * numRegisters;
-        }
-    }
-    else
-    {
-        const int numComponents = gl::VariableComponentCount(type);
-        baseAlignment           = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
-        if (!arraySizes.empty())
-        {
-            arrayStride = baseAlignment;
-        }
-    }
-    mStructureBaseAlignment = std::max(baseAlignment, mStructureBaseAlignment);
-    mCurrentOffset          = rx::roundUp(mCurrentOffset, baseAlignment);
-
-    *matrixStrideOut = matrixStride;
-    *arrayStrideOut  = arrayStride;
+    return GetStd430BaseAlignment(type, isRowMajorMatrix);
 }
 
 void GetInterfaceBlockInfo(const std::vector<InterfaceBlockField> &fields,
@@ -366,13 +349,13 @@ void VariableNameVisitor::exitStruct(const ShaderVariable &structVar)
     mMappedNameStack.pop_back();
 }
 
-void VariableNameVisitor::enterStructAccess(const ShaderVariable &structVar)
+void VariableNameVisitor::enterStructAccess(const ShaderVariable &structVar, bool isRowMajor)
 {
     mNameStack.push_back(".");
     mMappedNameStack.push_back(".");
 }
 
-void VariableNameVisitor::exitStructAccess(const ShaderVariable &structVar)
+void VariableNameVisitor::exitStructAccess(const ShaderVariable &structVar, bool isRowMajor)
 {
     mNameStack.pop_back();
     mMappedNameStack.pop_back();
@@ -380,7 +363,7 @@ void VariableNameVisitor::exitStructAccess(const ShaderVariable &structVar)
 
 void VariableNameVisitor::enterArray(const ShaderVariable &arrayVar)
 {
-    if (!arrayVar.hasParentArrayIndex())
+    if (!arrayVar.hasParentArrayIndex() && !arrayVar.isStruct())
     {
         mNameStack.push_back(arrayVar.name);
         mMappedNameStack.push_back(arrayVar.mappedName);
@@ -389,7 +372,7 @@ void VariableNameVisitor::enterArray(const ShaderVariable &arrayVar)
 
 void VariableNameVisitor::exitArray(const ShaderVariable &arrayVar)
 {
-    if (!arrayVar.hasParentArrayIndex())
+    if (!arrayVar.hasParentArrayIndex() && !arrayVar.isStruct())
     {
         mNameStack.pop_back();
         mMappedNameStack.pop_back();
@@ -465,16 +448,16 @@ BlockEncoderVisitor::BlockEncoderVisitor(const std::string &namePrefix,
 
 BlockEncoderVisitor::~BlockEncoderVisitor() = default;
 
-void BlockEncoderVisitor::enterStructAccess(const ShaderVariable &structVar)
+void BlockEncoderVisitor::enterStructAccess(const ShaderVariable &structVar, bool isRowMajor)
 {
-    VariableNameVisitor::enterStructAccess(structVar);
-    mEncoder->enterAggregateType();
+    VariableNameVisitor::enterStructAccess(structVar, isRowMajor);
+    mEncoder->enterAggregateType(structVar);
 }
 
-void BlockEncoderVisitor::exitStructAccess(const ShaderVariable &structVar)
+void BlockEncoderVisitor::exitStructAccess(const ShaderVariable &structVar, bool isRowMajor)
 {
-    mEncoder->exitAggregateType();
-    VariableNameVisitor::exitStructAccess(structVar);
+    mEncoder->exitAggregateType(structVar);
+    VariableNameVisitor::exitStructAccess(structVar, isRowMajor);
 }
 
 void BlockEncoderVisitor::visitNamedVariable(const ShaderVariable &variable,
@@ -502,16 +485,16 @@ void TraverseShaderVariable(const ShaderVariable &variable,
 
     if (variable.isStruct())
     {
+        visitor->enterStruct(variable);
         if (variable.isArray())
         {
-            TraverseStructArrayVariable(variable, 0u, rowMajorLayout, visitor);
+            TraverseStructArrayVariable(variable, rowMajorLayout, visitor);
         }
         else
         {
-            visitor->enterStruct(variable);
             TraverseStructVariable(variable, rowMajorLayout, visitor);
-            visitor->exitStruct(variable);
         }
+        visitor->exitStruct(variable);
     }
     else if (variable.isArrayOfArrays())
     {

@@ -93,15 +93,18 @@ class ShaderStorageBufferTest31 : public ANGLETest
         const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
             glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0,
                              matrixCase.mRows * matrixCase.mMatrixStride, GL_MAP_READ_BIT));
-        for (unsigned int idx = 0; idx < matrixCase.mRows; idx++)
+
+        for (unsigned int row = 0; row < matrixCase.mRows; row++)
         {
-            for (unsigned int idy = 0; idy < matrixCase.mColumns; idy++)
+            for (unsigned int col = 0; col < matrixCase.mColumns; col++)
             {
-                EXPECT_EQ(matrixCase.mInputdata[idx * (matrixCase.mMatrixStride /
-                                                       matrixCase.kBytesPerComponent) +
-                                                idy],
-                          *(ptr + idx * (matrixCase.mMatrixStride / matrixCase.kBytesPerComponent) +
-                            idy));
+                GLfloat expected = matrixCase.mInputdata[row * (matrixCase.mMatrixStride /
+                                                                matrixCase.kBytesPerComponent) +
+                                                         col];
+                GLfloat actual =
+                    *(ptr + row * (matrixCase.mMatrixStride / matrixCase.kBytesPerComponent) + col);
+
+                EXPECT_EQ(expected, actual) << " at row " << row << " and column " << col;
             }
         }
 

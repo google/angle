@@ -350,16 +350,16 @@ class ShaderStorageBlockVisitor : public sh::VariableNameVisitor
         sh::VariableNameVisitor::exitArrayElement(arrayVar, arrayElement);
     }
 
-    void enterStructAccess(const sh::ShaderVariable &structVar) override
+    void enterStructAccess(const sh::ShaderVariable &structVar, bool isRowMajor) override
     {
         mStructStackSize++;
-        sh::VariableNameVisitor::enterStructAccess(structVar);
+        sh::VariableNameVisitor::enterStructAccess(structVar, isRowMajor);
     }
 
-    void exitStructAccess(const sh::ShaderVariable &structVar) override
+    void exitStructAccess(const sh::ShaderVariable &structVar, bool isRowMajor) override
     {
         mStructStackSize--;
-        sh::VariableNameVisitor::exitStructAccess(structVar);
+        sh::VariableNameVisitor::exitStructAccess(structVar, isRowMajor);
     }
 
     void visitNamedVariable(const sh::ShaderVariable &variable,
@@ -560,16 +560,16 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
         }
     }
 
-    void enterStructAccess(const sh::ShaderVariable &structVar) override
+    void enterStructAccess(const sh::ShaderVariable &structVar, bool isRowMajor) override
     {
         mStructStackSize++;
-        sh::VariableNameVisitor::enterStructAccess(structVar);
+        sh::VariableNameVisitor::enterStructAccess(structVar, isRowMajor);
     }
 
-    void exitStructAccess(const sh::ShaderVariable &structVar) override
+    void exitStructAccess(const sh::ShaderVariable &structVar, bool isRowMajor) override
     {
         mStructStackSize--;
-        sh::VariableNameVisitor::exitStructAccess(structVar);
+        sh::VariableNameVisitor::exitStructAccess(structVar, isRowMajor);
     }
 
     ShaderUniformCount getCounts() const { return mUniformCount; }

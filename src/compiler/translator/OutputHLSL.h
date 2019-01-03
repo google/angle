@@ -47,7 +47,8 @@ class OutputHLSL : public TIntermTraverser
                ShCompileOptions compileOptions,
                sh::WorkGroupSize workGroupSize,
                TSymbolTable *symbolTable,
-               PerformanceDiagnostics *perfDiagnostics);
+               PerformanceDiagnostics *perfDiagnostics,
+               const std::vector<InterfaceBlock> &shaderStorageBlocks);
 
     ~OutputHLSL();
 

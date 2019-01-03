@@ -66,6 +66,11 @@ struct BlockMemberInfo
     int topLevelArrayStride = -1;
 };
 
+constexpr size_t ComponentAlignment(size_t numComponents)
+{
+    return (numComponents == 3u ? 4u : numComponents);
+}
+
 constexpr BlockMemberInfo kDefaultBlockMemberInfo;
 
 class BlockLayoutEncoder
@@ -78,13 +83,11 @@ class BlockLayoutEncoder
                                const std::vector<unsigned int> &arraySizes,
                                bool isRowMajorMatrix);
 
-    size_t getBlockSize() const { return mCurrentOffset * kBytesPerComponent; }
-    size_t getStructureBaseAlignment() const { return mStructureBaseAlignment; }
-    void increaseCurrentOffset(size_t offsetInBytes);
-    void setStructureBaseAlignment(size_t baseAlignment);
+    size_t getCurrentOffset() const { return mCurrentOffset * kBytesPerComponent; }
 
-    virtual void enterAggregateType() = 0;
-    virtual void exitAggregateType()  = 0;
+    // Called when entering/exiting a structure variable.
+    virtual void enterAggregateType(const ShaderVariable &structVar) = 0;
+    virtual void exitAggregateType(const ShaderVariable &structVar)  = 0;
 
     static constexpr size_t kBytesPerComponent           = 4u;
     static constexpr unsigned int kComponentsPerRegister = 4u;
@@ -93,10 +96,7 @@ class BlockLayoutEncoder
     static size_t GetBlockRegisterElement(const BlockMemberInfo &info);
 
   protected:
-    size_t mCurrentOffset;
-    size_t mStructureBaseAlignment;
-
-    virtual void nextRegister();
+    void align(size_t baseAlignment);
 
     virtual void getBlockLayoutInfo(GLenum type,
                                     const std::vector<unsigned int> &arraySizes,
@@ -108,6 +108,8 @@ class BlockLayoutEncoder
                                bool isRowMajorMatrix,
                                int arrayStride,
                                int matrixStride)          = 0;
+
+    size_t mCurrentOffset;
 };
 
 // Will return default values for everything.
@@ -116,8 +118,8 @@ class DummyBlockEncoder : public BlockLayoutEncoder
   public:
     DummyBlockEncoder() = default;
 
-    void enterAggregateType() override {}
-    void exitAggregateType() override {}
+    void enterAggregateType(const ShaderVariable &structVar) override {}
+    void exitAggregateType(const ShaderVariable &structVar) override {}
 
   protected:
     void getBlockLayoutInfo(GLenum type,
@@ -146,8 +148,8 @@ class Std140BlockEncoder : public BlockLayoutEncoder
   public:
     Std140BlockEncoder();
 
-    void enterAggregateType() override;
-    void exitAggregateType() override;
+    void enterAggregateType(const ShaderVariable &structVar) override;
+    void exitAggregateType(const ShaderVariable &structVar) override;
 
   protected:
     void getBlockLayoutInfo(GLenum type,
@@ -160,6 +162,16 @@ class Std140BlockEncoder : public BlockLayoutEncoder
                        bool isRowMajorMatrix,
                        int arrayStride,
                        int matrixStride) override;
+
+    virtual size_t getBaseAlignment(const ShaderVariable &variable) const
+    {
+        return kComponentsPerRegister;
+    }
+
+    virtual size_t getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const
+    {
+        return kComponentsPerRegister;
+    }
 };
 
 class Std430BlockEncoder : public Std140BlockEncoder
@@ -168,12 +180,8 @@ class Std430BlockEncoder : public Std140BlockEncoder
     Std430BlockEncoder();
 
   protected:
-    void nextRegister() override;
-    void getBlockLayoutInfo(GLenum type,
-                            const std::vector<unsigned int> &arraySizes,
-                            bool isRowMajorMatrix,
-                            int *arrayStrideOut,
-                            int *matrixStrideOut) override;
+    size_t getBaseAlignment(const ShaderVariable &variable) const override;
+    size_t getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const override;
 };
 
 using BlockLayoutMap = std::map<std::string, BlockMemberInfo>;
@@ -197,8 +205,8 @@ class ShaderVariableVisitor
     virtual void enterStruct(const ShaderVariable &structVar) {}
     virtual void exitStruct(const ShaderVariable &structVar) {}
 
-    virtual void enterStructAccess(const ShaderVariable &structVar) {}
-    virtual void exitStructAccess(const ShaderVariable &structVar) {}
+    virtual void enterStructAccess(const ShaderVariable &structVar, bool isRowMajor) {}
+    virtual void exitStructAccess(const ShaderVariable &structVar, bool isRowMajor) {}
 
     virtual void enterArray(const ShaderVariable &arrayVar) {}
     virtual void exitArray(const ShaderVariable &arrayVar) {}
@@ -222,8 +230,8 @@ class VariableNameVisitor : public ShaderVariableVisitor
 
     void enterStruct(const ShaderVariable &structVar) override;
     void exitStruct(const ShaderVariable &structVar) override;
-    void enterStructAccess(const ShaderVariable &structVar) override;
-    void exitStructAccess(const ShaderVariable &structVar) override;
+    void enterStructAccess(const ShaderVariable &structVar, bool isRowMajor) override;
+    void exitStructAccess(const ShaderVariable &structVar, bool isRowMajor) override;
     void enterArray(const ShaderVariable &arrayVar) override;
     void exitArray(const ShaderVariable &arrayVar) override;
     void enterArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) override;
@@ -243,11 +251,12 @@ class VariableNameVisitor : public ShaderVariableVisitor
                                     const std::string &name,
                                     const std::string &mappedName) = 0;
 
+    std::string collapseNameStack() const;
+    std::string collapseMappedNameStack() const;
+
   private:
     void visitSampler(const sh::ShaderVariable &sampler) final;
     void visitVariable(const ShaderVariable &variable, bool isRowMajor) final;
-    std::string collapseNameStack() const;
-    std::string collapseMappedNameStack() const;
 
     std::vector<std::string> mNameStack;
     std::vector<std::string> mMappedNameStack;
@@ -261,8 +270,8 @@ class BlockEncoderVisitor : public VariableNameVisitor
                         BlockLayoutEncoder *encoder);
     ~BlockEncoderVisitor();
 
-    void enterStructAccess(const ShaderVariable &structVar) override;
-    void exitStructAccess(const ShaderVariable &structVar) override;
+    void enterStructAccess(const ShaderVariable &structVar, bool isRowMajor) override;
+    void exitStructAccess(const ShaderVariable &structVar, bool isRowMajor) override;
 
     void visitNamedVariable(const ShaderVariable &variable,
                             bool isRowMajor,

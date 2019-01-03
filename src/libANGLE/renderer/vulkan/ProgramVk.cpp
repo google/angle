@@ -40,7 +40,7 @@ void InitDefaultUniformBlock(const std::vector<sh::Uniform> &uniforms,
     sh::Std140BlockEncoder blockEncoder;
     sh::GetUniformBlockInfo(uniforms, "", &blockEncoder, blockLayoutMapOut);
 
-    size_t blockSize = blockEncoder.getBlockSize();
+    size_t blockSize = blockEncoder.getCurrentOffset();
 
     // TODO(jmadill): I think we still need a valid block for the pipeline even if zero sized.
     if (blockSize == 0)

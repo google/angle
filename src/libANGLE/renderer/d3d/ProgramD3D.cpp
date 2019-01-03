@@ -210,7 +210,7 @@ size_t InterfaceBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock
     sh::GetInterfaceBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
                               &mBlockLayout);
 
-    return encoder->getBlockSize();
+    return encoder->getCurrentOffset();
 }
 
 bool InterfaceBlockInfo::getBlockSize(const std::string &name,
