@@ -41,6 +41,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_ANGLE_framebuffer_blit",
     "GL_ANGLE_framebuffer_multisample",
     "GL_ANGLE_instanced_arrays",
+    "GL_ANGLE_provoking_vertex",
     "GL_ANGLE_texture_multisample",
     "GL_ANGLE_translated_shader_source",
     "GL_EXT_blend_func_extended",

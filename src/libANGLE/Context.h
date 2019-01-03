@@ -1640,6 +1640,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                     const GLsizei *instanceCounts,
                                     GLsizei drawcount);
 
+    void provokingVertex(ProvokingVertex provokeMode);
+
     void framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
 
     // EXT_blend_func_extended

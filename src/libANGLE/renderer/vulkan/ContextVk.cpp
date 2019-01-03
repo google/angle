@@ -876,7 +876,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 invalidateDefaultAttributes(glState.getAndResetDirtyCurrentValues());
                 break;
             }
-            break;
+            case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
+                break;
             default:
                 UNREACHABLE();
                 break;

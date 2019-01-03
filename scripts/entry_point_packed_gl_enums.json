@@ -332,6 +332,9 @@
     "glPointSizePointerOES": {
         "type" : "VertexAttribType"
     },
+    "glProvokingVertexANGLE": {
+        "mode": "ProvokingVertex"
+    },
     "glQueryCounterEXT": {
         "target": "QueryType"
     },

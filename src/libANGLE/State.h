@@ -531,6 +531,7 @@ class State : angle::NonCopyable
         DIRTY_BIT_PATH_RENDERING,
         DIRTY_BIT_FRAMEBUFFER_SRGB,  // GL_EXT_sRGB_write_control
         DIRTY_BIT_CURRENT_VALUES,
+        DIRTY_BIT_PROVOKING_VERTEX,
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };
@@ -623,6 +624,13 @@ class State : angle::NonCopyable
     ANGLE_INLINE bool validateSamplerFormats() const
     {
         return (mTexturesIncompatibleWithSamplers & mProgram->getActiveSamplersMask()).none();
+    }
+
+    ProvokingVertex getProvokingVertex() const { return mProvokingVertex; }
+    void setProvokingVertex(ProvokingVertex val)
+    {
+        mDirtyBits.set(State::DIRTY_BIT_PROVOKING_VERTEX);
+        mProvokingVertex = val;
     }
 
   private:
@@ -728,6 +736,9 @@ class State : angle::NonCopyable
     BindingPointer<Renderbuffer> mRenderbuffer;
     Program *mProgram;
     BindingPointer<ProgramPipeline> mProgramPipeline;
+
+    // GL_ANGLE_provoking_vertex
+    ProvokingVertex mProvokingVertex;
 
     using VertexAttribVector = std::vector<VertexAttribCurrentValueData>;
     VertexAttribVector mVertexAttribCurrentValues;  // From glVertexAttrib

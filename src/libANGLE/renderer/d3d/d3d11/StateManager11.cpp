@@ -531,7 +531,7 @@ angle::Result ShaderConstants11::updateBuffer(const gl::Context *context,
 {
     // Re-upload the sampler meta-data if the current program uses more samplers
     // than we previously uploaded.
-    const int numSamplers = programD3D.getUsedSamplerRange(shaderType).length();
+    const int numSamplers       = programD3D.getUsedSamplerRange(shaderType).length();
     const int numReadonlyImages = programD3D.getUsedImageRange(shaderType, true).length();
     const int numImages         = programD3D.getUsedImageRange(shaderType, false).length();
 
@@ -551,7 +551,7 @@ angle::Result ShaderConstants11::updateBuffer(const gl::Context *context,
         reinterpret_cast<const uint8_t *>(mShaderImageMetadata[shaderType].data());
     const size_t imageDataSize = sizeof(ImageMetadata) * numImages;
 
-    mNumActiveShaderSamplers[shaderType] = numSamplers;
+    mNumActiveShaderSamplers[shaderType]       = numSamplers;
     mNumActiveShaderReadonlyImages[shaderType] = numReadonlyImages;
     mNumActiveShaderImages[shaderType]         = numImages;
     mShaderConstantsDirty.set(shaderType, false);
@@ -1157,6 +1157,9 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 }
                 break;
             }
+            case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
+                invalidateShaders();
+                break;
             default:
                 break;
         }
@@ -2833,7 +2836,7 @@ angle::Result StateManager11::syncProgram(const gl::Context *context, gl::Primit
 
     // Binaries must be compiled before the sync.
     ASSERT(mProgramD3D->hasVertexExecutableForCachedInputLayout());
-    ASSERT(mProgramD3D->hasGeometryExecutableForPrimitiveType(drawMode));
+    ASSERT(mProgramD3D->hasGeometryExecutableForPrimitiveType(glState, drawMode));
     ASSERT(mProgramD3D->hasPixelExecutableForCachedOutputLayout());
 
     ShaderExecutableD3D *vertexExe = nullptr;
@@ -2843,8 +2846,8 @@ angle::Result StateManager11::syncProgram(const gl::Context *context, gl::Primit
     ANGLE_TRY(mProgramD3D->getPixelExecutableForCachedOutputLayout(context11, &pixelExe, nullptr));
 
     ShaderExecutableD3D *geometryExe = nullptr;
-    ANGLE_TRY(mProgramD3D->getGeometryExecutableForPrimitiveType(context11, context11->getCaps(),
-                                                                 drawMode, &geometryExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getGeometryExecutableForPrimitiveType(context11, glState, drawMode,
+                                                                 &geometryExe, nullptr));
 
     const d3d11::VertexShader *vertexShader =
         (vertexExe ? &GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);

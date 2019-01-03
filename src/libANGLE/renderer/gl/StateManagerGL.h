@@ -150,6 +150,8 @@ class StateManagerGL final : angle::NonCopyable
     void setPathRenderingProjectionMatrix(const GLfloat *m);
     void setPathRenderingStencilState(GLenum func, GLint ref, GLuint mask);
 
+    void setProvokingVertex(GLenum mode);
+
     void pauseTransformFeedback();
     angle::Result pauseAllQueries(const gl::Context *context);
     angle::Result pauseQuery(const gl::Context *context, gl::QueryType type);
@@ -345,6 +347,8 @@ class StateManagerGL final : angle::NonCopyable
 
     bool mIsSideBySideDrawFramebuffer;
     const bool mIsMultiviewEnabled;
+
+    GLenum mProvokingVertex;
 
     gl::State::DirtyBits mLocalDirtyBits;
     gl::AttributesMask mLocalDirtyCurrentValues;

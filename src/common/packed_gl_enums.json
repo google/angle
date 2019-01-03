@@ -250,5 +250,10 @@
         "ClampToBorder": "GL_CLAMP_TO_BORDER",
         "MirroredRepeat": "GL_MIRRORED_REPEAT",
         "Repeat": "GL_REPEAT"
+    },
+    "ProvokingVertex":
+    {
+        "FirstVertexConvention": "GL_FIRST_VERTEX_CONVENTION",
+        "LastVertexConvention": "GL_LAST_VERTEX_CONVENTION"
     }
 }

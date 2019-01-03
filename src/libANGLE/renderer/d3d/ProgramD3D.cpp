@@ -689,7 +689,7 @@ bool ProgramD3D::usesGeometryShaderForPointSpriteEmulation() const
     return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
 }
 
-bool ProgramD3D::usesGeometryShader(gl::PrimitiveMode drawMode) const
+bool ProgramD3D::usesGeometryShader(const gl::State &state, const gl::PrimitiveMode drawMode) const
 {
     if (mHasANGLEMultiviewEnabled && !mRenderer->canSelectViewInVertexShader())
     {
@@ -697,7 +697,11 @@ bool ProgramD3D::usesGeometryShader(gl::PrimitiveMode drawMode) const
     }
     if (drawMode != gl::PrimitiveMode::Points)
     {
-        return mUsesFlatInterpolation;
+        if (!mUsesFlatInterpolation)
+        {
+            return false;
+        }
+        return state.getProvokingVertex() == gl::ProvokingVertex::LastVertexConvention;
     }
     return usesGeometryShaderForPointSpriteEmulation();
 }
@@ -1461,7 +1465,7 @@ angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
 }
 
 angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *context,
-                                                                const gl::Caps &caps,
+                                                                const gl::State &state,
                                                                 gl::PrimitiveMode drawMode,
                                                                 ShaderExecutableD3D **outExecutable,
                                                                 gl::InfoLog *infoLog)
@@ -1472,7 +1476,7 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
     }
 
     // Return a null shader if the current rendering doesn't use a geometry shader
-    if (!usesGeometryShader(drawMode))
+    if (!usesGeometryShader(state, drawMode))
     {
         return angle::Result::Continue;
     }
@@ -1487,7 +1491,7 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
         }
         return angle::Result::Continue;
     }
-
+    const gl::Caps &caps     = state.getCaps();
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
         caps, geometryShaderType, mState, mRenderer->presentPathFastEnabled(),
         mHasANGLEMultiviewEnabled, mRenderer->canSelectViewInVertexShader(),
@@ -1615,25 +1619,25 @@ void ProgramD3D::updateCachedImage2DBindLayoutFromComputeShader()
 class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
-    GetGeometryExecutableTask(ProgramD3D *program, const gl::Caps &caps)
-        : GetExecutableTask(program), mCaps(caps)
+    GetGeometryExecutableTask(ProgramD3D *program, const gl::State &state)
+        : GetExecutableTask(program), mState(state)
     {}
 
     angle::Result run() override
     {
         // Auto-generate the geometry shader here, if we expect to be using point rendering in
         // D3D11.
-        if (mProgram->usesGeometryShader(gl::PrimitiveMode::Points))
+        if (mProgram->usesGeometryShader(mState, gl::PrimitiveMode::Points))
         {
             ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(
-                this, mCaps, gl::PrimitiveMode::Points, &mExecutable, &mInfoLog));
+                this, mState, gl::PrimitiveMode::Points, &mExecutable, &mInfoLog));
         }
 
         return angle::Result::Continue;
     }
 
   private:
-    const gl::Caps &mCaps;
+    const gl::State &mState;
 };
 
 // The LinkEvent implementation for linking a rendering(VS, FS, GS) program.
@@ -1763,8 +1767,8 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Conte
 
     auto vertexTask   = std::make_shared<GetVertexExecutableTask>(this);
     auto pixelTask    = std::make_shared<GetPixelExecutableTask>(this);
-    auto geometryTask = std::make_shared<GetGeometryExecutableTask>(this, context->getCaps());
-    bool useGS        = usesGeometryShader(gl::PrimitiveMode::Points);
+    auto geometryTask = std::make_shared<GetGeometryExecutableTask>(this, context->getState());
+    bool useGS        = usesGeometryShader(context->getState(), gl::PrimitiveMode::Points);
     const ShaderD3D *vertexShaderD3D =
         GetImplAs<ShaderD3D>(mState.getAttachedShader(gl::ShaderType::Vertex));
     const ShaderD3D *fragmentShaderD3D =
@@ -2915,9 +2919,10 @@ bool ProgramD3D::hasVertexExecutableForCachedInputLayout()
     return mCachedVertexExecutableIndex.valid();
 }
 
-bool ProgramD3D::hasGeometryExecutableForPrimitiveType(gl::PrimitiveMode drawMode)
+bool ProgramD3D::hasGeometryExecutableForPrimitiveType(const gl::State &state,
+                                                       gl::PrimitiveMode drawMode)
 {
-    if (!usesGeometryShader(drawMode))
+    if (!usesGeometryShader(state, drawMode))
     {
         // No shader necessary mean we have the required (null) executable.
         return true;

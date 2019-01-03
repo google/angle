@@ -786,6 +786,10 @@
       "glSampleMaskiANGLE"
     ],
 
+    "GL_ANGLE_provoking_vertex": [
+      "glProvokingVertexANGLE"
+    ],
+
     "EGL 1.0": [
         "eglChooseConfig",
         "eglCopyBuffers",

@@ -6700,4 +6700,25 @@ bool ValidateMultiDrawElementsANGLE(Context *context,
     return true;
 }
 
+bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertex modePacked)
+{
+    if (!context->getExtensions().provokingVertex)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (modePacked)
+    {
+        case ProvokingVertex::FirstVertexConvention:
+        case ProvokingVertex::LastVertexConvention:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidProvokingVertex);
+            return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

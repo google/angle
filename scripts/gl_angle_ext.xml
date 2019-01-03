@@ -914,6 +914,10 @@
                 <param><ptype>GLuint</ptype> <name>maskNumber</name></param>
                 <param><ptype>GLbitfield</ptype> <name>mask</name></param>
             </command>
+            <command>
+                <proto>void <name>glProvokingVertexANGLE</name></proto>
+                <param group="VertexProvokingMode"><ptype>GLenum</ptype> <name>mode</name></param>
+            </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -1067,6 +1071,14 @@
                 <command name="glMultiDrawArraysInstancedANGLE"/>
                 <command name="glMultiDrawElementsANGLE"/>
                 <command name="glMultiDrawElementsInstancedANGLE"/>
+            </require>
+        </extension>
+        <extension name="GL_ANGLE_provoking_vertex" supported='gles2'>
+            <require>
+                <enum name="GL_FIRST_VERTEX_CONVENTION"/>
+                <enum name="GL_LAST_VERTEX_CONVENTION"/>
+                <enum name="GL_PROVOKING_VERTEX"/>
+                <command name="glProvokingVertexANGLE"/>
             </require>
         </extension>
     </extensions>

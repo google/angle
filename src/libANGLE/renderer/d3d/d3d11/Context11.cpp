@@ -523,7 +523,7 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     programD3D->updateCachedOutputLayout(context, drawFBO);
 
     bool recompileVS = !programD3D->hasVertexExecutableForCachedInputLayout();
-    bool recompileGS = !programD3D->hasGeometryExecutableForPrimitiveType(drawMode);
+    bool recompileGS = !programD3D->hasGeometryExecutableForPrimitiveType(glState, drawMode);
     bool recompilePS = !programD3D->hasPixelExecutableForCachedOutputLayout();
 
     if (!recompileVS && !recompileGS && !recompilePS)
@@ -551,9 +551,9 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     if (recompileGS)
     {
         ShaderExecutableD3D *geometryExe = nullptr;
-        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(
-            this, mState.getCaps(), drawMode, &geometryExe, &infoLog));
-        if (!programD3D->hasGeometryExecutableForPrimitiveType(drawMode))
+        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(this, glState, drawMode,
+                                                                    &geometryExe, &infoLog));
+        if (!programD3D->hasGeometryExecutableForPrimitiveType(glState, drawMode))
         {
             ASSERT(infoLog.getLength() > 0);
             ERR() << "Error compiling dynamic geometry executable: " << infoLog.str();

@@ -1354,6 +1354,10 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         extensions->sRGB = false;
     }
+
+    extensions->provokingVertex = functions->hasGLExtension("GL_ARB_provoking_vertex") ||
+                                  functions->hasGLExtension("GL_EXT_provoking_vertex") ||
+                                  functions->isAtLeastGL(gl::Version(3, 2));
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

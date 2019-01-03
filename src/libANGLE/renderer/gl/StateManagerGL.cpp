@@ -159,6 +159,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mPathStencilMask(std::numeric_limits<GLuint>::max()),
       mIsSideBySideDrawFramebuffer(false),
       mIsMultiviewEnabled(extensions.multiview),
+      mProvokingVertex(GL_LAST_VERTEX_CONVENTION),
       mLocalDirtyBits()
 {
     ASSERT(mFunctions);
@@ -1960,6 +1961,9 @@ void StateManagerGL::syncState(const gl::Context *context,
                 }
                 break;
             }
+            case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
+                setProvokingVertex(ToGLenum(state.getProvokingVertex()));
+                break;
             default:
                 UNREACHABLE();
                 break;
@@ -2103,6 +2107,17 @@ void StateManagerGL::setPathRenderingStencilState(GLenum func, GLint ref, GLuint
         mFunctions->pathStencilFuncNV(func, ref, mask);
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
+    }
+}
+
+void StateManagerGL::setProvokingVertex(GLenum mode)
+{
+    if (mode != mProvokingVertex)
+    {
+        mFunctions->provokingVertex(mode);
+        mProvokingVertex = mode;
+
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PROVOKING_VERTEX);
     }
 }
 

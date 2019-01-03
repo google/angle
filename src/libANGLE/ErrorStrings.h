@@ -270,6 +270,7 @@ MSG kInvalidProgramResourceProperty = "Invalid program resource property.";
 MSG kInvalidProjectionMatrix = "Invalid projection matrix. Left/right = top/bottom = near/far intervals cannot be zero = and near/far cannot be less than zero.";
 MSG kInvalidPropCount = "Invalid propCount.";
 MSG kInvalidPropertyForProgramInterface = "Not an allowed program resource property for this program interface";
+MSG kInvalidProvokingVertex = "Invalid provoking vertex.";
 MSG kInvalidQueryId = "Invalid query Id.";
 MSG kInvalidQueryName = "name is not a valid query.";
 MSG kInvalidQueryTarget = "Invalid query target.";

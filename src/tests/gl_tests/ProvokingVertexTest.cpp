@@ -300,6 +300,48 @@ TEST_P(ProvokingVertexTest, FlatTriStripPrimitiveRestart)
     }
 }
 
+// Test with FRONT_CONVENTION if we have ANGLE_provoking_vertex.
+TEST_P(ProvokingVertexTest, ANGLEProvokingVertex)
+{
+    int32_t vertexData[] = {1, 2, 3};
+    float positionData[] = {-1.0f, -1.0f, 3.0f, -1.0f, -1.0f, 3.0f};
+
+    glEnableVertexAttribArray(mIntAttribLocation);
+    glVertexAttribIPointer(mIntAttribLocation, 1, GL_INT, 0, vertexData);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    glEnableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, positionData);
+
+    glUseProgram(mProgram);
+    ASSERT_GL_NO_ERROR();
+
+    const auto &fnExpectId = [&](int id) {
+        const int32_t zero[4] = {};
+        glClearBufferiv(GL_COLOR, 0, zero);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        int32_t pixelValue = 0;
+        glReadPixels(0, 0, 1, 1, GL_RED_INTEGER, GL_INT, &pixelValue);
+
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(vertexData[id], pixelValue);
+    };
+
+    fnExpectId(2);
+
+    const bool hasExt = extensionEnabled("GL_ANGLE_provoking_vertex");
+    if (IsD3D11())
+    {
+        EXPECT_TRUE(hasExt);
+    }
+    if (hasExt)
+    {
+        glProvokingVertexANGLE(GL_FIRST_VERTEX_CONVENTION);
+        fnExpectId(0);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(ProvokingVertexTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 }  // anonymous namespace
