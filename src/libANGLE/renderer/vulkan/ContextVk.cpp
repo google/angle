@@ -52,45 +52,6 @@ GLenum DefaultGLErrorCode(VkResult result)
     }
 }
 
-void BindNonNullVertexBufferRanges(vk::CommandBuffer *commandBuffer,
-                                   const gl::AttributesMask &nonNullAttribMask,
-                                   uint32_t maxAttrib,
-                                   const gl::AttribArray<VkBuffer> &arrayBufferHandles,
-                                   const gl::AttribArray<VkDeviceSize> &arrayBufferOffsets)
-{
-    // Vulkan does not allow binding a null vertex buffer but the default state of null buffers is
-    // valid.
-
-    // We can detect if there are no gaps in active attributes by using the mask of the program
-    // attribs and the max enabled attrib.
-    ASSERT(maxAttrib > 0);
-    if (nonNullAttribMask.to_ulong() == (maxAttrib - 1))
-    {
-        commandBuffer->bindVertexBuffers(0, maxAttrib, arrayBufferHandles.data(),
-                                         arrayBufferOffsets.data());
-        return;
-    }
-
-    // Find ranges of non-null buffers and bind them all together.
-    for (uint32_t attribIdx = 0; attribIdx < maxAttrib; attribIdx++)
-    {
-        if (arrayBufferHandles[attribIdx] != VK_NULL_HANDLE)
-        {
-            // Find the end of this range of non-null handles
-            uint32_t rangeCount = 1;
-            while (attribIdx + rangeCount < maxAttrib &&
-                   arrayBufferHandles[attribIdx + rangeCount] != VK_NULL_HANDLE)
-            {
-                rangeCount++;
-            }
-
-            commandBuffer->bindVertexBuffers(attribIdx, rangeCount, &arrayBufferHandles[attribIdx],
-                                             &arrayBufferOffsets[attribIdx]);
-            attribIdx += rangeCount;
-        }
-    }
-}
-
 constexpr VkColorComponentFlags kAllColorChannelsMask =
     (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
      VK_COLOR_COMPONENT_A_BIT);
@@ -251,7 +212,8 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsPipelineDesc->updateTopology(&mGraphicsPipelineTransition, mCurrentDrawMode);
     }
 
-    if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer, commandBufferOut))
+    if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer->getCurrentQueueSerial(),
+                                                     commandBufferOut))
     {
         ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, commandBufferOut));
         mDirtyBits |= mNewCommandBufferDirtyBits;
@@ -278,9 +240,10 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Flush any relevant dirty bits.
     for (size_t dirtyBit : dirtyBits)
     {
-        mDirtyBits.reset(dirtyBit);
         ANGLE_TRY((this->*mDirtyBitHandlers[dirtyBit])(context, *commandBufferOut));
     }
+
+    mDirtyBits &= ~dirtyBitMask;
 
     return angle::Result::Continue;
 }
@@ -410,13 +373,15 @@ angle::Result ContextVk::handleDirtyTextures(const gl::Context *context,
 angle::Result ContextVk::handleDirtyVertexBuffers(const gl::Context *context,
                                                   vk::CommandBuffer *commandBuffer)
 {
-    BindNonNullVertexBufferRanges(
-        commandBuffer, mProgram->getState().getActiveAttribLocationsMask(),
-        mProgram->getState().getMaxActiveAttribLocation(),
-        mVertexArray->getCurrentArrayBufferHandles(), mVertexArray->getCurrentArrayBufferOffsets());
+    uint32_t maxAttrib = mProgram->getState().getMaxActiveAttribLocation();
+    const gl::AttribArray<VkBuffer> &bufferHandles = mVertexArray->getCurrentArrayBufferHandles();
+    const gl::AttribArray<VkDeviceSize> &bufferOffsets =
+        mVertexArray->getCurrentArrayBufferOffsets();
 
-    const auto &arrayBufferResources = mVertexArray->getCurrentArrayBuffers();
+    commandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(), bufferOffsets.data());
 
+    const gl::AttribArray<vk::BufferHelper *> &arrayBufferResources =
+        mVertexArray->getCurrentArrayBuffers();
     vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
 
     for (size_t attribIndex : context->getStateCache().getActiveBufferedAttribsMask())
@@ -1023,7 +988,7 @@ BufferImpl *ContextVk::createBuffer(const gl::BufferState &state)
 
 VertexArrayImpl *ContextVk::createVertexArray(const gl::VertexArrayState &state)
 {
-    return new VertexArrayVk(state, mRenderer);
+    return new VertexArrayVk(this, state);
 }
 
 QueryImpl *ContextVk::createQuery(gl::QueryType type)

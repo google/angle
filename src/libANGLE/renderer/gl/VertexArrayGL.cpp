@@ -654,14 +654,16 @@ void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
     }
 }
 
-#define ANGLE_DIRTY_ATTRIB_FUNC(INDEX)                      \
-    case VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:           \
-        syncDirtyAttrib(context, INDEX, attribBits[INDEX]); \
+#define ANGLE_DIRTY_ATTRIB_FUNC(INDEX)                         \
+    case VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:              \
+        syncDirtyAttrib(context, INDEX, (*attribBits)[INDEX]); \
+        (*attribBits)[INDEX].reset();                          \
         break;
 
-#define ANGLE_DIRTY_BINDING_FUNC(INDEX)                       \
-    case VertexArray::DIRTY_BIT_BINDING_0 + INDEX:            \
-        syncDirtyBinding(context, INDEX, bindingBits[INDEX]); \
+#define ANGLE_DIRTY_BINDING_FUNC(INDEX)                          \
+    case VertexArray::DIRTY_BIT_BINDING_0 + INDEX:               \
+        syncDirtyBinding(context, INDEX, (*bindingBits)[INDEX]); \
+        (*bindingBits)[INDEX].reset();                           \
         break;
 
 #define ANGLE_DIRTY_BUFFER_DATA_FUNC(INDEX)            \
@@ -670,8 +672,8 @@ void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
 
 angle::Result VertexArrayGL::syncState(const gl::Context *context,
                                        const gl::VertexArray::DirtyBits &dirtyBits,
-                                       const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                                       const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+                                       gl::VertexArray::DirtyAttribBitsArray *attribBits,
+                                       gl::VertexArray::DirtyBindingBitsArray *bindingBits)
 {
     mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
 

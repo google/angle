@@ -29,8 +29,8 @@ class VertexArray11 : public VertexArrayImpl
     // the draw call parameters.
     angle::Result syncState(const gl::Context *context,
                             const gl::VertexArray::DirtyBits &dirtyBits,
-                            const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                            const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
+                            gl::VertexArray::DirtyAttribBitsArray *attribBits,
+                            gl::VertexArray::DirtyBindingBitsArray *bindingBits) override;
 
     // Applied buffer pointers are updated here.
     angle::Result syncStateForDraw(const gl::Context *context,

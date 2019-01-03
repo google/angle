@@ -76,7 +76,13 @@ class CommandGraphNode final : angle::NonCopyable
     // Once a node has commands that must happen after it, recording is stopped and the node is
     // frozen forever.
     static void SetHappensBeforeDependency(CommandGraphNode *beforeNode,
-                                           CommandGraphNode *afterNode);
+                                           CommandGraphNode *afterNode)
+    {
+        ASSERT(beforeNode != afterNode && !beforeNode->isChildOf(afterNode));
+        afterNode->mParents.emplace_back(beforeNode);
+        beforeNode->setHasChildren();
+    }
+
     static void SetHappensBeforeDependencies(CommandGraphNode **beforeNodes,
                                              size_t beforeNodesCount,
                                              CommandGraphNode *afterNode);
@@ -107,10 +113,14 @@ class CommandGraphNode final : angle::NonCopyable
 
     void setQueryPool(const QueryPool *queryPool, uint32_t queryIndex);
 
-    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess);
+    ANGLE_INLINE void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
+    {
+        mGlobalMemoryBarrierSrcAccess |= srcAccess;
+        mGlobalMemoryBarrierDstAccess |= dstAccess;
+    }
 
   private:
-    void setHasChildren();
+    void setHasChildren() { mHasChildren = true; }
 
     // Used for testing only.
     bool isChildOf(CommandGraphNode *parent);
@@ -169,7 +179,7 @@ class CommandGraphResource : angle::NonCopyable
 
     // Get the current queue serial for this resource. Used to release resources, and for
     // queries, to know if the queue they are submitted on has finished execution.
-    Serial getStoredQueueSerial() const;
+    Serial getStoredQueueSerial() const { return mStoredQueueSerial; }
 
   protected:
     explicit CommandGraphResource(CommandGraphResourceType resourceType);
@@ -198,7 +208,17 @@ class RecordableGraphResource : public CommandGraphResource
 
     // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
-    void updateQueueSerial(Serial queueSerial);
+    ANGLE_INLINE void updateQueueSerial(Serial queueSerial)
+    {
+        ASSERT(queueSerial >= mStoredQueueSerial);
+
+        if (queueSerial > mStoredQueueSerial)
+        {
+            mCurrentWritingNode = nullptr;
+            mCurrentReadingNodes.clear();
+            mStoredQueueSerial = queueSerial;
+        }
+    }
 
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
@@ -216,7 +236,20 @@ class RecordableGraphResource : public CommandGraphResource
 
     // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
     // Returns the started command buffer in commandBufferOut.
-    bool appendToStartedRenderPass(RendererVk *renderer, CommandBuffer **commandBufferOut);
+    ANGLE_INLINE bool appendToStartedRenderPass(Serial currentQueueSerial,
+                                                CommandBuffer **commandBufferOut)
+    {
+        updateQueueSerial(currentQueueSerial);
+        if (hasStartedRenderPass())
+        {
+            *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     // Accessor for RenderPass RenderArea.
     const gl::Rectangle &getRenderPassRenderArea() const;
@@ -236,7 +269,7 @@ class RecordableGraphResource : public CommandGraphResource
 
   private:
     // Returns true if this node has a current writing node with no children.
-    bool hasChildlessWritingNode() const
+    ANGLE_INLINE bool hasChildlessWritingNode() const
     {
         // Note: currently, we don't have a resource that can issue both generic and special
         // commands.  We don't create read/write dependencies between mixed generic/special

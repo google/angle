@@ -121,8 +121,19 @@ class Buffer final : public RefCountObject,
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
 
-    bool isBound() const;
-    bool isBoundForTransformFeedbackAndOtherUse() const;
+    ANGLE_INLINE bool isBound() const { return mState.mBindingCount > 0; }
+
+    ANGLE_INLINE bool isBoundForTransformFeedbackAndOtherUse() const
+    {
+        // The transform feedback generic binding point is not an indexed binding point but it also
+        // does not count as a non-transform-feedback use of the buffer, so we subtract it from the
+        // binding count when checking if the buffer is bound to a non-transform-feedback location.
+        // See https://crbug.com/853978
+        return mState.mTransformFeedbackIndexedBindingCount > 0 &&
+               mState.mTransformFeedbackIndexedBindingCount !=
+                   mState.mBindingCount - mState.mTransformFeedbackGenericBindingCount;
+    }
+
     bool isDoubleBoundForTransformFeedback() const;
     void onTFBindingChanged(const Context *context, bool bound, bool indexed);
     void onNonTFBindingChanged(int incr) { mState.mBindingCount += incr; }

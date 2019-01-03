@@ -8143,7 +8143,6 @@ void StateCache::updateVertexElementLimits(Context *context)
     for (size_t attributeIndex : mCachedActiveBufferedAttribsMask)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
-        ASSERT(attrib.enabled);
 
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
         ASSERT(context->isGLES1() ||

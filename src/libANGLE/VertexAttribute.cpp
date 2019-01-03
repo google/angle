@@ -40,18 +40,6 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
     return *this;
 }
 
-void VertexBinding::setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound)
-{
-    if (containerIsBound)
-    {
-        if (mBuffer.get())
-            mBuffer->onNonTFBindingChanged(-1);
-        if (bufferIn)
-            bufferIn->onNonTFBindingChanged(1);
-    }
-    mBuffer.set(context, bufferIn);
-}
-
 void VertexBinding::onContainerBindingChanged(const Context *context, int incr) const
 {
     if (mBuffer.get())

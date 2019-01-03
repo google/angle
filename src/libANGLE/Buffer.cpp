@@ -252,22 +252,6 @@ GLint64 Buffer::getMemorySize() const
     return implSize > 0 ? implSize : mState.mSize;
 }
 
-bool Buffer::isBound() const
-{
-    return mState.mBindingCount;
-}
-
-bool Buffer::isBoundForTransformFeedbackAndOtherUse() const
-{
-    // The transform feedback generic binding point is not an indexed binding point but it also does
-    // not count as a non-transform-feedback use of the buffer, so we subtract it from the binding
-    // count when checking if the buffer is bound to a non-transform-feedback location. See
-    // https://crbug.com/853978
-    return mState.mTransformFeedbackIndexedBindingCount > 0 &&
-           mState.mTransformFeedbackIndexedBindingCount !=
-               mState.mBindingCount - mState.mTransformFeedbackGenericBindingCount;
-}
-
 bool Buffer::isDoubleBoundForTransformFeedback() const
 {
     return mState.mTransformFeedbackIndexedBindingCount > 1;

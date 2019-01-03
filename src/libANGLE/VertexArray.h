@@ -104,7 +104,7 @@ class VertexArray final : public angle::ObserverInterface,
 
     void onDestroy(const Context *context);
 
-    GLuint id() const;
+    GLuint id() const { return mId; }
 
     void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;

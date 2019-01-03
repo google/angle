@@ -1030,7 +1030,7 @@ angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // This will clear the current write operation if it is complete.
-    if (appendToStartedRenderPass(renderer, commandBufferOut))
+    if (appendToStartedRenderPass(renderer->getCurrentQueueSerial(), commandBufferOut))
     {
         *modeOut = vk::RecordingMode::Append;
         return angle::Result::Continue;

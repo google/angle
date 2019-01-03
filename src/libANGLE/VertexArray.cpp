@@ -122,11 +122,6 @@ VertexArray::~VertexArray()
     ASSERT(!mVertexArray);
 }
 
-GLuint VertexArray::id() const
-{
-    return mId;
-}
-
 void VertexArray::setLabel(const Context *context, const std::string &label)
 {
     mState.mLabel = label;
@@ -176,16 +171,49 @@ size_t VertexArray::GetVertexIndexFromDirtyBit(size_t dirtyBit)
     return (dirtyBit - DIRTY_BIT_ATTRIB_0) % gl::MAX_VERTEX_ATTRIBS;
 }
 
-void VertexArray::setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit)
+ANGLE_INLINE void VertexArray::setDirtyAttribBit(size_t attribIndex,
+                                                 DirtyAttribBitType dirtyAttribBit)
 {
     mDirtyBits.set(DIRTY_BIT_ATTRIB_0 + attribIndex);
     mDirtyAttribBits[attribIndex].set(dirtyAttribBit);
 }
 
-void VertexArray::setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit)
+ANGLE_INLINE void VertexArray::setDirtyBindingBit(size_t bindingIndex,
+                                                  DirtyBindingBitType dirtyBindingBit)
 {
     mDirtyBits.set(DIRTY_BIT_BINDING_0 + bindingIndex);
     mDirtyBindingBits[bindingIndex].set(dirtyBindingBit);
+}
+
+ANGLE_INLINE void VertexArray::updateCachedBufferBindingSize(VertexBinding *binding)
+{
+    for (size_t boundAttribute : binding->getBoundAttributesMask())
+    {
+        mState.mVertexAttributes[boundAttribute].updateCachedElementLimit(*binding);
+    }
+}
+
+ANGLE_INLINE void VertexArray::updateCachedMappedArrayBuffers(VertexBinding *binding)
+{
+    Buffer *buffer = binding->getBuffer().get();
+    if (buffer && buffer->isMapped())
+    {
+        mState.mCachedMappedArrayBuffers |= binding->getBoundAttributesMask();
+    }
+    else
+    {
+        mState.mCachedMappedArrayBuffers &= ~binding->getBoundAttributesMask();
+    }
+
+    mState.mCachedEnabledMappedArrayBuffers =
+        mState.mCachedMappedArrayBuffers & mState.mEnabledAttributesMask;
+}
+
+ANGLE_INLINE void VertexArray::updateCachedTransformFeedbackBindingValidation(size_t bindingIndex,
+                                                                              const Buffer *buffer)
+{
+    const bool hasConflict = buffer && buffer->isBoundForTransformFeedbackAndOtherUse();
+    mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, hasConflict);
 }
 
 void VertexArray::bindVertexBufferImpl(const Context *context,
@@ -266,12 +294,12 @@ void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)
     }
 }
 
-void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
-                                            GLint size,
-                                            GLenum type,
-                                            bool normalized,
-                                            bool pureInteger,
-                                            GLuint relativeOffset)
+ANGLE_INLINE void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
+                                                         GLint size,
+                                                         GLenum type,
+                                                         bool normalized,
+                                                         bool pureInteger,
+                                                         GLuint relativeOffset)
 {
     ASSERT(attribIndex < getMaxAttribs());
 
@@ -366,16 +394,13 @@ angle::Result VertexArray::syncState(const Context *context)
     {
         mDirtyBitsGuard = mDirtyBits;
         ANGLE_TRY(
-            mVertexArray->syncState(context, mDirtyBits, mDirtyAttribBits, mDirtyBindingBits));
+            mVertexArray->syncState(context, mDirtyBits, &mDirtyAttribBits, &mDirtyBindingBits));
         mDirtyBits.reset();
         mDirtyBitsGuard.reset();
 
-        // This is a bit of an implementation hack - but since we know the implementation
-        // details of the dirty bit class it should always have the same effect as iterating
-        // individual attribs. We could also look into schemes where iterating the dirty
-        // bit set also resets it as you pass through it.
-        memset(&mDirtyAttribBits, 0, sizeof(mDirtyAttribBits));
-        memset(&mDirtyBindingBits, 0, sizeof(mDirtyBindingBits));
+        // The dirty bits should be reset in the back-end. To simplify ASSERTs only check attrib 0.
+        ASSERT(mDirtyAttribBits[0].none());
+        ASSERT(mDirtyBindingBits[0].none());
     }
     return angle::Result::Continue;
 }
@@ -474,21 +499,6 @@ void VertexArray::updateObserverBinding(size_t bindingIndex)
     mArrayBufferObserverBindings[bindingIndex].bind(boundBuffer);
 }
 
-void VertexArray::updateCachedBufferBindingSize(VertexBinding *binding)
-{
-    for (size_t boundAttribute : binding->getBoundAttributesMask())
-    {
-        mState.mVertexAttributes[boundAttribute].updateCachedElementLimit(*binding);
-    }
-}
-
-void VertexArray::updateCachedTransformFeedbackBindingValidation(size_t bindingIndex,
-                                                                 const Buffer *buffer)
-{
-    const bool hasConflict = buffer && buffer->isBoundForTransformFeedbackAndOtherUse();
-    mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, hasConflict);
-}
-
 bool VertexArray::hasTransformFeedbackBindingConflict(const gl::Context *context) const
 {
     // Fast check first.
@@ -510,22 +520,6 @@ bool VertexArray::hasTransformFeedbackBindingConflict(const gl::Context *context
     }
 
     return false;
-}
-
-void VertexArray::updateCachedMappedArrayBuffers(VertexBinding *binding)
-{
-    Buffer *buffer = binding->getBuffer().get();
-    if (buffer && buffer->isMapped())
-    {
-        mState.mCachedMappedArrayBuffers |= binding->getBoundAttributesMask();
-    }
-    else
-    {
-        mState.mCachedMappedArrayBuffers &= ~binding->getBoundAttributesMask();
-    }
-
-    mState.mCachedEnabledMappedArrayBuffers =
-        mState.mCachedMappedArrayBuffers & mState.mEnabledAttributesMask;
 }
 
 angle::Result VertexArray::getIndexRangeImpl(const Context *context,
