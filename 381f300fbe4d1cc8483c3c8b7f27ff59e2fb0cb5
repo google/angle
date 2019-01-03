@@ -46,6 +46,53 @@
       "revId": "381f300fbe4d1cc8483c3c8b7f27ff59e2fb0cb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452484f9_160baaa6",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-01-03T20:20:28Z",
+      "side": 1,
+      "message": "I\u0027ve meant you won\u0027t need to ASSERT in that case.",
+      "parentUuid": "12d72f2a_ff7519b7",
+      "range": {
+        "startLine": 158,
+        "startChar": 48,
+        "endLine": 158,
+        "endChar": 62
+      },
+      "revId": "381f300fbe4d1cc8483c3c8b7f27ff59e2fb0cb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfce1499_a1e944b6",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-01-03T20:20:28Z",
+      "side": 1,
+      "message": "Would it work to also pass pos here?\nMaybe will speed things up a bit.",
+      "range": {
+        "startLine": 160,
+        "startChar": 27,
+        "endLine": 160,
+        "endChar": 28
+      },
+      "revId": "381f300fbe4d1cc8483c3c8b7f27ff59e2fb0cb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
