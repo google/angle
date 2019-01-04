@@ -94,6 +94,30 @@
       "revId": "904bb9185767d72a63eb4d1445c94c678b767b56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6414b75d_b4f1e43b",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-04T13:47:42Z",
+      "side": 0,
+      "message": "It can process a few more struct members but I don\u0027t think the runtime is a huge concern. I think it\u0027s okay.",
+      "parentUuid": "db3af1e2_18b431c7",
+      "range": {
+        "startLine": 213,
+        "startChar": 16,
+        "endLine": 213,
+        "endChar": 52
+      },
+      "revId": "904bb9185767d72a63eb4d1445c94c678b767b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
