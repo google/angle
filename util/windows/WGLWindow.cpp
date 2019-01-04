@@ -11,9 +11,7 @@
 
 #include "common/string_utils.h"
 #include "util/OSWindow.h"
-#include "util/gles_loader_autogen.h"
 #include "util/system_utils.h"
-#include "util/windows/wgl_loader_autogen.h"
 
 #include <iostream>
 

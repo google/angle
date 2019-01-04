@@ -11,6 +11,9 @@
 #if defined(ANGLE_USE_UTIL_LOADER)
 #    include "util/egl_loader_autogen.h"
 #    include "util/gles_loader_autogen.h"
+#    if defined(ANGLE_PLATFORM_WINDOWS)
+#        include "util/windows/wgl_loader_autogen.h"
+#    endif  // defined(ANGLE_PLATFORM_WINDOWS)
 #else
 
 #    if !defined(GL_GLES_PROTOTYPES)
@@ -20,6 +23,6 @@
 #    include <EGL/egl.h>
 #    include <EGL/eglext.h>
 #    include "angle_gl.h"
-#endif
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
 
 #endif  // UTIL_GL_H_

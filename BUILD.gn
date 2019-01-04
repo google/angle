@@ -887,13 +887,9 @@ source_set("angle_util_loader_headers") {
     "util/util_export.h",
   ]
 
-  public_configs = [
-    ":angle_util_config",
-    ":angle_util_loader_config",
-    ":extra_warnings",
-    ":internal_config",
-    ":no_gl_prototypes",
-  ]
+  if (is_win) {
+    sources += [ "util/windows/wgl_loader_autogen.h" ]
+  }
 
   public_deps = [
     ":includes",
@@ -909,12 +905,21 @@ source_set("angle_util_loader") {
   ]
 
   if (is_win) {
-    sources += util_wgl_sources
+    sources += [ "util/windows/wgl_loader_autogen.cpp" ]
   }
 
-  public_deps = [
+  deps = [
     ":angle_util_loader_headers",
   ]
+
+  public_configs = [
+    ":angle_util_config",
+    ":angle_util_loader_config",
+    ":internal_config",
+    ":no_gl_prototypes",
+  ]
+
+  configs += [ ":extra_warnings" ]
 }
 
 config("angle_util_config") {
@@ -943,7 +948,7 @@ foreach(is_shared_library,
     sources = util_sources
 
     if (is_win) {
-      sources += util_win32_sources
+      sources += util_win_sources
     }
 
     libs = []
@@ -998,6 +1003,7 @@ foreach(is_shared_library,
 
     deps = [
       ":angle_common",
+      ":angle_util_loader_headers",
     ]
 
     if (is_shared_library) {
@@ -1011,8 +1017,13 @@ foreach(is_shared_library,
         public_configs += [ ":shared_library_public_config" ]
       }
 
-      deps += [ ":angle_util_loader" ]
-      public_configs += [ ":no_gl_prototypes" ]
+      if (is_win) {
+        sources += util_win_shared_sources
+      }
+
+      public_deps = [
+        ":angle_util_loader",
+      ]
     } else {
       public_configs += [
         ":angle_static",
