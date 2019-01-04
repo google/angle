@@ -186,6 +186,7 @@ class RendererVk : angle::NonCopyable
 
     bool isMockICDEnabled() const { return mEnableMockICD; }
 
+    RenderPassCache &getRenderPassCache() { return mRenderPassCache; }
     const vk::PipelineCache &getPipelineCache() const { return mPipelineCache; }
 
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and

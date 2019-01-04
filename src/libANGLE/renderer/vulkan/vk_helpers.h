@@ -392,7 +392,17 @@ class BufferHelper final : public RecordableGraphResource
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
     // Helpers for setting the graph dependencies *and* setting the appropriate barrier.
-    void onRead(RecordableGraphResource *reader, VkAccessFlagBits readAccessType);
+    ANGLE_INLINE void onRead(RecordableGraphResource *reader, VkAccessFlagBits readAccessType)
+    {
+        addReadDependency(reader);
+
+        if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) == 0)
+        {
+            reader->addGlobalMemoryBarrier(mCurrentWriteAccess, readAccessType);
+            mCurrentReadAccess |= readAccessType;
+        }
+    }
+
     void onWrite(VkAccessFlagBits writeAccessType);
 
     // Also implicitly sets up the correct barriers.
@@ -617,11 +627,27 @@ class ShaderProgramHelper : angle::NonCopyable
     void setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader);
 
     // For getting a vk::Pipeline and from the pipeline cache.
-    angle::Result getGraphicsPipeline(Context *context,
-                                      const PipelineLayout &pipelineLayout,
-                                      const GraphicsPipelineDesc &pipelineDesc,
-                                      const gl::AttributesMask &activeAttribLocationsMask,
-                                      PipelineAndSerial **pipelineOut);
+    ANGLE_INLINE angle::Result getGraphicsPipeline(
+        Context *context,
+        RenderPassCache *renderPassCache,
+        const PipelineCache &pipelineCache,
+        Serial currentQueueSerial,
+        const PipelineLayout &pipelineLayout,
+        const GraphicsPipelineDesc &pipelineDesc,
+        const gl::AttributesMask &activeAttribLocationsMask,
+        PipelineAndSerial **pipelineOut)
+    {
+        // Pull in a compatible RenderPass.
+        vk::RenderPass *compatibleRenderPass = nullptr;
+        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(
+            context, currentQueueSerial, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
+
+        return mGraphicsPipelines.getPipeline(
+            context, pipelineCache, *compatibleRenderPass, pipelineLayout,
+            activeAttribLocationsMask, mShaders[gl::ShaderType::Vertex].get().get(),
+            mShaders[gl::ShaderType::Fragment].get().get(), pipelineDesc, pipelineOut);
+    }
+
     angle::Result getComputePipeline(Context *context,
                                      const PipelineLayout &pipelineLayout,
                                      PipelineAndSerial **pipelineOut);

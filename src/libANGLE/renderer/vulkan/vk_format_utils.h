@@ -62,9 +62,9 @@ struct Format final : private angle::NonCopyable
     void initTextureFallback(RendererVk *renderer, const TextureFormatInitInfo *info, int numInfo);
     void initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo);
 
-    const angle::Format &angleFormat() const;
-    const angle::Format &textureFormat() const;
-    const angle::Format &bufferFormat() const;
+    const angle::Format &angleFormat() const { return angle::Format::Get(angleFormatID); }
+    const angle::Format &textureFormat() const { return angle::Format::Get(textureFormatID); }
+    const angle::Format &bufferFormat() const { return angle::Format::Get(bufferFormatID); }
 
     angle::FormatID angleFormatID;
     GLenum internalFormat;
@@ -97,8 +97,16 @@ class FormatTable final : angle::NonCopyable
                     gl::TextureCapsMap *outTextureCapsMap,
                     std::vector<GLenum> *outCompressedTextureFormats);
 
-    const Format &operator[](GLenum internalFormat) const;
-    const Format &operator[](angle::FormatID formatID) const;
+    ANGLE_INLINE const Format &operator[](GLenum internalFormat) const
+    {
+        angle::FormatID formatID = angle::Format::InternalFormatToID(internalFormat);
+        return mFormatData[static_cast<size_t>(formatID)];
+    }
+
+    ANGLE_INLINE const Format &operator[](angle::FormatID formatID) const
+    {
+        return mFormatData[static_cast<size_t>(formatID)];
+    }
 
   private:
     // The table data is indexed by angle::FormatID.

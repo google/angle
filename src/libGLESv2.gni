@@ -276,7 +276,7 @@ libangle_sources = [
   "src/libANGLE/renderer/DisplayImpl.h",
   "src/libANGLE/renderer/EGLImplFactory.h",
   "src/libANGLE/renderer/FenceNVImpl.h",
-  "src/libANGLE/renderer/FormatID_autogen.inc",
+  "src/libANGLE/renderer/FormatID_autogen.h",
   "src/libANGLE/renderer/Format_table_autogen.cpp",
   "src/libANGLE/renderer/Format.h",
   "src/libANGLE/renderer/FramebufferAttachmentObjectImpl.h",

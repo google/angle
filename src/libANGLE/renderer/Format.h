@@ -12,11 +12,14 @@
 #ifndef LIBANGLE_RENDERER_FORMAT_H_
 #define LIBANGLE_RENDERER_FORMAT_H_
 
+#include "libANGLE/renderer/FormatID_autogen.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 namespace angle
 {
 enum class FormatID;
+
+extern const Format gFormatInfoTable[];
 
 struct Format final : private angle::NonCopyable
 {
@@ -36,10 +39,12 @@ struct Format final : private angle::NonCopyable
                      GLuint depthBits,
                      GLuint stencilBits,
                      GLuint pixelBytes,
+                     GLuint componentAlignmentMask,
                      bool isBlock,
                      bool isFixed);
 
-    static const Format &Get(FormatID id);
+    static const Format &Get(FormatID id) { return gFormatInfoTable[static_cast<int>(id)]; }
+
     static FormatID InternalFormatToID(GLenum internalFormat);
 
     constexpr bool hasDepthOrStencilBits() const;
@@ -84,6 +89,10 @@ struct Format final : private angle::NonCopyable
 
     GLuint pixelBytes;
 
+    // For 1-byte components, is MAX_UINT. For 2-byte, is 0x1. For 4-byte, is 0x3. For all others,
+    // 0x0.
+    GLuint componentAlignmentMask;
+
     bool isBlock;
     bool isFixed;
 };
@@ -104,6 +113,7 @@ constexpr Format::Format(FormatID id,
                          GLuint depthBits,
                          GLuint stencilBits,
                          GLuint pixelBytes,
+                         GLuint componentAlignmentMask,
                          bool isBlock,
                          bool isFixed)
     : id(id),
@@ -122,6 +132,7 @@ constexpr Format::Format(FormatID id,
       depthBits(depthBits),
       stencilBits(stencilBits),
       pixelBytes(pixelBytes),
+      componentAlignmentMask(componentAlignmentMask),
       isBlock(isBlock),
       isFixed(isFixed)
 {}
@@ -170,7 +181,5 @@ constexpr bool Format::isFloat() const
 }
 
 }  // namespace angle
-
-#include "libANGLE/renderer/FormatID_autogen.inc"
 
 #endif  // LIBANGLE_RENDERER_FORMAT_H_

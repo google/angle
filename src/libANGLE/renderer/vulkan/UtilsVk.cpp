@@ -306,6 +306,8 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
 
     const vk::BindingPointer<vk::PipelineLayout> &pipelineLayout = mPipelineLayouts[function];
 
+    Serial serial = renderer->getCurrentQueueSerial();
+
     vk::PipelineAndSerial *pipelineAndSerial;
     if (isCompute)
     {
@@ -316,12 +318,14 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
     {
         program->setShader(gl::ShaderType::Vertex, vsShader);
         program->setShader(gl::ShaderType::Fragment, fsCsShader);
-        ANGLE_TRY(program->getGraphicsPipeline(context, pipelineLayout.get(), *pipelineDesc,
-                                               gl::AttributesMask(), &pipelineAndSerial));
+
+        ANGLE_TRY(program->getGraphicsPipeline(
+            context, &renderer->getRenderPassCache(), renderer->getPipelineCache(), serial,
+            pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), &pipelineAndSerial));
     }
 
     commandBuffer->bindPipeline(bindPoint, pipelineAndSerial->get());
-    pipelineAndSerial->updateSerial(renderer->getCurrentQueueSerial());
+    pipelineAndSerial->updateSerial(serial);
 
     if (descriptorSet != VK_NULL_HANDLE)
     {

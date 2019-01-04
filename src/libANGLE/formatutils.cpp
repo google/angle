@@ -1625,11 +1625,6 @@ angle::FormatID GetVertexFormatID(GLenum type,
     }
 }
 
-angle::FormatID GetVertexFormatID(const VertexAttribute &attrib)
-{
-    return GetVertexFormatID(attrib.type, attrib.normalized, attrib.size, attrib.pureInteger);
-}
-
 angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, GLenum currentValueType)
 {
     if (!attrib.enabled)

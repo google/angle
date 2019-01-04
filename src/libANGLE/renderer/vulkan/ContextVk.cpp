@@ -239,27 +239,6 @@ angle::Result ContextVk::finish(const gl::Context *context)
     return mRenderer->finish(this);
 }
 
-angle::Result ContextVk::initPipeline()
-{
-    ASSERT(!mCurrentPipeline);
-
-    const gl::AttributesMask activeAttribLocationsMask =
-        mProgram->getState().getActiveAttribLocationsMask();
-
-    // Ensure the topology of the pipeline description is updated.
-    mGraphicsPipelineDesc->updateTopology(mCurrentDrawMode);
-
-    // Copy over the latest attrib and binding descriptions.
-    mVertexArray->getPackedInputDescriptions(mGraphicsPipelineDesc.get());
-
-    // Ensure that the RenderPass description is updated.
-    mGraphicsPipelineDesc->updateRenderPassDesc(mDrawFramebuffer->getRenderPassDesc());
-
-    // Draw call shader patching, shader compilation, and pipeline cache query.
-    return mProgram->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
-                                         activeAttribLocationsMask, &mCurrentPipeline);
-}
-
 angle::Result ContextVk::setupDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLint firstVertex,
@@ -274,6 +253,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     {
         invalidateCurrentPipeline();
         mCurrentDrawMode = mode;
+        mGraphicsPipelineDesc->updateTopology(mCurrentDrawMode);
     }
 
     if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer, commandBufferOut))
@@ -385,7 +365,13 @@ angle::Result ContextVk::handleDirtyPipeline(const gl::Context *context,
 {
     if (!mCurrentPipeline)
     {
-        ANGLE_TRY(initPipeline());
+        // Copy over the latest attrib and binding descriptions. This should be done more lazily.
+        mVertexArray->getPackedInputDescriptions(mGraphicsPipelineDesc.get());
+
+        // Draw call shader patching, shader compilation, and pipeline cache query.
+        ANGLE_TRY(mProgram->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
+                                                mProgram->getState().getActiveAttribLocationsMask(),
+                                                &mCurrentPipeline));
     }
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline->get());
@@ -842,6 +828,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                                    glState.getDrawFramebuffer());
                 mGraphicsPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
                                                                   glState.getDrawFramebuffer());
+                mGraphicsPipelineDesc->updateRenderPassDesc(mDrawFramebuffer->getRenderPassDesc());
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -1050,21 +1037,6 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
     return std::vector<PathImpl *>();
 }
 
-void ContextVk::invalidateVertexAndIndexBuffers()
-{
-    invalidateCurrentPipeline();
-    mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-    mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-}
-
-void ContextVk::invalidateCurrentPipeline()
-{
-    mDirtyBits.set(DIRTY_BIT_PIPELINE);
-    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
-    mDirtyBits.set(DIRTY_BIT_SCISSOR);
-    mCurrentPipeline = nullptr;
-}
-
 void ContextVk::invalidateCurrentTextures()
 {
     ASSERT(mProgram);
@@ -1079,6 +1051,13 @@ void ContextVk::invalidateDriverUniforms()
 {
     mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
     mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+}
+
+void ContextVk::onFramebufferChange(const vk::RenderPassDesc &renderPassDesc)
+{
+    // Ensure that the RenderPass description is updated.
+    invalidateCurrentPipeline();
+    mGraphicsPipelineDesc->updateRenderPassDesc(renderPassDesc);
 }
 
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,
@@ -1135,11 +1114,6 @@ const VkClearValue &ContextVk::getClearDepthStencilValue() const
 VkColorComponentFlags ContextVk::getClearColorMask() const
 {
     return mClearColorMask;
-}
-
-const angle::FeaturesVk &ContextVk::getFeatures() const
-{
-    return mRenderer->getFeatures();
 }
 
 angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,

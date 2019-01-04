@@ -153,21 +153,6 @@ void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo
     vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
 }
 
-const angle::Format &Format::textureFormat() const
-{
-    return angle::Format::Get(textureFormatID);
-}
-
-const angle::Format &Format::bufferFormat() const
-{
-    return angle::Format::Get(bufferFormatID);
-}
-
-const angle::Format &Format::angleFormat() const
-{
-    return angle::Format::Get(angleFormatID);
-}
-
 bool operator==(const Format &lhs, const Format &rhs)
 {
     return &lhs == &rhs;
@@ -216,18 +201,6 @@ void FormatTable::initialize(RendererVk *renderer,
         }
     }
 }
-
-const Format &FormatTable::operator[](GLenum internalFormat) const
-{
-    angle::FormatID formatID = angle::Format::InternalFormatToID(internalFormat);
-    return mFormatData[static_cast<size_t>(formatID)];
-}
-
-const Format &FormatTable::operator[](angle::FormatID formatID) const
-{
-    return mFormatData[static_cast<size_t>(formatID)];
-}
-
 }  // namespace vk
 
 size_t GetVertexInputAlignment(const vk::Format &format)

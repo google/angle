@@ -973,17 +973,6 @@ void BufferHelper::release(RendererVk *renderer)
     renderer->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
 }
 
-void BufferHelper::onRead(RecordableGraphResource *reader, VkAccessFlagBits readAccessType)
-{
-    addReadDependency(reader);
-
-    if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) == 0)
-    {
-        reader->addGlobalMemoryBarrier(mCurrentWriteAccess, readAccessType);
-        mCurrentReadAccess |= readAccessType;
-    }
-}
-
 void BufferHelper::onWrite(VkAccessFlagBits writeAccessType)
 {
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
@@ -1630,26 +1619,6 @@ void ShaderProgramHelper::release(RendererVk *renderer)
 void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader)
 {
     mShaders[shaderType].set(shader);
-}
-
-angle::Result ShaderProgramHelper::getGraphicsPipeline(
-    Context *context,
-    const PipelineLayout &pipelineLayout,
-    const GraphicsPipelineDesc &pipelineDesc,
-    const gl::AttributesMask &activeAttribLocationsMask,
-    PipelineAndSerial **pipelineOut)
-{
-    RendererVk *renderer = context->getRenderer();
-
-    // Pull in a compatible RenderPass.
-    vk::RenderPass *compatibleRenderPass = nullptr;
-    ANGLE_TRY(renderer->getCompatibleRenderPass(context, pipelineDesc.getRenderPassDesc(),
-                                                &compatibleRenderPass));
-
-    return mGraphicsPipelines.getPipeline(
-        context, renderer->getPipelineCache(), *compatibleRenderPass, pipelineLayout,
-        activeAttribLocationsMask, mShaders[gl::ShaderType::Vertex].get().get(),
-        mShaders[gl::ShaderType::Fragment].get().get(), pipelineDesc, pipelineOut);
 }
 
 angle::Result ShaderProgramHelper::getComputePipeline(Context *context,

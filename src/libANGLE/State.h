@@ -25,7 +25,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/Version.h"
-#include "libANGLE/VertexAttribute.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/angletypes.h"
 
 namespace gl
@@ -340,15 +340,22 @@ class State : angle::NonCopyable
     void setVertexAttribf(GLuint index, const GLfloat values[4]);
     void setVertexAttribu(GLuint index, const GLuint values[4]);
     void setVertexAttribi(GLuint index, const GLint values[4]);
-    void setVertexAttribPointer(const Context *context,
-                                unsigned int attribNum,
-                                Buffer *boundBuffer,
-                                GLint size,
-                                GLenum type,
-                                bool normalized,
-                                bool pureInteger,
-                                GLsizei stride,
-                                const void *pointer);
+
+    ANGLE_INLINE void setVertexAttribPointer(const Context *context,
+                                             unsigned int attribNum,
+                                             Buffer *boundBuffer,
+                                             GLint size,
+                                             GLenum type,
+                                             bool normalized,
+                                             bool pureInteger,
+                                             GLsizei stride,
+                                             const void *pointer)
+    {
+        mVertexArray->setVertexAttribPointer(context, attribNum, boundBuffer, size, type,
+                                             normalized, pureInteger, stride, pointer);
+        mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
+    }
+
     void setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const
     {

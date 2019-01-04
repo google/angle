@@ -92,8 +92,9 @@ struct SwizzleState final
 };
 
 // State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
-struct TextureState final : private angle::NonCopyable
+class TextureState final : private angle::NonCopyable
 {
+  public:
     TextureState(TextureType type);
     ~TextureState();
 

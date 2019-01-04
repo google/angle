@@ -10,7 +10,6 @@
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 
 #include "common/debug.h"
-#include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
@@ -132,11 +131,6 @@ angle::Result SyncDefaultUniformBlock(ContextVk *contextVk,
     ANGLE_TRY(dynamicBuffer->flush(contextVk));
     return angle::Result::Continue;
 }
-
-bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
-{
-    return contextVk->getFeatures().basicGLLineRasterization && gl::IsLineMode(mode);
-}
 }  // anonymous namespace
 
 // ProgramVk::ShaderInfo implementation.
@@ -149,23 +143,21 @@ angle::Result ProgramVk::ShaderInfo::initShaders(ContextVk *contextVk,
                                                  const std::string &fragmentSource,
                                                  bool enableLineRasterEmulation)
 {
-    if (!valid())
-    {
-        std::vector<uint32_t> vertexCode;
-        std::vector<uint32_t> fragmentCode;
-        ANGLE_TRY(GlslangWrapper::GetShaderCode(contextVk, contextVk->getCaps(),
-                                                enableLineRasterEmulation, vertexSource,
-                                                fragmentSource, &vertexCode, &fragmentCode));
+    ASSERT(!valid());
 
-        ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[gl::ShaderType::Vertex].get(),
-                                          vertexCode.data(), vertexCode.size() * sizeof(uint32_t)));
-        ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[gl::ShaderType::Fragment].get(),
-                                          fragmentCode.data(),
-                                          fragmentCode.size() * sizeof(uint32_t)));
+    std::vector<uint32_t> vertexCode;
+    std::vector<uint32_t> fragmentCode;
+    ANGLE_TRY(GlslangWrapper::GetShaderCode(contextVk, contextVk->getCaps(),
+                                            enableLineRasterEmulation, vertexSource, fragmentSource,
+                                            &vertexCode, &fragmentCode));
 
-        mProgramHelper.setShader(gl::ShaderType::Vertex, &mShaders[gl::ShaderType::Vertex]);
-        mProgramHelper.setShader(gl::ShaderType::Fragment, &mShaders[gl::ShaderType::Fragment]);
-    }
+    ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[gl::ShaderType::Vertex].get(),
+                                      vertexCode.data(), vertexCode.size() * sizeof(uint32_t)));
+    ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[gl::ShaderType::Fragment].get(),
+                                      fragmentCode.data(), fragmentCode.size() * sizeof(uint32_t)));
+
+    mProgramHelper.setShader(gl::ShaderType::Vertex, &mShaders[gl::ShaderType::Vertex]);
+    mProgramHelper.setShader(gl::ShaderType::Fragment, &mShaders[gl::ShaderType::Fragment]);
 
     return angle::Result::Continue;
 }
@@ -178,11 +170,6 @@ void ProgramVk::ShaderInfo::release(RendererVk *renderer)
     {
         shader.get().destroy(renderer->getDevice());
     }
-}
-
-bool ProgramVk::ShaderInfo::valid() const
-{
-    return mShaders[gl::ShaderType::Vertex].get().valid();
 }
 
 // ProgramVk implementation.
@@ -727,27 +714,6 @@ void ProgramVk::setPathFragmentInputGen(const std::string &inputName,
     UNIMPLEMENTED();
 }
 
-angle::Result ProgramVk::initShaders(ContextVk *contextVk,
-                                     gl::PrimitiveMode mode,
-                                     vk::ShaderProgramHelper **programOut)
-{
-    if (UseLineRaster(contextVk, mode))
-    {
-        ANGLE_TRY(
-            mLineRasterShaderInfo.initShaders(contextVk, mVertexSource, mFragmentSource, true));
-        ASSERT(mLineRasterShaderInfo.valid());
-        *programOut = &mLineRasterShaderInfo.getShaderProgram();
-    }
-    else
-    {
-        ANGLE_TRY(mDefaultShaderInfo.initShaders(contextVk, mVertexSource, mFragmentSource, false));
-        ASSERT(mDefaultShaderInfo.valid());
-        *programOut = &mDefaultShaderInfo.getShaderProgram();
-    }
-
-    return angle::Result::Continue;
-}
-
 angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex)
 {
     // Write out to a new a descriptor set.
@@ -886,8 +852,8 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
         for (uint32_t arrayElement = 0; arrayElement < samplerBinding.boundTextureUnits.size();
              ++arrayElement)
         {
-            GLuint textureUnit           = samplerBinding.boundTextureUnits[arrayElement];
-            TextureVk *textureVk         = activeTextures[textureUnit];
+            GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
+            TextureVk *textureVk = activeTextures[textureUnit];
 
             // Ensure any writes to the textures are flushed before we read from them.
             ANGLE_TRY(textureVk->ensureImageInitialized(contextVk));

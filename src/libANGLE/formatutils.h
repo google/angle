@@ -17,6 +17,7 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
+#include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
 
 namespace gl
@@ -250,7 +251,12 @@ angle::FormatID GetVertexFormatID(GLenum type,
                                   GLboolean normalized,
                                   GLuint components,
                                   bool pureInteger);
-angle::FormatID GetVertexFormatID(const VertexAttribute &attrib);
+
+ANGLE_INLINE angle::FormatID GetVertexFormatID(const VertexAttribute &attrib)
+{
+    return GetVertexFormatID(attrib.type, attrib.normalized, attrib.size, attrib.pureInteger);
+}
+
 angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, GLenum currentValueType);
 const VertexFormat &GetVertexFormatFromID(angle::FormatID vertexFormatID);
 size_t GetVertexFormatSize(angle::FormatID vertexFormatID);

@@ -12,6 +12,7 @@
 
 #include <array>
 
+#include "common/utilities.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -19,6 +20,11 @@
 
 namespace rx
 {
+ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
+{
+    return contextVk->getFeatures().basicGLLineRasterization && gl::IsLineMode(mode);
+}
+
 class ProgramVk : public ProgramImpl
 {
   public:
@@ -122,8 +128,11 @@ class ProgramVk : public ProgramImpl
         vk::ShaderProgramHelper *shaderProgram;
         ANGLE_TRY(initShaders(contextVk, mode, &shaderProgram));
         ASSERT(shaderProgram->isGraphicsProgram());
-        return shaderProgram->getGraphicsPipeline(contextVk, mPipelineLayout.get(), desc,
-                                                  activeAttribLocations, pipelineOut);
+        RendererVk *renderer = contextVk->getRenderer();
+        return shaderProgram->getGraphicsPipeline(
+            contextVk, &renderer->getRenderPassCache(), renderer->getPipelineCache(),
+            renderer->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
+            pipelineOut);
     }
 
   private:
@@ -148,9 +157,35 @@ class ProgramVk : public ProgramImpl
                            const gl::ProgramLinkedResources &resources,
                            gl::InfoLog &infoLog);
 
-    angle::Result initShaders(ContextVk *contextVk,
-                              gl::PrimitiveMode mode,
-                              vk::ShaderProgramHelper **shaderProgramOut);
+    ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
+                                           gl::PrimitiveMode mode,
+                                           vk::ShaderProgramHelper **shaderProgramOut)
+    {
+        if (UseLineRaster(contextVk, mode))
+        {
+            if (!mLineRasterShaderInfo.valid())
+            {
+                ANGLE_TRY(mLineRasterShaderInfo.initShaders(contextVk, mVertexSource,
+                                                            mFragmentSource, true));
+            }
+
+            ASSERT(mLineRasterShaderInfo.valid());
+            *shaderProgramOut = &mLineRasterShaderInfo.getShaderProgram();
+        }
+        else
+        {
+            if (!mDefaultShaderInfo.valid())
+            {
+                ANGLE_TRY(mDefaultShaderInfo.initShaders(contextVk, mVertexSource, mFragmentSource,
+                                                         false));
+            }
+
+            ASSERT(mDefaultShaderInfo.valid());
+            *shaderProgramOut = &mDefaultShaderInfo.getShaderProgram();
+        }
+
+        return angle::Result::Continue;
+    }
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable
@@ -201,7 +236,8 @@ class ProgramVk : public ProgramImpl
                                   const std::string &fragmentSource,
                                   bool enableLineRasterEmulation);
         void release(RendererVk *renderer);
-        bool valid() const;
+
+        ANGLE_INLINE bool valid() const { return mShaders[gl::ShaderType::Vertex].get().valid(); }
 
         vk::ShaderProgramHelper &getShaderProgram() { return mProgramHelper; }
 

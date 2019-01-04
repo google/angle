@@ -91,7 +91,6 @@ class FramebufferVk : public FramebufferImpl
                                     size_t index,
                                     GLfloat *xy) const override;
     RenderTargetVk *getDepthStencilRenderTarget() const;
-    const vk::RenderPassDesc &getRenderPassDesc();
 
     // Internal helper function for readPixels operations.
     angle::Result readPixelsImpl(ContextVk *contextVk,
@@ -118,6 +117,8 @@ class FramebufferVk : public FramebufferImpl
 
     RenderTargetVk *getFirstRenderTarget() const;
     GLint getSamples() const;
+
+    const vk::RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
 
   private:
     FramebufferVk(RendererVk *renderer,
@@ -165,10 +166,11 @@ class FramebufferVk : public FramebufferImpl
                                             const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
+    void updateRenderPassDesc();
 
     WindowSurfaceVk *mBackbuffer;
 
-    Optional<vk::RenderPassDesc> mRenderPassDesc;
+    vk::RenderPassDesc mRenderPassDesc;
     vk::FramebufferHelper mFramebuffer;
     RenderTargetCache<RenderTargetVk> mRenderTargetCache;
 

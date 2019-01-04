@@ -268,8 +268,12 @@ class GraphicsPipelineDesc final
                                      Pipeline *pipelineOut) const;
 
     // Vertex input state
-    void updateVertexInputInfo(const VertexInputBindings &bindings,
-                               const VertexInputAttributes &attribs);
+    ANGLE_INLINE void updateVertexInputInfo(const VertexInputBindings &bindings,
+                                            const VertexInputAttributes &attribs)
+    {
+        mVertexInputBindings = bindings;
+        mVertexInputAttribs  = attribs;
+    }
 
     // Input assembly info
     void updateTopology(gl::PrimitiveMode drawMode);
@@ -475,10 +479,26 @@ class RenderPassCache final : angle::NonCopyable
 
     void destroy(VkDevice device);
 
-    angle::Result getCompatibleRenderPass(vk::Context *context,
-                                          Serial serial,
-                                          const vk::RenderPassDesc &desc,
-                                          vk::RenderPass **renderPassOut);
+    ANGLE_INLINE angle::Result getCompatibleRenderPass(vk::Context *context,
+                                                       Serial serial,
+                                                       const vk::RenderPassDesc &desc,
+                                                       vk::RenderPass **renderPassOut)
+    {
+        auto outerIt = mPayload.find(desc);
+        if (outerIt != mPayload.end())
+        {
+            InnerCache &innerCache = outerIt->second;
+            ASSERT(!innerCache.empty());
+
+            // Find the first element and return it.
+            innerCache.begin()->second.updateSerial(serial);
+            *renderPassOut = &innerCache.begin()->second.get();
+            return angle::Result::Continue;
+        }
+
+        return addRenderPass(context, serial, desc, renderPassOut);
+    }
+
     angle::Result getRenderPassWithOps(vk::Context *context,
                                        Serial serial,
                                        const vk::RenderPassDesc &desc,
@@ -486,6 +506,11 @@ class RenderPassCache final : angle::NonCopyable
                                        vk::RenderPass **renderPassOut);
 
   private:
+    angle::Result addRenderPass(vk::Context *context,
+                                Serial serial,
+                                const vk::RenderPassDesc &desc,
+                                vk::RenderPass **renderPassOut);
+
     // Use a two-layer caching scheme. The top level matches the "compatible" RenderPass elements.
     // The second layer caches the attachment load/store ops and initial/final layout.
     using InnerCache = std::unordered_map<vk::AttachmentOpsArray, vk::RenderPassAndSerial>;
@@ -505,17 +530,40 @@ class GraphicsPipelineCache final : angle::NonCopyable
     void release(RendererVk *renderer);
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
-    angle::Result getPipeline(vk::Context *context,
-                              const vk::PipelineCache &pipelineCacheVk,
-                              const vk::RenderPass &compatibleRenderPass,
-                              const vk::PipelineLayout &pipelineLayout,
-                              const gl::AttributesMask &activeAttribLocationsMask,
-                              const vk::ShaderModule &vertexModule,
-                              const vk::ShaderModule &fragmentModule,
-                              const vk::GraphicsPipelineDesc &desc,
-                              vk::PipelineAndSerial **pipelineOut);
+
+    ANGLE_INLINE angle::Result getPipeline(vk::Context *context,
+                                           const vk::PipelineCache &pipelineCacheVk,
+                                           const vk::RenderPass &compatibleRenderPass,
+                                           const vk::PipelineLayout &pipelineLayout,
+                                           const gl::AttributesMask &activeAttribLocationsMask,
+                                           const vk::ShaderModule &vertexModule,
+                                           const vk::ShaderModule &fragmentModule,
+                                           const vk::GraphicsPipelineDesc &desc,
+                                           vk::PipelineAndSerial **pipelineOut)
+    {
+        auto item = mPayload.find(desc);
+        if (item != mPayload.end())
+        {
+            *pipelineOut = &item->second;
+            return angle::Result::Continue;
+        }
+
+        return insertPipeline(context, pipelineCacheVk, compatibleRenderPass, pipelineLayout,
+                              activeAttribLocationsMask, vertexModule, fragmentModule, desc,
+                              pipelineOut);
+    }
 
   private:
+    angle::Result insertPipeline(vk::Context *context,
+                                 const vk::PipelineCache &pipelineCacheVk,
+                                 const vk::RenderPass &compatibleRenderPass,
+                                 const vk::PipelineLayout &pipelineLayout,
+                                 const gl::AttributesMask &activeAttribLocationsMask,
+                                 const vk::ShaderModule &vertexModule,
+                                 const vk::ShaderModule &fragmentModule,
+                                 const vk::GraphicsPipelineDesc &desc,
+                                 vk::PipelineAndSerial **pipelineOut);
+
     std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineAndSerial> mPayload;
 };
 

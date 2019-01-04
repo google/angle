@@ -14,6 +14,7 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace angle
@@ -161,11 +162,19 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     VkDevice getDevice() const;
-    const angle::FeaturesVk &getFeatures() const;
 
-    void invalidateVertexAndIndexBuffers();
+    ANGLE_INLINE const angle::FeaturesVk &getFeatures() const { return mRenderer->getFeatures(); }
+
+    ANGLE_INLINE void invalidateVertexAndIndexBuffers()
+    {
+        invalidateCurrentPipeline();
+        mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+        mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+    }
+
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
+    void onFramebufferChange(const vk::RenderPassDesc &renderPassDesc);
 
     vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t descriptorSetIndex);
     vk::DynamicQueryPool *getQueryPool(gl::QueryType queryType);
@@ -210,7 +219,6 @@ class ContextVk : public ContextImpl, public vk::Context
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mDirtyBitHandlers;
 
-    angle::Result initPipeline();
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
                             GLint firstVertex,
@@ -246,7 +254,14 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
-    void invalidateCurrentPipeline();
+    ANGLE_INLINE void invalidateCurrentPipeline()
+    {
+        mDirtyBits.set(DIRTY_BIT_PIPELINE);
+        mDirtyBits.set(DIRTY_BIT_VIEWPORT);
+        mDirtyBits.set(DIRTY_BIT_SCISSOR);
+        mCurrentPipeline = nullptr;
+    }
+
     void invalidateCurrentTextures();
     void invalidateDriverUniforms();
 

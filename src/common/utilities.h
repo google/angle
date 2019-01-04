@@ -73,7 +73,17 @@ IndexRange ComputeIndexRange(DrawElementsType indexType,
 GLuint GetPrimitiveRestartIndex(DrawElementsType indexType);
 
 bool IsTriangleMode(PrimitiveMode drawMode);
-bool IsLineMode(PrimitiveMode primitiveMode);
+
+namespace priv
+{
+extern const angle::PackedEnumMap<PrimitiveMode, bool> gLineModes;
+}  // namespace priv
+
+ANGLE_INLINE bool IsLineMode(PrimitiveMode primitiveMode)
+{
+    return priv::gLineModes[primitiveMode];
+}
+
 bool IsIntegerFormat(GLenum unsizedFormat);
 
 // Returns the product of the sizes in the vector, or 1 if the vector is empty. Doesn't currently

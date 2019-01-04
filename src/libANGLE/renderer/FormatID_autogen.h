@@ -7,6 +7,11 @@
 //
 // ANGLE format enumeration.
 
+#ifndef LIBANGLE_RENDERER_FORMATID_H_
+#define LIBANGLE_RENDERER_FORMATID_H_
+
+#include <cstdint>
+
 namespace angle
 {
 
@@ -194,3 +199,5 @@ enum class FormatID
 constexpr uint32_t kNumANGLEFormats = 177;
 
 }  // namespace angle
+
+#endif  // LIBANGLE_RENDERER_FORMATID_H_

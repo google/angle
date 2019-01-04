@@ -36,7 +36,14 @@ class VertexArrayVk : public VertexArrayImpl
                             const gl::VertexArray::DirtyAttribBitsArray &attribBits,
                             const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
-    void getPackedInputDescriptions(vk::GraphicsPipelineDesc *pipelineDesc);
+    ANGLE_INLINE void getPackedInputDescriptions(vk::GraphicsPipelineDesc *pipelineDesc)
+    {
+        if (mDirtyPackedInputs.any())
+        {
+            updatePackedInputDescriptions();
+        }
+        pipelineDesc->updateVertexInputInfo(mPackedInputBindings, mPackedInputAttributes);
+    }
 
     void updateDefaultAttrib(RendererVk *renderer,
                              size_t attribIndex,

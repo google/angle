@@ -785,27 +785,23 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         mActiveColorComponentMasksForClear[0].any(), mActiveColorComponentMasksForClear[1].any(),
         mActiveColorComponentMasksForClear[2].any(), mActiveColorComponentMasksForClear[3].any());
 
-    mRenderPassDesc.reset();
     mFramebuffer.release(renderer);
 
     // Will freeze the current set of dependencies on this FBO. The next time we render we will
     // create a new entry in the command graph.
     mFramebuffer.finishCurrentCommands(renderer);
 
-    // No need to notify the ContextVk. A new command buffer will be started automatically.
+    // Notify the ContextVk to update the pipeline desc.
+    updateRenderPassDesc();
+    contextVk->onFramebufferChange(mRenderPassDesc);
 
     return angle::Result::Continue;
 }
 
-const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc()
+void FramebufferVk::updateRenderPassDesc()
 {
-    if (mRenderPassDesc.valid())
-    {
-        return mRenderPassDesc.value();
-    }
-
-    vk::RenderPassDesc desc;
-    desc.setSamples(getSamples());
+    mRenderPassDesc = {};
+    mRenderPassDesc.setSamples(getSamples());
 
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -813,17 +809,14 @@ const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc()
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
-        desc.packAttachment(colorRenderTarget->getImage().getFormat());
+        mRenderPassDesc.packAttachment(colorRenderTarget->getImage().getFormat());
     }
 
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
     if (depthStencilRenderTarget)
     {
-        desc.packAttachment(depthStencilRenderTarget->getImage().getFormat());
+        mRenderPassDesc.packAttachment(depthStencilRenderTarget->getImage().getFormat());
     }
-
-    mRenderPassDesc = desc;
-    return mRenderPassDesc.value();
 }
 
 angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffer **framebufferOut)
@@ -835,10 +828,9 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         return angle::Result::Continue;
     }
 
-    const vk::RenderPassDesc &desc = getRenderPassDesc();
-
     vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY(contextVk->getRenderer()->getCompatibleRenderPass(contextVk, desc, &renderPass));
+    ANGLE_TRY(
+        contextVk->getRenderer()->getCompatibleRenderPass(contextVk, mRenderPassDesc, &renderPass));
 
     // If we've a Framebuffer provided by a Surface (default FBO/backbuffer), query it.
     if (mBackbuffer)
@@ -1083,9 +1075,8 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     gl::Rectangle renderArea =
         gl::Rectangle(0, 0, mState.getDimensions().width, mState.getDimensions().height);
 
-    return mFramebuffer.beginRenderPass(contextVk, *framebuffer, renderArea,
-                                        mRenderPassDesc.value(), attachmentClearValues,
-                                        commandBufferOut);
+    return mFramebuffer.beginRenderPass(contextVk, *framebuffer, renderArea, mRenderPassDesc,
+                                        attachmentClearValues, commandBufferOut);
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a)

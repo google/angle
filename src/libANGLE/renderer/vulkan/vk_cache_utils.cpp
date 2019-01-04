@@ -672,13 +672,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     return angle::Result::Continue;
 }
 
-void GraphicsPipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
-                                                 const VertexInputAttributes &attribs)
-{
-    mVertexInputBindings = bindings;
-    mVertexInputAttribs  = attribs;
-}
-
 void GraphicsPipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
 {
     mInputAssembltyAndColorBlendStateInfo.topology =
@@ -1034,23 +1027,11 @@ void RenderPassCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-angle::Result RenderPassCache::getCompatibleRenderPass(vk::Context *context,
-                                                       Serial serial,
-                                                       const vk::RenderPassDesc &desc,
-                                                       vk::RenderPass **renderPassOut)
+angle::Result RenderPassCache::addRenderPass(vk::Context *context,
+                                             Serial serial,
+                                             const vk::RenderPassDesc &desc,
+                                             vk::RenderPass **renderPassOut)
 {
-    auto outerIt = mPayload.find(desc);
-    if (outerIt != mPayload.end())
-    {
-        InnerCache &innerCache = outerIt->second;
-        ASSERT(!innerCache.empty());
-
-        // Find the first element and return it.
-        innerCache.begin()->second.updateSerial(serial);
-        *renderPassOut = &innerCache.begin()->second.get();
-        return angle::Result::Continue;
-    }
-
     // Insert some dummy attachment ops.
     // It would be nice to pre-populate the cache in the Renderer so we rarely miss here.
     vk::AttachmentOpsArray ops;
@@ -1145,7 +1126,7 @@ void GraphicsPipelineCache::release(RendererVk *renderer)
     mPayload.clear();
 }
 
-angle::Result GraphicsPipelineCache::getPipeline(
+angle::Result GraphicsPipelineCache::insertPipeline(
     vk::Context *context,
     const vk::PipelineCache &pipelineCacheVk,
     const vk::RenderPass &compatibleRenderPass,
@@ -1156,13 +1137,6 @@ angle::Result GraphicsPipelineCache::getPipeline(
     const vk::GraphicsPipelineDesc &desc,
     vk::PipelineAndSerial **pipelineOut)
 {
-    auto item = mPayload.find(desc);
-    if (item != mPayload.end())
-    {
-        *pipelineOut = &item->second;
-        return angle::Result::Continue;
-    }
-
     vk::Pipeline newPipeline;
 
     // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.

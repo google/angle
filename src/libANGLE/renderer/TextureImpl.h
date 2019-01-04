@@ -33,7 +33,7 @@ struct Offset;
 struct Rectangle;
 class Framebuffer;
 struct PixelUnpackState;
-struct TextureState;
+class TextureState;
 }  // namespace gl
 
 namespace rx
