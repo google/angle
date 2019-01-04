@@ -70,6 +70,30 @@
       "revId": "904bb9185767d72a63eb4d1445c94c678b767b56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db3af1e2_18b431c7",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-04T01:50:40Z",
+      "side": 0,
+      "message": "Sorry, I just don\u0027t understand why the complexity is the same. Maybe my above example is not appropriate. I shouldn\u0027t compare the childVisitor with the parent visitor. For the childVisitor itself, it will be called \u0027number of elements in the array\u0027 times. The only differ between the first time and left is that only in first time,[a] is true. But I think the time is still O(number of elements in the array * members of the struct), isn\u0027t it?",
+      "parentUuid": "b109ac34_5a15222b",
+      "range": {
+        "startLine": 213,
+        "startChar": 16,
+        "endLine": 213,
+        "endChar": 52
+      },
+      "revId": "904bb9185767d72a63eb4d1445c94c678b767b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
