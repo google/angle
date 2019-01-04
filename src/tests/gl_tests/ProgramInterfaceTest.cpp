@@ -712,6 +712,121 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
     EXPECT_EQ(GL_FLOAT_VEC3, params[12]);  // type
 }
 
+// Tests the resource property querying for buffer variable in std430 SSBO works correctly.
+TEST_P(ProgramInterfaceTestES31, GetStd430BufferVariableProperties)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+struct S
+{
+    uvec2 v;
+    mat2 m;
+};
+layout(std430, binding = 0) buffer blockIn {
+    uint u;
+    uint a[2];
+    S s;
+} instanceIn;
+layout(std430, binding = 1) buffer blockOut {
+    uint u;
+    uint a[2];
+    S s;
+} instanceOut;
+void main()
+{
+    instanceOut.u = instanceIn.u;
+    instanceOut.a[0] = instanceIn.a[0];
+    instanceOut.a[1] = instanceIn.a[1];
+    instanceOut.s.v = instanceIn.s.v;
+    instanceOut.s.m = instanceIn.s.m;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+
+    GLuint index = glGetProgramResourceIndex(program, GL_BUFFER_VARIABLE, "blockIn.a");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_NE(GL_INVALID_INDEX, index);
+
+    GLchar name[64];
+    GLsizei length;
+    glGetProgramResourceName(program, GL_BUFFER_VARIABLE, index, sizeof(name), &length, name);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(12, length);
+    EXPECT_EQ("blockIn.a[0]", std::string(name));
+
+    GLenum props[]         = {GL_ARRAY_SIZE,
+                      GL_ARRAY_STRIDE,
+                      GL_BLOCK_INDEX,
+                      GL_IS_ROW_MAJOR,
+                      GL_MATRIX_STRIDE,
+                      GL_NAME_LENGTH,
+                      GL_OFFSET,
+                      GL_REFERENCED_BY_VERTEX_SHADER,
+                      GL_REFERENCED_BY_FRAGMENT_SHADER,
+                      GL_REFERENCED_BY_COMPUTE_SHADER,
+                      GL_TOP_LEVEL_ARRAY_SIZE,
+                      GL_TOP_LEVEL_ARRAY_STRIDE,
+                      GL_TYPE};
+    GLsizei propCount      = static_cast<GLsizei>(ArraySize(props));
+    constexpr int kBufSize = 256;
+    GLint params[kBufSize];
+
+    glGetProgramResourceiv(program, GL_BUFFER_VARIABLE, index, propCount, props, kBufSize, &length,
+                           params);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(propCount, length);
+    EXPECT_EQ(2, params[0]);   // array_size
+    EXPECT_LE(4, params[1]);   // array_stride
+    EXPECT_LE(0, params[2]);   // block_index
+    EXPECT_EQ(0, params[3]);   // is_row_major
+    EXPECT_EQ(0, params[4]);   // matrix_stride
+    EXPECT_EQ(13, params[5]);  // name_length
+    EXPECT_EQ(4, params[6]);   // offset
+
+    EXPECT_EQ(0, params[7]);  // referenced_by_vertex_shader
+    EXPECT_EQ(0, params[8]);  // referenced_by_fragment_shader
+    EXPECT_EQ(1, params[9]);  // referenced_by_compute_shader
+    // TODO(jiajia.qin@intel.com): top_level_array_stride is not correctly handled in D3D side.
+    // http://anglebug.com/1920.
+    // EXPECT_EQ(0, params[11]);  // top_level_array_stride
+
+    EXPECT_EQ(1, params[10]);                // top_level_array_size
+    EXPECT_EQ(GL_UNSIGNED_INT, params[12]);  // type
+
+    index = glGetProgramResourceIndex(program, GL_BUFFER_VARIABLE, "blockIn.s.m");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_NE(GL_INVALID_INDEX, index);
+
+    glGetProgramResourceName(program, GL_BUFFER_VARIABLE, index, sizeof(name), &length, name);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(11, length);
+    EXPECT_EQ("blockIn.s.m", std::string(name));
+
+    glGetProgramResourceiv(program, GL_BUFFER_VARIABLE, index, propCount, props, kBufSize, &length,
+                           params);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(propCount, length);
+    EXPECT_EQ(1, params[0]);   // array_size
+    EXPECT_LE(0, params[1]);   // array_stride
+    EXPECT_LE(0, params[2]);   // block_index
+    EXPECT_EQ(0, params[3]);   // is_row_major
+    EXPECT_EQ(8, params[4]);   // matrix_stride
+    EXPECT_EQ(12, params[5]);  // name_length
+    EXPECT_EQ(24, params[6]);  // offset
+
+    EXPECT_EQ(0, params[7]);  // referenced_by_vertex_shader
+    EXPECT_EQ(0, params[8]);  // referenced_by_fragment_shader
+    // TODO(jiajia.qin@intel.com): referenced_by_compute_shader and top_level_array_stride are not
+    // correctly handled. http://anglebug.com/1920.
+    // EXPECT_EQ(1, params[9]);   // referenced_by_compute_shader
+    // EXPECT_EQ(0, params[11]);  // top_level_array_stride
+
+    EXPECT_EQ(1, params[10]);              // top_level_array_size
+    EXPECT_EQ(GL_FLOAT_MAT2, params[12]);  // type
+}
+
 // Tests the resource property query for shader storage block can be done correctly.
 TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
 {
