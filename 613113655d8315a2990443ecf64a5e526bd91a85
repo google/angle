@@ -141,6 +141,30 @@
       "revId": "613113655d8315a2990443ecf64a5e526bd91a85",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37be4311_c0c94a87",
+        "filename": "src/common/uniform_type_info_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-01-04T17:31:45Z",
+      "side": 1,
+      "message": "Thanks for double-checking!",
+      "parentUuid": "b9e0c42f_5bad88d0",
+      "range": {
+        "startLine": 120,
+        "startChar": 6,
+        "endLine": 120,
+        "endChar": 29
+      },
+      "revId": "613113655d8315a2990443ecf64a5e526bd91a85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
