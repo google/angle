@@ -680,8 +680,7 @@ shared_library("libGLESv2${angle_libs_suffix}") {
   }
 
   if (is_win) {
-    ldflags = [ "/DEF:" + rebase_path("src/libGLESv2/libGLESv2_autogen.def",
-                                      root_build_dir) ]
+    sources += [ "src/libGLESv2/libGLESv2_autogen.def" ]
   }
 
   if (is_mac && !is_component_build) {
@@ -830,7 +829,7 @@ shared_library("libEGL${angle_libs_suffix}") {
   }
 
   if (is_win) {
-    ldflags = [ "/DEF:" + rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
+    sources += [ "src/libEGL/libEGL.def" ]
   }
 
   if (is_mac && !is_component_build) {
