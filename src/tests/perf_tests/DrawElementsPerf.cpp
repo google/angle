@@ -265,6 +265,21 @@ DrawElementsPerfParams DrawElementsPerfVulkanParams(bool indexBufferChanged,
     return params;
 }
 
+DrawElementsPerfParams DrawElementsPerfWGLParams(bool indexBufferChanged, GLenum indexType)
+{
+    DrawElementsPerfParams params;
+    params.driver = angle::GLESDriverType::SystemWGL;
+
+    params.indexBufferChanged = indexBufferChanged;
+    params.type               = indexType;
+
+    // Scale down iterations for slower tests.
+    if (indexBufferChanged)
+        params.iterationsPerStep /= 100;
+
+    return params;
+}
+
 TEST_P(DrawElementsPerfBenchmark, Run)
 {
     run();
@@ -287,6 +302,7 @@ ANGLE_INSTANTIATE_TEST(DrawElementsPerfBenchmark,
                        DrawElementsPerfVulkanParams(false, false, GL_UNSIGNED_SHORT),
                        DrawElementsPerfVulkanParams(false, true, GL_UNSIGNED_SHORT),
                        DrawElementsPerfVulkanParams(false, false, GL_UNSIGNED_INT),
-                       DrawElementsPerfVulkanParams(false, true, GL_UNSIGNED_INT));
+                       DrawElementsPerfVulkanParams(false, true, GL_UNSIGNED_INT),
+                       DrawElementsPerfWGLParams(false, GL_UNSIGNED_SHORT));
 
 }  // anonymous namespace
