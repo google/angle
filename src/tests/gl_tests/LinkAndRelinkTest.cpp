@@ -62,10 +62,6 @@ TEST_P(LinkAndRelinkTest, RenderingProgramFailsWithoutProgramInstalled)
 // However, dispatching compute always fails.
 TEST_P(LinkAndRelinkTest, RenderingProgramFailsWithProgramInstalled)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2648
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Install a render program in current GL state via UseProgram, then render.
     // It should succeed.
     constexpr char kVS[] = "void main() {}";
