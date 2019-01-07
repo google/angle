@@ -23,6 +23,7 @@ namespace sh
 struct BlockMemberInfo;
 struct InterfaceBlock;
 struct ShaderVariable;
+class BlockEncoderVisitor;
 class ShaderVariableVisitor;
 struct Uniform;
 }  // namespace sh

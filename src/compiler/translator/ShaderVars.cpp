@@ -107,6 +107,16 @@ void ShaderVariable::setArraySize(unsigned int size)
     }
 }
 
+unsigned int ShaderVariable::getInnerArraySizeProduct() const
+{
+    unsigned int arraySizeProduct = 1u;
+    for (size_t index = 1; index < arraySizes.size(); ++index)
+    {
+        arraySizeProduct *= getNestedArraySize(index);
+    }
+    return arraySizeProduct;
+}
+
 unsigned int ShaderVariable::getArraySizeProduct() const
 {
     return gl::ArraySizeProduct(arraySizes);
