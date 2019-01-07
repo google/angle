@@ -24,7 +24,7 @@ constexpr VkClearColorValue kBlackClearColorValue                 = {{0}};
 }  // anonymous namespace
 
 RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state)
-    : RenderbufferImpl(state), mRenderTarget(&mImage, &mImageView, 0)
+    : RenderbufferImpl(state), mRenderTarget(&mImage, &mImageView, 0, nullptr)
 {}
 
 RenderbufferVk::~RenderbufferVk() {}

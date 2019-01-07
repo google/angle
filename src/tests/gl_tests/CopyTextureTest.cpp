@@ -74,6 +74,288 @@ class CopyTextureTest : public ANGLETest
         return true;
     }
 
+    void calculateCopyTextureResults(GLenum sourceFormat,
+                                     GLenum destFormat,
+                                     bool premultiplyAlpha,
+                                     bool unmultiplyAlpha,
+                                     const uint8_t *sourceColor,
+                                     GLColor *destColor)
+    {
+        GLColor color;
+
+        switch (sourceFormat)
+        {
+            case GL_RGB:
+                color = GLColor(sourceColor[0], sourceColor[1], sourceColor[2], 255);
+                break;
+            case GL_RGBA:
+                color = GLColor(sourceColor[0], sourceColor[1], sourceColor[2], sourceColor[3]);
+                break;
+            case GL_LUMINANCE:
+                color = GLColor(sourceColor[0], sourceColor[0], sourceColor[0], 255);
+                break;
+            case GL_ALPHA:
+                color = GLColor(0, 0, 0, sourceColor[0]);
+                break;
+            case GL_LUMINANCE_ALPHA:
+                color = GLColor(sourceColor[0], sourceColor[0], sourceColor[0], sourceColor[1]);
+                break;
+            case GL_BGRA_EXT:
+                color = GLColor(sourceColor[2], sourceColor[1], sourceColor[0], sourceColor[3]);
+                break;
+            default:
+                EXPECT_EQ(true, false);
+        }
+
+        if (premultiplyAlpha != unmultiplyAlpha)
+        {
+            float alpha = color.A / 255.0f;
+            if (premultiplyAlpha)
+            {
+                color.R *= alpha;
+                color.G *= alpha;
+                color.B *= alpha;
+            }
+            else if (unmultiplyAlpha && color.A != 0)
+            {
+                color.R /= alpha;
+                color.G /= alpha;
+                color.B /= alpha;
+            }
+        }
+
+        switch (destFormat)
+        {
+            case GL_RGB:
+                color.A = 255;
+                break;
+            case GL_RGBA:
+            case GL_BGRA_EXT:
+                break;
+            default:
+                EXPECT_EQ(true, false);
+        }
+
+        *destColor = color;
+    }
+
+    const uint8_t *getSourceColors(GLenum sourceFormat, size_t *colorCount, uint8_t *componentCount)
+    {
+        // Note: in all the following values, alpha is larger than RGB so unmultiply alpha doesn't
+        // overflow
+        constexpr static uint8_t kRgbaColors[7 * 4] = {
+            255u, 127u, 63u,  255u,  // 0
+            31u,  127u, 63u,  127u,  // 1
+            31u,  63u,  127u, 255u,  // 2
+            15u,  127u, 31u,  127u,  // 3
+            127u, 255u, 63u,  0u,    // 4
+            31u,  63u,  127u, 0u,    // 5
+            15u,  31u,  63u,  63u,   // 6
+        };
+
+        constexpr static uint8_t kRgbColors[7 * 3] = {
+            255u, 127u, 63u,   // 0
+            31u,  127u, 63u,   // 1
+            31u,  63u,  127u,  // 2
+            15u,  127u, 31u,   // 3
+            127u, 255u, 63u,   // 4
+            31u,  63u,  127u,  // 5
+            15u,  31u,  63u,   // 6
+        };
+
+        constexpr static uint8_t kLumColors[7 * 1] = {
+            255u,  // 0
+            163u,  // 1
+            78u,   // 2
+            114u,  // 3
+            51u,   // 4
+            0u,    // 5
+            217u,  // 6
+        };
+
+        constexpr static uint8_t kLumaColors[7 * 2] = {
+            255u, 255u,  // 0
+            67u,  163u,  // 1
+            78u,  231u,  // 2
+            8u,   114u,  // 3
+            51u,  199u,  // 4
+            0u,   173u,  // 5
+            34u,  217u,  // 6
+        };
+
+        constexpr static uint8_t kAlphaColors[7 * 1] = {
+            255u,  // 0
+            67u,   // 1
+            231u,  // 2
+            8u,    // 3
+            199u,  // 4
+            173u,  // 5
+            34u,   // 6
+        };
+
+        *colorCount = 7;
+
+        switch (sourceFormat)
+        {
+            case GL_RGB:
+                *componentCount = 3;
+                return kRgbColors;
+            case GL_RGBA:
+            case GL_BGRA_EXT:
+                *componentCount = 4;
+                return kRgbaColors;
+            case GL_LUMINANCE:
+                *componentCount = 1;
+                return kLumColors;
+            case GL_ALPHA:
+                *componentCount = 1;
+                return kAlphaColors;
+            case GL_LUMINANCE_ALPHA:
+                *componentCount = 2;
+                return kLumaColors;
+            default:
+                EXPECT_EQ(true, false);
+                return nullptr;
+        }
+    }
+
+    void initializeSourceTexture(GLenum sourceFormat,
+                                 const uint8_t *srcColors,
+                                 uint8_t componentCount)
+    {
+        // The texture is initialized as 2x2.  If the componentCount is 1 or 3, then the input data
+        // will have a row pitch of 2 or 6, which needs to be padded to 4 or 8 respectively.
+        uint8_t srcColorsPadded[4 * 4];
+        size_t srcRowPitch =
+            2 * componentCount + (componentCount == 1 || componentCount == 3 ? 2 : 0);
+        size_t inputRowPitch = 2 * componentCount;
+        for (size_t row = 0; row < 2; ++row)
+        {
+            memcpy(&srcColorsPadded[row * srcRowPitch], &srcColors[row * inputRowPitch],
+                   inputRowPitch);
+            memset(&srcColorsPadded[row * srcRowPitch + inputRowPitch], 0,
+                   srcRowPitch - inputRowPitch);
+        }
+
+        glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, sourceFormat, 2, 2, 0, sourceFormat, GL_UNSIGNED_BYTE,
+                     srcColorsPadded);
+    }
+
+    void testCopyTexture(GLenum sourceFormat,
+                         GLenum destFormat,
+                         bool flipY,
+                         bool premultiplyAlpha,
+                         bool unmultiplyAlpha)
+    {
+        if (!checkExtensions())
+        {
+            return;
+        }
+
+        size_t colorCount;
+        uint8_t componentCount;
+        const uint8_t *srcColors = getSourceColors(sourceFormat, &colorCount, &componentCount);
+
+        std::vector<GLColor> destColors(colorCount);
+        for (size_t i = 0; i < colorCount; ++i)
+        {
+            calculateCopyTextureResults(sourceFormat, destFormat, premultiplyAlpha, unmultiplyAlpha,
+                                        &srcColors[i * componentCount], &destColors[i]);
+        }
+
+        for (size_t i = 0; i < colorCount - 3; ++i)
+        {
+            initializeSourceTexture(sourceFormat, &srcColors[i * componentCount], componentCount);
+
+            glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, destFormat,
+                                  GL_UNSIGNED_BYTE, flipY, premultiplyAlpha, unmultiplyAlpha);
+
+            EXPECT_GL_NO_ERROR();
+
+            // Check that FB is complete.
+            EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+            if (flipY)
+            {
+                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+            }
+            else
+            {
+                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+            }
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+
+    void testCopySubTexture(GLenum sourceFormat,
+                            GLenum destFormat,
+                            bool flipY,
+                            bool premultiplyAlpha,
+                            bool unmultiplyAlpha)
+    {
+        if (!checkExtensions())
+        {
+            return;
+        }
+
+        size_t colorCount;
+        uint8_t componentCount;
+        const uint8_t *srcColors = getSourceColors(sourceFormat, &colorCount, &componentCount);
+
+        std::vector<GLColor> destColors(colorCount);
+        for (size_t i = 0; i < colorCount; ++i)
+        {
+            calculateCopyTextureResults(sourceFormat, destFormat, premultiplyAlpha, unmultiplyAlpha,
+                                        &srcColors[i * componentCount], &destColors[i]);
+        }
+
+        for (size_t i = 0; i < colorCount - 3; ++i)
+        {
+            initializeSourceTexture(sourceFormat, &srcColors[i * componentCount], componentCount);
+
+            glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+            glTexImage2D(GL_TEXTURE_2D, 0, destFormat, 2, 2, 0, destFormat, GL_UNSIGNED_BYTE,
+                         nullptr);
+
+            glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 0, 0, 0, 0, 2,
+                                     2, flipY, premultiplyAlpha, unmultiplyAlpha);
+
+            EXPECT_GL_NO_ERROR();
+
+            if (sourceFormat != GL_LUMINANCE && sourceFormat != GL_LUMINANCE_ALPHA &&
+                sourceFormat != GL_ALPHA)
+            {
+                // Check that FB is complete.
+                EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            }
+
+            if (flipY)
+            {
+                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+            }
+            else
+            {
+                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
+                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+            }
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+
     void testGradientDownsampleUniqueValues(GLenum destFormat,
                                             GLenum destType,
                                             const std::array<size_t, 4> &expectedUniqueValues)
@@ -144,51 +426,13 @@ class CopyTextureTestES3 : public CopyTextureTest
 // Test to ensure that the basic functionality of the extension works.
 TEST_P(CopyTextureTest, BasicCopyTexture)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    GLColor pixels = GLColor::red;
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, false, false, false);
-
-    EXPECT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, pixels);
+    testCopyTexture(GL_RGBA, GL_RGBA, false, false, false);
 }
 
 // Test to ensure that the basic functionality of the extension works.
 TEST_P(CopyTextureTest, BasicCopySubTexture)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    GLColor pixels = GLColor::red;
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels);
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-    glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 0, 0, 0, 0, 1, 1,
-                             false, false, false);
-
-    EXPECT_GL_NO_ERROR();
-
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, pixels);
-
-    EXPECT_GL_NO_ERROR();
+    testCopySubTexture(GL_RGBA, GL_RGBA, false, false, false);
 }
 
 // Test that CopyTexture cannot redefine an immutable texture and CopySubTexture can copy data to
@@ -480,204 +724,1984 @@ TEST_P(CopyTextureTest, CopySubTextureOffset)
     glBindTexture(GL_TEXTURE_2D, mTextures[1]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, transparentPixels);
 
+    // Check that FB is complete.
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
     glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 1, 1, 0, 0, 1, 1,
                              false, false, false);
     EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+
     glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 1, 0, 1, 0, 1, 1,
                              false, false, false);
     EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::green);
+
     glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 0, 1, 0, 1, 1, 1,
                              false, false, false);
     EXPECT_GL_NO_ERROR();
-
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::blue);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::blue);
     EXPECT_GL_NO_ERROR();
 }
 
-// Test that flipping the Y component works correctly
-TEST_P(CopyTextureTest, FlipY)
+// Test every combination of copy [sub]texture parameters:
+// source: ALPHA, RGB, RGBA, LUMINANCE, LUMINANCE_ALPHA, BGRA_EXT
+// destination: RGB, RGBA, BGRA_EXT
+// flipY: false, true
+// premultiplyAlpha: false, true
+// unmultiplyAlpha: false, true
+TEST_P(CopyTextureTest, CopyTextureAToRGB)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    GLColor rgbaPixels[4] = {GLColor(255u, 255u, 255u, 255u), GLColor(127u, 127u, 127u, 127u),
-                             GLColor(63u, 63u, 63u, 127u), GLColor(255u, 255u, 255u, 0u)};
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, GL_TRUE, GL_FALSE, GL_FALSE);
-    EXPECT_GL_NO_ERROR();
-
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, rgbaPixels[2]);
-    EXPECT_PIXEL_COLOR_EQ(1, 0, rgbaPixels[3]);
-    EXPECT_PIXEL_COLOR_EQ(0, 1, rgbaPixels[0]);
-    EXPECT_PIXEL_COLOR_EQ(1, 1, rgbaPixels[1]);
-    EXPECT_GL_NO_ERROR();
+    testCopyTexture(GL_ALPHA, GL_RGB, false, false, false);
 }
 
-// Test that premultipying the alpha on copy works correctly
-TEST_P(CopyTextureTest, PremultiplyAlpha)
+TEST_P(CopyTextureTest, CopySubTextureAToRGB)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    GLColor rgbaPixels[4] = {GLColor(255u, 255u, 255u, 255u), GLColor(255u, 255u, 255u, 127u),
-                             GLColor(127u, 127u, 127u, 127u), GLColor(255u, 255u, 255u, 0u)};
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, GL_FALSE, GL_TRUE, GL_FALSE);
-    EXPECT_GL_NO_ERROR();
-
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 255, 255, 255), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(1, 0, GLColor(127, 127, 127, 127), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(0, 1, GLColor(63, 63, 63, 127), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(1, 1, GLColor(0, 0, 0, 0), 1.0);
-    EXPECT_GL_NO_ERROR();
+    testCopySubTexture(GL_ALPHA, GL_RGB, false, false, false);
 }
 
-// Test that unmultipying the alpha on copy works correctly
-TEST_P(CopyTextureTest, UnmultiplyAlpha)
+TEST_P(CopyTextureTest, CopyTextureAToRGBUnmultiplyAlpha)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    GLColor rgbaPixels[4] = {GLColor(255u, 255u, 255u, 255u), GLColor(127u, 127u, 127u, 127u),
-                             GLColor(63u, 63u, 63u, 127u), GLColor(255u, 255u, 255u, 0u)};
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, GL_FALSE, GL_FALSE, GL_TRUE);
-    EXPECT_GL_NO_ERROR();
-
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 255, 255, 255), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(1, 0, GLColor(255, 255, 255, 127), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(0, 1, GLColor(127, 127, 127, 127), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(1, 1, GLColor(255, 255, 255, 0), 1.0);
-    EXPECT_GL_NO_ERROR();
+    testCopyTexture(GL_ALPHA, GL_RGB, false, false, true);
 }
 
-// Test that unmultipying and premultiplying the alpha is the same as doing neither
-TEST_P(CopyTextureTest, UnmultiplyAndPremultiplyAlpha)
+TEST_P(CopyTextureTest, CopySubTextureAToRGBUnmultiplyAlpha)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    GLColor rgbaPixels[4] = {GLColor(255u, 255u, 255u, 255u), GLColor(127u, 127u, 127u, 127u),
-                             GLColor(63u, 63u, 63u, 127u), GLColor(255u, 255u, 255u, 0u)};
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, GL_FALSE, GL_TRUE, GL_TRUE);
-    EXPECT_GL_NO_ERROR();
-
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 255, 255, 255), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(1, 0, GLColor(127, 127, 127, 127), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(0, 1, GLColor(63, 63, 63, 127), 1.0);
-    EXPECT_PIXEL_COLOR_NEAR(1, 1, GLColor(255, 255, 255, 0), 1.0);
-    EXPECT_GL_NO_ERROR();
+    testCopySubTexture(GL_ALPHA, GL_RGB, false, false, true);
 }
 
-// Test to ensure that CopyTexture works with LUMINANCE_ALPHA texture
-TEST_P(CopyTextureTest, LuminanceAlpha)
+TEST_P(CopyTextureTest, CopyTextureAToRGBPremultiplyAlpha)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    uint8_t originalPixels[] = {163u, 67u};
-    GLColor expectedPixels(163u, 163u, 163u, 67u);
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 1, 1, 0, GL_LUMINANCE_ALPHA,
-                 GL_UNSIGNED_BYTE, &originalPixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, false, false, false);
-
-    EXPECT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixels);
+    testCopyTexture(GL_ALPHA, GL_RGB, false, true, false);
 }
 
-// Test to ensure that CopyTexture works with LUMINANCE texture
-TEST_P(CopyTextureTest, Luminance)
+TEST_P(CopyTextureTest, CopySubTextureAToRGBPremultiplyAlpha)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
-
-    uint8_t originalPixels[] = {57u};
-    GLColor expectedPixels(57u, 57u, 57u, 255u);
-
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,
-                 &originalPixels);
-
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, false, false, false);
-
-    EXPECT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixels);
+    testCopySubTexture(GL_ALPHA, GL_RGB, false, true, false);
 }
 
-// Test to ensure that CopyTexture works with ALPHA texture
-TEST_P(CopyTextureTest, Alpha)
+TEST_P(CopyTextureTest, CopyTextureAToRGBPremultiplyAlphaUnmultiplyAlpha)
 {
-    if (!checkExtensions())
+    testCopyTexture(GL_ALPHA, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBFlipY)
+{
+    testCopyTexture(GL_ALPHA, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBFlipY)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBA)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBA)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAUnmultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAPremultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAPremultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAFlipY)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAFlipY)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_ALPHA, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_ALPHA, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
     {
         return;
     }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, false, false, false);
+}
 
-    uint8_t originalPixels[] = {77u};
-    GLColor expectedPixels(0u, 0u, 0u, 77u);
+TEST_P(CopyTextureTest, CopySubTextureAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, false, false, false);
+}
 
-    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 1, 1, 0, GL_ALPHA, GL_UNSIGNED_BYTE, &originalPixels);
+TEST_P(CopyTextureTest, CopyTextureAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, false, false, true);
+}
 
-    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
-                          GL_UNSIGNED_BYTE, false, false, false);
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, false, false, true);
+}
 
-    EXPECT_GL_NO_ERROR();
+TEST_P(CopyTextureTest, CopyTextureAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, false, true, false);
+}
 
-    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixels);
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_ALPHA, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_ALPHA, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGB)
+{
+    testCopyTexture(GL_RGB, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGB)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBFlipY)
+{
+    testCopyTexture(GL_RGB, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBFlipY)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBA)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBA)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAFlipY)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAFlipY)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGB, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGB, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGB, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGB, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGB)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGB)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBFlipY)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBFlipY)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBA)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBA)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAFlipY)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAFlipY)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_RGBA, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_RGBA, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureRGBAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_RGBA, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureRGBAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_RGBA, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGB)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGB)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBFlipY)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBFlipY)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBA)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBA)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAFlipY)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAFlipY)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGB)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGB)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBFlipY)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBFlipY)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBA)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBA)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAFlipY)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAFlipY)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAFlipYUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAFlipYPremultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAFlipYPremultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureLAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureLAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_LUMINANCE_ALPHA, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGB)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGB)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGB, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToRGBAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_RGBA, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRA)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, false, true, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAFlipY)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, false, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAFlipYUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, false, true);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAFlipYPremultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, true, false);
+}
+
+TEST_P(CopyTextureTest, CopyTextureBGRAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopyTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, true, true);
+}
+
+TEST_P(CopyTextureTest, CopySubTextureBGRAToBGRAFlipYPremultiplyAlphaUnmultiplyAlpha)
+{
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+    testCopySubTexture(GL_BGRA_EXT, GL_BGRA_EXT, true, true, true);
 }
 
 // Test that copying to cube maps works
@@ -688,12 +2712,16 @@ TEST_P(CopyTextureTest, CubeMapTarget)
         return;
     }
 
-    GLColor pixels = GLColor::red;
+    // http://anglebug.com/1932
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsDesktopOpenGL());
+
+    GLColor pixels[7] = {
+        GLColor(10u, 13u, 16u, 19u), GLColor(20u, 23u, 26u, 29u), GLColor(30u, 33u, 36u, 39u),
+        GLColor(40u, 43u, 46u, 49u), GLColor(50u, 53u, 56u, 59u), GLColor(60u, 63u, 66u, 69u),
+        GLColor(70u, 73u, 76u, 79u),
+    };
 
     GLTexture textures[2];
-
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, textures[1]);
     for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
@@ -702,22 +2730,167 @@ TEST_P(CopyTextureTest, CubeMapTarget)
         glTexImage2D(face, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     }
 
-    glCopySubTextureCHROMIUM(textures[0], 0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, textures[1], 0, 0, 0,
-                             0, 0, 1, 1, false, false, false);
+    for (size_t i = 0; i < 2; ++i)
+    {
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            glBindTexture(GL_TEXTURE_2D, textures[0]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         &pixels[face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i]);
 
-    EXPECT_GL_NO_ERROR();
+            glCopySubTextureCHROMIUM(textures[0], 0, face, textures[1], 0, 0, 0, 0, 0, 1, 1, false,
+                                     false, false);
+        }
 
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-                           textures[1], 0);
+        EXPECT_GL_NO_ERROR();
 
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-    EXPECT_PIXEL_COLOR_EQ(0, 0, pixels);
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, face, textures[1], 0);
 
-    EXPECT_GL_NO_ERROR();
+            // Check that FB is complete.
+            EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+            EXPECT_PIXEL_COLOR_EQ(0, 0, pixels[face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i]);
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
+// Test BGRA to RGBA cube map copy
+TEST_P(CopyTextureTest, CubeMapTargetBGRA)
+{
+    if (!checkExtensions())
+    {
+        return;
+    }
+
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    {
+        return;
+    }
+
+    GLColor pixels[7] = {
+        GLColor(10u, 13u, 16u, 19u), GLColor(20u, 23u, 26u, 29u), GLColor(30u, 33u, 36u, 39u),
+        GLColor(40u, 43u, 46u, 49u), GLColor(50u, 53u, 56u, 59u), GLColor(60u, 63u, 66u, 69u),
+        GLColor(70u, 73u, 76u, 79u),
+    };
+
+    GLTexture textures[2];
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textures[1]);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         face++)
+    {
+        glTexImage2D(face, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            glBindTexture(GL_TEXTURE_2D, textures[0]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA_EXT, 1, 1, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE,
+                         &pixels[face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i]);
+
+            glCopySubTextureCHROMIUM(textures[0], 0, face, textures[1], 0, 0, 0, 0, 0, 1, 1, false,
+                                     false, false);
+        }
+
+        EXPECT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, face, textures[1], 0);
+
+            // Check that FB is complete.
+            EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+            GLColor converted = pixels[face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i];
+            std::swap(converted.R, converted.B);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, converted);
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
+// Test cube map copies with RGB format
+TEST_P(CopyTextureTest, CubeMapTargetRGB)
+{
+    if (!checkExtensions())
+    {
+        return;
+    }
+
+    // http://anglebug.com/1932
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsDesktopOpenGL());
+
+    constexpr uint8_t pixels[16 * 7] = {
+        0u,   3u,   6u,   10u,  13u,  16u,  0, 0, 20u,  23u,  26u,  30u,  33u,  36u,  0, 0,  // 2x2
+        40u,  43u,  46u,  50u,  53u,  56u,  0, 0, 60u,  63u,  66u,  70u,  73u,  76u,  0, 0,  // 2x2
+        80u,  83u,  86u,  90u,  93u,  96u,  0, 0, 100u, 103u, 106u, 110u, 113u, 116u, 0, 0,  // 2x2
+        120u, 123u, 126u, 130u, 133u, 136u, 0, 0, 140u, 143u, 146u, 160u, 163u, 166u, 0, 0,  // 2x2
+        170u, 173u, 176u, 180u, 183u, 186u, 0, 0, 190u, 193u, 196u, 200u, 203u, 206u, 0, 0,  // 2x2
+        210u, 213u, 216u, 220u, 223u, 226u, 0, 0, 230u, 233u, 236u, 240u, 243u, 246u, 0, 0,  // 2x2
+        10u,  50u,  100u, 30u,  80u,  130u, 0, 0, 60u,  110u, 160u, 90u,  140u, 200u, 0, 0,  // 2x2
+    };
+
+    GLTexture textures[2];
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textures[1]);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         face++)
+    {
+        glTexImage2D(face, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            glBindTexture(GL_TEXTURE_2D, textures[0]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                         &pixels[(face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i) * 16]);
+
+            glCopySubTextureCHROMIUM(textures[0], 0, face, textures[1], 0, 0, 0, 0, 0, 2, 2, false,
+                                     false, false);
+        }
+
+        EXPECT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, face, textures[1], 0);
+
+            // Check that FB is complete.
+            EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+            const uint8_t *faceData = &pixels[(face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i) * 16];
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(faceData[0], faceData[1], faceData[2], 255));
+            EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor(faceData[3], faceData[4], faceData[5], 255));
+            EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor(faceData[8], faceData[9], faceData[10], 255));
+            EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor(faceData[11], faceData[12], faceData[13], 255));
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
 }
 
 // Test that copying to non-zero mipmaps works
