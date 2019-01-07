@@ -22,6 +22,30 @@
       "revId": "9db8df4c3e6e8ae7ec5af3515dbeb3969a3461aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19bf7365_7c10fbae",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-07T18:33:51Z",
+      "side": 0,
+      "message": "It\u0027s inherited from angle_util_loader (public_deps).",
+      "parentUuid": "15b624ac_a52358cb",
+      "range": {
+        "startLine": 1015,
+        "startChar": 0,
+        "endLine": 1015,
+        "endChar": 47
+      },
+      "revId": "9db8df4c3e6e8ae7ec5af3515dbeb3969a3461aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
