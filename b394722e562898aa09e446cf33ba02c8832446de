@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6df774d_b8f818c0",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-01-08T09:07:15Z",
+      "side": 1,
+      "message": "What is the stride given as? What\u0027s the TopLevelArrayStride of struct {int a; float b;}[3][4][5]?",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da600136_9d24e54e",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-01-08T09:07:15Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e29504f2_bef789fc",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-01-08T09:07:15Z",
+      "side": 1,
+      "message": "This should probably be initialized to the stride of the non-array type, and take into account structure alignment.",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9425fc0_a01fb451",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-01-08T09:07:15Z",
+      "side": 1,
+      "message": "If modifications to the test introduce regressions, we should split the test in two to not lose coverage.",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

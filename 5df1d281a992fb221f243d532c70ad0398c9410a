@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f71820c6_62870591",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-01-08T09:07:15Z",
+      "side": 0,
+      "message": "Can you explain why it isn\u0027t possible to compute mTopLevelArrayStride here? It seems we could just get an encoder and compute the size of the type. Or even better do it in [1]",
+      "revId": "5df1d281a992fb221f243d532c70ad0398c9410a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
