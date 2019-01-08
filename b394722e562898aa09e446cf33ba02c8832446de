@@ -67,6 +67,24 @@
       "revId": "b394722e562898aa09e446cf33ba02c8832446de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffb7fa00_1a20d200",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-08T12:44:22Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "b9425fc0_a01fb451",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
