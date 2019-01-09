@@ -1285,6 +1285,35 @@ void GarbageObject::destroy(VkDevice device)
 }
 }  // namespace vk
 
+// VK_EXT_debug_utils
+PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT   = nullptr;
+PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT = nullptr;
+
+// VK_EXT_debug_report
+PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT   = nullptr;
+PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
+
+#define GET_FUNC(vkName)                                                                   \
+    do                                                                                     \
+    {                                                                                      \
+        vkName = reinterpret_cast<PFN_##vkName>(vkGetInstanceProcAddr(instance, #vkName)); \
+        ASSERT(vkName);                                                                    \
+    } while (0)
+
+void InitDebugUtilsEXTFunctions(VkInstance instance)
+{
+    GET_FUNC(vkCreateDebugUtilsMessengerEXT);
+    GET_FUNC(vkDestroyDebugUtilsMessengerEXT);
+}
+
+void InitDebugReportEXTFunctions(VkInstance instance)
+{
+    GET_FUNC(vkCreateDebugReportCallbackEXT);
+    GET_FUNC(vkDestroyDebugReportCallbackEXT);
+}
+
+#undef GET_FUNC
+
 namespace gl_vk
 {
 

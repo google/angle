@@ -243,6 +243,7 @@ class RendererVk : angle::NonCopyable
     VkInstance mInstance;
     bool mEnableValidationLayers;
     bool mEnableMockICD;
+    VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
     VkDebugReportCallbackEXT mDebugReportCallback;
     VkPhysicalDevice mPhysicalDevice;
     VkPhysicalDeviceProperties mPhysicalDeviceProperties;

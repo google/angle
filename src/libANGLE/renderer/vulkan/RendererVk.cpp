@@ -87,25 +87,209 @@ VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &exten
     return VK_SUCCESS;
 }
 
-// Array of Validation error/warning messages that will be ignored, should include bugID
-constexpr std::array<const char *, 1> kSkippedMessages = {
-    // http://anglebug.com/2796
-    " [ UNASSIGNED-CoreValidation-Shader-PointSizeMissing ] Object: VK_NULL_HANDLE (Type = 19) "
-    "| Pipeline topology is set to POINT_LIST, but PointSize is not written to in the shader "
-    "corresponding to VK_SHADER_STAGE_VERTEX_BIT."};
-
-// Suppress validation errors that are known
-//  return "true" if given code/prefix/message is known, else return "false"
-bool IsIgnoredDebugMessage(const char *message)
+bool ExtensionFound(const char *extensionName,
+                    const std::vector<VkExtensionProperties> &extensionProps)
 {
-    for (const auto &msg : kSkippedMessages)
+    for (const auto &extensionProp : extensionProps)
     {
-        if (strcmp(msg, message) == 0)
+        if (strcmp(extensionProp.extensionName, extensionName) == 0)
         {
             return true;
         }
     }
     return false;
+}
+
+// Array of Validation error/warning messages that will be ignored, should include bugID
+constexpr std::array<const char *, 1> kSkippedMessages = {
+    // http://anglebug.com/2796
+    "UNASSIGNED-CoreValidation-Shader-PointSizeMissing"};
+
+// Suppress validation errors that are known
+//  return "true" if given code/prefix/message is known, else return "false"
+bool IsIgnoredDebugMessage(const char *message)
+{
+    for (const char *msg : kSkippedMessages)
+    {
+        if (strstr(message, msg) != nullptr)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+const char *GetVkObjectTypeName(VkObjectType type)
+{
+    switch (type)
+    {
+        case VK_OBJECT_TYPE_UNKNOWN:
+            return "Unknown";
+        case VK_OBJECT_TYPE_INSTANCE:
+            return "Instance";
+        case VK_OBJECT_TYPE_PHYSICAL_DEVICE:
+            return "Physical Device";
+        case VK_OBJECT_TYPE_DEVICE:
+            return "Device";
+        case VK_OBJECT_TYPE_QUEUE:
+            return "Queue";
+        case VK_OBJECT_TYPE_SEMAPHORE:
+            return "Semaphore";
+        case VK_OBJECT_TYPE_COMMAND_BUFFER:
+            return "Command Buffer";
+        case VK_OBJECT_TYPE_FENCE:
+            return "Fence";
+        case VK_OBJECT_TYPE_DEVICE_MEMORY:
+            return "Device Memory";
+        case VK_OBJECT_TYPE_BUFFER:
+            return "Buffer";
+        case VK_OBJECT_TYPE_IMAGE:
+            return "Image";
+        case VK_OBJECT_TYPE_EVENT:
+            return "Event";
+        case VK_OBJECT_TYPE_QUERY_POOL:
+            return "Query Pool";
+        case VK_OBJECT_TYPE_BUFFER_VIEW:
+            return "Buffer View";
+        case VK_OBJECT_TYPE_IMAGE_VIEW:
+            return "Image View";
+        case VK_OBJECT_TYPE_SHADER_MODULE:
+            return "Shader Module";
+        case VK_OBJECT_TYPE_PIPELINE_CACHE:
+            return "Pipeline Cache";
+        case VK_OBJECT_TYPE_PIPELINE_LAYOUT:
+            return "Pipeline Layout";
+        case VK_OBJECT_TYPE_RENDER_PASS:
+            return "Render Pass";
+        case VK_OBJECT_TYPE_PIPELINE:
+            return "Pipeline";
+        case VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT:
+            return "Descriptor Set Layout";
+        case VK_OBJECT_TYPE_SAMPLER:
+            return "Sampler";
+        case VK_OBJECT_TYPE_DESCRIPTOR_POOL:
+            return "Descriptor Pool";
+        case VK_OBJECT_TYPE_DESCRIPTOR_SET:
+            return "Descriptor Set";
+        case VK_OBJECT_TYPE_FRAMEBUFFER:
+            return "Framebuffer";
+        case VK_OBJECT_TYPE_COMMAND_POOL:
+            return "Command Pool";
+        case VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION:
+            return "Sampler YCbCr Conversion";
+        case VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE:
+            return "Descriptor Update Template";
+        case VK_OBJECT_TYPE_SURFACE_KHR:
+            return "Surface";
+        case VK_OBJECT_TYPE_SWAPCHAIN_KHR:
+            return "Swapchain";
+        case VK_OBJECT_TYPE_DISPLAY_KHR:
+            return "Display";
+        case VK_OBJECT_TYPE_DISPLAY_MODE_KHR:
+            return "Display Mode";
+        case VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT:
+            return "Debug Report Callback";
+        case VK_OBJECT_TYPE_OBJECT_TABLE_NVX:
+            return "Object Table";
+        case VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX:
+            return "Indirect Commands Layout";
+        case VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT:
+            return "Debug Utils Messenger";
+        case VK_OBJECT_TYPE_VALIDATION_CACHE_EXT:
+            return "Validation Cache";
+        case VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NVX:
+            return "Acceleration Structure";
+        default:
+            return "<Unrecognized>";
+    }
+}
+
+VKAPI_ATTR VkBool32 VKAPI_CALL
+DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                    VkDebugUtilsMessageTypeFlagsEXT messageTypes,
+                    const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
+                    void *userData)
+{
+    constexpr VkDebugUtilsMessageSeverityFlagsEXT kSeveritiesToLog =
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+
+    // Check if we even care about this message.
+    if ((messageSeverity & kSeveritiesToLog) == 0)
+    {
+        return VK_FALSE;
+    }
+
+    // See if it's an issue we are aware of and don't want to be spammed about.
+    if (IsIgnoredDebugMessage(callbackData->pMessageIdName))
+    {
+        return VK_FALSE;
+    }
+
+    std::ostringstream log;
+    log << "[ " << callbackData->pMessageIdName << " ] " << callbackData->pMessage << std::endl;
+
+    // Aesthetic value based on length of the function name, line number, etc.
+    constexpr size_t kStartIndent = 28;
+
+    // Output the debug marker hierarchy under which this error has occured.
+    size_t indent = kStartIndent;
+    if (callbackData->queueLabelCount > 0)
+    {
+        log << std::string(indent++, ' ') << "<Queue Label Hierarchy:>" << std::endl;
+        for (uint32_t i = 0; i < callbackData->queueLabelCount; ++i)
+        {
+            log << std::string(indent++, ' ') << callbackData->pQueueLabels[i].pLabelName
+                << std::endl;
+        }
+    }
+    if (callbackData->cmdBufLabelCount > 0)
+    {
+        log << std::string(indent++, ' ') << "<Command Buffer Label Hierarchy:>" << std::endl;
+        for (uint32_t i = 0; i < callbackData->cmdBufLabelCount; ++i)
+        {
+            log << std::string(indent++, ' ') << callbackData->pCmdBufLabels[i].pLabelName
+                << std::endl;
+        }
+    }
+    // Output the objects involved in this error message.
+    if (callbackData->objectCount > 0)
+    {
+        for (uint32_t i = 0; i < callbackData->objectCount; ++i)
+        {
+            const char *objectName = callbackData->pObjects[i].pObjectName;
+            const char *objectType = GetVkObjectTypeName(callbackData->pObjects[i].objectType);
+            uint64_t objectHandle  = callbackData->pObjects[i].objectHandle;
+            log << std::string(indent, ' ') << "Object: ";
+            if (objectHandle == 0)
+            {
+                log << "VK_NULL_HANDLE";
+            }
+            else
+            {
+                log << "0x" << std::hex << objectHandle << std::dec;
+            }
+            log << " (type = " << objectType << "(" << callbackData->pObjects[i].objectType << "))";
+            if (objectName)
+            {
+                log << " [" << objectName << "]";
+            }
+            log << std::endl;
+        }
+    }
+
+    bool isError = (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) != 0;
+
+    if (isError)
+    {
+        ERR() << log.str();
+    }
+    else
+    {
+        WARN() << log.str();
+    }
+
+    return VK_FALSE;
 }
 
 VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
@@ -271,18 +455,6 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
 // Initially dumping the command graphs is disabled.
 constexpr bool kEnableCommandGraphDiagnostics = false;
 
-bool ExtensionFound(const char *extensionName,
-                    const std::vector<VkExtensionProperties> &extensionProps)
-{
-    for (const auto &extensionProp : extensionProps)
-    {
-        if (strcmp(extensionProp.extensionName, extensionName) == 0)
-        {
-            return true;
-        }
-    }
-    return false;
-}
 }  // anonymous namespace
 
 // CommandBatch implementation.
@@ -316,6 +488,7 @@ RendererVk::RendererVk()
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnableMockICD(false),
+      mDebugUtilsMessenger(VK_NULL_HANDLE),
       mDebugReportCallback(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
       mQueue(VK_NULL_HANDLE),
@@ -368,13 +541,17 @@ void RendererVk::onDestroy(vk::Context *context)
         mDevice = VK_NULL_HANDLE;
     }
 
-    if (mDebugReportCallback)
+    if (mDebugUtilsMessenger)
     {
-        ASSERT(mInstance);
-        auto destroyDebugReportCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(
-            vkGetInstanceProcAddr(mInstance, "vkDestroyDebugReportCallbackEXT"));
-        ASSERT(destroyDebugReportCallback);
-        destroyDebugReportCallback(mInstance, mDebugReportCallback, nullptr);
+        ASSERT(mInstance && vkDestroyDebugUtilsMessengerEXT);
+        vkDestroyDebugUtilsMessengerEXT(mInstance, mDebugUtilsMessenger, nullptr);
+
+        ASSERT(mDebugReportCallback == VK_NULL_HANDLE);
+    }
+    else if (mDebugReportCallback)
+    {
+        ASSERT(mInstance && vkDestroyDebugReportCallbackEXT);
+        vkDestroyDebugReportCallbackEXT(mInstance, mDebugReportCallback, nullptr);
     }
 
     if (mInstance)
@@ -452,8 +629,18 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
     enabledInstanceExtensions.push_back(wsiName);
 
-    // TODO(jmadill): Should be able to continue initialization if debug report ext missing.
-    if (mEnableValidationLayers)
+    bool enableDebugUtils =
+        mEnableValidationLayers &&
+        ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionProps);
+    bool enableDebugReport =
+        mEnableValidationLayers && !enableDebugUtils &&
+        ExtensionFound(VK_EXT_DEBUG_REPORT_EXTENSION_NAME, instanceExtensionProps);
+
+    if (enableDebugUtils)
+    {
+        enabledInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
+    else if (enableDebugReport)
     {
         enabledInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
     }
@@ -504,22 +691,40 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 
-    if (mEnableValidationLayers)
+    if (enableDebugUtils)
     {
+        // Try to use the newer EXT_debug_utils if it exists.
+        InitDebugUtilsEXTFunctions(mInstance);
+
+        // Create the messenger callback.
+        VkDebugUtilsMessengerCreateInfoEXT messengerInfo = {};
+
+        messengerInfo.sType           = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+        messengerInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
+                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+        messengerInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+                                    VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                                    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+        messengerInfo.pfnUserCallback = &DebugUtilsMessenger;
+        messengerInfo.pUserData       = this;
+
+        ANGLE_VK_TRY(displayVk, vkCreateDebugUtilsMessengerEXT(mInstance, &messengerInfo, nullptr,
+                                                               &mDebugUtilsMessenger));
+    }
+    else if (enableDebugReport)
+    {
+        // Fallback to EXT_debug_report.
+        InitDebugReportEXTFunctions(mInstance);
+
         VkDebugReportCallbackCreateInfoEXT debugReportInfo = {};
 
         debugReportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
-        debugReportInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT |
-                                VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
-                                VK_DEBUG_REPORT_INFORMATION_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT;
+        debugReportInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT;
         debugReportInfo.pfnCallback = &DebugReportCallback;
         debugReportInfo.pUserData   = this;
 
-        auto createDebugReportCallback = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(
-            vkGetInstanceProcAddr(mInstance, "vkCreateDebugReportCallbackEXT"));
-        ASSERT(createDebugReportCallback);
-        ANGLE_VK_TRY(displayVk, createDebugReportCallback(mInstance, &debugReportInfo, nullptr,
-                                                          &mDebugReportCallback));
+        ANGLE_VK_TRY(displayVk, vkCreateDebugReportCallbackEXT(mInstance, &debugReportInfo, nullptr,
+                                                               &mDebugReportCallback));
     }
 
     uint32_t physicalDeviceCount = 0;

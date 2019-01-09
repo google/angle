@@ -858,6 +858,19 @@ class BindingPointer final : angle::NonCopyable
 };
 }  // namespace vk
 
+// List of function pointers for used extensions.
+// VK_EXT_debug_utils
+extern PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
+extern PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
+
+// VK_EXT_debug_report
+extern PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
+extern PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
+
+// Lazily load entry points for each extension as necessary.
+void InitDebugUtilsEXTFunctions(VkInstance instance);
+void InitDebugReportEXTFunctions(VkInstance instance);
+
 namespace gl_vk
 {
 VkRect2D GetRect(const gl::Rectangle &source);
