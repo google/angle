@@ -33,6 +33,7 @@ class DynamicBuffer : angle::NonCopyable
 {
   public:
     DynamicBuffer(VkBufferUsageFlags usage, size_t minSize, bool hostVisible);
+    DynamicBuffer(DynamicBuffer &&other);
     ~DynamicBuffer();
 
     // Init is called after the buffer creation so that the alignment can be specified later.
@@ -477,6 +478,8 @@ class ImageHelper final : public CommandGraphResource
     ImageHelper(ImageHelper &&other);
     ~ImageHelper() override;
 
+    void initStagingBuffer(RendererVk *renderer);
+
     angle::Result init(Context *context,
                        gl::TextureType textureType,
                        const gl::Extents &extents,
@@ -514,7 +517,8 @@ class ImageHelper final : public CommandGraphResource
                                 VkImageUsageFlags usage,
                                 uint32_t layerCount);
 
-    void release(RendererVk *renderer);
+    void releaseImage(RendererVk *renderer);
+    void releaseStagingBuffer(RendererVk *renderer);
 
     bool valid() const { return mImage.valid(); }
 
@@ -573,7 +577,94 @@ class ImageHelper final : public CommandGraphResource
 
     angle::Result generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel);
 
+    // Data staging
+    void removeStagedUpdates(RendererVk *renderer, const gl::ImageIndex &index);
+
+    angle::Result stageSubresourceUpdate(ContextVk *contextVk,
+                                         const gl::ImageIndex &index,
+                                         const gl::Extents &extents,
+                                         const gl::Offset &offset,
+                                         const gl::InternalFormat &formatInfo,
+                                         const gl::PixelUnpackState &unpack,
+                                         GLenum type,
+                                         const uint8_t *pixels);
+
+    angle::Result stageSubresourceUpdateAndGetData(ContextVk *contextVk,
+                                                   size_t allocationSize,
+                                                   const gl::ImageIndex &imageIndex,
+                                                   const gl::Extents &extents,
+                                                   const gl::Offset &offset,
+                                                   uint8_t **destData);
+
+    angle::Result stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
+                                                        const gl::ImageIndex &index,
+                                                        const gl::Rectangle &sourceArea,
+                                                        const gl::Offset &dstOffset,
+                                                        const gl::Extents &dstExtent,
+                                                        const gl::InternalFormat &formatInfo,
+                                                        FramebufferVk *framebufferVk);
+
+    void stageSubresourceUpdateFromImage(vk::ImageHelper *image,
+                                         const gl::ImageIndex &index,
+                                         const gl::Offset &destOffset,
+                                         const gl::Extents &extents);
+
+    // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
+    // dst.
+    angle::Result allocateStagingMemory(ContextVk *contextVk,
+                                        size_t sizeInBytes,
+                                        uint8_t **ptrOut,
+                                        VkBuffer *handleOut,
+                                        VkDeviceSize *offsetOut,
+                                        bool *newBufferAllocatedOut);
+
+    angle::Result flushStagedUpdates(ContextVk *contextVk,
+                                     uint32_t levelCount,
+                                     vk::CommandBuffer *commandBuffer);
+
+    bool hasStagedUpdates() const;
+
   private:
+    struct SubresourceUpdate
+    {
+        SubresourceUpdate();
+        SubresourceUpdate(VkBuffer bufferHandle, const VkBufferImageCopy &copyRegion);
+        SubresourceUpdate(vk::ImageHelper *image, const VkImageCopy &copyRegion);
+        SubresourceUpdate(const SubresourceUpdate &other);
+
+        void release(RendererVk *renderer);
+
+        const VkImageSubresourceLayers &dstSubresource() const
+        {
+            return updateSource == UpdateSource::Buffer ? buffer.copyRegion.imageSubresource
+                                                        : image.copyRegion.dstSubresource;
+        }
+        bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndex) const;
+
+        enum class UpdateSource
+        {
+            Buffer,
+            Image,
+        };
+        struct BufferUpdate
+        {
+            VkBuffer bufferHandle;
+            VkBufferImageCopy copyRegion;
+        };
+        struct ImageUpdate
+        {
+            vk::ImageHelper *image;
+            VkImageCopy copyRegion;
+        };
+
+        UpdateSource updateSource;
+        union
+        {
+            BufferUpdate buffer;
+            ImageUpdate image;
+        };
+    };
+
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;
@@ -589,6 +680,10 @@ class ImageHelper final : public CommandGraphResource
     // Cached properties.
     uint32_t mLayerCount;
     uint32_t mLevelCount;
+
+    // Staging buffer
+    vk::DynamicBuffer mStagingBuffer;
+    std::vector<SubresourceUpdate> mSubresourceUpdates;
 };
 
 class FramebufferHelper : public CommandGraphResource

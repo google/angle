@@ -111,7 +111,8 @@ void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
     const DisplayVk *displayVk = vk::GetImpl(display);
     RendererVk *renderer       = displayVk->getRenderer();
 
-    image.release(renderer);
+    image.releaseImage(renderer);
+    image.releaseStagingBuffer(renderer);
     renderer->releaseObject(renderer->getCurrentQueueSerial(), &imageView);
 }
 
@@ -294,7 +295,8 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // We might not need to flush the pipe here.
     (void)renderer->finish(displayVk);
 
-    mDepthStencilImage.release(renderer);
+    mDepthStencilImage.releaseImage(renderer);
+    mDepthStencilImage.releaseStagingBuffer(renderer);
     mDepthStencilImageView.destroy(device);
 
     for (SwapchainImage &swapchainImage : mSwapchainImages)
