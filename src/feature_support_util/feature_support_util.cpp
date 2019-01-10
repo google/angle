@@ -845,13 +845,17 @@ ANGLE_EXPORT bool ANGLEGetSystemInfo(SystemInfoHandle *systemInfoHandle)
         return false;
     }
 
+// TODO (http://anglebug.com/3036): Restore the real code
     angle::SystemInfo *systemInfo = new angle::SystemInfo;
-    if (GetSystemInfo(systemInfo))
-    {
-        *systemInfoHandle = systemInfo;
-        return true;
-    }
-    return false;
+    systemInfo->gpus.resize(1);
+    GPUDeviceInfo &gpu = systemInfo->gpus[0];
+    gpu.vendorId = 0xFEFEFEFE;
+    gpu.deviceId = 0xFEEEFEEE;
+    gpu.driverVendor = "Foo";
+    gpu.driverVersion = "1.2.3.4";
+
+    *systemInfoHandle = systemInfo;
+    return true;
 }
 
 // This function is part of the version-2 API:
