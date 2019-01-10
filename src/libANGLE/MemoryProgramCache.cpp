@@ -123,6 +123,12 @@ angle::Result MemoryProgramCache::getProgram(const Context *context,
                                              Program *program,
                                              egl::BlobCache::Key *hashOut)
 {
+    // If caching is effectively disabled, don't bother calculating the hash.
+    if (!mBlobCache.isCachingEnabled())
+    {
+        return angle::Result::Incomplete;
+    }
+
     ComputeHash(context, program, hashOut);
     egl::BlobCache::Value binaryProgram;
     if (get(context, *hashOut, &binaryProgram))
@@ -176,6 +182,12 @@ void MemoryProgramCache::putProgram(const egl::BlobCache::Key &programHash,
                                     const Context *context,
                                     const Program *program)
 {
+    // If caching is effectively disabled, don't bother serializing the program.
+    if (!mBlobCache.isCachingEnabled())
+    {
+        return;
+    }
+
     angle::MemoryBuffer serializedProgram;
     program->serialize(context, &serializedProgram);
 

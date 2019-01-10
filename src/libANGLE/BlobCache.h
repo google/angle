@@ -137,6 +137,8 @@ class BlobCache final : angle::NonCopyable
 
     bool areBlobCacheFuncsSet() const;
 
+    bool isCachingEnabled() const { return areBlobCacheFuncsSet() || maxSize() > 0; }
+
   private:
     // This internal cache is used only if the application is not providing caching callbacks
     using CacheEntry = std::pair<angle::MemoryBuffer, CacheSource>;

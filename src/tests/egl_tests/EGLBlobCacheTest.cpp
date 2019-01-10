@@ -78,39 +78,24 @@ EGLsizeiANDROID GetBlob(const void *key,
 class EGLBlobCacheTest : public ANGLETest
 {
   protected:
-    EGLBlobCacheTest() : mHasProgramCache(false) { setDeferContextInit(true); }
+    EGLBlobCacheTest() : mHasBlobCache(false) {}
 
     void SetUp() override
     {
         ANGLETest::SetUp();
 
-        // Enable the program cache so that angle would do caching, which eventually lands in the
-        // BlobCache
         EGLDisplay display = getEGLWindow()->getDisplay();
-        if (eglDisplayExtensionEnabled(display, "EGL_ANGLE_program_cache_control"))
-        {
-            mHasProgramCache = true;
-            setContextProgramCacheEnabled(true);
-            eglProgramCacheResizeANGLE(display, 0x10000, EGL_PROGRAM_CACHE_RESIZE_ANGLE);
-        }
-
-        getEGLWindow()->initializeContext();
+        mHasBlobCache      = eglDisplayExtensionEnabled(display, kEGLExtName);
     }
 
     void TearDown() override { ANGLETest::TearDown(); }
-
-    bool extensionAvailable()
-    {
-        EGLDisplay display = getEGLWindow()->getDisplay();
-        return eglDisplayExtensionEnabled(display, kEGLExtName);
-    }
 
     bool programBinaryAvailable()
     {
         return (getClientMajorVersion() >= 3 || extensionEnabled("GL_OES_get_program_binary"));
     }
 
-    bool mHasProgramCache;
+    bool mHasBlobCache;
 };
 
 // Makes sure the extension exists and works
@@ -118,7 +103,7 @@ TEST_P(EGLBlobCacheTest, Functional)
 {
     EGLDisplay display = getEGLWindow()->getDisplay();
 
-    EXPECT_EQ(true, extensionAvailable());
+    EXPECT_EQ(true, mHasBlobCache);
     eglSetBlobCacheFuncsANDROID(display, SetBlob, GetBlob);
     ASSERT_EGL_SUCCESS();
 
@@ -157,7 +142,7 @@ void main()
 })";
 
     // Compile a shader so it puts something in the cache
-    if (mHasProgramCache && programBinaryAvailable())
+    if (programBinaryAvailable())
     {
         GLuint program = CompileProgram(kVertexShaderSrc, kFragmentShaderSrc);
         ASSERT_NE(0u, program);
@@ -187,7 +172,7 @@ void main()
 // Tests error conditions of the APIs.
 TEST_P(EGLBlobCacheTest, NegativeAPI)
 {
-    EXPECT_EQ(true, extensionAvailable());
+    EXPECT_EQ(true, mHasBlobCache);
 
     // Test bad display
     eglSetBlobCacheFuncsANDROID(EGL_NO_DISPLAY, nullptr, nullptr);
