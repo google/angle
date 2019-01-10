@@ -268,12 +268,11 @@ class GraphicsPipelineDesc final
                                      Pipeline *pipelineOut) const;
 
     // Vertex input state
-    ANGLE_INLINE void updateVertexInputInfo(const VertexInputBindings &bindings,
-                                            const VertexInputAttributes &attribs)
-    {
-        mVertexInputBindings = bindings;
-        mVertexInputAttribs  = attribs;
-    }
+    void updateVertexInput(uint32_t attribIndex,
+                           GLuint stride,
+                           GLuint divisor,
+                           VkFormat format,
+                           GLuint relativeOffset);
 
     // Input assembly info
     void updateTopology(gl::PrimitiveMode drawMode);

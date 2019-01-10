@@ -36,16 +36,7 @@ class VertexArrayVk : public VertexArrayImpl
                             const gl::VertexArray::DirtyAttribBitsArray &attribBits,
                             const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
-    ANGLE_INLINE void getPackedInputDescriptions(vk::GraphicsPipelineDesc *pipelineDesc)
-    {
-        if (mDirtyPackedInputs.any())
-        {
-            updatePackedInputDescriptions();
-        }
-        pipelineDesc->updateVertexInputInfo(mPackedInputBindings, mPackedInputAttributes);
-    }
-
-    void updateDefaultAttrib(RendererVk *renderer,
+    void updateDefaultAttrib(ContextVk *contextVk,
                              size_t attribIndex,
                              VkBuffer bufferHandle,
                              uint32_t offset);
@@ -95,15 +86,11 @@ class VertexArrayVk : public VertexArrayImpl
                                          const void *indices);
 
   private:
-    // This will update any dirty packed input descriptions, regardless if they're used by the
-    // active program. This could lead to slight inefficiencies when the app would repeatedly
-    // update vertex info for attributes the program doesn't use, (very silly edge case). The
-    // advantage is the cached state then doesn't depend on the Program, so doesn't have to be
-    // updated when the active Program changes.
-    void updatePackedInputDescriptions();
-    void updatePackedInputInfo(uint32_t attribIndex,
-                               const gl::VertexBinding &binding,
-                               const gl::VertexAttribute &attrib);
+    void setPackedInputInfo(ContextVk *contextVk,
+                            size_t attribIndex,
+                            const gl::VertexAttribute &attrib,
+                            const gl::VertexBinding &binding);
+    void setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex);
 
     angle::Result streamIndexData(ContextVk *contextVk,
                                   gl::DrawElementsType indexType,
@@ -134,12 +121,6 @@ class VertexArrayVk : public VertexArrayImpl
     gl::AttribArray<bool> mCurrentArrayBufferConversionCanRelease;
     VkDeviceSize mCurrentElementArrayBufferOffset;
     vk::BufferHelper *mCurrentElementArrayBuffer;
-
-    // Keep a cache of binding and attribute descriptions for easy pipeline updates.
-    // This is copied out of here into the pipeline description on a Context state change.
-    gl::AttributesMask mDirtyPackedInputs;
-    vk::VertexInputBindings mPackedInputBindings;
-    vk::VertexInputAttributes mPackedInputAttributes;
 
     vk::DynamicBuffer mDynamicVertexData;
     vk::DynamicBuffer mDynamicIndexData;

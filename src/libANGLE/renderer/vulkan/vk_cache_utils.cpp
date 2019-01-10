@@ -672,6 +672,27 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     return angle::Result::Continue;
 }
 
+void GraphicsPipelineDesc::updateVertexInput(uint32_t attribIndex,
+                                             GLuint stride,
+                                             GLuint divisor,
+                                             VkFormat format,
+                                             GLuint relativeOffset)
+{
+    vk::PackedVertexInputBindingDesc &bindingDesc = mVertexInputBindings[attribIndex];
+    bindingDesc.stride                            = static_cast<uint16_t>(stride);
+    bindingDesc.inputRate = static_cast<uint16_t>(divisor > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE
+                                                              : VK_VERTEX_INPUT_RATE_VERTEX);
+
+    ASSERT(format <= std::numeric_limits<uint16_t>::max());
+    if (format == VK_FORMAT_UNDEFINED)
+    {
+        UNIMPLEMENTED();
+    }
+
+    mVertexInputAttribs.formats[attribIndex] = static_cast<uint8_t>(format);
+    mVertexInputAttribs.offsets[attribIndex] = static_cast<uint16_t>(relativeOffset);
+}
+
 void GraphicsPipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
 {
     mInputAssembltyAndColorBlendStateInfo.topology =

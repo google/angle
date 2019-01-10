@@ -365,9 +365,6 @@ angle::Result ContextVk::handleDirtyPipeline(const gl::Context *context,
 {
     if (!mCurrentPipeline)
     {
-        // Copy over the latest attrib and binding descriptions. This should be done more lazily.
-        mVertexArray->getPackedInputDescriptions(mGraphicsPipelineDesc.get());
-
         // Draw call shader patching, shader compilation, and pipeline cache query.
         ANGLE_TRY(mProgram->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
                                                 mProgram->getState().getActiveAttribLocationsMask(),
@@ -1278,7 +1275,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 
     ANGLE_TRY(defaultBuffer.flush(this));
 
-    mVertexArray->updateDefaultAttrib(mRenderer, attribIndex, bufferHandle,
+    mVertexArray->updateDefaultAttrib(this, attribIndex, bufferHandle,
                                       static_cast<uint32_t>(offset));
     return angle::Result::Continue;
 }

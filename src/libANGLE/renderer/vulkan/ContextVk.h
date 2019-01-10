@@ -172,6 +172,17 @@ class ContextVk : public ContextImpl, public vk::Context
         mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     }
 
+    ANGLE_INLINE void onVertexAttributeChange(size_t attribIndex,
+                                              GLuint stride,
+                                              GLuint divisor,
+                                              VkFormat format,
+                                              GLuint relativeOffset)
+    {
+        invalidateVertexAndIndexBuffers();
+        mGraphicsPipelineDesc->updateVertexInput(static_cast<uint32_t>(attribIndex), stride,
+                                                 divisor, format, relativeOffset);
+    }
+
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
     void onFramebufferChange(const vk::RenderPassDesc &renderPassDesc);
