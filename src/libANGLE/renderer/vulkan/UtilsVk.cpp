@@ -325,24 +325,29 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
 
     Serial serial = renderer->getCurrentQueueSerial();
 
-    vk::PipelineAndSerial *pipelineAndSerial;
     if (isCompute)
     {
+        vk::PipelineAndSerial *pipelineAndSerial;
         program->setShader(gl::ShaderType::Compute, fsCsShader);
         ANGLE_TRY(program->getComputePipeline(context, pipelineLayout.get(), &pipelineAndSerial));
+        pipelineAndSerial->updateSerial(serial);
+        commandBuffer->bindPipeline(bindPoint, pipelineAndSerial->get());
     }
     else
     {
         program->setShader(gl::ShaderType::Vertex, vsShader);
         program->setShader(gl::ShaderType::Fragment, fsCsShader);
 
+        // This value is not used but is passed to getGraphicsPipeline to avoid a nullptr check.
+        const vk::GraphicsPipelineDesc *descPtr;
+        vk::PipelineHelper *helper;
+
         ANGLE_TRY(program->getGraphicsPipeline(
             context, &renderer->getRenderPassCache(), renderer->getPipelineCache(), serial,
-            pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), &pipelineAndSerial));
+            pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), &descPtr, &helper));
+        helper->updateSerial(serial);
+        commandBuffer->bindPipeline(bindPoint, helper->getPipeline());
     }
-
-    commandBuffer->bindPipeline(bindPoint, pipelineAndSerial->get());
-    pipelineAndSerial->updateSerial(serial);
 
     if (descriptorSet != VK_NULL_HANDLE)
     {
@@ -619,8 +624,8 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
-    pipelineDesc.updateColorWriteMask(params.colorMaskFlags, *params.alphaMask);
-    pipelineDesc.updateRenderPassDesc(*params.renderPassDesc);
+    pipelineDesc.setColorWriteMask(params.colorMaskFlags, *params.alphaMask);
+    pipelineDesc.setRenderPassDesc(*params.renderPassDesc);
 
     vk::ShaderLibrary &shaderLibrary                    = renderer->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
@@ -707,7 +712,7 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
-    pipelineDesc.updateRenderPassDesc(renderPassDesc);
+    pipelineDesc.setRenderPassDesc(renderPassDesc);
 
     gl::Rectangle renderArea;
     renderArea.x      = params.destOffset[0];

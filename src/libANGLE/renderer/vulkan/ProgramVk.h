@@ -123,7 +123,8 @@ class ProgramVk : public ProgramImpl
                                       gl::PrimitiveMode mode,
                                       const vk::GraphicsPipelineDesc &desc,
                                       const gl::AttributesMask &activeAttribLocations,
-                                      vk::PipelineAndSerial **pipelineOut)
+                                      const vk::GraphicsPipelineDesc **descPtrOut,
+                                      vk::PipelineHelper **pipelineOut)
     {
         vk::ShaderProgramHelper *shaderProgram;
         ANGLE_TRY(initShaders(contextVk, mode, &shaderProgram));
@@ -132,7 +133,7 @@ class ProgramVk : public ProgramImpl
         return shaderProgram->getGraphicsPipeline(
             contextVk, &renderer->getRenderPassCache(), renderer->getPipelineCache(),
             renderer->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
-            pipelineOut);
+            descPtrOut, pipelineOut);
     }
 
   private:

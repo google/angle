@@ -40,16 +40,11 @@ bool CheckedMathResult(const CheckedNumeric<GLuint> &value, GLuint *resultOut)
     }
 }
 
-constexpr GLuint Log2(GLuint bytes)
-{
-    return bytes == 1 ? 0 : (1 + Log2(bytes / 2));
-}
-
 constexpr uint32_t PackTypeInfo(GLuint bytes, bool specialized)
 {
     // static_assert within constexpr requires c++17
     // static_assert(isPow2(bytes));
-    return bytes | (Log2(bytes) << 8) | (specialized << 16);
+    return bytes | (rx::Log2(bytes) << 8) | (specialized << 16);
 }
 
 }  // anonymous namespace

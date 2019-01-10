@@ -158,10 +158,10 @@ void UnpackStencilState(const vk::PackedStencilOpState &packedState,
                         uint8_t stencilReference,
                         VkStencilOpState *stateOut)
 {
-    stateOut->failOp      = static_cast<VkStencilOp>(packedState.failOp);
-    stateOut->passOp      = static_cast<VkStencilOp>(packedState.passOp);
-    stateOut->depthFailOp = static_cast<VkStencilOp>(packedState.depthFailOp);
-    stateOut->compareOp   = static_cast<VkCompareOp>(packedState.compareOp);
+    stateOut->failOp      = static_cast<VkStencilOp>(packedState.ops.fail);
+    stateOut->passOp      = static_cast<VkStencilOp>(packedState.ops.pass);
+    stateOut->depthFailOp = static_cast<VkStencilOp>(packedState.ops.depthFail);
+    stateOut->compareOp   = static_cast<VkCompareOp>(packedState.ops.compare);
     stateOut->compareMask = packedState.compareMask;
     stateOut->writeMask   = packedState.writeMask;
     stateOut->reference   = stencilReference;
@@ -281,6 +281,54 @@ DestT Int4Array_Get(const uint8_t *arrayBytes, uint32_t arrayIndex)
 #define SetBitField(lhs, rhs)                                         \
     lhs = static_cast<typename std::decay<decltype(lhs)>::type>(rhs); \
     ASSERT(static_cast<decltype(rhs)>(lhs) == rhs);
+
+// When converting a byte number to a transition bit index we can shift instead of divide.
+constexpr size_t kTransitionByteShift = Log2(kGraphicsPipelineDirtyBitBytes);
+
+// When converting a number of bits offset to a transition bit index we can also shift.
+constexpr size_t kBitsPerByte        = 8;
+constexpr size_t kTransitionBitShift = kTransitionByteShift + Log2(kBitsPerByte);
+
+// Helper macro to map from a PipelineDesc struct and field to a dirty bit index.
+// Uses the 'offsetof' macro to compute the offset 'Member' within the PipelineDesc
+// and the offset of 'Field' within 'Member'. We can optimize the dirty bit setting by computing
+// the shifted dirty bit at compile time instead of calling "set".
+#define ANGLE_GET_TRANSITION_BIT(Member, Field)                                      \
+    ((offsetof(GraphicsPipelineDesc, Member) + offsetof(decltype(Member), Field)) >> \
+     kTransitionByteShift)
+
+// Indexed dirty bits cannot be entirely computed at compile time since the index is passed to
+// the update function.
+#define ANGLE_GET_INDEXED_TRANSITION_BIT(Member, Field, Index, BitWidth) \
+    (((BitWidth * Index) >> kTransitionBitShift) + ANGLE_GET_TRANSITION_BIT(Member, Field))
+
+bool GraphicsPipelineTransitionMatch(GraphicsPipelineTransitionBits bitsA,
+                                     GraphicsPipelineTransitionBits bitsB,
+                                     const GraphicsPipelineDesc &descA,
+                                     const GraphicsPipelineDesc &descB)
+{
+    if (bitsA != bitsB)
+        return false;
+
+    // We currently mask over 4 bytes of the pipeline description with each dirty bit.
+    // We could consider using 8 bytes and a mask of 32 bits. This would make some parts
+    // of the code faster. The for loop below would scan over twice as many bits per iteration.
+    // But there may be more collisions between the same dirty bit masks leading to different
+    // transitions. Thus there may be additional cost when applications use many transitions.
+    // We should revisit this in the future and investigate using different bit widths.
+    static_assert(sizeof(uint32_t) == kGraphicsPipelineDirtyBitBytes, "Size mismatch");
+
+    const uint32_t *rawPtrA = descA.getPtr<uint32_t>();
+    const uint32_t *rawPtrB = descB.getPtr<uint32_t>();
+
+    for (size_t dirtyBit : bitsA)
+    {
+        if (rawPtrA[dirtyBit] != rawPtrB[dirtyBit])
+            return false;
+    }
+
+    return true;
+}
 }  // anonymous namespace
 
 // RenderPassDesc implementation.
@@ -391,53 +439,52 @@ bool GraphicsPipelineDesc::operator==(const GraphicsPipelineDesc &other) const
 
 void GraphicsPipelineDesc::initDefaults()
 {
-    mRasterizationAndMultisampleStateInfo.depthClampEnable           = 0;
-    mRasterizationAndMultisampleStateInfo.rasterizationDiscardEnable = 0;
-    SetBitField(mRasterizationAndMultisampleStateInfo.polygonMode, VK_POLYGON_MODE_FILL);
-    SetBitField(mRasterizationAndMultisampleStateInfo.cullMode, VK_CULL_MODE_NONE);
-    SetBitField(mRasterizationAndMultisampleStateInfo.frontFace, VK_FRONT_FACE_CLOCKWISE);
-    mRasterizationAndMultisampleStateInfo.depthBiasEnable         = 0;
+    mRasterizationAndMultisampleStateInfo.bits.depthClampEnable           = 0;
+    mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable = 0;
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.polygonMode, VK_POLYGON_MODE_FILL);
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.cullMode, VK_CULL_MODE_NONE);
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.frontFace, VK_FRONT_FACE_CLOCKWISE);
+    mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable    = 0;
     mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = 0.0f;
     mRasterizationAndMultisampleStateInfo.depthBiasClamp          = 0.0f;
     mRasterizationAndMultisampleStateInfo.depthBiasSlopeFactor    = 0.0f;
     mRasterizationAndMultisampleStateInfo.lineWidth               = 1.0f;
 
-    mRasterizationAndMultisampleStateInfo.rasterizationSamples = 1;
-    mRasterizationAndMultisampleStateInfo.sampleShadingEnable  = 0;
-    mRasterizationAndMultisampleStateInfo.minSampleShading     = 0.0f;
+    mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = 1;
+    mRasterizationAndMultisampleStateInfo.bits.sampleShadingEnable  = 0;
+    mRasterizationAndMultisampleStateInfo.minSampleShading          = 0.0f;
     for (uint32_t &sampleMask : mRasterizationAndMultisampleStateInfo.sampleMask)
     {
         sampleMask = 0;
     }
-    mRasterizationAndMultisampleStateInfo.alphaToCoverageEnable = 0;
-    mRasterizationAndMultisampleStateInfo.alphaToOneEnable      = 0;
+    mRasterizationAndMultisampleStateInfo.bits.alphaToCoverageEnable = 0;
+    mRasterizationAndMultisampleStateInfo.bits.alphaToOneEnable      = 0;
 
-    mDepthStencilStateInfo.depthTestEnable  = 0;
-    mDepthStencilStateInfo.depthWriteEnable = 1;
+    mDepthStencilStateInfo.enable.depthTest  = 0;
+    mDepthStencilStateInfo.enable.depthWrite = 1;
     SetBitField(mDepthStencilStateInfo.depthCompareOp, VK_COMPARE_OP_LESS);
-    mDepthStencilStateInfo.depthBoundsTestEnable = 0;
-    mDepthStencilStateInfo.stencilTestEnable     = 0;
-    mDepthStencilStateInfo.minDepthBounds        = 0.0f;
-    mDepthStencilStateInfo.maxDepthBounds        = 0.0f;
-    SetBitField(mDepthStencilStateInfo.front.failOp, VK_STENCIL_OP_KEEP);
-    SetBitField(mDepthStencilStateInfo.front.passOp, VK_STENCIL_OP_KEEP);
-    SetBitField(mDepthStencilStateInfo.front.depthFailOp, VK_STENCIL_OP_KEEP);
-    SetBitField(mDepthStencilStateInfo.front.compareOp, VK_COMPARE_OP_ALWAYS);
+    mDepthStencilStateInfo.enable.depthBoundsTest = 0;
+    mDepthStencilStateInfo.enable.stencilTest     = 0;
+    mDepthStencilStateInfo.minDepthBounds         = 0.0f;
+    mDepthStencilStateInfo.maxDepthBounds         = 0.0f;
+    SetBitField(mDepthStencilStateInfo.front.ops.fail, VK_STENCIL_OP_KEEP);
+    SetBitField(mDepthStencilStateInfo.front.ops.pass, VK_STENCIL_OP_KEEP);
+    SetBitField(mDepthStencilStateInfo.front.ops.depthFail, VK_STENCIL_OP_KEEP);
+    SetBitField(mDepthStencilStateInfo.front.ops.compare, VK_COMPARE_OP_ALWAYS);
     SetBitField(mDepthStencilStateInfo.front.compareMask, 0xFF);
     SetBitField(mDepthStencilStateInfo.front.writeMask, 0xFF);
     mDepthStencilStateInfo.frontStencilReference = 0;
-    SetBitField(mDepthStencilStateInfo.back.failOp, VK_STENCIL_OP_KEEP);
-    SetBitField(mDepthStencilStateInfo.back.passOp, VK_STENCIL_OP_KEEP);
-    SetBitField(mDepthStencilStateInfo.back.depthFailOp, VK_STENCIL_OP_KEEP);
-    SetBitField(mDepthStencilStateInfo.back.compareOp, VK_COMPARE_OP_ALWAYS);
+    SetBitField(mDepthStencilStateInfo.back.ops.fail, VK_STENCIL_OP_KEEP);
+    SetBitField(mDepthStencilStateInfo.back.ops.pass, VK_STENCIL_OP_KEEP);
+    SetBitField(mDepthStencilStateInfo.back.ops.depthFail, VK_STENCIL_OP_KEEP);
+    SetBitField(mDepthStencilStateInfo.back.ops.compare, VK_COMPARE_OP_ALWAYS);
     SetBitField(mDepthStencilStateInfo.back.compareMask, 0xFF);
     SetBitField(mDepthStencilStateInfo.back.writeMask, 0xFF);
     mDepthStencilStateInfo.backStencilReference = 0;
 
-    PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend =
-        mInputAssembltyAndColorBlendStateInfo;
-    inputAndBlend.logicOpEnable     = 0;
-    inputAndBlend.logicOp           = static_cast<uint32_t>(VK_LOGIC_OP_CLEAR);
+    PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend = mInputAssemblyAndColorBlendStateInfo;
+    inputAndBlend.logic.opEnable                             = 0;
+    inputAndBlend.logic.op          = static_cast<uint32_t>(VK_LOGIC_OP_CLEAR);
     inputAndBlend.blendEnableMask   = 0;
     inputAndBlend.blendConstants[0] = 0.0f;
     inputAndBlend.blendConstants[1] = 0.0f;
@@ -464,8 +511,8 @@ void GraphicsPipelineDesc::initDefaults()
               &inputAndBlend.attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS],
               blendAttachmentState);
 
-    inputAndBlend.topology = static_cast<uint16_t>(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-    inputAndBlend.primitiveRestartEnable = 0;
+    inputAndBlend.primitive.topology = static_cast<uint16_t>(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+    inputAndBlend.primitive.restartEnable = 0;
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
@@ -550,9 +597,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssemblyState.flags = 0;
     inputAssemblyState.topology =
-        static_cast<VkPrimitiveTopology>(mInputAssembltyAndColorBlendStateInfo.topology);
+        static_cast<VkPrimitiveTopology>(mInputAssemblyAndColorBlendStateInfo.primitive.topology);
     inputAssemblyState.primitiveRestartEnable =
-        static_cast<VkBool32>(mInputAssembltyAndColorBlendStateInfo.primitiveRestartEnable);
+        static_cast<VkBool32>(mInputAssemblyAndColorBlendStateInfo.primitive.restartEnable);
 
     // Set initial viewport and scissor state.
 
@@ -569,13 +616,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     // Rasterizer state.
     rasterState.sType            = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterState.flags            = 0;
-    rasterState.depthClampEnable = static_cast<VkBool32>(rasterAndMS.depthClampEnable);
+    rasterState.depthClampEnable = static_cast<VkBool32>(rasterAndMS.bits.depthClampEnable);
     rasterState.rasterizerDiscardEnable =
-        static_cast<VkBool32>(rasterAndMS.rasterizationDiscardEnable);
-    rasterState.polygonMode             = static_cast<VkPolygonMode>(rasterAndMS.polygonMode);
-    rasterState.cullMode                = static_cast<VkCullModeFlags>(rasterAndMS.cullMode);
-    rasterState.frontFace               = static_cast<VkFrontFace>(rasterAndMS.frontFace);
-    rasterState.depthBiasEnable         = static_cast<VkBool32>(rasterAndMS.depthBiasEnable);
+        static_cast<VkBool32>(rasterAndMS.bits.rasterizationDiscardEnable);
+    rasterState.polygonMode             = static_cast<VkPolygonMode>(rasterAndMS.bits.polygonMode);
+    rasterState.cullMode                = static_cast<VkCullModeFlags>(rasterAndMS.bits.cullMode);
+    rasterState.frontFace               = static_cast<VkFrontFace>(rasterAndMS.bits.frontFace);
+    rasterState.depthBiasEnable         = static_cast<VkBool32>(rasterAndMS.bits.depthBiasEnable);
     rasterState.depthBiasConstantFactor = rasterAndMS.depthBiasConstantFactor;
     rasterState.depthBiasClamp          = rasterAndMS.depthBiasClamp;
     rasterState.depthBiasSlopeFactor    = rasterAndMS.depthBiasSlopeFactor;
@@ -584,28 +631,30 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     // Multisample state.
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     multisampleState.flags = 0;
-    multisampleState.rasterizationSamples = gl_vk::GetSamples(rasterAndMS.rasterizationSamples);
-    multisampleState.sampleShadingEnable  = static_cast<VkBool32>(rasterAndMS.sampleShadingEnable);
-    multisampleState.minSampleShading     = rasterAndMS.minSampleShading;
+    multisampleState.rasterizationSamples =
+        gl_vk::GetSamples(rasterAndMS.bits.rasterizationSamples);
+    multisampleState.sampleShadingEnable =
+        static_cast<VkBool32>(rasterAndMS.bits.sampleShadingEnable);
+    multisampleState.minSampleShading = rasterAndMS.minSampleShading;
     // TODO(jmadill): sample masks
     multisampleState.pSampleMask = nullptr;
     multisampleState.alphaToCoverageEnable =
-        static_cast<VkBool32>(rasterAndMS.alphaToCoverageEnable);
-    multisampleState.alphaToOneEnable = static_cast<VkBool32>(rasterAndMS.alphaToOneEnable);
+        static_cast<VkBool32>(rasterAndMS.bits.alphaToCoverageEnable);
+    multisampleState.alphaToOneEnable = static_cast<VkBool32>(rasterAndMS.bits.alphaToOneEnable);
 
     // Depth/stencil state.
     depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depthStencilState.flags = 0;
     depthStencilState.depthTestEnable =
-        static_cast<VkBool32>(mDepthStencilStateInfo.depthTestEnable);
+        static_cast<VkBool32>(mDepthStencilStateInfo.enable.depthTest);
     depthStencilState.depthWriteEnable =
-        static_cast<VkBool32>(mDepthStencilStateInfo.depthWriteEnable);
+        static_cast<VkBool32>(mDepthStencilStateInfo.enable.depthWrite);
     depthStencilState.depthCompareOp =
         static_cast<VkCompareOp>(mDepthStencilStateInfo.depthCompareOp);
     depthStencilState.depthBoundsTestEnable =
-        static_cast<VkBool32>(mDepthStencilStateInfo.depthBoundsTestEnable);
+        static_cast<VkBool32>(mDepthStencilStateInfo.enable.depthBoundsTest);
     depthStencilState.stencilTestEnable =
-        static_cast<VkBool32>(mDepthStencilStateInfo.stencilTestEnable);
+        static_cast<VkBool32>(mDepthStencilStateInfo.enable.stencilTest);
     UnpackStencilState(mDepthStencilStateInfo.front, mDepthStencilStateInfo.frontStencilReference,
                        &depthStencilState.front);
     UnpackStencilState(mDepthStencilStateInfo.back, mDepthStencilStateInfo.backStencilReference,
@@ -614,12 +663,12 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     depthStencilState.maxDepthBounds = mDepthStencilStateInfo.maxDepthBounds;
 
     const PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend =
-        mInputAssembltyAndColorBlendStateInfo;
+        mInputAssemblyAndColorBlendStateInfo;
 
     blendState.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     blendState.flags           = 0;
-    blendState.logicOpEnable   = static_cast<VkBool32>(inputAndBlend.logicOpEnable);
-    blendState.logicOp         = static_cast<VkLogicOp>(inputAndBlend.logicOp);
+    blendState.logicOpEnable   = static_cast<VkBool32>(inputAndBlend.logic.opEnable);
+    blendState.logicOp         = static_cast<VkLogicOp>(inputAndBlend.logic.op);
     blendState.attachmentCount = mRenderPassDesc.colorAttachmentCount();
     blendState.pAttachments    = blendAttachmentState.data();
 
@@ -672,7 +721,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     return angle::Result::Continue;
 }
 
-void GraphicsPipelineDesc::updateVertexInput(uint32_t attribIndex,
+void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *transition,
+                                             uint32_t attribIndex,
                                              GLuint stride,
                                              GLuint divisor,
                                              VkFormat format,
@@ -682,90 +732,124 @@ void GraphicsPipelineDesc::updateVertexInput(uint32_t attribIndex,
     bindingDesc.stride                            = static_cast<uint16_t>(stride);
     bindingDesc.inputRate = static_cast<uint16_t>(divisor > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE
                                                               : VK_VERTEX_INPUT_RATE_VERTEX);
+    constexpr size_t kBindingBaseBit =
+        offsetof(GraphicsPipelineDesc, mVertexInputBindings) >> kTransitionByteShift;
+    transition->set(kBindingBaseBit + attribIndex);
+    static_assert(kVertexInputBindingSize == 4, "Size mismatch");
 
-    ASSERT(format <= std::numeric_limits<uint16_t>::max());
     if (format == VK_FORMAT_UNDEFINED)
     {
         UNIMPLEMENTED();
     }
 
-    mVertexInputAttribs.formats[attribIndex] = static_cast<uint8_t>(format);
-    mVertexInputAttribs.offsets[attribIndex] = static_cast<uint16_t>(relativeOffset);
+    SetBitField(mVertexInputAttribs.formats[attribIndex], format);
+    SetBitField(mVertexInputAttribs.offsets[attribIndex], relativeOffset);
+    transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mVertexInputAttribs, formats, attribIndex, 8));
+    transition->set(
+        ANGLE_GET_INDEXED_TRANSITION_BIT(mVertexInputAttribs, offsets, attribIndex, 16));
 }
 
-void GraphicsPipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
+void GraphicsPipelineDesc::updateTopology(GraphicsPipelineTransitionBits *transition,
+                                          gl::PrimitiveMode drawMode)
 {
-    mInputAssembltyAndColorBlendStateInfo.topology =
-        static_cast<uint32_t>(gl_vk::GetPrimitiveTopology(drawMode));
+    VkPrimitiveTopology vkTopology = gl_vk::GetPrimitiveTopology(drawMode);
+    SetBitField(mInputAssemblyAndColorBlendStateInfo.primitive.topology, vkTopology);
+
+    transition->set(ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, primitive));
 }
 
-void GraphicsPipelineDesc::updateCullMode(const gl::RasterizerState &rasterState)
+void GraphicsPipelineDesc::updateCullMode(GraphicsPipelineTransitionBits *transition,
+                                          const gl::RasterizerState &rasterState)
 {
-    mRasterizationAndMultisampleStateInfo.cullMode =
+    mRasterizationAndMultisampleStateInfo.bits.cullMode =
         static_cast<uint16_t>(gl_vk::GetCullMode(rasterState));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }
 
-void GraphicsPipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState,
+void GraphicsPipelineDesc::updateFrontFace(GraphicsPipelineTransitionBits *transition,
+                                           const gl::RasterizerState &rasterState,
                                            bool invertFrontFace)
 {
-    mRasterizationAndMultisampleStateInfo.frontFace =
+    mRasterizationAndMultisampleStateInfo.bits.frontFace =
         static_cast<uint16_t>(gl_vk::GetFrontFace(rasterState.frontFace, invertFrontFace));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }
 
-void GraphicsPipelineDesc::updateLineWidth(float lineWidth)
+void GraphicsPipelineDesc::updateLineWidth(GraphicsPipelineTransitionBits *transition,
+                                           float lineWidth)
 {
     mRasterizationAndMultisampleStateInfo.lineWidth = lineWidth;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, lineWidth));
 }
 
-const RenderPassDesc &GraphicsPipelineDesc::getRenderPassDesc() const
+void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *transition,
+                                            const gl::ColorF &color)
 {
-    return mRenderPassDesc;
+    mInputAssemblyAndColorBlendStateInfo.blendConstants[0] = color.red;
+    mInputAssemblyAndColorBlendStateInfo.blendConstants[1] = color.green;
+    mInputAssemblyAndColorBlendStateInfo.blendConstants[2] = color.blue;
+    mInputAssemblyAndColorBlendStateInfo.blendConstants[3] = color.alpha;
+    constexpr size_t kSize = sizeof(mInputAssemblyAndColorBlendStateInfo.blendConstants[0]) * 8;
+
+    for (int index = 0; index < 4; ++index)
+    {
+        const size_t kBit = ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
+                                                             blendConstants, index, kSize);
+        transition->set(kBit);
+    }
 }
 
-void GraphicsPipelineDesc::updateBlendColor(const gl::ColorF &color)
-{
-    mInputAssembltyAndColorBlendStateInfo.blendConstants[0] = color.red;
-    mInputAssembltyAndColorBlendStateInfo.blendConstants[1] = color.green;
-    mInputAssembltyAndColorBlendStateInfo.blendConstants[2] = color.blue;
-    mInputAssembltyAndColorBlendStateInfo.blendConstants[3] = color.alpha;
-}
-
-void GraphicsPipelineDesc::updateBlendEnabled(bool isBlendEnabled)
+void GraphicsPipelineDesc::updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
+                                              bool isBlendEnabled)
 {
     gl::DrawBufferMask blendEnabled;
     if (isBlendEnabled)
         blendEnabled.set();
-    mInputAssembltyAndColorBlendStateInfo.blendEnableMask =
+    mInputAssemblyAndColorBlendStateInfo.blendEnableMask =
         static_cast<uint8_t>(blendEnabled.bits());
+    transition->set(
+        ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, blendEnableMask));
 }
 
-void GraphicsPipelineDesc::updateBlendEquations(const gl::BlendState &blendState)
+void GraphicsPipelineDesc::updateBlendEquations(GraphicsPipelineTransitionBits *transition,
+                                                const gl::BlendState &blendState)
 {
-    for (PackedColorBlendAttachmentState &blendAttachmentState :
-         mInputAssembltyAndColorBlendStateInfo.attachments)
+    constexpr size_t kSize = sizeof(PackedColorBlendAttachmentState) * 8;
+
+    for (size_t attachmentIndex = 0; attachmentIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+         ++attachmentIndex)
     {
+        PackedColorBlendAttachmentState &blendAttachmentState =
+            mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
         blendAttachmentState.colorBlendOp = PackGLBlendOp(blendState.blendEquationRGB);
         blendAttachmentState.alphaBlendOp = PackGLBlendOp(blendState.blendEquationAlpha);
+        transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
+                                                         attachments, attachmentIndex, kSize));
     }
 }
 
-void GraphicsPipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
+void GraphicsPipelineDesc::updateBlendFuncs(GraphicsPipelineTransitionBits *transition,
+                                            const gl::BlendState &blendState)
 {
-    for (PackedColorBlendAttachmentState &blendAttachmentState :
-         mInputAssembltyAndColorBlendStateInfo.attachments)
+    constexpr size_t kSize = sizeof(PackedColorBlendAttachmentState) * 8;
+    for (size_t attachmentIndex = 0; attachmentIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+         ++attachmentIndex)
     {
+        PackedColorBlendAttachmentState &blendAttachmentState =
+            mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
         blendAttachmentState.srcColorBlendFactor = PackGLBlendFactor(blendState.sourceBlendRGB);
         blendAttachmentState.dstColorBlendFactor = PackGLBlendFactor(blendState.destBlendRGB);
         blendAttachmentState.srcAlphaBlendFactor = PackGLBlendFactor(blendState.sourceBlendAlpha);
         blendAttachmentState.dstAlphaBlendFactor = PackGLBlendFactor(blendState.destBlendAlpha);
+        transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
+                                                         attachments, attachmentIndex, kSize));
     }
 }
 
-void GraphicsPipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlags,
-                                                const gl::DrawBufferMask &alphaMask)
+void GraphicsPipelineDesc::setColorWriteMask(VkColorComponentFlags colorComponentFlags,
+                                             const gl::DrawBufferMask &alphaMask)
 {
-    PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend =
-        mInputAssembltyAndColorBlendStateInfo;
+    PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend = mInputAssemblyAndColorBlendStateInfo;
     uint8_t colorMask = static_cast<uint8_t>(colorComponentFlags);
 
     for (size_t colorIndex = 0; colorIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorIndex++)
@@ -775,103 +859,161 @@ void GraphicsPipelineDesc::updateColorWriteMask(VkColorComponentFlags colorCompo
     }
 }
 
-void GraphicsPipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState,
+void GraphicsPipelineDesc::updateColorWriteMask(GraphicsPipelineTransitionBits *transition,
+                                                VkColorComponentFlags colorComponentFlags,
+                                                const gl::DrawBufferMask &alphaMask)
+{
+    setColorWriteMask(colorComponentFlags, alphaMask);
+
+    for (size_t colorIndex = 0; colorIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorIndex++)
+    {
+        transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
+                                                         colorWriteMaskBits, colorIndex, 4));
+    }
+}
+
+void GraphicsPipelineDesc::updateDepthTestEnabled(GraphicsPipelineTransitionBits *transition,
+                                                  const gl::DepthStencilState &depthStencilState,
                                                   const gl::Framebuffer *drawFramebuffer)
 {
     // Only enable the depth test if the draw framebuffer has a depth buffer.  It's possible that
     // we're emulating a stencil-only buffer with a depth-stencil buffer
-    mDepthStencilStateInfo.depthTestEnable =
+    mDepthStencilStateInfo.enable.depthTest =
         static_cast<uint8_t>(depthStencilState.depthTest && drawFramebuffer->hasDepth());
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, enable));
 }
 
-void GraphicsPipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateDepthFunc(GraphicsPipelineTransitionBits *transition,
+                                           const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.depthCompareOp = PackGLCompareFunc(depthStencilState.depthFunc);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, depthCompareOp));
 }
 
-void GraphicsPipelineDesc::updateDepthWriteEnabled(const gl::DepthStencilState &depthStencilState,
+void GraphicsPipelineDesc::updateDepthWriteEnabled(GraphicsPipelineTransitionBits *transition,
+                                                   const gl::DepthStencilState &depthStencilState,
                                                    const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to depth buffers that should not exist
-    mDepthStencilStateInfo.depthWriteEnable =
+    mDepthStencilStateInfo.enable.depthWrite =
         static_cast<uint8_t>(drawFramebuffer->hasDepth() ? depthStencilState.depthMask : 0);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, enable));
 }
 
-void GraphicsPipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState,
+void GraphicsPipelineDesc::updateStencilTestEnabled(GraphicsPipelineTransitionBits *transition,
+                                                    const gl::DepthStencilState &depthStencilState,
                                                     const gl::Framebuffer *drawFramebuffer)
 {
     // Only enable the stencil test if the draw framebuffer has a stencil buffer.  It's possible
     // that we're emulating a depth-only buffer with a depth-stencil buffer
-    mDepthStencilStateInfo.stencilTestEnable =
+    mDepthStencilStateInfo.enable.stencilTest =
         static_cast<uint8_t>(depthStencilState.stencilTest && drawFramebuffer->hasStencil());
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, enable));
 }
 
-void GraphicsPipelineDesc::updateStencilFrontFuncs(GLint ref,
+void GraphicsPipelineDesc::updateStencilFrontFuncs(GraphicsPipelineTransitionBits *transition,
+                                                   GLint ref,
                                                    const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.frontStencilReference = static_cast<uint8_t>(ref);
-    mDepthStencilStateInfo.front.compareOp       = PackGLCompareFunc(depthStencilState.stencilFunc);
+    mDepthStencilStateInfo.front.ops.compare     = PackGLCompareFunc(depthStencilState.stencilFunc);
     mDepthStencilStateInfo.front.compareMask = static_cast<uint8_t>(depthStencilState.stencilMask);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, front));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, frontStencilReference));
 }
 
-void GraphicsPipelineDesc::updateStencilBackFuncs(GLint ref,
+void GraphicsPipelineDesc::updateStencilBackFuncs(GraphicsPipelineTransitionBits *transition,
+                                                  GLint ref,
                                                   const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.backStencilReference = static_cast<uint8_t>(ref);
-    mDepthStencilStateInfo.back.compareOp = PackGLCompareFunc(depthStencilState.stencilBackFunc);
+    mDepthStencilStateInfo.back.ops.compare = PackGLCompareFunc(depthStencilState.stencilBackFunc);
     mDepthStencilStateInfo.back.compareMask =
         static_cast<uint8_t>(depthStencilState.stencilBackMask);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, backStencilReference));
 }
 
-void GraphicsPipelineDesc::updateStencilFrontOps(const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateStencilFrontOps(GraphicsPipelineTransitionBits *transition,
+                                                 const gl::DepthStencilState &depthStencilState)
 {
-    mDepthStencilStateInfo.front.passOp = PackGLStencilOp(depthStencilState.stencilPassDepthPass);
-    mDepthStencilStateInfo.front.failOp = PackGLStencilOp(depthStencilState.stencilFail);
-    mDepthStencilStateInfo.front.depthFailOp =
+    mDepthStencilStateInfo.front.ops.pass = PackGLStencilOp(depthStencilState.stencilPassDepthPass);
+    mDepthStencilStateInfo.front.ops.fail = PackGLStencilOp(depthStencilState.stencilFail);
+    mDepthStencilStateInfo.front.ops.depthFail =
         PackGLStencilOp(depthStencilState.stencilPassDepthFail);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, front));
 }
 
-void GraphicsPipelineDesc::updateStencilBackOps(const gl::DepthStencilState &depthStencilState)
+void GraphicsPipelineDesc::updateStencilBackOps(GraphicsPipelineTransitionBits *transition,
+                                                const gl::DepthStencilState &depthStencilState)
 {
-    mDepthStencilStateInfo.back.passOp =
+    mDepthStencilStateInfo.back.ops.pass =
         PackGLStencilOp(depthStencilState.stencilBackPassDepthPass);
-    mDepthStencilStateInfo.back.failOp = PackGLStencilOp(depthStencilState.stencilBackFail);
-    mDepthStencilStateInfo.back.depthFailOp =
+    mDepthStencilStateInfo.back.ops.fail = PackGLStencilOp(depthStencilState.stencilBackFail);
+    mDepthStencilStateInfo.back.ops.depthFail =
         PackGLStencilOp(depthStencilState.stencilBackPassDepthFail);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
 }
 
 void GraphicsPipelineDesc::updateStencilFrontWriteMask(
+    GraphicsPipelineTransitionBits *transition,
     const gl::DepthStencilState &depthStencilState,
     const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to stencil buffers that should not exist
     mDepthStencilStateInfo.front.writeMask = static_cast<uint8_t>(
         drawFramebuffer->hasStencil() ? depthStencilState.stencilWritemask : 0);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, front));
 }
 
 void GraphicsPipelineDesc::updateStencilBackWriteMask(
+    GraphicsPipelineTransitionBits *transition,
     const gl::DepthStencilState &depthStencilState,
     const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to stencil buffers that should not exist
     mDepthStencilStateInfo.back.writeMask = static_cast<uint8_t>(
         drawFramebuffer->hasStencil() ? depthStencilState.stencilBackWritemask : 0);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
 }
 
-void GraphicsPipelineDesc::updatePolygonOffsetFillEnabled(bool enabled)
+void GraphicsPipelineDesc::updatePolygonOffsetFillEnabled(
+    GraphicsPipelineTransitionBits *transition,
+    bool enabled)
 {
-    mRasterizationAndMultisampleStateInfo.depthBiasEnable = enabled;
+    mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable = enabled;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }
 
-void GraphicsPipelineDesc::updatePolygonOffset(const gl::RasterizerState &rasterState)
+void GraphicsPipelineDesc::updatePolygonOffset(GraphicsPipelineTransitionBits *transition,
+                                               const gl::RasterizerState &rasterState)
 {
     mRasterizationAndMultisampleStateInfo.depthBiasSlopeFactor    = rasterState.polygonOffsetFactor;
     mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = rasterState.polygonOffsetUnits;
+    transition->set(
+        ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, depthBiasSlopeFactor));
+    transition->set(
+        ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, depthBiasConstantFactor));
 }
 
-void GraphicsPipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
+void GraphicsPipelineDesc::setRenderPassDesc(const RenderPassDesc &renderPassDesc)
 {
     mRenderPassDesc = renderPassDesc;
+}
+
+void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,
+                                                const RenderPassDesc &renderPassDesc)
+{
+    setRenderPassDesc(renderPassDesc);
+
+    // The RenderPass is a special case where it spans multiple bits but has no member.
+    constexpr size_t kFirstBit =
+        offsetof(GraphicsPipelineDesc, mRenderPassDesc) >> kTransitionByteShift;
+    constexpr size_t kBitCount = kRenderPassDescSize >> kTransitionByteShift;
+    for (size_t bit = 0; bit < kBitCount; ++bit)
+    {
+        transition->set(kFirstBit + bit);
+    }
 }
 
 // AttachmentOpsArray implementation.
@@ -1026,6 +1168,41 @@ const PushConstantRangeArray<PackedPushConstantRange> &PipelineLayoutDesc::getPu
 {
     return mPushConstantRanges;
 }
+
+// PipelineHelper implementation.
+PipelineHelper::PipelineHelper() = default;
+
+PipelineHelper::~PipelineHelper() = default;
+
+void PipelineHelper::destroy(VkDevice device)
+{
+    mPipeline.destroy(device);
+}
+
+bool PipelineHelper::findTransition(GraphicsPipelineTransitionBits bits,
+                                    const GraphicsPipelineDesc &desc,
+                                    PipelineHelper **pipelineOut) const
+{
+    // Search could be improved using sorting or hashing.
+    for (const GraphicsPipelineTransition &transition : mTransitions)
+    {
+        if (GraphicsPipelineTransitionMatch(transition.bits, bits, *transition.desc, desc))
+        {
+            *pipelineOut = transition.target;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
+                                   const GraphicsPipelineDesc *desc,
+                                   PipelineHelper *pipeline)
+{
+    GraphicsPipelineTransition transition = {bits, desc, pipeline};
+    mTransitions.push_back(transition);
+}
 }  // namespace vk
 
 // RenderPassCache implementation.
@@ -1129,8 +1306,8 @@ void GraphicsPipelineCache::destroy(VkDevice device)
 {
     for (auto &item : mPayload)
     {
-        vk::PipelineAndSerial &pipeline = item.second;
-        pipeline.get().destroy(device);
+        vk::PipelineHelper &pipeline = item.second;
+        pipeline.destroy(device);
     }
 
     mPayload.clear();
@@ -1140,8 +1317,8 @@ void GraphicsPipelineCache::release(RendererVk *renderer)
 {
     for (auto &item : mPayload)
     {
-        vk::PipelineAndSerial &pipeline = item.second;
-        renderer->releaseObject(pipeline.getSerial(), &pipeline.get());
+        vk::PipelineHelper &pipeline = item.second;
+        renderer->releaseObject(pipeline.getSerial(), &pipeline.getPipeline());
     }
 
     mPayload.clear();
@@ -1156,7 +1333,8 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     const vk::ShaderModule &vertexModule,
     const vk::ShaderModule &fragmentModule,
     const vk::GraphicsPipelineDesc &desc,
-    vk::PipelineAndSerial **pipelineOut)
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut)
 {
     vk::Pipeline newPipeline;
 
@@ -1169,9 +1347,9 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     }
 
     // The Serial will be updated outside of this query.
-    auto insertedItem =
-        mPayload.emplace(desc, vk::PipelineAndSerial(std::move(newPipeline), Serial()));
-    *pipelineOut = &insertedItem.first->second;
+    auto insertedItem = mPayload.emplace(desc, std::move(newPipeline));
+    *descPtrOut       = &insertedItem.first->first;
+    *pipelineOut      = &insertedItem.first->second;
 
     return angle::Result::Continue;
 }
@@ -1184,7 +1362,7 @@ void GraphicsPipelineCache::populate(const vk::GraphicsPipelineDesc &desc, vk::P
         return;
     }
 
-    mPayload.emplace(desc, vk::PipelineAndSerial(std::move(pipeline), Serial()));
+    mPayload.emplace(desc, std::move(pipeline));
 }
 
 // DescriptorSetLayoutCache implementation.

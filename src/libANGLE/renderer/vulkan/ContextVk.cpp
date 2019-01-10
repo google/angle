@@ -109,6 +109,7 @@ constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer)
     : ContextImpl(state, errorSet),
       vk::Context(renderer),
+      mCurrentPipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mVertexArray(nullptr),
       mDrawFramebuffer(nullptr),
@@ -253,7 +254,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     {
         invalidateCurrentPipeline();
         mCurrentDrawMode = mode;
-        mGraphicsPipelineDesc->updateTopology(mCurrentDrawMode);
+        mGraphicsPipelineDesc->updateTopology(&mGraphicsPipelineTransition, mCurrentDrawMode);
     }
 
     if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer, commandBufferOut))
@@ -365,13 +366,34 @@ angle::Result ContextVk::handleDirtyPipeline(const gl::Context *context,
 {
     if (!mCurrentPipeline)
     {
+        const vk::GraphicsPipelineDesc *descPtr;
+
         // Draw call shader patching, shader compilation, and pipeline cache query.
         ANGLE_TRY(mProgram->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
                                                 mProgram->getState().getActiveAttribLocationsMask(),
-                                                &mCurrentPipeline));
+                                                &descPtr, &mCurrentPipeline));
+        mGraphicsPipelineTransition.reset();
+    }
+    else if (mGraphicsPipelineTransition.any())
+    {
+        if (!mCurrentPipeline->findTransition(mGraphicsPipelineTransition, *mGraphicsPipelineDesc,
+                                              &mCurrentPipeline))
+        {
+            vk::PipelineHelper *oldPipeline = mCurrentPipeline;
+
+            const vk::GraphicsPipelineDesc *descPtr;
+
+            ANGLE_TRY(mProgram->getGraphicsPipeline(
+                this, mCurrentDrawMode, *mGraphicsPipelineDesc,
+                mProgram->getState().getActiveAttribLocationsMask(), &descPtr, &mCurrentPipeline));
+
+            oldPipeline->addTransition(mGraphicsPipelineTransition, descPtr, mCurrentPipeline);
+        }
+
+        mGraphicsPipelineTransition.reset();
     }
 
-    commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline->get());
+    commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline->getPipeline());
 
     // Update the queue serial for the pipeline object.
     ASSERT(mCurrentPipeline && mCurrentPipeline->valid());
@@ -623,7 +645,7 @@ void ContextVk::updateColorMask(const gl::BlendState &blendState)
                                       blendState.colorMaskBlue, blendState.colorMaskAlpha);
 
     FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
-    mGraphicsPipelineDesc->updateColorWriteMask(mClearColorMask,
+    mGraphicsPipelineDesc->updateColorWriteMask(&mGraphicsPipelineTransition, mClearColorMask,
                                                 framebufferVk->getEmulatedAlphaAttachmentMask());
 }
 
@@ -689,16 +711,20 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
-                mGraphicsPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());
+                mGraphicsPipelineDesc->updateBlendEnabled(&mGraphicsPipelineTransition,
+                                                          glState.isBlendEnabled());
                 break;
             case gl::State::DIRTY_BIT_BLEND_COLOR:
-                mGraphicsPipelineDesc->updateBlendColor(glState.getBlendColor());
+                mGraphicsPipelineDesc->updateBlendColor(&mGraphicsPipelineTransition,
+                                                        glState.getBlendColor());
                 break;
             case gl::State::DIRTY_BIT_BLEND_FUNCS:
-                mGraphicsPipelineDesc->updateBlendFuncs(glState.getBlendState());
+                mGraphicsPipelineDesc->updateBlendFuncs(&mGraphicsPipelineTransition,
+                                                        glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_BLEND_EQUATIONS:
-                mGraphicsPipelineDesc->updateBlendEquations(glState.getBlendState());
+                mGraphicsPipelineDesc->updateBlendEquations(&mGraphicsPipelineTransition,
+                                                            glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
                 updateColorMask(glState.getBlendState());
@@ -714,61 +740,75 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_SAMPLE_MASK:
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
-                mGraphicsPipelineDesc->updateDepthTestEnabled(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
+                                                              glState.getDepthStencilState(),
                                                               glState.getDrawFramebuffer());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_FUNC:
-                mGraphicsPipelineDesc->updateDepthFunc(glState.getDepthStencilState());
+                mGraphicsPipelineDesc->updateDepthFunc(&mGraphicsPipelineTransition,
+                                                       glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_MASK:
-                mGraphicsPipelineDesc->updateDepthWriteEnabled(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition,
+                                                               glState.getDepthStencilState(),
                                                                glState.getDrawFramebuffer());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
-                mGraphicsPipelineDesc->updateStencilTestEnabled(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition,
+                                                                glState.getDepthStencilState(),
                                                                 glState.getDrawFramebuffer());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
-                mGraphicsPipelineDesc->updateStencilFrontFuncs(glState.getStencilRef(),
+                mGraphicsPipelineDesc->updateStencilFrontFuncs(&mGraphicsPipelineTransition,
+                                                               glState.getStencilRef(),
                                                                glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
-                mGraphicsPipelineDesc->updateStencilBackFuncs(glState.getStencilBackRef(),
+                mGraphicsPipelineDesc->updateStencilBackFuncs(&mGraphicsPipelineTransition,
+                                                              glState.getStencilBackRef(),
                                                               glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
-                mGraphicsPipelineDesc->updateStencilFrontOps(glState.getDepthStencilState());
+                mGraphicsPipelineDesc->updateStencilFrontOps(&mGraphicsPipelineTransition,
+                                                             glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
-                mGraphicsPipelineDesc->updateStencilBackOps(glState.getDepthStencilState());
+                mGraphicsPipelineDesc->updateStencilBackOps(&mGraphicsPipelineTransition,
+                                                            glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
-                mGraphicsPipelineDesc->updateStencilFrontWriteMask(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateStencilFrontWriteMask(&mGraphicsPipelineTransition,
+                                                                   glState.getDepthStencilState(),
                                                                    glState.getDrawFramebuffer());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
-                mGraphicsPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateStencilBackWriteMask(&mGraphicsPipelineTransition,
+                                                                  glState.getDepthStencilState(),
                                                                   glState.getDrawFramebuffer());
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::State::DIRTY_BIT_CULL_FACE:
-                mGraphicsPipelineDesc->updateCullMode(glState.getRasterizerState());
+                mGraphicsPipelineDesc->updateCullMode(&mGraphicsPipelineTransition,
+                                                      glState.getRasterizerState());
                 break;
             case gl::State::DIRTY_BIT_FRONT_FACE:
-                mGraphicsPipelineDesc->updateFrontFace(glState.getRasterizerState(),
+                mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
+                                                       glState.getRasterizerState(),
                                                        isViewportFlipEnabledForDrawFBO());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
                 mGraphicsPipelineDesc->updatePolygonOffsetFillEnabled(
-                    glState.isPolygonOffsetFillEnabled());
+                    &mGraphicsPipelineTransition, glState.isPolygonOffsetFillEnabled());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET:
-                mGraphicsPipelineDesc->updatePolygonOffset(glState.getRasterizerState());
+                mGraphicsPipelineDesc->updatePolygonOffset(&mGraphicsPipelineTransition,
+                                                           glState.getRasterizerState());
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 break;
             case gl::State::DIRTY_BIT_LINE_WIDTH:
-                mGraphicsPipelineDesc->updateLineWidth(glState.getLineWidth());
+                mGraphicsPipelineDesc->updateLineWidth(&mGraphicsPipelineTransition,
+                                                       glState.getLineWidth());
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
                 break;
@@ -813,19 +853,26 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
-                mGraphicsPipelineDesc->updateCullMode(glState.getRasterizerState());
+                mGraphicsPipelineDesc->updateCullMode(&mGraphicsPipelineTransition,
+                                                      glState.getRasterizerState());
                 updateScissor(glState);
-                mGraphicsPipelineDesc->updateDepthTestEnabled(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
+                                                              glState.getDepthStencilState(),
                                                               glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateDepthWriteEnabled(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition,
+                                                               glState.getDepthStencilState(),
                                                                glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateStencilTestEnabled(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition,
+                                                                glState.getDepthStencilState(),
                                                                 glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateStencilFrontWriteMask(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateStencilFrontWriteMask(&mGraphicsPipelineTransition,
+                                                                   glState.getDepthStencilState(),
                                                                    glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
+                mGraphicsPipelineDesc->updateStencilBackWriteMask(&mGraphicsPipelineTransition,
+                                                                  glState.getDepthStencilState(),
                                                                   glState.getDrawFramebuffer());
-                mGraphicsPipelineDesc->updateRenderPassDesc(mDrawFramebuffer->getRenderPassDesc());
+                mGraphicsPipelineDesc->updateRenderPassDesc(&mGraphicsPipelineTransition,
+                                                            mDrawFramebuffer->getRenderPassDesc());
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -851,6 +898,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 bool useVertexBuffer = (mProgram->getState().getMaxActiveAttribLocation());
                 mNonIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
                 mIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
+                mCurrentPipeline = nullptr;
+                mGraphicsPipelineTransition.reset();
                 break;
             }
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
@@ -1054,7 +1103,7 @@ void ContextVk::onFramebufferChange(const vk::RenderPassDesc &renderPassDesc)
 {
     // Ensure that the RenderPass description is updated.
     invalidateCurrentPipeline();
-    mGraphicsPipelineDesc->updateRenderPassDesc(renderPassDesc);
+    mGraphicsPipelineDesc->updateRenderPassDesc(&mGraphicsPipelineTransition, renderPassDesc);
 }
 
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,
@@ -1279,4 +1328,5 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
                                       static_cast<uint32_t>(offset));
     return angle::Result::Continue;
 }
+
 }  // namespace rx
