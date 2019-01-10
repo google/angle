@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fbca46d2_e425bd75",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-10T07:53:33Z",
+      "side": 1,
+      "message": "\u0027getTopLevelArrayStride()\u0027 means get the elements of top level array stride. Any type \u0027T\u0027 declared as \u0027T t[3][4][5]\u0027, getTopLevelArrayStride() will return array size product except the outermost array size. So getTopLevelArrayStride() of \u0027T t[3][4][5]\u0027 will be 4 * 5. Then the top_level_array_stride of buf.t (T is a structure) will be t.getTopLevelArrayStride() * sizeOfT. sizeOfT will be calculated in https://chromium-review.googlesource.com/c/angle/angle/+/1396745/6/src/compiler/translator/blocklayout.cpp#35.",
+      "parentUuid": "d6df774d_b8f818c0",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da600136_9d24e54e",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 6
@@ -47,6 +65,24 @@
       "writtenOn": "2019-01-08T09:07:15Z",
       "side": 1,
       "message": "This should probably be initialized to the stride of the non-array type, and take into account structure alignment.",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "651b6453_7a2f2ee6",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-10T07:53:33Z",
+      "side": 1,
+      "message": "Here we don\u0027t consider the elementStride. topLevelArrayStride is just the element count in final top_level_array_stride. So final top_level_array_stride will be getTopLevelArrayStride() * elementStride.",
+      "parentUuid": "e29504f2_bef789fc",
       "revId": "b394722e562898aa09e446cf33ba02c8832446de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

@@ -34,6 +34,41 @@
       "revId": "5df1d281a992fb221f243d532c70ad0398c9410a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c346ea0c_3c40e57c",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-10T07:53:33Z",
+      "side": 0,
+      "message": "top_level_array_stride is platform dependent for non-standard layout type. So you can see in [a],  mGetMemberInfo (all members in sh::BlockMemberInfo are platform dependent) will be called in back end not front end. But if you compute mTopLevelArrayStride here, how should I process the non-standard layout? You can see that patch set 7 did as you suggested (the trybots failing is because \u0027blocklayoutHLSL\u0027 is only linked for d3d ).",
+      "parentUuid": "1bcdd018_6bf2986e",
+      "revId": "5df1d281a992fb221f243d532c70ad0398c9410a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e79d2e15_e2140258",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-10T07:53:33Z",
+      "side": 0,
+      "message": "[a]",
+      "revId": "5df1d281a992fb221f243d532c70ad0398c9410a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
