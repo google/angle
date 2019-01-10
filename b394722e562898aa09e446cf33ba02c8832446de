@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b625857e_6184d284",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T20:33:09Z",
+      "side": 1,
+      "message": "stride is in basic machine units. stride of that struct depends on if it\u0027s inside a buffer or not. the \u0027top level\u0027 means it\u0027s in the top level of the buffer. if that struct was an array in the buffer like this:\n\nstruct s {\n  int a;\n  float b;\n}\n\nbuffer b {\n  s [3][4][5];\n}\n\nI could see the top level stride would be (4) * (4 * 5) as Jiajia said. But I couldn\u0027t find any specific spec text on arrays-of-arrays.",
+      "parentUuid": "fbca46d2_e425bd75",
+      "revId": "b394722e562898aa09e446cf33ba02c8832446de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da600136_9d24e54e",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 6

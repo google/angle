@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ad30e5b_39aedfa4",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T20:33:09Z",
+      "side": 1,
+      "message": "for (size_t index \u003d 1; index \u003c arraySizes.size(); ++i)\n{\n   arraySizeProduct *\u003d getNestedArraySize(index);\n}",
+      "range": {
+        "startLine": 115,
+        "startChar": 7,
+        "endLine": 115,
+        "endChar": 60
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a72af24_907b8856",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T20:33:09Z",
+      "side": 1,
+      "message": "Maybe call this getInnerArraySizeProduct",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 1
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d956111_fd4be0ea",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T20:33:09Z",
+      "side": 1,
+      "message": "here you should patch variableInfo to include the top level array stride. I imagine you could use something similar to BaseAlignmentVisitor. You can use mStructStackSize to determine if this is a top level array. I think it\u0027s okay if we compute top level array sizes for interface blocks and uniforms as well.\n\nThis should allow you to remove the getEncoder method. Maybe you could even compute the variable size by using the difference of the encoder offset before and after calling encodeType?",
+      "range": {
+        "startLine": 544,
+        "startChar": 0,
+        "endLine": 545,
+        "endChar": 76
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88f94c20_0bf3ca1c",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T20:33:09Z",
+      "side": 1,
+      "message": "moving these from ProgramLinkedResources into blocklayout.h is a good idea. Bu we should put them in BlockEncoderVisitor and make them protected or (if possible) private. I don\u0027t like the \u0027hasFinal\u0027 approach. I would continue to use mStructStackSize.",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 269,
+        "endChar": 45
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dc20352_a53df86c",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T20:33:09Z",
+      "side": 1,
+      "message": "Let\u0027s make sure the top level array size is already correctly set in \"variableInfo\". This will let us move the top level array size parsing members into BlockEncoderVisitor. And then you can remove this line.",
+      "range": {
+        "startLine": 355,
+        "startChar": 7,
+        "endLine": 355,
+        "endChar": 65
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
