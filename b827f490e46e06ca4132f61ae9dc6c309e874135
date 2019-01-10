@@ -22,6 +22,30 @@
       "revId": "b827f490e46e06ca4132f61ae9dc6c309e874135",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c34e0d60_62af21e0",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T18:09:51Z",
+      "side": 0,
+      "message": "Yep. I found it wasn\u0027t very useful if we\u0027re updating attributes individually instead of as a block.",
+      "parentUuid": "e6ff1358_70009db5",
+      "range": {
+        "startLine": 41,
+        "startChar": 12,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "b827f490e46e06ca4132f61ae9dc6c309e874135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
