@@ -70,6 +70,30 @@
       "revId": "b827f490e46e06ca4132f61ae9dc6c309e874135",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e523cae_b42b9118",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-10T18:53:44Z",
+      "side": 0,
+      "message": "It should be faster to update individually. There are 16 attributes and most applications don\u0027t use all 16. That\u0027s our assumption right now. We can reevaluate this assumption we add encounter more complex use cases.",
+      "parentUuid": "d4eb353f_e062148a",
+      "range": {
+        "startLine": 41,
+        "startChar": 12,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "b827f490e46e06ca4132f61ae9dc6c309e874135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
