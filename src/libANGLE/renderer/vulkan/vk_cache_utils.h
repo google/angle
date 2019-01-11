@@ -124,28 +124,33 @@ bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs);
 
 static_assert(sizeof(AttachmentOpsArray) == 80, "Size check failed");
 
-struct PackedVertexInputBindingDesc final
+struct PackedAttribDesc final
 {
-    // Although techncially stride can be any value in ES 2.0, in practice supporting stride
+    uint8_t format;
+
+    // inputRate can also be used to store instancing divisors up to 255.
+    // TODO(http://anglebug.com/2672): Emulate divisors greater than UBYTE_MAX.
+    uint8_t inputRate;
+
+    // Can only take 11 bits on NV.
+    uint16_t offset;
+
+    // Although technically stride can be any value in ES 2.0, in practice supporting stride
     // greater than MAX_USHORT should not be that helpful. Note that stride limits are
     // introduced in ES 3.1.
     uint16_t stride;
-    uint16_t inputRate;
 };
 
-constexpr size_t kVertexInputBindingSize = sizeof(PackedVertexInputBindingDesc);
-static_assert(kVertexInputBindingSize == 4, "Size check failed");
-
-using VertexInputBindings                 = gl::AttribArray<PackedVertexInputBindingDesc>;
-constexpr size_t kVertexInputBindingsSize = sizeof(VertexInputBindings);
+constexpr size_t kPackedAttribDescSize = sizeof(PackedAttribDesc);
+static_assert(kPackedAttribDescSize == 6, "Size mismatch");
 
 struct VertexInputAttributes final
 {
-    uint8_t formats[gl::MAX_VERTEX_ATTRIBS];
-    uint16_t offsets[gl::MAX_VERTEX_ATTRIBS];  // can only take 11 bits on NV
+    PackedAttribDesc attribs[gl::MAX_VERTEX_ATTRIBS];
 };
 
 constexpr size_t kVertexInputAttributesSize = sizeof(VertexInputAttributes);
+static_assert(kVertexInputAttributesSize == 96, "Size mismatch");
 
 struct RasterizationStateBits final
 {
@@ -274,9 +279,9 @@ constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
 static_assert(kPackedInputAssemblyAndColorBlendStateSize == 56, "Size check failed");
 
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
-    kVertexInputBindingsSize + kVertexInputAttributesSize +
-    kPackedInputAssemblyAndColorBlendStateSize + kPackedRasterizationAndMultisampleStateSize +
-    kPackedDepthStencilStateSize + kRenderPassDescSize;
+    kVertexInputAttributesSize + kPackedInputAssemblyAndColorBlendStateSize +
+    kPackedRasterizationAndMultisampleStateSize + kPackedDepthStencilStateSize +
+    kRenderPassDescSize;
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -398,7 +403,6 @@ class GraphicsPipelineDesc final
                              const gl::RasterizerState &rasterState);
 
   private:
-    VertexInputBindings mVertexInputBindings;
     VertexInputAttributes mVertexInputAttribs;
     RenderPassDesc mRenderPassDesc;
     PackedRasterizationAndMultisampleStateInfo mRasterizationAndMultisampleStateInfo;

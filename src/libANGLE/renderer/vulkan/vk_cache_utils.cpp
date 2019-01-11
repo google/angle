@@ -280,7 +280,7 @@ DestT Int4Array_Get(const uint8_t *arrayBytes, uint32_t arrayIndex)
 // Helper macro that casts to a bitfield type then verifies no bits were dropped.
 #define SetBitField(lhs, rhs)                                         \
     lhs = static_cast<typename std::decay<decltype(lhs)>::type>(rhs); \
-    ASSERT(static_cast<decltype(rhs)>(lhs) == rhs);
+    ASSERT(static_cast<decltype(rhs)>(lhs) == (rhs));
 
 // When converting a byte number to a transition bit index we can shift instead of divide.
 constexpr size_t kTransitionByteShift = Log2(kGraphicsPipelineDirtyBitBytes);
@@ -568,19 +568,19 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     {
         const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
 
-        VkVertexInputBindingDescription &bindingDesc      = bindingDescs[vertexAttribCount];
-        VkVertexInputAttributeDescription &attribDesc     = attributeDescs[vertexAttribCount];
-        const PackedVertexInputBindingDesc &packedBinding = mVertexInputBindings[attribIndex];
+        VkVertexInputBindingDescription &bindingDesc  = bindingDescs[vertexAttribCount];
+        VkVertexInputAttributeDescription &attribDesc = attributeDescs[vertexAttribCount];
+        const PackedAttribDesc &packedAttrib          = mVertexInputAttribs.attribs[attribIndex];
 
         bindingDesc.binding   = attribIndex;
-        bindingDesc.inputRate = static_cast<VkVertexInputRate>(packedBinding.inputRate);
-        bindingDesc.stride    = static_cast<uint32_t>(packedBinding.stride);
+        bindingDesc.inputRate = static_cast<VkVertexInputRate>(packedAttrib.inputRate);
+        bindingDesc.stride    = static_cast<uint32_t>(packedAttrib.stride);
 
-        // The binding or location might change in future ES versions.
+        // The binding index could become more dynamic in ES 3.1.
         attribDesc.binding  = attribIndex;
-        attribDesc.format   = static_cast<VkFormat>(mVertexInputAttribs.formats[attribIndex]);
+        attribDesc.format   = static_cast<VkFormat>(packedAttrib.format);
         attribDesc.location = static_cast<uint32_t>(attribIndex);
-        attribDesc.offset   = mVertexInputAttribs.offsets[attribIndex];
+        attribDesc.offset   = packedAttrib.offset;
 
         vertexAttribCount++;
     }
@@ -728,25 +728,30 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
                                              VkFormat format,
                                              GLuint relativeOffset)
 {
-    vk::PackedVertexInputBindingDesc &bindingDesc = mVertexInputBindings[attribIndex];
-    bindingDesc.stride                            = static_cast<uint16_t>(stride);
-    bindingDesc.inputRate = static_cast<uint16_t>(divisor > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE
-                                                              : VK_VERTEX_INPUT_RATE_VERTEX);
-    constexpr size_t kBindingBaseBit =
-        offsetof(GraphicsPipelineDesc, mVertexInputBindings) >> kTransitionByteShift;
-    transition->set(kBindingBaseBit + attribIndex);
-    static_assert(kVertexInputBindingSize == 4, "Size mismatch");
+    vk::PackedAttribDesc &packedAttrib = mVertexInputAttribs.attribs[attribIndex];
+
+    // TODO(http://anglebug.com/2672): This will need to be updated to support instancing.
+    ASSERT(divisor == 0);
+
+    SetBitField(packedAttrib.stride, stride);
+    SetBitField(packedAttrib.inputRate,
+                divisor > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX);
 
     if (format == VK_FORMAT_UNDEFINED)
     {
         UNIMPLEMENTED();
     }
 
-    SetBitField(mVertexInputAttribs.formats[attribIndex], format);
-    SetBitField(mVertexInputAttribs.offsets[attribIndex], relativeOffset);
-    transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mVertexInputAttribs, formats, attribIndex, 8));
-    transition->set(
-        ANGLE_GET_INDEXED_TRANSITION_BIT(mVertexInputAttribs, offsets, attribIndex, 16));
+    SetBitField(packedAttrib.format, format);
+    SetBitField(packedAttrib.offset, relativeOffset);
+
+    constexpr size_t kAttribBits = kPackedAttribDescSize * kBitsPerByte;
+    const size_t kBit =
+        ANGLE_GET_INDEXED_TRANSITION_BIT(mVertexInputAttribs, attribs, attribIndex, kAttribBits);
+
+    // Cover the next dirty bit conservatively. Because each attribute is 6 bytes.
+    transition->set(kBit);
+    transition->set(kBit + 1);
 }
 
 void GraphicsPipelineDesc::updateTopology(GraphicsPipelineTransitionBits *transition,
