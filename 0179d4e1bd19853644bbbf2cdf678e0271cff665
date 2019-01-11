@@ -162,6 +162,30 @@
       "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15292b24_2b539932",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-11T17:55:35Z",
+      "side": 1,
+      "message": "Also you might need an option to turn the skip on/off in the BlockEncoderVisitor constructor.",
+      "parentUuid": "4b85dab7_5d75119b",
+      "range": {
+        "startLine": 355,
+        "startChar": 7,
+        "endLine": 355,
+        "endChar": 65
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
