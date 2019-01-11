@@ -138,6 +138,30 @@
       "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b85dab7_5d75119b",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-11T17:54:48Z",
+      "side": 1,
+      "message": "Good point. Maybe for now just use a BlockEncoderVisitor here with a DummyBlockEncoder. It\u0027s not perfect but it\u0027s probably cleaner than the current CL.",
+      "parentUuid": "6c5c19ee_648a3f23",
+      "range": {
+        "startLine": 355,
+        "startChar": 7,
+        "endLine": 355,
+        "endChar": 65
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
