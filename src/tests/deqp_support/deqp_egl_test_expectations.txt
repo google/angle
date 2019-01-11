@@ -244,31 +244,31 @@
 2507 ANDROID GLES : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba8 = FAIL
 2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgb565_tex_subimage_rgb8 = FAIL
 2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba8 = FAIL
+2716 ANDROID GLES : dEQP-EGL.functional.preserve_swap.preserve.* = FAIL
 
 // Android failures
-2546 ANDROID : dEQP-EGL.functional.multithread.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.render.multi_thread.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
 2546 ANDROID : dEQP-EGL.functional.buffer_age.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_context.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.single_context.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.multithread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.odd_clear_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.odd_render_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.render_* = FAIL
-2716 ANDROID : dEQP-EGL.functional.preserve_swap.preserve.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.query_context.get_current_context.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.query_context.get_current_display.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
 2546 ANDROID : dEQP-EGL.functional.query_context.query_context.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.render.multi_context.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_thread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.single_context.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
+2546 ANDROID : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
 
 // ES 1 tests

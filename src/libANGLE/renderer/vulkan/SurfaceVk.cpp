@@ -224,7 +224,7 @@ EGLint OffscreenSurfaceVk::isPostSubBufferSupported() const
 
 EGLint OffscreenSurfaceVk::getSwapBehavior() const
 {
-    return EGL_BUFFER_PRESERVED;
+    return EGL_BUFFER_DESTROYED;
 }
 
 angle::Result OffscreenSurfaceVk::getAttachmentRenderTarget(
