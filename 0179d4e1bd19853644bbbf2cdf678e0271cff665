@@ -114,6 +114,30 @@
       "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c5c19ee_648a3f23",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-11T06:10:38Z",
+      "side": 1,
+      "message": "One problem is how to implement \u0027mSkipEnabled\u0027 if we move all logic to BlockEncoderVisitor? mSkipEnabled is needed here since \u0027For an active shader storage block member declared as an array of an aggregate type, an entry will be generated only for the first array element, regardless of its type.\u0027",
+      "parentUuid": "8dc20352_a53df86c",
+      "range": {
+        "startLine": 355,
+        "startChar": 7,
+        "endLine": 355,
+        "endChar": 65
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
