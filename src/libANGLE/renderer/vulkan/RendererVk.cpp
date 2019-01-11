@@ -843,6 +843,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Select additional features to be enabled
     VkPhysicalDeviceFeatures enabledFeatures = {};
     enabledFeatures.inheritedQueries         = mPhysicalDeviceFeatures.inheritedQueries;
+    enabledFeatures.robustBufferAccess       = mPhysicalDeviceFeatures.robustBufferAccess;
 
     VkDeviceQueueCreateInfo queueCreateInfo = {};
 

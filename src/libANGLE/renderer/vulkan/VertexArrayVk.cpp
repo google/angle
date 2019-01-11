@@ -450,11 +450,23 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             }
             else
             {
-                mCurrentArrayBuffers[attribIndex] = &bufferVk->getBuffer();
-                mCurrentArrayBufferHandles[attribIndex] =
-                    bufferVk->getBuffer().getBuffer().getHandle();
-                mCurrentArrayBufferOffsets[attribIndex] = binding.getOffset();
-                mCurrentArrayBufferStrides[attribIndex] = binding.getStride();
+                if (bufferVk->getSize() == 0)
+                {
+                    mCurrentArrayBuffers[attribIndex] = nullptr;
+                    mCurrentArrayBufferHandles[attribIndex] =
+                        mTheNullBuffer.getBuffer().getHandle();
+                    mCurrentArrayBufferOffsets[attribIndex] = 0;
+                    mCurrentArrayBufferStrides[attribIndex] = 0;
+                }
+                else
+                {
+                    mCurrentArrayBuffers[attribIndex] = &bufferVk->getBuffer();
+                    mCurrentArrayBufferHandles[attribIndex] =
+                        bufferVk->getBuffer().getBuffer().getHandle();
+                    mCurrentArrayBufferOffsets[attribIndex] = binding.getOffset();
+                    mCurrentArrayBufferStrides[attribIndex] = binding.getStride();
+                }
+
                 ensureConversionReleased(renderer, attribIndex);
             }
         }
