@@ -82,6 +82,10 @@ ANGLE_UTIL_EXPORT PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT;
 ANGLE_UTIL_EXPORT PFNEGLDEBUGMESSAGECONTROLKHRPROC eglDebugMessageControlKHR;
 ANGLE_UTIL_EXPORT PFNEGLLABELOBJECTKHRPROC eglLabelObjectKHR;
 ANGLE_UTIL_EXPORT PFNEGLQUERYDEBUGKHRPROC eglQueryDebugKHR;
+ANGLE_UTIL_EXPORT PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
+ANGLE_UTIL_EXPORT PFNEGLCREATESYNCKHRPROC eglCreateSyncKHR;
+ANGLE_UTIL_EXPORT PFNEGLDESTROYSYNCKHRPROC eglDestroySyncKHR;
+ANGLE_UTIL_EXPORT PFNEGLGETSYNCATTRIBKHRPROC eglGetSyncAttribKHR;
 ANGLE_UTIL_EXPORT PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
 ANGLE_UTIL_EXPORT PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR;
 ANGLE_UTIL_EXPORT PFNEGLCREATESTREAMKHRPROC eglCreateStreamKHR;
@@ -94,6 +98,7 @@ ANGLE_UTIL_EXPORT PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALKHRPROC
     eglStreamConsumerGLTextureExternalKHR;
 ANGLE_UTIL_EXPORT PFNEGLSTREAMCONSUMERRELEASEKHRPROC eglStreamConsumerReleaseKHR;
 ANGLE_UTIL_EXPORT PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC eglSwapBuffersWithDamageKHR;
+ANGLE_UTIL_EXPORT PFNEGLWAITSYNCKHRPROC eglWaitSyncKHR;
 ANGLE_UTIL_EXPORT PFNEGLPOSTSUBBUFFERNVPROC eglPostSubBufferNV;
 ANGLE_UTIL_EXPORT PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC
     eglStreamConsumerGLTextureExternalAttribsNV;
@@ -211,6 +216,12 @@ void LoadEGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLDEBUGMESSAGECONTROLKHRPROC>(loadProc("eglDebugMessageControlKHR"));
     eglLabelObjectKHR = reinterpret_cast<PFNEGLLABELOBJECTKHRPROC>(loadProc("eglLabelObjectKHR"));
     eglQueryDebugKHR  = reinterpret_cast<PFNEGLQUERYDEBUGKHRPROC>(loadProc("eglQueryDebugKHR"));
+    eglClientWaitSyncKHR =
+        reinterpret_cast<PFNEGLCLIENTWAITSYNCKHRPROC>(loadProc("eglClientWaitSyncKHR"));
+    eglCreateSyncKHR  = reinterpret_cast<PFNEGLCREATESYNCKHRPROC>(loadProc("eglCreateSyncKHR"));
+    eglDestroySyncKHR = reinterpret_cast<PFNEGLDESTROYSYNCKHRPROC>(loadProc("eglDestroySyncKHR"));
+    eglGetSyncAttribKHR =
+        reinterpret_cast<PFNEGLGETSYNCATTRIBKHRPROC>(loadProc("eglGetSyncAttribKHR"));
     eglCreateImageKHR = reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(loadProc("eglCreateImageKHR"));
     eglDestroyImageKHR =
         reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(loadProc("eglDestroyImageKHR"));
@@ -232,6 +243,7 @@ void LoadEGL(LoadProc loadProc)
         loadProc("eglStreamConsumerReleaseKHR"));
     eglSwapBuffersWithDamageKHR = reinterpret_cast<PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC>(
         loadProc("eglSwapBuffersWithDamageKHR"));
+    eglWaitSyncKHR = reinterpret_cast<PFNEGLWAITSYNCKHRPROC>(loadProc("eglWaitSyncKHR"));
     eglPostSubBufferNV =
         reinterpret_cast<PFNEGLPOSTSUBBUFFERNVPROC>(loadProc("eglPostSubBufferNV"));
     eglStreamConsumerGLTextureExternalAttribsNV =

@@ -39,8 +39,9 @@ namespace egl
 {
 class Device;
 class Image;
-class Surface;
 class Stream;
+class Surface;
+class Sync;
 class Thread;
 
 using SurfaceSet = std::set<Surface *>;
@@ -107,12 +108,15 @@ class Display final : public LabeledObject, angle::NonCopyable
                         const AttributeMap &attribs,
                         gl::Context **outContext);
 
+    Error createSync(EGLenum type, const AttributeMap &attribs, Sync **outSync);
+
     Error makeCurrent(Surface *drawSurface, Surface *readSurface, gl::Context *context);
 
     Error destroySurface(Surface *surface);
     void destroyImage(Image *image);
     void destroyStream(Stream *stream);
     Error destroyContext(const Thread *thread, gl::Context *context);
+    void destroySync(Sync *sync);
 
     bool isInitialized() const;
     bool isValidConfig(const Config *config) const;
@@ -120,6 +124,7 @@ class Display final : public LabeledObject, angle::NonCopyable
     bool isValidSurface(const Surface *surface) const;
     bool isValidImage(const Image *image) const;
     bool isValidStream(const Stream *stream) const;
+    bool isValidSync(const Sync *sync) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
 
     Error validateClientBuffer(const Config *configuration,
@@ -164,6 +169,9 @@ class Display final : public LabeledObject, angle::NonCopyable
                                EGLint binarysize);
     EGLint programCacheResize(EGLint limit, EGLenum mode);
 
+    Error clientWaitSync(Sync *sync, EGLint flags, EGLTime timeout, EGLint *outResult);
+    Error waitSync(Sync *sync, EGLint flags);
+
     const AttributeMap &getAttributeMap() const { return mAttributeMap; }
     EGLNativeDisplayType getNativeDisplayId() const { return mDisplayId; }
 
@@ -203,6 +211,9 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     typedef std::set<Stream *> StreamSet;
     StreamSet mStreamSet;
+
+    typedef std::set<Sync *> SyncSet;
+    SyncSet mSyncSet;
 
     bool mInitialized;
     bool mDeviceLost;

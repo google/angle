@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 
 #include "libANGLE/renderer/gl/egl/ImageEGL.h"
+#include "libANGLE/renderer/gl/egl/SyncEGL.h"
 
 namespace rx
 {
@@ -27,6 +28,11 @@ ImageImpl *DisplayEGL::createImage(const egl::ImageState &state,
                                    const egl::AttributeMap &attribs)
 {
     return new ImageEGL(state, context, target, attribs, mEGL);
+}
+
+EGLSyncImpl *DisplayEGL::createSync(const egl::AttributeMap &attribs)
+{
+    return new SyncEGL(attribs, mEGL);
 }
 
 std::string DisplayEGL::getVendorString() const
@@ -107,6 +113,8 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
 
 void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
+
     outExtensions->createContextRobustness =
         mEGL->hasExtension("EGL_EXT_create_context_robustness");
 
@@ -132,6 +140,11 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->imageNativeBuffer = mEGL->hasExtension("EGL_ANDROID_image_native_buffer");
 
     outExtensions->getFrameTimestamps = mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps");
+
+    outExtensions->fenceSync =
+        eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_fence_sync");
+    outExtensions->waitSync =
+        eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_wait_sync");
 
     DisplayGL::generateExtensions(outExtensions);
 }

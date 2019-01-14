@@ -71,10 +71,12 @@ class FunctionsEGL
                                const EGLint *attrib_list) const;
     EGLBoolean destroyImageKHR(EGLImageKHR image) const;
 
-    EGLSyncKHR createSyncKHR(EGLenum type, const EGLint *attrib_list);
-    EGLBoolean destroySyncKHR(EGLSyncKHR sync);
-    EGLint clientWaitSyncKHR(EGLSyncKHR sync, EGLint flags, EGLTimeKHR timeout);
-    EGLBoolean getSyncAttribKHR(EGLSyncKHR sync, EGLint attribute, EGLint *value);
+    EGLSyncKHR createSyncKHR(EGLenum type, const EGLint *attrib_list) const;
+    EGLBoolean destroySyncKHR(EGLSyncKHR sync) const;
+    EGLint clientWaitSyncKHR(EGLSyncKHR sync, EGLint flags, EGLTimeKHR timeout) const;
+    EGLBoolean getSyncAttribKHR(EGLSyncKHR sync, EGLint attribute, EGLint *value) const;
+
+    EGLint waitSyncKHR(EGLSyncKHR sync, EGLint flags) const;
 
     EGLBoolean swapBuffersWithDamageKHR(EGLSurface surface, EGLint *rects, EGLint n_rects) const;
 

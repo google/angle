@@ -231,7 +231,9 @@ unsigned int GetTexParameterCount(GLenum pname);
 namespace egl
 {
 struct Config;
+class Display;
 class Surface;
+class Sync;
 
 void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value);
 
@@ -239,6 +241,7 @@ void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *va
 
 void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value);
 void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value);
+Error GetSyncAttrib(Display *display, Sync *sync, EGLint attribute, EGLint *value);
 
 }  // namespace egl
 

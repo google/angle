@@ -4,8 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Fence.cpp: Implements the gl::FenceNV and gl::Sync classes, which support the GL_NV_fence
-// extension and GLES3 sync objects.
+// Fence.cpp: Implements the gl::FenceNV and gl::Sync classes.
 
 #include "libANGLE/Fence.h"
 
@@ -66,7 +65,11 @@ Sync::Sync(rx::SyncImpl *impl, GLuint id)
       mFlags(0)
 {}
 
-void Sync::onDestroy(const Context *context) {}
+void Sync::onDestroy(const Context *context)
+{
+    ASSERT(mFence);
+    mFence->onDestroy(context);
+}
 
 Sync::~Sync()
 {

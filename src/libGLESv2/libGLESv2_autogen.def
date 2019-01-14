@@ -1445,6 +1445,12 @@ EXPORTS
     EGL_LabelObjectKHR
     EGL_QueryDebugKHR
 
+    ; EGL_KHR_fence_sync
+    EGL_ClientWaitSyncKHR
+    EGL_CreateSyncKHR
+    EGL_DestroySyncKHR
+    EGL_GetSyncAttribKHR
+
     ; EGL_KHR_image
     EGL_CreateImageKHR
     EGL_DestroyImageKHR
@@ -1463,6 +1469,9 @@ EXPORTS
 
     ; EGL_KHR_swap_buffers_with_damage
     EGL_SwapBuffersWithDamageKHR
+
+    ; EGL_KHR_wait_sync
+    EGL_WaitSyncKHR
 
     ; EGL_NV_post_sub_buffer
     EGL_PostSubBufferNV

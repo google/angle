@@ -104,6 +104,23 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy
                                                                   void *texture,
                                                                   const EGLAttrib *attrib_list);
 
+// EGL_KHR_fence_sync
+ANGLE_EXPORT EGLSync EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy,
+                                                   EGLenum type,
+                                                   const EGLint *attrib_list);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSync sync);
+ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
+                                                      EGLSync sync,
+                                                      EGLint flags,
+                                                      EGLTime timeout);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncAttribKHR(EGLDisplay dpy,
+                                                         EGLSync sync,
+                                                         EGLint attribute,
+                                                         EGLint *value);
+
+// EGL_KHR_wait_sync
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags);
+
 // EGL_CHROMIUM_get_sync_values
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncValuesCHROMIUM(EGLDisplay dpy,
                                                               EGLSurface surface,

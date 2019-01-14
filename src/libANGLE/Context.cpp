@@ -3217,6 +3217,13 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.explicitContext = true;
     }
 
+    // If EGL_KHR_fence_sync is not enabled, don't expose GL_OES_EGL_sync.
+    ASSERT(mCurrentDisplay);
+    if (!mCurrentDisplay->getExtensions().fenceSync)
+    {
+        supportedExtensions.eglSync = false;
+    }
+
     supportedExtensions.memorySize = true;
 
     return supportedExtensions;

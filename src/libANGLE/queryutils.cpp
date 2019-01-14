@@ -13,6 +13,8 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
+#include "libANGLE/EGLSync.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/GLES1State.h"
@@ -3024,6 +3026,29 @@ void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
             UNREACHABLE();
             break;
     }
+}
+
+Error GetSyncAttrib(Display *display, Sync *sync, EGLint attribute, EGLint *value)
+{
+    switch (attribute)
+    {
+        case EGL_SYNC_TYPE_KHR:
+            *value = sync->getType();
+            return NoError();
+
+        case EGL_SYNC_STATUS_KHR:
+            return sync->getStatus(display, value);
+
+        case EGL_SYNC_CONDITION_KHR:
+            *value = sync->getCondition();
+            return NoError();
+
+        default:
+            break;
+    }
+
+    UNREACHABLE();
+    return NoError();
 }
 
 }  // namespace egl

@@ -1150,6 +1150,8 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->eglImageExternalEssl3 =
         functions->hasGLESExtension("GL_OES_EGL_image_external_essl3");
 
+    extensions->eglSync = functions->hasGLESExtension("GL_OES_EGL_sync");
+
     if (functions->isAtLeastGL(gl::Version(3, 3)) ||
         functions->hasGLExtension("GL_ARB_timer_query") ||
         functions->hasGLESExtension("GL_EXT_disjoint_timer_query"))

@@ -326,6 +326,9 @@ struct Extensions
     // GL_OES_EGL_image_external_essl3
     bool eglImageExternalEssl3;
 
+    // GL_OES_EGL_sync
+    bool eglSync;
+
     // NV_EGL_stream_consumer_external
     bool eglStreamConsumerExternal;
 
@@ -786,6 +789,12 @@ struct DisplayExtensions
 
     // EGL_ANGLE_stream_producer_d3d_texture
     bool streamProducerD3DTexture;
+
+    // EGL_KHR_fence_sync
+    bool fenceSync;
+
+    // EGL_KHR_wait_sync
+    bool waitSync;
 
     // EGL_ANGLE_create_context_webgl_compatibility
     bool createContextWebGLCompatibility;

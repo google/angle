@@ -68,7 +68,7 @@
   "GL/EGL entry points:scripts/gl_angle_ext.xml":
     "56fb2634ebb3d8240b1a92aeb5518f1a",
   "GL/EGL entry points:scripts/registry_xml.py":
-    "8490a27114ee420dbbe640f1b99edeec",
+    "d9f9d394f3e71ac7dba84c203452d9e1",
   "GL/EGL/WGL loader:scripts/egl.xml":
     "842e24514c4cfe09fba703c17a0fd292",
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
@@ -76,7 +76,7 @@
   "GL/EGL/WGL loader:scripts/generate_loader.py":
     "2d9be1d0f4f54905f3372411522133d1",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
-    "8490a27114ee420dbbe640f1b99edeec",
+    "d9f9d394f3e71ac7dba84c203452d9e1",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "OpenGL dispatch table:scripts/gl.xml":
@@ -120,7 +120,7 @@
   "proc table:src/libGLESv2/gen_proc_table.py":
     "ee265eada3dd238646010dd03874d242",
   "proc table:src/libGLESv2/proc_table_data.json":
-    "77a69a0785c263381ef856b1d7d9c492",
+    "81412cd66c53732e7e9d0cfc86b1ec92",
   "uniform type:src/common/gen_uniform_type_table.py":
     "e185802e66950dfc5fc7a8fc19751206"
 }

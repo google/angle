@@ -23,10 +23,14 @@ SyncGL::SyncGL(const FunctionsGL *functions) : SyncImpl(), mFunctions(functions)
 
 SyncGL::~SyncGL()
 {
-    if (mSyncObject != 0)
-    {
-        mFunctions->deleteSync(mSyncObject);
-    }
+    ASSERT(mSyncObject == 0);
+}
+
+void SyncGL::onDestroy(const gl::Context *context)
+{
+    ASSERT(mSyncObject != 0);
+    mFunctions->deleteSync(mSyncObject);
+    mSyncObject = 0;
 }
 
 angle::Result SyncGL::set(const gl::Context *context, GLenum condition, GLbitfield flags)

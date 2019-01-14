@@ -28,6 +28,8 @@ class SyncImpl : angle::NonCopyable
     SyncImpl(){};
     virtual ~SyncImpl(){};
 
+    virtual void onDestroy(const gl::Context *context) {}
+
     virtual angle::Result set(const gl::Context *context, GLenum condition, GLbitfield flags) = 0;
     virtual angle::Result clientWait(const gl::Context *context,
                                      GLbitfield flags,

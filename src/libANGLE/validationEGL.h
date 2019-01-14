@@ -32,6 +32,7 @@ class Display;
 class Image;
 class Stream;
 class Surface;
+class Sync;
 class Thread;
 class LabeledObject;
 
@@ -42,6 +43,7 @@ Error ValidateConfig(const Display *display, const Config *config);
 Error ValidateContext(const Display *display, const gl::Context *context);
 Error ValidateImage(const Display *display, const Image *image);
 Error ValidateDevice(const Device *device);
+Error ValidateSync(const Device *device, const Sync *sync);
 
 // Return the requested object only if it is valid (otherwise nullptr)
 const Thread *GetThreadIfValid(const Thread *thread);
@@ -51,6 +53,7 @@ const Image *GetImageIfValid(const Display *display, const Image *image);
 const Stream *GetStreamIfValid(const Display *display, const Stream *stream);
 const gl::Context *GetContextIfValid(const Display *display, const gl::Context *context);
 const Device *GetDeviceIfValid(const Device *device);
+const Sync *GetSyncIfValid(const Display *display, const Sync *sync);
 LabeledObject *GetLabeledObjectIfValid(Thread *thread,
                                        const Display *display,
                                        ObjectType objectType,
@@ -93,6 +96,42 @@ Error ValidateCreateDeviceANGLE(EGLint device_type,
                                 void *native_device,
                                 const EGLAttrib *attrib_list);
 Error ValidateReleaseDeviceANGLE(Device *device);
+
+Error ValidateCreateSyncBase(const Display *display,
+                             EGLenum type,
+                             const AttributeMap &attribs,
+                             const Display *currentDisplay,
+                             const gl::Context *currentContext,
+                             bool isExt);
+Error ValidateGetSyncAttribBase(const Display *display, const Sync *sync, EGLint attribute);
+
+Error ValidateCreateSyncKHR(const Display *display,
+                            EGLenum type,
+                            const AttributeMap &attribs,
+                            const Display *currentDisplay,
+                            const gl::Context *currentContext);
+Error ValidateCreateSync(const Display *display,
+                         EGLenum type,
+                         const AttributeMap &attribs,
+                         const Display *currentDisplay,
+                         const gl::Context *currentContext);
+Error ValidateDestroySync(const Display *display, const Sync *sync);
+Error ValidateClientWaitSync(const Display *display,
+                             const Sync *sync,
+                             EGLint flags,
+                             EGLTime timeout);
+Error ValidateWaitSync(const Display *display,
+                       const gl::Context *context,
+                       const Sync *sync,
+                       EGLint flags);
+Error ValidateGetSyncAttribKHR(const Display *display,
+                               const Sync *sync,
+                               EGLint attribute,
+                               EGLint *value);
+Error ValidateGetSyncAttrib(const Display *display,
+                            const Sync *sync,
+                            EGLint attribute,
+                            EGLAttrib *value);
 
 Error ValidateCreateStreamKHR(const Display *display, const AttributeMap &attributes);
 Error ValidateDestroyStreamKHR(const Display *display, const Stream *stream);

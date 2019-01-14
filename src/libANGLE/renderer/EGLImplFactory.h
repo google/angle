@@ -31,6 +31,7 @@ class State;
 namespace rx
 {
 class ContextImpl;
+class EGLSyncImpl;
 class ImageImpl;
 class ExternalImageSiblingImpl;
 class SurfaceImpl;
@@ -73,6 +74,8 @@ class EGLImplFactory : angle::NonCopyable
                                                                  EGLenum target,
                                                                  EGLClientBuffer buffer,
                                                                  const egl::AttributeMap &attribs);
+
+    virtual EGLSyncImpl *createSync(const egl::AttributeMap &attribs);
 };
 
 inline ExternalImageSiblingImpl *EGLImplFactory::createExternalImageSibling(
@@ -80,6 +83,12 @@ inline ExternalImageSiblingImpl *EGLImplFactory::createExternalImageSibling(
     EGLenum target,
     EGLClientBuffer buffer,
     const egl::AttributeMap &attribs)
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
+inline EGLSyncImpl *EGLImplFactory::createSync(const egl::AttributeMap &attribs)
 {
     UNREACHABLE();
     return nullptr;

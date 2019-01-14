@@ -15,6 +15,7 @@
 #include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Thread.h"
+#include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
 #include "libGLESv2/global_state.h"
 
@@ -869,6 +870,128 @@ EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy,
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
+
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
+// EGL_KHR_fence_sync
+ANGLE_EXPORT EGLSync EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy,
+                                                   EGLenum type,
+                                                   const EGLint *attrib_list)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR
+          ", EGLenum type = 0x%X, const EGLint* attrib_list = 0x%016" PRIxPTR ")",
+          (uintptr_t)dpy, type, (uintptr_t)attrib_list);
+
+    Thread *thread          = egl::GetCurrentThread();
+    egl::Display *display   = static_cast<egl::Display *>(dpy);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
+
+    gl::Context *currentContext  = thread->getContext();
+    egl::Display *currentDisplay = currentContext ? currentContext->getCurrentDisplay() : nullptr;
+
+    ANGLE_EGL_TRY_RETURN(
+        thread, ValidateCreateSyncKHR(display, type, attributes, currentDisplay, currentContext),
+        "eglCreateSync", GetDisplayIfValid(display), EGL_NO_SYNC);
+
+    egl::Sync *syncObject = nullptr;
+    ANGLE_EGL_TRY_RETURN(thread, display->createSync(type, attributes, &syncObject),
+                         "eglCreateSync", GetDisplayIfValid(display), EGL_NO_SYNC);
+
+    thread->setSuccess();
+    return static_cast<EGLSync>(syncObject);
+}
+
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSync sync)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR ")", (uintptr_t)dpy,
+          (uintptr_t)sync);
+
+    Thread *thread        = egl::GetCurrentThread();
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    egl::Sync *syncObject = static_cast<Sync *>(sync);
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateDestroySync(display, syncObject), "eglDestroySync",
+                         GetDisplayIfValid(display), EGL_FALSE);
+
+    display->destroySync(syncObject);
+
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
+ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
+                                                      EGLSync sync,
+                                                      EGLint flags,
+                                                      EGLTime timeout)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR
+          ", EGLint flags = 0x%X, EGLTime timeout = "
+          "%llu)",
+          (uintptr_t)dpy, (uintptr_t)sync, flags, static_cast<unsigned long long>(timeout));
+
+    Thread *thread        = egl::GetCurrentThread();
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    egl::Sync *syncObject = static_cast<Sync *>(sync);
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateClientWaitSync(display, syncObject, flags, timeout),
+                         "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+
+    EGLint syncStatus = EGL_FALSE;
+    ANGLE_EGL_TRY_RETURN(thread, display->clientWaitSync(syncObject, flags, timeout, &syncStatus),
+                         "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+
+    thread->setSuccess();
+    return syncStatus;
+}
+
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncAttribKHR(EGLDisplay dpy,
+                                                         EGLSync sync,
+                                                         EGLint attribute,
+                                                         EGLint *value)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR
+          ", EGLint attribute = 0x%X, EGLAttrib "
+          "*value = 0x%016" PRIxPTR ")",
+          (uintptr_t)dpy, (uintptr_t)sync, attribute, (uintptr_t)value);
+
+    Thread *thread        = egl::GetCurrentThread();
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    egl::Sync *syncObject = static_cast<Sync *>(sync);
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateGetSyncAttribKHR(display, syncObject, attribute, value),
+                         "eglGetSyncAttrib", GetDisplayIfValid(display), EGL_FALSE);
+
+    ANGLE_EGL_TRY_RETURN(thread, GetSyncAttrib(display, syncObject, attribute, value),
+                         "eglGetSyncAttrib", GetDisplayIfValid(display), EGL_FALSE);
+
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
+// EGL_KHR_wait_sync
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy =0x%016" PRIxPTR "p, EGLSync sync = 0x%016" PRIxPTR
+          ", EGLint flags = 0x%X)",
+          (uintptr_t)dpy, (uintptr_t)sync, flags);
+
+    Thread *thread        = egl::GetCurrentThread();
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    gl::Context *context  = thread->getContext();
+    egl::Sync *syncObject = static_cast<Sync *>(sync);
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateWaitSync(display, context, syncObject, flags),
+                         "eglWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+
+    ANGLE_EGL_TRY_RETURN(thread, display->waitSync(syncObject, flags), "eglWaitSync",
+                         GetDisplayIfValid(display), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

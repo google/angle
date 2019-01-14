@@ -155,7 +155,6 @@
 1340 WIN : dEQP-EGL.functional.resize.pixel_density.* = SKIP
 
 // Windows OpenGL failures
-2546 WIN : dEQP-EGL.functional.fence_sync.invalid.* = SKIP
 2546 WIN : dEQP-EGL.functional.resize.surface_size.shrink = SKIP
 2546 WIN : dEQP-EGL.functional.reusable_sync.invalid.* = SKIP
 2546 WIN : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL

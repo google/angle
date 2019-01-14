@@ -25,6 +25,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
+#include "libANGLE/EGLSync.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Stream.h"
@@ -566,6 +567,11 @@ Error Display::terminate(const Thread *thread)
         destroyStream(*mStreamSet.begin());
     }
 
+    while (!mSyncSet.empty())
+    {
+        destroySync(*mSyncSet.begin());
+    }
+
     while (!mState.surfaceSet.empty())
     {
         ANGLE_TRY(destroySurface(*mState.surfaceSet.begin()));
@@ -814,6 +820,29 @@ Error Display::createContext(const Config *configuration,
     return NoError();
 }
 
+Error Display::createSync(EGLenum type, const AttributeMap &attribs, Sync **outSync)
+{
+    ASSERT(isInitialized());
+
+    if (mImplementation->testDeviceLost())
+    {
+        ANGLE_TRY(restoreLostDevice());
+    }
+
+    angle::UniqueObjectPointer<egl::Sync, Display> syncPtr(new Sync(mImplementation, type, attribs),
+                                                           this);
+
+    ANGLE_TRY(syncPtr->initialize(this));
+
+    Sync *sync = syncPtr.release();
+
+    sync->addRef();
+    mSyncSet.insert(sync);
+
+    *outSync = sync;
+    return NoError();
+}
+
 Error Display::makeCurrent(egl::Surface *drawSurface,
                            egl::Surface *readSurface,
                            gl::Context *context)
@@ -924,6 +953,14 @@ Error Display::destroyContext(const Thread *thread, gl::Context *context)
     return NoError();
 }
 
+void Display::destroySync(egl::Sync *sync)
+{
+    auto iter = mSyncSet.find(sync);
+    ASSERT(iter != mSyncSet.end());
+    (*iter)->release(this);
+    mSyncSet.erase(iter);
+}
+
 bool Display::isDeviceLost() const
 {
     ASSERT(isInitialized());
@@ -1009,6 +1046,11 @@ bool Display::isValidStream(const Stream *stream) const
     return mStreamSet.find(const_cast<Stream *>(stream)) != mStreamSet.end();
 }
 
+bool Display::isValidSync(const Sync *sync) const
+{
+    return mSyncSet.find(const_cast<Sync *>(sync)) != mSyncSet.end();
+}
+
 bool Display::hasExistingWindowSurface(EGLNativeWindowType window)
 {
     WindowSurfaceMap *windowSurfaces = GetWindowSurfaces();
@@ -1056,8 +1098,8 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
     extensions.clientGetAllProcAddresses = true;
-    extensions.explicitContext           = true;
     extensions.debug                     = true;
+    extensions.explicitContext           = true;
 
     return extensions;
 }
@@ -1303,6 +1345,16 @@ EGLint Display::programCacheResize(EGLint limit, EGLenum mode)
             UNREACHABLE();
             return 0;
     }
+}
+
+Error Display::clientWaitSync(Sync *sync, EGLint flags, EGLTime timeout, EGLint *outResult)
+{
+    return sync->clientWait(this, flags, timeout, outResult);
+}
+
+Error Display::waitSync(Sync *sync, EGLint flags)
+{
+    return sync->serverWait(this, flags);
 }
 
 }  // namespace egl

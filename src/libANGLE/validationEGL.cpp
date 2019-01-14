@@ -13,6 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/EGLSync.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
@@ -807,6 +808,18 @@ Error ValidateDevice(const Device *device)
     return NoError();
 }
 
+Error ValidateSync(const Display *display, const Sync *sync)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->isValidSync(sync))
+    {
+        return EglBadParameter() << "sync object is not valid.";
+    }
+
+    return NoError();
+}
+
 const Thread *GetThreadIfValid(const Thread *thread)
 {
     // Threads should always be valid
@@ -871,6 +884,16 @@ const Device *GetDeviceIfValid(const Device *device)
     }
 
     return device;
+}
+
+const Sync *GetSyncIfValid(const Display *display, const Sync *sync)
+{
+    if (ValidateSync(display, sync).isError())
+    {
+        return nullptr;
+    }
+
+    return sync;
 }
 
 LabeledObject *GetLabeledObjectIfValid(Thread *thread,
@@ -2084,6 +2107,172 @@ Error ValidateReleaseDeviceANGLE(Device *device)
     return NoError();
 }
 
+Error ValidateCreateSyncBase(const Display *display,
+                             EGLenum type,
+                             const AttributeMap &attribs,
+                             const Display *currentDisplay,
+                             const gl::Context *currentContext,
+                             bool isExt)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    switch (type)
+    {
+        case EGL_SYNC_FENCE_KHR:
+            if (!attribs.isEmpty())
+            {
+                return EglBadAttribute() << "Invalid attribute";
+            }
+
+            if (display != currentDisplay)
+            {
+                return EglBadMatch() << "CreateSync can only be called on the current display";
+            }
+
+            ANGLE_TRY(ValidateContext(currentDisplay, currentContext));
+
+            if (!currentContext->getExtensions().eglSync)
+            {
+                return EglBadMatch() << "EGL_SYNC_FENCE_KHR cannot be used without "
+                                        "GL_OES_EGL_sync support.";
+            }
+            break;
+        default:
+            if (isExt)
+            {
+                return EglBadAttribute() << "Invalid type parameter";
+            }
+            else
+            {
+                return EglBadParameter() << "Invalid type parameter";
+            }
+    }
+
+    return NoError();
+}
+
+Error ValidateGetSyncAttribBase(const Display *display, const Sync *sync, EGLint attribute)
+{
+    ANGLE_TRY(ValidateSync(display, sync));
+
+    switch (attribute)
+    {
+        case EGL_SYNC_CONDITION_KHR:
+            if (sync->getType() != EGL_SYNC_FENCE_KHR)
+            {
+                return EglBadAttribute() << "EGL_SYNC_CONDITION_KHR is only valid for fence syncs";
+            }
+            break;
+        // The following attributes are accepted by all types
+        case EGL_SYNC_TYPE_KHR:
+        case EGL_SYNC_STATUS_KHR:
+            break;
+        default:
+            return EglBadAttribute() << "Invalid attribute";
+    }
+
+    return NoError();
+}
+
+Error ValidateCreateSyncKHR(const Display *display,
+                            EGLenum type,
+                            const AttributeMap &attribs,
+                            const Display *currentDisplay,
+                            const gl::Context *currentContext)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    const DisplayExtensions &extensions = display->getExtensions();
+    if (!extensions.fenceSync)
+    {
+        return EglBadAccess() << "EGL_KHR_fence_sync extension is not available";
+    }
+
+    return ValidateCreateSyncBase(display, type, attribs, currentDisplay, currentContext, true);
+}
+
+Error ValidateCreateSync(const Display *display,
+                         EGLenum type,
+                         const AttributeMap &attribs,
+                         const Display *currentDisplay,
+                         const gl::Context *currentContext)
+{
+    return ValidateCreateSyncBase(display, type, attribs, currentDisplay, currentContext, false);
+}
+
+Error ValidateDestroySync(const Display *display, const Sync *sync)
+{
+    ANGLE_TRY(ValidateSync(display, sync));
+    return NoError();
+}
+
+Error ValidateClientWaitSync(const Display *display,
+                             const Sync *sync,
+                             EGLint flags,
+                             EGLTime timeout)
+{
+    ANGLE_TRY(ValidateSync(display, sync));
+    return NoError();
+}
+
+Error ValidateWaitSync(const Display *display,
+                       const gl::Context *context,
+                       const Sync *sync,
+                       EGLint flags)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    const DisplayExtensions &extensions = display->getExtensions();
+    if (!extensions.waitSync)
+    {
+        return EglBadAccess() << "EGL_KHR_wait_sync extension is not available";
+    }
+
+    ANGLE_TRY(ValidateSync(display, sync));
+
+    if (context == nullptr)
+    {
+        return EglBadMatch() << "No context is current.";
+    }
+
+    if (!context->getExtensions().eglSync)
+    {
+        return EglBadMatch() << "Server-side waits cannot be performed without "
+                                "GL_OES_EGL_sync support.";
+    }
+
+    if (flags != 0)
+    {
+        return EglBadParameter() << "flags must be zero";
+    }
+
+    return NoError();
+}
+
+Error ValidateGetSyncAttribKHR(const Display *display,
+                               const Sync *sync,
+                               EGLint attribute,
+                               EGLint *value)
+{
+    if (value == nullptr)
+    {
+        return EglBadParameter() << "Invalid value parameter";
+    }
+    return ValidateGetSyncAttribBase(display, sync, attribute);
+}
+
+Error ValidateGetSyncAttrib(const Display *display,
+                            const Sync *sync,
+                            EGLint attribute,
+                            EGLAttrib *value)
+{
+    if (value == nullptr)
+    {
+        return EglBadParameter() << "Invalid value parameter";
+    }
+    return ValidateGetSyncAttribBase(display, sync, attribute);
+}
+
 Error ValidateCreateStreamKHR(const Display *display, const AttributeMap &attributes)
 {
     ANGLE_TRY(ValidateDisplay(display));
@@ -2174,7 +2363,6 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
                                                  gl::Context *context,
                                                  const Stream *stream)
 {
-    ANGLE_TRY(ValidateDisplay(display));
     ANGLE_TRY(ValidateContext(display, context));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
@@ -3256,7 +3444,6 @@ Error ValidateQueryContext(const Display *display,
                            EGLint attribute,
                            EGLint *value)
 {
-    ANGLE_TRY(ValidateDisplay(display));
     ANGLE_TRY(ValidateContext(display, context));
 
     switch (attribute)

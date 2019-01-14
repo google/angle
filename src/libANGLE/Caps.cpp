@@ -206,6 +206,7 @@ Extensions::Extensions()
       eglImage(false),
       eglImageExternal(false),
       eglImageExternalEssl3(false),
+      eglSync(false),
       eglStreamConsumerExternal(false),
       unpackSubimage(false),
       packSubimage(false),
@@ -866,6 +867,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_EGL_image"] = enableableExtension(&Extensions::eglImage);
         map["GL_OES_EGL_image_external"] = enableableExtension(&Extensions::eglImageExternal);
         map["GL_OES_EGL_image_external_essl3"] = enableableExtension(&Extensions::eglImageExternalEssl3);
+        map["GL_OES_EGL_sync"] = esOnlyExtension(&Extensions::eglSync);
         map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::eglStreamConsumerExternal);
         map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);
@@ -1356,6 +1358,8 @@ DisplayExtensions::DisplayExtensions()
       streamConsumerGLTexture(false),
       streamConsumerGLTextureYUV(false),
       streamProducerD3DTexture(false),
+      fenceSync(false),
+      waitSync(false),
       createContextWebGLCompatibility(false),
       createContextBindGeneratesResource(false),
       getSyncValues(false),
@@ -1404,6 +1408,8 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_stream",                                      stream,                             &extensionStrings);
     InsertExtensionString("EGL_KHR_stream_consumer_gltexture",                   streamConsumerGLTexture,            &extensionStrings);
     InsertExtensionString("EGL_NV_stream_consumer_gltexture_yuv",                streamConsumerGLTextureYUV,         &extensionStrings);
+    InsertExtensionString("EGL_KHR_fence_sync",                                  fenceSync,                          &extensionStrings);
+    InsertExtensionString("EGL_KHR_wait_sync",                                   waitSync,                           &extensionStrings);
     InsertExtensionString("EGL_ANGLE_flexible_surface_compatibility",            flexibleSurfaceCompatibility,       &extensionStrings);
     InsertExtensionString("EGL_ANGLE_stream_producer_d3d_texture",               streamProducerD3DTexture,           &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_webgl_compatibility",        createContextWebGLCompatibility,    &extensionStrings);

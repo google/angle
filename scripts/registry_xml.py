@@ -84,10 +84,12 @@ supported_egl_extensions = [
     "EGL_EXT_platform_base",
     "EGL_EXT_platform_device",
     "EGL_KHR_debug",
+    "EGL_KHR_fence_sync",
     "EGL_KHR_image",
     "EGL_KHR_stream",
     "EGL_KHR_stream_consumer_gltexture",
     "EGL_KHR_swap_buffers_with_damage",
+    "EGL_KHR_wait_sync",
     "EGL_NV_post_sub_buffer",
     "EGL_NV_stream_consumer_gltexture_yuv",
 ]
