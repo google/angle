@@ -12,7 +12,7 @@
 #define UTIL_GLES_LOADER_AUTOGEN_H_
 
 #if defined(GL_GLES_PROTOTYPES) && GL_GLES_PROTOTYPES
-#    error Don't define GL prototypes if you want to use a loader!
+#    error "Don't define GL prototypes if you want to use a loader!"
 #endif  // defined(GL_GLES_PROTOTYPES)
 
 #include "angle_gl.h"

@@ -186,7 +186,7 @@ libegl_preamble = """#include <EGL/egl.h>
 """
 
 util_gles_preamble = """#if defined(GL_GLES_PROTOTYPES) && GL_GLES_PROTOTYPES
-#error Don't define GL prototypes if you want to use a loader!
+#error "Don't define GL prototypes if you want to use a loader!"
 #endif  // defined(GL_GLES_PROTOTYPES)
 
 #include "angle_gl.h"
