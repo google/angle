@@ -3,7 +3,6 @@
 # found in the LICENSE file.
 
 import("../../gni/angle.gni")
-import("//build/config/c++/c++.gni")
 import("//build/config/chromecast_build.gni")
 import("//testing/test.gni")
 import("angle_unittests.gni")
@@ -289,10 +288,7 @@ if (is_win || is_linux || is_android || is_mac) {
 
     if (is_android) {
       use_native_activity = true
-      if (!export_libcxxabi_from_executables) {
-        # This config is already removed if(export_libcxxabi_from_executables)
-        configs -= [ "//build/config/android:hide_all_but_jni" ]
-      }
+      configs -= [ "//build/config/android:hide_all_but_jni" ]
     }
 
     if (is_win) {
@@ -342,10 +338,7 @@ if (is_win || is_linux || is_android || is_mac) {
 
     if (is_android) {
       use_native_activity = true
-      if (!export_libcxxabi_from_executables) {
-        # This config is already removed if(export_libcxxabi_from_executables)
-        configs -= [ "//build/config/android:hide_all_but_jni" ]
-      }
+      configs -= [ "//build/config/android:hide_all_but_jni" ]
     }
 
     configs += [
