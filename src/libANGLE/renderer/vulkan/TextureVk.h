@@ -129,14 +129,14 @@ class TextureVk : public TextureImpl
 
     const vk::ImageHelper &getImage() const
     {
-        ASSERT(mImage.valid());
-        return mImage;
+        ASSERT(mImage && mImage->valid());
+        return *mImage;
     }
 
     vk::ImageHelper &getImage()
     {
-        ASSERT(mImage.valid());
-        return mImage;
+        ASSERT(mImage && mImage->valid());
+        return *mImage;
     }
 
     const vk::ImageView &getReadImageView() const;
@@ -149,6 +149,8 @@ class TextureVk : public TextureImpl
     angle::Result ensureImageInitialized(ContextVk *contextVk);
 
   private:
+    angle::Result ensureImageAllocated(RendererVk *renderer);
+
     angle::Result redefineImage(const gl::Context *context,
                                 const gl::ImageIndex &index,
                                 const gl::InternalFormat &internalFormat,
@@ -218,7 +220,7 @@ class TextureVk : public TextureImpl
                                              uint32_t levelCount,
                                              const vk::Format &format);
 
-    vk::ImageHelper mImage;
+    vk::ImageHelper *mImage;
     vk::ImageView mDrawBaseLevelImageView;
     vk::ImageView mReadBaseLevelImageView;
     vk::ImageView mReadMipmapImageView;

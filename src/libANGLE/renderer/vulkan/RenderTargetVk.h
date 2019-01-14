@@ -37,14 +37,17 @@ class TextureVk;
 class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 {
   public:
-    RenderTargetVk(vk::ImageHelper *image,
-                   vk::ImageView *imageView,
-                   size_t layerIndex,
-                   TextureVk *ownwer);
+    RenderTargetVk();
     ~RenderTargetVk() override;
 
     // Used in std::vector initialization.
     RenderTargetVk(RenderTargetVk &&other);
+
+    void init(vk::ImageHelper *image,
+              vk::ImageView *imageView,
+              size_t layerIndex,
+              TextureVk *owner);
+    void reset();
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     void onColorDraw(vk::FramebufferHelper *framebufferVk,
