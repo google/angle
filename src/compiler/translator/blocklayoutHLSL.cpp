@@ -85,7 +85,11 @@ void HLSLBlockEncoder::advanceOffset(GLenum typeIn,
 
     if (!arraySizes.empty())
     {
-        mCurrentOffset += arrayStride * (gl::ArraySizeProduct(arraySizes) - 1);
+        unsigned int arraySize = gl::ArraySizeProduct(arraySizes);
+        if (arraySize > 0)
+        {
+            mCurrentOffset += arrayStride * (arraySize - 1);
+        }
     }
 
     if (gl::IsMatrixType(type))
