@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8218b0cb_1f0322b9",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "Sorry, should be mIsTopLevelArrayStrideReady. Will change it with other new comments if have:)",
+      "range": {
+        "startLine": 545,
+        "startChar": 8,
+        "endLine": 545,
+        "endChar": 10
+      },
+      "revId": "5e48301f2fa81f35b8f5b40f5bf79816d3ecffdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

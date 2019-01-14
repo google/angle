@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0727ef2d_63da7e5c",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ad30e5b_39aedfa4",
+      "range": {
+        "startLine": 115,
+        "startChar": 7,
+        "endLine": 115,
+        "endChar": 60
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a72af24_907b8856",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 8
@@ -48,6 +72,64 @@
     },
     {
       "key": {
+        "uuid": "e45e03ed_80e2a91e",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a72af24_907b8856",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 1
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17f8e195_8098597c",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "[b]",
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e3ecb74_507a4729",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "[a]",
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3d956111_fd4be0ea",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 8
@@ -59,6 +141,30 @@
       "writtenOn": "2019-01-10T20:33:09Z",
       "side": 1,
       "message": "here you should patch variableInfo to include the top level array stride. I imagine you could use something similar to BaseAlignmentVisitor. You can use mStructStackSize to determine if this is a top level array. I think it\u0027s okay if we compute top level array sizes for interface blocks and uniforms as well.\n\nThis should allow you to remove the getEncoder method. Maybe you could even compute the variable size by using the difference of the encoder offset before and after calling encodeType?",
+      "range": {
+        "startLine": 544,
+        "startChar": 0,
+        "endLine": 545,
+        "endChar": 76
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3acb75e0_db9a8d3d",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "See [a] which is used to calculate the size of structure var. The array of aggregate type is divided into:\n1) array of structure.\nWe must calculate the size of structure before traverse the structure member. So that we can get same top_level_array_stride for each structure member. So it only can be done in enterAggregateType, there we have the structure var. But I need to do below changes:\n   enterAggregateType(const ShaderVariable \u0026structVar, bool isRowMajor, bool isTopEntryPoint, size_t *sizeOut) // add additional information to enterAggregateType\n   \n2) array of array. \narrayOfArrays var can be calculated in encodeType.\n\nSo currently I put the structure size calculation to [b]. If you still think put them to enterAggregateType is better, I can do it in a follow-up patch.",
+      "parentUuid": "3d956111_fd4be0ea",
       "range": {
         "startLine": 544,
         "startChar": 0,
@@ -91,6 +197,30 @@
       "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d86060e_d5b3e33f",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "Done. Rename \u0027hasFinalTopLevelArrayStride\u0027 to \"mIsTopLevelArrayStrideReady\" to make it clear. For example\nstruct S\n{\n  vec a;\n  vec b;\n}\nbuffer Storage\n{\n  S s[][5];\n}\n\nmTopLevelArrayStride is only computed for the first time for s[0][0]. And s[0][1], s[0][2], s[0][3], s[0][4] will reuse mTopLevelArrayStride since mIsTopLevelArrayStrideReady is marked as true.",
+      "parentUuid": "88f94c20_0bf3ca1c",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 269,
+        "endChar": 45
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -177,6 +307,30 @@
       "side": 1,
       "message": "Also you might need an option to turn the skip on/off in the BlockEncoderVisitor constructor.",
       "parentUuid": "4b85dab7_5d75119b",
+      "range": {
+        "startLine": 355,
+        "startChar": 7,
+        "endLine": 355,
+        "endChar": 65
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c83ad44e_951d0a50",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-14T14:47:51Z",
+      "side": 1,
+      "message": "Done. It seems that skip on/off is not needed.",
+      "parentUuid": "15292b24_2b539932",
       "range": {
         "startLine": 355,
         "startChar": 7,
