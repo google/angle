@@ -1055,15 +1055,17 @@ std::string RendererVk::getRendererDescription() const
 
 gl::Version RendererVk::getMaxSupportedESVersion() const
 {
-    // Declare GLES2 support if necessary features for GLES3 are missing
-    bool necessaryFeaturesForES3 = mPhysicalDeviceFeatures.inheritedQueries;
+    // Current highest supported version
+    // TODO: Update this to support ES 3.0. http://crbug.com/angleproject/2950
+    gl::Version maxVersion = gl::Version(2, 0);
 
-    if (!necessaryFeaturesForES3)
+    // Vulkan inherited queries are required to support any GL query type
+    if (!mPhysicalDeviceFeatures.inheritedQueries)
     {
-        return gl::Version(2, 0);
+        maxVersion = std::max(maxVersion, gl::Version(2, 0));
     }
 
-    return gl::Version(3, 0);
+    return maxVersion;
 }
 
 void RendererVk::initFeatures(const std::vector<VkExtensionProperties> &deviceExtensionProps)
