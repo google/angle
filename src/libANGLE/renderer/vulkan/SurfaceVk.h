@@ -60,6 +60,8 @@ class OffscreenSurfaceVk : public SurfaceImpl
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
 
+    vk::ImageHelper *getColorAttachmentImage();
+
   private:
     struct AttachmentImage final : angle::NonCopyable
     {

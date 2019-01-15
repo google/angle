@@ -235,8 +235,8 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
     config.blueSize           = colorFormat.blueBits;
     config.alphaSize          = colorFormat.alphaBits;
     config.alphaMaskSize      = 0;
-    config.bindToTextureRGB   = EGL_FALSE;
-    config.bindToTextureRGBA  = EGL_FALSE;
+    config.bindToTextureRGB   = colorFormat.format == GL_RGB;
+    config.bindToTextureRGBA  = colorFormat.format == GL_RGBA || colorFormat.format == GL_BGRA_EXT;
     config.colorBufferType    = EGL_RGB_BUFFER;
     config.configCaveat       = EGL_NONE;
     config.conformant         = 0;
