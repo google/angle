@@ -4,7 +4,7 @@
 
 import("../gni/angle.gni")
 
-executable("shader_translator") {
+angle_executable("shader_translator") {
   sources = [
     "shader_translator/shader_translator.cpp",
   ]
@@ -18,7 +18,7 @@ config("sample_util_config") {
   include_dirs = [ "sample_util" ]
 }
 
-static_library("sample_util") {
+angle_static_library("sample_util") {
   sources = [
     "sample_util/SampleApplication.cpp",
     "sample_util/SampleApplication.h",
@@ -40,7 +40,6 @@ static_library("sample_util") {
   configs += [ "../:library_name_config" ]
   public_configs = [
     ":sample_util_config",
-    "../:internal_config",
     "../:no_gl_prototypes",
   ]
 }
@@ -55,7 +54,7 @@ template("angle_sample") {
     }
   }
 
-  executable(target_name) {
+  angle_executable(target_name) {
     deps = [
       ":sample_util",
     ]

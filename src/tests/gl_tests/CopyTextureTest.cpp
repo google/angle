@@ -112,15 +112,15 @@ class CopyTextureTest : public ANGLETest
             float alpha = color.A / 255.0f;
             if (premultiplyAlpha)
             {
-                color.R *= alpha;
-                color.G *= alpha;
-                color.B *= alpha;
+                color.R = static_cast<GLubyte>(static_cast<float>(color.R) * alpha);
+                color.G = static_cast<GLubyte>(static_cast<float>(color.G) * alpha);
+                color.B = static_cast<GLubyte>(static_cast<float>(color.B) * alpha);
             }
             else if (unmultiplyAlpha && color.A != 0)
             {
-                color.R /= alpha;
-                color.G /= alpha;
-                color.B /= alpha;
+                color.R = static_cast<GLubyte>(static_cast<float>(color.R) / alpha);
+                color.G = static_cast<GLubyte>(static_cast<float>(color.G) / alpha);
+                color.B = static_cast<GLubyte>(static_cast<float>(color.B) / alpha);
             }
         }
 

@@ -83,7 +83,8 @@ class EGLDirectCompositionTest : public ANGLETest
         ComPtr<IVisual> angleVis;
         ASSERT_TRUE(SUCCEEDED(mAngleHost.As(&angleVis)));
 
-        ASSERT_TRUE(SUCCEEDED(angleVis->put_Size({WINDOWWIDTH, WINDOWHEIGHT})));
+        ASSERT_TRUE(SUCCEEDED(angleVis->put_Size(
+            {static_cast<FLOAT>(WINDOWWIDTH), static_cast<FLOAT>(WINDOWHEIGHT)})));
 
         ASSERT_TRUE(SUCCEEDED(angleVis->put_Offset({0, 0, 0})));
 

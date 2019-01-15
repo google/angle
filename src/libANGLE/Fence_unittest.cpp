@@ -72,8 +72,10 @@ TEST_F(FenceNVTest, SetAndTestBehavior)
     EXPECT_TRUE(mFence->isSet());
     // Fake the behavior of testing the fence before and after it's passed.
     EXPECT_CALL(*mImpl, test(_, _))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_FALSE), Return(angle::Result::Continue)))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_TRUE), Return(angle::Result::Continue)))
+        .WillOnce(DoAll(SetArgumentPointee<1>(static_cast<GLboolean>(GL_FALSE)),
+                        Return(angle::Result::Continue)))
+        .WillOnce(DoAll(SetArgumentPointee<1>(static_cast<GLboolean>(GL_TRUE)),
+                        Return(angle::Result::Continue)))
         .RetiresOnSaturation();
     GLboolean out;
     EXPECT_EQ(angle::Result::Continue, mFence->test(nullptr, &out));

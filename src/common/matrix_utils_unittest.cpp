@@ -707,8 +707,8 @@ TEST(MatrixUtilsTest, Mat4Rotate)
     {
         const auto &input  = rotationGoldenInputs[i];
         const auto &output = rotationGoldenOutputs[i];
-        Mat4 r             = Mat4::Rotate(input.angle, input.axis);
-        CheckMatrixCloseToGolden(output, r);
+        Mat4 rot           = Mat4::Rotate(input.angle, input.axis);
+        CheckMatrixCloseToGolden(output, rot);
     }
 }
 
