@@ -4696,6 +4696,9 @@ TEST_P(GLSLTest, PointCoordConsistency)
     // AMD's OpenGL drivers may have the same issue. http://anglebug.com/1643
     ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
 
+    // http://anglebug.com/2599: Fails on the 5x due to driver bug.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     constexpr char kPointCoordVS[] = R"(attribute vec2 position;
 uniform vec2 viewportSize;
 void main()

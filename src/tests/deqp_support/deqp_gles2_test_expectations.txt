@@ -199,7 +199,6 @@
 
 // Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
 2791 VULKAN ANDROID : dEQP-GLES2.functional.clipping.* = SKIP
-2599 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.limits.points = FAIL
 
 // Failing on the Pixel 2.
 2727 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
