@@ -54,7 +54,7 @@ class GlobalSettings
         try
         {
             int showAngleInUseDialogBox = Settings.Global.getInt(contentResolver,
-                    mContext.getString(R.string.global_settings_angle_in_use_dialog_box));
+                    mContext.getString(R.string.global_settings_show_angle_in_use_dialog_box));
             return (showAngleInUseDialogBox == 1);
         }
         catch (Settings.SettingNotFoundException e)
@@ -74,7 +74,7 @@ class GlobalSettings
     {
         ContentResolver contentResolver = context.getContentResolver();
         Settings.Global.putInt(contentResolver,
-                context.getString(R.string.global_settings_angle_in_use_dialog_box),
+                context.getString(R.string.global_settings_show_angle_in_use_dialog_box),
                 showAngleInUseDialog ? 1 : 0);
     }
 

@@ -24,7 +24,7 @@
         <android.support.v14.preference.SwitchPreference
             android:key="@string/pref_key_angle_in_use_dialog"
             android:title="@string/show_angle_in_use_dialog_box"
-            android:summary="@string/global_settings_angle_in_use_dialog_box"
+            android:summary="@string/global_settings_show_angle_in_use_dialog_box"
             android:defaultValue="false"
             android:enabled="true"/>
     </PreferenceCategory>
