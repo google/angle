@@ -10,4 +10,5 @@
     <string name="global_settings_show_angle_in_use_dialog_box">show_angle_in_use_dialog_box</string>
     <string name="global_settings_driver_selection_pkgs">angle_gl_driver_selection_pkgs</string>
     <string name="global_settings_driver_selection_values">angle_gl_driver_selection_values</string>
+    <string name="global_settings_angle_whitelist">angle_whitelist</string>
 </resources>

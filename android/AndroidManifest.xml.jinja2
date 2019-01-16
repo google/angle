@@ -10,6 +10,7 @@
           package="{{manifest_package|default('com.android.angle')}}">
 
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-sdk android:minSdkVersion="26"
               android:targetSdkVersion="28">
@@ -50,5 +51,14 @@
             <meta-data android:name="com.android.settings.order" android:value="100" />
             <meta-data android:name="com.android.settings.profile" android:value="primary_profile_only" />
         </activity>
+
+        <receiver android:name="com.android.angle.common.Receiver"
+                  android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>
