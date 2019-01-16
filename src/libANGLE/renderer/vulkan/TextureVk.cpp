@@ -13,9 +13,11 @@
 #include "image_util/generatemip.inl"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/ImageVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -528,6 +530,11 @@ angle::Result TextureVk::setStorage(const gl::Context *context,
     ContextVk *contextVk             = GetAs<ContextVk>(context->getImplementation());
     RendererVk *renderer             = contextVk->getRenderer();
 
+    if (!mOwnsImage)
+    {
+        releaseAndDeleteImage(context, renderer);
+    }
+
     ANGLE_TRY(ensureImageAllocated(renderer));
 
     const vk::Format &format         = renderer->getFormat(internalFormat);
@@ -547,8 +554,18 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
                                            gl::TextureType type,
                                            egl::Image *image)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    releaseAndDeleteImage(context, renderer);
+
+    ImageVk *imageVk = vk::GetImpl(image);
+    setImageHelper(renderer, imageVk->getImage(), false);
+
+    const vk::Format &format = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
+    ANGLE_TRY(initImageViews(contextVk, format, 1));
+
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::setImageExternal(const gl::Context *context,
@@ -602,9 +619,10 @@ angle::Result TextureVk::redefineImage(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    // Make sure the image is not allocated yet or it is owned by this texture. We don't want to
-    // redefine an external image.
-    ASSERT(mImage == nullptr || mOwnsImage);
+    if (!mOwnsImage)
+    {
+        releaseAndDeleteImage(context, renderer);
+    }
 
     if (!size.empty())
     {
@@ -927,6 +945,15 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
 {
     UNIMPLEMENTED();
     return angle::Result::Continue;
+}
+
+void TextureVk::releaseOwnershipOfImage(const gl::Context *context)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    mOwnsImage = false;
+    releaseAndDeleteImage(context, renderer);
 }
 
 const vk::ImageView &TextureVk::getReadImageView() const

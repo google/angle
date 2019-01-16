@@ -110,6 +110,7 @@ struct ImageState : private angle::NonCopyable
     ~ImageState();
 
     EGLLabelKHR label;
+    EGLenum target;
     gl::ImageIndex imageIndex;
     ImageSibling *source;
     std::set<ImageSibling *> targets;

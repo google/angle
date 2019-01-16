@@ -139,6 +139,8 @@ class TextureVk : public TextureImpl
         return *mImage;
     }
 
+    void releaseOwnershipOfImage(const gl::Context *context);
+
     const vk::ImageView &getReadImageView() const;
     angle::Result getLayerLevelDrawImageView(vk::Context *context,
                                              size_t layer,

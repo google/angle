@@ -45,6 +45,8 @@ class ImageImpl : angle::NonCopyable
   public:
     ImageImpl(const egl::ImageState &state) : mState(state) {}
     virtual ~ImageImpl() {}
+    virtual void onDestroy(const egl::Display *display) {}
+
     virtual egl::Error initialize(const egl::Display *display) = 0;
 
     virtual angle::Result orphan(const gl::Context *context, egl::ImageSibling *sibling) = 0;

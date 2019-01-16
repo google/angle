@@ -659,7 +659,7 @@ class ImageHelper final : public CommandGraphResource
                                         VkDeviceSize *offsetOut,
                                         bool *newBufferAllocatedOut);
 
-    angle::Result flushStagedUpdates(ContextVk *contextVk,
+    angle::Result flushStagedUpdates(Context *context,
                                      uint32_t levelCount,
                                      vk::CommandBuffer *commandBuffer);
 

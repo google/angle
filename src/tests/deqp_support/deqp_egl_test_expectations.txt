@@ -272,6 +272,14 @@
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
 
+// Vulkan
+3081 VULKAN : dEQP-EGL.functional.image.create.gles2_renderbuffer_depth16_depth_buffer = SKIP
+3081 VULKAN : dEQP-EGL.functional.image.create.gles2_renderbuffer_stencil_stencil_buffer = SKIP
+3081 VULKAN : dEQP-EGL.functional.image.modify.renderbuffer_depth16_renderbuffer_clear_depth = SKIP
+3081 VULKAN : dEQP-EGL.functional.image.modify.renderbuffer_stencil_renderbuffer_clear_stencil = SKIP
+3081 VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_renderbuffer_depth16_depth_buffer = SKIP
+3081 VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_renderbuffer_stencil_stencil_buffer = SKIP
+
 // ES 1 tests
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL

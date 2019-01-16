@@ -197,6 +197,7 @@ rx::FramebufferAttachmentObjectImpl *ExternalImageSibling::getAttachmentImpl() c
 
 ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs)
     : label(nullptr),
+      target(target),
       imageIndex(GetImageIndex(target, attribs)),
       source(buffer),
       targets(),
@@ -242,6 +243,8 @@ void Image::onDestroy(const Display *display)
 
         mState.source = nullptr;
     }
+
+    mImplementation->onDestroy(display);
 }
 
 Image::~Image()

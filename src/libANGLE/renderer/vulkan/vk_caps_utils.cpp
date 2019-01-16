@@ -50,6 +50,12 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outExtensions->textureBorderClamp     = false;  // not implemented yet
     outExtensions->translatedShaderSource = true;
 
+    outExtensions->eglImage = true;
+    // TODO(geofflang): Support GL_OES_EGL_image_external. http://anglebug.com/2668
+    outExtensions->eglImageExternal = false;
+    // TODO(geofflang): Support GL_OES_EGL_image_external_essl3. http://anglebug.com/2668
+    outExtensions->eglImageExternalEssl3 = false;
+
     // Only expose robust buffer access if the physical device supports it.
     outExtensions->robustBufferAccessBehavior = physicalDeviceFeatures.robustBufferAccess;
 

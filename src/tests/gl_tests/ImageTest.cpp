@@ -514,6 +514,19 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
             EXPECT_FALSE(hasExternalESSL3Ext());
         }
     }
+    else if (IsVulkan())
+    {
+        EXPECT_TRUE(hasOESExt());
+        // TODO(geofflang): Support GL_OES_EGL_image_external. http://anglebug.com/2668
+        EXPECT_FALSE(hasExternalExt());
+        EXPECT_TRUE(hasBaseExt());
+        EXPECT_TRUE(has2DTextureExt());
+        // TODO(geofflang): Support EGL_KHR_gl_texture_cubemap_image. http://anglebug.com/2668
+        EXPECT_FALSE(hasCubemapExt());
+        EXPECT_TRUE(hasRenderbufferExt());
+        // TODO(geofflang): Support GL_OES_EGL_image_external_essl3. http://anglebug.com/2668
+        EXPECT_FALSE(hasExternalESSL3Ext());
+    }
     else
     {
         EXPECT_FALSE(hasOESExt());
@@ -1620,6 +1633,10 @@ TEST_P(ImageTest, MipLevels)
     // Also fails on NVIDIA Shield TV bot.
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
+    // TODO(geofflang): Support creating EGL images from non-zero mipmaps in Vulkan.
+    // http://anglebug.com/2668
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
@@ -1845,6 +1862,10 @@ TEST_P(ImageTest, RespecificationOfOtherLevel)
     // Respecification of textures that does not change the size of the level attached to the EGL
     // image does not cause orphaning on Qualcomm devices. http://anglebug.com/2744
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // It is undefined what happens to the mip 0 of the dest texture after it is orphaned. Some
+    // backends explicitly copy the data but Vulkan does not.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
