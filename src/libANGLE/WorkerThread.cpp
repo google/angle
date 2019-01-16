@@ -30,8 +30,8 @@ WorkerThreadPool::~WorkerThreadPool() = default;
 class SingleThreadedWaitableEvent final : public WaitableEvent
 {
   public:
-    SingleThreadedWaitableEvent()  = default;
-    ~SingleThreadedWaitableEvent() = default;
+    SingleThreadedWaitableEvent()           = default;
+    ~SingleThreadedWaitableEvent() override = default;
 
     void wait() override;
     bool isReady() override;
@@ -66,7 +66,7 @@ class AsyncWaitableEvent final : public WaitableEvent
 {
   public:
     AsyncWaitableEvent() : mIsPending(true) {}
-    ~AsyncWaitableEvent() = default;
+    ~AsyncWaitableEvent() override = default;
 
     void wait() override;
     bool isReady() override;
@@ -116,7 +116,7 @@ class AsyncWorkerPool final : public WorkerThreadPool
 {
   public:
     AsyncWorkerPool(size_t maxThreads) : mMaxThreads(maxThreads), mRunningThreads(0){};
-    ~AsyncWorkerPool() = default;
+    ~AsyncWorkerPool() override = default;
 
     std::shared_ptr<WaitableEvent> postWorkerTask(std::shared_ptr<Closure> task) override;
     void setMaxThreads(size_t maxThreads) override;

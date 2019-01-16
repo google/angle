@@ -258,6 +258,8 @@ Extensions::Extensions()
       multiDraw(false)
 {}
 
+Extensions::Extensions(const Extensions &other) = default;
+
 std::vector<std::string> Extensions::getStrings() const
 {
     std::vector<std::string> extensionStrings;
@@ -750,13 +752,13 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureHalfFloat      = DetermineHalfFloatTextureSupport(textureCaps);
     textureHalfFloatLinear =
         textureHalfFloat && DetermineHalfFloatTextureFilteringSupport(textureCaps);
-    textureFloat       = DetermineFloatTextureSupport(textureCaps);
-    textureFloatLinear = textureFloat && DetermineFloatTextureFilteringSupport(textureCaps);
-    textureRG          = DetermineRGTextureSupport(textureCaps, textureHalfFloat, textureFloat);
-    colorBufferHalfFloat = textureHalfFloat && DetermineColorBufferHalfFloatSupport(textureCaps);
-    textureCompressionDXT1     = DetermineDXT1TextureSupport(textureCaps);
-    textureCompressionDXT3     = DetermineDXT3TextureSupport(textureCaps);
-    textureCompressionDXT5     = DetermineDXT5TextureSupport(textureCaps);
+    textureFloat           = DetermineFloatTextureSupport(textureCaps);
+    textureFloatLinear     = textureFloat && DetermineFloatTextureFilteringSupport(textureCaps);
+    textureRG              = DetermineRGTextureSupport(textureCaps, textureHalfFloat, textureFloat);
+    colorBufferHalfFloat   = textureHalfFloat && DetermineColorBufferHalfFloatSupport(textureCaps);
+    textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);
+    textureCompressionDXT3 = DetermineDXT3TextureSupport(textureCaps);
+    textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
     textureCompressionS3TCsRGB = DetermineS3TCsRGBTextureSupport(textureCaps);
     textureCompressionASTCHDR  = DetermineASTCTextureSupport(textureCaps);
     textureCompressionASTCLDR  = textureCompressionASTCHDR;

@@ -41,7 +41,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                    vk::ImageView *imageView,
                    size_t layerIndex,
                    TextureVk *ownwer);
-    ~RenderTargetVk();
+    ~RenderTargetVk() override;
 
     // Used in std::vector initialization.
     RenderTargetVk(RenderTargetVk &&other);

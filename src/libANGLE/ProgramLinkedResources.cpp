@@ -1164,4 +1164,20 @@ void AtomicCounterBufferLinker::link(const std::map<int, unsigned int> &sizeMap)
     }
 }
 
+ProgramLinkedResources::ProgramLinkedResources(
+    GLuint maxVaryingVectors,
+    PackMode packMode,
+    std::vector<InterfaceBlock> *uniformBlocksOut,
+    std::vector<LinkedUniform> *uniformsOut,
+    std::vector<InterfaceBlock> *shaderStorageBlocksOut,
+    std::vector<BufferVariable> *bufferVariablesOut,
+    std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut)
+    : varyingPacking(maxVaryingVectors, packMode),
+      uniformBlockLinker(uniformBlocksOut, uniformsOut),
+      shaderStorageBlockLinker(shaderStorageBlocksOut, bufferVariablesOut),
+      atomicCounterBufferLinker(atomicCounterBuffersOut)
+{}
+
+ProgramLinkedResources::~ProgramLinkedResources() = default;
+
 }  // namespace gl

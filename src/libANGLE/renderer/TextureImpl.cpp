@@ -80,4 +80,15 @@ angle::Result TextureImpl::copy3DSubTexture(const gl::Context *context,
     UNREACHABLE();
     return angle::Result::Stop;
 }
+
+GLint TextureImpl::getMemorySize() const
+{
+    return 0;
+}
+
+GLint TextureImpl::getLevelMemorySize(gl::TextureTarget target, GLint level)
+{
+    return 0;
+}
+
 }  // namespace rx

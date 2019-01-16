@@ -109,37 +109,21 @@ enum class SamplerFormat : uint8_t
 
 struct UniformTypeInfo final : angle::NonCopyable
 {
-    constexpr UniformTypeInfo(GLenum type,
-                              GLenum componentType,
-                              GLenum textureType,
-                              GLenum transposedMatrixType,
-                              GLenum boolVectorType,
-                              SamplerFormat samplerFormat,
-                              int rowCount,
-                              int columnCount,
-                              int componentCount,
-                              size_t componentSize,
-                              size_t internalSize,
-                              size_t externalSize,
-                              bool isSampler,
-                              bool isMatrixType,
-                              bool isImageType)
-        : type(type),
-          componentType(componentType),
-          textureType(textureType),
-          transposedMatrixType(transposedMatrixType),
-          boolVectorType(boolVectorType),
-          samplerFormat(samplerFormat),
-          rowCount(rowCount),
-          columnCount(columnCount),
-          componentCount(componentCount),
-          componentSize(componentSize),
-          internalSize(internalSize),
-          externalSize(externalSize),
-          isSampler(isSampler),
-          isMatrixType(isMatrixType),
-          isImageType(isImageType)
-    {}
+    inline constexpr UniformTypeInfo(GLenum type,
+                                     GLenum componentType,
+                                     GLenum textureType,
+                                     GLenum transposedMatrixType,
+                                     GLenum boolVectorType,
+                                     SamplerFormat samplerFormat,
+                                     int rowCount,
+                                     int columnCount,
+                                     int componentCount,
+                                     size_t componentSize,
+                                     size_t internalSize,
+                                     size_t externalSize,
+                                     bool isSampler,
+                                     bool isMatrixType,
+                                     bool isImageType);
 
     GLenum type;
     GLenum componentType;
@@ -157,6 +141,38 @@ struct UniformTypeInfo final : angle::NonCopyable
     bool isMatrixType;
     bool isImageType;
 };
+
+inline constexpr UniformTypeInfo::UniformTypeInfo(GLenum type,
+                                                  GLenum componentType,
+                                                  GLenum textureType,
+                                                  GLenum transposedMatrixType,
+                                                  GLenum boolVectorType,
+                                                  SamplerFormat samplerFormat,
+                                                  int rowCount,
+                                                  int columnCount,
+                                                  int componentCount,
+                                                  size_t componentSize,
+                                                  size_t internalSize,
+                                                  size_t externalSize,
+                                                  bool isSampler,
+                                                  bool isMatrixType,
+                                                  bool isImageType)
+    : type(type),
+      componentType(componentType),
+      textureType(textureType),
+      transposedMatrixType(transposedMatrixType),
+      boolVectorType(boolVectorType),
+      samplerFormat(samplerFormat),
+      rowCount(rowCount),
+      columnCount(columnCount),
+      componentCount(componentCount),
+      componentSize(componentSize),
+      internalSize(internalSize),
+      externalSize(externalSize),
+      isSampler(isSampler),
+      isMatrixType(isMatrixType),
+      isImageType(isImageType)
+{}
 
 const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType);
 

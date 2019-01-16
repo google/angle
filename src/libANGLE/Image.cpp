@@ -137,6 +137,8 @@ ExternalImageSibling::ExternalImageSibling(rx::EGLImplFactory *factory,
     : mImplementation(factory->createExternalImageSibling(context, target, buffer, attribs))
 {}
 
+ExternalImageSibling::~ExternalImageSibling() = default;
+
 gl::Extents ExternalImageSibling::getAttachmentSize(const gl::ImageIndex &imageIndex) const
 {
     return mImplementation->getSize();

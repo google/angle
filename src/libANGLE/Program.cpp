@@ -1139,12 +1139,9 @@ angle::Result Program::link(const Context *context)
     std::unique_ptr<ProgramLinkedResources> resources;
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
-        resources.reset(
-            new ProgramLinkedResources{{0, PackMode::ANGLE_RELAXED},
-                                       {&mState.mUniformBlocks, &mState.mUniforms},
-                                       {&mState.mShaderStorageBlocks, &mState.mBufferVariables},
-                                       {&mState.mAtomicCounterBuffers},
-                                       {}});
+        resources.reset(new ProgramLinkedResources(
+            0, PackMode::ANGLE_RELAXED, &mState.mUniformBlocks, &mState.mUniforms,
+            &mState.mShaderStorageBlocks, &mState.mBufferVariables, &mState.mAtomicCounterBuffers));
 
         GLuint combinedImageUniforms = 0u;
         if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
@@ -1195,12 +1192,9 @@ angle::Result Program::link(const Context *context)
             packMode = PackMode::WEBGL_STRICT;
         }
 
-        resources.reset(
-            new ProgramLinkedResources{{data.getCaps().maxVaryingVectors, packMode},
-                                       {&mState.mUniformBlocks, &mState.mUniforms},
-                                       {&mState.mShaderStorageBlocks, &mState.mBufferVariables},
-                                       {&mState.mAtomicCounterBuffers},
-                                       {}});
+        resources.reset(new ProgramLinkedResources(
+            data.getCaps().maxVaryingVectors, packMode, &mState.mUniformBlocks, &mState.mUniforms,
+            &mState.mShaderStorageBlocks, &mState.mBufferVariables, &mState.mAtomicCounterBuffers));
 
         if (!linkAttributes(context->getCaps(), mInfoLog))
         {

@@ -31,7 +31,7 @@ namespace rx
 class ExternalImageSiblingImpl : public FramebufferAttachmentObjectImpl
 {
   public:
-    virtual ~ExternalImageSiblingImpl() {}
+    ~ExternalImageSiblingImpl() override {}
 
     virtual gl::Format getFormat() const                        = 0;
     virtual bool isRenderable(const gl::Context *context) const = 0;

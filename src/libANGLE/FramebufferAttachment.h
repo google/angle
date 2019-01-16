@@ -194,7 +194,7 @@ class FramebufferAttachmentObject : public angle::Subject
 {
   public:
     FramebufferAttachmentObject();
-    virtual ~FramebufferAttachmentObject();
+    ~FramebufferAttachmentObject() override;
 
     virtual Extents getAttachmentSize(const ImageIndex &imageIndex) const                  = 0;
     virtual Format getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const = 0;

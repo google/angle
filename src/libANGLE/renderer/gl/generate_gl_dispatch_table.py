@@ -178,6 +178,7 @@ class DispatchTableGL : angle::NonCopyable
   public:
 {table_data}
 
+  DispatchTableGL();
   virtual ~DispatchTableGL() = default;
 
   protected:
@@ -247,6 +248,7 @@ dispatch_table_source_template = """// GENERATED FILE - DO NOT EDIT.
 
 namespace rx
 {{
+DispatchTableGL::DispatchTableGL() = default;
 
 void DispatchTableGL::initProcsDesktopGL(const gl::Version &version, const std::set<std::string> &extensions)
 {{

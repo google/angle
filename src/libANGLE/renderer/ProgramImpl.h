@@ -52,12 +52,21 @@ class LinkEventDone final : public LinkEvent
 {
   public:
     LinkEventDone(angle::Result result) : mResult(result) {}
-    angle::Result wait(const gl::Context *context) override { return mResult; }
-    bool isLinking() override { return false; }
+    angle::Result wait(const gl::Context *context) override;
+    bool isLinking() override;
 
   private:
     angle::Result mResult;
 };
+
+inline angle::Result LinkEventDone::wait(const gl::Context *context)
+{
+    return mResult;
+}
+inline bool LinkEventDone::isLinking()
+{
+    return false;
+}
 
 class ProgramImpl : angle::NonCopyable
 {

@@ -29,6 +29,8 @@ SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attr
     : label(nullptr), config(configIn), attributes(attributesIn), timestampsEnabled(false)
 {}
 
+SurfaceState::~SurfaceState() = default;
+
 Surface::Surface(EGLint surfaceType,
                  const egl::Config *config,
                  const AttributeMap &attributes,

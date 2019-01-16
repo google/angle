@@ -60,7 +60,7 @@ constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
 class Display final : public LabeledObject, angle::NonCopyable
 {
   public:
-    ~Display();
+    ~Display() override;
 
     void setLabel(EGLLabelKHR label) override;
     EGLLabelKHR getLabel() const override;

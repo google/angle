@@ -126,11 +126,7 @@ class DummyBlockEncoder : public BlockLayoutEncoder
                             const std::vector<unsigned int> &arraySizes,
                             bool isRowMajorMatrix,
                             int *arrayStrideOut,
-                            int *matrixStrideOut) override
-    {
-        *arrayStrideOut  = 0;
-        *matrixStrideOut = 0;
-    }
+                            int *matrixStrideOut) override;
 
     void advanceOffset(GLenum type,
                        const std::vector<unsigned int> &arraySizes,
@@ -163,15 +159,8 @@ class Std140BlockEncoder : public BlockLayoutEncoder
                        int arrayStride,
                        int matrixStride) override;
 
-    virtual size_t getBaseAlignment(const ShaderVariable &variable) const
-    {
-        return kComponentsPerRegister;
-    }
-
-    virtual size_t getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const
-    {
-        return kComponentsPerRegister;
-    }
+    virtual size_t getBaseAlignment(const ShaderVariable &variable) const;
+    virtual size_t getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const;
 };
 
 class Std430BlockEncoder : public Std140BlockEncoder
@@ -226,7 +215,7 @@ class VariableNameVisitor : public ShaderVariableVisitor
 {
   public:
     VariableNameVisitor(const std::string &namePrefix, const std::string &mappedNamePrefix);
-    ~VariableNameVisitor();
+    ~VariableNameVisitor() override;
 
     void enterStruct(const ShaderVariable &structVar) override;
     void exitStruct(const ShaderVariable &structVar) override;
@@ -235,11 +224,7 @@ class VariableNameVisitor : public ShaderVariableVisitor
     void enterArray(const ShaderVariable &arrayVar) override;
     void exitArray(const ShaderVariable &arrayVar) override;
     void enterArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) override;
-    void exitArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) override
-    {
-        mNameStack.pop_back();
-        mMappedNameStack.pop_back();
-    }
+    void exitArrayElement(const ShaderVariable &arrayVar, unsigned int arrayElement) override;
 
   protected:
     virtual void visitNamedSampler(const sh::ShaderVariable &sampler,
@@ -268,7 +253,7 @@ class BlockEncoderVisitor : public VariableNameVisitor
     BlockEncoderVisitor(const std::string &namePrefix,
                         const std::string &mappedNamePrefix,
                         BlockLayoutEncoder *encoder);
-    ~BlockEncoderVisitor();
+    ~BlockEncoderVisitor() override;
 
     void enterStructAccess(const ShaderVariable &structVar, bool isRowMajor) override;
     void exitStructAccess(const ShaderVariable &structVar, bool isRowMajor) override;

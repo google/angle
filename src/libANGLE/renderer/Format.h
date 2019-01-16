@@ -23,25 +23,25 @@ extern const Format gFormatInfoTable[];
 
 struct Format final : private angle::NonCopyable
 {
-    constexpr Format(FormatID id,
-                     GLenum glFormat,
-                     GLenum fboFormat,
-                     rx::MipGenerationFunction mipGen,
-                     const rx::FastCopyFunctionMap &fastCopyFunctions,
-                     rx::PixelReadFunction colorRead,
-                     rx::PixelWriteFunction colorWrite,
-                     GLenum componentType,
-                     GLuint redBits,
-                     GLuint greenBits,
-                     GLuint blueBits,
-                     GLuint alphaBits,
-                     GLuint luminanceBits,
-                     GLuint depthBits,
-                     GLuint stencilBits,
-                     GLuint pixelBytes,
-                     GLuint componentAlignmentMask,
-                     bool isBlock,
-                     bool isFixed);
+    inline constexpr Format(FormatID id,
+                            GLenum glFormat,
+                            GLenum fboFormat,
+                            rx::MipGenerationFunction mipGen,
+                            const rx::FastCopyFunctionMap &fastCopyFunctions,
+                            rx::PixelReadFunction colorRead,
+                            rx::PixelWriteFunction colorWrite,
+                            GLenum componentType,
+                            GLuint redBits,
+                            GLuint greenBits,
+                            GLuint blueBits,
+                            GLuint alphaBits,
+                            GLuint luminanceBits,
+                            GLuint depthBits,
+                            GLuint stencilBits,
+                            GLuint pixelBytes,
+                            GLuint componentAlignmentMask,
+                            bool isBlock,
+                            bool isFixed);
 
     static const Format &Get(FormatID id) { return gFormatInfoTable[static_cast<int>(id)]; }
 

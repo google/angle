@@ -46,6 +46,7 @@ using SupportedTimestamps       = angle::PackedEnumBitSet<Timestamp>;
 struct SurfaceState final : private angle::NonCopyable
 {
     SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn);
+    ~SurfaceState();
 
     EGLLabelKHR label;
     const egl::Config *config;

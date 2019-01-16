@@ -47,11 +47,17 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
                                                    egl::Image *image) = 0;
 
     // Override if accurate native memory size information is available
-    virtual GLint getMemorySize() const { return 0; }
+    virtual GLint getMemorySize() const;
 
   protected:
     const gl::RenderbufferState &mState;
 };
+
+inline GLint RenderbufferImpl::getMemorySize() const
+{
+    return 0;
+}
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_

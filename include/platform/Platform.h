@@ -15,22 +15,22 @@
 #define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x3482
 
 #if defined(_WIN32)
-#   if !defined(LIBANGLE_IMPLEMENTATION)
-#       define ANGLE_PLATFORM_EXPORT __declspec(dllimport)
-#   else
-#       define ANGLE_PLATFORM_EXPORT __declspec(dllexport)
-#   endif
+#    if !defined(LIBANGLE_IMPLEMENTATION)
+#        define ANGLE_PLATFORM_EXPORT __declspec(dllimport)
+#    else
+#        define ANGLE_PLATFORM_EXPORT __declspec(dllexport)
+#    endif
 #elif defined(__GNUC__) || defined(__clang__)
-#   define ANGLE_PLATFORM_EXPORT __attribute__((visibility ("default")))
+#    define ANGLE_PLATFORM_EXPORT __attribute__((visibility("default")))
 #endif
 #if !defined(ANGLE_PLATFORM_EXPORT)
-#   define ANGLE_PLATFORM_EXPORT
+#    define ANGLE_PLATFORM_EXPORT
 #endif
 
 #if defined(_WIN32)
-#   define ANGLE_APIENTRY __stdcall
+#    define ANGLE_APIENTRY __stdcall
 #else
-#   define ANGLE_APIENTRY
+#    define ANGLE_APIENTRY
 #endif
 
 namespace angle
@@ -68,21 +68,15 @@ inline double DefaultMonotonicallyIncreasingTime(PlatformMethods *platform)
 
 // Log an error message within the platform implementation.
 using LogErrorFunc = void (*)(PlatformMethods *platform, const char *errorMessage);
-inline void DefaultLogError(PlatformMethods *platform, const char *errorMessage)
-{
-}
+inline void DefaultLogError(PlatformMethods *platform, const char *errorMessage) {}
 
 // Log a warning message within the platform implementation.
 using LogWarningFunc = void (*)(PlatformMethods *platform, const char *warningMessage);
-inline void DefaultLogWarning(PlatformMethods *platform, const char *warningMessage)
-{
-}
+inline void DefaultLogWarning(PlatformMethods *platform, const char *warningMessage) {}
 
 // Log an info message within the platform implementation.
 using LogInfoFunc = void (*)(PlatformMethods *platform, const char *infoMessage);
-inline void DefaultLogInfo(PlatformMethods *platform, const char *infoMessage)
-{
-}
+inline void DefaultLogInfo(PlatformMethods *platform, const char *infoMessage) {}
 
 // Tracing --------
 
@@ -183,8 +177,7 @@ inline void DefaultUpdateTraceEventDuration(PlatformMethods *platform,
                                             const unsigned char *categoryEnabledFlag,
                                             const char *name,
                                             angle::TraceEventHandle eventHandle)
-{
-}
+{}
 
 // Callbacks for reporting histogram data.
 // CustomCounts histogram has exponential bucket sizes, so that min=1, max=1000000, bucketCount=50
@@ -201,8 +194,7 @@ inline void DefaultHistogramCustomCounts(PlatformMethods *platform,
                                          int min,
                                          int max,
                                          int bucketCount)
-{
-}
+{}
 // Enumeration histogram buckets are linear, boundaryValue should be larger than any possible sample
 // value.
 using HistogramEnumerationFunc = void (*)(PlatformMethods *platform,
@@ -213,33 +205,26 @@ inline void DefaultHistogramEnumeration(PlatformMethods *platform,
                                         const char *name,
                                         int sample,
                                         int boundaryValue)
-{
-}
+{}
 // Unlike enumeration histograms, sparse histograms only allocate memory for non-empty buckets.
 using HistogramSparseFunc = void (*)(PlatformMethods *platform, const char *name, int sample);
-inline void DefaultHistogramSparse(PlatformMethods *platform, const char *name, int sample)
-{
-}
+inline void DefaultHistogramSparse(PlatformMethods *platform, const char *name, int sample) {}
 // Boolean histograms track two-state variables.
 using HistogramBooleanFunc = void (*)(PlatformMethods *platform, const char *name, bool sample);
-inline void DefaultHistogramBoolean(PlatformMethods *platform, const char *name, bool sample)
-{
-}
+inline void DefaultHistogramBoolean(PlatformMethods *platform, const char *name, bool sample) {}
 
 // Allows us to programatically override ANGLE's default workarounds for testing purposes.
 using OverrideWorkaroundsD3DFunc = void (*)(PlatformMethods *platform,
                                             angle::WorkaroundsD3D *workaroundsD3D);
 inline void DefaultOverrideWorkaroundsD3D(PlatformMethods *platform,
                                           angle::WorkaroundsD3D *workaroundsD3D)
-{
-}
+{}
 
 using OverrideFeaturesVkFunc = void (*)(PlatformMethods *platform,
                                         angle::FeaturesVk *workaroundsVulkan);
 inline void DefaultOverrideFeaturesVk(PlatformMethods *platform,
                                       angle::FeaturesVk *workaroundsVulkan)
-{
-}
+{}
 
 // Callback on a successful program link with the program binary. Can be used to store
 // shaders to disk. Keys are a 160-bit SHA-1 hash.
@@ -252,8 +237,7 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
                                 const ProgramKeyType &key,
                                 size_t programSize,
                                 const uint8_t *programBytes)
-{
-}
+{}
 
 // Platform methods are enumerated here once.
 #define ANGLE_PLATFORM_OP(OP)                                    \
@@ -277,7 +261,7 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
 
 struct ANGLE_PLATFORM_EXPORT PlatformMethods
 {
-    PlatformMethods() {}
+    inline PlatformMethods();
 
     // User data pointer for any implementation specific members. Put it at the start of the
     // platform structure so it doesn't become overwritten if one version of the platform
@@ -286,6 +270,8 @@ struct ANGLE_PLATFORM_EXPORT PlatformMethods
 
     ANGLE_PLATFORM_OP(ANGLE_PLATFORM_METHOD_DEF);
 };
+
+inline PlatformMethods::PlatformMethods() = default;
 
 #undef ANGLE_PLATFORM_METHOD_DEF
 
@@ -335,4 +321,4 @@ typedef void(ANGLE_APIENTRY *ResetDisplayPlatformFunc)(angle::EGLDisplayType);
 // This function is not exported
 angle::PlatformMethods *ANGLEPlatformCurrent();
 
-#endif // ANGLE_PLATFORM_H
+#endif  // ANGLE_PLATFORM_H

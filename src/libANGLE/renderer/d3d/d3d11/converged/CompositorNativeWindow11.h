@@ -76,7 +76,7 @@ class CompositorNativeWindow11 : public NativeWindow11
 {
   public:
     CompositorNativeWindow11(EGLNativeWindowType window, bool hasAlpha);
-    ~CompositorNativeWindow11() override = default;
+    ~CompositorNativeWindow11() override;
 
     bool initialize() override;
     bool getClientRect(LPRECT rect) const override;

@@ -526,17 +526,35 @@ class PipelineHelper;
 
 struct GraphicsPipelineTransition
 {
+    GraphicsPipelineTransition();
+    GraphicsPipelineTransition(const GraphicsPipelineTransition &other);
+    GraphicsPipelineTransition(GraphicsPipelineTransitionBits bits,
+                               const GraphicsPipelineDesc *desc,
+                               PipelineHelper *pipeline);
+
     GraphicsPipelineTransitionBits bits;
     const GraphicsPipelineDesc *desc;
     PipelineHelper *target;
 };
+
+ANGLE_INLINE GraphicsPipelineTransition::GraphicsPipelineTransition() = default;
+
+ANGLE_INLINE GraphicsPipelineTransition::GraphicsPipelineTransition(
+    const GraphicsPipelineTransition &other) = default;
+
+ANGLE_INLINE GraphicsPipelineTransition::GraphicsPipelineTransition(
+    GraphicsPipelineTransitionBits bits,
+    const GraphicsPipelineDesc *desc,
+    PipelineHelper *pipeline)
+    : bits(bits), desc(desc), target(pipeline)
+{}
 
 class PipelineHelper final : angle::NonCopyable
 {
   public:
     PipelineHelper();
     ~PipelineHelper();
-    explicit PipelineHelper(Pipeline &&pipeline) : mPipeline(std::move(pipeline)) {}
+    inline explicit PipelineHelper(Pipeline &&pipeline);
 
     void destroy(VkDevice device);
 
@@ -557,6 +575,8 @@ class PipelineHelper final : angle::NonCopyable
     Serial mSerial;
     Pipeline mPipeline;
 };
+
+ANGLE_INLINE PipelineHelper::PipelineHelper(Pipeline &&pipeline) : mPipeline(std::move(pipeline)) {}
 
 }  // namespace vk
 }  // namespace rx

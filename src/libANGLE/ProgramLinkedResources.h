@@ -192,6 +192,15 @@ struct UnusedUniform
 
 struct ProgramLinkedResources
 {
+    ProgramLinkedResources(GLuint maxVaryingVectors,
+                           PackMode packMode,
+                           std::vector<InterfaceBlock> *uniformBlocksOut,
+                           std::vector<LinkedUniform> *uniformsOut,
+                           std::vector<InterfaceBlock> *shaderStorageBlocksOut,
+                           std::vector<BufferVariable> *bufferVariablesOut,
+                           std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);
+    ~ProgramLinkedResources();
+
     VaryingPacking varyingPacking;
     UniformBlockLinker uniformBlockLinker;
     ShaderStorageBlockLinker shaderStorageBlockLinker;

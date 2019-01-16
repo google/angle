@@ -32,7 +32,7 @@ class BufferImpl : public angle::Subject
 {
   public:
     BufferImpl(const gl::BufferState &state) : mState(state) {}
-    virtual ~BufferImpl() {}
+    ~BufferImpl() override {}
     virtual void destroy(const gl::Context *context) {}
 
     virtual angle::Result setData(const gl::Context *context,
@@ -66,11 +66,17 @@ class BufferImpl : public angle::Subject
                                         gl::IndexRange *outRange) = 0;
 
     // Override if accurate native memory size information is available
-    virtual GLint64 getMemorySize() const { return 0; }
+    virtual GLint64 getMemorySize() const;
 
   protected:
     const gl::BufferState &mState;
 };
+
+inline GLint64 BufferImpl::getMemorySize() const
+{
+    return 0;
+}
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_BUFFERIMPL_H_

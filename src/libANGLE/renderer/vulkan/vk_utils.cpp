@@ -86,7 +86,7 @@ bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps
 
 bool HasValidationLayers(const std::vector<VkLayerProperties> &layerProps)
 {
-    for (const auto &layerName : g_VkValidationLayerNames)
+    for (const char *layerName : g_VkValidationLayerNames)
     {
         if (!HasValidationLayer(layerProps, layerName))
         {

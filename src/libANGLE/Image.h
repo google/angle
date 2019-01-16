@@ -78,6 +78,7 @@ class ExternalImageSibling : public ImageSibling
                          EGLenum target,
                          EGLClientBuffer buffer,
                          const AttributeMap &attribs);
+    ~ExternalImageSibling() override;
 
     gl::Extents getAttachmentSize(const gl::ImageIndex &imageIndex) const override;
     gl::Format getAttachmentFormat(GLenum binding, const gl::ImageIndex &imageIndex) const override;

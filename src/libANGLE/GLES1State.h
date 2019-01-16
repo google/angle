@@ -37,6 +37,8 @@ struct TextureCoordF
 
 struct MaterialParameters
 {
+    MaterialParameters();
+
     ColorF ambient;
     ColorF diffuse;
     ColorF specular;
@@ -46,12 +48,17 @@ struct MaterialParameters
 
 struct LightModelParameters
 {
+    LightModelParameters();
+
     ColorF color;
     bool twoSided;
 };
 
 struct LightParameters
 {
+    LightParameters();
+    LightParameters(const LightParameters &other);
+
     bool enabled                 = false;
     ColorF ambient               = {0.0f, 0.0f, 0.0f, 1.0f};
     ColorF diffuse               = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -67,6 +74,8 @@ struct LightParameters
 
 struct FogParameters
 {
+    FogParameters();
+
     FogMode mode;
     GLfloat density;
     GLfloat start;
@@ -76,6 +85,9 @@ struct FogParameters
 
 struct TextureEnvironmentParameters
 {
+    TextureEnvironmentParameters();
+    TextureEnvironmentParameters(const TextureEnvironmentParameters &other);
+
     TextureEnvMode mode         = TextureEnvMode::Modulate;
     TextureCombine combineRgb   = TextureCombine::Modulate;
     TextureCombine combineAlpha = TextureCombine::Modulate;
@@ -107,6 +119,9 @@ struct TextureEnvironmentParameters
 
 struct PointParameters
 {
+    PointParameters();
+    PointParameters(const PointParameters &other);
+
     GLfloat pointSizeMin                    = 0.0f;
     GLfloat pointSizeMax                    = 1.0f;
     GLfloat pointFadeThresholdSize          = 1.0f;
@@ -116,6 +131,10 @@ struct PointParameters
 
 struct ClipPlaneParameters
 {
+    ClipPlaneParameters();
+    ClipPlaneParameters(bool enabled, const angle::Vector4 &equation);
+    ClipPlaneParameters(const ClipPlaneParameters &other);
+
     bool enabled;
     angle::Vector4 equation;
 };

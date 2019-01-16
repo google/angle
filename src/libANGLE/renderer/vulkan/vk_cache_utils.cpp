@@ -1243,8 +1243,7 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
                                    const GraphicsPipelineDesc *desc,
                                    PipelineHelper *pipeline)
 {
-    GraphicsPipelineTransition transition = {bits, desc, pipeline};
-    mTransitions.push_back(transition);
+    mTransitions.emplace_back(bits, desc, pipeline);
 }
 }  // namespace vk
 

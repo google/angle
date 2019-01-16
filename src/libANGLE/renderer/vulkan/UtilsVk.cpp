@@ -152,6 +152,10 @@ uint32_t GetFormatDefaultChannelMask(const vk::Format &format)
 }
 }  // namespace
 
+UtilsVk::ConvertVertexShaderParams::ConvertVertexShaderParams() = default;
+
+UtilsVk::ImageCopyShaderParams::ImageCopyShaderParams() = default;
+
 UtilsVk::UtilsVk() = default;
 
 UtilsVk::~UtilsVk() = default;

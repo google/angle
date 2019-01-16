@@ -20,9 +20,12 @@ namespace rx
 CompositorNativeWindow11::CompositorNativeWindow11(EGLNativeWindowType window, bool hasAlpha)
     : NativeWindow11(window), mHasAlpha(hasAlpha)
 {
-    auto inspPtr = reinterpret_cast<ABI::Windows::UI::Composition::ISpriteVisual *>(window);
-    mHostVisual  = Microsoft::WRL::ComPtr<ABI::Windows::UI::Composition::ISpriteVisual>{inspPtr};
+    ABI::Windows::UI::Composition::ISpriteVisual *inspPtr =
+        reinterpret_cast<ABI::Windows::UI::Composition::ISpriteVisual *>(window);
+    mHostVisual = Microsoft::WRL::ComPtr<ABI::Windows::UI::Composition::ISpriteVisual>{inspPtr};
 }
+
+CompositorNativeWindow11::~CompositorNativeWindow11() = default;
 
 bool CompositorNativeWindow11::initialize()
 {
@@ -177,7 +180,8 @@ bool CompositorNativeWindow11::IsSpriteVisual(EGLNativeWindowType window)
 {
     RoHelper helper;
 
-    auto inspp = reinterpret_cast<ABI::Windows::UI::Composition::ISpriteVisual *>(window);
+    ABI::Windows::UI::Composition::ISpriteVisual *inspp =
+        reinterpret_cast<ABI::Windows::UI::Composition::ISpriteVisual *>(window);
     HSTRING className, spriteClassName;
     HSTRING_HEADER spriteClassNameHeader;
 

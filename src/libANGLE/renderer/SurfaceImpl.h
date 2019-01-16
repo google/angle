@@ -79,50 +79,25 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual EGLint getSwapBehavior() const          = 0;
 
     // Used to query color format from pbuffers created from D3D textures.
-    virtual const angle::Format *getD3DTextureColorFormat() const
-    {
-        UNREACHABLE();
-        return nullptr;
-    }
+    virtual const angle::Format *getD3DTextureColorFormat() const;
 
     // EGL_ANDROID_get_frame_timestamps
-    virtual void setTimestampsEnabled(bool enabled) { UNREACHABLE(); }
-
-    virtual egl::SupportedCompositorTimings getSupportedCompositorTimings() const
-    {
-        UNREACHABLE();
-        return egl::SupportedCompositorTimings();
-    }
+    virtual void setTimestampsEnabled(bool enabled);
+    virtual egl::SupportedCompositorTimings getSupportedCompositorTimings() const;
     virtual egl::Error getCompositorTiming(EGLint numTimestamps,
                                            const EGLint *names,
-                                           EGLnsecsANDROID *values) const
-    {
-        UNREACHABLE();
-        return egl::EglBadDisplay();
-    }
-
-    virtual egl::Error getNextFrameId(EGLuint64KHR *frameId) const
-    {
-        UNREACHABLE();
-        return egl::EglBadDisplay();
-    }
-    virtual egl::SupportedTimestamps getSupportedTimestamps() const
-    {
-        UNREACHABLE();
-        return egl::SupportedTimestamps();
-    }
+                                           EGLnsecsANDROID *values) const;
+    virtual egl::Error getNextFrameId(EGLuint64KHR *frameId) const;
+    virtual egl::SupportedTimestamps getSupportedTimestamps() const;
     virtual egl::Error getFrameTimestamps(EGLuint64KHR frameId,
                                           EGLint numTimestamps,
                                           const EGLint *timestamps,
-                                          EGLnsecsANDROID *values) const
-    {
-        UNREACHABLE();
-        return egl::EglBadDisplay();
-    }
+                                          EGLnsecsANDROID *values) const;
 
   protected:
     const egl::SurfaceState &mState;
 };
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_SURFACEIMPL_H_

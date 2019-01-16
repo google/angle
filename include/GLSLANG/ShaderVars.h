@@ -294,10 +294,8 @@ struct InterfaceBlock
 struct WorkGroupSize
 {
     // Must have a trivial default constructor since it is used in YYSTYPE.
-    WorkGroupSize() = default;
-    explicit constexpr WorkGroupSize(int initialSize)
-        : localSizeQualifiers{initialSize, initialSize, initialSize}
-    {}
+    inline WorkGroupSize() = default;
+    inline explicit constexpr WorkGroupSize(int initialSize);
 
     void fill(int fillValue);
     void setLocalSize(int localSizeX, int localSizeY, int localSizeZ);
@@ -320,8 +318,12 @@ struct WorkGroupSize
     // Checks whether either all of the values are set, or none of them are.
     bool isLocalSizeValid() const;
 
-    std::array<int, 3> localSizeQualifiers;
+    int localSizeQualifiers[3];
 };
+
+inline constexpr WorkGroupSize::WorkGroupSize(int initialSize)
+    : localSizeQualifiers{initialSize, initialSize, initialSize}
+{}
 
 }  // namespace sh
 

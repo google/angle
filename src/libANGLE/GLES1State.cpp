@@ -24,6 +24,33 @@ bool TextureCoordF::operator==(const TextureCoordF &other) const
     return s == other.s && t == other.t && r == other.r && q == other.q;
 }
 
+MaterialParameters::MaterialParameters() = default;
+
+LightModelParameters::LightModelParameters() = default;
+
+LightParameters::LightParameters() = default;
+
+LightParameters::LightParameters(const LightParameters &other) = default;
+
+FogParameters::FogParameters() = default;
+
+TextureEnvironmentParameters::TextureEnvironmentParameters() = default;
+
+TextureEnvironmentParameters::TextureEnvironmentParameters(
+    const TextureEnvironmentParameters &other) = default;
+
+PointParameters::PointParameters() = default;
+
+PointParameters::PointParameters(const PointParameters &other) = default;
+
+ClipPlaneParameters::ClipPlaneParameters() = default;
+
+ClipPlaneParameters::ClipPlaneParameters(bool enabled, const angle::Vector4 &equation)
+    : enabled(enabled), equation(equation)
+{}
+
+ClipPlaneParameters::ClipPlaneParameters(const ClipPlaneParameters &other) = default;
+
 GLES1State::GLES1State()
     : mGLState(nullptr),
       mVertexArrayEnabled(false),
@@ -135,7 +162,8 @@ void GLES1State::initialize(const Context *context, const State *state)
 
     mLogicOp = LogicalOperation::Copy;
 
-    mClipPlanes.resize(caps.maxClipPlanes, {false, angle::Vector4(0.0f, 0.0f, 0.0f, 0.0f)});
+    mClipPlanes.resize(caps.maxClipPlanes,
+                       ClipPlaneParameters(false, angle::Vector4(0.0f, 0.0f, 0.0f, 0.0f)));
 
     mLineSmoothHint            = HintSetting::DontCare;
     mPointSmoothHint           = HintSetting::DontCare;

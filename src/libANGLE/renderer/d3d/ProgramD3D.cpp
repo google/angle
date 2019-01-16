@@ -423,6 +423,14 @@ const uint8_t *D3DUniform::firstNonNullData() const
     return nullptr;
 }
 
+// D3DInterfaceBlock Implementation
+D3DInterfaceBlock::D3DInterfaceBlock()
+{
+    mShaderRegisterIndexes.fill(GL_INVALID_INDEX);
+}
+
+D3DInterfaceBlock::D3DInterfaceBlock(const D3DInterfaceBlock &other) = default;
+
 // D3DVarying Implementation
 
 D3DVarying::D3DVarying() : semanticIndex(0), componentCount(0), outputSlot(0) {}
@@ -449,6 +457,8 @@ ProgramD3DMetadata::ProgramD3DMetadata(RendererD3D *renderer,
       mCanSelectViewInVertexShader(renderer->canSelectViewInVertexShader()),
       mAttachedShaders(attachedShaders)
 {}
+
+ProgramD3DMetadata::~ProgramD3DMetadata() = default;
 
 int ProgramD3DMetadata::getRendererMajorShaderModel() const
 {

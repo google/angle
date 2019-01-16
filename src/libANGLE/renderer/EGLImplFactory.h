@@ -72,12 +72,18 @@ class EGLImplFactory : angle::NonCopyable
     virtual ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
                                                                  EGLenum target,
                                                                  EGLClientBuffer buffer,
-                                                                 const egl::AttributeMap &attribs)
-    {
-        UNREACHABLE();
-        return nullptr;
-    }
+                                                                 const egl::AttributeMap &attribs);
 };
+
+inline ExternalImageSiblingImpl *EGLImplFactory::createExternalImageSibling(
+    const gl::Context *context,
+    EGLenum target,
+    EGLClientBuffer buffer,
+    const egl::AttributeMap &attribs)
+{
+    UNREACHABLE();
+    return nullptr;
+}
 
 }  // namespace rx
 

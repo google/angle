@@ -121,6 +121,8 @@ class UtilsVk : angle::NonCopyable
 
     struct ConvertVertexShaderParams
     {
+        ConvertVertexShaderParams();
+
         // Structure matching PushConstants in ConvertVertex.comp
         uint32_t outputCount    = 0;
         uint32_t componentCount = 0;
@@ -144,6 +146,8 @@ class UtilsVk : angle::NonCopyable
 
     struct ImageCopyShaderParams
     {
+        ImageCopyShaderParams();
+
         // Structure matching PushConstants in ImageCopy.frag
         int32_t srcOffset[2]             = {};
         int32_t destOffset[2]            = {};

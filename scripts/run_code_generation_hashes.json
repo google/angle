@@ -82,7 +82,7 @@
   "OpenGL dispatch table:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/generate_gl_dispatch_table.py":
-    "71d2cd9c958ec5e13ce5e38bdb03dcb5",
+    "f527232452ecf930cfb1276883581342",
   "Vulkan format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan format:src/libANGLE/renderer/angle_format_map.json":

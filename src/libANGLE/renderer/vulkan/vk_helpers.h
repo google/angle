@@ -220,7 +220,7 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
 {
   public:
     DynamicQueryPool();
-    ~DynamicQueryPool();
+    ~DynamicQueryPool() override;
 
     angle::Result init(Context *context, VkQueryType type, uint32_t poolSize);
     void destroy(VkDevice device);
@@ -255,7 +255,7 @@ class QueryHelper final : public QueryGraphResource
 {
   public:
     QueryHelper();
-    ~QueryHelper();
+    ~QueryHelper() override;
 
     void init(const DynamicQueryPool *dynamicQueryPool,
               const size_t queryPoolIndex,
@@ -290,7 +290,7 @@ class DynamicSemaphorePool final : public DynamicallyGrowingPool<std::vector<Sem
 {
   public:
     DynamicSemaphorePool();
-    ~DynamicSemaphorePool();
+    ~DynamicSemaphorePool() override;
 
     angle::Result init(Context *context, uint32_t poolSize);
     void destroy(VkDevice device);
@@ -379,7 +379,7 @@ class BufferHelper final : public RecordableGraphResource
 {
   public:
     BufferHelper();
-    ~BufferHelper();
+    ~BufferHelper() override;
 
     angle::Result init(Context *context,
                        const VkBufferCreateInfo &createInfo,
@@ -467,7 +467,7 @@ class ImageHelper final : public RecordableGraphResource
   public:
     ImageHelper();
     ImageHelper(ImageHelper &&other);
-    ~ImageHelper();
+    ~ImageHelper() override;
 
     angle::Result init(Context *context,
                        gl::TextureType textureType,
@@ -587,7 +587,7 @@ class FramebufferHelper : public RecordableGraphResource
 {
   public:
     FramebufferHelper();
-    ~FramebufferHelper();
+    ~FramebufferHelper() override;
 
     angle::Result init(ContextVk *contextVk, const VkFramebufferCreateInfo &createInfo);
     void release(RendererVk *renderer);

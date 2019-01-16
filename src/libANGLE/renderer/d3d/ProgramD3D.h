@@ -85,7 +85,8 @@ struct D3DUniform : private angle::NonCopyable
 
 struct D3DInterfaceBlock
 {
-    D3DInterfaceBlock() { mShaderRegisterIndexes.fill(GL_INVALID_INDEX); }
+    D3DInterfaceBlock();
+    D3DInterfaceBlock(const D3DInterfaceBlock &other);
 
     bool activeInShader(gl::ShaderType shaderType) const
     {
@@ -117,6 +118,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
   public:
     ProgramD3DMetadata(RendererD3D *renderer,
                        const gl::ShaderMap<const ShaderD3D *> &attachedShaders);
+    ~ProgramD3DMetadata();
 
     int getRendererMajorShaderModel() const;
     bool usesBroadcast(const gl::State &data) const;

@@ -38,10 +38,7 @@ class VertexArrayImpl : angle::NonCopyable
     virtual angle::Result syncState(const gl::Context *context,
                                     const gl::VertexArray::DirtyBits &dirtyBits,
                                     gl::VertexArray::DirtyAttribBitsArray *attribBits,
-                                    gl::VertexArray::DirtyBindingBitsArray *bindingBits)
-    {
-        return angle::Result::Continue;
-    }
+                                    gl::VertexArray::DirtyBindingBitsArray *bindingBits);
 
     virtual void destroy(const gl::Context *context) {}
     virtual ~VertexArrayImpl() {}
@@ -51,6 +48,14 @@ class VertexArrayImpl : angle::NonCopyable
   protected:
     const gl::VertexArrayState &mState;
 };
+
+inline angle::Result VertexArrayImpl::syncState(const gl::Context *context,
+                                                const gl::VertexArray::DirtyBits &dirtyBits,
+                                                gl::VertexArray::DirtyAttribBitsArray *attribBits,
+                                                gl::VertexArray::DirtyBindingBitsArray *bindingBits)
+{
+    return angle::Result::Continue;
+}
 
 }  // namespace rx
 

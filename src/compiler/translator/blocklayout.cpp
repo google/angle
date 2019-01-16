@@ -205,6 +205,17 @@ void BlockLayoutEncoder::align(size_t baseAlignment)
     mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, baseAlignment);
 }
 
+// DummyBlockEncoder implementation.
+void DummyBlockEncoder::getBlockLayoutInfo(GLenum type,
+                                           const std::vector<unsigned int> &arraySizes,
+                                           bool isRowMajorMatrix,
+                                           int *arrayStrideOut,
+                                           int *matrixStrideOut)
+{
+    *arrayStrideOut  = 0;
+    *matrixStrideOut = 0;
+}
+
 // Std140BlockEncoder implementation.
 Std140BlockEncoder::Std140BlockEncoder() {}
 
@@ -278,6 +289,16 @@ void Std140BlockEncoder::advanceOffset(GLenum type,
     {
         mCurrentOffset += gl::VariableComponentCount(type);
     }
+}
+
+size_t Std140BlockEncoder::getBaseAlignment(const ShaderVariable &variable) const
+{
+    return kComponentsPerRegister;
+}
+
+size_t Std140BlockEncoder::getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const
+{
+    return kComponentsPerRegister;
 }
 
 // Std430BlockEncoder implementation.
@@ -387,6 +408,13 @@ void VariableNameVisitor::enterArrayElement(const ShaderVariable &arrayVar,
     std::string elementString = strstr.str();
     mNameStack.push_back(elementString);
     mMappedNameStack.push_back(elementString);
+}
+
+void VariableNameVisitor::exitArrayElement(const ShaderVariable &arrayVar,
+                                           unsigned int arrayElement)
+{
+    mNameStack.pop_back();
+    mMappedNameStack.pop_back();
 }
 
 std::string VariableNameVisitor::collapseNameStack() const

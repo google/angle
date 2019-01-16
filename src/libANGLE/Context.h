@@ -266,7 +266,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
             const egl::ClientExtensions &clientExtensions);
 
     egl::Error onDestroy(const egl::Display *display);
-    ~Context();
+    ~Context() override;
 
     void setLabel(EGLLabelKHR label) override;
     EGLLabelKHR getLabel() const override;

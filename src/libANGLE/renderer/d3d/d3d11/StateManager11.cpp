@@ -740,8 +740,8 @@ void StateManager11::setUnorderedAccessViewInternal(gl::ShaderType shaderType,
 
     if (record.view != reinterpret_cast<uintptr_t>(uav))
     {
-        auto deviceContext                = mRenderer->getDeviceContext();
-        ID3D11UnorderedAccessView *uavPtr = uav ? uav->get() : nullptr;
+        ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+        ID3D11UnorderedAccessView *uavPtr  = uav ? uav->get() : nullptr;
         // We need to make sure that resource being set to UnorderedAccessView slot |resourceSlot|
         // is not bound on SRV.
         if (uavPtr && unsetConflictingView(uavPtr))
@@ -1787,7 +1787,7 @@ angle::Result StateManager11::clearUAVs(gl::ShaderType shaderType,
         return angle::Result::Continue;
     }
 
-    auto deviceContext = mRenderer->getDeviceContext();
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     deviceContext->CSSetUnorderedAccessViews(static_cast<unsigned int>(clearRange.low()),
                                              static_cast<unsigned int>(clearRange.length()),
                                              &mNullUAVs[0], nullptr);
@@ -3617,8 +3617,8 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
         {
             case gl::ShaderType::Compute:
             {
-                ID3D11UnorderedAccessView *uav = uavPtr->get();
-                auto deviceContext             = mRenderer->getDeviceContext();
+                ID3D11UnorderedAccessView *uav     = uavPtr->get();
+                ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
                 deviceContext->CSSetUnorderedAccessViews(registerIndex, 1, &uav, nullptr);
                 break;
             }

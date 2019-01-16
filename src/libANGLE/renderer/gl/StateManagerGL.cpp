@@ -767,7 +767,7 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 
 #if defined(ANGLE_ENABLE_ASSERTS)
     // Temporarily pausing queries during context switch is not supported
-    for (auto &pausedQuery : mTemporaryPausedQueries)
+    for (QueryGL *pausedQuery : mTemporaryPausedQueries)
     {
         ASSERT(pausedQuery == nullptr);
     }

@@ -92,6 +92,7 @@ bool DetermineCompressedTextureETCSupport(const TextureCapsMap &textureCaps);
 struct Extensions
 {
     Extensions();
+    Extensions(const Extensions &other);
 
     // Generate a vector of supported extension strings
     std::vector<std::string> getStrings() const;
