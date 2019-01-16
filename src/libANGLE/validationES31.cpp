@@ -338,7 +338,7 @@ bool ValidateProgramUniformMatrix(Context *context,
 bool ValidateVertexAttribFormatCommon(Context *context,
                                       GLuint attribIndex,
                                       GLint size,
-                                      GLenum type,
+                                      VertexAttribType type,
                                       GLuint relativeOffset,
                                       GLboolean pureInteger)
 {
@@ -1216,7 +1216,7 @@ bool ValidateVertexBindingDivisor(Context *context, GLuint bindingIndex, GLuint 
 bool ValidateVertexAttribFormat(Context *context,
                                 GLuint attribindex,
                                 GLint size,
-                                GLenum type,
+                                VertexAttribType type,
                                 GLboolean normalized,
                                 GLuint relativeoffset)
 {
@@ -1227,7 +1227,7 @@ bool ValidateVertexAttribFormat(Context *context,
 bool ValidateVertexAttribIFormat(Context *context,
                                  GLuint attribindex,
                                  GLint size,
-                                 GLenum type,
+                                 VertexAttribType type,
                                  GLuint relativeoffset)
 {
     return ValidateVertexAttribFormatCommon(context, attribindex, size, type, relativeoffset, true);

@@ -346,7 +346,7 @@ bool ValidateVertexAttrib4fv(Context *context, GLuint index, const GLfloat *v);
 bool ValidateVertexAttribPointer(Context *context,
                                  GLuint index,
                                  GLint size,
-                                 GLenum type,
+                                 VertexAttribType typePacked,
                                  GLboolean normalized,
                                  GLsizei stride,
                                  const void *pointer);

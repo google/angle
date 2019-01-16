@@ -29,7 +29,7 @@ bool ValidateColor4ub(Context *context, GLubyte red, GLubyte green, GLubyte blue
 bool ValidateColor4x(Context *context, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);
 bool ValidateColorPointer(Context *context,
                           GLint size,
-                          GLenum type,
+                          VertexAttribType typePacked,
                           GLsizei stride,
                           const void *pointer);
 bool ValidateDepthRangex(Context *context, GLfixed n, GLfixed f);
@@ -135,7 +135,10 @@ bool ValidateMultiTexCoord4x(Context *context,
                              GLfixed q);
 bool ValidateNormal3f(Context *context, GLfloat nx, GLfloat ny, GLfloat nz);
 bool ValidateNormal3x(Context *context, GLfixed nx, GLfixed ny, GLfixed nz);
-bool ValidateNormalPointer(Context *context, GLenum type, GLsizei stride, const void *pointer);
+bool ValidateNormalPointer(Context *context,
+                           VertexAttribType typePacked,
+                           GLsizei stride,
+                           const void *pointer);
 bool ValidateOrthof(Context *context,
                     GLfloat l,
                     GLfloat r,
@@ -167,7 +170,7 @@ bool ValidateScalex(Context *context, GLfixed x, GLfixed y, GLfixed z);
 bool ValidateShadeModel(Context *context, ShadingModel modePacked);
 bool ValidateTexCoordPointer(Context *context,
                              GLint size,
-                             GLenum type,
+                             VertexAttribType typePacked,
                              GLsizei stride,
                              const void *pointer);
 bool ValidateTexEnvf(Context *context,
@@ -203,7 +206,7 @@ bool ValidateTranslatef(Context *context, GLfloat x, GLfloat y, GLfloat z);
 bool ValidateTranslatex(Context *context, GLfixed x, GLfixed y, GLfixed z);
 bool ValidateVertexPointer(Context *context,
                            GLint size,
-                           GLenum type,
+                           VertexAttribType typePacked,
                            GLsizei stride,
                            const void *pointer);
 }  // namespace gl

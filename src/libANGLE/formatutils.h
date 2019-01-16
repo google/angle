@@ -247,7 +247,7 @@ struct VertexFormat : private angle::NonCopyable
     bool pureInteger;
 };
 
-angle::FormatID GetVertexFormatID(GLenum type,
+angle::FormatID GetVertexFormatID(VertexAttribType type,
                                   GLboolean normalized,
                                   GLuint components,
                                   bool pureInteger);
@@ -257,7 +257,7 @@ ANGLE_INLINE angle::FormatID GetVertexFormatID(const VertexAttribute &attrib)
     return GetVertexFormatID(attrib.type, attrib.normalized, attrib.size, attrib.pureInteger);
 }
 
-angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, GLenum currentValueType);
+angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, VertexAttribType currentValueType);
 const VertexFormat &GetVertexFormatFromID(angle::FormatID vertexFormatID);
 size_t GetVertexFormatSize(angle::FormatID vertexFormatID);
 

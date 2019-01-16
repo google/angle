@@ -4781,7 +4781,7 @@ void Context::vertexAttrib4fv(GLuint index, const GLfloat *values)
 
 void Context::vertexAttribPointer(GLuint index,
                                   GLint size,
-                                  GLenum type,
+                                  VertexAttribType type,
                                   GLboolean normalized,
                                   GLsizei stride,
                                   const void *ptr)
@@ -4793,7 +4793,7 @@ void Context::vertexAttribPointer(GLuint index,
 
 void Context::vertexAttribFormat(GLuint attribIndex,
                                  GLint size,
-                                 GLenum type,
+                                 VertexAttribType type,
                                  GLboolean normalized,
                                  GLuint relativeOffset)
 {
@@ -4804,7 +4804,7 @@ void Context::vertexAttribFormat(GLuint attribIndex,
 
 void Context::vertexAttribIFormat(GLuint attribIndex,
                                   GLint size,
-                                  GLenum type,
+                                  VertexAttribType type,
                                   GLuint relativeOffset)
 {
     mState.setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
@@ -4830,7 +4830,7 @@ void Context::viewport(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void Context::vertexAttribIPointer(GLuint index,
                                    GLint size,
-                                   GLenum type,
+                                   VertexAttribType type,
                                    GLsizei stride,
                                    const void *pointer)
 {

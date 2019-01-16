@@ -2462,10 +2462,12 @@ void GL_APIENTRY VertexAttribPointer(GLuint index,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribPointer(context, index, size, type, normalized, stride, pointer))
+            ValidateVertexAttribPointer(context, index, size, typePacked, normalized, stride,
+                                        pointer))
         {
-            context->vertexAttribPointer(index, size, type, normalized, stride, pointer);
+            context->vertexAttribPointer(index, size, typePacked, normalized, stride, pointer);
         }
     }
 }

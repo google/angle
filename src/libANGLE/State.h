@@ -345,7 +345,7 @@ class State : angle::NonCopyable
                                              unsigned int attribNum,
                                              Buffer *boundBuffer,
                                              GLint size,
-                                             GLenum type,
+                                             VertexAttribType type,
                                              bool normalized,
                                              bool pureInteger,
                                              GLsizei stride,
@@ -377,7 +377,7 @@ class State : angle::NonCopyable
                           GLsizei stride);
     void setVertexAttribFormat(GLuint attribIndex,
                                GLint size,
-                               GLenum type,
+                               VertexAttribType type,
                                bool normalized,
                                bool pureInteger,
                                GLuint relativeOffset);

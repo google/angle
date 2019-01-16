@@ -53,8 +53,12 @@ void GetDefaultInputLayoutFromShader(gl::Shader *vertexShader, gl::InputLayout *
                 GLenum componentType = gl::VariableComponentType(transposedType);
                 GLuint components    = static_cast<GLuint>(gl::VariableColumnCount(transposedType));
                 bool pureInt         = (componentType != GL_FLOAT);
+
+                gl::VertexAttribType attribType =
+                    gl::FromGLenum<gl::VertexAttribType>(componentType);
+
                 angle::FormatID defaultID =
-                    gl::GetVertexFormatID(componentType, GL_FALSE, components, pureInt);
+                    gl::GetVertexFormatID(attribType, GL_FALSE, components, pureInt);
 
                 inputLayoutOut->push_back(defaultID);
             }

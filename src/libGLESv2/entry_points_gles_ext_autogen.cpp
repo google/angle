@@ -4299,10 +4299,11 @@ void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, const void *po
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidatePointSizePointerOES(context, type, stride, pointer))
+            ValidatePointSizePointerOES(context, typePacked, stride, pointer))
         {
-            context->pointSizePointer(type, stride, pointer);
+            context->pointSizePointer(typePacked, stride, pointer);
         }
     }
 }
@@ -5769,9 +5770,11 @@ void GL_APIENTRY ColorPointerContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        if (context->skipValidation() || ValidateColorPointer(context, size, type, stride, pointer))
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        if (context->skipValidation() ||
+            ValidateColorPointer(context, size, typePacked, stride, pointer))
         {
-            context->colorPointer(size, type, stride, pointer);
+            context->colorPointer(size, typePacked, stride, pointer);
         }
     }
 }
@@ -11139,9 +11142,11 @@ void GL_APIENTRY NormalPointerContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        if (context->skipValidation() || ValidateNormalPointer(context, type, stride, pointer))
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        if (context->skipValidation() ||
+            ValidateNormalPointer(context, typePacked, stride, pointer))
         {
-            context->normalPointer(type, stride, pointer);
+            context->normalPointer(typePacked, stride, pointer);
         }
     }
 }
@@ -11372,10 +11377,11 @@ void GL_APIENTRY PointSizePointerOESContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidatePointSizePointerOES(context, type, stride, pointer))
+            ValidatePointSizePointerOES(context, typePacked, stride, pointer))
         {
-            context->pointSizePointer(type, stride, pointer);
+            context->pointSizePointer(typePacked, stride, pointer);
         }
     }
 }
@@ -13102,10 +13108,11 @@ void GL_APIENTRY TexCoordPointerContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateTexCoordPointer(context, size, type, stride, pointer))
+            ValidateTexCoordPointer(context, size, typePacked, stride, pointer))
         {
-            context->texCoordPointer(size, type, stride, pointer);
+            context->texCoordPointer(size, typePacked, stride, pointer);
         }
     }
 }
@@ -14893,11 +14900,12 @@ void GL_APIENTRY VertexAttribFormatContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribFormat(context, attribindex, size, type, normalized,
+            ValidateVertexAttribFormat(context, attribindex, size, typePacked, normalized,
                                        relativeoffset))
         {
-            context->vertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
+            context->vertexAttribFormat(attribindex, size, typePacked, normalized, relativeoffset);
         }
     }
 }
@@ -14986,10 +14994,11 @@ void GL_APIENTRY VertexAttribIFormatContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribIFormat(context, attribindex, size, type, relativeoffset))
+            ValidateVertexAttribIFormat(context, attribindex, size, typePacked, relativeoffset))
         {
-            context->vertexAttribIFormat(attribindex, size, type, relativeoffset);
+            context->vertexAttribIFormat(attribindex, size, typePacked, relativeoffset);
         }
     }
 }
@@ -15011,10 +15020,11 @@ void GL_APIENTRY VertexAttribIPointerContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribIPointer(context, index, size, type, stride, pointer))
+            ValidateVertexAttribIPointer(context, index, size, typePacked, stride, pointer))
         {
-            context->vertexAttribIPointer(index, size, type, stride, pointer);
+            context->vertexAttribIPointer(index, size, typePacked, stride, pointer);
         }
     }
 }
@@ -15037,10 +15047,12 @@ void GL_APIENTRY VertexAttribPointerContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribPointer(context, index, size, type, normalized, stride, pointer))
+            ValidateVertexAttribPointer(context, index, size, typePacked, normalized, stride,
+                                        pointer))
         {
-            context->vertexAttribPointer(index, size, type, normalized, stride, pointer);
+            context->vertexAttribPointer(index, size, typePacked, normalized, stride, pointer);
         }
     }
 }
@@ -15080,10 +15092,11 @@ void GL_APIENTRY VertexPointerContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexPointer(context, size, type, stride, pointer))
+            ValidateVertexPointer(context, size, typePacked, stride, pointer))
         {
-            context->vertexPointer(size, type, stride, pointer);
+            context->vertexPointer(size, typePacked, stride, pointer);
         }
     }
 }

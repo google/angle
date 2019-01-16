@@ -61,7 +61,7 @@ struct TranslatedAttribute
 
     const gl::VertexAttribute *attribute;
     const gl::VertexBinding *binding;
-    GLenum currentValueType;
+    gl::VertexAttribType currentValueType;
     unsigned int baseOffset;
     bool usesFirstVertexOffset;
     unsigned int stride;  // 0 means not to advance the read pointer at all

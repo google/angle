@@ -80,7 +80,7 @@ bool ValidImageDataSize(Context *context,
 bool ValidQueryType(const Context *context, QueryType queryType);
 
 bool ValidateWebGLVertexAttribPointer(Context *context,
-                                      GLenum type,
+                                      VertexAttribType type,
                                       GLboolean normalized,
                                       GLsizei stride,
                                       const void *ptr,
@@ -491,7 +491,7 @@ bool ValidateGetVertexAttribBase(Context *context,
 bool ValidateVertexFormatBase(Context *context,
                               GLuint attribIndex,
                               GLint size,
-                              GLenum type,
+                              VertexAttribType type,
                               GLboolean pureInteger);
 
 bool ValidateWebGLFramebufferAttachmentClearType(Context *context,

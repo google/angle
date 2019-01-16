@@ -171,7 +171,7 @@ angle::Result VertexDeclarationCache::applyDeclaration(
             }
 
             angle::FormatID vertexformatID =
-                gl::GetVertexFormatID(*attributes[i].attribute, GL_FLOAT);
+                gl::GetVertexFormatID(*attributes[i].attribute, gl::VertexAttribType::Float);
             const d3d9::VertexFormat &d3d9VertexInfo =
                 d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexformatID);
 

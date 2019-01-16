@@ -346,7 +346,7 @@ bool ValidateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v);
 bool ValidateVertexAttribIPointer(Context *context,
                                   GLuint index,
                                   GLint size,
-                                  GLenum type,
+                                  VertexAttribType typePacked,
                                   GLsizei stride,
                                   const void *pointer);
 bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout);

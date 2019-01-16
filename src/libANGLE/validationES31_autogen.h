@@ -284,13 +284,13 @@ bool ValidateVertexAttribBinding(Context *context, GLuint attribindex, GLuint bi
 bool ValidateVertexAttribFormat(Context *context,
                                 GLuint attribindex,
                                 GLint size,
-                                GLenum type,
+                                VertexAttribType typePacked,
                                 GLboolean normalized,
                                 GLuint relativeoffset);
 bool ValidateVertexAttribIFormat(Context *context,
                                  GLuint attribindex,
                                  GLint size,
-                                 GLenum type,
+                                 VertexAttribType typePacked,
                                  GLuint relativeoffset);
 bool ValidateVertexBindingDivisor(Context *context, GLuint bindingindex, GLuint divisor);
 }  // namespace gl

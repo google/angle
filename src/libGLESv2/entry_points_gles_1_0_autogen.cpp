@@ -186,9 +186,11 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->skipValidation() || ValidateColorPointer(context, size, type, stride, pointer))
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        if (context->skipValidation() ||
+            ValidateColorPointer(context, size, typePacked, stride, pointer))
         {
-            context->colorPointer(size, type, stride, pointer);
+            context->colorPointer(size, typePacked, stride, pointer);
         }
     }
 }
@@ -932,9 +934,11 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->skipValidation() || ValidateNormalPointer(context, type, stride, pointer))
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        if (context->skipValidation() ||
+            ValidateNormalPointer(context, typePacked, stride, pointer))
         {
-            context->normalPointer(type, stride, pointer);
+            context->normalPointer(typePacked, stride, pointer);
         }
     }
 }
@@ -1219,10 +1223,11 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateTexCoordPointer(context, size, type, stride, pointer))
+            ValidateTexCoordPointer(context, size, typePacked, stride, pointer))
         {
-            context->texCoordPointer(size, type, stride, pointer);
+            context->texCoordPointer(size, typePacked, stride, pointer);
         }
     }
 }
@@ -1412,10 +1417,11 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexPointer(context, size, type, stride, pointer))
+            ValidateVertexPointer(context, size, typePacked, stride, pointer))
         {
-            context->vertexPointer(size, type, stride, pointer);
+            context->vertexPointer(size, typePacked, stride, pointer);
         }
     }
 }

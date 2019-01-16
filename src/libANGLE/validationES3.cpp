@@ -2966,7 +2966,7 @@ bool ValidateRenderbufferStorageMultisample(Context *context,
 bool ValidateVertexAttribIPointer(Context *context,
                                   GLuint index,
                                   GLint size,
-                                  GLenum type,
+                                  VertexAttribType type,
                                   GLsizei stride,
                                   const void *pointer)
 {

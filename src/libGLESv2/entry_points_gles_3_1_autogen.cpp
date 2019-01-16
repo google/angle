@@ -1317,11 +1317,12 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribFormat(context, attribindex, size, type, normalized,
+            ValidateVertexAttribFormat(context, attribindex, size, typePacked, normalized,
                                        relativeoffset))
         {
-            context->vertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
+            context->vertexAttribFormat(attribindex, size, typePacked, normalized, relativeoffset);
         }
     }
 }
@@ -1340,10 +1341,11 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribIFormat(context, attribindex, size, type, relativeoffset))
+            ValidateVertexAttribIFormat(context, attribindex, size, typePacked, relativeoffset))
         {
-            context->vertexAttribIFormat(attribindex, size, type, relativeoffset);
+            context->vertexAttribIFormat(attribindex, size, typePacked, relativeoffset);
         }
     }
 }

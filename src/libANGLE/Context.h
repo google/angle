@@ -656,20 +656,23 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void vertexAttrib4fv(GLuint index, const GLfloat *values);
     void vertexAttribFormat(GLuint attribIndex,
                             GLint size,
-                            GLenum type,
+                            VertexAttribType type,
                             GLboolean normalized,
                             GLuint relativeOffset);
-    void vertexAttribIFormat(GLuint attribIndex, GLint size, GLenum type, GLuint relativeOffset);
+    void vertexAttribIFormat(GLuint attribIndex,
+                             GLint size,
+                             VertexAttribType type,
+                             GLuint relativeOffset);
     void vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex);
     void vertexAttribPointer(GLuint index,
                              GLint size,
-                             GLenum type,
+                             VertexAttribType type,
                              GLboolean normalized,
                              GLsizei stride,
                              const void *ptr);
     void vertexAttribIPointer(GLuint index,
                               GLint size,
-                              GLenum type,
+                              VertexAttribType type,
                               GLsizei stride,
                               const void *pointer);
     void viewport(GLint x, GLint y, GLsizei width, GLsizei height);

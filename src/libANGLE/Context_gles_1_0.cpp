@@ -97,7 +97,7 @@ void Context::color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
         {FixedToFloat(red), FixedToFloat(green), FixedToFloat(blue), FixedToFloat(alpha)});
 }
 
-void Context::colorPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
+void Context::colorPointer(GLint size, VertexAttribType type, GLsizei stride, const void *ptr)
 {
     vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::Color), size, type, GL_FALSE,
                         stride, ptr);
@@ -401,7 +401,7 @@ void Context::normal3x(GLfixed nx, GLfixed ny, GLfixed nz)
     mState.gles1().setCurrentNormal({FixedToFloat(nx), FixedToFloat(ny), FixedToFloat(nz)});
 }
 
-void Context::normalPointer(GLenum type, GLsizei stride, const void *ptr)
+void Context::normalPointer(VertexAttribType type, GLsizei stride, const void *ptr)
 {
     vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::Normal), 3, type, GL_FALSE, stride,
                         ptr);
@@ -507,7 +507,7 @@ void Context::shadeModel(ShadingModel model)
     mState.gles1().setShadeModel(model);
 }
 
-void Context::texCoordPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
+void Context::texCoordPointer(GLint size, VertexAttribType type, GLsizei stride, const void *ptr)
 {
     vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::TextureCoord), size, type, GL_FALSE,
                         stride, ptr);
@@ -572,7 +572,7 @@ void Context::translatex(GLfixed x, GLfixed y, GLfixed z)
         angle::Mat4::Translate(angle::Vector3(FixedToFloat(x), FixedToFloat(y), FixedToFloat(z))));
 }
 
-void Context::vertexPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
+void Context::vertexPointer(GLint size, VertexAttribType type, GLsizei stride, const void *ptr)
 {
     vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::Vertex), size, type, GL_FALSE,
                         stride, ptr);
@@ -653,7 +653,7 @@ void Context::weightPointer(GLint size, GLenum type, GLsizei stride, const void 
 }
 
 // GL_OES_point_size_array
-void Context::pointSizePointer(GLenum type, GLsizei stride, const void *ptr)
+void Context::pointSizePointer(VertexAttribType type, GLsizei stride, const void *ptr)
 {
     vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::PointSize), 1, type, GL_FALSE,
                         stride, ptr);

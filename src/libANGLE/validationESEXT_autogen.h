@@ -1010,7 +1010,7 @@ bool ValidateWeightPointerOES(Context *context,
 
 // GL_OES_point_size_array
 bool ValidatePointSizePointerOES(Context *context,
-                                 GLenum type,
+                                 VertexAttribType typePacked,
                                  GLsizei stride,
                                  const void *pointer);
 

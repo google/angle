@@ -48,7 +48,7 @@ void VertexBinding::onContainerBindingChanged(const Context *context, int incr) 
 
 VertexAttribute::VertexAttribute(GLuint bindingIndex)
     : enabled(false),
-      type(GL_FLOAT),
+      type(VertexAttribType::Float),
       size(4u),
       normalized(false),
       pureInteger(false),
@@ -147,34 +147,35 @@ void VertexAttribute::updateCachedElementLimit(const VertexBinding &binding)
 
 size_t ComputeVertexAttributeTypeSize(const VertexAttribute &attrib)
 {
-    GLuint size = attrib.size;
     switch (attrib.type)
     {
-        case GL_BYTE:
-            return size * sizeof(GLbyte);
-        case GL_UNSIGNED_BYTE:
-            return size * sizeof(GLubyte);
-        case GL_SHORT:
-            return size * sizeof(GLshort);
-        case GL_UNSIGNED_SHORT:
-            return size * sizeof(GLushort);
-        case GL_INT:
-            return size * sizeof(GLint);
-        case GL_UNSIGNED_INT:
-            return size * sizeof(GLuint);
-        case GL_INT_2_10_10_10_REV:
+        case VertexAttribType::Byte:
+            return attrib.size * sizeof(GLbyte);
+        case VertexAttribType::UnsignedByte:
+            return attrib.size * sizeof(GLubyte);
+        case VertexAttribType::Short:
+            return attrib.size * sizeof(GLshort);
+        case VertexAttribType::UnsignedShort:
+            return attrib.size * sizeof(GLushort);
+        case VertexAttribType::Int:
+            return attrib.size * sizeof(GLint);
+        case VertexAttribType::UnsignedInt:
+            return attrib.size * sizeof(GLuint);
+        case VertexAttribType::Float:
+            return attrib.size * sizeof(GLfloat);
+        case VertexAttribType::HalfFloat:
+            return attrib.size * sizeof(GLhalf);
+        case VertexAttribType::Fixed:
+            return attrib.size * sizeof(GLfixed);
+        case VertexAttribType::Int2101010:
+            // Packed attribute types don't scale by their component size.
             return 4;
-        case GL_UNSIGNED_INT_2_10_10_10_REV:
+        case VertexAttribType::UnsignedInt2101010:
+            // Packed attribute types don't scale by their component size.
             return 4;
-        case GL_FIXED:
-            return size * sizeof(GLfixed);
-        case GL_HALF_FLOAT:
-            return size * sizeof(GLhalf);
-        case GL_FLOAT:
-            return size * sizeof(GLfloat);
         default:
             UNREACHABLE();
-            return size * sizeof(GLfloat);
+            return 0;
     }
 }
 
@@ -207,33 +208,6 @@ size_t ComputeVertexBindingElementCount(GLuint divisor, size_t drawCount, size_t
     }
 
     return drawCount;
-}
-
-GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib)
-{
-    if (attrib.pureInteger)
-    {
-        switch (attrib.type)
-        {
-            case GL_BYTE:
-            case GL_SHORT:
-            case GL_INT:
-                return GL_INT;
-
-            case GL_UNSIGNED_BYTE:
-            case GL_UNSIGNED_SHORT:
-            case GL_UNSIGNED_INT:
-                return GL_UNSIGNED_INT;
-
-            default:
-                UNREACHABLE();
-                return GL_NONE;
-        }
-    }
-    else
-    {
-        return GL_FLOAT;
-    }
 }
 
 }  // namespace gl

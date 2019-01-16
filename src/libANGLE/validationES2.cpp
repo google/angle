@@ -4678,7 +4678,7 @@ bool ValidateLineWidth(Context *context, GLfloat width)
 bool ValidateVertexAttribPointer(Context *context,
                                  GLuint index,
                                  GLint size,
-                                 GLenum type,
+                                 VertexAttribType type,
                                  GLboolean normalized,
                                  GLsizei stride,
                                  const void *ptr)
@@ -4727,7 +4727,7 @@ bool ValidateVertexAttribPointer(Context *context,
     {
         // WebGL 1.0 [Section 6.14] Fixed point support
         // The WebGL API does not support the GL_FIXED data type.
-        if (type == GL_FIXED)
+        if (type == VertexAttribType::Fixed)
         {
             context->validationError(GL_INVALID_ENUM, kFixedNotInWebGL);
             return false;

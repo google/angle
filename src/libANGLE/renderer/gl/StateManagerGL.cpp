@@ -974,15 +974,15 @@ void StateManagerGL::setAttributeCurrentData(size_t index,
         mVertexAttribCurrentValues[index] = data;
         switch (mVertexAttribCurrentValues[index].Type)
         {
-            case GL_FLOAT:
+            case gl::VertexAttribType::Float:
                 mFunctions->vertexAttrib4fv(static_cast<GLuint>(index),
                                             mVertexAttribCurrentValues[index].FloatValues);
                 break;
-            case GL_INT:
+            case gl::VertexAttribType::Int:
                 mFunctions->vertexAttribI4iv(static_cast<GLuint>(index),
                                              mVertexAttribCurrentValues[index].IntValues);
                 break;
-            case GL_UNSIGNED_INT:
+            case gl::VertexAttribType::UnsignedInt:
                 mFunctions->vertexAttribI4uiv(static_cast<GLuint>(index),
                                               mVertexAttribCurrentValues[index].UnsignedIntValues);
                 break;

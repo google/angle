@@ -24,6 +24,33 @@ bool IsElementArrayBufferSubjectIndex(angle::SubjectIndex subjectIndex)
     return (subjectIndex == MAX_VERTEX_ATTRIBS);
 }
 
+ANGLE_INLINE GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib)
+{
+    if (attrib.pureInteger)
+    {
+        switch (attrib.type)
+        {
+            case VertexAttribType::Byte:
+            case VertexAttribType::Short:
+            case VertexAttribType::Int:
+                return GL_INT;
+
+            case VertexAttribType::UnsignedByte:
+            case VertexAttribType::UnsignedShort:
+            case VertexAttribType::UnsignedInt:
+                return GL_UNSIGNED_INT;
+
+            default:
+                UNREACHABLE();
+                return GL_NONE;
+        }
+    }
+    else
+    {
+        return GL_FLOAT;
+    }
+}
+
 constexpr angle::SubjectIndex kElementArrayBufferIndex = MAX_VERTEX_ATTRIBS;
 }  // namespace
 
@@ -296,7 +323,7 @@ void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)
 
 ANGLE_INLINE void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
                                                          GLint size,
-                                                         GLenum type,
+                                                         VertexAttribType type,
                                                          bool normalized,
                                                          bool pureInteger,
                                                          GLuint relativeOffset)
@@ -315,7 +342,7 @@ ANGLE_INLINE void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
 
 void VertexArray::setVertexAttribFormat(size_t attribIndex,
                                         GLint size,
-                                        GLenum type,
+                                        VertexAttribType type,
                                         bool normalized,
                                         bool pureInteger,
                                         GLuint relativeOffset)
@@ -360,7 +387,7 @@ void VertexArray::setVertexAttribPointer(const Context *context,
                                          size_t attribIndex,
                                          gl::Buffer *boundBuffer,
                                          GLint size,
-                                         GLenum type,
+                                         VertexAttribType type,
                                          bool normalized,
                                          bool pureInteger,
                                          GLsizei stride,

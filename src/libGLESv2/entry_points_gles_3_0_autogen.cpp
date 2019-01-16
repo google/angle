@@ -1960,10 +1960,11 @@ VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, cons
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
         if (context->skipValidation() ||
-            ValidateVertexAttribIPointer(context, index, size, type, stride, pointer))
+            ValidateVertexAttribIPointer(context, index, size, typePacked, stride, pointer))
         {
-            context->vertexAttribIPointer(index, size, type, stride, pointer);
+            context->vertexAttribIPointer(index, size, typePacked, stride, pointer);
         }
     }
 }

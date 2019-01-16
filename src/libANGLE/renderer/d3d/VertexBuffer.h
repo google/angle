@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_
 #define LIBANGLE_RENDERER_D3D_VERTEXBUFFER_H_
 
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 
@@ -47,7 +48,7 @@ class VertexBuffer : angle::NonCopyable
     virtual angle::Result storeVertexAttributes(const gl::Context *context,
                                                 const gl::VertexAttribute &attrib,
                                                 const gl::VertexBinding &binding,
-                                                GLenum currentValueType,
+                                                gl::VertexAttribType currentValueType,
                                                 GLint start,
                                                 size_t count,
                                                 GLsizei instances,
@@ -118,7 +119,7 @@ class StreamingVertexBufferInterface : public VertexBufferInterface
     angle::Result storeDynamicAttribute(const gl::Context *context,
                                         const gl::VertexAttribute &attrib,
                                         const gl::VertexBinding &binding,
-                                        GLenum currentValueType,
+                                        gl::VertexAttribType currentValueType,
                                         GLint start,
                                         size_t count,
                                         GLsizei instances,
@@ -171,7 +172,7 @@ class StaticVertexBufferInterface : public VertexBufferInterface
         void set(const gl::VertexAttribute &attrib, const gl::VertexBinding &binding);
 
       private:
-        GLenum type;
+        gl::VertexAttribType type;
         GLuint size;
         GLuint stride;
         bool normalized;

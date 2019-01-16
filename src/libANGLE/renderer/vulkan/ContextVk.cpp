@@ -1261,7 +1261,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     const gl::VertexAttribCurrentValueData &defaultValue =
         glState.getVertexAttribCurrentValues()[attribIndex];
 
-    ASSERT(defaultValue.Type == GL_FLOAT);
+    ASSERT(defaultValue.Type == gl::VertexAttribType::Float);
 
     memcpy(ptr, defaultValue.FloatValues, kDefaultValueSize);
 

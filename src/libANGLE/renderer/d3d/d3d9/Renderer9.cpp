@@ -2925,7 +2925,7 @@ angle::Result Renderer9::getVertexSpaceRequired(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, GL_FLOAT);
+    angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, gl::VertexAttribType::Float);
     const d3d9::VertexFormat &d3d9VertexInfo =
         d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatID);
 

@@ -521,7 +521,7 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
             *params = CastFromGLintStateValue<ParamType>(pname, attrib.vertexAttribArrayStride);
             break;
         case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(pname, attrib.type);
+            *params = CastFromGLintStateValue<ParamType>(pname, ToGLenum(attrib.type));
             break;
         case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
             *params = CastFromStateValue<ParamType>(pname, static_cast<GLint>(attrib.normalized));

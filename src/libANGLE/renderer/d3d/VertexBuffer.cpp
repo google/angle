@@ -166,7 +166,7 @@ angle::Result StreamingVertexBufferInterface::storeDynamicAttribute(
     const gl::Context *context,
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
-    GLenum currentValueType,
+    gl::VertexAttribType currentValueType,
     GLint start,
     size_t count,
     GLsizei instances,
@@ -222,7 +222,12 @@ angle::Result StreamingVertexBufferInterface::reserveVertexSpace(const gl::Conte
 
 // StaticVertexBufferInterface Implementation
 StaticVertexBufferInterface::AttributeSignature::AttributeSignature()
-    : type(GL_NONE), size(0), stride(0), normalized(false), pureInteger(false), offset(0)
+    : type(gl::VertexAttribType::InvalidEnum),
+      size(0),
+      stride(0),
+      normalized(false),
+      pureInteger(false),
+      offset(0)
 {}
 
 bool StaticVertexBufferInterface::AttributeSignature::matchesAttribute(
@@ -285,7 +290,8 @@ angle::Result StaticVertexBufferInterface::storeStaticAttribute(const gl::Contex
     ANGLE_TRY(setBufferSize(context, spaceRequired));
 
     ASSERT(attrib.enabled);
-    ANGLE_TRY(mVertexBuffer->storeVertexAttributes(context, attrib, binding, GL_NONE, start, count,
+    ANGLE_TRY(mVertexBuffer->storeVertexAttributes(context, attrib, binding,
+                                                   gl::VertexAttribType::InvalidEnum, start, count,
                                                    instances, 0, sourceData));
 
     mSignature.set(attrib, binding);

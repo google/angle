@@ -32,7 +32,7 @@ class VertexBuffer11 : public VertexBuffer
     angle::Result storeVertexAttributes(const gl::Context *context,
                                         const gl::VertexAttribute &attrib,
                                         const gl::VertexBinding &binding,
-                                        GLenum currentValueType,
+                                        gl::VertexAttribType currentValueType,
                                         GLint start,
                                         size_t count,
                                         GLsizei instances,

@@ -85,7 +85,7 @@ struct VertexAttribute final : private angle::NonCopyable
     GLint64 getCachedElementLimit() const { return mCachedElementLimit; }
 
     bool enabled;  // For glEnable/DisableVertexAttribArray
-    GLenum type;
+    VertexAttribType type;
     GLuint size;
     bool normalized;
     bool pureInteger;
@@ -114,8 +114,6 @@ GLintptr ComputeVertexAttributeOffset(const VertexAttribute &attrib, const Verte
 
 size_t ComputeVertexBindingElementCount(GLuint divisor, size_t drawCount, size_t instanceCount);
 
-GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib);
-
 struct VertexAttribCurrentValueData
 {
     union
@@ -124,7 +122,7 @@ struct VertexAttribCurrentValueData
         GLint IntValues[4];
         GLuint UnsignedIntValues[4];
     };
-    GLenum Type;
+    VertexAttribType Type;
 
     VertexAttribCurrentValueData();
 

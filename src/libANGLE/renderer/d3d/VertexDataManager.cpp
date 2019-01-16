@@ -94,7 +94,7 @@ bool DirectStoragePossible(const gl::Context *context,
         return false;
     }
 
-    if (attrib.type != GL_FLOAT)
+    if (attrib.type != gl::VertexAttribType::Float)
     {
         unsigned int elementSize = 0;
         angle::Result error =
@@ -114,7 +114,7 @@ TranslatedAttribute::TranslatedAttribute()
     : active(false),
       attribute(nullptr),
       binding(nullptr),
-      currentValueType(GL_NONE),
+      currentValueType(gl::VertexAttribType::InvalidEnum),
       baseOffset(0),
       usesFirstVertexOffset(false),
       stride(0),
@@ -191,7 +191,7 @@ VertexDataManager::CurrentValueState::CurrentValueState(BufferFactoryD3D *factor
     data.FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
     data.FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
     data.FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
-    data.Type           = GL_FLOAT;
+    data.Type           = gl::VertexAttribType::Float;
 }
 
 VertexDataManager::CurrentValueState::CurrentValueState(CurrentValueState &&other)

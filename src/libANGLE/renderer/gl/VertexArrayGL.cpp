@@ -486,12 +486,13 @@ void VertexArrayGL::callVertexAttribPointer(GLuint attribIndex,
     if (attrib.pureInteger)
     {
         ASSERT(!attrib.normalized);
-        mFunctions->vertexAttribIPointer(attribIndex, attrib.size, attrib.type, stride, pointer);
+        mFunctions->vertexAttribIPointer(attribIndex, attrib.size, gl::ToGLenum(attrib.type),
+                                         stride, pointer);
     }
     else
     {
-        mFunctions->vertexAttribPointer(attribIndex, attrib.size, attrib.type, attrib.normalized,
-                                        stride, pointer);
+        mFunctions->vertexAttribPointer(attribIndex, attrib.size, gl::ToGLenum(attrib.type),
+                                        attrib.normalized, stride, pointer);
     }
 }
 
@@ -514,13 +515,14 @@ void VertexArrayGL::updateAttribFormat(size_t attribIndex)
     if (attrib.pureInteger)
     {
         ASSERT(!attrib.normalized);
-        mFunctions->vertexAttribIFormat(static_cast<GLuint>(attribIndex), attrib.size, attrib.type,
-                                        attrib.relativeOffset);
+        mFunctions->vertexAttribIFormat(static_cast<GLuint>(attribIndex), attrib.size,
+                                        gl::ToGLenum(attrib.type), attrib.relativeOffset);
     }
     else
     {
-        mFunctions->vertexAttribFormat(static_cast<GLuint>(attribIndex), attrib.size, attrib.type,
-                                       attrib.normalized, attrib.relativeOffset);
+        mFunctions->vertexAttribFormat(static_cast<GLuint>(attribIndex), attrib.size,
+                                       gl::ToGLenum(attrib.type), attrib.normalized,
+                                       attrib.relativeOffset);
     }
 
     mAppliedAttributes[attribIndex].size           = attrib.size;
