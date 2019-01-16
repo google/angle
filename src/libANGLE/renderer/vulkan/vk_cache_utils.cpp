@@ -301,34 +301,6 @@ constexpr size_t kTransitionBitShift = kTransitionByteShift + Log2(kBitsPerByte)
 // the update function.
 #define ANGLE_GET_INDEXED_TRANSITION_BIT(Member, Field, Index, BitWidth) \
     (((BitWidth * Index) >> kTransitionBitShift) + ANGLE_GET_TRANSITION_BIT(Member, Field))
-
-bool GraphicsPipelineTransitionMatch(GraphicsPipelineTransitionBits bitsA,
-                                     GraphicsPipelineTransitionBits bitsB,
-                                     const GraphicsPipelineDesc &descA,
-                                     const GraphicsPipelineDesc &descB)
-{
-    if (bitsA != bitsB)
-        return false;
-
-    // We currently mask over 4 bytes of the pipeline description with each dirty bit.
-    // We could consider using 8 bytes and a mask of 32 bits. This would make some parts
-    // of the code faster. The for loop below would scan over twice as many bits per iteration.
-    // But there may be more collisions between the same dirty bit masks leading to different
-    // transitions. Thus there may be additional cost when applications use many transitions.
-    // We should revisit this in the future and investigate using different bit widths.
-    static_assert(sizeof(uint32_t) == kGraphicsPipelineDirtyBitBytes, "Size mismatch");
-
-    const uint32_t *rawPtrA = descA.getPtr<uint32_t>();
-    const uint32_t *rawPtrB = descB.getPtr<uint32_t>();
-
-    for (size_t dirtyBit : bitsA)
-    {
-        if (rawPtrA[dirtyBit] != rawPtrB[dirtyBit])
-            return false;
-    }
-
-    return true;
-}
 }  // anonymous namespace
 
 // RenderPassDesc implementation.
@@ -1220,23 +1192,6 @@ PipelineHelper::~PipelineHelper() = default;
 void PipelineHelper::destroy(VkDevice device)
 {
     mPipeline.destroy(device);
-}
-
-bool PipelineHelper::findTransition(GraphicsPipelineTransitionBits bits,
-                                    const GraphicsPipelineDesc &desc,
-                                    PipelineHelper **pipelineOut) const
-{
-    // Search could be improved using sorting or hashing.
-    for (const GraphicsPipelineTransition &transition : mTransitions)
-    {
-        if (GraphicsPipelineTransitionMatch(transition.bits, bits, *transition.desc, desc))
-        {
-            *pipelineOut = transition.target;
-            return true;
-        }
-    }
-
-    return false;
 }
 
 void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
