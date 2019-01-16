@@ -488,11 +488,61 @@ bool ValidateGetVertexAttribBase(Context *context,
                                  bool pointer,
                                  bool pureIntegerEntryPoint);
 
-bool ValidateVertexFormatBase(Context *context,
-                              GLuint attribIndex,
-                              GLint size,
-                              VertexAttribType type,
-                              GLboolean pureInteger);
+ANGLE_INLINE bool ValidateVertexFormat(Context *context,
+                                       GLuint index,
+                                       GLint size,
+                                       VertexAttribTypeCase validation)
+{
+    const Caps &caps = context->getCaps();
+    if (index >= caps.maxVertexAttributes)
+    {
+        context->validationError(GL_INVALID_VALUE, err::kIndexExceedsMaxVertexAttribute);
+        return false;
+    }
+
+    switch (validation)
+    {
+        case VertexAttribTypeCase::Invalid:
+            context->validationError(GL_INVALID_ENUM, err::kInvalidType);
+            return false;
+        case VertexAttribTypeCase::Valid:
+            if (size < 1 || size > 4)
+            {
+                context->validationError(GL_INVALID_VALUE, err::kInvalidVertexAttrSize);
+                return false;
+            }
+            break;
+        case VertexAttribTypeCase::ValidSize4Only:
+            if (size != 4)
+            {
+                context->validationError(GL_INVALID_OPERATION,
+                                         err::kInvalidVertexAttribSize2101010);
+                return false;
+            }
+            break;
+    }
+
+    return true;
+}
+
+// Note: These byte, short, and int types are all converted to float for the shader.
+ANGLE_INLINE bool ValidateFloatVertexFormat(Context *context,
+                                            GLuint index,
+                                            GLint size,
+                                            VertexAttribType type)
+{
+    return ValidateVertexFormat(context, index, size,
+                                context->getStateCache().getVertexAttribTypeValidation(type));
+}
+
+ANGLE_INLINE bool ValidateIntegerVertexFormat(Context *context,
+                                              GLuint index,
+                                              GLint size,
+                                              VertexAttribType type)
+{
+    return ValidateVertexFormat(
+        context, index, size, context->getStateCache().getIntegerVertexAttribTypeValidation(type));
+}
 
 bool ValidateWebGLFramebufferAttachmentClearType(Context *context,
                                                  GLint drawbuffer,

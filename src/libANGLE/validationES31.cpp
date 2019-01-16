@@ -335,12 +335,7 @@ bool ValidateProgramUniformMatrix(Context *context,
            ValidateUniformMatrixValue(context, valueType, uniform->type);
 }
 
-bool ValidateVertexAttribFormatCommon(Context *context,
-                                      GLuint attribIndex,
-                                      GLint size,
-                                      VertexAttribType type,
-                                      GLuint relativeOffset,
-                                      GLboolean pureInteger)
+bool ValidateVertexAttribFormatCommon(Context *context, GLuint relativeOffset)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -363,7 +358,7 @@ bool ValidateVertexAttribFormatCommon(Context *context,
         return false;
     }
 
-    return ValidateVertexFormatBase(context, attribIndex, size, type, pureInteger);
+    return true;
 }
 
 }  // anonymous namespace
@@ -1220,8 +1215,12 @@ bool ValidateVertexAttribFormat(Context *context,
                                 GLboolean normalized,
                                 GLuint relativeoffset)
 {
-    return ValidateVertexAttribFormatCommon(context, attribindex, size, type, relativeoffset,
-                                            false);
+    if (!ValidateVertexAttribFormatCommon(context, relativeoffset))
+    {
+        return false;
+    }
+
+    return ValidateFloatVertexFormat(context, attribindex, size, type);
 }
 
 bool ValidateVertexAttribIFormat(Context *context,
@@ -1230,7 +1229,12 @@ bool ValidateVertexAttribIFormat(Context *context,
                                  VertexAttribType type,
                                  GLuint relativeoffset)
 {
-    return ValidateVertexAttribFormatCommon(context, attribindex, size, type, relativeoffset, true);
+    if (!ValidateVertexAttribFormatCommon(context, relativeoffset))
+    {
+        return false;
+    }
+
+    return ValidateIntegerVertexFormat(context, attribindex, size, type);
 }
 
 bool ValidateVertexAttribBinding(Context *context, GLuint attribIndex, GLuint bindingIndex)

@@ -4683,7 +4683,7 @@ bool ValidateVertexAttribPointer(Context *context,
                                  GLsizei stride,
                                  const void *ptr)
 {
-    if (!ValidateVertexFormatBase(context, index, size, type, false))
+    if (!ValidateFloatVertexFormat(context, index, size, type))
     {
         return false;
     }

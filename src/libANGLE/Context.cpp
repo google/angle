@@ -8097,6 +8097,7 @@ void StateCache::initialize(Context *context)
     updateValidDrawElementsTypes(context);
     updateBasicDrawStatesError();
     updateBasicDrawElementsError();
+    updateVertexAttribTypesValidation(context);
 }
 
 void StateCache::updateActiveAttribsMask(Context *context)
@@ -8387,5 +8388,45 @@ void StateCache::updateTransformFeedbackActiveUnpaused(Context *context)
 {
     TransformFeedback *xfb                 = context->getState().getCurrentTransformFeedback();
     mCachedTransformFeedbackActiveUnpaused = xfb && xfb->isActive() && !xfb->isPaused();
+}
+
+void StateCache::updateVertexAttribTypesValidation(Context *context)
+{
+    if (context->getClientMajorVersion() <= 2)
+    {
+        mCachedVertexAttribTypesValidation = {{
+            {VertexAttribType::Byte, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Short, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedByte, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedShort, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Float, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Fixed, VertexAttribTypeCase::Valid},
+        }};
+    }
+    else
+    {
+        mCachedVertexAttribTypesValidation = {{
+            {VertexAttribType::Byte, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Short, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Int, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedByte, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedShort, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedInt, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Float, VertexAttribTypeCase::Valid},
+            {VertexAttribType::HalfFloat, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Fixed, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Int2101010, VertexAttribTypeCase::ValidSize4Only},
+            {VertexAttribType::UnsignedInt2101010, VertexAttribTypeCase::ValidSize4Only},
+        }};
+
+        mCachedIntegerVertexAttribTypesValidation = {{
+            {VertexAttribType::Byte, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Short, VertexAttribTypeCase::Valid},
+            {VertexAttribType::Int, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedByte, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedShort, VertexAttribTypeCase::Valid},
+            {VertexAttribType::UnsignedInt, VertexAttribTypeCase::Valid},
+        }};
+    }
 }
 }  // namespace gl

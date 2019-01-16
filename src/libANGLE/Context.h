@@ -87,6 +87,13 @@ class ErrorSet : angle::NonCopyable
     std::set<GLenum> mErrors;
 };
 
+enum class VertexAttribTypeCase
+{
+    Invalid        = 0,
+    Valid          = 1,
+    ValidSize4Only = 2,
+};
+
 // Helper class for managing cache variables and state changes.
 class StateCache final : angle::NonCopyable
 {
@@ -198,6 +205,17 @@ class StateCache final : angle::NonCopyable
         return mCachedTransformFeedbackActiveUnpaused;
     }
 
+    // Cannot change except on Context/Extension init.
+    VertexAttribTypeCase getVertexAttribTypeValidation(VertexAttribType type) const
+    {
+        return mCachedVertexAttribTypesValidation[type];
+    }
+
+    VertexAttribTypeCase getIntegerVertexAttribTypeValidation(VertexAttribType type) const
+    {
+        return mCachedIntegerVertexAttribTypesValidation[type];
+    }
+
     // State change notifications.
     void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
@@ -226,6 +244,7 @@ class StateCache final : angle::NonCopyable
     void updateBasicDrawStatesError();
     void updateBasicDrawElementsError();
     void updateTransformFeedbackActiveUnpaused(Context *context);
+    void updateVertexAttribTypesValidation(Context *context);
 
     void setValidDrawModes(bool pointsOK, bool linesOK, bool trisOK, bool lineAdjOK, bool triAdjOK);
 
@@ -251,6 +270,14 @@ class StateCache final : angle::NonCopyable
         mCachedValidBindTextureTypes;
     angle::PackedEnumMap<DrawElementsType, bool, angle::EnumSize<DrawElementsType>() + 1>
         mCachedValidDrawElementsTypes;
+    angle::PackedEnumMap<VertexAttribType,
+                         VertexAttribTypeCase,
+                         angle::EnumSize<VertexAttribType>() + 1>
+        mCachedVertexAttribTypesValidation;
+    angle::PackedEnumMap<VertexAttribType,
+                         VertexAttribTypeCase,
+                         angle::EnumSize<VertexAttribType>() + 1>
+        mCachedIntegerVertexAttribTypesValidation;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface

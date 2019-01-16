@@ -317,7 +317,6 @@ MSG kInvalidTransformation = "Invalid transformation.";
 MSG kInvalidTransformFeedbackAttribsCount = "Count exceeds MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS.";
 MSG kInvalidTransformFeedbackName = "name is not a valid transform feedback.";
 MSG kInvalidType = "Invalid type.";
-MSG kInvalidTypePureInt = "Invalid type = should be integer";
 MSG kInvalidUniformCount = "Only array uniforms may have count > 1.";
 MSG kInvalidUniformLocation = "Invalid uniform location";
 MSG kInvalidUnpackAlignment = "Unpack alignment must be 1 = 2 = 4 = or 8.";
