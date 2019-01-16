@@ -366,8 +366,8 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
             else
             {
                 mPreviousCWD       = cwd.value();
-                const char *exeDir = angle::GetExecutableDirectory();
-                mChangedCWD        = angle::SetCWD(exeDir);
+                std::string exeDir = angle::GetExecutableDirectory();
+                mChangedCWD        = angle::SetCWD(exeDir.c_str());
                 if (!mChangedCWD)
                 {
                     ERR() << "Error setting CWD for Vulkan layers init.";
