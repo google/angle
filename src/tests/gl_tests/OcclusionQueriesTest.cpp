@@ -189,6 +189,9 @@ TEST_P(OcclusionQueriesTest, MultiContext)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !extensionEnabled("GL_EXT_occlusion_query_boolean"));
 
+    // TODO(cwallez@chromium.org): Suppression for http://anglebug.com/3080
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsVulkan());
+
     // Test skipped because the D3D backends cannot support simultaneous queries on multiple
     // contexts yet.  Same with the Vulkan backend.
     ANGLE_SKIP_TEST_IF(GetParam() == ES2_D3D9() || GetParam() == ES2_D3D11() ||
