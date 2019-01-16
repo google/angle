@@ -212,19 +212,34 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsPipelineDesc->updateTopology(&mGraphicsPipelineTransition, mCurrentDrawMode);
     }
 
-    if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer->getCurrentQueueSerial(),
-                                                     commandBufferOut))
-    {
-        ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, commandBufferOut));
-        mDirtyBits |= mNewCommandBufferDirtyBits;
-    }
-
+    // Must be called before the command buffer is started. Can call finish.
     if (context->getStateCache().hasAnyActiveClientAttrib())
     {
         ANGLE_TRY(mVertexArray->updateClientAttribs(context, firstVertex, vertexOrIndexCount,
                                                     indexTypeOrNone, indices));
         mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
+
+    // This could be improved using a dirty bit. But currently it's slower to use a handler
+    // function than an inlined if. We should probably replace the dirty bit dispatch table
+    // with a switch with inlined handler functions.
+    // TODO(jmadill): Use dirty bit. http://anglebug.com/3014
+    if (!mCommandBuffer)
+    {
+        if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer->getCurrentQueueSerial(),
+                                                         &mCommandBuffer))
+        {
+            ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, &mCommandBuffer));
+            mDirtyBits |= mNewCommandBufferDirtyBits;
+        }
+    }
+
+    // We keep a local copy of the command buffer. It's possible that some state changes could
+    // trigger a command buffer invalidation. The local copy ensures we retain the reference.
+    // Command buffers are pool allocated and only deleted after submit. Thus we know the
+    // command buffer will still be valid for the duration of this API call.
+    *commandBufferOut = mCommandBuffer;
+    ASSERT(*commandBufferOut);
 
     if (mProgram->dirtyUniforms())
     {
@@ -791,6 +806,13 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
+                // FramebufferVk::syncState signals that we should start a new command buffer. But
+                // changing the binding can skip FramebufferVk::syncState if the Framebuffer has no
+                // dirty bits. Thus we need to explicitly clear the current command buffer to
+                // ensure we start a new one. Note that we need a new command buffer because a
+                // command graph node can only support one RenderPass configuration at a time.
+                onCommandBufferFinished();
+
                 mDrawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
                 updateFlipViewportDrawFramebuffer(glState);
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),

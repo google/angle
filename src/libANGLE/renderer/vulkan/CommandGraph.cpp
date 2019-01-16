@@ -11,6 +11,7 @@
 
 #include <iostream>
 
+#include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -138,7 +139,7 @@ const gl::Rectangle &RecordableGraphResource::getRenderPassRenderArea() const
     return mCurrentWritingNode->getRenderPassRenderArea();
 }
 
-angle::Result RecordableGraphResource::beginRenderPass(Context *context,
+angle::Result RecordableGraphResource::beginRenderPass(ContextVk *contextVk,
                                                        const Framebuffer &framebuffer,
                                                        const gl::Rectangle &renderArea,
                                                        const RenderPassDesc &renderPassDesc,
@@ -148,14 +149,16 @@ angle::Result RecordableGraphResource::beginRenderPass(Context *context,
     // If a barrier has been inserted in the meantime, stop the command buffer.
     if (!hasChildlessWritingNode())
     {
-        startNewCommands(context->getRenderer());
+        startNewCommands(contextVk->getRenderer());
     }
 
     // Hard-code RenderPass to clear the first render target to the current clear value.
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
     mCurrentWritingNode->storeRenderPassInfo(framebuffer, renderArea, renderPassDesc, clearValues);
 
-    return mCurrentWritingNode->beginInsideRenderPassRecording(context, commandBufferOut);
+    mCurrentWritingNode->setCommandBufferOwner(contextVk);
+
+    return mCurrentWritingNode->beginInsideRenderPassRecording(contextVk, commandBufferOut);
 }
 
 void RecordableGraphResource::addWriteDependency(RecordableGraphResource *writingResource)
@@ -263,7 +266,8 @@ CommandGraphNode::CommandGraphNode(CommandGraphNodeFunction function)
       mHasChildren(false),
       mVisitedState(VisitedState::Unvisited),
       mGlobalMemoryBarrierSrcAccess(0),
-      mGlobalMemoryBarrierDstAccess(0)
+      mGlobalMemoryBarrierDstAccess(0),
+      mCommandBufferOwner(nullptr)
 {}
 
 CommandGraphNode::~CommandGraphNode()

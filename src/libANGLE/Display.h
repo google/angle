@@ -175,6 +175,9 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     const DisplayState &getState() const { return mState; }
 
+    typedef std::set<gl::Context *> ContextSet;
+    const ContextSet &getContextSet() { return mContextSet; }
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -193,7 +196,6 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     ConfigSet mConfigSet;
 
-    typedef std::set<gl::Context *> ContextSet;
     ContextSet mContextSet;
 
     typedef std::set<Image *> ImageSet;

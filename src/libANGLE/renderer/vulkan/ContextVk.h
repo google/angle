@@ -26,7 +26,7 @@ namespace rx
 {
 class RendererVk;
 
-class ContextVk : public ContextImpl, public vk::Context
+class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBufferOwner
 {
   public:
     ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer);

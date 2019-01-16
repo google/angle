@@ -230,6 +230,8 @@ class RendererVk : angle::NonCopyable
     template <VkFormatFeatureFlags VkFormatProperties::*features>
     bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
+    void nextSerial();
+
     egl::Display *mDisplay;
 
     mutable bool mCapsInitialized;

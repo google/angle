@@ -571,17 +571,17 @@ angle::Result UtilsVk::convertVertexBuffer(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result UtilsVk::startRenderPass(vk::Context *context,
+angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
                                        vk::ImageHelper *image,
                                        const vk::ImageView *imageView,
                                        const vk::RenderPassDesc &renderPassDesc,
                                        const gl::Rectangle &renderArea,
                                        vk::CommandBuffer **commandBufferOut)
 {
-    RendererVk *renderer = context->getRenderer();
+    RendererVk *renderer = contextVk->getRenderer();
 
     vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY(renderer->getCompatibleRenderPass(context, renderPassDesc, &renderPass));
+    ANGLE_TRY(renderer->getCompatibleRenderPass(contextVk, renderPassDesc, &renderPass));
 
     VkFramebufferCreateInfo framebufferInfo = {};
 
@@ -595,14 +595,14 @@ angle::Result UtilsVk::startRenderPass(vk::Context *context,
     framebufferInfo.layers          = 1;
 
     vk::Framebuffer framebuffer;
-    ANGLE_VK_TRY(context, framebuffer.init(context->getDevice(), framebufferInfo));
+    ANGLE_VK_TRY(contextVk, framebuffer.init(contextVk->getDevice(), framebufferInfo));
 
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
     std::vector<VkClearValue> clearValues = {{}};
     ASSERT(clearValues.size() == 1);
 
-    ANGLE_TRY(image->beginRenderPass(context, framebuffer, renderArea, renderPassDesc, clearValues,
-                                     commandBufferOut));
+    ANGLE_TRY(image->beginRenderPass(contextVk, framebuffer, renderArea, renderPassDesc,
+                                     clearValues, commandBufferOut));
 
     renderer->releaseObject(renderer->getCurrentQueueSerial(), &framebuffer);
 
@@ -658,16 +658,16 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result UtilsVk::copyImage(vk::Context *context,
+angle::Result UtilsVk::copyImage(ContextVk *contextVk,
                                  vk::ImageHelper *dest,
                                  const vk::ImageView *destView,
                                  vk::ImageHelper *src,
                                  const vk::ImageView *srcView,
                                  const CopyImageParameters &params)
 {
-    RendererVk *renderer = context->getRenderer();
+    RendererVk *renderer = contextVk->getRenderer();
 
-    ANGLE_TRY(ensureImageCopyResourcesInitialized(context));
+    ANGLE_TRY(ensureImageCopyResourcesInitialized(contextVk));
 
     const vk::Format &srcFormat  = src->getFormat();
     const vk::Format &destFormat = dest->getFormat();
@@ -707,9 +707,9 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
     VkDescriptorSet descriptorSet;
     vk::SharedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(mDescriptorPools[Function::ImageCopy].allocateSets(
-        context, mDescriptorSetLayouts[Function::ImageCopy][kSetIndex].get().ptr(), 1,
+        contextVk, mDescriptorSetLayouts[Function::ImageCopy][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
-    descriptorPoolBinding.get().updateSerial(context->getRenderer()->getCurrentQueueSerial());
+    descriptorPoolBinding.get().updateSerial(contextVk->getRenderer()->getCurrentQueueSerial());
 
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dest->getSamples());
@@ -736,8 +736,7 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
     if (src->getCurrentLayout() != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
     {
         vk::CommandBuffer *srcLayoutChange;
-        ANGLE_TRY(src->recordCommands(context, &srcLayoutChange));
-
+        ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
         src->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
                                     VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
                                     VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
@@ -746,7 +745,7 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
 
     // Change destination layout outside render pass as well
     vk::CommandBuffer *destLayoutChange;
-    ANGLE_TRY(dest->recordCommands(context, &destLayoutChange));
+    ANGLE_TRY(dest->recordCommands(contextVk, &destLayoutChange));
 
     dest->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
@@ -754,7 +753,8 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
                                  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, destLayoutChange);
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(startRenderPass(context, dest, destView, renderPassDesc, renderArea, &commandBuffer));
+    ANGLE_TRY(
+        startRenderPass(contextVk, dest, destView, renderPassDesc, renderArea, &commandBuffer));
 
     // Source's layout change should happen before rendering
     src->addReadDependency(dest);
@@ -771,15 +771,15 @@ angle::Result UtilsVk::copyImage(vk::Context *context,
     writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
     writeInfo.pImageInfo           = &imageInfo;
 
-    vkUpdateDescriptorSets(context->getDevice(), 1, &writeInfo, 0, nullptr);
+    vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
 
     vk::ShaderLibrary &shaderLibrary                    = renderer->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(context, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getImageCopy_frag(context, flags, &fragmentShader));
+    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getImageCopy_frag(contextVk, flags, &fragmentShader));
 
-    ANGLE_TRY(setupProgram(context, Function::ImageCopy, fragmentShader, vertexShader,
+    ANGLE_TRY(setupProgram(contextVk, Function::ImageCopy, fragmentShader, vertexShader,
                            &mImageCopyPrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
 
