@@ -320,7 +320,17 @@ class State : angle::NonCopyable
         (this->*(kBufferSetters[target]))(context, buffer);
     }
 
-    Buffer *getTargetBuffer(BufferBinding target) const;
+    ANGLE_INLINE Buffer *getTargetBuffer(BufferBinding target) const
+    {
+        switch (target)
+        {
+            case BufferBinding::ElementArray:
+                return getVertexArray()->getElementArrayBuffer();
+            default:
+                return mBoundBuffers[target].get();
+        }
+    }
+
     angle::Result setIndexedBufferBinding(const Context *context,
                                           BufferBinding target,
                                           GLuint index,
@@ -393,7 +403,13 @@ class State : angle::NonCopyable
                                bool normalized,
                                bool pureInteger,
                                GLuint relativeOffset);
-    void setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex);
+
+    void setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex)
+    {
+        mVertexArray->setVertexAttribBinding(context, attribIndex, bindingIndex);
+        mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
+    }
+
     void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
     // Pixel pack state manipulation

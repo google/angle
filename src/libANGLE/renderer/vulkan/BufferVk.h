@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_BUFFERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_BUFFERVK_H_
 
+#include "libANGLE/Buffer.h"
 #include "libANGLE/Observer.h"
 #include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -54,7 +55,8 @@ class BufferVk : public BufferImpl
                                 size_t count,
                                 bool primitiveRestartEnabled,
                                 gl::IndexRange *outRange) override;
-    GLint64 getSize();
+
+    GLint64 getSize() const { return mState.getSize(); }
 
     const vk::BufferHelper &getBuffer() const
     {

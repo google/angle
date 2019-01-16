@@ -266,6 +266,8 @@ class WrappedObject : angle::NonCopyable
     HandleT mHandle;
 };
 
+// TODO(jmadill): Inline all the methods in the wrapper classes. http://anglebug.com/3014
+
 class MemoryProperties final : angle::NonCopyable
 {
   public:
@@ -291,6 +293,20 @@ class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
     void destroy(VkDevice device);
 
     VkResult init(VkDevice device, const VkCommandPoolCreateInfo &createInfo);
+};
+
+class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
+{
+  public:
+    Pipeline();
+    void destroy(VkDevice device);
+
+    VkResult initGraphics(VkDevice device,
+                          const VkGraphicsPipelineCreateInfo &createInfo,
+                          const PipelineCache &pipelineCacheVk);
+    VkResult initCompute(VkDevice device,
+                         const VkComputePipelineCreateInfo &createInfo,
+                         const PipelineCache &pipelineCacheVk);
 };
 
 // Helper class that wraps a Vulkan command buffer.
@@ -404,11 +420,21 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
         vkCmdDispatch(mHandle, groupCountX, groupCountY, groupCountZ);
     }
 
-    void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const Pipeline &pipeline);
+    void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const Pipeline &pipeline)
+    {
+        ASSERT(valid() && pipeline.valid());
+        vkCmdBindPipeline(mHandle, pipelineBindPoint, pipeline.getHandle());
+    }
+
     void bindVertexBuffers(uint32_t firstBinding,
                            uint32_t bindingCount,
                            const VkBuffer *buffers,
-                           const VkDeviceSize *offsets);
+                           const VkDeviceSize *offsets)
+    {
+        ASSERT(valid());
+        vkCmdBindVertexBuffers(mHandle, firstBinding, bindingCount, buffers, offsets);
+    }
+
     void bindIndexBuffer(const VkBuffer &buffer, VkDeviceSize offset, VkIndexType indexType);
     void bindDescriptorSets(VkPipelineBindPoint bindPoint,
                             const PipelineLayout &layout,
@@ -586,20 +612,6 @@ class PipelineCache final : public WrappedObject<PipelineCache, VkPipelineCache>
 
     VkResult init(VkDevice device, const VkPipelineCacheCreateInfo &createInfo);
     VkResult getCacheData(VkDevice device, size_t *cacheSize, void *cacheData);
-};
-
-class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
-{
-  public:
-    Pipeline();
-    void destroy(VkDevice device);
-
-    VkResult initGraphics(VkDevice device,
-                          const VkGraphicsPipelineCreateInfo &createInfo,
-                          const PipelineCache &pipelineCacheVk);
-    VkResult initCompute(VkDevice device,
-                         const VkComputePipelineCreateInfo &createInfo,
-                         const PipelineCache &pipelineCacheVk);
 };
 
 class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDescriptorSetLayout>

@@ -1362,12 +1362,6 @@ void State::bindVertexBuffer(const Context *context,
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex)
-{
-    getVertexArray()->setVertexAttribBinding(context, attribIndex, bindingIndex);
-    mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
-}
-
 void State::setVertexAttribFormat(GLuint attribIndex,
                                   GLint size,
                                   VertexAttribType type,
@@ -1547,17 +1541,6 @@ const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t 
 {
     ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
     return mShaderStorageBuffers[index];
-}
-
-Buffer *State::getTargetBuffer(BufferBinding target) const
-{
-    switch (target)
-    {
-        case BufferBinding::ElementArray:
-            return getVertexArray()->getElementArrayBuffer();
-        default:
-            return mBoundBuffers[target].get();
-    }
 }
 
 angle::Result State::detachBuffer(const Context *context, const Buffer *buffer)

@@ -464,22 +464,6 @@ void CommandBuffer::endRenderPass()
     vkCmdEndRenderPass(mHandle);
 }
 
-void CommandBuffer::bindPipeline(VkPipelineBindPoint pipelineBindPoint,
-                                 const vk::Pipeline &pipeline)
-{
-    ASSERT(valid() && pipeline.valid());
-    vkCmdBindPipeline(mHandle, pipelineBindPoint, pipeline.getHandle());
-}
-
-void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
-                                      uint32_t bindingCount,
-                                      const VkBuffer *buffers,
-                                      const VkDeviceSize *offsets)
-{
-    ASSERT(valid());
-    vkCmdBindVertexBuffers(mHandle, firstBinding, bindingCount, buffers, offsets);
-}
-
 void CommandBuffer::bindIndexBuffer(const VkBuffer &buffer,
                                     VkDeviceSize offset,
                                     VkIndexType indexType)

@@ -128,11 +128,6 @@ angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
     return angle::Result::Continue;
 }
 
-GLint64 BufferVk::getSize()
-{
-    return mState.getSize();
-}
-
 angle::Result BufferVk::mapRange(const gl::Context *context,
                                  size_t offset,
                                  size_t length,
