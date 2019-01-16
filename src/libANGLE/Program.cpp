@@ -3097,8 +3097,10 @@ bool Program::linkAttributes(const Caps &caps, InfoLog &infoLog)
             // gl_VertexID and gl_InstanceID are active attributes but don't have a bound attribute.
             if (!attribute.isBuiltIn())
             {
-                mState.mAttributesTypeMask.setIndex(VariableComponentType(attribute.type),
-                                                    location);
+                ComponentType componentType =
+                    GLenumToComponentType(VariableComponentType(attribute.type));
+
+                SetComponentTypeMask(componentType, location, &mState.mAttributesTypeMask);
                 mState.mAttributesMask.set(location);
             }
         }
@@ -3648,7 +3650,9 @@ bool Program::linkOutputVariables(const Caps &caps,
             ASSERT(location < mState.mActiveOutputVariables.size());
             mState.mActiveOutputVariables.set(location);
             mState.mOutputVariableTypes[location] = VariableComponentType(outputVariable.type);
-            mState.mDrawBufferTypeMask.setIndex(mState.mOutputVariableTypes[location], location);
+            ComponentType componentType =
+                GLenumToComponentType(mState.mOutputVariableTypes[location]);
+            SetComponentTypeMask(componentType, location, &mState.mDrawBufferTypeMask);
         }
     }
 

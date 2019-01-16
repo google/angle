@@ -367,10 +367,10 @@ bool ValidateFragmentShaderColorBufferTypeMatch(Context *context)
     const Program *program         = context->getState().getLinkedProgram(context);
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
 
-    return ComponentTypeMask::Validate(program->getDrawBufferTypeMask().to_ulong(),
-                                       framebuffer->getDrawBufferTypeMask().to_ulong(),
-                                       program->getActiveOutputVariables().to_ulong(),
-                                       framebuffer->getDrawBufferMask().to_ulong());
+    return ValidateComponentTypeMasks(program->getDrawBufferTypeMask().to_ulong(),
+                                      framebuffer->getDrawBufferTypeMask().to_ulong(),
+                                      program->getActiveOutputVariables().to_ulong(),
+                                      framebuffer->getDrawBufferMask().to_ulong());
 }
 
 bool ValidateVertexShaderAttributeTypeMatch(Context *context)
@@ -383,13 +383,13 @@ bool ValidateVertexShaderAttributeTypeMatch(Context *context)
     unsigned long vaoAttribTypeBits          = vao->getAttributesTypeMask().to_ulong();
     unsigned long vaoAttribEnabledMask       = vao->getAttributesMask().to_ulong();
 
-    vaoAttribEnabledMask |= vaoAttribEnabledMask << MAX_COMPONENT_TYPE_MASK_INDEX;
+    vaoAttribEnabledMask |= vaoAttribEnabledMask << kMaxComponentTypeMaskIndex;
     vaoAttribTypeBits = (vaoAttribEnabledMask & vaoAttribTypeBits);
     vaoAttribTypeBits |= (~vaoAttribEnabledMask & stateCurrentValuesTypeBits);
 
-    return ComponentTypeMask::Validate(program->getAttributesTypeMask().to_ulong(),
-                                       vaoAttribTypeBits, program->getAttributesMask().to_ulong(),
-                                       0xFFFF);
+    return ValidateComponentTypeMasks(program->getAttributesTypeMask().to_ulong(),
+                                      vaoAttribTypeBits, program->getAttributesMask().to_ulong(),
+                                      0xFFFF);
 }
 
 bool IsCompatibleDrawModeWithGeometryShader(PrimitiveMode drawMode,

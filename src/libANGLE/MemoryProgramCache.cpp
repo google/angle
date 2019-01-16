@@ -246,8 +246,8 @@ angle::Result MemoryProgramCache::Deserialize(const Context *context,
 
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
-    state->mAttributesTypeMask.from_ulong(stream.readInt<uint32_t>());
-    state->mAttributesMask = stream.readInt<gl::AttributesMask>();
+    state->mAttributesTypeMask = gl::ComponentTypeMask(stream.readInt<uint32_t>());
+    state->mAttributesMask     = stream.readInt<gl::AttributesMask>();
 
     static_assert(MAX_VERTEX_ATTRIBS <= sizeof(unsigned long) * 8,
                   "Too many vertex attribs for mask");
@@ -404,7 +404,7 @@ angle::Result MemoryProgramCache::Deserialize(const Context *context,
     static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
                   "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
                   "into 32 bits each");
-    state->mDrawBufferTypeMask.from_ulong(stream.readInt<uint32_t>());
+    state->mDrawBufferTypeMask    = gl::ComponentTypeMask(stream.readInt<uint32_t>());
     state->mActiveOutputVariables = stream.readInt<gl::DrawBufferMask>();
 
     unsigned int samplerRangeLow  = stream.readInt<unsigned int>();

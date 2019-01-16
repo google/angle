@@ -217,7 +217,7 @@ class Framebuffer final : public angle::ObserverInterface,
     const std::vector<GLenum> &getDrawBufferStates() const;
     void setDrawBuffers(size_t count, const GLenum *buffers);
     const FramebufferAttachment *getDrawBuffer(size_t drawBuffer) const;
-    GLenum getDrawbufferWriteType(size_t drawBuffer) const;
+    ComponentType getDrawbufferWriteType(size_t drawBuffer) const;
     ComponentTypeMask getDrawBufferTypeMask() const;
     DrawBufferMask getDrawBufferMask() const;
     bool hasEnabledDrawBuffer() const;

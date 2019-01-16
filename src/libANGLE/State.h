@@ -347,12 +347,24 @@ class State : angle::NonCopyable
                                              GLint size,
                                              VertexAttribType type,
                                              bool normalized,
-                                             bool pureInteger,
                                              GLsizei stride,
                                              const void *pointer)
     {
         mVertexArray->setVertexAttribPointer(context, attribNum, boundBuffer, size, type,
-                                             normalized, pureInteger, stride, pointer);
+                                             normalized, stride, pointer);
+        mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
+    }
+
+    ANGLE_INLINE void setVertexAttribIPointer(const Context *context,
+                                              unsigned int attribNum,
+                                              Buffer *boundBuffer,
+                                              GLint size,
+                                              VertexAttribType type,
+                                              GLsizei stride,
+                                              const void *pointer)
+    {
+        mVertexArray->setVertexAttribIPointer(context, attribNum, boundBuffer, size, type, stride,
+                                              pointer);
         mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
     }
 

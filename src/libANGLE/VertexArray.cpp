@@ -24,30 +24,30 @@ bool IsElementArrayBufferSubjectIndex(angle::SubjectIndex subjectIndex)
     return (subjectIndex == MAX_VERTEX_ATTRIBS);
 }
 
-ANGLE_INLINE GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib)
+ANGLE_INLINE ComponentType GetVertexAttributeComponentType(bool pureInteger, VertexAttribType type)
 {
-    if (attrib.pureInteger)
+    if (pureInteger)
     {
-        switch (attrib.type)
+        switch (type)
         {
             case VertexAttribType::Byte:
             case VertexAttribType::Short:
             case VertexAttribType::Int:
-                return GL_INT;
+                return ComponentType::Int;
 
             case VertexAttribType::UnsignedByte:
             case VertexAttribType::UnsignedShort:
             case VertexAttribType::UnsignedInt:
-                return GL_UNSIGNED_INT;
+                return ComponentType::UnsignedInt;
 
             default:
                 UNREACHABLE();
-                return GL_NONE;
+                return ComponentType::NoType;
         }
     }
     else
     {
-        return GL_FLOAT;
+        return ComponentType::Float;
     }
 }
 
@@ -321,23 +321,16 @@ void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)
     }
 }
 
-ANGLE_INLINE void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
+ANGLE_INLINE void VertexArray::setVertexAttribFormatImpl(VertexAttribute *attrib,
                                                          GLint size,
                                                          VertexAttribType type,
                                                          bool normalized,
-                                                         bool pureInteger,
                                                          GLuint relativeOffset)
 {
-    ASSERT(attribIndex < getMaxAttribs());
-
-    VertexAttribute *attrib = &mState.mVertexAttributes[attribIndex];
-
     attrib->size           = size;
     attrib->type           = type;
     attrib->normalized     = normalized;
-    attrib->pureInteger    = pureInteger;
     attrib->relativeOffset = relativeOffset;
-    mState.mVertexAttributesTypeMask.setIndex(GetVertexAttributeBaseType(*attrib), attribIndex);
 }
 
 void VertexArray::setVertexAttribFormat(size_t attribIndex,
@@ -347,10 +340,15 @@ void VertexArray::setVertexAttribFormat(size_t attribIndex,
                                         bool pureInteger,
                                         GLuint relativeOffset)
 {
-    setVertexAttribFormatImpl(attribIndex, size, type, normalized, pureInteger, relativeOffset);
+    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
+    attrib.pureInteger      = pureInteger;
+
+    ComponentType componentType = GetVertexAttributeComponentType(pureInteger, type);
+    SetComponentTypeMask(componentType, attribIndex, &mState.mVertexAttributesTypeMask);
+
+    setVertexAttribFormatImpl(&attrib, size, type, normalized, relativeOffset);
     setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_FORMAT);
 
-    VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
     attrib.updateCachedElementLimit(mState.mVertexBindings[attrib.bindingIndex]);
 }
 
@@ -383,24 +381,28 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
         mState.mCachedMappedArrayBuffers & mState.mEnabledAttributesMask;
 }
 
-void VertexArray::setVertexAttribPointer(const Context *context,
-                                         size_t attribIndex,
-                                         gl::Buffer *boundBuffer,
-                                         GLint size,
-                                         VertexAttribType type,
-                                         bool normalized,
-                                         bool pureInteger,
-                                         GLsizei stride,
-                                         const void *pointer)
+ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context,
+                                                          ComponentType componentType,
+                                                          bool pureInteger,
+                                                          size_t attribIndex,
+                                                          Buffer *boundBuffer,
+                                                          GLint size,
+                                                          VertexAttribType type,
+                                                          bool normalized,
+                                                          GLsizei stride,
+                                                          const void *pointer)
 {
     ASSERT(attribIndex < getMaxAttribs());
 
     GLintptr offset = boundBuffer ? reinterpret_cast<GLintptr>(pointer) : 0;
 
-    setVertexAttribFormatImpl(attribIndex, size, type, normalized, pureInteger, 0);
-    setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex));
-
     VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
+    attrib.pureInteger      = pureInteger;
+
+    SetComponentTypeMask(componentType, attribIndex, &mState.mVertexAttributesTypeMask);
+
+    setVertexAttribFormatImpl(&attrib, size, type, normalized, 0);
+    setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex));
 
     GLsizei effectiveStride =
         stride != 0 ? stride : static_cast<GLsizei>(ComputeVertexAttributeTypeSize(attrib));
@@ -413,6 +415,32 @@ void VertexArray::setVertexAttribPointer(const Context *context,
 
     mState.mNullPointerClientMemoryAttribsMask.set(attribIndex,
                                                    boundBuffer == nullptr && pointer == nullptr);
+}
+
+void VertexArray::setVertexAttribPointer(const Context *context,
+                                         size_t attribIndex,
+                                         gl::Buffer *boundBuffer,
+                                         GLint size,
+                                         VertexAttribType type,
+                                         bool normalized,
+                                         GLsizei stride,
+                                         const void *pointer)
+{
+    setVertexAttribPointerImpl(context, ComponentType::Float, false, attribIndex, boundBuffer, size,
+                               type, normalized, stride, pointer);
+}
+
+void VertexArray::setVertexAttribIPointer(const Context *context,
+                                          size_t attribIndex,
+                                          gl::Buffer *boundBuffer,
+                                          GLint size,
+                                          VertexAttribType type,
+                                          GLsizei stride,
+                                          const void *pointer)
+{
+    ComponentType componentType = GetVertexAttributeComponentType(true, type);
+    setVertexAttribPointerImpl(context, componentType, true, attribIndex, boundBuffer, size, type,
+                               false, stride, pointer);
 }
 
 angle::Result VertexArray::syncState(const Context *context)

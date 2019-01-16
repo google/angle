@@ -673,7 +673,7 @@ Framebuffer::Framebuffer(const Context *context, egl::Surface *surface)
                           FramebufferAttachment::kDefaultMultiviewLayout,
                           FramebufferAttachment::kDefaultViewportOffsets);
     }
-    mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(0), 0);
+    SetComponentTypeMask(getDrawbufferWriteType(0), 0, &mState.mDrawBufferTypeMask);
 }
 
 Framebuffer::Framebuffer(rx::GLImplFactory *factory)
@@ -684,7 +684,7 @@ Framebuffer::Framebuffer(rx::GLImplFactory *factory)
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
     mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0);
-    mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(0), 0);
+    SetComponentTypeMask(getDrawbufferWriteType(0), 0, &mState.mDrawBufferTypeMask);
 }
 
 Framebuffer::~Framebuffer()
@@ -871,7 +871,7 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
 
     for (size_t index = 0; index < count; ++index)
     {
-        mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(index), index);
+        SetComponentTypeMask(getDrawbufferWriteType(index), index, &mState.mDrawBufferTypeMask);
 
         if (drawStates[index] != GL_NONE && mState.mColorAttachments[index].isAttached())
         {
@@ -885,23 +885,24 @@ const FramebufferAttachment *Framebuffer::getDrawBuffer(size_t drawBuffer) const
     return mState.getDrawBuffer(drawBuffer);
 }
 
-GLenum Framebuffer::getDrawbufferWriteType(size_t drawBuffer) const
+ComponentType Framebuffer::getDrawbufferWriteType(size_t drawBuffer) const
 {
     const FramebufferAttachment *attachment = mState.getDrawBuffer(drawBuffer);
     if (attachment == nullptr)
     {
-        return GL_NONE;
+        return ComponentType::NoType;
     }
 
     GLenum componentType = attachment->getFormat().info->componentType;
     switch (componentType)
     {
         case GL_INT:
+            return ComponentType::Int;
         case GL_UNSIGNED_INT:
-            return componentType;
+            return ComponentType::UnsignedInt;
 
         default:
-            return GL_FLOAT;
+            return ComponentType::Float;
     }
 }
 
@@ -1761,7 +1762,8 @@ void Framebuffer::setAttachmentImpl(const Context *context,
             // formsRenderingFeedbackLoopWith
             bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
             mState.mEnabledDrawBuffers.set(colorIndex, enabled);
-            mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(colorIndex), colorIndex);
+            SetComponentTypeMask(getDrawbufferWriteType(colorIndex), colorIndex,
+                                 &mState.mDrawBufferTypeMask);
         }
         break;
     }

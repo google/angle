@@ -119,15 +119,24 @@ class VertexArray final : public angle::ObserverInterface,
     void detachBuffer(const Context *context, GLuint bufferName);
     void setVertexAttribDivisor(const Context *context, size_t index, GLuint divisor);
     void enableAttribute(size_t attribIndex, bool enabledState);
+
     void setVertexAttribPointer(const Context *context,
                                 size_t attribIndex,
                                 Buffer *boundBuffer,
                                 GLint size,
                                 VertexAttribType type,
                                 bool normalized,
-                                bool pureInteger,
                                 GLsizei stride,
                                 const void *pointer);
+
+    void setVertexAttribIPointer(const Context *context,
+                                 size_t attribIndex,
+                                 Buffer *boundBuffer,
+                                 GLint size,
+                                 VertexAttribType type,
+                                 GLsizei stride,
+                                 const void *pointer);
+
     void setVertexAttribFormat(size_t attribIndex,
                                GLint size,
                                VertexAttribType type,
@@ -141,11 +150,10 @@ class VertexArray final : public angle::ObserverInterface,
                           GLsizei stride);
     void setVertexAttribBinding(const Context *context, size_t attribIndex, GLuint bindingIndex);
     void setVertexBindingDivisor(size_t bindingIndex, GLuint divisor);
-    void setVertexAttribFormatImpl(size_t attribIndex,
+    void setVertexAttribFormatImpl(VertexAttribute *attrib,
                                    GLint size,
                                    VertexAttribType type,
                                    bool normalized,
-                                   bool pureInteger,
                                    GLuint relativeOffset);
     void bindVertexBufferImpl(const Context *context,
                               size_t bindingIndex,
@@ -295,6 +303,17 @@ class VertexArray final : public angle::ObserverInterface,
                                     GLsizei indexCount,
                                     const void *indices,
                                     IndexRange *indexRangeOut) const;
+
+    void setVertexAttribPointerImpl(const Context *context,
+                                    ComponentType componentType,
+                                    bool pureInteger,
+                                    size_t attribIndex,
+                                    Buffer *boundBuffer,
+                                    GLint size,
+                                    VertexAttribType type,
+                                    bool normalized,
+                                    GLsizei stride,
+                                    const void *pointer);
 
     GLuint mId;
 

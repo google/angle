@@ -314,72 +314,15 @@ bool operator!=(const Extents &lhs, const Extents &rhs)
     return !(lhs == rhs);
 }
 
-ComponentTypeMask::ComponentTypeMask()
+bool ValidateComponentTypeMasks(unsigned long outputTypes,
+                                unsigned long inputTypes,
+                                unsigned long outputMask,
+                                unsigned long inputMask)
 {
-    mTypeMask.reset();
-}
-
-ComponentTypeMask::ComponentTypeMask(const ComponentTypeMask &other) = default;
-
-ComponentTypeMask::~ComponentTypeMask() = default;
-
-void ComponentTypeMask::reset()
-{
-    mTypeMask.reset();
-}
-
-bool ComponentTypeMask::none()
-{
-    return mTypeMask.none();
-}
-
-void ComponentTypeMask::setIndex(GLenum type, size_t index)
-{
-    ASSERT(index <= MAX_COMPONENT_TYPE_MASK_INDEX);
-
-    mTypeMask &= ~(0x10001 << index);
-
-    uint32_t m = 0;
-    switch (type)
-    {
-        case GL_INT:
-            m = 0x00001;
-            break;
-        case GL_UNSIGNED_INT:
-            m = 0x10000;
-            break;
-        case GL_FLOAT:
-            m = 0x10001;
-            break;
-        case GL_NONE:
-            m = 0x00000;
-            break;
-        default:
-            UNREACHABLE();
-    }
-
-    mTypeMask |= m << index;
-}
-
-unsigned long ComponentTypeMask::to_ulong() const
-{
-    return mTypeMask.to_ulong();
-}
-
-void ComponentTypeMask::from_ulong(unsigned long mask)
-{
-    mTypeMask = angle::BitSet<MAX_COMPONENT_TYPE_MASK_INDEX * 2>(mask);
-}
-
-bool ComponentTypeMask::Validate(unsigned long outputTypes,
-                                 unsigned long inputTypes,
-                                 unsigned long outputMask,
-                                 unsigned long inputMask)
-{
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS <= MAX_COMPONENT_TYPE_MASK_INDEX,
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS <= kMaxComponentTypeMaskIndex,
                   "Output/input masks should fit into 16 bits - 1 bit per draw buffer. The "
                   "corresponding type masks should fit into 32 bits - 2 bits per draw buffer.");
-    static_assert(MAX_VERTEX_ATTRIBS <= MAX_COMPONENT_TYPE_MASK_INDEX,
+    static_assert(MAX_VERTEX_ATTRIBS <= kMaxComponentTypeMaskIndex,
                   "Output/input masks should fit into 16 bits - 1 bit per attrib. The "
                   "corresponding type masks should fit into 32 bits - 2 bits per attrib.");
 
@@ -389,8 +332,8 @@ bool ComponentTypeMask::Validate(unsigned long outputTypes,
     // with the elswewhere used DrawBufferMask or AttributeMask.
 
     // OR the masks with themselves, shifted 16 bits. This is to match our split type bits.
-    outputMask |= (outputMask << MAX_COMPONENT_TYPE_MASK_INDEX);
-    inputMask |= (inputMask << MAX_COMPONENT_TYPE_MASK_INDEX);
+    outputMask |= (outputMask << kMaxComponentTypeMaskIndex);
+    inputMask |= (inputMask << kMaxComponentTypeMaskIndex);
 
     // To validate:
     // 1. Remove any indexes that are not enabled in the input (& inputMask)
