@@ -7,6 +7,7 @@
 // ParallelShaderCompileTest.cpp : Tests of the GL_KHR_parallel_shader_compile extension.
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 #include "util/random_utils.h"
 
@@ -14,6 +15,14 @@ using namespace angle;
 
 namespace
 {
+
+namespace
+{
+
+constexpr int kTaskCount             = 32;
+constexpr unsigned int kPollInterval = 100;
+
+}  // anonymous namespace
 
 class ParallelShaderCompileTest : public ANGLETest
 {
@@ -46,46 +55,16 @@ class ParallelShaderCompileTest : public ANGLETest
         return true;
     }
 
-    class ClearColorWithDraw
+    class Task
     {
       public:
-        ClearColorWithDraw(GLubyte color) : mColor(color, color, color, 255) {}
+        Task(int id) : mID(id) {}
+        virtual ~Task() {}
 
-        bool compile()
-        {
-            mVertexShader =
-                CompileShader(GL_VERTEX_SHADER, insertRandomString(essl1_shaders::vs::Simple()));
-            mFragmentShader = CompileShader(GL_FRAGMENT_SHADER,
-                                            insertRandomString(essl1_shaders::fs::UniformColor()));
-            return (mVertexShader != 0 && mFragmentShader != 0);
-        }
-
-        bool isCompileCompleted()
-        {
-            GLint status;
-            glGetShaderiv(mVertexShader, GL_COMPLETION_STATUS_KHR, &status);
-            if (status == GL_TRUE)
-            {
-                glGetShaderiv(mFragmentShader, GL_COMPLETION_STATUS_KHR, &status);
-                return (status == GL_TRUE);
-            }
-            return false;
-        }
-
-        bool link()
-        {
-            mProgram = 0;
-            if (checkShader(mVertexShader) && checkShader(mFragmentShader))
-            {
-                mProgram = glCreateProgram();
-                glAttachShader(mProgram, mVertexShader);
-                glAttachShader(mProgram, mFragmentShader);
-                glLinkProgram(mProgram);
-            }
-            glDeleteShader(mVertexShader);
-            glDeleteShader(mFragmentShader);
-            return (mProgram != 0);
-        }
+        virtual bool compile()                                     = 0;
+        virtual bool isCompileCompleted()                          = 0;
+        virtual bool link()                                        = 0;
+        virtual void runAndVerify(ParallelShaderCompileTest *test) = 0;
 
         bool isLinkCompleted()
         {
@@ -94,32 +73,13 @@ class ParallelShaderCompileTest : public ANGLETest
             return (status == GL_TRUE);
         }
 
-        void drawAndVerify(ParallelShaderCompileTest *test)
-        {
-            glClearColor(0, 0, 0, 0);
-            glClear(GL_COLOR_BUFFER_BIT);
-            glDisable(GL_DEPTH_TEST);
-            glUseProgram(mProgram);
-            ASSERT_GL_NO_ERROR();
-            GLint colorUniformLocation =
-                glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
-            ASSERT_NE(colorUniformLocation, -1);
-            auto normalizeColor = mColor.toNormalizedVector();
-            glUniform4fv(colorUniformLocation, 1, normalizeColor.data());
-            test->drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
-            EXPECT_PIXEL_COLOR_EQ(test->getWindowWidth() / 2, test->getWindowHeight() / 2, mColor);
-            glUseProgram(0);
-            glDeleteProgram(mProgram);
-            ASSERT_GL_NO_ERROR();
-        }
-
-      private:
+      protected:
         std::string insertRandomString(const std::string &source)
         {
             RNG rng;
             std::ostringstream ostream;
-            ostream << "// Random string to fool program cache: " << rng.randomInt() << "\n"
-                    << source;
+            ostream << source << "\n// Random string to fool program cache: " << rng.randomInt()
+                    << "\n";
             return ostream.str();
         }
 
@@ -161,10 +121,236 @@ class ParallelShaderCompileTest : public ANGLETest
             return (compileResult == GL_TRUE);
         }
 
+        GLuint mProgram;
+        int mID;
+    };
+
+    template <typename T>
+    class TaskRunner
+    {
+      public:
+        TaskRunner() {}
+        ~TaskRunner() {}
+
+        void run(ParallelShaderCompileTest *test)
+        {
+
+            std::vector<std::unique_ptr<T>> compileTasks;
+            for (int i = 0; i < kTaskCount; ++i)
+            {
+                std::unique_ptr<T> task(new T(i));
+                bool isCompiling = task->compile();
+                ASSERT_TRUE(isCompiling);
+                compileTasks.push_back(std::move(task));
+            }
+
+            std::vector<std::unique_ptr<T>> linkTasks;
+            while (!compileTasks.empty())
+            {
+                for (unsigned int i = 0; i < compileTasks.size();)
+                {
+                    auto &task = compileTasks[i];
+
+                    if (task->isCompileCompleted())
+                    {
+                        bool isLinking = task->link();
+                        ASSERT_TRUE(isLinking);
+                        linkTasks.push_back(std::move(task));
+                        compileTasks.erase(compileTasks.begin() + i);
+                        continue;
+                    }
+                    ++i;
+                }
+                Sleep(kPollInterval);
+            }
+
+            while (!linkTasks.empty())
+            {
+                for (unsigned int i = 0; i < linkTasks.size();)
+                {
+                    auto &task = linkTasks[i];
+
+                    if (task->isLinkCompleted())
+                    {
+                        task->runAndVerify(test);
+                        linkTasks.erase(linkTasks.begin() + i);
+                        continue;
+                    }
+                    ++i;
+                }
+                Sleep(kPollInterval);
+            }
+        }
+    };
+
+    class ClearColorWithDraw : public Task
+    {
+      public:
+        ClearColorWithDraw(int taskID) : Task(taskID)
+        {
+            auto color = static_cast<GLubyte>(taskID * 255 / kTaskCount);
+            mColor     = {color, color, color, 255};
+        }
+
+        bool compile() override
+        {
+            mVertexShader =
+                CompileShader(GL_VERTEX_SHADER, insertRandomString(essl1_shaders::vs::Simple()));
+            mFragmentShader = CompileShader(GL_FRAGMENT_SHADER,
+                                            insertRandomString(essl1_shaders::fs::UniformColor()));
+            return (mVertexShader != 0 && mFragmentShader != 0);
+        }
+
+        bool isCompileCompleted() override
+        {
+            GLint status;
+            glGetShaderiv(mVertexShader, GL_COMPLETION_STATUS_KHR, &status);
+            if (status == GL_TRUE)
+            {
+                glGetShaderiv(mFragmentShader, GL_COMPLETION_STATUS_KHR, &status);
+                return (status == GL_TRUE);
+            }
+            return false;
+        }
+
+        bool link() override
+        {
+            mProgram = 0;
+            if (checkShader(mVertexShader) && checkShader(mFragmentShader))
+            {
+                mProgram = glCreateProgram();
+                glAttachShader(mProgram, mVertexShader);
+                glAttachShader(mProgram, mFragmentShader);
+                glLinkProgram(mProgram);
+            }
+            glDeleteShader(mVertexShader);
+            glDeleteShader(mFragmentShader);
+            return (mProgram != 0);
+        }
+
+        void runAndVerify(ParallelShaderCompileTest *test) override
+        {
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glDisable(GL_DEPTH_TEST);
+            glUseProgram(mProgram);
+            ASSERT_GL_NO_ERROR();
+            GLint colorUniformLocation =
+                glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
+            ASSERT_NE(colorUniformLocation, -1);
+            auto normalizeColor = mColor.toNormalizedVector();
+            glUniform4fv(colorUniformLocation, 1, normalizeColor.data());
+            test->drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(test->getWindowWidth() / 2, test->getWindowHeight() / 2, mColor);
+            glUseProgram(0);
+            glDeleteProgram(mProgram);
+            ASSERT_GL_NO_ERROR();
+        }
+
+      private:
         GLColor mColor;
         GLuint mVertexShader;
         GLuint mFragmentShader;
-        GLuint mProgram;
+    };
+
+    class ImageLoadStore : public Task
+    {
+      public:
+        ImageLoadStore(int taskID) : Task(taskID) {}
+        ~ImageLoadStore() {}
+
+        bool compile() override
+        {
+            const char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+void main()
+{
+    uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+    imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+})";
+
+            mShader = CompileShader(GL_COMPUTE_SHADER, insertRandomString(kCSSource));
+            return mShader != 0;
+        }
+
+        bool isCompileCompleted() override
+        {
+            GLint status;
+            glGetShaderiv(mShader, GL_COMPLETION_STATUS_KHR, &status);
+            return status == GL_TRUE;
+        }
+
+        bool link() override
+        {
+            mProgram = 0;
+            if (checkShader(mShader))
+            {
+                mProgram = glCreateProgram();
+                glAttachShader(mProgram, mShader);
+                glLinkProgram(mProgram);
+            }
+            glDeleteShader(mShader);
+            return mProgram != 0;
+        }
+
+        void runAndVerify(ParallelShaderCompileTest *test) override
+        {
+            // Taken from ComputeShaderTest.StoreImageThenLoad.
+            constexpr GLuint kInputValues[3][1] = {{300}, {200}, {100}};
+            GLTexture texture[3];
+            glBindTexture(GL_TEXTURE_2D, texture[0]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                            kInputValues[0]);
+            EXPECT_GL_NO_ERROR();
+
+            glBindTexture(GL_TEXTURE_2D, texture[1]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                            kInputValues[1]);
+            EXPECT_GL_NO_ERROR();
+
+            glBindTexture(GL_TEXTURE_2D, texture[2]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                            kInputValues[2]);
+            EXPECT_GL_NO_ERROR();
+
+            glUseProgram(mProgram);
+
+            glBindImageTexture(0, texture[0], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+            glBindImageTexture(1, texture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+            glDispatchCompute(1, 1, 1);
+            glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+            EXPECT_GL_NO_ERROR();
+
+            glBindImageTexture(0, texture[1], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+            glBindImageTexture(1, texture[2], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+            glDispatchCompute(1, 1, 1);
+            glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+            EXPECT_GL_NO_ERROR();
+
+            GLuint outputValue;
+            GLFramebuffer framebuffer;
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   texture[2], 0);
+            glReadPixels(0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &outputValue);
+            EXPECT_GL_NO_ERROR();
+
+            EXPECT_EQ(300u, outputValue);
+
+            glUseProgram(0);
+            glDeleteProgram(mProgram);
+            ASSERT_GL_NO_ERROR();
+        }
+
+      private:
+        GLuint mShader;
     };
 };
 
@@ -186,55 +372,20 @@ TEST_P(ParallelShaderCompileTest, LinkAndDrawManyPrograms)
 {
     ANGLE_SKIP_TEST_IF(!ensureParallelShaderCompileExtensionAvailable());
 
-    std::vector<std::unique_ptr<ClearColorWithDraw>> compileTasks;
-    constexpr int kTaskCount = 32;
-    for (int i = 0; i < kTaskCount; ++i)
-    {
-        std::unique_ptr<ClearColorWithDraw> task(
-            new ClearColorWithDraw(static_cast<GLubyte>(i * 255 / kTaskCount)));
-        bool isCompiling = task->compile();
-        ASSERT_TRUE(isCompiling);
-        compileTasks.push_back(std::move(task));
-    }
+    TaskRunner<ClearColorWithDraw> runner;
+    runner.run(this);
+}
 
-    constexpr unsigned int kPollInterval = 100;
+class ParallelShaderCompileTestES31 : public ParallelShaderCompileTest
+{};
 
-    std::vector<std::unique_ptr<ClearColorWithDraw>> linkTasks;
-    while (!compileTasks.empty())
-    {
-        for (unsigned int i = 0; i < compileTasks.size();)
-        {
-            auto &task = compileTasks[i];
+// Test to compile and link many computing programs in parallel.
+TEST_P(ParallelShaderCompileTestES31, LinkAndDispatchManyPrograms)
+{
+    ANGLE_SKIP_TEST_IF(!ensureParallelShaderCompileExtensionAvailable());
 
-            if (task->isCompileCompleted())
-            {
-                bool isLinking = task->link();
-                ASSERT_TRUE(isLinking);
-                linkTasks.push_back(std::move(task));
-                compileTasks.erase(compileTasks.begin() + i);
-                continue;
-            }
-            ++i;
-        }
-        Sleep(kPollInterval);
-    }
-
-    while (!linkTasks.empty())
-    {
-        for (unsigned int i = 0; i < linkTasks.size();)
-        {
-            auto &task = linkTasks[i];
-
-            if (task->isLinkCompleted())
-            {
-                task->drawAndVerify(this);
-                linkTasks.erase(linkTasks.begin() + i);
-                continue;
-            }
-            ++i;
-        }
-        Sleep(kPollInterval);
-    }
+    TaskRunner<ImageLoadStore> runner;
+    runner.run(this);
 }
 
 ANGLE_INSTANTIATE_TEST(ParallelShaderCompileTest,
@@ -244,5 +395,7 @@ ANGLE_INSTANTIATE_TEST(ParallelShaderCompileTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN());
+
+ANGLE_INSTANTIATE_TEST(ParallelShaderCompileTestES31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace

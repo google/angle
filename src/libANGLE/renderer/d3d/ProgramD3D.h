@@ -333,7 +333,9 @@ class ProgramD3D : public ProgramImpl
     class GetVertexExecutableTask;
     class GetPixelExecutableTask;
     class GetGeometryExecutableTask;
+    class GetComputeExecutableTask;
     class GraphicsProgramLinkEvent;
+    class ComputeProgramLinkEvent;
 
     class LoadBinaryTask;
     class LoadBinaryLinkEvent;
@@ -475,7 +477,8 @@ class ProgramD3D : public ProgramImpl
 
     std::unique_ptr<LinkEvent> compileProgramExecutables(const gl::Context *context,
                                                          gl::InfoLog &infoLog);
-    angle::Result compileComputeExecutable(d3d::Context *context, gl::InfoLog &infoLog);
+    std::unique_ptr<LinkEvent> compileComputeExecutable(const gl::Context *context,
+                                                        gl::InfoLog &infoLog);
 
     angle::Result loadBinaryShaderExecutables(const gl::Context *context,
                                               gl::BinaryInputStream *stream,

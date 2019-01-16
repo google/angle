@@ -1758,6 +1758,21 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
     const gl::State &mState;
 };
 
+class ProgramD3D::GetComputeExecutableTask : public ProgramD3D::GetExecutableTask
+{
+  public:
+    GetComputeExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
+    angle::Result run() override
+    {
+        mProgram->updateCachedImage2DBindLayoutFromComputeShader();
+        ShaderExecutableD3D *computeExecutable = nullptr;
+        ANGLE_TRY(mProgram->getComputeExecutableForImage2DBindLayout(this, &computeExecutable,
+                                                                     &mInfoLog));
+
+        return computeExecutable ? angle::Result::Continue : angle::Result::Incomplete;
+    }
+};
+
 // The LinkEvent implementation for linking a rendering(VS, FS, GS) program.
 class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
 {
@@ -1793,9 +1808,9 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
         ANGLE_TRY(checkTask(context, mPixelTask.get()));
         ANGLE_TRY(checkTask(context, mGeometryTask.get()));
 
-        if (mVertexTask.get()->getResult() == angle::Result::Incomplete ||
-            mPixelTask.get()->getResult() == angle::Result::Incomplete ||
-            mGeometryTask.get()->getResult() == angle::Result::Incomplete)
+        if (mVertexTask->getResult() == angle::Result::Incomplete ||
+            mPixelTask->getResult() == angle::Result::Incomplete ||
+            mGeometryTask->getResult() == angle::Result::Incomplete)
         {
             return angle::Result::Incomplete;
         }
@@ -1873,6 +1888,36 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
     const ShaderD3D *mFragmentShader;
 };
 
+// The LinkEvent implementation for linking a computing program.
+class ProgramD3D::ComputeProgramLinkEvent final : public LinkEvent
+{
+  public:
+    ComputeProgramLinkEvent(gl::InfoLog &infoLog,
+                            std::shared_ptr<ProgramD3D::GetComputeExecutableTask> computeTask,
+                            std::shared_ptr<WaitableEvent> event)
+        : mInfoLog(infoLog), mComputeTask(computeTask), mWaitEvent(event)
+    {}
+
+    bool isLinking() override { return !mWaitEvent->isReady(); }
+
+    angle::Result wait(const gl::Context *context) override
+    {
+        mWaitEvent->wait();
+
+        angle::Result result = mComputeTask->getResult();
+        if (result != angle::Result::Continue)
+        {
+            mInfoLog << "Failed to create D3D compute shader.";
+        }
+        return result;
+    }
+
+  private:
+    gl::InfoLog &mInfoLog;
+    std::shared_ptr<ProgramD3D::GetComputeExecutableTask> mComputeTask;
+    std::shared_ptr<WaitableEvent> mWaitEvent;
+};
+
 std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Context *context,
                                                                  gl::InfoLog &infoLog)
 {
@@ -1895,6 +1940,21 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Conte
     return std::make_unique<GraphicsProgramLinkEvent>(infoLog, context->getWorkerThreadPool(),
                                                       vertexTask, pixelTask, geometryTask, useGS,
                                                       vertexShaderD3D, fragmentShaderD3D);
+}
+
+std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(const gl::Context *context,
+                                                                gl::InfoLog &infoLog)
+{
+    // Ensure the compiler is initialized to avoid race conditions.
+    angle::Result result = mRenderer->ensureHLSLCompilerInitialized(GetImplAs<ContextD3D>(context));
+    if (result != angle::Result::Continue)
+    {
+        return std::make_unique<LinkEventDone>(result);
+    }
+    auto computeTask = std::make_shared<GetComputeExecutableTask>(this);
+    return std::make_unique<ComputeProgramLinkEvent>(
+        infoLog, computeTask,
+        WorkerThreadPool::PostWorkerTask(context->getWorkerThreadPool(), computeTask));
 }
 
 angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
@@ -1939,19 +1999,6 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
     return angle::Result::Continue;
 }
 
-angle::Result ProgramD3D::compileComputeExecutable(d3d::Context *context, gl::InfoLog &infoLog)
-{
-    // Ensure the compiler is initialized to avoid race conditions.
-    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(context));
-
-    updateCachedImage2DBindLayoutFromComputeShader();
-
-    ShaderExecutableD3D *computeExecutable = nullptr;
-    ANGLE_TRY(getComputeExecutableForImage2DBindLayout(context, &computeExecutable, &infoLog));
-
-    return computeExecutable ? angle::Result::Continue : angle::Result::Incomplete;
-}
-
 std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog)
@@ -1982,12 +2029,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
 
         defineUniformsAndAssignRegisters();
 
-        angle::Result result = compileComputeExecutable(GetImplAs<ContextD3D>(context), infoLog);
-        if (result != angle::Result::Continue)
-        {
-            infoLog << "Failed to create D3D compute shader.";
-        }
-        return std::make_unique<LinkEventDone>(result);
+        return compileComputeExecutable(context, infoLog);
     }
     else
     {
