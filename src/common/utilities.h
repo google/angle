@@ -20,6 +20,7 @@
 
 #include "common/PackedEnums.h"
 #include "common/mathutil.h"
+#include "common/platform.h"
 
 namespace sh
 {

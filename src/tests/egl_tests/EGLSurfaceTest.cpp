@@ -11,6 +11,7 @@
 
 #include <vector>
 
+#include "common/platform.h"
 #include "test_utils/ANGLETest.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"

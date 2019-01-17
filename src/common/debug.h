@@ -19,6 +19,7 @@
 #include <string>
 
 #include "common/angleutils.h"
+#include "common/platform.h"
 
 #if !defined(TRACE_OUTPUT_FILE)
 #    define TRACE_OUTPUT_FILE "angle_debug.txt"

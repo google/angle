@@ -14,6 +14,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "common/platform.h"
+
 namespace angle
 {
 

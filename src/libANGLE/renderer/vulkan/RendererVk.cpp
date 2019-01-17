@@ -15,6 +15,7 @@
 #include <EGL/eglext.h>
 
 #include "common/debug.h"
+#include "common/platform.h"
 #include "common/system_utils.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/driver_utils.h"

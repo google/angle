@@ -12,6 +12,7 @@
 #include <limits>
 
 #include "common/mathutil.h"
+#include "common/platform.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"

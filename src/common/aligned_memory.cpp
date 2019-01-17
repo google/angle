@@ -9,6 +9,7 @@
 #include "common/aligned_memory.h"
 
 #include "common/debug.h"
+#include "common/platform.h"
 
 #if defined(COMPILER_MSVC)
 #    include <malloc.h>

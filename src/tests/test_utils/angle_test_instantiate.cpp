@@ -13,6 +13,7 @@
 #include <map>
 
 #include "angle_gl.h"
+#include "common/platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"

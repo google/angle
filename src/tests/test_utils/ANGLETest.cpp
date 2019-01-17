@@ -9,6 +9,7 @@
 
 #include "ANGLETest.h"
 
+#include "common/platform.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 

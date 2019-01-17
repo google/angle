@@ -8,6 +8,8 @@
 #ifndef UTIL_GL_H_
 #define UTIL_GL_H_
 
+#include "common/platform.h"
+
 #if defined(ANGLE_USE_UTIL_LOADER)
 #    include "util/egl_loader_autogen.h"
 #    include "util/gles_loader_autogen.h"

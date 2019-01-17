@@ -6,6 +6,7 @@
 //   Performance benchmark for Vulkan Primary/Secondary Command Buffer implementations.
 
 #include "ANGLEPerfTest.h"
+#include "common/platform.h"
 #include "test_utils/third_party/vulkan_command_buffer_utils.h"
 
 constexpr char kVertShaderText[] = R"(

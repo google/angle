@@ -9,6 +9,7 @@
 
 #include "ANGLEPerfTest.h"
 
+#include "common/platform.h"
 #include "third_party/perf/perf_test.h"
 #include "util/shader_utils.h"
 #include "util/system_utils.h"

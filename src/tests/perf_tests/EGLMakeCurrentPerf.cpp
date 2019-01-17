@@ -8,6 +8,7 @@
 //
 
 #include "ANGLEPerfTest.h"
+#include "common/platform.h"
 #include "platform/Platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
