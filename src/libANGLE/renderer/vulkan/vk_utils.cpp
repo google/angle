@@ -270,19 +270,21 @@ VkDevice Context::getDevice() const
 // CommandPool implementation.
 CommandPool::CommandPool() {}
 
-void CommandPool::destroy(VkDevice device)
+void CommandPool::destroy(VkDevice device, const VkAllocationCallbacks *allocationCallbacks)
 {
     if (valid())
     {
-        vkDestroyCommandPool(device, mHandle, nullptr);
+        vkDestroyCommandPool(device, mHandle, allocationCallbacks);
         mHandle = VK_NULL_HANDLE;
     }
 }
 
-VkResult CommandPool::init(VkDevice device, const VkCommandPoolCreateInfo &createInfo)
+VkResult CommandPool::init(VkDevice device,
+                           const VkCommandPoolCreateInfo &createInfo,
+                           const VkAllocationCallbacks *allocationCallbacks)
 {
     ASSERT(!valid());
-    return vkCreateCommandPool(device, &createInfo, nullptr, &mHandle);
+    return vkCreateCommandPool(device, &createInfo, allocationCallbacks, &mHandle);
 }
 
 // CommandBuffer implementation.

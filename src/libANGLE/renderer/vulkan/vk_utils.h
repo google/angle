@@ -290,9 +290,11 @@ class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
   public:
     CommandPool();
 
-    void destroy(VkDevice device);
+    void destroy(VkDevice device, const VkAllocationCallbacks *allocationCallbacks);
 
-    VkResult init(VkDevice device, const VkCommandPoolCreateInfo &createInfo);
+    VkResult init(VkDevice device,
+                  const VkCommandPoolCreateInfo &createInfo,
+                  const VkAllocationCallbacks *allocationCallbacks);
 };
 
 class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
@@ -317,7 +319,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     VkCommandBuffer releaseHandle();
 
-    // This is used for normal pool allocated command buffers. It reset the handle.
+    // This is used for normal pool allocated command buffers. It resets the handle.
     void destroy(VkDevice device);
 
     // This is used in conjunction with VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT.
@@ -788,6 +790,28 @@ class Scoped final : angle::NonCopyable
 
   private:
     VkDevice mDevice;
+    T mVar;
+};
+
+// Helper class to handle RAII patterns for initialization. Requires that T have a destroy method
+// that takes a VkDevice & VkAllocationCallbacks ptr and returns void.
+template <typename T>
+class ScopedCustomAllocation final : angle::NonCopyable
+{
+  public:
+    ScopedCustomAllocation(VkDevice device, const VkAllocationCallbacks *allocationCBs)
+        : mDevice(device), mAllocationCallbacks(allocationCBs)
+    {}
+    ~ScopedCustomAllocation() { mVar.destroy(mDevice, mAllocationCallbacks); }
+
+    const T &get() const { return mVar; }
+    T &get() { return mVar; }
+
+    T &&release() { return std::move(mVar); }
+
+  private:
+    VkDevice mDevice;
+    const VkAllocationCallbacks *mAllocationCallbacks;
     T mVar;
 };
 

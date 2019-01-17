@@ -61,7 +61,7 @@ class RemovePowTest : public testing::Test
     sh::TranslatorGLSL *mTranslatorGLSL;
     TIntermNode *mASTRoot;
 
-    TPoolAllocator allocator;
+    angle::PoolAllocator allocator;
 };
 
 // Check if there's a pow() node anywhere in the tree.

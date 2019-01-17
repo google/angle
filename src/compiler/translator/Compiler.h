@@ -66,7 +66,7 @@ class TShHandleBase
   protected:
     // Memory allocator. Allocates and tracks memory required by the compiler.
     // Deallocates all memory when compiler is destructed.
-    TPoolAllocator allocator;
+    angle::PoolAllocator allocator;
 };
 
 //
