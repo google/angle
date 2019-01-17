@@ -113,6 +113,29 @@
     },
     {
       "key": {
+        "uuid": "03c78cd4_b43c7cd9",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-17T08:18:44Z",
+      "side": 1,
+      "message": "[c]",
+      "range": {
+        "startLine": 54,
+        "startChar": 13,
+        "endLine": 54,
+        "endChar": 40
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5e3ecb74_507a4729",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 8
@@ -165,6 +188,30 @@
       "side": 1,
       "message": "See [a] which is used to calculate the size of structure var. The array of aggregate type is divided into:\n1) array of structure.\nWe must calculate the size of structure before traverse the structure member. So that we can get same top_level_array_stride for each structure member. So it only can be done in enterAggregateType, there we have the structure var. But I need to do below changes:\n   enterAggregateType(const ShaderVariable \u0026structVar, bool isRowMajor, bool isTopEntryPoint, size_t *sizeOut) // add additional information to enterAggregateType\n   \n2) array of array. \narrayOfArrays var can be calculated in encodeType.\n\nSo currently I put the structure size calculation to [b]. If you still think put them to enterAggregateType is better, I can do it in a follow-up patch.",
       "parentUuid": "3d956111_fd4be0ea",
+      "range": {
+        "startLine": 544,
+        "startChar": 0,
+        "endLine": 545,
+        "endChar": 76
+      },
+      "revId": "0179d4e1bd19853644bbbf2cdf678e0271cff665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08a2ed05_72937fbd",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-01-17T08:18:44Z",
+      "side": 1,
+      "message": "Move all mTopLevelArrayStride related code to BlockEncoderVisitor so that we don\u0027t need to do any additional change to BlockLayoutMapVisitor. mStructStackSize can\u0027t replace mIsTopLevelArrayStrideReady since it\u0027s also needed for non-structure array of array in [c].",
+      "parentUuid": "3acb75e0_db9a8d3d",
       "range": {
         "startLine": 544,
         "startChar": 0,
