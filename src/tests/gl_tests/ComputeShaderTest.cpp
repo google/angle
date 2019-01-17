@@ -619,8 +619,6 @@ void main()
 // Test that texelFetch works well in compute shader.
 TEST_P(ComputeShaderTest, TexelFetchFunction)
 {
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=16, local_size_y=16) in;
 precision highp usampler2D;
@@ -1524,10 +1522,6 @@ void main()
 // active shader storage blocks in a compute shader exceeds GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
 TEST_P(ComputeShaderTest, ExceedCombinedShaderOutputResourcesInCS)
 {
-    // TODO(jiawei.shao@intel.com): enable this test when shader storage buffer is supported on
-    // D3D11 back-ends.
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     GLint maxCombinedShaderOutputResources;
     GLint maxComputeShaderStorageBlocks;
     GLint maxComputeImageUniforms;
