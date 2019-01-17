@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74b8e16e_716d1c8a",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 38
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-01-17T22:00:34Z",
+      "side": 1,
+      "message": "This function needs to have a corresponding CGLDestroyPixelFormat in DisplayCGL::terminate.  This may be why we see asan failures.",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 71
+      },
+      "revId": "a100d8f471f79b9f88d387164992cc5bd9c6ee9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
