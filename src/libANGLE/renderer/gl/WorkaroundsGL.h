@@ -172,6 +172,10 @@ struct WorkaroundsGL
     // platforms.
     // http://anglebug.com/3045
     bool dontRelinkProgramsInParallel = false;
+
+    // Some tests have been seen to fail using worker contexts, this switch allows worker contexts
+    // to be disabled for some platforms. http://crbug.com/849576
+    bool disableWorkerContexts = false;
 };
 
 inline WorkaroundsGL::WorkaroundsGL() = default;

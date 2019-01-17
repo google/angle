@@ -566,6 +566,11 @@ angle::Result RendererGL::memoryBarrierByRegion(GLbitfield barriers)
 
 bool RendererGL::bindWorkerContext(std::string *infoLog)
 {
+    if (mWorkarounds.disableWorkerContexts)
+    {
+        return false;
+    }
+
     std::thread::id threadID = std::this_thread::get_id();
     std::lock_guard<std::mutex> lock(mWorkerMutex);
     std::unique_ptr<WorkerContext> workerContext;

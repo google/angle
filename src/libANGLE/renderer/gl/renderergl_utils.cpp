@@ -1444,6 +1444,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->queryCounterBitsGeneratesErrors = IsNexus5X(vendor, device);
 
     workarounds->dontRelinkProgramsInParallel = IsAndroid() || (IsWindows() && IsIntel(vendor));
+
+    workarounds->disableWorkerContexts = true;
 }
 
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)
