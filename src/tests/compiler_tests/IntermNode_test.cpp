@@ -131,7 +131,7 @@ class IntermNodeTest : public testing::Test
     }
 
   private:
-    TPoolAllocator allocator;
+    angle::PoolAllocator allocator;
     int mUniqueIndex;
 };
 

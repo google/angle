@@ -17,6 +17,8 @@ libangle_common_sources = [
   "src/common/PackedEnums.h",
   "src/common/PackedGLEnums_autogen.cpp",
   "src/common/PackedGLEnums_autogen.h",
+  "src/common/PoolAlloc.cpp",
+  "src/common/PoolAlloc.h",
   "src/common/aligned_memory.cpp",
   "src/common/aligned_memory.h",
   "src/common/angleutils.cpp",
