@@ -19,7 +19,6 @@
 namespace gl
 {
 class Context;
-class InfoLog;
 class Program;
 class ProgramState;
 
@@ -28,19 +27,6 @@ class MemoryProgramCache final : angle::NonCopyable
   public:
     explicit MemoryProgramCache(egl::BlobCache &blobCache);
     ~MemoryProgramCache();
-
-    // Writes a program's binary to the output memory buffer.
-    static void Serialize(const Context *context,
-                          const Program *program,
-                          angle::MemoryBuffer *binaryOut);
-
-    // Loads program state according to the specified binary blob.
-    static angle::Result Deserialize(const Context *context,
-                                     const Program *program,
-                                     ProgramState *state,
-                                     const uint8_t *binary,
-                                     size_t length,
-                                     InfoLog &infoLog);
 
     static void ComputeHash(const Context *context,
                             const Program *program,
@@ -74,8 +60,7 @@ class MemoryProgramCache final : angle::NonCopyable
     // Check the cache, and deserialize and load the program if found. Evict existing hash if load
     // fails.
     angle::Result getProgram(const Context *context,
-                             const Program *program,
-                             ProgramState *state,
+                             Program *program,
                              egl::BlobCache::Key *hashOut);
 
     // Empty the cache.

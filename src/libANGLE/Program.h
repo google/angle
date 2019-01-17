@@ -878,6 +878,15 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     ANGLE_INLINE bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
+    // Writes a program's binary to the output memory buffer.
+    void serialize(const Context *context, angle::MemoryBuffer *binaryOut) const;
+
+    // Loads program state according to the specified binary blob.
+    angle::Result deserialize(const Context *context,
+                              const uint8_t *binary,
+                              size_t length,
+                              InfoLog &infoLog);
+
   private:
     struct LinkingState;
 
@@ -979,6 +988,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     // Block until linking is finished and resolve it.
     void resolveLinkImpl(const gl::Context *context);
+
+    void postResolveLink(const gl::Context *context);
 
     ProgramState mState;
     rx::ProgramImpl *mProgram;
