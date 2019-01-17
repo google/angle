@@ -2571,6 +2571,185 @@ void main()
     }
 }
 
+// Test imageSize to access mipmap slice.
+TEST_P(ComputeShaderTest, ImageSizeMipmapSlice)
+{
+    // TODO(xinghua.cao@intel.com): http://anglebug.com/3100
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsD3D11());
+
+    // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
+
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    const char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+layout(rgba32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+void main()
+{
+    ivec2 size = imageSize(uImage_1);
+    imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), uvec4(size, 0, 0));
+})";
+
+    constexpr int kWidth1 = 8, kHeight1 = 4, kWidth2 = 1, kHeight2 = 1;
+    constexpr GLuint kInputValues[] = {0, 0, 0, 0};
+
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_R32UI, kWidth1, kHeight1);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32UI, kWidth2, kHeight2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth2, kHeight2, GL_RGBA_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    glBindImageTexture(0, texture[0], 1, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    glBindImageTexture(1, texture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    GLuint outputValues[kWidth2 * kHeight2 * 4];
+    constexpr GLuint expectedValue[] = {4, 2};
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture[1], 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth2, kHeight2, GL_RGBA_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < kWidth2 * kHeight2; i++)
+    {
+        EXPECT_EQ(expectedValue[i], outputValues[i]);
+        EXPECT_EQ(expectedValue[i + 1], outputValues[i + 1]);
+    }
+}
+
+// Test imageLoad to access mipmap slice.
+TEST_P(ComputeShaderTest, ImageLoadMipmapSlice)
+{
+    // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
+
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+void main()
+{
+    uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+    imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+})";
+
+    constexpr int kWidth1 = 2, kHeight1 = 2, kWidth2 = 1, kHeight2 = 1;
+    constexpr GLuint kInputValues11[] = {3, 3, 3, 3};
+    constexpr GLuint kInputValues12[] = {2};
+    constexpr GLuint kInputValues2[]  = {1};
+
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_R32UI, kWidth1, kHeight1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth1, kHeight1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues11);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, kWidth2, kHeight2, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues12);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth2, kHeight2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth2, kHeight2, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues2);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    glBindImageTexture(0, texture[0], 1, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    glBindImageTexture(1, texture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    GLuint outputValues;
+    constexpr GLuint expectedValue = 2;
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture[1], 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth2, kHeight2, GL_RED_INTEGER, GL_UNSIGNED_INT, &outputValues);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedValue, outputValues);
+}
+
+// Test imageStore to access mipmap slice.
+TEST_P(ComputeShaderTest, ImageStoreMipmapSlice)
+{
+    // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
+
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+void main()
+{
+    uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+    imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+})";
+
+    constexpr int kWidth1 = 1, kHeight1 = 1, kWidth2 = 2, kHeight2 = 2;
+    constexpr GLuint kInputValues1[]  = {3};
+    constexpr GLuint kInputValues21[] = {2, 2, 2, 2};
+    constexpr GLuint kInputValues22[] = {1};
+
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth1, kHeight1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth1, kHeight1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues1);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_R32UI, kWidth2, kHeight2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth2, kHeight2, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues21);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, kWidth1, kHeight1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues22);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    glBindImageTexture(0, texture[0], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    glBindImageTexture(1, texture[1], 1, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    GLuint outputValues;
+    constexpr GLuint expectedValue = 3;
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture[1], 1);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth1, kHeight1, GL_RED_INTEGER, GL_UNSIGNED_INT, &outputValues);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedValue, outputValues);
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11());
