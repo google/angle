@@ -197,7 +197,7 @@ bool IsPlatformAvailable(const CompilerParameters &param)
         case SH_HLSL_4_0_FL9_3_OUTPUT:
         case SH_HLSL_3_0_OUTPUT:
         {
-            TPoolAllocator allocator;
+            angle::PoolAllocator allocator;
             InitializePoolIndex();
             allocator.push();
             SetGlobalPoolAllocator(&allocator);
@@ -259,7 +259,7 @@ class CompilerPerfTest : public ANGLEPerfTest,
     const char *mTestShader;
 
     ShBuiltInResources mResources;
-    TPoolAllocator mAllocator;
+    angle::PoolAllocator mAllocator;
     sh::TCompiler *mTranslator;
 };
 

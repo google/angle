@@ -19,7 +19,7 @@ namespace sh
 // Verify that mangled name matches between a vector/matrix TType and a corresponding StaticType.
 TEST(Type, VectorAndMatrixMangledNameConsistent)
 {
-    TPoolAllocator allocator;
+    angle::PoolAllocator allocator;
     allocator.push();
     SetGlobalPoolAllocator(&allocator);
 
