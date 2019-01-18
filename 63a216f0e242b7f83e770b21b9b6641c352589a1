@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76f603b0_6b7b0e6e",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-01-18T00:38:41Z",
+      "side": 1,
+      "message": "nit: this could be the return type.",
+      "range": {
+        "startLine": 192,
+        "startChar": 47,
+        "endLine": 192,
+        "endChar": 62
+      },
+      "revId": "63a216f0e242b7f83e770b21b9b6641c352589a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
