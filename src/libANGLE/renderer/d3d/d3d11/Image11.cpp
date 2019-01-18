@@ -360,7 +360,8 @@ angle::Result Image11::copyFromTexStorage(const gl::Context *context,
     const TextureHelper11 *textureHelper = nullptr;
     ANGLE_TRY(storage11->getResource(context, &textureHelper));
 
-    UINT subresourceIndex = storage11->getSubresourceIndex(imageIndex);
+    UINT subresourceIndex = 0;
+    ANGLE_TRY(storage11->getSubresourceIndex(context, imageIndex, &subresourceIndex));
 
     gl::Box sourceBox(0, 0, 0, mWidth, mHeight, mDepth);
     return copyWithoutConversion(context, gl::Offset(), sourceBox, *textureHelper,

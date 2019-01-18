@@ -194,13 +194,16 @@ angle::Result TextureStorage11::getMippedResource(const gl::Context *context,
     return getResource(context, outResource);
 }
 
-UINT TextureStorage11::getSubresourceIndex(const gl::ImageIndex &index) const
+angle::Result TextureStorage11::getSubresourceIndex(const gl::Context *context,
+                                                    const gl::ImageIndex &index,
+                                                    UINT *outSubresourceIndex) const
 {
     UINT mipSlice    = static_cast<UINT>(index.getLevelIndex() + mTopLevel);
     UINT arraySlice  = static_cast<UINT>(index.hasLayer() ? index.getLayerIndex() : 0);
     UINT subresource = D3D11CalcSubresource(mipSlice, arraySlice, mMipLevels);
     ASSERT(subresource != std::numeric_limits<UINT>::max());
-    return subresource;
+    *outSubresourceIndex = subresource;
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
@@ -531,7 +534,8 @@ angle::Result TextureStorage11::updateSubresourceLevel(const gl::Context *contex
         ANGLE_TRY(getResource(context, &dstTexture));
     }
 
-    unsigned int dstSubresource = getSubresourceIndex(index);
+    unsigned int dstSubresource = 0;
+    ANGLE_TRY(getSubresourceIndex(context, index, &dstSubresource));
 
     ASSERT(dstTexture->valid());
 
@@ -586,7 +590,8 @@ angle::Result TextureStorage11::copySubresourceLevel(const gl::Context *context,
 
     ASSERT(srcTexture->valid());
 
-    unsigned int srcSubresource = getSubresourceIndex(index);
+    unsigned int srcSubresource = 0;
+    ANGLE_TRY(getSubresourceIndex(context, index, &srcSubresource));
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -713,7 +718,8 @@ angle::Result TextureStorage11::setData(const gl::Context *context,
     ANGLE_TRY(getResource(context, &resource));
     ASSERT(resource && resource->valid());
 
-    UINT destSubresource = getSubresourceIndex(index);
+    UINT destSubresource = 0;
+    ANGLE_TRY(getSubresourceIndex(context, index, &destSubresource));
 
     const gl::InternalFormat &internalFormatInfo =
         gl::GetInternalFormatInfo(image->getInternalFormat(), type);
@@ -824,7 +830,10 @@ angle::Result TextureStorage11::initDropStencilTexture(const gl::Context *contex
         gl::Box wholeArea(0, 0, 0, getLevelWidth(index.getLevelIndex()),
                           getLevelHeight(index.getLevelIndex()), 1);
         gl::Extents wholeSize(wholeArea.width, wholeArea.height, 1);
-        UINT subresource = getSubresourceIndex(index);
+
+        UINT subresource = 0;
+        ANGLE_TRY(getSubresourceIndex(context, index, &subresource));
+
         ANGLE_TRY(mRenderer->getBlitter()->copyDepthStencil(
             context, *sourceTexture, subresource, wholeArea, wholeSize, mDropStencilTexture,
             subresource, wholeArea, wholeSize, nullptr));
@@ -1642,6 +1651,19 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
 
 TextureStorage11_EGLImage::~TextureStorage11_EGLImage() {}
 
+angle::Result TextureStorage11_EGLImage::getSubresourceIndex(const gl::Context *context,
+                                                             const gl::ImageIndex &index,
+                                                             UINT *outSubresourceIndex) const
+{
+    ASSERT(index.getType() == gl::TextureType::_2D);
+    ASSERT(index.getLevelIndex() == 0);
+
+    RenderTarget11 *renderTarget11 = nullptr;
+    ANGLE_TRY(getImageRenderTarget(context, &renderTarget11));
+    *outSubresourceIndex = renderTarget11->getSubresourceIndex();
+    return angle::Result::Continue;
+}
+
 angle::Result TextureStorage11_EGLImage::getResource(const gl::Context *context,
                                                      const TextureHelper11 **outResource)
 {
@@ -1897,7 +1919,9 @@ angle::Result TextureStorage11_Cube::onDestroy(const gl::Context *context)
 
 TextureStorage11_Cube::~TextureStorage11_Cube() {}
 
-UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) const
+angle::Result TextureStorage11_Cube::getSubresourceIndex(const gl::Context *context,
+                                                         const gl::ImageIndex &index,
+                                                         UINT *outSubresourceIndex) const
 {
     UINT arraySlice = index.cubeMapFaceIndex();
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround && mUseLevelZeroTexture &&
@@ -1905,15 +1929,16 @@ UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) con
     {
         UINT subresource = D3D11CalcSubresource(0, arraySlice, 1);
         ASSERT(subresource != std::numeric_limits<UINT>::max());
-        return subresource;
+        *outSubresourceIndex = subresource;
     }
     else
     {
         UINT mipSlice    = static_cast<UINT>(index.getLevelIndex() + mTopLevel);
         UINT subresource = D3D11CalcSubresource(mipSlice, arraySlice, mMipLevels);
         ASSERT(subresource != std::numeric_limits<UINT>::max());
-        return subresource;
+        *outSubresourceIndex = subresource;
     }
+    return angle::Result::Continue;
 }
 
 angle::Result TextureStorage11_Cube::copyToStorage(const gl::Context *context,

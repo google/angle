@@ -2410,10 +2410,15 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
         if (srcTarget == gl::TextureTarget::_2D || srcTarget == gl::TextureTarget::_3D)
         {
             gl::ImageIndex sourceIndex = gl::ImageIndex::MakeFromTarget(srcTarget, sourceLevel);
-            UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
+
+            UINT sourceSubresource = 0;
+            ANGLE_TRY(
+                sourceStorage11->getSubresourceIndex(context, sourceIndex, &sourceSubresource));
 
             gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
-            UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
+
+            UINT destSubresource = 0;
+            ANGLE_TRY(destStorage11->getSubresourceIndex(context, destIndex, &destSubresource));
 
             D3D11_BOX d3dBox{static_cast<UINT>(sourceBox.x),
                              static_cast<UINT>(sourceBox.y),
@@ -2439,9 +2444,14 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
             for (int i = 0; i < sourceBox.depth; i++)
             {
                 gl::ImageIndex srcIndex = gl::ImageIndex::Make2DArray(sourceLevel, i + sourceBox.z);
-                UINT sourceSubresource  = sourceStorage11->getSubresourceIndex(srcIndex);
-                gl::ImageIndex dIndex   = gl::ImageIndex::Make2DArray(destLevel, i + destOffset.z);
-                UINT destSubresource    = destStorage11->getSubresourceIndex(dIndex);
+                UINT sourceSubresource  = 0;
+                ANGLE_TRY(
+                    sourceStorage11->getSubresourceIndex(context, srcIndex, &sourceSubresource));
+
+                gl::ImageIndex dIndex = gl::ImageIndex::Make2DArray(destLevel, i + destOffset.z);
+                UINT destSubresource  = 0;
+                ANGLE_TRY(destStorage11->getSubresourceIndex(context, dIndex, &destSubresource));
+
                 mDeviceContext->CopySubresourceRegion(
                     destResource->get(), destSubresource, destOffset.x, destOffset.y, 0,
                     sourceResource->get(), sourceSubresource, &d3dBox);
@@ -2529,7 +2539,8 @@ angle::Result Renderer11::copyCompressedTexture(const gl::Context *context,
     ANGLE_TRY(destStorage11->getResource(context, &destResource));
 
     gl::ImageIndex destIndex = gl::ImageIndex::Make2D(destLevel);
-    UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
+    UINT destSubresource     = 0;
+    ANGLE_TRY(destStorage11->getSubresourceIndex(context, destIndex, &destSubresource));
 
     TextureD3D *sourceD3D = GetImplAs<TextureD3D>(source);
     ASSERT(sourceD3D);
@@ -2544,7 +2555,8 @@ angle::Result Renderer11::copyCompressedTexture(const gl::Context *context,
     ANGLE_TRY(sourceStorage11->getResource(context, &sourceResource));
 
     gl::ImageIndex sourceIndex = gl::ImageIndex::Make2D(sourceLevel);
-    UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
+    UINT sourceSubresource     = 0;
+    ANGLE_TRY(sourceStorage11->getSubresourceIndex(context, sourceIndex, &sourceSubresource));
 
     mDeviceContext->CopySubresourceRegion(destResource->get(), destSubresource, 0, 0, 0,
                                           sourceResource->get(), sourceSubresource, nullptr);
