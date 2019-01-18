@@ -517,8 +517,7 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
     else if (IsVulkan())
     {
         EXPECT_TRUE(hasOESExt());
-        // TODO(geofflang): Support GL_OES_EGL_image_external. http://anglebug.com/2668
-        EXPECT_FALSE(hasExternalExt());
+        EXPECT_TRUE(hasExternalExt());
         EXPECT_TRUE(hasBaseExt());
         EXPECT_TRUE(has2DTextureExt());
         EXPECT_TRUE(hasCubemapExt());

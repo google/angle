@@ -51,8 +51,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.translatedShaderSource = true;
 
     mNativeExtensions.eglImage = true;
-    // TODO(geofflang): Support GL_OES_EGL_image_external. http://anglebug.com/2668
-    mNativeExtensions.eglImageExternal = false;
+    mNativeExtensions.eglImageExternal = true;
     // TODO(geofflang): Support GL_OES_EGL_image_external_essl3. http://anglebug.com/2668
     mNativeExtensions.eglImageExternalEssl3 = false;
 
