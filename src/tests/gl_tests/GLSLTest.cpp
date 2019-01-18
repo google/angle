@@ -1911,6 +1911,9 @@ TEST_P(GLSLTest_ES3, AmbiguousFunctionCall2x2)
 // the function name being too long.
 TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
 {
+    // TODO(cwallez@chromium.org): crashing on Mac ASAN, see http://anglebug.com/3087
+    ANGLE_SKIP_TEST_IF(IsOSX() && (IsNVIDIA() || IsIntel()));
+
     std::stringstream vertexShaderStream;
     // This fails on Macos if the number of parameters is larger than 978 when linking in parallel.
     // http://anglebug.com/3047
