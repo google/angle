@@ -117,7 +117,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
     mOwner     = nullptr;
 }
 
-vk::ImageHelper *RenderTargetVk::getImageForRead(vk::RecordableGraphResource *readingResource,
+vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readingResource,
                                                  VkImageLayout layout,
                                                  vk::CommandBuffer *commandBuffer)
 {
@@ -133,8 +133,7 @@ vk::ImageHelper *RenderTargetVk::getImageForRead(vk::RecordableGraphResource *re
     return mImage;
 }
 
-vk::ImageHelper *RenderTargetVk::getImageForWrite(
-    vk::RecordableGraphResource *writingResource) const
+vk::ImageHelper *RenderTargetVk::getImageForWrite(vk::CommandGraphResource *writingResource) const
 {
     ASSERT(mImage && mImage->valid());
     mImage->addWriteDependency(writingResource);

@@ -629,9 +629,7 @@ angle::Result DynamicQueryPool::allocateNewPool(Context *context)
 }
 
 // QueryHelper implementation
-QueryHelper::QueryHelper()
-    : QueryGraphResource(), mDynamicQueryPool(nullptr), mQueryPoolIndex(0), mQuery(0)
-{}
+QueryHelper::QueryHelper() : mDynamicQueryPool(nullptr), mQueryPoolIndex(0), mQuery(0) {}
 
 QueryHelper::~QueryHelper() {}
 
@@ -649,6 +647,34 @@ void QueryHelper::deinit()
     mDynamicQueryPool = nullptr;
     mQueryPoolIndex   = 0;
     mQuery            = 0;
+}
+
+void QueryHelper::beginQuery(vk::Context *context)
+{
+    RendererVk *renderer = context->getRenderer();
+    renderer->getCommandGraph()->beginQuery(getQueryPool(), getQuery());
+    mMostRecentSerial = renderer->getCurrentQueueSerial();
+}
+
+void QueryHelper::endQuery(vk::Context *context)
+{
+    RendererVk *renderer = context->getRenderer();
+    renderer->getCommandGraph()->endQuery(getQueryPool(), getQuery());
+    mMostRecentSerial = renderer->getCurrentQueueSerial();
+}
+
+void QueryHelper::writeTimestamp(vk::Context *context)
+{
+    RendererVk *renderer = context->getRenderer();
+    renderer->getCommandGraph()->writeTimestamp(getQueryPool(), getQuery());
+    mMostRecentSerial = renderer->getCurrentQueueSerial();
+}
+
+bool QueryHelper::hasPendingWork(RendererVk *renderer)
+{
+    // If the renderer has a queue serial higher than the stored one, the command buffers that
+    // recorded this query have already been submitted, so there is no pending work.
+    return mMostRecentSerial == renderer->getCurrentQueueSerial();
 }
 
 // DynamicSemaphorePool implementation
@@ -912,7 +938,7 @@ void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
 
 // BufferHelper implementation.
 BufferHelper::BufferHelper()
-    : RecordableGraphResource(CommandGraphResourceType::Buffer),
+    : CommandGraphResource(CommandGraphResourceType::Buffer),
       mMemoryPropertyFlags{},
       mSize(0),
       mMappedMemory(nullptr),
@@ -1068,7 +1094,7 @@ angle::Result BufferHelper::invalidate(Context *context, size_t offset, size_t s
 
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
-    : RecordableGraphResource(CommandGraphResourceType::Image),
+    : CommandGraphResource(CommandGraphResourceType::Image),
       mFormat(nullptr),
       mSamples(0),
       mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED),
@@ -1077,7 +1103,7 @@ ImageHelper::ImageHelper()
 {}
 
 ImageHelper::ImageHelper(ImageHelper &&other)
-    : RecordableGraphResource(CommandGraphResourceType::Image),
+    : CommandGraphResource(CommandGraphResourceType::Image),
       mImage(std::move(other.mImage)),
       mDeviceMemory(std::move(other.mDeviceMemory)),
       mExtents(other.mExtents),
@@ -1549,8 +1575,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
 }
 
 // FramebufferHelper implementation.
-FramebufferHelper::FramebufferHelper()
-    : RecordableGraphResource(CommandGraphResourceType::Framebuffer)
+FramebufferHelper::FramebufferHelper() : CommandGraphResource(CommandGraphResourceType::Framebuffer)
 {}
 
 FramebufferHelper::~FramebufferHelper() = default;

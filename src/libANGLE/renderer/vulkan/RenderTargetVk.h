@@ -24,7 +24,7 @@ struct Format;
 class FramebufferHelper;
 class ImageHelper;
 class ImageView;
-class RecordableGraphResource;
+class CommandGraphResource;
 class RenderPassDesc;
 }  // namespace vk
 
@@ -58,10 +58,10 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     const vk::ImageHelper &getImage() const;
 
     // getImageForRead will also transition the resource to the given layout.
-    vk::ImageHelper *getImageForRead(vk::RecordableGraphResource *readingResource,
+    vk::ImageHelper *getImageForRead(vk::CommandGraphResource *readingResource,
                                      VkImageLayout layout,
                                      vk::CommandBuffer *commandBuffer);
-    vk::ImageHelper *getImageForWrite(vk::RecordableGraphResource *writingResource) const;
+    vk::ImageHelper *getImageForWrite(vk::CommandGraphResource *writingResource) const;
 
     vk::ImageView *getDrawImageView() const;
     vk::ImageView *getReadImageView() const;

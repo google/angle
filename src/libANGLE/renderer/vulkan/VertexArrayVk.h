@@ -18,11 +18,6 @@ namespace rx
 {
 class BufferVk;
 
-namespace vk
-{
-class RecordableGraphResource;
-}  // namespace vk
-
 class VertexArrayVk : public VertexArrayImpl
 {
   public:
