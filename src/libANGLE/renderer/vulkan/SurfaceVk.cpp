@@ -80,7 +80,7 @@ constexpr VkImageUsageFlags kSurfaceVKDepthStencilImageUsageFlags =
 
 OffscreenSurfaceVk::AttachmentImage::AttachmentImage()
 {
-    renderTarget.init(&image, &imageView, 0, nullptr);
+    renderTarget.init(&image, &imageView, 0, 0, nullptr);
 }
 
 OffscreenSurfaceVk::AttachmentImage::~AttachmentImage() = default;
@@ -107,7 +107,7 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
     VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 
     ANGLE_TRY(image.initImageView(displayVk, gl::TextureType::_2D, aspect, gl::SwizzleState(),
-                                  &imageView, 1));
+                                  &imageView, 0, 1));
 
     return angle::Result::Continue;
 }
@@ -291,7 +291,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mCurrentSwapchainImageIndex(0),
       mCurrentSwapHistoryIndex(0)
 {
-    mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageView, 0, nullptr);
+    mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageView, 0, 0, nullptr);
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()
@@ -540,7 +540,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
 
         ANGLE_TRY(member.image.initImageView(displayVk, gl::TextureType::_2D,
                                              VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
-                                             &member.imageView, 1));
+                                             &member.imageView, 0, 1));
 
         // Allocate a command buffer for clearing our images to black.
         vk::CommandBuffer *commandBuffer = nullptr;
@@ -571,7 +571,8 @@ angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
         mDepthStencilImage.clearDepthStencil(aspect, aspect, depthStencilClearValue, commandBuffer);
 
         ANGLE_TRY(mDepthStencilImage.initImageView(displayVk, gl::TextureType::_2D, aspect,
-                                                   gl::SwizzleState(), &mDepthStencilImageView, 1));
+                                                   gl::SwizzleState(), &mDepthStencilImageView, 0,
+                                                   1));
 
         // We will need to pass depth/stencil image views to the RenderTargetVk in the future.
     }

@@ -22,7 +22,7 @@ namespace rx
 {
 
 ImageVk::ImageVk(const egl::ImageState &state, const gl::Context *context)
-    : ImageImpl(state), mOwnsImage(false), mImage(nullptr), mContext(context)
+    : ImageImpl(state), mImageLevel(0), mOwnsImage(false), mImage(nullptr), mContext(context)
 {}
 
 ImageVk::~ImageVk() {}
@@ -43,7 +43,6 @@ void ImageVk::onDestroy(const egl::Display *display)
 
 egl::Error ImageVk::initialize(const egl::Display *display)
 {
-
     if (egl::IsTextureTarget(mState.target))
     {
         TextureVk *textureVk = GetImplAs<TextureVk>(GetAs<gl::Texture>(mState.source));
@@ -59,7 +58,7 @@ egl::Error ImageVk::initialize(const egl::Display *display)
 
         mOwnsImage = false;
 
-        ASSERT(mState.imageIndex.getLevelIndex() == 0);
+        mImageLevel = mState.imageIndex.getLevelIndex();
     }
     else if (egl::IsRenderbufferTarget(mState.target))
     {
@@ -74,6 +73,8 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         mImage->initStagingBuffer(renderer);
 
         mOwnsImage = false;
+
+        mImageLevel = 0;
     }
     else
     {

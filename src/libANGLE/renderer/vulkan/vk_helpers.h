@@ -552,6 +552,7 @@ class ImageHelper final : public CommandGraphResource
                                 VkImageAspectFlags aspectMask,
                                 const gl::SwizzleState &swizzleMap,
                                 ImageView *imageViewOut,
+                                uint32_t baseMipLevel,
                                 uint32_t levelCount);
     // Create a 2D[Array] for staging purposes.  Used by:
     //
@@ -660,6 +661,7 @@ class ImageHelper final : public CommandGraphResource
                                         bool *newBufferAllocatedOut);
 
     angle::Result flushStagedUpdates(Context *context,
+                                     uint32_t baseLevel,
                                      uint32_t levelCount,
                                      vk::CommandBuffer *commandBuffer);
 

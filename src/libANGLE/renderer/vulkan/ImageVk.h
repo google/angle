@@ -28,8 +28,11 @@ class ImageVk : public ImageImpl
     angle::Result orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
 
     vk::ImageHelper *getImage() const { return mImage; }
+    uint32_t getImageLevel() const { return mImageLevel; }
 
   private:
+    uint32_t mImageLevel;
+
     bool mOwnsImage;
     vk::ImageHelper *mImage;
 

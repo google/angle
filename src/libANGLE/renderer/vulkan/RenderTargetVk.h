@@ -46,6 +46,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     void init(vk::ImageHelper *image,
               vk::ImageView *imageView,
+              size_t levelIndex,
               size_t layerIndex,
               TextureVk *owner);
     void reset();
@@ -72,6 +73,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::Format &getImageFormat() const;
     const gl::Extents &getImageExtents() const;
+    size_t getLevelIndex() const { return mLevelIndex; }
     size_t getLayerIndex() const { return mLayerIndex; }
 
     // Special mutator for Surface RenderTargets. Allows the Framebuffer to keep a single
@@ -85,6 +87,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // Note that the draw and read image views are the same, given the requirements of a render
     // target.
     vk::ImageView *mImageView;
+    size_t mLevelIndex;
     size_t mLayerIndex;
 
     // If owned by the texture, this will be non-nullptr, and is used to ensure texture changes

@@ -1633,10 +1633,6 @@ TEST_P(ImageTest, MipLevels)
     // Also fails on NVIDIA Shield TV bot.
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    // TODO(geofflang): Support creating EGL images from non-zero mipmaps in Vulkan.
-    // http://anglebug.com/2668
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 

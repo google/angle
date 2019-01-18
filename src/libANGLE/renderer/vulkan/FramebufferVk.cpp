@@ -297,10 +297,9 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
         ASSERT(colorRenderTarget);
         vk::ImageHelper *image = colorRenderTarget->getImageForWrite(&mFramebuffer);
-        GLint mipLevelToClear  = (attachment->type() == GL_TEXTURE) ? attachment->mipLevel() : 0;
 
         // If we're clearing a cube map face ensure we only clear the selected layer.
-        image->clearColorLayer(modifiedClearColorValue, mipLevelToClear, 1,
+        image->clearColorLayer(modifiedClearColorValue, colorRenderTarget->getLevelIndex(), 1,
                                colorRenderTarget->getLayerIndex(), 1, commandBuffer);
     }
 
@@ -1138,7 +1137,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     region.imageSubresource.aspectMask     = copyAspectFlags;
     region.imageSubresource.baseArrayLayer = renderTarget->getLayerIndex();
     region.imageSubresource.layerCount     = 1;
-    region.imageSubresource.mipLevel       = 0;
+    region.imageSubresource.mipLevel       = renderTarget->getLevelIndex();
 
     commandBuffer->copyImageToBuffer(srcImage->getImage(), srcImage->getCurrentLayout(),
                                      bufferHandle, 1, &region);
