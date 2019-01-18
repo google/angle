@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
+#include "libANGLE/renderer/vulkan/SyncVk.h"
 
 namespace rx
 {
@@ -80,10 +81,6 @@ DeviceImpl *DisplayVk::createDevice()
 
 egl::Error DisplayVk::waitClient(const gl::Context *context)
 {
-    // TODO(jmadill): Call flush instead of finish once it is implemented in RendererVK.
-    // http://anglebug.com/2504
-    UNIMPLEMENTED();
-
     return angle::ToEGL(mRenderer->finish(this), this, EGL_BAD_ACCESS);
 }
 
@@ -157,6 +154,11 @@ StreamProducerImpl *DisplayVk::createStreamProducerD3DTexture(
     return static_cast<StreamProducerImpl *>(0);
 }
 
+EGLSyncImpl *DisplayVk::createSync(const egl::AttributeMap &attribs)
+{
+    return new EGLSyncVk(attribs);
+}
+
 gl::Version DisplayVk::getMaxSupportedESVersion() const
 {
     return mRenderer->getMaxSupportedESVersion();
@@ -176,6 +178,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // When the Vulkan driver supports VK_KHR_incremental_present, it will use it.  Otherwise, it
     // will ignore the hint and do a regular swap.
     outExtensions->swapBuffersWithDamage = true;
+
+    outExtensions->fenceSync = true;
+    outExtensions->waitSync  = true;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

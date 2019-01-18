@@ -53,9 +53,9 @@ namespace
 // one for the vertex shader.
 constexpr size_t kUniformBufferDescriptorsPerDescriptorSet = 2;
 // Update the pipeline cache every this many swaps (if 60fps, this means every 10 minutes)
-static constexpr uint32_t kPipelineCacheVkUpdatePeriod = 10 * 60 * 60;
+constexpr uint32_t kPipelineCacheVkUpdatePeriod = 10 * 60 * 60;
 // Wait a maximum of 10s.  If that times out, we declare it a failure.
-static constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
 
 bool ShouldEnableMockICD(const egl::AttributeMap &attribs)
 {
@@ -1364,6 +1364,24 @@ bool RendererVk::isSerialInUse(Serial serial) const
 
 angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 {
+    bool timedOut        = false;
+    angle::Result result = finishToSerialOrTimeout(context, serial, kMaxFenceWaitTimeNs, &timedOut);
+
+    // Don't tolerate timeout.  If such a large wait time results in timeout, something's wrong.
+    if (timedOut)
+    {
+        result = angle::Result::Stop;
+    }
+    return result;
+}
+
+angle::Result RendererVk::finishToSerialOrTimeout(vk::Context *context,
+                                                  Serial serial,
+                                                  uint64_t timeout,
+                                                  bool *outTimedOut)
+{
+    *outTimedOut = false;
+
     if (!isSerialInUse(serial) || mInFlightCommands.empty())
     {
         return angle::Result::Continue;
@@ -1383,7 +1401,16 @@ angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
     const CommandBatch &batch = mInFlightCommands[batchIndex];
 
     // Wait for it finish
-    ANGLE_VK_TRY(context, batch.fence.wait(mDevice, kMaxFenceWaitTimeNs));
+    VkResult status = batch.fence.wait(mDevice, kMaxFenceWaitTimeNs);
+
+    // If timed out, report it as such.
+    if (status == VK_TIMEOUT)
+    {
+        *outTimedOut = true;
+        return angle::Result::Continue;
+    }
+
+    ANGLE_VK_TRY(context, status);
 
     // Clean up finished batches.
     return checkCompletedCommands(context);
@@ -1785,7 +1812,7 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
 
         ANGLE_VK_TRY(context, commandBuffer.begin(beginInfo));
 
-        commandBuffer.setEvent(gpuReady.get(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+        commandBuffer.setEvent(gpuReady.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
         commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
                                  VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, nullptr, 0, nullptr, 0,
                                  nullptr);
@@ -1796,7 +1823,7 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
                                      timestampQuery.getQueryPool()->getHandle(),
                                      timestampQuery.getQuery());
 
-        commandBuffer.setEvent(gpuDone.get(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+        commandBuffer.setEvent(gpuDone.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
 
         ANGLE_VK_TRY(context, commandBuffer.end());
 

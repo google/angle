@@ -74,6 +74,17 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
                     UNREACHABLE();
                     return "Query";
             }
+        case CommandGraphResourceType::FenceSync:
+            switch (function)
+            {
+                case CommandGraphNodeFunction::SetFenceSync:
+                    return "SetFenceSync";
+                case CommandGraphNodeFunction::WaitFenceSync:
+                    return "WaitFenceSync";
+                default:
+                    UNREACHABLE();
+                    return "FenceSync";
+            }
         default:
             UNREACHABLE();
             return "";
@@ -211,6 +222,7 @@ CommandGraphNode::CommandGraphNode(CommandGraphNodeFunction function)
       mFunction(function),
       mQueryPool(VK_NULL_HANDLE),
       mQueryIndex(0),
+      mFenceSyncEvent(VK_NULL_HANDLE),
       mHasChildren(false),
       mVisitedState(VisitedState::Unvisited),
       mGlobalMemoryBarrierSrcAccess(0),
@@ -337,6 +349,13 @@ void CommandGraphNode::setQueryPool(const QueryPool *queryPool, uint32_t queryIn
     mQueryIndex = queryIndex;
 }
 
+void CommandGraphNode::setFenceSync(const vk::Event &event)
+{
+    ASSERT(mFunction == CommandGraphNodeFunction::SetFenceSync ||
+           mFunction == CommandGraphNodeFunction::WaitFenceSync);
+    mFenceSyncEvent = event.getHandle();
+}
+
 // Do not call this in anything but testing code, since it's slow.
 bool CommandGraphNode::isChildOf(CommandGraphNode *parent)
 {
@@ -381,7 +400,7 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
     switch (mFunction)
     {
         case CommandGraphNodeFunction::Generic:
-            ASSERT(mQueryPool == VK_NULL_HANDLE);
+            ASSERT(mQueryPool == VK_NULL_HANDLE && mFenceSyncEvent == VK_NULL_HANDLE);
 
             // Record the deferred pipeline barrier if necessary.
             ASSERT((mGlobalMemoryBarrierDstAccess == 0) == (mGlobalMemoryBarrierSrcAccess == 0));
@@ -458,6 +477,25 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
             primaryCommandBuffer->resetQueryPool(mQueryPool, mQueryIndex, 1);
             primaryCommandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, mQueryPool,
                                                  mQueryIndex);
+
+            break;
+
+        case CommandGraphNodeFunction::SetFenceSync:
+            ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
+            ASSERT(mFenceSyncEvent != VK_NULL_HANDLE);
+
+            primaryCommandBuffer->setEvent(mFenceSyncEvent, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
+
+            break;
+
+        case CommandGraphNodeFunction::WaitFenceSync:
+            ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
+            ASSERT(mFenceSyncEvent != VK_NULL_HANDLE);
+
+            // Fence Syncs are purely execution barriers, so there are no memory barriers attached.
+            primaryCommandBuffer->waitEvents(
+                1, &mFenceSyncEvent, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, nullptr);
 
             break;
 
@@ -658,6 +696,20 @@ void CommandGraph::writeTimestamp(const QueryPool *queryPool, uint32_t queryInde
     CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::Query,
                                                     CommandGraphNodeFunction::WriteTimestamp);
     newNode->setQueryPool(queryPool, queryIndex);
+}
+
+void CommandGraph::setFenceSync(const vk::Event &event)
+{
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::FenceSync,
+                                                    CommandGraphNodeFunction::SetFenceSync);
+    newNode->setFenceSync(event);
+}
+
+void CommandGraph::waitFenceSync(const vk::Event &event)
+{
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::FenceSync,
+                                                    CommandGraphNodeFunction::WaitFenceSync);
+    newNode->setFenceSync(event);
 }
 
 // Dumps the command graph into a dot file that works with graphviz.

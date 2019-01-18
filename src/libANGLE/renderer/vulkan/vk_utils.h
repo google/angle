@@ -455,8 +455,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        uint32_t size,
                        const void *data);
 
-    void setEvent(const vk::Event &event, VkPipelineStageFlags stageMask);
-    void resetEvent(const vk::Event &event, VkPipelineStageFlags stageMask);
+    void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
+    void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void waitEvents(uint32_t eventCount,
                     const VkEvent *events,
                     VkPipelineStageFlags srcStageMask,

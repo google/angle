@@ -53,6 +53,8 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // Only expose robust buffer access if the physical device supports it.
     outExtensions->robustBufferAccessBehavior = physicalDeviceFeatures.robustBufferAccess;
 
+    outExtensions->eglSync = true;
+
     // We use secondary command buffers almost everywhere and they require a feature to be
     // able to execute in the presence of queries.  As a result, we won't support queries
     // unless that feature is available.

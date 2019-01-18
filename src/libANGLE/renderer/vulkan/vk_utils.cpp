@@ -511,16 +511,16 @@ void CommandBuffer::pushConstants(const PipelineLayout &layout,
     vkCmdPushConstants(mHandle, layout.getHandle(), flag, offset, size, data);
 }
 
-void CommandBuffer::setEvent(const vk::Event &event, VkPipelineStageFlags stageMask)
+void CommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)
 {
-    ASSERT(valid() && event.valid());
-    vkCmdSetEvent(mHandle, event.getHandle(), stageMask);
+    ASSERT(event != VK_NULL_HANDLE);
+    vkCmdSetEvent(mHandle, event, stageMask);
 }
 
-void CommandBuffer::resetEvent(const vk::Event &event, VkPipelineStageFlags stageMask)
+void CommandBuffer::resetEvent(VkEvent event, VkPipelineStageFlags stageMask)
 {
-    ASSERT(valid() && event.valid());
-    vkCmdResetEvent(mHandle, event.getHandle(), stageMask);
+    ASSERT(event != VK_NULL_HANDLE);
+    vkCmdResetEvent(mHandle, event, stageMask);
 }
 
 void CommandBuffer::waitEvents(uint32_t eventCount,
