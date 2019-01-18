@@ -184,15 +184,13 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->fenceSync = true;
     outExtensions->waitSync  = true;
 
-    outExtensions->image            = true;
-    outExtensions->imageBase        = true;
-    outExtensions->imagePixmap      = false;  // ANGLE does not support pixmaps
-    outExtensions->glTexture2DImage = true;
-    // TODO(geofflang): Support EGL_KHR_gl_texture_cubemap_image. http://anglebug.com/2668
-    outExtensions->glTextureCubemapImage = false;
-    // TODO(geofflang): Support ES3 and EGL_KHR_gl_texture_3D_image. http://anglebug.com/2668
-    outExtensions->glTexture3DImage    = false;
-    outExtensions->glRenderbufferImage = true;
+    outExtensions->image                 = true;
+    outExtensions->imageBase             = true;
+    outExtensions->imagePixmap           = false;  // ANGLE does not support pixmaps
+    outExtensions->glTexture2DImage      = true;
+    outExtensions->glTextureCubemapImage = true;
+    outExtensions->glTexture3DImage      = false;
+    outExtensions->glRenderbufferImage   = true;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
