@@ -225,16 +225,6 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                     const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
                     void *userData)
 {
-    constexpr VkDebugUtilsMessageSeverityFlagsEXT kSeveritiesToLog =
-        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
-
-    // Check if we even care about this message.
-    if ((messageSeverity & kSeveritiesToLog) == 0)
-    {
-        return VK_FALSE;
-    }
-
     // See if it's an issue we are aware of and don't want to be spammed about.
     if (IsIgnoredDebugMessage(callbackData->pMessageIdName))
     {
@@ -739,12 +729,18 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         // Create the messenger callback.
         VkDebugUtilsMessengerCreateInfoEXT messengerInfo = {};
 
+        constexpr VkDebugUtilsMessageSeverityFlagsEXT kSeveritiesToLog =
+            VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
+            VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+
+        constexpr VkDebugUtilsMessageTypeFlagsEXT kMessagesToLog =
+            VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+            VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+            VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+
         messengerInfo.sType           = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        messengerInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
-        messengerInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-                                    VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-                                    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+        messengerInfo.messageSeverity = kSeveritiesToLog;
+        messengerInfo.messageType     = kMessagesToLog;
         messengerInfo.pfnUserCallback = &DebugUtilsMessenger;
         messengerInfo.pUserData       = this;
 
@@ -1742,6 +1738,21 @@ bool RendererVk::hasTextureFormatFeatureBits(VkFormat format,
 bool RendererVk::hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
 {
     return hasFormatFeatureBits<&VkFormatProperties::bufferFeatures>(format, featureBits);
+}
+
+void RendererVk::insertDebugMarker(GLenum source, GLuint id, std::string &&marker)
+{
+    mCommandGraph.insertDebugMarker(source, std::move(marker));
+}
+
+void RendererVk::pushDebugMarker(GLenum source, GLuint id, std::string &&marker)
+{
+    mCommandGraph.pushDebugMarker(source, std::move(marker));
+}
+
+void RendererVk::popDebugMarker()
+{
+    mCommandGraph.popDebugMarker();
 }
 
 angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)

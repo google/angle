@@ -422,7 +422,7 @@ void RendererGL::pushGroupMarker(GLsizei length, const char *marker) {}
 
 void RendererGL::popGroupMarker() {}
 
-void RendererGL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) {}
+void RendererGL::pushDebugGroup(GLenum source, GLuint id, const std::string &message) {}
 
 void RendererGL::popDebugGroup() {}
 
