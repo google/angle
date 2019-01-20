@@ -10,6 +10,7 @@
 #include "ANGLEPerfTest.h"
 #include "DrawCallPerfParams.h"
 #include "test_utils/draw_call_perf_utils.h"
+#include "util/shader_utils.h"
 
 namespace
 {
@@ -17,6 +18,7 @@ enum class StateChange
 {
     NoChange,
     VertexBuffer,
+    ManyVertexBuffers,
     Texture,
 };
 
@@ -39,6 +41,9 @@ std::string DrawArraysPerfParams::suffix() const
     {
         case StateChange::VertexBuffer:
             strstr << "_vbo_change";
+            break;
+        case StateChange::ManyVertexBuffers:
+            strstr << "_manyvbos_change";
             break;
         case StateChange::Texture:
             strstr << "_tex_change";
@@ -117,12 +122,52 @@ void DrawCallPerfBenchmark::initializeBenchmark()
     {
         mProgram = SetupSimpleTextureProgram();
     }
+    else if (params.stateChange == StateChange::ManyVertexBuffers)
+    {
+        constexpr char kVS[] = R"(attribute vec2 vPosition;
+attribute vec2 v0;
+attribute vec2 v1;
+attribute vec2 v2;
+attribute vec2 v3;
+const float scale = 0.5;
+const float offset = -0.5;
+
+varying vec2 v;
+
+void main()
+{
+    gl_Position = vec4(vPosition * vec2(scale) + vec2(offset), 0, 1);
+    v = (v0 + v1 + v2 + v3) * 0.25;
+})";
+
+        constexpr char kFS[] = R"(precision mediump float;
+varying vec2 v;
+void main()
+{
+    gl_FragColor = vec4(v, 0, 1);
+})";
+
+        mProgram = CompileProgram(kVS, kFS);
+        glBindAttribLocation(mProgram, 1, "v0");
+        glBindAttribLocation(mProgram, 2, "v1");
+        glBindAttribLocation(mProgram, 3, "v2");
+        glBindAttribLocation(mProgram, 4, "v3");
+        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
+        glEnableVertexAttribArray(3);
+        glEnableVertexAttribArray(4);
+    }
     else
     {
         mProgram = SetupSimpleDrawProgram();
     }
 
     ASSERT_NE(0u, mProgram);
+
+    // Re-link program to ensure the attrib bindings are used.
+    glBindAttribLocation(mProgram, 0, "vPosition");
+    glLinkProgram(mProgram);
+    glUseProgram(mProgram);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -175,19 +220,26 @@ void JustDraw(unsigned int iterations, GLsizei numElements)
     }
 }
 
-void ChangeVerticesThenDraw(unsigned int iterations,
-                            GLsizei numElements,
-                            GLuint buffer1,
-                            GLuint buffer2)
+template <int kArrayBufferCount>
+void ChangeArrayBuffersThenDraw(unsigned int iterations,
+                                GLsizei numElements,
+                                GLuint buffer1,
+                                GLuint buffer2)
 {
     for (unsigned int it = 0; it < iterations; it++)
     {
         glBindBuffer(GL_ARRAY_BUFFER, buffer1);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        for (int arrayIndex = 0; arrayIndex < kArrayBufferCount; ++arrayIndex)
+        {
+            glVertexAttribPointer(arrayIndex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        }
         glDrawArrays(GL_TRIANGLES, 0, numElements);
 
         glBindBuffer(GL_ARRAY_BUFFER, buffer2);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        for (int arrayIndex = 0; arrayIndex < kArrayBufferCount; ++arrayIndex)
+        {
+            glVertexAttribPointer(arrayIndex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        }
         glDrawArrays(GL_TRIANGLES, 0, numElements);
     }
 }
@@ -219,7 +271,12 @@ void DrawCallPerfBenchmark::drawBenchmark()
     switch (params.stateChange)
     {
         case StateChange::VertexBuffer:
-            ChangeVerticesThenDraw(params.iterationsPerStep, numElements, mBuffer1, mBuffer2);
+            ChangeArrayBuffersThenDraw<1>(params.iterationsPerStep, numElements, mBuffer1,
+                                          mBuffer2);
+            break;
+        case StateChange::ManyVertexBuffers:
+            ChangeArrayBuffersThenDraw<5>(params.iterationsPerStep, numElements, mBuffer1,
+                                          mBuffer2);
             break;
         case StateChange::Texture:
             ChangeTextureThenDraw(params.iterationsPerStep, numElements, mTexture1, mTexture2);
@@ -269,6 +326,8 @@ ANGLE_INSTANTIATE_TEST(
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, true), StateChange::NoChange),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::VertexBuffer),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::VertexBuffer),
+    DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::ManyVertexBuffers),
+    DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::ManyVertexBuffers),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::Texture),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::Texture),
     DrawArrays(DrawCallPerfValidationOnly(), StateChange::NoChange),
@@ -276,6 +335,8 @@ ANGLE_INSTANTIATE_TEST(
     DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::NoChange),
     DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::VertexBuffer),
     DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::VertexBuffer),
+    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::ManyVertexBuffers),
+    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::ManyVertexBuffers),
     DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::Texture),
     DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::Texture),
     DrawArrays(DrawCallPerfWGLParams(false), StateChange::NoChange),
