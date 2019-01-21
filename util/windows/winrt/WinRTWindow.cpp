@@ -217,6 +217,8 @@ void WinRTWindow::destroy()
     mCoreDispatcher.Reset();
 }
 
+void WinRTWindow::resetNativeWindow() {}
+
 EGLNativeWindowType WinRTWindow::getNativeWindow() const
 {
     return mNativeWindow;

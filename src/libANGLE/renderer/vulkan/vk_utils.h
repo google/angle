@@ -391,6 +391,12 @@ extern PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
 void InitDebugUtilsEXTFunctions(VkInstance instance);
 void InitDebugReportEXTFunctions(VkInstance instance);
 
+#if defined(ANGLE_PLATFORM_FUCHSIA)
+// VK_FUCHSIA_imagepipe_surface
+extern PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA;
+void InitImagePipeSurfaceFUCHSIAFunctions(VkInstance instance);
+#endif
+
 namespace gl_vk
 {
 VkRect2D GetRect(const gl::Rectangle &source);

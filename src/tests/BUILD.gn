@@ -39,6 +39,12 @@ if (build_with_chromium) {
     ]
     public_configs += [ ":angle_internal_gtest_config" ]
     configs -= [ "${angle_root}:extra_warnings" ]
+    if (is_fuchsia) {
+      deps = [
+        "//third_party/fuchsia-sdk/sdk:fdio",
+        "//third_party/fuchsia-sdk/sdk:zx",
+      ]
+    }
   }
 
   config("angle_internal_gmock_config") {
@@ -67,10 +73,14 @@ if (build_with_chromium) {
       "//src/tests:angle_end2end_tests",
       "//src/tests:angle_perftests",
       "//src/tests:angle_unittests",
-      "//src/tests:angle_white_box_perftests",
-      "//src/tests:angle_white_box_tests",
     ]
-    if (build_angle_deqp_tests) {
+    if (!is_fuchsia) {
+      deps += [
+        "//src/tests:angle_white_box_perftests",
+        "//src/tests:angle_white_box_tests",
+      ]
+    }
+    if (build_angle_deqp_tests && !is_fuchsia) {
       deps += [
         "//src/tests:angle_deqp_egl_no_gtest",
         "//src/tests:angle_deqp_egl_tests",
@@ -141,7 +151,7 @@ angle_test("angle_unittests") {
          ]
 }
 
-if (is_win || is_linux || is_mac || is_android) {
+if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
   import("angle_end2end_tests.gni")
 
   angle_test("angle_end2end_tests") {
@@ -187,7 +197,9 @@ if (is_win || is_linux || is_mac || is_android) {
       use_native_activity = true
     }
   }
+}
 
+if (is_win || is_linux || is_mac || is_android) {
   import("angle_white_box_tests.gni")
 
   angle_test("angle_white_box_tests") {
@@ -259,6 +271,10 @@ if (is_win || is_linux || is_android || is_mac) {
       use_native_activity = true
     }
   }
+}
+
+if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
+  import("angle_perftests.gni")
 
   # This test suite is designed to run against a generic GL implementation.
   angle_test("angle_perftests") {
@@ -517,7 +533,7 @@ if (build_angle_gles1_conform_tests) {
 ### dEQP tests
 ###-----------------------------------------------------
 
-if (build_angle_deqp_tests) {
+if (build_angle_deqp_tests && !is_fuchsia) {
   import("deqp.gni")
 
   angle_tests_main("angle_deqp_tests_main") {

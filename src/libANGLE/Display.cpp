@@ -70,6 +70,8 @@
 #        include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
 #    elif defined(ANGLE_PLATFORM_ANDROID)
 #        include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
+#    elif defined(ANGLE_PLATFORM_FUCHSIA)
+#        include "libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h"
 #    else
 #        error Unsupported Vulkan platform.
 #    endif
@@ -189,6 +191,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
             impl = new rx::DisplayGLX(state);
 #elif defined(ANGLE_PLATFORM_APPLE)
             impl = new rx::DisplayCGL(state);
+#elif defined(ANGLE_PLATFORM_FUCHSIA)
+            impl = new rx::DisplayVkFuchsia(state);
 #elif defined(ANGLE_USE_OZONE)
             impl = new rx::DisplayOzone(state);
 #elif defined(ANGLE_PLATFORM_ANDROID)
@@ -261,6 +265,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
             impl = new rx::DisplayVkXcb(state);
 #    elif defined(ANGLE_PLATFORM_ANDROID)
             impl = new rx::DisplayVkAndroid(state);
+#    elif defined(ANGLE_PLATFORM_FUCHSIA)
+            impl = new rx::DisplayVkFuchsia(state);
 #    else
 #        error Unsupported Vulkan platform.
 #    endif

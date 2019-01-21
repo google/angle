@@ -703,6 +703,8 @@ bool Win32Window::takeScreenshot(uint8_t *pixelData)
     return !error;
 }
 
+void Win32Window::resetNativeWindow() {}
+
 EGLNativeWindowType Win32Window::getNativeWindow() const
 {
     return mNativeWindow;

@@ -835,6 +835,13 @@ libangle_vulkan_xcb_sources = [
   "src/libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.h",
 ]
 
+libangle_vulkan_fuchsia_sources = [
+  "src/libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.cpp",
+  "src/libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h",
+  "src/libANGLE/renderer/vulkan/fuchsia/WindowSurfaceVkFuchsia.cpp",
+  "src/libANGLE/renderer/vulkan/fuchsia/WindowSurfaceVkFuchsia.h",
+]
+
 libangle_null_sources = [
   "src/libANGLE/renderer/null/BufferNULL.cpp",
   "src/libANGLE/renderer/null/BufferNULL.h",

@@ -355,7 +355,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
 // Changing CWD and setting environment variables makes no sense on Android,
 // since this code is a part of Java application there.
 // Android Vulkan loader doesn't need this either.
-#if !defined(ANGLE_PLATFORM_ANDROID)
+#if !defined(ANGLE_PLATFORM_ANDROID) && !defined(ANGLE_PLATFORM_FUCHSIA)
         if (enableMockICD)
         {
             // Override environment variable to use built Mock ICD

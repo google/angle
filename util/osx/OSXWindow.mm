@@ -679,6 +679,8 @@ void OSXWindow::destroy()
     mWindow = nil;
 }
 
+void OSXWindow::resetNativeWindow() {}
+
 EGLNativeWindowType OSXWindow::getNativeWindow() const
 {
     return [mView layer];

@@ -494,6 +494,9 @@ if (angle_enable_vulkan) {
       ]
       libs = [ "vulkan" ]
     }
+    if (is_fuchsia) {
+      defines = [ "VK_USE_PLATFORM_FUCHSIA" ]
+    }
   }
 
   # Use this target to include everything ANGLE needs for Vulkan.
@@ -503,7 +506,7 @@ if (angle_enable_vulkan) {
     ]
     public_configs = [ ":vulkan_config" ]
     data_deps = []
-    if (!is_android) {
+    if (!is_android && !is_fuchsia) {
       deps = [
         "$angle_root/third_party/vulkan-loader:libvulkan",
       ]
@@ -511,11 +514,24 @@ if (angle_enable_vulkan) {
       public_configs +=
           [ "$angle_root/third_party/vulkan-loader:vulkan_loader_config" ]
     }
+    if (is_fuchsia) {
+      public_deps += [
+        "$angle_root/src/common/fuchsia_egl",
+        "//third_party/fuchsia-sdk:vulkan_base",
+        "//third_party/fuchsia-sdk/sdk:vulkan",
+      ]
+    }
 
     if (angle_enable_vulkan_validation_layers) {
-      data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers" ]
-      if (!is_android) {
-        data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files" ]
+      if (is_fuchsia) {
+        deps = [
+          "//third_party/fuchsia-sdk:vulkan_validation",
+        ]
+      } else {
+        data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers" ]
+        if (!is_android) {
+          data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files" ]
+        }
       }
     }
   }
@@ -617,6 +633,13 @@ angle_static_library("libANGLE") {
     }
     if (is_linux) {
       sources += libangle_vulkan_xcb_sources
+    }
+    if (is_fuchsia) {
+      sources += libangle_vulkan_fuchsia_sources
+      deps += [
+        "$angle_root/src/common/fuchsia_egl",
+        "$angle_root/src/common/fuchsia_egl:backend",
+      ]
     }
     if (is_android) {
       sources += libangle_vulkan_android_sources
@@ -924,10 +947,6 @@ foreach(is_shared_library,
       ]
     }
 
-    if (use_ozone) {
-      sources += util_ozone_sources
-    }
-
     configs += [ ":debug_annotations_config" ]
 
     public_configs += [ ":angle_util_config" ]
@@ -937,6 +956,24 @@ foreach(is_shared_library,
       ":angle_util_loader_headers",
     ]
 
+    public_deps = []
+    if (is_fuchsia) {
+      sources += util_fuchsia_sources
+      public_deps += [
+        "$angle_root/src/common/fuchsia_egl",
+        "//third_party/fuchsia-sdk/sdk:async_loop_cpp",
+        "//third_party/fuchsia-sdk/sdk:fdio",
+        "//third_party/fuchsia-sdk/sdk:images",
+        "//third_party/fuchsia-sdk/sdk:scenic_cpp",
+        "//third_party/fuchsia-sdk/sdk:ui_gfx",
+        "//third_party/fuchsia-sdk/sdk:ui_policy",
+        "//third_party/fuchsia-sdk/sdk:ui_scenic",
+        "//third_party/fuchsia-sdk/sdk:ui_viewsv1",
+      ]
+    } else if (use_ozone) {
+      sources += util_ozone_sources
+    }
+
     if (is_shared_library) {
       defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
 
@@ -944,9 +981,7 @@ foreach(is_shared_library,
         sources += util_win_shared_sources
       }
 
-      public_deps = [
-        ":angle_util_loader",
-      ]
+      public_deps += [ ":angle_util_loader" ]
 
       if (is_mac && !is_component_build) {
         ldflags = [
