@@ -39,6 +39,12 @@ class ANGLE_UTIL_EXPORT OSWindow
     // just grab the pixels of the window. Returns if it was successful.
     virtual bool takeScreenshot(uint8_t *pixelData);
 
+    // Re-initializes the native window. This is used on platforms which do not
+    // have a reusable EGLNativeWindowType in order to recreate it, and is
+    // needed by the test suite because it re-uses the same OSWindow for
+    // multiple EGLSurfaces.
+    virtual void resetNativeWindow() = 0;
+
     virtual EGLNativeWindowType getNativeWindow() const   = 0;
     virtual EGLNativeDisplayType getNativeDisplay() const = 0;
 

@@ -29,6 +29,8 @@ bool OzoneWindow::initialize(const std::string &name, size_t width, size_t heigh
 
 void OzoneWindow::destroy() {}
 
+void OzoneWindow::resetNativeWindow() {}
+
 EGLNativeWindowType OzoneWindow::getNativeWindow() const
 {
     return reinterpret_cast<EGLNativeWindowType>(&mNative);

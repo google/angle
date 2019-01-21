@@ -387,6 +387,8 @@ void X11Window::destroy()
     WM_PROTOCOLS     = None;
 }
 
+void X11Window::resetNativeWindow() {}
+
 EGLNativeWindowType X11Window::getNativeWindow() const
 {
     return mWindow;

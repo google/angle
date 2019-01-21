@@ -62,7 +62,7 @@ declare_args() {
   # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
   # Otherwise, API level 24 would have been enough.
   angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos) ||
-                        (is_android && ndk_api_level_at_least_26)
+                        (is_android && ndk_api_level_at_least_26) || is_fuchsia
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true

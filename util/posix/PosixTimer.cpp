@@ -4,12 +4,12 @@
 // found in the LICENSE file.
 //
 
-// LinuxTimer.cpp: Implementation of a high precision timer class on Linux
+// PosixTimer.cpp: Implementation of a high precision timer class on POSIX
 
-#include "util/linux/LinuxTimer.h"
+#include "util/posix/PosixTimer.h"
 #include <iostream>
 
-LinuxTimer::LinuxTimer() : mRunning(false) {}
+PosixTimer::PosixTimer() : mRunning(false) {}
 
 namespace
 {
@@ -21,19 +21,19 @@ uint64_t getCurrentTimeNs()
 }
 }  // anonymous namespace
 
-void LinuxTimer::start()
+void PosixTimer::start()
 {
     mStartTimeNs = getCurrentTimeNs();
     mRunning     = true;
 }
 
-void LinuxTimer::stop()
+void PosixTimer::stop()
 {
     mStopTimeNs = getCurrentTimeNs();
     mRunning    = false;
 }
 
-double LinuxTimer::getElapsedTime() const
+double PosixTimer::getElapsedTime() const
 {
     uint64_t endTimeNs;
     if (mRunning)
@@ -48,12 +48,12 @@ double LinuxTimer::getElapsedTime() const
     return (endTimeNs - mStartTimeNs) * 1e-9;
 }
 
-double LinuxTimer::getAbsoluteTime()
+double PosixTimer::getAbsoluteTime()
 {
     return getCurrentTimeNs() * 1e-9;
 }
 
 Timer *CreateTimer()
 {
-    return new LinuxTimer();
+    return new PosixTimer();
 }

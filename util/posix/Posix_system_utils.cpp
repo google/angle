@@ -8,11 +8,14 @@
 
 #include "util/system_utils.h"
 
-#include <dlfcn.h>
 #include <sched.h>
-#include <sys/resource.h>
 #include <time.h>
 #include <unistd.h>
+
+#if !defined(ANGLE_PLATFORM_FUCHSIA)
+#    include <dlfcn.h>
+#    include <sys/resource.h>
+#endif
 
 #include "common/platform.h"
 
@@ -40,7 +43,9 @@ void Sleep(unsigned int milliseconds)
 
 void SetLowPriorityProcess()
 {
+#if !defined(ANGLE_PLATFORM_FUCHSIA)
     setpriority(PRIO_PROCESS, getpid(), 10);
+#endif
 }
 
 void WriteDebugMessage(const char *format, ...)
@@ -53,6 +58,7 @@ void WriteDebugMessage(const char *format, ...)
 
 bool StabilizeCPUForBenchmarking()
 {
+#if !defined(ANGLE_PLATFORM_FUCHSIA)
     bool success = true;
     errno        = 0;
     setpriority(PRIO_PROCESS, getpid(), -20);
@@ -80,5 +86,8 @@ bool StabilizeCPUForBenchmarking()
 #endif
 
     return success;
+#else  // defined(ANGLE_PLATFORM_FUCHSIA)
+    return false;
+#endif
 }
 }  // namespace angle
