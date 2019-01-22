@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "0abc48e6_a8fe7686",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-22T22:04:03Z",
+      "side": 1,
+      "message": "Yeah. For Vulkan back-end we can use angle::Result and cast to egl::Error when needed. But for the egl:: world and Impl functions we need egl::Error still. There\u0027s an issue open for this at 3041.",
+      "parentUuid": "a47d207a_19ae6933",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 10
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "132d1b2b_1ec325fd",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.h",
         "patchSetId": 5
@@ -319,6 +343,30 @@
       "side": 1,
       "message": "I could do that. Any arguments fore or against either implementation, Jamie?",
       "parentUuid": "132d1b2b_1ec325fd",
+      "range": {
+        "startLine": 53,
+        "startChar": 38,
+        "endLine": 53,
+        "endChar": 56
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e99dad4e_e57f9958",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-22T22:04:03Z",
+      "side": 1,
+      "message": "I was about to say. Generally I prefer composition. Not that major problemss would come up with this situation. There\u0027s a whole wikipedia article about it here (didn\u0027t read it yet)\n\nhttps://en.wikipedia.org/wiki/Composition_over_inheritance",
+      "parentUuid": "9c6f4c01_0049005e",
       "range": {
         "startLine": 53,
         "startChar": 38,
