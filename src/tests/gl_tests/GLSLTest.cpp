@@ -1911,13 +1911,8 @@ TEST_P(GLSLTest_ES3, AmbiguousFunctionCall2x2)
 // the function name being too long.
 TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
 {
-    // TODO(cwallez@chromium.org): crashing on Mac ASAN, see http://anglebug.com/3087
-    ANGLE_SKIP_TEST_IF(IsOSX());
-
     std::stringstream vertexShaderStream;
-    // This fails on Macos if the number of parameters is larger than 978 when linking in parallel.
-    // http://anglebug.com/3047
-    const unsigned int paramCount = (IsOSX() ? 978u : 1024u);
+    const unsigned int paramCount = 1024u;
 
     vertexShaderStream << "#version 300 es\n"
                           "precision highp float;\n"
@@ -1929,12 +1924,13 @@ TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
     }
     vertexShaderStream << "vec4 aLast)\n"
                           "{\n"
-                          "    return ";
+                          "    vec4 sum = vec4(0.0, 0.0, 0.0, 0.0);\n";
     for (unsigned int i = 0; i < paramCount; ++i)
     {
-        vertexShaderStream << "a" << i << " + ";
+        vertexShaderStream << "    sum += a" << i << ";\n";
     }
-    vertexShaderStream << "aLast;\n"
+    vertexShaderStream << "    sum += aLast;\n"
+                          "    return sum;\n "
                           "}\n"
                           "void main()\n"
                           "{\n"

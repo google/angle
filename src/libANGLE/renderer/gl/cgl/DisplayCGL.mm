@@ -109,7 +109,11 @@ void DisplayCGL::terminate()
     DisplayGL::terminate();
 
     mRenderer.reset();
-
+    if (mPixelFormat != nullptr)
+    {
+        CGLDestroyPixelFormat(mPixelFormat);
+        mPixelFormat = nullptr;
+    }
     if (mContext != nullptr)
     {
         CGLSetCurrentContext(nullptr);
