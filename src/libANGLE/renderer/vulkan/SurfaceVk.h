@@ -141,12 +141,25 @@ class WindowSurfaceVk : public SurfaceImpl
 
   private:
     virtual angle::Result createSurfaceVk(vk::Context *context, gl::Extents *extentsOut) = 0;
+    virtual angle::Result getCurrentWindowSize(vk::Context *context, gl::Extents *extentsOut) = 0;
+
     angle::Result initializeImpl(DisplayVk *displayVk);
+    angle::Result recreateSwapchain(DisplayVk *displayVk,
+                                    const gl::Extents &extents,
+                                    uint32_t swapHistoryIndex);
+    angle::Result checkForOutOfDateSwapchain(DisplayVk *displayVk,
+                                             uint32_t swapHistoryIndex,
+                                             bool presentOutOfDate);
+    void releaseSwapchainImages(RendererVk *renderer);
     angle::Result nextSwapchainImage(DisplayVk *displayVk);
     angle::Result swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects);
 
     VkSwapchainKHR mSwapchain;
+    // Cached information used to recreate swapchains.
     VkPresentModeKHR mSwapchainPresentMode;
+    uint32_t mMinImageCount;
+    VkSurfaceTransformFlagBitsKHR mPreTransform;
+    VkCompositeAlphaFlagBitsKHR mCompositeAlpha;
 
     RenderTargetVk mColorRenderTarget;
     RenderTargetVk mDepthStencilRenderTarget;
@@ -167,10 +180,15 @@ class WindowSurfaceVk : public SurfaceImpl
     std::vector<SwapchainImage> mSwapchainImages;
 
     // A circular buffer, with the same size as mSwapchainImages (N), that stores the serial of the
-    // renderer on every swap.  In FIFO present modes, the CPU is throttled by waiting for the
-    // Nth previous serial to finish.
-    std::vector<Serial> mSwapSerials;
-    size_t mCurrentSwapSerialIndex;
+    // renderer on every swap.  The CPU is throttled by waiting for the Nth previous serial to
+    // finish.  Old swapchains are scheduled to be destroyed at the same time.
+    struct SwapHistory
+    {
+        Serial serial;
+        VkSwapchainKHR swapchain = VK_NULL_HANDLE;
+    };
+    std::vector<SwapHistory> mSwapHistory;
+    size_t mCurrentSwapHistoryIndex;
 
     vk::ImageHelper mDepthStencilImage;
     vk::ImageView mDepthStencilImageView;

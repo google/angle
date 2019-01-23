@@ -24,10 +24,13 @@
 #    include <dcomp.h>
 #endif
 
+using namespace angle;
+
 namespace
 {
 
-class EGLSurfaceTest : public EGLTest
+class EGLSurfaceTest : public EGLTest,
+                       public ::testing::WithParamInterface<angle::PlatformParameters>
 {
   protected:
     EGLSurfaceTest()
@@ -88,12 +91,14 @@ class EGLSurfaceTest : public EGLTest
         ASSERT_TRUE(mWindowSurface == EGL_NO_SURFACE && mContext == EGL_NO_CONTEXT);
     }
 
-    void initializeDisplay(EGLenum platformType)
+    void initializeDisplay()
     {
         PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
             reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
                 eglGetProcAddress("eglGetPlatformDisplayEXT"));
         ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
+
+        GLenum platformType = GetParam().getRenderer();
 
         std::vector<EGLint> displayAttributes;
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
@@ -102,13 +107,8 @@ class EGLSurfaceTest : public EGLTest
         displayAttributes.push_back(EGL_DONT_CARE);
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
         displayAttributes.push_back(EGL_DONT_CARE);
-
-        if (platformType == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE ||
-            platformType == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-        {
-            displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
-            displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
-        }
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
         displayAttributes.push_back(EGL_NONE);
 
         mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
@@ -249,16 +249,12 @@ class EGLSurfaceTest : public EGLTest
 
 // Test a surface bug where we could have two Window surfaces active
 // at one time, blocking message loops. See http://crbug.com/475085
-TEST_F(EGLSurfaceTest, MessageLoopBug)
+TEST_P(EGLSurfaceTest, MessageLoopBug)
 {
-    const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
+    // TODO(syoussefi): http://anglebug.com/3123
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     initializeSurfaceWithDefaultConfig();
 
     runMessageLoopTest(EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -266,32 +262,24 @@ TEST_F(EGLSurfaceTest, MessageLoopBug)
 
 // Tests the message loop bug, but with setting a second context
 // instead of null.
-TEST_F(EGLSurfaceTest, MessageLoopBugContext)
+TEST_P(EGLSurfaceTest, MessageLoopBugContext)
 {
-    const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
+    // TODO(syoussefi): http://anglebug.com/3123
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     initializeSurfaceWithDefaultConfig();
 
     runMessageLoopTest(mPbufferSurface, mSecondContext);
 }
 
 // Test a bug where calling makeCurrent twice would release the surface
-TEST_F(EGLSurfaceTest, MakeCurrentTwice)
+TEST_P(EGLSurfaceTest, MakeCurrentTwice)
 {
-#if defined(ANGLE_PLATFORM_APPLE) && !defined(ANGLE_STANDALONE_BUILD)
-    // TODO(cwallez) Make context creation return at least an OpenGL ES 2 context on
-    // the Mac trybots.
-    std::cout << "Test skipped temporarily skipped on the Mac trybots" << std::endl;
-    return;
-#endif
+    // TODO(syoussefi): http://anglebug.com/3123
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+    initializeDisplay();
     initializeSurfaceWithDefaultConfig();
 
     eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
@@ -304,17 +292,18 @@ TEST_F(EGLSurfaceTest, MakeCurrentTwice)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-// Test that the D3D window surface is correctly resized after calling swapBuffers
-TEST_F(EGLSurfaceTest, ResizeD3DWindow)
+// Test that the window surface is correctly resized after calling swapBuffers
+TEST_P(EGLSurfaceTest, ResizeWindow)
 {
-    const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (strstr(extensionsString, "EGL_ANGLE_platform_angle_d3d") == nullptr)
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
+    // TODO(syoussefi): http://anglebug.com/3123
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    GLenum platform               = GetParam().getRenderer();
+    bool platformSupportsZeroSize = platform == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
+                                    platform == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
+    int minSize = platformSupportsZeroSize ? 0 : 1;
+
+    initializeDisplay();
     initializeSurfaceWithDefaultConfig();
     initializeContext();
 
@@ -327,15 +316,19 @@ TEST_F(EGLSurfaceTest, ResizeD3DWindow)
     ASSERT_EGL_SUCCESS();
     ASSERT_EQ(64, height);  // initial size
 
-    // set window's height to 0
-    mOSWindow->resize(64, 0);
+    // set window's height to 0 (if possible) or 1
+    mOSWindow->resize(64, minSize);
 
     eglSwapBuffers(mDisplay, mWindowSurface);
     ASSERT_EGL_SUCCESS();
 
+    // TODO(syoussefi): the GLX implementation still reads the window size as 64x64 through
+    // XGetGeometry.  http://anglebug.com/3122
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL());
+
     eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
     ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(0, height);
+    ASSERT_EQ(minSize, height);
 
     // restore window's height
     mOSWindow->resize(64, 64);
@@ -350,19 +343,13 @@ TEST_F(EGLSurfaceTest, ResizeD3DWindow)
 
 // Test creating a surface that supports a EGLConfig with 16bit
 // support GL_RGB565
-TEST_F(EGLSurfaceTest, CreateWithEGLConfig5650Support)
+TEST_P(EGLSurfaceTest, CreateWithEGLConfig5650Support)
 {
-    if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
-
     const EGLint configAttributes[] = {
         EGL_RED_SIZE,   5, EGL_GREEN_SIZE,   6, EGL_BLUE_SIZE,      5, EGL_ALPHA_SIZE, 0,
         EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     EGLConfig config;
     if (EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config) == EGL_FALSE)
     {
@@ -385,19 +372,13 @@ TEST_F(EGLSurfaceTest, CreateWithEGLConfig5650Support)
 
 // Test creating a surface that supports a EGLConfig with 16bit
 // support GL_RGBA4
-TEST_F(EGLSurfaceTest, CreateWithEGLConfig4444Support)
+TEST_P(EGLSurfaceTest, CreateWithEGLConfig4444Support)
 {
-    if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
-
     const EGLint configAttributes[] = {
         EGL_RED_SIZE,   4, EGL_GREEN_SIZE,   4, EGL_BLUE_SIZE,      4, EGL_ALPHA_SIZE, 4,
         EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     EGLConfig config;
     if (EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config) == EGL_FALSE)
     {
@@ -420,19 +401,13 @@ TEST_F(EGLSurfaceTest, CreateWithEGLConfig4444Support)
 
 // Test creating a surface that supports a EGLConfig with 16bit
 // support GL_RGB5_A1
-TEST_F(EGLSurfaceTest, CreateWithEGLConfig5551Support)
+TEST_P(EGLSurfaceTest, CreateWithEGLConfig5551Support)
 {
-    if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
-
     const EGLint configAttributes[] = {
         EGL_RED_SIZE,   5, EGL_GREEN_SIZE,   5, EGL_BLUE_SIZE,      5, EGL_ALPHA_SIZE, 1,
         EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     EGLConfig config;
     if (EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config) == EGL_FALSE)
     {
@@ -454,19 +429,13 @@ TEST_F(EGLSurfaceTest, CreateWithEGLConfig5551Support)
 }
 
 // Test creating a surface that supports a EGLConfig without alpha support
-TEST_F(EGLSurfaceTest, CreateWithEGLConfig8880Support)
+TEST_P(EGLSurfaceTest, CreateWithEGLConfig8880Support)
 {
-    if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
-
     const EGLint configAttributes[] = {
         EGL_RED_SIZE,   8, EGL_GREEN_SIZE,   8, EGL_BLUE_SIZE,      8, EGL_ALPHA_SIZE, 0,
         EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     EGLConfig config;
     if (EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config) == EGL_FALSE)
     {
@@ -487,16 +456,13 @@ TEST_F(EGLSurfaceTest, CreateWithEGLConfig8880Support)
     glDeleteProgram(program);
 }
 
-TEST_F(EGLSurfaceTest, FixedSizeWindow)
+TEST_P(EGLSurfaceTest, FixedSizeWindow)
 {
-    ANGLE_SKIP_TEST_IF(
-        !ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"));
-
     const EGLint configAttributes[] = {
         EGL_RED_SIZE,   8, EGL_GREEN_SIZE,   8, EGL_BLUE_SIZE,      8, EGL_ALPHA_SIZE, 0,
         EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     ANGLE_SKIP_TEST_IF(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &mConfig) == EGL_FALSE);
 
     ANGLE_SKIP_TEST_IF(
@@ -549,15 +515,18 @@ TEST_F(EGLSurfaceTest, FixedSizeWindow)
 }
 
 #if defined(ANGLE_ENABLE_D3D11)
+class EGLSurfaceTestD3D11 : public EGLSurfaceTest
+{};
+
 // Test that rendering to an IDCompositionSurface using a pbuffer works.
-TEST_F(EGLSurfaceTest, CreateDirectCompositionSurface)
+TEST_P(EGLSurfaceTestD3D11, CreateDirectCompositionSurface)
 {
     if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
     {
         std::cout << "D3D Platform not supported in ANGLE" << std::endl;
         return;
     }
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
 
     EGLAttrib device       = 0;
     EGLAttrib newEglDevice = 0;
@@ -625,7 +594,7 @@ TEST_F(EGLSurfaceTest, CreateDirectCompositionSurface)
     glDeleteProgram(program);
 }
 
-TEST_F(EGLSurfaceTest, CreateSurfaceWithMSAA)
+TEST_P(EGLSurfaceTestD3D11, CreateSurfaceWithMSAA)
 {
     if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
     {
@@ -648,7 +617,7 @@ TEST_F(EGLSurfaceTest, CreateSurfaceWithMSAA)
     };
     // clang-format on
 
-    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    initializeDisplay();
     EGLConfig config;
     if (EGLWindow::FindEGLConfig(mDisplay, configAttributes, &config) == EGL_FALSE)
     {
@@ -697,4 +666,19 @@ TEST_F(EGLSurfaceTest, CreateSurfaceWithMSAA)
 }
 
 #endif  // ANGLE_ENABLE_D3D11
-}  // namespace
+
+}  // anonymous namespace
+
+ANGLE_INSTANTIATE_TEST(EGLSurfaceTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES3_D3D11(),
+                       ES2_OPENGL(),
+                       ES3_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
+
+#if defined(ANGLE_ENABLE_D3D11)
+ANGLE_INSTANTIATE_TEST(EGLSurfaceTestD3D11, ES2_D3D11(), ES3_D3D11());
+#endif

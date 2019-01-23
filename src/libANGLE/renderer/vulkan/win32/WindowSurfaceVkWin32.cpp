@@ -32,6 +32,12 @@ angle::Result WindowSurfaceVkWin32::createSurfaceVk(vk::Context *context, gl::Ex
     ANGLE_VK_TRY(context, vkCreateWin32SurfaceKHR(context->getRenderer()->getInstance(),
                                                   &createInfo, nullptr, &mSurface));
 
+    return getCurrentWindowSize(context, extentsOut);
+}
+
+angle::Result WindowSurfaceVkWin32::getCurrentWindowSize(vk::Context *context,
+                                                         gl::Extents *extentsOut)
+{
     RECT rect;
     ANGLE_VK_CHECK(context, GetClientRect(mNativeWindowType, &rect) == TRUE,
                    VK_ERROR_INITIALIZATION_FAILED);

@@ -93,7 +93,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
     const VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVKDepthStencilImageUsageFlags
                                                            : kSurfaceVKColorImageUsageFlags;
 
-    gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
+    gl::Extents extents(std::max(static_cast<int>(width), 1), std::max(static_cast<int>(height), 1),
+                        1);
     ANGLE_TRY(image.init(displayVk, gl::TextureType::_2D, extents, vkFormat, 1, usage, 1, 1));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
@@ -274,8 +275,11 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mInstance(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
+      mMinImageCount(0),
+      mPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
+      mCompositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR),
       mCurrentSwapchainImageIndex(0),
-      mCurrentSwapSerialIndex(0)
+      mCurrentSwapHistoryIndex(0)
 {
     mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageView, 0, nullptr);
 }
@@ -296,17 +300,15 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // We might not need to flush the pipe here.
     (void)renderer->finish(displayVk);
 
-    mDepthStencilImage.releaseImage(renderer);
-    mDepthStencilImage.releaseStagingBuffer(renderer);
-    mDepthStencilImageView.destroy(device);
+    releaseSwapchainImages(renderer);
 
-    for (SwapchainImage &swapchainImage : mSwapchainImages)
+    for (SwapHistory &swap : mSwapHistory)
     {
-        // Although we don't own the swapchain image handles, we need to keep our shutdown clean.
-        swapchainImage.image.resetImageWeakReference();
-        swapchainImage.image.destroy(device);
-        swapchainImage.imageView.destroy(device);
-        swapchainImage.framebuffer.destroy(device);
+        if (swap.swapchain != VK_NULL_HANDLE)
+        {
+            vkDestroySwapchainKHR(device, swap.swapchain, nullptr);
+            swap.swapchain = VK_NULL_HANDLE;
+        }
     }
 
     if (mSwapchain)
@@ -401,27 +403,27 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     // - On fifo, we use max(3, minImageCount).  Triple-buffering allows us to present an image,
     //   have one in the queue and record in another.  Note: on certain configurations (windows +
     //   nvidia + windowed mode), we could get away with a smaller number.
-    uint32_t minImageCount = surfaceCaps.minImageCount;
+    mMinImageCount = surfaceCaps.minImageCount;
     if (mSwapchainPresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR)
     {
-        minImageCount = std::max<uint32_t>(2, minImageCount);
+        mMinImageCount = std::max<uint32_t>(2, mMinImageCount);
     }
     else if (mSwapchainPresentMode == VK_PRESENT_MODE_FIFO_KHR)
     {
-        minImageCount = std::max<uint32_t>(3, minImageCount);
+        mMinImageCount = std::max<uint32_t>(3, mMinImageCount);
     }
 
     // Make sure we don't exceed maxImageCount.
-    if (surfaceCaps.maxImageCount > 0 && minImageCount > surfaceCaps.maxImageCount)
+    if (surfaceCaps.maxImageCount > 0 && mMinImageCount > surfaceCaps.maxImageCount)
     {
-        minImageCount = surfaceCaps.maxImageCount;
+        mMinImageCount = surfaceCaps.maxImageCount;
     }
 
     // Default to identity transform.
-    VkSurfaceTransformFlagBitsKHR preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-    if ((surfaceCaps.supportedTransforms & preTransform) == 0)
+    mPreTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+    if ((surfaceCaps.supportedTransforms & mPreTransform) == 0)
     {
-        preTransform = surfaceCaps.currentTransform;
+        mPreTransform = surfaceCaps.currentTransform;
     }
 
     uint32_t surfaceFormatCount = 0;
@@ -455,38 +457,89 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
         ANGLE_VK_CHECK(displayVk, foundFormat, VK_ERROR_INITIALIZATION_FAILED);
     }
 
-    VkCompositeAlphaFlagBitsKHR compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-    if ((surfaceCaps.supportedCompositeAlpha & compositeAlpha) == 0)
+    mCompositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    if ((surfaceCaps.supportedCompositeAlpha & mCompositeAlpha) == 0)
     {
-        compositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
+        mCompositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
     }
-    ANGLE_VK_CHECK(displayVk, (surfaceCaps.supportedCompositeAlpha & compositeAlpha) != 0,
+    ANGLE_VK_CHECK(displayVk, (surfaceCaps.supportedCompositeAlpha & mCompositeAlpha) != 0,
                    VK_ERROR_INITIALIZATION_FAILED);
 
+    ANGLE_TRY(recreateSwapchain(displayVk, extents, mCurrentSwapHistoryIndex));
+
+    // Get the first available swapchain iamge.
+    return nextSwapchainImage(displayVk);
+}
+
+angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
+                                                 const gl::Extents &extents,
+                                                 uint32_t swapHistoryIndex)
+{
+    RendererVk *renderer = displayVk->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    VkSwapchainKHR oldSwapchain = mSwapchain;
+    mSwapchain                  = VK_NULL_HANDLE;
+
+    if (oldSwapchain)
+    {
+        // Note: the old swapchain must be destroyed regardless of whether creating the new
+        // swapchain succeeds.  We can only destroy the swapchain once rendering to all its images
+        // have finished.  We therefore store the handle to the swapchain being destroyed in the
+        // swap history (alongside the serial of the last submission) so it can be destroyed once we
+        // wait on that serial as part of the CPU throttling.
+        //
+        // TODO(syoussefi): the spec specifically allows multiple retired swapchains to exist:
+        //
+        // > Multiple retired swapchains can be associated with the same VkSurfaceKHR through
+        // > multiple uses of oldSwapchain that outnumber calls to vkDestroySwapchainKHR.
+        //
+        // However, a bug in the validation layers currently forces us to limit this to one retired
+        // swapchain.  Once the issue is resolved, the following for loop can be removed.
+        // http://anglebug.com/3095
+        for (SwapHistory &swap : mSwapHistory)
+        {
+            if (swap.swapchain != VK_NULL_HANDLE)
+            {
+                ANGLE_TRY(renderer->finishToSerial(displayVk, swap.serial));
+                vkDestroySwapchainKHR(renderer->getDevice(), swap.swapchain, nullptr);
+                swap.swapchain = VK_NULL_HANDLE;
+            }
+        }
+        mSwapHistory[swapHistoryIndex].swapchain = oldSwapchain;
+    }
+
+    releaseSwapchainImages(renderer);
+
+    const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
+    VkFormat nativeFormat    = format.vkTextureFormat;
+
     // We need transfer src for reading back from the backbuffer.
-    VkImageUsageFlags imageUsageFlags = kSurfaceVKColorImageUsageFlags;
+    constexpr VkImageUsageFlags kImageUsageFlags = kSurfaceVKColorImageUsageFlags;
 
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfo.flags                    = 0;
     swapchainInfo.surface                  = mSurface;
-    swapchainInfo.minImageCount            = minImageCount;
+    swapchainInfo.minImageCount            = mMinImageCount;
     swapchainInfo.imageFormat              = nativeFormat;
     swapchainInfo.imageColorSpace          = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-    swapchainInfo.imageExtent.width        = width;
-    swapchainInfo.imageExtent.height       = height;
+    // Note: Vulkan doesn't allow 0-width/height swapchains.
+    swapchainInfo.imageExtent.width        = std::max(extents.width, 1);
+    swapchainInfo.imageExtent.height       = std::max(extents.height, 1);
     swapchainInfo.imageArrayLayers         = 1;
-    swapchainInfo.imageUsage               = imageUsageFlags;
+    swapchainInfo.imageUsage               = kImageUsageFlags;
     swapchainInfo.imageSharingMode         = VK_SHARING_MODE_EXCLUSIVE;
     swapchainInfo.queueFamilyIndexCount    = 0;
     swapchainInfo.pQueueFamilyIndices      = nullptr;
-    swapchainInfo.preTransform             = preTransform;
-    swapchainInfo.compositeAlpha           = compositeAlpha;
+    swapchainInfo.preTransform             = mPreTransform;
+    swapchainInfo.compositeAlpha           = mCompositeAlpha;
     swapchainInfo.presentMode              = mSwapchainPresentMode;
     swapchainInfo.clipped                  = VK_TRUE;
-    swapchainInfo.oldSwapchain             = VK_NULL_HANDLE;
+    swapchainInfo.oldSwapchain             = oldSwapchain;
 
-    VkDevice device = renderer->getDevice();
+    // TODO(syoussefi): Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old
+    // swapchain need to carry over to the new one.  http://anglebug.com/2942
     ANGLE_VK_TRY(displayVk, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &mSwapchain));
 
     // Intialize the swapchain image views.
@@ -503,8 +556,16 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     transparentBlack.float32[2]        = 0.0f;
     transparentBlack.float32[3]        = 0.0f;
 
+    // Note: we expect subsequent calls to vkGetSwapchainImagesKHR to return the same number of
+    // images, given that the same value for minImageCount was provided.  If that's not true, then
+    // the swap history would need to be preserved correctly; if there are more images now, the
+    // circular history buffer needs to be rearranged to remain continuous, and if there are fewer
+    // images now, we need to finishToSerial for the part of history that doesn't fit and clean up
+    // the respective old swapchains.
+    ASSERT(mSwapHistory.size() == 0 || mSwapHistory.size() == imageCount);
+
     mSwapchainImages.resize(imageCount);
-    mSwapSerials.resize(imageCount);
+    mSwapHistory.resize(imageCount);
 
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
@@ -522,9 +583,6 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
         // Set transfer dest layout, and clear the image to black.
         member.image.clearColor(transparentBlack, 0, 1, commandBuffer);
     }
-
-    // Get the first available swapchain iamge.
-    ANGLE_TRY(nextSwapchainImage(displayVk));
 
     // Initialize depth/stencil if requested.
     if (mState.config->depthStencilFormat != GL_NONE)
@@ -555,6 +613,73 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     return angle::Result::Continue;
 }
 
+angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(DisplayVk *displayVk,
+                                                          uint32_t swapHistoryIndex,
+                                                          bool presentOutOfDate)
+{
+    // Check for window resize and recreate swapchain if necessary.
+    gl::Extents currentExtents;
+    ANGLE_TRY(getCurrentWindowSize(displayVk, &currentExtents));
+    if (!presentOutOfDate && currentExtents.width == getWidth() &&
+        currentExtents.height == getHeight())
+    {
+        return angle::Result::Continue;
+    }
+
+    VkSurfaceCapabilitiesKHR surfaceCaps;
+    const VkPhysicalDevice &physicalDevice = displayVk->getRenderer()->getPhysicalDevice();
+    ANGLE_VK_TRY(displayVk,
+                 vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface, &surfaceCaps));
+
+    uint32_t width  = surfaceCaps.currentExtent.width;
+    uint32_t height = surfaceCaps.currentExtent.height;
+
+    if (width != 0xFFFFFFFFu)
+    {
+        ASSERT(height != 0xFFFFFFFFu);
+        currentExtents.width  = width;
+        currentExtents.height = height;
+    }
+
+    return recreateSwapchain(displayVk, currentExtents, swapHistoryIndex);
+}
+
+void WindowSurfaceVk::releaseSwapchainImages(RendererVk *renderer)
+{
+    if (mDepthStencilImage.valid())
+    {
+        Serial depthStencilSerial = mDepthStencilImage.getStoredQueueSerial();
+        mDepthStencilImage.releaseImage(renderer);
+        mDepthStencilImage.releaseStagingBuffer(renderer);
+
+        if (mDepthStencilImageView.valid())
+        {
+            renderer->releaseObject(depthStencilSerial, &mDepthStencilImageView);
+        }
+    }
+
+    for (SwapchainImage &swapchainImage : mSwapchainImages)
+    {
+        Serial imageSerial = swapchainImage.image.getStoredQueueSerial();
+
+        // We don't own the swapchain image handles, so we just remove our reference to it.
+        swapchainImage.image.resetImageWeakReference();
+        swapchainImage.image.destroy(renderer->getDevice());
+
+        if (swapchainImage.imageView.valid())
+        {
+            renderer->releaseObject(imageSerial, &swapchainImage.imageView);
+        }
+
+        if (swapchainImage.framebuffer.valid())
+        {
+            renderer->releaseObject(imageSerial, &swapchainImage.framebuffer);
+        }
+    }
+
+    mSwapchainImages.clear();
+}
+
 FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
                                                            const gl::FramebufferState &state)
 {
@@ -582,12 +707,16 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
 {
     RendererVk *renderer = displayVk->getRenderer();
 
-    // If the swapchain is not in mailbox mode, throttle the submissions.  NOTE(syoussefi): this can
-    // be done in mailbox mode too, just currently unnecessary.
-    if (mSwapchainPresentMode != VK_PRESENT_MODE_MAILBOX_KHR)
+    // Throttle the submissions to avoid getting too far ahead of the GPU.
     {
         TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::swapImpl: Throttle CPU");
-        ANGLE_TRY(renderer->finishToSerial(displayVk, mSwapSerials[mCurrentSwapSerialIndex]));
+        SwapHistory &swap = mSwapHistory[mCurrentSwapHistoryIndex];
+        ANGLE_TRY(renderer->finishToSerial(displayVk, swap.serial));
+        if (swap.swapchain != VK_NULL_HANDLE)
+        {
+            vkDestroySwapchainKHR(renderer->getDevice(), swap.swapchain, nullptr);
+            swap.swapchain = VK_NULL_HANDLE;
+        }
     }
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
@@ -600,9 +729,11 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
     ANGLE_TRY(renderer->flush(displayVk));
 
     // Remember the serial of the last submission.
-    mSwapSerials[mCurrentSwapSerialIndex++] = renderer->getLastSubmittedQueueSerial();
-    mCurrentSwapSerialIndex =
-        mCurrentSwapSerialIndex == mSwapSerials.size() ? 0 : mCurrentSwapSerialIndex;
+    mSwapHistory[mCurrentSwapHistoryIndex].serial = renderer->getLastSubmittedQueueSerial();
+    uint32_t currentSwapHistoryIndex              = mCurrentSwapHistoryIndex;
+    ++mCurrentSwapHistoryIndex;
+    mCurrentSwapHistoryIndex =
+        mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
 
     // Ask the renderer what semaphore it signaled in the last flush.
     const vk::Semaphore *commandsCompleteSemaphore =
@@ -643,7 +774,17 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
         presentInfo.pNext = &presentRegions;
     }
 
-    ANGLE_VK_TRY(displayVk, vkQueuePresentKHR(renderer->getQueue(), &presentInfo));
+    VkResult result = vkQueuePresentKHR(renderer->getQueue(), &presentInfo);
+
+    // If SUBOPTIMAL/OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
+    // continuing.
+    bool swapchainOutOfDate = result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR;
+    if (!swapchainOutOfDate)
+    {
+        ANGLE_VK_TRY(displayVk, result);
+    }
+
+    ANGLE_TRY(checkForOutOfDateSwapchain(displayVk, currentSwapHistoryIndex, swapchainOutOfDate));
 
     {
         // Note: TRACE_EVENT0 is put here instead of inside the function to workaround this issue:
