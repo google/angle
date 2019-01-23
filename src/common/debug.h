@@ -98,6 +98,8 @@ void UninitializeDebugAnnotations();
 bool DebugAnnotationsActive();
 bool DebugAnnotationsInitialized();
 
+void InitializeDebugMutexIfNeeded();
+
 namespace priv
 {
 // This class is used to explicitly ignore values in the conditional logging macros. This avoids
