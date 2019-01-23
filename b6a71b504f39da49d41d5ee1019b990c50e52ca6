@@ -237,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "e4a721f3_8934b653",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-01-23T17:08:04Z",
+      "side": 1,
+      "message": "Ah, sorry, maybe I\u0027ve confused it with VK_TRY",
+      "parentUuid": "7ff02af7_8f6a7068",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 77
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d262a039_7766aeb0",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 5
