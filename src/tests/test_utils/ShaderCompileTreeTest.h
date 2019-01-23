@@ -53,7 +53,7 @@ class ShaderCompileTreeTest : public testing::Test
   private:
     TranslatorESSL *mTranslator;
 
-    angle::PoolAllocator mAllocator;
+    TPoolAllocator mAllocator;
 };
 
 // Returns true if the node is some kind of a zero node - either constructor or a constant union

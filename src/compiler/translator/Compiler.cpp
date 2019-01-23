@@ -170,7 +170,7 @@ namespace
 class TScopedPoolAllocator
 {
   public:
-    TScopedPoolAllocator(angle::PoolAllocator *allocator) : mAllocator(allocator)
+    TScopedPoolAllocator(TPoolAllocator *allocator) : mAllocator(allocator)
     {
         mAllocator->push();
         SetGlobalPoolAllocator(mAllocator);
@@ -182,7 +182,7 @@ class TScopedPoolAllocator
     }
 
   private:
-    angle::PoolAllocator *mAllocator;
+    TPoolAllocator *mAllocator;
 };
 
 class TScopedSymbolTableLevel
