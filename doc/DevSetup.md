@@ -1,6 +1,6 @@
 # ANGLE Development
 
-ANGLE provides OpenGL ES 2.0 and EGL 1.4 libraries and dlls.  You can use these to build and run OpenGL ES 2.0 applications on Windows.
+ANGLE provides OpenGL ES 2.0 and EGL 1.4 libraries and dlls.  You can use these to build and run OpenGL ES 2.0 applications on Windows, Linux, Mac and Android.
 
 ## Development setup
 
@@ -30,7 +30,7 @@ On Windows:
 
 On Linux:
 
- * Development packages for OpenGL, X11 and libpci (all of these dependencies should be installed automatically when running install-build-deps.sh later on).
+ * Development packages for OpenGL, X11 and libpci (all of these dependencies should be installed automatically when running `install-build-deps.sh` later on).
  * Bison and flex are not needed as we only support generating the translator grammar on Windows.
 
 On MacOS:
@@ -134,12 +134,13 @@ Also, follow [How to build ANGLE in Chromium for dev](BuildingAngleForChromiumDe
 ## Application Development with ANGLE
 This sections describes how to use ANGLE to build an OpenGL ES application.
 
-### Choosing a D3D Backend
-ANGLE can use either a backing renderer which uses D3D11 on systems where it is available, or a D3D9-only renderer.
+### Choosing a Backend
+ANGLE can use a variety of backing renderers based on platform.  On Windows, it defaults to D3D11 where it's available,
+or D3D9 otherwise.  On other desktop platforms, it defaults to GL.  On mobile, it defaults to GLES.
 
-ANGLE provides an EGL extension called `EGL_ANGLE_platform_angle` which allows uers to select which renderer to use at EGL initialization time by calling eglGetPlatformDisplayEXT with special enums. Details of the extension can be found in it's specification in `extensions/ANGLE_platform_angle.txt` and `extensions/ANGLE_platform_angle_d3d.txt` and examples of it's use can be seen in the ANGLE samples and tests, particularly `util/EGLWindow.cpp`.
+ANGLE provides an EGL extension called `EGL_ANGLE_platform_angle` which allows uers to select which renderer to use at EGL initialization time by calling eglGetPlatformDisplayEXT with special enums. Details of the extension can be found in it's specification in `extensions/ANGLE_platform_angle.txt` and `extensions/ANGLE_platform_angle_*.txt` and examples of it's use can be seen in the ANGLE samples and tests, particularly `util/EGLWindow.cpp`.
 
-By default, ANGLE will use a D3D11 renderer. To change the default:
+To change the default D3D backend:
 
  1. Open `src/libANGLE/renderer/d3d/DisplayD3D.cpp`
  2. Locate the definition of `ANGLE_DEFAULT_D3D11` near the head of the file, and set it to your preference.

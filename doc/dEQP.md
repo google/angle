@@ -36,10 +36,10 @@ If you're running a full test suite, it might take very long time. Running in
 Debug is only useful to isolate and fix particular failures, Release will give
 a better sense of total passing rate.
 
-### Choosing a Renderer on Windows
+### Choosing a Renderer
 
-By default Windows ANGLE tests with D3D11. To specify the exact platform for
-ANGLE + dEQP, use the arguments:
+By default ANGLE tests with D3D11 on Windows, GLES on mobile and Desktop GL otherwise.
+To specify the exact platform for ANGLE + dEQP, use the arguments:
 
   * `--deqp-egl-display-type=angle-d3d11` for D3D11 (highest available feature level)
   * `--deqp-egl-display-type=angle-d3d9` for D3D9
@@ -47,6 +47,8 @@ ANGLE + dEQP, use the arguments:
   * `--deqp-egl-display-type=angle-gl` for OpenGL Desktop (OSX, Linux and Windows)
   * `--deqp-egl-display-type=angle-gles` for OpenGL ES (Android/ChromeOS, some Windows platforms)
   * `--deqp-egl-display-type=angle-vulkan` for Vulkan (Android, Linux, Windows)
+
+The flag `--use-angle=X` has the same effect as `--deqp-egl-display-type=angle-X`.
 
 ### Check your results
 
