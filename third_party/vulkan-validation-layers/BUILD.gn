@@ -295,7 +295,7 @@ layers = [
   [
     "object_tracker",
     object_tracker_sources,
-    ":vulkan_gen_object_tracker_cpp",
+    ":vulkan_gen_object_tracker",
   ],
   [
     "parameter_validation",
@@ -392,9 +392,9 @@ config("vulkan_parameter_validation_config") {
   }
 }
 
-# This special action is needed to remove the generated param header.
-# Otherwise the param gen cpp file will pick up the old file and the
-# build will fail. It's a bit unfortunate but necessary.
+# These special "clean" actions are needed to remove generated headers.
+# Otherwise the cpp files will pick up the old generated files
+# and the build will fail. It's a bit unfortunate but necessary.
 action("vulkan_clean_parameter_gen_header") {
   script = "$angle_root/scripts/remove_file_if_exists.py"
   inputs = parameter_validation_sources
@@ -410,12 +410,34 @@ action("vulkan_clean_parameter_gen_header") {
   ]
 }
 
+action("vulkan_clean_tracker_gen_header") {
+  script = "$angle_root/scripts/remove_file_if_exists.py"
+  inputs = object_tracker_sources
+  deps = [
+    ":vulkan_gen_object_tracker_cpp",
+  ]
+  outputs = [
+    "$vulkan_gen_dir/object_tracker_h_is_removed",
+  ]
+  args = [
+    "$raw_vulkan_gen_dir/object_tracker.h",
+    "$raw_vulkan_gen_dir/object_tracker_h_is_removed",
+  ]
+}
+
 source_set("vulkan_gen_parameter_validation") {
   deps = [
     ":vulkan_clean_parameter_gen_header",
     ":vulkan_gen_parameter_validation_cpp",
   ]
   public_configs = [ ":vulkan_parameter_validation_config" ]
+}
+
+source_set("vulkan_gen_object_tracker") {
+  deps = [
+    ":vulkan_clean_tracker_gen_header",
+    ":vulkan_gen_object_tracker_cpp",
+  ]
 }
 
 foreach(layer_info, layers) {
