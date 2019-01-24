@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a4fbb923_3b2dc799",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-01-24T03:49:38Z",
+      "side": 1,
+      "message": "Forgive my ignorance.  If I move this line to Display::initDisplayExtensions, does that enable the extension for all back-ends?",
+      "parentUuid": "b3a99061_5ecd283a",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 182,
+        "endChar": 37
+      },
+      "revId": "9693ee1b009ccfe3b74c30b601bc7770725dccb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8670ea1d_127bc27e",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "9693ee1b009ccfe3b74c30b601bc7770725dccb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de1a341b_0bfcc6d3",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-01-24T03:49:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8670ea1d_127bc27e",
+      "range": {
+        "startLine": 227,
+        "startChar": 6,
+        "endLine": 227,
+        "endChar": 34
+      },
+      "revId": "9693ee1b009ccfe3b74c30b601bc7770725dccb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
