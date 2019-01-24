@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "729b7c29_ea6b8669",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-01-24T23:53:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7caeac17_2f33d7ee",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 182,
+        "endChar": 37
+      },
+      "revId": "9693ee1b009ccfe3b74c30b601bc7770725dccb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8670ea1d_127bc27e",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 2
