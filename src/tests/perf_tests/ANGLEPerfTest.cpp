@@ -170,6 +170,7 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
     : mName(name),
       mSuffix(suffix),
       mTimer(CreateTimer()),
+      mGPUTimeNs(0),
       mSkipTest(false),
       mStepsToRun(std::numeric_limits<unsigned int>::max()),
       mNumStepsPerformed(0),
@@ -225,6 +226,7 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime)
     mNumStepsPerformed = 0;
     mRunning           = true;
     mTimer->start();
+    startTest();
 
     while (mRunning)
     {
@@ -268,21 +270,35 @@ void ANGLEPerfTest::TearDown() {}
 
 void ANGLEPerfTest::printResults()
 {
-    double elapsedTimeSeconds = mTimer->getElapsedTime();
+    double elapsedTimeSeconds[2] = {
+        mTimer->getElapsedTime(),
+        mGPUTimeNs * 1e-9,
+    };
 
-    double secondsPerStep      = elapsedTimeSeconds / static_cast<double>(mNumStepsPerformed);
-    double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
+    const char *clockNames[2] = {
+        "wall_time",
+        "gpu_time",
+    };
 
-    // Give the result a different name to ensure separate graphs if we transition.
-    if (secondsPerIteration > 1e-3)
+    // If measured gpu time is non-zero, print that too.
+    size_t clocksToOutput = mGPUTimeNs > 0 ? 2 : 1;
+
+    for (size_t i = 0; i < clocksToOutput; ++i)
     {
-        double microSecondsPerIteration = secondsPerIteration * kMicroSecondsPerSecond;
-        printResult("wall_time", microSecondsPerIteration, "us", true);
-    }
-    else
-    {
-        double nanoSecPerIteration = secondsPerIteration * kNanoSecondsPerSecond;
-        printResult("wall_time", nanoSecPerIteration, "ns", true);
+        double secondsPerStep = elapsedTimeSeconds[i] / static_cast<double>(mNumStepsPerformed);
+        double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
+
+        // Give the result a different name to ensure separate graphs if we transition.
+        if (secondsPerIteration > 1e-3)
+        {
+            double microSecondsPerIteration = secondsPerIteration * kMicroSecondsPerSecond;
+            printResult(clockNames[i], microSecondsPerIteration, "us", true);
+        }
+        else
+        {
+            double nanoSecPerIteration = secondsPerIteration * kNanoSecondsPerSecond;
+            printResult(clockNames[i], nanoSecPerIteration, "ns", true);
+        }
     }
 }
 
@@ -505,8 +521,41 @@ void ANGLERenderTest::step()
     }
 }
 
+void ANGLERenderTest::startGpuTimer()
+{
+    if (mTestParams.trackGpuTime)
+    {
+        glBeginQueryEXT(GL_TIME_ELAPSED_EXT, mTimestampQuery);
+    }
+}
+
+void ANGLERenderTest::stopGpuTimer()
+{
+    if (mTestParams.trackGpuTime)
+    {
+        glEndQueryEXT(GL_TIME_ELAPSED_EXT);
+        uint64_t gpuTimeNs = 0;
+        glGetQueryObjectui64vEXT(mTimestampQuery, GL_QUERY_RESULT_EXT, &gpuTimeNs);
+
+        mGPUTimeNs += gpuTimeNs;
+    }
+}
+
+void ANGLERenderTest::startTest()
+{
+    if (mTestParams.trackGpuTime)
+    {
+        glGenQueriesEXT(1, &mTimestampQuery);
+        mGPUTimeNs = 0;
+    }
+}
+
 void ANGLERenderTest::finishTest()
 {
+    if (mTestParams.trackGpuTime)
+    {
+        glDeleteQueriesEXT(1, &mTimestampQuery);
+    }
     if (mTestParams.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
     {
         glFinish();
