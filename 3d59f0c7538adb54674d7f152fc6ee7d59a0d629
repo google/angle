@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32346b99_6770dc3b",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "nit: don\u0027t need (c)\n\nsee https://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md#comments",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5cfe5def_1d5a850f",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "Did you try running the test? Right now it won\u0027t run because you didn\u0027t specify any configs params. See the ANGLE_INSTANTIATE_TEST line in EGLDebugTest.cpp for an example of how to specify configs.\n\nI\u0027d recommend using EGLTest as a base class instead of ANGLETest. You want to create the EGL resources yourself so the ANGLETest EGL setup is not helpful. See EGLQueryContextTest.cpp for an example of how to use EGLTest. You will need to specify:\n\nclass EGLRecordableTest : public EGLTest, public testing::WithParamInterface\u003cPlatformParameters\u003e\n\nYour actual test logic won\u0027t have to change much.",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 24
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99f96296_3bab0865",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "ASSERT_NE",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 15
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "986c8a41_9a731c2b",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "nit: ASSERT_EQ(expected, actual)",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 15
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f8c8261_6b17feb8",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "nit: EGLConfig",
+      "range": {
+        "startLine": 64,
+        "startChar": 9,
+        "endLine": 64,
+        "endChar": 14
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ce7aeae_0f4e0067",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "nit: ASSERT_EGL_FALSE",
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c42af56_8dff615d",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T18:27:55Z",
+      "side": 1,
+      "message": "nit: ASSERT_EGL_TRUE\n\nAlso can you add ASSERT_EGL_SUCCESS as well?",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 15
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
