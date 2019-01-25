@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "0e7374c4_966bd7b5",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T19:50:48Z",
+      "side": 1,
+      "message": "You call this \"hasPendingWork\" in another method. Can you also make this a helper to the tune of \"hasPendingWork\"?",
+      "parentUuid": "e46f6a01_f5a45117",
+      "range": {
+        "startLine": 80,
+        "startChar": 46,
+        "endLine": 81,
+        "endChar": 25
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "96550f3d_d1da65e3",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 5
@@ -178,6 +202,30 @@
       "side": 1,
       "message": "The only option to satisfy these, that I can think of, is what I had written in a comment above:\n\n\u003e We could test the event in a loop with a sleep, ...\n\nThis means we could **potentially** return earlier than when the fence is signaled (and can also implement the wait-forever behavior). However, I\u0027m not exactly sure that\u0027s a good approach either. We obviously don\u0027t want to busy wait, and sleep has wildly different precision on different platforms. So far, angle has avoided creating a cross-platform sleep, I\u0027m guessing for that reason.\n\nI also don\u0027t know if any application would really need to have the CPU wakeup while the GPU is in the middle of the submission work vs the end. I\u0027d be interested to know what would be the use case there.\n\nAll that said, I\u0027m open to suggestions.",
       "parentUuid": "96550f3d_d1da65e3",
+      "range": {
+        "startLine": 87,
+        "startChar": 19,
+        "endLine": 87,
+        "endChar": 82
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d08204bc_6f29128d",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T19:50:48Z",
+      "side": 1,
+      "message": "The GLES wording is pretty clear: \n\n\"commands waiting on that sync object may not be unblocked until some time after the fence command completes.\"\n\nMy suggestion: don\u0027t worry about waking up before the fence. If it\u0027s not in the spec it\u0027s a suggestion that implementations don\u0027t do this and applications don\u0027t require it.",
+      "parentUuid": "c1d7dde2_fdbfea4d",
       "range": {
         "startLine": 87,
         "startChar": 19,
