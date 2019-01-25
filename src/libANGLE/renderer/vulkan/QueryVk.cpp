@@ -143,6 +143,8 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     }
     ANGLE_VK_TRY(contextVk, result);
 
+    double timestampPeriod = renderer->getPhysicalDeviceProperties().limits.timestampPeriod;
+
     // Fix up the results to what OpenGL expects.
     switch (getType())
     {
@@ -152,6 +154,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
             mCachedResult = !!mCachedResult;
             break;
         case gl::QueryType::Timestamp:
+            mCachedResult = static_cast<uint64_t>(mCachedResult * timestampPeriod);
             break;
         case gl::QueryType::TimeElapsed:
         {
@@ -166,6 +169,8 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
             ANGLE_VK_TRY(contextVk, result);
 
             mCachedResult = timeElapsedEnd - mCachedResult;
+            mCachedResult = static_cast<uint64_t>(mCachedResult * timestampPeriod);
+
             break;
         }
         default:

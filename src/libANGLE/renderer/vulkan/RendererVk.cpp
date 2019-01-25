@@ -1636,6 +1636,10 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
 
     timestampQueryPool.get().freeQuery(context, &timestampQuery);
 
+    // Convert results to nanoseconds.
+    *timestampOut = static_cast<uint64_t>(
+        *timestampOut * static_cast<double>(mPhysicalDeviceProperties.limits.timestampPeriod));
+
     return angle::Result::Continue;
 }
 
