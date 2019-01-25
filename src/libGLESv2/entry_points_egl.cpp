@@ -771,12 +771,35 @@ EGLSurface EGLAPIENTRY EGL_CreatePbufferFromClientBuffer(EGLDisplay dpy,
 
 EGLBoolean EGLAPIENTRY EGL_ReleaseThread(void)
 {
-    // Explicitly no global mutex lock because eglReleaseThread forwards its implementation to
-    // eglMakeCurrent
+    ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT("()");
     Thread *thread = egl::GetCurrentThread();
 
-    EGL_MakeCurrent(EGL_NO_DISPLAY, EGL_NO_CONTEXT, EGL_NO_SURFACE, EGL_NO_SURFACE);
+    Surface *previousDraw         = thread->getCurrentDrawSurface();
+    Surface *previousRead         = thread->getCurrentReadSurface();
+    gl::Context *previousContext  = thread->getContext();
+    egl::Display *previousDisplay = thread->getCurrentDisplay();
+
+    // Only call makeCurrent if the context or surfaces have changed.
+    if (previousDraw != EGL_NO_SURFACE || previousRead != EGL_NO_SURFACE ||
+        previousContext != EGL_NO_CONTEXT)
+    {
+        // Release the surface from the previously-current context, to allow
+        // destroyed surfaces to delete themselves.
+        if (previousContext != nullptr && previousDisplay != EGL_NO_DISPLAY)
+        {
+            ANGLE_EGL_TRY_RETURN(thread, previousContext->releaseSurface(previousDisplay),
+                                 "eglReleaseThread", nullptr, EGL_FALSE);
+        }
+
+        if (previousDisplay != EGL_NO_DISPLAY)
+        {
+            ANGLE_EGL_TRY_RETURN(thread, previousDisplay->makeCurrent(nullptr, nullptr, nullptr),
+                                 "eglReleaseThread", nullptr, EGL_FALSE);
+        }
+
+        SetContextCurrent(thread, nullptr);
+    }
 
     thread->setSuccess();
     return EGL_TRUE;
