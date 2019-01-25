@@ -282,7 +282,7 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
     mHasRobustness = functionsGL->getGraphicsResetStatus != nullptr;
     if (mHasWGLCreateContextRobustness != mHasRobustness)
     {
-        WARN() << "WGL_ARB_create_context_robustness exists but unable to OpenGL context with "
+        WARN() << "WGL_ARB_create_context_robustness exists but unable to create a context with "
                   "robustness.";
     }
 
@@ -885,7 +885,7 @@ HGLRC DisplayWGL::createContextAttribs(const gl::Version &version,
 
 egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererWGL> *outRenderer)
 {
-    HGLRC context = nullptr;
+    HGLRC context       = nullptr;
     HGLRC sharedContext = nullptr;
     std::vector<int> workerContextAttribs;
 

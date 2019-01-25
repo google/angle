@@ -763,9 +763,19 @@ TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
     EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 1);
 }
 
+class VertexAttributeOORTest : public VertexAttributeTest
+{
+  public:
+    VertexAttributeOORTest()
+    {
+        setWebGLCompatibilityEnabled(true);
+        setRobustAccess(false);
+    }
+};
+
 // Verify that drawing with a large out-of-range offset generates INVALID_OPERATION.
-// Requires an ANGLE or similar implementation that checks buffer bounds.
-TEST_P(VertexAttributeTest, ANGLEDrawArraysBufferTooSmall)
+// Requires WebGL compatibility with robust access behaviour disabled.
+TEST_P(VertexAttributeOORTest, ANGLEDrawArraysBufferTooSmall)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
     ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
@@ -783,8 +793,8 @@ TEST_P(VertexAttributeTest, ANGLEDrawArraysBufferTooSmall)
 }
 
 // Verify that index draw with an out-of-range offset generates INVALID_OPERATION.
-// Requires an ANGLE or similar implementation that checks buffer bounds.
-TEST_P(VertexAttributeTest, ANGLEDrawElementsBufferTooSmall)
+// Requires WebGL compatibility with robust access behaviour disabled.
+TEST_P(VertexAttributeOORTest, ANGLEDrawElementsBufferTooSmall)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
     ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
@@ -801,7 +811,9 @@ TEST_P(VertexAttributeTest, ANGLEDrawElementsBufferTooSmall)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-TEST_P(VertexAttributeTest, ANGLEDrawArraysOutOfBoundsCases)
+// Verify that DrawArarys with an out-of-range offset generates INVALID_OPERATION.
+// Requires WebGL compatibility with robust access behaviour disabled.
+TEST_P(VertexAttributeOORTest, ANGLEDrawArraysOutOfBoundsCases)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
     ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
@@ -1975,6 +1987,13 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
+                       ES2_VULKAN());
+
+ANGLE_INSTANTIATE_TEST(VertexAttributeOORTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
                        ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

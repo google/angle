@@ -63,7 +63,7 @@ class VertexArrayState final : angle::NonCopyable
         return mVertexAttributes[attribIndex].bindingIndex;
     }
 
-    void setAttribBinding(size_t attribIndex, GLuint newBindingIndex);
+    void setAttribBinding(const Context *context, size_t attribIndex, GLuint newBindingIndex);
 
     // Extra validation performed on the Vertex Array.
     bool hasEnabledNullPointerClientArray() const;
@@ -294,7 +294,7 @@ class VertexArray final : public angle::ObserverInterface,
                               angle::SubjectIndex index);
 
     // These are used to optimize draw call validation.
-    void updateCachedBufferBindingSize(VertexBinding *binding);
+    void updateCachedBufferBindingSize(const Context *context, VertexBinding *binding);
     void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
     void updateCachedMappedArrayBuffers(VertexBinding *binding);
 

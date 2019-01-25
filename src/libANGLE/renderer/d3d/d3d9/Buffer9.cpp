@@ -59,7 +59,14 @@ angle::Result Buffer9::setData(const gl::Context *context,
 
 angle::Result Buffer9::getData(const gl::Context *context, const uint8_t **outData)
 {
-    *outData = mMemory.data();
+    if (mMemory.empty())
+    {
+        *outData = nullptr;
+    }
+    else
+    {
+        *outData = mMemory.data();
+    }
     return angle::Result::Continue;
 }
 

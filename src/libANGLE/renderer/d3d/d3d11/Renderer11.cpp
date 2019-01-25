@@ -689,7 +689,11 @@ egl::Error Renderer11::initialize()
         if (SUCCEEDED(result))
         {
             D3D11_MESSAGE_ID hideMessages[] = {
-                D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET};
+                D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET,
+
+                // Robust access behaviour makes out of bounds messages safe
+                D3D11_MESSAGE_ID_DEVICE_DRAW_VERTEX_BUFFER_TOO_SMALL,
+            };
 
             D3D11_INFO_QUEUE_FILTER filter = {};
             filter.DenyList.NumIDs         = static_cast<unsigned int>(ArraySize(hideMessages));

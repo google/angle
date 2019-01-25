@@ -1047,6 +1047,11 @@ angle::Result Buffer11::NativeStorage::copyFromStorage(const gl::Context *contex
         clampedSize = std::min(clampedSize, mBufferSize - destOffset);
     }
 
+    if (clampedSize == 0)
+    {
+        return angle::Result::Continue;
+    }
+
     if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
         source->getUsage() == BUFFER_USAGE_SYSTEM_MEMORY)
     {
@@ -1087,6 +1092,13 @@ angle::Result Buffer11::NativeStorage::resize(const gl::Context *context,
                                               size_t size,
                                               bool preserveData)
 {
+    if (size == 0)
+    {
+        mBuffer.reset();
+        mBufferSize = 0;
+        return angle::Result::Continue;
+    }
+
     D3D11_BUFFER_DESC bufferDesc;
     FillBufferDesc(&bufferDesc, mRenderer, mUsage, static_cast<unsigned int>(size));
 

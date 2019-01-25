@@ -345,7 +345,11 @@ angle::Result VertexDataManager::StoreStaticAttrib(const gl::Context *context,
     const int offset          = static_cast<int>(ComputeVertexAttributeOffset(attrib, binding));
 
     ANGLE_TRY(bufferD3D->getData(context, &sourceData));
-    sourceData += offset;
+
+    if (sourceData)
+    {
+        sourceData += offset;
+    }
 
     unsigned int streamOffset = 0;
 
@@ -363,8 +367,11 @@ angle::Result VertexDataManager::StoreStaticAttrib(const gl::Context *context,
             ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize()));
         int startIndex = offset / static_cast<int>(ComputeVertexAttributeStride(attrib, binding));
 
-        ANGLE_TRY(staticBuffer->storeStaticAttribute(context, attrib, binding, -startIndex,
-                                                     totalCount, 0, sourceData));
+        if (totalCount > 0)
+        {
+            ANGLE_TRY(staticBuffer->storeStaticAttribute(context, attrib, binding, -startIndex,
+                                                         totalCount, 0, sourceData));
+        }
     }
 
     unsigned int firstElementOffset =

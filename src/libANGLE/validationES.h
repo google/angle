@@ -697,6 +697,11 @@ ANGLE_INLINE bool ValidateDrawAttribs(Context *context, int64_t maxVertex)
 
 ANGLE_INLINE bool ValidateDrawArraysAttribs(Context *context, GLint first, GLsizei count)
 {
+    if (!context->isBufferAccessValidationEnabled())
+    {
+        return true;
+    }
+
     // Check the computation of maxVertex doesn't overflow.
     // - first < 0 has been checked as an error condition.
     // - if count <= 0, skip validating no-op draw calls.
@@ -715,6 +720,11 @@ ANGLE_INLINE bool ValidateDrawArraysAttribs(Context *context, GLint first, GLsiz
 
 ANGLE_INLINE bool ValidateDrawInstancedAttribs(Context *context, GLint primcount)
 {
+    if (!context->isBufferAccessValidationEnabled())
+    {
+        return true;
+    }
+
     if ((primcount - 1) > context->getStateCache().getInstancedVertexElementLimit())
     {
         RecordDrawAttribsError(context);
@@ -897,7 +907,7 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(Context *context,
         }
     }
 
-    if (!context->getExtensions().robustBufferAccessBehavior && primcount > 0)
+    if (context->isBufferAccessValidationEnabled() && primcount > 0)
     {
         // Use the parameter buffer to retrieve and cache the index range.
         IndexRange indexRange{IndexRange::Undefined()};

@@ -327,6 +327,244 @@ TEST_P(RobustBufferAccessBehaviorTest, NoBufferData)
     ASSERT_GL_NO_ERROR();
 }
 
+constexpr char kWebGLVS[] = R"(attribute vec2 position;
+attribute vec4 aOne;
+attribute vec4 aTwo;
+varying vec4 v;
+uniform vec2 comparison;
+
+bool isRobust(vec4 value) {
+    // The valid buffer range is filled with this value.
+    if (value.xy == comparison)
+        return true;
+    // Checking the w value is a bit complex.
+    return (value.xyz == vec3(0, 0, 0));
+}
+
+void main() {
+    gl_Position = vec4(position, 0, 1);
+    if (isRobust(aOne) && isRobust(aTwo)) {
+        v = vec4(0, 1, 0, 1);
+    } else {
+        v = vec4(1, 0, 0, 1);
+    }
+})";
+
+constexpr char kWebGLFS[] = R"(precision mediump float;
+varying vec4 v;
+void main() {
+    gl_FragColor = v;
+})";
+
+// Test buffer with interleaved (3+2) float vectors. Adapted from WebGL test
+// conformance/rendering/draw-arrays-out-of-bounds.html
+TEST_P(RobustBufferAccessBehaviorTest, InterleavedAttributes)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    ANGLE_GL_PROGRAM(program, kWebGLVS, kWebGLFS);
+    glUseProgram(program);
+
+    constexpr GLint kPosLoc = 0;
+    constexpr GLint kOneLoc = 1;
+    constexpr GLint kTwoLoc = 2;
+
+    ASSERT_EQ(kPosLoc, glGetAttribLocation(program, "position"));
+    ASSERT_EQ(kOneLoc, glGetAttribLocation(program, "aOne"));
+    ASSERT_EQ(kTwoLoc, glGetAttribLocation(program, "aTwo"));
+
+    // Create a buffer of 200 valid sets of quad lists.
+    constexpr size_t kNumQuads = 200;
+    using QuadVerts            = std::array<Vector3, 6>;
+    std::vector<QuadVerts> quadVerts(kNumQuads, GetQuadVertices());
+
+    GLBuffer positionBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuf);
+    glBufferData(GL_ARRAY_BUFFER, kNumQuads * sizeof(QuadVerts), quadVerts.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(kPosLoc);
+
+    constexpr GLfloat kDefaultFloat = 0.2f;
+    std::vector<Vector4> defaultFloats(kNumQuads * 2, Vector4(kDefaultFloat));
+
+    GLBuffer vbo;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    // enough for 9 vertices, so 3 triangles
+    glBufferData(GL_ARRAY_BUFFER, 9 * 5 * sizeof(GLfloat), defaultFloats.data(), GL_STATIC_DRAW);
+
+    // bind first 3 elements, with a stride of 5 float elements
+    glVertexAttribPointer(kOneLoc, 3, GL_FLOAT, GL_FALSE, 5 * 4, 0);
+    // bind 2 elements, starting after the first 3; same stride of 5 float elements
+    glVertexAttribPointer(kTwoLoc, 2, GL_FLOAT, GL_FALSE, 5 * 4,
+                          reinterpret_cast<const GLvoid *>(3 * 4));
+
+    glEnableVertexAttribArray(kOneLoc);
+    glEnableVertexAttribArray(kTwoLoc);
+
+    // set test uniform
+    GLint uniLoc = glGetUniformLocation(program, "comparison");
+    ASSERT_NE(-1, uniLoc);
+    glUniform2f(uniLoc, kDefaultFloat, kDefaultFloat);
+
+    // Draw out of bounds.
+    glDrawArrays(GL_TRIANGLES, 0, 10000);
+    GLenum err = glGetError();
+    if (err == GL_NO_ERROR)
+    {
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+    else
+    {
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, err);
+    }
+
+    glDrawArrays(GL_TRIANGLES, (kNumQuads - 1) * 6, 6);
+    err = glGetError();
+    if (err == GL_NO_ERROR)
+    {
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+    else
+    {
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, err);
+    }
+}
+
+// Tests redefining an empty buffer. Adapted from WebGL test
+// conformance/rendering/draw-arrays-out-of-bounds.html
+TEST_P(RobustBufferAccessBehaviorTest, EmptyBuffer)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    // AMD GL does not support robustness. http://anglebug.com/3099
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    ANGLE_GL_PROGRAM(program, kWebGLVS, kWebGLFS);
+    glUseProgram(program);
+
+    constexpr GLint kPosLoc = 0;
+    constexpr GLint kOneLoc = 1;
+    constexpr GLint kTwoLoc = 2;
+
+    ASSERT_EQ(kPosLoc, glGetAttribLocation(program, "position"));
+    ASSERT_EQ(kOneLoc, glGetAttribLocation(program, "aOne"));
+    ASSERT_EQ(kTwoLoc, glGetAttribLocation(program, "aTwo"));
+
+    // Create a buffer of 200 valid sets of quad lists.
+    constexpr size_t kNumQuads = 200;
+    using QuadVerts            = std::array<Vector3, 6>;
+    std::vector<QuadVerts> quadVerts(kNumQuads, GetQuadVertices());
+
+    GLBuffer positionBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuf);
+    glBufferData(GL_ARRAY_BUFFER, kNumQuads * sizeof(QuadVerts), quadVerts.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(kPosLoc);
+
+    // set test uniform
+    GLint uniLoc = glGetUniformLocation(program, "comparison");
+    ASSERT_NE(-1, uniLoc);
+    glUniform2f(uniLoc, 0, 0);
+
+    // Define empty buffer.
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+    glVertexAttribPointer(kOneLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(kOneLoc);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    GLenum err = glGetError();
+    if (err == GL_NO_ERROR)
+    {
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+    else
+    {
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, err);
+    }
+
+    // Redefine buffer with 3 float vectors.
+    constexpr GLfloat kFloats[] = {0, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kFloats), kFloats, GL_STATIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests robust buffer access with dynamic buffer usage.
+TEST_P(RobustBufferAccessBehaviorTest, DynamicBuffer)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    ANGLE_GL_PROGRAM(program, kWebGLVS, kWebGLFS);
+    glUseProgram(program);
+
+    constexpr GLint kPosLoc = 0;
+    constexpr GLint kOneLoc = 1;
+    constexpr GLint kTwoLoc = 2;
+
+    ASSERT_EQ(kPosLoc, glGetAttribLocation(program, "position"));
+    ASSERT_EQ(kOneLoc, glGetAttribLocation(program, "aOne"));
+    ASSERT_EQ(kTwoLoc, glGetAttribLocation(program, "aTwo"));
+
+    // Create a buffer of 200 valid sets of quad lists.
+    constexpr size_t kNumQuads = 200;
+    using QuadVerts            = std::array<Vector3, 6>;
+    std::vector<QuadVerts> quadVerts(kNumQuads, GetQuadVertices());
+
+    GLBuffer positionBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuf);
+    glBufferData(GL_ARRAY_BUFFER, kNumQuads * sizeof(QuadVerts), quadVerts.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(kPosLoc);
+
+    constexpr GLfloat kDefaultFloat = 0.2f;
+    std::vector<Vector4> defaultFloats(kNumQuads * 2, Vector4(kDefaultFloat));
+
+    GLBuffer vbo;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    // enough for 9 vertices, so 3 triangles
+    glBufferData(GL_ARRAY_BUFFER, 9 * 5 * sizeof(GLfloat), defaultFloats.data(), GL_DYNAMIC_DRAW);
+
+    // bind first 3 elements, with a stride of 5 float elements
+    glVertexAttribPointer(kOneLoc, 3, GL_FLOAT, GL_FALSE, 5 * 4, 0);
+    // bind 2 elements, starting after the first 3; same stride of 5 float elements
+    glVertexAttribPointer(kTwoLoc, 2, GL_FLOAT, GL_FALSE, 5 * 4,
+                          reinterpret_cast<const GLvoid *>(3 * 4));
+
+    glEnableVertexAttribArray(kOneLoc);
+    glEnableVertexAttribArray(kTwoLoc);
+
+    // set test uniform
+    GLint uniLoc = glGetUniformLocation(program, "comparison");
+    ASSERT_NE(-1, uniLoc);
+    glUniform2f(uniLoc, kDefaultFloat, kDefaultFloat);
+
+    // Draw out of bounds.
+    glDrawArrays(GL_TRIANGLES, 0, 10000);
+    GLenum err = glGetError();
+    if (err == GL_NO_ERROR)
+    {
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+    else
+    {
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, err);
+    }
+
+    glDrawArrays(GL_TRIANGLES, (kNumQuads - 1) * 6, 6);
+    err = glGetError();
+    if (err == GL_NO_ERROR)
+    {
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+    else
+    {
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, err);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        ES2_D3D9(),
                        ES2_D3D11_FL9_3(),

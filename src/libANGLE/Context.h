@@ -238,6 +238,7 @@ class StateCache final : angle::NonCopyable
     // Cache update functions.
     void updateActiveAttribsMask(Context *context);
     void updateVertexElementLimits(Context *context);
+    void updateVertexElementLimitsImpl(Context *context);
     void updateValidDrawModes(Context *context);
     void updateValidBindTextureTypes(Context *context);
     void updateValidDrawElementsTypes(Context *context);
@@ -1805,6 +1806,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void onSamplerUniformChange(size_t textureUnitIndex);
 
+    bool isBufferAccessValidationEnabled() const { return mBufferAccessValidationEnabled; }
+
   private:
     void initialize();
 
@@ -1913,6 +1916,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::Surface *mCurrentSurface;
     egl::Display *mCurrentDisplay;
     const bool mWebGLContext;
+    bool mBufferAccessValidationEnabled;
     const bool mExtensionsEnabled;
     MemoryProgramCache *mMemoryProgramCache;
 

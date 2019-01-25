@@ -306,6 +306,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mCurrentSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
       mCurrentDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
       mWebGLContext(GetWebGLContext(attribs)),
+      mBufferAccessValidationEnabled(false),
       mExtensionsEnabled(GetExtensionsEnabled(attribs, mWebGLContext)),
       mMemoryProgramCache(memoryProgramCache),
       mVertexArrayObserverBinding(this, kVertexArraySubjectIndex),
@@ -3433,6 +3434,13 @@ void Context::updateCaps()
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS, robustInit);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT, robustInit);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT, robustInit);
+
+    // We need to validate buffer bounds if we are in a WebGL or robust access context and the
+    // back-end does not support robust buffer access behaviour.
+    if (!mSupportedExtensions.robustBufferAccessBehavior && (mState.isWebGL() || mRobustAccess))
+    {
+        mBufferAccessValidationEnabled = true;
+    }
 
     // Reinitialize state cache after extension changes.
     mStateCache.initialize(this);
@@ -8097,6 +8105,14 @@ StateCache::StateCache()
 
 StateCache::~StateCache() = default;
 
+ANGLE_INLINE void StateCache::updateVertexElementLimits(Context *context)
+{
+    if (context->isBufferAccessValidationEnabled())
+    {
+        updateVertexElementLimitsImpl(context);
+    }
+}
+
 void StateCache::initialize(Context *context)
 {
     updateValidDrawModes(context);
@@ -8136,8 +8152,10 @@ void StateCache::updateActiveAttribsMask(Context *context)
     mCachedHasAnyEnabledClientAttrib = (clientAttribs & enabledAttribs).any();
 }
 
-void StateCache::updateVertexElementLimits(Context *context)
+void StateCache::updateVertexElementLimitsImpl(Context *context)
 {
+    ASSERT(context->isBufferAccessValidationEnabled());
+
     const VertexArray *vao = context->getState().getVertexArray();
 
     mCachedNonInstancedVertexElementLimit = std::numeric_limits<GLint64>::max();

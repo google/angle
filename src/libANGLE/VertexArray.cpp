@@ -86,7 +86,9 @@ AttributesMask VertexArrayState::getBindingToAttributesMask(GLuint bindingIndex)
 }
 
 // Set an attribute using a new binding.
-void VertexArrayState::setAttribBinding(size_t attribIndex, GLuint newBindingIndex)
+void VertexArrayState::setAttribBinding(const Context *context,
+                                        size_t attribIndex,
+                                        GLuint newBindingIndex)
 {
     ASSERT(attribIndex < MAX_VERTEX_ATTRIBS && newBindingIndex < MAX_VERTEX_ATTRIB_BINDINGS);
 
@@ -107,7 +109,11 @@ void VertexArrayState::setAttribBinding(size_t attribIndex, GLuint newBindingInd
 
     // Set the attribute using the new binding.
     attrib.bindingIndex = newBindingIndex;
-    attrib.updateCachedElementLimit(newBinding);
+
+    if (context->isBufferAccessValidationEnabled())
+    {
+        attrib.updateCachedElementLimit(newBinding);
+    }
 
     bool isMapped = newBinding.getBuffer().get() && newBinding.getBuffer()->isMapped();
     mCachedMappedArrayBuffers.set(attribIndex, isMapped);
@@ -212,8 +218,12 @@ ANGLE_INLINE void VertexArray::setDirtyBindingBit(size_t bindingIndex,
     mDirtyBindingBits[bindingIndex].set(dirtyBindingBit);
 }
 
-ANGLE_INLINE void VertexArray::updateCachedBufferBindingSize(VertexBinding *binding)
+ANGLE_INLINE void VertexArray::updateCachedBufferBindingSize(const Context *context,
+                                                             VertexBinding *binding)
 {
+    if (!context->isBufferAccessValidationEnabled())
+        return;
+
     for (size_t boundAttribute : binding->getBoundAttributesMask())
     {
         mState.mVertexAttributes[boundAttribute].updateCachedElementLimit(*binding);
@@ -259,7 +269,7 @@ void VertexArray::bindVertexBufferImpl(const Context *context,
     binding->setStride(stride);
 
     updateObserverBinding(bindingIndex);
-    updateCachedBufferBindingSize(binding);
+    updateCachedBufferBindingSize(context, binding);
     updateCachedTransformFeedbackBindingValidation(bindingIndex, boundBuffer);
     updateCachedMappedArrayBuffers(binding);
 
@@ -295,7 +305,7 @@ void VertexArray::setVertexAttribBinding(const Context *context,
         // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
         ASSERT(context->getClientVersion() >= ES_3_1);
 
-        mState.setAttribBinding(attribIndex, bindingIndex);
+        mState.setAttribBinding(context, attribIndex, bindingIndex);
 
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
 
@@ -501,7 +511,7 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
         case angle::SubjectMessage::STORAGE_CHANGED:
             if (!IsElementArrayBufferSubjectIndex(index))
             {
-                updateCachedBufferBindingSize(&mState.mVertexBindings[index]);
+                updateCachedBufferBindingSize(context, &mState.mVertexBindings[index]);
             }
             setDependentDirtyBit(context, false, index);
             break;
