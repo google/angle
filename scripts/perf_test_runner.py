@@ -18,8 +18,8 @@ import re
 
 base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
-# Might have to add lower case "release" in some configurations.
-perftests_paths = glob.glob('out/*Release*')
+# Look for a [Rr]elease build.
+perftests_paths = glob.glob('out/*elease*')
 metric = 'wall_time'
 max_experiments = 10
 

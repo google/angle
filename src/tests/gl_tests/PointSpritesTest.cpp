@@ -44,7 +44,7 @@ class PointSpritesTest : public ANGLETest
 
     float s2p(float s) { return (s + 1.0f) * 0.5f * (GLfloat)windowWidth; }
 
-    void testPointCoordAndPointSizeCompliance(priv::GLProgram program)
+    void testPointCoordAndPointSizeCompliance(GLProgram program)
     {
         glUseProgram(program);
 

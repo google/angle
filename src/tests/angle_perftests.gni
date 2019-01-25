@@ -25,6 +25,7 @@ angle_perf_tests_sources = [
   "perf_tests/TextureSampling.cpp",
   "perf_tests/TexturesPerf.cpp",
   "perf_tests/UniformsPerf.cpp",
+  "perf_tests/VulkanBarriersPerf.cpp",
   "perf_tests/third_party/perf/perf_test.cc",
   "perf_tests/third_party/perf/perf_test.h",
   "test_utils/angle_test_configs.cpp",
