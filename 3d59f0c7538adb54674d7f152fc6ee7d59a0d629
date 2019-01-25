@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f3456ca3_09f1a622",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T23:59:32Z",
+      "side": 1,
+      "message": "If you clean it up, maybe try using a regex or other filter. But it\u0027s very low priority. Don\u0027t want you to spent a ton of time on it. :)",
+      "parentUuid": "67f849f4_abb8011c",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cfe5def_1d5a850f",
         "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
         "patchSetId": 5
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "\u003e Did you try running the test?\n\nI don\u0027t know how to run just the test, and I was wanting to push my state last night.\n\nI finally tried running angle_end2eng_tests, but this takes a long time.  How do I just run the new tests that I\u0027m adding?",
       "parentUuid": "5cfe5def_1d5a850f",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 24
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3bd80cf_8b240e91",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-25T23:59:32Z",
+      "side": 1,
+      "message": "Use --gtest_filter\u003d*wildcard*\n\nyou can also use the --help argument on angle_end2end_tests for more info.",
+      "parentUuid": "ea0ca4cc_91c1356d",
       "range": {
         "startLine": 17,
         "startChar": 6,
