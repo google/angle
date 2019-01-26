@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "8639ccab_02f493db",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-01-26T00:54:51Z",
+      "side": 1,
+      "message": "Thanks!  The \"angle_end2end_tests --gtest_filter\u003d*EGLRecordableTest*\" command tries to run just what I\u0027m adding, and I can see output.  I\u0027m not sure I\u0027m interpretting it correctly though.  Here\u0027s some of the output:\n\nC   24.824s Main  [UNKNOWN] EGLRecordableTest.ExtensionAlwaysAvailable/ES2_VULKAN:\nC   24.824s Main  [ RUN      ] EGLRecordableTest.ExtensionAlwaysAvailable/ES2_VULKAN\nC   24.824s Main  ../../third_party/angle/src/tests/test_utils/ANGLETest.cpp:56: Failure\nC   24.824s Main  Failed\nC   24.824s Main  GetAvailableValidationLayers(225): Vulkan validation layers are missing.\nC   24.824s Main  Stack trace:\nC   24.824s Main  \nC   24.824s Main  Entering EGLRecordableTest.ExtensionAlwaysAvailable/ES2_VULKAN\nC   24.824s Main  [  FAILED  ] EGLRecordableTest.ExtensionAlwaysAvailable/ES2_VULKAN, where GetParam() \u003d ES2_VULKAN (50 ms)\nC   24.824s Main  Reading Android symbols from: /home/ianelliott/chromium/src\nC   24.824s Main  Searching for Chrome symbols from within: /home/ianelliott/chromium/src/out/ANGLEDebug/lib.unstripped:/home/ianelliott/chromium/src/out/ANGLEDebug\nC   24.825s Main  Searching for native crashes in: /tmp/tmpmOrzzT\nC   24.825s Main  Unknown Android release, consider passing --packed-lib.\nC   24.825s Main  Searching for Chrome symbols from within: /home/ianelliott/chromium/src/out/ANGLEDebug/lib.unstripped:/home/ianelliott/chromium/src/out/ANGLEDebug\nC   24.825s Main  \nC   24.825s Main  Stack Trace:\nC   24.825s Main    RELADDR   FUNCTION                                                                                                                                                         FILE:LINE\nC   24.825s Main    000000000078fa9b  angle::(anonymous namespace)::TestPlatform_logError(angle::PlatformMethods*, char const*)                                                                        ../../third_party/angle/src/tests/test_utils/ANGLETest.cpp:56:5\nC   24.825s Main    000000000037816b  angle::LoggingAnnotator::logMessage(gl::LogMessage const\u0026) const                                                                                                 ../../third_party/angle/src/libANGLE/LoggingAnnotator.cpp:0:0\nC   24.825s Main    00000000004a38b7  gl::LogMessage::~LogMessage()                                                                                                                                    ../../third_party/angle/src/common/debug.cpp:145:27\nC   24.825s Main    000000000049a7e7  rx::GetAvailableValidationLayers(std::__1::vector\u003cVkLayerProperties, std::__1::allocator\u003cVkLayerProperties\u003e \u003e const\u0026, bool, char const* const**, unsigned int*)  ../../third_party/angle/src/libANGLE/renderer/vulkan/vk_utils.cpp:0:13\nC   24.825s Main    00000000004787f7  rx::RendererVk::initialize(rx::DisplayVk*, egl::Display*, char const*)                                                                                           ../../third_party/angle/src/libANGLE/renderer/vulkan/RendererVk.cpp:624:35\nC   24.825s Main    000000000046baff  rx::DisplayVk::initialize(egl::Display*)                                                                                                                         ../../third_party/angle/src/libANGLE/renderer/vulkan/DisplayVk.cpp:34:39\nC   24.825s Main    000000000049fa2b  rx::DisplayVkAndroid::initialize(egl::Display*)                                                                                                                  ../../third_party/angle/src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp:27:5\nC   24.825s Main    000000000035f3cf  egl::Display::initialize()                                                                                                                                       ../../third_party/angle/src/libANGLE/Display.cpp:476:36\nC   24.825s Main    00000000002c3163  EGL_Initialize                                                                                                                                                   ../../third_party/angle/src/libGLESv2/entry_points_egl.cpp:85:5\nC   24.825s Main    000000000006c94b  EGLWindow::initializeDisplayAndSurface(OSWindow*, angle::Library*)                                                                                               ../../third_party/angle/util/EGLWindow.cpp:241:9\nC   24.825s Main    000000000078f91f  ANGLETestBase::ANGLETestSetUp()                                                                                                                                  ../../third_party/angle/src/tests/test_utils/ANGLETest.cpp:426:26\nC   24.825s Main    0000000000786f3b  angle::EGLRecordableTest::SetUp()                                                                                                                                ../../third_party/angle/src/tests/egl_tests/EGLRecordableTest.cpp:26:20\nC   24.825s Main    00000000007a48e3  testing::Test::Run()                                                                                                                                             ../../third_party/googletest/src/googletest/src/gtest.cc:2517:3\n\n\nAny insight on what\u0027s going on?",
+      "parentUuid": "e3bd80cf_8b240e91",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 24
+      },
+      "revId": "3d59f0c7538adb54674d7f152fc6ee7d59a0d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "99f96296_3bab0865",
         "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
         "patchSetId": 5
