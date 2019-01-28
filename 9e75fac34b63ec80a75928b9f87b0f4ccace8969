@@ -281,6 +281,30 @@
       "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45309b72_1cae0e17",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-01-28T15:28:21Z",
+      "side": 1,
+      "message": "OK. Maybe we should re-enable ES3. Even if it requires some temporary EGL test suppressions.",
+      "parentUuid": "7c1f8e8f_9476e29c",
+      "range": {
+        "startLine": 273,
+        "startChar": 81,
+        "endLine": 273,
+        "endChar": 91
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
