@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f5dbb1be_e937b98b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1368,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "beec75c8_ce43a327",
+      "revId": "9da27a7ea0d94f122091c1824b9324670d4d7cde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbd56c44_bb4d338d",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 7
@@ -39,6 +57,30 @@
       "revId": "9da27a7ea0d94f122091c1824b9324670d4d7cde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d57ab789_d70d0d98",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "How did _that_ happen?!",
+      "parentUuid": "fbd56c44_bb4d338d",
+      "range": {
+        "startLine": 161,
+        "startChar": 5,
+        "endLine": 161,
+        "endChar": 6
+      },
+      "revId": "9da27a7ea0d94f122091c1824b9324670d4d7cde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "83f6122c_cf4fa7d9",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e7374c4_966bd7b5",
+      "range": {
+        "startLine": 80,
+        "startChar": 46,
+        "endLine": 81,
+        "endChar": 25
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96550f3d_d1da65e3",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 5
@@ -238,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "d26aa487_78995919",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d08204bc_6f29128d",
+      "range": {
+        "startLine": 87,
+        "startChar": 19,
+        "endLine": 87,
+        "endChar": 82
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e384b3e_c5aebd79",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 5
@@ -306,6 +354,30 @@
       "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1a4544a_174f578b",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e4a721f3_8934b653",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 77
+      },
+      "revId": "b6a71b504f39da49d41d5ee1019b990c50e52ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {

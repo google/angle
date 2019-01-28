@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1657a893_96274833",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "This is supposed to be the sequence of commands as recorded in the \"command buffer\". I\u0027ll note on the duality.",
+      "parentUuid": "cdd5ac4d_71c28fa6",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 10
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80275712_c2cdd1a6",
         "filename": "/COMMIT_MSG",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2019-01-25T19:50:48Z",
       "side": 1,
       "message": "not quite correct. We can wait on semaphores and pipeline barriers. But VkEvents make sense because barriers can\u0027t wait on stuff that happened earlier. Could also mention that \u0027server wait\u0027 is \u0027glWaitSync\u0027",
+      "range": {
+        "startLine": 36,
+        "startChar": 45,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92291969_d42e536f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Fixed \u0026 Done.",
+      "parentUuid": "80275712_c2cdd1a6",
       "range": {
         "startLine": 36,
         "startChar": 45,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e8225d76_81154afb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78f3144f_8fa55a87",
+      "range": {
+        "startLine": 41,
+        "startChar": 34,
+        "endLine": 41,
+        "endChar": 44
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d70f1303_fb8541c9",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 8
@@ -82,6 +154,30 @@
       "writtenOn": "2019-01-25T19:50:48Z",
       "side": 1,
       "message": "technically this assertion could be violated if fence creation fails.",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 27
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2451ba3_58bfc83e",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "Other classes do the same. As far as I can tell, `onDestroy()` isn\u0027t called if fence creation fails, since the front-end object is never created.",
+      "parentUuid": "d70f1303_fb8541c9",
       "range": {
         "startLine": 26,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ccbddc40_b9b930ce",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "It\u0027s not, you\u0027re right.",
+      "parentUuid": "cf882b24_806e52d5",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 43
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f0ba9d2_f1070771",
         "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
         "patchSetId": 8
@@ -128,6 +248,30 @@
       "writtenOn": "2019-01-25T19:50:48Z",
       "side": 1,
       "message": "does this work? I think Geoff disabled ES3 context creation.",
+      "range": {
+        "startLine": 273,
+        "startChar": 81,
+        "endLine": 273,
+        "endChar": 91
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c1f8e8f_9476e29c",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-28T15:17:40Z",
+      "side": 1,
+      "message": "I added this before Geoff disabled ES3, and it was passing on the bots. When we enable ES3, this shouldn\u0027t cause a problem.",
+      "parentUuid": "6f0ba9d2_f1070771",
       "range": {
         "startLine": 273,
         "startChar": 81,
