@@ -471,6 +471,53 @@ class BufferHelper final : public CommandGraphResource
     VkFlags mCurrentReadAccess;
 };
 
+// Imagine an image going through a few layout transitions:
+//
+//           srcStage 1    dstStage 2          srcStage 2     dstStage 3
+//  Layout 1 ------Transition 1-----> Layout 2 ------Transition 2------> Layout 3
+//           srcAccess 1  dstAccess 2          srcAccess 2   dstAccess 3
+//   \_________________  ___________________/
+//                     \/
+//               A transition
+//
+// Every transition requires 6 pieces of information: from/to layouts, src/dst stage masks and
+// src/dst access masks.  At the moment we decide to transition the image to Layout 2 (i.e.
+// Transition 1), we need to have Layout 1, srcStage 1 and srcAccess 1 stored as history of the
+// image.  To perform the transition, we need to know Layout 2, dstStage 2 and dstAccess 2.
+// Additionally, we need to know srcStage 2 and srcAccess 2 to retain them for the next transition.
+//
+// That is, with the history kept, on every new transition we need 5 pieces of new information:
+// layout/dstStage/dstAccess to transition into the layout, and srcStage/srcAccess for the future
+// transition out from it.  Given the small number of possible combinations of these values, an
+// enum is used were each value encapsulates these 5 pieces of information:
+//
+//                       +--------------------------------+
+//           srcStage 1  | dstStage 2          srcStage 2 |   dstStage 3
+//  Layout 1 ------Transition 1-----> Layout 2 ------Transition 2------> Layout 3
+//           srcAccess 1 |dstAccess 2          srcAccess 2|  dstAccess 3
+//                       +---------------  ---------------+
+//                                       \/
+//                                 One enum value
+//
+// Note that, while generally dstStage for the to-transition and srcStage for the from-transition
+// are the same, they may occasionally be BOTTOM_OF_PIPE and TOP_OF_PIPE respectively.
+enum class ImageLayout
+{
+    Undefined              = 0,
+    PreInitialized         = 1,
+    TransferSrc            = 2,
+    TransferDst            = 3,
+    ComputeShaderReadOnly  = 4,
+    ComputeShaderWrite     = 5,
+    FragmentShaderReadOnly = 6,
+    ColorAttachment        = 7,
+    DepthStencilAttachment = 8,
+    Present                = 9,
+
+    InvalidEnum = 10,
+    EnumCount   = 10,
+};
+
 class ImageHelper final : public CommandGraphResource
 {
   public:
@@ -541,13 +588,7 @@ class ImageHelper final : public CommandGraphResource
     const Format &getFormat() const;
     GLint getSamples() const;
 
-    VkImageLayout getCurrentLayout() const { return mCurrentLayout; }
-
-    void changeLayoutWithStages(VkImageAspectFlags aspectMask,
-                                VkImageLayout newLayout,
-                                VkPipelineStageFlags srcStageMask,
-                                VkPipelineStageFlags dstStageMask,
-                                CommandBuffer *commandBuffer);
+    VkImageLayout getCurrentLayout() const;
 
     void clearColor(const VkClearColorValue &color,
                     uint32_t baseMipLevel,
@@ -624,6 +665,15 @@ class ImageHelper final : public CommandGraphResource
 
     bool hasStagedUpdates() const;
 
+    // changeLayout automatically skips the layout change if it's unnecessary.  This function can be
+    // used to prevent creating a command graph node and subsequently a command buffer for the sole
+    // purpose of performing a transition (which may then not be issued).
+    bool isLayoutChangeNecessary(ImageLayout newLayout);
+
+    void changeLayout(VkImageAspectFlags aspectMask,
+                      ImageLayout newLayout,
+                      CommandBuffer *commandBuffer);
+
   private:
     struct SubresourceUpdate
     {
@@ -675,7 +725,7 @@ class ImageHelper final : public CommandGraphResource
     GLint mSamples;
 
     // Current state.
-    VkImageLayout mCurrentLayout;
+    ImageLayout mCurrentLayout;
 
     // Cached properties.
     uint32_t mLayerCount;

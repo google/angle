@@ -733,24 +733,20 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     pipelineDesc.setScissor(scissor);
 
     // Change source layout outside render pass
-    if (src->getCurrentLayout() != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    if (src->isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
     {
         vk::CommandBuffer *srcLayoutChange;
         ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
-        src->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
-                                    VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                                    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, srcLayoutChange);
+        src->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::FragmentShaderReadOnly,
+                          srcLayoutChange);
     }
 
     // Change destination layout outside render pass as well
     vk::CommandBuffer *destLayoutChange;
     ANGLE_TRY(dest->recordCommands(contextVk, &destLayoutChange));
 
-    dest->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
-                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                 VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, destLayoutChange);
+    dest->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                       destLayoutChange);
 
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(

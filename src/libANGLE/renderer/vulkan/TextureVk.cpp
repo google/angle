@@ -628,9 +628,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
 
     // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
-    mImage->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+    mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc, commandBuffer);
 
     // Allocate enough memory to copy the sourceArea region of the source texture into its pixel
     // buffer.

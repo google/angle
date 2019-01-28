@@ -59,10 +59,8 @@ void RenderTargetVk::onColorDraw(vk::FramebufferHelper *framebufferVk,
     renderPassDesc->packAttachment(mImage->getFormat());
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-    mImage->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
-                                   VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, commandBuffer);
+    mImage->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                         commandBuffer);
 
     // Set up dependencies between the RT resource and the Framebuffer.
     mImage->addWriteDependency(framebufferVk);
@@ -82,9 +80,7 @@ void RenderTargetVk::onDepthStencilDraw(vk::FramebufferHelper *framebufferVk,
     const angle::Format &format    = mImage->getFormat().textureFormat();
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
-    mImage->changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, commandBuffer);
+    mImage->changeLayout(aspectFlags, vk::ImageLayout::DepthStencilAttachment, commandBuffer);
 
     // Set up dependencies between the RT resource and the Framebuffer.
     mImage->addWriteDependency(framebufferVk);
@@ -134,7 +130,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
 }
 
 vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readingResource,
-                                                 VkImageLayout layout,
+                                                 vk::ImageLayout layout,
                                                  vk::CommandBuffer *commandBuffer)
 {
     ASSERT(mImage && mImage->valid());
@@ -142,9 +138,7 @@ vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readi
     // TODO(jmadill): Better simultaneous resource access. http://anglebug.com/2679
     mImage->addWriteDependency(readingResource);
 
-    mImage->changeLayoutWithStages(mImage->getAspectFlags(), layout,
-                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+    mImage->changeLayout(mImage->getAspectFlags(), layout, commandBuffer);
 
     return mImage;
 }

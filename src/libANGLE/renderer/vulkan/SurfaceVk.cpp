@@ -572,15 +572,12 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
         ANGLE_TRY(renderer->finishToSerial(displayVk, mSwapSerials[mCurrentSwapSerialIndex]));
     }
 
-    vk::CommandBuffer *swapCommands = nullptr;
-    ANGLE_TRY(mSwapchainImages[mCurrentSwapchainImageIndex].image.recordCommands(displayVk,
-                                                                                 &swapCommands));
-
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    image.image.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                       VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, swapCommands);
+    vk::CommandBuffer *swapCommands = nullptr;
+    ANGLE_TRY(image.image.recordCommands(displayVk, &swapCommands));
+
+    image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, swapCommands);
 
     ANGLE_TRY(renderer->flush(displayVk));
 
