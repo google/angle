@@ -9,8 +9,7 @@
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 
 // glslang's version of ShaderLang.h, not to be confused with ANGLE's.
-// Our function defs conflict with theirs, but we carefully manage our includes to prevent this.
-#include <ShaderLang.h>
+#include <glslang/Public/ShaderLang.h>
 
 // Other glslang includes.
 #include <SPIRV/GlslangToSpv.h>

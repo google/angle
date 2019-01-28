@@ -1,4 +1,4 @@
-# Copyright 2015 The Chromium Authors. All rights reserved.
+# Copyright 2015 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -28,23 +28,23 @@ if (build_with_chromium) {
 
   config("angle_internal_gtest_config") {
     include_dirs = [
-      "//third_party/googletest/src/googletest",
-      "//third_party/googletest/src/googletest/include",
+      "${angle_googletest_dir}/googletest",
+      "${angle_googletest_dir}/googletest/include",
     ]
   }
 
   angle_static_library("angle_internal_gtest") {
     sources = [
-      "//third_party/googletest/src/googletest/src/gtest-all.cc",
+      "${angle_googletest_dir}/googletest/src/gtest-all.cc",
     ]
     public_configs += [ ":angle_internal_gtest_config" ]
   }
 
   config("angle_internal_gmock_config") {
     include_dirs = [
-      "//third_party/googletest/src/googlemock",
-      "//third_party/googletest/src/googlemock/include",
-      "//third_party/googletest/src/googletest/include",
+      "${angle_googletest_dir}/googlemock",
+      "${angle_googletest_dir}/googlemock/include",
+      "${angle_googletest_dir}/googletest/include",
     ]
     if (is_clang) {
       # TODO: Can remove this if/when the issue is fixed.
@@ -55,7 +55,7 @@ if (build_with_chromium) {
 
   angle_static_library("angle_internal_gmock") {
     sources = [
-      "//third_party/googletest/src/googlemock/src/gmock-all.cc",
+      "${angle_googletest_dir}/googlemock/src/gmock-all.cc",
     ]
     public_configs += [ ":angle_internal_gmock_config" ]
   }
@@ -93,9 +93,9 @@ template("angle_tests_main") {
     testonly = true
     public_deps = googletest_deps
     deps = [
-      angle_root + ":includes",
+      "${angle_root}:includes",
     ]
-    configs += [ angle_root + ":internal_config" ]
+    configs += [ "${angle_root}:internal_config" ]
 
     main = invoker.main
 
@@ -134,10 +134,10 @@ angle_test("angle_unittests") {
   }
 
   deps = googletest_deps + [
-           angle_root + ":libANGLE",
-           angle_root + ":preprocessor",
-           angle_root + ":translator",
-           angle_root + ":libfeature_support${angle_libs_suffix}",
+           "${angle_root}:libANGLE",
+           "${angle_root}:preprocessor",
+           "${angle_root}:translator",
+           "${angle_root}:libfeature_support${angle_libs_suffix}",
            ":angle_unittests_main",
          ]
 }
@@ -166,21 +166,21 @@ if (is_win || is_linux || is_mac || is_android) {
     }
 
     configs += [
-      angle_root + ":libANGLE_config",
-      angle_root + ":library_name_config",
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:library_name_config",
     ]
 
     deps = [
-      angle_root + ":angle_image_util",
-      angle_root + ":angle_util",
-      angle_root + ":angle_util_loader_headers",
       ":angle_end2end_tests_main",
+      "${angle_root}:angle_image_util",
+      "${angle_root}:angle_util",
+      "${angle_root}:angle_util_loader_headers",
     ]
 
     data_deps = [
-      angle_root + ":libEGL${angle_libs_suffix}",
-      angle_root + ":libGLESv1_CM${angle_libs_suffix}",
-      angle_root + ":libGLESv2${angle_libs_suffix}",
+      "${angle_root}:libEGL${angle_libs_suffix}",
+      "${angle_root}:libGLESv1_CM${angle_libs_suffix}",
+      "${angle_root}:libGLESv2${angle_libs_suffix}",
     ]
 
     if (is_android) {
@@ -204,18 +204,18 @@ if (is_win || is_linux || is_mac || is_android) {
     }
 
     configs += [
-      angle_root + ":libANGLE_config",
-      angle_root + ":library_name_config",
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:library_name_config",
     ]
 
     deps = [
-      angle_root + ":angle_util_static",
-      angle_root + ":libANGLE",
-      angle_root + ":libEGL_static",
-      angle_root + ":libGLESv2_static",
-      angle_root + ":preprocessor",
-      angle_root + ":translator",
       ":angle_end2end_tests_main",
+      "${angle_root}:angle_util_static",
+      "${angle_root}:libANGLE",
+      "${angle_root}:libEGL_static",
+      "${angle_root}:libGLESv2_static",
+      "${angle_root}:preprocessor",
+      "${angle_root}:translator",
     ]
 
     if (is_android) {
@@ -233,12 +233,12 @@ if (is_win || is_linux || is_android || is_mac) {
     sources = angle_white_box_perf_tests_sources
 
     deps = [
-      angle_root + ":angle_util_static",
-      angle_root + ":libANGLE",
-      angle_root + ":libEGL_static",
-      angle_root + ":libGLESv2_static",
-      angle_root + "/third_party/jsoncpp:jsoncpp",
       ":angle_perftests_main",
+      "${angle_jsoncpp_dir}:jsoncpp",
+      "${angle_root}:angle_util_static",
+      "${angle_root}:libANGLE",
+      "${angle_root}:libEGL_static",
+      "${angle_root}:libGLESv2_static",
     ]
 
     if (is_win) {
@@ -247,13 +247,12 @@ if (is_win || is_linux || is_android || is_mac) {
 
     if (angle_enable_vulkan) {
       sources += angle_white_box_perf_tests_vulkan_sources
-      deps += [ "$angle_root/third_party/glslang:glslang" ]
-      public_configs += [ "$angle_root/third_party/glslang:glslang_config" ]
+      deps += [ "${angle_glslang_dir}:glslang_sources" ]
     }
 
     configs += [
-      angle_root + ":libANGLE_config",
-      angle_root + ":library_name_config",
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:library_name_config",
     ]
 
     if (is_android) {
@@ -267,22 +266,22 @@ if (is_win || is_linux || is_android || is_mac) {
     sources = angle_perf_tests_sources
 
     deps = [
-      angle_root + "/third_party/jsoncpp:jsoncpp",
-      angle_root + ":angle_common",
-      angle_root + ":angle_system_utils",
-      angle_root + ":angle_util",
-      angle_root + ":angle_util_loader_headers",
       ":angle_perftests_main",
+      "${angle_jsoncpp_dir}:jsoncpp",
+      "${angle_root}:angle_common",
+      "${angle_root}:angle_system_utils",
+      "${angle_root}:angle_util",
+      "${angle_root}:angle_util_loader_headers",
     ]
 
     data_deps = [
-      angle_root + ":libEGL${angle_libs_suffix}",
-      angle_root + ":libGLESv2${angle_libs_suffix}",
+      "${angle_root}:libEGL${angle_libs_suffix}",
+      "${angle_root}:libGLESv2${angle_libs_suffix}",
     ]
 
     configs += [
-      angle_root + ":libANGLE_config",
-      angle_root + ":library_name_config",
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:library_name_config",
     ]
 
     if (is_android) {
@@ -336,25 +335,25 @@ if (build_angle_gles1_conform_tests) {
   source_set("angle_gles1_conformance_no_gtest") {
     configs += [
       ":angle_gles1_conform_support",
-      angle_root + ":internal_config",
+      "${angle_root}:internal_config",
     ]
 
     public_configs = [
-      angle_root + ":angle_util_config",
-      angle_root + ":gl_prototypes",
-      angle_root + ":angle_static",
+      "${angle_root}:angle_util_config",
+      "${angle_root}:gl_prototypes",
+      "${angle_root}:angle_static",
     ]
 
     testonly = true
 
     deps = [
-      angle_root + ":angle_common",
-      angle_root + ":angle_util_static",
-      angle_root + ":libEGL_static",
-      angle_root + ":libGLESv1_CM_static",
-      angle_root + ":libGLESv2_static",
-      angle_root + ":preprocessor",
-      angle_root + ":translator",
+      "${angle_root}:angle_common",
+      "${angle_root}:angle_util_static",
+      "${angle_root}:libEGL_static",
+      "${angle_root}:libGLESv1_CM_static",
+      "${angle_root}:libGLESv2_static",
+      "${angle_root}:preprocessor",
+      "${angle_root}:translator",
     ]
 
     sources = [
@@ -503,8 +502,8 @@ if (build_angle_gles1_conform_tests) {
     ]
 
     configs += [
-      angle_root + ":libANGLE_config",
-      angle_root + ":library_name_config",
+      "${angle_root}:libANGLE_config",
+      "${angle_root}:library_name_config",
     ]
 
     if (is_android) {
@@ -591,7 +590,7 @@ if (build_angle_deqp_tests) {
     "//build/config/compiler:chromium_code",
     "//build/config/compiler:no_exceptions",
     "//build/config/compiler:no_rtti",
-    angle_root + ":extra_warnings",
+    "${angle_root}:extra_warnings",
   ]
 
   if (is_win) {
@@ -639,15 +638,15 @@ if (build_angle_deqp_tests) {
   angle_static_library("angle_deqp_libtester") {
     public_deps = [
       ":angle_deqp_decpp",
-      angle_root + ":angle_common",
-      angle_root + ":angle_util",
-      angle_root + ":libEGL${angle_libs_suffix}",
-      angle_root + ":libGLESv2${angle_libs_suffix}",
-      "//third_party/libpng:libpng",
+      "${angle_libpng_dir}:libpng",
+      "${angle_root}:angle_common",
+      "${angle_root}:angle_util",
+      "${angle_root}:libEGL${angle_libs_suffix}",
+      "${angle_root}:libGLESv2${angle_libs_suffix}",
     ]
 
     suppressed_configs += deqp_undefine_configs
-    configs += [ angle_root + ":library_name_config" ]
+    configs += [ "${angle_root}:library_name_config" ]
     public_configs += [ ":angle_deqp_libtester_config" ]
     sources = deqp_libtester_sources
     if (is_win) {
@@ -670,9 +669,9 @@ if (build_angle_deqp_tests) {
     testonly = true
 
     public_deps = [
-      angle_root + ":angle_common",
-      angle_root + ":angle_util",
       ":angle_deqp_tests_main",
+      "${angle_root}:angle_common",
+      "${angle_root}:angle_util",
     ]
 
     public_configs += [ ":angle_deqp_gtest_support_config" ]
@@ -684,7 +683,7 @@ if (build_angle_deqp_tests) {
     }
 
     if (!is_android) {
-      public_deps += [ angle_root + ":angle_gpu_info_util" ]
+      public_deps += [ "${angle_root}:angle_gpu_info_util" ]
     }
   }
 
@@ -724,7 +723,7 @@ if (build_angle_deqp_tests) {
     angle_shared_library(shared_library_name) {
       deps = [
         ":angle_deqp_libtester",
-        angle_root + ":angle_util",
+        "${angle_root}:angle_util",
       ]
 
       suppressed_configs += deqp_undefine_configs

@@ -140,8 +140,7 @@ foreach(script_and_dep, helper_script_and_deps) {
   }
 }
 
-raw_spirv_tools_dir =
-    rebase_path("$angle_root/third_party/spirv-tools/src", root_build_dir)
+raw_spirv_tools_dir = rebase_path("${angle_spirv_tools_dir}", root_build_dir)
 
 spirv_git_is_present = exec_script("$angle_root/src/commit_id.py",
                                    [
@@ -369,19 +368,13 @@ source_set("vulkan_layer_utils") {
 }
 
 config("vulkan_core_validation_config") {
-  include_dirs = [ "$angle_root/third_party/glslang/src" ]
-}
-
-if (build_with_chromium) {
-  spvtools_dir = "//third_party/SPIRV-Tools/src"
-} else {
-  spvtools_dir = "${angle_root}/third_party/spirv-tools/src"
+  include_dirs = [ "${angle_glslang_dir}" ]
 }
 
 source_set("vulkan_core_validation_glslang") {
   public_deps = [
-    "${spvtools_dir}:spvtools",
-    "${spvtools_dir}:spvtools_val",
+    "${angle_spirv_tools_dir}:spvtools",
+    "${angle_spirv_tools_dir}:spvtools_val",
   ]
   public_configs = [ ":vulkan_core_validation_config" ]
 }
