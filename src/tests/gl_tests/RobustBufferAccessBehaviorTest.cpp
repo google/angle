@@ -440,6 +440,10 @@ TEST_P(RobustBufferAccessBehaviorTest, EmptyBuffer)
     // AMD GL does not support robustness. http://anglebug.com/3099
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
+    // TODO(cwallez@chromium.org): Test failing on Pixel XL, see
+    // http://anglebug.com/3109
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
     ANGLE_GL_PROGRAM(program, kWebGLVS, kWebGLFS);
     glUseProgram(program);
 
