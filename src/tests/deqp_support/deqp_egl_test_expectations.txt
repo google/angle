@@ -245,6 +245,9 @@
 2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba8 = FAIL
 2716 ANDROID GLES : dEQP-EGL.functional.preserve_swap.preserve.* = FAIL
 
+// Seems to crash on the 5x. Possibly other Android devices.
+3113 ANDROID GLES : dEQP-EGL.functional.reusable_sync.* = SKIP
+
 // Android failures
 2546 ANDROID : dEQP-EGL.functional.buffer_age.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_* = FAIL
