@@ -106,7 +106,6 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mD3d11Module(nullptr),
       mD3D11DeviceHandle(nullptr),
       mD3D11Device(nullptr),
-      mHasWorkerContexts(true),
       mUseARBShare(true)
 {}
 
@@ -291,13 +290,6 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
     if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE && IsIntel(vendor))
     {
         return egl::EglNotInitialized() << "Intel OpenGL ES drivers are not supported.";
-    }
-
-    // Using worker contexts is not currently supported due to bugs in the driver.
-    // http://anglebug.com/3031
-    if (IsAMD(vendor))
-    {
-        mHasWorkerContexts = false;
     }
 
     // Create DXGI swap chains for windows that come from other processes.  Windows is unable to
@@ -995,11 +987,6 @@ WorkerContext *DisplayWGL::createWorkerContext(std::string *infoLog,
                                                HGLRC sharedContext,
                                                const std::vector<int> &workerContextAttribs)
 {
-    if (!mHasWorkerContexts)
-    {
-        *infoLog += "Has no WorkerContext support.";
-        return nullptr;
-    }
     if (!sharedContext)
     {
         *infoLog += "Unable to create the shared context.";
