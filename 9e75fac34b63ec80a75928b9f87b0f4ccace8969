@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "2878dcd8_1c557e83",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-29T14:59:07Z",
+      "side": 1,
+      "message": "No, you were right, it can get called because of the `angle::UniqueObjectPointer`. Fixed.",
+      "parentUuid": "c2451ba3_58bfc83e",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 27
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf882b24_806e52d5",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 8
@@ -305,6 +329,30 @@
       "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2723b515_2543c756",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-01-29T14:59:07Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "45309b72_1cae0e17",
+      "range": {
+        "startLine": 273,
+        "startChar": 81,
+        "endLine": 273,
+        "endChar": 91
+      },
+      "revId": "9e75fac34b63ec80a75928b9f87b0f4ccace8969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
