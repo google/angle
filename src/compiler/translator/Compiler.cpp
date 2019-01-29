@@ -1095,9 +1095,9 @@ bool TCompiler::checkCallDepth()
     for (size_t i = 0; i < mCallDag.size(); i++)
     {
         int depth    = 0;
-        auto &record = mCallDag.getRecordFromIndex(i);
+        const CallDAG::Record &record = mCallDag.getRecordFromIndex(i);
 
-        for (auto &calleeIndex : record.callees)
+        for (const int &calleeIndex : record.callees)
         {
             depth = std::max(depth, depths[calleeIndex] + 1);
         }
@@ -1122,7 +1122,7 @@ bool TCompiler::checkCallDepth()
                     << mCallDag.getRecordFromIndex(currentFunction).node->getFunction()->name();
 
                 int nextFunction = -1;
-                for (auto &calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
+                for (const int &calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
                 {
                     if (depths[calleeIndex] == currentDepth - 1)
                     {
@@ -1273,7 +1273,7 @@ void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
 {
     sh::InterfaceBlockList list;
 
-    for (auto block : mUniformBlocks)
+    for (const sh::InterfaceBlock &block : mUniformBlocks)
     {
         if (!block.staticUse &&
             (block.layout == sh::BLOCKLAYOUT_STD140 || block.layout == sh::BLOCKLAYOUT_SHARED))
@@ -1290,7 +1290,7 @@ void TCompiler::initializeOutputVariables(TIntermBlock *root)
     InitVariableList list;
     if (mShaderType == GL_VERTEX_SHADER || mShaderType == GL_GEOMETRY_SHADER_EXT)
     {
-        for (auto var : mOutputVaryings)
+        for (const sh::Varying &var : mOutputVaryings)
         {
             list.push_back(var);
             if (var.name == "gl_Position")
@@ -1303,7 +1303,7 @@ void TCompiler::initializeOutputVariables(TIntermBlock *root)
     else
     {
         ASSERT(mShaderType == GL_FRAGMENT_SHADER);
-        for (auto var : mOutputVariables)
+        for (const sh::OutputVariable &var : mOutputVariables)
         {
             list.push_back(var);
         }
