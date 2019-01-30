@@ -808,6 +808,7 @@ libangle_vulkan_sources = [
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp",
   "src/libANGLE/renderer/vulkan/vk_utils.cpp",
   "src/libANGLE/renderer/vulkan/vk_utils.h",
+  "src/libANGLE/renderer/vulkan/vk_wrapper.h",
 ]
 
 libangle_vulkan_android_sources = [
