@@ -21,7 +21,7 @@ namespace rx
 {
 class GLImplFactory;
 class ProgramPipelineImpl;
-};  // namespace rx
+}  // namespace rx
 
 namespace gl
 {

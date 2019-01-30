@@ -25,8 +25,8 @@ namespace rx
 class SyncImpl : angle::NonCopyable
 {
   public:
-    SyncImpl(){};
-    virtual ~SyncImpl(){};
+    SyncImpl() {}
+    virtual ~SyncImpl() {}
 
     virtual void onDestroy(const gl::Context *context) {}
 

@@ -86,10 +86,10 @@ class FramebufferState final : angle::NonCopyable
     const FramebufferAttachment *getDrawBuffer(size_t drawBufferIdx) const;
     size_t getDrawBufferCount() const;
 
-    GLint getDefaultWidth() const { return mDefaultWidth; };
-    GLint getDefaultHeight() const { return mDefaultHeight; };
-    GLint getDefaultSamples() const { return mDefaultSamples; };
-    bool getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; };
+    GLint getDefaultWidth() const { return mDefaultWidth; }
+    GLint getDefaultHeight() const { return mDefaultHeight; }
+    GLint getDefaultSamples() const { return mDefaultSamples; }
+    bool getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; }
     GLint getDefaultLayers() const { return mDefaultLayers; }
 
     bool hasDepth() const;

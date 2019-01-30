@@ -408,7 +408,7 @@ class TIntermSwizzle : public TIntermExpression
 
     TIntermTyped *deepCopy() const override { return new TIntermSwizzle(*this); }
 
-    TIntermSwizzle *getAsSwizzleNode() override { return this; };
+    TIntermSwizzle *getAsSwizzleNode() override { return this; }
     bool visit(Visit visit, TIntermTraverser *it) final;
 
     size_t getChildCount() const final;
@@ -458,7 +458,7 @@ class TIntermBinary : public TIntermOperator
     static TOperator GetMulOpBasedOnOperands(const TType &left, const TType &right);
     static TOperator GetMulAssignOpBasedOnOperands(const TType &left, const TType &right);
 
-    TIntermBinary *getAsBinaryNode() override { return this; };
+    TIntermBinary *getAsBinaryNode() override { return this; }
     void traverse(TIntermTraverser *it) final;
     bool visit(Visit visit, TIntermTraverser *it) final;
 

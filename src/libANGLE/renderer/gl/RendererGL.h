@@ -51,7 +51,7 @@ class StateManagerGL;
 class WorkerContext : angle::NonCopyable
 {
   public:
-    virtual ~WorkerContext(){};
+    virtual ~WorkerContext() {}
 
     virtual bool makeCurrent()   = 0;
     virtual void unmakeCurrent() = 0;

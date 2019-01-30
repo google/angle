@@ -125,7 +125,7 @@ class TextureState final : private angle::NonCopyable
     const ImageDesc &getImageDesc(TextureTarget target, size_t level) const;
     const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
 
-    TextureType getType() const { return mType; };
+    TextureType getType() const { return mType; }
     const SwizzleState &getSwizzleState() const { return mSwizzleState; }
     const SamplerState &getSamplerState() const { return mSamplerState; }
     GLenum getUsage() const { return mUsage; }
