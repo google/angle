@@ -112,6 +112,10 @@ constexpr std::array<const char *, 1> kSkippedMessages = {
 //  return "true" if given code/prefix/message is known, else return "false"
 bool IsIgnoredDebugMessage(const char *message)
 {
+    if (!message)
+    {
+        return false;
+    }
     for (const char *msg : kSkippedMessages)
     {
         if (strstr(message, msg) != nullptr)
@@ -230,7 +234,11 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     }
 
     std::ostringstream log;
-    log << "[ " << callbackData->pMessageIdName << " ] " << callbackData->pMessage << std::endl;
+    if (callbackData->pMessageIdName)
+    {
+        log << "[ " << callbackData->pMessageIdName << " ] ";
+    }
+    log << callbackData->pMessage << std::endl;
 
     // Aesthetic value based on length of the function name, line number, etc.
     constexpr size_t kStartIndent = 28;
