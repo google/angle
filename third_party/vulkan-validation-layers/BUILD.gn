@@ -156,7 +156,7 @@ if (spirv_use_commit_id) {
   action("spirv_tools_external_revision_generate") {
     script = "src/scripts/external_revision_generator.py"
     inputs = [
-      "$angle_root/DEPS",
+      "//DEPS",
     ]
     outputs = [
       "$vulkan_gen_dir/spirv_tools_commit_id.h",
