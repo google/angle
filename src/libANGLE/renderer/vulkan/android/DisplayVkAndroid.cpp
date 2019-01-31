@@ -14,6 +14,7 @@
 #include <vulkan/vulkan.h>
 
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.h"
 #include "libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 
@@ -56,6 +57,38 @@ bool DisplayVkAndroid::checkConfigSupport(egl::Config *config)
     // TODO(geofflang): Test for native support and modify the config accordingly.
     // anglebug.com/2692
     return true;
+}
+
+egl::Error DisplayVkAndroid::validateImageClientBuffer(const gl::Context *context,
+                                                       EGLenum target,
+                                                       EGLClientBuffer clientBuffer,
+                                                       const egl::AttributeMap &attribs) const
+{
+    switch (target)
+    {
+        case EGL_NATIVE_BUFFER_ANDROID:
+            return HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(mRenderer,
+                                                                               clientBuffer);
+
+        default:
+            return DisplayVk::validateImageClientBuffer(context, target, clientBuffer, attribs);
+    }
+}
+
+ExternalImageSiblingImpl *DisplayVkAndroid::createExternalImageSibling(
+    const gl::Context *context,
+    EGLenum target,
+    EGLClientBuffer buffer,
+    const egl::AttributeMap &attribs)
+{
+    switch (target)
+    {
+        case EGL_NATIVE_BUFFER_ANDROID:
+            return new HardwareBufferImageSiblingVkAndroid(buffer);
+
+        default:
+            return DisplayVk::createExternalImageSibling(context, target, buffer, attribs);
+    }
 }
 
 const char *DisplayVkAndroid::getWSIExtension() const

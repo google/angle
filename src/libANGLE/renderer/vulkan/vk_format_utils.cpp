@@ -65,17 +65,6 @@ void FillTextureFormatCaps(RendererVk *renderer, VkFormat format, gl::TextureCap
     }
 }
 
-bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat)
-{
-    constexpr uint32_t kBitsColor = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
-                                    VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
-                                    VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    constexpr uint32_t kBitsDepth = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-
-    return renderer->hasTextureFormatFeatureBits(vkFormat, kBitsColor) ||
-           renderer->hasTextureFormatFeatureBits(vkFormat, kBitsDepth);
-}
-
 bool HasFullBufferFormatSupport(RendererVk *renderer, VkFormat vkFormat)
 {
     return renderer->hasBufferFormatFeatureBits(vkFormat, VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT);
@@ -202,6 +191,17 @@ void FormatTable::initialize(RendererVk *renderer,
     }
 }
 }  // namespace vk
+
+bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat)
+{
+    constexpr uint32_t kBitsColor = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
+                                    VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+                                    VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    constexpr uint32_t kBitsDepth = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+    return renderer->hasTextureFormatFeatureBits(vkFormat, kBitsColor) ||
+           renderer->hasTextureFormatFeatureBits(vkFormat, kBitsDepth);
+}
 
 size_t GetVertexInputAlignment(const vk::Format &format)
 {

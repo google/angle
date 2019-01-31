@@ -62,28 +62,43 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         mImageLevel       = mState.imageIndex.getLevelIndex();
         mImageLayer       = mState.imageIndex.hasLayer() ? mState.imageIndex.getLayerIndex() : 0;
     }
-    else if (egl::IsRenderbufferTarget(mState.target))
+    else
     {
-        RenderbufferVk *renderbufferVk =
-            GetImplAs<RenderbufferVk>(GetAs<gl::Renderbuffer>(mState.source));
-        mImage = renderbufferVk->getImage();
+        if (egl::IsRenderbufferTarget(mState.target))
+        {
+            RenderbufferVk *renderbufferVk =
+                GetImplAs<RenderbufferVk>(GetAs<gl::Renderbuffer>(mState.source));
+            mImage = renderbufferVk->getImage();
 
-        // Make sure a staging buffer is ready to use to upload data
-        ASSERT(mContext != nullptr);
-        ContextVk *contextVk = vk::GetImpl(mContext);
-        RendererVk *renderer = contextVk->getRenderer();
-        mImage->initStagingBuffer(renderer);
+            // Make sure a staging buffer is ready to use to upload data
+            ASSERT(mContext != nullptr);
+            ContextVk *contextVk = vk::GetImpl(mContext);
+            RendererVk *renderer = contextVk->getRenderer();
+            mImage->initStagingBuffer(renderer);
+        }
+        else if (egl::IsExternalImageTarget(mState.target))
+        {
+            const ExternalImageSiblingVk *externalImageSibling =
+                GetImplAs<ExternalImageSiblingVk>(GetAs<egl::ExternalImageSibling>(mState.source));
+            mImage = externalImageSibling->getImage();
+
+            // Make sure a staging buffer is ready to use to upload data
+            ASSERT(mContext == nullptr);
+            DisplayVk *displayVk = vk::GetImpl(display);
+            RendererVk *renderer = displayVk->getRenderer();
+            mImage->initStagingBuffer(renderer);
+        }
+        else
+        {
+            UNREACHABLE();
+            return egl::EglBadAccess();
+        }
 
         mOwnsImage = false;
 
         mImageTextureType = gl::TextureType::_2D;
         mImageLevel       = 0;
         mImageLayer       = 0;
-    }
-    else
-    {
-        UNREACHABLE();
-        return egl::EglBadAccess();
     }
 
     return egl::NoError();

@@ -923,6 +923,18 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         enabledDeviceExtensions.push_back(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME);
     }
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+    if (getFeatures().supportsAndroidHardwareBuffer)
+    {
+        enabledDeviceExtensions.push_back(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME);
+        enabledDeviceExtensions.push_back(
+            VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME);
+        InitExternalMemoryHardwareBufferANDROIDFunctions(mInstance);
+    }
+#else
+    ASSERT(!getFeatures().supportsAndroidHardwareBuffer);
+#endif
+
     std::sort(enabledDeviceExtensions.begin(), enabledDeviceExtensions.end(), StrLess);
     ANGLE_VK_TRY(displayVk, VerifyExtensionsPresent(deviceExtensionNames, enabledDeviceExtensions));
 
@@ -1181,6 +1193,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     {
         mFeatures.supportsIncrementalPresent = true;
     }
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    mFeatures.supportsAndroidHardwareBuffer = ExtensionFound(
+        VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME, deviceExtensionNames);
+#endif
 }
 
 void RendererVk::initPipelineCacheVkKey()

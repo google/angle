@@ -62,6 +62,10 @@ struct FeaturesVk
     // Intel drivers on windows that have an issue with creating single-layer views on cube map
     // textures.
     bool forceCpuPathForCubeMapCopy = false;
+
+    // Whether the VkDevice supports the VK_ANDROID_external_memory_android_hardware_buffer
+    // extension, on which the EGL_ANDROID_image_native_buffer extension can be layered.
+    bool supportsAndroidHardwareBuffer = false;
 };
 
 }  // namespace angle

@@ -33,6 +33,9 @@ class ExternalImageSiblingImpl : public FramebufferAttachmentObjectImpl
   public:
     ~ExternalImageSiblingImpl() override {}
 
+    virtual egl::Error initialize(const egl::Display *display) = 0;
+    virtual void onDestroy(const egl::Display *display) {}
+
     virtual gl::Format getFormat() const                        = 0;
     virtual bool isRenderable(const gl::Context *context) const = 0;
     virtual bool isTexturable(const gl::Context *context) const = 0;

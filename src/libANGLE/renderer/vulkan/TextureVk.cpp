@@ -688,6 +688,17 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     const vk::Format &format = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
     ANGLE_TRY(initImageViews(contextVk, format, 1));
 
+    // Transfer the image to this queue if needed
+    uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
+    if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
+    {
+        vk::CommandBuffer *commandBuffer = nullptr;
+        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+        mImage->changeLayoutAndQueue(VK_IMAGE_ASPECT_COLOR_BIT,
+                                     vk::ImageLayout::FragmentShaderReadOnly,
+                                     rendererQueueFamilyIndex, commandBuffer);
+    }
+
     return angle::Result::Continue;
 }
 

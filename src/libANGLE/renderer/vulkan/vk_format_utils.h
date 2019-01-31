@@ -121,6 +121,9 @@ const VkFormatProperties &GetMandatoryFormatSupport(VkFormat vkFormat);
 
 }  // namespace vk
 
+// Checks if a vkFormat supports all the features needed to use it as a GL texture format
+bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat);
+
 // Returns the alignment for a buffer to be used with the vertex input stage in Vulkan. This
 // calculation is listed in the Vulkan spec at the end of the section 'Vertex Input Description'.
 size_t GetVertexInputAlignment(const vk::Format &format);

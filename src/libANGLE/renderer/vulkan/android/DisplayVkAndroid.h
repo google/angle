@@ -31,6 +31,16 @@ class DisplayVkAndroid : public DisplayVk
     egl::ConfigSet generateConfigs() override;
     bool checkConfigSupport(egl::Config *config) override;
 
+    egl::Error validateImageClientBuffer(const gl::Context *context,
+                                         EGLenum target,
+                                         EGLClientBuffer clientBuffer,
+                                         const egl::AttributeMap &attribs) const override;
+
+    ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
+                                                         EGLenum target,
+                                                         EGLClientBuffer buffer,
+                                                         const egl::AttributeMap &attribs) override;
+
     const char *getWSIExtension() const override;
 };
 

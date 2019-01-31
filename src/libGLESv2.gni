@@ -84,6 +84,13 @@ if (is_win) {
   angle_system_utils_sources += [ "src/common/system_utils_win.cpp" ]
 }
 
+if (is_android) {
+  angle_system_utils_sources += [
+    "src/common/android_util.cpp",
+    "src/common/android_util.h",
+  ]
+}
+
 libangle_image_util_sources = [
   "src/image_util/copyimage.cpp",
   "src/image_util/copyimage.h",
@@ -727,8 +734,6 @@ libangle_gl_ozone_sources = [
 ]
 
 libangle_gl_egl_android_sources = [
-  "src/libANGLE/renderer/gl/egl/android/android_util.cpp",
-  "src/libANGLE/renderer/gl/egl/android/android_util.h",
   "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
   "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.h",
   "src/libANGLE/renderer/gl/egl/android/NativeBufferImageSiblingAndroid.cpp",
@@ -817,6 +822,8 @@ libangle_vulkan_sources = [
 libangle_vulkan_android_sources = [
   "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
   "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
+  "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+  "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.h",
   "src/libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.cpp",
   "src/libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.h",
 ]

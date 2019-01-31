@@ -80,6 +80,10 @@ class ExternalImageSibling : public ImageSibling
                          const AttributeMap &attribs);
     ~ExternalImageSibling() override;
 
+    void onDestroy(const egl::Display *display);
+
+    Error initialize(const Display *display);
+
     gl::Extents getAttachmentSize(const gl::ImageIndex &imageIndex) const override;
     gl::Format getAttachmentFormat(GLenum binding, const gl::ImageIndex &imageIndex) const override;
     GLsizei getAttachmentSamples(const gl::ImageIndex &imageIndex) const override;

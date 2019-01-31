@@ -139,6 +139,16 @@ ExternalImageSibling::ExternalImageSibling(rx::EGLImplFactory *factory,
 
 ExternalImageSibling::~ExternalImageSibling() = default;
 
+void ExternalImageSibling::onDestroy(const egl::Display *display)
+{
+    mImplementation->onDestroy(display);
+}
+
+Error ExternalImageSibling::initialize(const egl::Display *display)
+{
+    return mImplementation->initialize(display);
+}
+
 gl::Extents ExternalImageSibling::getAttachmentSize(const gl::ImageIndex &imageIndex) const
 {
     return mImplementation->getSize();
@@ -201,9 +211,9 @@ ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap 
       imageIndex(GetImageIndex(target, attribs)),
       source(buffer),
       targets(),
-      format(buffer->getAttachmentFormat(GL_NONE, imageIndex)),
-      size(buffer->getAttachmentSize(imageIndex)),
-      samples(buffer->getAttachmentSamples(imageIndex)),
+      format(GL_NONE),
+      size(),
+      samples(),
       sourceType(target)
 {}
 
@@ -238,7 +248,9 @@ void Image::onDestroy(const Display *display)
         // If the source is an external object, delete it
         if (IsExternalImageTarget(mState.sourceType))
         {
-            delete mState.source;
+            ExternalImageSibling *externalSibling = rx::GetAs<ExternalImageSibling>(mState.source);
+            externalSibling->onDestroy(display);
+            delete externalSibling;
         }
 
         mState.source = nullptr;
@@ -363,6 +375,15 @@ rx::ImageImpl *Image::getImplementation() const
 
 Error Image::initialize(const Display *display)
 {
+    if (IsExternalImageTarget(mState.sourceType))
+    {
+        ANGLE_TRY(rx::GetAs<ExternalImageSibling>(mState.source)->initialize(display));
+    }
+
+    mState.format  = mState.source->getAttachmentFormat(GL_NONE, mState.imageIndex);
+    mState.size    = mState.source->getAttachmentSize(mState.imageIndex);
+    mState.samples = mState.source->getAttachmentSamples(mState.imageIndex);
+
     return mImplementation->initialize(display);
 }
 
