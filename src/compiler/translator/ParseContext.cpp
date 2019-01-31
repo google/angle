@@ -611,7 +611,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         return true;
     }
 
-    std::stringstream reasonStream;
+    std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
     reasonStream << "l-value required";
     if (!message.empty())
     {
@@ -902,7 +902,7 @@ bool TParseContext::checkIsNotOpaqueType(const TSourceLoc &line,
     {
         if (ContainsSampler(pType.userDef))
         {
-            std::stringstream reasonStream;
+            std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
             reasonStream << reason << " (structure contains a sampler)";
             std::string reasonStr = reasonStream.str();
             error(line, reasonStr.c_str(), getBasicString(pType.type));
@@ -3066,7 +3066,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
                 if (mComputeShaderLocalSize[i] < 1 ||
                     mComputeShaderLocalSize[i] > maxComputeWorkGroupSizeValue)
                 {
-                    std::stringstream reasonStream;
+                    std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
                     reasonStream << "invalid value: Value must be at least 1 and no greater than "
                                  << maxComputeWorkGroupSizeValue;
                     const std::string &reason = reasonStream.str();
@@ -3891,7 +3891,7 @@ void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const
     // one to the field's struct nesting.
     if (1 + field.type()->getDeepestStructNesting() > kWebGLMaxStructNesting)
     {
-        std::stringstream reasonStream;
+        std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
         if (field.type()->getStruct()->symbolType() == SymbolType::Empty)
         {
             // This may happen in case there are nested struct definitions. While they are also
@@ -4085,7 +4085,7 @@ int TParseContext::checkIndexLessThan(bool outOfRangeIndexIsError,
     ASSERT(index >= 0);
     if (index >= arraySize)
     {
-        std::stringstream reasonStream;
+        std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
         reasonStream << reason << " '" << index << "'";
         std::string token = reasonStream.str();
         outOfRangeError(outOfRangeIndexIsError, location, reason, "[]");
@@ -4387,7 +4387,7 @@ void TParseContext::parseLocalSize(const ImmutableString &qualifierType,
     checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
     if (intValue < 1)
     {
-        std::stringstream reasonStream;
+        std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
         reasonStream << "out of range: " << getWorkGroupSizeString(index) << " must be positive";
         std::string reason = reasonStream.str();
         error(intValueLine, reason.c_str(), intValueString.c_str());
@@ -5672,7 +5672,7 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
                 int offsetValue = values[i].getIConst();
                 if (offsetValue > maxOffsetValue || offsetValue < minOffsetValue)
                 {
-                    std::stringstream tokenStream;
+                    std::stringstream tokenStream = sh::InitializeStream<std::stringstream>();
                     tokenStream << offsetValue;
                     std::string token = tokenStream.str();
                     error(offset->getLine(), "Texture offset value out of valid range",
