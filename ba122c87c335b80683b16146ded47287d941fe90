@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12b0b6e2_5181c5cd",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2869,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-01-31T18:13:07Z",
+      "side": 1,
+      "message": "Instead of returning false here, can we just return the config member?  That way if any backend does implement it, it will just start working.",
+      "range": {
+        "startLine": 2869,
+        "startChar": 21,
+        "endLine": 2869,
+        "endChar": 30
+      },
+      "revId": "ba122c87c335b80683b16146ded47287d941fe90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f052e07_af14b447",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-01-31T18:13:07Z",
+      "side": 1,
+      "message": "EGL_RECORDABLE_ANDROID",
+      "range": {
+        "startLine": 293,
+        "startChar": 49,
+        "endLine": 293,
+        "endChar": 69
+      },
+      "revId": "ba122c87c335b80683b16146ded47287d941fe90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
