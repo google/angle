@@ -68,7 +68,7 @@ void DumpFuzzerCase(char const *const *shaderStrings,
 {
     static int fileIndex = 0;
 
-    std::ostringstream o;
+    std::ostringstream o = sh::InitializeStream<std::ostringstream>();
     o << "corpus/" << fileIndex++ << ".sample";
     std::string s = o.str();
 
@@ -940,7 +940,7 @@ bool TCompiler::initBuiltInSymbolTable(const ShBuiltInResources &resources)
 
 void TCompiler::setResourceString()
 {
-    std::ostringstream strstream;
+    std::ostringstream strstream = sh::InitializeStream<std::ostringstream>();
 
     // clang-format off
     strstream << ":MaxVertexAttribs:" << mResources.MaxVertexAttribs
@@ -1094,7 +1094,7 @@ bool TCompiler::checkCallDepth()
 
     for (size_t i = 0; i < mCallDag.size(); i++)
     {
-        int depth    = 0;
+        int depth                     = 0;
         const CallDAG::Record &record = mCallDag.getRecordFromIndex(i);
 
         for (const int &calleeIndex : record.callees)
@@ -1107,7 +1107,7 @@ bool TCompiler::checkCallDepth()
         if (depth >= mResources.MaxCallStackDepth)
         {
             // Trace back the function chain to have a meaningful info log.
-            std::stringstream errorStream;
+            std::stringstream errorStream = sh::InitializeStream<std::stringstream>();
             errorStream << "Call stack too deep (larger than " << mResources.MaxCallStackDepth
                         << ") with the following call chain: "
                         << record.node->getFunction()->name();

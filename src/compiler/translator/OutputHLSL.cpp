@@ -39,7 +39,7 @@ constexpr const char kImage2DFunctionString[] = "// @@ IMAGE2D DECLARATION FUNCT
 
 TString ArrayHelperFunctionName(const char *prefix, const TType &type)
 {
-    TStringStream fnName;
+    TStringStream fnName = sh::InitializeStream<TStringStream>();
     fnName << prefix << "_";
     if (type.isArray())
     {
@@ -132,7 +132,7 @@ const char *kZeros       = "_ANGLE_ZEROS_";
 constexpr int kZeroCount = 256;
 std::string DefineZeroArray()
 {
-    std::stringstream ss;
+    std::stringstream ss = sh::InitializeStream<std::stringstream>();
     // For 'static', if the declaration does not include an initializer, the value is set to zero.
     // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/dx-graphics-hlsl-variable-syntax
     ss << "static uint " << kZeros << "[" << kZeroCount << "];\n";
@@ -141,9 +141,9 @@ std::string DefineZeroArray()
 
 std::string GetZeroInitializer(size_t size)
 {
-    std::stringstream ss;
-    size_t quotient = size / kZeroCount;
-    size_t reminder = size % kZeroCount;
+    std::stringstream ss = sh::InitializeStream<std::stringstream>();
+    size_t quotient      = size / kZeroCount;
+    size_t reminder      = size % kZeroCount;
 
     for (size_t i = 0; i < quotient; ++i)
     {
@@ -416,7 +416,7 @@ TString OutputHLSL::structInitializerString(int indent,
         init += indentString + "{\n";
         for (unsigned int arrayIndex = 0u; arrayIndex < type.getOutermostArraySize(); ++arrayIndex)
         {
-            TStringStream indexedString;
+            TStringStream indexedString = sh::InitializeStream<TStringStream>();
             indexedString << name << "[" << arrayIndex << "]";
             TType elementType = type;
             elementType.toArrayElementType();
@@ -891,8 +891,8 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
         out << kImage2DFunctionString << "\n";
 
-        std::ostringstream systemValueDeclaration;
-        std::ostringstream glBuiltinInitialization;
+        std::ostringstream systemValueDeclaration  = sh::InitializeStream<std::ostringstream>();
+        std::ostringstream glBuiltinInitialization = sh::InitializeStream<std::ostringstream>();
 
         systemValueDeclaration << "\nstruct CS_INPUT\n{\n";
         glBuiltinInitialization << "\nvoid initGLBuiltins(CS_INPUT input)\n"
@@ -1900,7 +1900,7 @@ ImmutableString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
         {
             int index = nodeBinary->getRight()->getAsConstantUnion()->getIConst(0);
 
-            std::stringstream prefixSink;
+            std::stringstream prefixSink = sh::InitializeStream<std::stringstream>();
             prefixSink << samplerNamePrefixFromStruct(nodeBinary->getLeft()) << "_" << index;
             return ImmutableString(prefixSink.str());
         }
@@ -1910,7 +1910,7 @@ ImmutableString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
             int index           = nodeBinary->getRight()->getAsConstantUnion()->getIConst(0);
             const TField *field = s->fields()[index];
 
-            std::stringstream prefixSink;
+            std::stringstream prefixSink = sh::InitializeStream<std::stringstream>();
             prefixSink << samplerNamePrefixFromStruct(nodeBinary->getLeft()) << "_"
                        << field->name();
             return ImmutableString(prefixSink.str());
