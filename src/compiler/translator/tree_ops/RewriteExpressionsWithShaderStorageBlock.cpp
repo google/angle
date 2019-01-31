@@ -302,7 +302,7 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
                     readBackToSSBOs.push_back(readBackToSSBO);
                 }
             }
-            node->replaceChildNode(ssboArgument->deepCopy(), argumentCopy);
+            node->replaceChildNode(ssboArgument, argumentCopy);
         }
     }
 
