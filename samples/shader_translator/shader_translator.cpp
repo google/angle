@@ -114,9 +114,20 @@ int main(int argc, char *argv[])
                                     spec = SH_GLES3_SPEC;
                                 }
                             }
+                            else if (argv[0][4] == '2')
+                            {
+                                if (argv[0][5] == 'n')
+                                {
+                                    spec = SH_GLES2_SPEC;
+                                }
+                                else {
+                                    spec = SH_GLES2_SPEC;
+                                    resources.FragmentPrecisionHigh = 1;
+                                }
+                            }
                             else
                             {
-                                spec = SH_GLES2_SPEC;
+                                failCode = EFailUsage;
                             }
                             break;
                         case 'w':
@@ -361,7 +372,8 @@ void usage()
         "       -o       : print translated code\n"
         "       -u       : print active attribs, uniforms, varyings and program outputs\n"
         "       -p       : use precision emulation\n"
-        "       -s=e2    : use GLES2 spec (this is by default)\n"
+        "       -s=e2n   : use GLES2 spec with no highp support in fragment shaders (this is by default)\n"
+        "       -s=e2    : use GLES2 spec\n"
         "       -s=e3    : use GLES3 spec\n"
         "       -s=e31   : use GLES31 spec (in development)\n"
         "       -s=w     : use WebGL 1.0 spec\n"
