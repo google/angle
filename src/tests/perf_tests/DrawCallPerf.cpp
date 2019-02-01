@@ -45,7 +45,6 @@ std::string DrawArraysPerfParams::suffix() const
             break;
         default:
             break;
-            ;
     }
 
     return strstr.str();

@@ -33,7 +33,7 @@ GLColor Vec4ToColor(const Vector4 &vec)
     color.B = static_cast<uint8_t>(vec.z() * 255.0f);
     color.A = static_cast<uint8_t>(vec.w() * 255.0f);
     return color;
-};
+}
 
 class ClearTestBase : public ANGLETest
 {

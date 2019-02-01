@@ -263,7 +263,7 @@ bool InterfaceBlockInfo::getBlockSize(const std::string &name,
 
     *sizeOut = sizeIter->second;
     return true;
-};
+}
 
 bool InterfaceBlockInfo::getBlockMemberInfo(const std::string &name,
                                             const std::string &mappedName,
@@ -278,7 +278,7 @@ bool InterfaceBlockInfo::getBlockMemberInfo(const std::string &name,
 
     *infoOut = infoIter->second;
     return true;
-};
+}
 
 // Helper class that gathers uniform info from the default uniform block.
 class UniformEncodingVisitorD3D : public sh::BlockEncoderVisitor

@@ -121,7 +121,7 @@ void LinkProgramBenchmark::initializeBenchmark()
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vector3), vertices.data(),
                  GL_STATIC_DRAW);
-};
+}
 
 void LinkProgramBenchmark::destroyBenchmark()
 {

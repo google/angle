@@ -92,7 +92,7 @@ class Context : angle::NonCopyable
 
 // ANGLE_TRY for HRESULT errors.
 #define ANGLE_TRY_HR(CONTEXT, EXPR, MESSAGE)                                                     \
-                                                                                                 \
+    do                                                                                           \
     {                                                                                            \
         auto ANGLE_LOCAL_VAR = (EXPR);                                                           \
         if (ANGLE_UNLIKELY(FAILED(ANGLE_LOCAL_VAR)))                                             \
@@ -100,16 +100,17 @@ class Context : angle::NonCopyable
             CONTEXT->handleResult(ANGLE_LOCAL_VAR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
             return angle::Result::Stop;                                                          \
         }                                                                                        \
-    }
+    } while (0)
 
 #define ANGLE_CHECK_HR(CONTEXT, EXPR, MESSAGE, ERROR)                                  \
+    do                                                                                 \
     {                                                                                  \
         if (ANGLE_UNLIKELY(!(EXPR)))                                                   \
         {                                                                              \
             CONTEXT->handleResult(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
             return angle::Result::Stop;                                                \
         }                                                                              \
-    }
+    } while (0)
 
 #define ANGLE_HR_UNREACHABLE(context) \
     UNREACHABLE();                    \

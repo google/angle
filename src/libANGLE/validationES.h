@@ -661,8 +661,8 @@ bool ValidateSampleMaskiBase(Context *context, GLuint maskNumber, GLbitfield mas
 // Utility macro for handling implementation methods inside Validation.
 #define ANGLE_HANDLE_VALIDATION_ERR(X) \
     (void)(X);                         \
-    return false;
-#define ANGLE_VALIDATION_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_VALIDATION_ERR);
+    return false
+#define ANGLE_VALIDATION_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_VALIDATION_ERR)
 
 // We should check with Khronos if returning INVALID_FRAMEBUFFER_OPERATION is OK when querying
 // implementation format info for incomplete framebuffers. It seems like these queries are

@@ -317,9 +317,9 @@ class Renderer11 : public RendererD3D
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     void *getD3DDevice() override;
-    ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
-    ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; };
-    IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
+    ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; }
+    ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; }
+    IDXGIFactory *getDxgiFactory() { return mDxgiFactory; }
 
     angle::Result getBlendState(const gl::Context *context,
                                 const d3d11::BlendStateKey &key,
@@ -388,7 +388,7 @@ class Renderer11 : public RendererD3D
                                        bool stencilBlit);
 
     bool isES3Capable() const;
-    const Renderer11DeviceCaps &getRenderer11DeviceCaps() const { return mRenderer11DeviceCaps; };
+    const Renderer11DeviceCaps &getRenderer11DeviceCaps() const { return mRenderer11DeviceCaps; }
 
     RendererClass getRendererClass() const override;
     StateManager11 *getStateManager() { return &mStateManager; }

@@ -19,7 +19,7 @@
 namespace rx
 {
 class DeviceImpl;
-}
+}  // namespace rx
 
 namespace egl
 {
@@ -33,7 +33,7 @@ class Device final : public LabeledObject, angle::NonCopyable
     EGLLabelKHR getLabel() const override;
 
     Error getDevice(EGLAttrib *value);
-    Display *getOwningDisplay() { return mOwningDisplay; };
+    Display *getOwningDisplay() { return mOwningDisplay; }
     EGLint getType();
 
     const DeviceExtensions &getExtensions() const;

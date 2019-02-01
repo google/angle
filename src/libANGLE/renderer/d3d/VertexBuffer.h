@@ -62,7 +62,7 @@ class VertexBuffer : angle::NonCopyable
     unsigned int getSerial() const;
 
     // This may be overridden (e.g. by VertexBuffer11) if necessary.
-    virtual void hintUnmapResource(){};
+    virtual void hintUnmapResource() {}
 
     // Reference counting.
     void addRef();

@@ -38,6 +38,7 @@ if (build_with_chromium) {
       "${angle_googletest_dir}/googletest/src/gtest-all.cc",
     ]
     public_configs += [ ":angle_internal_gtest_config" ]
+    configs -= [ "${angle_root}:extra_warnings" ]
   }
 
   config("angle_internal_gmock_config") {

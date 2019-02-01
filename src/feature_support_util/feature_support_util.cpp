@@ -13,8 +13,8 @@
 #include <string.h>
 #include "common/platform.h"
 #if defined(ANGLE_PLATFORM_ANDROID)
-#include <android/log.h>
-#include <unistd.h>
+#    include <android/log.h>
+#    include <unistd.h>
 #endif
 #include <fstream>
 #include <list>
@@ -27,21 +27,21 @@ namespace angle
 // Define ANGLE_FEATURE_UTIL_LOG_VERBOSE if you want VERBOSE to output
 // ANGLE_FEATURE_UTIL_LOG_VERBOSE is automatically defined when is_debug = true
 
-#define ERR(...) __android_log_print(ANDROID_LOG_ERROR, "ANGLE", __VA_ARGS__)
-#define WARN(...) __android_log_print(ANDROID_LOG_WARN, "ANGLE", __VA_ARGS__)
-#define INFO(...) __android_log_print(ANDROID_LOG_INFO, "ANGLE", __VA_ARGS__)
-#define DEBUG(...) __android_log_print(ANDROID_LOG_DEBUG, "ANGLE", __VA_ARGS__)
-#ifdef ANGLE_FEATURE_UTIL_LOG_VERBOSE
-#define VERBOSE(...) __android_log_print(ANDROID_LOG_VERBOSE, "ANGLE", __VA_ARGS__)
-#else
-#define VERBOSE(...) ((void)0)
-#endif
+#    define ERR(...) __android_log_print(ANDROID_LOG_ERROR, "ANGLE", __VA_ARGS__)
+#    define WARN(...) __android_log_print(ANDROID_LOG_WARN, "ANGLE", __VA_ARGS__)
+#    define INFO(...) __android_log_print(ANDROID_LOG_INFO, "ANGLE", __VA_ARGS__)
+#    define DEBUG(...) __android_log_print(ANDROID_LOG_DEBUG, "ANGLE", __VA_ARGS__)
+#    ifdef ANGLE_FEATURE_UTIL_LOG_VERBOSE
+#        define VERBOSE(...) __android_log_print(ANDROID_LOG_VERBOSE, "ANGLE", __VA_ARGS__)
+#    else
+#        define VERBOSE(...) ((void)0)
+#    endif
 #else  // defined(ANDROID)
-#define ERR(...) printf(__VA_ARGS__);
-#define WARN(...) printf(__VA_ARGS__);
-#define INFO(...) printf(__VA_ARGS__);
-#define DEBUG(...) printf(__VA_ARGS__);
-#define VERBOSE(...) printf(__VA_ARGS__);
+#    define ERR(...) printf(__VA_ARGS__)
+#    define WARN(...) printf(__VA_ARGS__)
+#    define INFO(...) printf(__VA_ARGS__)
+#    define DEBUG(...) printf(__VA_ARGS__)
+#    define VERBOSE(...) printf(__VA_ARGS__)
 #endif  // defined(ANDROID)
 
 // JSON values are generally composed of either:
@@ -845,14 +845,14 @@ ANGLE_EXPORT bool ANGLEGetSystemInfo(SystemInfoHandle *systemInfoHandle)
         return false;
     }
 
-// TODO (http://anglebug.com/3036): Restore the real code
+    // TODO (http://anglebug.com/3036): Restore the real code
     angle::SystemInfo *systemInfo = new angle::SystemInfo;
     systemInfo->gpus.resize(1);
     GPUDeviceInfo &gpu = systemInfo->gpus[0];
-    gpu.vendorId = 0xFEFEFEFE;
-    gpu.deviceId = 0xFEEEFEEE;
-    gpu.driverVendor = "Foo";
-    gpu.driverVersion = "1.2.3.4";
+    gpu.vendorId       = 0xFEFEFEFE;
+    gpu.deviceId       = 0xFEEEFEEE;
+    gpu.driverVendor   = "Foo";
+    gpu.driverVersion  = "1.2.3.4";
 
     *systemInfoHandle = systemInfo;
     return true;

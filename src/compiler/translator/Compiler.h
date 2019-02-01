@@ -146,7 +146,8 @@ class TCompiler : public TShHandleBase
   protected:
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
-                                             ShCompileOptions compileOptions){};
+                                             ShCompileOptions compileOptions)
+    {}
     // Translate to object code. May generate performance warnings through the diagnostics.
     virtual void translate(TIntermBlock *root,
                            ShCompileOptions compileOptions,

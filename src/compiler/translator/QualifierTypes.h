@@ -34,9 +34,9 @@ enum TQualifierType
 class TQualifierWrapperBase : angle::NonCopyable
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     TQualifierWrapperBase(const TSourceLoc &line) : mLine(line) {}
-    virtual ~TQualifierWrapperBase(){};
+    virtual ~TQualifierWrapperBase() {}
     virtual TQualifierType getType() const             = 0;
     virtual ImmutableString getQualifierString() const = 0;
     virtual unsigned int getRank() const               = 0;
@@ -176,7 +176,7 @@ class TTypeQualifierBuilder : angle::NonCopyable
     using QualifierSequence = TVector<const TQualifierWrapperBase *>;
 
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     TTypeQualifierBuilder(const TStorageQualifierWrapper *scope, int shaderVersion);
     // Adds the passed qualifier to the end of the sequence.
     void appendQualifier(const TQualifierWrapperBase *qualifier);

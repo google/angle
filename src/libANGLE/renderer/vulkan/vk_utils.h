@@ -45,7 +45,7 @@ struct SwizzleState;
 struct VertexAttribute;
 class VertexBinding;
 
-ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT);
+ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT)
 }  // namespace gl
 
 #define ANGLE_PRE_DECLARE_VK_OBJECT(OBJ) class OBJ##Vk;
@@ -66,7 +66,7 @@ egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode);
 
 namespace rx
 {
-ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT);
+ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT)
 
 const char *VulkanResultString(VkResult result);
 // Verify that validation layers are available.

@@ -137,11 +137,12 @@ class ConfigSorter
 
     bool operator()(const Config &x, const Config &y) const
     {
-#define SORT(attribute)                   \
-    if (x.attribute != y.attribute)       \
-    {                                     \
-        return x.attribute < y.attribute; \
-    }
+#define SORT(attribute)                       \
+    do                                        \
+    {                                         \
+        if (x.attribute != y.attribute)       \
+            return x.attribute < y.attribute; \
+    } while (0)
 
         static_assert(EGL_NONE < EGL_SLOW_CONFIG && EGL_SLOW_CONFIG < EGL_NON_CONFORMANT_CONFIG,
                       "Unexpected EGL enum value.");

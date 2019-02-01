@@ -21,7 +21,7 @@ const unsigned int kPixelTolerance = 1u;
 const std::array<GLubyte, 16> kBC7Data4x4 = {0x50, 0x1f, 0xfc, 0xf, 0x0,  0xf0, 0xe3, 0xe1,
                                              0xe1, 0xe1, 0xc1, 0xf, 0xfc, 0xc0, 0xf,  0xfc};
 
-};  // anonymous namespace
+}  // anonymous namespace
 
 class BPTCCompressedTextureTest : public ANGLETest
 {

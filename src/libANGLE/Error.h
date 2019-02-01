@@ -129,7 +129,7 @@ inline Error NoError()
     } while (0)
 
 #define ANGLE_RETURN(X) return X;
-#define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN);
+#define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN)
 
 // TODO(jmadill): Remove after EGL error refactor. http://anglebug.com/3041
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \
@@ -147,13 +147,14 @@ inline Error NoError()
 #undef ANGLE_CONCAT1
 
 #define ANGLE_CHECK(CONTEXT, EXPR, MESSAGE, ERROR)                                    \
+    do                                                                                \
     {                                                                                 \
         if (ANGLE_UNLIKELY(!(EXPR)))                                                  \
         {                                                                             \
             CONTEXT->handleError(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
             return angle::Result::Stop;                                               \
         }                                                                             \
-    }
+    } while (0)
 
 namespace angle
 {

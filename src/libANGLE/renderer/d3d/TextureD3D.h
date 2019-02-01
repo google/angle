@@ -160,7 +160,7 @@ class TextureD3D : public TextureImpl
 
     angle::Result releaseTexStorage(const gl::Context *context);
 
-    GLuint getBaseLevel() const { return mBaseLevel; };
+    GLuint getBaseLevel() const { return mBaseLevel; }
 
     virtual void markAllImagesDirty() = 0;
 

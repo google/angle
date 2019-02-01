@@ -30,7 +30,15 @@ samples utility functions
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "common/debug.h"
+
+// glslang has issues with some specific warnings.
+ANGLE_DISABLE_EXTRA_SEMI_WARNING
+
 #include "SPIRV/GlslangToSpv.h"
+
+ANGLE_REENABLE_EXTRA_SEMI_WARNING
 
 #if defined(__linux__) && !defined(__ANDROID__)
 #    define VK_USE_PLATFORM_XCB_KHR

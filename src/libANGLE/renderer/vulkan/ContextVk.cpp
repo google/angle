@@ -326,7 +326,7 @@ angle::Result ContextVk::handleDirtyDefaultAttribs(const gl::Context *context,
 
     for (size_t attribIndex : mDirtyDefaultAttribsMask)
     {
-        ANGLE_TRY(updateDefaultAttribute(attribIndex))
+        ANGLE_TRY(updateDefaultAttribute(attribIndex));
     }
 
     mDirtyDefaultAttribsMask.reset();

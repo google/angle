@@ -297,7 +297,7 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
     ANGLE_GL_PROGRAM(program, "void main() { gl_Position = vec4(0, 0, 0, 1); }",
-                     "void main() { gl_FragColor = vec4(0, 1, 0, 1); }")
+                     "void main() { gl_FragColor = vec4(0, 1, 0, 1); }");
     glUseProgram(program.get());
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -1336,7 +1336,7 @@ void WebGLCompatibilityTest::TestDifferentStencilMaskAndRef(GLenum errIfMismatch
                               renderbuffer.get());
 
     ANGLE_GL_PROGRAM(program, "void main() { gl_Position = vec4(0, 0, 0, 1); }",
-                     "void main() { gl_FragColor = vec4(0, 1, 0, 1); }")
+                     "void main() { gl_FragColor = vec4(0, 1, 0, 1); }");
     glUseProgram(program.get());
     ASSERT_GL_NO_ERROR();
 

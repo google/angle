@@ -45,7 +45,7 @@ Blit11::BlitShaderType Blit11::getBlitShaderType(BlitShaderOperation operation, 
             UNREACHABLE();
             return BLITSHADER_INVALID;
     }}
-}};
+}}
 
 angle::Result Blit11::mapBlitShader(const gl::Context *context,
                                     BlitShaderType blitShaderType)

@@ -231,11 +231,11 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    if defined(_MSC_VER)
 #        define EVENT(message, ...)                                                      \
             gl::ScopedPerfEventHelper scopedPerfEventHelper##__LINE__("%s" message "\n", \
-                                                                      __FUNCTION__, __VA_ARGS__);
+                                                                      __FUNCTION__, __VA_ARGS__)
 #    else
 #        define EVENT(message, ...)                                                          \
             gl::ScopedPerfEventHelper scopedPerfEventHelper("%s" message "\n", __FUNCTION__, \
-                                                            ##__VA_ARGS__);
+                                                            ##__VA_ARGS__)
 #    endif  // _MSC_VER
 #else
 #    define EVENT(message, ...) (void(0))
@@ -344,6 +344,15 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #else
 #    define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 #    define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+#endif
+
+#if defined(__clang__)
+#    define ANGLE_DISABLE_EXTRA_SEMI_WARNING \
+        _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wextra-semi\"")
+#    define ANGLE_REENABLE_EXTRA_SEMI_WARNING _Pragma("clang diagnostic pop")
+#else
+#    define ANGLE_DISABLE_EXTRA_SEMI_WARNING
+#    define ANGLE_REENABLE_EXTRA_SEMI_WARNING
 #endif
 
 #endif  // COMMON_DEBUG_H_

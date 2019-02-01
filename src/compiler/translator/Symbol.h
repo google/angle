@@ -24,7 +24,7 @@ class TSymbolTable;
 class TSymbol : angle::NonCopyable
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     TSymbol(TSymbolTable *symbolTable,
             const ImmutableString &name,
             SymbolType symbolType,

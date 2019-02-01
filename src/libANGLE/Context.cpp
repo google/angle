@@ -50,12 +50,6 @@ namespace gl
 {
 namespace
 {
-
-#define ANGLE_HANDLE_ERR(X) \
-    (void)(X);              \
-    return;
-#define ANGLE_CONTEXT_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_ERR);
-
 template <typename T>
 std::vector<Path *> GatherPaths(PathManager &resourceManager,
                                 GLsizei numPaths,

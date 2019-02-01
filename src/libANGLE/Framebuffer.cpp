@@ -143,7 +143,7 @@ bool CheckAttachmentCompleteness(const Context *context, const FramebufferAttach
     }
 
     return true;
-};
+}
 
 bool CheckAttachmentSampleCompleteness(const Context *context,
                                        const FramebufferAttachment &attachment,

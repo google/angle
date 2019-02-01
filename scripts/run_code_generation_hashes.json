@@ -12,7 +12,7 @@
   "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
     "4253e14cd3217f42b6fec75ee400655a",
   "D3D11 blit shader selection:src/libANGLE/renderer/d3d/d3d11/gen_blit11helper.py":
-    "575f994249adf2143e90e9e19ed6f9e8",
+    "fa59a0edd32890a018a7247e0484426c",
   "D3D11 format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py":
@@ -40,7 +40,7 @@
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
     "d07ec4348b35d0db1eeab3c99a5e91f9",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":
-    "9a5226ee6573650897bdc21e1bb0bfd0",
+    "932aafd053b3a64affdc7ad31d0a3c42",
   "Emulated HLSL functions:src/compiler/translator/emulated_builtin_function_data_hlsl.json":
     "002ad46d144c51fe98d73478aa554ba7",
   "Emulated HLSL functions:src/compiler/translator/gen_emulated_builtin_function_tables.py":

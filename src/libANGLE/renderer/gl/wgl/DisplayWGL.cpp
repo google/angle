@@ -1006,19 +1006,22 @@ WorkerContext *DisplayWGL::createWorkerContext(std::string *infoLog,
     HDC workerDeviceContext   = nullptr;
     HGLRC workerContext       = nullptr;
 
-#define CLEANUP_ON_ERROR()                                                      \
-    if (workerContext)                                                          \
-    {                                                                           \
-        mFunctionsWGL->deleteContext(workerContext);                            \
-    }                                                                           \
-    if (workerDeviceContext)                                                    \
-    {                                                                           \
-        mFunctionsWGL->releasePbufferDCARB(workerPbuffer, workerDeviceContext); \
-    }                                                                           \
-    if (workerPbuffer)                                                          \
-    {                                                                           \
-        mFunctionsWGL->destroyPbufferARB(workerPbuffer);                        \
-    }
+#define CLEANUP_ON_ERROR()                                                          \
+    do                                                                              \
+    {                                                                               \
+        if (workerContext)                                                          \
+        {                                                                           \
+            mFunctionsWGL->deleteContext(workerContext);                            \
+        }                                                                           \
+        if (workerDeviceContext)                                                    \
+        {                                                                           \
+            mFunctionsWGL->releasePbufferDCARB(workerPbuffer, workerDeviceContext); \
+        }                                                                           \
+        if (workerPbuffer)                                                          \
+        {                                                                           \
+            mFunctionsWGL->destroyPbufferARB(workerPbuffer);                        \
+        }                                                                           \
+    } while (0)
 
     const int attribs[] = {0, 0};
     workerPbuffer = mFunctionsWGL->createPbufferARB(mDeviceContext, mPixelFormat, 1, 1, attribs);

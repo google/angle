@@ -22,7 +22,7 @@ class TSymbolTable;
 
 struct TReferencedBlock : angle::NonCopyable
 {
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     TReferencedBlock(const TInterfaceBlock *block, const TVariable *instanceVariable);
     const TInterfaceBlock *block;
     const TVariable *instanceVariable;  // May be nullptr if the block is not instanced.

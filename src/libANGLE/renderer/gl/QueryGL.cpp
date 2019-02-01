@@ -326,7 +326,7 @@ angle::Result SyncQueryGL::end(const gl::Context *context)
     else if (nativegl::SupportsOcclusionQueries(mFunctions))
     {
         mSyncProvider.reset(new SyncProviderGLQuery(mFunctions));
-        ANGLE_TRY(mSyncProvider->init(context, gl::QueryType::AnySamples))
+        ANGLE_TRY(mSyncProvider->init(context, gl::QueryType::AnySamples));
     }
     else
     {

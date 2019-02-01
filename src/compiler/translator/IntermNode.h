@@ -68,7 +68,7 @@ class TVariable;
 class TIntermNode : angle::NonCopyable
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     TIntermNode()
     {
         // TODO: Move this to TSourceLoc constructor

@@ -268,7 +268,7 @@ struct ANGLE_PLATFORM_EXPORT PlatformMethods
     // adds or removes new members.
     void *context = 0;
 
-    ANGLE_PLATFORM_OP(ANGLE_PLATFORM_METHOD_DEF);
+    ANGLE_PLATFORM_OP(ANGLE_PLATFORM_METHOD_DEF)
 };
 
 inline PlatformMethods::PlatformMethods() = default;

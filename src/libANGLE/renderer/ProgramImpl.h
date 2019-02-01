@@ -35,7 +35,7 @@ namespace rx
 class LinkEvent : angle::NonCopyable
 {
   public:
-    virtual ~LinkEvent(){};
+    virtual ~LinkEvent() {}
 
     // Please be aware that these methods may be called under a gl::Context other
     // than the one where the LinkEvent was created.

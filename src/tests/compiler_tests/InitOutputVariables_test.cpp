@@ -176,7 +176,7 @@ class FindStructByName final : public TIntermTraverser
         }
     }
 
-    bool isStructureFound() const { return mStructure != nullptr; };
+    bool isStructureFound() const { return mStructure != nullptr; }
     const TStructure *getStructure() const { return mStructure; }
 
   private:

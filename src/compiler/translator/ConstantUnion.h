@@ -20,7 +20,7 @@ class TDiagnostics;
 class TConstantUnion
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     TConstantUnion();
 
     bool cast(TBasicType newType, const TConstantUnion &constant);

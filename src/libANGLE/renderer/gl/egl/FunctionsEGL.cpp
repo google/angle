@@ -145,11 +145,14 @@ FunctionsEGL::~FunctionsEGL()
 
 egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
 {
-#define ANGLE_GET_PROC_OR_ERROR(MEMBER, NAME)                                       \
-    if (!SetPtr(MEMBER, getProcAddress(#NAME)))                                     \
-    {                                                                               \
-        return egl::EglNotInitialized() << "Could not load EGL entry point " #NAME; \
-    }
+#define ANGLE_GET_PROC_OR_ERROR(MEMBER, NAME)                                           \
+    do                                                                                  \
+    {                                                                                   \
+        if (!SetPtr(MEMBER, getProcAddress(#NAME)))                                     \
+        {                                                                               \
+            return egl::EglNotInitialized() << "Could not load EGL entry point " #NAME; \
+        }                                                                               \
+    } while (0)
 
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->bindAPIPtr, eglBindAPI);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->chooseConfigPtr, eglChooseConfig);

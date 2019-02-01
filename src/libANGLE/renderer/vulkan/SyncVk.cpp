@@ -241,7 +241,7 @@ egl::Error EGLSyncVk::clientWait(const egl::Display *display,
             UNREACHABLE();
             *outResult = EGL_FALSE;
             return egl::Error(EGL_BAD_ALLOC);
-    };
+    }
 }
 
 egl::Error EGLSyncVk::serverWait(const egl::Display *display, EGLint flags)

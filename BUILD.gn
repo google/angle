@@ -122,10 +122,14 @@ config("extra_warnings") {
   }
   if (is_clang) {
     cflags += [
+      # Remove when crbug.com/926235 is resolved.
+      "-Wextra-semi",
+      "-Wextra-semi-stmt",
+
       # Remove when crbug.com/428099 is resolved.
       "-Winconsistent-missing-override",
-      "-Wunneeded-internal-declaration",
       "-Wnon-virtual-dtor",
+      "-Wunneeded-internal-declaration",
     ]
   }
 }
@@ -192,12 +196,21 @@ angle_source_set("angle_system_utils") {
   sources = angle_system_utils_sources
 }
 
+angle_source_set("xxhash") {
+  sources = xxhash_sources
+  configs -= [ "${angle_root}:extra_warnings" ]
+}
+
 angle_static_library("angle_common") {
   sources = libangle_common_sources
 
   configs += [
     ":angle_common_config",
     ":debug_annotations_config",
+  ]
+
+  deps = [
+    ":xxhash",
   ]
 
   public_deps = [

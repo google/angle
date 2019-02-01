@@ -50,7 +50,7 @@ std::vector<T> FilterTestParams(const std::vector<T> &params)
     INSTANTIATE_TEST_CASE_P(, testName,                                          \
                             testing::ValuesIn(::angle::FilterTestParams(         \
                                 testName##params, ArraySize(testName##params))), \
-                            testing::PrintToStringParamName());
+                            testing::PrintToStringParamName())
 
 }  // namespace angle
 

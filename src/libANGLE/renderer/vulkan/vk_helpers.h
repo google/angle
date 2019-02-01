@@ -64,7 +64,7 @@ class DynamicBuffer : angle::NonCopyable
     // This frees resources immediately.
     void destroy(VkDevice device);
 
-    BufferHelper *getCurrentBuffer() { return mBuffer; };
+    BufferHelper *getCurrentBuffer() { return mBuffer; }
 
     // For testing only!
     void setMinimumSizeForTesting(size_t minSize);

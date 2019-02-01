@@ -544,6 +544,6 @@ ANGLE_INSTANTIATE_TEST(BindUniformLocationTest,
                        ES2_OPENGLES(),
                        ES2_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(BindUniformLocationES31Test, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES())
+ANGLE_INSTANTIATE_TEST(BindUniformLocationES31Test, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
 }  // namespace

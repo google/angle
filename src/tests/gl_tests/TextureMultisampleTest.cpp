@@ -118,7 +118,7 @@ void main() {
     my_FragColor = texelFetch(tex, sampleCoords, sampleNum);
 }
 )";
-    };
+    }
 
     const char *blitArrayTextureLayerFragmentShader()
     {
@@ -140,7 +140,7 @@ void main() {
     my_FragColor = texelFetch(tex, ivec3(sampleCoords, layer), sampleNum);
 }
 )";
-    };
+    }
 
     const char *blitIntArrayTextureLayerFragmentShader()
     {
@@ -162,7 +162,7 @@ void main() {
     my_FragColor = vec4(texelFetch(tex, ivec3(sampleCoords, layer), sampleNum));
 }
 )";
-    };
+    }
 };
 
 class NegativeTextureMultisampleTest : public TextureMultisampleTest

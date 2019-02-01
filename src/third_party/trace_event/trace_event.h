@@ -462,16 +462,20 @@
 // Implementation detail: internal macro to create static category and add begin
 // event if the category is enabled. Also adds the end event when the scope
 // ends.
-#define INTERNAL_TRACE_EVENT_ADD_SCOPED(category, name, ...)                                     \
-    INTERNAL_TRACE_EVENT_GET_CATEGORY_INFO(category);                                            \
-    gl::TraceEvent::TraceEndOnScopeClose INTERNALTRACEEVENTUID(profileScope);                    \
-    if (*INTERNALTRACEEVENTUID(catstatic))                                                       \
-    {                                                                                            \
-        gl::TraceEvent::addTraceEvent(TRACE_EVENT_PHASE_BEGIN, INTERNALTRACEEVENTUID(catstatic), \
-                                      name, gl::TraceEvent::noEventId, TRACE_EVENT_FLAG_NONE,    \
-                                      ##__VA_ARGS__);                                            \
-        INTERNALTRACEEVENTUID(profileScope).initialize(INTERNALTRACEEVENTUID(catstatic), name);  \
-    }
+#define INTERNAL_TRACE_EVENT_ADD_SCOPED(category, name, ...)                      \
+    do                                                                            \
+    {                                                                             \
+        INTERNAL_TRACE_EVENT_GET_CATEGORY_INFO(category);                         \
+        gl::TraceEvent::TraceEndOnScopeClose INTERNALTRACEEVENTUID(profileScope); \
+        if (*INTERNALTRACEEVENTUID(catstatic))                                    \
+        {                                                                         \
+            gl::TraceEvent::addTraceEvent(                                        \
+                TRACE_EVENT_PHASE_BEGIN, INTERNALTRACEEVENTUID(catstatic), name,  \
+                gl::TraceEvent::noEventId, TRACE_EVENT_FLAG_NONE, ##__VA_ARGS__); \
+            INTERNALTRACEEVENTUID(profileScope)                                   \
+                .initialize(INTERNALTRACEEVENTUID(catstatic), name);              \
+        }                                                                         \
+    } while (0)
 
 // Implementation detail: internal macro to create static category and add
 // event if the category is enabled.

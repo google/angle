@@ -690,9 +690,9 @@ angle::Result VertexArrayGL::syncState(const gl::Context *context,
             case VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
                 break;
 
-                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_ATTRIB_FUNC);
-                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_BINDING_FUNC);
-                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_BUFFER_DATA_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_ATTRIB_FUNC)
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_BINDING_FUNC)
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_BUFFER_DATA_FUNC)
 
             default:
                 UNREACHABLE();

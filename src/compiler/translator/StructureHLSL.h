@@ -67,7 +67,7 @@ class StructureHLSL : angle::NonCopyable
 
     struct TStructProperties : public angle::NonCopyable
     {
-        POOL_ALLOCATOR_NEW_DELETE();
+        POOL_ALLOCATOR_NEW_DELETE
 
         TStructProperties() {}
 

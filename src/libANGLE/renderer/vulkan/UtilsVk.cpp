@@ -620,7 +620,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     vk::CommandBuffer *commandBuffer;
     if (!framebuffer->appendToStartedRenderPass(renderer->getCurrentQueueSerial(), &commandBuffer))
     {
-        ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, &commandBuffer))
+        ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, &commandBuffer));
     }
 
     ImageClearShaderParams shaderParams;

@@ -38,7 +38,7 @@ class ImageD3D : angle::NonCopyable
 {
   public:
     ImageD3D();
-    virtual ~ImageD3D(){};
+    virtual ~ImageD3D() {}
 
     GLsizei getWidth() const { return mWidth; }
     GLsizei getHeight() const { return mHeight; }

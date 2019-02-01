@@ -577,7 +577,7 @@ angle::Result ComputeStartVertex(ContextImpl *contextImpl,
     // unsigned integers(with wrapping on overflow conditions)." ANGLE does not fully handle
     // these rules, an overflow error is returned if the start vertex cannot be stored in a
     // 32-bit signed integer.
-    ANGLE_CHECK_GL_MATH(contextImpl, startVertexInt64 <= std::numeric_limits<GLint>::max())
+    ANGLE_CHECK_GL_MATH(contextImpl, startVertexInt64 <= std::numeric_limits<GLint>::max());
 
     *firstVertexOut = static_cast<GLint>(startVertexInt64);
     return angle::Result::Continue;

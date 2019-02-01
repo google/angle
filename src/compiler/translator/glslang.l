@@ -40,6 +40,8 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #endif
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+// Flex isn't semi-colon clean.
+#pragma clang diagnostic ignored "-Wextra-semi-stmt"
 #endif
 }
 

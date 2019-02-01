@@ -187,37 +187,37 @@ class GLProgram
 #define ANGLE_GL_EMPTY_PROGRAM(name) \
     priv::GLProgram name;            \
     name.makeEmpty();                \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_PROGRAM(name, vertex, fragment) \
     priv::GLProgram name;                        \
     name.makeRaster(vertex, fragment);           \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_PROGRAM_WITH_GS(name, vertex, geometry, fragment) \
     priv::GLProgram name;                                          \
     name.makeRaster(vertex, geometry, fragment);                   \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(name, vertex, fragment, tfVaryings, bufferMode) \
     priv::GLProgram name;                                                                   \
     name.makeRasterWithTransformFeedback(vertex, fragment, tfVaryings, bufferMode);         \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_COMPUTE_PROGRAM(name, compute) \
     priv::GLProgram name;                       \
     name.makeCompute(compute);                  \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_BINARY_OES_PROGRAM(name, binary, binaryFormat) \
     priv::GLProgram name;                                       \
     name.makeBinaryOES(binary, binaryFormat);                   \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_BINARY_ES3_PROGRAM(name, binary, binaryFormat) \
     priv::GLProgram name;                                       \
     name.makeBinaryES3(binary, binaryFormat);                   \
-    ASSERT_TRUE(name.valid());
+    ASSERT_TRUE(name.valid())
 
 }  // namespace angle
 

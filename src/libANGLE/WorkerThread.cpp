@@ -121,7 +121,7 @@ bool AsyncWaitableEvent::isReady()
 class AsyncWorkerPool final : public WorkerThreadPool
 {
   public:
-    AsyncWorkerPool(size_t maxThreads) : mMaxThreads(maxThreads), mRunningThreads(0){};
+    AsyncWorkerPool(size_t maxThreads) : mMaxThreads(maxThreads), mRunningThreads(0) {}
     ~AsyncWorkerPool() override = default;
 
     std::shared_ptr<WaitableEvent> postWorkerTask(std::shared_ptr<Closure> task) override;

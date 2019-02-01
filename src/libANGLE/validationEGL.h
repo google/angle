@@ -318,13 +318,15 @@ Error ValidateGetFrameTimestampsANDROID(const Display *display,
 }  // namespace egl
 
 #define ANGLE_EGL_TRY(THREAD, EXPR, FUNCNAME, LABELOBJECT)                               \
+    do                                                                                   \
     {                                                                                    \
         auto ANGLE_LOCAL_VAR = (EXPR);                                                   \
         if (ANGLE_LOCAL_VAR.isError())                                                   \
             return THREAD->setError(ANGLE_LOCAL_VAR, GetDebug(), FUNCNAME, LABELOBJECT); \
-    }
+    } while (0)
 
 #define ANGLE_EGL_TRY_RETURN(THREAD, EXPR, FUNCNAME, LABELOBJECT, RETVAL)         \
+    do                                                                            \
     {                                                                             \
         auto ANGLE_LOCAL_VAR = (EXPR);                                            \
         if (ANGLE_LOCAL_VAR.isError())                                            \
@@ -332,6 +334,6 @@ Error ValidateGetFrameTimestampsANDROID(const Display *display,
             THREAD->setError(ANGLE_LOCAL_VAR, GetDebug(), FUNCNAME, LABELOBJECT); \
             return RETVAL;                                                        \
         }                                                                         \
-    }
+    } while (0)
 
 #endif  // LIBANGLE_VALIDATIONEGL_H_

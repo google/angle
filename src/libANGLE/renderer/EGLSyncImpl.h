@@ -25,8 +25,8 @@ namespace rx
 class EGLSyncImpl : angle::NonCopyable
 {
   public:
-    EGLSyncImpl(){};
-    virtual ~EGLSyncImpl(){};
+    EGLSyncImpl() {}
+    virtual ~EGLSyncImpl() {}
 
     virtual void onDestroy(const egl::Display *display) {}
 

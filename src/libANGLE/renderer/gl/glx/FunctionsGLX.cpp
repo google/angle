@@ -150,16 +150,19 @@ bool FunctionsGLX::initialize(Display *xDisplay, int screen, std::string *errorS
     getProc = reinterpret_cast<PFNGETPROCPROC>(glXGetProcAddress);
 #endif
 
-#define GET_PROC_OR_ERROR(MEMBER, NAME)                         \
-    if (!GetProc(getProc, MEMBER, #NAME))                       \
-    {                                                           \
-        *errorString = "Could not load GLX entry point " #NAME; \
-        return false;                                           \
-    }
+#define GET_PROC_OR_ERROR(MEMBER, NAME)                             \
+    do                                                              \
+    {                                                               \
+        if (!GetProc(getProc, MEMBER, #NAME))                       \
+        {                                                           \
+            *errorString = "Could not load GLX entry point " #NAME; \
+            return false;                                           \
+        }                                                           \
+    } while (0)
 #if !defined(ANGLE_LINK_GLX)
 #    define GET_FNPTR_OR_ERROR(MEMBER, NAME) GET_PROC_OR_ERROR(MEMBER, NAME)
 #else
-#    define GET_FNPTR_OR_ERROR(MEMBER, NAME) *MEMBER = NAME;
+#    define GET_FNPTR_OR_ERROR(MEMBER, NAME) *MEMBER = NAME
 #endif
 
     // GLX 1.0

@@ -45,14 +45,17 @@ libangle_common_sources = [
   "src/common/third_party/base/anglebase/sys_byteorder.h",
   "src/common/third_party/smhasher/src/PMurHash.cpp",
   "src/common/third_party/smhasher/src/PMurHash.h",
-  "src/common/third_party/xxhash/xxhash.c",
-  "src/common/third_party/xxhash/xxhash.h",
   "src/common/tls.cpp",
   "src/common/tls.h",
   "src/common/uniform_type_info_autogen.cpp",
   "src/common/utilities.cpp",
   "src/common/utilities.h",
   "src/common/vector_utils.h",
+]
+
+xxhash_sources = [
+  "src/common/third_party/xxhash/xxhash.c",
+  "src/common/third_party/xxhash/xxhash.h",
 ]
 
 angle_system_utils_sources = [

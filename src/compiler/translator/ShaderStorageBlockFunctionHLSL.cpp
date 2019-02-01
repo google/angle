@@ -409,7 +409,6 @@ void ShaderStorageBlockFunctionHLSL::shaderStorageBlockFunctionHeader(TInfoSinkB
                 out << ssboFunction.typeString << " " << ssboFunction.functionName
                     << "(RWByteAddressBuffer buffer, uint loc, " << ssboFunction.typeString
                     << " value)\n";
-                ;
                 out << "{\n";
 
                 OutputSSBOAtomicMemoryFunctionBody(out, ssboFunction);
@@ -420,7 +419,6 @@ void ShaderStorageBlockFunctionHLSL::shaderStorageBlockFunctionHeader(TInfoSinkB
                 out << ssboFunction.typeString << " " << ssboFunction.functionName
                     << "(RWByteAddressBuffer buffer, uint loc, " << ssboFunction.typeString
                     << " compare_value, " << ssboFunction.typeString << " value)\n";
-                ;
                 out << "{\n";
                 OutputSSBOAtomicMemoryFunctionBody(out, ssboFunction);
                 break;

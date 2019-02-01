@@ -187,7 +187,7 @@ namespace BuiltInVariable
 
 {get_variable_definitions}
 
-}};  // namespace BuiltInVariable
+}}  // namespace BuiltInVariable
 
 namespace BuiltInParameters
 {{

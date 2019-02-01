@@ -357,7 +357,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         (*attribBits)[INDEX].reset();                                             \
         break;
 
-                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_ATTRIB_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_ATTRIB_FUNC)
 
 #define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                    \
     case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                            \
@@ -367,7 +367,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         (*bindingBits)[INDEX].reset();                                            \
         break;
 
-                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BINDING_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BINDING_FUNC)
 
 #define ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC(INDEX)                                \
     case gl::VertexArray::DIRTY_BIT_BUFFER_DATA_0 + INDEX:                        \
@@ -375,7 +375,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
         break;
 
-                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC)
 
             default:
                 UNREACHABLE();

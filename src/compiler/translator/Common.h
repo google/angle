@@ -34,7 +34,7 @@ struct TSourceLoc
 //
 // Put POOL_ALLOCATOR_NEW_DELETE in base classes to make them use this scheme.
 //
-#define POOL_ALLOCATOR_NEW_DELETE()                                                  \
+#define POOL_ALLOCATOR_NEW_DELETE                                                    \
     void *operator new(size_t s) { return GetGlobalPoolAllocator()->allocate(s); }   \
     void *operator new(size_t, void *_Where) { return (_Where); }                    \
     void operator delete(void *) {}                                                  \
@@ -65,7 +65,7 @@ template <class T>
 class TVector : public std::vector<T, pool_allocator<T>>
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
 
     typedef typename std::vector<T, pool_allocator<T>>::size_type size_type;
     TVector() : std::vector<T, pool_allocator<T>>() {}
@@ -77,7 +77,7 @@ template <class K, class D, class H = std::hash<K>, class CMP = std::equal_to<K>
 class TUnorderedMap : public std::unordered_map<K, D, H, CMP, pool_allocator<std::pair<const K, D>>>
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     typedef pool_allocator<std::pair<const K, D>> tAllocator;
 
     TUnorderedMap() : std::unordered_map<K, D, H, CMP, tAllocator>() {}
@@ -93,7 +93,7 @@ template <class K, class D, class CMP = std::less<K>>
 class TMap : public std::map<K, D, CMP, pool_allocator<std::pair<const K, D>>>
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
+    POOL_ALLOCATOR_NEW_DELETE
     typedef pool_allocator<std::pair<const K, D>> tAllocator;
 
     TMap() : std::map<K, D, CMP, tAllocator>() {}

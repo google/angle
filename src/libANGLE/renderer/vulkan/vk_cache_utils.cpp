@@ -280,7 +280,7 @@ DestT Int4Array_Get(const uint8_t *arrayBytes, uint32_t arrayIndex)
 // Helper macro that casts to a bitfield type then verifies no bits were dropped.
 #define SetBitField(lhs, rhs)                                         \
     lhs = static_cast<typename std::decay<decltype(lhs)>::type>(rhs); \
-    ASSERT(static_cast<decltype(rhs)>(lhs) == (rhs));
+    ASSERT(static_cast<decltype(rhs)>(lhs) == (rhs))
 
 // When converting a byte number to a transition bit index we can shift instead of divide.
 constexpr size_t kTransitionByteShift = Log2(kGraphicsPipelineDirtyBitBytes);

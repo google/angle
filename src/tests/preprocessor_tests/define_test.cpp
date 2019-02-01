@@ -30,7 +30,7 @@ TEST_F(DefineTest, NonIdentifier)
                 print(pp::Diagnostics::PP_UNEXPECTED_TOKEN, pp::SourceLocation(0, 1), "2"));
 
     preprocess(input, expected);
-};
+}
 
 TEST_F(DefineTest, RedefinePredefined)
 {

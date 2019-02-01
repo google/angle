@@ -58,7 +58,7 @@ class EGLContextCompatibilityTest : public EGLTest,
     {
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         eglTerminate(mDisplay);
-    };
+    }
 
   protected:
     // Queries EGL config to determine if multisampled or not
