@@ -17,6 +17,28 @@
 namespace rx
 {
 
+namespace
+{
+EGLint GetXcbVisualType(xcb_screen_t *screen)
+{
+    // Visual type is the class member of xcb_visualtype_t whose id matches the root visual.
+    for (xcb_depth_iterator_t depth_iter = xcb_screen_allowed_depths_iterator(screen);
+         depth_iter.rem; xcb_depth_next(&depth_iter))
+    {
+        for (xcb_visualtype_iterator_t visual_iter = xcb_depth_visuals_iterator(depth_iter.data);
+             visual_iter.rem; xcb_visualtype_next(&visual_iter))
+        {
+            if (screen->root_visual == visual_iter.data->visual_id)
+            {
+                return visual_iter.data->_class;
+            }
+        }
+    }
+
+    return EGL_NONE;
+}
+}  // namespace
+
 DisplayVkXcb::DisplayVkXcb(const egl::DisplayState &state)
     : DisplayVk(state), mXcbConnection(nullptr)
 {}
@@ -72,7 +94,19 @@ egl::ConfigSet DisplayVkXcb::generateConfigs()
 bool DisplayVkXcb::checkConfigSupport(egl::Config *config)
 {
     // TODO(geofflang): Test for native support and modify the config accordingly.
-    // anglebug.com/2692
+    // http://anglebug.com/2692
+
+    // Find the screen the window was created on:
+    xcb_screen_iterator_t screenIterator = xcb_setup_roots_iterator(xcb_get_setup(mXcbConnection));
+    ASSERT(screenIterator.rem);
+
+    xcb_screen_t *screen = screenIterator.data;
+    ASSERT(screen);
+
+    // Visual id is root_visual of the screen
+    config->nativeVisualID   = screen->root_visual;
+    config->nativeVisualType = GetXcbVisualType(screen);
+
     return true;
 }
 
