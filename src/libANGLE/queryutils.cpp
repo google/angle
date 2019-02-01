@@ -2867,6 +2867,9 @@ void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value)
         case EGL_COLOR_COMPONENT_TYPE_EXT:
             *value = config->colorComponentType;
             break;
+        case EGL_RECORDABLE_ANDROID:
+            *value = config->recordable;
+            break;
         default:
             UNREACHABLE();
             break;

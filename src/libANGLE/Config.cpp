@@ -59,7 +59,8 @@ Config::Config()
       transparentGreenValue(0),
       transparentBlueValue(0),
       optimalOrientation(0),
-      colorComponentType(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT)
+      colorComponentType(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT),
+      recordable(EGL_FALSE)
 {}
 
 Config::~Config() {}
@@ -266,7 +267,7 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     match = config.stencilSize >= attributeValue;
                     break;
                 case EGL_CONFIG_CAVEAT:
-                    match = config.configCaveat == (EGLenum)attributeValue;
+                    match = config.configCaveat == static_cast<EGLenum>(attributeValue);
                     break;
                 case EGL_CONFIG_ID:
                     match = config.configID == attributeValue;
@@ -275,7 +276,7 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     match = config.level >= attributeValue;
                     break;
                 case EGL_NATIVE_RENDERABLE:
-                    match = config.nativeRenderable == (EGLBoolean)attributeValue;
+                    match = config.nativeRenderable == static_cast<EGLBoolean>(attributeValue);
                     break;
                 case EGL_NATIVE_VISUAL_TYPE:
                     match = config.nativeVisualType == attributeValue;
@@ -290,7 +291,7 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     match = (config.surfaceType & attributeValue) == attributeValue;
                     break;
                 case EGL_TRANSPARENT_TYPE:
-                    match = config.transparentType == (EGLenum)attributeValue;
+                    match = config.transparentType == static_cast<EGLenum>(attributeValue);
                     break;
                 case EGL_TRANSPARENT_BLUE_VALUE:
                     match = config.transparentBlueValue == attributeValue;
@@ -302,10 +303,10 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     match = config.transparentRedValue == attributeValue;
                     break;
                 case EGL_BIND_TO_TEXTURE_RGB:
-                    match = config.bindToTextureRGB == (EGLBoolean)attributeValue;
+                    match = config.bindToTextureRGB == static_cast<EGLBoolean>(attributeValue);
                     break;
                 case EGL_BIND_TO_TEXTURE_RGBA:
-                    match = config.bindToTextureRGBA == (EGLBoolean)attributeValue;
+                    match = config.bindToTextureRGBA == static_cast<EGLBoolean>(attributeValue);
                     break;
                 case EGL_MIN_SWAP_INTERVAL:
                     match = config.minSwapInterval == attributeValue;
@@ -320,7 +321,7 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     match = config.alphaMaskSize >= attributeValue;
                     break;
                 case EGL_COLOR_BUFFER_TYPE:
-                    match = config.colorBufferType == (EGLenum)attributeValue;
+                    match = config.colorBufferType == static_cast<EGLenum>(attributeValue);
                     break;
                 case EGL_RENDERABLE_TYPE:
                     match = (config.renderableType & attributeValue) == attributeValue;
@@ -346,6 +347,9 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     break;
                 case EGL_COLOR_COMPONENT_TYPE_EXT:
                     match = config.colorComponentType == static_cast<EGLenum>(attributeValue);
+                    break;
+                case EGL_RECORDABLE_ANDROID:
+                    match = config.recordable == static_cast<EGLBoolean>(attributeValue);
                     break;
                 default:
                     UNREACHABLE();

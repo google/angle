@@ -1195,6 +1195,10 @@ void Display::initDisplayExtensions()
     // Blob cache extension is provided by the ANGLE frontend
     mDisplayExtensions.blobCache = true;
 
+    // The EGL_ANDROID_recordable extension is provided by the ANGLE frontend, and will always say
+    // that ANativeWindow is not recordable.
+    mDisplayExtensions.recordable = true;
+
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 

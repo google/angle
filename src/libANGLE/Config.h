@@ -69,6 +69,7 @@ struct Config
     EGLint transparentBlueValue;   // Transparent blue value
     EGLint optimalOrientation;     // Optimal window surface orientation
     EGLenum colorComponentType;    // Color component type
+    EGLBoolean recordable;         // EGL_TRUE if a surface can support recording on Android
 };
 
 class ConfigSet
