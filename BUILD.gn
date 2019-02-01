@@ -948,6 +948,13 @@ angle_shared_library("libfeature_support${angle_libs_suffix}") {
     "${angle_jsoncpp_dir}:jsoncpp_config",
   ]
 
+  if (is_mac && !is_component_build) {
+    ldflags = [
+      "-install_name",
+      "@rpath/${target_name}.dylib",
+    ]
+  }
+
   sources = [
     "src/feature_support_util/feature_support_util.cpp",
     "src/feature_support_util/feature_support_util.h",
