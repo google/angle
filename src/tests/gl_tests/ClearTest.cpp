@@ -187,6 +187,26 @@ TEST_P(ClearTest, DefaultFramebuffer)
     EXPECT_PIXEL_NEAR(0, 0, 64, 128, 128, 128, 1.0);
 }
 
+// Test clearing the default framebuffer with scissor and mask
+// This forces down path that uses draw to do clear
+TEST_P(ClearTest, EmptyScissor)
+{
+    // These configs have bug that fails this test.
+    // These configs are unmaintained so skipping.
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
+    ANGLE_SKIP_TEST_IF(IsOSX());
+    glClearColor(0.25f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(-10, 0, 5, 5);
+    glClearColor(0.5f, 0.25f, 0.75f, 0.5f);
+    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_SCISSOR_TEST);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    EXPECT_PIXEL_NEAR(0, 0, 64, 128, 128, 255, 1.0);
+}
+
 // Test clearing the RGB default framebuffer and verify that the alpha channel is not cleared
 TEST_P(ClearTestRGB, DefaultFramebufferRGB)
 {
