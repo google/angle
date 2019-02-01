@@ -22,6 +22,8 @@
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
+#include "common/string_utils.h"
+#include "common/system_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
@@ -133,11 +135,50 @@ rx::DisplayImpl *CreateDisplayFromDevice(Device *eglDevice, const DisplayState &
     return impl;
 }
 
+// On platforms with support for multiple back-ends, allow an environment variable to control
+// the default.  This is useful to run angle with benchmarks without having to modify the
+// benchmark source.  Possible values for this environment variable (ANGLE_DEFAULT_PLATFORM)
+// are: vulkan, gl, d3d11.
+EGLAttrib GetDisplayTypeFromEnvironment()
+{
+    std::string angleDefaultEnv = angle::GetEnvironmentVar("ANGLE_DEFAULT_PLATFORM");
+    angle::ToLower(&angleDefaultEnv);
+
+#if defined(ANGLE_ENABLE_VULKAN)
+    if (angleDefaultEnv == "vulkan")
+    {
+        return EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
+    }
+#endif
+
+#if defined(ANGLE_ENABLE_OPENGL)
+    if (angleDefaultEnv == "gl")
+    {
+        return EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE;
+    }
+#endif
+
+#if defined(ANGLE_ENABLE_D3D11)
+    if (angleDefaultEnv == "d3d11")
+    {
+        return EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    }
+#endif
+
+    return EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+}
+
 rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const DisplayState &state)
 {
     rx::DisplayImpl *impl = nullptr;
     EGLAttrib displayType =
         attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+
+    if (displayType == EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
+    {
+        displayType = GetDisplayTypeFromEnvironment();
+    }
+
     switch (displayType)
     {
         case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
