@@ -7,6 +7,7 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
+#include "util/gles_loader_autogen.h"
 #include "util/random_utils.h"
 
 using namespace angle;
@@ -1489,6 +1490,162 @@ TEST_P(TransformFeedbackTest, NoTransformFeedbackVaryingsInUse)
     // is active or because the active program object has specified no output variables to record."
 
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Test that you can pause transform feedback without drawing first.
+TEST_P(TransformFeedbackTest, SwitchProgramBeforeDraw)
+{
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ANGLE_GL_PROGRAM(nonTFProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Set up transform feedback, but pause it.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glPauseTransformFeedback();
+
+    // Switch programs and draw while transform feedback is paused.
+    glUseProgram(nonTFProgram);
+    GLint positionLocation = glGetAttribLocation(nonTFProgram, essl1_shaders::PositionAttrib());
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttrib4f(positionLocation, 0.0f, 0.0f, 0.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that ending transform feedback with a different program bound does not cause internal
+// errors.
+TEST_P(TransformFeedbackTest, EndWithDifferentProgram)
+{
+    // AMD drivers fail because they perform transform feedback when it should be paused.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ANGLE_GL_PROGRAM(nonTFProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Set up transform feedback, but pause it.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    // Make sure the buffer has zero'd data
+    std::vector<float> data(mTransformFeedbackBufferSize / sizeof(float), 0.0f);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, data.data(),
+                 GL_STATIC_DRAW);
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glPauseTransformFeedback();
+    // Transform feedback should not happen
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+    // Draw using a different program.
+    glUseProgram(nonTFProgram);
+    GLint positionLocation = glGetAttribLocation(nonTFProgram, essl1_shaders::PositionAttrib());
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttrib4f(positionLocation, 0.0f, 0.0f, 0.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // End transform feedback without unpausing and with a different program bound. This triggers
+    // the bug.
+    glEndTransformFeedback();
+
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    // On a buggy driver without the workaround this will cause a GL error because the driver
+    // thinks transform feedback is still paused, but rendering will still write to the transform
+    // feedback buffers.
+    glPauseTransformFeedback();
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    glEndTransformFeedback();
+
+    // Make sure that transform feedback did not happen. We always paused transform feedback before
+    // rendering, but a buggy driver will fail to pause.
+    const void *mapPointer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector4) * 4, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+    const Vector4 *vecPointer = static_cast<const Vector4 *>(mapPointer);
+    ASSERT_EQ(vecPointer[0], Vector4(0, 0, 0, 0));
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that switching contexts with paused transform feedback does not cause internal errors.
+TEST_P(TransformFeedbackTest, EndWithDifferentProgramContextSwitch)
+{
+    // AMD drivers fail because they perform transform feedback when it should be paused.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    EGLWindow *window          = getEGLWindow();
+    EGLDisplay display         = window->getDisplay();
+    EGLConfig config           = window->getConfig();
+    EGLSurface surface         = window->getSurface();
+    EGLint contextAttributes[] = {
+        EGL_CONTEXT_MAJOR_VERSION_KHR,
+        GetParam().majorVersion,
+        EGL_CONTEXT_MINOR_VERSION_KHR,
+        GetParam().minorVersion,
+        EGL_NONE,
+    };
+    auto context1 = eglGetCurrentContext();
+    auto context2 = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttributes);
+    ASSERT_NE(context2, EGL_NO_CONTEXT);
+    // Compile a program on the second context.
+    eglMakeCurrent(display, surface, surface, context2);
+    ANGLE_GL_PROGRAM(nonTFProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    eglMakeCurrent(display, surface, surface, context1);
+
+    // Set up transform feedback, but pause it.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    // Make sure the buffer has zero'd data
+    std::vector<float> data(mTransformFeedbackBufferSize / sizeof(float), 0.0f);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, data.data(),
+                 GL_STATIC_DRAW);
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glPauseTransformFeedback();
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    // Leave transform feedback active but paused while we switch to a second context and render
+    // something.
+    eglMakeCurrent(display, surface, surface, context2);
+    glUseProgram(nonTFProgram);
+    GLint positionLocation = glGetAttribLocation(nonTFProgram, essl1_shaders::PositionAttrib());
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttrib4f(positionLocation, 0.0f, 0.0f, 0.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // Switch back to the first context and end transform feedback. On a buggy driver, this will
+    // cause the transform feedback object to enter an invalid "inactive, but paused" state unless
+    // the workaround is applied.
+    eglMakeCurrent(display, surface, surface, context1);
+    glEndTransformFeedback();
+    glBeginTransformFeedback(GL_TRIANGLES);
+    // On a buggy driver without the workaround this will cause a GL error because the driver
+    // thinks transform feedback is still paused, but rendering will still write to the transform
+    // feedback buffers.
+    glPauseTransformFeedback();
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    glEndTransformFeedback();
+
+    // Make sure that transform feedback did not happen. We always paused transform feedback before
+    // rendering, but a buggy driver will fail to pause.
+    const void *mapPointer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector4) * 4, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+    const Vector4 *vecPointer = static_cast<const Vector4 *>(mapPointer);
+    ASSERT_EQ(vecPointer[0], Vector4(0, 0, 0, 0));
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+    eglDestroyContext(display, context2);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
