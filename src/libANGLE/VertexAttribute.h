@@ -40,17 +40,13 @@ class VertexBinding final : angle::NonCopyable
 
     const BindingPointer<Buffer> &getBuffer() const { return mBuffer; }
 
-    ANGLE_INLINE void setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound)
+    ANGLE_INLINE void setBuffer(const gl::Context *context, Buffer *bufferIn)
     {
-        if (containerIsBound)
-        {
-            if (mBuffer.get())
-                mBuffer->onNonTFBindingChanged(-1);
-            if (bufferIn)
-                bufferIn->onNonTFBindingChanged(1);
-        }
         mBuffer.set(context, bufferIn);
     }
+
+    // Skips ref counting for better inlined performance.
+    ANGLE_INLINE void assignBuffer(Buffer *bufferIn) { mBuffer.assign(bufferIn); }
 
     void onContainerBindingChanged(const Context *context, int incr) const;
 

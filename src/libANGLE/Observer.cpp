@@ -98,9 +98,4 @@ void ObserverBinding::onSubjectReset()
 {
     mSubject = nullptr;
 }
-
-const Subject *ObserverBinding::getSubject() const
-{
-    return mSubject;
-}
 }  // namespace angle

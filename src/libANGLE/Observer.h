@@ -115,7 +115,9 @@ class ObserverBinding final : public ObserverBindingBase
     void onStateChange(const gl::Context *context, SubjectMessage message) const;
     void onSubjectReset() override;
 
-    const Subject *getSubject() const;
+    ANGLE_INLINE const Subject *getSubject() const { return mSubject; }
+
+    ANGLE_INLINE void assignSubject(Subject *subject) { mSubject = subject; }
 
   private:
     Subject *mSubject;
