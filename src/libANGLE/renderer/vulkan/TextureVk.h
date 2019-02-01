@@ -240,6 +240,7 @@ class TextureVk : public TextureImpl
                                            const gl::Offset &destOffset,
                                            const vk::Format &destFormat,
                                            size_t sourceLevel,
+                                           size_t sourceLayer,
                                            const gl::Rectangle &sourceArea,
                                            bool isSrcFlipY,
                                            bool unpackFlipY,
