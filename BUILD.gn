@@ -124,7 +124,9 @@ config("extra_warnings") {
     cflags += [
       # Remove when crbug.com/926235 is resolved.
       "-Wextra-semi",
-      "-Wextra-semi-stmt",
+
+      # Enable after anglebug.com/3128 is fixed.
+      # "-Wextra-semi-stmt",
 
       # Remove when crbug.com/428099 is resolved.
       "-Winconsistent-missing-override",
