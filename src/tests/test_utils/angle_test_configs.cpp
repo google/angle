@@ -382,11 +382,6 @@ PlatformParameters ES2_D3D9()
     return PlatformParameters(2, 0, egl_platform::D3D9());
 }
 
-PlatformParameters ES2_D3D9_REFERENCE()
-{
-    return PlatformParameters(2, 0, egl_platform::D3D9_REFERENCE());
-}
-
 PlatformParameters ES1_D3D11()
 {
     return PlatformParameters(1, 0, egl_platform::D3D11());
@@ -525,26 +520,6 @@ PlatformParameters ES3_D3D11_FL11_0_WARP()
 PlatformParameters ES3_D3D11_FL10_1_WARP()
 {
     return PlatformParameters(3, 0, egl_platform::D3D11_FL10_1_WARP());
-}
-
-PlatformParameters ES3_D3D11_REFERENCE()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_REFERENCE());
-}
-
-PlatformParameters ES3_D3D11_FL11_1_REFERENCE()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_FL11_1_REFERENCE());
-}
-
-PlatformParameters ES3_D3D11_FL11_0_REFERENCE()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_FL11_0_REFERENCE());
-}
-
-PlatformParameters ES3_D3D11_FL10_1_REFERENCE()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_FL10_1_REFERENCE());
 }
 
 PlatformParameters ES1_OPENGLES()

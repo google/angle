@@ -173,6 +173,7 @@ if (is_win || is_linux || is_mac || is_android) {
 
     deps = [
       ":angle_end2end_tests_main",
+      "${angle_root}:angle_gpu_info_util",
       "${angle_root}:angle_image_util",
       "${angle_root}:angle_util",
       "${angle_root}:angle_util_loader_headers",
@@ -270,6 +271,7 @@ if (is_win || is_linux || is_android || is_mac) {
       ":angle_perftests_main",
       "${angle_jsoncpp_dir}:jsoncpp",
       "${angle_root}:angle_common",
+      "${angle_root}:angle_gpu_info_util",
       "${angle_root}:angle_system_utils",
       "${angle_root}:angle_util",
       "${angle_root}:angle_util_loader_headers",

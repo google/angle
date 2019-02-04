@@ -1521,7 +1521,6 @@ TEST_P(UniformBufferTest, DependentBufferChange)
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),
                        ES3_D3D11_FL11_1(),
-                       ES3_D3D11_FL11_1_REFERENCE(),
                        ES3_OPENGL(),
                        ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(UniformBufferTest31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());

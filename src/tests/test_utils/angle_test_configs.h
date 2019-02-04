@@ -108,7 +108,6 @@ EGLPlatformParameters VULKAN_NULL();
 // ANGLE tests platforms
 PlatformParameters ES1_D3D9();
 PlatformParameters ES2_D3D9();
-PlatformParameters ES2_D3D9_REFERENCE();
 
 PlatformParameters ES1_D3D11();
 PlatformParameters ES2_D3D11();
@@ -142,11 +141,6 @@ PlatformParameters ES3_D3D11_WARP();
 PlatformParameters ES3_D3D11_FL11_1_WARP();
 PlatformParameters ES3_D3D11_FL11_0_WARP();
 PlatformParameters ES3_D3D11_FL10_1_WARP();
-
-PlatformParameters ES3_D3D11_REFERENCE();
-PlatformParameters ES3_D3D11_FL11_1_REFERENCE();
-PlatformParameters ES3_D3D11_FL11_0_REFERENCE();
-PlatformParameters ES3_D3D11_FL10_1_REFERENCE();
 
 PlatformParameters ES1_OPENGL();
 PlatformParameters ES2_OPENGL();

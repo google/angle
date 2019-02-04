@@ -476,14 +476,7 @@ bool IsD3DSM3();
 bool IsDesktopOpenGL();
 bool IsOpenGLES();
 bool IsOpenGL();
-bool IsOzone();
 bool IsNULL();
-
-// Operating systems
-bool IsAndroid();
-bool IsLinux();
-bool IsOSX();
-bool IsWindows();
 bool IsVulkan();
 
 // Debug/Release

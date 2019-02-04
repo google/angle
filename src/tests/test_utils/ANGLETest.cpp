@@ -1219,56 +1219,11 @@ bool IsNULL()
     return (rendererString.find("NULL") != std::string::npos);
 }
 
-bool IsAndroid()
-{
-#if defined(ANGLE_PLATFORM_ANDROID)
-    return true;
-#else
-    return false;
-#endif
-}
-
 bool IsVulkan()
 {
     const char *renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     std::string rendererString(renderer);
     return (rendererString.find("Vulkan") != std::string::npos);
-}
-
-bool IsOzone()
-{
-#if defined(USE_OZONE)
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool IsLinux()
-{
-#if defined(ANGLE_PLATFORM_LINUX)
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool IsOSX()
-{
-#if defined(ANGLE_PLATFORM_APPLE)
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool IsWindows()
-{
-#if defined(ANGLE_PLATFORM_WINDOWS)
-    return true;
-#else
-    return false;
-#endif
 }
 
 bool IsDebug()
