@@ -5,6 +5,8 @@
 angle_perf_tests_sources = [
   "perf_tests/ANGLEPerfTest.cpp",
   "perf_tests/ANGLEPerfTest.h",
+  "perf_tests/ANGLEPerfTestArgs.cpp",
+  "perf_tests/ANGLEPerfTestArgs.h",
   "perf_tests/BlitFramebufferPerf.cpp",
   "perf_tests/BindingPerf.cpp",
   "perf_tests/BufferSubData.cpp",
@@ -26,6 +28,7 @@ angle_perf_tests_sources = [
   "perf_tests/TexturesPerf.cpp",
   "perf_tests/UniformsPerf.cpp",
   "perf_tests/VulkanBarriersPerf.cpp",
+  "perf_tests/glmark2Benchmark.cpp",
   "perf_tests/third_party/perf/perf_test.cc",
   "perf_tests/third_party/perf/perf_test.h",
   "test_utils/angle_test_configs.cpp",
@@ -41,6 +44,8 @@ angle_white_box_perf_tests_sources = [
   "angle_unittests_utils.h",
   "perf_tests/ANGLEPerfTest.cpp",
   "perf_tests/ANGLEPerfTest.h",
+  "perf_tests/ANGLEPerfTestArgs.cpp",
+  "perf_tests/ANGLEPerfTestArgs.h",
   "perf_tests/BitSetIteratorPerf.cpp",
   "perf_tests/CompilerPerf.cpp",
   "perf_tests/EGLInitializePerf.cpp",  # Uses ANGLEGetDisplayPlatform, a non-standard EP.

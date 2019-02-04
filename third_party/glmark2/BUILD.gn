@@ -109,6 +109,9 @@ source_set("glmark2_headers") {
     "src/src/texture.h",
   ]
 
+  if (is_linux) {
+    sources += [ "src/src/gl-state-glx.h" ]
+  }
   if (is_win) {
     sources += [
       "src/src/gl-state-wgl.h",
@@ -377,6 +380,26 @@ glmark2_exe("glmark2_angle") {
     "EGL_EGL_PROTOTYPES=1",
     "GLMARK2_USE_EGL",
   ]
+
+  if (is_linux && !is_component_build) {
+    # Set rpath to find shared libs in a non-component build.
+    public_configs = [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+  }
+}
+
+if (is_linux) {
+  glmark2_exe("glmark2_glx") {
+    sources = [
+      "src/src/gl-state-glx.cpp",
+      "src/src/glad/include/glad/glx.h",
+      "src/src/glad/src/glx.c",
+    ]
+    deps = [
+      ":glmark2_common_gl",
+    ]
+
+    defines = [ "GLMARK2_USE_GLX" ]
+  }
 }
 
 if (is_win) {

@@ -51,13 +51,6 @@ if (build_with_chromium) {
     if (build_angle_gles1_conform_tests) {
       deps += [ "//src/tests:angle_gles1_conformance_tests" ]
     }
-
-    if (is_win) {
-      deps += [
-        "//third_party/glmark2:glmark2_angle",
-        "//third_party/glmark2:glmark2_wgl",
-      ]
-    }
   }
 }
 
@@ -281,6 +274,16 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
 
     if (is_android) {
       use_native_activity = true
+    }
+
+    if (is_win || is_linux) {
+      data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]
+    }
+    if (is_win) {
+      data_deps += [ "${angle_root}/third_party/glmark2:glmark2_wgl" ]
+    }
+    if (is_linux) {
+      data_deps += [ "${angle_root}/third_party/glmark2:glmark2_glx" ]
     }
   }
 }
