@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8773d5cb_f7ed901d",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-02-04T14:18:48Z",
+      "side": 1,
+      "message": "GL will return a display that is already created if you pass the same parameters to eglGetDisplay and we may terminate a display that is used by the test runner.  Each ANGLETest already has a display you can use by querying getEGLWindow().getDisplay()",
+      "range": {
+        "startLine": 28,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 67
+      },
+      "revId": "3d6e3004f037ee0206683fae5cc9b695650d274c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7356ba6_f8f369d4",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-02-04T14:18:48Z",
+      "side": 1,
+      "message": "You are not calling AngleTest::CleanUp which will leak a lot of state.",
+      "range": {
+        "startLine": 41,
+        "startChar": 31,
+        "endLine": 41,
+        "endChar": 54
+      },
+      "revId": "3d6e3004f037ee0206683fae5cc9b695650d274c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9121f46c_5b099c93",
+        "filename": "src/tests/egl_tests/EGLRecordableTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-02-04T14:18:48Z",
+      "side": 1,
+      "message": "FYI: Each of these will create a display that the test uses.",
+      "range": {
+        "startLine": 85,
+        "startChar": 42,
+        "endLine": 85,
+        "endChar": 81
+      },
+      "revId": "3d6e3004f037ee0206683fae5cc9b695650d274c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
