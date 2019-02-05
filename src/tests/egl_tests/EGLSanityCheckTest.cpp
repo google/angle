@@ -43,6 +43,9 @@ TEST_F(EGLSanityCheckTest, GetProcAddressNegativeTest)
 // We can add specific exceptions here if needed.
 TEST_F(EGLSanityCheckTest, WhitelistMatchesSupport)
 {
+    // Has issues with Vulkan support detection on Android.
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
     // Cannot make any useful checks if SystemInfo is not supported.
     SystemInfo systemInfo;
     ANGLE_SKIP_TEST_IF(!GetSystemInfo(&systemInfo));
@@ -69,8 +72,7 @@ TEST_F(EGLSanityCheckTest, WhitelistMatchesSupport)
     check(ES3_D3D11());
     check(ES31_D3D11());
 
-    // Has an issue on the Android Shield TV.
-    // check(ES1_VULKAN());
+    check(ES1_VULKAN());
     check(ES2_VULKAN());
     check(ES3_VULKAN());
 
