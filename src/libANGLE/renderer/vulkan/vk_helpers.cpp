@@ -29,7 +29,7 @@ constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage =
 constexpr int kLineLoopDynamicBufferMinSize = 1024 * 1024;
 
 // This is an arbitrary max. We can change this later if necessary.
-constexpr uint32_t kDefaultDescriptorPoolMaxSets = 2048;
+constexpr uint32_t kDefaultDescriptorPoolMaxSets = 128;
 
 struct ImageMemoryBarrierData
 {
