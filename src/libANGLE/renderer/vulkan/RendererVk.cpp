@@ -31,7 +31,6 @@
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "platform/Platform.h"
-
 #include "third_party/trace_event/trace_event.h"
 
 // Consts
@@ -1281,6 +1280,7 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
         mLastCompletedQueueSerial = batch.serial;
 
         batch.fence.destroy(mDevice);
+        TRACE_EVENT0("gpu.angle", "commandPool.destroy");
         batch.commandPool.destroy(mDevice);
         ++finishedCount;
     }

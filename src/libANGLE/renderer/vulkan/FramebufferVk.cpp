@@ -24,6 +24,7 @@
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "third_party/trace_event/trace_event.h"
 
 namespace rx
 {
@@ -1096,6 +1097,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                             RenderTargetVk *renderTarget,
                                             void *pixels)
 {
+    TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
     RendererVk *renderer = contextVk->getRenderer();
 
     ANGLE_TRY(renderTarget->ensureImageInitialized(contextVk));
