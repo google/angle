@@ -173,7 +173,8 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                 return false;
         }
     }
-    else if (IsOSX())
+
+    if (IsOSX())
     {
         // Currently we only support the OpenGL back-end on OSX.
         if (param.driver != GLESDriverType::AngleEGL)
@@ -189,7 +190,21 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
 
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
     }
-    else if (IsLinux())
+
+    if (IsOzone())
+    {
+        // Currently we only support the GLES back-end on Ozone.
+        if (param.driver != GLESDriverType::AngleEGL)
+            return false;
+
+        // ES 3 configs do not work properly on Ozone.
+        if (param.majorVersion > 2)
+            return false;
+
+        return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
+    }
+
+    if (IsLinux())
     {
         // Currently we support the OpenGL and Vulkan back-ends on Linux.
         if (param.driver != GLESDriverType::AngleEGL)
@@ -207,19 +222,8 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                 return false;
         }
     }
-    else if (IsOzone())
-    {
-        // Currently we only support the GLES back-end on Ozone.
-        if (param.driver != GLESDriverType::AngleEGL)
-            return false;
 
-        // ES 3 configs do not work properly on Ozone.
-        if (param.majorVersion > 2)
-            return false;
-
-        return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
-    }
-    else if (IsAndroid())
+    if (IsAndroid())
     {
         // Currently we support the GLES and Vulkan back-ends on Linux.
         if (param.driver != GLESDriverType::AngleEGL)
@@ -243,11 +247,9 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                 return false;
         }
     }
-    else
-    {
-        // Unknown platform.
-        return false;
-    }
+
+    // Unknown platform.
+    return false;
 }
 
 bool IsConfigSupported(const PlatformParameters &param)
