@@ -5095,6 +5095,27 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test initializing an array with the same name of previously declared array
+TEST_P(GLSLTest_ES3, InitSameNameArray)
+{
+    constexpr char kFS[] = R"(#version 300 es
+      precision highp float;
+      out vec4 my_FragColor;
+
+      void main()
+      {
+          float arr[2] = float[2](1.0, 1.0);
+          {
+              float arr[2] = arr;
+              my_FragColor = vec4(0.0, arr[0], 0.0, arr[1]);
+          }
+      })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,

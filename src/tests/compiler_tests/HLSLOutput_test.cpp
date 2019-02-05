@@ -197,5 +197,30 @@ TEST_F(HLSLOutputTest, Array)
             }
         })";
     compile(shaderString);
-    EXPECT_TRUE(foundInCode("_arr[2]"));
+    // The unique id of arr is 1030, which is given to the symbol when parsed and inserted to the
+    // symbol table
+    EXPECT_TRUE(foundInCode("_arr1030[2]"));
+}
+
+// Test that initializing array with previously declared array will not be overwritten
+TEST_F(HLSLOutputTest, SameNameArray)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp float;
+        out vec4 my_FragColor;
+
+        void main()
+        {
+          float arr[2] = float[2](1.0, 1.0);
+          {
+            float arr[2] = arr;
+            my_FragColor = vec4(0.0, arr[0], 0.0, arr[1]);
+          }
+        })";
+    compile(shaderString);
+    // The unique id of the original array, arr, is 1029
+    EXPECT_TRUE(foundInCode("_arr1029[2]"));
+    // The unique id of the new array, arr, is 1030
+    EXPECT_TRUE(foundInCode("_arr1030[2]"));
 }
