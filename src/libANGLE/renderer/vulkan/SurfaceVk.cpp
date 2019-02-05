@@ -392,8 +392,26 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     mSwapchainPresentMode = GetDesiredPresentMode(presentModes, minSwapInterval, maxSwapInterval);
 
-    // Determine number of swapchain images. Aim for one more than the minimum.
-    uint32_t minImageCount = surfaceCaps.minImageCount + 1;
+    // Determine the number of swapchain images:
+    //
+    // - On mailbox, we use minImageCount.  The drivers may increase the number so that non-blocking
+    //   mailbox actually makes sense.
+    // - On immediate, we use max(2, minImageCount).  The vkQueuePresentKHR call immediately frees
+    //   up the other image, so there is no point in having any more images.
+    // - On fifo, we use max(3, minImageCount).  Triple-buffering allows us to present an image,
+    //   have one in the queue and record in another.  Note: on certain configurations (windows +
+    //   nvidia + windowed mode), we could get away with a smaller number.
+    uint32_t minImageCount = surfaceCaps.minImageCount;
+    if (mSwapchainPresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR)
+    {
+        minImageCount = std::max<uint32_t>(2, minImageCount);
+    }
+    else if (mSwapchainPresentMode == VK_PRESENT_MODE_FIFO_KHR)
+    {
+        minImageCount = std::max<uint32_t>(3, minImageCount);
+    }
+
+    // Make sure we don't exceed maxImageCount.
     if (surfaceCaps.maxImageCount > 0 && minImageCount > surfaceCaps.maxImageCount)
     {
         minImageCount = surfaceCaps.maxImageCount;
