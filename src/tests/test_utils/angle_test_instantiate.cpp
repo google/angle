@@ -213,6 +213,10 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
         if (param.driver != GLESDriverType::AngleEGL)
             return false;
 
+        // ES 3 configs do not work properly on Ozone.
+        if (param.majorVersion > 2)
+            return false;
+
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
     }
     else if (IsAndroid())

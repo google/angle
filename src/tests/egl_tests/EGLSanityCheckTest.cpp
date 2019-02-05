@@ -69,7 +69,8 @@ TEST_F(EGLSanityCheckTest, WhitelistMatchesSupport)
     check(ES3_D3D11());
     check(ES31_D3D11());
 
-    check(ES1_VULKAN());
+    // Has an issue on the Android Shield TV.
+    // check(ES1_VULKAN());
     check(ES2_VULKAN());
     check(ES3_VULKAN());
 
