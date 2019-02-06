@@ -9,6 +9,14 @@
 #include "common/platform.h"
 #include "test_utils/third_party/vulkan_command_buffer_utils.h"
 
+#if defined(ANDROID)
+#    define NUM_CMD_BUFFERS 1000
+#    define NUM_FRAMES 10
+#else
+#    define NUM_CMD_BUFFERS 1000
+#    define NUM_FRAMES 100
+#endif
+
 constexpr char kVertShaderText[] = R"(
 #version 400
 #extension GL_ARB_separate_shader_objects : enable
@@ -44,8 +52,8 @@ struct CommandBufferTestParams
 {
     CommandBufferImpl CBImplementation;
     std::string suffix;
-    int frames  = 1;
-    int buffers = 10;
+    int frames  = NUM_FRAMES;
+    int buffers = NUM_CMD_BUFFERS;
 };
 
 class VulkanCommandBufferPerfTest : public ANGLEPerfTest,
@@ -83,7 +91,7 @@ VulkanCommandBufferPerfTest::VulkanCommandBufferPerfTest()
 
 // This test appears to be flaky on multiple platforms.
 #if !defined(ANGLE_PLATFORM_ANDROID)
-    mSkipTest = true;
+    // mSkipTest = true;
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
 }
 
@@ -105,7 +113,7 @@ void VulkanCommandBufferPerfTest::SetUp()
     init_swapchain_extension(mInfo);
     init_device(mInfo);
 
-    init_command_pool(mInfo);
+    init_command_pool(mInfo, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
     init_command_buffer(mInfo);                   // Primary command buffer to hold secondaries
     init_command_buffer_array(mInfo, mBuffers);   // Array of primary command buffers
     init_command_buffer2_array(mInfo, mBuffers);  // Array containing all secondary buffers
@@ -193,6 +201,34 @@ void VulkanCommandBufferPerfTest::TearDown()
     ANGLEPerfTest::TearDown();
 }
 
+// Common code to present image used by all tests
+void Present(sample_info &info, VkFence drawFence)
+{
+    // Now present the image in the window
+
+    VkPresentInfoKHR present;
+    present.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    present.pNext              = NULL;
+    present.swapchainCount     = 1;
+    present.pSwapchains        = &info.swap_chain;
+    present.pImageIndices      = &info.current_buffer;
+    present.pWaitSemaphores    = NULL;
+    present.waitSemaphoreCount = 0;
+    present.pResults           = NULL;
+
+    // Make sure command buffer is finished before presenting
+    VkResult res;
+    do
+    {
+        res = vkWaitForFences(info.device, 1, &drawFence, VK_TRUE, FENCE_TIMEOUT);
+    } while (res == VK_TIMEOUT);
+    vkResetFences(info.device, 1, &drawFence);
+
+    ASSERT_EQ(VK_SUCCESS, res);
+    res = vkQueuePresentKHR(info.present_queue, &present);
+    ASSERT_EQ(VK_SUCCESS, res);
+}
+
 void PrimaryCommandBufferBenchmarkHundredIndividual(sample_info &info,
                                                     VkClearValue *clear_values,
                                                     VkFence drawFence,
@@ -255,28 +291,7 @@ void PrimaryCommandBufferBenchmarkHundredIndividual(sample_info &info,
     res = vkQueueSubmit(info.graphics_queue, 1, submitInfo, drawFence);
     ASSERT_EQ(VK_SUCCESS, res);
 
-    // Now present the image in the window
-
-    VkPresentInfoKHR present;
-    present.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    present.pNext              = NULL;
-    present.swapchainCount     = 1;
-    present.pSwapchains        = &info.swap_chain;
-    present.pImageIndices      = &info.current_buffer;
-    present.pWaitSemaphores    = NULL;
-    present.waitSemaphoreCount = 0;
-    present.pResults           = NULL;
-
-    // Make sure command buffer is finished before presenting
-    do
-    {
-        res = vkWaitForFences(info.device, 1, &drawFence, VK_TRUE, FENCE_TIMEOUT);
-    } while (res == VK_TIMEOUT);
-    vkResetFences(info.device, 1, &drawFence);
-
-    ASSERT_EQ(VK_SUCCESS, res);
-    res = vkQueuePresentKHR(info.present_queue, &present);
-    ASSERT_EQ(VK_SUCCESS, res);
+    Present(info, drawFence);
 }
 
 void PrimaryCommandBufferBenchmarkOneWithOneHundred(sample_info &info,
@@ -342,28 +357,7 @@ void PrimaryCommandBufferBenchmarkOneWithOneHundred(sample_info &info,
     res = vkQueueSubmit(info.graphics_queue, 1, submitInfo, drawFence);
     ASSERT_EQ(VK_SUCCESS, res);
 
-    // Now present the image in the window
-
-    VkPresentInfoKHR present;
-    present.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    present.pNext              = NULL;
-    present.swapchainCount     = 1;
-    present.pSwapchains        = &info.swap_chain;
-    present.pImageIndices      = &info.current_buffer;
-    present.pWaitSemaphores    = NULL;
-    present.waitSemaphoreCount = 0;
-    present.pResults           = NULL;
-
-    // Make sure command buffer is finished before presenting
-    do
-    {
-        res = vkWaitForFences(info.device, 1, &drawFence, VK_TRUE, FENCE_TIMEOUT);
-    } while (res == VK_TIMEOUT);
-    vkResetFences(info.device, 1, &drawFence);
-
-    ASSERT_EQ(VK_SUCCESS, res);
-    res = vkQueuePresentKHR(info.present_queue, &present);
-    ASSERT_EQ(VK_SUCCESS, res);
+    Present(info, drawFence);
 }
 
 void SecondaryCommandBufferBenchmark(sample_info &info,
@@ -454,28 +448,89 @@ void SecondaryCommandBufferBenchmark(sample_info &info,
     res = vkQueueSubmit(info.graphics_queue, 1, submitInfo, drawFence);
     ASSERT_EQ(VK_SUCCESS, res);
 
-    // Now present the image in the window
+    Present(info, drawFence);
+}
 
-    VkPresentInfoKHR present;
-    present.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    present.pNext              = NULL;
-    present.swapchainCount     = 1;
-    present.pSwapchains        = &info.swap_chain;
-    present.pImageIndices      = &info.current_buffer;
-    present.pWaitSemaphores    = NULL;
-    present.waitSemaphoreCount = 0;
-    present.pResults           = NULL;
+void CommandPoolDestroyBenchmark(sample_info &info,
+                                 VkClearValue *clear_values,
+                                 VkFence drawFence,
+                                 VkSemaphore imageAcquiredSemaphore,
+                                 int numBuffers)
+{
+    // Save setup cmd buffer data to be restored
+    auto saved_cmd_pool = info.cmd_pool;
+    auto saved_cb       = info.cmd;
+    auto saved_cb2s     = info.cmd2s;
+    // Now re-allocate & destroy cmd buffers to stress those calls
+    init_command_pool(info, 0);
+    init_command_buffer2_array(info, numBuffers);
 
-    // Make sure command buffer is finished before presenting
-    do
-    {
-        res = vkWaitForFences(info.device, 1, &drawFence, VK_TRUE, FENCE_TIMEOUT);
-    } while (res == VK_TIMEOUT);
-    vkResetFences(info.device, 1, &drawFence);
+    SecondaryCommandBufferBenchmark(info, clear_values, drawFence, imageAcquiredSemaphore,
+                                    numBuffers);
 
-    ASSERT_EQ(VK_SUCCESS, res);
-    res = vkQueuePresentKHR(info.present_queue, &present);
-    ASSERT_EQ(VK_SUCCESS, res);
+    destroy_command_pool(info);
+
+    // Restore original cmd buffer data for cleanup
+    info.cmd_pool = saved_cmd_pool;
+    info.cmd      = saved_cb;
+    info.cmd2s    = saved_cb2s;
+}
+
+void CommandPoolHardResetBenchmark(sample_info &info,
+                                   VkClearValue *clear_values,
+                                   VkFence drawFence,
+                                   VkSemaphore imageAcquiredSemaphore,
+                                   int numBuffers)
+{
+    SecondaryCommandBufferBenchmark(info, clear_values, drawFence, imageAcquiredSemaphore,
+                                    numBuffers);
+    reset_command_pool(info, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+}
+
+void CommandPoolSoftResetBenchmark(sample_info &info,
+                                   VkClearValue *clear_values,
+                                   VkFence drawFence,
+                                   VkSemaphore imageAcquiredSemaphore,
+                                   int numBuffers)
+{
+    SecondaryCommandBufferBenchmark(info, clear_values, drawFence, imageAcquiredSemaphore,
+                                    numBuffers);
+    reset_command_pool(info, 0);
+}
+
+void CommandBufferExplicitHardResetBenchmark(sample_info &info,
+                                             VkClearValue *clear_values,
+                                             VkFence drawFence,
+                                             VkSemaphore imageAcquiredSemaphore,
+                                             int numBuffers)
+{
+    SecondaryCommandBufferBenchmark(info, clear_values, drawFence, imageAcquiredSemaphore,
+                                    numBuffers);
+    // Explicitly resetting cmd buffers
+    reset_command_buffer2_array(info, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
+}
+
+void CommandBufferExplicitSoftResetBenchmark(sample_info &info,
+                                             VkClearValue *clear_values,
+                                             VkFence drawFence,
+                                             VkSemaphore imageAcquiredSemaphore,
+                                             int numBuffers)
+{
+    SecondaryCommandBufferBenchmark(info, clear_values, drawFence, imageAcquiredSemaphore,
+                                    numBuffers);
+    // Explicitly resetting cmd buffers w/ soft reset (don't release resources)
+    reset_command_buffer2_array(info, 0);
+}
+
+void CommandBufferImplicitResetBenchmark(sample_info &info,
+                                         VkClearValue *clear_values,
+                                         VkFence drawFence,
+                                         VkSemaphore imageAcquiredSemaphore,
+                                         int numBuffers)
+{
+    // Repeated call SCBBenchmark & BeginCmdBuffer calls will implicitly reset each cmd buffer
+    SecondaryCommandBufferBenchmark(info, clear_values, drawFence, imageAcquiredSemaphore,
+                                    numBuffers);
 }
 
 CommandBufferTestParams PrimaryCBHundredIndividualParams()
@@ -502,6 +557,54 @@ CommandBufferTestParams SecondaryCBParams()
     return params;
 }
 
+CommandBufferTestParams CommandPoolDestroyParams()
+{
+    CommandBufferTestParams params;
+    params.CBImplementation = CommandPoolDestroyBenchmark;
+    params.suffix           = "_Reset_CBs_With_Destroy_Command_Pool";
+    return params;
+}
+
+CommandBufferTestParams CommandPoolHardResetParams()
+{
+    CommandBufferTestParams params;
+    params.CBImplementation = CommandPoolHardResetBenchmark;
+    params.suffix           = "_Reset_CBs_With_Hard_Reset_Command_Pool";
+    return params;
+}
+
+CommandBufferTestParams CommandPoolSoftResetParams()
+{
+    CommandBufferTestParams params;
+    params.CBImplementation = CommandPoolSoftResetBenchmark;
+    params.suffix           = "_Reset_CBs_With_Soft_Reset_Command_Pool";
+    return params;
+}
+
+CommandBufferTestParams CommandBufferExplicitHardResetParams()
+{
+    CommandBufferTestParams params;
+    params.CBImplementation = CommandBufferExplicitHardResetBenchmark;
+    params.suffix           = "_Reset_CBs_With_Explicit_Hard_Reset_Command_Buffers";
+    return params;
+}
+
+CommandBufferTestParams CommandBufferExplicitSoftResetParams()
+{
+    CommandBufferTestParams params;
+    params.CBImplementation = CommandBufferExplicitSoftResetBenchmark;
+    params.suffix           = "_Reset_CBs_With_Explicit_Soft_Reset_Command_Buffers";
+    return params;
+}
+
+CommandBufferTestParams CommandBufferImplicitResetParams()
+{
+    CommandBufferTestParams params;
+    params.CBImplementation = CommandBufferImplicitResetBenchmark;
+    params.suffix           = "_Reset_CBs_With_Implicit_Reset_Command_Buffers";
+    return params;
+}
+
 TEST_P(VulkanCommandBufferPerfTest, Run)
 {
     run();
@@ -511,4 +614,10 @@ INSTANTIATE_TEST_CASE_P(,
                         VulkanCommandBufferPerfTest,
                         ::testing::Values(PrimaryCBHundredIndividualParams(),
                                           PrimaryCBOneWithOneHundredParams(),
-                                          SecondaryCBParams()));
+                                          SecondaryCBParams(),
+                                          CommandPoolDestroyParams(),
+                                          CommandPoolHardResetParams(),
+                                          CommandPoolSoftResetParams(),
+                                          CommandBufferExplicitHardResetParams(),
+                                          CommandBufferExplicitSoftResetParams(),
+                                          CommandBufferImplicitResetParams()));

@@ -705,7 +705,7 @@ VkResult init_device(struct sample_info &info)
     return res;
 }
 
-void init_command_pool(struct sample_info &info)
+void init_command_pool(struct sample_info &info, VkCommandPoolCreateFlags cmd_pool_create_flags)
 {
     /* DEPENDS on init_swapchain_extension() */
     VkResult res;
@@ -714,7 +714,7 @@ void init_command_pool(struct sample_info &info)
     cmd_pool_info.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     cmd_pool_info.pNext                   = NULL;
     cmd_pool_info.queueFamilyIndex        = info.graphics_queue_family_index;
-    cmd_pool_info.flags                   = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    cmd_pool_info.flags                   = cmd_pool_create_flags;
 
     res = vkCreateCommandPool(info.device, &cmd_pool_info, NULL, &info.cmd_pool);
     assert(res == VK_SUCCESS);
@@ -1736,22 +1736,6 @@ void init_viewports_array(struct sample_info &info, int index)
 #endif
 }
 
-void init_viewports2(struct sample_info &info)
-{
-#ifdef __ANDROID__
-// Disable dynamic viewport on Android. Some drive has an issue with the dynamic viewport
-// feature.
-#else
-    info.viewport.height = (float)info.height;
-    info.viewport.width = (float)info.width;
-    info.viewport.minDepth = (float)0.0f;
-    info.viewport.maxDepth = (float)1.0f;
-    info.viewport.x = 0;
-    info.viewport.y = 0;
-    vkCmdSetViewport(info.cmd2, 0, NUM_VIEWPORTS, &info.viewport);
-#endif
-}
-
 void init_viewports2_array(struct sample_info &info, int index)
 {
 #ifdef __ANDROID__
@@ -1855,9 +1839,23 @@ void destroy_command_buffer_array(struct sample_info &info, int numBuffers)
     vkFreeCommandBuffers(info.device, info.cmd_pool, numBuffers, info.cmds.data());
 }
 
+void reset_command_buffer2_array(struct sample_info &info,
+                                 VkCommandBufferResetFlags cmd_buffer_reset_flags)
+{
+    for (auto cb : info.cmd2s)
+    {
+        vkResetCommandBuffer(cb, cmd_buffer_reset_flags);
+    }
+}
+
 void destroy_command_buffer2_array(struct sample_info &info, int numBuffers)
 {
     vkFreeCommandBuffers(info.device, info.cmd_pool, numBuffers, info.cmd2s.data());
+}
+
+void reset_command_pool(struct sample_info &info, VkCommandPoolResetFlags cmd_pool_reset_flags)
+{
+    vkResetCommandPool(info.device, info.cmd_pool, cmd_pool_reset_flags);
 }
 
 void destroy_command_pool(struct sample_info &info)
