@@ -248,7 +248,7 @@ egl::Config GenerateDefaultConfig(const RendererVk *renderer,
     config.maxPBufferHeight   = physicalDeviceProperties.limits.maxImageDimension2D;
     config.maxPBufferPixels   = ComputeMaximumPBufferPixels(physicalDeviceProperties);
     config.maxSwapInterval    = 1;
-    config.minSwapInterval    = 1;
+    config.minSwapInterval    = 0;
     config.nativeRenderable   = EGL_TRUE;
     config.nativeVisualID     = 0;
     config.nativeVisualType   = EGL_NONE;
