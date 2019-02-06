@@ -29,7 +29,7 @@ class DisplayVkWin32 : public DisplayVk
     egl::ConfigSet generateConfigs() override;
     bool checkConfigSupport(egl::Config *config) override;
 
-    const char *getWSIName() const override;
+    const char *getWSIExtension() const override;
 };
 
 }  // namespace rx

@@ -110,7 +110,7 @@ bool DisplayVkXcb::checkConfigSupport(egl::Config *config)
     return true;
 }
 
-const char *DisplayVkXcb::getWSIName() const
+const char *DisplayVkXcb::getWSIExtension() const
 {
     return VK_KHR_XCB_SURFACE_EXTENSION_NAME;
 }

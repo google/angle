@@ -58,7 +58,7 @@ bool DisplayVkAndroid::checkConfigSupport(egl::Config *config)
     return true;
 }
 
-const char *DisplayVkAndroid::getWSIName() const
+const char *DisplayVkAndroid::getWSIExtension() const
 {
     return VK_KHR_ANDROID_SURFACE_EXTENSION_NAME;
 }

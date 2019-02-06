@@ -33,7 +33,7 @@ DisplayVk::~DisplayVk()
 egl::Error DisplayVk::initialize(egl::Display *display)
 {
     ASSERT(mRenderer != nullptr && display != nullptr);
-    angle::Result result = mRenderer->initialize(this, display, getWSIName());
+    angle::Result result = mRenderer->initialize(this, display, getWSIExtension(), getWSILayer());
     ANGLE_TRY(angle::ToEGL(result, this, EGL_NOT_INITIALIZED));
     return egl::NoError();
 }
@@ -188,6 +188,11 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
 {
     outCaps->textureNPOT = true;
+}
+
+const char *DisplayVk::getWSILayer() const
+{
+    return nullptr;
 }
 
 bool DisplayVk::getScratchBuffer(size_t requstedSizeBytes,

@@ -592,7 +592,8 @@ bool RendererVk::isDeviceLost() const
 
 angle::Result RendererVk::initialize(DisplayVk *displayVk,
                                      egl::Display *display,
-                                     const char *wsiName)
+                                     const char *wsiExtension,
+                                     const char *wsiLayer)
 {
     mDisplay                         = display;
     const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
@@ -624,19 +625,23 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
                                                             instanceExtensionProps.data()));
     }
 
-    const char *const *enabledLayerNames = nullptr;
-    uint32_t enabledLayerCount           = 0;
+    VulkanLayerVector enabledLayerNames;
     if (mEnableValidationLayers)
     {
         bool layersRequested =
             (attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE) == EGL_TRUE);
-        mEnableValidationLayers = GetAvailableValidationLayers(
-            instanceLayerProps, layersRequested, &enabledLayerNames, &enabledLayerCount);
+        mEnableValidationLayers =
+            GetAvailableValidationLayers(instanceLayerProps, layersRequested, &enabledLayerNames);
+    }
+
+    if (wsiLayer)
+    {
+        enabledLayerNames.push_back(wsiLayer);
     }
 
     std::vector<const char *> enabledInstanceExtensions;
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
-    enabledInstanceExtensions.push_back(wsiName);
+    enabledInstanceExtensions.push_back(wsiExtension);
 
     bool enableDebugUtils =
         mEnableValidationLayers &&
@@ -695,8 +700,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
     instanceInfo.ppEnabledExtensionNames =
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
-    instanceInfo.enabledLayerCount   = enabledLayerCount;
-    instanceInfo.ppEnabledLayerNames = enabledLayerNames;
+    instanceInfo.enabledLayerCount   = enabledLayerNames.size();
+    instanceInfo.ppEnabledLayerNames = enabledLayerNames.data();
 
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 
@@ -822,12 +827,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
                                                                      deviceExtensionProps.data()));
     }
 
-    const char *const *enabledLayerNames = nullptr;
-    uint32_t enabledLayerCount           = 0;
+    VulkanLayerVector enabledLayerNames;
     if (mEnableValidationLayers)
     {
-        mEnableValidationLayers = GetAvailableValidationLayers(
-            deviceLayerProps, false, &enabledLayerNames, &enabledLayerCount);
+        mEnableValidationLayers =
+            GetAvailableValidationLayers(deviceLayerProps, false, &enabledLayerNames);
     }
 
     std::vector<const char *> enabledDeviceExtensions;
@@ -871,8 +875,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     createInfo.flags                 = 0;
     createInfo.queueCreateInfoCount  = 1;
     createInfo.pQueueCreateInfos     = &queueCreateInfo;
-    createInfo.enabledLayerCount     = enabledLayerCount;
-    createInfo.ppEnabledLayerNames   = enabledLayerNames;
+    createInfo.enabledLayerCount     = enabledLayerNames.size();
+    createInfo.ppEnabledLayerNames   = enabledLayerNames.data();
     createInfo.enabledExtensionCount = static_cast<uint32_t>(enabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         enabledDeviceExtensions.empty() ? nullptr : enabledDeviceExtensions.data();

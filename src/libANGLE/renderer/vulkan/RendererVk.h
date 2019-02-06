@@ -45,7 +45,10 @@ class RendererVk : angle::NonCopyable
     RendererVk();
     ~RendererVk();
 
-    angle::Result initialize(DisplayVk *displayVk, egl::Display *display, const char *wsiName);
+    angle::Result initialize(DisplayVk *displayVk,
+                             egl::Display *display,
+                             const char *wsiExtension,
+                             const char *wsiLayer);
     void onDestroy(vk::Context *context);
 
     void notifyDeviceLost();

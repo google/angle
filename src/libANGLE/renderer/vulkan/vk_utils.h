@@ -12,6 +12,7 @@
 
 #include <limits>
 
+#include "common/FixedVector.h"
 #include "common/Optional.h"
 #include "common/PackedEnums.h"
 #include "common/debug.h"
@@ -69,11 +70,14 @@ namespace rx
 ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT)
 
 const char *VulkanResultString(VkResult result);
+
+constexpr size_t kMaxVulkanLayers = 20;
+using VulkanLayerVector           = angle::FixedVector<const char *, kMaxVulkanLayers>;
+
 // Verify that validation layers are available.
 bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerProps,
                                   bool mustHaveLayers,
-                                  const char *const **enabledLayerNames,
-                                  uint32_t *enabledLayerCount);
+                                  VulkanLayerVector *enabledLayerNames);
 
 extern const char *g_VkLoaderLayersPathEnv;
 extern const char *g_VkICDPathEnv;

@@ -63,8 +63,6 @@ const char *g_VkValidationLayerNames[] = {
     "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
     "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
     "VK_LAYER_GOOGLE_unique_objects"};
-const uint32_t g_VkNumValidationLayerNames =
-    sizeof(g_VkValidationLayerNames) / sizeof(g_VkValidationLayerNames[0]);
 
 bool HasValidationLayer(const std::vector<VkLayerProperties> &layerProps, const char *layerName)
 {
@@ -204,18 +202,18 @@ const char *VulkanResultString(VkResult result)
 
 bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerProps,
                                   bool mustHaveLayers,
-                                  const char *const **enabledLayerNames,
-                                  uint32_t *enabledLayerCount)
+                                  VulkanLayerVector *enabledLayerNames)
 {
     if (HasStandardValidationLayer(layerProps))
     {
-        *enabledLayerNames = &g_VkStdValidationLayerName;
-        *enabledLayerCount = 1;
+        enabledLayerNames->push_back(g_VkStdValidationLayerName);
     }
     else if (HasValidationLayers(layerProps))
     {
-        *enabledLayerNames = g_VkValidationLayerNames;
-        *enabledLayerCount = g_VkNumValidationLayerNames;
+        for (const char *layerName : g_VkValidationLayerNames)
+        {
+            enabledLayerNames->push_back(layerName);
+        }
     }
     else
     {
@@ -229,8 +227,6 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
             WARN() << "Vulkan validation layers are missing.";
         }
 
-        *enabledLayerNames = nullptr;
-        *enabledLayerCount = 0;
         return false;
     }
 

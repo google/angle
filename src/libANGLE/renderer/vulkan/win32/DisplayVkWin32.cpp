@@ -47,7 +47,7 @@ bool DisplayVkWin32::checkConfigSupport(egl::Config *config)
     return true;
 }
 
-const char *DisplayVkWin32::getWSIName() const
+const char *DisplayVkWin32::getWSIExtension() const
 {
     return VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
 }
