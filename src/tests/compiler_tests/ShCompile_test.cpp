@@ -142,8 +142,6 @@ TEST_F(ShCompileTest, DecimalSepLocale)
     })";
     const char *parts[]  = {kSource};
 
-    int testedLocales = 0;
-
     for (const std::string &locale : availableLocales)
     {
         // If the locale doesn't exist on the testing platform, the locale constructor will fail,
@@ -172,15 +170,6 @@ TEST_F(ShCompileTest, DecimalSepLocale)
 
             ASSERT_EQ(referenceOut, localizedOut)
                 << "different output with locale (" << localizedLoc.name() << ") set";
-
-            testedLocales++;
         }
     }
-
-// Ignore for Android which doesn't use these locales
-#if !defined(ANGLE_PLATFORM_ANDROID)
-    // This test must run on at least one different locale to pass
-    EXPECT_NE(testedLocales, 0)
-        << "Missing locales to test on this platform. Add them to availableLocales[]";
-#endif
 }
