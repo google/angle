@@ -104,28 +104,6 @@ group("vulkan_generate_helper_files") {
   }
 }
 
-config("vulkan_config") {
-  if (is_win) {
-    defines = [
-      "VK_USE_PLATFORM_WIN32_KHR",
-      "VK_USE_PLATFORM_WIN32_KHX",
-    ]
-  }
-  if (is_linux) {
-    defines = [
-      "VK_USE_PLATFORM_XCB_KHR",
-      "VK_USE_PLATFORM_XCB_KHX",
-    ]
-  }
-  if (is_android) {
-    defines = [
-      "VK_USE_PLATFORM_ANDROID_KHR",
-      "VK_USE_PLATFORM_ANDROID_KHX",
-    ]
-    libs = [ "vulkan" ]
-  }
-}
-
 config("vulkan_internal_config") {
   defines = [ "VULKAN_NON_CMAKE_BUILD" ]
   if (is_clang || !is_win) {
@@ -169,7 +147,7 @@ if (!is_android) {
 
   shared_library("VkICD_mock_icd") {
     configs -= vulkan_undefine_configs
-    public_configs = [ ":vulkan_config" ]
+    public_configs = [ "$angle_root:vulkan_config" ]
     deps = [
       ":vulkan_generate_mock_icd_files",
     ]

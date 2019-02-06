@@ -459,13 +459,34 @@ config("libANGLE_config") {
 }
 
 if (angle_enable_vulkan) {
+  config("vulkan_config") {
+    if (is_win) {
+      defines = [
+        "VK_USE_PLATFORM_WIN32_KHR",
+        "VK_USE_PLATFORM_WIN32_KHX",
+      ]
+    }
+    if (is_linux) {
+      defines = [
+        "VK_USE_PLATFORM_XCB_KHR",
+        "VK_USE_PLATFORM_XCB_KHX",
+      ]
+    }
+    if (is_android) {
+      defines = [
+        "VK_USE_PLATFORM_ANDROID_KHR",
+        "VK_USE_PLATFORM_ANDROID_KHX",
+      ]
+      libs = [ "vulkan" ]
+    }
+  }
+
   # Use this target to include everything ANGLE needs for Vulkan.
   group("angle_vulkan") {
     public_deps = [
       "$angle_root/third_party/vulkan-headers:vulkan_headers",
     ]
-    public_configs =
-        [ "$angle_root/third_party/vulkan-validation-layers:vulkan_config" ]
+    public_configs = [ ":vulkan_config" ]
     data_deps = []
     if (!is_android) {
       deps = [

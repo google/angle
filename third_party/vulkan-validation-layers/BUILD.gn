@@ -197,30 +197,11 @@ group("vulkan_generate_helper_files") {
   }
 }
 
-config("vulkan_config") {
-  if (is_win) {
-    defines = [
-      "VK_USE_PLATFORM_WIN32_KHR",
-      "VK_USE_PLATFORM_WIN32_KHX",
-    ]
-  }
-  if (is_linux) {
-    defines = [
-      "VK_USE_PLATFORM_XCB_KHR",
-      "VK_USE_PLATFORM_XCB_KHX",
-    ]
-  }
-  if (is_android) {
-    defines = [
-      "VK_USE_PLATFORM_ANDROID_KHR",
-      "VK_USE_PLATFORM_ANDROID_KHX",
-    ]
-  }
-  defines += [ "API_NAME=\"Vulkan\"" ]
-}
-
 config("vulkan_internal_config") {
-  defines = [ "VULKAN_NON_CMAKE_BUILD" ]
+  defines = [
+    "VULKAN_NON_CMAKE_BUILD",
+    "API_NAME=\"Vulkan\"",
+  ]
   if (is_clang || !is_win) {
     cflags = [ "-Wno-unused-function" ]
   }
@@ -356,7 +337,7 @@ source_set("vulkan_layer_utils") {
     "src/layers/vk_layer_utils.h",
   ]
   public_configs = [
-    ":vulkan_config",
+    "$angle_root:vulkan_config",
     ":vulkan_internal_config",
   ]
   configs -= [ "//build/config/compiler:chromium_code" ]
