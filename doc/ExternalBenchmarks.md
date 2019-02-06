@@ -61,3 +61,64 @@ To run glmark2 on a specific back-end of ANGLE:
 ```
 $ ANGLE_DEFAULT_PLATFORM=vulkan LD_LIBRARY_PATH=/path/to/angle/out/release/ ./glmark2-es2
 ```
+
+### glmark2 on Linux for Android
+
+**Prerequisites**
+
+Below steps are set up to use version 26.0.1 of build-tools, which can be downloaded here:
+
+[https://dl.google.com/android/repository/build-tools_r26.0.1-linux.zip](https://dl.google.com/android/repository/build-tools_r26.0.1-linux.zip)
+
+Tested with r19 of NDK, which can be downloaded here:
+
+[https://dl.google.com/android/repository/android-ndk-r19-linux-x86_64.zip](https://dl.google.com/android/repository/android-ndk-r19-linux-x86_64.zip)
+
+Tested with OpenJDK 8:
+
+```
+sudo apt-get install openjdk-8-jdk
+```
+
+Note: This is built from a branch that has fixes for Android.  It only supports
+32-bit ARM (armeabi-v7a).  Supporting other ABIs requires more work, possibly
+including a move to cmake instead of ndk-build.
+
+**Setup**
+
+```
+export ANDROID_SDK=<path_to_Android_SDK>
+export ANDROID_NDK=<path_to_Android_NDK>
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+```
+
+**Build**
+
+```
+git clone https://github.com/cnorthrop/glmark2.git
+cd glmark2/android
+git checkout android_fixes
+./build.sh
+```
+
+**Install**
+
+```
+adb install --abi armeabi-v7a glmark2.apk
+```
+
+**Run**
+
+To select ANGLE as the driver on Android (requires Android Q):
+
+```
+adb shell settings put global angle_gl_driver_selection_pkgs org.linaro.glmark2
+adb shell settings put global angle_gl_driver_selection_values angle
+```
+
+To switch back to native GLES driver:
+
+```
+adb shell settings delete global angle_gl_driver_selection_values
+adb shell settings delete global angle_gl_driver_selection_pkgs
+```
