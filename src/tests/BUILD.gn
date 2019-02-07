@@ -96,12 +96,10 @@ template("angle_tests_main") {
     deps = [
       "${angle_root}:includes",
     ]
-    configs += [ "${angle_root}:internal_config" ]
 
     main = invoker.main
 
     if (build_with_chromium) {
-      include_dirs = [ "../.." ]
       sources = [
         "//gpu/$main.cc",
       ]
