@@ -30,6 +30,7 @@ if (!build_with_chromium) {
     deps = [
       ":angle_shader_translator",
       ":translator_fuzzer",
+      ":xxhash_fuzzer",
       "//samples:all",
       "//src/tests:all",
     ]
@@ -206,6 +207,15 @@ angle_source_set("angle_system_utils") {
 angle_source_set("xxhash") {
   sources = xxhash_sources
   configs -= [ "${angle_root}:extra_warnings" ]
+}
+
+fuzzer_test("xxhash_fuzzer") {
+  sources = [
+    "src/common/third_party/xxhash/xxhash_fuzzer.cpp",
+  ]
+  deps = [
+    ":xxhash",
+  ]
 }
 
 angle_static_library("angle_common") {
