@@ -254,6 +254,9 @@ TEST_P(EGLSurfaceTest, MessageLoopBug)
     // TODO(syoussefi): http://anglebug.com/3123
     ANGLE_SKIP_TEST_IF(IsAndroid());
 
+    // http://anglebug.com/3138
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsOpenGLES());
+
     initializeDisplay();
     initializeSurfaceWithDefaultConfig();
 
