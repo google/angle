@@ -285,9 +285,10 @@ struct Extensions
 
     // GL_ANGLE_instanced_arrays
     bool instancedArraysANGLE;
-
     // GL_EXT_instanced_arrays
     bool instancedArraysEXT;
+    // Any version of the instanced arrays extension
+    bool instancedArraysAny() const { return (instancedArraysANGLE || instancedArraysEXT); }
 
     // GL_ANGLE_pack_reverse_row_order
     bool packReverseRowOrder;
