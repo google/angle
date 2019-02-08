@@ -284,7 +284,10 @@ struct Extensions
     bool framebufferMultisample;
 
     // GL_ANGLE_instanced_arrays
-    bool instancedArrays;
+    bool instancedArraysANGLE;
+
+    // GL_EXT_instanced_arrays
+    bool instancedArraysEXT;
 
     // GL_ANGLE_pack_reverse_row_order
     bool packReverseRowOrder;

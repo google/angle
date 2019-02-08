@@ -428,6 +428,12 @@
         "glVertexAttribDivisorANGLE"
     ],
 
+    "GL_EXT_instanced_arrays": [
+        "glDrawArraysInstancedEXT",
+        "glDrawElementsInstancedEXT",
+        "glVertexAttribDivisorEXT"
+    ],
+
     "GL_OES_get_program_binary": [
         "glGetProgramBinaryOES",
         "glProgramBinaryOES"

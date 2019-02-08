@@ -359,6 +359,8 @@ ProcEntry g_procTable[] = {
     {"glDrawArraysInstancedANGLE", P(gl::DrawArraysInstancedANGLE)},
     {"glDrawArraysInstancedANGLEContextANGLE", P(gl::DrawArraysInstancedANGLEContextANGLE)},
     {"glDrawArraysInstancedContextANGLE", P(gl::DrawArraysInstancedContextANGLE)},
+    {"glDrawArraysInstancedEXT", P(gl::DrawArraysInstancedEXT)},
+    {"glDrawArraysInstancedEXTContextANGLE", P(gl::DrawArraysInstancedEXTContextANGLE)},
     {"glDrawBuffers", P(gl::DrawBuffers)},
     {"glDrawBuffersContextANGLE", P(gl::DrawBuffersContextANGLE)},
     {"glDrawBuffersEXT", P(gl::DrawBuffersEXT)},
@@ -371,6 +373,8 @@ ProcEntry g_procTable[] = {
     {"glDrawElementsInstancedANGLE", P(gl::DrawElementsInstancedANGLE)},
     {"glDrawElementsInstancedANGLEContextANGLE", P(gl::DrawElementsInstancedANGLEContextANGLE)},
     {"glDrawElementsInstancedContextANGLE", P(gl::DrawElementsInstancedContextANGLE)},
+    {"glDrawElementsInstancedEXT", P(gl::DrawElementsInstancedEXT)},
+    {"glDrawElementsInstancedEXTContextANGLE", P(gl::DrawElementsInstancedEXTContextANGLE)},
     {"glDrawRangeElements", P(gl::DrawRangeElements)},
     {"glDrawRangeElementsContextANGLE", P(gl::DrawRangeElementsContextANGLE)},
     {"glDrawTexfOES", P(gl::DrawTexfOES)},
@@ -1341,6 +1345,8 @@ ProcEntry g_procTable[] = {
     {"glVertexAttribDivisorANGLE", P(gl::VertexAttribDivisorANGLE)},
     {"glVertexAttribDivisorANGLEContextANGLE", P(gl::VertexAttribDivisorANGLEContextANGLE)},
     {"glVertexAttribDivisorContextANGLE", P(gl::VertexAttribDivisorContextANGLE)},
+    {"glVertexAttribDivisorEXT", P(gl::VertexAttribDivisorEXT)},
+    {"glVertexAttribDivisorEXTContextANGLE", P(gl::VertexAttribDivisorEXTContextANGLE)},
     {"glVertexAttribFormat", P(gl::VertexAttribFormat)},
     {"glVertexAttribFormatContextANGLE", P(gl::VertexAttribFormatContextANGLE)},
     {"glVertexAttribI4i", P(gl::VertexAttribI4i)},
@@ -1368,5 +1374,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1284;
+size_t g_numProcs = 1290;
 }  // namespace egl

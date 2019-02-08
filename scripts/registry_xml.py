@@ -50,6 +50,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_EXT_disjoint_timer_query",
     "GL_EXT_draw_buffers",
     "GL_EXT_geometry_shader",
+    "GL_EXT_instanced_arrays",
     "GL_EXT_map_buffer_range",
     "GL_EXT_occlusion_query_boolean",
     "GL_EXT_robustness",

@@ -793,7 +793,7 @@ TEST_P(WebGLCompatibilityTest, EnableFramebufferMultisampleExtension)
 }
 
 // Test enabling the GL_ANGLE_instanced_arrays extension
-TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtension)
+TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtensionANGLE)
 {
     EXPECT_FALSE(extensionEnabled("GL_ANGLE_instanced_arrays"));
 
@@ -814,6 +814,32 @@ TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtension)
 
         glGetVertexAttribiv(0, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &divisor);
         glVertexAttribDivisorANGLE(0, 1);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Test enabling the GL_EXT_instanced_arrays extension
+TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtensionEXT)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_instanced_arrays"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLint divisor = 0;
+    glGetVertexAttribiv(0, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &divisor);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glVertexAttribDivisorEXT(0, 1);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_EXT_instanced_arrays"))
+    {
+        glRequestExtensionANGLE("GL_EXT_instanced_arrays");
+        EXPECT_GL_NO_ERROR();
+
+        glGetVertexAttribiv(0, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &divisor);
+        glVertexAttribDivisorEXT(0, 1);
         EXPECT_GL_NO_ERROR();
     }
 }

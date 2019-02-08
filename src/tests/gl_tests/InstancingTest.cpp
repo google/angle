@@ -26,6 +26,11 @@ enum Draw
     Indexed,
     NonIndexed
 };
+enum Vendor
+{
+    Angle,
+    Ext
+};
 }  // namespace
 
 class InstancingTest : public ANGLETest
@@ -94,9 +99,17 @@ class InstancingTest : public ANGLETest
                  Geometry geometry,
                  Draw draw,
                  Storage storage,
+                 Vendor vendor,
                  unsigned offset)  // for NonIndexed/DrawArrays only
     {
-        ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
+        if (vendor == Angle)
+        {
+            ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
+        }
+        else if (vendor == Ext)
+        {
+            ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_instanced_arrays"));
+        }
 
         // TODO: Fix these.  http://anglebug.com/3129
         ANGLE_SKIP_TEST_IF(IsD3D9() && draw == Indexed && geometry == Point);
@@ -128,31 +141,49 @@ class InstancingTest : public ANGLETest
         glVertexAttribPointer(instanceAttrib, 1, GL_FLOAT, GL_FALSE, 0,
                               storage == Buffer ? nullptr : mInstanceData);
         glEnableVertexAttribArray(instanceAttrib);
-        glVertexAttribDivisorANGLE(instanceAttrib, divisor);
+        if (vendor == Angle)
+            glVertexAttribDivisorANGLE(instanceAttrib, divisor);
+        else if (vendor == Ext)
+            glVertexAttribDivisorEXT(instanceAttrib, divisor);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glVertexAttribPointer(positionAttrib, 2, GL_FLOAT, GL_FALSE, 0,
                               geometry == Point ? kPointVertices : kQuadVertices);
         glEnableVertexAttribArray(positionAttrib);
-        glVertexAttribDivisorANGLE(positionAttrib, 0);
+        if (vendor == Angle)
+            glVertexAttribDivisorANGLE(positionAttrib, 0);
+        else if (vendor == Ext)
+            glVertexAttribDivisorEXT(positionAttrib, 0);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (geometry == Point)
         {
             if (draw == Indexed)
-                glDrawElementsInstancedANGLE(GL_POINTS, ArraySize(kPointIndices), GL_UNSIGNED_SHORT,
-                                             kPointIndices, numInstance);
-            else
+                if (vendor == Angle)
+                    glDrawElementsInstancedANGLE(GL_POINTS, ArraySize(kPointIndices),
+                                                 GL_UNSIGNED_SHORT, kPointIndices, numInstance);
+                else
+                    glDrawElementsInstancedEXT(GL_POINTS, ArraySize(kPointIndices),
+                                               GL_UNSIGNED_SHORT, kPointIndices, numInstance);
+            else if (vendor == Angle)
                 glDrawArraysInstancedANGLE(GL_POINTS, offset, 4 /*vertices*/, numInstance);
+            else
+                glDrawArraysInstancedEXT(GL_POINTS, offset, 4 /*vertices*/, numInstance);
         }
         else
         {
             if (draw == Indexed)
-                glDrawElementsInstancedANGLE(GL_TRIANGLES, ArraySize(kQuadIndices),
-                                             GL_UNSIGNED_SHORT, kQuadIndices, numInstance);
-            else
+                if (vendor == Angle)
+                    glDrawElementsInstancedANGLE(GL_TRIANGLES, ArraySize(kQuadIndices),
+                                                 GL_UNSIGNED_SHORT, kQuadIndices, numInstance);
+                else
+                    glDrawElementsInstancedEXT(GL_TRIANGLES, ArraySize(kQuadIndices),
+                                               GL_UNSIGNED_SHORT, kQuadIndices, numInstance);
+            else if (vendor == Angle)
                 glDrawArraysInstancedANGLE(GL_TRIANGLES, offset, 6 /*vertices*/, numInstance);
+            else
+                glDrawArraysInstancedEXT(GL_TRIANGLES, offset, 6 /*vertices*/, numInstance);
         }
 
         ASSERT_GL_NO_ERROR();
@@ -225,22 +256,22 @@ constexpr GLfloat InstancingTest::kPointVertices[];
 constexpr GLushort InstancingTest::kQuadIndices[];
 constexpr GLushort InstancingTest::kPointIndices[];
 
-#define TEST_INDEXED(attrib, geometry, storage)                      \
-    TEST_P(InstancingTest, IndexedAttrib##attrib##geometry##storage) \
-    {                                                                \
-        runTest(11, 2, attrib, geometry, Indexed, storage, 0);       \
+#define TEST_INDEXED(attrib, geometry, storage, vendor)                      \
+    TEST_P(InstancingTest, IndexedAttrib##attrib##geometry##storage##vendor) \
+    {                                                                        \
+        runTest(11, 2, attrib, geometry, Indexed, storage, vendor, 0);       \
     }
 
-#define TEST_NONINDEXED(attrib, geometry, storage, offset)                              \
-    TEST_P(InstancingTest, NonIndexedAttrib##attrib##geometry##storage##Offset##offset) \
-    {                                                                                   \
-        runTest(11, 2, attrib, geometry, NonIndexed, storage, offset);                  \
+#define TEST_NONINDEXED(attrib, geometry, storage, vendor, offset)                              \
+    TEST_P(InstancingTest, NonIndexedAttrib##attrib##geometry##storage##vendor##Offset##offset) \
+    {                                                                                           \
+        runTest(11, 2, attrib, geometry, NonIndexed, storage, vendor, offset);                  \
     }
 
-#define TEST_DIVISOR(numInstance, divisor)                             \
-    TEST_P(InstancingTest, Instances##numInstance##Divisor##divisor)   \
-    {                                                                  \
-        runTest(numInstance, divisor, 1, Quad, NonIndexed, Buffer, 0); \
+#define TEST_DIVISOR(numInstance, divisor)                                    \
+    TEST_P(InstancingTest, Instances##numInstance##Divisor##divisor)          \
+    {                                                                         \
+        runTest(numInstance, divisor, 1, Quad, NonIndexed, Buffer, Angle, 0); \
     }
 
 // D3D9 and D3D11 FL9_3, have a special codepath that rearranges the input layout sent to D3D,
@@ -249,35 +280,58 @@ constexpr GLushort InstancingTest::kPointIndices[];
 //
 // Tests with a non-zero 'offset' check that "first" parameter to glDrawArraysInstancedANGLE is only
 // an offset into the non-instanced vertex attributes.
-
-TEST_INDEXED(0, Quad, Buffer)
-TEST_INDEXED(0, Quad, Memory)
-TEST_INDEXED(1, Quad, Buffer)
-TEST_INDEXED(1, Quad, Memory)
-TEST_INDEXED(0, Point, Buffer)
-TEST_INDEXED(0, Point, Memory)
-TEST_INDEXED(1, Point, Buffer)
-TEST_INDEXED(1, Point, Memory)
+TEST_INDEXED(0, Quad, Buffer, Angle)
+TEST_INDEXED(0, Quad, Memory, Angle)
+TEST_INDEXED(1, Quad, Buffer, Angle)
+TEST_INDEXED(1, Quad, Memory, Angle)
+TEST_INDEXED(0, Point, Buffer, Angle)
+TEST_INDEXED(0, Point, Memory, Angle)
+TEST_INDEXED(1, Point, Buffer, Angle)
+TEST_INDEXED(1, Point, Memory, Angle)
+TEST_INDEXED(0, Quad, Buffer, Ext)
+TEST_INDEXED(0, Quad, Memory, Ext)
+TEST_INDEXED(1, Quad, Buffer, Ext)
+TEST_INDEXED(1, Quad, Memory, Ext)
+TEST_INDEXED(0, Point, Buffer, Ext)
+TEST_INDEXED(0, Point, Memory, Ext)
+TEST_INDEXED(1, Point, Buffer, Ext)
+TEST_INDEXED(1, Point, Memory, Ext)
 
 // offset should be 0 or 4 for quads
-TEST_NONINDEXED(0, Quad, Buffer, 0)
-TEST_NONINDEXED(0, Quad, Buffer, 4)
-TEST_NONINDEXED(0, Quad, Memory, 0)
-TEST_NONINDEXED(0, Quad, Memory, 4)
-TEST_NONINDEXED(1, Quad, Buffer, 0)
-TEST_NONINDEXED(1, Quad, Buffer, 4)
-TEST_NONINDEXED(1, Quad, Memory, 0)
-TEST_NONINDEXED(1, Quad, Memory, 4)
+TEST_NONINDEXED(0, Quad, Buffer, Angle, 0)
+TEST_NONINDEXED(0, Quad, Buffer, Angle, 4)
+TEST_NONINDEXED(0, Quad, Memory, Angle, 0)
+TEST_NONINDEXED(0, Quad, Memory, Angle, 4)
+TEST_NONINDEXED(1, Quad, Buffer, Angle, 0)
+TEST_NONINDEXED(1, Quad, Buffer, Angle, 4)
+TEST_NONINDEXED(1, Quad, Memory, Angle, 0)
+TEST_NONINDEXED(1, Quad, Memory, Angle, 4)
+TEST_NONINDEXED(0, Quad, Buffer, Ext, 0)
+TEST_NONINDEXED(0, Quad, Buffer, Ext, 4)
+TEST_NONINDEXED(0, Quad, Memory, Ext, 0)
+TEST_NONINDEXED(0, Quad, Memory, Ext, 4)
+TEST_NONINDEXED(1, Quad, Buffer, Ext, 0)
+TEST_NONINDEXED(1, Quad, Buffer, Ext, 4)
+TEST_NONINDEXED(1, Quad, Memory, Ext, 0)
+TEST_NONINDEXED(1, Quad, Memory, Ext, 4)
 
 // offset should be 0 or 2 for points
-TEST_NONINDEXED(0, Point, Buffer, 0)
-TEST_NONINDEXED(0, Point, Buffer, 2)
-TEST_NONINDEXED(0, Point, Memory, 0)
-TEST_NONINDEXED(0, Point, Memory, 2)
-TEST_NONINDEXED(1, Point, Buffer, 0)
-TEST_NONINDEXED(1, Point, Buffer, 2)
-TEST_NONINDEXED(1, Point, Memory, 0)
-TEST_NONINDEXED(1, Point, Memory, 2)
+TEST_NONINDEXED(0, Point, Buffer, Angle, 0)
+TEST_NONINDEXED(0, Point, Buffer, Angle, 2)
+TEST_NONINDEXED(0, Point, Memory, Angle, 0)
+TEST_NONINDEXED(0, Point, Memory, Angle, 2)
+TEST_NONINDEXED(1, Point, Buffer, Angle, 0)
+TEST_NONINDEXED(1, Point, Buffer, Angle, 2)
+TEST_NONINDEXED(1, Point, Memory, Angle, 0)
+TEST_NONINDEXED(1, Point, Memory, Angle, 2)
+TEST_NONINDEXED(0, Point, Buffer, Ext, 0)
+TEST_NONINDEXED(0, Point, Buffer, Ext, 2)
+TEST_NONINDEXED(0, Point, Memory, Ext, 0)
+TEST_NONINDEXED(0, Point, Memory, Ext, 2)
+TEST_NONINDEXED(1, Point, Buffer, Ext, 0)
+TEST_NONINDEXED(1, Point, Buffer, Ext, 2)
+TEST_NONINDEXED(1, Point, Memory, Ext, 0)
+TEST_NONINDEXED(1, Point, Memory, Ext, 2)
 
 // The following tests produce each value of 'lastDrawn' in runTest() from 1 to kMaxDrawn, a few
 // different ways.
@@ -544,6 +598,7 @@ ANGLE_INSTANTIATE_TEST(InstancingTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
+                       ES2_OPENGL(3, 0),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN());

@@ -191,7 +191,8 @@ Extensions::Extensions()
       blendMinMax(false),
       framebufferBlit(false),
       framebufferMultisample(false),
-      instancedArrays(false),
+      instancedArraysANGLE(false),
+      instancedArraysEXT(false),
       packReverseRowOrder(false),
       standardDerivatives(false),
       shaderTextureLOD(false),
@@ -853,7 +854,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_blend_minmax"] = enableableExtension(&Extensions::blendMinMax);
         map["GL_ANGLE_framebuffer_blit"] = enableableExtension(&Extensions::framebufferBlit);
         map["GL_ANGLE_framebuffer_multisample"] = enableableExtension(&Extensions::framebufferMultisample);
-        map["GL_ANGLE_instanced_arrays"] = enableableExtension(&Extensions::instancedArrays);
+        map["GL_ANGLE_instanced_arrays"] = enableableExtension(&Extensions::instancedArraysANGLE);
+        map["GL_EXT_instanced_arrays"] = enableableExtension(&Extensions::instancedArraysEXT);
         map["GL_ANGLE_pack_reverse_row_order"] = enableableExtension(&Extensions::packReverseRowOrder);
         map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivatives);
         map["GL_EXT_shader_texture_lod"] = enableableExtension(&Extensions::shaderTextureLOD);

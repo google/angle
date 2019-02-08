@@ -1595,7 +1595,8 @@ void GenerateCaps(ID3D11Device *device,
     extensions->blendMinMax                = true;
     extensions->framebufferBlit            = GetFramebufferBlitSupport(featureLevel);
     extensions->framebufferMultisample     = GetFramebufferMultisampleSupport(featureLevel);
-    extensions->instancedArrays            = GetInstancingSupport(featureLevel);
+    extensions->instancedArraysANGLE       = GetInstancingSupport(featureLevel);
+    extensions->instancedArraysEXT         = GetInstancingSupport(featureLevel);
     extensions->packReverseRowOrder        = true;
     extensions->standardDerivatives        = GetDerivativeInstructionSupport(featureLevel);
     extensions->shaderTextureLOD           = GetShaderTextureLODSupport(featureLevel);

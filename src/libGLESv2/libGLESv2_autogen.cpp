@@ -3636,6 +3636,29 @@ void GL_APIENTRY glFramebufferTextureEXT(GLenum target,
     return gl::FramebufferTextureEXT(target, attachment, texture, level);
 }
 
+// GL_EXT_instanced_arrays
+void GL_APIENTRY glDrawArraysInstancedEXT(GLenum mode,
+                                          GLint start,
+                                          GLsizei count,
+                                          GLsizei primcount)
+{
+    return gl::DrawArraysInstancedEXT(mode, start, count, primcount);
+}
+
+void GL_APIENTRY glDrawElementsInstancedEXT(GLenum mode,
+                                            GLsizei count,
+                                            GLenum type,
+                                            const void *indices,
+                                            GLsizei primcount)
+{
+    return gl::DrawElementsInstancedEXT(mode, count, type, indices, primcount);
+}
+
+void GL_APIENTRY glVertexAttribDivisorEXT(GLuint index, GLuint divisor)
+{
+    return gl::VertexAttribDivisorEXT(index, divisor);
+}
+
 // GL_EXT_map_buffer_range
 void GL_APIENTRY glFlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
 {
@@ -4924,6 +4947,15 @@ void GL_APIENTRY glDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
     return gl::DrawArraysInstancedANGLEContextANGLE(ctx, mode, first, count, primcount);
 }
 
+void GL_APIENTRY glDrawArraysInstancedEXTContextANGLE(GLeglContext ctx,
+                                                      GLenum mode,
+                                                      GLint start,
+                                                      GLsizei count,
+                                                      GLsizei primcount)
+{
+    return gl::DrawArraysInstancedEXTContextANGLE(ctx, mode, start, count, primcount);
+}
+
 void GL_APIENTRY glDrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
 {
     return gl::DrawBuffersContextANGLE(ctx, n, bufs);
@@ -4969,6 +5001,16 @@ void GL_APIENTRY glDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
                                                           GLsizei primcount)
 {
     return gl::DrawElementsInstancedANGLEContextANGLE(ctx, mode, count, type, indices, primcount);
+}
+
+void GL_APIENTRY glDrawElementsInstancedEXTContextANGLE(GLeglContext ctx,
+                                                        GLenum mode,
+                                                        GLsizei count,
+                                                        GLenum type,
+                                                        const void *indices,
+                                                        GLsizei primcount)
+{
+    return gl::DrawElementsInstancedEXTContextANGLE(ctx, mode, count, type, indices, primcount);
 }
 
 void GL_APIENTRY glDrawRangeElementsContextANGLE(GLeglContext ctx,
@@ -7877,6 +7919,13 @@ void GL_APIENTRY glVertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
                                                         GLuint divisor)
 {
     return gl::VertexAttribDivisorANGLEContextANGLE(ctx, index, divisor);
+}
+
+void GL_APIENTRY glVertexAttribDivisorEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint index,
+                                                      GLuint divisor)
+{
+    return gl::VertexAttribDivisorEXTContextANGLE(ctx, index, divisor);
 }
 
 void GL_APIENTRY glVertexAttribFormatContextANGLE(GLeglContext ctx,

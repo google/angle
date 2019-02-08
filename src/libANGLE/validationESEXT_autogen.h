@@ -784,6 +784,20 @@ bool ValidateFramebufferTextureEXT(Context *context,
                                    GLuint texture,
                                    GLint level);
 
+// GL_EXT_instanced_arrays
+bool ValidateDrawArraysInstancedEXT(Context *context,
+                                    PrimitiveMode modePacked,
+                                    GLint start,
+                                    GLsizei count,
+                                    GLsizei primcount);
+bool ValidateDrawElementsInstancedEXT(Context *context,
+                                      PrimitiveMode modePacked,
+                                      GLsizei count,
+                                      DrawElementsType typePacked,
+                                      const void *indices,
+                                      GLsizei primcount);
+bool ValidateVertexAttribDivisorEXT(Context *context, GLuint index, GLuint divisor);
+
 // GL_EXT_map_buffer_range
 bool ValidateFlushMappedBufferRangeEXT(Context *context,
                                        BufferBinding targetPacked,

@@ -109,6 +109,9 @@
     "glDrawArraysInstancedANGLE": {
         "mode": "PrimitiveMode"
     },
+    "glDrawArraysInstancedEXT": {
+        "mode": "PrimitiveMode"
+    },
     "glDrawElements": {
         "mode": "PrimitiveMode",
         "type": "DrawElementsType"
@@ -122,6 +125,10 @@
         "type": "DrawElementsType"
     },
     "glDrawElementsInstancedANGLE": {
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
+    },
+    "glDrawElementsInstancedEXT": {
         "mode": "PrimitiveMode",
         "type": "DrawElementsType"
     },
