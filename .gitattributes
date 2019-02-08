@@ -8,6 +8,7 @@
 **/shaders/gen/*.inc eol=lf
 *.sh                 eol=lf
 *.gn                 eol=lf
+*.gni                eol=lf
 
 # Git conflict markers in the json file break the code generator.
 # Using a binary merge strategy forces a conflict without changing the file.
