@@ -74,7 +74,7 @@ Framebuffer- ->Context: onSubjectStateChange
 Note over Context: cache update
 -->
 
-![State Change Example](https://chromium.googlesource.com/angle/angle/+/master/doc/image/StateNotificationExample.svg)
+![State Change Example](https://chromium.googlesource.com/angle/angle/+/master/doc/img/StateNotificationExample.svg)
 
 We use the [Observer pattern](https://en.wikipedia.org/wiki/Observer_pattern) to implement cache
 invalidation notifications. See [`Observer.h`](../src/libANGLE/Observer.h). In the example the
