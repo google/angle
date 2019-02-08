@@ -373,14 +373,8 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     {
         ASSERT(mSurfaceCaps.currentExtent.height == 0xFFFFFFFFu);
 
-        if (attribWidth == 0)
-        {
-            width = windowSize.width;
-        }
-        if (attribHeight == 0)
-        {
-            height = windowSize.height;
-        }
+        width  = (attribWidth != 0) ? static_cast<uint32_t>(attribWidth) : windowSize.width;
+        height = (attribHeight != 0) ? static_cast<uint32_t>(attribHeight) : windowSize.height;
     }
 
     gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
