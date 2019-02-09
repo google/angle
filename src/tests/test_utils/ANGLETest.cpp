@@ -63,7 +63,14 @@ void TestPlatform_logWarning(PlatformMethods *platform, const char *warningMessa
     if (testPlatformContext->ignoreMessages)
         return;
 
-    std::cerr << "Warning: " << warningMessage << std::endl;
+    if (testPlatformContext->warningsAsErrors)
+    {
+        FAIL() << warningMessage;
+    }
+    else
+    {
+        std::cerr << "Warning: " << warningMessage << std::endl;
+    }
 }
 
 void TestPlatform_logInfo(PlatformMethods *platform, const char *infoMessage)
@@ -374,8 +381,9 @@ ANGLETestBase::~ANGLETestBase()
 
 void ANGLETestBase::ANGLETestSetUp()
 {
-    mPlatformContext.ignoreMessages = false;
-    mPlatformContext.currentTest    = this;
+    mPlatformContext.ignoreMessages   = false;
+    mPlatformContext.warningsAsErrors = false;
+    mPlatformContext.currentTest      = this;
 
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
@@ -1250,6 +1258,11 @@ void ANGLETestBase::ignoreD3D11SDKLayersWarnings()
 {
     // Some tests may need to disable the D3D11 SDK Layers Warnings checks
     mIgnoreD3D11SDKLayersWarnings = true;
+}
+
+void ANGLETestBase::treatPlatformWarningsAsErrors()
+{
+    mPlatformContext.warningsAsErrors = true;
 }
 
 ANGLETestBase::ScopedIgnorePlatformMessages::ScopedIgnorePlatformMessages(ANGLETestBase *test)

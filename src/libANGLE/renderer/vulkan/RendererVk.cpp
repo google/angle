@@ -103,9 +103,12 @@ bool ExtensionFound(const char *extensionName,
 }
 
 // Array of Validation error/warning messages that will be ignored, should include bugID
-constexpr std::array<const char *, 1> kSkippedMessages = {
+constexpr const char *kSkippedMessages[] = {
+    // http://anglebug.com/2866
+    "UNASSIGNED-CoreValidation-Shader-OutputNotConsumed",
     // http://anglebug.com/2796
-    "UNASSIGNED-CoreValidation-Shader-PointSizeMissing"};
+    "UNASSIGNED-CoreValidation-Shader-PointSizeMissing",
+};
 
 // Suppress validation errors that are known
 //  return "true" if given code/prefix/message is known, else return "false"

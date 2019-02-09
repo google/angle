@@ -245,6 +245,7 @@ class WGLWindow;
 struct TestPlatformContext final : private angle::NonCopyable
 {
     bool ignoreMessages        = false;
+    bool warningsAsErrors      = false;
     ANGLETestBase *currentTest = nullptr;
 };
 
@@ -368,6 +369,9 @@ class ANGLETestBase
     EGLint getPlatformRenderer() const;
 
     void ignoreD3D11SDKLayersWarnings();
+
+    // Allows a test to be more restrictive about platform warnings.
+    void treatPlatformWarningsAsErrors();
 
     static OSWindow *GetOSWindow() { return mOSWindow; }
 
