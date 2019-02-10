@@ -1407,11 +1407,13 @@ void WebGLCompatibilityTest::TestDifferentStencilMaskAndRef(GLenum errIfMismatch
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
 }
+
 TEST_P(WebGLCompatibilityTest, StencilTestEnabledDisallowsDifferentStencilMaskAndRef)
 {
     glEnable(GL_STENCIL_TEST);
     TestDifferentStencilMaskAndRef(GL_INVALID_OPERATION);
 }
+
 TEST_P(WebGLCompatibilityTest, StencilTestDisabledAllowsDifferentStencilMaskAndRef)
 {
     glDisable(GL_STENCIL_TEST);
@@ -2395,6 +2397,9 @@ TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoopWithDrawBuffersEXT)
 // Based on the WebGL test conformance/textures/misc/texture-copying-feedback-loops.html
 TEST_P(WebGLCompatibilityTest, TextureCopyingFeedbackLoops)
 {
+    // Vulkan does not support copying from a texture to itself. http://anglebug.com/2914
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture.get());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -2524,6 +2529,9 @@ TEST_P(WebGLCompatibilityTest, GlobalNamesConflict)
 // Test dimension and image size validation of compressed textures
 TEST_P(WebGLCompatibilityTest, CompressedTextureS3TC)
 {
+    // Missing compressed Texture support. http://anglebug.com/2904
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     if (extensionRequestable("GL_EXT_texture_compression_dxt1"))
     {
         glRequestExtensionANGLE("GL_EXT_texture_compression_dxt1");
@@ -4111,6 +4119,9 @@ void WebGLCompatibilityTest::validateCompressedTexImageExtensionFormat(GLenum fo
                                                                        const std::string &extName,
                                                                        bool subImageAllowed)
 {
+    // Missing compressed Texture support. http://anglebug.com/2904
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     std::vector<GLubyte> data(blockSize, 0u);
 
     GLTexture texture;
@@ -4348,7 +4359,8 @@ ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(WebGL2CompatibilityTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 }  // namespace angle
