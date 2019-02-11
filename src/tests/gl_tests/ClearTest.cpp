@@ -152,8 +152,6 @@ class VulkanClearTest : public ClearTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override { ANGLETest::TearDown(); }
-
     void bindColorStencilFBO()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, mColorStencilFBO);
@@ -422,6 +420,57 @@ TEST_P(ClearTest, Stencil8Scissored)
         glClearStencil(static_cast<int>(perc * 255.0f));
         glClear(GL_STENCIL_BUFFER_BIT);
     }
+}
+
+// Covers a bug in the Vulkan back-end where starting a new command buffer in
+// the masked clear would not trigger descriptor sets to be re-bound.
+TEST_P(ClearTest, MaskedClearThenDrawWithUniform)
+{
+    // Initialize a program with a uniform.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint uniLoc = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, uniLoc);
+    glUniform4f(uniLoc, 0.0f, 1.0f, 0.0f, 1.0f);
+
+    // Initialize position attribute.
+    GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    // Initialize a simple FBO.
+    constexpr GLsizei kSize = 2;
+    GLTexture clearTexture;
+    glBindTexture(GL_TEXTURE_2D, clearTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, clearTexture, 0);
+
+    glViewport(0, 0, kSize, kSize);
+
+    // Clear and draw to flush out dirty bits.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Flush to trigger a new serial.
+    glFlush();
+
+    // Enable color mask and draw again to trigger the bug.
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Requires ES3

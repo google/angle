@@ -288,15 +288,16 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
         }
     }
 
-    bool isError = (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) != 0;
+    bool isError    = (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) != 0;
+    std::string msg = log.str();
 
     if (isError)
     {
-        ERR() << log.str();
+        ERR() << msg;
     }
     else
     {
-        WARN() << log.str();
+        WARN() << msg;
     }
 
     return VK_FALSE;

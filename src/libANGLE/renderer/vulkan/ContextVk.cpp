@@ -226,11 +226,11 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // TODO(jmadill): Use dirty bit. http://anglebug.com/3014
     if (!mCommandBuffer)
     {
+        mDirtyBits |= mNewCommandBufferDirtyBits;
         if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer->getCurrentQueueSerial(),
                                                          &mCommandBuffer))
         {
             ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, &mCommandBuffer));
-            mDirtyBits |= mNewCommandBufferDirtyBits;
         }
     }
 
