@@ -351,8 +351,7 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
 // Test that swap interval works.
 TEST_P(EGLSurfaceTest, SwapInterval)
 {
-    // On OSX, the test takes tens of milliseconds, which should be impossible with
-    // setSwapInterval(1) followed by 240 swaps as done below.  http://anglebug.com/3140
+    // On OSX, maxInterval >= 1 is advertised, but is not implemented.  http://anglebug.com/3140
     ANGLE_SKIP_TEST_IF(IsOSX());
 
     initializeDisplay();
@@ -397,6 +396,10 @@ TEST_P(EGLSurfaceTest, SwapInterval)
             for (int i = 0; i < 100; ++i)
             {
                 eglSwapBuffers(mDisplay, mWindowSurface);
+
+                // Second eglSwapBuffers causes an EGL_BAD_SURFACE on Nvidia shield tv.
+                // http://anglebug.com/3144.
+                ANGLE_SKIP_TEST_IF(IsAndroid());
             }
             timer->stop();
             ASSERT_EGL_SUCCESS();
