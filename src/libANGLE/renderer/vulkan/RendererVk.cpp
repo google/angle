@@ -1157,18 +1157,6 @@ angle::Result RendererVk::initPipelineCache(DisplayVk *display)
     return angle::Result::Continue;
 }
 
-void RendererVk::ensureCapsInitialized() const
-{
-    if (!mCapsInitialized)
-    {
-        ASSERT(mCurrentQueueFamilyIndex < mQueueFamilyProperties.size());
-        vk::GenerateCaps(mPhysicalDeviceProperties, mPhysicalDeviceFeatures,
-                         mQueueFamilyProperties[mCurrentQueueFamilyIndex], mNativeTextureCaps,
-                         &mNativeCaps, &mNativeExtensions, &mNativeLimitations);
-        mCapsInitialized = true;
-    }
-}
-
 void RendererVk::getSubmitWaitSemaphores(
     vk::Context *context,
     angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> *waitSemaphores,
