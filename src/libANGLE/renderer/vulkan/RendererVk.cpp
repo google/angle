@@ -55,6 +55,12 @@ constexpr size_t kUniformBufferDescriptorsPerDescriptorSet = 2;
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 10 * 60 * 60;
 // Wait a maximum of 10s.  If that times out, we declare it a failure.
 constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+// Per the Vulkan specification, as long as Vulkan 1.1+ is returned by vkEnumerateInstanceVersion,
+// ANGLE must indicate the highest version of Vulkan functionality that it uses.  The Vulkan
+// validation layers will issue messages for any core functionality that requires a higher version.
+// This value must be increased whenever ANGLE starts using functionality from a newer core
+// version of Vulkan.
+constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
 bool ShouldEnableMockICD(const egl::AttributeMap &attribs)
 {
@@ -701,11 +707,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_VK_TRY(displayVk, enumerateInstanceVersion(&apiVersion));
         if ((VK_VERSION_MAJOR(apiVersion) > 1) || (VK_VERSION_MINOR(apiVersion) >= 1))
         {
-            // Note: will need to revisit this with Vulkan 1.2+.
-            applicationInfo.apiVersion = VK_API_VERSION_1_1;
+            // This is the highest version of core Vulkan functionality that ANGLE uses.
+            applicationInfo.apiVersion = kPreferredVulkanAPIVersion;
         }
         else
         {
+            // Since only 1.0 instance-level functionality is available, this must set to 1.0.
             applicationInfo.apiVersion = VK_API_VERSION_1_0;
         }
     }
