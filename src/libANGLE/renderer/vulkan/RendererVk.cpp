@@ -1126,8 +1126,12 @@ std::string RendererVk::getRendererDescription() const
 gl::Version RendererVk::getMaxSupportedESVersion() const
 {
     // Current highest supported version
-    // TODO: Update this to support ES 3.0. http://crbug.com/angleproject/2950
-    gl::Version maxVersion = gl::Version(2, 0);
+    gl::Version maxVersion = gl::Version(3, 0);
+
+#if ANGLE_VULKAN_CONFORMANT_CONFIGS_ONLY
+    // TODO: Disallow ES 3.0 until supported. http://crbug.com/angleproject/2950
+    maxVersion = gl::Version(2, 0);
+#endif
 
     // Vulkan inherited queries are required to support any GL query type
     if (!mPhysicalDeviceFeatures.inheritedQueries)

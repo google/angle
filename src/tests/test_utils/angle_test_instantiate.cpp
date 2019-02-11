@@ -144,11 +144,13 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
             return true;
     }
 
+#if ANGLE_VULKAN_CONFORMANT_CONFIGS_ONLY
     // Vulkan ES 3.0 is not yet supported.
     if (param.majorVersion > 2 && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
     {
         return false;
     }
+#endif
 
     if (IsWindows())
     {

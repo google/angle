@@ -101,6 +101,9 @@ config("internal_config") {
     if (angle_enable_vulkan_gpu_trace_events) {
       defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
     }
+    if (angle_vulkan_conformant_configs_only) {
+      defines += [ "ANGLE_VULKAN_CONFORMANT_CONFIGS_ONLY=1" ]
+    }
   }
 
   if (angle_enable_trace) {
