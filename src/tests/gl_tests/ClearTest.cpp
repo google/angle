@@ -364,7 +364,7 @@ TEST_P(ClearTest, Depth16Scissored)
 {
     // Crashes on NVIDIA and Android in FramebufferVk::clearWithClearAttachments.
     // http://anglebug.com/3081
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() || IsAndroid() || IsFuchsia());
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() || IsAndroid());
 
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
@@ -396,7 +396,7 @@ TEST_P(ClearTest, Stencil8Scissored)
 {
     // Crashes on NVIDIA and Android in FramebufferVk::clearWithClearAttachments.
     // http://anglebug.com/3081
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() || IsAndroid() || IsFuchsia());
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() || IsAndroid());
 
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
