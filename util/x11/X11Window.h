@@ -27,7 +27,6 @@ class ANGLE_UTIL_EXPORT X11Window : public OSWindow
     bool initialize(const std::string &name, size_t width, size_t height) override;
     void destroy() override;
 
-    void resetNativeWindow() override;
     EGLNativeWindowType getNativeWindow() const override;
     EGLNativeDisplayType getNativeDisplay() const override;
 

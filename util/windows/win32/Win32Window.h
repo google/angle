@@ -26,7 +26,6 @@ class Win32Window : public OSWindow
 
     bool takeScreenshot(uint8_t *pixelData) override;
 
-    void resetNativeWindow() override;
     EGLNativeWindowType getNativeWindow() const override;
     EGLNativeDisplayType getNativeDisplay() const override;
 

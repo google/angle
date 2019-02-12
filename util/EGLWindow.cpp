@@ -305,8 +305,6 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *
 
     surfaceAttributes.push_back(EGL_NONE);
 
-    osWindow->resetNativeWindow();
-
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(),
                                       &surfaceAttributes[0]);
     if (eglGetError() != EGL_SUCCESS || (mSurface == EGL_NO_SURFACE))

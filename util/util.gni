@@ -53,8 +53,8 @@ util_winrt_sources = [
 ]
 
 util_linux_sources = [
-  "util/posix/PosixTimer.cpp",
-  "util/posix/PosixTimer.h",
+  "util/linux/LinuxTimer.cpp",
+  "util/linux/LinuxTimer.h",
   "util/posix/Posix_system_utils.cpp",
 ]
 
@@ -63,14 +63,6 @@ util_x11_sources = [
   "util/x11/X11Pixmap.h",
   "util/x11/X11Window.cpp",
   "util/x11/X11Window.h",
-]
-
-util_fuchsia_sources = [
-  "util/posix/PosixTimer.cpp",
-  "util/posix/PosixTimer.h",
-  "util/posix/Posix_system_utils.cpp",
-  "util/fuchsia/ScenicWindow.cpp",
-  "util/fuchsia/ScenicWindow.h",
 ]
 
 util_ozone_sources = [

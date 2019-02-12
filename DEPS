@@ -36,12 +36,12 @@ vars = {
 deps = {
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@9a53be87ebb636c35f2ed9772e5deaeb350d790b',
+    'url': '{chromium_git}/chromium/src/build.git@9dbdd5c2ae8c298bef55ca7c42754079aabe60c7',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/buildtools': {
-    'url': '{chromium_git}/chromium/buildtools.git@6fbda1b24c1893a893b17aa219b765b9e7c801d8',
+    'url': '{chromium_git}/chromium/buildtools.git@24ebce4578745db15274e180da1938ebc1358243',
     'condition': 'not build_with_chromium',
   },
 
@@ -85,28 +85,6 @@ deps = {
     'condition': 'not build_with_chromium',
    },
 
-  '{angle_root}/third_party/qemu-linux-x64': {
-      'packages': [
-          {
-              'package': 'fuchsia/qemu/linux-amd64',
-              'version': '9cc486c5b18a0be515c39a280ca9a309c54cf994'
-          },
-      ],
-      'condition': 'not build_with_chromium and (host_os == "linux" and checkout_fuchsia)',
-      'dep_type': 'cipd',
-  },
-
-  '{angle_root}/third_party/qemu-mac-x64': {
-      'packages': [
-          {
-              'package': 'fuchsia/qemu/mac-amd64',
-              'version': '2d3358ae9a569b2d4a474f498b32b202a152134f'
-          },
-      ],
-      'condition': 'not build_with_chromium and (host_os == "mac" and checkout_fuchsia)',
-      'dep_type': 'cipd',
-  },
-
   '{angle_root}/third_party/spirv-headers/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@{spirv_headers_revision}',
     'condition': 'not build_with_chromium',
@@ -141,11 +119,6 @@ deps = {
   '{angle_root}/tools/clang': {
     'url': '{chromium_git}/chromium/src/tools/clang.git@3114fbc11f9644c54dd0a4cdbfa867bac50ff983',
     'condition': 'not build_with_chromium',
-  },
-
-  '{angle_root}/third_party/fuchsia-sdk': {
-    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@8e8db13b538ecb251e5ce9d5c781fc142f9752fd',
-    'condition': 'checkout_fuchsia and not build_with_chromium',
   },
 }
 
@@ -273,16 +246,6 @@ hooks = [
                 '--no_auth',
                 '--bucket', 'chromium-browser-clang/rc',
                 '-s', '{angle_root}/build/toolchain/win/rc/win/rc.exe.sha1',
-    ],
-  },
-
-  {
-    'name': 'fuchsia_sdk',
-    'pattern': '.',
-    'condition': 'checkout_fuchsia and not build_with_chromium',
-    'action': [
-      'python',
-      '{angle_root}/build/fuchsia/update_sdk.py',
     ],
   },
 ]

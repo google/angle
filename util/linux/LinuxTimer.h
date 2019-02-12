@@ -4,20 +4,20 @@
 // found in the LICENSE file.
 //
 
-// PosixTimer.h: Definition of a high precision timer class on Linux
+// LinuxTimer.h: Definition of a high precision timer class on Linux
 
-#ifndef UTIL_POSIX_TIMER_H
-#define UTIL_POSIX_TIMER_H
+#ifndef UTIL_LINUX_TIMER_H
+#define UTIL_LINUX_TIMER_H
 
 #include <stdint.h>
 #include <time.h>
 
 #include "util/Timer.h"
 
-class ANGLE_UTIL_EXPORT PosixTimer : public Timer
+class ANGLE_UTIL_EXPORT LinuxTimer : public Timer
 {
   public:
-    PosixTimer();
+    LinuxTimer();
 
     void start() override;
     void stop() override;
@@ -31,4 +31,4 @@ class ANGLE_UTIL_EXPORT PosixTimer : public Timer
     uint64_t mStopTimeNs;
 };
 
-#endif  // UTIL_POSIX_TIMER_H
+#endif  // UTIL_LINUX_TIMER_H

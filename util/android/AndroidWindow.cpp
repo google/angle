@@ -31,8 +31,6 @@ bool AndroidWindow::initialize(const std::string &name, size_t width, size_t hei
 }
 void AndroidWindow::destroy() {}
 
-void AndroidWindow::resetNativeWindow() {}
-
 EGLNativeWindowType AndroidWindow::getNativeWindow() const
 {
     // Return the entire Activity Surface for now

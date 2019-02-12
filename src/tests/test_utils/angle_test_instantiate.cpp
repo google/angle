@@ -122,15 +122,6 @@ bool IsWindows()
 #endif
 }
 
-bool IsFuchsia()
-{
-#if defined(ANGLE_PLATFORM_FUCHSIA)
-    return true;
-#else
-    return false;
-#endif
-}
-
 bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param)
 {
     VendorID vendorID = systemInfo.gpus[systemInfo.primaryGPUIndex].vendorId;
@@ -198,17 +189,6 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
         }
 
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
-    }
-
-    if (IsFuchsia())
-    {
-        // Currently we only support the Vulkan back-end on Fuchsia.
-        if (param.driver != GLESDriverType::AngleEGL)
-        {
-            return false;
-        }
-
-        return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
     }
 
     if (IsOzone())

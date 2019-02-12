@@ -11,9 +11,6 @@
 
 #if defined(_WIN32)
 #    define ANGLE_PLATFORM_WINDOWS 1
-#elif defined(__Fuchsia__)
-#    define ANGLE_PLATFORM_FUCHSIA 1
-#    define ANGLE_PLATFORM_POSIX 1
 #elif defined(__APPLE__)
 #    define ANGLE_PLATFORM_APPLE 1
 #    define ANGLE_PLATFORM_POSIX 1

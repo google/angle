@@ -10,10 +10,6 @@ import("../../gni/angle.gni")
 
 import("$angle_root/third_party/vulkan-headers/vulkan_headers_script_deps.gni")
 
-# Vulkan-tools isn't ported to Fuchsia yet.
-# TODO(spang): Port mock ICD to Fuchsia.
-assert(!is_fuchsia)
-
 vulkan_undefine_configs = []
 if (is_win) {
   vulkan_undefine_configs += [

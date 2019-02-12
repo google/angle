@@ -23,7 +23,6 @@ bool IsLinux();
 bool IsOSX();
 bool IsOzone();
 bool IsWindows();
-bool IsFuchsia();
 
 bool IsPlatformAvailable(const PlatformParameters &param);
 

@@ -8,10 +8,6 @@
 
 import("../../gni/angle.gni")
 
-# Fuchsia has non-upstream changes to the vulkan layers, so we don't want
-# to build it from upstream sources.
-assert(!is_fuchsia)
-
 import("$angle_root/third_party/vulkan-headers/vulkan_headers_script_deps.gni")
 
 vulkan_undefine_configs = []
