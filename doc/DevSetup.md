@@ -107,10 +107,10 @@ target_cpu = "arm64"          # Nexus 5X is 64 bit, remove this on 32 bit device
 target_os = "android"
 use_goma = true               # Remove this if you don't have goma
 ```
-Additional flags to build the Vulkan backend, enable only if running on Android N or higher:
+Additional flags to build the Vulkan backend, enable only if running on Android O or higher:
 ```
-android32_ndk_api_level = 24
-android64_ndk_api_level = 24
+android32_ndk_api_level = 26
+android64_ndk_api_level = 26
 ```
 
 These ANGLE targets are supported:

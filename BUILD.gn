@@ -465,7 +465,9 @@ config("libANGLE_config") {
   }
 
   if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
-    if (ndk_supports_nativewindow) {
+    # In API level 26 ANativeWindow APIs were moved from libandroid.so
+    # into a separate library, libnativewindow.so
+    if (ndk_api_level_at_least_26) {
       libs += [ "nativewindow" ]
     } else {
       libs += [ "android" ]
