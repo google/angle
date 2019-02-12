@@ -10,9 +10,9 @@
 #ifndef UTIL_FUCHSIA_SCENIC_WINDOW_H
 #define UTIL_FUCHSIA_SCENIC_WINDOW_H
 
+#include <fuchsia/ui/input/cpp/fidl.h>
 #include <fuchsia/ui/policy/cpp/fidl.h>
 #include <fuchsia/ui/scenic/cpp/fidl.h>
-#include <fuchsia/ui/viewsv1/cpp/fidl.h>
 #include <fuchsia_egl.h>
 #include <lib/async-loop/cpp/loop.h>
 #include <lib/ui/scenic/cpp/commands.h>
@@ -29,7 +29,7 @@ struct FuchsiaEGLWindowDeleter
     void operator()(fuchsia_egl_window *eglWindow) { fuchsia_egl_window_destroy(eglWindow); }
 };
 
-class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow, public fuchsia::ui::viewsv1::ViewListener
+class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow
 {
   public:
     ScenicWindow();
@@ -48,10 +48,6 @@ class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow, public fuchsia::ui::view
     void setVisible(bool isVisible) override;
     void signalTestEvent() override;
 
-    // views::ViewListener:
-    void OnPropertiesChanged(fuchsia::ui::viewsv1::ViewProperties properties,
-                             OnPropertiesChangedCallback callback) override;
-
     // FIDL callbacks:
     void OnScenicEvents(std::vector<fuchsia::ui::scenic::Event> events);
     void OnScenicError(zx_status_t status);
@@ -63,18 +59,15 @@ class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow, public fuchsia::ui::view
     // System services.
     zx::channel mServiceRoot;
     fuchsia::ui::scenic::ScenicPtr mScenic;
-    fuchsia::ui::viewsv1::ViewManagerPtr mViewManager;
     fuchsia::ui::policy::PresenterPtr mPresenter;
 
     // Scenic session & resources.
     scenic::Session mScenicSession;
-    scenic::ImportNode mParent;
     scenic::ShapeNode mShape;
     scenic::Material mMaterial;
 
-    // Scenic view & listener.
-    fuchsia::ui::viewsv1::ViewPtr mView;
-    fidl::Binding<fuchsia::ui::viewsv1::ViewListener> mViewListenerBinding;
+    // Scenic view.
+    std::unique_ptr<scenic::View> mView;
 
     // EGL native window.
     std::unique_ptr<fuchsia_egl_window, FuchsiaEGLWindowDeleter> mFuchsiaEGLWindow;

@@ -59,13 +59,10 @@ ScenicWindow::ScenicWindow()
     : mLoop(GetDefaultLoop()),
       mServiceRoot(ConnectToServiceRoot()),
       mScenic(ConnectToService<fuchsia::ui::scenic::Scenic>(mServiceRoot.get())),
-      mViewManager(ConnectToService<fuchsia::ui::viewsv1::ViewManager>(mServiceRoot.get())),
       mPresenter(ConnectToService<fuchsia::ui::policy::Presenter>(mServiceRoot.get())),
       mScenicSession(mScenic.get()),
-      mParent(&mScenicSession),
       mShape(&mScenicSession),
-      mMaterial(&mScenicSession),
-      mViewListenerBinding(this)
+      mMaterial(&mScenicSession)
 {}
 
 ScenicWindow::~ScenicWindow()
@@ -76,24 +73,20 @@ ScenicWindow::~ScenicWindow()
 bool ScenicWindow::initialize(const std::string &name, size_t width, size_t height)
 {
     // Set up scenic resources.
-    zx::eventpair parentExportToken;
-    mParent.BindAsRequest(&parentExportToken);
-    mParent.SetEventMask(fuchsia::ui::gfx::kMetricsEventMask);
-    mParent.AddChild(mShape);
     mShape.SetShape(scenic::Rectangle(&mScenicSession, width, height));
     mShape.SetMaterial(mMaterial);
 
-    // Create view and present it.
+    // Create view.
     zx::eventpair viewHolderToken;
     zx::eventpair viewToken;
     zx_status_t status = zx::eventpair::create(0 /* options */, &viewToken, &viewHolderToken);
     ASSERT(status == ZX_OK);
+    mView = std::make_unique<scenic::View>(&mScenicSession, std::move(viewToken), name);
+    mView->AddChild(mShape);
+    mScenicSession.Present(0, [](fuchsia::images::PresentationInfo info) {});
+
+    // Present view.
     mPresenter->Present2(std::move(viewHolderToken), nullptr);
-    mViewManager->CreateView2(mView.NewRequest(), std::move(viewToken),
-                              mViewListenerBinding.NewBinding(), std::move(parentExportToken),
-                              name);
-    mView.set_error_handler(fit::bind_member(this, &ScenicWindow::OnScenicError));
-    mViewListenerBinding.set_error_handler(fit::bind_member(this, &ScenicWindow::OnScenicError));
 
     mWidth  = width;
     mHeight = height;
@@ -160,12 +153,6 @@ bool ScenicWindow::resize(int width, int height)
 void ScenicWindow::setVisible(bool isVisible) {}
 
 void ScenicWindow::signalTestEvent() {}
-
-void ScenicWindow::OnPropertiesChanged(fuchsia::ui::viewsv1::ViewProperties properties,
-                                       OnPropertiesChangedCallback callback)
-{
-    UNIMPLEMENTED();
-}
 
 void ScenicWindow::OnScenicEvents(std::vector<fuchsia::ui::scenic::Event> events)
 {
