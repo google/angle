@@ -145,7 +145,7 @@
 2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
 2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
-// Windows Linux and Mac failures
+// dEQP bugs
 1028 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
 1028 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
 1028 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL

@@ -90,7 +90,7 @@
   "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
     "61a7752424595e24edff0c1f1784e18e",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
-    "84f988ff75f4d5b8f2a5d572ee8c51cc",
+    "6e6f7cf9afd17860169b590621c3dcc1",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "1c64f7187357d7561c984ec57d251e74",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp":
