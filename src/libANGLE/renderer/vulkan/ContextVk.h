@@ -61,7 +61,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                                         GLsizei count,
                                         gl::DrawElementsType type,
                                         const void *indices,
-                                        GLsizei instanceCount) override;
+                                        GLsizei instances) override;
     angle::Result drawRangeElements(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLuint start,
@@ -232,7 +232,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                             gl::PrimitiveMode mode,
                             GLint firstVertex,
                             GLsizei vertexOrIndexCount,
-                            GLsizei instanceCount,
                             gl::DrawElementsType indexTypeOrInvalid,
                             const void *indices,
                             DirtyBits dirtyBitMask,
@@ -240,7 +239,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLsizei indexCount,
-                                   GLsizei instanceCount,
                                    gl::DrawElementsType indexType,
                                    const void *indices,
                                    vk::CommandBuffer **commandBufferOut);

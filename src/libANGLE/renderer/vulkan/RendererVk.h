@@ -205,9 +205,6 @@ class RendererVk : angle::NonCopyable
     bool hasTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
     bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
-    static constexpr size_t kMaxExtensionNames = 200;
-    using ExtensionNameList = angle::FixedVector<const char *, kMaxExtensionNames>;
-
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
     // image acquire.
@@ -227,7 +224,7 @@ class RendererVk : angle::NonCopyable
                               vk::CommandBuffer &&commandBuffer);
     void freeAllInFlightResources();
     angle::Result flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch);
-    void initFeatures(const ExtensionNameList &extensions);
+    void initFeatures(const std::vector<VkExtensionProperties> &deviceExtensionProps);
     void initPipelineCacheVkKey();
     angle::Result initPipelineCache(DisplayVk *display);
 
@@ -265,7 +262,6 @@ class RendererVk : angle::NonCopyable
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     VkQueue mQueue;
     uint32_t mCurrentQueueFamilyIndex;
-    uint32_t mMaxVertexAttribDivisor;
     VkDevice mDevice;
     vk::CommandPool mCommandPool;
     SerialFactory mQueueSerialFactory;
