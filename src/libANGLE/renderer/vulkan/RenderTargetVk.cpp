@@ -140,6 +140,20 @@ vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readi
     ASSERT(mImage && mImage->valid());
 
     // TODO(jmadill): Better simultaneous resource access. http://anglebug.com/2679
+    //
+    // A better alternative would be:
+    //
+    // if (mImage->isLayoutChangeNecessary(layout)
+    // {
+    //     vk::CommandBuffer *srcLayoutChange;
+    //     ANGLE_TRY(mImage->recordCommands(contextVk, &srcLayoutChange));
+    //     mImage->changeLayout(mImage->getAspectFlags(), layout, srcLayoutChange);
+    // }
+    // mImage->addReadDependency(readingResource);
+    //
+    // I.e. the transition should happen on a node generated from mImage itself.
+    // However, this needs context to be available here, or all call sites changed
+    // to perform the layout transition and set the dependency.
     mImage->addWriteDependency(readingResource);
 
     mImage->changeLayout(mImage->getAspectFlags(), layout, commandBuffer);

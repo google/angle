@@ -207,6 +207,14 @@ class TextureVk : public TextureImpl
                                      bool unpackUnmultiplyAlpha,
                                      TextureVk *source);
 
+    angle::Result copySubImageImplWithTransfer(ContextVk *contextVk,
+                                               const gl::ImageIndex &index,
+                                               const gl::Offset &destOffset,
+                                               const vk::Format &destFormat,
+                                               size_t sourceLevel,
+                                               const gl::Rectangle &sourceArea,
+                                               vk::ImageHelper *srcImage);
+
     angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
                                            const gl::ImageIndex &index,
                                            const gl::Offset &destOffset,

@@ -1401,12 +1401,12 @@ void ImageHelper::init2DWeakReference(VkImage handle,
 {
     ASSERT(!valid());
 
-    mExtents    = extents;
-    mFormat     = &format;
-    mSamples    = samples;
+    mExtents       = extents;
+    mFormat        = &format;
+    mSamples       = samples;
     mCurrentLayout = ImageLayout::Undefined;
-    mLayerCount = 1;
-    mLevelCount = 1;
+    mLayerCount    = 1;
+    mLevelCount    = 1;
 
     mImage.setHandle(handle);
 }
@@ -1607,32 +1607,27 @@ void ImageHelper::Copy(ImageHelper *srcImage,
                        const gl::Offset &srcOffset,
                        const gl::Offset &dstOffset,
                        const gl::Extents &copySize,
-                       VkImageAspectFlags aspectMask,
+                       const VkImageSubresourceLayers &srcSubresource,
+                       const VkImageSubresourceLayers &dstSubresource,
                        CommandBuffer *commandBuffer)
 {
     ASSERT(commandBuffer->valid() && srcImage->valid() && dstImage->valid());
 
-    srcImage->changeLayout(srcImage->getAspectFlags(), ImageLayout::TransferSrc, commandBuffer);
-    dstImage->changeLayout(dstImage->getAspectFlags(), ImageLayout::TransferDst, commandBuffer);
+    ASSERT(srcImage->getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+    ASSERT(dstImage->getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-    VkImageCopy region                   = {};
-    region.srcSubresource.aspectMask     = aspectMask;
-    region.srcSubresource.mipLevel       = 0;
-    region.srcSubresource.baseArrayLayer = 0;
-    region.srcSubresource.layerCount     = 1;
-    region.srcOffset.x                   = srcOffset.x;
-    region.srcOffset.y                   = srcOffset.y;
-    region.srcOffset.z                   = srcOffset.z;
-    region.dstSubresource.aspectMask     = aspectMask;
-    region.dstSubresource.mipLevel       = 0;
-    region.dstSubresource.baseArrayLayer = 0;
-    region.dstSubresource.layerCount     = 1;
-    region.dstOffset.x                   = dstOffset.x;
-    region.dstOffset.y                   = dstOffset.y;
-    region.dstOffset.z                   = dstOffset.z;
-    region.extent.width                  = copySize.width;
-    region.extent.height                 = copySize.height;
-    region.extent.depth                  = copySize.depth;
+    VkImageCopy region    = {};
+    region.srcSubresource = srcSubresource;
+    region.srcOffset.x    = srcOffset.x;
+    region.srcOffset.y    = srcOffset.y;
+    region.srcOffset.z    = srcOffset.z;
+    region.dstSubresource = dstSubresource;
+    region.dstOffset.x    = dstOffset.x;
+    region.dstOffset.y    = dstOffset.y;
+    region.dstOffset.z    = dstOffset.z;
+    region.extent.width   = copySize.width;
+    region.extent.height  = copySize.height;
+    region.extent.depth   = copySize.depth;
 
     commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                              dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);

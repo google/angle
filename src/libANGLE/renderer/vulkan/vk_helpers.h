@@ -614,7 +614,8 @@ class ImageHelper final : public CommandGraphResource
                      const gl::Offset &srcOffset,
                      const gl::Offset &dstOffset,
                      const gl::Extents &copySize,
-                     VkImageAspectFlags aspectMask,
+                     const VkImageSubresourceLayers &srcSubresources,
+                     const VkImageSubresourceLayers &dstSubresources,
                      CommandBuffer *commandBuffer);
 
     angle::Result generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel);
