@@ -32,7 +32,7 @@ class ShaderGL : public ShaderImpl
     ShCompileOptions prepareSourceAndReturnOptions(const gl::Context *context,
                                                    std::stringstream *sourceStream,
                                                    std::string *sourcePath) override;
-    void compileAsync(const std::string &source) override;
+    void compileAsync(const std::string &source, std::string &infoLog) override;
     bool postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog) override;
     std::string getDebugInfo() const override;
 

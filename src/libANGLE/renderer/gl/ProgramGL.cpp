@@ -130,22 +130,24 @@ void ProgramGL::setSeparable(bool separable)
     mFunctions->programParameteri(mProgramID, GL_PROGRAM_SEPARABLE, separable ? GL_TRUE : GL_FALSE);
 }
 
-using LinkImplFunctor = std::function<bool()>;
+using LinkImplFunctor = std::function<bool(std::string &)>;
 class ProgramGL::LinkTask final : public angle::Closure
 {
   public:
     LinkTask(LinkImplFunctor &&functor) : mLinkImplFunctor(functor), mFallbackToMainContext(false)
     {}
 
-    void operator()() override { mFallbackToMainContext = mLinkImplFunctor(); }
+    void operator()() override { mFallbackToMainContext = mLinkImplFunctor(mInfoLog); }
     bool fallbackToMainContext() { return mFallbackToMainContext; }
+    const std::string &getInfoLog() { return mInfoLog; }
 
   private:
     LinkImplFunctor mLinkImplFunctor;
     bool mFallbackToMainContext;
+    std::string mInfoLog;
 };
 
-using PostLinkImplFunctor = std::function<angle::Result(bool)>;
+using PostLinkImplFunctor = std::function<angle::Result(bool, const std::string &)>;
 class ProgramGL::LinkEventGL final : public LinkEvent
 {
   public:
@@ -162,7 +164,7 @@ class ProgramGL::LinkEventGL final : public LinkEvent
     angle::Result wait(const gl::Context *context) override
     {
         mWaitableEvent->wait();
-        return mPostLinkImplFunctor(mLinkTask->fallbackToMainContext());
+        return mPostLinkImplFunctor(mLinkTask->fallbackToMainContext(), mLinkTask->getInfoLog());
     }
 
     bool isLinking() override { return !mWaitableEvent->isReady(); }
@@ -358,13 +360,13 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         }
     }
     auto workerPool = context->getWorkerThreadPool();
-    auto linkTask   = std::make_shared<LinkTask>([this]() {
-        std::string infoLog;
-        ScopedWorkerContextGL worker(mRenderer.get(), &infoLog);
+    auto linkTask   = std::make_shared<LinkTask>([this](std::string &infoLog) {
+        std::string workerInfoLog;
+        ScopedWorkerContextGL worker(mRenderer.get(), &workerInfoLog);
         if (!worker())
         {
 #if !defined(NDEBUG)
-            WARN() << "bindWorkerContext failed." << std::endl << infoLog;
+            infoLog += "bindWorkerContext failed.\n" + workerInfoLog;
 #endif
             // Fallback to the main context.
             return true;
@@ -379,7 +381,9 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         return false;
     });
 
-    auto postLinkImplTask = [this, &infoLog, &resources](bool fallbackToMainContext) {
+    auto postLinkImplTask = [this, &infoLog, &resources](bool fallbackToMainContext,
+                                                         const std::string &workerInfoLog) {
+        infoLog << workerInfoLog;
         if (fallbackToMainContext)
         {
             mFunctions->linkProgram(mProgramID);
@@ -433,7 +437,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
     }
     else
     {
-        return std::make_unique<LinkEventDone>(postLinkImplTask(true));
+        return std::make_unique<LinkEventDone>(postLinkImplTask(true, std::string()));
     }
 }
 

@@ -29,7 +29,7 @@ class ShaderImpl : angle::NonCopyable
                                                            std::string *sourcePath) = 0;
 
     // Uses the GL driver to compile the shader source in a worker thread.
-    virtual void compileAsync(const std::string &source) {}
+    virtual void compileAsync(const std::string &source, std::string &infoLog) {}
 
     // Returns success for compiling on the driver. Returns success.
     virtual bool postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog) = 0;

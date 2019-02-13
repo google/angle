@@ -5120,8 +5120,7 @@ TEST_P(GLSLTest_ES3, InitSameNameArray)
 TEST_P(GLSLTest, FragData)
 {
     // Ensures that we don't regress and emit Vulkan layer warnings.
-    // TODO(http://crbug.com/931294): Fix worker context warnings.
-    // treatPlatformWarningsAsErrors();
+    treatPlatformWarningsAsErrors();
 
     constexpr char kFS[] = R"(void main() { gl_FragData[0] = vec4(1, 0, 0, 1); })";
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);

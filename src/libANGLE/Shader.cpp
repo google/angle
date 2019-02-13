@@ -108,7 +108,7 @@ class ScopedExit final : angle::NonCopyable
     std::function<void()> mExit;
 };
 
-using CompileImplFunctor = std::function<void(const std::string &)>;
+using CompileImplFunctor = std::function<void(const std::string &, std::string &)>;
 class CompileTask : public angle::Closure
 {
   public:
@@ -135,10 +135,11 @@ class CompileTask : public angle::Closure
         mResult = sh::Compile(mHandle, &srcStrings[0], srcStrings.size(), mOptions);
         if (mResult)
         {
-            mCompileImplFunctor(sh::GetObjectCode(mHandle));
+            mCompileImplFunctor(sh::GetObjectCode(mHandle), mInfoLog);
         }
     }
     bool getResult() { return mResult; }
+    const std::string &getInfoLog() { return mInfoLog; }
 
   private:
     ShHandle mHandle;
@@ -147,6 +148,7 @@ class CompileTask : public angle::Closure
     ShCompileOptions mOptions;
     CompileImplFunctor mCompileImplFunctor;
     bool mResult;
+    std::string mInfoLog;
 };
 
 ShaderState::ShaderState(ShaderType shaderType)
@@ -394,16 +396,16 @@ void Shader::compile(const Context *context)
     mCompilerResourcesString = mShCompilerInstance.getBuiltinResourcesString();
 
     mWorkerPool   = context->getWorkerThreadPool();
-    std::function<void(const std::string &)> compileImplFunctor;
+    std::function<void(const std::string &, std::string &)> compileImplFunctor;
     if (mWorkerPool->isAsync())
     {
-        compileImplFunctor = [this](const std::string &source) {
-            mImplementation->compileAsync(source);
+        compileImplFunctor = [this](const std::string &source, std::string &infoLog) {
+            mImplementation->compileAsync(source, infoLog);
         };
     }
     else
     {
-        compileImplFunctor = [](const std::string &source) {};
+        compileImplFunctor = [](const std::string &source, std::string &infoLog) {};
     }
     mCompileTask =
         std::make_shared<CompileTask>(compilerHandle, std::move(sourcePath), std::move(source),
@@ -427,6 +429,7 @@ void Shader::resolveCompile()
     mWorkerPool.reset();
 
     bool compiled = mCompileTask->getResult();
+    mInfoLog += mCompileTask->getInfoLog();
     mCompileTask.reset();
 
     ScopedExit exit([this]() { mBoundCompiler->putInstance(std::move(mShCompilerInstance)); });
@@ -434,7 +437,7 @@ void Shader::resolveCompile()
     ShHandle compilerHandle = mShCompilerInstance.getHandle();
     if (!compiled)
     {
-        mInfoLog = sh::GetInfoLog(compilerHandle);
+        mInfoLog += sh::GetInfoLog(compilerHandle);
         WARN() << std::endl << mInfoLog;
         mState.mCompileStatus = CompileStatus::NOT_COMPILED;
         return;
