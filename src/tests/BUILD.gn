@@ -13,60 +13,16 @@ declare_args() {
   build_angle_gles1_conform_tests = false
 }
 
+googletest_deps = [
+  "//testing/gmock",
+  "//testing/gtest",
+  "//third_party/googletest:gmock",
+  "//third_party/googletest:gtest",
+]
+
 if (build_with_chromium) {
-  googletest_deps = [
-    "//base",
-    "//base/test:test_support",
-    "//testing/gmock",
-    "//testing/gtest",
-  ]
+  googletest_deps += [ "//base/test:test_support" ]
 } else {
-  googletest_deps = [
-    ":angle_internal_gmock",
-    ":angle_internal_gtest",
-  ]
-
-  config("angle_internal_gtest_config") {
-    include_dirs = [
-      "${angle_googletest_dir}/googletest",
-      "${angle_googletest_dir}/googletest/include",
-    ]
-  }
-
-  angle_static_library("angle_internal_gtest") {
-    sources = [
-      "${angle_googletest_dir}/googletest/src/gtest-all.cc",
-    ]
-    public_configs += [ ":angle_internal_gtest_config" ]
-    configs -= [ "${angle_root}:extra_warnings" ]
-    if (is_fuchsia) {
-      deps = [
-        "//third_party/fuchsia-sdk/sdk:fdio",
-        "//third_party/fuchsia-sdk/sdk:zx",
-      ]
-    }
-  }
-
-  config("angle_internal_gmock_config") {
-    include_dirs = [
-      "${angle_googletest_dir}/googlemock",
-      "${angle_googletest_dir}/googlemock/include",
-      "${angle_googletest_dir}/googletest/include",
-    ]
-    if (is_clang) {
-      # TODO: Can remove this if/when the issue is fixed.
-      # https://github.com/google/googletest/issues/533
-      cflags = [ "-Wno-inconsistent-missing-override" ]
-    }
-  }
-
-  angle_static_library("angle_internal_gmock") {
-    sources = [
-      "${angle_googletest_dir}/googlemock/src/gmock-all.cc",
-    ]
-    public_configs += [ ":angle_internal_gmock_config" ]
-  }
-
   group("all") {
     testonly = true
     deps = [
