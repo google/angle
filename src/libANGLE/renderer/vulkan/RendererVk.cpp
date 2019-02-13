@@ -212,7 +212,7 @@ const char *GetVkObjectTypeName(VkObjectType type)
             return "Debug Utils Messenger";
         case VK_OBJECT_TYPE_VALIDATION_CACHE_EXT:
             return "Validation Cache";
-        case VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV:
+        case VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NVX:
             return "Acceleration Structure";
         default:
             return "<Unrecognized>";
