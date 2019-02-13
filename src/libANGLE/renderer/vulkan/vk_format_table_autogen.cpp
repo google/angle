@@ -491,7 +491,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
+            textureFormatID              = angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BC1_RGB_UNORM_BLOCK:
@@ -507,39 +515,111 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
+            textureFormatID              = angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC1_RGB_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC1_RGB_SRGB_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BC2_RGBA_UNORM_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE;
+            textureFormatID              = angle::FormatID::BC2_RGBA_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC2_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BC2_RGBA_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC2_UNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT;
+            textureFormatID              = angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC2_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC2_SRGB_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BC3_RGBA_UNORM_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE;
+            textureFormatID              = angle::FormatID::BC3_RGBA_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC3_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BC3_RGBA_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC3_UNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+            textureFormatID              = angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC3_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC3_SRGB_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_RGBA_BPTC_UNORM_EXT;
+            textureFormatID              = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC7_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC7_UNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT;
+            textureFormatID              = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC6H_SFLOAT_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC6H_SFLOAT_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT;
+            textureFormatID              = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC6H_UFLOAT_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC6H_UFLOAT_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT;
+            textureFormatID              = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC7_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC7_SRGB_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::D16_UNORM:

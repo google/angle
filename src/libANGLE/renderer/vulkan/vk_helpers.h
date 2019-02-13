@@ -67,6 +67,9 @@ class DynamicBuffer : angle::NonCopyable
 
     BufferHelper *getCurrentBuffer() { return mBuffer; }
 
+    size_t getAlignment() { return mAlignment; }
+    void updateAlignment(RendererVk *renderer, size_t alignment);
+
     // For testing only!
     void setMinimumSizeForTesting(size_t minSize);
 
@@ -525,7 +528,7 @@ class ImageHelper final : public CommandGraphResource
     ImageHelper(ImageHelper &&other);
     ~ImageHelper() override;
 
-    void initStagingBuffer(RendererVk *renderer);
+    void initStagingBuffer(RendererVk *renderer, const vk::Format &format);
 
     angle::Result init(Context *context,
                        gl::TextureType textureType,

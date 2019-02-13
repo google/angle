@@ -259,13 +259,23 @@ def json_to_table_data(format_id, json, angle_to_gl):
     if format_id == "B8G8R8A8_UNORM":
         parsed["fastCopyFunctions"] = "BGRACopyFunctions"
 
-    sum_of_bits = 0
-    for channel in angle_format.kChannels:
-        sum_of_bits += int(parsed[channel])
-    parsed["pixelBytes"] = sum_of_bits / 8
+    is_block = format_id.endswith("_BLOCK")
+
+    pixel_bytes = 0
+    if is_block:
+        assert 'blockPixelBytes' in parsed, \
+            'Compressed format %s requires its block size to be specified in angle_format_data.json' % \
+                format_id
+        pixel_bytes = parsed['blockPixelBytes']
+    else:
+        sum_of_bits = 0
+        for channel in angle_format.kChannels:
+            sum_of_bits += int(parsed[channel])
+        pixel_bytes = sum_of_bits / 8
+    parsed["pixelBytes"] = pixel_bytes
     parsed["componentAlignmentMask"] = get_component_alignment_mask(
         parsed["channels"], parsed["bits"])
-    parsed["isBlock"] = "true" if format_id.endswith("_BLOCK") else "false"
+    parsed["isBlock"] = "true" if is_block else "false"
     parsed["isFixed"] = "true" if "FIXED" in format_id else "false"
 
     return format_entry_template.format(**parsed)

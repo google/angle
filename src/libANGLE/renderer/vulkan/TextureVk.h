@@ -87,6 +87,9 @@ class TextureVk : public TextureImpl
                                  bool unpackUnmultiplyAlpha,
                                  const gl::Texture *source) override;
 
+    angle::Result copyCompressedTexture(const gl::Context *context,
+                                        const gl::Texture *source) override;
+
     angle::Result setStorage(const gl::Context *context,
                              gl::TextureType type,
                              size_t levels,
@@ -158,18 +161,35 @@ class TextureVk : public TextureImpl
     uint32_t getNativeImageLayer(uint32_t frontendLayer) const;
 
     void releaseAndDeleteImage(const gl::Context *context, RendererVk *renderer);
-    angle::Result ensureImageAllocated(RendererVk *renderer);
+    angle::Result ensureImageAllocated(RendererVk *renderer, const vk::Format &format);
     void setImageHelper(RendererVk *renderer,
                         vk::ImageHelper *imageHelper,
                         gl::TextureType imageType,
+                        const vk::Format &format,
                         uint32_t imageLevelOffset,
                         uint32_t imageLayerOffset,
                         bool selfOwned);
+    void updateImageHelper(RendererVk *renderer, const vk::Format &internalFormat);
 
     angle::Result redefineImage(const gl::Context *context,
                                 const gl::ImageIndex &index,
-                                const gl::InternalFormat &internalFormat,
+                                const vk::Format &format,
                                 const gl::Extents &size);
+
+    angle::Result setImageImpl(const gl::Context *context,
+                               const gl::ImageIndex &index,
+                               const gl::InternalFormat &formatInfo,
+                               const gl::Extents &size,
+                               GLenum type,
+                               const gl::PixelUnpackState &unpack,
+                               const uint8_t *pixels);
+    angle::Result setSubImageImpl(const gl::Context *context,
+                                  const gl::ImageIndex &index,
+                                  const gl::Box &area,
+                                  const gl::InternalFormat &formatInfo,
+                                  GLenum type,
+                                  const gl::PixelUnpackState &unpack,
+                                  const uint8_t *pixels);
 
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
                                         size_t sourceLevel,

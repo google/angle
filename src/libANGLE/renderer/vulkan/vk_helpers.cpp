@@ -240,10 +240,7 @@ void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
         mMinSize = std::min<size_t>(mMinSize, 0x1000);
     }
 
-    ASSERT(alignment > 0);
-    mAlignment = std::max(
-        alignment,
-        static_cast<size_t>(renderer->getPhysicalDeviceProperties().limits.nonCoherentAtomSize));
+    updateAlignment(renderer, alignment);
 }
 
 DynamicBuffer::~DynamicBuffer()
@@ -402,6 +399,27 @@ void DynamicBuffer::destroy(VkDevice device)
         delete mBuffer;
         mBuffer = nullptr;
     }
+}
+
+void DynamicBuffer::updateAlignment(RendererVk *renderer, size_t alignment)
+{
+    ASSERT(alignment > 0);
+
+    size_t atomSize =
+        static_cast<size_t>(renderer->getPhysicalDeviceProperties().limits.nonCoherentAtomSize);
+
+    // We need lcm(alignment, atomSize), we are assuming one divides the other so std::max() could
+    // be used instead.
+    ASSERT(alignment % atomSize == 0 || atomSize % alignment == 0);
+    alignment = std::max(alignment, atomSize);
+
+    // If alignment has changed, make sure the next allocation is done at an aligned offset.
+    if (alignment != mAlignment)
+    {
+        mNextAllocationOffset = roundUp(mNextAllocationOffset, static_cast<uint32_t>(alignment));
+    }
+
+    mAlignment = alignment;
 }
 
 void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
@@ -1249,11 +1267,9 @@ ImageHelper::~ImageHelper()
     ASSERT(!valid());
 }
 
-void ImageHelper::initStagingBuffer(RendererVk *renderer)
+void ImageHelper::initStagingBuffer(RendererVk *renderer, const vk::Format &format)
 {
-    // vkCmdCopyBufferToImage must have an offset that is a multiple of 4.
-    // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
-    mStagingBuffer.init(4, renderer);
+    mStagingBuffer.updateAlignment(renderer, format.getImageCopyBufferAlignment());
 }
 
 angle::Result ImageHelper::init(Context *context,
@@ -1816,8 +1832,47 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     const vk::Format &vkFormat         = renderer->getFormat(formatInfo.sizedInternalFormat);
     const angle::Format &storageFormat = vkFormat.textureFormat();
 
-    size_t outputRowPitch   = storageFormat.pixelBytes * extents.width;
-    size_t outputDepthPitch = outputRowPitch * extents.height;
+    size_t outputRowPitch;
+    size_t outputDepthPitch;
+    uint32_t bufferRowLength;
+    uint32_t bufferImageHeight;
+
+    if (storageFormat.isBlock)
+    {
+        const gl::InternalFormat &storageFormatInfo = vkFormat.getInternalFormatInfo(type);
+        GLuint rowPitch;
+        GLuint depthPitch;
+
+        ANGLE_VK_CHECK_MATH(contextVk, storageFormatInfo.computeCompressedImageSize(
+                                           gl::Extents(extents.width, 1, 1), &rowPitch));
+        ANGLE_VK_CHECK_MATH(contextVk,
+                            storageFormatInfo.computeCompressedImageSize(
+                                gl::Extents(extents.width, extents.height, 1), &depthPitch));
+
+        outputRowPitch   = rowPitch;
+        outputDepthPitch = depthPitch;
+
+        angle::CheckedNumeric<uint32_t> checkedRowLength =
+            rx::CheckedRoundUp<uint32_t>(extents.width, storageFormatInfo.compressedBlockWidth);
+        angle::CheckedNumeric<uint32_t> checkedImageHeight =
+            rx::CheckedRoundUp<uint32_t>(extents.height, storageFormatInfo.compressedBlockHeight);
+
+        ANGLE_VK_CHECK_MATH(contextVk, checkedRowLength.IsValid());
+        ANGLE_VK_CHECK_MATH(contextVk, checkedImageHeight.IsValid());
+
+        bufferRowLength   = checkedRowLength.ValueOrDie();
+        bufferImageHeight = checkedImageHeight.ValueOrDie();
+    }
+    else
+    {
+        outputRowPitch   = storageFormat.pixelBytes * extents.width;
+        outputDepthPitch = outputRowPitch * extents.height;
+
+        bufferRowLength   = extents.width;
+        bufferImageHeight = extents.height;
+
+        ASSERT(storageFormat.pixelBytes != 0);
+    }
 
     VkBuffer bufferHandle = VK_NULL_HANDLE;
 
@@ -1837,8 +1892,8 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     VkBufferImageCopy copy = {};
 
     copy.bufferOffset                    = stagingOffset;
-    copy.bufferRowLength                 = extents.width;
-    copy.bufferImageHeight               = extents.height;
+    copy.bufferRowLength                 = bufferRowLength;
+    copy.bufferImageHeight               = bufferImageHeight;
     copy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     copy.imageSubresource.mipLevel       = index.getLevelIndex();
     copy.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
@@ -2054,9 +2109,6 @@ angle::Result ImageHelper::flushStagedUpdates(Context *context,
         }
         else
         {
-            // Note: currently, the staging images are only made through color attachment writes. If
-            // they were written to otherwise in the future, the src stage of this transition should
-            // be adjusted appropriately.
             update.image.image->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT,
                                              vk::ImageLayout::TransferSrc, commandBuffer);
 

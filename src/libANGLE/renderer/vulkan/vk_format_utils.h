@@ -66,6 +66,13 @@ struct Format final : private angle::NonCopyable
     const angle::Format &textureFormat() const { return angle::Format::Get(textureFormatID); }
     const angle::Format &bufferFormat() const { return angle::Format::Get(bufferFormatID); }
 
+    // Get buffer alignment for image-copy operations (to or from a buffer).
+    const gl::InternalFormat &getInternalFormatInfo(GLenum type) const
+    {
+        return gl::GetInternalFormatInfo(internalFormat, type);
+    }
+    size_t getImageCopyBufferAlignment() const;
+
     angle::FormatID angleFormatID;
     GLenum internalFormat;
     angle::FormatID textureFormatID;

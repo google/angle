@@ -64,17 +64,16 @@ egl::Error ImageVk::initialize(const egl::Display *display)
     }
     else
     {
+        RendererVk *renderer = nullptr;
         if (egl::IsRenderbufferTarget(mState.target))
         {
             RenderbufferVk *renderbufferVk =
                 GetImplAs<RenderbufferVk>(GetAs<gl::Renderbuffer>(mState.source));
             mImage = renderbufferVk->getImage();
 
-            // Make sure a staging buffer is ready to use to upload data
             ASSERT(mContext != nullptr);
-            ContextVk *contextVk = vk::GetImpl(mContext);
-            RendererVk *renderer = contextVk->getRenderer();
-            mImage->initStagingBuffer(renderer);
+            renderer = vk::GetImpl(mContext)->getRenderer();
+            ;
         }
         else if (egl::IsExternalImageTarget(mState.target))
         {
@@ -82,17 +81,17 @@ egl::Error ImageVk::initialize(const egl::Display *display)
                 GetImplAs<ExternalImageSiblingVk>(GetAs<egl::ExternalImageSibling>(mState.source));
             mImage = externalImageSibling->getImage();
 
-            // Make sure a staging buffer is ready to use to upload data
             ASSERT(mContext == nullptr);
-            DisplayVk *displayVk = vk::GetImpl(display);
-            RendererVk *renderer = displayVk->getRenderer();
-            mImage->initStagingBuffer(renderer);
+            renderer = vk::GetImpl(display)->getRenderer();
         }
         else
         {
             UNREACHABLE();
             return egl::EglBadAccess();
         }
+
+        // Make sure a staging buffer is ready to use to upload data
+        mImage->initStagingBuffer(renderer, mImage->getFormat());
 
         mOwnsImage = false;
 

@@ -260,6 +260,8 @@ TEST_P(CopyCompressedTextureTest, InvalidTextureIds)
         return;
     }
 
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -296,6 +298,8 @@ TEST_P(CopyCompressedTextureTest, BindingPoints)
     {
         return;
     }
+
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextures[0]);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
