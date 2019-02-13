@@ -18,7 +18,7 @@ template <typename T>
 struct Color
 {
     Color();
-    constexpr Color(T r, T g, T b, T a);
+    Color(T r, T g, T b, T a);
 
     const T *data() const { return &red; }
     T *ptr() { return &red; }

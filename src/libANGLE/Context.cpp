@@ -5005,8 +5005,8 @@ GLuint Context::getDebugMessageLog(GLuint count,
 void Context::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message)
 {
     std::string msg(message, (length > 0) ? static_cast<size_t>(length) : strlen(message));
-    mImplementation->pushDebugGroup(source, id, msg);
     mState.getDebug().pushGroup(source, id, std::move(msg));
+    mImplementation->pushDebugGroup(source, id, length, message);
 }
 
 void Context::popDebugGroup()

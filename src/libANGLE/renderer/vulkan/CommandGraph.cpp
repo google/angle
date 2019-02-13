@@ -85,45 +85,11 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
                     UNREACHABLE();
                     return "FenceSync";
             }
-        case CommandGraphResourceType::DebugMarker:
-            switch (function)
-            {
-                case CommandGraphNodeFunction::InsertDebugMarker:
-                    return "InsertDebugMarker";
-                case CommandGraphNodeFunction::PushDebugMarker:
-                    return "PushDebugMarker";
-                case CommandGraphNodeFunction::PopDebugMarker:
-                    return "PopDebugMarker";
-                default:
-                    UNREACHABLE();
-                    return "DebugMarker";
-            }
         default:
             UNREACHABLE();
             return "";
     }
 }
-
-void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)
-{
-    static constexpr angle::ColorF kLabelColors[6] = {
-        angle::ColorF(1.0f, 0.5f, 0.5f, 1.0f),  // DEBUG_SOURCE_API
-        angle::ColorF(0.5f, 1.0f, 0.5f, 1.0f),  // DEBUG_SOURCE_WINDOW_SYSTEM
-        angle::ColorF(0.5f, 0.5f, 1.0f, 1.0f),  // DEBUG_SOURCE_SHADER_COMPILER
-        angle::ColorF(0.7f, 0.7f, 0.7f, 1.0f),  // DEBUG_SOURCE_THIRD_PARTY
-        angle::ColorF(0.5f, 0.8f, 0.9f, 1.0f),  // DEBUG_SOURCE_APPLICATION
-        angle::ColorF(0.9f, 0.8f, 0.5f, 1.0f),  // DEBUG_SOURCE_OTHER
-    };
-
-    int colorIndex = source - GL_DEBUG_SOURCE_API;
-    ASSERT(colorIndex >= 0 && static_cast<size_t>(colorIndex) < ArraySize(kLabelColors));
-
-    label->sType      = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
-    label->pNext      = nullptr;
-    label->pLabelName = marker;
-    kLabelColors[colorIndex].writeData(label->color);
-}
-
 }  // anonymous namespace
 
 // CommandGraphResource implementation.
@@ -390,14 +356,6 @@ void CommandGraphNode::setFenceSync(const vk::Event &event)
     mFenceSyncEvent = event.getHandle();
 }
 
-void CommandGraphNode::setDebugMarker(GLenum source, std::string &&marker)
-{
-    ASSERT(mFunction == CommandGraphNodeFunction::InsertDebugMarker ||
-           mFunction == CommandGraphNodeFunction::PushDebugMarker);
-    mDebugMarkerSource = source;
-    mDebugMarker       = std::move(marker);
-}
-
 // Do not call this in anything but testing code, since it's slow.
 bool CommandGraphNode::isChildOf(CommandGraphNode *parent)
 {
@@ -539,39 +497,6 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
                 1, &mFenceSyncEvent, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, nullptr);
 
-            break;
-
-        case CommandGraphNodeFunction::InsertDebugMarker:
-            ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
-
-            if (vkCmdInsertDebugUtilsLabelEXT)
-            {
-                VkDebugUtilsLabelEXT label;
-                MakeDebugUtilsLabel(mDebugMarkerSource, mDebugMarker.c_str(), &label);
-
-                vkCmdInsertDebugUtilsLabelEXT(primaryCommandBuffer->getHandle(), &label);
-            }
-            break;
-
-        case CommandGraphNodeFunction::PushDebugMarker:
-            ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
-
-            if (vkCmdBeginDebugUtilsLabelEXT)
-            {
-                VkDebugUtilsLabelEXT label;
-                MakeDebugUtilsLabel(mDebugMarkerSource, mDebugMarker.c_str(), &label);
-
-                vkCmdBeginDebugUtilsLabelEXT(primaryCommandBuffer->getHandle(), &label);
-            }
-            break;
-
-        case CommandGraphNodeFunction::PopDebugMarker:
-            ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
-
-            if (vkCmdEndDebugUtilsLabelEXT)
-            {
-                vkCmdEndDebugUtilsLabelEXT(primaryCommandBuffer->getHandle());
-            }
             break;
 
         default:
@@ -787,26 +712,6 @@ void CommandGraph::waitFenceSync(const vk::Event &event)
     newNode->setFenceSync(event);
 }
 
-void CommandGraph::insertDebugMarker(GLenum source, std::string &&marker)
-{
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::DebugMarker,
-                                                    CommandGraphNodeFunction::InsertDebugMarker);
-    newNode->setDebugMarker(source, std::move(marker));
-}
-
-void CommandGraph::pushDebugMarker(GLenum source, std::string &&marker)
-{
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::DebugMarker,
-                                                    CommandGraphNodeFunction::PushDebugMarker);
-    newNode->setDebugMarker(source, std::move(marker));
-}
-
-void CommandGraph::popDebugMarker()
-{
-    allocateBarrierNode(CommandGraphResourceType::DebugMarker,
-                        CommandGraphNodeFunction::PopDebugMarker);
-}
-
 // Dumps the command graph into a dot file that works with graphviz.
 void CommandGraph::dumpGraphDotFile(std::ostream &out) const
 {
@@ -834,53 +739,38 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
 
         std::stringstream strstr;
         strstr << GetResourceTypeName(node->getResourceTypeForDiagnostics(), node->getFunction());
+        strstr << " ";
 
-        if (node->getResourceTypeForDiagnostics() == CommandGraphResourceType::DebugMarker)
+        auto it = objectIDMap.find(node->getResourceIDForDiagnostics());
+        if (it != objectIDMap.end())
         {
-            // For debug markers, use the string from the debug marker itself.
-            if (node->getFunction() != CommandGraphNodeFunction::PopDebugMarker)
-            {
-                strstr << " " << node->getDebugMarker();
-            }
+            strstr << it->second;
         }
         else
         {
-            strstr << " ";
+            int id = 0;
 
-            // Otherwise assign each object an ID, so all the nodes of the same object have the same
-            // label.
-            ASSERT(node->getResourceIDForDiagnostics() != 0);
-            auto it = objectIDMap.find(node->getResourceIDForDiagnostics());
-            if (it != objectIDMap.end())
+            switch (node->getResourceTypeForDiagnostics())
             {
-                strstr << it->second;
+                case CommandGraphResourceType::Buffer:
+                    id = bufferIDCounter++;
+                    break;
+                case CommandGraphResourceType::Framebuffer:
+                    id = framebufferIDCounter++;
+                    break;
+                case CommandGraphResourceType::Image:
+                    id = imageIDCounter++;
+                    break;
+                case CommandGraphResourceType::Query:
+                    id = queryIDCounter++;
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
             }
-            else
-            {
-                int id = 0;
 
-                switch (node->getResourceTypeForDiagnostics())
-                {
-                    case CommandGraphResourceType::Buffer:
-                        id = bufferIDCounter++;
-                        break;
-                    case CommandGraphResourceType::Framebuffer:
-                        id = framebufferIDCounter++;
-                        break;
-                    case CommandGraphResourceType::Image:
-                        id = imageIDCounter++;
-                        break;
-                    case CommandGraphResourceType::Query:
-                        id = queryIDCounter++;
-                        break;
-                    default:
-                        UNREACHABLE();
-                        break;
-                }
-
-                objectIDMap[node->getResourceIDForDiagnostics()] = id;
-                strstr << id;
-            }
+            objectIDMap[node->getResourceIDForDiagnostics()] = id;
+            strstr << id;
         }
 
         const std::string &label = strstr.str();

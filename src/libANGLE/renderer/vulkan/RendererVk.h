@@ -205,10 +205,6 @@ class RendererVk : angle::NonCopyable
     bool hasTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
     bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
-    void insertDebugMarker(GLenum source, GLuint id, std::string &&marker);
-    void pushDebugMarker(GLenum source, GLuint id, std::string &&marker);
-    void popDebugMarker();
-
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
     // image acquire.

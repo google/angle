@@ -508,9 +508,9 @@ void ContextGL::popGroupMarker()
     mRenderer->popGroupMarker();
 }
 
-void ContextGL::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
+void ContextGL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
 {
-    mRenderer->pushDebugGroup(source, id, message);
+    mRenderer->pushDebugGroup(source, id, length, message);
 }
 
 void ContextGL::popDebugGroup()

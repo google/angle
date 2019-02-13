@@ -421,10 +421,10 @@ void Context11::popGroupMarker()
     }
 }
 
-void Context11::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
+void Context11::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
 {
     // Fall through to the EXT_debug_marker functions
-    pushGroupMarker(message.size(), message.c_str());
+    pushGroupMarker(length, message);
 }
 
 void Context11::popDebugGroup()

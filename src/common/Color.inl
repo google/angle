@@ -15,7 +15,7 @@ Color<T>::Color() : Color(0, 0, 0, 0)
 }
 
 template <typename T>
-constexpr Color<T>::Color(T r, T g, T b, T a) : red(r), green(g), blue(b), alpha(a)
+Color<T>::Color(T r, T g, T b, T a) : red(r), green(g), blue(b), alpha(a)
 {
 }
 

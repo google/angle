@@ -475,9 +475,6 @@ void GarbageObject::destroy(VkDevice device)
 // VK_EXT_debug_utils
 PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT   = nullptr;
 PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT = nullptr;
-PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT       = nullptr;
-PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT           = nullptr;
-PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT     = nullptr;
 
 // VK_EXT_debug_report
 PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT   = nullptr;
@@ -499,9 +496,6 @@ void InitDebugUtilsEXTFunctions(VkInstance instance)
 {
     GET_FUNC(vkCreateDebugUtilsMessengerEXT);
     GET_FUNC(vkDestroyDebugUtilsMessengerEXT);
-    GET_FUNC(vkCmdBeginDebugUtilsLabelEXT);
-    GET_FUNC(vkCmdEndDebugUtilsLabelEXT);
-    GET_FUNC(vkCmdInsertDebugUtilsLabelEXT);
 }
 
 void InitDebugReportEXTFunctions(VkInstance instance)
