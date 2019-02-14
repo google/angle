@@ -32,9 +32,9 @@ class ProgramVk : public ProgramImpl
     ~ProgramVk() override;
     void destroy(const gl::Context *context) override;
 
-    angle::Result load(const gl::Context *context,
-                       gl::InfoLog &infoLog,
-                       gl::BinaryInputStream *stream) override;
+    std::unique_ptr<LinkEvent> load(const gl::Context *context,
+                                    gl::BinaryInputStream *stream,
+                                    gl::InfoLog &infoLog) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;

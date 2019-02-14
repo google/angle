@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 
+#include "common/MemoryBuffer.h"
 #include "common/bitset_utils.h"
 #include "common/string_utils.h"
 #include "common/utilities.h"
@@ -562,6 +563,50 @@ const ShaderD3D *ProgramD3DMetadata::getFragmentShader() const
     return mAttachedShaders[gl::ShaderType::Fragment];
 }
 
+// ProgramD3D::GetExecutableTask class
+class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
+{
+  public:
+    GetExecutableTask(ProgramD3D *program) : mProgram(program) {}
+
+    virtual angle::Result run() = 0;
+
+    void operator()() override { mResult = run(); }
+
+    angle::Result getResult() const { return mResult; }
+    const gl::InfoLog &getInfoLog() const { return mInfoLog; }
+    ShaderExecutableD3D *getExecutable() { return mExecutable; }
+
+    void handleResult(HRESULT hr,
+                      const char *message,
+                      const char *file,
+                      const char *function,
+                      unsigned int line) override
+    {
+        mStoredHR       = hr;
+        mStoredMessage  = message;
+        mStoredFile     = file;
+        mStoredFunction = function;
+        mStoredLine     = line;
+    }
+
+    void popError(d3d::Context *context)
+    {
+        context->handleResult(mStoredHR, mStoredMessage, mStoredFile, mStoredFunction, mStoredLine);
+    }
+
+  protected:
+    ProgramD3D *mProgram  = nullptr;
+    angle::Result mResult = angle::Result::Continue;
+    gl::InfoLog mInfoLog;
+    ShaderExecutableD3D *mExecutable = nullptr;
+    HRESULT mStoredHR                = S_OK;
+    const char *mStoredMessage       = nullptr;
+    const char *mStoredFile          = nullptr;
+    const char *mStoredFunction      = nullptr;
+    unsigned int mStoredLine         = 0;
+};
+
 // ProgramD3D Implementation
 
 ProgramD3D::VertexExecutable::VertexExecutable(const gl::InputLayout &inputLayout,
@@ -849,10 +894,92 @@ gl::RangeUI ProgramD3D::getUsedImageRange(gl::ShaderType type, bool readonly) co
     }
 }
 
-angle::Result ProgramD3D::load(const gl::Context *context,
-                               gl::InfoLog &infoLog,
-                               gl::BinaryInputStream *stream)
+class ProgramD3D::LoadBinaryTask : public ProgramD3D::GetExecutableTask
 {
+  public:
+    LoadBinaryTask(const gl::Context *context,
+                   ProgramD3D *program,
+                   gl::BinaryInputStream *stream,
+                   gl::InfoLog &infoLog)
+        : ProgramD3D::GetExecutableTask(program),
+          mContext(context),
+          mProgram(program),
+          mInfoLog(infoLog)
+    {
+        ASSERT(mContext);
+        ASSERT(mProgram);
+        ASSERT(stream);
+
+        // Copy the remaining data from the stream locally so that the client can't modify it when
+        // loading off thread.
+        size_t dataSize    = stream->remainingSize();
+        mDataCopySucceeded = mStreamData.resize(dataSize);
+        if (mDataCopySucceeded)
+        {
+            memcpy(mStreamData.data(), stream->data() + stream->offset(), dataSize);
+        }
+    }
+
+    angle::Result run() override
+    {
+        if (!mDataCopySucceeded)
+        {
+            mInfoLog << "Failed to copy program binary data to local buffer.";
+            return angle::Result::Stop;
+        }
+
+        gl::BinaryInputStream stream(mStreamData.data(), mStreamData.size());
+        return mProgram->loadBinaryShaderExecutables(mContext, &stream, mInfoLog);
+    }
+
+  private:
+    const gl::Context *mContext;
+    ProgramD3D *mProgram;
+    gl::InfoLog &mInfoLog;
+
+    bool mDataCopySucceeded;
+    angle::MemoryBuffer mStreamData;
+};
+
+class ProgramD3D::LoadBinaryLinkEvent final : public LinkEvent
+{
+  public:
+    LoadBinaryLinkEvent(std::shared_ptr<WorkerThreadPool> workerPool,
+                        const gl::Context *context,
+                        ProgramD3D *program,
+                        gl::BinaryInputStream *stream,
+                        gl::InfoLog &infoLog)
+        : mTask(std::make_shared<ProgramD3D::LoadBinaryTask>(context, program, stream, infoLog)),
+          mWaitableEvent(workerPool->postWorkerTask(mTask))
+    {}
+
+    angle::Result wait(const gl::Context *context) override
+    {
+        mWaitableEvent->wait();
+
+        // Continue and Incomplete are not errors. For Stop, pass the error to the ContextD3D.
+        if (mTask->getResult() != angle::Result::Stop)
+        {
+            return angle::Result::Continue;
+        }
+
+        ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
+        mTask->popError(contextD3D);
+        return angle::Result::Stop;
+    }
+
+    bool isLinking() override { return !mWaitableEvent->isReady(); }
+
+  private:
+    std::shared_ptr<ProgramD3D::LoadBinaryTask> mTask;
+    std::shared_ptr<WaitableEvent> mWaitableEvent;
+};
+
+std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
+                                                gl::BinaryInputStream *stream,
+                                                gl::InfoLog &infoLog)
+{
+
     // TODO(jmadill): Use Renderer from contextImpl.
 
     reset();
@@ -865,14 +992,14 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (memcmp(&identifier, &binaryDeviceIdentifier, sizeof(DeviceIdentifier)) != 0)
     {
         infoLog << "Invalid program binary, device configuration has changed.";
-        return angle::Result::Incomplete;
+        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
     int compileFlags = stream->readInt<int>();
     if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
     {
         infoLog << "Mismatched compilation flags.";
-        return angle::Result::Incomplete;
+        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
     for (int &index : mAttribLocationToD3DSemantic)
@@ -935,7 +1062,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return angle::Result::Incomplete;
+        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
     ASSERT(mD3DShaderStorageBlocks.empty());
@@ -959,7 +1086,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return angle::Result::Incomplete;
+        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
     const auto &linkedUniforms = mState.getUniforms();
@@ -986,7 +1113,7 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     if (stream->error())
     {
         infoLog << "Invalid program binary.";
-        return angle::Result::Incomplete;
+        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
     ASSERT(mD3DUniformBlocks.empty());
@@ -1038,6 +1165,14 @@ angle::Result ProgramD3D::load(const gl::Context *context,
 
     stream->readString(&mGeometryShaderPreamble);
 
+    return std::make_unique<LoadBinaryLinkEvent>(context->getWorkerThreadPool(), context, this,
+                                                 stream, infoLog);
+}
+
+angle::Result ProgramD3D::loadBinaryShaderExecutables(const gl::Context *context,
+                                                      gl::BinaryInputStream *stream,
+                                                      gl::InfoLog &infoLog)
+{
     const unsigned char *binary = reinterpret_cast<const unsigned char *>(stream->data());
 
     bool separateAttribs = (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS);
@@ -1542,49 +1677,6 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
     }
     return result;
 }
-
-class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
-{
-  public:
-    GetExecutableTask(ProgramD3D *program) : mProgram(program) {}
-
-    virtual angle::Result run() = 0;
-
-    void operator()() override { mResult = run(); }
-
-    angle::Result getResult() const { return mResult; }
-    const gl::InfoLog &getInfoLog() const { return mInfoLog; }
-    ShaderExecutableD3D *getExecutable() { return mExecutable; }
-
-    void handleResult(HRESULT hr,
-                      const char *message,
-                      const char *file,
-                      const char *function,
-                      unsigned int line) override
-    {
-        mStoredHR       = hr;
-        mStoredMessage  = message;
-        mStoredFile     = file;
-        mStoredFunction = function;
-        mStoredLine     = line;
-    }
-
-    void popError(d3d::Context *context)
-    {
-        context->handleResult(mStoredHR, mStoredMessage, mStoredFile, mStoredFunction, mStoredLine);
-    }
-
-  protected:
-    ProgramD3D *mProgram  = nullptr;
-    angle::Result mResult = angle::Result::Continue;
-    gl::InfoLog mInfoLog;
-    ShaderExecutableD3D *mExecutable = nullptr;
-    HRESULT mStoredHR                = S_OK;
-    const char *mStoredMessage       = nullptr;
-    const char *mStoredFile          = nullptr;
-    const char *mStoredFunction      = nullptr;
-    unsigned int mStoredLine         = 0;
-};
 
 class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
 {

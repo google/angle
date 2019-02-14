@@ -221,12 +221,12 @@ void ProgramVk::reset(RendererVk *renderer)
     }
 }
 
-angle::Result ProgramVk::load(const gl::Context *context,
-                              gl::InfoLog &infoLog,
-                              gl::BinaryInputStream *stream)
+std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
+                                               gl::BinaryInputStream *stream,
+                                               gl::InfoLog &infoLog)
 {
     UNIMPLEMENTED();
-    return angle::Result::Stop;
+    return std::make_unique<LinkEventDone>(angle::Result::Stop);
 }
 
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)

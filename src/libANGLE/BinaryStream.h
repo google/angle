@@ -125,6 +125,11 @@ class BinaryInputStream : angle::NonCopyable
     }
 
     size_t offset() const { return mOffset; }
+    size_t remainingSize() const
+    {
+        ASSERT(mLength >= mOffset);
+        return mLength - mOffset;
+    }
 
     bool error() const { return mError; }
 

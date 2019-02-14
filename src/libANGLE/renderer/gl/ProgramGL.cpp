@@ -57,9 +57,9 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-angle::Result ProgramGL::load(const gl::Context *context,
-                              gl::InfoLog &infoLog,
-                              gl::BinaryInputStream *stream)
+std::unique_ptr<LinkEvent> ProgramGL::load(const gl::Context *context,
+                                           gl::BinaryInputStream *stream,
+                                           gl::InfoLog &infoLog)
 {
     preLink();
 
@@ -75,13 +75,13 @@ angle::Result ProgramGL::load(const gl::Context *context,
     // Verify that the program linked
     if (!checkLinkStatus(infoLog))
     {
-        return angle::Result::Incomplete;
+        return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
     postLink();
     reapplyUBOBindingsIfNeeded(context);
 
-    return angle::Result::Continue;
+    return std::make_unique<LinkEventDone>(angle::Result::Continue);
 }
 
 void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)

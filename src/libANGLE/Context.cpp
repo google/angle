@@ -5898,23 +5898,7 @@ void Context::linkProgram(GLuint program)
     Program *programObject = getProgramNoResolveLink(program);
     ASSERT(programObject);
     ANGLE_CONTEXT_TRY(programObject->link(this));
-
-    // Don't parallel link a program which is active in any GL contexts. With this assumption, we
-    // don't need to worry that:
-    //   1. Draw calls after link use the new executable code or the old one depending on the link
-    //      result.
-    //   2. When a backend program, e.g., ProgramD3D is linking, other backend classes like
-    //      StateManager11, Renderer11, etc., may have a chance to make unexpected calls to
-    //      ProgramD3D.
-    if (programObject->isInUse())
-    {
-        programObject->resolveLink(this);
-        if (programObject->isLinked())
-        {
-            ANGLE_CONTEXT_TRY(mState.onProgramExecutableChange(this, programObject));
-        }
-        mStateCache.onProgramExecutableChange(this);
-    }
+    ANGLE_CONTEXT_TRY(onProgramLink(programObject));
 }
 
 void Context::releaseShaderCompiler()
@@ -6155,11 +6139,7 @@ void Context::programBinary(GLuint program, GLenum binaryFormat, const void *bin
     ASSERT(programObject != nullptr);
 
     ANGLE_CONTEXT_TRY(programObject->loadBinary(this, binaryFormat, binary, length));
-    if (programObject->isInUse())
-    {
-        ANGLE_CONTEXT_TRY(mState.onProgramExecutableChange(this, programObject));
-        mStateCache.onProgramExecutableChange(this);
-    }
+    ANGLE_CONTEXT_TRY(onProgramLink(programObject));
 }
 
 void Context::uniform1ui(GLint location, GLuint v0)
@@ -8037,6 +8017,28 @@ void Context::onSubjectStateChange(const Context *context,
             }
             break;
     }
+}
+
+angle::Result Context::onProgramLink(Program *programObject)
+{
+    // Don't parallel link a program which is active in any GL contexts. With this assumption, we
+    // don't need to worry that:
+    //   1. Draw calls after link use the new executable code or the old one depending on the link
+    //      result.
+    //   2. When a backend program, e.g., ProgramD3D is linking, other backend classes like
+    //      StateManager11, Renderer11, etc., may have a chance to make unexpected calls to
+    //      ProgramD3D.
+    if (programObject->isInUse())
+    {
+        programObject->resolveLink(this);
+        if (programObject->isLinked())
+        {
+            ANGLE_TRY(mState.onProgramExecutableChange(this, programObject));
+        }
+        mStateCache.onProgramExecutableChange(this);
+    }
+
+    return angle::Result::Continue;
 }
 
 // ErrorSet implementation.

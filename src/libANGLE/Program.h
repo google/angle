@@ -42,6 +42,7 @@ struct TranslatedAttribute;
 namespace gl
 {
 class Buffer;
+class BinaryInputStream;
 struct Caps;
 class Context;
 struct Extensions;
@@ -881,16 +882,14 @@ class Program final : angle::NonCopyable, public LabeledObject
     // Writes a program's binary to the output memory buffer.
     void serialize(const Context *context, angle::MemoryBuffer *binaryOut) const;
 
-    // Loads program state according to the specified binary blob.
-    angle::Result deserialize(const Context *context,
-                              const uint8_t *binary,
-                              size_t length,
-                              InfoLog &infoLog);
 
   private:
     struct LinkingState;
 
     ~Program() override;
+
+    // Loads program state according to the specified binary blob.
+    angle::Result deserialize(const Context *context, BinaryInputStream &stream, InfoLog &infoLog);
 
     void unlink();
     void deleteSelf(const Context *context);

@@ -133,9 +133,8 @@ angle::Result MemoryProgramCache::getProgram(const Context *context,
     egl::BlobCache::Value binaryProgram;
     if (get(context, *hashOut, &binaryProgram))
     {
-        InfoLog infoLog;
-        angle::Result result =
-            program->deserialize(context, binaryProgram.data(), binaryProgram.size(), infoLog);
+        angle::Result result = program->loadBinary(context, GL_PROGRAM_BINARY_ANGLE,
+                                                   binaryProgram.data(), binaryProgram.size());
         ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess",
                                 result == angle::Result::Continue);
         ANGLE_TRY(result);
@@ -146,7 +145,7 @@ angle::Result MemoryProgramCache::getProgram(const Context *context,
         // Cache load failed, evict.
         if (mIssuedWarnings++ < kWarningLimit)
         {
-            WARN() << "Failed to load binary from cache: " << infoLog.str();
+            WARN() << "Failed to load binary from cache.";
 
             if (mIssuedWarnings == kWarningLimit)
             {

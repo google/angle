@@ -183,9 +183,9 @@ class ProgramD3D : public ProgramImpl
     bool usesGeometryShaderForPointSpriteEmulation() const;
     bool usesInstancedPointSpriteEmulation() const;
 
-    angle::Result load(const gl::Context *context,
-                       gl::InfoLog &infoLog,
-                       gl::BinaryInputStream *stream) override;
+    std::unique_ptr<LinkEvent> load(const gl::Context *context,
+                                    gl::BinaryInputStream *stream,
+                                    gl::InfoLog &infoLog) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
@@ -332,6 +332,9 @@ class ProgramD3D : public ProgramImpl
     class GetGeometryExecutableTask;
     class GraphicsProgramLinkEvent;
 
+    class LoadBinaryTask;
+    class LoadBinaryLinkEvent;
+
     class VertexExecutable
     {
       public:
@@ -470,6 +473,10 @@ class ProgramD3D : public ProgramImpl
     std::unique_ptr<LinkEvent> compileProgramExecutables(const gl::Context *context,
                                                          gl::InfoLog &infoLog);
     angle::Result compileComputeExecutable(d3d::Context *context, gl::InfoLog &infoLog);
+
+    angle::Result loadBinaryShaderExecutables(const gl::Context *context,
+                                              gl::BinaryInputStream *stream,
+                                              gl::InfoLog &infoLog);
 
     void gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyings,
                                          const BuiltinInfo &builtins);

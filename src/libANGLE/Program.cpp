@@ -718,6 +718,7 @@ struct Program::LinkingState
     std::unique_ptr<ProgramLinkedResources> resources;
     egl::BlobCache::Key programHash;
     std::unique_ptr<rx::LinkEvent> linkEvent;
+    bool linkingFromBinary;
 };
 
 const char *const g_fakepath = "C:\\fakepath";
@@ -1234,17 +1235,19 @@ angle::Result Program::link(const Context *context)
 
     if (cache)
     {
-        angle::Result result = cache->getProgram(context, this, &programHash);
-        mLinked              = (result == angle::Result::Continue);
-        ANGLE_TRY(result);
-    }
+        angle::Result cacheResult = cache->getProgram(context, this, &programHash);
+        ANGLE_TRY(cacheResult);
 
-    if (mLinked)
-    {
-        double delta = platform->currentTime(platform) - startTime;
-        int us       = static_cast<int>(delta * 1000000.0);
-        ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
-        return angle::Result::Continue;
+        // Check explicitly for Continue, Incomplete means a cache miss
+        if (cacheResult == angle::Result::Continue)
+        {
+            // Succeeded in loading the binaries in the front-end, back end may still be loading
+            // asynchronously
+            double delta = platform->currentTime(platform) - startTime;
+            int us       = static_cast<int>(delta * 1000000.0);
+            ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
+            return angle::Result::Continue;
+        }
     }
 
     // Cache load failed, fall through to normal linking.
@@ -1375,6 +1378,7 @@ angle::Result Program::link(const Context *context)
 
     mLinkingState.reset(new LinkingState());
     mLinkingState->context     = context;
+    mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash = programHash;
     mLinkingState->linkEvent   = mProgram->link(context, *resources, mInfoLog);
     mLinkingState->resources   = std::move(resources);
@@ -1396,9 +1400,15 @@ void Program::resolveLinkImpl(const Context *context)
 
     mLinked           = result == angle::Result::Continue;
     mLinkResolved     = true;
-    auto linkingState = std::move(mLinkingState);
+    std::unique_ptr<LinkingState> linkingState = std::move(mLinkingState);
     if (!mLinked)
     {
+        return;
+    }
+
+    if (linkingState->linkingFromBinary)
+    {
+        // All internal Program state is already loaded from the binary.
         return;
     }
 
@@ -1567,10 +1577,8 @@ angle::Result Program::loadBinary(const Context *context,
         return angle::Result::Continue;
     }
 
-    const uint8_t *bytes = reinterpret_cast<const uint8_t *>(binary);
-    angle::Result result = deserialize(context, bytes, length, mInfoLog);
-    mLinked = result == angle::Result::Continue;
-    ANGLE_TRY(result);
+    BinaryInputStream stream(binary, length);
+    ANGLE_TRY(deserialize(context, stream, mInfoLog));
 
     // Currently we require the full shader text to compute the program hash.
     // We could also store the binary in the internal program cache.
@@ -1580,6 +1588,12 @@ angle::Result Program::loadBinary(const Context *context,
     {
         mDirtyBits.set(uniformBlockIndex);
     }
+
+    mLinkingState.reset(new LinkingState());
+    mLinkingState->context           = context;
+    mLinkingState->linkingFromBinary = true;
+    mLinkingState->linkEvent         = mProgram->load(context, &stream, mInfoLog);
+    mLinkResolved                    = false;
 
     return angle::Result::Continue;
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
@@ -4442,12 +4456,9 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
 }
 
 angle::Result Program::deserialize(const Context *context,
-                                   const uint8_t *binary,
-                                   size_t length,
+                                   BinaryInputStream &stream,
                                    InfoLog &infoLog)
 {
-    BinaryInputStream stream(binary, length);
-
     unsigned char commitString[ANGLE_COMMIT_HASH_SIZE];
     stream.readBytes(commitString, ANGLE_COMMIT_HASH_SIZE);
     if (memcmp(commitString, ANGLE_COMMIT_HASH, sizeof(unsigned char) * ANGLE_COMMIT_HASH_SIZE) !=
@@ -4678,7 +4689,7 @@ angle::Result Program::deserialize(const Context *context,
 
     postResolveLink(context);
 
-    return mProgram->load(context, infoLog, &stream);
+    return angle::Result::Continue;
 }
 
 void Program::postResolveLink(const gl::Context *context)

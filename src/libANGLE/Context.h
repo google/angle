@@ -1829,6 +1829,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     VertexArray *checkVertexArrayAllocation(GLuint vertexArrayHandle);
     TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);
 
+    angle::Result onProgramLink(Program *programObject);
+
     void detachBuffer(Buffer *buffer);
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);
