@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "465a0e45_c9bd468c",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-02-14T23:50:43Z",
+      "side": 1,
+      "message": "Please add \"\u0026\u0026 IsAndroid()\" everywhere.\nMaybe also \"\u0026\u0026 IsVulkan()\" if the problem is Vulkan specific.",
+      "range": {
+        "startLine": 263,
+        "startChar": 48,
+        "endLine": 263,
+        "endChar": 99
+      },
+      "revId": "080679d9e6e8a5ce6fecc3ebf4df770a92a7014b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3b7d989_373788b4",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-02-14T23:50:43Z",
+      "side": 1,
+      "message": "Can you describe in a bug what are the issues and put a link to the bug here?",
+      "range": {
+        "startLine": 287,
+        "startChar": 35,
+        "endLine": 287,
+        "endChar": 56
+      },
+      "revId": "080679d9e6e8a5ce6fecc3ebf4df770a92a7014b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
