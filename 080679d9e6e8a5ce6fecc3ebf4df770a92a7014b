@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "f69fd36f_990dbe39",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-02-14T23:53:07Z",
+      "side": 1,
+      "message": "Can we improve OSWindow? Would that allow us to test these configs?",
+      "range": {
+        "startLine": 18,
+        "startChar": 37,
+        "endLine": 20,
+        "endChar": 8
+      },
+      "revId": "080679d9e6e8a5ce6fecc3ebf4df770a92a7014b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10e97345_6a1d3122",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-02-14T23:53:07Z",
+      "side": 1,
+      "message": "Is this bug number still relevant? Seems to be closed.",
+      "range": {
+        "startLine": 23,
+        "startChar": 18,
+        "endLine": 23,
+        "endChar": 22
+      },
+      "revId": "080679d9e6e8a5ce6fecc3ebf4df770a92a7014b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "465a0e45_c9bd468c",
         "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
         "patchSetId": 6
