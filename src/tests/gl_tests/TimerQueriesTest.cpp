@@ -186,7 +186,7 @@ TEST_P(TimerQueriesTest, TimeElapsedTextureTest)
     // Skip test if the number of bits is 0
     ANGLE_SKIP_TEST_IF(!queryTimeElapsedBits);
 
-    GLubyte pixels[] = {0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0};
+    std::vector<GLColor> texData{GLColor::black, GLColor::white, GLColor::white, GLColor::black};
 
     // Query and texture initialization
     GLuint texture;
@@ -198,7 +198,7 @@ TEST_P(TimerQueriesTest, TimeElapsedTextureTest)
     glBeginQueryEXT(GL_TIME_ELAPSED_EXT, query);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, texData.data());
     glGenerateMipmap(GL_TEXTURE_2D);
     glFinish();
     glEndQueryEXT(GL_TIME_ELAPSED_EXT);

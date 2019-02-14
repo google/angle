@@ -324,7 +324,7 @@ TEST_P(Texture3DCopy, CopyFromMipmap)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    std::vector<GLColor> texDataGreen(2u * 2u * 2u, GLColor::green);
+    std::vector<GLColor> texDataGreen(4u * 4u * 4u, GLColor::green);
 
     glBindTexture(GL_TEXTURE_3D, sourceTexture.get());
     glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,

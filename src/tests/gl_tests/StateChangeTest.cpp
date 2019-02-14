@@ -3029,11 +3029,9 @@ void main()
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, transformFeedbackBuffer);
 
     // Set up uniform buffer.
-    std::vector<GLColor32F> redData(1, kFloatGreen);
-
     GLBuffer uniformBuffer;
     glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, 128, &kFloatGreen.R, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F), &kFloatGreen.R, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
 
     ASSERT_GL_NO_ERROR();

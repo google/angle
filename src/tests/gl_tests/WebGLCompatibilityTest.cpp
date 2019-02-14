@@ -4000,7 +4000,7 @@ TEST_P(WebGLCompatibilityTest, GenerateMipmapUnsizedFloatingPointTexture)
         kFloatGreen,
         kFloatBlue,
     };
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_FLOAT, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, data);
     ASSERT_GL_NO_ERROR();
 
     glGenerateMipmap(GL_TEXTURE_2D);
