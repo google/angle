@@ -24,6 +24,17 @@
 #include "libANGLE/renderer/gl/glx/WindowSurfaceGLX.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
+namespace
+{
+
+bool HasParallelShaderCompileExtension(const rx::FunctionsGL *functions)
+{
+    return functions->maxShaderCompilerThreadsKHR != nullptr ||
+           functions->maxShaderCompilerThreadsARB != nullptr;
+}
+
+}  // anonymous namespace
+
 namespace rx
 {
 
@@ -289,14 +300,23 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
 
     if (mSharedContext)
     {
-        for (unsigned int i = 0; i < RendererGL::getMaxWorkerContexts(); ++i)
+        if (HasParallelShaderCompileExtension(functionsGL.get()))
         {
-            glx::Pbuffer workerPbuffer = mGLX.createPbuffer(mContextConfig, dummyPbufferAttribs);
-            if (!workerPbuffer)
+            mGLX.destroyContext(mSharedContext);
+            mSharedContext = nullptr;
+        }
+        else
+        {
+            for (unsigned int i = 0; i < RendererGL::getMaxWorkerContexts(); ++i)
             {
-                return egl::EglNotInitialized() << "Could not create the worker pbuffers.";
+                glx::Pbuffer workerPbuffer =
+                    mGLX.createPbuffer(mContextConfig, dummyPbufferAttribs);
+                if (!workerPbuffer)
+                {
+                    return egl::EglNotInitialized() << "Could not create the worker pbuffers.";
+                }
+                mWorkerPbufferPool.push_back(workerPbuffer);
             }
-            mWorkerPbufferPool.push_back(workerPbuffer);
         }
     }
 

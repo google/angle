@@ -790,5 +790,15 @@
         "InsertEventMarkerEXT",
         "PushGroupMarkerEXT",
         "PopGroupMarkerEXT"
+    ],
+
+    "GL_ARB_parallel_shader_compile":
+    [
+        "MaxShaderCompilerThreadsARB"
+    ],
+
+    "GL_KHR_parallel_shader_compile":
+    [
+        "MaxShaderCompilerThreadsKHR"
     ]
 }

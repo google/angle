@@ -140,6 +140,9 @@ class ContextImpl : public GLImplFactory
     virtual void pushDebugGroup(GLenum source, GLuint id, const std::string &message) = 0;
     virtual void popDebugGroup()                                                      = 0;
 
+    // KHR_parallel_shader_compile
+    virtual void setMaxShaderCompilerThreads(GLuint count) {}
+
     // State sync with dirty bits.
     virtual angle::Result syncState(const gl::Context *context,
                                     const gl::State::DirtyBits &dirtyBits,

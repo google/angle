@@ -306,6 +306,7 @@ libangle_sources = [
   "src/libANGLE/renderer/RenderbufferImpl.h",
   "src/libANGLE/renderer/RenderTargetCache.h",
   "src/libANGLE/renderer/SamplerImpl.h",
+  "src/libANGLE/renderer/ShaderImpl.cpp",
   "src/libANGLE/renderer/ShaderImpl.h",
   "src/libANGLE/renderer/StreamProducerImpl.h",
   "src/libANGLE/renderer/SurfaceImpl.cpp",

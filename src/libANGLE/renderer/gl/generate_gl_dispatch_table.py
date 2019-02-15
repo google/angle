@@ -297,7 +297,7 @@ def main():
             command_name = command.attrib['name']
             if 'gl' in support and 'gles2' in support:
                 # Special case for KHR extensions, since in GLES they are suffixed.
-                if '_KHR_' in extension_name:
+                if '_KHR_' in extension_name and not command_name.endswith('KHR'):
                     safe_append(gl_extension_commands, command_name, extension_name)
                     safe_append(gles2_extension_commands, command_name, extension_name)
                 else:

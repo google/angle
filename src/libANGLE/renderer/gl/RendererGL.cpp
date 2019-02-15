@@ -55,6 +55,19 @@ std::vector<GLuint> GatherPaths(const std::vector<gl::Path *> &paths)
     return ret;
 }
 
+void SetMaxShaderCompilerThreads(const rx::FunctionsGL *functions, GLuint count)
+{
+    if (functions->maxShaderCompilerThreadsKHR != nullptr)
+    {
+        functions->maxShaderCompilerThreadsKHR(count);
+    }
+    else
+    {
+        ASSERT(functions->maxShaderCompilerThreadsARB != nullptr);
+        functions->maxShaderCompilerThreadsARB(count);
+    }
+}
+
 }  // namespace
 
 static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
@@ -175,7 +188,8 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::Attrib
       mMultiviewClearer(nullptr),
       mUseDebugOutput(false),
       mCapsInitialized(false),
-      mMultiviewImplementationType(MultiviewImplementationTypeGL::UNSPECIFIED)
+      mMultiviewImplementationType(MultiviewImplementationTypeGL::UNSPECIFIED),
+      mNativeParallelCompileEnabled(false)
 {
     ASSERT(mFunctions);
     nativegl_gl::GenerateWorkarounds(mFunctions.get(), &mWorkarounds);
@@ -214,6 +228,12 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::Attrib
         {
             mFunctions->vertexAttrib4f(i, 0.0f, 0.0f, 0.0f, 1.0f);
         }
+    }
+
+    if (hasNativeParallelCompile() && !mNativeParallelCompileEnabled)
+    {
+        SetMaxShaderCompilerThreads(mFunctions.get(), 0xffffffff);
+        mNativeParallelCompileEnabled = true;
     }
 }
 
@@ -615,6 +635,20 @@ unsigned int RendererGL::getMaxWorkerContexts()
 {
     // No more than 16 worker contexts.
     return std::min(16u, std::thread::hardware_concurrency());
+}
+
+bool RendererGL::hasNativeParallelCompile()
+{
+    return mFunctions->maxShaderCompilerThreadsKHR != nullptr ||
+           mFunctions->maxShaderCompilerThreadsARB != nullptr;
+}
+
+void RendererGL::setMaxShaderCompilerThreads(GLuint count)
+{
+    if (hasNativeParallelCompile())
+    {
+        SetMaxShaderCompilerThreads(mFunctions.get(), count);
+    }
 }
 
 ScopedWorkerContextGL::ScopedWorkerContextGL(RendererGL *renderer, std::string *infoLog)

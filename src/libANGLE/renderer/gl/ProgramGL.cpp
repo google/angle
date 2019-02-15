@@ -148,16 +148,51 @@ class ProgramGL::LinkTask final : public angle::Closure
 };
 
 using PostLinkImplFunctor = std::function<angle::Result(bool, const std::string &)>;
+
+// The event for a parallelized linking using the native driver extension.
+class ProgramGL::LinkEventNativeParallel final : public LinkEvent
+{
+  public:
+    LinkEventNativeParallel(PostLinkImplFunctor &&functor,
+                            const FunctionsGL *functions,
+                            GLuint programID)
+        : mPostLinkImplFunctor(functor), mFunctions(functions), mProgramID(programID)
+    {}
+
+    angle::Result wait(const gl::Context *context) override
+    {
+        GLint linkStatus = GL_FALSE;
+        mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
+        if (linkStatus == GL_TRUE)
+        {
+            return mPostLinkImplFunctor(false, std::string());
+        }
+        return angle::Result::Incomplete;
+    }
+
+    bool isLinking() override
+    {
+        GLint completionStatus = GL_FALSE;
+        mFunctions->getProgramiv(mProgramID, GL_COMPLETION_STATUS, &completionStatus);
+        return completionStatus == GL_FALSE;
+    }
+
+  private:
+    PostLinkImplFunctor mPostLinkImplFunctor;
+    const FunctionsGL *mFunctions;
+    GLuint mProgramID;
+};
+
+// The event for a parallelized linking using the worker thread pool.
 class ProgramGL::LinkEventGL final : public LinkEvent
 {
   public:
     LinkEventGL(std::shared_ptr<angle::WorkerThreadPool> workerPool,
                 std::shared_ptr<ProgramGL::LinkTask> linkTask,
                 PostLinkImplFunctor &&functor)
-        : mWorkerPool(workerPool),
-          mLinkTask(linkTask),
-          mWaitableEvent(
-              std::shared_ptr<angle::WaitableEvent>(workerPool->postWorkerTask(mLinkTask))),
+        : mLinkTask(linkTask),
+          mWaitableEvent(std::shared_ptr<angle::WaitableEvent>(
+              angle::WorkerThreadPool::PostWorkerTask(workerPool, mLinkTask))),
           mPostLinkImplFunctor(functor)
     {}
 
@@ -170,7 +205,6 @@ class ProgramGL::LinkEventGL final : public LinkEvent
     bool isLinking() override { return !mWaitableEvent->isReady(); }
 
   private:
-    std::shared_ptr<angle::WorkerThreadPool> mWorkerPool;
     std::shared_ptr<ProgramGL::LinkTask> mLinkTask;
     std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
     PostLinkImplFunctor mPostLinkImplFunctor;
@@ -430,7 +464,13 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         return angle::Result::Continue;
     };
 
-    if (workerPool->isAsync() && (!mWorkarounds.dontRelinkProgramsInParallel || !mLinkedInParallel))
+    if (mRenderer->hasNativeParallelCompile())
+    {
+        mFunctions->linkProgram(mProgramID);
+        return std::make_unique<LinkEventNativeParallel>(postLinkImplTask, mFunctions, mProgramID);
+    }
+    else if (workerPool->isAsync() &&
+             (!mWorkarounds.dontRelinkProgramsInParallel || !mLinkedInParallel))
     {
         mLinkedInParallel = true;
         return std::make_unique<LinkEventGL>(workerPool, linkTask, postLinkImplTask);

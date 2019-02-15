@@ -20,6 +20,131 @@
 namespace rx
 {
 
+using CompileAndCheckShaderInWorkerFunctor = std::function<bool(const char *source)>;
+class TranslateTaskGL : public angle::Closure
+{
+  public:
+    TranslateTaskGL(ShHandle handle,
+                    ShCompileOptions options,
+                    const std::string &source,
+                    CompileAndCheckShaderInWorkerFunctor &&compileAndCheckShaderInWorkerFunctor)
+        : mHandle(handle),
+          mOptions(options),
+          mSource(source),
+          mCompileAndCheckShaderInWorkerFunctor(std::move(compileAndCheckShaderInWorkerFunctor)),
+          mResult(false),
+          mWorkerAvailable(true)
+    {}
+
+    void operator()() override
+    {
+        const char *source = mSource.c_str();
+        mResult            = sh::Compile(mHandle, &source, 1, mOptions);
+        if (mResult)
+        {
+            mWorkerAvailable =
+                mCompileAndCheckShaderInWorkerFunctor(sh::GetObjectCode(mHandle).c_str());
+        }
+    }
+
+    bool getResult() { return mResult; }
+
+    bool workerAvailable() { return mWorkerAvailable; }
+
+    ShHandle getHandle() { return mHandle; }
+
+  private:
+    ShHandle mHandle;
+    ShCompileOptions mOptions;
+    std::string mSource;
+    CompileAndCheckShaderInWorkerFunctor mCompileAndCheckShaderInWorkerFunctor;
+    bool mResult;
+    bool mWorkerAvailable;
+};
+
+using PostTranslateFunctor         = std::function<bool(std::string *infoLog)>;
+using CompileAndCheckShaderFunctor = std::function<void(const char *source)>;
+class WaitableCompileEventWorkerContext final : public WaitableCompileEvent
+{
+  public:
+    WaitableCompileEventWorkerContext(std::shared_ptr<angle::WaitableEvent> waitableEvent,
+                                      CompileAndCheckShaderFunctor &&compileAndCheckShaderFunctor,
+                                      PostTranslateFunctor &&postTranslateFunctor,
+                                      std::shared_ptr<TranslateTaskGL> translateTask)
+        : WaitableCompileEvent(waitableEvent),
+          mCompileAndCheckShaderFunctor(std::move(compileAndCheckShaderFunctor)),
+          mPostTranslateFunctor(std::move(postTranslateFunctor)),
+          mTranslateTask(translateTask)
+    {}
+
+    bool getResult() override { return mTranslateTask->getResult(); }
+
+    bool postTranslate(std::string *infoLog) override
+    {
+        if (!mTranslateTask->workerAvailable())
+        {
+            ShHandle handle = mTranslateTask->getHandle();
+            mCompileAndCheckShaderFunctor(sh::GetObjectCode(handle).c_str());
+        }
+        return mPostTranslateFunctor(infoLog);
+    }
+
+  private:
+    CompileAndCheckShaderFunctor mCompileAndCheckShaderFunctor;
+    PostTranslateFunctor mPostTranslateFunctor;
+    std::shared_ptr<TranslateTaskGL> mTranslateTask;
+};
+
+using PeekCompletionFunctor = std::function<bool()>;
+using CheckShaderFunctor    = std::function<void()>;
+
+class WaitableCompileEventNativeParallel final : public WaitableCompileEvent
+{
+  public:
+    WaitableCompileEventNativeParallel(PostTranslateFunctor &&postTranslateFunctor,
+                                       bool result,
+                                       CheckShaderFunctor &&checkShaderFunctor,
+                                       PeekCompletionFunctor &&peekCompletionFunctor)
+        : WaitableCompileEvent(std::shared_ptr<angle::WaitableEventDone>()),
+          mPostTranslateFunctor(std::move(postTranslateFunctor)),
+          mResult(result),
+          mCheckShaderFunctor(std::move(checkShaderFunctor)),
+          mPeekCompletionFunctor(std::move(peekCompletionFunctor))
+    {}
+
+    void wait() override { mCheckShaderFunctor(); }
+
+    bool isReady() override { return mPeekCompletionFunctor(); }
+
+    bool getResult() override { return mResult; }
+
+    bool postTranslate(std::string *infoLog) override { return mPostTranslateFunctor(infoLog); }
+
+  private:
+    PostTranslateFunctor mPostTranslateFunctor;
+    bool mResult;
+    CheckShaderFunctor mCheckShaderFunctor;
+    PeekCompletionFunctor mPeekCompletionFunctor;
+};
+
+class WaitableCompileEventDone final : public WaitableCompileEvent
+{
+  public:
+    WaitableCompileEventDone(PostTranslateFunctor &&postTranslateFunctor, bool result)
+        : WaitableCompileEvent(std::make_shared<angle::WaitableEventDone>()),
+          mPostTranslateFunctor(std::move(postTranslateFunctor)),
+          mResult(result)
+    {}
+
+    bool getResult() override { return mResult; }
+
+    bool postTranslate(std::string *infoLog) override { return mPostTranslateFunctor(infoLog); }
+
+  private:
+    PostTranslateFunctor mPostTranslateFunctor;
+    bool mResult;
+};
+
 ShaderGL::ShaderGL(const gl::ShaderState &data,
                    GLuint shaderID,
                    MultiviewImplementationTypeGL multiviewImplementationType,
@@ -28,7 +153,6 @@ ShaderGL::ShaderGL(const gl::ShaderState &data,
       mShaderID(shaderID),
       mMultiviewImplementationType(multiviewImplementationType),
       mRenderer(renderer),
-      mFallbackToMainThread(true),
       mCompileStatus(GL_FALSE)
 {}
 
@@ -43,113 +167,22 @@ void ShaderGL::destroy()
     mShaderID = 0;
 }
 
-ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(const gl::Context *context,
-                                                         std::stringstream *sourceStream,
-                                                         std::string * /*sourcePath*/)
+void ShaderGL::compileAndCheckShader(const char *source)
 {
-    *sourceStream << mData.getSource();
-
-    ShCompileOptions options = SH_INIT_GL_POSITION;
-
-    bool isWebGL = context->getExtensions().webglCompatibility;
-    if (isWebGL && (mData.getShaderType() != gl::ShaderType::Compute))
-    {
-        options |= SH_INIT_OUTPUT_VARIABLES;
-    }
-
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
-
-    if (workarounds.doWhileGLSLCausesGPUHang)
-    {
-        options |= SH_REWRITE_DO_WHILE_LOOPS;
-    }
-
-    if (workarounds.emulateAbsIntFunction)
-    {
-        options |= SH_EMULATE_ABS_INT_FUNCTION;
-    }
-
-    if (workarounds.addAndTrueToLoopCondition)
-    {
-        options |= SH_ADD_AND_TRUE_TO_LOOP_CONDITION;
-    }
-
-    if (workarounds.emulateIsnanFloat)
-    {
-        options |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
-    }
-
-    if (workarounds.emulateAtan2Float)
-    {
-        options |= SH_EMULATE_ATAN2_FLOAT_FUNCTION;
-    }
-
-    if (workarounds.useUnusedBlocksWithStandardOrSharedLayout)
-    {
-        options |= SH_USE_UNUSED_STANDARD_SHARED_BLOCKS;
-    }
-
-    if (workarounds.dontRemoveInvariantForFragmentInput)
-    {
-        options |= SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT;
-    }
-
-    if (workarounds.removeInvariantAndCentroidForESSL3)
-    {
-        options |= SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3;
-    }
-
-    if (workarounds.rewriteFloatUnaryMinusOperator)
-    {
-        options |= SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR;
-    }
-
-    if (!workarounds.dontInitializeUninitializedLocals)
-    {
-        options |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
-    }
-
-    if (workarounds.clampPointSize)
-    {
-        options |= SH_CLAMP_POINT_SIZE;
-    }
-
-    if (workarounds.rewriteVectorScalarArithmetic)
-    {
-        options |= SH_REWRITE_VECTOR_SCALAR_ARITHMETIC;
-    }
-
-    if (workarounds.dontUseLoopsToInitializeVariables)
-    {
-        options |= SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES;
-    }
-
-    if (workarounds.clampFragDepth)
-    {
-        options |= SH_CLAMP_FRAG_DEPTH;
-    }
-
-    if (workarounds.rewriteRepeatedAssignToSwizzled)
-    {
-        options |= SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED;
-    }
-
-    if (mMultiviewImplementationType == MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2)
-    {
-        options |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
-        options |= SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER;
-    }
-
-    mFallbackToMainThread = true;
-
-    return options;
+    compileShader(source);
+    checkShader();
 }
 
-void ShaderGL::compileAndCheckShader(const char *source)
+void ShaderGL::compileShader(const char *source)
 {
     const FunctionsGL *functions = mRenderer->getFunctions();
     functions->shaderSource(mShaderID, 1, &source, nullptr);
     functions->compileShader(mShaderID);
+}
+
+void ShaderGL::checkShader()
+{
+    const FunctionsGL *functions = mRenderer->getFunctions();
 
     // Check for compile errors from the native driver
     mCompileStatus = GL_FALSE;
@@ -167,7 +200,7 @@ void ShaderGL::compileAndCheckShader(const char *source)
             std::vector<char> buf(infoLogLength);
             functions->getShaderInfoLog(mShaderID, infoLogLength, nullptr, &buf[0]);
 
-            mInfoLog = &buf[0];
+            mInfoLog += &buf[0];
             WARN() << std::endl << mInfoLog;
         }
         else
@@ -177,37 +210,192 @@ void ShaderGL::compileAndCheckShader(const char *source)
     }
 }
 
-void ShaderGL::compileAsync(const std::string &source, std::string &infoLog)
+bool ShaderGL::peekCompletion()
+{
+    const FunctionsGL *functions = mRenderer->getFunctions();
+    GLint status                 = GL_FALSE;
+    functions->getShaderiv(mShaderID, GL_COMPLETION_STATUS, &status);
+    return status == GL_TRUE;
+}
+
+bool ShaderGL::compileAndCheckShaderInWorker(const char *source)
 {
     std::string workerInfoLog;
     ScopedWorkerContextGL worker(mRenderer.get(), &workerInfoLog);
     if (worker())
     {
-        compileAndCheckShader(source.c_str());
-        mFallbackToMainThread = false;
+        compileAndCheckShader(source);
+        return true;
     }
     else
     {
 #if !defined(NDEBUG)
-        infoLog += "bindWorkerContext failed.\n" + workerInfoLog;
+        mInfoLog += "bindWorkerContext failed.\n" + workerInfoLog;
 #endif
+        return false;
     }
 }
 
-bool ShaderGL::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
+std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *context,
+                                                        gl::ShCompilerInstance *compilerInstance,
+                                                        ShCompileOptions options)
 {
-    if (mFallbackToMainThread)
+    mInfoLog.clear();
+
+    ShCompileOptions additionalOptions = SH_INIT_GL_POSITION;
+
+    bool isWebGL = context->getExtensions().webglCompatibility;
+    if (isWebGL && (mData.getShaderType() != gl::ShaderType::Compute))
     {
-        const char *translatedSourceCString = mData.getTranslatedSource().c_str();
-        compileAndCheckShader(translatedSourceCString);
-    }
-    if (mCompileStatus == GL_FALSE)
-    {
-        *infoLog = mInfoLog;
-        return false;
+        additionalOptions |= SH_INIT_OUTPUT_VARIABLES;
     }
 
-    return true;
+    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+
+    if (workarounds.doWhileGLSLCausesGPUHang)
+    {
+        additionalOptions |= SH_REWRITE_DO_WHILE_LOOPS;
+    }
+
+    if (workarounds.emulateAbsIntFunction)
+    {
+        additionalOptions |= SH_EMULATE_ABS_INT_FUNCTION;
+    }
+
+    if (workarounds.addAndTrueToLoopCondition)
+    {
+        additionalOptions |= SH_ADD_AND_TRUE_TO_LOOP_CONDITION;
+    }
+
+    if (workarounds.emulateIsnanFloat)
+    {
+        additionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
+    }
+
+    if (workarounds.emulateAtan2Float)
+    {
+        additionalOptions |= SH_EMULATE_ATAN2_FLOAT_FUNCTION;
+    }
+
+    if (workarounds.useUnusedBlocksWithStandardOrSharedLayout)
+    {
+        additionalOptions |= SH_USE_UNUSED_STANDARD_SHARED_BLOCKS;
+    }
+
+    if (workarounds.dontRemoveInvariantForFragmentInput)
+    {
+        additionalOptions |= SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT;
+    }
+
+    if (workarounds.removeInvariantAndCentroidForESSL3)
+    {
+        additionalOptions |= SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3;
+    }
+
+    if (workarounds.rewriteFloatUnaryMinusOperator)
+    {
+        additionalOptions |= SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR;
+    }
+
+    if (!workarounds.dontInitializeUninitializedLocals)
+    {
+        additionalOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
+    }
+
+    if (workarounds.clampPointSize)
+    {
+        additionalOptions |= SH_CLAMP_POINT_SIZE;
+    }
+
+    if (workarounds.rewriteVectorScalarArithmetic)
+    {
+        additionalOptions |= SH_REWRITE_VECTOR_SCALAR_ARITHMETIC;
+    }
+
+    if (workarounds.dontUseLoopsToInitializeVariables)
+    {
+        additionalOptions |= SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES;
+    }
+
+    if (workarounds.clampFragDepth)
+    {
+        additionalOptions |= SH_CLAMP_FRAG_DEPTH;
+    }
+
+    if (workarounds.rewriteRepeatedAssignToSwizzled)
+    {
+        additionalOptions |= SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED;
+    }
+
+    if (mMultiviewImplementationType == MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2)
+    {
+        additionalOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
+        additionalOptions |= SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER;
+    }
+
+    options |= additionalOptions;
+
+    auto workerThreadPool = context->getWorkerThreadPool();
+
+    const std::string &source = mData.getSource();
+
+    auto postTranslateFunctor = [this](std::string *infoLog) {
+        if (mCompileStatus == GL_FALSE)
+        {
+            *infoLog = mInfoLog;
+            return false;
+        }
+        return true;
+    };
+
+    if (mRenderer->hasNativeParallelCompile())
+    {
+        ShHandle handle = compilerInstance->getHandle();
+        const char *str = source.c_str();
+        bool result     = sh::Compile(handle, &str, 1, options);
+        if (result)
+        {
+            compileShader(sh::GetObjectCode(handle).c_str());
+            auto checkShaderFunctor    = [this]() { checkShader(); };
+            auto peekCompletionFunctor = [this]() { return peekCompletion(); };
+            return std::make_shared<WaitableCompileEventNativeParallel>(
+                std::move(postTranslateFunctor), result, std::move(checkShaderFunctor),
+                std::move(peekCompletionFunctor));
+        }
+        else
+        {
+            return std::make_shared<WaitableCompileEventDone>([](std::string *) { return true; },
+                                                              result);
+        }
+    }
+    else if (workerThreadPool->isAsync())
+    {
+        auto compileAndCheckShaderInWorkerFunctor = [this](const char *source) {
+            return compileAndCheckShaderInWorker(source);
+        };
+        auto translateTask =
+            std::make_shared<TranslateTaskGL>(compilerInstance->getHandle(), options, source,
+                                              std::move(compileAndCheckShaderInWorkerFunctor));
+
+        auto compileAndCheckShaderFunctor = [this](const char *source) {
+            compileAndCheckShader(source);
+        };
+        return std::make_shared<WaitableCompileEventWorkerContext>(
+            angle::WorkerThreadPool::PostWorkerTask(workerThreadPool, translateTask),
+            std::move(compileAndCheckShaderFunctor), std::move(postTranslateFunctor),
+            translateTask);
+    }
+    else
+    {
+        ShHandle handle = compilerInstance->getHandle();
+        const char *str = source.c_str();
+        bool result     = sh::Compile(handle, &str, 1, options);
+        if (result)
+        {
+            compileAndCheckShader(sh::GetObjectCode(handle).c_str());
+        }
+        return std::make_shared<WaitableCompileEventDone>(std::move(postTranslateFunctor), result);
+    }
 }
 
 std::string ShaderGL::getDebugInfo() const

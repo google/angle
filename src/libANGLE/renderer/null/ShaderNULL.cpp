@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/null/ShaderNULL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
 
 namespace rx
 {
@@ -18,17 +19,11 @@ ShaderNULL::ShaderNULL(const gl::ShaderState &data) : ShaderImpl(data) {}
 
 ShaderNULL::~ShaderNULL() {}
 
-ShCompileOptions ShaderNULL::prepareSourceAndReturnOptions(const gl::Context *context,
-                                                           std::stringstream *sourceStream,
-                                                           std::string *sourcePath)
+std::shared_ptr<WaitableCompileEvent> ShaderNULL::compile(const gl::Context *context,
+                                                          gl::ShCompilerInstance *compilerInstance,
+                                                          ShCompileOptions options)
 {
-    *sourceStream << mData.getSource();
-    return 0;
-}
-
-bool ShaderNULL::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
-{
-    return true;
+    return compileImpl(context, compilerInstance, mData.getSource(), options);
 }
 
 std::string ShaderNULL::getDebugInfo() const

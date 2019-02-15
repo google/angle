@@ -1672,6 +1672,10 @@ void *INTERNAL_GL_APIENTRY glMapNamedBufferRangeNULL(GLuint buffer,
 
 void INTERNAL_GL_APIENTRY glMatrixLoadfEXTNULL(GLenum mode, const GLfloat *m) {}
 
+void INTERNAL_GL_APIENTRY glMaxShaderCompilerThreadsARBNULL(GLuint count) {}
+
+void INTERNAL_GL_APIENTRY glMaxShaderCompilerThreadsKHRNULL(GLuint count) {}
+
 void INTERNAL_GL_APIENTRY glMemoryBarrierNULL(GLbitfield barriers) {}
 
 void INTERNAL_GL_APIENTRY glMemoryBarrierByRegionNULL(GLbitfield barriers) {}

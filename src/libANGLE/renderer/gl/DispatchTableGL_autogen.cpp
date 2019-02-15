@@ -1128,6 +1128,11 @@ void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
         ASSIGN("glIsQueryARB", isQuery);
     }
 
+    if (extensions.count("GL_ARB_parallel_shader_compile") != 0)
+    {
+        ASSIGN("glMaxShaderCompilerThreadsARB", maxShaderCompilerThreadsARB);
+    }
+
     if (extensions.count("GL_ARB_point_parameters") != 0)
     {
         ASSIGN("glPointParameterfARB", pointParameterf);
@@ -2699,6 +2704,11 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
         ASSIGN("glValidateProgramPipelineEXT", validateProgramPipeline);
     }
 
+    if (extensions.count("GL_KHR_parallel_shader_compile") != 0)
+    {
+        ASSIGN("glMaxShaderCompilerThreadsKHR", maxShaderCompilerThreadsKHR);
+    }
+
     if (extensions.count("GL_NV_fence") != 0)
     {
         ASSIGN("glDeleteFencesNV", deleteFencesNV);
@@ -3847,6 +3857,11 @@ void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
         getQueryObjectuiv = &glGetQueryObjectuivNULL;
         getQueryiv        = &glGetQueryivNULL;
         isQuery           = &glIsQueryNULL;
+    }
+
+    if (extensions.count("GL_ARB_parallel_shader_compile") != 0)
+    {
+        maxShaderCompilerThreadsARB = &glMaxShaderCompilerThreadsARBNULL;
     }
 
     if (extensions.count("GL_ARB_point_parameters") != 0)
@@ -5417,6 +5432,11 @@ void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> 
         programUniformMatrix4x3fv = &glProgramUniformMatrix4x3fvNULL;
         useProgramStages          = &glUseProgramStagesNULL;
         validateProgramPipeline   = &glValidateProgramPipelineNULL;
+    }
+
+    if (extensions.count("GL_KHR_parallel_shader_compile") != 0)
+    {
+        maxShaderCompilerThreadsKHR = &glMaxShaderCompilerThreadsKHRNULL;
     }
 
     if (extensions.count("GL_NV_fence") != 0)

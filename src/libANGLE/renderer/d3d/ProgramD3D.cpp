@@ -955,7 +955,7 @@ class ProgramD3D::LoadBinaryLinkEvent final : public LinkEvent
                         gl::BinaryInputStream *stream,
                         gl::InfoLog &infoLog)
         : mTask(std::make_shared<ProgramD3D::LoadBinaryTask>(context, program, stream, infoLog)),
-          mWaitableEvent(workerPool->postWorkerTask(mTask))
+          mWaitableEvent(angle::WorkerThreadPool::PostWorkerTask(workerPool, mTask))
     {}
 
     angle::Result wait(const gl::Context *context) override
@@ -1771,14 +1771,15 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
                              const ShaderD3D *vertexShader,
                              const ShaderD3D *fragmentShader)
         : mInfoLog(infoLog),
-          mWorkerPool(workerPool),
           mVertexTask(vertexTask),
           mPixelTask(pixelTask),
           mGeometryTask(geometryTask),
-          mWaitEvents(
-              {{std::shared_ptr<WaitableEvent>(workerPool->postWorkerTask(mVertexTask)),
-                std::shared_ptr<WaitableEvent>(workerPool->postWorkerTask(mPixelTask)),
-                std::shared_ptr<WaitableEvent>(workerPool->postWorkerTask(mGeometryTask))}}),
+          mWaitEvents({{std::shared_ptr<WaitableEvent>(
+                            angle::WorkerThreadPool::PostWorkerTask(workerPool, mVertexTask)),
+                        std::shared_ptr<WaitableEvent>(
+                            angle::WorkerThreadPool::PostWorkerTask(workerPool, mPixelTask)),
+                        std::shared_ptr<WaitableEvent>(
+                            angle::WorkerThreadPool::PostWorkerTask(workerPool, mGeometryTask))}}),
           mUseGS(useGS),
           mVertexShader(vertexShader),
           mFragmentShader(fragmentShader)
@@ -1863,7 +1864,6 @@ class ProgramD3D::GraphicsProgramLinkEvent final : public LinkEvent
     }
 
     gl::InfoLog &mInfoLog;
-    std::shared_ptr<WorkerThreadPool> mWorkerPool;
     std::shared_ptr<ProgramD3D::GetVertexExecutableTask> mVertexTask;
     std::shared_ptr<ProgramD3D::GetPixelExecutableTask> mPixelTask;
     std::shared_ptr<ProgramD3D::GetGeometryExecutableTask> mGeometryTask;
