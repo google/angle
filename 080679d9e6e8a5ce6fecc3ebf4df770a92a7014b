@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "eacc6202_470cb740",
+        "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-02-15T17:44:46Z",
+      "side": 1,
+      "message": "Found it.  It\u0027s IsAndroid() and requires #include\u0027ing \"test_utils/angle_test_instantiate.h\".\n\nThanks!",
+      "parentUuid": "2b52634f_f147e5f9",
+      "range": {
+        "startLine": 263,
+        "startChar": 48,
+        "endLine": 263,
+        "endChar": 99
+      },
+      "revId": "080679d9e6e8a5ce6fecc3ebf4df770a92a7014b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3b7d989_373788b4",
         "filename": "src/tests/egl_tests/EGLContextCompatibilityTest.cpp",
         "patchSetId": 6
