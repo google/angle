@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "f0cd7918_f4ba2260",
+        "filename": "src/libANGLE/renderer/gl/TransformFeedbackGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-02-15T14:57:10Z",
+      "side": 1,
+      "message": "Ah, I missed this comment.  This may be why we see issues, in StateManagerGL it will sync the active program before syncing the transform feedback so no, it wont go back and reset the program to the correct one for the upcoming draw call.  You should reset it here, changing GL state while syncing dirty bits is one place we need to be careful.",
+      "parentUuid": "4d52f4f2_8feee2a1",
+      "revId": "691e56e47b94ff3dbfc3bc63d1d734163c7231f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "123e99e1_72acc1c5",
         "filename": "src/libANGLE/renderer/gl/TransformFeedbackGL.h",
         "patchSetId": 3
