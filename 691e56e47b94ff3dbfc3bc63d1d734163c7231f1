@@ -127,6 +127,24 @@
     },
     {
       "key": {
+        "uuid": "27089ef2_ee053a28",
+        "filename": "src/libANGLE/renderer/gl/TransformFeedbackGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2019-02-15T18:46:37Z",
+      "side": 1,
+      "message": "OK, I\u0027ll prepare a change that restores the correct program after EndTransformFeedback. But we can\u0027t do the same after BeginTransformFeedback because it\u0027s illegal to change programs then. Did I miss some issues caused by this?",
+      "parentUuid": "f0cd7918_f4ba2260",
+      "revId": "691e56e47b94ff3dbfc3bc63d1d734163c7231f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "123e99e1_72acc1c5",
         "filename": "src/libANGLE/renderer/gl/TransformFeedbackGL.h",
         "patchSetId": 3
