@@ -9,7 +9,6 @@
 
 #include "compiler/translator/AtomicCounterFunctionHLSL.h"
 
-#include "compiler/translator/Common.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
@@ -93,7 +92,7 @@ void AtomicCounterFunctionHLSL::atomicCounterFunctionHeader(TInfoSinkBase &out)
 
 ImmutableString getAtomicCounterNameForBinding(int binding)
 {
-    std::stringstream counterName = sh::InitializeStream<std::stringstream>();
+    std::stringstream counterName;
     counterName << kAtomicCounterBaseName << binding;
     return ImmutableString(counterName.str());
 }

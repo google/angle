@@ -117,59 +117,39 @@ TEST_F(ShCompileTest, TokensSplitInShaderStrings)
 }
 
 // Parsing floats in shaders can run afoul of locale settings.
-// Eg. in de_DE, `strtof("1.9")` will yield `1.0f`. (It's expecting "1,9")
+// In de_DE, `strtof("1.9")` will yield `1.0f`. (It's expecting "1,9")
 TEST_F(ShCompileTest, DecimalSepLocale)
 {
-    // Locale names are platform dependent, add platform-specific names of locales to be tested here
-    const std::string availableLocales[] = {
-        "de_DE", "de-DE", "de_DE.UTF-8", "de_DE.ISO8859-1", "de_DE.ISO8859-15", "de_DE@euro",
-        "de_DE.88591", "de_DE.88591.en", "de_DE.iso88591", "de_DE.ISO-8859-1", "de_DE.ISO_8859-1",
-        "de_DE.iso885915", "de_DE.ISO-8859-15", "de_DE.ISO_8859-15", "de_DE.8859-15",
-        "de_DE.8859-15@euro", "de_DE.ISO-8859-15@euro", "de_DE.UTF-8@euro", "de_DE.utf8",
-        "German_germany", "German_Germany", "German_Germany.1252", "German_Germany.UTF-8", "German",
-        // One ubuntu tester doesn't have a german locale, but da_DK.utf8 has similar float
-        // representation
-        "da_DK.utf8"};
+    const auto defaultLocale = setlocale(LC_NUMERIC, nullptr);
 
-    const auto localeExists = [](const std::string name) {
-        return bool(setlocale(LC_ALL, name.c_str()));
+    const auto fnSetLocale = [](const char *const name) {
+        return bool(setlocale(LC_NUMERIC, name));
     };
 
-    const char kSource[] = R"(
-    void main()
+    const bool setLocaleToDe =
+        fnSetLocale("de_DE") || fnSetLocale("de-DE");  // Windows doesn't like de_DE.
+
+// These configs don't support de_DE: android_angle_vk[32,64]_rel_ng, linux_angle_rel_ng
+// Just allow those platforms to quietly fail, but require other platforms to succeed.
+#if defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX)
+    if (!setLocaleToDe)
     {
-        gl_FragColor = vec4(1.9);
-    })";
-    const char *parts[]  = {kSource};
-
-    for (const std::string &locale : availableLocales)
-    {
-        // If the locale doesn't exist on the testing platform, the locale constructor will fail,
-        // throwing an exception
-        // We use setlocale() (through localeExists) to test whether a locale
-        // exists before calling the locale constructor
-        if (localeExists(locale))
-        {
-            std::locale localizedLoc(locale);
-
-            // std::locale::global() must be used instead of setlocale() to affect new streams'
-            // default locale
-            std::locale::global(std::locale::classic());
-            sh::Compile(mCompiler, parts, 1, SH_OBJECT_CODE);
-            std::string referenceOut = sh::GetObjectCode(mCompiler);
-            EXPECT_NE(referenceOut.find("1.9"), std::string::npos)
-                << "float formatted incorrectly with classic locale";
-
-            sh::ClearResults(mCompiler);
-
-            std::locale::global(localizedLoc);
-            sh::Compile(mCompiler, parts, 1, SH_OBJECT_CODE);
-            std::string localizedOut = sh::GetObjectCode(mCompiler);
-            EXPECT_NE(localizedOut.find("1.9"), std::string::npos)
-                << "float formatted incorrectly with locale (" << localizedLoc.name() << ") set";
-
-            ASSERT_EQ(referenceOut, localizedOut)
-                << "different output with locale (" << localizedLoc.name() << ") set";
-        }
+        return;
     }
+#endif
+    ASSERT_TRUE(setLocaleToDe);
+
+    const char kSource[] = R"(
+        void main()
+        {
+            gl_FragColor = vec4(1.9);
+        })";
+    const char *parts[]  = {kSource};
+    testCompile(parts, 1, true);
+
+    const auto &translated = sh::GetObjectCode(mCompiler);
+    // printf("%s\n", translated.data());
+    EXPECT_NE(translated.find("1.9"), std::string::npos);
+
+    fnSetLocale(defaultLocale);
 }

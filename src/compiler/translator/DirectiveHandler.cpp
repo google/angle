@@ -10,7 +10,6 @@
 
 #include "angle_gl.h"
 #include "common/debug.h"
-#include "compiler/translator/Common.h"
 #include "compiler/translator/Diagnostics.h"
 
 namespace sh
@@ -191,7 +190,7 @@ void TDirectiveHandler::handleVersion(const angle::pp::SourceLocation &loc, int 
     }
     else
     {
-        std::stringstream stream = sh::InitializeStream<std::stringstream>();
+        std::stringstream stream;
         stream << version;
         std::string str = stream.str();
         mDiagnostics.error(loc, "version number not supported", str.c_str());
