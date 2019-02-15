@@ -16,6 +16,24 @@
       "revId": "6fc22a13d45d59348d71674b11ebdb4444134201",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73df2b3c_2f03566a",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-02-15T15:28:28Z",
+      "side": 1,
+      "message": "Ha! Good point, if either dimension is 0 there is nothing to do.\nI\u0027ll post an update.",
+      "parentUuid": "eaa7a7a4_a02eb035",
+      "revId": "6fc22a13d45d59348d71674b11ebdb4444134201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
