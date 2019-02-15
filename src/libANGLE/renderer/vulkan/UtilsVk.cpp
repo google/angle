@@ -642,7 +642,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     const gl::State &glState = contextVk->getState();
     gl_vk::GetScissor(glState, invertViewport, renderArea, &scissor);
     // TODO(courtneygo): workaround for scissor issue on some devices. http://anglebug.com/3114
-    if ((scissor.extent.width == 0) && (scissor.extent.height == 0))
+    if ((scissor.extent.width == 0) || (scissor.extent.height == 0))
     {
         return angle::Result::Continue;
     }
