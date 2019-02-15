@@ -173,6 +173,7 @@ class StateManagerGL final : angle::NonCopyable
         }
     }
 
+    GLuint getProgramID() const { return mProgram; }
     GLuint getVertexArrayID() const { return mVAO; }
     GLuint getFramebufferID(angle::FramebufferBinding binding) const
     {
