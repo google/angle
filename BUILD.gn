@@ -200,7 +200,7 @@ config("angle_disable_pool_alloc") {
 }
 
 config("debug_annotations_config") {
-  if (is_debug) {
+  if (is_debug || angle_enable_trace) {
     defines = [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
   }
 }
