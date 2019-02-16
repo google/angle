@@ -306,7 +306,11 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     RendererVk *renderer = displayVk->getRenderer();
     VkDevice device      = renderer->getDevice();
     VkInstance instance  = renderer->getInstance();
+    bool swapchainOutOfDate;
 
+    // Queueing the image for presentation ensures the image is no longer in use when
+    // we delete the window surface.
+    (void)present(displayVk, nullptr, 0, swapchainOutOfDate);
     // We might not need to flush the pipe here.
     (void)renderer->finish(displayVk);
 
@@ -681,13 +685,16 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 
-angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects)
+angle::Result WindowSurfaceVk::present(DisplayVk *displayVk,
+                                       EGLint *rects,
+                                       EGLint n_rects,
+                                       bool &swapchainOutOfDate)
 {
     RendererVk *renderer = displayVk->getRenderer();
 
     // Throttle the submissions to avoid getting too far ahead of the GPU.
     {
-        TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::swapImpl: Throttle CPU");
+        TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
         SwapHistory &swap = mSwapHistory[mCurrentSwapHistoryIndex];
         ANGLE_TRY(renderer->finishToSerial(displayVk, swap.serial));
         if (swap.swapchain != VK_NULL_HANDLE)
@@ -708,7 +715,6 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
 
     // Remember the serial of the last submission.
     mSwapHistory[mCurrentSwapHistoryIndex].serial = renderer->getLastSubmittedQueueSerial();
-    uint32_t currentSwapHistoryIndex              = mCurrentSwapHistoryIndex;
     ++mCurrentSwapHistoryIndex;
     mCurrentSwapHistoryIndex =
         mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
@@ -727,13 +733,14 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
     presentInfo.pImageIndices  = &mCurrentSwapchainImageIndex;
     presentInfo.pResults       = nullptr;
 
+    VkPresentRegionKHR presentRegion   = {};
     VkPresentRegionsKHR presentRegions = {};
+    std::vector<VkRectLayerKHR> vk_rects;
     if (renderer->getFeatures().supportsIncrementalPresent && (n_rects > 0))
     {
-        VkPresentRegionKHR presentRegion = {};
-        std::vector<VkRectLayerKHR> vk_rects(n_rects);
         EGLint *egl_rects = rects;
         presentRegion.rectangleCount = n_rects;
+        vk_rects.resize(n_rects);
         for (EGLint rect = 0; rect < n_rects; rect++)
         {
             vk_rects[rect].offset.x      = *egl_rects++;
@@ -756,11 +763,22 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
 
     // If SUBOPTIMAL/OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.
-    bool swapchainOutOfDate = result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR;
+    swapchainOutOfDate = result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR;
     if (!swapchainOutOfDate)
     {
         ANGLE_VK_TRY(displayVk, result);
     }
+
+    return angle::Result::Continue;
+}
+
+angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects)
+{
+    bool swapchainOutOfDate;
+    // Save this now, since present() will increment the value.
+    size_t currentSwapHistoryIndex = mCurrentSwapHistoryIndex;
+
+    ANGLE_TRY(present(displayVk, rects, n_rects, swapchainOutOfDate));
 
     ANGLE_TRY(checkForOutOfDateSwapchain(displayVk, currentSwapHistoryIndex, swapchainOutOfDate));
 
@@ -772,6 +790,7 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk, EGLint *rects, EGL
         ANGLE_TRY(nextSwapchainImage(displayVk));
     }
 
+    RendererVk *renderer = displayVk->getRenderer();
     ANGLE_TRY(renderer->syncPipelineCacheVk(displayVk));
 
     return angle::Result::Continue;

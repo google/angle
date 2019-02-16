@@ -154,6 +154,10 @@ class WindowSurfaceVk : public SurfaceImpl
                                              bool presentOutOfDate);
     void releaseSwapchainImages(RendererVk *renderer);
     angle::Result nextSwapchainImage(DisplayVk *displayVk);
+    angle::Result present(DisplayVk *displayVk,
+                          EGLint *rects,
+                          EGLint n_rects,
+                          bool &swapchainOutOfDate);
     angle::Result swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects);
     angle::Result resizeSwapHistory(DisplayVk *displayVk, size_t imageCount);
 
