@@ -46,29 +46,30 @@
 // test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
 1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
-1442 D3D11 : dEQP-GLES31.functional.compute* = SKIP
 1729 D3D11 : dEQP-GLES31.functional.atomic_counter.* = SKIP
 1951 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
 1951 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.ssbo.* = SKIP
-1729 D3D11 : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_* = SKIP
-1951 D3D11 : dEQP-GLES31.functional.state_query.indexed.shader_storage_buffer_* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.program_interface_query.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.synchronization.* = SKIP
-1951 D3D11 : dEQP-GLES31.functional.ssbo.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.layout_binding.image.* = SKIP
-1951 D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.* = SKIP
 // This case is skipped since it uses atomic counter builtin functions which haven't been implemented.
 1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP
-// Below cases are skipped since it uses variable * ssbo.matrix as the expression which haven't been implemented,
-// that will result the code entering unreachable.
-1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.ssbo_block.ssbo_block_interface_matching_tests = SKIP
-1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.ssbo_block.ssbo_using_shared_qualifier_tests = SKIP
-1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.ssbo_block.ssbo_block_interface_matching_tests = SKIP
-1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.ssbo_block.ssbo_using_shared_qualifier_tests = SKIP
-1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.ssbo_block.ssbo_block_interface_matching_tests = SKIP
-1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.ssbo_block.ssbo_using_shared_qualifier_tests = SKIP
 
 // D3D11 Failing Tests
+// Below cases are failed due to binding multi-UAVs to a single buffer is not supported in D3D backend.
+// http://anglebug.com/3032
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.single_struct.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.single_struct_array.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.single_nested_struct.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.single_nested_struct_array.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.unsized_struct_array.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.2_level_unsized_struct_array.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.unsized_nested_struct_array.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.multi_basic_types.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.multi_nested_struct.single_buffer* = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.nested_structs_arrays_instance_arrays.13 = FAIL
+3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer* = FAIL
+
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_shared_memory_size_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_atomic_counters_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_atomic_counter_buffer_size_* = FAIL
@@ -89,12 +90,6 @@
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_9 = FAIL
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_10 = FAIL
 1663 D3D11 : dEQP-GLES31.functional.draw_indirect.compute_interop.* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.num_work_groups = FAIL
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.work_group_size = FAIL
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.work_group_id = FAIL
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.local_invocation_id = FAIL
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.global_invocation_id = FAIL
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.local_invocation_index = FAIL
 
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.common.abs.float_lowp_geometry = FAIL
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.common.abs.float_mediump_geometry = FAIL
@@ -545,13 +540,13 @@
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.referenced_by_shader.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.random.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.referenced_by.* = FAIL
-1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
-1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 
 // An NVIDIA bug seems to occur when sending GL commands in a certain order to the driver
 2432 NVIDIA OPENGL : dEQP-GLES31.functional.vertex_attribute_binding.usage.mixed_usage.mixed_api_change_binding_point = SKIP
 
 // OpenGL and D3D11 Failing Tests
+1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
+1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
