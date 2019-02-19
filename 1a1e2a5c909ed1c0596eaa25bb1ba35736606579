@@ -34,6 +34,24 @@
       "revId": "1a1e2a5c909ed1c0596eaa25bb1ba35736606579",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "caf5beae_19624a33",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 935,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-02-19T17:52:31Z",
+      "side": 1,
+      "message": "Not necessary. Just something I\u0027d noticed.",
+      "parentUuid": "1f206f2f_c524a8ea",
+      "revId": "1a1e2a5c909ed1c0596eaa25bb1ba35736606579",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
