@@ -270,11 +270,11 @@ TEST_P(EXTYUVTargetTest, CompileSucceedsWithExtensionAndPragma)
     EXPECT_TRUE(TestShaderCompile(EXTYTPragma));
 }
 
-INSTANTIATE_TEST_CASE_P(CorrectVariantsWithExtensionAndPragma,
-                        EXTYUVTargetTest,
-                        Combine(Values(SH_GLES3_SPEC),
-                                Values(sh::ESSLVersion300),
-                                Values(ESSL300_SimpleShader, ESSL300_FragColorShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectVariantsWithExtensionAndPragma,
+                         EXTYUVTargetTest,
+                         Combine(Values(SH_GLES3_SPEC),
+                                 Values(sh::ESSLVersion300),
+                                 Values(ESSL300_SimpleShader, ESSL300_FragColorShader)));
 
 class EXTYUVTargetCompileSuccessTest : public EXTYUVTargetTest
 {};
@@ -287,14 +287,14 @@ TEST_P(EXTYUVTargetCompileSuccessTest, CompileSucceeds)
     EXPECT_TRUE(TestShaderCompile(EXTYTPragma));
 }
 
-INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
-                        EXTYUVTargetCompileSuccessTest,
-                        Combine(Values(SH_GLES3_SPEC),
-                                Values(sh::ESSLVersion300),
-                                Values(ESSL300_FragColorShader,
-                                       ESSL300_YUVQualifierMultipleTimesShader,
-                                       ESSL300_YuvCscStandardEXTShader,
-                                       ESSL300_BuiltInFunctionsShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
+                         EXTYUVTargetCompileSuccessTest,
+                         Combine(Values(SH_GLES3_SPEC),
+                                 Values(sh::ESSLVersion300),
+                                 Values(ESSL300_FragColorShader,
+                                        ESSL300_YUVQualifierMultipleTimesShader,
+                                        ESSL300_YuvCscStandardEXTShader,
+                                        ESSL300_BuiltInFunctionsShader)));
 
 class EXTYUVTargetCompileFailureTest : public EXTYUVTargetTest
 {};
@@ -307,27 +307,27 @@ TEST_P(EXTYUVTargetCompileFailureTest, CompileFails)
     EXPECT_FALSE(TestShaderCompile(EXTYTPragma));
 }
 
-INSTANTIATE_TEST_CASE_P(IncorrectESSL300Shaders,
-                        EXTYUVTargetCompileFailureTest,
-                        Combine(Values(SH_GLES3_SPEC),
-                                Values(sh::ESSLVersion300),
-                                Values(ESSL300_YUVQualifierFailureShader1,
-                                       ESSL300_YUVQualifierFailureShader2,
-                                       ESSL300_LocationAndYUVFailureShader,
-                                       ESSL300_MultipleColorAndYUVOutputsFailureShader1,
-                                       ESSL300_MultipleColorAndYUVOutputsFailureShader2,
-                                       ESSL300_DepthAndYUVOutputsFailureShader,
-                                       ESSL300_MultipleYUVOutputsFailureShader,
-                                       ESSL300_YuvCscStandartdEXTConstructFailureShader1,
-                                       ESSL300_YuvCscStandartdEXTConstructFailureShader2,
-                                       ESSL300_YuvCscStandartdEXTConversionFailureShader1,
-                                       ESSL300_YuvCscStandartdEXTConversionFailureShader2,
-                                       ESSL300_YuvCscStandartdEXTConversionFailureShader3,
-                                       ESSL300_YuvCscStandartdEXTConversionFailureShader4,
-                                       ESSL300_YuvCscStandartdEXTConversionFailureShader5,
-                                       ESSL300_YuvCscStandartdEXTQualifiersFailureShader1,
-                                       ESSL300_YuvCscStandartdEXTQualifiersFailureShader2,
-                                       ESSL300_YuvCscStandartdEXTQualifiersFailureShader3)));
+INSTANTIATE_TEST_SUITE_P(IncorrectESSL300Shaders,
+                         EXTYUVTargetCompileFailureTest,
+                         Combine(Values(SH_GLES3_SPEC),
+                                 Values(sh::ESSLVersion300),
+                                 Values(ESSL300_YUVQualifierFailureShader1,
+                                        ESSL300_YUVQualifierFailureShader2,
+                                        ESSL300_LocationAndYUVFailureShader,
+                                        ESSL300_MultipleColorAndYUVOutputsFailureShader1,
+                                        ESSL300_MultipleColorAndYUVOutputsFailureShader2,
+                                        ESSL300_DepthAndYUVOutputsFailureShader,
+                                        ESSL300_MultipleYUVOutputsFailureShader,
+                                        ESSL300_YuvCscStandartdEXTConstructFailureShader1,
+                                        ESSL300_YuvCscStandartdEXTConstructFailureShader2,
+                                        ESSL300_YuvCscStandartdEXTConversionFailureShader1,
+                                        ESSL300_YuvCscStandartdEXTConversionFailureShader2,
+                                        ESSL300_YuvCscStandartdEXTConversionFailureShader3,
+                                        ESSL300_YuvCscStandartdEXTConversionFailureShader4,
+                                        ESSL300_YuvCscStandartdEXTConversionFailureShader5,
+                                        ESSL300_YuvCscStandartdEXTQualifiersFailureShader1,
+                                        ESSL300_YuvCscStandartdEXTQualifiersFailureShader2,
+                                        ESSL300_YuvCscStandartdEXTQualifiersFailureShader3)));
 
 class EXTYUVNotEnabledTest : public EXTYUVTargetTest
 {};
@@ -341,10 +341,10 @@ TEST_P(EXTYUVNotEnabledTest, CanOverloadConversions)
     EXPECT_TRUE(TestShaderCompile(""));
 }
 
-INSTANTIATE_TEST_CASE_P(CoreESSL300Shaders,
-                        EXTYUVNotEnabledTest,
-                        Combine(Values(SH_GLES3_SPEC),
-                                Values(sh::ESSLVersion300),
-                                Values(ESSL300_OverloadRgb2Yuv, ESSL300_OverloadYuv2Rgb)));
+INSTANTIATE_TEST_SUITE_P(CoreESSL300Shaders,
+                         EXTYUVNotEnabledTest,
+                         Combine(Values(SH_GLES3_SPEC),
+                                 Values(sh::ESSLVersion300),
+                                 Values(ESSL300_OverloadRgb2Yuv, ESSL300_OverloadYuv2Rgb)));
 
 }  // namespace

@@ -610,14 +610,14 @@ TEST_P(VulkanCommandBufferPerfTest, Run)
     run();
 }
 
-INSTANTIATE_TEST_CASE_P(,
-                        VulkanCommandBufferPerfTest,
-                        ::testing::Values(PrimaryCBHundredIndividualParams(),
-                                          PrimaryCBOneWithOneHundredParams(),
-                                          SecondaryCBParams(),
-                                          CommandPoolDestroyParams(),
-                                          CommandPoolHardResetParams(),
-                                          CommandPoolSoftResetParams(),
-                                          CommandBufferExplicitHardResetParams(),
-                                          CommandBufferExplicitSoftResetParams(),
-                                          CommandBufferImplicitResetParams()));
+INSTANTIATE_TEST_SUITE_P(,
+                         VulkanCommandBufferPerfTest,
+                         ::testing::Values(PrimaryCBHundredIndividualParams(),
+                                           PrimaryCBOneWithOneHundredParams(),
+                                           SecondaryCBParams(),
+                                           CommandPoolDestroyParams(),
+                                           CommandPoolHardResetParams(),
+                                           CommandPoolSoftResetParams(),
+                                           CommandBufferExplicitHardResetParams(),
+                                           CommandBufferExplicitSoftResetParams(),
+                                           CommandBufferImplicitResetParams()));

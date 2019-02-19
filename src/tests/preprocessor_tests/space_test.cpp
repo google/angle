@@ -51,7 +51,7 @@ TEST_P(SpaceCharTest, SpaceIgnored)
     expectSpace(str);
 }
 
-INSTANTIATE_TEST_CASE_P(SingleSpaceChar, SpaceCharTest, testing::ValuesIn(kSpaceChars));
+INSTANTIATE_TEST_SUITE_P(SingleSpaceChar, SpaceCharTest, testing::ValuesIn(kSpaceChars));
 
 // This test fixture tests the processing of a string containing consecutive
 // whitespace characters. All tests in this fixture are ran with all possible
@@ -72,11 +72,11 @@ TEST_P(SpaceStringTest, SpaceIgnored)
     expectSpace(str);
 }
 
-INSTANTIATE_TEST_CASE_P(SpaceCharCombination,
-                        SpaceStringTest,
-                        testing::Combine(testing::ValuesIn(kSpaceChars),
-                                         testing::ValuesIn(kSpaceChars),
-                                         testing::ValuesIn(kSpaceChars)));
+INSTANTIATE_TEST_SUITE_P(SpaceCharCombination,
+                         SpaceStringTest,
+                         testing::Combine(testing::ValuesIn(kSpaceChars),
+                                          testing::ValuesIn(kSpaceChars),
+                                          testing::ValuesIn(kSpaceChars)));
 
 // The tests above make sure that the space char is recorded in the
 // next token. This test makes sure that a token is not incorrectly marked

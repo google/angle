@@ -453,15 +453,15 @@ void dEQPTest<TestModuleIndex>::TearDownTestCase()
     deqp_libtester_shutdown_platform();
 }
 
-#define ANGLE_INSTANTIATE_DEQP_TEST_CASE(API, N)                             \
-    class dEQP : public dEQPTest<N>                                          \
-    {};                                                                      \
-    TEST_P(dEQP, API) { runTest(); }                                         \
-                                                                             \
-    INSTANTIATE_TEST_CASE_P(, dEQP, dEQP::GetTestingRange(),                 \
-                            [](const testing::TestParamInfo<size_t> &info) { \
-                                return dEQP::GetCaseGTestName(info.param);   \
-                            })
+#define ANGLE_INSTANTIATE_DEQP_TEST_CASE(API, N)                              \
+    class dEQP : public dEQPTest<N>                                           \
+    {};                                                                       \
+    TEST_P(dEQP, API) { runTest(); }                                          \
+                                                                              \
+    INSTANTIATE_TEST_SUITE_P(, dEQP, dEQP::GetTestingRange(),                 \
+                             [](const testing::TestParamInfo<size_t> &info) { \
+                                 return dEQP::GetCaseGTestName(info.param);   \
+                             })
 
 #ifdef ANGLE_DEQP_GLES2_TESTS
 ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES2, 0);

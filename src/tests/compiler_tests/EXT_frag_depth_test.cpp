@@ -58,10 +58,10 @@ TEST_P(EXTFragDepthTest, CompileSucceedsWithExtensionAndPragma)
 
 // The SL #version 100 shaders that are correct work similarly
 // in both GL2 and GL3, with and without the version string.
-INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
-                        EXTFragDepthTest,
-                        Combine(Values(SH_GLES2_SPEC),
-                                Values(sh::ESSLVersion100),
-                                Values(ESSL100_FragDepthShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
+                         EXTFragDepthTest,
+                         Combine(Values(SH_GLES2_SPEC),
+                                 Values(sh::ESSLVersion100),
+                                 Values(ESSL100_FragDepthShader)));
 
 }  // anonymous namespace

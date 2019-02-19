@@ -39,13 +39,13 @@ TEST_P(SingleLetterIdentifierTest, Identified)
 }
 
 // Test string: '_'
-INSTANTIATE_TEST_CASE_P(Underscore, SingleLetterIdentifierTest, testing::Values('_'));
+INSTANTIATE_TEST_SUITE_P(Underscore, SingleLetterIdentifierTest, testing::Values('_'));
 
 // Test string: [a-z]
-INSTANTIATE_TEST_CASE_P(a_z, SingleLetterIdentifierTest, CLOSED_RANGE('a', 'z'));
+INSTANTIATE_TEST_SUITE_P(a_z, SingleLetterIdentifierTest, CLOSED_RANGE('a', 'z'));
 
 // Test string: [A-Z]
-INSTANTIATE_TEST_CASE_P(A_Z, SingleLetterIdentifierTest, CLOSED_RANGE('A', 'Z'));
+INSTANTIATE_TEST_SUITE_P(A_Z, SingleLetterIdentifierTest, CLOSED_RANGE('A', 'Z'));
 
 typedef std::tuple<char, char> IdentifierParams;
 class DoubleLetterIdentifierTest : public IdentifierTest,
@@ -63,64 +63,64 @@ TEST_P(DoubleLetterIdentifierTest, Identified)
 }
 
 // Test string: "__"
-INSTANTIATE_TEST_CASE_P(Underscore_Underscore,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(testing::Values('_'), testing::Values('_')));
+INSTANTIATE_TEST_SUITE_P(Underscore_Underscore,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(testing::Values('_'), testing::Values('_')));
 
 // Test string: "_"[a-z]
-INSTANTIATE_TEST_CASE_P(Underscore_a_z,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(testing::Values('_'), CLOSED_RANGE('a', 'z')));
+INSTANTIATE_TEST_SUITE_P(Underscore_a_z,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(testing::Values('_'), CLOSED_RANGE('a', 'z')));
 
 // Test string: "_"[A-Z]
-INSTANTIATE_TEST_CASE_P(Underscore_A_Z,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(testing::Values('_'), CLOSED_RANGE('A', 'Z')));
+INSTANTIATE_TEST_SUITE_P(Underscore_A_Z,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(testing::Values('_'), CLOSED_RANGE('A', 'Z')));
 
 // Test string: "_"[0-9]
-INSTANTIATE_TEST_CASE_P(Underscore_0_9,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(testing::Values('_'), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(Underscore_0_9,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(testing::Values('_'), CLOSED_RANGE('0', '9')));
 
 // Test string: [a-z]"_"
-INSTANTIATE_TEST_CASE_P(a_z_Underscore,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('a', 'z'), testing::Values('_')));
+INSTANTIATE_TEST_SUITE_P(a_z_Underscore,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('a', 'z'), testing::Values('_')));
 
 // Test string: [a-z][a-z]
-INSTANTIATE_TEST_CASE_P(a_z_a_z,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('a', 'z'), CLOSED_RANGE('a', 'z')));
+INSTANTIATE_TEST_SUITE_P(a_z_a_z,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('a', 'z'), CLOSED_RANGE('a', 'z')));
 
 // Test string: [a-z][A-Z]
-INSTANTIATE_TEST_CASE_P(a_z_A_Z,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('a', 'z'), CLOSED_RANGE('A', 'Z')));
+INSTANTIATE_TEST_SUITE_P(a_z_A_Z,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('a', 'z'), CLOSED_RANGE('A', 'Z')));
 
 // Test string: [a-z][0-9]
-INSTANTIATE_TEST_CASE_P(a_z_0_9,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('a', 'z'), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(a_z_0_9,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('a', 'z'), CLOSED_RANGE('0', '9')));
 
 // Test string: [A-Z]"_"
-INSTANTIATE_TEST_CASE_P(A_Z_Underscore,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('A', 'Z'), testing::Values('_')));
+INSTANTIATE_TEST_SUITE_P(A_Z_Underscore,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('A', 'Z'), testing::Values('_')));
 
 // Test string: [A-Z][a-z]
-INSTANTIATE_TEST_CASE_P(A_Z_a_z,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('A', 'Z'), CLOSED_RANGE('a', 'z')));
+INSTANTIATE_TEST_SUITE_P(A_Z_a_z,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('A', 'Z'), CLOSED_RANGE('a', 'z')));
 
 // Test string: [A-Z][A-Z]
-INSTANTIATE_TEST_CASE_P(A_Z_A_Z,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('A', 'Z'), CLOSED_RANGE('A', 'Z')));
+INSTANTIATE_TEST_SUITE_P(A_Z_A_Z,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('A', 'Z'), CLOSED_RANGE('A', 'Z')));
 
 // Test string: [A-Z][0-9]
-INSTANTIATE_TEST_CASE_P(A_Z_0_9,
-                        DoubleLetterIdentifierTest,
-                        testing::Combine(CLOSED_RANGE('A', 'Z'), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(A_Z_0_9,
+                         DoubleLetterIdentifierTest,
+                         testing::Combine(CLOSED_RANGE('A', 'Z'), CLOSED_RANGE('0', '9')));
 
 // The tests above cover one-letter and various combinations of two-letter
 // identifier names. This test covers all characters in a single string.

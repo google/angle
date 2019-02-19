@@ -140,13 +140,13 @@ TEST_P(InvalidPragmaTest, Identified)
     preprocess(str, expected);
 }
 
-INSTANTIATE_TEST_CASE_P(All,
-                        InvalidPragmaTest,
-                        testing::Values("#pragma 1\n",               // Invalid name.
-                                        "#pragma foo()\n",           // Missing value.
-                                        "#pragma foo bar)\n",        // Missing left paren,
-                                        "#pragma foo(bar\n",         // Missing right paren.
-                                        "#pragma foo bar\n",         // Missing parens.
-                                        "#pragma foo(bar) baz\n"));  // Extra tokens.
+INSTANTIATE_TEST_SUITE_P(All,
+                         InvalidPragmaTest,
+                         testing::Values("#pragma 1\n",               // Invalid name.
+                                         "#pragma foo()\n",           // Missing value.
+                                         "#pragma foo bar)\n",        // Missing left paren,
+                                         "#pragma foo(bar\n",         // Missing right paren.
+                                         "#pragma foo bar\n",         // Missing parens.
+                                         "#pragma foo(bar) baz\n"));  // Extra tokens.
 
 }  // namespace angle

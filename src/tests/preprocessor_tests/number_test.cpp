@@ -28,11 +28,11 @@ TEST_P(InvalidNumberTest, InvalidNumberIdentified)
     preprocess(str);
 }
 
-INSTANTIATE_TEST_CASE_P(InvalidIntegers, InvalidNumberTest, testing::Values("1a", "08", "0xG"));
+INSTANTIATE_TEST_SUITE_P(InvalidIntegers, InvalidNumberTest, testing::Values("1a", "08", "0xG"));
 
-INSTANTIATE_TEST_CASE_P(InvalidFloats,
-                        InvalidNumberTest,
-                        testing::Values("1eg", "0.a", "0.1.2", ".0a", ".0.1"));
+INSTANTIATE_TEST_SUITE_P(InvalidFloats,
+                         InvalidNumberTest,
+                         testing::Values("1eg", "0.a", "0.1.2", ".0a", ".0.1"));
 
 typedef std::tuple<const char *, char> IntegerParams;
 class IntegerTest : public SimplePreprocessorTest, public testing::WithParamInterface<IntegerParams>
@@ -50,25 +50,25 @@ TEST_P(IntegerTest, Identified)
     EXPECT_EQ(str, token.text);
 }
 
-INSTANTIATE_TEST_CASE_P(DecimalInteger,
-                        IntegerTest,
-                        testing::Combine(testing::Values(""), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(DecimalInteger,
+                         IntegerTest,
+                         testing::Combine(testing::Values(""), CLOSED_RANGE('0', '9')));
 
-INSTANTIATE_TEST_CASE_P(OctalInteger,
-                        IntegerTest,
-                        testing::Combine(testing::Values("0"), CLOSED_RANGE('0', '7')));
+INSTANTIATE_TEST_SUITE_P(OctalInteger,
+                         IntegerTest,
+                         testing::Combine(testing::Values("0"), CLOSED_RANGE('0', '7')));
 
-INSTANTIATE_TEST_CASE_P(HexadecimalInteger_0_9,
-                        IntegerTest,
-                        testing::Combine(testing::Values("0x", "0X"), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(HexadecimalInteger_0_9,
+                         IntegerTest,
+                         testing::Combine(testing::Values("0x", "0X"), CLOSED_RANGE('0', '9')));
 
-INSTANTIATE_TEST_CASE_P(HexadecimalInteger_a_f,
-                        IntegerTest,
-                        testing::Combine(testing::Values("0x", "0X"), CLOSED_RANGE('a', 'f')));
+INSTANTIATE_TEST_SUITE_P(HexadecimalInteger_a_f,
+                         IntegerTest,
+                         testing::Combine(testing::Values("0x", "0X"), CLOSED_RANGE('a', 'f')));
 
-INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
-                        IntegerTest,
-                        testing::Combine(testing::Values("0x", "0X"), CLOSED_RANGE('A', 'F')));
+INSTANTIATE_TEST_SUITE_P(HexadecimalInteger_A_F,
+                         IntegerTest,
+                         testing::Combine(testing::Values("0x", "0X"), CLOSED_RANGE('A', 'F')));
 
 class FloatTest : public SimplePreprocessorTest
 {
@@ -102,12 +102,12 @@ TEST_P(FloatScientificTest, FloatIdentified)
     expectFloat(str);
 }
 
-INSTANTIATE_TEST_CASE_P(FloatScientific,
-                        FloatScientificTest,
-                        testing::Combine(CLOSED_RANGE('0', '9'),
-                                         testing::Values('e', 'E'),
-                                         testing::Values("", "+", "-"),
-                                         CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(FloatScientific,
+                         FloatScientificTest,
+                         testing::Combine(CLOSED_RANGE('0', '9'),
+                                          testing::Values('e', 'E'),
+                                          testing::Values("", "+", "-"),
+                                          CLOSED_RANGE('0', '9')));
 
 typedef std::tuple<char, char> FloatFractionParams;
 class FloatFractionTest : public FloatTest, public testing::WithParamInterface<FloatFractionParams>
@@ -132,17 +132,17 @@ TEST_P(FloatFractionTest, FloatIdentified)
     expectFloat(str);
 }
 
-INSTANTIATE_TEST_CASE_P(FloatFraction_X_X,
-                        FloatFractionTest,
-                        testing::Combine(CLOSED_RANGE('0', '9'), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(FloatFraction_X_X,
+                         FloatFractionTest,
+                         testing::Combine(CLOSED_RANGE('0', '9'), CLOSED_RANGE('0', '9')));
 
-INSTANTIATE_TEST_CASE_P(FloatFraction_0_X,
-                        FloatFractionTest,
-                        testing::Combine(testing::Values('\0'), CLOSED_RANGE('0', '9')));
+INSTANTIATE_TEST_SUITE_P(FloatFraction_0_X,
+                         FloatFractionTest,
+                         testing::Combine(testing::Values('\0'), CLOSED_RANGE('0', '9')));
 
-INSTANTIATE_TEST_CASE_P(FloatFraction_X_0,
-                        FloatFractionTest,
-                        testing::Combine(CLOSED_RANGE('0', '9'), testing::Values('\0')));
+INSTANTIATE_TEST_SUITE_P(FloatFraction_X_0,
+                         FloatFractionTest,
+                         testing::Combine(CLOSED_RANGE('0', '9'), testing::Values('\0')));
 
 // In the tests above we have tested individual parts of a float separately.
 // This test has all parts of a float.

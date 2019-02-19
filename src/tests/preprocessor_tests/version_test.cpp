@@ -196,6 +196,6 @@ static const VersionTestParam kParams[] = {
     {"#version 100 foo\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN},
     {"#version 0xffffffff\n", pp::Diagnostics::PP_INTEGER_OVERFLOW}};
 
-INSTANTIATE_TEST_CASE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));
+INSTANTIATE_TEST_SUITE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));
 
 }  // namespace angle

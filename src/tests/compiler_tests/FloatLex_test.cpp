@@ -63,7 +63,7 @@ class FloatLexTest : public ::testing::Test
 };
 
 typedef ::testing::Types<StrtofClampParser, NumericLexFloatParser> FloatParserTypes;
-TYPED_TEST_CASE(FloatLexTest, FloatParserTypes);
+TYPED_TEST_SUITE(FloatLexTest, FloatParserTypes);
 
 TYPED_TEST(FloatLexTest, One)
 {

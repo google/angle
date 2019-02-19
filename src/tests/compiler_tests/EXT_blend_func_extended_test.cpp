@@ -200,22 +200,22 @@ TEST_P(EXTBlendFuncExtendedTest, CompileSucceedsWithExtensionAndPragma)
 
 // The SL #version 100 shaders that are correct work similarly
 // in both GL2 and GL3, with and without the version string.
-INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
-                        EXTBlendFuncExtendedTest,
-                        Combine(Values(SH_GLES2_SPEC, SH_GLES3_SPEC),
-                                Values("", sh::ESSLVersion100),
-                                Values(ESSL100_SimpleShader1,
-                                       ESSL100_MaxDualSourceAccessShader,
-                                       ESSL100_FragDataShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
+                         EXTBlendFuncExtendedTest,
+                         Combine(Values(SH_GLES2_SPEC, SH_GLES3_SPEC),
+                                 Values("", sh::ESSLVersion100),
+                                 Values(ESSL100_SimpleShader1,
+                                        ESSL100_MaxDualSourceAccessShader,
+                                        ESSL100_FragDataShader)));
 
-INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
-                        EXTBlendFuncExtendedTest,
-                        Combine(Values(SH_GLES3_SPEC),
-                                Values(sh::ESSLVersion300),
-                                Values(ESSL300_MaxDualSourceAccessShader,
-                                       ESSL300_LocationAndUnspecifiedOutputShader,
-                                       ESSL300_TwoUnspecifiedLocationOutputsShader,
-                                       ESSL300_LocationIndexShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
+                         EXTBlendFuncExtendedTest,
+                         Combine(Values(SH_GLES3_SPEC),
+                                 Values(sh::ESSLVersion300),
+                                 Values(ESSL300_MaxDualSourceAccessShader,
+                                        ESSL300_LocationAndUnspecifiedOutputShader,
+                                        ESSL300_TwoUnspecifiedLocationOutputsShader,
+                                        ESSL300_LocationIndexShader)));
 
 class EXTBlendFuncExtendedCompileFailureTest : public EXTBlendFuncExtendedTest
 {};
@@ -230,39 +230,39 @@ TEST_P(EXTBlendFuncExtendedCompileFailureTest, CompileFails)
 }
 
 // Incorrect #version 100 shaders fail.
-INSTANTIATE_TEST_CASE_P(IncorrectESSL100Shaders,
-                        EXTBlendFuncExtendedCompileFailureTest,
-                        Combine(Values(SH_GLES2_SPEC),
-                                Values(sh::ESSLVersion100),
-                                Values(ESSL100_ColorAndDataWriteFailureShader1,
-                                       ESSL100_ColorAndDataWriteFailureShader2,
-                                       ESSL100_ColorAndDataWriteFailureShader3)));
+INSTANTIATE_TEST_SUITE_P(IncorrectESSL100Shaders,
+                         EXTBlendFuncExtendedCompileFailureTest,
+                         Combine(Values(SH_GLES2_SPEC),
+                                 Values(sh::ESSLVersion100),
+                                 Values(ESSL100_ColorAndDataWriteFailureShader1,
+                                        ESSL100_ColorAndDataWriteFailureShader2,
+                                        ESSL100_ColorAndDataWriteFailureShader3)));
 
 // Correct #version 300 es shaders fail in GLES2 context, regardless of version string.
-INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
-                        EXTBlendFuncExtendedCompileFailureTest,
-                        Combine(Values(SH_GLES2_SPEC),
-                                Values("", sh::ESSLVersion100, sh::ESSLVersion300),
-                                Values(ESSL300_LocationAndUnspecifiedOutputShader,
-                                       ESSL300_TwoUnspecifiedLocationOutputsShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
+                         EXTBlendFuncExtendedCompileFailureTest,
+                         Combine(Values(SH_GLES2_SPEC),
+                                 Values("", sh::ESSLVersion100, sh::ESSLVersion300),
+                                 Values(ESSL300_LocationAndUnspecifiedOutputShader,
+                                        ESSL300_TwoUnspecifiedLocationOutputsShader)));
 
 // Correct #version 100 shaders fail when used with #version 300 es.
-INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
-                        EXTBlendFuncExtendedCompileFailureTest,
-                        Combine(Values(SH_GLES3_SPEC),
-                                Values(sh::ESSLVersion300),
-                                Values(ESSL100_SimpleShader1, ESSL100_FragDataShader)));
+INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
+                         EXTBlendFuncExtendedCompileFailureTest,
+                         Combine(Values(SH_GLES3_SPEC),
+                                 Values(sh::ESSLVersion300),
+                                 Values(ESSL100_SimpleShader1, ESSL100_FragDataShader)));
 
 // Incorrect #version 300 es shaders always fail.
-INSTANTIATE_TEST_CASE_P(IncorrectESSL300Shaders,
-                        EXTBlendFuncExtendedCompileFailureTest,
-                        Combine(Values(SH_GLES3_1_SPEC),
-                                Values(sh::ESSLVersion300, sh::ESSLVersion310),
-                                Values(ESSL300_LocationIndexFailureShader,
-                                       ESSL300_DoubleIndexFailureShader,
-                                       ESSL300_GlobalIndexFailureShader,
-                                       ESSL300_IndexOnUniformVariableFailureShader,
-                                       ESSL300_IndexOnStructFailureShader,
-                                       ESSL300_IndexOnStructFieldFailureShader)));
+INSTANTIATE_TEST_SUITE_P(IncorrectESSL300Shaders,
+                         EXTBlendFuncExtendedCompileFailureTest,
+                         Combine(Values(SH_GLES3_1_SPEC),
+                                 Values(sh::ESSLVersion300, sh::ESSLVersion310),
+                                 Values(ESSL300_LocationIndexFailureShader,
+                                        ESSL300_DoubleIndexFailureShader,
+                                        ESSL300_GlobalIndexFailureShader,
+                                        ESSL300_IndexOnUniformVariableFailureShader,
+                                        ESSL300_IndexOnStructFailureShader,
+                                        ESSL300_IndexOnStructFieldFailureShader)));
 
 }  // namespace

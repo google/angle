@@ -512,7 +512,7 @@ const angle::PlatformParameters es2_platforms[] = {
     ES2_VULKAN(),
 };
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     ,
     MultiDrawTest,
     testing::Combine(testing::ValuesIn(::angle::FilterTestParams(platforms, ArraySize(platforms))),
@@ -521,7 +521,7 @@ INSTANTIATE_TEST_CASE_P(
                                      InstancingOption::UseInstancing)),
     PrintToStringParamName());
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     ,
     MultiDrawNoInstancingSupportTest,
     testing::Combine(testing::ValuesIn(::angle::FilterTestParams(es2_platforms,

@@ -130,6 +130,6 @@ static const ExtensionTestParam kParams[] = {
     {"#extension foo : \n", pp::Diagnostics::PP_INVALID_EXTENSION_DIRECTIVE},
     {"#extension foo : 1\n", pp::Diagnostics::PP_INVALID_EXTENSION_BEHAVIOR},
     {"#extension foo : bar baz\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN}};
-INSTANTIATE_TEST_CASE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));
+INSTANTIATE_TEST_SUITE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));
 
 }  // namespace angle

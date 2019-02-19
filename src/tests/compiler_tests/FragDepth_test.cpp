@@ -116,4 +116,4 @@ TEST_P(FragDepthTest, ExtensionFDFailsESSL300)
 }
 
 // The tests should pass regardless whether the EXT_frag_depth is on or not.
-INSTANTIATE_TEST_CASE_P(FragDepthTests, FragDepthTest, testing::Values(false, true));
+INSTANTIATE_TEST_SUITE_P(FragDepthTests, FragDepthTest, testing::Values(false, true));

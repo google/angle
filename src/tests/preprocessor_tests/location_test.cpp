@@ -370,7 +370,7 @@ static const LineTestParam kParams[] = {
     {"#line 0xffffffff\n", pp::Diagnostics::PP_INTEGER_OVERFLOW},
     {"#line 10 0xffffffff\n", pp::Diagnostics::PP_INTEGER_OVERFLOW}};
 
-INSTANTIATE_TEST_CASE_P(All, InvalidLineTest, testing::ValuesIn(kParams));
+INSTANTIATE_TEST_SUITE_P(All, InvalidLineTest, testing::ValuesIn(kParams));
 
 struct LineExpressionTestParam
 {
@@ -399,6 +399,6 @@ static const LineExpressionTestParam kParamsLineExpressionTest[] = {
     {"+9", 9},     {"(1 + 2) * 4", 12}, {"3 | 5", 7},    {"3 ^ 5", 6},    {"3 & 5", 1},
     {"~5", ~5},    {"2 << 3", 16},      {"16 >> 2", 4}};
 
-INSTANTIATE_TEST_CASE_P(All, LineExpressionTest, testing::ValuesIn(kParamsLineExpressionTest));
+INSTANTIATE_TEST_SUITE_P(All, LineExpressionTest, testing::ValuesIn(kParamsLineExpressionTest));
 
 }  // namespace angle

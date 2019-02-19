@@ -22,22 +22,22 @@ TEST_P(CommentTest, CommentIgnored)
     EXPECT_EQ(pp::Token::LAST, token.type);
 }
 
-INSTANTIATE_TEST_CASE_P(LineComment,
-                        CommentTest,
-                        testing::Values("//foo\n",  // With newline.
-                                        "//foo",    // Without newline.
-                                        "//**/",    // Nested block comment.
-                                        "////",     // Nested line comment.
-                                        "//\""));   // Invalid character.
+INSTANTIATE_TEST_SUITE_P(LineComment,
+                         CommentTest,
+                         testing::Values("//foo\n",  // With newline.
+                                         "//foo",    // Without newline.
+                                         "//**/",    // Nested block comment.
+                                         "////",     // Nested line comment.
+                                         "//\""));   // Invalid character.
 
-INSTANTIATE_TEST_CASE_P(BlockComment,
-                        CommentTest,
-                        testing::Values("/*foo*/",
-                                        "/*foo\n*/",  // With newline.
-                                        "/*//*/",     // Nested line comment.
-                                        "/*/**/",     // Nested block comment.
-                                        "/***/",      // With lone '*'.
-                                        "/*\"*/"));   // Invalid character.
+INSTANTIATE_TEST_SUITE_P(BlockComment,
+                         CommentTest,
+                         testing::Values("/*foo*/",
+                                         "/*foo\n*/",  // With newline.
+                                         "/*//*/",     // Nested line comment.
+                                         "/*/**/",     // Nested block comment.
+                                         "/***/",      // With lone '*'.
+                                         "/*\"*/"));   // Invalid character.
 
 class BlockCommentTest : public SimplePreprocessorTest
 {};

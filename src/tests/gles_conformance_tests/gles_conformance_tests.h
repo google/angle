@@ -39,7 +39,7 @@ typedef testing::Types<D3D11> ConformanceTestTypes;
     template <typename T>                   \
     class name : public ConformanceTest<T>  \
     {};                                     \
-    TYPED_TEST_CASE(name, ConformanceTestTypes);
+    TYPED_TEST_SUITE(name, ConformanceTestTypes);
 
 template <typename T>
 class ConformanceTest : public testing::Test

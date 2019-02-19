@@ -73,6 +73,6 @@ static const OperatorTestParam kOperators[] = {{"(", '('},
                                                {"^=", pp::Token::OP_XOR_ASSIGN},
                                                {"|=", pp::Token::OP_OR_ASSIGN}};
 
-INSTANTIATE_TEST_CASE_P(All, OperatorTest, testing::ValuesIn(kOperators));
+INSTANTIATE_TEST_SUITE_P(All, OperatorTest, testing::ValuesIn(kOperators));
 
 }  // namespace angle

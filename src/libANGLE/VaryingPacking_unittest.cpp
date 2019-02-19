@@ -161,6 +161,6 @@ TEST_P(VaryingPackingTest, MaxPlusOneMat2VaryingsFailsWebGL)
 }
 
 // Makes separate tests for different values of kMaxVaryings.
-INSTANTIATE_TEST_CASE_P(, VaryingPackingTest, ::testing::Values(1, 4, 8));
+INSTANTIATE_TEST_SUITE_P(, VaryingPackingTest, ::testing::Values(1, 4, 8));
 
 }  // anonymous namespace
