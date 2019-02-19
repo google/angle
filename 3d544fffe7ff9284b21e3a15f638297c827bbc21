@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f175fc8_2521a4c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-02-19T19:53:50Z",
+      "side": 1,
+      "message": "non-blocking nit: can include links to http://anglebug.com/ for workarounds.",
+      "range": {
+        "startLine": 524,
+        "startChar": 29,
+        "endLine": 524,
+        "endChar": 34
+      },
+      "revId": "3d544fffe7ff9284b21e3a15f638297c827bbc21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
