@@ -1111,12 +1111,18 @@ if (!is_component_build && is_android &&
   # Package ANGLE libraries for pre-installed system image
   angle_apk("aosp_apk") {
     package_name = "com.android.angle"
-    apk_name = "AngleLibraries"
+    apk_name = "AngleAosp"
+  }
+
+  angle_apk("google_apk") {
+    package_name = "com.google.android.angle"
+    apk_name = "ANGLEPrebuilt"
   }
 
   group("angle_apks") {
     deps = [
       ":aosp_apk",
+      ":google_apk",
     ]
   }
 
