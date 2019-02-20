@@ -1220,6 +1220,9 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt());
 
+    // http://anglebug.com/3145
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsFuchsia());
+
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
         0,   0, 255, 255, 0,   255, 0,   255, 0,   0, 0, 255,
