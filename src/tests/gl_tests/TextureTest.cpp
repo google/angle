@@ -2736,6 +2736,41 @@ TEST_P(SamplerInStructAndOtherVariableTest, SamplerInStructAndOtherVariable)
     runSamplerInStructTest();
 }
 
+// GL_EXT_texture_filter_anisotropic
+class TextureAnisotropyTest : public Texture2DTest
+{
+  protected:
+    void uploadTexture()
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture2D);
+        GLColor texDataRed[1] = {GLColor::red};
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed);
+        EXPECT_GL_NO_ERROR();
+    }
+};
+
+// Tests that setting anisotropic filtering doesn't cause failures at draw time.
+TEST_P(TextureAnisotropyTest, AnisotropyFunctional)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_filter_anisotropic"));
+
+    setUpProgram();
+
+    uploadTexture();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2.0f);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::red);
+}
+
 // GL_OES_texture_border_clamp
 class TextureBorderClampTest : public Texture2DTest
 {
@@ -4373,6 +4408,12 @@ ANGLE_INSTANTIATE_TEST(SamplerInNestedStructAsFunctionParameterTest,
 ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
+ANGLE_INSTANTIATE_TEST(TextureAnisotropyTest,
+                       ES2_D3D11(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
