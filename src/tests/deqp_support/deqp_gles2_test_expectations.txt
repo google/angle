@@ -139,21 +139,6 @@
 // Android GLES backend only failures
 1484 GLES ANDROID : dEQP-GLES2.functional.vertex_arrays.* = SKIP
 1485 GLES ANDROID : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_neg_x_neg_z_and_pos_x_pos_z_and_neg_x_neg_y_pos_z = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_none_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_rbo_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_tex_none = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_tex_rbo = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_tex_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_none_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_rbo_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_tex_none = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_tex_rbo = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_tex_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_none_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_rbo_tex = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_tex_none = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_tex_rbo = FAIL
-1486 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_tex_tex = FAIL
 1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.depth_stencil_unsigned_int_24_8 = FAIL
 1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
 1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
