@@ -138,12 +138,6 @@
 
 // Android GLES backend only failures
 1484 GLES ANDROID : dEQP-GLES2.functional.vertex_arrays.* = SKIP
-1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.depth_stencil_unsigned_int_24_8 = FAIL
-1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
-1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
-1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
-1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = FAIL
-1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_vertex = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_fragment = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.output_write_always_vertex = FAIL
@@ -165,9 +159,9 @@
 2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
 // Windows Linux and Mac failures
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
-1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
+1028 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
+1028 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
+1028 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
 // General Vulkan failures
 // Nothing here!
