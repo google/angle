@@ -137,7 +137,6 @@
 2137 MAC AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
 
 // Android GLES backend only failures
-1484 GLES ANDROID : dEQP-GLES2.functional.vertex_arrays.* = SKIP
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_vertex = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_fragment = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.output_write_always_vertex = FAIL
