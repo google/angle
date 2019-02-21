@@ -32,12 +32,7 @@ template("angle_apk") {
 
   android_resources("${invoker.package_name}_resources") {
     resource_dirs = [ "android/res" ]
-
-    custom_package = "com.android.angle.common"
-    deps = [
-      "//third_party/android_deps:android_support_v14_preference_java",
-      "//third_party/android_deps:android_support_v7_preference_java",
-    ]
+    custom_package = "${invoker.package_name}"
   }
 
   android_assets("${invoker.package_name}_assets") {
@@ -54,9 +49,6 @@ template("angle_apk") {
     deps = [
       ":${invoker.package_name}_assets",
       ":${invoker.package_name}_resources",
-      "//base:base_java",
-      "//third_party/android_deps:android_support_v14_preference_java",
-      "//third_party/android_deps:android_support_v7_preference_java",
     ]
     if (symbol_level != 0) {
       deps += [ ":compressed_symbols" ]
@@ -77,9 +69,10 @@ template("angle_apk") {
         }
         if (angle_enable_vulkan_validation_layers) {
           foreach(_layer, vulkan_validation_layers) {
-            secondary_abi_shared_libraries +=
-                [ "${angle_root}/third_party/vulkan-validation-layers:${_layer}" +
-                  "($android_secondary_abi_toolchain)" ]
+            secondary_abi_shared_libraries += [
+              "${angle_root}/third_party/vulkan-validation-layers:${_layer}" +
+                  "($android_secondary_abi_toolchain)",
+            ]
           }
         }
       } else {
@@ -88,8 +81,7 @@ template("angle_apk") {
                 "root_out_dir")
         secondary_abi_loadable_modules = []
         foreach(_library, angle_libraries) {
-          secondary_abi_loadable_modules +=
-            [ "${_secondary_out_dir}/lib.compressed/lib${_library}${angle_libs_suffix}.so" ]
+          secondary_abi_loadable_modules += [ "${_secondary_out_dir}/lib.compressed/lib${_library}${angle_libs_suffix}.so" ]
         }
         if (angle_enable_vulkan_validation_layers) {
           foreach(_layer, vulkan_validation_layers) {
@@ -115,9 +107,7 @@ template("angle_apk") {
     } else {
       loadable_modules = []
       foreach(_library, angle_libraries) {
-        loadable_modules += [
-          "${root_out_dir}/lib.compressed/lib${_library}${angle_libs_suffix}.so",
-        ]
+        loadable_modules += [ "${root_out_dir}/lib.compressed/lib${_library}${angle_libs_suffix}.so" ]
       }
       if (angle_enable_vulkan_validation_layers) {
         foreach(_layer, vulkan_validation_layers) {
@@ -125,19 +115,6 @@ template("angle_apk") {
               [ "${root_out_dir}/lib.compressed/lib${_layer}.so" ]
         }
       }
-    }
-
-    # Common files required by all builds
-    java_files = [
-      "android/src/com/android/angle/common/GlobalSettings.java",
-      "android/src/com/android/angle/common/MainFragment.java",
-      "android/src/com/android/angle/common/Receiver.java",
-    ]
-
-    if (target_name == "aosp_apk") {
-      java_files += [ "android/src/com/android/angle/MainActivity.java" ]
-    } else if (target_name == "google_apk") {
-      java_files += [ "android/src/com/google/android/angle/MainActivity.java" ]
     }
   }
 }
