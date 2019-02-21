@@ -365,6 +365,9 @@ void main()
 // Use glDispatchCompute to define work group count.
 TEST_P(ComputeShaderTest, DispatchCompute)
 {
+    // D3D Debug device reports an error. http://anglebug.com/3512
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
 layout(rgba32ui) uniform highp writeonly uimage2D imageOut;

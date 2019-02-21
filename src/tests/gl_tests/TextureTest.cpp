@@ -1936,6 +1936,8 @@ TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
     ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
     // Flaky hangs on Win10 AMD RX 550 GL. http://anglebug.com/3371
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
+    // D3D Debug device reports an error. http://anglebug.com/3501
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
 
     // The workaround in the GL backend required to trigger this bug generates driver warning
     // messages.
