@@ -138,7 +138,6 @@
 
 // Android GLES backend only failures
 1484 GLES ANDROID : dEQP-GLES2.functional.vertex_arrays.* = SKIP
-1485 GLES ANDROID : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_neg_x_neg_z_and_pos_x_pos_z_and_neg_x_neg_y_pos_z = FAIL
 1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.depth_stencil_unsigned_int_24_8 = FAIL
 1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
 1487 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
