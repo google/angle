@@ -1345,6 +1345,11 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->maxDualSourceDrawBuffers = 1;
     }
 
+    // EXT_float_blend
+    // Assume all desktop driver supports this by default.
+    extensions->floatBlend = functions->standard == STANDARD_GL_DESKTOP ||
+                             functions->hasGLESExtension("GL_EXT_float_blend");
+
     // GL_CHROMIUM_compressed_texture_etc
     // Expose this extension only when we support the formats or we're running on top of a native
     // ES driver.

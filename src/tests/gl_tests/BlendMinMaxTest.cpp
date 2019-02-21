@@ -171,7 +171,7 @@ TEST_P(BlendMinMaxTest, RGBA8)
 
 TEST_P(BlendMinMaxTest, RGBA32F)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 || !extensionEnabled("GL_EXT_float_blend") ||
                        !extensionEnabled("GL_EXT_color_buffer_float"));
 
     // Ignore SDK layers messages on D3D11 FL 9.3 (http://anglebug.com/1284)
