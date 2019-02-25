@@ -5,7 +5,6 @@
 angle_unittests_sources = [
   "../common/FastVector_unittest.cpp",
   "../common/FixedVector_unittest.cpp",
-  "../common/PoolAlloc_unittest.cpp",
   "../common/Optional_unittest.cpp",
   "../common/aligned_memory_unittest.cpp",
   "../common/angleutils_unittest.cpp",

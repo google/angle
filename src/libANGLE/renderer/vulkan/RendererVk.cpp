@@ -1816,7 +1816,7 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
     //
     //     Post-submission work             Begin execution
     //
-    //            ????                    Write timestamp Tgpu
+    //            ????                    Write timstamp Tgpu
     //
     //            ????                       End execution
     //

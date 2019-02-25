@@ -30,7 +30,7 @@ class ImmutableStringBuilderTest : public testing::Test
         allocator.pop();
     }
 
-    angle::PoolAllocator allocator;
+    TPoolAllocator allocator;
 };
 
 // Test writing a 32-bit signed int as hexadecimal using ImmutableStringBuilder.
