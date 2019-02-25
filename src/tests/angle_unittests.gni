@@ -14,7 +14,6 @@ angle_unittests_sources = [
   "../common/mathutil_unittest.cpp",
   "../common/matrix_utils_unittest.cpp",
   "../common/string_utils_unittest.cpp",
-  "../common/system_utils_unittest.cpp",
   "../common/utilities_unittest.cpp",
   "../common/vector_utils_unittest.cpp",
   "../feature_support_util/feature_support_util_unittest.cpp",
