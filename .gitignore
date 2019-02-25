@@ -31,7 +31,7 @@
 /third_party/fuchsia-sdk
 /third_party/gles1_conform
 /third_party/glslang/src
-/third_party/googletest/src
+/third_party/googletest
 /third_party/jsoncpp
 /third_party/libpng/src
 /third_party/llvm-build
