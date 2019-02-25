@@ -90,6 +90,14 @@ angle_tests_main("angle_perftests_main") {
   main = "angle_perftests_main"
 }
 
+angle_test("angle_unittests_helper") {
+  sources = angle_unittests_helper_sources
+
+  deps = [
+    "${angle_root}:angle_common",
+  ]
+}
+
 angle_test("angle_unittests") {
   sources = angle_unittests_sources
 
@@ -105,6 +113,13 @@ angle_test("angle_unittests") {
            "${angle_root}:libfeature_support${angle_libs_suffix}",
            ":angle_unittests_main",
          ]
+  if (!is_android && !is_fuchsia) {
+    # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
+    # platforms yet.
+    data_deps = [
+      ":angle_unittests_helper",
+    ]
+  }
 }
 
 if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
