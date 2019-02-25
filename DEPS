@@ -112,6 +112,10 @@ deps = {
       'dep_type': 'cipd',
   },
 
+  '{angle_root}/third_party/rapidjson/src': {
+    'url': '{chromium_git}/external/github.com/Tencent/rapidjson@7484e06c589873e1ed80382d262087e4fa80fb63',
+  },
+
   '{angle_root}/third_party/spirv-headers/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@{spirv_headers_revision}',
     'condition': 'not build_with_chromium',

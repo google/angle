@@ -37,6 +37,7 @@
 /third_party/llvm-build
 /third_party/qemu-linux-x64
 /third_party/qemu-mac-x64
+/third_party/rapidjson/src
 /third_party/spirv-headers/src
 /third_party/spirv-tools/src
 /third_party/vulkan-headers/src
