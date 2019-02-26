@@ -31,6 +31,7 @@ enum class CommandGraphResourceType
     Image,
     Query,
     FenceSync,
+    DebugMarker,
 };
 
 // Certain functionality cannot be put in secondary command buffers, so they are special-cased in
@@ -43,6 +44,9 @@ enum class CommandGraphNodeFunction
     WriteTimestamp,
     SetFenceSync,
     WaitFenceSync,
+    InsertDebugMarker,
+    PushDebugMarker,
+    PopDebugMarker,
 };
 
 // Receives notifications when a command buffer is no longer able to record. Can be used with
@@ -131,6 +135,8 @@ class CommandGraphNode final : angle::NonCopyable
 
     void setQueryPool(const QueryPool *queryPool, uint32_t queryIndex);
     void setFenceSync(const vk::Event &event);
+    void setDebugMarker(GLenum source, std::string &&marker);
+    const std::string &getDebugMarker() const { return mDebugMarker; }
 
     ANGLE_INLINE void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
     {
@@ -177,6 +183,9 @@ class CommandGraphNode final : angle::NonCopyable
     uint32_t mQueryIndex;
     // GLsync and EGLSync:
     VkEvent mFenceSyncEvent;
+    // Debug markers:
+    GLenum mDebugMarkerSource;
+    std::string mDebugMarker;
 
     // Parents are commands that must be submitted before 'this' CommandNode can be submitted.
     std::vector<CommandGraphNode *> mParents;
@@ -369,6 +378,10 @@ class CommandGraph final : angle::NonCopyable
     // GLsync and EGLSync:
     void setFenceSync(const vk::Event &event);
     void waitFenceSync(const vk::Event &event);
+    // Debug markers:
+    void insertDebugMarker(GLenum source, std::string &&marker);
+    void pushDebugMarker(GLenum source, std::string &&marker);
+    void popDebugMarker();
 
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphResourceType resourceType,

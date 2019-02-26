@@ -205,6 +205,10 @@ class RendererVk : angle::NonCopyable
     bool hasTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
     bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
+    void insertDebugMarker(GLenum source, GLuint id, std::string &&marker);
+    void pushDebugMarker(GLenum source, GLuint id, std::string &&marker);
+    void popDebugMarker();
+
     static constexpr size_t kMaxExtensionNames = 200;
     using ExtensionNameList = angle::FixedVector<const char *, kMaxExtensionNames>;
 
