@@ -70,6 +70,30 @@
       "revId": "7085305f6eda7d0a277b6c59fd6f4250d8d6f9da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dd2dc50_ca0658f7",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-02-27T19:22:25Z",
+      "side": 1,
+      "message": "Right now we\u0027re doing this:\n\n// On dual-GPU systems we assume the non-Intel GPU is the primary one.\n\nThis is clearly not correct. Let\u0027s bring it up with NVIDIA on the best practice for predicting which GPU will be initialized on a dual-GPU optimus system. Could you file an issue on the ANGLE tracker indicating the issue with GetSystemInfo and cc kkinnunen@nvidia.com ?",
+      "parentUuid": "23ed6d06_5f87b1ce",
+      "range": {
+        "startLine": 127,
+        "startChar": 51,
+        "endLine": 127,
+        "endChar": 66
+      },
+      "revId": "7085305f6eda7d0a277b6c59fd6f4250d8d6f9da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
