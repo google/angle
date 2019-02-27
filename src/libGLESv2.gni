@@ -790,6 +790,8 @@ libangle_vulkan_sources = [
   "src/libANGLE/renderer/vulkan/RenderTargetVk.h",
   "src/libANGLE/renderer/vulkan/SamplerVk.cpp",
   "src/libANGLE/renderer/vulkan/SamplerVk.h",
+  "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.cpp",
+  "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
   "src/libANGLE/renderer/vulkan/ShaderVk.cpp",
   "src/libANGLE/renderer/vulkan/ShaderVk.h",
   "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",

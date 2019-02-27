@@ -202,11 +202,6 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                     uint32_t regionCount,
                     const VkBufferCopy *regions);
 
-    void copyBuffer(const VkBuffer &srcBuffer,
-                    const VkBuffer &destBuffer,
-                    uint32_t regionCount,
-                    const VkBufferCopy *regions);
-
     void copyBufferToImage(VkBuffer srcBuffer,
                            const Image &dstImage,
                            VkImageLayout dstImageLayout,
@@ -601,15 +596,6 @@ ANGLE_INLINE void CommandBuffer::copyBuffer(const vk::Buffer &srcBuffer,
     ASSERT(valid());
     ASSERT(srcBuffer.valid() && destBuffer.valid());
     vkCmdCopyBuffer(mHandle, srcBuffer.getHandle(), destBuffer.getHandle(), regionCount, regions);
-}
-
-ANGLE_INLINE void CommandBuffer::copyBuffer(const VkBuffer &srcBuffer,
-                                            const VkBuffer &destBuffer,
-                                            uint32_t regionCount,
-                                            const VkBufferCopy *regions)
-{
-    ASSERT(valid());
-    vkCmdCopyBuffer(mHandle, srcBuffer, destBuffer, regionCount, regions);
 }
 
 ANGLE_INLINE void CommandBuffer::copyBufferToImage(VkBuffer srcBuffer,
