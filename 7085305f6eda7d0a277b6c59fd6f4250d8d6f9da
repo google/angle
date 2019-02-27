@@ -94,6 +94,30 @@
       "revId": "7085305f6eda7d0a277b6c59fd6f4250d8d6f9da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f8224f5_4c378175",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-02-27T19:29:43Z",
+      "side": 1,
+      "message": "Actually, this heuristic of FindPrimaryGPU() gets overridden by the code that follows it in GetSystemInfo(), at least in SystemInfo_win.cpp.\nWhich results in the integrated GPU (Intel) being the primary and not the discreet NVIDIA, contrary to what FindPrimaryGPU() wants.\nSure, I can open a bug.",
+      "parentUuid": "9dd2dc50_ca0658f7",
+      "range": {
+        "startLine": 127,
+        "startChar": 51,
+        "endLine": 127,
+        "endChar": 66
+      },
+      "revId": "7085305f6eda7d0a277b6c59fd6f4250d8d6f9da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
