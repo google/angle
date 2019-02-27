@@ -18,6 +18,10 @@
 #    include "util/windows/WGLWindow.h"
 #endif  // defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
 
+#if defined(ANGLE_PLATFORM_WINDOWS)
+#    include <VersionHelpers.h>
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
+
 namespace angle
 {
 
@@ -1276,7 +1280,13 @@ void ANGLETestBase::ignoreD3D11SDKLayersWarnings()
 
 void ANGLETestBase::treatPlatformWarningsAsErrors()
 {
-    mPlatformContext.warningsAsErrors = true;
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    // Disable on Windows 7-8. We are falling back to the old compiler DLL.
+    if (!IsWindows10OrGreater())
+    {
+        mPlatformContext.warningsAsErrors = true;
+    }
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 }
 
 ANGLETestBase::ScopedIgnorePlatformMessages::ScopedIgnorePlatformMessages(ANGLETestBase *test)

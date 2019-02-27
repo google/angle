@@ -149,7 +149,7 @@ angle::Result HLSLCompiler::ensureInitialized(d3d::Context *context)
         }
         else
         {
-            WARN() << "Failed to load HLSL compiler library. Trying old DLL.";
+            WARN() << "Failed to load HLSL compiler library. Using 'old' DLL.";
             mD3DCompilerModule = LoadLibraryA(kOldCompilerLibrary);
             if (mD3DCompilerModule)
             {
@@ -162,7 +162,7 @@ angle::Result HLSLCompiler::ensureInitialized(d3d::Context *context)
     if (!mD3DCompilerModule)
     {
         DWORD lastError = GetLastError();
-        ERR() << "LoadLibrary(" << D3DCOMPILER_DLL_A << ") failed. GetLastError=" << lastError;
+        ERR() << "D3D Compiler LoadLibrary failed. GetLastError=" << lastError;
         ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3DCompilerLoadLibraryResult", D3DCompilerFailure,
                                     D3DCompilerEnumBoundary);
         ANGLE_TRY_HR(context, E_OUTOFMEMORY, "LoadLibrary failed to load D3D Compiler DLL.");
