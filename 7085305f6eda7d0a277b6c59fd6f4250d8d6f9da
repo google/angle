@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f89388e_a1f7bc3b",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-02-27T01:30:30Z",
+      "side": 1,
+      "message": "On my Intel/Nvidia laptop this is always Intel, regardless of the actual GPU used.\nI think that this is not what this code would expect.",
+      "range": {
+        "startLine": 127,
+        "startChar": 51,
+        "endLine": 127,
+        "endChar": 66
+      },
+      "revId": "7085305f6eda7d0a277b6c59fd6f4250d8d6f9da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
