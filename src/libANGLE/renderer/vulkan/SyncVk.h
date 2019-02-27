@@ -41,15 +41,12 @@ class FenceSyncVk
     angle::Result getStatus(vk::Context *context, bool *signaled);
 
   private:
-    bool hasPendingWork(RendererVk *renderer);
-
     // The vkEvent that's signaled on `init` and can be waited on in `serverWait`, or queried with
     // `getStatus`.
     vk::Event mEvent;
-    // The serial in which the event was inserted.  Used in `clientWait` to know whether flush is
-    // necessary, and to be able to wait on the vkFence that's automatically inserted at the end of
-    // each submissions.
-    Serial mSignalSerial;
+    // The vkFence that's signaled once the command buffer including the `init` signal is executed.
+    // `clientWait` waits on this fence.
+    vk::Shared<vk::Fence> mFence;
 };
 
 class SyncVk final : public SyncImpl

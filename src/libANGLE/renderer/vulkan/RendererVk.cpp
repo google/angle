@@ -468,8 +468,9 @@ RendererVk::CommandBatch::CommandBatch() = default;
 RendererVk::CommandBatch::~CommandBatch() = default;
 
 RendererVk::CommandBatch::CommandBatch(CommandBatch &&other)
-    : commandPool(std::move(other.commandPool)), fence(std::move(other.fence)), serial(other.serial)
-{}
+{
+    *this = std::move(other);
+}
 
 RendererVk::CommandBatch &RendererVk::CommandBatch::operator=(CommandBatch &&other)
 {
@@ -482,7 +483,7 @@ RendererVk::CommandBatch &RendererVk::CommandBatch::operator=(CommandBatch &&oth
 void RendererVk::CommandBatch::destroy(VkDevice device)
 {
     commandPool.destroy(device);
-    fence.destroy(device);
+    fence.reset(device);
 }
 
 // RendererVk implementation.
@@ -1371,12 +1372,12 @@ void RendererVk::freeAllInFlightResources()
         // On device loss we need to wait for fence to be signaled before destroying it
         if (mDeviceLost)
         {
-            VkResult status = batch.fence.wait(mDevice, kMaxFenceWaitTimeNs);
+            VkResult status = batch.fence.get().wait(mDevice, kMaxFenceWaitTimeNs);
             // If wait times out, it is probably not possible to recover from lost device
             ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
         }
-        batch.fence.destroy(mDevice);
         batch.commandPool.destroy(mDevice);
+        batch.fence.reset(mDevice);
     }
     mInFlightCommands.clear();
 
@@ -1395,7 +1396,7 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 
     for (CommandBatch &batch : mInFlightCommands)
     {
-        VkResult result = batch.fence.getStatus(mDevice);
+        VkResult result = batch.fence.get().getStatus(mDevice);
         if (result == VK_NOT_READY)
         {
             break;
@@ -1405,7 +1406,7 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
         ASSERT(batch.serial > mLastCompletedQueueSerial);
         mLastCompletedQueueSerial = batch.serial;
 
-        batch.fence.destroy(mDevice);
+        batch.fence.reset(mDevice);
         TRACE_EVENT0("gpu.angle", "commandPool.destroy");
         batch.commandPool.destroy(mDevice);
         ++finishedCount;
@@ -1434,15 +1435,12 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
                                       vk::CommandBuffer &&commandBuffer)
 {
     TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
-    VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags             = 0;
 
     vk::Scoped<CommandBatch> scopedBatch(mDevice);
     CommandBatch &batch = scopedBatch.get();
-    ANGLE_VK_TRY(context, batch.fence.init(mDevice, fenceInfo));
+    ANGLE_TRY(getSubmitFence(context, &batch.fence));
 
-    ANGLE_VK_TRY(context, vkQueueSubmit(mQueue, 1, &submitInfo, batch.fence.getHandle()));
+    ANGLE_VK_TRY(context, vkQueueSubmit(mQueue, 1, &submitInfo, batch.fence.get().getHandle()));
 
     // Store this command buffer in the in-flight list.
     batch.commandPool = std::move(mCommandPool);
@@ -1450,10 +1448,12 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
     mInFlightCommands.emplace_back(scopedBatch.release());
 
+    // Make sure a new fence is created for the next submission.
+    mSubmitFence.reset(mDevice);
+
     // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done on
     // swap() though, and there could be multiple submissions in between (through glFlush() calls),
-    // so the limit is larger than the expected number of images.  The
-    // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
+    // so the limit is larger than the expected number of images.
     ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
 
     nextSerial();
@@ -1505,24 +1505,6 @@ bool RendererVk::isSerialInUse(Serial serial) const
 
 angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 {
-    bool timedOut        = false;
-    angle::Result result = finishToSerialOrTimeout(context, serial, kMaxFenceWaitTimeNs, &timedOut);
-
-    // Don't tolerate timeout.  If such a large wait time results in timeout, something's wrong.
-    if (timedOut)
-    {
-        result = angle::Result::Stop;
-    }
-    return result;
-}
-
-angle::Result RendererVk::finishToSerialOrTimeout(vk::Context *context,
-                                                  Serial serial,
-                                                  uint64_t timeout,
-                                                  bool *outTimedOut)
-{
-    *outTimedOut = false;
-
     if (!isSerialInUse(serial) || mInFlightCommands.empty())
     {
         return angle::Result::Continue;
@@ -1542,15 +1524,9 @@ angle::Result RendererVk::finishToSerialOrTimeout(vk::Context *context,
     const CommandBatch &batch = mInFlightCommands[batchIndex];
 
     // Wait for it finish
-    VkResult status = batch.fence.wait(mDevice, kMaxFenceWaitTimeNs);
+    VkResult status = batch.fence.get().wait(mDevice, kMaxFenceWaitTimeNs);
 
-    // If timed out, report it as such.
-    if (status == VK_TIMEOUT)
-    {
-        *outTimedOut = true;
-        return angle::Result::Continue;
-    }
-
+    // Don't tolerate timeout.  If such a large wait time results in timeout, something's wrong.
     ANGLE_VK_TRY(context, status);
 
     // Clean up finished batches.
@@ -1712,6 +1688,26 @@ const vk::Semaphore *RendererVk::getSubmitLastSignaledSemaphore(vk::Context *con
     mSubmitSemaphorePool.freeSemaphore(context, &mSubmitLastSignaledSemaphore);
 
     return semaphore;
+}
+
+angle::Result RendererVk::getSubmitFence(vk::Context *context,
+                                         vk::Shared<vk::Fence> *sharedFenceOut)
+{
+    if (!mSubmitFence.isReferenced())
+    {
+        vk::Fence fence;
+
+        VkFenceCreateInfo fenceCreateInfo = {};
+        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceCreateInfo.flags             = 0;
+
+        ANGLE_VK_TRY(context, fence.init(mDevice, fenceCreateInfo));
+
+        mSubmitFence.assign(mDevice, std::move(fence));
+    }
+
+    sharedFenceOut->copy(mDevice, mSubmitFence);
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestampOut)

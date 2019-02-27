@@ -113,11 +113,6 @@ class RendererVk : angle::NonCopyable
 
     // Wait for completion of batches until (at least) batch with given serial is finished.
     angle::Result finishToSerial(vk::Context *context, Serial serial);
-    // A variant of finishToSerial that can time out.  Timeout status returned in outTimedOut.
-    angle::Result finishToSerialOrTimeout(vk::Context *context,
-                                          Serial serial,
-                                          uint64_t timeout,
-                                          bool *outTimedOut);
 
     uint32_t getQueueFamilyIndex() const { return mCurrentQueueFamilyIndex; }
 
@@ -162,6 +157,9 @@ class RendererVk : angle::NonCopyable
     // Get the last signaled semaphore to wait on externally.  The semaphore will not be waited on
     // by next submission.
     const vk::Semaphore *getSubmitLastSignaledSemaphore(vk::Context *context);
+
+    // Get (or allocate) the fence that will be signaled on next submission.
+    angle::Result getSubmitFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
 
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
@@ -290,7 +288,7 @@ class RendererVk : angle::NonCopyable
         void destroy(VkDevice device);
 
         vk::CommandPool commandPool;
-        vk::Fence fence;
+        vk::Shared<vk::Fence> fence;
         Serial serial;
     };
 
@@ -327,6 +325,14 @@ class RendererVk : angle::NonCopyable
 
     // A pool of semaphores used to support the aforementioned mid-frame submissions.
     vk::DynamicSemaphorePool mSubmitSemaphorePool;
+
+    // mSubmitFence is the fence that's going to be signaled at the next submission.  This is used
+    // to support SyncVk objects, which may outlive the context (as EGLSync objects).
+    //
+    // TODO(geofflang): this is in preparation for moving RendererVk functionality to ContextVk, and
+    // is otherwise unnecessary as the SyncVk objects don't actually outlive the renderer currently.
+    // http://anglebug.com/2701
+    vk::Shared<vk::Fence> mSubmitFence;
 
     // See CommandGraph.h for a desription of the Command Graph.
     vk::CommandGraph mCommandGraph;

@@ -319,6 +319,7 @@ class RefCounted : angle::NonCopyable
 
     RefCounted(RefCounted &&copy) : mRefCount(copy.mRefCount), mObject(std::move(copy.mObject))
     {
+        ASSERT(this != &copy);
         copy.mRefCount = 0;
     }
 
@@ -380,6 +381,76 @@ class BindingPointer final : angle::NonCopyable
     const T &get() const { return mRefCounted->get(); }
 
     bool valid() const { return mRefCounted != nullptr; }
+
+  private:
+    RefCounted<T> *mRefCounted;
+};
+
+// Helper class to share ref-counted Vulkan objects.  Requires that T have a destroy method
+// that takes a VkDevice and returns void.
+template <typename T>
+class Shared final : angle::NonCopyable
+{
+  public:
+    Shared() : mRefCounted(nullptr) {}
+    ~Shared() { ASSERT(mRefCounted == nullptr); }
+
+    Shared(Shared &&other) { *this = std::move(other); }
+    Shared &operator=(Shared &&other)
+    {
+        ASSERT(this != &other);
+        mRefCounted       = other.mRefCounted;
+        other.mRefCounted = nullptr;
+        return *this;
+    }
+
+    void set(VkDevice device, RefCounted<T> *refCounted)
+    {
+        if (mRefCounted)
+        {
+            mRefCounted->releaseRef();
+            if (!mRefCounted->isReferenced())
+            {
+                mRefCounted->get().destroy(device);
+                SafeDelete(mRefCounted);
+            }
+        }
+
+        mRefCounted = refCounted;
+
+        if (mRefCounted)
+        {
+            mRefCounted->addRef();
+        }
+    }
+
+    void assign(VkDevice device, T &&newObject)
+    {
+        set(device, new RefCounted<T>(std::move(newObject)));
+    }
+
+    void copy(VkDevice device, const Shared<T> &other) { set(device, other.mRefCounted); }
+
+    void reset(VkDevice device) { set(device, nullptr); }
+
+    bool isReferenced() const
+    {
+        // If reference is zero, the object should have been deleted.  I.e. if the object is not
+        // nullptr, it should have a reference.
+        ASSERT(!mRefCounted || mRefCounted->isReferenced());
+        return mRefCounted != nullptr;
+    }
+
+    T &get()
+    {
+        ASSERT(mRefCounted && mRefCounted->isReferenced());
+        return mRefCounted->get();
+    }
+    const T &get() const
+    {
+        ASSERT(mRefCounted && mRefCounted->isReferenced());
+        return mRefCounted->get();
+    }
 
   private:
     RefCounted<T> *mRefCounted;
