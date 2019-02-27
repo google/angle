@@ -34,6 +34,29 @@
       "revId": "b823137940789c00070898e5893307bb18efd273",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d422e569_ff828e1d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-02-27T19:18:07Z",
+      "side": 1,
+      "message": "these changes don\u0027t seem to be related.",
+      "range": {
+        "startLine": 168,
+        "startChar": 15,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "b823137940789c00070898e5893307bb18efd273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
