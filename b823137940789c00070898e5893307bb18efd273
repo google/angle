@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aadfb0e_7ada24cd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-02-27T14:49:58Z",
+      "side": 1,
+      "message": "For functions like it this it would look nicer to put the renderer into a local variable.",
+      "revId": "b823137940789c00070898e5893307bb18efd273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
