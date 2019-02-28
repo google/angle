@@ -1281,11 +1281,9 @@ void ANGLETestBase::ignoreD3D11SDKLayersWarnings()
 void ANGLETestBase::treatPlatformWarningsAsErrors()
 {
 #if defined(ANGLE_PLATFORM_WINDOWS)
-    // Disable on Windows 7-8. We are falling back to the old compiler DLL.
-    if (!IsWindows10OrGreater())
-    {
-        mPlatformContext.warningsAsErrors = true;
-    }
+    // Only do warnings-as-errors on 8 and above. We may fall back to the old
+    // compiler DLL on Windows 7.
+    mPlatformContext.warningsAsErrors = IsWindows8OrGreater();
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 }
 
