@@ -16,6 +16,24 @@
       "revId": "4b314eefc839f688cf2367b2cc288a8e954d1c4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7919d395_114ef2af",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2019-02-28T23:20:24Z",
+      "side": 1,
+      "message": "I think this fixes it. Comment on the review with any thoughts.\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/1496015/",
+      "parentUuid": "9e030852_a240d62e",
+      "revId": "4b314eefc839f688cf2367b2cc288a8e954d1c4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
