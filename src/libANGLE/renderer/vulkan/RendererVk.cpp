@@ -79,19 +79,28 @@ bool StrLess(const char *a, const char *b)
     return strcmp(a, b) < 0;
 }
 
-VkResult VerifyExtensionsPresent(const RendererVk::ExtensionNameList &haystack,
-                                 const RendererVk::ExtensionNameList &needles)
-{
-    // NOTE: The lists must be sorted.
-    return std::includes(haystack.begin(), haystack.end(), needles.begin(), needles.end(), StrLess)
-               ? VK_SUCCESS
-               : VK_ERROR_EXTENSION_NOT_PRESENT;
-}
-
 bool ExtensionFound(const char *needle, const RendererVk::ExtensionNameList &haystack)
 {
     // NOTE: The list must be sorted.
     return std::binary_search(haystack.begin(), haystack.end(), needle, StrLess);
+}
+
+VkResult VerifyExtensionsPresent(const RendererVk::ExtensionNameList &haystack,
+                                 const RendererVk::ExtensionNameList &needles)
+{
+    // NOTE: The lists must be sorted.
+    if (std::includes(haystack.begin(), haystack.end(), needles.begin(), needles.end(), StrLess))
+    {
+        return VK_SUCCESS;
+    }
+    for (const char *needle : needles)
+    {
+        if (!ExtensionFound(needle, haystack))
+        {
+            ERR() << "Extension not supported: " << needle;
+        }
+    }
+    return VK_ERROR_EXTENSION_NOT_PRESENT;
 }
 
 // Array of Validation error/warning messages that will be ignored, should include bugID
@@ -1199,8 +1208,10 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    mFeatures.supportsAndroidHardwareBuffer = ExtensionFound(
-        VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME, deviceExtensionNames);
+    mFeatures.supportsAndroidHardwareBuffer =
+        ExtensionFound(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME,
+                       deviceExtensionNames) &&
+        ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames);
 #endif
 }
 
