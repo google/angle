@@ -1213,6 +1213,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
                        deviceExtensionNames) &&
         ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames);
 #endif
+
+    if (IsLinux() && IsIntel(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.disableFifoPresentMode = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()

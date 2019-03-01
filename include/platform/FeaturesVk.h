@@ -14,6 +14,8 @@ namespace angle
 
 struct FeaturesVk
 {
+    FeaturesVk();
+
     // Line segment rasterization must follow OpenGL rules. This means using an algorithm similar
     // to Bresenham's. Vulkan uses a different algorithm. This feature enables the use of pixel
     // shader patching to implement OpenGL basic line rasterization rules. This feature will
@@ -66,8 +68,12 @@ struct FeaturesVk
     // Whether the VkDevice supports the VK_ANDROID_external_memory_android_hardware_buffer
     // extension, on which the EGL_ANDROID_image_native_buffer extension can be layered.
     bool supportsAndroidHardwareBuffer = false;
+
+    // VK_PRESENT_MODE_FIFO_KHR causes random timeouts on Linux Intel. http://anglebug.com/3153
+    bool disableFifoPresentMode = false;
 };
 
+inline FeaturesVk::FeaturesVk() = default;
 }  // namespace angle
 
 #endif  // ANGLE_PLATFORM_FEATURESVK_H_
