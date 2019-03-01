@@ -55,6 +55,7 @@ View the [Dev setup instructions](doc/DevSetup.md).
 
 * Join our [Google group](https://groups.google.com/group/angleproject) to keep up to date.
 * Join us on IRC in the #ANGLEproject channel on FreeNode.
+* Join us on [Slack](https://chromium.slack.com) in the #angle channel.
 * [File bugs](http://anglebug.com/new) in the [issue tracker](https://bugs.chromium.org/p/angleproject/issues/list) (preferably with an isolated test-case).
 * [Choose an ANGLE branch](doc/ChoosingANGLEBranch.md) to track in your own project.
 
@@ -66,6 +67,7 @@ View the [Dev setup instructions](doc/DevSetup.md).
 * Use ANGLE's [coding standard](doc/CodingStandard.md).
 * Learn how to [build ANGLE for Chromium development](doc/BuildingAngleForChromiumDevelopment.md).
 * Get help on [debugging ANGLE](doc/DebuggingTips.md).
+* Go through [ANGLE's orientation](doc/Orientation.md) and sift through [starter projects](doc/Starter-Projects.md).
 
 
 * Read about WebGL on the [Khronos WebGL Wiki](http://khronos.org/webgl/wiki/Main_Page).
