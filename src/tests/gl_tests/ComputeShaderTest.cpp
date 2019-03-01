@@ -2749,6 +2749,14 @@ void main()
     EXPECT_EQ(expectedValue, outputValues);
 }
 
+// Test that invalid memory barrier will produce an error.
+TEST_P(ComputeShaderTest, InvalidMemoryBarrier)
+{
+    GLbitfield barriers = 0;
+    glMemoryBarrier(barriers);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11());
