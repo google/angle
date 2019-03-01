@@ -30,7 +30,7 @@ using RefCountedPipelineLayout      = RefCounted<PipelineLayout>;
 
 // Packed Vk resource descriptions.
 // Most Vk types use many more bits than required to represent the underlying data.
-// Since ANGLE wants cache things like RenderPasses and Pipeline State Objects using
+// Since ANGLE wants to cache things like RenderPasses and Pipeline State Objects using
 // hashing (and also needs to check equality) we can optimize these operations by
 // using fewer bits. Hence the packed types.
 //
@@ -86,19 +86,21 @@ bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
 constexpr size_t kRenderPassDescSize = sizeof(RenderPassDesc);
 static_assert(kRenderPassDescSize == 12, "Size check failed");
 
-struct alignas(8) PackedAttachmentOpsDesc final
+struct PackedAttachmentOpsDesc final
 {
-    uint8_t loadOp;
-    uint8_t storeOp;
-    uint8_t stencilLoadOp;
-    uint8_t stencilStoreOp;
+    // VkAttachmentLoadOp is in range [0, 2], and VkAttachmentStoreOp is in range [0, 1].
+    uint16_t loadOp : 2;
+    uint16_t storeOp : 1;
+    uint16_t stencilLoadOp : 2;
+    uint16_t stencilStoreOp : 1;
 
-    // 16-bits to force pad the structure to exactly 8 bytes.
-    uint16_t initialLayout;
-    uint16_t finalLayout;
+    // 5-bits to force pad the structure to exactly 2 bytes.  Note that we currently don't support
+    // any of the extension layouts, whose values start at 1'000'000'000.
+    uint16_t initialLayout : 5;
+    uint16_t finalLayout : 5;
 };
 
-static_assert(sizeof(PackedAttachmentOpsDesc) == 8, "Size check failed");
+static_assert(sizeof(PackedAttachmentOpsDesc) == 2, "Size check failed");
 
 class AttachmentOpsArray final
 {
@@ -122,7 +124,7 @@ class AttachmentOpsArray final
 
 bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs);
 
-static_assert(sizeof(AttachmentOpsArray) == 80, "Size check failed");
+static_assert(sizeof(AttachmentOpsArray) == 20, "Size check failed");
 
 struct PackedAttribDesc final
 {
