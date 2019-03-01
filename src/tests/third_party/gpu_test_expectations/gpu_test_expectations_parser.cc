@@ -75,6 +75,7 @@ enum Token {
   kConfigMacElCapitan,
   kConfigMacSierra,
   kConfigMacHighSierra,
+  kConfigMacMojave,
   kConfigMac,
   kConfigLinux,
   kConfigChromeOS,
@@ -132,6 +133,7 @@ const TokenInfo kTokenData[] = {
     {"elcapitan", GPUTestConfig::kOsMacElCapitan},
     {"sierra", GPUTestConfig::kOsMacSierra},
     {"highsierra", GPUTestConfig::kOsMacHighSierra},
+    {"mojave", GPUTestConfig::kOsMacMojave},
     {"mac", GPUTestConfig::kOsMac},
     {"linux", GPUTestConfig::kOsLinux},
     {"chromeos", GPUTestConfig::kOsChromeOS},
@@ -221,8 +223,7 @@ GPUTestExpectationsParser::GPUTestExpectationsParser() {
             sizeof(kErrorMessage) / sizeof(kErrorMessage[0]));
 }
 
-GPUTestExpectationsParser::~GPUTestExpectationsParser() {
-}
+GPUTestExpectationsParser::~GPUTestExpectationsParser() = default;
 
 bool GPUTestExpectationsParser::LoadTestExpectations(const std::string& data) {
   entries_.clear();
@@ -297,6 +298,7 @@ bool GPUTestExpectationsParser::ParseConfig(
       case kConfigMacElCapitan:
       case kConfigMacSierra:
       case kConfigMacHighSierra:
+      case kConfigMacMojave:
       case kConfigMac:
       case kConfigLinux:
       case kConfigChromeOS:
@@ -359,6 +361,7 @@ bool GPUTestExpectationsParser::ParseLine(
       case kConfigMacElCapitan:
       case kConfigMacSierra:
       case kConfigMacHighSierra:
+      case kConfigMacMojave:
       case kConfigMac:
       case kConfigLinux:
       case kConfigChromeOS:
@@ -484,6 +487,7 @@ bool GPUTestExpectationsParser::UpdateTestConfig(GPUTestConfig* config,
     case kConfigMacElCapitan:
     case kConfigMacSierra:
     case kConfigMacHighSierra:
+    case kConfigMacMojave:
     case kConfigMac:
     case kConfigLinux:
     case kConfigChromeOS:

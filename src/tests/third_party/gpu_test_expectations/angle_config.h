@@ -21,6 +21,7 @@
 #define DCHECK_NE(A, B) ASSERT((A) != (B))
 #define DCHECK(X) ASSERT(X)
 #define DLOG(X) std::cerr
+#define DVLOG(X) std::cerr
 #define LOG(X) std::cerr
 
 #define GPU_EXPORT
@@ -48,6 +49,7 @@ class Size
   public:
     int width() const { return 0; }
     int height() const { return 0; }
+    std::string ToString() const { return "0x0"; }
 };
 }  // namespace gfx
 
@@ -64,6 +66,8 @@ struct DxDiagNode
 #    define OS_LINUX
 #elif defined(__APPLE__)
 #    define OS_MACOSX
+#elif defined(__Fuchsia__)
+#    define OS_FUCHSIA
 #else
 #    error "Unsupported platform"
 #endif
