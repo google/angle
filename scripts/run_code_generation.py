@@ -162,6 +162,7 @@ generators = {
     },
 }
 
+
 def md5(fname):
     hash_md5 = hashlib.md5()
     with open(fname, "r") as f:
@@ -169,7 +170,8 @@ def md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-def any_input_dirty(name, inputs):
+
+def any_input_dirty(name, inputs, new_hashes, old_hashes):
     found_dirty_input = False
     for finput in inputs:
         key = name + ":" + finput
@@ -178,47 +180,63 @@ def any_input_dirty(name, inputs):
             found_dirty_input = True
     return found_dirty_input
 
-os.chdir(script_dir)
-old_hashes = json.load(open(hash_fname))
-new_hashes = {}
-any_dirty = False
 
-verify_only = False
-if len(sys.argv) > 1 and sys.argv[1] == '--verify-no-dirty':
-    verify_only = True
+def any_old_hash_missing(new_hashes, old_hashes):
+    for name, _ in old_hashes.iteritems():
+        if name not in new_hashes:
+            return True
+    return False
 
-for name, info in sorted(generators.iteritems()):
 
-    # Reset the CWD to the root ANGLE directory.
-    os.chdir(root_dir)
-    script = info['script']
+def main():
+    os.chdir(script_dir)
+    old_hashes = json.load(open(hash_fname))
+    new_hashes = {}
+    any_dirty = False
 
-    if any_input_dirty(name, info['inputs'] + [script]):
+    verify_only = False
+    if len(sys.argv) > 1 and sys.argv[1] == '--verify-no-dirty':
+        verify_only = True
+
+    for name, info in sorted(generators.iteritems()):
+
+        # Reset the CWD to the root ANGLE directory.
+        os.chdir(root_dir)
+        script = info['script']
+
+        if any_input_dirty(name, info['inputs'] + [script], new_hashes, old_hashes):
+            any_dirty = True
+
+            if not verify_only:
+                # Set the CWD to the script directory.
+                os.chdir(get_child_script_dirname(script))
+
+                print('Running ' + name + ' code generator')
+                if subprocess.call(['python', os.path.basename(script)]) != 0:
+                    sys.exit(1)
+
+    if any_old_hash_missing(new_hashes, old_hashes):
         any_dirty = True
 
-        if not verify_only:
-            # Set the CWD to the script directory.
-            os.chdir(get_child_script_dirname(script))
+    if verify_only:
+        sys.exit(any_dirty)
 
-            print('Running ' + name + ' code generator')
-            if subprocess.call(['python', os.path.basename(script)]) != 0:
-                sys.exit(1)
+    if any_dirty:
+        args = []
+        if os.name == 'nt':
+            args += ['git.bat']
+        else:
+            args += ['git']
+        # The diff can be so large the arguments to clang-format can break the Windows command
+        # line length limits. Work around this by calling git cl format with --full.
+        args += ['cl', 'format', '--full']
+        print('Calling git cl format')
+        subprocess.call(args)
 
-if verify_only:
-    sys.exit(any_dirty)
+        os.chdir(script_dir)
+        json.dump(new_hashes, open(hash_fname, "w"), indent=2, sort_keys=True,
+                  separators=(',', ':\n    '))
 
-if any_dirty:
-    args = []
-    if os.name == 'nt':
-        args += ['git.bat']
-    else:
-        args += ['git']
-    # The diff can be so large the arguments to clang-format can break the Windows command
-    # line length limits. Work around this by calling git cl format with --full.
-    args += ['cl', 'format', '--full']
-    print('Calling git cl format')
-    subprocess.call(args)
 
-    os.chdir(script_dir)
-    json.dump(new_hashes, open(hash_fname, "w"), indent=2, sort_keys=True,
-              separators=(',', ':\n    '))
+if __name__ == '__main__':
+    sys.exit(main())
