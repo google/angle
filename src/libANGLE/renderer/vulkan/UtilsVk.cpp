@@ -389,7 +389,7 @@ angle::Result UtilsVk::clearBuffer(vk::Context *context,
     shaderParams.clearValue = params.clearValue;
 
     VkDescriptorSet descriptorSet;
-    vk::SharedDescriptorPoolBinding descriptorPoolBinding;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(mDescriptorPools[Function::BufferClear].allocateSets(
         context, mDescriptorSetLayouts[Function::BufferClear][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
@@ -451,7 +451,7 @@ angle::Result UtilsVk::copyBuffer(vk::Context *context,
     shaderParams.srcOffset  = params.srcOffset;
 
     VkDescriptorSet descriptorSet;
-    vk::SharedDescriptorPoolBinding descriptorPoolBinding;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(mDescriptorPools[Function::BufferCopy].allocateSets(
         context, mDescriptorSetLayouts[Function::BufferCopy][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
@@ -534,7 +534,7 @@ angle::Result UtilsVk::convertVertexBuffer(vk::Context *context,
     flags |= isAligned ? ConvertVertex_comp::kIsAligned : 0;
 
     VkDescriptorSet descriptorSet;
-    vk::SharedDescriptorPoolBinding descriptorPoolBinding;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(mDescriptorPools[Function::ConvertVertexBuffer].allocateSets(
         context, mDescriptorSetLayouts[Function::ConvertVertexBuffer][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
@@ -710,7 +710,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     flags |= src->getLayerCount() > 1 ? ImageCopy_frag::kSrcIsArray : 0;
 
     VkDescriptorSet descriptorSet;
-    vk::SharedDescriptorPoolBinding descriptorPoolBinding;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(mDescriptorPools[Function::ImageCopy].allocateSets(
         contextVk, mDescriptorSetLayouts[Function::ImageCopy][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));

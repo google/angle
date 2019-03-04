@@ -215,7 +215,7 @@ void ProgramVk::reset(RendererVk *renderer)
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
 
-    for (vk::SharedDescriptorPoolBinding &binding : mDescriptorPoolBindings)
+    for (vk::RefCountedDescriptorPoolBinding &binding : mDescriptorPoolBindings)
     {
         binding.reset();
     }

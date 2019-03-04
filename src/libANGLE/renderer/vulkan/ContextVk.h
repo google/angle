@@ -344,7 +344,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     vk::DynamicBuffer mDriverUniformsBuffer;
     VkDescriptorSet mDriverUniformsDescriptorSet;
     vk::BindingPointer<vk::DescriptorSetLayout> mDriverUniformsSetLayout;
-    vk::SharedDescriptorPoolBinding mDriverUniformsDescriptorPoolBinding;
+    vk::RefCountedDescriptorPoolBinding mDriverUniformsDescriptorPoolBinding;
 
     // This cache should also probably include the texture index (shader location) and array
     // index (also in the shader). This info is used in the descriptor update step.

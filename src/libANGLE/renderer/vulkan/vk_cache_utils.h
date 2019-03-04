@@ -25,8 +25,8 @@ class ImageHelper;
 using RenderPassAndSerial = ObjectAndSerial<RenderPass>;
 using PipelineAndSerial   = ObjectAndSerial<Pipeline>;
 
-using SharedDescriptorSetLayout = RefCounted<DescriptorSetLayout>;
-using SharedPipelineLayout      = RefCounted<PipelineLayout>;
+using RefCountedDescriptorSetLayout = RefCounted<DescriptorSetLayout>;
+using RefCountedPipelineLayout      = RefCounted<PipelineLayout>;
 
 // Packed Vk resource descriptions.
 // Most Vk types use many more bits than required to represent the underlying data.
@@ -772,7 +772,7 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
         vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut);
 
   private:
-    std::unordered_map<vk::DescriptorSetLayoutDesc, vk::SharedDescriptorSetLayout> mPayload;
+    std::unordered_map<vk::DescriptorSetLayoutDesc, vk::RefCountedDescriptorSetLayout> mPayload;
 };
 
 class PipelineLayoutCache final : angle::NonCopyable
@@ -789,7 +789,7 @@ class PipelineLayoutCache final : angle::NonCopyable
                                     vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
 
   private:
-    std::unordered_map<vk::PipelineLayoutDesc, vk::SharedPipelineLayout> mPayload;
+    std::unordered_map<vk::PipelineLayoutDesc, vk::RefCountedPipelineLayout> mPayload;
 };
 
 // Some descriptor set and pipeline layout constants.

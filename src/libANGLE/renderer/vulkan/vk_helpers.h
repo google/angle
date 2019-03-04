@@ -126,8 +126,8 @@ class DescriptorPoolHelper
     Serial mMostRecentSerial;
 };
 
-using SharedDescriptorPoolHelper  = RefCounted<DescriptorPoolHelper>;
-using SharedDescriptorPoolBinding = BindingPointer<DescriptorPoolHelper>;
+using RefCountedDescriptorPoolHelper  = RefCounted<DescriptorPoolHelper>;
+using RefCountedDescriptorPoolBinding = BindingPointer<DescriptorPoolHelper>;
 
 class DynamicDescriptorPool final : angle::NonCopyable
 {
@@ -148,7 +148,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     angle::Result allocateSets(Context *context,
                                const VkDescriptorSetLayout *descriptorSetLayout,
                                uint32_t descriptorSetCount,
-                               SharedDescriptorPoolBinding *bindingOut,
+                               RefCountedDescriptorPoolBinding *bindingOut,
                                VkDescriptorSet *descriptorSetsOut);
 
     // For testing only!
@@ -159,7 +159,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
 
     uint32_t mMaxSetsPerPool;
     size_t mCurrentPoolIndex;
-    std::vector<SharedDescriptorPoolHelper *> mDescriptorPools;
+    std::vector<RefCountedDescriptorPoolHelper *> mDescriptorPools;
     std::vector<VkDescriptorPoolSize> mPoolSizes;
 };
 

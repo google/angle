@@ -1391,7 +1391,7 @@ void DescriptorSetLayoutCache::destroy(VkDevice device)
 {
     for (auto &item : mPayload)
     {
-        vk::SharedDescriptorSetLayout &layout = item.second;
+        vk::RefCountedDescriptorSetLayout &layout = item.second;
         ASSERT(!layout.isReferenced());
         layout.get().destroy(device);
     }
@@ -1407,7 +1407,7 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
-        vk::SharedDescriptorSetLayout &layout = iter->second;
+        vk::RefCountedDescriptorSetLayout &layout = iter->second;
         descriptorSetLayoutOut->set(&layout);
         return angle::Result::Continue;
     }
@@ -1425,8 +1425,9 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     vk::DescriptorSetLayout newLayout;
     ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
 
-    auto insertedItem = mPayload.emplace(desc, vk::SharedDescriptorSetLayout(std::move(newLayout)));
-    vk::SharedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
+    auto insertedItem =
+        mPayload.emplace(desc, vk::RefCountedDescriptorSetLayout(std::move(newLayout)));
+    vk::RefCountedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
     descriptorSetLayoutOut->set(&insertedLayout);
 
     return angle::Result::Continue;
@@ -1444,7 +1445,7 @@ void PipelineLayoutCache::destroy(VkDevice device)
 {
     for (auto &item : mPayload)
     {
-        vk::SharedPipelineLayout &layout = item.second;
+        vk::RefCountedPipelineLayout &layout = item.second;
         layout.get().destroy(device);
     }
 
@@ -1460,7 +1461,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
-        vk::SharedPipelineLayout &layout = iter->second;
+        vk::RefCountedPipelineLayout &layout = iter->second;
         pipelineLayoutOut->set(&layout);
         return angle::Result::Continue;
     }
@@ -1518,8 +1519,8 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     vk::PipelineLayout newLayout;
     ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
 
-    auto insertedItem = mPayload.emplace(desc, vk::SharedPipelineLayout(std::move(newLayout)));
-    vk::SharedPipelineLayout &insertedLayout = insertedItem.first->second;
+    auto insertedItem = mPayload.emplace(desc, vk::RefCountedPipelineLayout(std::move(newLayout)));
+    vk::RefCountedPipelineLayout &insertedLayout = insertedItem.first->second;
     pipelineLayoutOut->set(&insertedLayout);
 
     return angle::Result::Continue;

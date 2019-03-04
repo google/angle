@@ -516,13 +516,13 @@ angle::Result DynamicDescriptorPool::init(Context *context,
         mPoolSizes[i].descriptorCount *= mMaxSetsPerPool;
     }
 
-    mDescriptorPools.push_back(new SharedDescriptorPoolHelper());
+    mDescriptorPools.push_back(new RefCountedDescriptorPoolHelper());
     return mDescriptorPools[0]->get().init(context, mPoolSizes, mMaxSetsPerPool);
 }
 
 void DynamicDescriptorPool::destroy(VkDevice device)
 {
-    for (SharedDescriptorPoolHelper *pool : mDescriptorPools)
+    for (RefCountedDescriptorPoolHelper *pool : mDescriptorPools)
     {
         ASSERT(!pool->isReferenced());
         pool->get().destroy(device);
@@ -535,7 +535,7 @@ void DynamicDescriptorPool::destroy(VkDevice device)
 angle::Result DynamicDescriptorPool::allocateSets(Context *context,
                                                   const VkDescriptorSetLayout *descriptorSetLayout,
                                                   uint32_t descriptorSetCount,
-                                                  SharedDescriptorPoolBinding *bindingOut,
+                                                  RefCountedDescriptorPoolBinding *bindingOut,
                                                   VkDescriptorSet *descriptorSetsOut)
 {
     if (!bindingOut->valid() || !bindingOut->get().hasCapacity(descriptorSetCount))
@@ -580,7 +580,7 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
 
     if (!found)
     {
-        mDescriptorPools.push_back(new SharedDescriptorPoolHelper());
+        mDescriptorPools.push_back(new RefCountedDescriptorPoolHelper());
         mCurrentPoolIndex = mDescriptorPools.size() - 1;
 
         static constexpr size_t kMaxPools = 99999;
