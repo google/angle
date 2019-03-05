@@ -139,10 +139,9 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
 }
 
 #if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-static constexpr VkSubpassContents kRenderPassContents = VK_SUBPASS_CONTENTS_INLINE;
+constexpr VkSubpassContents kRenderPassContents = VK_SUBPASS_CONTENTS_INLINE;
 #else
-static constexpr VkSubpassContents kRenderPassContents =
-    VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
+constexpr VkSubpassContents kRenderPassContents = VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 #endif
 
 // Helpers to unify executeCommands call based on underlying cmd buffer type
@@ -303,7 +302,6 @@ CommandGraphNode::CommandGraphNode(CommandGraphNodeFunction function,
 CommandGraphNode::~CommandGraphNode()
 {
     mRenderPassFramebuffer.setHandle(VK_NULL_HANDLE);
-
     // Command buffers are managed by the command pool, so don't need to be freed.
     mOutsideRenderPassCommands.releaseHandle();
     mInsideRenderPassCommands.releaseHandle();
@@ -503,7 +501,6 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
                 RenderPass *renderPass = nullptr;
                 ANGLE_TRY(renderPassCache->getCompatibleRenderPass(context, serial, mRenderPassDesc,
                                                                    &renderPass));
-
                 ANGLE_VK_TRY(context, mInsideRenderPassCommands.end());
 
                 VkRenderPassBeginInfo beginInfo = {};
@@ -634,7 +631,10 @@ CommandGraph::CommandGraph(bool enableGraphDiagnostics, angle::PoolAllocator *po
     : mEnableGraphDiagnostics(enableGraphDiagnostics),
       mPoolAllocator(poolAllocator),
       mLastBarrierIndex(kInvalidNodeIndex)
-{}
+{
+    // Push so that allocations made from here will be recycled in clear() below.
+    mPoolAllocator->push();
+}
 
 CommandGraph::~CommandGraph()
 {
@@ -776,6 +776,12 @@ bool CommandGraph::empty() const
 void CommandGraph::clear()
 {
     mLastBarrierIndex = kInvalidNodeIndex;
+    // Release cmd graph pool memory now that cmds are submitted
+    // NOTE: This frees all memory since last push. Right now only the CommandGraph
+    //  will push the allocator (at creation and below). If other people start
+    //  pushing the allocator this (and/or the allocator) will need to be updated.
+    mPoolAllocator->pop();
+    mPoolAllocator->push();
 
     // TODO(jmadill): Use pool allocator for performance. http://anglebug.com/2951
     for (CommandGraphNode *node : mNodes)
