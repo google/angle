@@ -16,6 +16,24 @@
       "revId": "76d0feef5079eae77bcdb2c7b89f616ab361b914",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "653090f3_081be3cf",
+        "filename": "src/common/constexpr_array.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-03-05T16:31:32Z",
+      "side": 1,
+      "message": "Guess so. :) Just got curious and wondered why std::sort wasn\u0027t already constexpr. Turns out it will be, eventually.",
+      "parentUuid": "51d6ffce_3aeee9d7",
+      "revId": "76d0feef5079eae77bcdb2c7b89f616ab361b914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
