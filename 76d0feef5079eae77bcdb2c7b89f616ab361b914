@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51d6ffce_3aeee9d7",
+        "filename": "src/common/constexpr_array.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-05T16:18:17Z",
+      "side": 1,
+      "message": "Did you read my mind about adding this comment? :D",
+      "revId": "76d0feef5079eae77bcdb2c7b89f616ab361b914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
