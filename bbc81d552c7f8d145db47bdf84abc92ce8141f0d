@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9f98c117_11c9e9c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 28
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-03-05T18:33:19Z",
+      "side": 1,
+      "message": "Wasn\u0027t sure if we\u0027d end up using the data directory specified in the GN currently. It\u0027s still tricky to support the bot build and local builds on Linux and Windows. Maybe your solution of using the copies rule was a good idea. We could maybe ask for a patch to glmark2 to CWD to the current local binary directory.",
+      "parentUuid": "c1626831_49eb206e",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 46
+      },
+      "revId": "bbc81d552c7f8d145db47bdf84abc92ce8141f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8673f3f6_789f7bd3",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 28
@@ -45,6 +69,30 @@
       "revId": "bbc81d552c7f8d145db47bdf84abc92ce8141f0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43bc70f2_72aeec26",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 28
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-03-05T18:33:19Z",
+      "side": 1,
+      "message": "Can I leave that for later? I think there might be a problem initializing on Linux ANGLE right now. The eglGetPlatformDisplay path in glmark2 is going to use the EGL_EXT_platform_x11 extension. I think you or I should implement that in ANGLE rather than trying to modify glmark2.",
+      "parentUuid": "8673f3f6_789f7bd3",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 0
+      },
+      "revId": "bbc81d552c7f8d145db47bdf84abc92ce8141f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
