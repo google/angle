@@ -222,6 +222,30 @@
       "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8577bf_27d5efe0",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-05T16:30:06Z",
+      "side": 1,
+      "message": "Where the switches O(1)? They were on GL enums, which would be hard to turn into a jump table. I believe this is O(n+m)-\u003eO(log(n*m)).",
+      "parentUuid": "ac7a3d86_731d91dc",
+      "range": {
+        "startLine": 308,
+        "startChar": 37,
+        "endLine": 308,
+        "endChar": 48
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
