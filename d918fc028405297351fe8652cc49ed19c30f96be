@@ -107,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "336ce7e5_8a717053",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-03-05T16:26:55Z",
+      "side": 1,
+      "message": "Yeah. Seems to work in my checking.",
+      "parentUuid": "8a789289_29f58cae",
+      "range": {
+        "startLine": 261,
+        "startChar": 67,
+        "endLine": 261,
+        "endChar": 90
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "40495e18_2b045645",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 5
@@ -130,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "b8cf0a79_23614931",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-03-05T16:26:55Z",
+      "side": 1,
+      "message": "git cl format is as git cl format does. :/",
+      "parentUuid": "40495e18_2b045645",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 38
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5adf0aa2_362defc3",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 5
@@ -150,6 +198,30 @@
       "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac7a3d86_731d91dc",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2019-03-05T16:26:55Z",
+      "side": 1,
+      "message": "Remember the \"N\" here is 34. So log (34) is probably smaller than a somewhat large constant cost of the hashing, indirection and comparison. I think for constexpr data using sorted lists makes a lot of sense.",
+      "parentUuid": "5adf0aa2_362defc3",
+      "range": {
+        "startLine": 308,
+        "startChar": 37,
+        "endLine": 308,
+        "endChar": 48
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
