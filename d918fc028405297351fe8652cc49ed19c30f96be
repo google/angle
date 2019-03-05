@@ -81,6 +81,75 @@
       "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a789289_29f58cae",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-05T16:21:22Z",
+      "side": 1,
+      "message": "Have you verified that our compilers indeed do this?",
+      "range": {
+        "startLine": 261,
+        "startChar": 67,
+        "endLine": 261,
+        "endChar": 90
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40495e18_2b045645",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-05T16:21:22Z",
+      "side": 1,
+      "message": "weird formatting",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 38
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5adf0aa2_362defc3",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-05T16:21:22Z",
+      "side": 1,
+      "message": "Is this O(log(n)) instead of O(1) now?\nWhy not have a hash of hashes to match what switches were doing?",
+      "range": {
+        "startLine": 308,
+        "startChar": 37,
+        "endLine": 308,
+        "endChar": 48
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
