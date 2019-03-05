@@ -51,6 +51,13 @@ if (build_with_chromium) {
     if (build_angle_gles1_conform_tests) {
       deps += [ "//src/tests:angle_gles1_conformance_tests" ]
     }
+
+    if (is_win) {
+      deps += [
+        "//third_party/glmark2:glmark2_angle",
+        "//third_party/glmark2:glmark2_wgl",
+      ]
+    }
   }
 }
 

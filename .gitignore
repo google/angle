@@ -30,9 +30,11 @@
 /third_party/deqp/src
 /third_party/fuchsia-sdk
 /third_party/gles1_conform
+/third_party/glmark2/src
 /third_party/glslang/src
 /third_party/googletest
 /third_party/jsoncpp
+/third_party/libjpeg_turbo
 /third_party/libpng/src
 /third_party/llvm-build
 /third_party/qemu-linux-x64
@@ -44,6 +46,7 @@
 /third_party/vulkan-loader/src
 /third_party/vulkan-tools/src
 /third_party/vulkan-validation-layers/src
+/third_party/yasm
 /third_party/zlib
 angle_internal
 build
@@ -56,7 +59,6 @@ Debug_x64/
 diag.txt
 ipch
 lib/*
-Makefile
 out
 patches-*
 Release/
