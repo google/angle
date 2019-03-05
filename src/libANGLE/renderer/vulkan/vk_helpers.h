@@ -626,6 +626,7 @@ class ImageHelper final : public CommandGraphResource
                            VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
                            CommandBufferT *commandBuffer);
+
     gl::Extents getSize(const gl::ImageIndex &index) const;
 
     static void Copy(ImageHelper *srcImage,

@@ -506,7 +506,7 @@ RendererVk::RendererVk()
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
       mDeviceLost(false),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
-      mPoolAllocator(kDefaultPoolAllocatorPageSize),
+      mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
       mCommandGraph(kEnableCommandGraphDiagnostics, &mPoolAllocator),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},

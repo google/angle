@@ -14,102 +14,6 @@ namespace rx
 {
 namespace vk
 {
-
-// Allocate/initialize memory for the command and return pointer to Cmd Header
-template <class StructType>
-StructType *SecondaryCommandBuffer::initCommand(CommandID cmdID, size_t variableSize)
-{
-    size_t paramSize      = sizeof(StructType);
-    size_t completeSize   = sizeof(CommandHeader) + paramSize + variableSize;
-    CommandHeader *header = static_cast<CommandHeader *>(mAllocator->allocate(completeSize));
-    // Update cmd ID in header
-    header->id   = cmdID;
-    header->next = nullptr;
-    // Update mHead ptr
-    mHead = (mHead == nullptr) ? header : mHead;
-    // Update prev cmd's "next" ptr and mLast ptr
-    if (mLast)
-    {
-        mLast->next = header;
-    }
-    // Update mLast ptr
-    mLast = header;
-
-    uint8_t *fixedParamPtr = reinterpret_cast<uint8_t *>(header) + sizeof(CommandHeader);
-    mPtrCmdData            = fixedParamPtr + sizeof(StructType);
-    return reinterpret_cast<StructType *>(fixedParamPtr);
-}
-
-template <class PtrType>
-void SecondaryCommandBuffer::storePointerParameter(const PtrType *paramData,
-                                                   const PtrType **writePtr,
-                                                   size_t sizeInBytes)
-{
-    *writePtr = reinterpret_cast<const PtrType *>(mPtrCmdData);
-    memcpy(mPtrCmdData, paramData, sizeInBytes);
-    mPtrCmdData += sizeInBytes;
-}
-
-void SecondaryCommandBuffer::bindDescriptorSets(VkPipelineBindPoint bindPoint,
-                                                const PipelineLayout &layout,
-                                                uint32_t firstSet,
-                                                uint32_t descriptorSetCount,
-                                                const VkDescriptorSet *descriptorSets,
-                                                uint32_t dynamicOffsetCount,
-                                                const uint32_t *dynamicOffsets)
-{
-    size_t descSize   = descriptorSetCount * sizeof(VkDescriptorSet);
-    size_t offsetSize = dynamicOffsetCount * sizeof(uint32_t);
-    size_t varSize    = descSize + offsetSize;
-    BindDescriptorSetParams *paramStruct =
-        initCommand<BindDescriptorSetParams>(CommandID::BindDescriptorSets, varSize);
-    // Copy params into memory
-    paramStruct->bindPoint          = bindPoint;
-    paramStruct->layout             = layout.getHandle();
-    paramStruct->firstSet           = firstSet;
-    paramStruct->descriptorSetCount = descriptorSetCount;
-    paramStruct->dynamicOffsetCount = dynamicOffsetCount;
-    // Copy variable sized data
-    storePointerParameter(descriptorSets, &paramStruct->descriptorSets, descSize);
-    storePointerParameter(dynamicOffsets, &paramStruct->dynamicOffsets, offsetSize);
-}
-
-void SecondaryCommandBuffer::bindIndexBuffer(const Buffer &buffer,
-                                             VkDeviceSize offset,
-                                             VkIndexType indexType)
-{
-    BindIndexBufferParams *paramStruct =
-        initCommand<BindIndexBufferParams>(CommandID::BindIndexBuffer, 0);
-    paramStruct->buffer    = buffer.getHandle();
-    paramStruct->offset    = offset;
-    paramStruct->indexType = indexType;
-}
-
-void SecondaryCommandBuffer::bindPipeline(VkPipelineBindPoint pipelineBindPoint,
-                                          const Pipeline &pipeline)
-{
-    BindPipelineParams *paramStruct = initCommand<BindPipelineParams>(CommandID::BindPipeline, 0);
-    paramStruct->pipelineBindPoint  = pipelineBindPoint;
-    paramStruct->pipeline           = pipeline.getHandle();
-}
-
-void SecondaryCommandBuffer::bindVertexBuffers(uint32_t firstBinding,
-                                               uint32_t bindingCount,
-                                               const VkBuffer *buffers,
-                                               const VkDeviceSize *offsets)
-{
-    size_t buffSize   = bindingCount * sizeof(VkBuffer);
-    size_t offsetSize = bindingCount * sizeof(VkDeviceSize);
-    BindVertexBuffersParams *paramStruct =
-        initCommand<BindVertexBuffersParams>(CommandID::BindVertexBuffers, buffSize + offsetSize);
-    // Copy params
-    paramStruct->firstBinding = firstBinding;
-    paramStruct->bindingCount = bindingCount;
-    // Copy variable sized data
-    storePointerParameter(buffers, &paramStruct->buffers, buffSize);
-    storePointerParameter(offsets, &paramStruct->offsets, offsetSize);
-}
-
 void SecondaryCommandBuffer::blitImage(const Image &srcImage,
                                        VkImageLayout srcImageLayout,
                                        const Image &dstImage,
@@ -305,37 +209,11 @@ void SecondaryCommandBuffer::setScissor(uint32_t firstScissor,
     storePointerParameter(scissors, &paramStruct->scissors, scissorSize);
 }
 
-void SecondaryCommandBuffer::draw(uint32_t vertexCount,
-                                  uint32_t instanceCount,
-                                  uint32_t firstVertex,
-                                  uint32_t firstInstance)
-{
-    DrawParams *paramStruct    = initCommand<DrawParams>(CommandID::Draw, 0);
-    paramStruct->vertexCount   = vertexCount;
-    paramStruct->instanceCount = instanceCount;
-    paramStruct->firstVertex   = firstVertex;
-    paramStruct->firstInstance = firstInstance;
-}
-
-void SecondaryCommandBuffer::drawIndexed(uint32_t indexCount,
-                                         uint32_t instanceCount,
-                                         uint32_t firstIndex,
-                                         int32_t vertexOffset,
-                                         uint32_t firstInstance)
-{
-    DrawIndexedParams *paramStruct = initCommand<DrawIndexedParams>(CommandID::DrawIndexed, 0);
-    paramStruct->indexCount        = indexCount;
-    paramStruct->instanceCount     = instanceCount;
-    paramStruct->firstIndex        = firstIndex;
-    paramStruct->vertexOffset      = vertexOffset;
-    paramStruct->firstInstance     = firstInstance;
-}
-
 void SecondaryCommandBuffer::dispatch(uint32_t groupCountX,
                                       uint32_t groupCountY,
                                       uint32_t groupCountZ)
 {
-    DispatchParams *paramStruct = initCommand<DispatchParams>(CommandID::Dispatch, 0);
+    DispatchParams *paramStruct = initCommand<DispatchParams>(CommandID::Dispatch);
     paramStruct->groupCountX    = groupCountX;
     paramStruct->groupCountY    = groupCountY;
     paramStruct->groupCountZ    = groupCountZ;
@@ -355,9 +233,10 @@ void SecondaryCommandBuffer::pipelineBarrier(VkPipelineStageFlags srcStageMask,
     size_t buffBarrierSize             = bufferMemoryBarrierCount * sizeof(VkBufferMemoryBarrier);
     size_t imgBarrierSize              = imageMemoryBarrierCount * sizeof(VkImageMemoryBarrier);
     PipelineBarrierParams *paramStruct = initCommand<PipelineBarrierParams>(
-        CommandID::PipelinBarrier, memBarrierSize + buffBarrierSize + imgBarrierSize);
+        CommandID::PipelineBarrier, memBarrierSize + buffBarrierSize + imgBarrierSize);
     paramStruct->srcStageMask             = srcStageMask;
     paramStruct->dstStageMask             = dstStageMask;
+    paramStruct->dependencyFlags          = dependencyFlags;
     paramStruct->memoryBarrierCount       = memoryBarrierCount;
     paramStruct->bufferMemoryBarrierCount = bufferMemoryBarrierCount;
     paramStruct->imageMemoryBarrierCount  = imageMemoryBarrierCount;
@@ -368,16 +247,26 @@ void SecondaryCommandBuffer::pipelineBarrier(VkPipelineStageFlags srcStageMask,
     storePointerParameter(imageMemoryBarriers, &paramStruct->imageMemoryBarriers, imgBarrierSize);
 }
 
+void SecondaryCommandBuffer::imageBarrier(VkPipelineStageFlags srcStageMask,
+                                          VkPipelineStageFlags dstStageMask,
+                                          VkImageMemoryBarrier *imageMemoryBarrier)
+{
+    ImageBarrierParams *paramStruct = initCommand<ImageBarrierParams>(CommandID::ImageBarrier);
+    paramStruct->srcStageMask       = srcStageMask;
+    paramStruct->dstStageMask       = dstStageMask;
+    paramStruct->imageMemoryBarrier = *imageMemoryBarrier;
+}
+
 void SecondaryCommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)
 {
-    SetEventParams *paramStruct = initCommand<SetEventParams>(CommandID::SetEvent, 0);
+    SetEventParams *paramStruct = initCommand<SetEventParams>(CommandID::SetEvent);
     paramStruct->event          = event;
     paramStruct->stageMask      = stageMask;
 }
 
 void SecondaryCommandBuffer::resetEvent(VkEvent event, VkPipelineStageFlags stageMask)
 {
-    ResetEventParams *paramStruct = initCommand<ResetEventParams>(CommandID::ResetEvent, 0);
+    ResetEventParams *paramStruct = initCommand<ResetEventParams>(CommandID::ResetEvent);
     paramStruct->event            = event;
     paramStruct->stageMask        = stageMask;
 }
@@ -418,7 +307,7 @@ void SecondaryCommandBuffer::resetQueryPool(VkQueryPool queryPool,
                                             uint32_t queryCount)
 {
     ResetQueryPoolParams *paramStruct =
-        initCommand<ResetQueryPoolParams>(CommandID::ResetQueryPool, 0);
+        initCommand<ResetQueryPoolParams>(CommandID::ResetQueryPool);
     paramStruct->queryPool  = queryPool;
     paramStruct->firstQuery = firstQuery;
     paramStruct->queryCount = queryCount;
@@ -428,7 +317,7 @@ void SecondaryCommandBuffer::beginQuery(VkQueryPool queryPool,
                                         uint32_t query,
                                         VkQueryControlFlags flags)
 {
-    BeginQueryParams *paramStruct = initCommand<BeginQueryParams>(CommandID::BeginQuery, 0);
+    BeginQueryParams *paramStruct = initCommand<BeginQueryParams>(CommandID::BeginQuery);
     paramStruct->queryPool        = queryPool;
     paramStruct->query            = query;
     paramStruct->flags            = flags;
@@ -436,7 +325,7 @@ void SecondaryCommandBuffer::beginQuery(VkQueryPool queryPool,
 
 void SecondaryCommandBuffer::endQuery(VkQueryPool queryPool, uint32_t query)
 {
-    EndQueryParams *paramStruct = initCommand<EndQueryParams>(CommandID::EndQuery, 0);
+    EndQueryParams *paramStruct = initCommand<EndQueryParams>(CommandID::EndQuery);
     paramStruct->queryPool      = queryPool;
     paramStruct->query          = query;
 }
@@ -446,225 +335,276 @@ void SecondaryCommandBuffer::writeTimestamp(VkPipelineStageFlagBits pipelineStag
                                             uint32_t query)
 {
     WriteTimestampParams *paramStruct =
-        initCommand<WriteTimestampParams>(CommandID::WriteTimestamp, 0);
+        initCommand<WriteTimestampParams>(CommandID::WriteTimestamp);
     paramStruct->pipelineStage = pipelineStage;
     paramStruct->queryPool     = queryPool;
     paramStruct->query         = query;
 }
 
+ANGLE_INLINE const CommandHeader *NextCommand(const CommandHeader *command)
+{
+    return reinterpret_cast<const CommandHeader *>(reinterpret_cast<const uint8_t *>(command) +
+                                                   command->size);
+}
+
 // Parse the cmds in this cmd buffer into given primary cmd buffer
 void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
 {
-    for (CommandHeader *currentCommand = mHead; currentCommand;
-         currentCommand                = currentCommand->next)
+    for (const CommandHeader *command : mCommands)
     {
-        switch (currentCommand->id)
+        for (const CommandHeader *currentCommand                      = command;
+             currentCommand->id != CommandID::Invalid; currentCommand = NextCommand(currentCommand))
         {
-            case CommandID::BindDescriptorSets:
+            switch (currentCommand->id)
             {
-                BindDescriptorSetParams *params =
-                    getParamPtr<BindDescriptorSetParams>(currentCommand);
-                vkCmdBindDescriptorSets(cmdBuffer, params->bindPoint, params->layout,
-                                        params->firstSet, params->descriptorSetCount,
-                                        params->descriptorSets, params->dynamicOffsetCount,
-                                        params->dynamicOffsets);
-                break;
-            }
-            case CommandID::BindIndexBuffer:
-            {
-                BindIndexBufferParams *params = getParamPtr<BindIndexBufferParams>(currentCommand);
-                vkCmdBindIndexBuffer(cmdBuffer, params->buffer, params->offset, params->indexType);
-                break;
-            }
-            case CommandID::BindPipeline:
-            {
-                BindPipelineParams *params = getParamPtr<BindPipelineParams>(currentCommand);
-                vkCmdBindPipeline(cmdBuffer, params->pipelineBindPoint, params->pipeline);
-                break;
-            }
-            case CommandID::BindVertexBuffers:
-            {
-                BindVertexBuffersParams *params =
-                    getParamPtr<BindVertexBuffersParams>(currentCommand);
-                vkCmdBindVertexBuffers(cmdBuffer, params->firstBinding, params->bindingCount,
-                                       params->buffers, params->offsets);
-                break;
-            }
-            case CommandID::BlitImage:
-            {
-                BlitImageParams *params = getParamPtr<BlitImageParams>(currentCommand);
-                vkCmdBlitImage(cmdBuffer, params->srcImage, params->srcImageLayout,
-                               params->dstImage, params->dstImageLayout, params->regionCount,
-                               params->pRegions, params->filter);
-                break;
-            }
-            case CommandID::CopyBuffer:
-            {
-                CopyBufferParams *params = getParamPtr<CopyBufferParams>(currentCommand);
-                vkCmdCopyBuffer(cmdBuffer, params->srcBuffer, params->destBuffer,
-                                params->regionCount, params->regions);
-                break;
-            }
-            case CommandID::CopyBufferToImage:
-            {
-                CopyBufferToImageParams *params =
-                    getParamPtr<CopyBufferToImageParams>(currentCommand);
-                vkCmdCopyBufferToImage(cmdBuffer, params->srcBuffer, params->dstImage,
-                                       params->dstImageLayout, params->regionCount,
-                                       params->regions);
-                break;
-            }
-            case CommandID::CopyImage:
-            {
-                CopyImageParams *params = getParamPtr<CopyImageParams>(currentCommand);
-                vkCmdCopyImage(cmdBuffer, params->srcImage, params->srcImageLayout,
-                               params->dstImage, params->dstImageLayout, params->regionCount,
-                               params->regions);
-                break;
-            }
-            case CommandID::CopyImageToBuffer:
-            {
-                CopyImageToBufferParams *params =
-                    getParamPtr<CopyImageToBufferParams>(currentCommand);
-                vkCmdCopyImageToBuffer(cmdBuffer, params->srcImage, params->srcImageLayout,
-                                       params->dstBuffer, params->regionCount, params->regions);
-                break;
-            }
-            case CommandID::ClearAttachments:
-            {
-                ClearAttachmentsParams *params =
-                    getParamPtr<ClearAttachmentsParams>(currentCommand);
-                vkCmdClearAttachments(cmdBuffer, params->attachmentCount, params->attachments,
-                                      params->rectCount, params->rects);
-                break;
-            }
-            case CommandID::ClearColorImage:
-            {
-                ClearColorImageParams *params = getParamPtr<ClearColorImageParams>(currentCommand);
-                vkCmdClearColorImage(cmdBuffer, params->image, params->imageLayout, &params->color,
-                                     params->rangeCount, params->ranges);
-                break;
-            }
-            case CommandID::ClearDepthStencilImage:
-            {
-                ClearDepthStencilImageParams *params =
-                    getParamPtr<ClearDepthStencilImageParams>(currentCommand);
-                vkCmdClearDepthStencilImage(cmdBuffer, params->image, params->imageLayout,
-                                            &params->depthStencil, params->rangeCount,
-                                            params->ranges);
-                break;
-            }
-            case CommandID::UpdateBuffer:
-            {
-                UpdateBufferParams *params = getParamPtr<UpdateBufferParams>(currentCommand);
-                vkCmdUpdateBuffer(cmdBuffer, params->buffer, params->dstOffset, params->dataSize,
-                                  params->data);
-                break;
-            }
-            case CommandID::PushConstants:
-            {
-                PushConstantsParams *params = getParamPtr<PushConstantsParams>(currentCommand);
-                vkCmdPushConstants(cmdBuffer, params->layout, params->flag, params->offset,
-                                   params->size, params->data);
-                break;
-            }
-            case CommandID::SetViewport:
-            {
-                SetViewportParams *params = getParamPtr<SetViewportParams>(currentCommand);
-                vkCmdSetViewport(cmdBuffer, params->firstViewport, params->viewportCount,
-                                 params->viewports);
-                break;
-            }
-            case CommandID::SetScissor:
-            {
-                SetScissorParams *params = getParamPtr<SetScissorParams>(currentCommand);
-                vkCmdSetScissor(cmdBuffer, params->firstScissor, params->scissorCount,
-                                params->scissors);
-                break;
-            }
-            case CommandID::Draw:
-            {
-                DrawParams *params = getParamPtr<DrawParams>(currentCommand);
-                vkCmdDraw(cmdBuffer, params->vertexCount, params->instanceCount,
-                          params->firstVertex, params->firstInstance);
-                break;
-            }
-            case CommandID::DrawIndexed:
-            {
-                DrawIndexedParams *params = getParamPtr<DrawIndexedParams>(currentCommand);
-                vkCmdDrawIndexed(cmdBuffer, params->indexCount, params->instanceCount,
-                                 params->firstIndex, params->vertexOffset, params->firstInstance);
-                break;
-            }
-            case CommandID::Dispatch:
-            {
-                DispatchParams *params = getParamPtr<DispatchParams>(currentCommand);
-                vkCmdDispatch(cmdBuffer, params->groupCountX, params->groupCountY,
-                              params->groupCountZ);
-                break;
-            }
-            case CommandID::PipelinBarrier:
-            {
-                PipelineBarrierParams *params = getParamPtr<PipelineBarrierParams>(currentCommand);
-                vkCmdPipelineBarrier(cmdBuffer, params->srcStageMask, params->dstStageMask,
-                                     params->dependencyFlags, params->memoryBarrierCount,
-                                     params->memoryBarriers, params->bufferMemoryBarrierCount,
-                                     params->bufferMemoryBarriers, params->imageMemoryBarrierCount,
-                                     params->imageMemoryBarriers);
-                break;
-            }
-            case CommandID::SetEvent:
-            {
-                SetEventParams *params = getParamPtr<SetEventParams>(currentCommand);
-                vkCmdSetEvent(cmdBuffer, params->event, params->stageMask);
-                break;
-            }
-            case CommandID::ResetEvent:
-            {
-                ResetEventParams *params = getParamPtr<ResetEventParams>(currentCommand);
-                vkCmdResetEvent(cmdBuffer, params->event, params->stageMask);
-                break;
-            }
-            case CommandID::WaitEvents:
-            {
-                WaitEventsParams *params = getParamPtr<WaitEventsParams>(currentCommand);
-                vkCmdWaitEvents(cmdBuffer, params->eventCount, params->events, params->srcStageMask,
-                                params->dstStageMask, params->memoryBarrierCount,
-                                params->memoryBarriers, params->bufferMemoryBarrierCount,
-                                params->bufferMemoryBarriers, params->imageMemoryBarrierCount,
-                                params->imageMemoryBarriers);
-                break;
-            }
-            case CommandID::ResetQueryPool:
-            {
-                ResetQueryPoolParams *params = getParamPtr<ResetQueryPoolParams>(currentCommand);
-                vkCmdResetQueryPool(cmdBuffer, params->queryPool, params->firstQuery,
-                                    params->queryCount);
-                break;
-            }
-            case CommandID::BeginQuery:
-            {
-                BeginQueryParams *params = getParamPtr<BeginQueryParams>(currentCommand);
-                vkCmdBeginQuery(cmdBuffer, params->queryPool, params->query, params->flags);
-                break;
-            }
-            case CommandID::EndQuery:
-            {
-                EndQueryParams *params = getParamPtr<EndQueryParams>(currentCommand);
-                vkCmdEndQuery(cmdBuffer, params->queryPool, params->query);
-                break;
-            }
-            case CommandID::WriteTimestamp:
-            {
-                WriteTimestampParams *params = getParamPtr<WriteTimestampParams>(currentCommand);
-                vkCmdWriteTimestamp(cmdBuffer, params->pipelineStage, params->queryPool,
-                                    params->query);
-                break;
-            }
-            default:
-            {
-                UNREACHABLE();
-                break;
+                case CommandID::BeginQuery:
+                {
+                    const BeginQueryParams *params = getParamPtr<BeginQueryParams>(currentCommand);
+                    vkCmdBeginQuery(cmdBuffer, params->queryPool, params->query, params->flags);
+                    break;
+                }
+                case CommandID::BindComputePipeline:
+                {
+                    const BindPipelineParams *params =
+                        getParamPtr<BindPipelineParams>(currentCommand);
+                    vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, params->pipeline);
+                    break;
+                }
+                case CommandID::BindDescriptorSets:
+                {
+                    const BindDescriptorSetParams *params =
+                        getParamPtr<BindDescriptorSetParams>(currentCommand);
+                    vkCmdBindDescriptorSets(cmdBuffer, params->bindPoint, params->layout,
+                                            params->firstSet, params->descriptorSetCount,
+                                            params->descriptorSets, params->dynamicOffsetCount,
+                                            params->dynamicOffsets);
+                    break;
+                }
+                case CommandID::BindGraphicsPipeline:
+                {
+                    const BindPipelineParams *params =
+                        getParamPtr<BindPipelineParams>(currentCommand);
+                    vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, params->pipeline);
+                    break;
+                }
+                case CommandID::BindIndexBuffer:
+                {
+                    const BindIndexBufferParams *params =
+                        getParamPtr<BindIndexBufferParams>(currentCommand);
+                    vkCmdBindIndexBuffer(cmdBuffer, params->buffer, params->offset,
+                                         params->indexType);
+                    break;
+                }
+                case CommandID::BindVertexBuffers:
+                {
+                    const BindVertexBuffersParams *params =
+                        getParamPtr<BindVertexBuffersParams>(currentCommand);
+                    const VkBuffer *buffers =
+                        Offset<VkBuffer>(params, sizeof(BindVertexBuffersParams));
+                    const VkDeviceSize *offsets =
+                        Offset<VkDeviceSize>(buffers, sizeof(VkBuffer) * params->bindingCount);
+                    vkCmdBindVertexBuffers(cmdBuffer, 0, params->bindingCount, buffers, offsets);
+                    break;
+                }
+                case CommandID::BlitImage:
+                {
+                    const BlitImageParams *params = getParamPtr<BlitImageParams>(currentCommand);
+                    vkCmdBlitImage(cmdBuffer, params->srcImage, params->srcImageLayout,
+                                   params->dstImage, params->dstImageLayout, params->regionCount,
+                                   params->pRegions, params->filter);
+                    break;
+                }
+                case CommandID::ClearAttachments:
+                {
+                    const ClearAttachmentsParams *params =
+                        getParamPtr<ClearAttachmentsParams>(currentCommand);
+                    vkCmdClearAttachments(cmdBuffer, params->attachmentCount, params->attachments,
+                                          params->rectCount, params->rects);
+                    break;
+                }
+                case CommandID::ClearColorImage:
+                {
+                    const ClearColorImageParams *params =
+                        getParamPtr<ClearColorImageParams>(currentCommand);
+                    vkCmdClearColorImage(cmdBuffer, params->image, params->imageLayout,
+                                         &params->color, params->rangeCount, params->ranges);
+                    break;
+                }
+                case CommandID::ClearDepthStencilImage:
+                {
+                    const ClearDepthStencilImageParams *params =
+                        getParamPtr<ClearDepthStencilImageParams>(currentCommand);
+                    vkCmdClearDepthStencilImage(cmdBuffer, params->image, params->imageLayout,
+                                                &params->depthStencil, params->rangeCount,
+                                                params->ranges);
+                    break;
+                }
+                case CommandID::CopyBuffer:
+                {
+                    const CopyBufferParams *params = getParamPtr<CopyBufferParams>(currentCommand);
+                    vkCmdCopyBuffer(cmdBuffer, params->srcBuffer, params->destBuffer,
+                                    params->regionCount, params->regions);
+                    break;
+                }
+                case CommandID::CopyBufferToImage:
+                {
+                    const CopyBufferToImageParams *params =
+                        getParamPtr<CopyBufferToImageParams>(currentCommand);
+                    vkCmdCopyBufferToImage(cmdBuffer, params->srcBuffer, params->dstImage,
+                                           params->dstImageLayout, params->regionCount,
+                                           params->regions);
+                    break;
+                }
+                case CommandID::CopyImage:
+                {
+                    const CopyImageParams *params = getParamPtr<CopyImageParams>(currentCommand);
+                    vkCmdCopyImage(cmdBuffer, params->srcImage, params->srcImageLayout,
+                                   params->dstImage, params->dstImageLayout, params->regionCount,
+                                   params->regions);
+                    break;
+                }
+                case CommandID::CopyImageToBuffer:
+                {
+                    const CopyImageToBufferParams *params =
+                        getParamPtr<CopyImageToBufferParams>(currentCommand);
+                    vkCmdCopyImageToBuffer(cmdBuffer, params->srcImage, params->srcImageLayout,
+                                           params->dstBuffer, params->regionCount, params->regions);
+                    break;
+                }
+                case CommandID::Dispatch:
+                {
+                    const DispatchParams *params = getParamPtr<DispatchParams>(currentCommand);
+                    vkCmdDispatch(cmdBuffer, params->groupCountX, params->groupCountY,
+                                  params->groupCountZ);
+                    break;
+                }
+                case CommandID::Draw:
+                {
+                    const DrawParams *params = getParamPtr<DrawParams>(currentCommand);
+                    vkCmdDraw(cmdBuffer, params->vertexCount, 1, params->firstVertex, 0);
+                    break;
+                }
+                case CommandID::DrawIndexed:
+                {
+                    const DrawIndexedParams *params =
+                        getParamPtr<DrawIndexedParams>(currentCommand);
+                    vkCmdDrawIndexed(cmdBuffer, params->indexCount, 1, 0, 0, 0);
+                    break;
+                }
+                case CommandID::DrawIndexedInstanced:
+                {
+                    const DrawIndexedInstancedParams *params =
+                        getParamPtr<DrawIndexedInstancedParams>(currentCommand);
+                    vkCmdDrawIndexed(cmdBuffer, params->indexCount, params->instanceCount, 0, 0, 0);
+                    break;
+                }
+                case CommandID::DrawInstanced:
+                {
+                    const DrawInstancedParams *params =
+                        getParamPtr<DrawInstancedParams>(currentCommand);
+                    vkCmdDraw(cmdBuffer, params->vertexCount, params->instanceCount,
+                              params->firstVertex, 0);
+                    break;
+                }
+                case CommandID::EndQuery:
+                {
+                    const EndQueryParams *params = getParamPtr<EndQueryParams>(currentCommand);
+                    vkCmdEndQuery(cmdBuffer, params->queryPool, params->query);
+                    break;
+                }
+                case CommandID::ImageBarrier:
+                {
+                    const ImageBarrierParams *params =
+                        getParamPtr<ImageBarrierParams>(currentCommand);
+                    vkCmdPipelineBarrier(cmdBuffer, params->srcStageMask, params->dstStageMask, 0,
+                                         0, nullptr, 0, nullptr, 1, &params->imageMemoryBarrier);
+                    break;
+                }
+                case CommandID::PipelineBarrier:
+                {
+                    const PipelineBarrierParams *params =
+                        getParamPtr<PipelineBarrierParams>(currentCommand);
+                    vkCmdPipelineBarrier(
+                        cmdBuffer, params->srcStageMask, params->dstStageMask,
+                        params->dependencyFlags, params->memoryBarrierCount, params->memoryBarriers,
+                        params->bufferMemoryBarrierCount, params->bufferMemoryBarriers,
+                        params->imageMemoryBarrierCount, params->imageMemoryBarriers);
+                    break;
+                }
+                case CommandID::PushConstants:
+                {
+                    const PushConstantsParams *params =
+                        getParamPtr<PushConstantsParams>(currentCommand);
+                    vkCmdPushConstants(cmdBuffer, params->layout, params->flag, params->offset,
+                                       params->size, params->data);
+                    break;
+                }
+                case CommandID::ResetEvent:
+                {
+                    const ResetEventParams *params = getParamPtr<ResetEventParams>(currentCommand);
+                    vkCmdResetEvent(cmdBuffer, params->event, params->stageMask);
+                    break;
+                }
+                case CommandID::ResetQueryPool:
+                {
+                    const ResetQueryPoolParams *params =
+                        getParamPtr<ResetQueryPoolParams>(currentCommand);
+                    vkCmdResetQueryPool(cmdBuffer, params->queryPool, params->firstQuery,
+                                        params->queryCount);
+                    break;
+                }
+                case CommandID::SetEvent:
+                {
+                    const SetEventParams *params = getParamPtr<SetEventParams>(currentCommand);
+                    vkCmdSetEvent(cmdBuffer, params->event, params->stageMask);
+                    break;
+                }
+                case CommandID::SetScissor:
+                {
+                    const SetScissorParams *params = getParamPtr<SetScissorParams>(currentCommand);
+                    vkCmdSetScissor(cmdBuffer, params->firstScissor, params->scissorCount,
+                                    params->scissors);
+                    break;
+                }
+                case CommandID::SetViewport:
+                {
+                    const SetViewportParams *params =
+                        getParamPtr<SetViewportParams>(currentCommand);
+                    vkCmdSetViewport(cmdBuffer, params->firstViewport, params->viewportCount,
+                                     params->viewports);
+                    break;
+                }
+                case CommandID::UpdateBuffer:
+                {
+                    const UpdateBufferParams *params =
+                        getParamPtr<UpdateBufferParams>(currentCommand);
+                    vkCmdUpdateBuffer(cmdBuffer, params->buffer, params->dstOffset,
+                                      params->dataSize, params->data);
+                    break;
+                }
+                case CommandID::WaitEvents:
+                {
+                    const WaitEventsParams *params = getParamPtr<WaitEventsParams>(currentCommand);
+                    vkCmdWaitEvents(cmdBuffer, params->eventCount, params->events,
+                                    params->srcStageMask, params->dstStageMask,
+                                    params->memoryBarrierCount, params->memoryBarriers,
+                                    params->bufferMemoryBarrierCount, params->bufferMemoryBarriers,
+                                    params->imageMemoryBarrierCount, params->imageMemoryBarriers);
+                    break;
+                }
+                case CommandID::WriteTimestamp:
+                {
+                    const WriteTimestampParams *params =
+                        getParamPtr<WriteTimestampParams>(currentCommand);
+                    vkCmdWriteTimestamp(cmdBuffer, params->pipelineStage, params->queryPool,
+                                        params->query);
+                    break;
+                }
+                default:
+                {
+                    UNREACHABLE();
+                    break;
+                }
             }
         }
     }
