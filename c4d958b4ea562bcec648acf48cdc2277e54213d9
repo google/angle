@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89c6a736_cec74d9c",
+        "filename": "src/common/constexpr_array.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-05T18:43:01Z",
+      "side": 1,
+      "message": "If this fails again, could you fix the typo here?",
+      "range": {
+        "startLine": 84,
+        "startChar": 23,
+        "endLine": 84,
+        "endChar": 38
+      },
+      "revId": "c4d958b4ea562bcec648acf48cdc2277e54213d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
