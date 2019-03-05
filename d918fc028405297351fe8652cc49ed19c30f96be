@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5253ed9e_f51fef5a",
+        "filename": "src/common/constexpr_array.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-05T14:57:04Z",
+      "side": 1,
+      "message": "Header guards missing",
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60891957_69dbc520",
+        "filename": "src/common/constexpr_array.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-05T14:57:04Z",
+      "side": 1,
+      "message": "I find this a very odd way of partitioning. Your pivot (`arr[left]`) gets smaller after the first swap, but then stays constant after it. It looks like the author in the SO question wanted to do this: https://en.wikipedia.org/wiki/Quicksort#Lomuto_partition_scheme\n\nIf you decide to improve that, you might as well implement a better alternative: https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 40
+      },
+      "revId": "d918fc028405297351fe8652cc49ed19c30f96be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
