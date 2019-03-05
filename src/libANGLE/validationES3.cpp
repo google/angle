@@ -9,6 +9,7 @@
 #include "libANGLE/validationES3_autogen.h"
 
 #include "anglebase/numerics/safe_conversions.h"
+#include "common/constexpr_array.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
@@ -255,6 +256,55 @@ bool ValidateCopyTexture3DCommon(Context *context,
     }
 
     return true;
+}
+
+// Since the unsorted array is only referenced in construction, it should be optimized out.
+using CopyDesc = std::pair<GLenum, GLenum>;
+constexpr angle::constexpr_array<CopyDesc, 34> kUnsortedCopyConversionTable{
+    {// From ES 3.0.1 spec, table 3.15
+     {GL_ALPHA, GL_RGBA},
+     {GL_LUMINANCE, GL_RED},
+     {GL_LUMINANCE, GL_RG},
+     {GL_LUMINANCE, GL_RGB},
+     {GL_LUMINANCE, GL_RGBA},
+     {GL_LUMINANCE_ALPHA, GL_RGBA},
+     {GL_RED, GL_RED},
+     {GL_RED, GL_RG},
+     {GL_RED, GL_RGB},
+     {GL_RED, GL_RGBA},
+     {GL_RG, GL_RG},
+     {GL_RG, GL_RGB},
+     {GL_RG, GL_RGBA},
+     {GL_RGB, GL_RGB},
+     {GL_RGB, GL_RGBA},
+     {GL_RGBA, GL_RGBA},
+
+     // Necessary for ANGLE back-buffers
+     {GL_ALPHA, GL_BGRA_EXT},
+     {GL_LUMINANCE, GL_BGRA_EXT},
+     {GL_LUMINANCE_ALPHA, GL_BGRA_EXT},
+     {GL_RED, GL_BGRA_EXT},
+     {GL_RG, GL_BGRA_EXT},
+     {GL_RGB, GL_BGRA_EXT},
+     {GL_RGBA, GL_BGRA_EXT},
+     {GL_BGRA_EXT, GL_BGRA_EXT},
+
+     {GL_RED_INTEGER, GL_RED_INTEGER},
+     {GL_RED_INTEGER, GL_RG_INTEGER},
+     {GL_RED_INTEGER, GL_RGB_INTEGER},
+     {GL_RED_INTEGER, GL_RGBA_INTEGER},
+     {GL_RG_INTEGER, GL_RG_INTEGER},
+     {GL_RG_INTEGER, GL_RGB_INTEGER},
+     {GL_RG_INTEGER, GL_RGBA_INTEGER},
+     {GL_RGB_INTEGER, GL_RGB_INTEGER},
+     {GL_RGB_INTEGER, GL_RGBA_INTEGER},
+     {GL_RGBA_INTEGER, GL_RGBA_INTEGER}}};
+
+auto kSortedCopyConversionTable = angle::constexpr_sort(kUnsortedCopyConversionTable);
+
+bool ValidES3CopyConversion(GLenum textureFormat, GLenum framebufferFormat)
+{
+    return constexpr_array_contains(kSortedCopyConversionTable, {textureFormat, framebufferFormat});
 }
 }  // anonymous namespace
 
