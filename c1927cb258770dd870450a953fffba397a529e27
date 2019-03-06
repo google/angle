@@ -224,6 +224,30 @@
       "revId": "c1927cb258770dd870450a953fffba397a529e27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39e470aa_51d47162",
+        "filename": "src/tests/perf_tests/glmark2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-06T17:24:57Z",
+      "side": 1,
+      "message": "I\u0027m definitely not an authority on the subject. But there does seem to be process-level variance. My source:\n\nhttps://vstinner.github.io/journey-to-stable-benchmark-average.html",
+      "parentUuid": "69862bbf_ed6ef8c0",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 0
+      },
+      "revId": "c1927cb258770dd870450a953fffba397a529e27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
