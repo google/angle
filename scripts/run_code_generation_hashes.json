@@ -45,6 +45,10 @@
     "002ad46d144c51fe98d73478aa554ba7",
   "Emulated HLSL functions:src/compiler/translator/gen_emulated_builtin_function_tables.py":
     "6a00c1ba22c35a9b700a154efda6f861",
+  "GL copy conversion table:src/libANGLE/es3_copy_conversion_formats.json":
+    "54608f6f7d9aa7c59a8458ccf3ab9935",
+  "GL copy conversion table:src/libANGLE/gen_copy_conversion_table.py":
+    "ac1afe23d9578bd1d2ef74f4a7aa927a",
   "GL format map:src/libANGLE/es3_format_type_combinations.json":
     "a232823cd6430f14e28793ccabb968ee",
   "GL format map:src/libANGLE/format_map_data.json":

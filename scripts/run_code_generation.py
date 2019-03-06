@@ -93,6 +93,12 @@ generators = {
         auto_script('scripts/generate_loader.py'),
     'GL/EGL entry points':
         auto_script('scripts/generate_entry_points.py'),
+    'GL copy conversion table': {
+        'inputs': [
+            'src/libANGLE/es3_copy_conversion_formats.json',
+        ],
+        'script': 'src/libANGLE/gen_copy_conversion_table.py',
+    },
     'GL format map': {
         'inputs': [
             'src/libANGLE/es3_format_type_combinations.json',
