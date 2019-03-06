@@ -82,8 +82,8 @@ declare_args() {
     # Enable Vulkan GPU trace event capability
     angle_enable_vulkan_gpu_trace_events = false
 
-    # Disallow non-conformant configurations
-    angle_vulkan_conformant_configs_only = false
+    # Disallow non-conformant configurations in official builds.
+    angle_vulkan_conformant_configs_only = is_official_build
   }
 }
 
