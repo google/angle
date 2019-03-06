@@ -16,11 +16,7 @@ namespace angle
 
 bool LoggingAnnotator::getStatus()
 {
-#if defined(ANGLE_TRACE_ENABLED)
-    return true;
-#else
     return false;
-#endif
 }
 
 void LoggingAnnotator::beginEvent(const char *eventName, const char *eventMessage)
