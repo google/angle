@@ -248,6 +248,30 @@
       "revId": "c1927cb258770dd870450a953fffba397a529e27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89f0dee2_8c479b91",
+        "filename": "src/tests/perf_tests/glmark2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-06T18:05:42Z",
+      "side": 1,
+      "message": "Well, me neither :)\n\nIn the case of vstinner though, it looks like the variation from starting address space is very minor (3ms out of 200ms) and I suspect will be even less the longer the test runs, as it might just affect something like startup/load times.\n\nIn our situation, I\u0027m sure we have bigger problems, like the OS randomly doing work on the GPU or interrupt the CPU etc. The long benchmark run should generally account for all of that, though.\n\nAnyway as I said, this will be a possibility with the above work, so why not!",
+      "parentUuid": "39e470aa_51d47162",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 0
+      },
+      "revId": "c1927cb258770dd870450a953fffba397a529e27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
