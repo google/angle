@@ -434,15 +434,31 @@ class ANGLETestBase
     static Optional<EGLint> mLastRendererType;
 };
 
-class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<angle::PlatformParameters>
+template <typename Params = angle::PlatformParameters>
+class ANGLETestWithParam : public ANGLETestBase, public ::testing::TestWithParam<Params>
 {
   protected:
-    ANGLETest();
+    ANGLETestWithParam();
 
   public:
-    void SetUp() override;
-    void TearDown() override;
+    void SetUp() override { ANGLETestBase::ANGLETestSetUp(); }
+
+    void TearDown() override { ANGLETestBase::ANGLETestTearDown(); }
 };
+
+template <typename Params>
+ANGLETestWithParam<Params>::ANGLETestWithParam()
+    : ANGLETestBase(std::get<angle::PlatformParameters>(this->GetParam()))
+{}
+
+template <>
+inline ANGLETestWithParam<angle::PlatformParameters>::ANGLETestWithParam()
+    : ANGLETestBase(this->GetParam())
+{}
+
+// Note: this hack is not necessary in C++17.  Once we switch to C++17, we can just rename
+// ANGLETestWithParam to ANGLETest.
+using ANGLETest = ANGLETestWithParam<>;
 
 class ANGLETestEnvironment : public testing::Environment
 {

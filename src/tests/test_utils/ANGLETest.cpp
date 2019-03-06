@@ -1161,18 +1161,6 @@ void ANGLETestBase::SetWindowVisible(bool isVisible)
     mOSWindow->setVisible(isVisible);
 }
 
-ANGLETest::ANGLETest() : ANGLETestBase(GetParam()) {}
-
-void ANGLETest::SetUp()
-{
-    ANGLETestBase::ANGLETestSetUp();
-}
-
-void ANGLETest::TearDown()
-{
-    ANGLETestBase::ANGLETestTearDown();
-}
-
 bool IsIntel()
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
