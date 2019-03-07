@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "eaf4a0bf_899bf033",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-07T20:48:24Z",
+      "side": 1,
+      "message": "We should make an ANGLE_UNUSED macro for this use case. See ANGLE_NO_DISCARD. \n\nThere is a c++ attribute https://en.cppreference.com/w/cpp/language/attributes/maybe_unused\n\nAlso a gcc specialization [[gnu::unused]] as a fallback. On MSVC no value is required. I can help with this if you need. Very low priority but would be nice to have.",
+      "parentUuid": "f120a4cb_23055287",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 39
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edc27ba9_6f74c987",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 8
