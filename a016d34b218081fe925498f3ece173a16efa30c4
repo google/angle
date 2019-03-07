@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "590b9e9b_472178a1",
+        "filename": "src/tests/perf_tests/README.md",
+        "patchSetId": 17
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-07T20:44:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56933e00_b0c24948",
+      "range": {
+        "startLine": 42,
+        "startChar": 14,
+        "endLine": 42,
+        "endChar": 21
+      },
+      "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "928b1361_65b9d815",
         "filename": "src/tests/perf_tests/glmark2Benchmark.cpp",
         "patchSetId": 17
@@ -36,6 +60,30 @@
       "writtenOn": "2019-03-07T20:18:12Z",
       "side": 1,
       "message": "chatted offline - could maybe use an ostream \u003c\u003c overload to get the print working. Otherwise you can pass a custom handler function in place of PrintToStringParamName that accepts the right Param signature (tuple).",
+      "range": {
+        "startLine": 244,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 32
+      },
+      "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4e72985_b986ccf0",
+        "filename": "src/tests/perf_tests/glmark2Benchmark.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-07T20:44:00Z",
+      "side": 1,
+      "message": "Somehow an overload didn\u0027t work (it\u0027s likely already overloaded for tuple, and somehow it didn\u0027t pick up my specialization). Using a custom print function works though. See here: https://chromium-review.googlesource.com/c/angle/angle/+/1506236/5/src/tests/gl_tests/CopyTextureTest.cpp\n\nLines 132+ and near the end. See if you like that, and I\u0027ll do the same here.",
+      "parentUuid": "928b1361_65b9d815",
       "range": {
         "startLine": 244,
         "startChar": 0,
@@ -68,6 +116,30 @@
       "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "148c7551_c7a3fb15",
+        "filename": "third_party/glmark2/BUILD.gn",
+        "patchSetId": 17
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-07T20:44:00Z",
+      "side": 1,
+      "message": "The native ones shouldn\u0027t have this so they don\u0027t accidentally use ANGLE.",
+      "parentUuid": "aed633cf_bcc4afce",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 387,
+        "endChar": 3
+      },
+      "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
