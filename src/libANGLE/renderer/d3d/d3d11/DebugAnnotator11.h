@@ -19,17 +19,15 @@ class DebugAnnotator11 : public angle::LoggingAnnotator
   public:
     DebugAnnotator11();
     ~DebugAnnotator11() override;
+    void initialize(ID3D11DeviceContext *context);
+    void release();
     void beginEvent(const char *eventName, const char *eventMessage) override;
     void endEvent(const char *eventName) override;
     void setMarker(const char *markerName) override;
     bool getStatus() override;
 
   private:
-    void initializeDevice();
-
-    bool mInitialized;
-    HMODULE mD3d11Module;
-    ID3DUserDefinedAnnotation *mUserDefinedAnnotation;
+    angle::ComPtr<ID3DUserDefinedAnnotation> mUserDefinedAnnotation;
     static constexpr size_t kMaxMessageLength = 256;
     wchar_t mWCharMessage[kMaxMessageLength];
 };

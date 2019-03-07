@@ -189,7 +189,7 @@ void Renderer9::release()
 egl::Error Renderer9::initialize()
 {
     TRACE_EVENT0("gpu.angle", "GetModuleHandle_d3d9");
-    mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
+    mD3d9Module = ::LoadLibrary(TEXT("d3d9.dll"));
 
     if (mD3d9Module == nullptr)
     {

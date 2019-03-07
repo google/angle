@@ -68,13 +68,6 @@
 #    include "libANGLE/renderer/d3d/d3d11/win32/NativeWindow11Win32.h"
 #endif
 
-// Include the D3D9 debug annotator header for use by the desktop D3D11 renderer
-// because the D3D11 interface method ID3DUserDefinedAnnotation::GetStatus
-// doesn't work with the Graphics Diagnostics tools in Visual Studio 2013.
-#ifdef ANGLE_ENABLE_D3D9
-#    include "libANGLE/renderer/d3d/d3d9/DebugAnnotator9.h"
-#endif
-
 // Enable ANGLE_SKIP_DXGI_1_2_CHECK if there is not a possibility of using cross-process
 // HWNDs or the Windows 7 Platform Update (KB2670838) is expected to be installed.
 #ifndef ANGLE_SKIP_DXGI_1_2_CHECK
@@ -420,8 +413,7 @@ Renderer11::Renderer11(egl::Display *display)
       mLastHistogramUpdateTime(
           ANGLEPlatformCurrent()->monotonicallyIncreasingTime(ANGLEPlatformCurrent())),
       mDebug(nullptr),
-      mScratchMemoryBuffer(ScratchMemoryBufferLifetime),
-      mAnnotator(nullptr)
+      mScratchMemoryBuffer(ScratchMemoryBufferLifetime)
 {
     mLineLoopIB    = nullptr;
     mTriangleFanIB = nullptr;
@@ -536,19 +528,6 @@ Renderer11::Renderer11(egl::Display *display)
     const EGLenum presentPath = static_cast<EGLenum>(attributes.get(
         EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE, EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE));
     mPresentPathFastEnabled   = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
-
-// The D3D11 renderer must choose the D3D9 debug annotator because the D3D11 interface
-// method ID3DUserDefinedAnnotation::GetStatus on desktop builds doesn't work with the Graphics
-// Diagnostics tools in Visual Studio 2013.
-// The D3D9 annotator works properly for both D3D11 and D3D9.
-// Incorrect status reporting can cause ANGLE to log unnecessary debug events.
-#ifdef ANGLE_ENABLE_D3D9
-    mAnnotator = new DebugAnnotator9();
-#else
-    mAnnotator = new DebugAnnotator11();
-#endif
-    ASSERT(mAnnotator);
-    gl::InitializeDebugAnnotations(mAnnotator);
 }
 
 Renderer11::~Renderer11()
@@ -834,6 +813,9 @@ egl::Error Renderer11::initializeD3DDevice()
     mResourceManager11.setAllocationsInitialized(mCreateDebugDevice);
 
     d3d11::SetDebugName(mDeviceContext, "DeviceContext");
+
+    mAnnotator.initialize(mDeviceContext);
+    gl::InitializeDebugAnnotations(&mAnnotator);
 
     return egl::NoError();
 }
@@ -1930,11 +1912,8 @@ void Renderer11::release()
 {
     mScratchMemoryBuffer.clear();
 
-    if (mAnnotator != nullptr)
-    {
-        gl::UninitializeDebugAnnotations();
-        SafeDelete(mAnnotator);
-    }
+    mAnnotator.release();
+    gl::UninitializeDebugAnnotations();
 
     releaseDeviceResources();
 
@@ -3747,7 +3726,7 @@ gl::Version Renderer11::getMaxSupportedESVersion() const
 
 gl::DebugAnnotator *Renderer11::getAnnotator()
 {
-    return mAnnotator;
+    return &mAnnotator;
 }
 
 angle::Result Renderer11::dispatchCompute(const gl::Context *context,

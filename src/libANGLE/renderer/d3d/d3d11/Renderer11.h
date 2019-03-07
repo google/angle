@@ -605,7 +605,7 @@ class Renderer11 : public RendererD3D
 
     angle::ScratchBuffer mScratchMemoryBuffer;
 
-    gl::DebugAnnotator *mAnnotator;
+    DebugAnnotator11 mAnnotator;
 
     mutable Optional<bool> mSupportsShareHandles;
     ResourceManager11 mResourceManager11;
