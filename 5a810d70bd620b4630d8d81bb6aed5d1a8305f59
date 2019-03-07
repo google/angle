@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f120a4cb_23055287",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "Attempted but hit similar compile errors to executeCommands so keeping #if for now.",
+      "parentUuid": "41c5a722_4f0ebced",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 39
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edc27ba9_6f74c987",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1934c877_20a414ac",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edc27ba9_6f74c987",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 6
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "52fc1436_75250d32",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f02d1092_a6bbb1d7",
+      "range": {
+        "startLine": 608,
+        "startChar": 6,
+        "endLine": 608,
+        "endChar": 23
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10a5dbf4_7408c24f",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 8
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "65d5b8ec_a872ed57",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10a5dbf4_7408c24f",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 45
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6e3443f_4804332f",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 8
@@ -105,6 +201,30 @@
       "writtenOn": "2019-03-06T14:59:43Z",
       "side": 1,
       "message": "nit: maybe make these into local static helper functions in CommandGraph.cpp?",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 5
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67984acc_4fe9376b",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "I did this but do to \"unused function\" compile errors had to add back in #if checks. I tried using ANGLE_UNREFERENCE_VARIABLE() macro to avoid warning but b/c this is an overloaded function there was a second compiler error when I tried to use the macro related to attempting to cast overloaded function w/ same name to function ptr.",
+      "parentUuid": "a6e3443f_4804332f",
       "range": {
         "startLine": 178,
         "startChar": 0,
@@ -137,6 +257,30 @@
       "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a7dc4c2_66e325c2",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a437ff2_7baf3dea",
+      "range": {
+        "startLine": 229,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 6
+      },
+      "revId": "5a810d70bd620b4630d8d81bb6aed5d1a8305f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

@@ -445,6 +445,30 @@
       "revId": "23e40079120be2bd0344a147afe6db6122aba559",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4596555e_113ed8ce",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-07T16:38:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "733efa76_2c571eeb",
+      "range": {
+        "startLine": 338,
+        "startChar": 71,
+        "endLine": 338,
+        "endChar": 83
+      },
+      "revId": "23e40079120be2bd0344a147afe6db6122aba559",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
