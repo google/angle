@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56933e00_b0c24948",
+        "filename": "src/tests/perf_tests/README.md",
+        "patchSetId": 17
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-07T20:18:12Z",
+      "side": 1,
+      "message": "nit: can update this",
+      "range": {
+        "startLine": 42,
+        "startChar": 14,
+        "endLine": 42,
+        "endChar": 21
+      },
+      "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "928b1361_65b9d815",
+        "filename": "src/tests/perf_tests/glmark2Benchmark.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-07T20:18:12Z",
+      "side": 1,
+      "message": "chatted offline - could maybe use an ostream \u003c\u003c overload to get the print working. Otherwise you can pass a custom handler function in place of PrintToStringParamName that accepts the right Param signature (tuple).",
+      "range": {
+        "startLine": 244,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 32
+      },
+      "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aed633cf_bcc4afce",
+        "filename": "third_party/glmark2/BUILD.gn",
+        "patchSetId": 17
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-07T20:18:12Z",
+      "side": 1,
+      "message": "nice. maybe we should add this to the glmark2_exe template itself.",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 387,
+        "endChar": 3
+      },
+      "revId": "a016d34b218081fe925498f3ece173a16efa30c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
