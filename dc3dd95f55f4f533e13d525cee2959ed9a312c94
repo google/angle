@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d9ce5dd8_44faccd3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2019-03-08T22:29:47Z",
+      "side": 1,
+      "message": "Done. \n\nI edited the comment to this more clear. Windows 10 fixed a bug where ID3DUserDefinedAnnotation.GetStatus works incorrectly. Other than calling IsWindows10OrGreater, there is no other way to determine whether it gives a truthful answer.\n\nFixing the bug on Win7-Win8.1 would likely not meet the servicing bar.",
+      "parentUuid": "bf4fb57b_806bcd5c",
+      "range": {
+        "startLine": 65,
+        "startChar": 7,
+        "endLine": 65,
+        "endChar": 87
+      },
+      "revId": "dc3dd95f55f4f533e13d525cee2959ed9a312c94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db730e96_1251abc2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "dc3dd95f55f4f533e13d525cee2959ed9a312c94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77cd442f_6ece94c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2019-03-08T22:29:47Z",
+      "side": 1,
+      "message": "Done\n\nI edited the comment to make this more clear. By \"returning true\", I mean returning true from DebugAnnotator11::getStatus().",
+      "parentUuid": "db730e96_1251abc2",
+      "range": {
+        "startLine": 66,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 21
+      },
+      "revId": "dc3dd95f55f4f533e13d525cee2959ed9a312c94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
