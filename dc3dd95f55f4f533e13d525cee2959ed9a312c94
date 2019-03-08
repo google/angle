@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf4fb57b_806bcd5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-08T21:40:23Z",
+      "side": 1,
+      "message": "I feel like the real reason might be something else? If the unreliability of windows 7 comes from the kernel version, this is fine. But if it\u0027s due to some d3d dll version, perhaps that\u0027s what should be put in the `if`?\n\nPoint being that if what made this reliable in windows 10 is something that could one day be upgraded in windows 7, the if would be wrong.",
+      "range": {
+        "startLine": 65,
+        "startChar": 7,
+        "endLine": 65,
+        "endChar": 87
+      },
+      "revId": "dc3dd95f55f4f533e13d525cee2959ed9a312c94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db730e96_1251abc2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-08T21:40:23Z",
+      "side": 1,
+      "message": "\"Returning true\" from where? Do you mean to say something like \"Unconditionally \u003cdescribe what inside of if is doing (attaching annotator?)\u003e means writing out ...\"?",
+      "range": {
+        "startLine": 66,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 21
+      },
+      "revId": "dc3dd95f55f4f533e13d525cee2959ed9a312c94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
