@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "41329699_dd5ccdda",
+        "filename": "src/libANGLE/AttributeMap.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-11T21:41:21Z",
+      "side": 1,
+      "message": "Sorry, I thought \"map\" variable is \"std::map\" type.\nYes, it would be clearer if AttributeMap followed \"std::map\" convention and defined operator\u003d for that operation instead of \"insert\".\nI don\u0027t mind if you just leave this as is.",
+      "parentUuid": "a90df1e9_3b5f12fd",
+      "range": {
+        "startLine": 112,
+        "startChar": 16,
+        "endLine": 112,
+        "endChar": 22
+      },
+      "revId": "48597a5f5df326135a2a5d0c3f746f5a9c9d93b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "899a6923_d65d1c35",
         "filename": "src/libANGLE/Config.cpp",
         "patchSetId": 4
