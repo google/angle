@@ -38,6 +38,7 @@ class Win32Window : public OSWindow
     bool setPosition(int x, int y) override;
     bool resize(int width, int height) override;
     void setVisible(bool isVisible) override;
+    bool setPixelFormat(const PIXELFORMATDESCRIPTOR pixelFormatDescriptor);
 
     void signalTestEvent() override;
 
@@ -46,6 +47,9 @@ class Win32Window : public OSWindow
 
     std::string mParentClassName;
     std::string mChildClassName;
+    bool mParentClassRegistered;
+    bool mChildClassRegistered;
+    bool mPixelFormatIsSet;
 
     bool mIsVisible;
     Timer *mSetVisibleTimer;

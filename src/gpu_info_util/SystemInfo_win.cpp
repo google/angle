@@ -241,9 +241,20 @@ bool GetSystemInfo(SystemInfo *info)
     }
     ASSERT(foundPrimary);
 
+    ASSERT(GetLastError() == ERROR_SUCCESS);
     // nvd3d9wrap.dll is loaded into all processes when Optimus is enabled.
     HMODULE nvd3d9wrap = GetModuleHandleW(L"nvd3d9wrap.dll");
     info->isOptimus    = nvd3d9wrap != nullptr;
+    // ERROR_MOD_NOT_FOUND is expected from GetModuleHandleW, reset last error if it happens.
+    if (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_MOD_NOT_FOUND)
+    {
+        WARN() << "Unexpected error calling GetModuleHandleW: 0x" << std::hex << GetLastError()
+               << std::endl;
+    }
+    else
+    {
+        SetLastError(ERROR_SUCCESS);
+    }
 
     return true;
 }
