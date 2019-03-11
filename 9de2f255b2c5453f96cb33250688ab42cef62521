@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78580017_b0523783",
+        "filename": "src/tests/egl_tests/EGLChooseConfigDefaultTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-11T22:49:49Z",
+      "side": 1,
+      "message": "Could you check if the extension is enabled for this one?",
+      "range": {
+        "startLine": 70,
+        "startChar": 44,
+        "endLine": 70,
+        "endChar": 72
+      },
+      "revId": "9de2f255b2c5453f96cb33250688ab42cef62521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
