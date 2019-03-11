@@ -7,6 +7,7 @@
 #  Code generation for the load function tables used for texture formats. These mappings are
 #  not renderer specific. The mappings are done from the GL internal format, to the ANGLE
 #  format ID, and then for the specific data type.
+#  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 #
 
 import json, sys
@@ -184,15 +185,35 @@ def parse_json(json_data):
 
     return table_data, load_functions_data
 
-json_data = angle_format.load_json('load_functions_data.json')
+def main():
 
-switch_data, load_functions_data = parse_json(json_data)
-output = template.format(internal_format = internal_format_param,
-                         angle_format = angle_format_param,
-                         switch_data = switch_data,
-                         load_functions_data = load_functions_data,
-                         copyright_year = date.today().year)
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = ['load_functions_data.json']
+        outputs = ['load_functions_table_autogen.cpp']
 
-with open('load_functions_table_autogen.cpp', 'wt') as out_file:
-    out_file.write(output)
-    out_file.close()
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
+    json_data = angle_format.load_json('load_functions_data.json')
+
+    switch_data, load_functions_data = parse_json(json_data)
+    output = template.format(internal_format = internal_format_param,
+                             angle_format = angle_format_param,
+                             switch_data = switch_data,
+                             load_functions_data = load_functions_data,
+                             copyright_year = date.today().year)
+
+    with open('load_functions_table_autogen.cpp', 'wt') as out_file:
+        out_file.write(output)
+        out_file.close()
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())

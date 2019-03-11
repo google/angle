@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// vk_format_table:
+// vk_format_table_autogen.cpp:
 //   Queries for full Vulkan format information based on GL format.
 
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"

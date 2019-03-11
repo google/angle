@@ -5,6 +5,7 @@
 #
 # gen_angle_format_table.py:
 #  Code generation for ANGLE format map.
+#  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 #
 
 import angle_format
@@ -90,10 +91,12 @@ const Format *GetFormatInfoTable()
 }}  // namespace angle
 """
 
+
 def is_depth_stencil(angle_format):
     if not 'channels' in angle_format or not angle_format['channels']:
         return False
     return 'd' in angle_format['channels'] or 's' in angle_format['channels']
+
 
 def get_component_suffix(angle_format):
     if angle_format['componentType'] == 'float':
@@ -101,6 +104,7 @@ def get_component_suffix(angle_format):
     if angle_format['componentType'] == 'int' or angle_format['componentType'] == 'snorm':
         return 'S'
     return ""
+
 
 def get_channel_struct(angle_format):
     if 'bits' not in angle_format or angle_format['bits'] is None:
@@ -136,11 +140,13 @@ def get_channel_struct(angle_format):
 
     return struct_name
 
+
 def get_mip_generation_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
     if is_depth_stencil(angle_format) or channel_struct == None or "BLOCK" in angle_format["id"]:
         return 'nullptr'
     return 'GenerateMip<' + channel_struct + '>'
+
 
 def get_color_read_write_component_type(angle_format):
     component_type_map = {
@@ -152,6 +158,7 @@ def get_color_read_write_component_type(angle_format):
     }
     return component_type_map[angle_format['componentType']]
 
+
 def get_color_read_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
     if channel_struct == None:
@@ -162,6 +169,7 @@ def get_color_read_function(angle_format):
 
     read_component_type = get_color_read_write_component_type(angle_format)
     return 'ReadColor<' + channel_struct + ', '+ read_component_type + '>'
+
 
 def get_color_write_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
@@ -194,6 +202,7 @@ def get_named_component_type(component_type):
     else:
         raise ValueError("Unknown component type for " + component_type)
 
+
 def get_component_alignment_mask(channels, bits):
     if channels == None or bits == None:
         return "std::numeric_limits<GLuint>::max()"
@@ -215,6 +224,7 @@ def get_component_alignment_mask(channels, bits):
     else:
         # Can happen for 4-bit RGBA.
         return "std::numeric_limits<GLuint>::max()"
+
 
 def json_to_table_data(format_id, json, angle_to_gl):
 
@@ -280,6 +290,7 @@ def json_to_table_data(format_id, json, angle_to_gl):
 
     return format_entry_template.format(**parsed)
 
+
 def parse_angle_format_table(all_angle, json_data, angle_to_gl):
     table_data = ''
     for format_id in sorted(all_angle):
@@ -288,6 +299,7 @@ def parse_angle_format_table(all_angle, json_data, angle_to_gl):
             table_data += json_to_table_data(format_id, format_info, angle_to_gl)
 
     return table_data
+
 
 def gen_enum_string(all_angle):
     enum_data = '    NONE'
@@ -301,6 +313,7 @@ case_template = """        case {gl_format}:
             return FormatID::{angle_format};
 """
 
+
 def gen_map_switch_string(gl_to_angle):
     switch_data = '';
     for gl_format in sorted(gl_to_angle.keys()):
@@ -312,33 +325,56 @@ def gen_map_switch_string(gl_to_angle):
     switch_data += "            return FormatID::NONE;"
     return switch_data;
 
-gl_to_angle = angle_format.load_forward_table('angle_format_map.json')
-angle_to_gl = angle_format.load_inverse_table('angle_format_map.json')
-data_source_name = 'angle_format_data.json'
-json_data = angle_format.load_json(data_source_name)
-all_angle = angle_to_gl.keys()
 
-angle_format_cases = parse_angle_format_table(
-    all_angle, json_data, angle_to_gl)
-switch_data = gen_map_switch_string(gl_to_angle)
-output_cpp = template_autogen_inl.format(
-    script_name = sys.argv[0],
-    copyright_year = date.today().year,
-    angle_format_info_cases = angle_format_cases,
-    angle_format_switch = switch_data,
-    data_source_name = data_source_name)
-with open('Format_table_autogen.cpp', 'wt') as out_file:
-    out_file.write(output_cpp)
-    out_file.close()
+def main():
 
-enum_data = gen_enum_string(all_angle)
-num_angle_formats = len(all_angle)
-output_h = template_autogen_h.format(
-    script_name = sys.argv[0],
-    copyright_year = date.today().year,
-    angle_format_enum = enum_data,
-    data_source_name = data_source_name,
-    num_angle_formats = num_angle_formats)
-with open('FormatID_autogen.h', 'wt') as out_file:
-    out_file.write(output_h)
-    out_file.close()
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = ['angle_format.py', 'angle_format_data.json', 'angle_format_map.json']
+        outputs = ['Format_table_autogen.cpp', 'FormatID_autogen.h']
+
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
+    gl_to_angle = angle_format.load_forward_table('angle_format_map.json')
+    angle_to_gl = angle_format.load_inverse_table('angle_format_map.json')
+    data_source_name = 'angle_format_data.json'
+    json_data = angle_format.load_json(data_source_name)
+    all_angle = angle_to_gl.keys()
+
+    angle_format_cases = parse_angle_format_table(
+        all_angle, json_data, angle_to_gl)
+    switch_data = gen_map_switch_string(gl_to_angle)
+    output_cpp = template_autogen_inl.format(
+        script_name = sys.argv[0],
+        copyright_year = date.today().year,
+        angle_format_info_cases = angle_format_cases,
+        angle_format_switch = switch_data,
+        data_source_name = data_source_name)
+    with open('Format_table_autogen.cpp', 'wt') as out_file:
+        out_file.write(output_cpp)
+        out_file.close()
+
+    enum_data = gen_enum_string(all_angle)
+    num_angle_formats = len(all_angle)
+    output_h = template_autogen_h.format(
+        script_name = sys.argv[0],
+        copyright_year = date.today().year,
+        angle_format_enum = enum_data,
+        data_source_name = data_source_name,
+        num_angle_formats = num_angle_formats)
+    with open('FormatID_autogen.h', 'wt') as out_file:
+        out_file.write(output_h)
+        out_file.close()
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -5,6 +5,7 @@
 #
 # gen_vk_mandatory_format_support_table.py:
 #  Code generation for mandatory formats supported by Vulkan.
+#  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 from datetime import date
 import sys
@@ -85,30 +86,56 @@ def gen_format_case(index, vk_to_index_to_format_map, vk_map):
         buffer_features = buffer_features_str)
 
 
-input_file_name = 'vk_mandatory_format_support_data.json'
-out_file_name = 'vk_mandatory_format_support_table'
+def main():
 
-tree = etree.parse(script_relative('../../../../third_party/vulkan-headers/src/registry/vk.xml'))
-root = tree.getroot()
-vk_format_enums = root.findall(".//enums[@name='VkFormat']/enum")
-vk_format_name_to_index_map = {}
-num_formats = len(vk_format_enums)
-for format_enum in vk_format_enums:
-    index = int(format_enum.attrib['value'])
-    vk_format = format_enum.attrib['name']
-    vk_format_name_to_index_map[index] = vk_format
+    input_file_name = 'vk_mandatory_format_support_data.json'
+    out_file_name = 'vk_mandatory_format_support_table_autogen.cpp'
+    vk_xml_file = '../../../../third_party/vulkan-headers/src/registry/vk.xml'
 
-vk_map = angle_format.load_json(input_file_name)
-vk_cases = [gen_format_case(index, vk_format_name_to_index_map, vk_map) for index in vk_format_name_to_index_map]
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = [
+            '../angle_format.py',
+            input_file_name,
+            vk_xml_file,
+        ]
+        outputs = [out_file_name]
 
-output_cpp = template_table_autogen_cpp.format(
-    copyright_year = date.today().year,
-    num_formats = num_formats,
-    format_case_data = "\n,".join(vk_cases),
-    script_name = __file__,
-    out_file_name = out_file_name,
-    input_file_name = input_file_name)
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
 
-with open(out_file_name + '_autogen.cpp', 'wt') as out_file:
-    out_file.write(output_cpp)
-    out_file.close()
+    tree = etree.parse(script_relative(vk_xml_file))
+    root = tree.getroot()
+    vk_format_enums = root.findall(".//enums[@name='VkFormat']/enum")
+    vk_format_name_to_index_map = {}
+    num_formats = len(vk_format_enums)
+    for format_enum in vk_format_enums:
+        index = int(format_enum.attrib['value'])
+        vk_format = format_enum.attrib['name']
+        vk_format_name_to_index_map[index] = vk_format
+
+    vk_map = angle_format.load_json(input_file_name)
+    vk_cases = [gen_format_case(index, vk_format_name_to_index_map, vk_map) for index in vk_format_name_to_index_map]
+
+    output_cpp = template_table_autogen_cpp.format(
+        copyright_year = date.today().year,
+        num_formats = num_formats,
+        format_case_data = "\n,".join(vk_cases),
+        script_name = __file__,
+        out_file_name = out_file_name,
+        input_file_name = input_file_name)
+
+    with open(out_file_name, 'wt') as out_file:
+        out_file.write(output_cpp)
+        out_file.close()
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

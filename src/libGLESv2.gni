@@ -464,7 +464,7 @@ libangle_d3d11_sources = [
   "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
   "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
   "src/libANGLE/renderer/d3d/d3d11/dxgi_format_map_autogen.cpp",
-  "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+  "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table_autogen.cpp",
   "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.h",
   "src/libANGLE/renderer/d3d/d3d11/Fence11.cpp",
   "src/libANGLE/renderer/d3d/d3d11/Fence11.h",

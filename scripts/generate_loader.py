@@ -6,23 +6,11 @@
 #
 # generate_loader.py:
 #   Generates dynamic loaders for various binding interfaces.
+#   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 import sys, os, pprint, json
 from datetime import date
 import registry_xml
-
-# Handle inputs/outputs for run_code_generation.py's auto_script
-if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
-
-    inputs = [
-        'egl.xml',
-        'egl_angle_ext.xml',
-        'registry_xml.py',
-        'wgl.xml',
-    ]
-
-    print(",".join(inputs))
-    sys.exit(0)
 
 def write_header(data_source_name, all_cmds, api, preamble, path, lib, ns = "", prefix = None, export = ""):
     file_name = "%s_loader_autogen.h" % api
@@ -175,10 +163,40 @@ def gen_wgl_loader():
     write_source(source, all_cmds, "wgl", path, "_")
 
 def main():
+
+    # Handle inputs/outputs for run_code_generation.py's auto_script
+    if len(sys.argv) > 1:
+        inputs = [
+            'egl.xml',
+            'egl_angle_ext.xml',
+            'registry_xml.py',
+            'wgl.xml',
+        ]
+        outputs = [
+            '../src/libEGL/egl_loader_autogen.cpp',
+            '../src/libEGL/egl_loader_autogen.h',
+            '../util/egl_loader_autogen.cpp',
+            '../util/egl_loader_autogen.h',
+            '../util/gles_loader_autogen.cpp',
+            '../util/gles_loader_autogen.h',
+            '../util/windows/wgl_loader_autogen.cpp',
+            '../util/windows/wgl_loader_autogen.h',
+        ]
+
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
     gen_libegl_loader()
     gen_gl_loader()
     gen_egl_loader()
     gen_wgl_loader()
+    return 0
 
 
 libegl_preamble = """#include <EGL/egl.h>

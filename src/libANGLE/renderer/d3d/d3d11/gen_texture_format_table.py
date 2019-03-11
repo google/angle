@@ -5,6 +5,7 @@
 #
 # gen_texture_format_table.py:
 #  Code generation for texture format map
+#  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 #
 
 from datetime import date
@@ -266,16 +267,38 @@ def parse_json_into_switch_angle_format_string(json_map, json_data):
 
     return table_data
 
-json_map = angle_format.load_with_override(os.path.abspath('texture_format_map.json'))
-data_source_name = 'texture_format_data.json'
-json_data = angle_format.load_json(data_source_name)
 
-angle_format_cases = parse_json_into_switch_angle_format_string(json_map, json_data)
-output_cpp = template_texture_format_table_autogen_cpp.format(
-    script_name = sys.argv[0],
-    copyright_year = date.today().year,
-    angle_format_info_cases = angle_format_cases,
-    data_source_name = data_source_name)
-with open('texture_format_table_autogen.cpp', 'wt') as out_file:
-    out_file.write(output_cpp)
-    out_file.close()
+def main():
+
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = ['../../angle_format.py', 'texture_format_data.json', 'texture_format_map.json']
+        outputs = ['texture_format_table_autogen.cpp']
+
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
+    json_map = angle_format.load_with_override(os.path.abspath('texture_format_map.json'))
+    data_source_name = 'texture_format_data.json'
+    json_data = angle_format.load_json(data_source_name)
+
+    angle_format_cases = parse_json_into_switch_angle_format_string(json_map, json_data)
+    output_cpp = template_texture_format_table_autogen_cpp.format(
+        script_name = sys.argv[0],
+        copyright_year = date.today().year,
+        angle_format_info_cases = angle_format_cases,
+        data_source_name = data_source_name)
+    with open('texture_format_table_autogen.cpp', 'wt') as out_file:
+        out_file.write(output_cpp)
+        out_file.close()
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

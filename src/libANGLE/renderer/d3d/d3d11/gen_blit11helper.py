@@ -6,6 +6,7 @@
 #
 # gen_blit11helper.py:
 #   Generates the code for retrieving the various blit shaders for D3D11
+#   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 import sys, os, pprint
 from datetime import date
@@ -335,22 +336,42 @@ def write_gni_file(shader_filename_list):
     out.close()
 
 
-map_blitshader_cases = []
-shader_includes = []
-blitshadertype_cases = []
-blitshadertype_enums = []
-blitshaderop_enums = []
-shader_filenames = []
+def main():
 
-map_blitshader_cases = get_map_blitshader_cases()
-shader_includes = get_shader_includes()
-blitshadertype_cases = get_blitshader_cases()
-blitshaderop_enums = get_blitshaderop_enums()
-blitshadertype_enums = get_blitshadertype_enums()
-shader_filenames = get_shader_filenames()
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = []
+        outputs = ['Blit11Helper_autogen.inc', 'd3d11_blit_shaders_autogen.gni']
 
-write_inc_file("\n".join([d for d in blitshadertype_cases]), "\n".join(
-    [c for c in map_blitshader_cases]), "\n".join([i for i in shader_includes]),
-               "\n".join([e for e in blitshaderop_enums]), "\n".join(
-                   [e for e in blitshadertype_enums]))
-write_gni_file("\n".join([s for s in shader_filenames]))
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
+    map_blitshader_cases = []
+    shader_includes = []
+    blitshadertype_cases = []
+    blitshadertype_enums = []
+    blitshaderop_enums = []
+    shader_filenames = []
+
+    map_blitshader_cases = get_map_blitshader_cases()
+    shader_includes = get_shader_includes()
+    blitshadertype_cases = get_blitshader_cases()
+    blitshaderop_enums = get_blitshaderop_enums()
+    blitshadertype_enums = get_blitshadertype_enums()
+    shader_filenames = get_shader_filenames()
+
+    write_inc_file("\n".join([d for d in blitshadertype_cases]), "\n".join(
+        [c for c in map_blitshader_cases]), "\n".join([i for i in shader_includes]),
+                   "\n".join([e for e in blitshaderop_enums]), "\n".join(
+                       [e for e in blitshadertype_enums]))
+    write_gni_file("\n".join([s for s in shader_filenames]))
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())

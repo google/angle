@@ -6,6 +6,8 @@
 # gen_vk_internal_shaders.py:
 #  Code generation for internal Vulkan shaders. Should be run when an internal
 #  shader program is changed, added or removed.
+#  Because this script can be slow direct invocation is supported. But before
+#  code upload please run scripts/run_code_generation.py.
 
 from datetime import date
 import json
@@ -248,48 +250,8 @@ compact_newlines_regex = re.compile(r"\n\s*\n", re.MULTILINE)
 def cleanup_preprocessed_shader(shader_text):
     return compact_newlines_regex.sub('\n\n', shader_text.strip())
 
-# STEP 0: Handle inputs/outputs for run_code_generation.py's auto_script
-shaders_dir = os.path.join('shaders', 'src')
-if not os.path.isdir(shaders_dir):
-    raise Exception("Could not find shaders directory")
-
-print_inputs = len(sys.argv) == 2 and sys.argv[1] == 'inputs'
-print_outputs = len(sys.argv) == 2 and sys.argv[1] == 'outputs'
-# If an argument X is given that's not inputs or outputs, compile shaders that match *X*.
-# This is useful in development to build only the shader of interest.
-shader_files_to_compile = os.listdir(shaders_dir)
-if not (print_inputs or print_outputs or len(sys.argv) < 2):
-    shader_files_to_compile = [f for f in shader_files_to_compile if f.find(sys.argv[1]) != -1]
-
-valid_extensions = ['.vert', '.frag', '.comp']
-input_shaders = sorted([os.path.join(shaders_dir, shader)
-    for shader in os.listdir(shaders_dir)
-    if any([os.path.splitext(shader)[1] == ext for ext in valid_extensions])])
-if print_inputs:
-    print(",".join(input_shaders))
-    sys.exit(0)
-
-# STEP 1: Call glslang to generate the internal shaders into small .inc files.
-
-# a) Get the path to the glslang binary from the script directory.
-build_path = find_build_path(".")
-print("Using glslang_validator from '" + build_path + "'")
-result = subprocess.call(['ninja', '-C', build_path, 'glslang_validator'])
-if result != 0:
-    raise Exception("Error building glslang_validator")
-
-glslang_binary = 'glslang_validator'
-if os.name == 'nt':
-    glslang_binary += '.exe'
-glslang_path = os.path.join(build_path, glslang_binary)
-if not os.path.isfile(glslang_path):
-    raise Exception("Could not find " + glslang_binary)
-
-# b) Iterate over the shaders and call glslang with the right arguments.
-output_shaders = []
-
-def compile_variation(shader_file, shader_basename, flags, enums,
-        flags_active, enum_indices, flags_bits, enum_bits, do_compile):
+def compile_variation(glslang_path, shader_file, shader_basename, flags, enums,
+        flags_active, enum_indices, flags_bits, enum_bits, output_shaders):
 
     glslang_args = [glslang_path]
 
@@ -322,7 +284,7 @@ def compile_variation(shader_file, shader_basename, flags, enums,
     output_path = get_output_path(output_name)
     output_shaders.append(output_path)
 
-    if do_compile:
+    if glslang_path is not None:
         glslang_preprocessor_output_args = glslang_args + ['-E']
         glslang_preprocessor_output_args.append(shader_file)           # Input GLSL shader
 
@@ -350,40 +312,7 @@ class ShaderAndVariations:
         get_variation_bits(self.flags, self.enums)
         (self.flags_bits, self.enum_bits) = get_variation_bits(self.flags, self.enums)
 
-input_shaders_and_variations = [ShaderAndVariations(shader_file) for shader_file in input_shaders]
 
-for shader_and_variation in input_shaders_and_variations:
-    shader_file = shader_and_variation.shader_file
-    flags = shader_and_variation.flags
-    enums = shader_and_variation.enums
-    flags_bits = shader_and_variation.flags_bits
-    enum_bits = shader_and_variation.enum_bits
-
-    # an array where each element i is in [0, len(enums[i])),
-    # telling which enum is currently selected
-    enum_indices = [0] * len(enums)
-
-    output_name = os.path.basename(shader_file)
-
-    while True:
-        do_compile = not print_outputs and output_name in shader_files_to_compile
-        # a number where each bit says whether a flag is active or not,
-        # with values in [0, 2^len(flags))
-        for flags_active in range(1 << len(flags)):
-            compile_variation(shader_file, output_name, flags, enums,
-                    flags_active, enum_indices, flags_bits, enum_bits, do_compile)
-
-        if not next_enum_variation(enums, enum_indices):
-            break
-
-output_shaders = sorted(output_shaders)
-outputs = output_shaders + [out_file_cpp, out_file_h]
-
-if print_outputs:
-    print("\n".join(outputs))
-    sys.exit(0)
-
-# STEP 2: Consolidate the .inc files into an auto-generated cpp/h library.
 def get_variation_definition(shader_and_variation):
     shader_file = shader_and_variation.shader_file
     flags = shader_and_variation.flags
@@ -516,52 +445,134 @@ def get_destroy_call(shader_and_variation):
     destroy += '{\nshader.get().destroy(device);\n}'
     return destroy
 
-with open(out_file_cpp, 'w') as outfile:
-    includes = "\n".join([gen_shader_include(shader) for shader in output_shaders])
-    shader_tables_cpp = '\n'.join([get_shader_table_cpp(s)
-        for s in input_shaders_and_variations])
-    shader_destroy_calls = '\n'.join([get_destroy_call(s)
-        for s in input_shaders_and_variations])
-    shader_get_functions_cpp = '\n'.join([get_get_function_cpp(s)
-        for s in input_shaders_and_variations])
 
-    outcode = template_shader_library_cpp.format(
-        script_name = __file__,
-        copyright_year = date.today().year,
-        out_file_name = out_file_cpp,
-        input_file_name = 'shaders/src/*',
-        internal_shader_includes = includes,
-        shader_tables_cpp = shader_tables_cpp,
-        shader_destroy_calls = shader_destroy_calls,
-        shader_get_functions_cpp = shader_get_functions_cpp)
-    outfile.write(outcode)
-    outfile.close()
+def main():
+    # STEP 0: Handle inputs/outputs for run_code_generation.py's auto_script
+    shaders_dir = os.path.join('shaders', 'src')
+    if not os.path.isdir(shaders_dir):
+        raise Exception("Could not find shaders directory")
 
-with open(out_file_h, 'w') as outfile:
-    shader_variation_definitions = '\n'.join([get_variation_definition(s)
-        for s in input_shaders_and_variations])
-    shader_get_functions_h = '\n'.join([get_get_function_h(s)
-        for s in input_shaders_and_variations])
-    shader_tables_h = '\n'.join([get_shader_table_h(s)
-        for s in input_shaders_and_variations])
-    outcode = template_shader_library_h.format(
-        script_name = __file__,
-        copyright_year = date.today().year,
-        out_file_name = out_file_h,
-        input_file_name = 'shaders/src/*',
-        shader_variation_definitions = shader_variation_definitions,
-        shader_get_functions_h = shader_get_functions_h,
-        shader_tables_h = shader_tables_h)
-    outfile.write(outcode)
-    outfile.close()
+    print_inputs = len(sys.argv) == 2 and sys.argv[1] == 'inputs'
+    print_outputs = len(sys.argv) == 2 and sys.argv[1] == 'outputs'
+    # If an argument X is given that's not inputs or outputs, compile shaders that match *X*.
+    # This is useful in development to build only the shader of interest.
+    shader_files_to_compile = os.listdir(shaders_dir)
+    if not (print_inputs or print_outputs or len(sys.argv) < 2):
+        shader_files_to_compile = [f for f in shader_files_to_compile if f.find(sys.argv[1]) != -1]
 
-# STEP 3: Create a gni file with the generated files.
-with open(out_file_gni, 'w') as outfile:
-    outcode = template_shader_includes_gni.format(
-        script_name = __file__,
-        copyright_year = date.today().year,
-        out_file_name = out_file_gni,
-        input_file_name = 'shaders/src/*',
-        shaders_list = ',\n'.join(['  "' + slash(shader) + '"' for shader in output_shaders]))
-    outfile.write(outcode)
-    outfile.close()
+    valid_extensions = ['.vert', '.frag', '.comp']
+    input_shaders = sorted([os.path.join(shaders_dir, shader)
+        for shader in os.listdir(shaders_dir)
+        if any([os.path.splitext(shader)[1] == ext for ext in valid_extensions])])
+    if print_inputs:
+        print(",".join(input_shaders))
+        sys.exit(0)
+
+    # STEP 1: Call glslang to generate the internal shaders into small .inc files.
+
+    # a) Get the path to the glslang binary from the script directory.
+    glslang_path = None
+    if not print_outputs:
+        build_path = find_build_path(".")
+        print("Using glslang_validator from '" + build_path + "'")
+        result = subprocess.call(['ninja', '-C', build_path, 'glslang_validator'])
+        if result != 0:
+            raise Exception("Error building glslang_validator")
+
+        glslang_binary = 'glslang_validator'
+        if os.name == 'nt':
+            glslang_binary += '.exe'
+        glslang_path = os.path.join(build_path, glslang_binary)
+        if not os.path.isfile(glslang_path):
+            raise Exception("Could not find " + glslang_binary)
+
+    # b) Iterate over the shaders and call glslang with the right arguments.
+    output_shaders = []
+
+    input_shaders_and_variations = [ShaderAndVariations(shader_file) for shader_file in input_shaders]
+
+    for shader_and_variation in input_shaders_and_variations:
+        shader_file = shader_and_variation.shader_file
+        flags = shader_and_variation.flags
+        enums = shader_and_variation.enums
+        flags_bits = shader_and_variation.flags_bits
+        enum_bits = shader_and_variation.enum_bits
+
+        # an array where each element i is in [0, len(enums[i])),
+        # telling which enum is currently selected
+        enum_indices = [0] * len(enums)
+
+        output_name = os.path.basename(shader_file)
+
+        while True:
+            do_compile = not print_outputs and output_name in shader_files_to_compile
+            # a number where each bit says whether a flag is active or not,
+            # with values in [0, 2^len(flags))
+            for flags_active in range(1 << len(flags)):
+                compile_variation(glslang_path, shader_file, output_name, flags, enums,
+                        flags_active, enum_indices, flags_bits, enum_bits, output_shaders)
+
+            if not next_enum_variation(enums, enum_indices):
+                break
+
+    output_shaders = sorted(output_shaders)
+    outputs = output_shaders + [out_file_cpp, out_file_h]
+
+    if print_outputs:
+        print(','.join(outputs))
+        sys.exit(0)
+
+    # STEP 2: Consolidate the .inc files into an auto-generated cpp/h library.
+    with open(out_file_cpp, 'w') as outfile:
+        includes = "\n".join([gen_shader_include(shader) for shader in output_shaders])
+        shader_tables_cpp = '\n'.join([get_shader_table_cpp(s)
+            for s in input_shaders_and_variations])
+        shader_destroy_calls = '\n'.join([get_destroy_call(s)
+            for s in input_shaders_and_variations])
+        shader_get_functions_cpp = '\n'.join([get_get_function_cpp(s)
+            for s in input_shaders_and_variations])
+
+        outcode = template_shader_library_cpp.format(
+            script_name = __file__,
+            copyright_year = date.today().year,
+            out_file_name = out_file_cpp,
+            input_file_name = 'shaders/src/*',
+            internal_shader_includes = includes,
+            shader_tables_cpp = shader_tables_cpp,
+            shader_destroy_calls = shader_destroy_calls,
+            shader_get_functions_cpp = shader_get_functions_cpp)
+        outfile.write(outcode)
+        outfile.close()
+
+    with open(out_file_h, 'w') as outfile:
+        shader_variation_definitions = '\n'.join([get_variation_definition(s)
+            for s in input_shaders_and_variations])
+        shader_get_functions_h = '\n'.join([get_get_function_h(s)
+            for s in input_shaders_and_variations])
+        shader_tables_h = '\n'.join([get_shader_table_h(s)
+            for s in input_shaders_and_variations])
+        outcode = template_shader_library_h.format(
+            script_name = __file__,
+            copyright_year = date.today().year,
+            out_file_name = out_file_h,
+            input_file_name = 'shaders/src/*',
+            shader_variation_definitions = shader_variation_definitions,
+            shader_get_functions_h = shader_get_functions_h,
+            shader_tables_h = shader_tables_h)
+        outfile.write(outcode)
+        outfile.close()
+
+    # STEP 3: Create a gni file with the generated files.
+    with open(out_file_gni, 'w') as outfile:
+        outcode = template_shader_includes_gni.format(
+            script_name = __file__,
+            copyright_year = date.today().year,
+            out_file_name = out_file_gni,
+            input_file_name = 'shaders/src/*',
+            shaders_list = ',\n'.join(['  "' + slash(shader) + '"' for shader in output_shaders]))
+        outfile.write(outcode)
+        outfile.close()
+
+
+if __name__ == '__main__':
+    sys.exit(main())

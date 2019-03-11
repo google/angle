@@ -6,25 +6,11 @@
 #
 # generate_entry_points.py:
 #   Generates the OpenGL bindings and entry point layers for ANGLE.
+#   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 import sys, os, pprint, json
 from datetime import date
 import registry_xml
-
-# Handle inputs/outputs for run_code_generation.py's auto_script
-if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
-
-    inputs = [
-        'egl.xml',
-        'egl_angle_ext.xml',
-        'entry_point_packed_gl_enums.json',
-        'gl.xml',
-        'gl_angle_ext.xml',
-        'registry_xml.py',
-    ]
-
-    print(",".join(inputs))
-    sys.exit(0)
 
 # List of GLES1 extensions for which we don't need to add Context.h decls.
 gles1_no_context_decl_extensions = [
@@ -640,158 +626,6 @@ def get_exports(commands, fmt = None):
     else:
         return ["    %s" % cmd for cmd in sorted(commands)]
 
-gles1decls = {}
-
-gles1decls['core'] = []
-gles1decls['exts'] = {}
-
-libgles_ep_defs = []
-libgles_ep_exports = []
-
-xml = registry_xml.RegistryXML('gl.xml', 'gl_angle_ext.xml')
-
-# First run through the main GLES entry points.  Since ES2+ is the primary use
-# case, we go through those first and then add ES1-only APIs at the end.
-for major_version, minor_version in [[2, 0], [3, 0], [3, 1], [1, 0]]:
-    annotation = "{}_{}".format(major_version, minor_version)
-    name_prefix = "GL_ES_VERSION_"
-
-    is_gles1 = major_version == 1
-    if is_gles1:
-        name_prefix = "GL_VERSION_ES_CM_"
-
-    comment = annotation.replace("_", ".")
-    feature_name = "{}{}".format(name_prefix, annotation)
-
-    xml.AddCommands(feature_name, annotation)
-
-    gles_commands = xml.commands[annotation]
-    all_commands = xml.all_commands
-
-    decls, defs, libgles_defs, validation_protos = get_entry_points(
-        all_commands, gles_commands, False)
-
-    # Write the version as a comment before the first EP.
-    libgles_defs.insert(0, "\n// OpenGL ES %s" % comment)
-    libgles_ep_exports.append("\n    ; OpenGL ES %s" % comment)
-
-    libgles_ep_defs += libgles_defs
-    libgles_ep_exports += get_exports(gles_commands)
-
-    major_if_not_one = major_version if major_version != 1 else ""
-    minor_if_not_zero = minor_version if minor_version != 0 else ""
-
-    header_includes = template_header_includes.format(
-        major=major_if_not_one, minor=minor_if_not_zero)
-
-    # We include the platform.h header since it undefines the conflicting MemoryBarrier macro.
-    if major_version == 3 and minor_version == 1:
-        header_includes += "\n#include \"common/platform.h\"\n"
-
-    source_includes = template_sources_includes.format(
-        annotation.lower(), major_version, minor_if_not_zero)
-
-    write_file(annotation, comment, template_entry_point_header,
-               "\n".join(decls), "h", header_includes, "gl.xml")
-    write_file(annotation, comment, template_entry_point_source,
-               "\n".join(defs), "cpp", source_includes, "gl.xml")
-    if is_gles1:
-        gles1decls['core'] = get_gles1_decls(all_commands, gles_commands)
-
-    validation_annotation = "%s%s" % (major_version, minor_if_not_zero)
-    write_validation_header(validation_annotation, comment, validation_protos)
-
-
-# After we finish with the main entry points, we process the extensions.
-extension_defs = []
-extension_decls = []
-
-# Accumulated validation prototypes.
-ext_validation_protos = []
-
-for gles1ext in registry_xml.gles1_extensions:
-    gles1decls['exts'][gles1ext] = []
-
-xml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
-
-for extension_name, ext_cmd_names in sorted(xml.ext_data.iteritems()):
-
-    # Detect and filter duplicate extensions.
-    decls, defs, libgles_defs, validation_protos = get_entry_points(
-        xml.all_commands, ext_cmd_names, False)
-
-    # Avoid writing out entry points defined by a prior extension.
-    for dupe in xml.ext_dupes[extension_name]:
-        msg = "// {} is already defined.\n".format(dupe[2:])
-        defs.append(msg)
-
-    # Write the extension name as a comment before the first EP.
-    comment = "\n// {}".format(extension_name)
-    defs.insert(0, comment)
-    decls.insert(0, comment)
-    libgles_defs.insert(0, comment)
-    libgles_ep_exports.append("\n    ; %s" % extension_name)
-
-    extension_defs += defs
-    extension_decls += decls
-
-    ext_validation_protos += [comment] + validation_protos
-
-    libgles_ep_defs += libgles_defs
-    libgles_ep_exports += get_exports(ext_cmd_names)
-
-    if extension_name in registry_xml.gles1_extensions:
-        if extension_name not in gles1_no_context_decl_extensions:
-            gles1decls['exts'][extension_name] = get_gles1_decls(all_commands, ext_cmd_names)
-
-# Special handling for EGL_ANGLE_explicit_context extension
-if registry_xml.support_EGL_ANGLE_explicit_context:
-    comment = "\n// EGL_ANGLE_explicit_context"
-    extension_defs.append(comment)
-    extension_decls.append(comment)
-    libgles_ep_defs.append(comment)
-
-    cmds = xml.all_cmd_names.get_all_commands()
-
-    # Get the explicit context entry points
-    decls, defs, libgles_defs, validation_protos = get_entry_points(
-        xml.all_commands, cmds, True)
-
-    # Append the explicit context entry points
-    extension_decls += decls
-    extension_defs += defs
-    libgles_ep_defs += libgles_defs
-
-    libgles_ep_exports.append("\n    ; EGL_ANGLE_explicit_context")
-    libgles_ep_exports += get_exports(cmds, lambda x: "%sContextANGLE" % x)
-
-    # Generate .inc files for extension function pointers and declarations
-    for major, minor in [[2, 0], [3, 0], [3, 1], [1, 0]]:
-        annotation = "{}_{}".format(major, minor)
-
-        major_if_not_one = major if major != 1 else ""
-        minor_if_not_zero = minor if minor != 0 else ""
-        version = "{}{}".format(major_if_not_one, minor_if_not_zero)
-
-        glext_ptrs, glext_protos = get_glext_decls(all_commands,
-            xml.all_cmd_names.get_commands(annotation), version, True)
-
-        glext_ext_ptrs = []
-        glext_ext_protos = []
-
-        # Append extensions for 1.0 and 2.0
-        if(annotation == "1_0"):
-            glext_ext_ptrs, glext_ext_protos = get_glext_decls(all_commands,
-                xml.all_cmd_names.get_commands("glext"), version, True)
-        elif(annotation == "2_0"):
-            glext_ext_ptrs, glext_ext_protos = get_glext_decls(all_commands,
-                xml.all_cmd_names.get_commands("gl2ext"), version, True)
-
-        glext_ptrs += glext_ext_ptrs
-        glext_protos += glext_ext_protos
-
-        write_glext_explicit_context_inc(version, "\n".join(glext_ptrs), "\n".join(glext_protos))
-
 # Get EGL exports
 def get_egl_exports():
 
@@ -828,62 +662,260 @@ def get_egl_exports():
 
     return exports
 
-header_includes = template_header_includes.format(
-    major="", minor="")
-header_includes += """
-#include <GLES/gl.h>
-#include <GLES/glext.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-"""
+def main():
 
-source_includes = template_sources_includes.format("ext", "EXT", "")
-source_includes += """
-#include "libANGLE/validationES1.h"
-#include "libANGLE/validationES2.h"
-#include "libANGLE/validationES3.h"
-#include "libANGLE/validationES31.h"
-"""
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = [
+            'egl.xml',
+            'egl_angle_ext.xml',
+            'entry_point_packed_gl_enums.json',
+            'gl.xml',
+            'gl_angle_ext.xml',
+            'registry_xml.py',
+        ]
+        outputs = [
+            '../src/libANGLE/Context_gles_1_0_autogen.h',
+            '../src/libANGLE/validationES1_autogen.h',
+            '../src/libANGLE/validationES2_autogen.h',
+            '../src/libANGLE/validationES31_autogen.h',
+            '../src/libANGLE/validationES3_autogen.h',
+            '../src/libANGLE/validationESEXT_autogen.h',
+            '../src/libGLESv2/entry_points_enum_autogen.h',
+            '../src/libGLESv2/entry_points_gles_1_0_autogen.cpp',
+            '../src/libGLESv2/entry_points_gles_1_0_autogen.h',
+            '../src/libGLESv2/entry_points_gles_2_0_autogen.cpp',
+            '../src/libGLESv2/entry_points_gles_2_0_autogen.h',
+            '../src/libGLESv2/entry_points_gles_3_0_autogen.cpp',
+            '../src/libGLESv2/entry_points_gles_3_0_autogen.h',
+            '../src/libGLESv2/entry_points_gles_3_1_autogen.cpp',
+            '../src/libGLESv2/entry_points_gles_3_1_autogen.h',
+            '../src/libGLESv2/entry_points_gles_ext_autogen.cpp',
+            '../src/libGLESv2/entry_points_gles_ext_autogen.h',
+            '../src/libGLESv2/libGLESv2_autogen.cpp',
+            '../src/libGLESv2/libGLESv2_autogen.def',
+        ]
 
-write_file("ext", "extension", template_entry_point_header,
-           "\n".join([item for item in extension_decls]), "h", header_includes,
-           "gl.xml and gl_angle_ext.xml")
-write_file("ext", "extension", template_entry_point_source,
-           "\n".join([item for item in extension_defs]), "cpp", source_includes,
-           "gl.xml and gl_angle_ext.xml")
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
 
-write_validation_header("EXT", "extension", ext_validation_protos)
+    gles1decls = {}
 
-write_context_api_decls("1_0", context_gles_header, gles1decls)
+    gles1decls['core'] = []
+    gles1decls['exts'] = {}
 
-sorted_cmd_names = ["Invalid"] + [cmd[2:] for cmd in sorted(xml.all_cmd_names.get_all_commands())]
+    libgles_ep_defs = []
+    libgles_ep_exports = []
 
-entry_points_enum = template_entry_points_enum_header.format(
-    script_name = os.path.basename(sys.argv[0]),
-    data_source_name = "gl.xml and gl_angle_ext.xml",
-    year = date.today().year,
-    entry_points_list = ",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
+    xml = registry_xml.RegistryXML('gl.xml', 'gl_angle_ext.xml')
 
-entry_points_enum_header_path = path_to("libGLESv2", "entry_points_enum_autogen.h")
-with open(entry_points_enum_header_path, "w") as out:
-    out.write(entry_points_enum)
-    out.close()
+    # First run through the main GLES entry points.  Since ES2+ is the primary use
+    # case, we go through those first and then add ES1-only APIs at the end.
+    for major_version, minor_version in [[2, 0], [3, 0], [3, 1], [1, 0]]:
+        annotation = "{}_{}".format(major_version, minor_version)
+        name_prefix = "GL_ES_VERSION_"
 
-source_includes = """
-#include "angle_gl.h"
+        is_gles1 = major_version == 1
+        if is_gles1:
+            name_prefix = "GL_VERSION_ES_CM_"
 
-#include "libGLESv2/entry_points_gles_1_0_autogen.h"
-#include "libGLESv2/entry_points_gles_2_0_autogen.h"
-#include "libGLESv2/entry_points_gles_3_0_autogen.h"
-#include "libGLESv2/entry_points_gles_3_1_autogen.h"
-#include "libGLESv2/entry_points_gles_ext_autogen.h"
+        comment = annotation.replace("_", ".")
+        feature_name = "{}{}".format(name_prefix, annotation)
 
-#include "common/event_tracer.h"
-"""
+        xml.AddCommands(feature_name, annotation)
 
-write_export_files("\n".join([item for item in libgles_ep_defs]), source_includes)
+        gles_commands = xml.commands[annotation]
+        all_commands = xml.all_commands
 
-libgles_ep_exports += get_egl_exports()
+        decls, defs, libgles_defs, validation_protos = get_entry_points(
+            all_commands, gles_commands, False)
 
-everything = "Khronos and ANGLE XML files"
-write_windows_def_file(everything, "libGLESv2", libgles_ep_exports)
+        # Write the version as a comment before the first EP.
+        libgles_defs.insert(0, "\n// OpenGL ES %s" % comment)
+        libgles_ep_exports.append("\n    ; OpenGL ES %s" % comment)
+
+        libgles_ep_defs += libgles_defs
+        libgles_ep_exports += get_exports(gles_commands)
+
+        major_if_not_one = major_version if major_version != 1 else ""
+        minor_if_not_zero = minor_version if minor_version != 0 else ""
+
+        header_includes = template_header_includes.format(
+            major=major_if_not_one, minor=minor_if_not_zero)
+
+        # We include the platform.h header since it undefines the conflicting MemoryBarrier macro.
+        if major_version == 3 and minor_version == 1:
+            header_includes += "\n#include \"common/platform.h\"\n"
+
+        source_includes = template_sources_includes.format(
+            annotation.lower(), major_version, minor_if_not_zero)
+
+        write_file(annotation, comment, template_entry_point_header,
+                   "\n".join(decls), "h", header_includes, "gl.xml")
+        write_file(annotation, comment, template_entry_point_source,
+                   "\n".join(defs), "cpp", source_includes, "gl.xml")
+        if is_gles1:
+            gles1decls['core'] = get_gles1_decls(all_commands, gles_commands)
+
+        validation_annotation = "%s%s" % (major_version, minor_if_not_zero)
+        write_validation_header(validation_annotation, comment, validation_protos)
+
+
+    # After we finish with the main entry points, we process the extensions.
+    extension_defs = []
+    extension_decls = []
+
+    # Accumulated validation prototypes.
+    ext_validation_protos = []
+
+    for gles1ext in registry_xml.gles1_extensions:
+        gles1decls['exts'][gles1ext] = []
+
+    xml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
+
+    for extension_name, ext_cmd_names in sorted(xml.ext_data.iteritems()):
+
+        # Detect and filter duplicate extensions.
+        decls, defs, libgles_defs, validation_protos = get_entry_points(
+            xml.all_commands, ext_cmd_names, False)
+
+        # Avoid writing out entry points defined by a prior extension.
+        for dupe in xml.ext_dupes[extension_name]:
+            msg = "// {} is already defined.\n".format(dupe[2:])
+            defs.append(msg)
+
+        # Write the extension name as a comment before the first EP.
+        comment = "\n// {}".format(extension_name)
+        defs.insert(0, comment)
+        decls.insert(0, comment)
+        libgles_defs.insert(0, comment)
+        libgles_ep_exports.append("\n    ; %s" % extension_name)
+
+        extension_defs += defs
+        extension_decls += decls
+
+        ext_validation_protos += [comment] + validation_protos
+
+        libgles_ep_defs += libgles_defs
+        libgles_ep_exports += get_exports(ext_cmd_names)
+
+        if extension_name in registry_xml.gles1_extensions:
+            if extension_name not in gles1_no_context_decl_extensions:
+                gles1decls['exts'][extension_name] = get_gles1_decls(all_commands, ext_cmd_names)
+
+    # Special handling for EGL_ANGLE_explicit_context extension
+    if registry_xml.support_EGL_ANGLE_explicit_context:
+        comment = "\n// EGL_ANGLE_explicit_context"
+        extension_defs.append(comment)
+        extension_decls.append(comment)
+        libgles_ep_defs.append(comment)
+
+        cmds = xml.all_cmd_names.get_all_commands()
+
+        # Get the explicit context entry points
+        decls, defs, libgles_defs, validation_protos = get_entry_points(
+            xml.all_commands, cmds, True)
+
+        # Append the explicit context entry points
+        extension_decls += decls
+        extension_defs += defs
+        libgles_ep_defs += libgles_defs
+
+        libgles_ep_exports.append("\n    ; EGL_ANGLE_explicit_context")
+        libgles_ep_exports += get_exports(cmds, lambda x: "%sContextANGLE" % x)
+
+        # Generate .inc files for extension function pointers and declarations
+        for major, minor in [[2, 0], [3, 0], [3, 1], [1, 0]]:
+            annotation = "{}_{}".format(major, minor)
+
+            major_if_not_one = major if major != 1 else ""
+            minor_if_not_zero = minor if minor != 0 else ""
+            version = "{}{}".format(major_if_not_one, minor_if_not_zero)
+
+            glext_ptrs, glext_protos = get_glext_decls(all_commands,
+                xml.all_cmd_names.get_commands(annotation), version, True)
+
+            glext_ext_ptrs = []
+            glext_ext_protos = []
+
+            # Append extensions for 1.0 and 2.0
+            if(annotation == "1_0"):
+                glext_ext_ptrs, glext_ext_protos = get_glext_decls(all_commands,
+                    xml.all_cmd_names.get_commands("glext"), version, True)
+            elif(annotation == "2_0"):
+                glext_ext_ptrs, glext_ext_protos = get_glext_decls(all_commands,
+                    xml.all_cmd_names.get_commands("gl2ext"), version, True)
+
+            glext_ptrs += glext_ext_ptrs
+            glext_protos += glext_ext_protos
+
+            write_glext_explicit_context_inc(version, "\n".join(glext_ptrs), "\n".join(glext_protos))
+
+
+    header_includes = template_header_includes.format(
+        major="", minor="")
+    header_includes += """
+    #include <GLES/glext.h>
+    #include <GLES2/gl2.h>
+    #include <GLES2/gl2ext.h>
+    """
+
+    source_includes = template_sources_includes.format("ext", "EXT", "")
+    source_includes += """
+    #include "libANGLE/validationES1.h"
+    #include "libANGLE/validationES2.h"
+    #include "libANGLE/validationES3.h"
+    #include "libANGLE/validationES31.h"
+    """
+
+    write_file("ext", "extension", template_entry_point_header,
+               "\n".join([item for item in extension_decls]), "h", header_includes,
+               "gl.xml and gl_angle_ext.xml")
+    write_file("ext", "extension", template_entry_point_source,
+               "\n".join([item for item in extension_defs]), "cpp", source_includes,
+               "gl.xml and gl_angle_ext.xml")
+
+    write_validation_header("EXT", "extension", ext_validation_protos)
+
+    write_context_api_decls("1_0", context_gles_header, gles1decls)
+
+    sorted_cmd_names = ["Invalid"] + [cmd[2:] for cmd in sorted(xml.all_cmd_names.get_all_commands())]
+
+    entry_points_enum = template_entry_points_enum_header.format(
+        script_name = os.path.basename(sys.argv[0]),
+        data_source_name = "gl.xml and gl_angle_ext.xml",
+        year = date.today().year,
+        entry_points_list = ",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
+
+    entry_points_enum_header_path = path_to("libGLESv2", "entry_points_enum_autogen.h")
+    with open(entry_points_enum_header_path, "w") as out:
+        out.write(entry_points_enum)
+        out.close()
+
+    source_includes = """
+    #include "angle_gl.h"
+
+    #include "libGLESv2/entry_points_gles_1_0_autogen.h"
+    #include "libGLESv2/entry_points_gles_2_0_autogen.h"
+    #include "libGLESv2/entry_points_gles_3_0_autogen.h"
+    #include "libGLESv2/entry_points_gles_3_1_autogen.h"
+    #include "libGLESv2/entry_points_gles_ext_autogen.h"
+
+    #include "common/event_tracer.h"
+    """
+
+    write_export_files("\n".join([item for item in libgles_ep_defs]), source_includes)
+
+    libgles_ep_exports += get_egl_exports()
+
+    everything = "Khronos and ANGLE XML files"
+    write_windows_def_file(everything, "libGLESv2", libgles_ep_exports)
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -5,6 +5,7 @@
 #
 # gen_emulated_builtin_function_tables.py:
 #  Generator for the builtin function maps.
+#  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 from datetime import date
 import json
@@ -88,10 +89,6 @@ def enum_type(arg):
         return 'UI' + arg_type[2:] + suffix
     return arg_type.capitalize() + suffix
 
-input_script = "emulated_builtin_function_data_hlsl.json"
-hlsl_json = load_json(input_script)
-emulated_functions = []
-
 def gen_emulated_function(data):
 
    func = ""
@@ -109,17 +106,44 @@ def gen_emulated_function(data):
    func += "},\n"
    return [ func ]
 
-for item in hlsl_json:
-   emulated_functions += gen_emulated_function(item)
 
-hlsl_fname = "emulated_builtin_functions_hlsl_autogen.cpp"
+def main():
 
-hlsl_gen = template_emulated_builtin_functions_hlsl.format(
-   script_name = sys.argv[0],
-   data_source_name = input_script,
-   copyright_year = date.today().year,
-   emulated_functions = "".join(emulated_functions))
+    input_script = "emulated_builtin_function_data_hlsl.json"
+    hlsl_fname = "emulated_builtin_functions_hlsl_autogen.cpp"
 
-with open(hlsl_fname, 'wt') as f:
-   f.write(hlsl_gen)
-   f.close()
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = [input_script]
+        outputs = [hlsl_fname]
+
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
+    hlsl_json = load_json(input_script)
+    emulated_functions = []
+
+    for item in hlsl_json:
+       emulated_functions += gen_emulated_function(item)
+
+    hlsl_gen = template_emulated_builtin_functions_hlsl.format(
+       script_name = sys.argv[0],
+       data_source_name = input_script,
+       copyright_year = date.today().year,
+       emulated_functions = "".join(emulated_functions))
+
+    with open(hlsl_fname, 'wt') as f:
+       f.write(hlsl_gen)
+       f.close()
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

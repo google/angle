@@ -3,7 +3,8 @@
 # found in the LICENSE file.
 #
 # gen_packed_gl_enums.py:
-#  Code generation for the packed enums.
+#   Code generation for the packed enums.
+#   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 import datetime, json, os, sys
 from collections import namedtuple
@@ -204,7 +205,29 @@ def write_cpp(enums, path_prefix, file_name, data_source_name, namespace, api_en
     with (open(path_prefix + file_name, 'wt')) as f:
         f.write(cpp)
 
-if __name__ == '__main__':
+
+def main():
+
+    # auto_script parameters.
+    if len(sys.argv) > 1:
+        inputs = []
+        outputs = []
+        for generator in Generators:
+            inputs += [generator['json']]
+            outputs += [
+                generator['output'] + '_autogen.cpp',
+                generator['output'] + '_autogen.h',
+            ]
+
+        if sys.argv[1] == 'inputs':
+            print ','.join(inputs)
+        elif sys.argv[1] == 'outputs':
+            print ','.join(outputs)
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
     path_prefix = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 
     for generator in Generators:
@@ -215,3 +238,8 @@ if __name__ == '__main__':
         enums = load_enums(path_prefix + json_file)
         write_header(enums, path_prefix, output_file + '_autogen.h', json_file, namespace, enum_type)
         write_cpp(enums, path_prefix, output_file + '_autogen.cpp', json_file, namespace, enum_type)
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
