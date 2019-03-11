@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "651cbb4c_cbeca529",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-11T19:49:40Z",
+      "side": 1,
+      "message": "We could have the backends call this directly I think when compiling, I think that it doesn\u0027t save any code to wrap it.",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 80
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4326eeda_3c716fc5",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-11T19:49:40Z",
+      "side": 1,
+      "message": "Instead of passing this as a function, can we do all this work on the main thread first?  The backend compile function could take a few parameters instead: the options and compiler instance.\n\nI think this way, there would be no more passing of functors from the frontend to backend.",
+      "range": {
+        "startLine": 384,
+        "startChar": 12,
+        "endLine": 414,
+        "endChar": 0
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5db1eb67_6267f6be",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-11T19:49:40Z",
+      "side": 1,
+      "message": "Why does this need to be a functor passed to the backend? It would be better to still do this in resolveCompile on the main thread.",
+      "range": {
+        "startLine": 420,
+        "startChar": 4,
+        "endLine": 420,
+        "endChar": 45
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8eb5ba58_27c5ff0f",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-11T19:49:40Z",
+      "side": 1,
+      "message": "Could you move this definition higher in the file?  Near the debug declarations would be fine.",
+      "range": {
+        "startLine": 193,
+        "startChar": 17,
+        "endLine": 193,
+        "endChar": 44
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aba4e60_1bf14408",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-11T19:49:40Z",
+      "side": 1,
+      "message": "Implement this with UNREACHABLE().  This forces all contexts that implement this extension to implement this function.",
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "056083ee_e9b2938d",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-11T19:49:40Z",
+      "side": 1,
+      "message": "\u0026\u0026",
+      "range": {
+        "startLine": 233,
+        "startChar": 35,
+        "endLine": 233,
+        "endChar": 36
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
