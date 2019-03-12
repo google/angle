@@ -995,7 +995,7 @@ TEST_F(CollectVertexVariablesTest, ViewID_OVR)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "precision mediump float;\n"
         "void main()\n"
         "{\n"
@@ -1003,7 +1003,7 @@ TEST_F(CollectVertexVariablesTest, ViewID_OVR)
         "}\n";
 
     ShBuiltInResources resources = mTranslator->getResources();
-    resources.OVR_multiview      = 1;
+    resources.OVR_multiview2     = 1;
     resources.MaxViewsOVR        = 4;
     initTranslator(resources);
 

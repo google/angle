@@ -2756,6 +2756,11 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
         ASSIGN("glStencilThenCoverStrokePathInstancedNV", stencilThenCoverStrokePathInstancedNV);
         ASSIGN("glStencilThenCoverStrokePathNV", stencilThenCoverStrokePathNV);
     }
+
+    if (extensions.count("GL_OVR_multiview") != 0)
+    {
+        ASSIGN("glFramebufferTextureMultiviewOVR", framebufferTextureMultiviewOVR);
+    }
 }
 
 #if defined(ANGLE_ENABLE_OPENGL_NULL)
@@ -5485,6 +5490,11 @@ void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> 
         stencilThenCoverFillPathNV            = &glStencilThenCoverFillPathNVNULL;
         stencilThenCoverStrokePathInstancedNV = &glStencilThenCoverStrokePathInstancedNVNULL;
         stencilThenCoverStrokePathNV          = &glStencilThenCoverStrokePathNVNULL;
+    }
+
+    if (extensions.count("GL_OVR_multiview") != 0)
+    {
+        framebufferTextureMultiviewOVR = &glFramebufferTextureMultiviewOVRNULL;
     }
 }
 #endif  // defined(ANGLE_ENABLE_OPENGL_NULL)

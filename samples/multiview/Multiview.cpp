@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// This sample shows basic usage of the GL_ANGLE_multiview extension.
+// This sample shows basic usage of the GL_OVR_multiview2 extension.
 
 #include "SampleApplication.h"
 
@@ -64,13 +64,13 @@ class MultiviewSample : public SampleApplication
 
     bool initialize() override
     {
-        // Check whether the GL_ANGLE_multiview extension is supported. If not, abort
+        // Check whether the GL_OVR_multiview2 extension is supported. If not, abort
         // initialization.
         const char *allExtensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
         const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
-        if (paddedExtensions.find(std::string(" GL_ANGLE_multiview ")) == std::string::npos)
+        if (paddedExtensions.find(std::string(" GL_OVR_multiview2 ")) == std::string::npos)
         {
-            std::cout << "GL_ANGLE_multiview is not available." << std::endl;
+            std::cout << "GL_OVR_multiview2 is not available." << std::endl;
             return false;
         }
 
@@ -94,10 +94,10 @@ class MultiviewSample : public SampleApplication
         // Generate multiview framebuffer for layered rendering.
         glGenFramebuffers(1, &mMultiviewFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mMultiviewFBO);
-        glFramebufferTextureMultiviewLayeredANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                                  mColorTexture, 0, 0, 2);
-        glFramebufferTextureMultiviewLayeredANGLE(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                                  mDepthTexture, 0, 0, 2);
+        glFramebufferTextureMultiviewOVR(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mColorTexture, 0, 0,
+                                         2);
+        glFramebufferTextureMultiviewOVR(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, mDepthTexture, 0, 0,
+                                         2);
         GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
         glDrawBuffers(1, &drawBuffer);
 
@@ -113,7 +113,7 @@ class MultiviewSample : public SampleApplication
         // use.
         constexpr char kMultiviewVS[] =
             "#version 300 es\n"
-            "#extension GL_OVR_multiview : require\n"
+            "#extension GL_OVR_multiview2 : require\n"
             "layout(num_views = 2) in;\n"
             "layout(location=0) in vec3 posIn;\n"
             "layout(location=1) in vec3 normalIn;\n"
@@ -136,7 +136,7 @@ class MultiviewSample : public SampleApplication
 
         constexpr char kMultiviewFS[] =
             "#version 300 es\n"
-            "#extension GL_OVR_multiview : require\n"
+            "#extension GL_OVR_multiview2 : require\n"
             "precision mediump float;\n"
             "out vec4 color;\n"
             "in vec3 oNormal;\n"

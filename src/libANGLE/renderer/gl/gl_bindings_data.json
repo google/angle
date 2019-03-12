@@ -800,5 +800,10 @@
     "GL_KHR_parallel_shader_compile":
     [
         "MaxShaderCompilerThreadsKHR"
-    ]
+    ],
+    
+    "GL_OVR_multiview2":
+    [
+        "FramebufferTextureMultiviewOVR"
+    ] 
 }

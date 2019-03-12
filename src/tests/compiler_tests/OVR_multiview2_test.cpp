@@ -87,46 +87,46 @@ class SymbolOccurrenceCounterByNameAndQualifier : public SymbolOccurrenceCounter
     TQualifier mSymbolQualifier;
 };
 
-class WEBGLMultiviewVertexShaderTest : public ShaderCompileTreeTest
+class OVRMultiviewVertexShaderTest : public ShaderCompileTreeTest
 {
   public:
-    WEBGLMultiviewVertexShaderTest() {}
+    OVRMultiviewVertexShaderTest() {}
 
   protected:
     ::GLenum getShaderType() const override { return GL_VERTEX_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
     void initResources(ShBuiltInResources *resources) override
     {
-        resources->OVR_multiview = 1;
-        resources->MaxViewsOVR   = 4;
+        resources->OVR_multiview2 = 1;
+        resources->MaxViewsOVR    = 4;
     }
 };
 
-class WEBGLMultiviewFragmentShaderTest : public ShaderCompileTreeTest
+class OVRMultiviewFragmentShaderTest : public ShaderCompileTreeTest
 {
   public:
-    WEBGLMultiviewFragmentShaderTest() {}
+    OVRMultiviewFragmentShaderTest() {}
 
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL3_SPEC; }
     void initResources(ShBuiltInResources *resources) override
     {
-        resources->OVR_multiview = 1;
-        resources->MaxViewsOVR   = 4;
+        resources->OVR_multiview2 = 1;
+        resources->MaxViewsOVR    = 4;
     }
 };
 
-class WEBGLMultiviewOutputCodeTest : public MatchOutputCodeTest
+class OVRMultiviewOutputCodeTest : public MatchOutputCodeTest
 {
   public:
-    WEBGLMultiviewOutputCodeTest(sh::GLenum shaderType)
+    OVRMultiviewOutputCodeTest(sh::GLenum shaderType)
         : MatchOutputCodeTest(shaderType, 0, SH_ESSL_OUTPUT)
     {
         addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
 
-        getResources()->OVR_multiview = 1;
-        getResources()->MaxViewsOVR   = 4;
+        getResources()->OVR_multiview2 = 1;
+        getResources()->MaxViewsOVR    = 4;
     }
 
     void requestHLSLOutput()
@@ -151,23 +151,22 @@ class WEBGLMultiviewOutputCodeTest : public MatchOutputCodeTest
     }
 };
 
-class WEBGLMultiviewVertexShaderOutputCodeTest : public WEBGLMultiviewOutputCodeTest
+class OVRMultiviewVertexShaderOutputCodeTest : public OVRMultiviewOutputCodeTest
 {
   public:
-    WEBGLMultiviewVertexShaderOutputCodeTest() : WEBGLMultiviewOutputCodeTest(GL_VERTEX_SHADER) {}
+    OVRMultiviewVertexShaderOutputCodeTest() : OVRMultiviewOutputCodeTest(GL_VERTEX_SHADER) {}
 };
 
-class WEBGLMultiviewFragmentShaderOutputCodeTest : public WEBGLMultiviewOutputCodeTest
+class OVRMultiviewFragmentShaderOutputCodeTest : public OVRMultiviewOutputCodeTest
 {
   public:
-    WEBGLMultiviewFragmentShaderOutputCodeTest() : WEBGLMultiviewOutputCodeTest(GL_FRAGMENT_SHADER)
-    {}
+    OVRMultiviewFragmentShaderOutputCodeTest() : OVRMultiviewOutputCodeTest(GL_FRAGMENT_SHADER) {}
 };
 
-class WEBGLMultiviewComputeShaderOutputCodeTest : public WEBGLMultiviewOutputCodeTest
+class OVRMultiviewComputeShaderOutputCodeTest : public OVRMultiviewOutputCodeTest
 {
   public:
-    WEBGLMultiviewComputeShaderOutputCodeTest() : WEBGLMultiviewOutputCodeTest(GL_COMPUTE_SHADER) {}
+    OVRMultiviewComputeShaderOutputCodeTest() : OVRMultiviewOutputCodeTest(GL_COMPUTE_SHADER) {}
 };
 
 void VariableOccursNTimes(TIntermBlock *root,
@@ -188,13 +187,13 @@ void VariableOccursNTimes(TIntermBlock *root,
     EXPECT_EQ(n, viewIDByName.getNumberOfOccurrences());
 }
 
-// Unsupported GL_OVR_multiview2 extension directive (WEBGL_multiview spec only exposes
-// GL_OVR_multiview).
-TEST_F(WEBGLMultiviewVertexShaderTest, InvalidMultiview2)
+// Unsupported GL_OVR_multiview extension directive (GL_OVR_multiview2 spec only exposes
+// GL_OVR_multiview2).
+TEST_F(OVRMultiviewVertexShaderTest, InvalidMultiview2)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
@@ -208,11 +207,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, InvalidMultiview2)
 }
 
 // Invalid combination of non-matching num_views declarations.
-TEST_F(WEBGLMultiviewVertexShaderTest, InvalidNumViewsMismatch)
+TEST_F(OVRMultiviewVertexShaderTest, InvalidNumViewsMismatch)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "layout(num_views = 1) in;\n"
         "void main()\n"
@@ -227,11 +226,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, InvalidNumViewsMismatch)
 }
 
 // Invalid value zero for num_views.
-TEST_F(WEBGLMultiviewVertexShaderTest, InvalidNumViewsZero)
+TEST_F(OVRMultiviewVertexShaderTest, InvalidNumViewsZero)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 0) in;\n"
         "void main()\n"
         "{\n"
@@ -245,11 +244,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, InvalidNumViewsZero)
 }
 
 // Too large value for num_views.
-TEST_F(WEBGLMultiviewVertexShaderTest, InvalidNumViewsGreaterThanMax)
+TEST_F(OVRMultiviewVertexShaderTest, InvalidNumViewsGreaterThanMax)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 5) in;\n"
         "void main()\n"
         "{\n"
@@ -263,11 +262,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, InvalidNumViewsGreaterThanMax)
 }
 
 // Valid use of gl_ViewID_OVR.
-TEST_F(WEBGLMultiviewVertexShaderTest, ViewIDUsed)
+TEST_F(OVRMultiviewVertexShaderTest, ViewIDUsed)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "layout(num_views = 2) in;  // Duplicated on purpose\n"
         "in vec4 pos;\n"
@@ -292,12 +291,12 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ViewIDUsed)
     }
 }
 
-// Read gl_FragCoord in a OVR_multiview fragment shader.
-TEST_F(WEBGLMultiviewFragmentShaderTest, ReadOfFragCoord)
+// Read gl_FragCoord in a OVR_multiview2 fragment shader.
+TEST_F(OVRMultiviewFragmentShaderTest, ReadOfFragCoord)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "precision highp float;\n"
         "out vec4 outColor;\n"
         "void main()\n"
@@ -310,12 +309,12 @@ TEST_F(WEBGLMultiviewFragmentShaderTest, ReadOfFragCoord)
     }
 }
 
-// Read gl_ViewID_OVR in an OVR_multiview fragment shader.
-TEST_F(WEBGLMultiviewFragmentShaderTest, ReadOfViewID)
+// Read gl_ViewID_OVR in an OVR_multiview2 fragment shader.
+TEST_F(OVRMultiviewFragmentShaderTest, ReadOfViewID)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "precision highp float;\n"
         "out vec4 outColor;\n"
         "void main()\n"
@@ -328,13 +327,13 @@ TEST_F(WEBGLMultiviewFragmentShaderTest, ReadOfViewID)
     }
 }
 
-// Correct use of GL_OVR_multiview macro.
-TEST_F(WEBGLMultiviewVertexShaderTest, UseOfExtensionMacro)
+// Correct use of GL_OVR_multiview2 macro.
+TEST_F(OVRMultiviewVertexShaderTest, UseOfExtensionMacro)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#ifdef GL_OVR_multiview\n"
-        "#if (GL_OVR_multiview == 1)\n"
+        "#ifdef GL_OVR_multiview2\n"
+        "#if (GL_OVR_multiview2 == 1)\n"
         "void main()\n"
         "{\n"
         "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);\n"
@@ -348,11 +347,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, UseOfExtensionMacro)
 }
 
 // Test that gl_ViewID_OVR can't be used as an l-value.
-TEST_F(WEBGLMultiviewVertexShaderTest, ViewIdAsLValue)
+TEST_F(OVRMultiviewVertexShaderTest, ViewIdAsLValue)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "void foo(out uint u)\n"
         "{\n"
@@ -369,11 +368,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ViewIdAsLValue)
     }
 }
 
-// Test that compiling an ESSL 1.00 shader with multiview support succeeds.
-TEST_F(WEBGLMultiviewVertexShaderTest, ESSL1Shader)
+// Test that compiling an ESSL 1.00 shader with multiview support fails.
+TEST_F(OVRMultiviewVertexShaderTest, ESSL1Shader)
 {
     const std::string &shaderString =
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
@@ -386,17 +385,17 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ESSL1Shader)
         "        gl_Position = vec4(1.0, 0.0, 0.0, 1.0);\n"
         "    }\n"
         "}\n";
-    if (!compile(shaderString))
+    if (compile(shaderString))
     {
-        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
 
 // Test that compiling an ESSL 1.00 shader with an unsupported global layout qualifier fails.
-TEST_F(WEBGLMultiviewVertexShaderTest, ESSL1ShaderUnsupportedGlobalLayoutQualifier)
+TEST_F(OVRMultiviewVertexShaderTest, ESSL1ShaderUnsupportedGlobalLayoutQualifier)
 {
     const std::string &shaderString =
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "layout(std140) uniform;\n"
         "void main()\n"
@@ -417,10 +416,10 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ESSL1ShaderUnsupportedGlobalLayoutQualifi
 }
 
 // Test that compiling an ESSL 1.00 vertex shader with an unsupported input storage qualifier fails.
-TEST_F(WEBGLMultiviewVertexShaderTest, ESSL1ShaderUnsupportedInputStorageQualifier)
+TEST_F(OVRMultiviewVertexShaderTest, ESSL1ShaderUnsupportedInputStorageQualifier)
 {
     const std::string &shaderString =
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "in vec4 pos;\n"
         "void main()\n"
@@ -442,10 +441,10 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ESSL1ShaderUnsupportedInputStorageQualifi
 
 // Test that compiling an ESSL 1.00 fragment shader with an unsupported input storage qualifier
 // fails.
-TEST_F(WEBGLMultiviewFragmentShaderTest, ESSL1ShaderUnsupportedInStorageQualifier)
+TEST_F(OVRMultiviewFragmentShaderTest, ESSL1ShaderUnsupportedInStorageQualifier)
 {
     const std::string &shaderString =
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "precision highp float;\n"
         "in vec4 color;\n"
         "void main()\n"
@@ -469,11 +468,11 @@ TEST_F(WEBGLMultiviewFragmentShaderTest, ESSL1ShaderUnsupportedInStorageQualifie
 // twice: once to initialize ViewID_OVR and once for InstanceID. The number of occurrences of
 // InstanceID in the AST should be the sum of two and the number of occurrences of gl_InstanceID
 // before any renaming.
-TEST_F(WEBGLMultiviewVertexShaderTest, GLInstanceIDIsRenamed)
+TEST_F(OVRMultiviewVertexShaderTest, GLInstanceIDIsRenamed)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "flat out int myInstance;\n"
         "out float myInstanceF;\n"
@@ -505,11 +504,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, GLInstanceIDIsRenamed)
 // Test that gl_ViewID_OVR gets correctly replaced by ViewID_OVR. gl_ViewID_OVR should not be found
 // by either name or qualifier. The number of occurrences of ViewID_OVR in the AST should be the sum
 // of two and the number of occurrences of gl_ViewID_OVR before any renaming.
-TEST_F(WEBGLMultiviewVertexShaderTest, GLViewIDIsRenamed)
+TEST_F(OVRMultiviewVertexShaderTest, GLViewIDIsRenamed)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 2) in;\n"
         "flat out uint a;\n"
         "void main()\n"
@@ -537,11 +536,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, GLViewIDIsRenamed)
 
 // The test checks that ViewID_OVR and InstanceID have the correct initializers based on the
 // number of views.
-TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectValues)
+TEST_F(OVRMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectValues)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 3) in;\n"
         "flat out int myInstance;\n"
         "void main()\n"
@@ -563,59 +562,34 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectV
     EXPECT_TRUE(foundInHLSLCode("InstanceID = int_ctor((uint_ctor(gl_InstanceID) / 3))"));
 }
 
-// The test checks that the directive enabling GL_OVR_multiview is not outputted if the extension is
-// emulated.
-TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, StrippedOVRMultiviewDirective)
+// The test checks that the directive enabling GL_OVR_multiview2 is not outputted if the extension
+// is emulated.
+TEST_F(OVRMultiviewVertexShaderOutputCodeTest, StrippedOVRMultiviewDirective)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 3) in;\n"
         "void main()\n"
         "{\n"
         "}\n";
     // The directive must not be present if any of the multiview emulation options are set.
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW);
-    EXPECT_FALSE(foundInESSLCode("GL_OVR_multiview"));
-    EXPECT_FALSE(foundInGLSLCode("GL_OVR_multiview"));
+    EXPECT_FALSE(foundInESSLCode("GL_OVR_multiview2"));
+    EXPECT_FALSE(foundInGLSLCode("GL_OVR_multiview2"));
 
     // The directive should be outputted from the ESSL translator with none of the options being
     // set.
     compile(shaderString);
-    EXPECT_TRUE(foundInESSLCode("GL_OVR_multiview"));
-}
-
-// Test that gl_InstanceID is collected in an ESSL1 shader if the
-// SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW option is set.
-TEST_F(WEBGLMultiviewVertexShaderTest, InstaceIDCollectedESSL1)
-{
-    const std::string &shaderString =
-        "#extension GL_OVR_multiview : require\n"
-        "layout(num_views = 2) in;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position.x = gl_ViewID_OVR == 0 ? 0. : 1.;\n"
-        "   gl_Position.yzw = vec3(0., 0., 1.);\n"
-        "}\n";
-    mExtraCompileOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
-    mExtraCompileOptions |= SH_VARIABLES;
-    compileAssumeSuccess(shaderString);
-
-    const std::vector<Attribute> &attributes = getAttributes();
-    bool isGLInstanceIDFound                 = false;
-    for (size_t i = 0u; i < attributes.size() && !isGLInstanceIDFound; ++i)
-    {
-        isGLInstanceIDFound = (attributes[i].name == "gl_InstanceID");
-    }
-    EXPECT_TRUE(isGLInstanceIDFound);
+    EXPECT_TRUE(foundInESSLCode("GL_OVR_multiview2"));
 }
 
 // Test that ViewID_OVR is declared as a flat input variable in an ESSL 3.00 fragment shader.
-TEST_F(WEBGLMultiviewFragmentShaderTest, ViewIDDeclaredAsFlatInput)
+TEST_F(OVRMultiviewFragmentShaderTest, ViewIDDeclaredAsFlatInput)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "void main()\n"
         "{\n"
         "}\n";
@@ -625,10 +599,10 @@ TEST_F(WEBGLMultiviewFragmentShaderTest, ViewIDDeclaredAsFlatInput)
 }
 
 // Test that ViewID_OVR is declared as a flat output variable in an ESSL 1.00 vertex shader.
-TEST_F(WEBGLMultiviewVertexShaderTest, ViewIDDeclaredAsFlatOutput)
+TEST_F(OVRMultiviewVertexShaderTest, ViewIDDeclaredAsFlatOutput)
 {
     const std::string &shaderString =
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "void main()\n"
         "{\n"
         "}\n";
@@ -639,11 +613,11 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ViewIDDeclaredAsFlatOutput)
 
 // The test checks that the GL_NV_viewport_array2 extension is emitted in a vertex shader if the
 // SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set.
-TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewportArray2IsEmitted)
+TEST_F(OVRMultiviewVertexShaderOutputCodeTest, ViewportArray2IsEmitted)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 3) in;\n"
         "void main()\n"
         "{\n"
@@ -654,9 +628,9 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewportArray2IsEmitted)
 }
 
 // The test checks that the GL_NV_viewport_array2 extension is not emitted in a vertex shader if the
-// OVR_multiview extension is not requested in the shader source even if the
+// OVR_multiview2 extension is not requested in the shader source even if the
 // SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set.
-TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewportArray2IsNotEmitted)
+TEST_F(OVRMultiviewVertexShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 {
     const std::string &shaderString =
         "#version 300 es\n"
@@ -671,11 +645,11 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 
 // The test checks that the GL_NV_viewport_array2 extension is not emitted in a fragment shader if
 // the SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set.
-TEST_F(WEBGLMultiviewFragmentShaderOutputCodeTest, ViewportArray2IsNotEmitted)
+TEST_F(OVRMultiviewFragmentShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "void main()\n"
         "{\n"
         "}\n";
@@ -687,11 +661,11 @@ TEST_F(WEBGLMultiviewFragmentShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 
 // The test checks that the GL_NV_viewport_array2 extension is not emitted in a compute shader if
 // the SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set.
-TEST_F(WEBGLMultiviewComputeShaderOutputCodeTest, ViewportArray2IsNotEmitted)
+TEST_F(OVRMultiviewComputeShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OVR_multiview : require
+        #extension GL_OVR_multiview2 : require
         void main()
         {
         })";
@@ -703,11 +677,11 @@ TEST_F(WEBGLMultiviewComputeShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 
 // The test checks that the viewport index is selected after the initialization of ViewID_OVR for
 // GLSL and ESSL ouputs.
-TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlViewportIndexIsSet)
+TEST_F(OVRMultiviewVertexShaderOutputCodeTest, GlViewportIndexIsSet)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 3) in;\n"
         "void main()\n"
         "{\n"
@@ -723,11 +697,11 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlViewportIndexIsSet)
 
 // The test checks that the layer is selected after the initialization of ViewID_OVR for
 // GLSL and ESSL ouputs.
-TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
+TEST_F(OVRMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
 {
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
+        "#extension GL_OVR_multiview2 : require\n"
         "layout(num_views = 3) in;\n"
         "void main()\n"
         "{\n"
@@ -740,32 +714,6 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
         "gl_Layer = (int(ViewID_OVR) + multiviewBaseViewLayerIndex)"};
     EXPECT_TRUE(foundInCodeInOrder(SH_ESSL_OUTPUT, expectedStrings));
     EXPECT_TRUE(foundInCodeInOrder(SH_GLSL_COMPATIBILITY_OUTPUT, expectedStrings));
-}
-
-// Test that a warning is generated in an ESSL 1.00 shader when using a layout qualifier to set
-// num_views and the extension is set to warn.
-TEST_F(WEBGLMultiviewVertexShaderTest, WarnOnGlobalLayoutQualifier)
-{
-    const std::string &shaderString =
-        R"(
-        #extension GL_OVR_multiview : warn
-        layout(num_views=2) in;
-
-        void main()
-        {
-        })";
-    if (compile(shaderString))
-    {
-        if (!hasWarning())
-        {
-            FAIL() << "Shader compilation succeeded without warnings, expecting warning:\n"
-                   << mInfoLog;
-        }
-    }
-    else
-    {
-        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
-    }
 }
 
 }  // namespace

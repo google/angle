@@ -29,7 +29,7 @@ Number
 
 Dependencies
 
-    OpenGL ES 3.0 and the extensions ANGLE_texture_multisample, ANGLE_multiview
+    OpenGL ES 3.0 and the extensions ANGLE_texture_multisample, OVR_multiview2
     and OES_texture_storage_multisample_2d_array are required.
 
     With OpenGL ES 3.1, only the extensions ANGLE_multiview and
@@ -63,7 +63,7 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
     "* Layers of a two-dimensional multisample array texture which can be used
        for multi-view rendering."
 
-    Modify the error list of FramebufferTextureMultiviewLayeredANGLE:
+    Modify the error list of FramebufferTextureMultiviewOVR:
 
     Change
 

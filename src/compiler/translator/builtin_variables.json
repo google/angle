@@ -856,13 +856,13 @@
         }
     },
     "Multiview":{
-        "condition":"mResources.OVR_multiview && shaderType != GL_COMPUTE_SHADER",
+        "condition":"mResources.OVR_multiview2 && shaderType != GL_COMPUTE_SHADER",
         "subgroups":{
             "ESSL3":{
                 "variables":{
                     "gl_ViewID_OVR":{
                         "level":"ESSL3_BUILTINS",
-                        "extension":"OVR_multiview",
+                        "extension":"OVR_multiview2",
                         "type":{
                             "basic":"UInt",
                             "precision":"High",
@@ -876,7 +876,7 @@
                     "gl_ViewID_OVR":{
                         "suffix":"ESSL1",
                         "level":"ESSL1_BUILTINS",
-                        "extension":"OVR_multiview",
+                        "extension":"OVR_multiview2",
                         "type":{
                             "basic":"Int",
                             "precision":"High",

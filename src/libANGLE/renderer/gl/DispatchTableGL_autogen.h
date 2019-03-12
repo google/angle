@@ -751,6 +751,9 @@ class DispatchTableGL : angle::NonCopyable
     PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC eGLImageTargetRenderbufferStorageOES = nullptr;
     PFNGLEGLIMAGETARGETTEXTURE2DOESPROC eGLImageTargetTexture2DOES = nullptr;
 
+    // GL_OVR_multiview2
+    PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC framebufferTextureMultiviewOVR = nullptr;
+
     // NV_path_rendering (originally written against 3.2 compatibility profile)
     PFNGLCOVERFILLPATHINSTANCEDNVPROC coverFillPathInstancedNV = nullptr;
     PFNGLCOVERFILLPATHNVPROC coverFillPathNV = nullptr;

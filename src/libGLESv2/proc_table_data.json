@@ -578,9 +578,8 @@
       "glMultiDrawElementsInstancedANGLE"
     ],
 
-    "GL_ANGLE_multiview": [
-        "glFramebufferTextureMultiviewLayeredANGLE",
-        "glFramebufferTextureMultiviewSideBySideANGLE"
+    "GL_OVR_multiview2": [
+        "glFramebufferTextureMultiviewOVR"
     ],
 
     "GL_KHR_parallel_shader_compile": [

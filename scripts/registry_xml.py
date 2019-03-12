@@ -22,7 +22,6 @@ angle_extensions = [
     "GL_CHROMIUM_copy_compressed_texture",
     "GL_ANGLE_request_extension",
     "GL_ANGLE_robust_client_memory",
-    "GL_ANGLE_multiview",
     "GL_ANGLE_copy_texture_3d",
 ]
 
@@ -67,6 +66,8 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_OES_texture_border_clamp",
     "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
+    "GL_OVR_multiview",
+    "GL_OVR_multiview2",
     "GL_KHR_parallel_shader_compile",
     "GL_ANGLE_multi_draw",
 ])

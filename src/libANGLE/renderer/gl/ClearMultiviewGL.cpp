@@ -40,18 +40,9 @@ void ClearMultiviewGL::clearMultiviewFBO(const gl::FramebufferState &state,
                                          GLint stencil)
 {
     const gl::FramebufferAttachment *firstAttachment = state.getFirstNonNullAttachment();
-    switch (firstAttachment->getMultiviewLayout())
+    if (firstAttachment->isMultiview())
     {
-        case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
-            clearLayeredFBO(state, clearCommandType, mask, buffer, drawbuffer, values, depth,
-                            stencil);
-            break;
-        case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
-            clearSideBySideFBO(state, scissorBase, clearCommandType, mask, buffer, drawbuffer,
-                               values, depth, stencil);
-            break;
-        default:
-            UNREACHABLE();
+        clearLayeredFBO(state, clearCommandType, mask, buffer, drawbuffer, values, depth, stencil);
     }
 }
 
@@ -69,7 +60,7 @@ void ClearMultiviewGL::clearLayeredFBO(const gl::FramebufferState &state,
     mStateManager->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
 
     const gl::FramebufferAttachment *firstAttachment = state.getFirstNonNullAttachment();
-    ASSERT(firstAttachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE);
+    ASSERT(firstAttachment->isMultiview());
 
     const auto &drawBuffers = state.getDrawBufferStates();
     mFunctions->drawBuffers(static_cast<GLsizei>(drawBuffers.size()), drawBuffers.data());
@@ -84,30 +75,6 @@ void ClearMultiviewGL::clearLayeredFBO(const gl::FramebufferState &state,
     }
 
     detachTextures(state);
-}
-
-void ClearMultiviewGL::clearSideBySideFBO(const gl::FramebufferState &state,
-                                          const gl::Rectangle &scissorBase,
-                                          ClearCommandType clearCommandType,
-                                          GLbitfield mask,
-                                          GLenum buffer,
-                                          GLint drawbuffer,
-                                          const uint8_t *values,
-                                          GLfloat depth,
-                                          GLint stencil)
-{
-    const gl::FramebufferAttachment *firstAttachment = state.getFirstNonNullAttachment();
-    ASSERT(firstAttachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
-
-    const auto &viewportOffsets = firstAttachment->getMultiviewViewportOffsets();
-    for (size_t i = 0u; i < viewportOffsets.size(); ++i)
-    {
-        gl::Rectangle scissor(scissorBase.x + viewportOffsets[i].x,
-                              scissorBase.y + viewportOffsets[i].y, scissorBase.width,
-                              scissorBase.height);
-        mStateManager->setScissorIndexed(0u, scissor);
-        genericClear(clearCommandType, mask, buffer, drawbuffer, values, depth, stencil);
-    }
 }
 
 void ClearMultiviewGL::genericClear(ClearCommandType clearCommandType,

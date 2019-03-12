@@ -52,15 +52,15 @@
   "ESSL static builtins:src/compiler/translator/ParseContext_autogen.h":
     "6be7f97ce68aa5ba5ecf30b835bc344d",
   "ESSL static builtins:src/compiler/translator/SymbolTable_autogen.cpp":
-    "c4add6e70cd468f301e1478a598d26ed",
+    "f3b75261653cf1729b11afcee7294494",
   "ESSL static builtins:src/compiler/translator/SymbolTable_autogen.h":
     "bdb3c8eab0d48267a2f264e3af635e1a",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
     "e5e567406476306ea06984d885be028d",
   "ESSL static builtins:src/compiler/translator/builtin_symbols_hash_autogen.txt":
-    "0a24a1f40317834c9724290be9adc640",
+    "e60e2185718a035adfd19ab91536fdb7",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
-    "d07ec4348b35d0db1eeab3c99a5e91f9",
+    "a8f3d76c3c395e8f6a35dd22eb2e8416",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":
     "f056dba2fdeac5a5dbad9d8f7b17f55f",
   "ESSL static builtins:src/compiler/translator/tree_util/BuiltIn_autogen.h":
@@ -94,13 +94,13 @@
   "GL/EGL entry points:scripts/entry_point_packed_gl_enums.json":
     "263af9517ddb1c9f3ba83894fe837095",
   "GL/EGL entry points:scripts/generate_entry_points.py":
-    "7bd73a78c638334a114ed027d49cb6df",
+    "70f826962543838df966ed8c7155d0dd",
   "GL/EGL entry points:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "GL/EGL entry points:scripts/gl_angle_ext.xml":
-    "56fb2634ebb3d8240b1a92aeb5518f1a",
+    "20422d413ae9fdf06f179b3ba9980d79",
   "GL/EGL entry points:scripts/registry_xml.py":
-    "1b3141a346eac3c3c1c7f8f06f1a16fb",
+    "2657b7b0e19548e47c12e2348cf33de7",
   "GL/EGL entry points:src/libANGLE/Context_gles_1_0_autogen.h":
     "fad4ec629b41e9d97ff57a132ad946cb",
   "GL/EGL entry points:src/libANGLE/validationES1_autogen.h":
@@ -112,9 +112,9 @@
   "GL/EGL entry points:src/libANGLE/validationES3_autogen.h":
     "4617942e5bf67fa5e35675daf66afc5c",
   "GL/EGL entry points:src/libANGLE/validationESEXT_autogen.h":
-    "bc9b6b21c88b9647cdf1af80ff3842e3",
+    "8e501839a051c0f1b646343b665369df",
   "GL/EGL entry points:src/libGLESv2/entry_points_enum_autogen.h":
-    "c023a19637be195551e04642f489eb24",
+    "1c50aa0844ece3d673d563a8b23a7166",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_1_0_autogen.cpp":
     "196771da8ad7a5beded1dc878410ac11",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_1_0_autogen.h":
@@ -132,13 +132,13 @@
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_3_1_autogen.h":
     "043d09a964c740067bf4279e0b544aed",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_ext_autogen.cpp":
-    "c50113c9fa37c9a7500a26933cd8e208",
+    "9131b9e072a25e09f10cedaccfdd68f8",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_ext_autogen.h":
-    "1daa12e804ae05ed40176d18eb895e84",
+    "2c746d064fe2d8ed4769dc9acbb9ad67",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.cpp":
-    "c36c139b71cfdbef2b5b995a2cef367a",
+    "7b4db87b102a45a75b0df10fc0fc8b6f",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.def":
-    "403a60d4d8a84a81c667328f66b26fb4",
+    "d3aefde6dbf9591669c89162164e4043",
   "GL/EGL/WGL loader:scripts/egl.xml":
     "842e24514c4cfe09fba703c17a0fd292",
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
@@ -146,7 +146,7 @@
   "GL/EGL/WGL loader:scripts/generate_loader.py":
     "475030714c1644b6dfb1f6f08572039d",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
-    "1b3141a346eac3c3c1c7f8f06f1a16fb",
+    "2657b7b0e19548e47c12e2348cf33de7",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
@@ -158,9 +158,9 @@
   "GL/EGL/WGL loader:util/egl_loader_autogen.h":
     "897a66bc15e1791e356d7324f2ff94af",
   "GL/EGL/WGL loader:util/gles_loader_autogen.cpp":
-    "4edf322870fa8ab445d60b6f9a293f0d",
+    "3bf16abb2fdaa4b61cf872e10f12ae49",
   "GL/EGL/WGL loader:util/gles_loader_autogen.h":
-    "61230991ba509d8bdc00c478e51559ff",
+    "537180e892aa887ff52825419319b15e",
   "GL/EGL/WGL loader:util/windows/wgl_loader_autogen.cpp":
     "12ffb44e5e743c826e4d84ac65cdba82",
   "GL/EGL/WGL loader:util/windows/wgl_loader_autogen.h":
@@ -170,17 +170,17 @@
   "OpenGL dispatch table:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp":
-    "2ed6500b69d5db151348ddccf6d9b2b8",
+    "96d06b3acf7826aee1ec813a8fa3a867",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/DispatchTableGL_autogen.h":
-    "4211cf4afa7d4a0f8a95de39db45a55e",
+    "ea5eded625b5db7d7b2b7f689c72f14b",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/generate_gl_dispatch_table.py":
     "7571edb9e610891ed0c95dc496120cff",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/gl_bindings_data.json":
-    "6cd07767ecf12d24d2d3572194c3323b",
+    "1afca09d29ed7788c76cbc9bcfb4de0a",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/null_functions.cpp":
-    "f10d2f520f2ceae32ad8e65322fdb0a5",
+    "5470d6b1d7057d797e15b986a31e196e",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/null_functions.h":
-    "638724bfa3c1e926e93fb97a84b7617f",
+    "7906751710cab691f9e7365e59b7beed",
   "Vulkan format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan format:src/libANGLE/renderer/angle_format_map.json":
@@ -380,9 +380,9 @@
   "proc table:src/libGLESv2/gen_proc_table.py":
     "20ebe54894d613de42b0b15ca34078d9",
   "proc table:src/libGLESv2/proc_table_autogen.cpp":
-    "57c28e284b325a46ae480f443ebedb81",
+    "1d064990760130a0d134d31a92d71ec9",
   "proc table:src/libGLESv2/proc_table_data.json":
-    "48af1fb9e30059591d0313c6af1fc7ce",
+    "42fa5eb6c9a7ffa65bd589224299433e",
   "uniform type:src/common/gen_uniform_type_table.py":
     "fa40444d496ac07cd9dc0cd239e4a499",
   "uniform type:src/common/uniform_type_info_autogen.cpp":
