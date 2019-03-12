@@ -5,12 +5,13 @@
 //
 
 #include "gtest/gtest.h"
+#include "test_utils/runner/TestSuite.h"
 
 void ANGLEProcessTestArgs(int *argc, char *argv[]);
 
 int main(int argc, char **argv)
 {
-    testing::InitGoogleTest(&argc, argv);
+    tr::TestSuite testSuite(&argc, argv);
     ANGLEProcessTestArgs(&argc, argv);
     int rt = RUN_ALL_TESTS();
     return rt;
