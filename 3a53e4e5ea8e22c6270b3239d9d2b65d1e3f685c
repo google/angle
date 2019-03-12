@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "39596409_3a2e0b57",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T15:32:45Z",
+      "side": 1,
+      "message": "How about CreateFromIntArrayForChooseConfig?\n\nI see your other discussion about eliminating this method.  This is pending that.",
+      "parentUuid": "a7d320f8_28cbaab3",
+      "range": {
+        "startLine": 59,
+        "startChar": 24,
+        "endLine": 59,
+        "endChar": 54
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c63b1a3c_6d1c8bdf",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T15:32:45Z",
+      "side": 1,
+      "message": "I see your other discussion about eliminating this method.  This is pending that.\n\nI\u0027m trying, but this is causing header-file dependency issues.  For example, I\u0027ve moved the following line from \"AttributeMap.cpp\" to \"AttributeMap.h\", and I\u0027m getting compilation errors in other headers that are complaining about the contents of \"Display.h\":\n\n#include \"libANGLE/Display.h\"",
+      "parentUuid": "cb448b37_c90df62f",
+      "range": {
+        "startLine": 59,
+        "startChar": 56,
+        "endLine": 59,
+        "endChar": 69
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e1bc806b_21309444",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2019-03-11T21:15:37Z",
       "side": 1,
       "message": "This will validate the injected parameters which I would prefer not to do.  Could you add the default config parameters in display::getConfigs?  Copying the attribute map to create a new one with the default parameters is OK in my opinion.\n\nIt also moves knowledge about default config parameters from the AttributeMap class which is a simple container.",
+      "range": {
+        "startLine": 203,
+        "startChar": 29,
+        "endLine": 203,
+        "endChar": 92
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87aac040_eba46d1e",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T15:32:45Z",
+      "side": 1,
+      "message": "Hmm.  I went down several paths before, including this one.  I don\u0027t have a clear architectural picture of ANGLE, but I saw problems with doing as you ask.  I\u0027ll do what you\u0027d like, but here are some things I considered ...\n\nBoth EGL_GetConfigs() and EGL_ChooseConfig() go through Display::getConfigs, but with different AttributeMap\u0027s.  eglGetConfigs() has/requires an empty AttributeMap.  eglChooseConfig() likely has caller-provided values and requires default attribute values in AttributeMap.  Without adding the attributes in EGL_ChooseConfig, neither Display::getConfigs() nor ConfigSet::filter() know whether they should add the default values.  It\u0027s also somewhat complex to conditionally add the defaults.\n\nAn alternative seems to be to split display-\u003egetConfigs into 2: one for EGL_GetConfigs() and one for EGL_ChooseConfig().  My new code, that adds defaults, can migrate to the one for EGL_ChooseConfig().  Does that seem reasonable?",
+      "parentUuid": "e1bc806b_21309444",
       "range": {
         "startLine": 203,
         "startChar": 29,
