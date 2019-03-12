@@ -709,6 +709,8 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_robustness.txt
     extensions->robustBufferAccessBehavior = false;
     extensions->blendMinMax                = true;
+    // https://docs.microsoft.com/en-us/windows/desktop/direct3ddxgi/format-support-for-direct3d-feature-level-9-1-hardware
+    extensions->floatBlend                 = false;
     extensions->framebufferBlit            = true;
     extensions->framebufferMultisample     = true;
     extensions->instancedArraysANGLE       = deviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
