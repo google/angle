@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "77327a0b_b3246961",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T17:18:07Z",
+      "side": 1,
+      "message": "Could sending these through validation be why the \"dEQP-EGL.functional.negative_api.choose_config\" test is crashing on some devices?",
+      "parentUuid": "87aac040_eba46d1e",
+      "range": {
+        "startLine": 203,
+        "startChar": 29,
+        "endLine": 203,
+        "endChar": 92
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "01882db5_94c5d857",
         "filename": "src/tests/egl_tests/EGLChooseConfigDefaultTest.cpp",
         "patchSetId": 7
