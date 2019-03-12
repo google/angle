@@ -26,10 +26,10 @@ def get_child_script_dirname(script):
 def clean_path_slashes(path):
     return path.replace("\\", "/")
 
-# Takes a script input file name which is relative to the code generation script's directory and
+# Takes a script file name which is relative to the code generation script's directory and
 # changes it to be relative to the angle root directory
-def rebase_script_path(script_path, input_file_path):
-    return os.path.relpath(os.path.join(os.path.dirname(script_path), input_file_path), root_dir)
+def rebase_script_path(script_path, relative_path):
+    return os.path.relpath(os.path.join(os.path.dirname(script_path), relative_path), root_dir)
 
 def grab_from_script(script, param):
     res = subprocess.check_output(['python', script, param]).strip()
@@ -41,10 +41,13 @@ def auto_script(script):
     # Set the CWD to the script directory.
     os.chdir(get_child_script_dirname(script))
     base_script = os.path.basename(script)
-    return {
+    info = {
         'inputs': grab_from_script(base_script, 'inputs'),
         'outputs': grab_from_script(base_script, 'outputs')
     }
+    # Reset the CWD to the root ANGLE directory.
+    os.chdir(root_dir)
+    return info
 
 hash_fname = "run_code_generation_hashes.json"
 
@@ -98,21 +101,35 @@ def md5(fname):
     return hash_md5.hexdigest()
 
 
-def any_input_dirty(name, inputs, new_hashes, old_hashes):
-    found_dirty_input = False
-    for finput in inputs:
-        key = name + ":" + finput
-        new_hashes[key] = md5(finput)
-        if (not key in old_hashes) or (old_hashes[key] != new_hashes[key]):
-            found_dirty_input = True
-    return found_dirty_input
+def any_hash_dirty(name, filenames, new_hashes, old_hashes):
+    found_dirty_hash = False
+    for filename in filenames:
+        key = name + ":" + filename
+        if not os.path.isfile(filename):
+            found_dirty_hash = True
+        else:
+            new_hashes[key] = md5(filename)
+            if (not key in old_hashes) or (old_hashes[key] != new_hashes[key]):
+                found_dirty_hash = True
+    return found_dirty_hash
 
 
 def any_old_hash_missing(new_hashes, old_hashes):
     for name, _ in old_hashes.iteritems():
         if name not in new_hashes:
+            script, file = name.split(':')
+            print('%s missing from generated hashes.' % file)
             return True
     return False
+
+
+def update_output_hashes(script, outputs, new_hashes):
+    for output in outputs:
+        if not os.path.isfile(output):
+            print('Output is missing from %s: %s' % (script, output))
+            sys.exit(1)
+        key = script + ":" + output
+        new_hashes[key] = md5(output)
 
 
 def main():
@@ -126,13 +143,9 @@ def main():
         verify_only = True
 
     for name, script in sorted(generators.iteritems()):
-
         info = auto_script(script)
-
-        # Reset the CWD to the root ANGLE directory.
-        os.chdir(root_dir)
-
-        if any_input_dirty(name, info['inputs'] + [script], new_hashes, old_hashes):
+        filenames = info['inputs'] + info['outputs'] + [script]
+        if any_hash_dirty(name, filenames, new_hashes, old_hashes):
             any_dirty = True
 
             if not verify_only:
@@ -160,6 +173,11 @@ def main():
         args += ['cl', 'format', '--full']
         print('Calling git cl format')
         subprocess.call(args)
+
+        # Update the output hashes again since they can be formatted.
+        for name, script in sorted(generators.iteritems()):
+            info = auto_script(script)
+            update_output_hashes(name, info['outputs'], new_hashes)
 
         os.chdir(script_dir)
         json.dump(new_hashes, open(hash_fname, "w"), indent=2, sort_keys=True,

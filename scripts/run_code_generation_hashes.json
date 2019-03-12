@@ -1,4 +1,8 @@
 {
+  "ANGLE format:src/libANGLE/renderer/FormatID_autogen.h":
+    "083c08bb743bf72a900079890b14184f",
+  "ANGLE format:src/libANGLE/renderer/Format_table_autogen.cpp":
+    "a4cf00b75621bc058c4a1b341bdf6989",
   "ANGLE format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "ANGLE format:src/libANGLE/renderer/angle_format_data.json":
@@ -11,6 +15,12 @@
     "475de30b8552795ca928096543cec7f2",
   "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
     "4253e14cd3217f42b6fec75ee400655a",
+  "ANGLE load functions table:src/libANGLE/renderer/load_functions_table_autogen.cpp":
+    "557e3a1de1f2373d6a7520a5b21d52ee",
+  "D3D11 blit shader selection:src/libANGLE/renderer/d3d/d3d11/Blit11Helper_autogen.inc":
+    "f69cf03a3d868a977fad9e9c0eb0652a",
+  "D3D11 blit shader selection:src/libANGLE/renderer/d3d/d3d11/d3d11_blit_shaders_autogen.gni":
+    "329dbafc64b0cb578348819198abcfea",
   "D3D11 blit shader selection:src/libANGLE/renderer/d3d/d3d11/gen_blit11helper.py":
     "38bff72bc17ac25c6b42c98d40c76e20",
   "D3D11 format:src/libANGLE/renderer/angle_format.py":
@@ -21,8 +31,12 @@
     "d7483ece817e819588f4ca157716dc7b",
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/texture_format_map.json":
     "805d30e2443935e3a3bd68839699e171",
+  "D3D11 format:src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp":
+    "7c42f9e538cb675d13f8b5d2f248ef84",
   "DXGI format support:src/libANGLE/renderer/d3d/d3d11/dxgi_support_data.json":
     "09195053f8829fc81efe08229b54a8b5",
+  "DXGI format support:src/libANGLE/renderer/d3d/d3d11/dxgi_support_table_autogen.cpp":
+    "7ec32ce0ad41450be7493c1db1130e25",
   "DXGI format support:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_support_tables.py":
     "389a6358534ebad5e232a44944b6123b",
   "DXGI format:src/libANGLE/renderer/angle_format.py":
@@ -31,24 +45,44 @@
     "be9f9bdbdf785dda05920146e8c55dbb",
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json":
     "24f525b05dc665fbbc8c6d68fb863719",
+  "DXGI format:src/libANGLE/renderer/d3d/d3d11/dxgi_format_map_autogen.cpp":
+    "32b9860e3fd8e87a89ff9a09e848e516",
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
     "bed2688ca828fc9fd1904408d33ba007",
+  "ESSL static builtins:src/compiler/translator/ParseContext_autogen.h":
+    "6be7f97ce68aa5ba5ecf30b835bc344d",
+  "ESSL static builtins:src/compiler/translator/SymbolTable_autogen.cpp":
+    "c4add6e70cd468f301e1478a598d26ed",
+  "ESSL static builtins:src/compiler/translator/SymbolTable_autogen.h":
+    "bdb3c8eab0d48267a2f264e3af635e1a",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
     "e5e567406476306ea06984d885be028d",
+  "ESSL static builtins:src/compiler/translator/builtin_symbols_hash_autogen.txt":
+    "0a24a1f40317834c9724290be9adc640",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
     "d07ec4348b35d0db1eeab3c99a5e91f9",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":
     "f056dba2fdeac5a5dbad9d8f7b17f55f",
+  "ESSL static builtins:src/compiler/translator/tree_util/BuiltIn_autogen.h":
+    "6df5ab6576da4f364763b581da839b77",
+  "ESSL static builtins:src/tests/compiler_tests/ImmutableString_test_autogen.cpp":
+    "c7994179a311f152df4b4a8513211c87",
   "Emulated HLSL functions:src/compiler/translator/emulated_builtin_function_data_hlsl.json":
     "002ad46d144c51fe98d73478aa554ba7",
+  "Emulated HLSL functions:src/compiler/translator/emulated_builtin_functions_hlsl_autogen.cpp":
+    "1c759ffdd27a86fd8f2d590b2f3dcb56",
   "Emulated HLSL functions:src/compiler/translator/gen_emulated_builtin_function_tables.py":
     "c24de0c9ce5f201985c852d2b4b12b98",
   "GL copy conversion table:src/libANGLE/es3_copy_conversion_formats.json":
     "54608f6f7d9aa7c59a8458ccf3ab9935",
+  "GL copy conversion table:src/libANGLE/es3_copy_conversion_table_autogen.cpp":
+    "b20d198cf5e292c43170d4873b381b34",
   "GL copy conversion table:src/libANGLE/gen_copy_conversion_table.py":
     "92428cef9d97d33ee7063cfa387ccf56",
   "GL format map:src/libANGLE/es3_format_type_combinations.json":
     "a232823cd6430f14e28793ccabb968ee",
+  "GL format map:src/libANGLE/format_map_autogen.cpp":
+    "1e1b1c2af35a8a75c4395430d2370758",
   "GL format map:src/libANGLE/format_map_data.json":
     "779798d4879e5f73a5a108e3e3fd3095",
   "GL format map:src/libANGLE/gen_format_map.py":
@@ -67,6 +101,44 @@
     "56fb2634ebb3d8240b1a92aeb5518f1a",
   "GL/EGL entry points:scripts/registry_xml.py":
     "be6628bdeb99e50868cf4af51ea63f54",
+  "GL/EGL entry points:src/libANGLE/Context_gles_1_0_autogen.h":
+    "fad4ec629b41e9d97ff57a132ad946cb",
+  "GL/EGL entry points:src/libANGLE/validationES1_autogen.h":
+    "8d3131d2bf2e6f521f46b44e64a6bff9",
+  "GL/EGL entry points:src/libANGLE/validationES2_autogen.h":
+    "edf0d7d2afdfd6c090f83d40312394ad",
+  "GL/EGL entry points:src/libANGLE/validationES31_autogen.h":
+    "22ef241ea5b79a6abe6589f1afcc80a2",
+  "GL/EGL entry points:src/libANGLE/validationES3_autogen.h":
+    "210f732f87ac6a184bde4d4d1e548f70",
+  "GL/EGL entry points:src/libANGLE/validationESEXT_autogen.h":
+    "5ac8dd83e449e6e624a76496c9d3990a",
+  "GL/EGL entry points:src/libGLESv2/entry_points_enum_autogen.h":
+    "f5bb2430fa25930ebfbaab028145b23c",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_1_0_autogen.cpp":
+    "196771da8ad7a5beded1dc878410ac11",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_1_0_autogen.h":
+    "77fa8d307ebf839838f8812786cddc1a",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_2_0_autogen.cpp":
+    "d0be11a3780b0c348279fc36060d1fab",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_2_0_autogen.h":
+    "3bbaf1cf42fba5d675e5b54cd1d14df7",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_3_0_autogen.cpp":
+    "555b6fa72e56b5d6a531b744e5dd0607",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_3_0_autogen.h":
+    "395f6978219abd5182bbe80cc367e40c",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_3_1_autogen.cpp":
+    "72188430258b99258cef9048f0f4b4ee",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_3_1_autogen.h":
+    "043d09a964c740067bf4279e0b544aed",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_ext_autogen.cpp":
+    "a79b0be21cc6af36e068dc6b88850f6f",
+  "GL/EGL entry points:src/libGLESv2/entry_points_gles_ext_autogen.h":
+    "463d2ddb268f48b387a8478d5064dc9e",
+  "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.cpp":
+    "eedc75cbaa0c44cf067c96ccc079c5cb",
+  "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.def":
+    "4569b01aeff02543b9d0312fcf570661",
   "GL/EGL/WGL loader:scripts/egl.xml":
     "842e24514c4cfe09fba703c17a0fd292",
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
@@ -77,14 +149,38 @@
     "be6628bdeb99e50868cf4af51ea63f54",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
+  "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
+    "d270ee9f0b0bcbb58f3a8967758d9b38",
+  "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.h":
+    "77d0a6b43528115ea2ce3a987b25fa91",
+  "GL/EGL/WGL loader:util/egl_loader_autogen.cpp":
+    "d397c5b251c10f44857c9098eab5f9a2",
+  "GL/EGL/WGL loader:util/egl_loader_autogen.h":
+    "897a66bc15e1791e356d7324f2ff94af",
+  "GL/EGL/WGL loader:util/gles_loader_autogen.cpp":
+    "5a522fa027c9d404053370a60da72623",
+  "GL/EGL/WGL loader:util/gles_loader_autogen.h":
+    "498621d6b9e21462d7c05d1a65775609",
+  "GL/EGL/WGL loader:util/windows/wgl_loader_autogen.cpp":
+    "12ffb44e5e743c826e4d84ac65cdba82",
+  "GL/EGL/WGL loader:util/windows/wgl_loader_autogen.h":
+    "e18f6c134b709c5a69ed3b4ff38642d0",
   "OpenGL dispatch table:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "OpenGL dispatch table:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
+  "OpenGL dispatch table:src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp":
+    "6556e48f03112aaf0e4d0fa2949727b4",
+  "OpenGL dispatch table:src/libANGLE/renderer/gl/DispatchTableGL_autogen.h":
+    "caea949141a8c6b8692f1c021fb4fa42",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/generate_gl_dispatch_table.py":
-    "8365d4130b9814eaa396915ae85734eb",
+    "86a66ba63f6dceac553d8af6c132b6fb",
   "OpenGL dispatch table:src/libANGLE/renderer/gl/gl_bindings_data.json":
     "71079f089335ce1f67835d67a6d49d1a",
+  "OpenGL dispatch table:src/libANGLE/renderer/gl/null_functions.cpp":
+    "774c21cf434656bb40735cc67fb4fa40",
+  "OpenGL dispatch table:src/libANGLE/renderer/gl/null_functions.h":
+    "594f92ec5ffaaf21409579009f579cd7",
   "Vulkan format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan format:src/libANGLE/renderer/angle_format_map.json":
@@ -93,8 +189,106 @@
     "9937d3c942f0a5fe08f1ca080d40d47e",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
     "992749b88763adb66003fe5d801b5ded",
+  "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp":
+    "1d22113470fbe8506e1264923f1793d2",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "97e148951cbbf009ab963ca5a90ddf1a",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000000.inc":
+    "aa007002f1c386fbd0ef23842801f3b0",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000001.inc":
+    "85109f972925b49341e28bcdedee17ef",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000002.inc":
+    "18f1338f8816c82b220d66444ed89347",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000003.inc":
+    "992047a9ba7b4e7137ded9081f186872",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000004.inc":
+    "875d3ae7117f58c8c4447bc3ce107778",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000005.inc":
+    "ef916d5e0de87a37f5cd4e3a3520f960",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000006.inc":
+    "e7bb8f3abd6482d6ce7c7c35bbba772a",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000007.inc":
+    "179fe2b50bd1947e86403a9fa80883ba",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000008.inc":
+    "fc756b1b614c11437f436e9913f7a666",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000009.inc":
+    "e81c83f5880edf045bf7f8f8a3f81298",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.0000000A.inc":
+    "152ee2a0a4cad628257c3e47068a5bc4",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.0000000B.inc":
+    "1c7ff0a63d22f24b11e460efb074dad6",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000000.inc":
+    "5b4cb3203020b3fc2ce3d02cfdf18e7a",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000001.inc":
+    "40eb3ff16d7083706ee56062b6982407",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000002.inc":
+    "5a6575940c92c22821e102fc35e91a77",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000003.inc":
+    "1aec6858837dce1cdd28060a8859b992",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000004.inc":
+    "59f5ddd672b8cbf850569ffb7b8b7245",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000005.inc":
+    "713f6cd052458639db1bd2d433cf1f79",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000006.inc":
+    "ed5af7b2d920733e76bc06f2c3b164ce",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000007.inc":
+    "f8d4bd3b0f022570bf5c373aae1a1eeb",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000008.inc":
+    "74619bd4129eed30a92eb9b4153a3102",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000009.inc":
+    "abaaa11bd808030c19ad1935e12e4ac3",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000A.inc":
+    "37210579d5cc23b15849f888d6174ea8",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000B.inc":
+    "f69c274d122b233d1178d211abd8077d",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000C.inc":
+    "d07d651b147c994d1498727e305b1c63",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000D.inc":
+    "edab6697752cb0d9bbdfe1b1b4043241",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000E.inc":
+    "232af09e03c58c0a05e7dbb1f4298133",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.0000000F.inc":
+    "6c48361bd61138c0c6387400c87f68ed",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc":
+    "d3cb0d2a3c1e6457e7d11e95d0e8d8d5",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000000.inc":
+    "33f4a2663d3548be013da03b518e51bd",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000000.inc":
+    "5f81809ca35eb191aaeacfe6e20a585a",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000001.inc":
+    "d1077262f9873606c2c5b38b32e6e97f",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000002.inc":
+    "3461de5f2b8551fad685648e91ae5861",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000003.inc":
+    "813364c4e5c6e55098e251d967d3c8ae",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000004.inc":
+    "27554047e29b6adcdff35ee9a4e7a955",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000005.inc":
+    "d07513ecf1657ae13bb87450362d84d1",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000008.inc":
+    "30bc550480906a71004842ce59dbf9e4",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000009.inc":
+    "f6618202ad3ec0e092252622b645c5a4",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000A.inc":
+    "34073fe8f464c082e0f5fe5b36a6f7e4",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000B.inc":
+    "2c0e86e6be6b931309fdc919832cb63c",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000C.inc":
+    "ff7538eb96b25e2a60753f85c85dc3c9",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000000D.inc":
+    "04f8754e24b09ef449b7db9de62ad1a7",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000010.inc":
+    "4e50fd06b6c48150dd75f1513fb7fb3b",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000011.inc":
+    "fce6f6fdb66315b2fe762ea4037a3cbe",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000012.inc":
+    "80f0cf394bf6ecd99f46cad0835f8c90",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000013.inc":
+    "9037b65050619a88aacf7d2b71aaa5ea",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000014.inc":
+    "4f516bc3d811e72b86d98a4874411297",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000015.inc":
+    "9c05f406e59fd487616d77ad1df133b4",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp":
     "0c8c050841543da0d7faca2559212aa8",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp":
@@ -105,14 +299,28 @@
     "98d490413d20118e92dd2b160c1dfc6e",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ImageCopy.frag":
     "9b9fd690321f53163221f1ebba9f006d",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
+    "959f09bfb979cdc240f1df50b56d8429",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
+    "e70f3fa32f5ff0e567ce4ed2a5dc759e",
   "Vulkan mandatory format support table:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":
     "417772416d3082400ce05acc2f209c9f",
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":
     "fa2bd54c1bb0ab2cf1d386061a4bc5c5",
+  "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp":
+    "d20e549634ef32d6ad4e9f0b28e52acf",
   "Vulkan mandatory format support table:third_party/vulkan-headers/src/registry/vk.xml":
     "f5c8c9b8e521644ded34d44b1016c25e",
+  "packed enum:src/common/PackedEGLEnums_autogen.cpp":
+    "c9f7cea85751e5a39b92bccc1d97f3bd",
+  "packed enum:src/common/PackedEGLEnums_autogen.h":
+    "4073274726e0c926765c5ab8b21dc3de",
+  "packed enum:src/common/PackedGLEnums_autogen.cpp":
+    "b64a7cadc5c8c054f788d1e0b58a11a1",
+  "packed enum:src/common/PackedGLEnums_autogen.h":
+    "80724ac8fc2cbdebee81fb43b4345c1a",
   "packed enum:src/common/gen_packed_gl_enums.py":
     "0cd1a1cb6d5fde8cbac2994db24eb901",
   "packed enum:src/common/packed_egl_enums.json":
@@ -121,8 +329,12 @@
     "6e2e2845f96754509b8add1f77e203b3",
   "proc table:src/libGLESv2/gen_proc_table.py":
     "20ebe54894d613de42b0b15ca34078d9",
+  "proc table:src/libGLESv2/proc_table_autogen.cpp":
+    "e27cd4ac1c1d524fd80042e9c9e02c54",
   "proc table:src/libGLESv2/proc_table_data.json":
     "6deb74c7709ecb664b917a2f1e598399",
   "uniform type:src/common/gen_uniform_type_table.py":
-    "fa40444d496ac07cd9dc0cd239e4a499"
+    "fa40444d496ac07cd9dc0cd239e4a499",
+  "uniform type:src/common/uniform_type_info_autogen.cpp":
+    "b31d181bc49ad1c3540401a5c874e692"
 }

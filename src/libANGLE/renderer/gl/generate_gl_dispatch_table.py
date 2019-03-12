@@ -53,7 +53,9 @@ namespace rx
 class DispatchTableGL : angle::NonCopyable
 {{
   public:
+  // clang-format off
 {table_data}
+  // clang-format on
 
   DispatchTableGL();
   virtual ~DispatchTableGL() = default;
