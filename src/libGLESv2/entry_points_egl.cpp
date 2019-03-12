@@ -205,7 +205,7 @@ EGLBoolean EGLAPIENTRY EGL_ChooseConfig(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(thread, ValidateChooseConfig(display, attribMap, config_size, num_config),
                          "eglChooseConfig", GetDisplayIfValid(display), EGL_FALSE);
 
-    ClipConfigs(display->getConfigs(attribMap), configs, config_size, num_config);
+    ClipConfigs(display->chooseConfig(attribMap), configs, config_size, num_config);
 
     thread->setSuccess();
     return EGL_TRUE;

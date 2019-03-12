@@ -77,6 +77,7 @@ class Display final : public LabeledObject, angle::NonCopyable
     static const std::string &GetClientExtensionString();
 
     std::vector<const Config *> getConfigs(const AttributeMap &attribs) const;
+    std::vector<const Config *> chooseConfig(const AttributeMap &attribs) const;
 
     Error createWindowSurface(const Config *configuration,
                               EGLNativeWindowType window,
