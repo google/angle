@@ -96,6 +96,54 @@
     },
     {
       "key": {
+        "uuid": "ca5b3457_81a8208f",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T18:54:00Z",
+      "side": 1,
+      "message": "I removed this function, so this is now resolved.",
+      "parentUuid": "c63b1a3c_6d1c8bdf",
+      "range": {
+        "startLine": 59,
+        "startChar": 56,
+        "endLine": 59,
+        "endChar": 69
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "465377b7_168fb0c6",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T18:54:00Z",
+      "side": 1,
+      "message": "I removed this function, so this is now resolved.",
+      "parentUuid": "39596409_3a2e0b57",
+      "range": {
+        "startLine": 59,
+        "startChar": 24,
+        "endLine": 59,
+        "endChar": 54
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1bc806b_21309444",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 7
@@ -164,6 +212,30 @@
       "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdfa06ef_e6beef23",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-12T18:54:00Z",
+      "side": 1,
+      "message": "Okay, I reworked this per what I proposed as an alternative.",
+      "parentUuid": "77327a0b_b3246961",
+      "range": {
+        "startLine": 203,
+        "startChar": 29,
+        "endLine": 203,
+        "endChar": 92
+      },
+      "revId": "3a53e4e5ea8e22c6270b3239d9d2b65d1e3f685c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
