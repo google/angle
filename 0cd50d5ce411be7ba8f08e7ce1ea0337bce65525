@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23d9ff37_03f1f66d",
+        "filename": "src/libANGLE/Config.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T19:40:25Z",
+      "side": 1,
+      "message": "Can you also implement:\nIf EGL_TRANSPARENT_TYPE is set to EGL_NONE in attrib list, then the EGL_-\nTRANSPARENT_RED_VALUE, EGL_TRANSPARENT_GREEN_VALUE, and EGL_-\nTRANSPARENT_BLUE_VALUE attributes are ignored.",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 304,
+        "endChar": 26
+      },
+      "revId": "0cd50d5ce411be7ba8f08e7ce1ea0337bce65525",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "063912cb_cf328afe",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T19:40:25Z",
+      "side": 1,
+      "message": "Please add a comment here, like you\u0027ve suggested, that \"insert\" would overwrite the default value, if user specified a different one.",
+      "range": {
+        "startLine": 673,
+        "startChar": 28,
+        "endLine": 673,
+        "endChar": 34
+      },
+      "revId": "0cd50d5ce411be7ba8f08e7ce1ea0337bce65525",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57df10d0_446d2a6c",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T19:40:25Z",
+      "side": 1,
+      "message": "not needed\nYou can remove it in .cpp, too.",
+      "range": {
+        "startLine": 80,
+        "startChar": 51,
+        "endLine": 80,
+        "endChar": 54
+      },
+      "revId": "0cd50d5ce411be7ba8f08e7ce1ea0337bce65525",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11af789b_2e7ba10e",
+        "filename": "src/tests/egl_tests/EGLChooseConfigDefaultTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T19:40:25Z",
+      "side": 1,
+      "message": "I think you\u0027ve missed Jamie\u0027s comment on this.\nLet\u0027s name the test EGLChooseConfigTest.Defaults and rename the file accordingly, so we can reuse it for other eglChooseConfig tests.",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 50
+      },
+      "revId": "0cd50d5ce411be7ba8f08e7ce1ea0337bce65525",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75136591_a38e3881",
+        "filename": "src/tests/egl_tests/EGLChooseConfigDefaultTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T19:40:25Z",
+      "side": 1,
+      "message": "Could you also do the reverse check that all configurations in \"allConfigs\" which have default attribute values appear in \"defaultConfigs\" (via config id)?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 76
+      },
+      "revId": "0cd50d5ce411be7ba8f08e7ce1ea0337bce65525",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
