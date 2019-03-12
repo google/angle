@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9d523ef_cd91e5aa",
+        "filename": "src/tests/egl_tests/EGLChooseConfigTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T21:34:18Z",
+      "side": 1,
+      "message": "nit: no longer true",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 40,
+        "endChar": 22
+      },
+      "revId": "b3c376cb1932d1119284305a08923838eb59df15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b54c658c_70457e43",
+        "filename": "src/tests/egl_tests/EGLChooseConfigTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-12T21:34:18Z",
+      "side": 1,
+      "message": "Any reason not to run this on D3D9 and OPENGLES as well?",
+      "range": {
+        "startLine": 80,
+        "startChar": 44,
+        "endLine": 80,
+        "endChar": 83
+      },
+      "revId": "b3c376cb1932d1119284305a08923838eb59df15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
