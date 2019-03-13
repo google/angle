@@ -632,16 +632,16 @@ void CommandGraph::setNewBarrier(CommandGraphNode *newBarrier)
     size_t previousBarrierIndex       = 0;
     CommandGraphNode *previousBarrier = getLastBarrierNode(&previousBarrierIndex);
 
-    // Add a dependency from previousBarrier to all nodes in (previousBarrier, newBarrier].
+    // Add a dependency from previousBarrier to all nodes in (previousBarrier, newBarrier).
     if (previousBarrier && previousBarrierIndex + 1 < mNodes.size())
     {
-        size_t afterNodesCount = mNodes.size() - (previousBarrierIndex + 1);
+        size_t afterNodesCount = mNodes.size() - (previousBarrierIndex + 2);
         CommandGraphNode::SetHappensBeforeDependencies(
             previousBarrier, &mNodes[previousBarrierIndex + 1], afterNodesCount);
     }
 
-    // Add a dependency from all nodes in (previousBarrier, newBarrier) to newBarrier.
-    addDependenciesToNextBarrier(previousBarrierIndex + 1, mNodes.size() - 1, newBarrier);
+    // Add a dependency from all nodes in [previousBarrier, newBarrier) to newBarrier.
+    addDependenciesToNextBarrier(previousBarrierIndex, mNodes.size() - 1, newBarrier);
 
     mLastBarrierIndex = mNodes.size() - 1;
 }
