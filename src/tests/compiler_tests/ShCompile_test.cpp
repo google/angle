@@ -176,11 +176,4 @@ TEST_F(ShCompileTest, DecimalSepLocale)
             testedLocales++;
         }
     }
-
-// Ignore for Android which doesn't use these locales
-#if !defined(ANGLE_PLATFORM_ANDROID)
-    // This test must run on at least one different locale to pass
-    EXPECT_NE(testedLocales, 0)
-        << "Missing locales to test on this platform. Add them to availableLocales[]";
-#endif
 }
