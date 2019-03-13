@@ -41,6 +41,7 @@ void LoggingAnnotator::logMessage(const gl::LogMessage &msg) const
     {
         switch (msg.getSeverity())
         {
+            case gl::LOG_FATAL:
             case gl::LOG_ERR:
                 plat->logError(plat, msg.getMessage().c_str());
                 break;
