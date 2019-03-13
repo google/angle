@@ -65,61 +65,8 @@
 
 // TODO(jmadill): Triage these into permananent and temporary failures.
 1340 WIN : dEQP-EGL.functional.query_config.get_configs.get_configs_bounds = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.buffer_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.red_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.green_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.blue_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.luminance_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.alpha_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.alpha_mask_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.bind_to_texture_rgb = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.bind_to_texture_rgba = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.color_buffer_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.config_caveat = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.config_id = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.depth_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.level = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.max_swap_interval = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.min_swap_interval = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.native_renderable = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.native_visual_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.sample_buffers = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.samples = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.stencil_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.surface_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_red_value = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_green_value = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_blue_value = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.buffer_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.red_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.green_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.blue_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.luminance_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.alpha_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.alpha_mask_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.bind_to_texture_rgb = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.bind_to_texture_rgba = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.color_buffer_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.config_caveat = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.config_id = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.depth_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.level = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.max_swap_interval = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.min_swap_interval = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.native_renderable = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.native_visual_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.sample_buffers = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.samples = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.stencil_size = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.surface_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_red_value = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_green_value = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_blue_value = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.random.color_sizes = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.random.color_depth_stencil_sizes = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.random.buffer_sizes = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.random.surface_type = FAIL
-1340 WIN : dEQP-EGL.functional.choose_config.random.sample_buffers = FAIL
+3270 WIN : dEQP-EGL.functional.choose_config.simple.selection_only.config_id = FAIL
+3270 WIN : dEQP-EGL.functional.choose_config.simple.selection_and_sort.config_id = FAIL
 1340 WIN : dEQP-EGL.functional.render.single_context.gles2.rgba5551_window = FAIL
 1340 WIN : dEQP-EGL.functional.render.single_context.gles2.rgba5551_pbuffer = FAIL
 1340 WIN : dEQP-EGL.functional.render.single_context.gles3.rgba5551_window = FAIL
@@ -249,8 +196,12 @@
 
 // Android failures
 2546 ANDROID : dEQP-EGL.functional.buffer_age.* = FAIL
-2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_* = FAIL
-2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_* = FAIL
+3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_red_value = FAIL
+3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_green_value = FAIL
+3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_blue_value = FAIL
+3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_red_value = FAIL
+3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_green_value = FAIL
+3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_blue_value = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_context.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.single_context.* = FAIL
@@ -286,8 +237,6 @@
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
 
 // Tests failing since the Jan 2018 roll of dEQP
-2329 DEBUG RELEASE : dEQP-EGL.functional.choose_config.simple.selection_only.renderable_type = FAIL
-2329 DEBUG RELEASE : dEQP-EGL.functional.choose_config.simple.selection_and_sort.renderable_type = FAIL
 2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.* = FLAKY
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.no_reset_notification = SKIP
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.lose_context_on_reset = SKIP
