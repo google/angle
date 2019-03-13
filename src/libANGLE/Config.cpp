@@ -34,7 +34,7 @@ Config::Config()
       alphaMaskSize(0),
       bindToTextureRGB(EGL_FALSE),
       bindToTextureRGBA(EGL_FALSE),
-      colorBufferType(EGL_NONE),
+      colorBufferType(EGL_RGB_BUFFER),
       configCaveat(EGL_NONE),
       configID(0),
       conformant(0),
