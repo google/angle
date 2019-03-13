@@ -134,6 +134,8 @@ class CommandGraphNode final : angle::NonCopyable
     CommandGraphNodeFunction getFunction() const { return mFunction; }
 
     void setQueryPool(const QueryPool *queryPool, uint32_t queryIndex);
+    VkQueryPool getQueryPool() const { return mQueryPool; }
+    uint32_t getQueryIndex() const { return mQueryIndex; }
     void setFenceSync(const vk::Event &event);
     void setDebugMarker(GLenum source, std::string &&marker);
     const std::string &getDebugMarker() const { return mDebugMarker; }
@@ -384,8 +386,9 @@ class CommandGraph final : angle::NonCopyable
     void popDebugMarker();
 
   private:
-    CommandGraphNode *allocateBarrierNode(CommandGraphResourceType resourceType,
-                                          CommandGraphNodeFunction function);
+    CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,
+                                          CommandGraphResourceType resourceType,
+                                          uintptr_t resourceID);
     void setNewBarrier(CommandGraphNode *newBarrier);
     CommandGraphNode *getLastBarrierNode(size_t *indexOut);
     void addDependenciesToNextBarrier(size_t begin, size_t end, CommandGraphNode *nextBarrier);

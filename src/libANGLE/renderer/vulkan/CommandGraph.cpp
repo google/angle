@@ -617,11 +617,12 @@ CommandGraphNode *CommandGraph::allocateNode(CommandGraphNodeFunction function)
     return newCommands;
 }
 
-CommandGraphNode *CommandGraph::allocateBarrierNode(CommandGraphResourceType resourceType,
-                                                    CommandGraphNodeFunction function)
+CommandGraphNode *CommandGraph::allocateBarrierNode(CommandGraphNodeFunction function,
+                                                    CommandGraphResourceType resourceType,
+                                                    uintptr_t resourceID)
 {
     CommandGraphNode *newNode = allocateNode(function);
-    newNode->setDiagnosticInfo(resourceType, 0);
+    newNode->setDiagnosticInfo(resourceType, resourceID);
     setNewBarrier(newNode);
 
     return newNode;
@@ -754,65 +755,68 @@ void CommandGraph::clear()
 
 void CommandGraph::beginQuery(const QueryPool *queryPool, uint32_t queryIndex)
 {
-    CommandGraphNode *newNode =
-        allocateBarrierNode(CommandGraphResourceType::Query, CommandGraphNodeFunction::BeginQuery);
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::BeginQuery,
+                                                    CommandGraphResourceType::Query, 0);
     newNode->setQueryPool(queryPool, queryIndex);
 }
 
 void CommandGraph::endQuery(const QueryPool *queryPool, uint32_t queryIndex)
 {
     CommandGraphNode *newNode =
-        allocateBarrierNode(CommandGraphResourceType::Query, CommandGraphNodeFunction::EndQuery);
+        allocateBarrierNode(CommandGraphNodeFunction::EndQuery, CommandGraphResourceType::Query, 0);
     newNode->setQueryPool(queryPool, queryIndex);
 }
 
 void CommandGraph::writeTimestamp(const QueryPool *queryPool, uint32_t queryIndex)
 {
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::Query,
-                                                    CommandGraphNodeFunction::WriteTimestamp);
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::WriteTimestamp,
+                                                    CommandGraphResourceType::Query, 0);
     newNode->setQueryPool(queryPool, queryIndex);
 }
 
 void CommandGraph::setFenceSync(const vk::Event &event)
 {
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::FenceSync,
-                                                    CommandGraphNodeFunction::SetFenceSync);
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::SetFenceSync,
+                                                    CommandGraphResourceType::FenceSync,
+                                                    reinterpret_cast<uintptr_t>(&event));
     newNode->setFenceSync(event);
 }
 
 void CommandGraph::waitFenceSync(const vk::Event &event)
 {
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::FenceSync,
-                                                    CommandGraphNodeFunction::WaitFenceSync);
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::WaitFenceSync,
+                                                    CommandGraphResourceType::FenceSync,
+                                                    reinterpret_cast<uintptr_t>(&event));
     newNode->setFenceSync(event);
 }
 
 void CommandGraph::insertDebugMarker(GLenum source, std::string &&marker)
 {
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::DebugMarker,
-                                                    CommandGraphNodeFunction::InsertDebugMarker);
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::InsertDebugMarker,
+                                                    CommandGraphResourceType::DebugMarker, 0);
     newNode->setDebugMarker(source, std::move(marker));
 }
 
 void CommandGraph::pushDebugMarker(GLenum source, std::string &&marker)
 {
-    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphResourceType::DebugMarker,
-                                                    CommandGraphNodeFunction::PushDebugMarker);
+    CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::PushDebugMarker,
+                                                    CommandGraphResourceType::DebugMarker, 0);
     newNode->setDebugMarker(source, std::move(marker));
 }
 
 void CommandGraph::popDebugMarker()
 {
-    allocateBarrierNode(CommandGraphResourceType::DebugMarker,
-                        CommandGraphNodeFunction::PopDebugMarker);
+    allocateBarrierNode(CommandGraphNodeFunction::PopDebugMarker,
+                        CommandGraphResourceType::DebugMarker, 0);
 }
 
 // Dumps the command graph into a dot file that works with graphviz.
 void CommandGraph::dumpGraphDotFile(std::ostream &out) const
 {
-    // This ID maps a node pointer to a monatonic ID. It allows us to look up parent node IDs.
+    // This ID maps a node pointer to a monotonic ID. It allows us to look up parent node IDs.
     std::map<const CommandGraphNode *, int> nodeIDMap;
     std::map<uintptr_t, int> objectIDMap;
+    std::map<std::pair<VkQueryPool, uint32_t>, int> queryIDMap;
 
     // Map nodes to ids.
     for (size_t nodeIndex = 0; nodeIndex < mNodes.size(); ++nodeIndex)
@@ -825,6 +829,7 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
     int framebufferIDCounter = 1;
     int imageIDCounter       = 1;
     int queryIDCounter       = 1;
+    int fenceIDCounter       = 1;
 
     out << "digraph {" << std::endl;
 
@@ -841,6 +846,29 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
             if (node->getFunction() != CommandGraphNodeFunction::PopDebugMarker)
             {
                 strstr << " " << node->getDebugMarker();
+            }
+        }
+        else if (node->getResourceTypeForDiagnostics() == CommandGraphResourceType::Query)
+        {
+            // Special case for queries as they cannot generate a resource ID at creation time that
+            // would reliably fit in a uintptr_t.
+            strstr << " ";
+
+            ASSERT(node->getResourceIDForDiagnostics() == 0);
+
+            auto queryID = std::make_pair(node->getQueryPool(), node->getQueryIndex());
+
+            auto it = queryIDMap.find(queryID);
+            if (it != queryIDMap.end())
+            {
+                strstr << it->second;
+            }
+            else
+            {
+                int id = queryIDCounter++;
+
+                queryIDMap[queryID] = id;
+                strstr << id;
             }
         }
         else
@@ -870,8 +898,8 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
                     case CommandGraphResourceType::Image:
                         id = imageIDCounter++;
                         break;
-                    case CommandGraphResourceType::Query:
-                        id = queryIDCounter++;
+                    case CommandGraphResourceType::FenceSync:
+                        id = fenceIDCounter++;
                         break;
                     default:
                         UNREACHABLE();
