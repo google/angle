@@ -849,6 +849,11 @@ void OutputHLSL::header(TInfoSinkBase &out,
                 mResourcesHLSL->samplerMetadataUniforms(out, 4);
             }
 
+            if (mUsesVertexID)
+            {
+                out << "    uint dx_VertexID : packoffset(c3.w);\n";
+            }
+
             out << "};\n"
                    "\n";
         }
@@ -975,6 +980,11 @@ void OutputHLSL::header(TInfoSinkBase &out,
     if (mHasMultiviewExtensionEnabled)
     {
         out << "#define GL_ANGLE_MULTIVIEW_ENABLED\n";
+    }
+
+    if (mUsesVertexID)
+    {
+        out << "#define GL_USES_VERTEX_ID\n";
     }
 
     if (mUsesViewID)

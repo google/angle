@@ -87,6 +87,7 @@ void ShaderD3D::uncompile()
     mUsesDepthRange              = false;
     mUsesFragDepth               = false;
     mHasANGLEMultiviewEnabled    = false;
+    mUsesVertexID                = false;
     mUsesViewID                  = false;
     mUsesDiscardRewriting        = false;
     mUsesNestedBreak             = false;
@@ -216,6 +217,7 @@ bool ShaderD3D::postTranslateCompile(gl::ShCompilerInstance *compiler, std::stri
     mUsesFragDepth             = translatedSource.find("GL_USES_FRAG_DEPTH") != std::string::npos;
     mHasANGLEMultiviewEnabled =
         translatedSource.find("GL_ANGLE_MULTIVIEW_ENABLED") != std::string::npos;
+    mUsesVertexID = translatedSource.find("GL_USES_VERTEX_ID") != std::string::npos;
     mUsesViewID = translatedSource.find("GL_USES_VIEW_ID") != std::string::npos;
     mUsesDiscardRewriting =
         translatedSource.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;

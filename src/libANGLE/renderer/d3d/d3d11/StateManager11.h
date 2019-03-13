@@ -44,6 +44,7 @@ class ShaderConstants11 : angle::NonCopyable
                           const D3D11_VIEWPORT &dxViewport,
                           bool is9_3,
                           bool presentPathFast);
+    bool onFirstVertexChange(GLint firstVertex);
     void onImageLayerChange(gl::ShaderType shaderType, unsigned int imageIndex, int layer);
     void onSamplerChange(gl::ShaderType shaderType,
                          unsigned int samplerIndex,
@@ -68,7 +69,7 @@ class ShaderConstants11 : angle::NonCopyable
               viewCoords{.0f},
               viewScale{.0f},
               multiviewWriteToViewportIndex{.0f},
-              padding{.0f}
+              firstVertex{0}
         {}
 
         float depthRange[4];
@@ -80,8 +81,7 @@ class ShaderConstants11 : angle::NonCopyable
         // whenever a multi-view draw framebuffer is made active.
         float multiviewWriteToViewportIndex;
 
-        // Added here to manually pad the struct.
-        float padding;
+        uint32_t firstVertex;
     };
 
     struct Pixel

@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
 
+#include "common/angleutils.h"
 #include "common/bitset_utils.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -487,6 +488,19 @@ void ShaderConstants11::onViewportChange(const gl::Rectangle &glViewport,
 
     mVertex.viewScale[0] = mPixel.viewScale[0];
     mVertex.viewScale[1] = mPixel.viewScale[1];
+}
+
+// Update the ShaderConstants with a new first vertex and return whether the update dirties them.
+ANGLE_INLINE bool ShaderConstants11::onFirstVertexChange(GLint firstVertex)
+{
+    uint32_t newFirstVertex = static_cast<uint32_t>(firstVertex);
+    bool firstVertexDirty   = (mVertex.firstVertex != newFirstVertex);
+    if (firstVertexDirty)
+    {
+        mVertex.firstVertex = newFirstVertex;
+        mShaderConstantsDirty.set(gl::ShaderType::Vertex);
+    }
+    return firstVertexDirty;
 }
 
 void ShaderConstants11::onSamplerChange(gl::ShaderType shaderType,
@@ -2170,6 +2184,15 @@ angle::Result StateManager11::updateState(const gl::Context *context,
     {
         mLastFirstVertex = firstVertex;
         invalidateInputLayout();
+    }
+
+    // The ShaderConstants only need to be updated when the program uses vertexID
+    if (mProgramD3D->usesVertexID())
+    {
+        if (mShaderConstants.onFirstVertexChange(firstVertex))
+        {
+            mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS);
+        }
     }
 
     if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)

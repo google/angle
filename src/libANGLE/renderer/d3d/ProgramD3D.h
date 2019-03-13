@@ -129,6 +129,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
     bool usesInsertedPointCoordValue() const;
     bool usesViewScale() const;
     bool hasANGLEMultiviewEnabled() const;
+    bool usesVertexID() const;
     bool usesViewID() const;
     bool canSelectViewInVertexShader() const;
     bool addsPointCoordToVertexShader() const;
@@ -324,6 +325,8 @@ class ProgramD3D : public ProgramImpl
                                 bool readonly);
     bool hasNamedUniform(const std::string &name);
 
+    bool usesVertexID() const { return mUsesVertexID; }
+
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.
     class GetExecutableTask;
@@ -512,6 +515,7 @@ class ProgramD3D : public ProgramImpl
 
     bool mUsesFragDepth;
     bool mHasANGLEMultiviewEnabled;
+    bool mUsesVertexID;
     bool mUsesViewID;
     std::vector<PixelShaderOutputVariable> mPixelShaderKey;
 

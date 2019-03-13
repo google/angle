@@ -609,6 +609,78 @@ void main()
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Draw an array of points with the first vertex offset at 0 using gl_VertexID
+TEST_P(GLSLTest_ES3, GLVertexIDOffsetZeroDrawArray)
+{
+    constexpr int kStartIndex  = 0;
+    constexpr int kArrayLength = 5;
+    constexpr char kVS[]       = R"(#version 300 es
+precision highp float;
+void main() {
+    gl_Position = vec4(float(gl_VertexID)/10.0, 0, 0, 1);
+    gl_PointSize = 3.0;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+void main() {
+    outColor = vec4(255.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glUseProgram(program);
+    glDrawArrays(GL_POINTS, kStartIndex, kArrayLength);
+
+    double pointCenterX = static_cast<double>(getWindowWidth()) / 2.0;
+    double pointCenterY = static_cast<double>(getWindowHeight()) / 2.0;
+    for (int i = kStartIndex; i < kStartIndex + kArrayLength; i++)
+    {
+        double pointOffsetX = static_cast<double>(i * getWindowWidth()) / 20.0;
+        EXPECT_PIXEL_COLOR_EQ(static_cast<int>(pointCenterX + pointOffsetX),
+                              static_cast<int>(pointCenterY), GLColor::red);
+    }
+}
+
+// Draw an array of points with the first vertex offset at 5 using gl_VertexID
+TEST_P(GLSLTest_ES3, GLVertexIDOffsetFiveDrawArray)
+{
+    // TODO(jonahr): Remove test suppression once Nexus 5X is removed from bots
+    // (http://anglebug.com/3264)
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    constexpr int kStartIndex  = 5;
+    constexpr int kArrayLength = 5;
+    constexpr char kVS[]       = R"(#version 300 es
+precision highp float;
+void main() {
+    gl_Position = vec4(float(gl_VertexID)/10.0, 0, 0, 1);
+    gl_PointSize = 3.0;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+void main() {
+    outColor = vec4(255.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glUseProgram(program);
+    glDrawArrays(GL_POINTS, kStartIndex, kArrayLength);
+
+    double pointCenterX = static_cast<double>(getWindowWidth()) / 2.0;
+    double pointCenterY = static_cast<double>(getWindowHeight()) / 2.0;
+    for (int i = kStartIndex; i < kStartIndex + kArrayLength; i++)
+    {
+        double pointOffsetX = static_cast<double>(i * getWindowWidth()) / 20.0;
+        EXPECT_PIXEL_COLOR_EQ(static_cast<int>(pointCenterX + pointOffsetX),
+                              static_cast<int>(pointCenterY), GLColor::red);
+    }
+}
+
 TEST_P(GLSLTest, ElseIfRewriting)
 {
     constexpr char kVS[] =

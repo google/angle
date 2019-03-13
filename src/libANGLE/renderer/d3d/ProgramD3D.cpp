@@ -513,6 +513,11 @@ bool ProgramD3DMetadata::hasANGLEMultiviewEnabled() const
     return mAttachedShaders[gl::ShaderType::Vertex]->hasANGLEMultiviewEnabled();
 }
 
+bool ProgramD3DMetadata::usesVertexID() const
+{
+    return mAttachedShaders[gl::ShaderType::Vertex]->usesVertexID();
+}
+
 bool ProgramD3DMetadata::usesViewID() const
 {
     return mAttachedShaders[gl::ShaderType::Fragment]->usesViewID();
@@ -1148,6 +1153,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
 
     stream->readBool(&mUsesFragDepth);
     stream->readBool(&mHasANGLEMultiviewEnabled);
+    stream->readBool(&mUsesVertexID);
     stream->readBool(&mUsesViewID);
     stream->readBool(&mUsesPointSize);
     stream->readBool(&mUsesFlatInterpolation);
@@ -1429,6 +1435,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
 
     stream->writeInt(mUsesFragDepth);
     stream->writeInt(mHasANGLEMultiviewEnabled);
+    stream->writeInt(mUsesVertexID);
     stream->writeInt(mUsesViewID);
     stream->writeInt(mUsesPointSize);
     stream->writeInt(mUsesFlatInterpolation);
@@ -2018,6 +2025,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         mUsesPointSize = shadersD3D[gl::ShaderType::Vertex]->usesPointSize();
         mDynamicHLSL->getPixelShaderOutputKey(data, mState, metadata, &mPixelShaderKey);
         mUsesFragDepth            = metadata.usesFragDepth();
+        mUsesVertexID             = metadata.usesVertexID();
         mUsesViewID               = metadata.usesViewID();
         mHasANGLEMultiviewEnabled = metadata.hasANGLEMultiviewEnabled();
 
@@ -2866,6 +2874,7 @@ void ProgramD3D::reset()
 
     mUsesFragDepth            = false;
     mHasANGLEMultiviewEnabled = false;
+    mUsesVertexID             = false;
     mUsesViewID               = false;
     mPixelShaderKey.clear();
     mUsesPointSize         = false;
