@@ -1811,7 +1811,8 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                                   const gl::InternalFormat &formatInfo,
                                                   const gl::PixelUnpackState &unpack,
                                                   GLenum type,
-                                                  const uint8_t *pixels)
+                                                  const uint8_t *pixels,
+                                                  const vk::Format &vkFormat)
 {
     GLuint inputRowPitch = 0;
     ANGLE_VK_CHECK_MATH(contextVk, formatInfo.computeRowPitch(type, extents.width, unpack.alignment,
@@ -1830,9 +1831,6 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                         formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
                                                     applySkipImages, &inputSkipBytes));
 
-    RendererVk *renderer = contextVk->getRenderer();
-
-    const vk::Format &vkFormat         = renderer->getFormat(formatInfo.sizedInternalFormat);
     const angle::Format &storageFormat = vkFormat.textureFormat();
 
     size_t outputRowPitch;
@@ -1868,13 +1866,13 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     }
     else
     {
+        ASSERT(storageFormat.pixelBytes != 0);
+
         outputRowPitch   = storageFormat.pixelBytes * extents.width;
         outputDepthPitch = outputRowPitch * extents.height;
 
         bufferRowLength   = extents.width;
         bufferImageHeight = extents.height;
-
-        ASSERT(storageFormat.pixelBytes != 0);
     }
 
     VkBuffer bufferHandle = VK_NULL_HANDLE;

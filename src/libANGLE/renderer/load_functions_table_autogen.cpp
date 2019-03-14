@@ -2134,6 +2134,8 @@ LoadImageFunctionInfo RGB565_to_R5G6B5_UNORM(GLenum type)
 {
     switch (type)
     {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadRGB8ToBGR565, true);
         case GL_UNSIGNED_SHORT_5_6_5:
             return LoadImageFunctionInfo(LoadToNative<GLushort, 1>, false);
         default:

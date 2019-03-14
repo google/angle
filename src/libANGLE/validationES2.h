@@ -140,7 +140,7 @@ ANGLE_INLINE bool ValidateBindTexture(Context *context, TextureType target, GLui
     Texture *textureObject = context->getTexture(texture);
     if (textureObject && textureObject->getType() != target)
     {
-        context->validationError(GL_INVALID_OPERATION, err::kTypeMismatch);
+        context->validationError(GL_INVALID_OPERATION, err::kTextureTargetMismatch);
         return false;
     }
 

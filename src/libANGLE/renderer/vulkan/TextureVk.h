@@ -189,7 +189,8 @@ class TextureVk : public TextureImpl
                                   const gl::InternalFormat &formatInfo,
                                   GLenum type,
                                   const gl::PixelUnpackState &unpack,
-                                  const uint8_t *pixels);
+                                  const uint8_t *pixels,
+                                  const vk::Format &vkFormat);
 
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
                                         size_t sourceLevel,

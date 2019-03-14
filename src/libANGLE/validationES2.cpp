@@ -1646,12 +1646,18 @@ bool ValidateES2TexImageParameters(Context *context,
             return false;
         }
 
-        if (format != GL_NONE)
+        if (format != textureInternalFormat.format)
+        {
+            context->validationError(GL_INVALID_OPERATION, err::kTextureFormatMismatch);
+            return false;
+        }
+
+        if (context->getExtensions().webglCompatibility)
         {
             if (GetInternalFormatInfo(format, type).sizedInternalFormat !=
                 textureInternalFormat.sizedInternalFormat)
             {
-                context->validationError(GL_INVALID_OPERATION, kTypeMismatch);
+                context->validationError(GL_INVALID_OPERATION, kTextureTypeMismatch);
                 return false;
             }
         }

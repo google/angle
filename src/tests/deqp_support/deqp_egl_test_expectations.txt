@@ -77,19 +77,6 @@
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles3.rgba5551_pbuffer = FAIL
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba5551_window = FAIL
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba5551_pbuffer = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgb8_tex_subimage_rgb565 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgb565_tex_subimage_rgb8 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgba8_tex_subimage_rgba5_a1 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgba8_tex_subimage_rgba4 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgba5_a1_tex_subimage_rgba8 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgba5_a1_tex_subimage_rgba4 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba8 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba5_a1 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba8 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba5_a1 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.renderbuffer_rgb5_a1_tex_subimage_rgba8 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.renderbuffer_rgb5_a1_tex_subimage_rgba4 = FAIL
-1340 WIN : dEQP-EGL.functional.image.modify.renderbuffer_rgb565_tex_subimage_rgb8 = FAIL
 1340 WIN : dEQP-EGL.functional.negative_api.choose_config = SKIP
 1340 WIN : dEQP-EGL.functional.negative_api.get_display = FAIL
 1340 WIN : dEQP-EGL.functional.negative_api.surface_attrib = SKIP
@@ -180,10 +167,6 @@
 // Android GLES-only failues
 2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_red = FAIL
 2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rg = FAIL
-2507 ANDROID GLES : dEQP-EGL.functional.image.modify.renderbuffer_rgb565_tex_subimage_rgb8 = FAIL
-2507 ANDROID GLES : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba8 = FAIL
-2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgb565_tex_subimage_rgb8 = FAIL
-2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba8 = FAIL
 2716 ANDROID GLES : dEQP-EGL.functional.preserve_swap.preserve.* = FAIL
 
 // Seems to crash on the 5x. Possibly other Android devices.
