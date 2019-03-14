@@ -402,7 +402,8 @@ if (is_linux) {
   }
 }
 
-if (is_win) {
+# opengl32.lib/opengl32.dll are not available on Windows ARM64.
+if (is_win && target_cpu != "arm64") {
   glmark2_exe("glmark2_wgl") {
     sources = [
       "src/src/gl-state-wgl.cpp",

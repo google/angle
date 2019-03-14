@@ -279,7 +279,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     if (is_win || is_linux) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]
     }
-    if (is_win) {
+    if (is_win && target_cpu != "arm64") {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_wgl" ]
     }
     if (is_linux) {
