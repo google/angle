@@ -199,7 +199,14 @@ void main()
             return;
         }
 
-        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (framebufferStatus == GL_FRAMEBUFFER_UNSUPPORTED)
+        {
+            std::cout << "Framebuffer returned GL_FRAMEBUFFER_UNSUPPORTED, this is legal."
+                      << std::endl;
+            return;
+        }
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, framebufferStatus);
 
         ANGLE_GL_PROGRAM(renderingProgram, essl1_shaders::vs::Simple(),
                          essl1_shaders::fs::UniformColor());
@@ -3263,7 +3270,9 @@ TEST_P(WebGLCompatibilityTest, RGB16FTextures)
         {
             bool texture = extensionEnabled("GL_OES_texture_half_float");
             bool filter  = extensionEnabled("GL_OES_texture_half_float_linear");
-            bool render  = false;
+            // WebGL says that Unsized RGB 16F (OES) can be renderable with
+            // GL_EXT_color_buffer_half_float.
+            bool render = extensionEnabled("GL_EXT_color_buffer_half_float");
             TestFloatTextureFormat(GL_RGB, GL_RGB, GL_HALF_FLOAT_OES, texture, filter, render,
                                    textureData, readPixelsData);
         }
