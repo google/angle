@@ -108,6 +108,7 @@ TextureState::TextureState(TextureType type)
       mGenerateMipmapHint(GL_FALSE),
       mInitState(InitState::MayNeedInit),
       mCachedSamplerFormat(SamplerFormat::InvalidEnum),
+      mCachedSamplerCompareMode(GL_NONE),
       mCachedSamplerFormatValid(false)
 {}
 
@@ -241,12 +242,12 @@ GLenum TextureState::getGenerateMipmapHint() const
     return mGenerateMipmapHint;
 }
 
-SamplerFormat TextureState::computeRequiredSamplerFormat() const
+SamplerFormat TextureState::computeRequiredSamplerFormat(const SamplerState &samplerState) const
 {
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
     if ((baseImageDesc.format.info->format == GL_DEPTH_COMPONENT ||
          baseImageDesc.format.info->format == GL_DEPTH_STENCIL) &&
-        mSamplerState.getCompareMode() != GL_NONE)
+        samplerState.getCompareMode() != GL_NONE)
     {
         return SamplerFormat::Shadow;
     }

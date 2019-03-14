@@ -540,7 +540,8 @@ ANGLE_INLINE void State::updateActiveTextureState(const Context *context,
 
     mTexturesIncompatibleWithSamplers[textureIndex] =
         !texture->getTextureState().compatibleWithSamplerFormat(
-            mProgram->getState().getSamplerFormatForTextureUnitIndex(textureIndex));
+            mProgram->getState().getSamplerFormatForTextureUnitIndex(textureIndex),
+            sampler ? sampler->getSamplerState() : texture->getSamplerState());
 
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
 }
@@ -1184,6 +1185,7 @@ void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sample
     // This is overly conservative as it assumes the sampler has never been bound.
     setSamplerDirty(textureUnit);
     onActiveTextureChange(context, textureUnit);
+    onActiveTextureStateChange(context, textureUnit);
 }
 
 void State::detachSampler(const Context *context, GLuint sampler)
@@ -1192,12 +1194,11 @@ void State::detachSampler(const Context *context, GLuint sampler)
     // If a sampler object that is currently bound to one or more texture units is
     // deleted, it is as though BindSampler is called once for each texture unit to
     // which the sampler is bound, with unit set to the texture unit and sampler set to zero.
-    for (BindingPointer<Sampler> &samplerBinding : mSamplers)
+    for (size_t i = 0; i < mSamplers.size(); i++)
     {
-        if (samplerBinding.id() == sampler)
+        if (mSamplers[i].id() == sampler)
         {
-            samplerBinding.set(context, nullptr);
-            mDirtyBits.set(DIRTY_BIT_SAMPLER_BINDINGS);
+            setSamplerBinding(context, i, nullptr);
         }
     }
 }

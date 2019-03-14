@@ -454,40 +454,40 @@ void SetSamplerParameterBase(Context *context,
     switch (pname)
     {
         case GL_TEXTURE_WRAP_S:
-            sampler->setWrapS(ConvertToGLenum(pname, params[0]));
+            sampler->setWrapS(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_WRAP_T:
-            sampler->setWrapT(ConvertToGLenum(pname, params[0]));
+            sampler->setWrapT(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_WRAP_R:
-            sampler->setWrapR(ConvertToGLenum(pname, params[0]));
+            sampler->setWrapR(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_MIN_FILTER:
-            sampler->setMinFilter(ConvertToGLenum(pname, params[0]));
+            sampler->setMinFilter(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_MAG_FILTER:
-            sampler->setMagFilter(ConvertToGLenum(pname, params[0]));
+            sampler->setMagFilter(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-            sampler->setMaxAnisotropy(CastQueryValueTo<GLfloat>(pname, params[0]));
+            sampler->setMaxAnisotropy(context, CastQueryValueTo<GLfloat>(pname, params[0]));
             break;
         case GL_TEXTURE_COMPARE_MODE:
-            sampler->setCompareMode(ConvertToGLenum(pname, params[0]));
+            sampler->setCompareMode(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_COMPARE_FUNC:
-            sampler->setCompareFunc(ConvertToGLenum(pname, params[0]));
+            sampler->setCompareFunc(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_MIN_LOD:
-            sampler->setMinLod(CastQueryValueTo<GLfloat>(pname, params[0]));
+            sampler->setMinLod(context, CastQueryValueTo<GLfloat>(pname, params[0]));
             break;
         case GL_TEXTURE_MAX_LOD:
-            sampler->setMaxLod(CastQueryValueTo<GLfloat>(pname, params[0]));
+            sampler->setMaxLod(context, CastQueryValueTo<GLfloat>(pname, params[0]));
             break;
         case GL_TEXTURE_SRGB_DECODE_EXT:
-            sampler->setSRGBDecode(ConvertToGLenum(pname, params[0]));
+            sampler->setSRGBDecode(context, ConvertToGLenum(pname, params[0]));
             break;
         case GL_TEXTURE_BORDER_COLOR:
-            sampler->setBorderColor(ConvertToColor<isPureInteger>(params));
+            sampler->setBorderColor(context, ConvertToColor<isPureInteger>(params));
             break;
         default:
             UNREACHABLE();

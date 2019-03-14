@@ -1100,6 +1100,7 @@ void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerHandle);
     mState.setSamplerBinding(this, textureUnit, sampler);
     mSamplerObserverBindings[textureUnit].bind(sampler);
+    mStateCache.onActiveTextureChange(this);
 }
 
 void Context::bindImageTexture(GLuint unit,
@@ -8015,6 +8016,7 @@ void Context::onSubjectStateChange(const Context *context,
             {
                 ASSERT(index < kSamplerMaxSubjectIndex);
                 mState.setSamplerDirty(index - kSampler0SubjectIndex);
+                mState.onActiveTextureStateChange(this, index - kSampler0SubjectIndex);
             }
             break;
     }

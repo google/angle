@@ -3087,8 +3087,6 @@ void main()
 // Test sampler format validation caching works.
 TEST_P(WebGL2ValidationStateChangeTest, SamplerFormatCache)
 {
-    // TODO(jdarpinian): Re-enable this test when fixing http://crbug.com/940080
-    ANGLE_SKIP_TEST_IF(true);
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform sampler2D sampler;
