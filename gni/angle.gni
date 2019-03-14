@@ -13,12 +13,8 @@ if (is_android) {
 }
 
 if (build_with_chromium) {
-  angle_root = "//third_party/angle"
-
   import("//ui/ozone/ozone.gni")
 } else {
-  angle_root = "//"
-
   declare_args() {
     ozone_platform_gbm = false
   }
