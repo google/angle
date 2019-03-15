@@ -27,7 +27,7 @@ namespace
 struct BenchmarkInfo
 {
     const char *glmark2Config;
-    const char *gtestSuffix;
+    const char *name;
 };
 
 // Each glmark2 scene is individually benchmarked.  If glmark2 is run without a specific benchmark,
@@ -84,7 +84,7 @@ std::string GLMark2BenchmarkPrint(
     std::ostringstream out;
 
     out << std::get<0>(params) << '_';
-    out << kBenchmarks[std::get<1>(params)].gtestSuffix;
+    out << kBenchmarks[std::get<1>(params)].name;
 
     return out.str();
 }
@@ -118,7 +118,9 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
             return;
         }
 
-        const char *benchmark = kBenchmarks[std::get<1>(GetParam())].glmark2Config;
+        const BenchmarkInfo benchmarkInfo = kBenchmarks[std::get<1>(GetParam())];
+        const char *benchmark             = benchmarkInfo.glmark2Config;
+        const char *benchmarkName         = benchmarkInfo.name;
         bool completeRun      = benchmark == nullptr || benchmark[0] == '\0';
 
         Optional<std::string> cwd = GetCWD();
@@ -127,7 +129,7 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
         // set relative to that path.
         std::string executableDir = GetExecutableDirectory();
         SetCWD(executableDir.c_str());
-        SetEnvironmentVar("ANGLE_DEFAULT_PLATFORM", mBackend);
+        SetEnvironmentVar("ANGLE_DEFAULT_PLATFORM", mBackend.c_str());
 
         std::vector<const char *> args = {
             "glmark2_angle",
@@ -160,12 +162,12 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
 
         if (!OneFrame())
         {
-            parseOutput(output, completeRun);
+            parseOutput(output, benchmarkName, completeRun);
         }
     }
 
   private:
-    void parseOutput(const std::string &output, bool completeRun)
+    void parseOutput(const std::string &output, const char *benchmarkName, bool completeRun)
     {
         // Output is in the following format:
         //
@@ -240,7 +242,10 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
             EXPECT_EQ("FPS:", fpsTag);
             EXPECT_EQ("FrameTime:", frametimeTag);
 
-            perf_test::PrintResult(testName + testConfig, mBackend, "fps", fps, "", true);
+            if (!completeRun)
+            {
+                perf_test::PrintResult(benchmarkName, '_' + mBackend, "fps", fps, "", true);
+            }
         }
 
         // Get the score line: `glmark2 Score: uint`
@@ -251,13 +256,13 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
         EXPECT_EQ("glmark2", glmark2Tag);
         EXPECT_EQ("Score:", scoreTag);
 
-        if (!completeRun)
+        if (completeRun)
         {
-            perf_test::PrintResult("glmark2", mBackend, "score", score, "", true);
+            perf_test::PrintResult("glmark2", '_' + mBackend, "score", score, "", true);
         }
     }
 
-    const char *mBackend = "invalid";
+    std::string mBackend = "invalid";
 };
 
 TEST_P(GLMark2Benchmark, Run)
