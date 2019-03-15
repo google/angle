@@ -51,10 +51,14 @@ class EGLQueryContextTest : public EGLTest, public testing::WithParamInterface<P
 
     void TearDown() override
     {
-        eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        eglDestroyContext(mDisplay, mContext);
-        eglDestroySurface(mDisplay, mSurface);
-        eglTerminate(mDisplay);
+        if (mDisplay != EGL_NO_DISPLAY)
+        {
+            eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+            eglDestroyContext(mDisplay, mContext);
+            eglDestroySurface(mDisplay, mSurface);
+            eglTerminate(mDisplay);
+        }
+        ASSERT_EGL_SUCCESS() << "Error during test TearDown";
     }
 
     EGLDisplay mDisplay;
@@ -102,6 +106,7 @@ TEST_P(EGLQueryContextTest, GetRenderBufferBoundSurface)
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_RENDER_BUFFER, &contextRenderBuffer) !=
                 EGL_FALSE);
     EXPECT_TRUE(renderBuffer == contextRenderBuffer);
+    ASSERT_EGL_SUCCESS();
 }
 
 TEST_P(EGLQueryContextTest, BadDisplay)
