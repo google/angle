@@ -205,7 +205,6 @@ void FormatTable::initialize(RendererVk *renderer,
 
         format.initialize(renderer, angleFormat);
         const GLenum internalFormat = format.internalFormat;
-        format.textureLoadFunctions = GetLoadFunctionsMap(internalFormat, format.textureFormatID);
         format.angleFormatID        = formatID;
 
         if (!format.valid())
@@ -219,6 +218,12 @@ void FormatTable::initialize(RendererVk *renderer,
         gl::TextureCaps textureCaps;
         FillTextureFormatCaps(renderer, format.vkTextureFormat, &textureCaps);
         outTextureCapsMap->set(formatID, textureCaps);
+
+        if (textureCaps.texturable)
+        {
+            format.textureLoadFunctions =
+                GetLoadFunctionsMap(internalFormat, format.textureFormatID);
+        }
 
         if (angleFormat.isBlock)
         {
