@@ -51,6 +51,8 @@ class InstancingTest : public ANGLETest
         glDeleteBuffers(1, &mInstanceBuffer);
         glDeleteProgram(mProgram[0]);
         glDeleteProgram(mProgram[1]);
+
+        ANGLETest::TearDown();
     }
 
     void SetUp() override
@@ -210,7 +212,7 @@ class InstancingTest : public ANGLETest
     GLuint mInstanceBuffer;
 
     static constexpr unsigned kMaxDrawn = 16;
-    static constexpr float kDrawSize = 2.0 / kMaxDrawn;
+    static constexpr float kDrawSize    = 2.0 / kMaxDrawn;
     GLfloat mInstanceData[kMaxDrawn];
 
     // clang-format off

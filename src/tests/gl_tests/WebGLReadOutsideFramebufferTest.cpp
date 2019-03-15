@@ -53,7 +53,7 @@ class PixelRect
         }
         else
         {
-            ASSERT_TRUE(target == GL_TEXTURE_2D);
+            ASSERT_GLENUM_EQ(GL_TEXTURE_2D, target);
             glTexImage2D(target, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                          mData.data());
         }
@@ -235,20 +235,20 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        constexpr char kVS[] =
-            "attribute vec3 a_position;\n"
-            "varying vec2 v_texCoord;\n"
-            "void main() {\n"
-            "    v_texCoord = a_position.xy * 0.5 + 0.5;\n"
-            "    gl_Position = vec4(a_position, 1);\n"
-            "}\n";
-        constexpr char kFS[] =
-            "precision mediump float;\n"
-            "varying vec2 v_texCoord;\n"
-            "uniform sampler2D u_texture;\n"
-            "void main() {\n"
-            "    gl_FragColor = texture2D(u_texture, v_texCoord);\n"
-            "}\n";
+        constexpr char kVS[] = R"(
+attribute vec3 a_position;
+varying vec2 v_texCoord;
+void main() {
+    v_texCoord = a_position.xy * 0.5 + 0.5;
+    gl_Position = vec4(a_position, 1);
+})";
+        constexpr char kFS[] = R"(
+precision mediump float;
+varying vec2 v_texCoord;
+uniform sampler2D u_texture;
+void main() {
+    gl_FragColor = texture2D(u_texture, v_texCoord);
+})";
 
         mProgram = CompileProgram(kVS, kFS);
         glUseProgram(mProgram);

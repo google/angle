@@ -17,7 +17,11 @@ namespace angle
 class EGLDebugTest : public ANGLETest
 {
   protected:
-    void TearDown() override { eglDebugMessageControlKHR(nullptr, nullptr); }
+    void TearDown() override
+    {
+        eglDebugMessageControlKHR(nullptr, nullptr);
+        ANGLETest::TearDown();
+    }
 
     bool hasExtension() const { return eglClientExtensionEnabled("EGL_KHR_debug"); }
 

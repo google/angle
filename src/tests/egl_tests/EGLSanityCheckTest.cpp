@@ -41,7 +41,9 @@ TEST_F(EGLSanityCheckTest, GetProcAddressNegativeTest)
 
 // Tests that our whitelist function generally maps to our support function.
 // We can add specific exceptions here if needed.
-TEST_F(EGLSanityCheckTest, WhitelistMatchesSupport)
+// Disabled because it was creating a large number of configs. This could even result
+// in a BDOD on Windows.
+TEST_F(EGLSanityCheckTest, DISABLED_WhitelistMatchesSupport)
 {
     // Has issues with Vulkan support detection on Android.
     ANGLE_SKIP_TEST_IF(IsAndroid());

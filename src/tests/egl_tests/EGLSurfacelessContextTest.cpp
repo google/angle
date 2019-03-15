@@ -18,14 +18,15 @@ using namespace angle;
 namespace
 {
 
-class EGLSurfacelessContextTest : public ANGLETest
+class EGLSurfacelessContextTest : public EGLTest,
+                                  public testing::WithParamInterface<PlatformParameters>
 {
   public:
     EGLSurfacelessContextTest() : mDisplay(0) {}
 
     void SetUp() override
     {
-        ANGLETest::SetUp();
+        EGLTest::SetUp();
 
         EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
         mDisplay           = eglGetPlatformDisplayEXT(
@@ -65,7 +66,7 @@ class EGLSurfacelessContextTest : public ANGLETest
             eglDestroyContext(mDisplay, mContext);
         }
 
-        if (mContext != EGL_NO_SURFACE)
+        if (mPbuffer != EGL_NO_SURFACE)
         {
             eglDestroySurface(mDisplay, mPbuffer);
         }
