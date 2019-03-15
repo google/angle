@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0049a001_0e60f356",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-15T20:22:25Z",
+      "side": 1,
+      "message": "Could you make a new struct here like Program::LinkingState to store more than just the event?  The CompilerInstance could be stored there instead of in WaitableCompileEvent, simplifying Shader::resolveCompile.",
+      "range": {
+        "startLine": 212,
+        "startChar": 4,
+        "endLine": 212,
+        "endChar": 45
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f7a9afa_0f3776ff",
+        "filename": "src/libANGLE/renderer/ShaderImpl.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-15T20:22:25Z",
+      "side": 1,
+      "message": "Do we need to store this? Base classes can store it themselves if they need.",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 62
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dccccc92_31fdff5e",
+        "filename": "src/libANGLE/renderer/ShaderImpl.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-15T20:22:25Z",
+      "side": 1,
+      "message": "nit: skip the vector allocation by doing:\n\n   const char* source \u003d mSource.c_str();\n   mResult \u003d sh::Compile(mHandle, \u0026source, 1, mOptions);",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 46
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "351401b5_215a271e",
+        "filename": "src/libANGLE/renderer/ShaderImpl.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-15T20:22:25Z",
+      "side": 1,
+      "message": "Could we merge these two functions? they are both called from Shader::resolveCompile on the main thread so I think we can combine them.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 57
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
