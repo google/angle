@@ -1,0 +1,297 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97e07417_d18ce25c",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "can we make this work with uint8_t?",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd81891a_db42c431",
+        "filename": "src/common/PoolAlloc.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "can you enable these ASSERTs?",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 35
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc46a5ee_9852d80c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "I\u0027d like for us to refactor this to a non #if style, can follow up with you offline for suggestions.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 13
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "603a9a94_09f6c90a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "ditto all this",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 38
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06c1f0e1_3c103306",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "you can omit static (it\u0027s redundant with the anonymous namespace) and can capitalize \"Execute\" to match the style guide.",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 6
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5b5e530_23fb4969",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "maybe we should add a new API that resets the current memory?",
+      "range": {
+        "startLine": 779,
+        "startChar": 0,
+        "endLine": 780,
+        "endChar": 27
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12c42836_8e687afa",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "for these new operations I recommend we added new custom methods to vk::CommandBuffer. It won\u0027t mirror the API for CommandBuffer but that\u0027s fine.",
+      "range": {
+        "startLine": 369,
+        "startChar": 0,
+        "endLine": 371,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1abed6c6_aa1d80f9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 465,
+        "endChar": 16
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3d5f5b0_2958a2fa",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 492,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34f160d2_8e5b77dd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "same with these guys",
+      "range": {
+        "startLine": 513,
+        "startChar": 0,
+        "endLine": 515,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8f52ab5_a88ccb9d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "same with these guys",
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "722bb207_941433fb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "we require all new TODOs to be associated with an ANGLE bug ID. could you leave a bug link here? http://anglebug.com/####",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 67
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9097d78_a0b82c45",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-15T16:53:13Z",
+      "side": 1,
+      "message": "can you sort these alphabetically (with Invalid at the top)?\n\nAlso can you remove the numerical assignment? Makes it a bit harder to maintain.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 32
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
