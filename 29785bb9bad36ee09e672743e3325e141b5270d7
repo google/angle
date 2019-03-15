@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a2552397_45cb104e",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-15T07:42:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "651cbb4c_cbeca529",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 80
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4326eeda_3c716fc5",
         "filename": "src/libANGLE/Shader.cpp",
         "patchSetId": 12
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6c1f624a_b2676ee5",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-15T07:42:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4326eeda_3c716fc5",
+      "range": {
+        "startLine": 384,
+        "startChar": 12,
+        "endLine": 414,
+        "endChar": 0
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5db1eb67_6267f6be",
         "filename": "src/libANGLE/Shader.cpp",
         "patchSetId": 12
@@ -68,6 +116,30 @@
       "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a354b9fb_134f1a6b",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-15T07:42:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5db1eb67_6267f6be",
+      "range": {
+        "startLine": 420,
+        "startChar": 4,
+        "endLine": 420,
+        "endChar": 45
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +183,48 @@
     },
     {
       "key": {
+        "uuid": "37e27b22_6181fe9f",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-15T07:42:59Z",
+      "side": 1,
+      "message": "This would actually force all contexts to implement this function, and therefore add a few duplicated stub code lines.",
+      "parentUuid": "4aba4e60_1bf14408",
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f963e59c_d6950aa9",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-15T07:42:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8eb5ba58_27c5ff0f",
+      "range": {
+        "startLine": 193,
+        "startChar": 17,
+        "endLine": 193,
+        "endChar": 44
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "056083ee_e9b2938d",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 12
@@ -122,6 +236,30 @@
       "writtenOn": "2019-03-11T19:49:40Z",
       "side": 1,
       "message": "\u0026\u0026",
+      "range": {
+        "startLine": 233,
+        "startChar": 35,
+        "endLine": 233,
+        "endChar": 36
+      },
+      "revId": "29785bb9bad36ee09e672743e3325e141b5270d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9106dfab_888a34c9",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-15T07:42:59Z",
+      "side": 1,
+      "message": "Good catching, thanks!",
+      "parentUuid": "056083ee_e9b2938d",
       "range": {
         "startLine": 233,
         "startChar": 35,
