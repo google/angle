@@ -258,22 +258,43 @@ angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
 
             WARN() << std::endl << message;
 
-            if ((message.find("error X3531:") !=
-                     std::string::npos ||  // "can't unroll loops marked with loop attribute"
-                 message.find("error X4014:") !=
-                     std::string::npos) &&  // "cannot have gradient operations inside loops with
-                                            // divergent flow control", even though it is
-                                            // counter-intuitive to disable unrolling for this
-                                            // error, some very long shaders have trouble deciding
-                                            // which loops to unroll and turning off forced unrolls
-                                            // allows them to compile properly.
-                macros != nullptr)
+            if (macros != nullptr)
             {
-                macros = nullptr;  // Disable [loop] and [flatten]
+                constexpr const char *kLoopRelatedErrors[] = {
+                    // "can't unroll loops marked with loop attribute"
+                    "error X3531:",
 
-                // Retry without changing compiler flags
-                i--;
-                continue;
+                    // "cannot have gradient operations inside loops with divergent flow control",
+                    // even though it is counter-intuitive to disable unrolling for this error, some
+                    // very long shaders have trouble deciding which loops to unroll and turning off
+                    // forced unrolls allows them to compile properly.
+                    "error X4014:",
+
+                    // "array index out of bounds", loop unrolling can result in invalid array
+                    // access if the indices become constant, causing loops that may never be
+                    // executed to generate compilation errors
+                    "error X3504:",
+                };
+
+                bool hasLoopRelatedError = false;
+                for (const char *errorType : kLoopRelatedErrors)
+                {
+                    if (message.find(errorType) != std::string::npos)
+                    {
+                        hasLoopRelatedError = true;
+                        break;
+                    }
+                }
+
+                if (hasLoopRelatedError)
+                {
+                    // Disable [loop] and [flatten]
+                    macros = nullptr;
+
+                    // Retry without changing compiler flags
+                    i--;
+                    continue;
+                }
             }
         }
 
