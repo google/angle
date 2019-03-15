@@ -166,7 +166,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     ContextVk *contextVk = vk::GetImpl(context);
 
     // This command buffer is only started once.
-    vk::CommandBuffer *commandBuffer = nullptr;
+    CommandBufferT *commandBuffer = nullptr;
 
     const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
     bool clearDepth = (depthAttachment && (mask & GL_DEPTH_BUFFER_BIT) != 0);
@@ -424,7 +424,7 @@ angle::Result FramebufferVk::blitWithCopy(ContextVk *contextVk,
     VkImageAspectFlags aspectMask =
         vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     vk::ImageHelper *writeImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
@@ -509,7 +509,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     // Reinitialize the commandBuffer after a read pixels because it calls
     // renderer->finish which makes command buffers obsolete.
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     // We read the bytes of the image in a buffer, now we have to copy them into the
@@ -669,7 +669,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
 
     vk::ImageHelper *dstImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     const vk::Format &readImageFormat = readRenderTarget->getImageFormat();
@@ -903,7 +903,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(
 
     // This command can only happen inside a render pass, so obtain one if its already happening
     // or create a new one if not.
-    vk::CommandBuffer *commandBuffer = nullptr;
+    CommandBufferT *commandBuffer    = nullptr;
     vk::RecordingMode mode           = vk::RecordingMode::Start;
     ANGLE_TRY(getCommandBufferForDraw(contextVk, &commandBuffer, &mode));
 
@@ -1032,7 +1032,7 @@ angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
 }
 
 angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
-                                                     vk::CommandBuffer **commandBufferOut,
+                                                     CommandBufferT **commandBufferOut,
                                                      vk::RecordingMode *modeOut)
 {
     RendererVk *renderer = contextVk->getRenderer();
@@ -1048,7 +1048,7 @@ angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
 }
 
 angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
-                                                vk::CommandBuffer **commandBufferOut)
+                                                CommandBufferT **commandBufferOut)
 {
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY(getFramebuffer(contextVk, &framebuffer));
@@ -1056,7 +1056,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
     std::vector<VkClearValue> attachmentClearValues;
 
-    vk::CommandBuffer *writeCommands = nullptr;
+    CommandBufferT *writeCommands = nullptr;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &writeCommands));
 
     vk::RenderPassDesc renderPassDesc;
@@ -1112,7 +1112,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 
     ANGLE_TRY(renderTarget->ensureImageInitialized(contextVk));
 
-    vk::CommandBuffer *commandBuffer = nullptr;
+    CommandBufferT *commandBuffer = nullptr;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     // Note that although we're reading from the image, we need to update the layout below.

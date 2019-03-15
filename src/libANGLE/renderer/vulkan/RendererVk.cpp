@@ -41,6 +41,7 @@ const uint32_t kMockDeviceID                              = 0xf005ba11;
 constexpr char kMockDeviceName[]                          = "Vulkan Mock Device";
 constexpr size_t kInFlightCommandsLimit                   = 100u;
 constexpr VkFormatFeatureFlags kInvalidFormatFeatureFlags = static_cast<VkFormatFeatureFlags>(-1);
+constexpr size_t kDefaultPoolAllocatorPageSize            = 16 * 1024;
 }  // anonymous namespace
 
 namespace rx
@@ -505,7 +506,8 @@ RendererVk::RendererVk()
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
       mDeviceLost(false),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
-      mCommandGraph(kEnableCommandGraphDiagnostics),
+      mPoolAllocator(kDefaultPoolAllocatorPageSize),
+      mCommandGraph(kEnableCommandGraphDiagnostics, &mPoolAllocator),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0)

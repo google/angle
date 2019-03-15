@@ -253,7 +253,7 @@ class TextureVk : public TextureImpl
                             const vk::Format &format,
                             const gl::Extents &extents,
                             const uint32_t levelCount,
-                            vk::CommandBuffer *commandBuffer);
+                            CommandBufferT *commandBuffer);
     void releaseImage(RendererVk *renderer);
     void releaseStagingBuffer(RendererVk *renderer);
     uint32_t getLevelCount() const;

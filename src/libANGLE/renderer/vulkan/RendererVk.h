@@ -13,6 +13,7 @@
 #include <vulkan/vulkan.h>
 #include <memory>
 
+#include "common/PoolAlloc.h"
 #include "common/angleutils.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
@@ -333,6 +334,9 @@ class RendererVk : angle::NonCopyable
     // is otherwise unnecessary as the SyncVk objects don't actually outlive the renderer currently.
     // http://anglebug.com/2701
     vk::Shared<vk::Fence> mSubmitFence;
+
+    // Pool allocator used for command graph but may be expanded to other allocations
+    angle::PoolAllocator mPoolAllocator;
 
     // See CommandGraph.h for a desription of the Command Graph.
     vk::CommandGraph mCommandGraph;

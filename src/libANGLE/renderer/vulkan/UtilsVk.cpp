@@ -311,7 +311,7 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
                                     const VkDescriptorSet descriptorSet,
                                     const void *pushConstants,
                                     size_t pushConstantsSize,
-                                    vk::CommandBuffer *commandBuffer)
+                                    CommandBufferT *commandBuffer)
 {
     RendererVk *renderer = context->getRenderer();
 
@@ -373,7 +373,7 @@ angle::Result UtilsVk::clearBuffer(vk::Context *context,
 
     ANGLE_TRY(ensureBufferClearResourcesInitialized(context));
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(dest->recordCommands(context, &commandBuffer));
 
     // Tell dest it's being written to.
@@ -429,7 +429,7 @@ angle::Result UtilsVk::copyBuffer(vk::Context *context,
 
     ANGLE_TRY(ensureBufferCopyResourcesInitialized(context));
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(dest->recordCommands(context, &commandBuffer));
 
     // Tell src we are going to read from it.
@@ -498,7 +498,7 @@ angle::Result UtilsVk::convertVertexBuffer(vk::Context *context,
 
     ANGLE_TRY(ensureConvertVertexResourcesInitialized(context));
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(dest->recordCommands(context, &commandBuffer));
 
     // Tell src we are going to read from it.
@@ -576,7 +576,7 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
                                        const vk::ImageView *imageView,
                                        const vk::RenderPassDesc &renderPassDesc,
                                        const gl::Rectangle &renderArea,
-                                       vk::CommandBuffer **commandBufferOut)
+                                       CommandBufferT **commandBufferOut)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -617,7 +617,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     ANGLE_TRY(ensureImageClearResourcesInitialized(contextVk));
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     if (!framebuffer->appendToStartedRenderPass(renderer->getCurrentQueueSerial(), &commandBuffer))
     {
         ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, &commandBuffer));
@@ -740,20 +740,20 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     // Change source layout outside render pass
     if (src->isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
     {
-        vk::CommandBuffer *srcLayoutChange;
+        CommandBufferT *srcLayoutChange;
         ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
         src->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::FragmentShaderReadOnly,
                           srcLayoutChange);
     }
 
     // Change destination layout outside render pass as well
-    vk::CommandBuffer *destLayoutChange;
+    CommandBufferT *destLayoutChange;
     ANGLE_TRY(dest->recordCommands(contextVk, &destLayoutChange));
 
     dest->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                        destLayoutChange);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(
         startRenderPass(contextVk, dest, destView, renderPassDesc, renderArea, &commandBuffer));
 

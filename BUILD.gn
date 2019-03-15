@@ -474,6 +474,9 @@ config("libANGLE_config") {
   }
   if (angle_enable_vulkan) {
     defines += [ "ANGLE_ENABLE_VULKAN" ]
+    if (angle_enable_custom_vulkan_cmd_buffers) {
+      defines += [ "ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS=1" ]
+    }
   }
   if (angle_enable_null) {
     defines += [ "ANGLE_ENABLE_NULL" ]
