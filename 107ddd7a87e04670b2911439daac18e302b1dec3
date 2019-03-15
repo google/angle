@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "87bb49fb_7b74ac2b",
+        "filename": "src/common/PoolAlloc.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd81891a_db42c431",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 35
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc46a5ee_9852d80c",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 25
@@ -140,6 +164,30 @@
     },
     {
       "key": {
+        "uuid": "48121c23_b822e1ec",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Yes, I\u0027m not satisfied with the lifetime management in PoolAllocator long term.\nI was thinking I would integrate PoolAllocator into the command graph in a soon-to-come follow-on and revise the PoolAllocator reset capability at that point.",
+      "parentUuid": "d5b5e530_23fb4969",
+      "range": {
+        "startLine": 779,
+        "startChar": 0,
+        "endLine": 780,
+        "endChar": 27
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "12c42836_8e687afa",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 25
@@ -160,6 +208,30 @@
       "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d51fbf0_ced69c3b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12c42836_8e687afa",
+      "range": {
+        "startLine": 369,
+        "startChar": 0,
+        "endLine": 371,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +258,30 @@
     },
     {
       "key": {
+        "uuid": "a82967e5_d798ef6d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abed6c6_aa1d80f9",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 465,
+        "endChar": 16
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3d5f5b0_2958a2fa",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 25
@@ -206,6 +302,30 @@
       "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a02d9240_a68ff7c0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3d5f5b0_2958a2fa",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 492,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -232,6 +352,30 @@
     },
     {
       "key": {
+        "uuid": "f22874fe_c0fa767e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34f160d2_8e5b77dd",
+      "range": {
+        "startLine": 513,
+        "startChar": 0,
+        "endLine": 515,
+        "endChar": 5
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8f52ab5_a88ccb9d",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 25
@@ -246,6 +390,24 @@
       "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd7cb001_084c7466",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8f52ab5_a88ccb9d",
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -292,6 +454,30 @@
       "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3575bf7d_e55b58dd",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-15T20:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9097d78_a0b82c45",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 32
+      },
+      "revId": "107ddd7a87e04670b2911439daac18e302b1dec3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
