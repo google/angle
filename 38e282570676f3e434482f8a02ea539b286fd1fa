@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81887a16_5fef5254",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-18T22:39:29Z",
+      "side": 1,
+      "message": "Maybe this needs to be ANGLE_ASSERT_IMPL?\nI think ANGLE_ASSERT_IMPL is ANGLE_CRASH only in Release and assert() in Debug.",
+      "range": {
+        "startLine": 171,
+        "startChar": 8,
+        "endLine": 171,
+        "endChar": 19
+      },
+      "revId": "38e282570676f3e434482f8a02ea539b286fd1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
