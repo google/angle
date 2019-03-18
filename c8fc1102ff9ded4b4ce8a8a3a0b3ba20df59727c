@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba327800_ee0cc812",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "I updated this code and will test perf on ARM",
+      "parentUuid": "e6ce34bd_4bb5bafe",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b4a381ee_48ee92e6",
         "filename": "src/common/PoolAlloc.cpp",
         "patchSetId": 28
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "d14d001d_71bb5746",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4a381ee_48ee92e6",
+      "range": {
+        "startLine": 328,
+        "startChar": 25,
+        "endLine": 328,
+        "endChar": 48
+      },
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c583169_82f60fb4",
         "filename": "src/common/PoolAlloc.h",
         "patchSetId": 28
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "2fde235e_fed9a292",
+        "filename": "src/common/PoolAlloc.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c583169_82f60fb4",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f2079a0_9eb8a0ab",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 28
@@ -70,6 +130,24 @@
       "writtenOn": "2019-03-18T17:07:34Z",
       "side": 1,
       "message": "You can use the `Offset` function above. Also, what\u0027s the reason `bindVertexBuffers` doesn\u0027t use `storePointerParameters`?",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8964a66e_263724d2",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "Jamie optimized this where pointer params aren\u0027t stored in the param struct so storePointerParameters does more than is needed. Will probably update other functions to follow this pattern to save size in parameter structs and avoid copying ptrs that can be deduced.",
+      "parentUuid": "2f2079a0_9eb8a0ab",
       "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "8f13c84b_bafde835",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "Jamie tuned this size while optimizing for DrawCallPerf test. Reduced to 2046 as suggested to help reduce waste.",
+      "parentUuid": "77176666_f955afc2",
+      "range": {
+        "startLine": 535,
+        "startChar": 41,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "170ed9b0_0356b5a4",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 28
@@ -116,6 +218,24 @@
     },
     {
       "key": {
+        "uuid": "647802a2_9bde8dac",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "170ed9b0_0356b5a4",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f25aa15_df47f67e",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 28
@@ -130,6 +250,24 @@
       "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "795e40b0_27a3023a",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-18T22:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f25aa15_df47f67e",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
