@@ -244,7 +244,9 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
 
             if (!completeRun)
             {
-                perf_test::PrintResult(benchmarkName, '_' + mBackend, "fps", fps, "", true);
+                const std::string kBenchmarkPrefix = "glmark2_";
+                perf_test::PrintResult(kBenchmarkPrefix + benchmarkName, '_' + mBackend, "fps", fps,
+                                       "", true);
             }
         }
 
