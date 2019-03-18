@@ -22,6 +22,30 @@
       "revId": "38e282570676f3e434482f8a02ea539b286fd1fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b8befb7_3d9f3f03",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2019-03-18T23:19:25Z",
+      "side": 1,
+      "message": "Hmm, you\u0027re right that ANGLE_ASSERT_IMPL used to do assert(expression). But it\u0027s not possible to do assert(expression) with this approach. The assert is in ~LogMessage() so the expression is not available.\n\nAlso the old approach caused multiple evaluations of the expression, which is not ideal if the expression has side effects. For example, the second evaluation could succeed and then it wouldn\u0027t crash.\n\nI could do assert(false) here, but I\u0027m not sure what advantage that would have over just crashing.",
+      "parentUuid": "81887a16_5fef5254",
+      "range": {
+        "startLine": 171,
+        "startChar": 8,
+        "endLine": 171,
+        "endChar": 19
+      },
+      "revId": "38e282570676f3e434482f8a02ea539b286fd1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
