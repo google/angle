@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "588c617b_d20224b8",
+        "filename": "src/image_util/loadimage.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1239,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-18T14:30:24Z",
+      "side": 1,
+      "message": "were these guys actually reachable in test code?",
+      "range": {
+        "startLine": 1239,
+        "startChar": 5,
+        "endLine": 1239,
+        "endChar": 25
+      },
+      "revId": "258867d4e52c8bfe247b1f6ba7dc40677718b87e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76b15a3b_c1f56cbd",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-18T14:30:24Z",
+      "side": 1,
+      "message": "can you make these guys use the UNREACHABLE load function? There isn\u0027t any GL format that can represent them. Though apparently AMD exposes this format.",
+      "range": {
+        "startLine": 415,
+        "startChar": 3,
+        "endLine": 415,
+        "endChar": 26
+      },
+      "revId": "258867d4e52c8bfe247b1f6ba7dc40677718b87e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
