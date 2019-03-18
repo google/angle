@@ -22,6 +22,30 @@
       "revId": "d25be8a1ab392e1c973d4ca8b1a0903ee38b668d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b7917ca_09440a8f",
+        "filename": "src/common/debug.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2019-03-18T22:31:14Z",
+      "side": 0,
+      "message": "The crash was moved into the FATAL() call, in LogMessage::~LogMessage, here: https://cs.chromium.org/chromium/src/third_party/angle/src/common/debug.cpp?l\u003d171\u0026rcl\u003d38e282570676f3e434482f8a02ea539b286fd1fa",
+      "parentUuid": "88f89066_fa91f1f0",
+      "range": {
+        "startLine": 279,
+        "startChar": 23,
+        "endLine": 279,
+        "endChar": 52
+      },
+      "revId": "d25be8a1ab392e1c973d4ca8b1a0903ee38b668d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
