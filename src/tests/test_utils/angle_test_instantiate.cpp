@@ -131,6 +131,35 @@ bool IsFuchsia()
 #endif
 }
 
+bool IsAndroidDevice(const std::string &deviceName)
+{
+    if (!IsAndroid())
+    {
+        return false;
+    }
+    SystemInfo *systemInfo = GetTestSystemInfo();
+    if (systemInfo->machineModelName == deviceName)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool IsNexus5X()
+{
+    return IsAndroidDevice("Nexus 5X");
+}
+
+bool IsPixelXL()
+{
+    return IsAndroidDevice("Pixel XL");
+}
+
+bool IsPixel2()
+{
+    return IsAndroidDevice("Pixel 2");
+}
+
 bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param)
 {
     VendorID vendorID = systemInfo.gpus[systemInfo.primaryGPUIndex].vendorId;

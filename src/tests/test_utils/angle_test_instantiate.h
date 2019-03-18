@@ -25,6 +25,11 @@ bool IsOzone();
 bool IsWindows();
 bool IsFuchsia();
 
+// Android devices
+bool IsNexus5X();
+bool IsPixelXL();
+bool IsPixel2();
+
 bool IsPlatformAvailable(const PlatformParameters &param);
 
 // This functions is used to filter which tests should be registered,
