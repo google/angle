@@ -751,7 +751,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_ETC1_RGB8_OES;
+            textureFormatID              = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::FormatID::NONE;
+            vkBufferFormat               = VK_FORMAT_UNDEFINED;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:

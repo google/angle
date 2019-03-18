@@ -224,6 +224,10 @@
             "buffer": "NONE",
             "texture": "D24_UNORM_S8_UINT"
         },
+        "ETC1_R8G8B8_UNORM_BLOCK": {
+            "buffer": "NONE",
+            "texture": "ETC2_R8G8B8_UNORM_BLOCK"
+        },
         "R32_FIXED": {
             "buffer": "R32_FLOAT"
         },

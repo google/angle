@@ -1184,6 +1184,18 @@ LoadImageFunctionInfo ETC1_RGB8_OES_to_ETC1_R8G8B8_UNORM_BLOCK(GLenum type)
     }
 }
 
+LoadImageFunctionInfo ETC1_RGB8_OES_to_ETC2_R8G8B8_UNORM_BLOCK(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo ETC1_RGB8_OES_to_R8G8B8A8_UNORM(GLenum type)
 {
     switch (type)
@@ -3016,6 +3028,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             {
                 case FormatID::ETC1_R8G8B8_UNORM_BLOCK:
                     return ETC1_RGB8_OES_to_ETC1_R8G8B8_UNORM_BLOCK;
+                case FormatID::ETC2_R8G8B8_UNORM_BLOCK:
+                    return ETC1_RGB8_OES_to_ETC2_R8G8B8_UNORM_BLOCK;
                 case FormatID::R8G8B8A8_UNORM:
                     return ETC1_RGB8_OES_to_R8G8B8A8_UNORM;
                 default:

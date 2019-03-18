@@ -719,6 +719,9 @@
     },
     "ETC1_R8G8B8_UNORM_BLOCK": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 8>"
+    },
+    "ETC2_R8G8B8_UNORM_BLOCK": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 8>"
     }
   },
   "GL_ETC1_RGB8_LOSSY_DECODE_ANGLE": {
