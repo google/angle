@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6ce34bd_4bb5bafe",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "How about removing the `fastEnable` arg and special-case `mAlignment \u003d\u003d 1`?\n\nAlso, is this even correct? What happens on architectures that require pointers to be aligned? Reading on ARM, it looks like unaligned access is supported in hardware, but incurs a performance penalty: http://infocenter.arm.com/help/index.jsp?topic\u003d/com.arm.doc.faqs/ka15414.html\n\nI suggest testing this on ARM before committing to this optimization. Defaulting to an alignment of `sizeof(void *)` (and hardcoding that for the sake of the fast path) may be faster there.",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4a381ee_48ee92e6",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "Please add the alignment code here so that the `allocate()` function can use this too.",
+      "range": {
+        "startLine": 328,
+        "startChar": 25,
+        "endLine": 328,
+        "endChar": 48
+      },
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c583169_82f60fb4",
+        "filename": "src/common/PoolAlloc.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "#if defined(ANGLE_DISABLE_POOL_ALLOC)\nreturn allocate(numBytes);\n#endif",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f2079a0_9eb8a0ab",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "You can use the `Offset` function above. Also, what\u0027s the reason `bindVertexBuffers` doesn\u0027t use `storePointerParameters`?",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77176666_f955afc2",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "Any idea how wasteful this is? I\u0027ve seen many cases where we have only one or two commands per secondary command buffer.\n\n---\n\nAlso, I suggest at least changing this to 2046 (or something a bit smaller). This is because the pool allocator is creating 16KB pages (currently) but excluding a header from the available size (16 bytes when not adding guards). With an allocation size of 2048, you will always end up with an unusable 2032-byte at the end of every 16KB page. That\u0027s a guaranteed 12.5% memory waste.",
+      "range": {
+        "startLine": 535,
+        "startChar": 41,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "170ed9b0_0356b5a4",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "constexpr analogous to the other `initCommand`.",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f25aa15_df47f67e",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-18T17:07:34Z",
+      "side": 1,
+      "message": "We don\u0027t invert `if` expressions like this. The compiler warns about `if (x \u003d 0)`, so there\u0027s no longer any benefit to `if (0 \u003d\u003d x)` (only makes it read weirdly).",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
