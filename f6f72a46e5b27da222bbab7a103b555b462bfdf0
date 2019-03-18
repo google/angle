@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c89a63dd_f7be20b2",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-18T06:28:51Z",
+      "side": 1,
+      "message": "Good point, Done!",
+      "parentUuid": "0049a001_0e60f356",
+      "range": {
+        "startLine": 212,
+        "startChar": 4,
+        "endLine": 212,
+        "endChar": 45
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4f7a9afa_0f3776ff",
         "filename": "src/libANGLE/renderer/ShaderImpl.cpp",
         "patchSetId": 15
@@ -36,6 +60,30 @@
       "writtenOn": "2019-03-15T20:22:25Z",
       "side": 1,
       "message": "Do we need to store this? Base classes can store it themselves if they need.",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 62
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a81a0a5_4261fbbc",
+        "filename": "src/libANGLE/renderer/ShaderImpl.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-18T06:28:51Z",
+      "side": 1,
+      "message": "The reference has been moved to WaitableEvent.",
+      "parentUuid": "4f7a9afa_0f3776ff",
       "range": {
         "startLine": 18,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3bcfd5ce_4f26b3dd",
+        "filename": "src/libANGLE/renderer/ShaderImpl.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-18T06:28:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dccccc92_31fdff5e",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 46
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "351401b5_215a271e",
         "filename": "src/libANGLE/renderer/ShaderImpl.h",
         "patchSetId": 15
@@ -82,6 +154,30 @@
       "writtenOn": "2019-03-15T20:22:25Z",
       "side": 1,
       "message": "Could we merge these two functions? they are both called from Shader::resolveCompile on the main thread so I think we can combine them.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 57
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73969d41_ca774836",
+        "filename": "src/libANGLE/renderer/ShaderImpl.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-18T06:28:51Z",
+      "side": 1,
+      "message": "I\u0027ve managed to merge them. But it costs a new functor parameter.",
+      "parentUuid": "351401b5_215a271e",
       "range": {
         "startLine": 36,
         "startChar": 0,
