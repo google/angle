@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23e03d0e_f3aa71d7",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-19T20:04:03Z",
+      "side": 1,
+      "message": "Aha! I knew using an alignment of 1 in the pool is going to be trouble. I\u0027m convinced that this works right now because `sizeof(*Params) % 4 \u003d\u003d 0` for all the params structs above. If you feel up to it, you can add such `static_assert`s for every param too.\n\nNow that I look closer, some of the params structs could be rearranged to avoid padding.\n\nJust to be clear, I\u0027m not blocking submission on this, just something for the future.",
+      "revId": "85f8455706fdcf1181f2e16593893b96e400d3bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
