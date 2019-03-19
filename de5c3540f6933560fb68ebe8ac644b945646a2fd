@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c21a173c_423de467",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-19T02:05:09Z",
+      "side": 1,
+      "message": "I would leave the `initializeAllocation` call to the caller (`allocate()`). If someone calls `allocate()` with `mAlignment \u003d\u003d 1`, there would be a problem.",
+      "range": {
+        "startLine": 307,
+        "startChar": 11,
+        "endLine": 307,
+        "endChar": 84
+      },
+      "revId": "de5c3540f6933560fb68ebe8ac644b945646a2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bf504a3_97d6de30",
+        "filename": "src/common/PoolAlloc.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-19T02:05:09Z",
+      "side": 1,
+      "message": "Comment needs updating",
+      "range": {
+        "startLine": 128,
+        "startChar": 29,
+        "endLine": 128,
+        "endChar": 49
+      },
+      "revId": "de5c3540f6933560fb68ebe8ac644b945646a2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

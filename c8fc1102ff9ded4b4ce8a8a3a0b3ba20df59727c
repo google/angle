@@ -154,6 +154,24 @@
     },
     {
       "key": {
+        "uuid": "f1287333_f9e47469",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-19T02:05:09Z",
+      "side": 1,
+      "message": "Ack. I had been wondering which would be faster (storing \u003d faster execute, not storing \u003d faster build). I guess the smaller memory footprint wins.",
+      "parentUuid": "8964a66e_263724d2",
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77176666_f955afc2",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 28
@@ -198,6 +216,30 @@
       "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47ff2cf8_c95e2747",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-19T02:05:09Z",
+      "side": 1,
+      "message": "Ack. Adding a comment would be nice, since the number looks \"unusual\".",
+      "parentUuid": "8f13c84b_bafde835",
+      "range": {
+        "startLine": 535,
+        "startChar": 41,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
