@@ -357,53 +357,6 @@ TEST_P(DrawBuffersTest, DefaultFramebufferDrawBufferQuery)
     EXPECT_EQ(GL_NONE, drawbuffer);
 }
 
-// Tests masking out some of the draw buffers by not writing to them in the program.
-TEST_P(DrawBuffersWebGL2Test, SomeProgramOutputsDisabled)
-{
-    ANGLE_SKIP_TEST_IF(!setupTest());
-
-    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
-
-    bool flags[8]  = {false};
-    GLenum bufs[4] = {GL_NONE};
-
-    constexpr GLuint kMaxBuffers     = 4;
-    constexpr GLuint kHalfMaxBuffers = 2;
-
-    // Enable all draw buffers.
-    for (GLuint texIndex = 0; texIndex < kMaxBuffers; texIndex++)
-    {
-        glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
-                               mTextures[texIndex], 0);
-        bufs[texIndex] = GL_COLOR_ATTACHMENT0 + texIndex;
-
-        // Mask out the first two buffers.
-        flags[texIndex] = texIndex >= kHalfMaxBuffers;
-    }
-
-    GLuint program;
-    setupMRTProgram(flags, &program);
-
-    setDrawBuffers(kMaxBuffers, bufs);
-    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
-
-    for (GLuint texIndex = 0; texIndex < kHalfMaxBuffers; texIndex++)
-    {
-        verifyAttachment2DUnwritten(texIndex, mTextures[texIndex], GL_TEXTURE_2D, 0);
-    }
-
-    for (GLuint texIndex = kHalfMaxBuffers; texIndex < kMaxBuffers; texIndex++)
-    {
-        verifyAttachment2D(texIndex, mTextures[texIndex], GL_TEXTURE_2D, 0);
-    }
-
-    EXPECT_GL_NO_ERROR();
-
-    glDeleteProgram(program);
-}
-
 // Same as above but adds a state change from a program with different masks after a clear.
 TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
 {
@@ -463,7 +416,7 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
     verifyAttachment2DColor(3, mTextures[3], GL_TEXTURE_2D, 0, GLColor::green);
 
     // Draw with MRT program.
-    setDrawBuffers(kMaxBuffers, allBufs);
+    setDrawBuffers(kMaxBuffers, someBufs);
     drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
@@ -472,6 +425,11 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
     verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::transparentBlack);
     verifyAttachment2D(2, mTextures[2], GL_TEXTURE_2D, 0);
     verifyAttachment2D(3, mTextures[3], GL_TEXTURE_2D, 0);
+
+    // Active draw buffers with no fragment output is not allowed.
+    setDrawBuffers(kMaxBuffers, allBufs);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Clear again. All attachments should be cleared.
     glClear(GL_COLOR_BUFFER_BIT);

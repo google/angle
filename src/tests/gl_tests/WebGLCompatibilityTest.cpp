@@ -4065,7 +4065,7 @@ TEST_P(WebGLCompatibilityTest, FramebufferAttachmentQuery)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
-// Tests the WebGL removal of undefined behavior when attachments aren't written to.
+// Tests WebGL reports INVALID_OPERATION for mismatch of drawbuffers and fragment output
 TEST_P(WebGLCompatibilityTest, DrawBuffers)
 {
     // Make sure we can use at least 4 attachments for the tests.
@@ -4152,12 +4152,12 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
 
     GLenum halfDrawBuffers[] = {
         GL_NONE,
+        GL_COLOR_ATTACHMENT1,
         GL_NONE,
-        GL_COLOR_ATTACHMENT2,
         GL_COLOR_ATTACHMENT3,
     };
 
-    // Test that when using gl_FragColor, only the first attachment is written to.
+    // Test that when using gl_FragColor with no-array
     const char *fragESSL1 =
         R"(precision highp float;
 void main()
@@ -4167,28 +4167,10 @@ void main()
     ANGLE_GL_PROGRAM(programESSL1, essl1_shaders::vs::Simple(), fragESSL1);
 
     {
-        ClearEverythingToRed(renderbuffers);
-
         glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
         DrawBuffers(useEXT, 4, allDrawBuffers);
         drawQuad(programESSL1, essl1_shaders::PositionAttrib(), 0.5, 1.0, true);
-        ASSERT_GL_NO_ERROR();
-
-        CheckColors(renderbuffers, 0b0001, GLColor::green);
-        CheckColors(renderbuffers, 0b1110, GLColor::red);
-    }
-
-    // Test that when using gl_FragColor, but the first draw buffer is 0, then no attachment is
-    // written to.
-    {
-        ClearEverythingToRed(renderbuffers);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
-        DrawBuffers(useEXT, 4, halfDrawBuffers);
-        drawQuad(programESSL1, essl1_shaders::PositionAttrib(), 0.5, 1.0, true);
-        ASSERT_GL_NO_ERROR();
-
-        CheckColors(renderbuffers, 0b1111, GLColor::red);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
 
     // Test what happens when rendering to a subset of the outputs. There is a behavior difference
@@ -4199,11 +4181,8 @@ void main()
     const char *positionAttrib;
     const char *writeOddOutputsVert;
     const char *writeOddOutputsFrag;
-    GLColor unwrittenColor;
     if (useEXT)
     {
-        // In the extension, when an attachment isn't written to, it should get 0's
-        unwrittenColor      = GLColor(0, 0, 0, 0);
         positionAttrib      = essl1_shaders::PositionAttrib();
         writeOddOutputsVert = essl1_shaders::vs::Simple();
         writeOddOutputsFrag =
@@ -4217,9 +4196,6 @@ void main()
     }
     else
     {
-        // In ES3 if an attachment isn't declared, it shouldn't get written and should be red
-        // because of the preceding clears.
-        unwrittenColor      = GLColor::red;
         positionAttrib      = essl3_shaders::PositionAttrib();
         writeOddOutputsVert = essl3_shaders::vs::Simple();
         writeOddOutputsFrag =
@@ -4235,21 +4211,30 @@ void main()
     }
     ANGLE_GL_PROGRAM(writeOddOutputsProgram, writeOddOutputsVert, writeOddOutputsFrag);
 
-    // Test that attachments not written to get the "unwritten" color
+    // Test that attachments not written to get the "unwritten" color (useEXT)
+    // Or INVALID_OPERATION is generated if there's active draw buffer receive no output
     {
         ClearEverythingToRed(renderbuffers);
 
         glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
         DrawBuffers(useEXT, 4, allDrawBuffers);
         drawQuad(writeOddOutputsProgram, positionAttrib, 0.5, 1.0, true);
-        ASSERT_GL_NO_ERROR();
 
-        CheckColors(renderbuffers, 0b1010, GLColor::green);
-        CheckColors(renderbuffers, 0b0101, unwrittenColor);
+        if (useEXT)
+        {
+            ASSERT_GL_NO_ERROR();
+            CheckColors(renderbuffers, 0b1010, GLColor::green);
+            // In the extension, when an attachment isn't written to, it should get 0's
+            CheckColors(renderbuffers, 0b0101, GLColor(0, 0, 0, 0));
+        }
+        else
+        {
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
     }
 
-    // Test that attachments not written to get the "unwritten" color but that even when the
-    // extension is used, disabled attachments are not written at all and stay red.
+    // Test that attachments written to get the correct color from shader output but that even when
+    // the extension is used, disabled attachments are not written at all and stay red.
     {
         ClearEverythingToRed(renderbuffers);
 
@@ -4258,9 +4243,8 @@ void main()
         drawQuad(writeOddOutputsProgram, positionAttrib, 0.5, 1.0, true);
         ASSERT_GL_NO_ERROR();
 
-        CheckColors(renderbuffers, 0b1000, GLColor::green);
-        CheckColors(renderbuffers, 0b0100, unwrittenColor);
-        CheckColors(renderbuffers, 0b0011, GLColor::red);
+        CheckColors(renderbuffers, 0b1010, GLColor::green);
+        CheckColors(renderbuffers, 0b0101, GLColor::red);
     }
 }
 

@@ -362,6 +362,17 @@ bool ValidateTextureMaxAnisotropyValue(Context *context, GLfloat paramValue)
     return true;
 }
 
+bool ValidateFragmentShaderColorBufferMaskMatch(Context *context)
+{
+    const Program *program         = context->getState().getLinkedProgram(context);
+    const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
+
+    auto drawBufferMask     = framebuffer->getDrawBufferMask().to_ulong();
+    auto fragmentOutputMask = program->getActiveOutputVariables().to_ulong();
+
+    return drawBufferMask == (drawBufferMask & fragmentOutputMask);
+}
+
 bool ValidateFragmentShaderColorBufferTypeMatch(Context *context)
 {
     const Program *program         = context->getState().getLinkedProgram(context);
@@ -2765,6 +2776,12 @@ const char *ValidateDrawStates(Context *context)
             if (!ValidateVertexShaderAttributeTypeMatch(context))
             {
                 return kVertexShaderTypeMismatch;
+            }
+
+            // Detect that if there's active color buffer without fragment shader output
+            if (!ValidateFragmentShaderColorBufferMaskMatch(context))
+            {
+                return kDrawBufferMaskMismatch;
             }
 
             // Detect that the color buffer types match the fragment shader output types

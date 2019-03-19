@@ -726,30 +726,6 @@ bool FramebufferGL::isDefault() const
     return mIsDefault;
 }
 
-void FramebufferGL::maskOutInactiveOutputDrawBuffersImpl(const gl::Context *context,
-                                                         DrawBufferMask targetAppliedDrawBuffers)
-{
-
-    ASSERT(mAppliedEnabledDrawBuffers != targetAppliedDrawBuffers);
-    mAppliedEnabledDrawBuffers = targetAppliedDrawBuffers;
-
-    const auto &stateDrawBuffers = mState.getDrawBufferStates();
-    GLsizei drawBufferCount      = static_cast<GLsizei>(stateDrawBuffers.size());
-    ASSERT(drawBufferCount <= IMPLEMENTATION_MAX_DRAW_BUFFERS);
-
-    GLenum drawBuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    for (GLenum i = 0; static_cast<int>(i) < drawBufferCount; ++i)
-    {
-        drawBuffers[i] = targetAppliedDrawBuffers[i] ? stateDrawBuffers[i] : GL_NONE;
-    }
-
-    const FunctionsGL *functions = GetFunctionsGL(context);
-    StateManagerGL *stateManager = GetStateManagerGL(context);
-
-    ASSERT(stateManager->getFramebufferID(angle::FramebufferBindingDraw) == mFramebufferID);
-    functions->drawBuffers(drawBufferCount, drawBuffers);
-}
-
 void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);

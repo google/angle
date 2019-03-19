@@ -84,6 +84,7 @@ MSG kDestinationLevelNotDefined = "The destination level of the destination text
 MSG kDestinationTextureTooSmall = "Destination texture too small.";
 MSG kDimensionsMustBePow2 = "Texture dimensions must be power-of-two.";
 MSG kDispatchIndirectBufferNotBound = "Dispatch indirect buffer must be bound.";
+MSG kDrawBufferMaskMismatch = "Active draw buffers with missing fragment shader outputs.";
 MSG kDrawBufferTypeMismatch = "Fragment shader output type does not match the bound framebuffer attachment type.";
 MSG kDrawFramebufferIncomplete = "Draw framebuffer is incomplete";
 MSG kDrawIndirectBufferNotBound = "Draw indirect buffer must be bound.";

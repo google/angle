@@ -231,8 +231,6 @@ class ContextGL : public ContextImpl
                                        GLsizei instanceCount,
                                        const void **outIndices);
 
-    angle::Result setDrawIndirectState(const gl::Context *context);
-
   protected:
     std::shared_ptr<RendererGL> mRenderer;
 };
