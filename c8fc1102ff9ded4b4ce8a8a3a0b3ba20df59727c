@@ -243,6 +243,30 @@
     },
     {
       "key": {
+        "uuid": "954f9f5b_57287a19",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-03-19T14:09:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47ff2cf8_c95e2747",
+      "range": {
+        "startLine": 535,
+        "startChar": 41,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "c8fc1102ff9ded4b4ce8a8a3a0b3ba20df59727c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "170ed9b0_0356b5a4",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 28
