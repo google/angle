@@ -2,6 +2,92 @@
   "comments": [
     {
       "key": {
+        "uuid": "0455acf0_3387087a",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-19T21:18:03Z",
+      "side": 1,
+      "message": "we have a method ceilPow2 you can use here.",
+      "revId": "85f8455706fdcf1181f2e16593893b96e400d3bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41784c94_d238a726",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-19T21:18:03Z",
+      "side": 1,
+      "message": "there\u0027s also a helper for this in mathutil.",
+      "range": {
+        "startLine": 68,
+        "startChar": 12,
+        "endLine": 68,
+        "endChar": 78
+      },
+      "revId": "85f8455706fdcf1181f2e16593893b96e400d3bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00975a21_5c435f30",
+        "filename": "src/common/PoolAlloc.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-19T21:18:03Z",
+      "side": 1,
+      "message": "this too I believe.",
+      "range": {
+        "startLine": 281,
+        "startChar": 24,
+        "endLine": 281,
+        "endChar": 69
+      },
+      "revId": "85f8455706fdcf1181f2e16593893b96e400d3bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc25a38e_007e940c",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-19T21:18:03Z",
+      "side": 1,
+      "message": "minor request but could you define these out-of-class? makes the class definition a bit more easy to read",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 354,
+        "endChar": 0
+      },
+      "revId": "85f8455706fdcf1181f2e16593893b96e400d3bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "23e03d0e_f3aa71d7",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 32
