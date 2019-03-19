@@ -46,6 +46,30 @@
       "revId": "38e282570676f3e434482f8a02ea539b286fd1fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49ace9f2_53142a2d",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-19T00:37:37Z",
+      "side": 1,
+      "message": "assert is nice in Debug because it pops up a little dialog box in Windows. But not a big deal if it\u0027s very hard to implement. It would be much better if it could be done in the header.",
+      "parentUuid": "8b8befb7_3d9f3f03",
+      "range": {
+        "startLine": 171,
+        "startChar": 8,
+        "endLine": 171,
+        "endChar": 19
+      },
+      "revId": "38e282570676f3e434482f8a02ea539b286fd1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
