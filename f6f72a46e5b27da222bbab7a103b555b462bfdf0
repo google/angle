@@ -187,6 +187,30 @@
       "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3d2730d_22aa49ee",
+        "filename": "src/libANGLE/renderer/ShaderImpl.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-19T23:30:12Z",
+      "side": 1,
+      "message": "Ok, I see what you mean, ShaderD3D needs the gl::Shader to update mData before it runs the postTranslate.  The old way may have been better.",
+      "parentUuid": "73969d41_ca774836",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 57
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
