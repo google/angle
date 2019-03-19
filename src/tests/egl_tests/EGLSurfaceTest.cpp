@@ -399,7 +399,7 @@ TEST_P(EGLSurfaceTest, SwapInterval)
 
                 // Second eglSwapBuffers causes an EGL_BAD_SURFACE on Nvidia shield tv.
                 // http://anglebug.com/3144.
-                ANGLE_SKIP_TEST_IF(IsAndroid());
+                ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
             }
             timer->stop();
             ASSERT_EGL_SUCCESS();

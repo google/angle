@@ -249,7 +249,7 @@ TEST_P(ReadPixelsPBOTest, SubDataPreservesContents)
 TEST_P(ReadPixelsPBOTest, SubDataOffsetPreservesContents)
 {
     // anglebug.com/1415
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsAdreno() && IsOpenGLES());
     // anglebug.com/2185
     ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
 

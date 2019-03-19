@@ -561,8 +561,8 @@ TEST_P(RobustResourceInitTest, TexImageThenSubImage)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    // http://anglebug.com/2407, but only fails on Nexus devices
+    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
 
     // Put some data into the texture
 
@@ -734,8 +734,8 @@ TEST_P(RobustResourceInitTest, ReadingPartiallyInitializedTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    // http://anglebug.com/2407, but only fails on Nexus devices
+    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -1375,8 +1375,8 @@ TEST_P(RobustResourceInitTest, MaskedStencilClear)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
-    // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    // http://anglebug.com/2407, but only fails on Nexus devices
+    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1397,8 +1397,8 @@ TEST_P(RobustResourceInitTestES3, MaskedStencilClearBuffer)
 
     ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL());
 
-    // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    // http://anglebug.com/2407, but only fails on Nexus devices
+    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

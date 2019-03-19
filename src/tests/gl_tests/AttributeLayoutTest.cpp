@@ -409,9 +409,9 @@ void AttributeLayoutTest::GetTestCases(void)
     if (es3)
     {
         mTestCases.push_back({SInt(M0, 0, 40, mCoord), UInt(M0, 16, 40, mColor)});
-        if (!IsAndroid())
-            mTestCases.push_back(
-                {NormSInt(M0, 0, 40, mCoord), NormUInt(M0, 16, 40, mColor)});  // anglebug.com/2641
+        // Fails on Nexus devices (anglebug.com/2641)
+        if (!IsNexus5X() && !IsNexus6P())
+            mTestCases.push_back({NormSInt(M0, 0, 40, mCoord), NormUInt(M0, 16, 40, mColor)});
     }
 }
 
