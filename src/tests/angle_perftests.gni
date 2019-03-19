@@ -10,6 +10,7 @@ angle_perf_tests_sources = [
   "perf_tests/BlitFramebufferPerf.cpp",
   "perf_tests/BindingPerf.cpp",
   "perf_tests/BufferSubData.cpp",
+  "perf_tests/ClearPerf.cpp",
   "perf_tests/DispatchComputePerf.cpp",
   "perf_tests/DrawCallPerf.cpp",
   "perf_tests/DrawCallPerfParams.cpp",
