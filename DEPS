@@ -12,7 +12,7 @@ vars = {
   'deqp_revision': '66a49e0a43f7af654ee1de8a3b1bcaf6c0d14aa4',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': 'f6e7c4d2de0d59724ea07739df70c466d169a2cd',
+  'glslang_revision': '5efb004d59601711cdf328c8a8bfbe7f333dc7a0',
 
   # Current revision fo the SPIRV-Headers Vulkan support library.
   'spirv_headers_revision': '8bea0a266ac9b718aa0818d9e3a47c0b77c2cb23',
@@ -36,17 +36,17 @@ vars = {
 deps = {
 
   '{angle_root}/build': {
-    'url': '{chromium_git}/chromium/src/build.git@9a53be87ebb636c35f2ed9772e5deaeb350d790b',
+    'url': '{chromium_git}/chromium/src/build.git@16bafea184ed656b9ec19c0dd18447d08464bd53',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/buildtools': {
-    'url': '{chromium_git}/chromium/buildtools.git@6fbda1b24c1893a893b17aa219b765b9e7c801d8',
+    'url': '{chromium_git}/chromium/src/buildtools.git@62f9eb0d64d6bf48f620b8233d9f7a1dc07f8414',
     'condition': 'not build_with_chromium',
   },
 
   '{angle_root}/testing': {
-    'url': '{chromium_git}/chromium/src/testing@7bdda3c6577f21fd0ec986a0383ecfce28f5d761',
+    'url': '{chromium_git}/chromium/src/testing@71baa9533c1d21f99dfa8c9e6ca5c1db5f9566bd',
     'condition': 'not build_with_chromium',
   },
 

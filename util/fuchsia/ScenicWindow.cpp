@@ -10,7 +10,7 @@
 #include "util/fuchsia/ScenicWindow.h"
 
 #include <lib/async-loop/cpp/loop.h>
-#include <lib/fdio/util.h>
+#include <lib/fdio/directory.h>
 #include <lib/fidl/cpp/interface_ptr.h>
 #include <lib/fidl/cpp/interface_request.h>
 #include <lib/zx/channel.h>
