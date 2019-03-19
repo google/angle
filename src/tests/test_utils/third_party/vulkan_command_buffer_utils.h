@@ -40,17 +40,10 @@ ANGLE_DISABLE_EXTRA_SEMI_WARNING
 
 ANGLE_REENABLE_EXTRA_SEMI_WARNING
 
-#if defined(__linux__) && !defined(__ANDROID__)
-#    define VK_USE_PLATFORM_XCB_KHR
-#endif
-
 #ifdef _WIN32
 #    pragma comment(linker, "/subsystem:console")
 #    ifndef WIN32_LEAN_AND_MEAN
 #        define WIN32_LEAN_AND_MEAN
-#    endif
-#    ifndef VK_USE_PLATFORM_WIN32_KHR
-#        define VK_USE_PLATFORM_WIN32_KHR
 #    endif
 #    ifndef NOMINMAX
 #        define NOMINMAX /* Don't let Windows define min() or max() */
@@ -58,7 +51,6 @@ ANGLE_REENABLE_EXTRA_SEMI_WARNING
 #    define APP_NAME_STR_LEN 80
 #elif defined(__ANDROID__)
 // Include files for Android
-#    define VK_USE_PLATFORM_ANDROID_KHR
 #    include <android/log.h>
 #    include <unistd.h>
 #    include "util/OSWindow.h"

@@ -497,27 +497,8 @@ config("libANGLE_config") {
 
 if (angle_enable_vulkan) {
   config("vulkan_config") {
-    if (is_win) {
-      defines = [
-        "VK_USE_PLATFORM_WIN32_KHR",
-        "VK_USE_PLATFORM_WIN32_KHX",
-      ]
-    }
-    if (is_linux) {
-      defines = [
-        "VK_USE_PLATFORM_XCB_KHR",
-        "VK_USE_PLATFORM_XCB_KHX",
-      ]
-    }
     if (is_android) {
-      defines = [
-        "VK_USE_PLATFORM_ANDROID_KHR",
-        "VK_USE_PLATFORM_ANDROID_KHX",
-      ]
       libs = [ "vulkan" ]
-    }
-    if (is_fuchsia) {
-      defines = [ "VK_USE_PLATFORM_FUCHSIA" ]
     }
   }
 
