@@ -494,6 +494,7 @@ void Display::setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap
 
 Error Display::initialize()
 {
+    ASSERT(mImplementation != nullptr);
     mImplementation->setBlobCache(&mBlobCache);
 
     // TODO(jmadill): Store Platform in Display and init here.
@@ -515,8 +516,6 @@ Error Display::initialize()
 
     SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.DisplayInitializeMS");
     TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
-
-    ASSERT(mImplementation != nullptr);
 
     if (isInitialized())
     {

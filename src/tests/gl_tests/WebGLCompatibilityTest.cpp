@@ -3382,10 +3382,12 @@ TEST_P(WebGLCompatibilityTest, SizedRGBA32FFormats)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA, GL_FLOAT, nullptr);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    // dEQP implicitly defines error code ordering
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 1, 1, 0, GL_RGB, GL_FLOAT, nullptr);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    // dEQP implicitly defines error code ordering
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     if (extensionRequestable("GL_CHROMIUM_color_buffer_float_rgba"))
     {

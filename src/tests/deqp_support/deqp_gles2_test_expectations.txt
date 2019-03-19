@@ -79,11 +79,6 @@
 // Half float OES either has an implementation bug or a dEQP bug.
 3283 DEBUG RELEASE : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
 
-// Negative API failures.
-3250 DEBUG RELEASE : dEQP-GLES2.functional.negative_api.texture.teximage2d_invalid_format = FAIL
-3250 DEBUG RELEASE : dEQP-GLES2.functional.negative_api.texture.teximage2d_invalid_internalformat = FAIL
-3251 DEBUG RELEASE : dEQP-GLES2.functional.negative_api.texture.texsubimage2d_invalid_type = FAIL
-
 // Shader failures.
 3285 DEBUG RELEASE : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_fragment = FAIL
 3285 DEBUG RELEASE : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_vertex = FAIL
