@@ -18,6 +18,7 @@
 #include "common/angleutils.h"
 #include "common/vector_utils.h"
 #include "platform/Platform.h"
+#include "util/EGLWindow.h"
 #include "util/shader_utils.h"
 #include "util/system_utils.h"
 #include "util/util_gl.h"
@@ -411,6 +412,7 @@ class ANGLETestBase
 
     EGLWindow *mEGLWindow;
     WGLWindow *mWGLWindow;
+    ConfigParameters mConfigParameters;
     int mWidth;
     int mHeight;
 

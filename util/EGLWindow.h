@@ -26,46 +26,78 @@ class Library;
 struct PlatformMethods;
 }  // namespace angle
 
+struct ANGLE_UTIL_EXPORT ConfigParameters
+{
+    ConfigParameters();
+    ~ConfigParameters();
+
+    void reset();
+
+    // Display parameters.
+    Optional<bool> debugLayersEnabled;
+    Optional<bool> contextVirtualization;
+    angle::PlatformMethods *platformMethods;
+
+    // Surface and Context parameters.
+    int redBits;
+    int greenBits;
+    int blueBits;
+    int alphaBits;
+    int depthBits;
+    int stencilBits;
+    int swapInterval;
+
+    Optional<bool> webGLCompatibility;
+    Optional<bool> robustResourceInit;
+
+    // EGLWindow-specific.
+    EGLenum componentType;
+    bool multisample;
+    bool debug;
+    bool noError;
+    Optional<bool> extensionsEnabled;
+    bool bindGeneratesResource;
+    bool clientArraysEnabled;
+    bool robustAccess;
+    EGLint samples;
+    Optional<bool> contextProgramCacheEnabled;
+};
+
 class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable
 {
   public:
     static void Delete(GLWindowBase **window);
 
     // It should also be possible to set multisample and floating point framebuffers.
-    void setConfigRedBits(int bits) { mRedBits = bits; }
-    void setConfigGreenBits(int bits) { mGreenBits = bits; }
-    void setConfigBlueBits(int bits) { mBlueBits = bits; }
-    void setConfigAlphaBits(int bits) { mAlphaBits = bits; }
-    void setConfigDepthBits(int bits) { mDepthBits = bits; }
-    void setConfigStencilBits(int bits) { mStencilBits = bits; }
-    void setSwapInterval(int swapInterval) { mSwapInterval = swapInterval; }
-
-    int getConfigRedBits() const { return mRedBits; }
-    int getConfigGreenBits() const { return mGreenBits; }
-    int getConfigBlueBits() const { return mBlueBits; }
-    int getConfigAlphaBits() const { return mAlphaBits; }
-    int getConfigDepthBits() const { return mDepthBits; }
-    int getConfigStencilBits() const { return mStencilBits; }
-    int getSwapInterval() const { return mSwapInterval; }
-    void setPlatformMethods(angle::PlatformMethods *platformMethods)
-    {
-        mPlatformMethods = platformMethods;
-    }
-    void setWebGLCompatibilityEnabled(bool webglCompatibility)
-    {
-        mWebGLCompatibility = webglCompatibility;
-    }
-    void setRobustResourceInit(bool enabled) { mRobustResourceInit = enabled; }
-
     EGLint getClientMajorVersion() const { return mClientMajorVersion; }
     EGLint getClientMinorVersion() const { return mClientMinorVersion; }
 
-    virtual bool initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibrary) = 0;
-    virtual bool isGLInitialized() const                                              = 0;
-    virtual void swap()                                                               = 0;
-    virtual void destroyGL()                                                          = 0;
-    virtual void makeCurrent()                                                        = 0;
-    virtual bool hasError() const                                                     = 0;
+    virtual bool initializeGL(OSWindow *osWindow,
+                              angle::Library *glWindowingLibrary,
+                              const ConfigParameters &config) = 0;
+    virtual bool isGLInitialized() const                      = 0;
+    virtual void swap()                                       = 0;
+    virtual void destroyGL()                                  = 0;
+    virtual void makeCurrent()                                = 0;
+    virtual bool hasError() const                             = 0;
+
+    int getConfigRedBits() const { return mConfigParams.redBits; }
+    int getConfigGreenBits() const { return mConfigParams.greenBits; }
+    int getConfigBlueBits() const { return mConfigParams.blueBits; }
+    int getConfigAlphaBits() const { return mConfigParams.alphaBits; }
+    int getConfigDepthBits() const { return mConfigParams.depthBits; }
+    int getConfigStencilBits() const { return mConfigParams.stencilBits; }
+    int getSwapInterval() const { return mConfigParams.swapInterval; }
+
+    bool isMultisample() const { return mConfigParams.multisample; }
+    bool isDebugEnabled() const { return mConfigParams.debug; }
+
+    const angle::PlatformMethods *getPlatformMethods() const
+    {
+        return mConfigParams.platformMethods;
+    }
+
+    const ConfigParameters &getConfigParams() const { return mConfigParams; }
 
   protected:
     GLWindowBase(EGLint glesMajorVersion, EGLint glesMinorVersion);
@@ -73,17 +105,7 @@ class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable
 
     EGLint mClientMajorVersion;
     EGLint mClientMinorVersion;
-    int mRedBits;
-    int mGreenBits;
-    int mBlueBits;
-    int mAlphaBits;
-    int mDepthBits;
-    int mStencilBits;
-    int mSwapInterval;
-
-    angle::PlatformMethods *mPlatformMethods;
-    Optional<bool> mWebGLCompatibility;
-    Optional<bool> mRobustResourceInit;
+    ConfigParameters mConfigParams;
 };
 
 class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
@@ -94,22 +116,6 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
                           const EGLPlatformParameters &platform);
     static void Delete(EGLWindow **window);
 
-    void setConfigComponentType(EGLenum componentType) { mComponentType = componentType; }
-    void setMultisample(bool multisample) { mMultisample = multisample; }
-    void setSamples(EGLint samples) { mSamples = samples; }
-    void setDebugEnabled(bool debug) { mDebug = debug; }
-    void setNoErrorEnabled(bool noError) { mNoError = noError; }
-    void setExtensionsEnabled(bool extensionsEnabled) { mExtensionsEnabled = extensionsEnabled; }
-    void setBindGeneratesResource(bool bindGeneratesResource)
-    {
-        mBindGeneratesResource = bindGeneratesResource;
-    }
-    void setDebugLayersEnabled(bool enabled) { mDebugLayersEnabled = enabled; }
-    void setClientArraysEnabled(bool enabled) { mClientArraysEnabled = enabled; }
-    void setRobustAccess(bool enabled) { mRobustAccess = enabled; }
-    void setContextProgramCacheEnabled(bool enabled) { mContextProgramCacheEnabled = enabled; }
-    void setContextVirtualization(bool enabled) { mContextVirtualization = enabled; }
-
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
 
     void swap() override;
@@ -119,15 +125,21 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     EGLDisplay getDisplay() const;
     EGLSurface getSurface() const;
     EGLContext getContext() const;
-    bool isMultisample() const { return mMultisample; }
-    bool isDebugEnabled() const { return mDebug; }
-    const angle::PlatformMethods *getPlatformMethods() const { return mPlatformMethods; }
 
     // Internally initializes the Display, Surface and Context.
-    bool initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibrary) override;
+    bool initializeGL(OSWindow *osWindow,
+                      angle::Library *glWindowingLibrary,
+                      const ConfigParameters &params) override;
 
-    // Only initializes the Display and Surface.
-    bool initializeDisplayAndSurface(OSWindow *osWindow, angle::Library *glWindowingLibrary);
+    // Only initializes the Display.
+    bool initializeDisplay(OSWindow *osWindow,
+                           angle::Library *glWindowingLibrary,
+                           const ConfigParameters &params);
+
+    // Only initializes the Surface.
+    bool initializeSurface(OSWindow *osWindow,
+                           angle::Library *glWindowingLibrary,
+                           const ConfigParameters &params);
 
     // Create an EGL context with this window's configuration
     EGLContext createContext(EGLContext share) const;
@@ -136,9 +148,13 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     bool initializeContext();
 
     void destroyGL() override;
+    void destroySurface();
+    void destroyContext();
     bool isGLInitialized() const override;
     void makeCurrent() override;
     bool hasError() const override;
+
+    bool isDisplayInitialized() const { return mDisplay != EGL_NO_DISPLAY; }
 
     static bool ClientExtensionEnabled(const std::string &extName);
 
@@ -157,18 +173,6 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     EGLint mEGLMajorVersion;
     EGLint mEGLMinorVersion;
     EGLPlatformParameters mPlatform;
-    EGLenum mComponentType;
-    bool mMultisample;
-    bool mDebug;
-    bool mNoError;
-    Optional<bool> mExtensionsEnabled;
-    bool mBindGeneratesResource;
-    bool mClientArraysEnabled;
-    bool mRobustAccess;
-    EGLint mSamples;
-    Optional<bool> mDebugLayersEnabled;
-    Optional<bool> mContextProgramCacheEnabled;
-    Optional<bool> mContextVirtualization;
 };
 
 ANGLE_UTIL_EXPORT bool CheckExtensionExists(const char *allExtensions, const std::string &extName);

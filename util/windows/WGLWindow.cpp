@@ -69,8 +69,11 @@ WGLWindow::WGLWindow(int glesMajorVersion, int glesMinorVersion)
 WGLWindow::~WGLWindow() {}
 
 // Internally initializes GL resources.
-bool WGLWindow::initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibrary)
+bool WGLWindow::initializeGL(OSWindow *osWindow,
+                             angle::Library *glWindowingLibrary,
+                             const ConfigParameters &params)
 {
+    mConfigParams = params;
     glWindowingLibrary->getAs("wglGetProcAddress", &gCurrentWGLGetProcAddress);
 
     if (!gCurrentWGLGetProcAddress)
@@ -135,7 +138,7 @@ bool WGLWindow::initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibr
         return false;
     }
 
-    if (mWebGLCompatibility.valid() || mRobustResourceInit.valid())
+    if (mConfigParams.webGLCompatibility.valid() || mConfigParams.robustResourceInit.valid())
     {
         std::cerr << "WGLWindow does not support the requested feature set." << std::endl;
         return false;
@@ -163,11 +166,11 @@ bool WGLWindow::initializeGL(OSWindow *osWindow, angle::Library *glWindowingLibr
 
     makeCurrent();
 
-    if (mSwapInterval != -1)
+    if (mConfigParams.swapInterval != -1)
     {
         if (_wglSwapIntervalEXT)
         {
-            if (_wglSwapIntervalEXT(mSwapInterval) == FALSE)
+            if (_wglSwapIntervalEXT(mConfigParams.swapInterval) == FALSE)
             {
                 std::cerr << "Error setting swap interval." << std::endl;
             }

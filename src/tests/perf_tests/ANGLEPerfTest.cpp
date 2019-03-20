@@ -416,7 +416,8 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    mGLWindow->setSwapInterval(0);
+    // Disable vsync.
+    mConfigParams.swapInterval = 0;
 
     mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
     mPlatformMethods.logError                    = EmptyPlatformMethod;
@@ -427,7 +428,8 @@ void ANGLERenderTest::SetUp()
     mPlatformMethods.updateTraceEventDuration    = UpdateTraceEventDuration;
     mPlatformMethods.monotonicallyIncreasingTime = MonotonicallyIncreasingTime;
     mPlatformMethods.context                     = this;
-    mGLWindow->setPlatformMethods(&mPlatformMethods);
+
+    mConfigParams.platformMethods = &mPlatformMethods;
 
     if (!mOSWindow->initialize(mName, mTestParams.windowWidth, mTestParams.windowHeight))
     {
@@ -436,7 +438,7 @@ void ANGLERenderTest::SetUp()
         // FAIL returns.
     }
 
-    if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get()))
+    if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), mConfigParams))
     {
         mSkipTest = true;
         FAIL() << "Failed initializing GL Window";
@@ -588,12 +590,12 @@ bool ANGLERenderTest::areExtensionPrerequisitesFulfilled() const
 
 void ANGLERenderTest::setWebGLCompatibilityEnabled(bool webglCompatibility)
 {
-    mGLWindow->setWebGLCompatibilityEnabled(webglCompatibility);
+    mConfigParams.webGLCompatibility = webglCompatibility;
 }
 
 void ANGLERenderTest::setRobustResourceInit(bool enabled)
 {
-    mGLWindow->setRobustResourceInit(enabled);
+    mConfigParams.robustResourceInit = enabled;
 }
 
 std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()

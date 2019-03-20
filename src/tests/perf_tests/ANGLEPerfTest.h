@@ -163,6 +163,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     OSWindow *mOSWindow;
     std::vector<const char *> mExtensionPrerequisites;
     angle::PlatformMethods mPlatformMethods;
+    ConfigParameters mConfigParams;
 
     GLuint mTimestampQuery;
 

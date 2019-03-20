@@ -710,7 +710,8 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
     {
         EGLWindow *eglWindow =
             EGLWindow::New(param.majorVersion, param.minorVersion, param.eglParameters);
-        bool result = eglWindow->initializeGL(mOSWindow, mEntryPointsLib.get());
+        ConfigParameters configParams;
+        bool result = eglWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), configParams);
         if (result == false)
         {
             EGLWindow::Delete(&eglWindow);

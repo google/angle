@@ -319,7 +319,7 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
                 EGLWindow::New(params.majorVersion, params.minorVersion, params.eglParameters);
 
             // Default debug layers to enabled in tests.
-            mEGLWindow->setDebugLayersEnabled(true);
+            mConfigParameters.debugLayersEnabled = true;
 
             // Workaround for NVIDIA not being able to share OpenGL and Vulkan contexts.
             // Workaround if any of the GPUs is Nvidia, since we can't detect current GPU.
@@ -406,7 +406,8 @@ void ANGLETestBase::ANGLETestSetUp()
     if (mWGLWindow)
     {
 #if defined(ANGLE_PLATFORM_WINDOWS) && defined(ANGLE_USE_UTIL_LOADER)
-        if (!mWGLWindow->initializeGL(mOSWindow, ANGLETestEnvironment::GetWGLLibrary()))
+        if (!mWGLWindow->initializeGL(mOSWindow, ANGLETestEnvironment::GetWGLLibrary(),
+                                      mConfigParameters))
         {
             std::cerr << "WGL init failed.. trying again with new OSWindow." << std::endl;
 
@@ -419,7 +420,8 @@ void ANGLETestBase::ANGLETestSetUp()
                 FAIL() << "Failed to create ANGLE test window.";
             }
 
-            if (!mWGLWindow->initializeGL(mOSWindow, ANGLETestEnvironment::GetWGLLibrary()))
+            if (!mWGLWindow->initializeGL(mOSWindow, ANGLETestEnvironment::GetWGLLibrary(),
+                                          mConfigParameters))
             {
                 FAIL() << "WGL init failed.";
             }
@@ -436,12 +438,18 @@ void ANGLETestBase::ANGLETestSetUp()
         mPlatformMethods.logWarning             = angle::TestPlatform_logWarning;
         mPlatformMethods.logInfo                = angle::TestPlatform_logInfo;
         mPlatformMethods.context                = &mPlatformContext;
-        mEGLWindow->setPlatformMethods(&mPlatformMethods);
+        mConfigParameters.platformMethods       = &mPlatformMethods;
 
-        if (!mEGLWindow->initializeDisplayAndSurface(mOSWindow,
-                                                     ANGLETestEnvironment::GetEGLLibrary()))
+        if (!mEGLWindow->initializeDisplay(mOSWindow, ANGLETestEnvironment::GetEGLLibrary(),
+                                           mConfigParameters))
         {
-            FAIL() << "egl display or surface init failed.";
+            FAIL() << "egl display init failed.";
+        }
+
+        if (!mEGLWindow->initializeSurface(mOSWindow, ANGLETestEnvironment::GetEGLLibrary(),
+                                           mConfigParameters))
+        {
+            FAIL() << "egl surface init failed.";
         }
 
         if (!mDeferContextInit && !mEGLWindow->initializeContext())
@@ -471,7 +479,7 @@ void ANGLETestBase::ANGLETestTearDown()
 {
     if (mEGLWindow)
     {
-        mEGLWindow->setPlatformMethods(nullptr);
+        mConfigParameters.platformMethods = nullptr;
         checkD3D11SDKLayersMessages();
     }
 
@@ -991,102 +999,102 @@ GLWindowBase *ANGLETestBase::getGLWindow() const
 
 void ANGLETestBase::setConfigRedBits(int bits)
 {
-    getGLWindow()->setConfigRedBits(bits);
+    mConfigParameters.redBits = bits;
 }
 
 void ANGLETestBase::setConfigGreenBits(int bits)
 {
-    getGLWindow()->setConfigGreenBits(bits);
+    mConfigParameters.greenBits = bits;
 }
 
 void ANGLETestBase::setConfigBlueBits(int bits)
 {
-    getGLWindow()->setConfigBlueBits(bits);
+    mConfigParameters.blueBits = bits;
 }
 
 void ANGLETestBase::setConfigAlphaBits(int bits)
 {
-    getGLWindow()->setConfigAlphaBits(bits);
+    mConfigParameters.alphaBits = bits;
 }
 
 void ANGLETestBase::setConfigDepthBits(int bits)
 {
-    getGLWindow()->setConfigDepthBits(bits);
+    mConfigParameters.depthBits = bits;
 }
 
 void ANGLETestBase::setConfigStencilBits(int bits)
 {
-    getGLWindow()->setConfigStencilBits(bits);
+    mConfigParameters.stencilBits = bits;
 }
 
 void ANGLETestBase::setConfigComponentType(EGLenum componentType)
 {
-    mEGLWindow->setConfigComponentType(componentType);
+    mConfigParameters.componentType = componentType;
 }
 
 void ANGLETestBase::setMultisampleEnabled(bool enabled)
 {
-    mEGLWindow->setMultisample(enabled);
+    mConfigParameters.multisample = enabled;
 }
 
 void ANGLETestBase::setSamples(EGLint samples)
 {
-    mEGLWindow->setSamples(samples);
+    mConfigParameters.samples = samples;
 }
 
 void ANGLETestBase::setDebugEnabled(bool enabled)
 {
-    mEGLWindow->setDebugEnabled(enabled);
+    mConfigParameters.debug = enabled;
 }
 
 void ANGLETestBase::setNoErrorEnabled(bool enabled)
 {
-    mEGLWindow->setNoErrorEnabled(enabled);
+    mConfigParameters.noError = enabled;
 }
 
 void ANGLETestBase::setWebGLCompatibilityEnabled(bool webglCompatibility)
 {
-    mEGLWindow->setWebGLCompatibilityEnabled(webglCompatibility);
+    mConfigParameters.webGLCompatibility = webglCompatibility;
 }
 
 void ANGLETestBase::setExtensionsEnabled(bool extensionsEnabled)
 {
-    mEGLWindow->setExtensionsEnabled(extensionsEnabled);
+    mConfigParameters.extensionsEnabled = extensionsEnabled;
 }
 
 void ANGLETestBase::setRobustAccess(bool enabled)
 {
-    mEGLWindow->setRobustAccess(enabled);
+    mConfigParameters.robustAccess = enabled;
 }
 
 void ANGLETestBase::setBindGeneratesResource(bool bindGeneratesResource)
 {
-    mEGLWindow->setBindGeneratesResource(bindGeneratesResource);
+    mConfigParameters.bindGeneratesResource = bindGeneratesResource;
 }
 
 void ANGLETestBase::setDebugLayersEnabled(bool enabled)
 {
-    mEGLWindow->setDebugLayersEnabled(enabled);
+    mConfigParameters.debugLayersEnabled = enabled;
 }
 
 void ANGLETestBase::setClientArraysEnabled(bool enabled)
 {
-    mEGLWindow->setClientArraysEnabled(enabled);
+    mConfigParameters.clientArraysEnabled = enabled;
 }
 
 void ANGLETestBase::setRobustResourceInit(bool enabled)
 {
-    mEGLWindow->setRobustResourceInit(enabled);
+    mConfigParameters.robustResourceInit = enabled;
 }
 
 void ANGLETestBase::setContextProgramCacheEnabled(bool enabled)
 {
-    mEGLWindow->setContextProgramCacheEnabled(enabled);
+    mConfigParameters.contextProgramCacheEnabled = enabled;
 }
 
 void ANGLETestBase::setContextVirtualization(bool enabled)
 {
-    mEGLWindow->setContextVirtualization(enabled);
+    mConfigParameters.contextVirtualization = enabled;
 }
 
 void ANGLETestBase::setDeferContextInit(bool enabled)

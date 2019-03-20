@@ -70,16 +70,6 @@ SampleApplication::SampleApplication(std::string name,
                                 EGLPlatformParameters(requestedRenderer));
     mTimer.reset(CreateTimer());
     mOSWindow = OSWindow::New();
-
-    mEGLWindow->setConfigRedBits(8);
-    mEGLWindow->setConfigGreenBits(8);
-    mEGLWindow->setConfigBlueBits(8);
-    mEGLWindow->setConfigAlphaBits(8);
-    mEGLWindow->setConfigDepthBits(24);
-    mEGLWindow->setConfigStencilBits(8);
-
-    // Disable vsync
-    mEGLWindow->setSwapInterval(0);
 }
 
 SampleApplication::~SampleApplication()
@@ -138,7 +128,18 @@ int SampleApplication::run()
 
     mOSWindow->setVisible(true);
 
-    if (!mEGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get()))
+    ConfigParameters configParams;
+    configParams.redBits     = 8;
+    configParams.greenBits   = 8;
+    configParams.blueBits    = 8;
+    configParams.alphaBits   = 8;
+    configParams.depthBits   = 24;
+    configParams.stencilBits = 8;
+
+    // Disable vsync
+    configParams.swapInterval = 0;
+
+    if (!mEGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), configParams))
     {
         return -1;
     }
