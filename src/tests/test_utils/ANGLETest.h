@@ -399,7 +399,7 @@ class ANGLETestBase
 
   private:
     void checkD3D11SDKLayersMessages();
-    bool hasNvidiaGPU();
+    bool hasNVIDIAGPU() const;
 
     void drawQuad(GLuint program,
                   const std::string &positionAttribName,
@@ -469,14 +469,10 @@ class ANGLETestEnvironment : public testing::Environment
     static angle::Library *GetEGLLibrary();
     static angle::Library *GetWGLLibrary();
 
-    static angle::SystemInfo *GetSystemInfo();
-
   private:
     // For loading entry points.
     static std::unique_ptr<angle::Library> gEGLLibrary;
     static std::unique_ptr<angle::Library> gWGLLibrary;
-
-    static std::unique_ptr<angle::SystemInfo> gSystemInfo;
 };
 
 // This base fixture loads the EGL entry points.

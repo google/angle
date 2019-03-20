@@ -34,7 +34,7 @@ std::string VendorName(VendorID vendor)
             return "AMD";
         case kVendorID_Intel:
             return "Intel";
-        case kVendorID_Nvidia:
+        case kVendorID_NVIDIA:
             return "Nvidia";
         case kVendorID_Qualcomm:
             return "Qualcomm";

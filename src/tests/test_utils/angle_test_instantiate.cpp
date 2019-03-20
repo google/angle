@@ -28,17 +28,6 @@ namespace angle
 {
 namespace
 {
-SystemInfo *GetTestSystemInfo()
-{
-    static SystemInfo *sSystemInfo = nullptr;
-    if (sSystemInfo == nullptr)
-    {
-        sSystemInfo = new SystemInfo;
-        GetSystemInfo(sSystemInfo);
-    }
-    return sSystemInfo;
-}
-
 bool IsANGLEConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
 {
     std::unique_ptr<angle::Library> eglLibrary;
@@ -76,6 +65,20 @@ bool IsNativeConfigSupported(const PlatformParameters &param, OSWindow *osWindow
     return false;
 }
 }  // namespace
+
+SystemInfo *GetTestSystemInfo()
+{
+    static SystemInfo *sSystemInfo = nullptr;
+    if (sSystemInfo == nullptr)
+    {
+        sSystemInfo = new SystemInfo;
+        if (!GetSystemInfo(sSystemInfo))
+        {
+            std::cerr << "Warning: incomplete system info collection.\n";
+        }
+    }
+    return sSystemInfo;
+}
 
 bool IsAndroid()
 {
@@ -202,13 +205,13 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                         }
 
                         // Win ES emulation is currently only supported on NVIDIA.
-                        return vendorID == kVendorID_Nvidia;
+                        return IsNVIDIA(vendorID);
                     default:
                         return false;
                 }
             case GLESDriverType::SystemWGL:
                 // AMD does not support the ES compatibility extensions.
-                return vendorID != kVendorID_AMD;
+                return IsAMD(vendorID);
             default:
                 return false;
         }
@@ -216,7 +219,7 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
 
     if (IsOSX())
     {
-        // Currently we only support the OpenGL back-end on OSX.
+        // We do not support non-ANGLE bindings on OSX.
         if (param.driver != GLESDriverType::AngleEGL)
         {
             return false;
@@ -228,23 +231,25 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
             return false;
         }
 
+        // Currently we only support the OpenGL back-end on OSX.
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
     }
 
     if (IsFuchsia())
     {
-        // Currently we only support the Vulkan back-end on Fuchsia.
+        // We do not support non-ANGLE bindings on Fuchsia.
         if (param.driver != GLESDriverType::AngleEGL)
         {
             return false;
         }
 
+        // Currently we only support the Vulkan back-end on Fuchsia.
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
     }
 
     if (IsOzone())
     {
-        // Currently we only support the GLES back-end on Ozone.
+        // We do not support non-ANGLE bindings on Ozone.
         if (param.driver != GLESDriverType::AngleEGL)
             return false;
 
@@ -252,17 +257,19 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
         if (param.majorVersion > 2)
             return false;
 
+        // Currently we only support the GLES back-end on Ozone.
         return (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
     }
 
     if (IsLinux())
     {
-        // Currently we support the OpenGL and Vulkan back-ends on Linux.
+        // We do not support non-ANGLE bindings on Linux.
         if (param.driver != GLESDriverType::AngleEGL)
         {
             return false;
         }
 
+        // Currently we support the OpenGL and Vulkan back-ends on Linux.
         switch (param.getRenderer())
         {
             case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
@@ -276,7 +283,7 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
 
     if (IsAndroid())
     {
-        // Currently we support the GLES and Vulkan back-ends on Linux.
+        // We do not support non-ANGLE bindings on Android.
         if (param.driver != GLESDriverType::AngleEGL)
         {
             return false;
@@ -289,6 +296,7 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
             return false;
         }
 
+        // Currently we support the GLES and Vulkan back-ends on Android.
         switch (param.getRenderer())
         {
             case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:

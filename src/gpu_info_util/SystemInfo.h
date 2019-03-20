@@ -52,6 +52,10 @@ struct SystemInfo
 
     SystemInfo(const SystemInfo &other);
 
+    bool hasNVIDIAGPU() const;
+    bool hasIntelGPU() const;
+    bool hasAMDGPU() const;
+
     std::vector<GPUDeviceInfo> gpus;
 
     // Index of the primary GPU (the discrete one on dual GPU systems) in `gpus`.
@@ -87,7 +91,7 @@ constexpr VendorID kVendorID_AMD      = 0x1002;
 constexpr VendorID kVendorID_ARM      = 0x13B5;
 constexpr VendorID kVendorID_ImgTec   = 0x1010;
 constexpr VendorID kVendorID_Intel    = 0x8086;
-constexpr VendorID kVendorID_Nvidia   = 0x10DE;
+constexpr VendorID kVendorID_NVIDIA   = 0x10DE;
 constexpr VendorID kVendorID_Qualcomm = 0x5143;
 
 // Known non-PCI (i.e. Khronos-registered) vendor IDs
@@ -101,7 +105,7 @@ bool IsARM(VendorID vendorId);
 bool IsImgTec(VendorID vendorId);
 bool IsIntel(VendorID vendorId);
 bool IsKazan(VendorID vendorId);
-bool IsNvidia(VendorID vendorId);
+bool IsNVIDIA(VendorID vendorId);
 bool IsQualcomm(VendorID vendorId);
 bool IsVeriSilicon(VendorID vendorId);
 bool IsVivante(VendorID vendorId);

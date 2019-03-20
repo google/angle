@@ -201,7 +201,7 @@ bool GetSystemInfo(SystemInfo *info)
                 gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
                 gpu.detailedDriverVersion.major = properties.driverVersion;
                 break;
-            case kVendorID_Nvidia:
+            case kVendorID_NVIDIA:
                 gpu.driverVendor  = "NVIDIA Corporation";
                 gpu.driverVersion = FormatString("%d.%d.%d.%d", properties.driverVersion >> 22,
                                                  (properties.driverVersion >> 14) & 0XFF,

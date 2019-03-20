@@ -29,6 +29,42 @@ SystemInfo::~SystemInfo() = default;
 
 SystemInfo::SystemInfo(const SystemInfo &other) = default;
 
+bool SystemInfo::hasNVIDIAGPU() const
+{
+    for (const GPUDeviceInfo &gpu : gpus)
+    {
+        if (IsNVIDIA(gpu.vendorId))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SystemInfo::hasIntelGPU() const
+{
+    for (const GPUDeviceInfo &gpu : gpus)
+    {
+        if (IsIntel(gpu.vendorId))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SystemInfo::hasAMDGPU() const
+{
+    for (const GPUDeviceInfo &gpu : gpus)
+    {
+        if (IsAMD(gpu.vendorId))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool IsAMD(VendorID vendorId)
 {
     return vendorId == kVendorID_AMD;
@@ -54,9 +90,9 @@ bool IsIntel(VendorID vendorId)
     return vendorId == kVendorID_Intel;
 }
 
-bool IsNvidia(VendorID vendorId)
+bool IsNVIDIA(VendorID vendorId)
 {
-    return vendorId == kVendorID_Nvidia;
+    return vendorId == kVendorID_NVIDIA;
 }
 
 bool IsQualcomm(VendorID vendorId)
@@ -187,9 +223,9 @@ void FindPrimaryGPU(SystemInfo *info)
         }
     }
 
-    // Assume that a combination of AMD or Nvidia with Intel means Optimus or AMD Switchable
+    // Assume that a combination of NVIDIA or AMD with Intel means Optimus or AMD Switchable
     info->primaryGPUIndex = primary;
-    info->isOptimus       = hasIntel && IsNvidia(info->gpus[primary].vendorId);
+    info->isOptimus       = hasIntel && IsNVIDIA(info->gpus[primary].vendorId);
     info->isAMDSwitchable = hasIntel && IsAMD(info->gpus[primary].vendorId);
 }
 
