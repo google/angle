@@ -276,6 +276,7 @@ GLint64 Context9::getTimestamp()
 
 angle::Result Context9::onMakeCurrent(const gl::Context *context)
 {
+    mRenderer->getStateManager()->setAllDirtyBits();
     return mRenderer->ensureVertexDataManagerInitialized(context);
 }
 
