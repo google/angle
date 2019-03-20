@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24a7c405_adea8946",
+        "filename": "src/libANGLE/renderer/ContextImpl.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-20T16:31:00Z",
+      "side": 1,
+      "message": "this is missing the ContextImpl scoping. You should probably remove the one from the header.",
+      "range": {
+        "startLine": 128,
+        "startChar": 5,
+        "endLine": 128,
+        "endChar": 32
+      },
+      "revId": "78d085ca478157b460ade8313fe6294fac1891c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf5102e8_2d0dc968",
+        "filename": "src/libANGLE/renderer/ShaderImpl.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-20T16:31:00Z",
+      "side": 1,
+      "message": "you can omit (c) from the new files.",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "78d085ca478157b460ade8313fe6294fac1891c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
