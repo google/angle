@@ -138,7 +138,7 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &s
 
     mCurrentArrayBufferHandles.fill(mTheNullBuffer.getBuffer().getHandle());
     mCurrentArrayBufferOffsets.fill(0);
-    mCurrentArrayBuffers.fill(nullptr);
+    mCurrentArrayBuffers.fill(&mTheNullBuffer);
 
     for (vk::DynamicBuffer &buffer : mCurrentArrayBufferConversion)
     {
@@ -438,7 +438,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             {
                 if (bufferVk->getSize() == 0)
                 {
-                    mCurrentArrayBuffers[attribIndex] = nullptr;
+                    mCurrentArrayBuffers[attribIndex] = &mTheNullBuffer;
                     mCurrentArrayBufferHandles[attribIndex] =
                         mTheNullBuffer.getBuffer().getHandle();
                     mCurrentArrayBufferOffsets[attribIndex] = 0;
@@ -458,7 +458,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         }
         else
         {
-            mCurrentArrayBuffers[attribIndex]       = nullptr;
+            mCurrentArrayBuffers[attribIndex]       = &mTheNullBuffer;
             mCurrentArrayBufferHandles[attribIndex] = mTheNullBuffer.getBuffer().getHandle();
             mCurrentArrayBufferOffsets[attribIndex] = 0;
             stride                                  = vertexFormat.bufferFormat().pixelBytes;
@@ -473,7 +473,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         contextVk->invalidateDefaultAttribute(attribIndex);
 
         // These will be filled out by the ContextVk.
-        mCurrentArrayBuffers[attribIndex]       = nullptr;
+        mCurrentArrayBuffers[attribIndex]       = &mTheNullBuffer;
         mCurrentArrayBufferHandles[attribIndex] = mTheNullBuffer.getBuffer().getHandle();
         mCurrentArrayBufferOffsets[attribIndex] = 0;
 
