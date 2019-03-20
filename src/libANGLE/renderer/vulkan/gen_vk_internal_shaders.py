@@ -185,12 +185,11 @@ def find_build_path(path):
                     argsgn = os.path.join(subdir, "args.gn")
                     if os.path.isfile(argsgn):
                         return subdir
+    parent = os.path.join(path, "..")
+    if (os.path.isdir(parent)):
+        return find_build_path(parent)
     else:
-        parent = os.path.join(path, "..")
-        if (os.path.isdir(parent)):
-            return find_build_path(parent)
-        else:
-            raise Exception("Could not find GN out directory")
+        raise Exception("Could not find GN out directory")
 
 # Generates the code for a shader blob array entry.
 def gen_shader_blob_entry(shader):
