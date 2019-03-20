@@ -10,6 +10,7 @@
 #include <clocale>
 #include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
+#include "common/angleutils.h"
 #include "common/platform.h"
 #include "gtest/gtest.h"
 
@@ -46,9 +47,29 @@ class ShCompileTest : public testing::Test
 
     ShBuiltInResources mResources;
 
+    class ScopedRestoreDefaultLocale : angle::NonCopyable
+    {
+      public:
+        ScopedRestoreDefaultLocale();
+        ~ScopedRestoreDefaultLocale();
+
+      private:
+        std::locale defaultLocale;
+    };
+
   public:
     ShHandle mCompiler;
 };
+
+ShCompileTest::ScopedRestoreDefaultLocale::ScopedRestoreDefaultLocale()
+{
+    defaultLocale = std::locale();
+}
+
+ShCompileTest::ScopedRestoreDefaultLocale::~ScopedRestoreDefaultLocale()
+{
+    std::locale::global(defaultLocale);
+}
 
 class ShCompileComputeTest : public ShCompileTest
 {
@@ -143,6 +164,9 @@ TEST_F(ShCompileTest, DecimalSepLocale)
     const char *parts[]  = {kSource};
 
     int testedLocales = 0;
+
+    // Ensure the locale is reset after the test runs.
+    ScopedRestoreDefaultLocale restoreLocale;
 
     for (const std::string &locale : availableLocales)
     {
