@@ -23,6 +23,11 @@ constexpr FLOAT kDebugColorInitClearValue[4] = {0.3f, 0.5f, 0.7f, 0.5f};
 constexpr FLOAT kDebugDepthInitValue         = 0.2f;
 constexpr UINT8 kDebugStencilInitValue       = 3;
 
+// A hard limit on buffer size. This works around a problem in the NVIDIA drivers where buffer sizes
+// close to MAX_UINT would give undefined results. The limit of MAX_UINT/2 should be generous enough
+// for almost any demanding application.
+constexpr UINT kMaximumBufferSizeHardLimit = std::numeric_limits<UINT>::max() >> 1;
+
 uint64_t ComputeMippedMemoryUsage(unsigned int width,
                                   unsigned int height,
                                   unsigned int depth,
@@ -109,6 +114,12 @@ HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_SUBRESOURCE_DATA *initData,
                        ID3D11Buffer **buffer)
 {
+    // Force buffers to be limited to a fixed max size.
+    if (desc->ByteWidth > kMaximumBufferSizeHardLimit)
+    {
+        return E_OUTOFMEMORY;
+    }
+
     return device->CreateBuffer(desc, initData, buffer);
 }
 
