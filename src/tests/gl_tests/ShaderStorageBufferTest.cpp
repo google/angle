@@ -2043,6 +2043,35 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that uniform can be used as the index of buffer variable.
+TEST_P(ShaderStorageBufferTest31, UniformUsedAsIndexOfBufferVariable)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=4) in;
+layout(std140, binding = 0) uniform CB
+{
+    uint index;
+} cb;
+
+layout(binding=0, std140) buffer Storage0
+{
+    uint data[];
+} sb_load;
+layout(binding=1, std140) buffer Storage1
+{
+    uint data[];
+} sb_store;
+void main()
+{
+    sb_store.data[gl_LocalInvocationIndex] = sb_load.data[gl_LocalInvocationID.x + cb.index];
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace
