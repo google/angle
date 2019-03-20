@@ -6,6 +6,8 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "test_utils/gl_raii.h"
+
 using namespace angle;
 
 class LineLoopTest : public ANGLETest
@@ -184,6 +186,22 @@ TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
     runTest(GL_UNSIGNED_INT, buf, reinterpret_cast<const void *>(sizeof(GLuint)));
 
     glDeleteBuffers(1, &buf);
+}
+
+// Tests an edge case with a very large line loop element count.
+// Disabled because it is slow and triggers an internal error.
+TEST_P(LineLoopTest, DISABLED_DrawArraysWithLargeCount)
+{
+    constexpr char kVS[] = "void main() { gl_Position = vec4(0); }";
+    constexpr char kFS[] = "void main() { gl_FragColor = vec4(0, 1, 0, 1); }";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glDrawArrays(GL_LINE_LOOP, 0, 0x3FFFFFFE);
+    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+
+    glDrawArrays(GL_LINE_LOOP, 0, 0x1FFFFFFE);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

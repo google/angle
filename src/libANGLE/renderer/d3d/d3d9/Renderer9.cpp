@@ -89,6 +89,11 @@ static void DrawPoints(IDirect3DDevice9 *device, GLsizei count, const void *indi
         device->DrawPrimitive(D3DPT_POINTLIST, indexValue, 1);
     }
 }
+
+// A hard limit on buffer size. This works around a problem in the NVIDIA drivers where buffer sizes
+// close to MAX_UINT would give undefined results. The limit of MAX_UINT/2 should be generous enough
+// for almost any demanding application.
+constexpr UINT kMaximumBufferSizeHardLimit = std::numeric_limits<UINT>::max() >> 1;
 }  // anonymous namespace
 
 Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManager(this)
@@ -865,6 +870,12 @@ HRESULT Renderer9::createVertexBuffer(UINT Length,
                                       DWORD Usage,
                                       IDirect3DVertexBuffer9 **ppVertexBuffer)
 {
+    // Force buffers to be limited to a fixed max size.
+    if (Length > kMaximumBufferSizeHardLimit)
+    {
+        return E_OUTOFMEMORY;
+    }
+
     D3DPOOL Pool = getBufferPool(Usage);
     return mDevice->CreateVertexBuffer(Length, Usage, 0, Pool, ppVertexBuffer, nullptr);
 }
@@ -879,6 +890,12 @@ HRESULT Renderer9::createIndexBuffer(UINT Length,
                                      D3DFORMAT Format,
                                      IDirect3DIndexBuffer9 **ppIndexBuffer)
 {
+    // Force buffers to be limited to a fixed max size.
+    if (Length > kMaximumBufferSizeHardLimit)
+    {
+        return E_OUTOFMEMORY;
+    }
+
     D3DPOOL Pool = getBufferPool(Usage);
     return mDevice->CreateIndexBuffer(Length, Usage, Format, Pool, ppIndexBuffer, nullptr);
 }
