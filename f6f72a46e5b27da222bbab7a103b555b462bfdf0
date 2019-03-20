@@ -211,6 +211,30 @@
       "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "443321aa_9be634ba",
+        "filename": "src/libANGLE/renderer/ShaderImpl.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2019-03-20T08:20:05Z",
+      "side": 1,
+      "message": "I am with you. Reverted to the old way.",
+      "parentUuid": "c3d2730d_22aa49ee",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 57
+      },
+      "revId": "f6f72a46e5b27da222bbab7a103b555b462bfdf0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
