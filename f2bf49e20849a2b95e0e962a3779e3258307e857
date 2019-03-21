@@ -34,6 +34,24 @@
       "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2445edc_12e88282",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-21T21:14:43Z",
+      "side": 0,
+      "message": "I do agree the tests are not really being effective by checking error priority. And they should probably be loosened. But we have already done this kind of error re-ordering to make dEQP happy before. It\u0027s usually not too onerous.\n\nGenerally I think error priority is the order they\u0027re listed in the GLES 3.1+ specs. But I\u0027ve never confirmed this in the spec.",
+      "parentUuid": "d9a88f8f_ced3fe35",
+      "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
