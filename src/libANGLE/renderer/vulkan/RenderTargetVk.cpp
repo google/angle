@@ -182,8 +182,11 @@ angle::Result RenderTargetVk::ensureImageInitialized(ContextVk *contextVk)
 {
     if (mOwner)
     {
+        // If the render target source is a texture, make sure the image is initialized and its
+        // staged updates flushed.
         return mOwner->ensureImageInitialized(contextVk);
     }
+
     return angle::Result::Continue;
 }
 

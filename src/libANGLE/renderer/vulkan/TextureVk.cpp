@@ -382,17 +382,28 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    gl::Rectangle destArea(destOffset.x, destOffset.y, clippedSourceArea.width,
-                           clippedSourceArea.height);
-
     ContextVk *contextVk         = vk::GetImpl(context);
     RendererVk *renderer         = contextVk->getRenderer();
     FramebufferVk *framebufferVk = vk::GetImpl(source);
 
     const gl::ImageIndex offsetImageIndex = getNativeImageIndex(index);
-    const gl::Offset modifiedDestOffset(destOffset.x, destOffset.y, 0);
 
-    const vk::Format &srcFormat  = framebufferVk->getColorReadRenderTarget()->getImageFormat();
+    // If negative offsets are given, clippedSourceArea ensures we don't read from those offsets.
+    // However, that changes the sourceOffset->destOffset mapping.  Here, destOffset is shifted by
+    // the same amount as clipped to correct the error.
+    //
+    // TODO(syoussefi): a bug here is that we need to clip the extents to make sure the copy
+    // region does not overflow the image size.  For example, if an FBO of size 16x16 is used as
+    // source and glCopyTexImage2D(..., -8, -8, 16, 16, ...) is used, then we will be copying to
+    // the region expanding from (8, 8) through (23, 23), while the image is only 16x16.
+    // http://anglebug.com/3355
+    const gl::Offset modifiedDestOffset(destOffset.x + clippedSourceArea.x - sourceArea.x,
+                                        destOffset.y + clippedSourceArea.y - sourceArea.y, 0);
+
+    RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
+    ANGLE_TRY(colorReadRT->ensureImageInitialized(contextVk));
+
+    const vk::Format &srcFormat  = colorReadRT->getImageFormat();
     const vk::Format &destFormat = renderer->getFormat(internalFormat.sizedInternalFormat);
 
     bool isViewportFlipY = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -400,8 +411,6 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     // If it's possible to perform the copy with a transfer, that's the best option.
     if (!isViewportFlipY && CanCopyWithTransfer(renderer, srcFormat, destFormat))
     {
-        RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
-
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, modifiedDestOffset,
                                             destFormat, 0, clippedSourceArea,
                                             &colorReadRT->getImage());
@@ -412,8 +421,6 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     // If it's possible to perform the copy with a draw call, do that.
     if (CanCopyWithDraw(renderer, srcFormat, destFormat) && !forceCpuPath)
     {
-        RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
-
         // Layer count can only be 1 as the source is a framebuffer.
         ASSERT(offsetImageIndex.getLayerCount() == 1);
 
@@ -1016,7 +1023,8 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-    return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), getLevelCount(),
+    return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
+                                      getNativeImageLayer(0), mImage->getLayerCount(),
                                       commandBuffer);
 }
 
@@ -1027,7 +1035,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     // Some data is pending, or the image has not been defined at all yet
     if (!mImage->valid())
     {
-        // lets initialize the image so we can generate the next levels.
+        // Let's initialize the image so we can generate the next levels.
         if (mImage->hasStagedUpdates())
         {
             ANGLE_TRY(ensureImageInitialized(contextVk));
@@ -1142,6 +1150,7 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
     {
         return angle::Result::Continue;
     }
+
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
 
@@ -1150,7 +1159,9 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
         ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount, commandBuffer));
     }
 
-    return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), levelCount, commandBuffer);
+    return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
+                                      getNativeImageLayer(0), mImage->getLayerCount(),
+                                      commandBuffer);
 }
 
 angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
@@ -1229,7 +1240,12 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
 angle::Result TextureVk::initializeContents(const gl::Context *context,
                                             const gl::ImageIndex &imageIndex)
 {
-    UNIMPLEMENTED();
+    const gl::ImageDesc &desc = mState.getImageDesc(imageIndex);
+    const vk::Format &format =
+        vk::GetImpl(context)->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
+
+    mImage->stageSubresourceRobustClear(imageIndex, format.angleFormat());
+
     return angle::Result::Continue;
 }
 
@@ -1302,14 +1318,14 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                                    const uint32_t levelCount,
                                    vk::CommandBuffer *commandBuffer)
 {
-    const RendererVk *renderer       = contextVk->getRenderer();
-    const angle::Format &angleFormat = format.textureFormat();
+    const RendererVk *renderer         = contextVk->getRenderer();
+    const angle::Format &textureFormat = format.textureFormat();
 
     VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
                                         VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
                                         VK_IMAGE_USAGE_SAMPLED_BIT;
 
-    if (!angleFormat.isBlock)
+    if (!textureFormat.isBlock)
     {
         imageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     }
@@ -1324,13 +1340,20 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     ANGLE_TRY(initImageViews(contextVk, format, levelCount));
 
-    if (!angleFormat.isBlock)
+    // If the image has an emulated channel, always clear it.  These channels will be masked out in
+    // future writes, and shouldn't contain uninitialized values.
+    if (format.hasEmulatedChannels())
     {
-        // TODO(jmadill): Fold this into the RenderPass load/store ops if possible, or defer to
-        // first use.  This is only necessary if robustness is required.  http://anglebug.com/2361
-        VkClearColorValue black = {{0, 0, 0, 1.0f}};
-        mImage->clearColor(black, 0, levelCount, commandBuffer);
+        uint32_t levelCount = mImage->getLevelCount();
+        uint32_t layerCount = mImage->getLayerCount();
+
+        for (uint32_t level = 0; level < levelCount; ++level)
+        {
+            gl::ImageIndex index = gl::ImageIndex::Make2DArrayRange(level, 0, layerCount);
+            mImage->stageSubresourceEmulatedClear(index, format.angleFormat());
+        }
     }
+
     return angle::Result::Continue;
 }
 

@@ -23,6 +23,14 @@ namespace vk
 {
 namespace
 {
+// WebGL requires color textures to be initialized to transparent black.
+constexpr VkClearColorValue kWebGLInitColorValue = {{0, 0, 0, 0}};
+// When emulating a texture, we want the emulated channels to be 0, with alpha 1.
+constexpr VkClearColorValue kEmulatedInitColorValue = {{0, 0, 0, 1.0f}};
+// WebGL requires depth/stencil textures to be initialized to depth=1, stencil=0.  We are fine with
+// these values for emulated depth/stencil textures too.
+constexpr VkClearDepthStencilValue kWebGLInitDepthStencilValue = {1.0f, 0};
+
 constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage =
     VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
     VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
@@ -1257,6 +1265,7 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mStagingBuffer(std::move(other.mStagingBuffer)),
       mSubresourceUpdates(std::move(other.mSubresourceUpdates))
 {
+    ASSERT(this != &other);
     other.mCurrentLayout = ImageLayout::Undefined;
     other.mLayerCount    = 0;
     other.mLevelCount    = 0;
@@ -1516,31 +1525,6 @@ void ImageHelper::dumpResources(Serial serial, std::vector<GarbageObject> *garba
     mDeviceMemory.dumpResources(serial, garbageQueue);
 }
 
-const Image &ImageHelper::getImage() const
-{
-    return mImage;
-}
-
-const DeviceMemory &ImageHelper::getDeviceMemory() const
-{
-    return mDeviceMemory;
-}
-
-const gl::Extents &ImageHelper::getExtents() const
-{
-    return mExtents;
-}
-
-const Format &ImageHelper::getFormat() const
-{
-    return *mFormat;
-}
-
-GLint ImageHelper::getSamples() const
-{
-    return mSamples;
-}
-
 VkImageLayout ImageHelper::getCurrentLayout() const
 {
     return kImageMemoryBarrierData[mCurrentLayout].layout;
@@ -1620,17 +1604,9 @@ void ImageHelper::forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
 void ImageHelper::clearColor(const VkClearColorValue &color,
                              uint32_t baseMipLevel,
                              uint32_t levelCount,
+                             uint32_t baseArrayLayer,
+                             uint32_t layerCount,
                              vk::CommandBuffer *commandBuffer)
-{
-    clearColorLayer(color, baseMipLevel, levelCount, 0, mLayerCount, commandBuffer);
-}
-
-void ImageHelper::clearColorLayer(const VkClearColorValue &color,
-                                  uint32_t baseMipLevel,
-                                  uint32_t levelCount,
-                                  uint32_t baseArrayLayer,
-                                  uint32_t layerCount,
-                                  vk::CommandBuffer *commandBuffer)
 {
     ASSERT(valid());
 
@@ -1664,6 +1640,27 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
     };
 
     commandBuffer->clearDepthStencilImage(mImage, getCurrentLayout(), depthStencil, 1, &clearRange);
+}
+
+void ImageHelper::clear(const VkClearValue &value,
+                        uint32_t mipLevel,
+                        uint32_t baseArrayLayer,
+                        uint32_t layerCount,
+                        vk::CommandBuffer *commandBuffer)
+{
+    const angle::Format &angleFormat = mFormat->angleFormat();
+    bool isDepthStencil              = angleFormat.depthBits > 0 || angleFormat.stencilBits > 0;
+
+    if (isDepthStencil)
+    {
+        ASSERT(mipLevel == 0 && baseArrayLayer == 0 && layerCount == 1);
+        const VkImageAspectFlags aspect = vk::GetDepthStencilAspectFlags(mFormat->textureFormat());
+        clearDepthStencil(aspect, aspect, value.depthStencil, commandBuffer);
+    }
+    else
+    {
+        clearColor(value.color, mipLevel, 1, baseArrayLayer, layerCount, commandBuffer);
+    }
 }
 
 gl::Extents ImageHelper::getSize(const gl::ImageIndex &index) const
@@ -2052,6 +2049,40 @@ void ImageHelper::stageSubresourceUpdateFromImage(vk::ImageHelper *image,
     mSubresourceUpdates.emplace_back(image, copyToImage);
 }
 
+void ImageHelper::stageSubresourceRobustClear(const gl::ImageIndex &index,
+                                              const angle::Format &format)
+{
+    stageSubresourceClear(index, format, kWebGLInitColorValue, kWebGLInitDepthStencilValue);
+}
+
+void ImageHelper::stageSubresourceEmulatedClear(const gl::ImageIndex &index,
+                                                const angle::Format &format)
+{
+    stageSubresourceClear(index, format, kEmulatedInitColorValue, kWebGLInitDepthStencilValue);
+}
+
+void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index,
+                                        const angle::Format &format,
+                                        const VkClearColorValue &colorValue,
+                                        const VkClearDepthStencilValue &depthStencilValue)
+{
+    VkClearValue clearValue;
+
+    bool isDepthStencil = format.depthBits > 0 || format.stencilBits > 0;
+    if (isDepthStencil)
+    {
+        clearValue.depthStencil = depthStencilValue;
+    }
+    else
+    {
+        clearValue.color = colorValue;
+    }
+
+    // Note that clears can arrive out of order from the front-end with respect to staged changes,
+    // but they are intended to be done first.
+    mSubresourceUpdates.emplace(mSubresourceUpdates.begin(), clearValue, index);
+}
+
 angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
                                                  size_t sizeInBytes,
                                                  uint8_t **ptrOut,
@@ -2064,8 +2095,10 @@ angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
 }
 
 angle::Result ImageHelper::flushStagedUpdates(Context *context,
-                                              uint32_t baseLevel,
-                                              uint32_t levelCount,
+                                              uint32_t levelStart,
+                                              uint32_t levelEnd,
+                                              uint32_t layerStart,
+                                              uint32_t layerEnd,
                                               vk::CommandBuffer *commandBuffer)
 {
     if (mSubresourceUpdates.empty())
@@ -2078,40 +2111,69 @@ angle::Result ImageHelper::flushStagedUpdates(Context *context,
     ANGLE_TRY(mStagingBuffer.flush(context));
 
     std::vector<SubresourceUpdate> updatesToKeep;
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(mFormat->textureFormat());
 
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
-        ASSERT((update.updateSource == SubresourceUpdate::UpdateSource::Buffer &&
+        ASSERT(update.updateSource == SubresourceUpdate::UpdateSource::Clear ||
+               (update.updateSource == SubresourceUpdate::UpdateSource::Buffer &&
                 update.buffer.bufferHandle != VK_NULL_HANDLE) ||
                (update.updateSource == SubresourceUpdate::UpdateSource::Image &&
                 update.image.image != nullptr && update.image.image->valid()));
 
-        const uint32_t updateMipLevel = update.dstSubresource().mipLevel;
+        uint32_t updateMipLevel;
+        uint32_t updateBaseLayer;
+        uint32_t updateLayerCount;
+        if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
+        {
+            updateMipLevel   = update.clear.levelIndex;
+            updateBaseLayer  = update.clear.layerIndex;
+            updateLayerCount = update.clear.layerCount;
+            if (updateLayerCount == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
+            {
+                updateLayerCount = mLayerCount;
+            }
+        }
+        else
+        {
+            const VkImageSubresourceLayers &dstSubresource = update.dstSubresource();
+            updateMipLevel                                 = dstSubresource.mipLevel;
+            updateBaseLayer                                = dstSubresource.baseArrayLayer;
+            updateLayerCount                               = dstSubresource.layerCount;
+        }
 
-        // It's possible we've accumulated updates that are no longer applicable if the image has
-        // never been flushed but the image description has changed. Check if this level exist for
-        // this image.
-        if (updateMipLevel < baseLevel || updateMipLevel >= baseLevel + levelCount)
+        // If the update level is not within the requested range, skip the update.
+        const bool isUpdateLevelOutsideRange =
+            updateMipLevel < levelStart || updateMipLevel >= levelEnd;
+        // If the update layers don't intersect the requested layers, skip the update.
+        const bool areUpdateLayersOutsideRange =
+            updateBaseLayer + updateLayerCount <= layerStart || updateBaseLayer >= layerEnd;
+
+        if (isUpdateLevelOutsideRange || areUpdateLayersOutsideRange)
         {
             updatesToKeep.emplace_back(update);
             continue;
         }
 
-        // Conservatively flush all writes to the image. We could use a more restricted barrier.
-        // Do not move this above the for loop, otherwise multiple updates can have race conditions
-        // and not be applied correctly as seen in:
-        // dEQP-gles2.functional_texture_specification_texsubimage2d_align_2d* tests on Windows AMD
-        changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst, commandBuffer);
+        // Conservatively add a barrier between every update.  This is to avoid races when updating
+        // the same subresource.  A possible optimization could be to only issue this barrier when
+        // an overlap in updates is observed.
+        changeLayout(aspectFlags, vk::ImageLayout::TransferDst, commandBuffer);
 
-        if (update.updateSource == SubresourceUpdate::UpdateSource::Buffer)
+        if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
+        {
+            clear(update.clear.value, updateMipLevel, updateBaseLayer, updateLayerCount,
+                  commandBuffer);
+        }
+        else if (update.updateSource == SubresourceUpdate::UpdateSource::Buffer)
         {
             commandBuffer->copyBufferToImage(update.buffer.bufferHandle, mImage, getCurrentLayout(),
                                              1, &update.buffer.copyRegion);
         }
         else
         {
-            update.image.image->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT,
-                                             vk::ImageLayout::TransferSrc, commandBuffer);
+            update.image.image->changeLayout(aspectFlags, vk::ImageLayout::TransferSrc,
+                                             commandBuffer);
 
             update.image.image->addReadDependency(this);
 
@@ -2130,18 +2192,16 @@ angle::Result ImageHelper::flushStagedUpdates(Context *context,
     {
         mStagingBuffer.releaseRetainedBuffers(context->getRenderer());
     }
-    else
-    {
-        WARN() << "Internal Vulkan buffer could not be released. This is likely due to having "
-                  "extra images defined in the Texture.";
-    }
 
     return angle::Result::Continue;
 }
 
-bool ImageHelper::hasStagedUpdates() const
+angle::Result ImageHelper::flushAllStagedUpdates(Context *context)
 {
-    return !mSubresourceUpdates.empty();
+    // Clear the image.
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(recordCommands(context, &commandBuffer));
+    return flushStagedUpdates(context, 0, mLevelCount, 0, mLayerCount, commandBuffer);
 }
 
 // ImageHelper::SubresourceUpdate implementation
@@ -2159,10 +2219,24 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(vk::ImageHelper *imageIn,
     : updateSource(UpdateSource::Image), image{imageIn, copyRegionIn}
 {}
 
+ImageHelper::SubresourceUpdate::SubresourceUpdate(const VkClearValue &clearValue,
+                                                  const gl::ImageIndex &imageIndex)
+    : updateSource(UpdateSource::Clear)
+{
+    clear.value      = clearValue;
+    clear.levelIndex = imageIndex.getLevelIndex();
+    clear.layerIndex = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
+    clear.layerCount = imageIndex.getLayerCount();
+}
+
 ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other)
     : updateSource(other.updateSource)
 {
-    if (updateSource == UpdateSource::Buffer)
+    if (updateSource == UpdateSource::Clear)
+    {
+        clear = other.clear;
+    }
+    else if (updateSource == UpdateSource::Buffer)
     {
         buffer = other.buffer;
     }
@@ -2185,6 +2259,11 @@ void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
 bool ImageHelper::SubresourceUpdate::isUpdateToLayerLevel(uint32_t layerIndex,
                                                           uint32_t levelIndex) const
 {
+    if (updateSource == UpdateSource::Clear)
+    {
+        return clear.levelIndex == levelIndex && clear.layerIndex == layerIndex;
+    }
+
     const VkImageSubresourceLayers &dst = dstSubresource();
     return dst.baseArrayLayer == layerIndex && dst.mipLevel == levelIndex;
 }

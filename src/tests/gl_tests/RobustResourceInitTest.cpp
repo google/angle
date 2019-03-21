@@ -307,7 +307,8 @@ class RobustResourceInitTestES31 : public RobustResourceInitTest
 // it only works on the implemented renderers
 TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 {
-    bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9() || IsOpenGL() || IsOpenGLES();
+    bool shouldHaveSupport =
+        IsD3D11() || IsD3D11_FL93() || IsD3D9() || IsOpenGL() || IsOpenGLES() || IsVulkan();
     EXPECT_EQ(shouldHaveSupport, hasGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasEGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasRobustSurfaceInit());
@@ -775,7 +776,7 @@ TEST_P(RobustResourceInitTest, UninitializedPartsOfCopied2DTexturesAreBlack)
 // succeed with all bytes set to 0. Regression test for a bug where the zeroing out of the
 // texture was done via the same code path as glTexImage2D, causing the PIXEL_UNPACK_BUFFER
 // to be used.
-TEST_P(RobustResourceInitTestES3, ReadingOutOfboundsCopiedTextureWithUnpackBuffer)
+TEST_P(RobustResourceInitTestES3, ReadingOutOfBoundsCopiedTextureWithUnpackBuffer)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
     // TODO(geofflang@chromium.org): CopyTexImage from GL_RGBA4444 to GL_ALPHA fails when looking
@@ -834,7 +835,7 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfboundsCopiedTextureWithUnpackBuffe
 
 // Reading an uninitialized portion of a texture (copyTexImage2D with negative x and y) should
 // succeed with all bytes set to 0.
-TEST_P(RobustResourceInitTest, ReadingOutOfboundsCopiedTexture)
+TEST_P(RobustResourceInitTest, ReadingOutOfBoundsCopiedTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
@@ -1827,6 +1828,9 @@ TEST_P(RobustResourceInitTestES31, Multisample2DTextureArray)
 // Tests that using an out of bounds draw offset with a dynamic array succeeds.
 TEST_P(RobustResourceInitTest, DynamicVertexArrayOffsetOutOfBounds)
 {
+    // Not implemented on Vulkan.  http://anglebug.com/3350
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
 
@@ -1851,7 +1855,8 @@ ANGLE_INSTANTIATE_TEST(RobustResourceInitTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(RobustResourceInitTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 

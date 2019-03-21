@@ -172,9 +172,6 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->createContextRobustness  = true;
     outExtensions->surfaceOrientation       = true;
     outExtensions->displayTextureShareGroup = true;
-
-    // TODO(geofflang): Extension is exposed but not implemented so that other aspects of the Vulkan
-    // backend can be tested in Chrome. http://anglebug.com/2722
     outExtensions->robustResourceInitialization = true;
 
     // The Vulkan implementation will always say that EGL_KHR_swap_buffers_with_damage is supported.

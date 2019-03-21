@@ -17,14 +17,6 @@
 
 namespace rx
 {
-
-namespace
-{
-constexpr VkClearDepthStencilValue kDefaultClearDepthStencilValue = {0.0f, 1};
-constexpr VkClearColorValue kBlackClearColorValue                 = {{0}};
-
-}  // anonymous namespace
-
 RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state)
     : RenderbufferImpl(state), mOwnsImage(false), mImage(nullptr)
 {}
@@ -92,18 +84,12 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
         ANGLE_TRY(mImage->initImageView(contextVk, gl::TextureType::_2D, aspect, gl::SwizzleState(),
                                         &mImageView, 0, 1));
 
-        // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
-        vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
-
-        if (isDepthOrStencilFormat)
+        // Clear the renderbuffer if it has emulated channels.
+        if (vkFormat.hasEmulatedChannels())
         {
-            mImage->clearDepthStencil(aspect, aspect, kDefaultClearDepthStencilValue,
-                                      commandBuffer);
-        }
-        else
-        {
-            mImage->clearColor(kBlackClearColorValue, 0, 1, commandBuffer);
+            mImage->stageSubresourceEmulatedClear(gl::ImageIndex::Make2D(0),
+                                                  vkFormat.angleFormat());
+            ANGLE_TRY(mImage->flushAllStagedUpdates(vk::GetImpl(context)));
         }
 
         mRenderTarget.init(mImage, &mImageView, 0, 0, nullptr);
@@ -172,8 +158,8 @@ angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *conte
 angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
                                                  const gl::ImageIndex &imageIndex)
 {
-    UNIMPLEMENTED();
-    return angle::Result::Continue;
+    mImage->stageSubresourceRobustClear(imageIndex, mImage->getFormat().angleFormat());
+    return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 
 void RenderbufferVk::releaseOwnershipOfImage(const gl::Context *context)

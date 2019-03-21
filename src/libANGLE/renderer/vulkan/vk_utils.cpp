@@ -262,8 +262,11 @@ VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
 
 VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format)
 {
-    return (format.redBits > 0 ? VK_IMAGE_ASPECT_COLOR_BIT : 0) |
-           GetDepthStencilAspectFlags(format);
+    VkImageAspectFlags dsAspect = GetDepthStencilAspectFlags(format);
+    // If the image is not depth stencil, assume color aspect.  Note that detecting color formats
+    // is less trivial than depth/stencil, e.g. as block formats don't indicate any bits for RGBA
+    // channels.
+    return dsAspect != 0 ? dsAspect : VK_IMAGE_ASPECT_COLOR_BIT;
 }
 
 VkImageAspectFlags GetDepthStencilAspectFlagsForCopy(bool copyDepth, bool copyStencil)
