@@ -204,6 +204,9 @@ class RobustResourceInitTest : public ANGLETest
         setConfigStencilBits(8);
 
         setRobustResourceInit(true);
+
+        // Test flakiness was noticed when reusing displays.
+        forceNewDisplay();
     }
 
     bool hasGLExtension() { return extensionEnabled("GL_ANGLE_robust_resource_initialization"); }

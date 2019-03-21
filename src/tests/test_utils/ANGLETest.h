@@ -262,9 +262,7 @@ class ANGLETestBase
     virtual ~ANGLETestBase();
 
   public:
-    static bool InitTestWindow();
-    static bool DestroyTestWindow();
-    static void SetWindowVisible(bool isVisible);
+    void setWindowVisible(bool isVisible);
     static bool eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
 
     virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
@@ -357,8 +355,9 @@ class ANGLETestBase
     void setDebugLayersEnabled(bool enabled);
     void setClientArraysEnabled(bool enabled);
     void setRobustResourceInit(bool enabled);
-    void setContextProgramCacheEnabled(bool enabled);
+    void setContextProgramCacheEnabled(bool enabled, angle::CacheProgramFunc cacheProgramFunc);
     void setContextVirtualization(bool enabled);
+    void forceNewDisplay();
 
     // Some EGL extension tests would like to defer the Context init until the test body.
     void setDeferContextInit(bool enabled);
@@ -379,28 +378,22 @@ class ANGLETestBase
     // Allows a test to be more restrictive about platform warnings.
     void treatPlatformWarningsAsErrors();
 
-    static OSWindow *GetOSWindow() { return mOSWindow; }
+    OSWindow *getOSWindow() { return mCurrentPlatform->osWindow; }
 
     GLuint get2DTexturedQuadProgram();
 
     // Has a float uniform "u_layer" to choose the 3D texture layer.
     GLuint get3DTexturedQuadProgram();
 
-    angle::PlatformMethods mPlatformMethods;
-
     class ScopedIgnorePlatformMessages : angle::NonCopyable
     {
       public:
-        ScopedIgnorePlatformMessages(ANGLETestBase *test);
+        ScopedIgnorePlatformMessages();
         ~ScopedIgnorePlatformMessages();
-
-      private:
-        ANGLETestBase *mTest;
     };
 
   private:
     void checkD3D11SDKLayersMessages();
-    bool hasNVIDIAGPU() const;
 
     void drawQuad(GLuint program,
                   const std::string &positionAttribName,
@@ -410,9 +403,18 @@ class ANGLETestBase
                   bool useInstancedDrawCalls,
                   GLuint numInstances);
 
-    EGLWindow *mEGLWindow;
-    WGLWindow *mWGLWindow;
-    ConfigParameters mConfigParameters;
+    struct Platform
+    {
+        Platform();
+        ~Platform();
+
+        EGLWindow *eglWindow = nullptr;
+        WGLWindow *wglWindow = nullptr;
+        OSWindow *osWindow   = nullptr;
+        ConfigParameters configParams;
+        uint32_t reuseCounter = 0;
+    };
+
     int mWidth;
     int mHeight;
 
@@ -426,11 +428,17 @@ class ANGLETestBase
     GLuint m2DTexturedQuadProgram;
     GLuint m3DTexturedQuadProgram;
 
-    TestPlatformContext mPlatformContext;
-
     bool mDeferContextInit;
+    bool mAlwaysForceNewDisplay;
+    bool mForceNewDisplay;
 
-    static OSWindow *mOSWindow;
+    // On most systems we force a new display on every test instance. For these configs we can
+    // share a single OSWindow instance. With display reuse we need a separate OSWindow for each
+    // different config. This OSWindow sharing seemed to lead to driver bugs on some platforms.
+    static OSWindow *mOSWindowSingleton;
+
+    static std::map<angle::PlatformParameters, Platform> gPlatforms;
+    Platform *mCurrentPlatform;
 
     // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
     static Optional<EGLint> mLastRendererType;

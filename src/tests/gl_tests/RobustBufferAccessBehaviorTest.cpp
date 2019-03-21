@@ -29,6 +29,9 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+
+        // Test flakiness was noticed when reusing displays.
+        forceNewDisplay();
     }
 
     void TearDown() override

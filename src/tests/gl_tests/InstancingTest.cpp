@@ -115,7 +115,7 @@ class InstancingTest : public ANGLETest
 
         // TODO: Fix these.  http://anglebug.com/3129
         ANGLE_SKIP_TEST_IF(IsD3D9() && draw == Indexed && geometry == Point);
-        ANGLE_SKIP_TEST_IF(IsD3D9() && IsAMD() && geometry == Point);
+        ANGLE_SKIP_TEST_IF(IsD3D9() && IsAMD());
 
         // D3D11 FL9_3 has a special codepath that emulates instanced points rendering
         // but it has bugs and was only implemented for vertex positions in a buffer object,

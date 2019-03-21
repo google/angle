@@ -33,6 +33,8 @@ struct ANGLE_UTIL_EXPORT ConfigParameters
 
     void reset();
 
+    static bool CanShareDisplay(const ConfigParameters &a, const ConfigParameters &b);
+
     // Display parameters.
     Optional<bool> debugLayersEnabled;
     Optional<bool> contextVirtualization;

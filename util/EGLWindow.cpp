@@ -114,6 +114,14 @@ void ConfigParameters::reset()
     *this = ConfigParameters();
 }
 
+// static
+bool ConfigParameters::CanShareDisplay(const ConfigParameters &a, const ConfigParameters &b)
+{
+    return a.debugLayersEnabled == b.debugLayersEnabled &&
+           a.contextVirtualization == b.contextVirtualization &&
+           a.platformMethods == b.platformMethods;
+}
+
 // GLWindowBase implementation.
 GLWindowBase::GLWindowBase(EGLint glesMajorVersion, EGLint glesMinorVersion)
     : mClientMajorVersion(glesMajorVersion), mClientMinorVersion(glesMinorVersion)

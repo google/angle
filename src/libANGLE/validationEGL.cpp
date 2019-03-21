@@ -2869,11 +2869,7 @@ Error ValidateSwapBuffersWithDamageKHR(const Display *display,
                                        EGLint *rects,
                                        EGLint n_rects)
 {
-    Error error = ValidateSurface(display, surface);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(ValidateSurface(display, surface));
 
     if (!display->getExtensions().swapBuffersWithDamage)
     {
