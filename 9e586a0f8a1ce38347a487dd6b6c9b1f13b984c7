@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58c00ac4_805dee82",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-21T20:34:50Z",
+      "side": 1,
+      "message": "Does this work for Android builds also?\n\nFor Android build within Chromium, out/ is not at the base of the ANGLE source, but Chromium\u0027s:\n\nchromium/src/out\nchromium/src/third_party/angle/src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py\n\nAndroid builds are done with Chromium\u0027s src/:\ntimvp@timvp:~/code/chromium/src$ autoninja -v -C out/Debug third_party/angle:angle_apk",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
