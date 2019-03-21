@@ -16,6 +16,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6268b8d_3bcbbb02",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-03-21T20:44:41Z",
+      "side": 1,
+      "message": "My impression was that this is only necessary to run when changing internal shaders to Angle, and you wouldn\u0027t run the code generation for a chromium build. But I might not fully understand so I\u0027ll let Jamie or Shabbi answer.",
+      "parentUuid": "58c00ac4_805dee82",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
