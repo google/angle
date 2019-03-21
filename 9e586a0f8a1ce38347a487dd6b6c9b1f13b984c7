@@ -52,6 +52,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2c5d855_f550afef",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-21T21:08:43Z",
+      "side": 1,
+      "message": "So when we are building ANGLE in Chromium (for Android) and run:\n\ntimvp@timvp:~/code/chromium/src/third_party/angle$ python scripts/run_code_generation.py\n\nWill all of the necessary files still be updated?   Or will I need a second copy of ANGLE outside of Chromium with my changes?",
+      "parentUuid": "ca47667e_f0068468",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
