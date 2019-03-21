@@ -174,8 +174,9 @@ def get_output_path(name):
     return os.path.join('shaders', 'gen', name + ".inc")
 
 # Finds a path to GN's out directory
-def find_build_path(path):
-    out = os.path.join(path, 'out')
+def find_build_path():
+    path = sys.path[0] # Directory of this script
+    out = os.path.join(path, "../../../../out") # Out is in angle base dir
     if (os.path.isdir(out)):
         # Prefer release directories.
         for pattern in ['elease', '']:
@@ -185,11 +186,9 @@ def find_build_path(path):
                     argsgn = os.path.join(subdir, "args.gn")
                     if os.path.isfile(argsgn):
                         return subdir
-    parent = os.path.join(path, "..")
-    if (os.path.isdir(parent)):
-        return find_build_path(parent)
-    else:
-        raise Exception("Could not find GN out directory")
+
+    # If we reached this point, there was no build directory in the angle repo
+    raise Exception("Could not find GN out directory")
 
 # Generates the code for a shader blob array entry.
 def gen_shader_blob_entry(shader):
@@ -476,7 +475,7 @@ def main():
     # a) Get the path to the glslang binary from the script directory.
     glslang_path = None
     if not print_outputs:
-        build_path = find_build_path(".")
+        build_path = find_build_path()
         print("Using glslang_validator from '" + build_path + "'")
         result = subprocess.call(['ninja', '-C', build_path, 'glslang_validator'])
         if result != 0:
