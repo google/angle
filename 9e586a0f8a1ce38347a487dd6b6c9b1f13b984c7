@@ -88,6 +88,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d582c7e_292f32ad",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-21T21:19:38Z",
+      "side": 1,
+      "message": "What is the right development setup and how do we set it up?\n\nThe way this is written, I\u0027m thinking it won\u0027t work for Android.   There is no out/ within angle/ in a Chromium build, so it will throw the exception until I clone my changes into a standalone angle checkout.   Has anyone tried this within a Chromium checkout?\n\nMy concern is that these types of gotchas will start popping up more as more Android developers join ANGLE development.",
+      "parentUuid": "d0bcfa20_aa88588f",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
