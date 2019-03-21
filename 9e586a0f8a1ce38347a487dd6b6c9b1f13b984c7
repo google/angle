@@ -178,6 +178,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a22db45e_c6c2c1b2",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-21T21:52:35Z",
+      "side": 1,
+      "message": "👍 \n\nI\u0027d like to move more to a world where we don\u0027t need to use Chromium for Android stuff. But it\u0027ll probably take us a while to get there.",
+      "parentUuid": "b43b97ae_077c7dd1",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
