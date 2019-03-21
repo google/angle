@@ -124,6 +124,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a84a980a_eda11eba",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-21T21:32:44Z",
+      "side": 1,
+      "message": "That doesn\u0027t end up with chromium/src/third_party/angle/out though.\n\nInstead, out/ is in chromium/src/out, which this change will not be able to find anymore.",
+      "parentUuid": "d58f1f86_aa973ae0",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
