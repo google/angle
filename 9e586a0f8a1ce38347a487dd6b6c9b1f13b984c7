@@ -196,6 +196,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6a6f04d_a9d32d91",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-21T21:58:53Z",
+      "side": 1,
+      "message": "Sometimes you do want to build Linux inside of Chromium, regardless of how Android build is done.\nBecause Chromium build uses different test runner from standalone ANGLE, and since build bots build inside Chromium, sometimes you need Chromium build to better imitate build bots.\nI think just \"python scripts/run_code_generation.py\" should be done in third_party/angle, the rest can be done in Chromium.",
+      "parentUuid": "a22db45e_c6c2c1b2",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
