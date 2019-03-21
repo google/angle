@@ -31,7 +31,7 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
                                         const VkCommandBufferInheritanceInfo &inheritanceInfo,
                                         VkCommandBufferUsageFlags flags,
                                         angle::PoolAllocator *poolAllocator,
-                                        SecondaryCommandBuffer *commandBuffer)
+                                        priv::SecondaryCommandBuffer *commandBuffer)
 {
     ASSERT(!commandBuffer->valid());
     commandBuffer->initialize(poolAllocator);
@@ -44,7 +44,7 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
                                         const VkCommandBufferInheritanceInfo &inheritanceInfo,
                                         VkCommandBufferUsageFlags flags,
                                         angle::PoolAllocator *poolAllocator,
-                                        CommandBuffer *commandBuffer)
+                                        PrimaryCommandBuffer *commandBuffer)
 {
     ASSERT(!commandBuffer->valid());
     VkCommandBufferAllocateInfo createInfo = {};
@@ -146,13 +146,14 @@ constexpr VkSubpassContents kRenderPassContents = VK_SUBPASS_CONTENTS_SECONDARY_
 
 // Helpers to unify executeCommands call based on underlying cmd buffer type
 ANGLE_MAYBE_UNUSED
-void ExecuteCommands(CommandBuffer *primCmdBuffer, SecondaryCommandBuffer *secCmdBuffer)
+void ExecuteCommands(PrimaryCommandBuffer *primCmdBuffer,
+                     priv::SecondaryCommandBuffer *secCmdBuffer)
 {
     secCmdBuffer->executeCommands(primCmdBuffer->getHandle());
 }
 
 ANGLE_MAYBE_UNUSED
-void ExecuteCommands(CommandBuffer *primCmdBuffer, CommandBuffer *secCmdBuffer)
+void ExecuteCommands(PrimaryCommandBuffer *primCmdBuffer, priv::CommandBuffer *secCmdBuffer)
 {
     primCmdBuffer->executeCommands(1, secCmdBuffer);
 }
@@ -172,7 +173,7 @@ bool CommandGraphResource::isResourceInUse(RendererVk *renderer) const
 }
 
 angle::Result CommandGraphResource::recordCommands(Context *context,
-                                                   CommandBufferT **commandBufferOut)
+                                                   CommandBuffer **commandBufferOut)
 {
     updateQueueSerial(context->getRenderer()->getCurrentQueueSerial());
 
@@ -183,7 +184,7 @@ angle::Result CommandGraphResource::recordCommands(Context *context,
             context, context->getRenderer()->getCommandPool(), commandBufferOut);
     }
 
-    CommandBufferT *outsideRenderPassCommands = mCurrentWritingNode->getOutsideRenderPassCommands();
+    CommandBuffer *outsideRenderPassCommands = mCurrentWritingNode->getOutsideRenderPassCommands();
     if (!outsideRenderPassCommands->valid())
     {
         ANGLE_TRY(mCurrentWritingNode->beginOutsideRenderPassRecording(
@@ -208,7 +209,7 @@ angle::Result CommandGraphResource::beginRenderPass(ContextVk *contextVk,
                                                     const gl::Rectangle &renderArea,
                                                     const RenderPassDesc &renderPassDesc,
                                                     const std::vector<VkClearValue> &clearValues,
-                                                    CommandBufferT **commandBufferOut)
+                                                    CommandBuffer **commandBufferOut)
 {
     // If a barrier has been inserted in the meantime, stop the command buffer.
     if (!hasChildlessWritingNode())
@@ -309,7 +310,7 @@ CommandGraphNode::~CommandGraphNode()
 
 angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context,
                                                                 const CommandPool &commandPool,
-                                                                CommandBufferT **commandsOut)
+                                                                CommandBuffer **commandsOut)
 {
     ASSERT(!mHasChildren);
 
@@ -331,7 +332,7 @@ angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context
 }
 
 angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
-                                                               CommandBufferT **commandsOut)
+                                                               CommandBuffer **commandsOut)
 {
     ASSERT(!mHasChildren);
 
@@ -466,7 +467,7 @@ void CommandGraphNode::visitParents(std::vector<CommandGraphNode *> *stack)
 angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
                                                 Serial serial,
                                                 RenderPassCache *renderPassCache,
-                                                CommandBuffer *primaryCommandBuffer)
+                                                PrimaryCommandBuffer *primaryCommandBuffer)
 {
     switch (mFunction)
     {
@@ -683,7 +684,7 @@ angle::Result CommandGraph::submitCommands(Context *context,
                                            Serial serial,
                                            RenderPassCache *renderPassCache,
                                            CommandPool *commandPool,
-                                           CommandBuffer *primaryCommandBufferOut)
+                                           PrimaryCommandBuffer *primaryCommandBufferOut)
 {
     // There is no point in submitting an empty command buffer, so make sure not to call this
     // function if there's nothing to do.

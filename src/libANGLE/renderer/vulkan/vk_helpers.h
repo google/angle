@@ -379,7 +379,7 @@ class LineLoopHelper final : angle::NonCopyable
     void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
-    static void Draw(uint32_t count, CommandBufferT *commandBuffer);
+    static void Draw(uint32_t count, vk::CommandBuffer *commandBuffer);
 
   private:
     DynamicBuffer mDynamicIndexBuffer;
@@ -613,20 +613,19 @@ class ImageHelper final : public CommandGraphResource
     void clearColor(const VkClearColorValue &color,
                     uint32_t baseMipLevel,
                     uint32_t levelCount,
-                    CommandBufferT *commandBuffer);
+                    vk::CommandBuffer *commandBuffer);
 
     void clearColorLayer(const VkClearColorValue &color,
                          uint32_t baseMipLevel,
                          uint32_t levelCount,
                          uint32_t baseArrayLayer,
                          uint32_t layerCount,
-                         CommandBufferT *commandBuffer);
+                         vk::CommandBuffer *commandBuffer);
 
     void clearDepthStencil(VkImageAspectFlags imageAspectFlags,
                            VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
-                           CommandBufferT *commandBuffer);
-
+                           vk::CommandBuffer *commandBuffer);
     gl::Extents getSize(const gl::ImageIndex &index) const;
 
     static void Copy(ImageHelper *srcImage,
@@ -636,7 +635,7 @@ class ImageHelper final : public CommandGraphResource
                      const gl::Extents &copySize,
                      const VkImageSubresourceLayers &srcSubresources,
                      const VkImageSubresourceLayers &dstSubresources,
-                     CommandBufferT *commandBuffer);
+                     vk::CommandBuffer *commandBuffer);
 
     angle::Result generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel);
 
@@ -684,7 +683,7 @@ class ImageHelper final : public CommandGraphResource
     angle::Result flushStagedUpdates(Context *context,
                                      uint32_t baseLevel,
                                      uint32_t levelCount,
-                                     CommandBufferT *commandBuffer);
+                                     vk::CommandBuffer *commandBuffer);
 
     bool hasStagedUpdates() const;
 
@@ -695,7 +694,7 @@ class ImageHelper final : public CommandGraphResource
 
     void changeLayout(VkImageAspectFlags aspectMask,
                       ImageLayout newLayout,
-                      CommandBufferT *commandBuffer);
+                      vk::CommandBuffer *commandBuffer);
 
     bool isQueueChangeNeccesary(uint32_t newQueueFamilyIndex) const
     {
@@ -705,13 +704,13 @@ class ImageHelper final : public CommandGraphResource
     void changeLayoutAndQueue(VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               uint32_t newQueueFamilyIndex,
-                              CommandBufferT *commandBuffer);
+                              vk::CommandBuffer *commandBuffer);
 
   private:
     void forceChangeLayoutAndQueue(VkImageAspectFlags aspectMask,
                                    ImageLayout newLayout,
                                    uint32_t newQueueFamilyIndex,
-                                   CommandBufferT *commandBuffer);
+                                   vk::CommandBuffer *commandBuffer);
 
     struct SubresourceUpdate
     {

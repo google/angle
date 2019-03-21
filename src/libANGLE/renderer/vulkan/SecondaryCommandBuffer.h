@@ -22,6 +22,9 @@ namespace rx
 namespace vk
 {
 
+namespace priv
+{
+
 enum class CommandID : uint16_t
 {
     // Invalid cmd used to mark end of sequence of commands
@@ -705,6 +708,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedInstanced(uint32_t indexCou
     paramStruct->instanceCount = instanceCount;
 }
 
+}  // namespace priv
 }  // namespace vk
 }  // namespace rx
 

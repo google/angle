@@ -13,12 +13,6 @@
 #include "libANGLE/renderer/vulkan/SecondaryCommandBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
-#if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-using CommandBufferT = rx::vk::SecondaryCommandBuffer;
-#else
-using CommandBufferT = rx::vk::CommandBuffer;
-#endif
-
 namespace rx
 {
 
@@ -69,7 +63,7 @@ class CommandBufferOwner
     ANGLE_INLINE void onCommandBufferFinished() { mCommandBuffer = nullptr; }
 
   protected:
-    CommandBufferT *mCommandBuffer = nullptr;
+    CommandBuffer *mCommandBuffer = nullptr;
 };
 
 // Only used internally in the command graph. Kept in the header for better inlining performance.
@@ -80,13 +74,13 @@ class CommandGraphNode final : angle::NonCopyable
     ~CommandGraphNode();
 
     // Immutable queries for when we're walking the commands tree.
-    CommandBufferT *getOutsideRenderPassCommands()
+    CommandBuffer *getOutsideRenderPassCommands()
     {
         ASSERT(!mHasChildren);
         return &mOutsideRenderPassCommands;
     }
 
-    CommandBufferT *getInsideRenderPassCommands()
+    CommandBuffer *getInsideRenderPassCommands()
     {
         ASSERT(!mHasChildren);
         return &mInsideRenderPassCommands;
@@ -95,10 +89,10 @@ class CommandGraphNode final : angle::NonCopyable
     // For outside the render pass (copies, transitions, etc).
     angle::Result beginOutsideRenderPassRecording(Context *context,
                                                   const CommandPool &commandPool,
-                                                  CommandBufferT **commandsOut);
+                                                  CommandBuffer **commandsOut);
 
     // For rendering commands (draws).
-    angle::Result beginInsideRenderPassRecording(Context *context, CommandBufferT **commandsOut);
+    angle::Result beginInsideRenderPassRecording(Context *context, CommandBuffer **commandsOut);
 
     // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
     void storeRenderPassInfo(const Framebuffer &framebuffer,
@@ -134,7 +128,7 @@ class CommandGraphNode final : angle::NonCopyable
     angle::Result visitAndExecute(Context *context,
                                   Serial serial,
                                   RenderPassCache *renderPassCache,
-                                  CommandBuffer *primaryCommandBuffer);
+                                  PrimaryCommandBuffer *primaryCommandBuffer);
 
     // Only used in the command graph diagnostics.
     const std::vector<CommandGraphNode *> &getParentsForDiagnostics() const;
@@ -190,8 +184,8 @@ class CommandGraphNode final : angle::NonCopyable
     angle::PoolAllocator *mPoolAllocator;
     // Keep separate buffers for commands inside and outside a RenderPass.
     // TODO(jmadill): We might not need inside and outside RenderPass commands separate.
-    CommandBufferT mOutsideRenderPassCommands;
-    CommandBufferT mInsideRenderPassCommands;
+    CommandBuffer mOutsideRenderPassCommands;
+    CommandBuffer mInsideRenderPassCommands;
 
     // Special-function additional data:
     // Queries:
@@ -265,7 +259,7 @@ class CommandGraphResource : angle::NonCopyable
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     // Will append to an existing command buffer/graph node if possible.
-    angle::Result recordCommands(Context *context, CommandBufferT **commandBufferOut);
+    angle::Result recordCommands(Context *context, CommandBuffer **commandBufferOut);
 
     // Begins a command buffer on the current graph node for in-RenderPass rendering.
     // Called from FramebufferVk::startNewRenderPass and UtilsVk functions.
@@ -274,12 +268,12 @@ class CommandGraphResource : angle::NonCopyable
                                   const gl::Rectangle &renderArea,
                                   const RenderPassDesc &renderPassDesc,
                                   const std::vector<VkClearValue> &clearValues,
-                                  CommandBufferT **commandBufferOut);
+                                  CommandBuffer **commandBufferOut);
 
     // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
     // Returns the started command buffer in commandBufferOut.
     ANGLE_INLINE bool appendToStartedRenderPass(Serial currentQueueSerial,
-                                                CommandBufferT **commandBufferOut)
+                                                CommandBuffer **commandBufferOut)
     {
         updateQueueSerial(currentQueueSerial);
         if (hasStartedRenderPass())
@@ -382,7 +376,7 @@ class CommandGraph final : angle::NonCopyable
                                  Serial serial,
                                  RenderPassCache *renderPassCache,
                                  CommandPool *commandPool,
-                                 CommandBuffer *primaryCommandBufferOut);
+                                 PrimaryCommandBuffer *primaryCommandBufferOut);
     bool empty() const;
     void clear();
 

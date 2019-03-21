@@ -14,6 +14,8 @@ namespace rx
 {
 namespace vk
 {
+namespace priv
+{
 void SecondaryCommandBuffer::blitImage(const Image &srcImage,
                                        VkImageLayout srcImageLayout,
                                        const Image &dstImage,
@@ -610,5 +612,6 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
     }
 }
 
+}  // namespace priv
 }  // namespace vk
 }  // namespace rx

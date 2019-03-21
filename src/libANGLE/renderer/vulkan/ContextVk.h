@@ -226,7 +226,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
     using DirtyBitHandler = angle::Result (ContextVk::*)(const gl::Context *,
-                                                         CommandBufferT *commandBuffer);
+                                                         vk::CommandBuffer *commandBuffer);
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mDirtyBitHandlers;
 
@@ -238,21 +238,21 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                             gl::DrawElementsType indexTypeOrInvalid,
                             const void *indices,
                             DirtyBits dirtyBitMask,
-                            CommandBufferT **commandBufferOut);
+                            vk::CommandBuffer **commandBufferOut);
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLsizei indexCount,
                                    GLsizei instanceCount,
                                    gl::DrawElementsType indexType,
                                    const void *indices,
-                                   CommandBufferT **commandBufferOut);
+                                   vk::CommandBuffer **commandBufferOut);
     angle::Result setupLineLoopDraw(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLint firstVertex,
                                     GLsizei vertexOrIndexCount,
                                     gl::DrawElementsType indexTypeOrInvalid,
                                     const void *indices,
-                                    CommandBufferT **commandBufferOut);
+                                    vk::CommandBuffer **commandBufferOut);
 
     void updateViewport(FramebufferVk *framebufferVk,
                         const gl::Rectangle &viewport,
@@ -273,16 +273,17 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     void invalidateDriverUniforms();
 
     angle::Result handleDirtyDefaultAttribs(const gl::Context *context,
-                                            CommandBufferT *commandBuffer);
-    angle::Result handleDirtyPipeline(const gl::Context *context, CommandBufferT *commandBuffer);
-    angle::Result handleDirtyTextures(const gl::Context *context, CommandBufferT *commandBuffer);
+                                            vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyPipeline(const gl::Context *context, vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyTextures(const gl::Context *context, vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyVertexBuffers(const gl::Context *context,
-                                           CommandBufferT *commandBuffer);
-    angle::Result handleDirtyIndexBuffer(const gl::Context *context, CommandBufferT *commandBuffer);
+                                           vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyIndexBuffer(const gl::Context *context,
+                                         vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDriverUniforms(const gl::Context *context,
-                                            CommandBufferT *commandBuffer);
+                                            vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDescriptorSets(const gl::Context *context,
-                                            CommandBufferT *commandBuffer);
+                                            vk::CommandBuffer *commandBuffer);
 
     vk::PipelineHelper *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;

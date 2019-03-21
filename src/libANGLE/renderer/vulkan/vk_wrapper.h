@@ -70,7 +70,6 @@ class WrappedObject : angle::NonCopyable
 #define ANGLE_HANDLE_TYPES_X(FUNC) \
     FUNC(Buffer)                   \
     FUNC(BufferView)               \
-    FUNC(CommandBuffer)            \
     FUNC(CommandPool)              \
     FUNC(DescriptorPool)           \
     FUNC(DescriptorSetLayout)      \
@@ -94,6 +93,7 @@ class WrappedObject : angle::NonCopyable
 enum class HandleType
 {
     Invalid,
+    CommandBuffer,
     ANGLE_HANDLE_TYPES_X(ANGLE_COMMA_SEP_FUNC)
 };
 
@@ -101,6 +101,10 @@ enum class HandleType
 
 #define ANGLE_PRE_DECLARE_CLASS_FUNC(TYPE) class TYPE;
 ANGLE_HANDLE_TYPES_X(ANGLE_PRE_DECLARE_CLASS_FUNC)
+namespace priv
+{
+class CommandBuffer;
+}  // namespace priv
 #undef ANGLE_PRE_DECLARE_CLASS_FUNC
 
 // Returns the HandleType of a Vk Handle.
@@ -115,6 +119,11 @@ struct HandleTypeHelper;
     };
 
 ANGLE_HANDLE_TYPES_X(ANGLE_HANDLE_TYPE_HELPER_FUNC)
+template <>
+struct HandleTypeHelper<priv::CommandBuffer>
+{
+    constexpr static HandleType kHandleType = HandleType::CommandBuffer;
+};
 
 #undef ANGLE_HANDLE_TYPE_HELPER_FUNC
 
@@ -141,6 +150,9 @@ class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
                          const VkComputePipelineCreateInfo &createInfo,
                          const PipelineCache &pipelineCacheVk);
 };
+
+namespace priv
+{
 
 // Helper class that wraps a Vulkan command buffer.
 class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
@@ -292,6 +304,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
 };
+
+}  // namespace priv
 
 class Image final : public WrappedObject<Image, VkImage>
 {
@@ -518,6 +532,9 @@ ANGLE_INLINE VkResult CommandPool::init(VkDevice device, const VkCommandPoolCrea
     return vkCreateCommandPool(device, &createInfo, nullptr, &mHandle);
 }
 
+namespace priv
+{
+
 // CommandBuffer implementation.
 ANGLE_INLINE VkCommandBuffer CommandBuffer::releaseHandle()
 {
@@ -715,7 +732,7 @@ ANGLE_INLINE void CommandBuffer::bindDescriptorSets(VkPipelineBindPoint bindPoin
 }
 
 ANGLE_INLINE void CommandBuffer::executeCommands(uint32_t commandBufferCount,
-                                                 const vk::CommandBuffer *commandBuffers)
+                                                 const CommandBuffer *commandBuffers)
 {
     ASSERT(valid());
     vkCmdExecuteCommands(mHandle, commandBufferCount, commandBuffers[0].ptr());
@@ -895,6 +912,8 @@ ANGLE_INLINE void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
     ASSERT(valid());
     vkCmdBindVertexBuffers(mHandle, firstBinding, bindingCount, buffers, offsets);
 }
+
+}  // namespace priv
 
 // Image implementation.
 ANGLE_INLINE void Image::setHandle(VkImage handle)

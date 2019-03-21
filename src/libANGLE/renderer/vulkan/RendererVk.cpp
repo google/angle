@@ -1324,7 +1324,7 @@ angle::Result RendererVk::finish(vk::Context *context)
     {
         TRACE_EVENT0("gpu.angle", "RendererVk::finish");
 
-        vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
+        vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(mDevice);
         ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
         angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> waitSemaphores;
@@ -1434,7 +1434,7 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 
 angle::Result RendererVk::submitFrame(vk::Context *context,
                                       const VkSubmitInfo &submitInfo,
-                                      vk::CommandBuffer &&commandBuffer)
+                                      vk::PrimaryCommandBuffer &&commandBuffer)
 {
     TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
 
@@ -1557,7 +1557,8 @@ vk::CommandGraph *RendererVk::getCommandGraph()
     return &mCommandGraph;
 }
 
-angle::Result RendererVk::flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch)
+angle::Result RendererVk::flushCommandGraph(vk::Context *context,
+                                            vk::PrimaryCommandBuffer *commandBatch)
 {
     return mCommandGraph.submitCommands(context, mCurrentQueueSerial, &mRenderPassCache,
                                         &mCommandPool, commandBatch);
@@ -1572,7 +1573,7 @@ angle::Result RendererVk::flush(vk::Context *context)
 
     TRACE_EVENT0("gpu.angle", "RendererVk::flush");
 
-    vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
+    vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(mDevice);
     ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
     angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> waitSemaphores;
@@ -1742,8 +1743,8 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
     ANGLE_TRY(timestampQueryPool.get().allocateQuery(context, &timestampQuery));
 
     // Record the command buffer
-    vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
-    vk::CommandBuffer &commandBuffer = commandBatch.get();
+    vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(mDevice);
+    vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
     VkCommandBufferAllocateInfo commandBufferInfo = {};
     commandBufferInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -1948,8 +1949,8 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
         ANGLE_VK_TRY(context, gpuDone.get().reset(mDevice));
 
         // Record the command buffer
-        vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
-        vk::CommandBuffer &commandBuffer = commandBatch.get();
+        vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(mDevice);
+        vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
         VkCommandBufferAllocateInfo commandBufferInfo = {};
         commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -2069,7 +2070,7 @@ angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
 }
 
 angle::Result RendererVk::traceGpuEventImpl(vk::Context *context,
-                                            vk::CommandBuffer *commandBuffer,
+                                            vk::PrimaryCommandBuffer *commandBuffer,
                                             char phase,
                                             const char *name)
 {

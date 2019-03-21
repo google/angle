@@ -862,7 +862,7 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
             // Ensure the image is in read-only layout
             if (image.isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
             {
-                CommandBufferT *srcLayoutChange;
+                vk::CommandBuffer *srcLayoutChange;
                 ANGLE_TRY(image.recordCommands(contextVk, &srcLayoutChange));
 
                 image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT,
@@ -910,7 +910,8 @@ void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
     }
 }
 
-angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk, CommandBufferT *commandBuffer)
+angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
+                                              vk::CommandBuffer *commandBuffer)
 {
     // Can probably use better dirty bits here.
 

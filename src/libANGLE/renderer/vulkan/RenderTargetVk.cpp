@@ -53,7 +53,7 @@ void RenderTargetVk::reset()
 }
 
 void RenderTargetVk::onColorDraw(vk::FramebufferHelper *framebufferVk,
-                                 CommandBufferT *commandBuffer,
+                                 vk::CommandBuffer *commandBuffer,
                                  vk::RenderPassDesc *renderPassDesc)
 {
     ASSERT(commandBuffer->valid());
@@ -71,7 +71,7 @@ void RenderTargetVk::onColorDraw(vk::FramebufferHelper *framebufferVk,
 }
 
 void RenderTargetVk::onDepthStencilDraw(vk::FramebufferHelper *framebufferVk,
-                                        CommandBufferT *commandBuffer,
+                                        vk::CommandBuffer *commandBuffer,
                                         vk::RenderPassDesc *renderPassDesc)
 {
     ASSERT(commandBuffer->valid());
@@ -135,7 +135,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
 
 vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readingResource,
                                                  vk::ImageLayout layout,
-                                                 CommandBufferT *commandBuffer)
+                                                 vk::CommandBuffer *commandBuffer)
 {
     ASSERT(mImage && mImage->valid());
 
@@ -145,7 +145,7 @@ vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readi
     //
     // if (mImage->isLayoutChangeNecessary(layout)
     // {
-    //     CommandBufferT *srcLayoutChange;
+    //     vk::CommandBuffer *srcLayoutChange;
     //     ANGLE_TRY(mImage->recordCommands(contextVk, &srcLayoutChange));
     //     mImage->changeLayout(mImage->getAspectFlags(), layout, srcLayoutChange);
     // }

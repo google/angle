@@ -548,7 +548,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
                                              &member.imageView, 0, 1));
 
         // Allocate a command buffer for clearing our images to black.
-        CommandBufferT *commandBuffer = nullptr;
+        vk::CommandBuffer *commandBuffer = nullptr;
         ANGLE_TRY(member.image.recordCommands(displayVk, &commandBuffer));
 
         // Set transfer dest layout, and clear the image to black.
@@ -571,7 +571,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
         VkClearDepthStencilValue depthStencilClearValue = {1.0f, 0};
 
         // Clear the image.
-        CommandBufferT *commandBuffer = nullptr;
+        vk::CommandBuffer *commandBuffer = nullptr;
         ANGLE_TRY(mDepthStencilImage.recordCommands(displayVk, &commandBuffer));
         mDepthStencilImage.clearDepthStencil(aspect, aspect, depthStencilClearValue, commandBuffer);
 
@@ -706,7 +706,7 @@ angle::Result WindowSurfaceVk::present(DisplayVk *displayVk,
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    CommandBufferT *swapCommands = nullptr;
+    vk::CommandBuffer *swapCommands = nullptr;
     ANGLE_TRY(image.image.recordCommands(displayVk, &swapCommands));
 
     image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, swapCommands);

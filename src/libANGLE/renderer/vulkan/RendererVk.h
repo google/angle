@@ -183,7 +183,7 @@ class RendererVk : angle::NonCopyable
     // The events are queued until the query results are available.  Possible values for `phase`
     // are TRACE_EVENT_PHASE_*
     ANGLE_INLINE angle::Result traceGpuEvent(vk::Context *context,
-                                             vk::CommandBuffer *commandBuffer,
+                                             vk::PrimaryCommandBuffer *commandBuffer,
                                              char phase,
                                              const char *name)
     {
@@ -227,16 +227,16 @@ class RendererVk : angle::NonCopyable
         angle::FixedVector<VkPipelineStageFlags, kMaxWaitSemaphores> *waitStageMasks);
     angle::Result submitFrame(vk::Context *context,
                               const VkSubmitInfo &submitInfo,
-                              vk::CommandBuffer &&commandBuffer);
+                              vk::PrimaryCommandBuffer &&commandBuffer);
     void freeAllInFlightResources();
-    angle::Result flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch);
+    angle::Result flushCommandGraph(vk::Context *context, vk::PrimaryCommandBuffer *commandBatch);
     void initFeatures(const ExtensionNameList &extensions);
     void initPipelineCacheVkKey();
     angle::Result initPipelineCache(DisplayVk *display);
 
     angle::Result synchronizeCpuGpuTime(vk::Context *context);
     angle::Result traceGpuEventImpl(vk::Context *context,
-                                    vk::CommandBuffer *commandBuffer,
+                                    vk::PrimaryCommandBuffer *commandBuffer,
                                     char phase,
                                     const char *name);
     angle::Result checkCompletedGpuEvents(vk::Context *context);

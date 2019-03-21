@@ -246,7 +246,7 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
                                      uint32_t copyCount,
                                      const VkBufferCopy *copies)
 {
-    CommandBufferT *commandBuffer;
+    vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(mBuffer.recordCommands(contextVk, &commandBuffer));
     commandBuffer->copyBuffer(mBuffer.getBuffer(), destBuffer->getBuffer(), copyCount, copies);
 
