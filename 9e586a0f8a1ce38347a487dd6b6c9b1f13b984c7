@@ -160,6 +160,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b43b97ae_077c7dd1",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-21T21:51:03Z",
+      "side": 1,
+      "message": "Oh, I see now.\n\nI have been building Linux and Android from Chromium src/:\n\nLinux:\ntimvp@timvp:~/code/chromium/src$ autoninja -v -C out/LinuxDebug angle_end2end_tests\nAndroid:\ntimvp@timvp:~/code/chromium/src$ autoninja -v -C out/Debug angle_end2end_tests\n\nBut instead, when I change auto-generated stuff, I need to build Linux in angle/ with:\n\ntimvp@timvp:~/code/chromium/src/third_party/angle$ gn args out/LinuxDebug\ntimvp@timvp:~/code/chromium/src/third_party/angle$ autoninja -v -C out/LinuxDebug angle_end2end_tests\ntimvp@timvp:~/code/chromium/src/third_party/angle$ python scripts/run_code_generation.py\n\nThat seems like it should work since we are always telling it where out/ is relative to where we are issuing the command.",
+      "parentUuid": "ce8412e2_d3520dc9",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
