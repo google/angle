@@ -16,6 +16,24 @@
       "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9a88f8f_ced3fe35",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-21T21:03:39Z",
+      "side": 0,
+      "message": "Yes, we need to return the correct error code based on what\u0027s passed in to pass the test.\n\nIn this case I also think it\u0027s the right thing to do, since I would argue that we should be making sure the parameters are valid before trying to use them.   Calling things like GetInternalFormatInfo() should be avoided for invalid formats/types, for example.   That lets us avoid hitting code that\u0027s rarely (if ever) exercised by bad parameters and reduces the chances for bugs caused by missing error handling deeper within ANGLE.\n\nAdditionally, it\u0027s easier for us to conform and follow what the rest of the industry is doing (i.e., passing dEQP as it currently is), since maintaining exclusion lists in Android/Chromium, opening Khronos bugs, asking for waivers, etc. are all more work than just fixing ANGLE.   This also gives developers an expected behavior, since dEQP has implicitly enforced an order of operations and what is checked when, even if they don\u0027t exactly realize it.",
+      "parentUuid": "5d157f4a_33edc06f",
+      "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
