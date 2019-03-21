@@ -70,6 +70,24 @@
       "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0bcfa20_aa88588f",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-21T21:11:58Z",
+      "side": 1,
+      "message": "It probably works as long as you have the right development setup.",
+      "parentUuid": "c2c5d855_f550afef",
+      "revId": "9e586a0f8a1ce38347a487dd6b6c9b1f13b984c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
