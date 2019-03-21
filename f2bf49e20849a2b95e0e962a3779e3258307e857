@@ -52,6 +52,24 @@
       "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8210eedc_0a44e9d5",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-03-21T22:14:03Z",
+      "side": 0,
+      "message": "I agree with changing ANGLE.  The 3.2 spec explicitly allows an implementation to pick which error to return, if there are multiple errors.  However, if dEQP wants to pick an order, it\u0027s easiest for us to comply:-).",
+      "parentUuid": "b2445edc_12e88282",
+      "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
