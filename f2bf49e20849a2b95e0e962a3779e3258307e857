@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d157f4a_33edc06f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-21T20:10:59Z",
+      "side": 0,
+      "message": "Are these moved for the sole purpose of returning `GL_INVALID_VALUE` with invalid `internalformat` instead of some other error? If there are multiple error conditions, does GL even specify what error has precedence over what?\n\nSeems to me like the test should be fixed to expect any of the valid error codes as they violate multiple error conditions by providing an invalid `internalformat`.",
+      "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
