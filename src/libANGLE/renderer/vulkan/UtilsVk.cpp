@@ -316,8 +316,6 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
     RendererVk *renderer = context->getRenderer();
 
     bool isCompute = function >= Function::ComputeStartIndex;
-    VkPipelineBindPoint bindPoint =
-        isCompute ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
     VkShaderStageFlags pushConstantsShaderStage =
         isCompute ? VK_SHADER_STAGE_COMPUTE_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
 
@@ -336,6 +334,10 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
         ANGLE_TRY(program->getComputePipeline(context, pipelineLayout.get(), &pipelineAndSerial));
         pipelineAndSerial->updateSerial(serial);
         commandBuffer->bindComputePipeline(pipelineAndSerial->get());
+        if (descriptorSet != VK_NULL_HANDLE)
+        {
+            commandBuffer->bindComputeDescriptorSets(pipelineLayout.get(), &descriptorSet);
+        }
     }
     else
     {
@@ -351,12 +353,11 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
             pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), &descPtr, &helper));
         helper->updateSerial(serial);
         commandBuffer->bindGraphicsPipeline(helper->getPipeline());
-    }
-
-    if (descriptorSet != VK_NULL_HANDLE)
-    {
-        commandBuffer->bindDescriptorSets(bindPoint, pipelineLayout.get(), 0, 1, &descriptorSet, 0,
-                                          nullptr);
+        if (descriptorSet != VK_NULL_HANDLE)
+        {
+            commandBuffer->bindGraphicsDescriptorSets(pipelineLayout.get(), 0, 1, &descriptorSet, 0,
+                                                      nullptr);
+        }
     }
 
     commandBuffer->pushConstants(pipelineLayout.get(), pushConstantsShaderStage, 0,
