@@ -1404,8 +1404,6 @@ TEST_P(SimpleStateChangeTest, RedefineBufferInUse)
 // Tests updating a buffer's contents while in use, without redefining it.
 TEST_P(SimpleStateChangeTest, UpdateBufferInUse)
 {
-    // tobine: Started failing w/ custom cmd buffers. http://anglebug.com/3255
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsVulkan());
     std::vector<GLColor> redColorData(6, GLColor::red);
 
     GLBuffer buffer;

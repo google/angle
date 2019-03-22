@@ -24,7 +24,6 @@ namespace rx
 
 namespace vk
 {
-
 enum class VisitedState
 {
     Unvisited,
@@ -120,11 +119,9 @@ class CommandGraphNode final : angle::NonCopyable
     static void SetHappensBeforeDependencies(CommandGraphNode **beforeNodes,
                                              size_t beforeNodesCount,
                                              CommandGraphNode *afterNode);
-
     static void SetHappensBeforeDependencies(CommandGraphNode *beforeNode,
                                              CommandGraphNode **afterNodes,
                                              size_t afterNodesCount);
-
     bool hasParents() const;
     bool hasChildren() const { return mHasChildren; }
 

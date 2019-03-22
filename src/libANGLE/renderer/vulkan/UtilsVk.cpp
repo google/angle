@@ -335,7 +335,7 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
         program->setShader(gl::ShaderType::Compute, fsCsShader);
         ANGLE_TRY(program->getComputePipeline(context, pipelineLayout.get(), &pipelineAndSerial));
         pipelineAndSerial->updateSerial(serial);
-        commandBuffer->bindComputePipeline(pipelineAndSerial->get());
+        commandBuffer->bindPipeline(bindPoint, pipelineAndSerial->get());
     }
     else
     {
@@ -350,7 +350,7 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
             context, &renderer->getRenderPassCache(), renderer->getPipelineCache(), serial,
             pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), &descPtr, &helper));
         helper->updateSerial(serial);
-        commandBuffer->bindGraphicsPipeline(helper->getPipeline());
+        commandBuffer->bindPipeline(bindPoint, helper->getPipeline());
     }
 
     if (descriptorSet != VK_NULL_HANDLE)
@@ -657,7 +657,9 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
                            &mImageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
-    commandBuffer->draw(6, 0);
+
+    commandBuffer->draw(6, 1, 0, 0);
+
     return angle::Result::Continue;
 }
 
@@ -781,7 +783,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     ANGLE_TRY(setupProgram(contextVk, Function::ImageCopy, fragmentShader, vertexShader,
                            &mImageCopyPrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
-    commandBuffer->draw(6, 0);
+
+    commandBuffer->draw(6, 1, 0, 0);
+
     descriptorPoolBinding.reset();
 
     return angle::Result::Continue;

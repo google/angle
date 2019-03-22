@@ -424,7 +424,7 @@ angle::Result FramebufferVk::blitWithCopy(ContextVk *contextVk,
     VkImageAspectFlags aspectMask =
         vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
 
-    CommandBufferT *commandBuffer = nullptr;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     vk::ImageHelper *writeImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
@@ -509,7 +509,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     // Reinitialize the commandBuffer after a read pixels because it calls
     // renderer->finish which makes command buffers obsolete.
-    CommandBufferT *commandBuffer = nullptr;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     // We read the bytes of the image in a buffer, now we have to copy them into the
@@ -669,7 +669,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
 
     vk::ImageHelper *dstImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
 
-    CommandBufferT *commandBuffer = nullptr;
+    CommandBufferT *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     const vk::Format &readImageFormat = readRenderTarget->getImageFormat();
@@ -903,8 +903,8 @@ angle::Result FramebufferVk::clearWithClearAttachments(
 
     // This command can only happen inside a render pass, so obtain one if its already happening
     // or create a new one if not.
-    CommandBufferT *commandBuffer = nullptr;
-    vk::RecordingMode mode        = vk::RecordingMode::Start;
+    CommandBufferT *commandBuffer    = nullptr;
+    vk::RecordingMode mode           = vk::RecordingMode::Start;
     ANGLE_TRY(getCommandBufferForDraw(contextVk, &commandBuffer, &mode));
 
     // The array layer is offset by the ImageView. So we shouldn't need to set a base array layer.
