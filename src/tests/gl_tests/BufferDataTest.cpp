@@ -561,6 +561,19 @@ TEST_P(BufferDataOverflowTest, VertexBufferIntegerOverflow)
     EXPECT_GL_NO_ERROR();
     glDrawArrays(GL_TRIANGLES, 0, numItems);
     EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+
+    // Test that a small draw still works.
+    for (GLsizei bufferIndex = 0; bufferIndex < bufferCnt; ++bufferIndex)
+    {
+        std::stringstream attribNameStr;
+        attribNameStr << "attrib" << bufferIndex;
+        GLint attribLocation = glGetAttribLocation(program.get(), attribNameStr.str().c_str());
+        ASSERT_NE(-1, attribLocation);
+        glDisableVertexAttribArray(attribLocation);
+    }
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_ERROR(GL_NO_ERROR);
 }
 
 // Tests a security bug in our CopyBufferSubData validation (integer overflow).
