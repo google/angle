@@ -19,8 +19,8 @@
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
-#include "gpu_test_expectations_parser.h"
 #include "platform/Platform.h"
+#include "tests/test_expectations/gpu_test_expectations_parser.h"
 #include "util/system_utils.h"
 
 namespace

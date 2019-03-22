@@ -46,4 +46,4 @@ void GetOperatingSystemVersionNumbers(int32_t *major_version,
 #endif
 }
 
-} // namespace angle
+}  // namespace angle

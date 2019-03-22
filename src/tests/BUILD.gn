@@ -659,26 +659,34 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     }
   }
 
-  config("angle_deqp_gtest_support_config") {
-    include_dirs = [ "third_party/gpu_test_expectations" ]
+  config("angle_deqp_test_expectations_config") {
+    include_dirs = [ "${angle_root}:angle_common" ]
+  }
+
+  angle_static_library("angle_deqp_test_expectations") {
+    public_configs += [ ":angle_deqp_test_expectations_config" ]
+    public_deps = [
+      "${angle_root}:angle_common",
+      "${angle_root}:angle_util",
+    ]
+    sources = deqp_test_expectations_sources
+    if (is_mac) {
+      sources += deqp_test_expectations_sources_mac
+      libs = [ "Cocoa.framework" ]
+    }
   }
 
   angle_source_set("angle_deqp_gtest_support") {
     testonly = true
 
     public_deps = [
+      ":angle_deqp_test_expectations",
       ":angle_deqp_tests_main",
       "${angle_root}:angle_common",
       "${angle_root}:angle_util",
     ]
 
-    public_configs += [ ":angle_deqp_gtest_support_config" ]
-
-    sources = deqp_gpu_test_expectations_sources
-    if (is_mac) {
-      sources += deqp_gpu_test_expectations_sources_mac
-      libs = [ "Cocoa.framework" ]
-    }
+    libs = []
 
     if (!is_android) {
       public_deps += [ "${angle_root}:angle_gpu_info_util" ]
