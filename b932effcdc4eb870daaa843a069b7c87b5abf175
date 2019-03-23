@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70fda385_f2143146",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3308,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-23T02:18:15Z",
+      "side": 1,
+      "message": "Looks like a significant thing to be missing from the front-end! Maybe Geoff or Jamie can tell if this functionality is expected to be happening in some other way.",
+      "revId": "b932effcdc4eb870daaa843a069b7c87b5abf175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
