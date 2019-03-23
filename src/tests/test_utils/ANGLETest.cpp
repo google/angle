@@ -171,14 +171,6 @@ const char *GetColorName(GLColor color)
 
 bool ShouldAlwaysForceNewDisplay()
 {
-#if defined(ANGLE_PLATFORM_WINDOWS)
-    // Work around a buffer allocation crash that shows up on Windows 7 x64 NVIDIA bots.
-    // See http://crbug.com/944454 for more information.
-    if (!IsWindows10OrGreater())
-    {
-        return true;
-    }
-#endif  // defined(ANGLE_PLATFORM_WINDOWS)
     // We prefer to reuse config displays. This is faster and solves a driver issue where creating
     // many displays causes crashes. However this exposes other driver bugs on many other platforms.
     // Conservatively enable the feature only on Windows Intel and NVIDIA for now.
