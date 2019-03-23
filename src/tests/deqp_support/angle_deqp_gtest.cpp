@@ -47,7 +47,14 @@ std::string DrawElementsToGoogleTestName(const std::string &dEQPName)
     return gTestName;
 }
 
+// We look for a GLES Khronos master list first. We keep the Android CTS so we can locate a version
+// of egl-master.txt that has the full list of tests.
 const char *gCaseListSearchPaths[] = {
+    "/../../third_party/deqp/src/external/openglcts/data/mustpass/gles/aosp_mustpass/master/",
+    "/../../third_party/angle/third_party/deqp/src/external/openglcts/data/mustpass/gles/"
+    "aosp_mustpass/master/",
+    "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/external/openglcts/"
+    "data/mustpass/gles/aosp_mustpass/master/",
     "/../../third_party/deqp/src/android/cts/master/",
     "/../../third_party/angle/third_party/deqp/src/android/cts/master/",
     "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/android/cts/master/",

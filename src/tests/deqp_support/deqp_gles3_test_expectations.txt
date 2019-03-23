@@ -82,6 +82,9 @@
 1436 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.textureprojgradoffset.sampler2dshadow_vertex = FAIL
 1436 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.textureprojgradoffset.sampler2dshadow_fragment = FAIL
 
+// DrawBuffers test failing on D3D11.
+3298 WIN D3D11 : dEQP-GLES3.functional.shaders.fragdata.draw_buffers = FAIL
+
 // TODO(jmadill, cwallez): triage the failures below into permanent and temporary failures
 
 // Quadro P400
@@ -97,6 +100,10 @@
 
 // Failing everywhere
 2322 DEBUG RELEASE : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
+
+// Bind aliasing is not working currently
+3252 DEBUG RELEASE : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
+3252 DEBUG RELEASE : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
 // Windows and Linux failures
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
@@ -170,6 +177,19 @@
 
 // Very small threshold issue. Could upstream a higher tolerance to dEQP.
 2323 WIN D3D11 : dEQP-GLES3.functional.texture.units.2_units.only_cube.7 = FAIL
+
+// Blit related failures on D3D11
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_x = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_y = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_x = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_y = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_linear = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_x_linear = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_y_linear = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_dst_x_linear = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_dst_y_linear = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_linear = FAIL
+3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_linear = FAIL
 
 // Windows AMD specific failures
 1633 WIN D3D11 AMD : dEQP-GLES3.functional.fbo.blit.depth_stencil.depth24_stencil8_scale = FAIL
@@ -310,6 +330,13 @@
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_vertex = FAIL
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_fragment = FAIL
 
+// Polygon offset failures
+3304 LINUX OPENGL : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
+3304 LINUX OPENGL : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
+
+// Flaky test
+3305 LINUX OPENGL : dEQP-GLES3.functional.shaders.builtin_functions.common.uintbitstofloat.uint_highp_vertex = FAIL
+
 // Linux Intel specific
 2349 LINUX OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.default_framebuffer* = FAIL
 
@@ -445,6 +472,13 @@
 2567 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
 2567 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.red_unsigned_byte = FAIL
 2567 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rg_unsigned_byte = FAIL
+
+// Nexus 5x failures
+3308 ANDROID GLES : dEQP-GLES3.functional.polygon_offset.default_result_depth_clamp = FAIL
+3308 ANDROID GLES : dEQP-GLES3.functional.polygon_offset.fixed24_result_depth_clamp = FAIL
+3308 ANDROID GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.lines.3 = FAIL
+3308 ANDROID GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.8 = FAIL
+3308 ANDROID GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.10 = FAIL
 
 // Seems to fail on all desktop GL
 2960 OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8 = FAIL

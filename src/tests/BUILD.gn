@@ -758,10 +758,16 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "deqp_support/angle_deqp_gtest.cpp",
       ]
 
+      # Use the master lists from the Khronos version for GLES. For EGL the Khronos lists use wildcards.
+      mustpass_dir = "external/openglcts/data/mustpass/gles/aosp_mustpass"
+      if (api_name == "egl") {
+        mustpass_dir = "android/cts"
+      }
+
       data = [
-        "deqp_support/deqp_${api_name}_test_expectations.txt",
-        "$angle_root/third_party/deqp/src/android/cts/master/${api_name}-master.txt",
+        "$angle_root/third_party/deqp/src/$mustpass_dir/master/${api_name}-master.txt",
         "$angle_root/third_party/deqp/src/data/",
+        "deqp_support/deqp_${api_name}_test_expectations.txt",
       ]
 
       if (is_android) {
