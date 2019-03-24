@@ -110,6 +110,8 @@ bool IsQualcomm(VendorID vendorId);
 bool IsVeriSilicon(VendorID vendorId);
 bool IsVivante(VendorID vendorId);
 
+// Dumps the system info to stdout.
+void PrintSystemInfo(const SystemInfo &info);
 }  // namespace angle
 
 #endif  // GPU_INFO_UTIL_SYSTEM_INFO_H_

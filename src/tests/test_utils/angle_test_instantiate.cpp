@@ -78,6 +78,13 @@ SystemInfo *GetTestSystemInfo()
         {
             std::cerr << "Warning: incomplete system info collection.\n";
         }
+
+        // Print complete system info when available.
+        // Seems to trip up Android test expectation parsing.
+        if (!IsAndroid())
+        {
+            PrintSystemInfo(*sSystemInfo);
+        }
     }
     return sSystemInfo;
 }
