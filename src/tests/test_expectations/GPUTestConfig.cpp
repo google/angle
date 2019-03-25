@@ -1,24 +1,27 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+//#if
+
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
 
-#include "gpu_test_config.h"
+#include "GPUTestConfig.h"
 
 #include <stddef.h>
 #include <stdint.h>
 
-#include "gpu_info.h"
-#include "gpu_test_expectations_parser.h"
+#include "GPUInfo.h"
+#include "GPUTestExpectationsParser.h"
 
-#if defined(OS_MACOSX)
-#    include "gpu_test_config_mac.h"
+#if defined(ANGLE_PLATFORM_APPLE)
+#    include "GPUTestConfig_mac.h"
 #endif
 
-#if !defined(OS_ANDROID)
+#if !defined(ANGLE_PLATFORM_ANDROID)
 #    include "gpu_info_util/SystemInfo.h"
 #endif
 
-#if defined(OS_WIN)
+#if defined(ANGLE_PLATFORM_WINDOWS)
 
 namespace base
 {
@@ -51,9 +54,9 @@ void SysInfo::OperatingSystemVersionNumbers(int32_t *major_version,
 }  // anonymous namespace
 }  // namespace base
 
-#endif  // defined(OS_WIN)
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
-namespace gpu
+namespace angle
 {
 
 namespace
@@ -61,11 +64,9 @@ namespace
 
 GPUTestConfig::OS GetCurrentOS()
 {
-#if defined(OS_CHROMEOS)
-    return GPUTestConfig::kOsChromeOS;
-#elif defined(OS_LINUX) || defined(OS_OPENBSD)
+#if defined(ANGLE_PLATFORM_LINUX)
     return GPUTestConfig::kOsLinux;
-#elif defined(OS_WIN)
+#elif defined(ANGLE_PLATFORM_WINDOWS)
     int32_t major_version  = 0;
     int32_t minor_version  = 0;
     int32_t bugfix_version = 0;
@@ -80,7 +81,7 @@ GPUTestConfig::OS GetCurrentOS()
         return GPUTestConfig::kOsWin8;
     if (major_version == 10)
         return GPUTestConfig::kOsWin10;
-#elif defined(OS_MACOSX)
+#elif defined(ANGLE_PLATFORM_APPLE)
     int32_t major_version  = 0;
     int32_t minor_version  = 0;
     int32_t bugfix_version = 0;
@@ -111,15 +112,15 @@ GPUTestConfig::OS GetCurrentOS()
                 return GPUTestConfig::kOsMacMojave;
         }
     }
-#elif defined(OS_ANDROID)
+#elif defined(ANGLE_PLATFORM_ANDROID)
     return GPUTestConfig::kOsAndroid;
-#elif defined(OS_FUCHSIA)
+#elif defined(ANGLE_PLATFORM_FUCHSIA)
     return GPUTestConfig::kOsFuchsia;
 #endif
     return GPUTestConfig::kOsUnknown;
 }
 
-#if !defined(OS_ANDROID)
+#if !defined(ANGLE_PLATFORM_ANDROID)
 bool CollectBasicGraphicsInfo(GPUInfo *gpu_info)
 {
     angle::SystemInfo info;
@@ -141,7 +142,7 @@ bool CollectBasicGraphicsInfo(GPUInfo *gpu_info)
     gpu_info->gpu.active = true;
     return false;
 }
-#endif  // defined(OS_ANDROID)
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
 }  // namespace
 
 GPUTestConfig::GPUTestConfig()
@@ -158,15 +159,15 @@ GPUTestConfig::~GPUTestConfig() = default;
 
 void GPUTestConfig::set_os(int32_t os)
 {
-    DCHECK_EQ(0, os & ~(kOsAndroid | kOsWin | kOsMac | kOsLinux | kOsChromeOS | kOsFuchsia));
+    ASSERT((0) == (os & ~(kOsAndroid | kOsWin | kOsMac | kOsLinux | kOsFuchsia)));
     os_ = os;
 }
 
 void GPUTestConfig::AddGPUVendor(uint32_t gpu_vendor)
 {
-    DCHECK_NE(0u, gpu_vendor);
+    ASSERT((0u) != (gpu_vendor));
     for (size_t i = 0; i < gpu_vendor_.size(); ++i)
-        DCHECK_NE(gpu_vendor_[i], gpu_vendor);
+        ASSERT((gpu_vendor_[i]) != (gpu_vendor));
     gpu_vendor_.push_back(gpu_vendor);
 }
 
@@ -177,13 +178,13 @@ void GPUTestConfig::set_gpu_device_id(uint32_t id)
 
 void GPUTestConfig::set_build_type(int32_t build_type)
 {
-    DCHECK_EQ(0, build_type & ~(kBuildTypeRelease | kBuildTypeDebug));
+    ASSERT((0) == (build_type & ~(kBuildTypeRelease | kBuildTypeDebug)));
     build_type_ = build_type;
 }
 
 void GPUTestConfig::set_api(int32_t api)
 {
-    DCHECK_EQ(0, api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES | kAPIVulkan));
+    ASSERT((0) == (api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES | kAPIVulkan)));
     api_ = api;
 }
 
@@ -198,8 +199,8 @@ bool GPUTestConfig::IsValid() const
 
 bool GPUTestConfig::OverlapsWith(const GPUTestConfig &config) const
 {
-    DCHECK(IsValid());
-    DCHECK(config.IsValid());
+    ASSERT(IsValid());
+    ASSERT(config.IsValid());
     if (config.os_ != kOsUnknown && os_ != kOsUnknown && (os_ & config.os_) == 0)
         return false;
     if (config.gpu_vendor_.size() > 0 && gpu_vendor_.size() > 0)
@@ -244,13 +245,13 @@ GPUTestBotConfig::~GPUTestBotConfig() = default;
 
 void GPUTestBotConfig::AddGPUVendor(uint32_t gpu_vendor)
 {
-    DCHECK_EQ(0u, GPUTestConfig::gpu_vendor().size());
+    ASSERT((0u) == (GPUTestConfig::gpu_vendor().size()));
     GPUTestConfig::AddGPUVendor(gpu_vendor);
 }
 
 bool GPUTestBotConfig::SetGPUInfo(const GPUInfo &gpu_info)
 {
-    DCHECK(validate_gpu_info_);
+    ASSERT(validate_gpu_info_);
     if (gpu_info.gpu.device_id == 0 || gpu_info.gpu.vendor_id == 0)
         return false;
     ClearGPUVendor();
@@ -279,7 +280,6 @@ bool GPUTestBotConfig::IsValid() const
         case kOsMacHighSierra:
         case kOsMacMojave:
         case kOsLinux:
-        case kOsChromeOS:
         case kOsAndroid:
         case kOsFuchsia:
             break;
@@ -306,8 +306,8 @@ bool GPUTestBotConfig::IsValid() const
 
 bool GPUTestBotConfig::Matches(const GPUTestConfig &config) const
 {
-    DCHECK(IsValid());
-    DCHECK(config.IsValid());
+    ASSERT(IsValid());
+    ASSERT(config.IsValid());
     if (config.os() != kOsUnknown && (os() & config.os()) == 0)
         return false;
     if (config.gpu_vendor().size() > 0)
@@ -351,7 +351,7 @@ bool GPUTestBotConfig::LoadCurrentConfig(const GPUInfo *gpu_info)
         GPUInfo my_gpu_info;
         if (!CollectBasicGraphicsInfo(&my_gpu_info))
         {
-            LOG(ERROR) << "Fail to identify GPU\n";
+            std::cerr << "Fail to identify GPU\n";
             DisableGPUInfoValidation();
             rt = true;
         }
@@ -367,7 +367,7 @@ bool GPUTestBotConfig::LoadCurrentConfig(const GPUInfo *gpu_info)
     set_os(GetCurrentOS());
     if (os() == kOsUnknown)
     {
-        LOG(ERROR) << "Unknown OS\n";
+        std::cerr << "Unknown OS\n";
         rt = false;
     }
 #if defined(NDEBUG)
@@ -407,4 +407,4 @@ bool GPUTestBotConfig::GpuBlacklistedOnBot()
     return false;
 }
 
-}  // namespace gpu
+}  // namespace angle

@@ -1,9 +1,11 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+//
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
 
-#ifndef ANGLE_GPU_CONFIG_GPU_TEST_EXPECTATIONS_PARSER_H_
-#define ANGLE_GPU_CONFIG_GPU_TEST_EXPECTATIONS_PARSER_H_
+#ifndef TEST_EXPECTATIONS_GPU_TEST_EXPECTATIONS_PARSER_H_
+#define TEST_EXPECTATIONS_GPU_TEST_EXPECTATIONS_PARSER_H_
 
 #include <stddef.h>
 #include <stdint.h>
@@ -11,12 +13,12 @@
 #include <string>
 #include <vector>
 
-#include "gpu_test_config.h"
+#include "GPUTestConfig.h"
 
-namespace gpu
+namespace angle
 {
 
-class GPU_EXPORT GPUTestExpectationsParser
+class GPUTestExpectationsParser
 {
   public:
     enum GPUTestExpectation
@@ -85,6 +87,6 @@ class GPU_EXPORT GPUTestExpectationsParser
     std::vector<std::string> error_messages_;
 };
 
-}  // namespace gpu
+}  // namespace angle
 
-#endif  // ANGLE_GPU_CONFIG_GPU_TEST_EXPECTATIONS_PARSER_H_
+#endif  // TEST_EXPECTATIONS_GPU_TEST_EXPECTATIONS_PARSER_H_

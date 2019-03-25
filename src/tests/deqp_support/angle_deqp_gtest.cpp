@@ -20,11 +20,15 @@
 #include "common/platform.h"
 #include "common/string_utils.h"
 #include "platform/Platform.h"
-#include "tests/test_expectations/gpu_test_expectations_parser.h"
+#include "tests/test_expectations/GPUTestExpectationsParser.h"
 #include "util/system_utils.h"
+
+namespace angle
+{
 
 namespace
 {
+
 bool gGlobalError = false;
 bool gExpectError = false;
 
@@ -81,15 +85,15 @@ const char *gTestExpectationsFiles[] = {
     "deqp_egl_test_expectations.txt",
 };
 
-using APIInfo = std::pair<const char *, gpu::GPUTestConfig::API>;
+using APIInfo = std::pair<const char *, angle::GPUTestConfig::API>;
 
 const APIInfo gEGLDisplayAPIs[] = {
-    {"angle-d3d9", gpu::GPUTestConfig::kAPID3D9},
-    {"angle-d3d11", gpu::GPUTestConfig::kAPID3D11},
-    {"angle-gl", gpu::GPUTestConfig::kAPIGLDesktop},
-    {"angle-gles", gpu::GPUTestConfig::kAPIGLES},
-    {"angle-null", gpu::GPUTestConfig::kAPIUnknown},
-    {"angle-vulkan", gpu::GPUTestConfig::kAPIVulkan},
+    {"angle-d3d9", angle::GPUTestConfig::kAPID3D9},
+    {"angle-d3d11", angle::GPUTestConfig::kAPID3D11},
+    {"angle-gl", angle::GPUTestConfig::kAPIGLDesktop},
+    {"angle-gles", angle::GPUTestConfig::kAPIGLES},
+    {"angle-null", angle::GPUTestConfig::kAPIUnknown},
+    {"angle-vulkan", angle::GPUTestConfig::kAPIVulkan},
 };
 
 const char *gdEQPEGLString  = "--deqp-egl-display-type=";
@@ -213,8 +217,8 @@ class dEQPCaseList
 
   private:
     std::vector<CaseInfo> mCaseInfoList;
-    gpu::GPUTestExpectationsParser mTestExpectationsParser;
-    gpu::GPUTestBotConfig mTestConfig;
+    angle::GPUTestExpectationsParser mTestExpectationsParser;
+    angle::GPUTestBotConfig mTestConfig;
     size_t mTestModuleIndex;
     bool mInitialized;
 };
@@ -296,7 +300,7 @@ void dEQPCaseList::initialize()
             continue;
 
         int expectation = mTestExpectationsParser.GetTestExpectation(dEQPName, mTestConfig);
-        if (expectation != gpu::GPUTestExpectationsParser::kGpuTestSkip)
+        if (expectation != angle::GPUTestExpectationsParser::kGpuTestSkip)
         {
             mCaseInfoList.push_back(CaseInfo(dEQPName, gTestName, expectation));
         }
@@ -357,7 +361,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
         const auto &caseInfo = GetCaseList().getCaseInfo(GetParam());
         std::cout << caseInfo.mDEQPName << std::endl;
 
-        gExpectError      = (caseInfo.mExpectation != gpu::GPUTestExpectationsParser::kGpuTestPass);
+        gExpectError = (caseInfo.mExpectation != angle::GPUTestExpectationsParser::kGpuTestPass);
         TestResult result = deqp_libtester_run(caseInfo.mDEQPName.c_str());
 
         bool testPassed = TestPassed(result);
@@ -369,7 +373,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
             gGlobalError = false;
         }
 
-        if (caseInfo.mExpectation == gpu::GPUTestExpectationsParser::kGpuTestPass)
+        if (caseInfo.mExpectation == angle::GPUTestExpectationsParser::kGpuTestPass)
         {
             EXPECT_TRUE(testPassed);
             sPasses += (testPassed ? 1u : 0u);
@@ -548,8 +552,6 @@ void DeleteArg(int *argc, int argIndex, char **argv)
 }  // anonymous namespace
 
 // Called from main() to process command-line arguments.
-namespace angle
-{
 void InitTestHarness(int *argc, char **argv)
 {
     int argIndex = 0;

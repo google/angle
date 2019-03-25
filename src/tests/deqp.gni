@@ -1144,14 +1144,14 @@ deqp_libtester_sources_android = [
   "$_deqp_path/framework/platform/android/tcuAndroidInternals.hpp",
 ]
 deqp_test_expectations_sources = [
-  "test_expectations/gpu_info.cpp",
-  "test_expectations/gpu_info.h",
-  "test_expectations/gpu_test_config.cpp",
-  "test_expectations/gpu_test_config.h",
-  "test_expectations/gpu_test_expectations_parser.cpp",
-  "test_expectations/gpu_test_expectations_parser.h",
+  "test_expectations/GPUInfo.cpp",
+  "test_expectations/GPUInfo.h",
+  "test_expectations/GPUTestConfig.cpp",
+  "test_expectations/GPUTestConfig.h",
+  "test_expectations/GPUTestExpectationsParser.cpp",
+  "test_expectations/GPUTestExpectationsParser.h",
 ]
 deqp_test_expectations_sources_mac = [
-  "test_expectations/gpu_test_config_mac.mm",
-  "test_expectations/gpu_test_config_mac.h",
+  "test_expectations/GPUTestConfig_mac.mm",
+  "test_expectations/GPUTestConfig_mac.h",
 ]

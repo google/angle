@@ -1,8 +1,10 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+//
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
 
-#include "gpu_test_expectations_parser.h"
+#include "GPUTestExpectationsParser.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -47,7 +49,7 @@ bool LowerCaseEqualsASCII(const std::string &a, const char *b)
 
 }  // namespace base
 
-namespace gpu
+namespace angle
 {
 
 namespace
@@ -230,10 +232,10 @@ bool NamesMatching(const std::string &ref, const std::string &test_name)
 GPUTestExpectationsParser::GPUTestExpectationsParser()
 {
     // Some sanity check.
-    DCHECK_EQ(static_cast<unsigned int>(kNumberOfExactMatchTokens),
-              sizeof(kTokenData) / sizeof(kTokenData[0]));
-    DCHECK_EQ(static_cast<unsigned int>(kNumberOfErrors),
-              sizeof(kErrorMessage) / sizeof(kErrorMessage[0]));
+    ASSERT((static_cast<unsigned int>(kNumberOfExactMatchTokens)) ==
+           (sizeof(kTokenData) / sizeof(kTokenData[0])));
+    ASSERT((static_cast<unsigned int>(kNumberOfErrors)) ==
+           (sizeof(kErrorMessage) / sizeof(kErrorMessage[0])));
 }
 
 GPUTestExpectationsParser::~GPUTestExpectationsParser() = default;
@@ -243,9 +245,8 @@ bool GPUTestExpectationsParser::LoadTestExpectations(const std::string &data)
     entries_.clear();
     error_messages_.clear();
 
-    std::vector<std::string> lines =
-        base::SplitString(data, "\n", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
-    bool rt = true;
+    std::vector<std::string> lines = SplitString(data, "\n", TRIM_WHITESPACE, SPLIT_WANT_ALL);
+    bool rt                        = true;
     for (size_t i = 0; i < lines.size(); ++i)
     {
         if (!ParseLine(lines[i], i + 1))
@@ -266,7 +267,7 @@ bool GPUTestExpectationsParser::LoadTestExpectationsFromFile(const std::string &
     error_messages_.clear();
 
     std::string data;
-    if (!base::ReadFileToString(path, &data))
+    if (!ReadFileToString(path, &data))
     {
         error_messages_.push_back(kErrorMessage[kErrorFileIO]);
         return false;
@@ -293,9 +294,9 @@ const std::vector<std::string> &GPUTestExpectationsParser::GetErrorMessages() co
 
 bool GPUTestExpectationsParser::ParseConfig(const std::string &config_data, GPUTestConfig *config)
 {
-    DCHECK(config);
-    std::vector<std::string> tokens = base::SplitString(
-        config_data, base::kWhitespaceASCII, base::KEEP_WHITESPACE, base::SPLIT_WANT_NONEMPTY);
+    ASSERT(config);
+    std::vector<std::string> tokens =
+        SplitString(config_data, kWhitespaceASCII, KEEP_WHITESPACE, SPLIT_WANT_NONEMPTY);
 
     for (size_t i = 0; i < tokens.size(); ++i)
     {
@@ -354,8 +355,8 @@ bool GPUTestExpectationsParser::ParseConfig(const std::string &config_data, GPUT
 
 bool GPUTestExpectationsParser::ParseLine(const std::string &line_data, size_t line_number)
 {
-    std::vector<std::string> tokens = base::SplitString(
-        line_data, base::kWhitespaceASCII, base::KEEP_WHITESPACE, base::SPLIT_WANT_NONEMPTY);
+    std::vector<std::string> tokens =
+        SplitString(line_data, kWhitespaceASCII, KEEP_WHITESPACE, SPLIT_WANT_NONEMPTY);
     int32_t stage = kLineParserBegin;
     GPUTestExpectationEntry entry;
     entry.line_number         = line_number;
@@ -477,7 +478,7 @@ bool GPUTestExpectationsParser::ParseLine(const std::string &line_data, size_t l
                     stage++;
                 break;
             default:
-                DCHECK(false);
+                ASSERT(false);
                 break;
         }
     }
@@ -504,7 +505,7 @@ bool GPUTestExpectationsParser::UpdateTestConfig(GPUTestConfig *config,
                                                  int32_t token,
                                                  size_t line_number)
 {
-    DCHECK(config);
+    ASSERT(config);
     switch (token)
     {
         case kConfigWinXP:
@@ -573,7 +574,7 @@ bool GPUTestExpectationsParser::UpdateTestConfig(GPUTestConfig *config,
             config->set_api(config->api() | kTokenData[token].flag);
             break;
         default:
-            DCHECK(false);
+            ASSERT(false);
             break;
     }
     return true;
@@ -583,9 +584,9 @@ bool GPUTestExpectationsParser::UpdateTestConfig(GPUTestConfig *config,
                                                  const std::string &gpu_device_id,
                                                  size_t line_number)
 {
-    DCHECK(config);
+    ASSERT(config);
     uint32_t device_id = 0;
-    if (config->gpu_device_id() != 0 || !base::HexStringToUInt(gpu_device_id, &device_id) ||
+    if (config->gpu_device_id() != 0 || !HexStringToUInt(gpu_device_id, &device_id) ||
         device_id == 0)
     {
         PushErrorMessage(kErrorMessage[kErrorEntryWithGpuDeviceIdConflicts], line_number);
@@ -631,4 +632,4 @@ GPUTestExpectationsParser::GPUTestExpectationEntry::GPUTestExpectationEntry()
     : test_expectation(0), line_number(0)
 {}
 
-}  // namespace gpu
+}  // namespace angle

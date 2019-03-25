@@ -1,9 +1,11 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+//
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
 
-#ifndef ANGLE_GPU_CONFIG_GPU_INFO_H_
-#define ANGLE_GPU_CONFIG_GPU_INFO_H_
+#ifndef TEST_EXPECTATIONS_GPU_INFO_H_
+#define TEST_EXPECTATIONS_GPU_INFO_H_
 
 // Provides access to the GPU information for the system
 // on which chrome is currently running.
@@ -13,13 +15,14 @@
 #include <string>
 #include <vector>
 
-#include "gpu_test_config.h"
+#include "GPUTestConfig.h"
+#include "common/platform.h"
 
 #if defined(USE_X11)
 typedef unsigned long VisualID;
 #endif
 
-namespace gpu
+namespace angle
 {
 
 // These values are persisted to logs. Entries should not be renumbered and
@@ -82,7 +85,7 @@ enum VideoCodecProfile
 };
 
 // Specification of a decoding profile supported by a hardware decoder.
-struct GPU_EXPORT VideoDecodeAcceleratorSupportedProfile
+struct VideoDecodeAcceleratorSupportedProfile
 {
     VideoCodecProfile profile;
     gfx::Size max_resolution;
@@ -92,7 +95,7 @@ struct GPU_EXPORT VideoDecodeAcceleratorSupportedProfile
 
 using VideoDecodeAcceleratorSupportedProfiles = std::vector<VideoDecodeAcceleratorSupportedProfile>;
 
-struct GPU_EXPORT VideoDecodeAcceleratorCapabilities
+struct VideoDecodeAcceleratorCapabilities
 {
     VideoDecodeAcceleratorCapabilities();
     VideoDecodeAcceleratorCapabilities(const VideoDecodeAcceleratorCapabilities &other);
@@ -102,7 +105,7 @@ struct GPU_EXPORT VideoDecodeAcceleratorCapabilities
 };
 
 // Specification of an encoding profile supported by a hardware encoder.
-struct GPU_EXPORT VideoEncodeAcceleratorSupportedProfile
+struct VideoEncodeAcceleratorSupportedProfile
 {
     VideoCodecProfile profile;
     gfx::Size max_resolution;
@@ -126,7 +129,7 @@ enum class ImageDecodeAcceleratorSubsampling
 };
 
 // Specification of an image decoding profile supported by a hardware decoder.
-struct GPU_EXPORT ImageDecodeAcceleratorSupportedProfile
+struct ImageDecodeAcceleratorSupportedProfile
 {
     ImageDecodeAcceleratorSupportedProfile();
     ImageDecodeAcceleratorSupportedProfile(const ImageDecodeAcceleratorSupportedProfile &other);
@@ -150,7 +153,7 @@ struct GPU_EXPORT ImageDecodeAcceleratorSupportedProfile
 };
 using ImageDecodeAcceleratorSupportedProfiles = std::vector<ImageDecodeAcceleratorSupportedProfile>;
 
-#if defined(OS_WIN)
+#if defined(ANGLE_PLATFORM_WINDOWS)
 // Common overlay formats that we're interested in. Must match the OverlayFormat
 // enum in //tools/metrics/histograms/enums.xml. Mapped to corresponding DXGI
 // formats in DirectCompositionSurfaceWin.
@@ -162,9 +165,9 @@ enum class OverlayFormat
     kMaxValue = kNV12
 };
 
-GPU_EXPORT const char *OverlayFormatToString(OverlayFormat format);
+const char *OverlayFormatToString(OverlayFormat format);
 
-struct GPU_EXPORT OverlayCapability
+struct OverlayCapability
 {
     OverlayFormat format;
     bool is_scaling_supported;
@@ -172,7 +175,7 @@ struct GPU_EXPORT OverlayCapability
 };
 using OverlayCapabilities = std::vector<OverlayCapability>;
 
-struct GPU_EXPORT Dx12VulkanVersionInfo
+struct Dx12VulkanVersionInfo
 {
     bool IsEmpty() const { return !d3d12_feature_level && !vulkan_version; }
 
@@ -190,9 +193,9 @@ struct GPU_EXPORT Dx12VulkanVersionInfo
 };
 #endif
 
-struct GPU_EXPORT GPUInfo
+struct GPUInfo
 {
-    struct GPU_EXPORT GPUDevice
+    struct GPUDevice
     {
         GPUDevice();
         GPUDevice(const GPUDevice &other);
@@ -240,7 +243,7 @@ struct GPU_EXPORT GPUInfo
 
     // The amount of time taken to get from the process starting to the message
     // loop being pumped.
-    base::TimeDelta initialization_time;
+    int64_t initialization_time;
 
     // Computer has NVIDIA Optimus
     bool optimus;
@@ -321,7 +324,7 @@ struct GPU_EXPORT GPUInfo
     // is only implemented on Android.
     bool can_support_threaded_texture_mailbox = false;
 
-#if defined(OS_WIN)
+#if defined(ANGLE_PLATFORM_WINDOWS)
     // True if we use direct composition surface on Windows.
     bool direct_composition = false;
 
@@ -363,11 +366,11 @@ struct GPU_EXPORT GPUInfo
         // is the root object, but calls to BeginGPUDevice/EndGPUDevice and
         // BeginAuxAttributes/EndAuxAttributes change the object to which these
         // calls should apply.
-        virtual void AddInt64(const char *name, int64_t value)                              = 0;
-        virtual void AddInt(const char *name, int value)                                    = 0;
-        virtual void AddString(const char *name, const std::string &value)                  = 0;
-        virtual void AddBool(const char *name, bool value)                                  = 0;
-        virtual void AddTimeDeltaInSecondsF(const char *name, const base::TimeDelta &value) = 0;
+        virtual void AddInt64(const char *name, int64_t value)                     = 0;
+        virtual void AddInt(const char *name, int value)                           = 0;
+        virtual void AddString(const char *name, const std::string &value)         = 0;
+        virtual void AddBool(const char *name, bool value)                         = 0;
+        virtual void AddTimeDeltaInSeconds(const char *name, const int64_t &value) = 0;
 
         // Markers indicating that a GPUDevice is being described.
         virtual void BeginGPUDevice() = 0;
@@ -407,6 +410,6 @@ struct GPU_EXPORT GPUInfo
     void EnumerateFields(Enumerator *enumerator) const;
 };
 
-}  // namespace gpu
+}  // namespace angle
 
-#endif  // ANGLE_GPU_CONFIG_GPU_INFO_H_
+#endif  // TEST_EXPECTATIONS_GPU_INFO_H_

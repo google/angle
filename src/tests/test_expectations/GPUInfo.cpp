@@ -1,15 +1,18 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+//
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
 
 #include <stdint.h>
 
-#include "gpu_info.h"
+#include "GPUInfo.h"
 
 namespace
 {
 
-void EnumerateGPUDevice(const gpu::GPUInfo::GPUDevice &device, gpu::GPUInfo::Enumerator *enumerator)
+void EnumerateGPUDevice(const angle::GPUInfo::GPUDevice &device,
+                        angle::GPUInfo::Enumerator *enumerator)
 {
     enumerator->BeginGPUDevice();
     enumerator->AddInt("vendorId", device.vendor_id);
@@ -25,8 +28,8 @@ void EnumerateGPUDevice(const gpu::GPUInfo::GPUDevice &device, gpu::GPUInfo::Enu
 }
 
 void EnumerateVideoDecodeAcceleratorSupportedProfile(
-    const gpu::VideoDecodeAcceleratorSupportedProfile &profile,
-    gpu::GPUInfo::Enumerator *enumerator)
+    const angle::VideoDecodeAcceleratorSupportedProfile &profile,
+    angle::GPUInfo::Enumerator *enumerator)
 {
     enumerator->BeginVideoDecodeAcceleratorSupportedProfile();
     enumerator->AddInt("profile", profile.profile);
@@ -39,8 +42,8 @@ void EnumerateVideoDecodeAcceleratorSupportedProfile(
 }
 
 void EnumerateVideoEncodeAcceleratorSupportedProfile(
-    const gpu::VideoEncodeAcceleratorSupportedProfile &profile,
-    gpu::GPUInfo::Enumerator *enumerator)
+    const angle::VideoEncodeAcceleratorSupportedProfile &profile,
+    angle::GPUInfo::Enumerator *enumerator)
 {
     enumerator->BeginVideoEncodeAcceleratorSupportedProfile();
     enumerator->AddInt("profile", profile.profile);
@@ -51,32 +54,32 @@ void EnumerateVideoEncodeAcceleratorSupportedProfile(
     enumerator->EndVideoEncodeAcceleratorSupportedProfile();
 }
 
-const char *ImageDecodeAcceleratorTypeToString(gpu::ImageDecodeAcceleratorType type)
+const char *ImageDecodeAcceleratorTypeToString(angle::ImageDecodeAcceleratorType type)
 {
     switch (type)
     {
-        case gpu::ImageDecodeAcceleratorType::kJpeg:
+        case angle::ImageDecodeAcceleratorType::kJpeg:
             return "JPEG";
-        case gpu::ImageDecodeAcceleratorType::kUnknown:
+        case angle::ImageDecodeAcceleratorType::kUnknown:
             return "Unknown";
     }
 }
 
 const char *ImageDecodeAcceleratorSubsamplingToString(
-    gpu::ImageDecodeAcceleratorSubsampling subsampling)
+    angle::ImageDecodeAcceleratorSubsampling subsampling)
 {
     switch (subsampling)
     {
-        case gpu::ImageDecodeAcceleratorSubsampling::k420:
+        case angle::ImageDecodeAcceleratorSubsampling::k420:
             return "4:2:0";
-        case gpu::ImageDecodeAcceleratorSubsampling::k422:
+        case angle::ImageDecodeAcceleratorSubsampling::k422:
             return "4:2:2";
     }
 }
 
 void EnumerateImageDecodeAcceleratorSupportedProfile(
-    const gpu::ImageDecodeAcceleratorSupportedProfile &profile,
-    gpu::GPUInfo::Enumerator *enumerator)
+    const angle::ImageDecodeAcceleratorSupportedProfile &profile,
+    angle::GPUInfo::Enumerator *enumerator)
 {
     enumerator->BeginImageDecodeAcceleratorSupportedProfile();
     enumerator->AddString("imageType", ImageDecodeAcceleratorTypeToString(profile.image_type));
@@ -93,9 +96,9 @@ void EnumerateImageDecodeAcceleratorSupportedProfile(
     enumerator->EndImageDecodeAcceleratorSupportedProfile();
 }
 
-#if defined(OS_WIN)
-void EnumerateOverlayCapability(const gpu::OverlayCapability &cap,
-                                gpu::GPUInfo::Enumerator *enumerator)
+#if defined(ANGLE_PLATFORM_WINDOWS)
+void EnumerateOverlayCapability(const angle::OverlayCapability &cap,
+                                angle::GPUInfo::Enumerator *enumerator)
 {
     std::string key_string = "overlayCap";
     key_string += OverlayFormatToString(cap.format);
@@ -104,8 +107,8 @@ void EnumerateOverlayCapability(const gpu::OverlayCapability &cap,
     enumerator->EndOverlayCapability();
 }
 
-void EnumerateDx12VulkanVersionInfo(const gpu::Dx12VulkanVersionInfo &info,
-                                    gpu::GPUInfo::Enumerator *enumerator)
+void EnumerateDx12VulkanVersionInfo(const angle::Dx12VulkanVersionInfo &info,
+                                    angle::GPUInfo::Enumerator *enumerator)
 {
     enumerator->BeginDx12VulkanVersionInfo();
     enumerator->AddBool("supportsDx12", info.supports_dx12);
@@ -118,10 +121,10 @@ void EnumerateDx12VulkanVersionInfo(const gpu::Dx12VulkanVersionInfo &info,
 
 }  // namespace
 
-namespace gpu
+namespace angle
 {
 
-#if defined(OS_WIN)
+#if defined(ANGLE_PLATFORM_WINDOWS)
 const char *OverlayFormatToString(OverlayFormat format)
 {
     switch (format)
@@ -215,7 +218,7 @@ const GPUInfo::GPUDevice &GPUInfo::active_gpu() const
         if (secondary_gpu.active)
             return secondary_gpu;
     }
-    DVLOG(2) << "No active GPU found, returning primary GPU.\n";
+    std::cerr << "No active GPU found, returning primary GPU.\n";
     return gpu;
 }
 
@@ -228,7 +231,7 @@ void GPUInfo::EnumerateFields(Enumerator *enumerator) const
 {
     struct GPUInfoKnownFields
     {
-        base::TimeDelta initialization_time;
+        int64_t initialization_time;
         bool optimus;
         bool amd_switchable;
         GPUDevice gpu;
@@ -252,7 +255,7 @@ void GPUInfo::EnumerateFields(Enumerator *enumerator) const
         bool in_process_gpu;
         bool passthrough_cmd_decoder;
         bool can_support_threaded_texture_mailbox;
-#if defined(OS_WIN)
+#if defined(ANGLE_PLATFORM_WINDOWS)
         bool direct_composition;
         bool supports_overlays;
         OverlayCapabilities overlay_capabilities;
@@ -288,7 +291,7 @@ void GPUInfo::EnumerateFields(Enumerator *enumerator) const
         EnumerateGPUDevice(secondary_gpu, enumerator);
 
     enumerator->BeginAuxAttributes();
-    enumerator->AddTimeDeltaInSecondsF("initializationTime", initialization_time);
+    enumerator->AddTimeDeltaInSeconds("initializationTime", initialization_time);
     enumerator->AddBool("optimus", optimus);
     enumerator->AddBool("amdSwitchable", amd_switchable);
     enumerator->AddString("pixelShaderVersion", pixel_shader_version);
@@ -311,7 +314,7 @@ void GPUInfo::EnumerateFields(Enumerator *enumerator) const
     enumerator->AddBool("passthroughCmdDecoder", passthrough_cmd_decoder);
     enumerator->AddBool("canSupportThreadedTextureMailbox", can_support_threaded_texture_mailbox);
     // TODO(kbr): add dx_diagnostics on Windows.
-#if defined(OS_WIN)
+#if defined(ANGLE_PLATFORM_WINDOWS)
     enumerator->AddBool("directComposition", direct_composition);
     enumerator->AddBool("supportsOverlays", supports_overlays);
     for (const auto &cap : overlay_capabilities)
@@ -334,4 +337,4 @@ void GPUInfo::EnumerateFields(Enumerator *enumerator) const
     enumerator->EndAuxAttributes();
 }
 
-}  // namespace gpu
+}  // namespace angle

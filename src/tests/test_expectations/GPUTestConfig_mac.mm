@@ -1,11 +1,12 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+//
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-// gpu_test_config_mac.mm:
+//
+// GPUTestConfig_mac.mm:
 //   Helper functions for gpu_test_config that have to be compiled in ObjectiveC++
 
-#include "gpu_test_config_mac.h"
+#include "GPUTestConfig_mac.h"
 
 #import <Cocoa/Cocoa.h>
 
