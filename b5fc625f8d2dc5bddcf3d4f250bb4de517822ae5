@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43525a8b_978b5eba",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-25T15:56:27Z",
+      "side": 1,
+      "message": "Don\u0027t need to declare these. I believe they default to empty automatically.",
+      "revId": "b5fc625f8d2dc5bddcf3d4f250bb4de517822ae5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
