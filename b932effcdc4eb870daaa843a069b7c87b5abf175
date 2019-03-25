@@ -34,6 +34,24 @@
       "revId": "b932effcdc4eb870daaa843a069b7c87b5abf175",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dae608e6_ff026cf6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3308,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-25T15:56:06Z",
+      "side": 1,
+      "message": "Without this line these tests fail:\n\nWebGLCompatibilityTest.SizedRGBA32FFormats/ES2_OPENGL\nWebGLCompatibilityTest.GenerateMipmapSizedFloatingPointTexture/ES2_OPENGL\nWebGLCompatibilityTest.GenerateMipmapSizedFloatingPointTexture/ES3_OPENGL\n\nLooking closer at WebGLCompatibilityTest.SizedRGBA32FFormats/ES2_OPENGL, we fail due to GL_INVALID_ENUM being returned by ValidateES2TexImageParameters():\n\n        if (!isSubImage)\n        {\n            switch (internalformat)\n            {\n                case GL_RGBA32F:\n                    if (!context-\u003egetExtensions().colorBufferFloatRGBA)\n                    {\n                        context-\u003evalidationError(GL_INVALID_ENUM, kInvalidFormat);\n                        return false;\n                    }\n\nThis is due to colorBufferFloatRGBA being \u0027false\u0027, even though the extension \"GL_OES_texture_float\" is enabled:\n\n[[[... third_party/angle/src/tests/gl_tests/WebGLCompatibilityTest.cpp ...]]]\nTEST_P(WebGLCompatibilityTest, SizedRGBA32FFormats)\n{\n    // Test skipped because it is only valid for WebGL1 contexts.\n    ANGLE_SKIP_TEST_IF(getClientMajorVersion() !\u003d 2);\n\n    ANGLE_SKIP_TEST_IF(!extensionRequestable(\"GL_OES_texture_float\"));\n[[[... extension is enabled here ...]]]\n    glRequestExtensionANGLE(\"GL_OES_texture_float\");\n    ASSERT_GL_NO_ERROR();\n\n    GLTexture texture;\n    glBindTexture(GL_TEXTURE_2D, texture);\n[[[... but we fail in here due to the Context not knowing its enabled ...]]]\n    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA, GL_FLOAT, nullptr);\n\n\nWhere/How else should the Context be updated to know which extensions are enabled?",
+      "parentUuid": "a56298b4_2da27403",
+      "revId": "b932effcdc4eb870daaa843a069b7c87b5abf175",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
