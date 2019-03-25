@@ -46,6 +46,30 @@
       "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c214758_7925e963",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-25T16:56:50Z",
+      "side": 1,
+      "message": "It\u0027s hard to tell what dEQP is looking for in this case.  We can always special-case and reject internalFormat of 0 with an error but we won\u0027t be able to list every possible internal format here.",
+      "parentUuid": "0052640d_a3b3e7b5",
+      "range": {
+        "startLine": 1565,
+        "startChar": 0,
+        "endLine": 1585,
+        "endChar": 33
+      },
+      "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
