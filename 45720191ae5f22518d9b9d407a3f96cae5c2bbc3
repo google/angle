@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da68e8ff_73de3826",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-25T16:50:16Z",
+      "side": 1,
+      "message": "This is a desktop OpenGL extension.  Why is it needed instead of the GL_EXT_sRGB below?",
+      "range": {
+        "startLine": 824,
+        "startChar": 8,
+        "endLine": 824,
+        "endChar": 76
+      },
+      "revId": "45720191ae5f22518d9b9d407a3f96cae5c2bbc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9f171f9_e99653eb",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3308,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-25T16:50:16Z",
+      "side": 1,
+      "message": "This will force a bunch of extensions to be turned on in the frontend when they may not be requested yet.  The setTextureExtensionSupport function should be called by the backends during caps initialization.",
+      "range": {
+        "startLine": 3308,
+        "startChar": 4,
+        "endLine": 3308,
+        "endChar": 91
+      },
+      "revId": "45720191ae5f22518d9b9d407a3f96cae5c2bbc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

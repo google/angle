@@ -106,6 +106,29 @@
       "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9d159c7_26997bda",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-25T16:50:16Z",
+      "side": 0,
+      "message": "The removal of this validation is what\u0027s causing WebGLCompatibilityTest.SizedRGBA32FFormats/ES2_OPENGL to fail.  This extension adds a special case that internalFormat can be sized and internalFormat can be not equal to format in ES2.",
+      "range": {
+        "startLine": 1158,
+        "startChar": 0,
+        "endLine": 1171,
+        "endChar": 5
+      },
+      "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
