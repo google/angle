@@ -22,6 +22,30 @@
       "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0052640d_a3b3e7b5",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-25T16:37:49Z",
+      "side": 1,
+      "message": "Without this, we accept bad internalformat values.   For example, dEQP.GLES2/functional_negative_api_texture_teximage2d_invalid_internalformat calls glTexImage2D() with internalformat\u003d0, which we fail to reject with GL_INVALID_VALUE and fail the test.\n\nIs there a list of accepted GLES2 internalFormat values we can use instead?",
+      "parentUuid": "b384f2b7_5f0aafe7",
+      "range": {
+        "startLine": 1565,
+        "startChar": 0,
+        "endLine": 1585,
+        "endChar": 33
+      },
+      "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
