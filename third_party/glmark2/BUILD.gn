@@ -341,7 +341,7 @@ template("glmark2_exe") {
       "src/src/main.cpp",
     ]
     data = [
-      "src/data",
+      "src/data/",
     ]
 
     defines += [ "GLMARK_VERSION=\"${glmark2_version}\"" ]
