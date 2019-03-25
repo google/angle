@@ -94,6 +94,30 @@
       "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d3e2db5_54e13b6a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-25T19:04:31Z",
+      "side": 1,
+      "message": "So it\u0027s supposed to be an initial check if the internal format is \u0027known\u0027 vs some unknown value.\n\nIn that case, the switch you have above is close but:\n - Remove the sized formats except GL_RGBA32F and GL_RGB32F, it shouldn\u0027t be possible for them to be valid.\n - Replace the preprocessor defines with extension checks.  For example, the GL_R_EXT and GL_RG_EXT formats should check context-\u003egetExtensions().textureRG.\n - Update the  GL_RGBA32F and GL_RGB32F validation to return INVALID_VALUE instead of INVALID_ENUM when the extensions are not enabled.",
+      "parentUuid": "9ee155f8_486a0197",
+      "range": {
+        "startLine": 1565,
+        "startChar": 0,
+        "endLine": 1585,
+        "endChar": 33
+      },
+      "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
