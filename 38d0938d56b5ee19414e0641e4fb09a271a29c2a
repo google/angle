@@ -70,6 +70,30 @@
       "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ee155f8_486a0197",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-03-25T18:17:21Z",
+      "side": 1,
+      "message": "It\u0027s looking to enforce this part of the spec:\n\n  GL_INVALID_VALUE is generated if internalformat is not an accepted format.\n\n[[[... third_party/angle/third_party/deqp/src/modules/gles2/functional/es2fNegativeTextureApiTests.cpp ...]]]\n\tES2F_ADD_API_CASE(teximage2d_invalid_internalformat, \"Invalid glTexImage2D() usage\",\n\t\t{\n\t\t\tm_log \u003c\u003c TestLog::Section(\"\", \"GL_INVALID_VALUE is generated if internalformat is not an accepted format.\");\n\t\t\tglTexImage2D(GL_TEXTURE_2D, 0, 0, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);\n\t\t\texpectError(GL_INVALID_VALUE);\n\t\t\tm_log \u003c\u003c TestLog::EndSection;\n\t\t});\n\n\nAlso defined in the spec are all of the accepted values:\ninternalformat\nSpecifies the internal format of the texture. Must be one of the following symbolic constants: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.\n\nANGLE seems to support additional internalFormat values, based on how other tests behave.   We could special-case internalFormat\u003d0 and return GL_INVALID_VALUE, but we still wouldn\u0027t be following the spec.\n\nHow can we return GL_INVALID_VALUE for bad internalFormat values?",
+      "parentUuid": "7c214758_7925e963",
+      "range": {
+        "startLine": 1565,
+        "startChar": 0,
+        "endLine": 1585,
+        "endChar": 33
+      },
+      "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
