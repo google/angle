@@ -58,7 +58,7 @@ command stream on Android.  For it to work, ANGLE's libraries must have differen
 system OpenGL libraries.  This is done with the gn arg:
 
 ```
-angle_libs_suffix = "_ANGLE"
+angle_libs_suffix = "_ANGLE_DEV"
 ```
 
 All
@@ -103,7 +103,6 @@ special case, there's little support for it by RenderDoc, though there are worka
 
 On Windows, RenderDoc supports setting the environment variable `RENDERDOC_HOOK_EGL` to 0 to avoid
 this issue.
-
 ### Linux
 
 On Linux, there is no supported workaround by RenderDoc.  See [this
@@ -173,4 +172,59 @@ echo sudo cp -P "$ver"/x86_64/lib/lib* /usr/lib/x86_64-linux-gnu/
 sudo cp -P "$ver"/x86_64/lib/lib* /usr/lib/x86_64-linux-gnu/
 
 echo "Done."
+```
+
+### Android
+
+If you are on Linux, make sure not to use the build done in the previous section.  The GL renderer
+disabled in the previous section is actually needed in this section.
+
+Define the following environment variables, for example in `.bashrc` (values are examples):
+
+```
+export JAVA_HOME=/usr/local/buildtools/java/jdk
+export ANDROID_SDK=$HOME/chromium/src/third_party/android_sdk/public
+export ANDROID_NDK=$HOME/chromium/src/third_party/android_ndk
+export ANDROID_NDK_HOME=$HOME/chromium/src/third_party/android_ndk
+```
+
+In the renderdoc directory, create Android builds of RenderDoc:
+
+```
+mkdir build-android-arm32
+cd build-android-arm32/
+cmake -DBUILD_ANDROID=On -DANDROID_ABI=armeabi-v7a ..
+make -j
+cd ../
+
+mkdir build-android-arm64
+cd build-android-arm64/
+cmake -DBUILD_ANDROID=On -DANDROID_ABI=arm64-v8a ..
+make -j
+cd ../
+```
+
+Note that you need both arm32 and arm64 builds even if working with an arm64 device.  See
+[RenderDoc's documentation](https://github.com/baldurk/renderdoc/blob/v1.x/docs/CONTRIBUTING/Compiling.md#android)
+for more information.
+
+When you run RenderDoc, choose the "Replay Context" from the bottom-left part of the UI (defaults to
+Local).  When selecting the device, you should see the RenderDoc application running.
+
+In ANGLE itself, make sure you add a suffix for its names to be different from the system's.  Add
+this to gn args:
+
+```
+angle_libs_suffix = "_ANGLE_DEV"
+```
+
+Next, you need to install an ANGLE test apk.  When you build the test, a test launcher is generated,
+for example, `./out/Release/bin/run_angle_end2end_tests`. The best way to install the APK is to run
+this test launcher once.
+
+In RenderDoc, use `org.chromium.native_test` as the Executable Path, and provide the following
+arguments:
+
+```
+-e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt -e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=*ES2_VULKAN"
 ```
