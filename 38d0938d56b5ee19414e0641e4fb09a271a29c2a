@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b384f2b7_5f0aafe7",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-25T14:38:27Z",
+      "side": 1,
+      "message": "this code needs to be removed. I\u0027m not sure which validation you\u0027re trying to prioritize (invalid format?) but this will lead to false negatives.",
+      "range": {
+        "startLine": 1565,
+        "startChar": 0,
+        "endLine": 1585,
+        "endChar": 33
+      },
+      "revId": "38d0938d56b5ee19414e0641e4fb09a271a29c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

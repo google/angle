@@ -88,6 +88,24 @@
       "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbe8ada6_311eaa1e",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-25T14:38:27Z",
+      "side": 0,
+      "message": "Thanks Ian.\n\nI didn\u0027t realize that 3.2 specified that any error was valid. We should at least make sure a bug is filed on the VK-GL-CTS tracker. If the official conformance test suite is not validating conformance and no one has bothered to report it, that\u0027s bad.\n\nRelevant spec text:\n\n\u003e When a command could potentially generate several different errors (for example, when it is passed separate enum and numeric parameters which are both out of range), the GL implementation may choose to generate any of the applicable errors.",
+      "parentUuid": "26eea0f5_6fe010d7",
+      "revId": "f2bf49e20849a2b95e0e962a3779e3258307e857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
