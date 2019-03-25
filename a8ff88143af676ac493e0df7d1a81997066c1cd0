@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9a056ee_fe9fa969",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-25T14:05:58Z",
+      "side": 0,
+      "message": "i.e. this will be faster",
+      "range": {
+        "startLine": 670,
+        "startChar": 1,
+        "endLine": 673,
+        "endChar": 47
+      },
+      "revId": "a8ff88143af676ac493e0df7d1a81997066c1cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
