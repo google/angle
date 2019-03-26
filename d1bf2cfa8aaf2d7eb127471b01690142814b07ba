@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e345814_25f1697a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-26T20:15:56Z",
+      "side": 1,
+      "message": "nit: move this as close as possible to where it is written/used.",
+      "range": {
+        "startLine": 1132,
+        "startChar": 4,
+        "endLine": 1132,
+        "endChar": 40
+      },
+      "revId": "d1bf2cfa8aaf2d7eb127471b01690142814b07ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
