@@ -22,6 +22,46 @@
       "revId": "d1bf2cfa8aaf2d7eb127471b01690142814b07ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c9e84d0_9571170d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-26T20:30:44Z",
+      "side": 1,
+      "message": "Suggest grouping with GL_ALPHA.",
+      "range": {
+        "startLine": 1593,
+        "startChar": 0,
+        "endLine": 1595,
+        "endChar": 26
+      },
+      "revId": "d1bf2cfa8aaf2d7eb127471b01690142814b07ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "092e5cbf_ebddf029",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1608,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-26T20:30:44Z",
+      "side": 1,
+      "message": "Same. And they could all be moved to the top, i.e.:\n\n- All core formats\n- Formats requiring extension X\n- Formats requiring extension Y\n...",
+      "revId": "d1bf2cfa8aaf2d7eb127471b01690142814b07ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
