@@ -970,12 +970,12 @@ void WindowSurfaceVk::setSwapInterval(EGLint interval)
 
 EGLint WindowSurfaceVk::getWidth() const
 {
-    return static_cast<EGLint>(mColorRenderTarget.getImageExtents().width);
+    return static_cast<EGLint>(mColorRenderTarget.getExtents().width);
 }
 
 EGLint WindowSurfaceVk::getHeight() const
 {
-    return static_cast<EGLint>(mColorRenderTarget.getImageExtents().height);
+    return static_cast<EGLint>(mColorRenderTarget.getExtents().height);
 }
 
 EGLint WindowSurfaceVk::isPostSubBufferSupported() const
@@ -1023,7 +1023,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
 
     VkFramebufferCreateInfo framebufferInfo = {};
 
-    const gl::Extents &extents            = mColorRenderTarget.getImageExtents();
+    const gl::Extents extents             = mColorRenderTarget.getExtents();
     std::array<VkImageView, 2> imageViews = {{VK_NULL_HANDLE, mDepthStencilImageView.getHandle()}};
 
     framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

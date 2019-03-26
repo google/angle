@@ -100,7 +100,7 @@ class FramebufferVk : public FramebufferImpl
                                  RenderTargetVk *renderTarget,
                                  void *pixels);
 
-    const gl::Extents &getReadImageExtents() const;
+    gl::Extents getReadImageExtents() const;
 
     const gl::DrawBufferMask &getEmulatedAlphaAttachmentMask() const;
     RenderTargetVk *getColorReadRenderTarget() const;

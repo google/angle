@@ -45,7 +45,7 @@ bool ClipToRenderTarget(const gl::Rectangle &area,
                         RenderTargetVk *renderTarget,
                         gl::Rectangle *rectOut)
 {
-    const gl::Extents &renderTargetExtents = renderTarget->getImageExtents();
+    const gl::Extents renderTargetExtents = renderTarget->getExtents();
     gl::Rectangle renderTargetRect(0, 0, renderTargetExtents.width, renderTargetExtents.height);
     return ClipRectangle(area, renderTargetRect, rectOut);
 }
@@ -679,7 +679,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     vk::ImageHelper *srcImage = readRenderTarget->getImageForRead(
         &mFramebuffer, vk::ImageLayout::TransferSrc, commandBuffer);
 
-    const gl::Extents sourceFrameBufferExtents = readRenderTarget->getImageExtents();
+    const gl::Extents sourceFrameBufferExtents = readRenderTarget->getExtents();
     gl::Rectangle readRect                     = readRectIn;
 
     if (flipSource)
@@ -699,8 +699,8 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     blit.dstSubresource.baseArrayLayer = 0;
     blit.dstSubresource.layerCount     = 1;
 
-    const gl::Extents &drawFrameBufferExtents = drawRenderTarget->getImageExtents();
-    gl::Rectangle drawRect                    = drawRectIn;
+    const gl::Extents drawFrameBufferExtents = drawRenderTarget->getExtents();
+    gl::Rectangle drawRect                   = drawRectIn;
 
     if (flipDest)
     {
@@ -858,8 +858,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         ASSERT(colorRenderTarget);
         attachments.push_back(colorRenderTarget->getDrawImageView()->getHandle());
 
-        ASSERT(attachmentsSize.empty() || attachmentsSize == colorRenderTarget->getImageExtents());
-        attachmentsSize = colorRenderTarget->getImageExtents();
+        ASSERT(attachmentsSize.empty() || attachmentsSize == colorRenderTarget->getExtents());
+        attachmentsSize = colorRenderTarget->getExtents();
     }
 
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
@@ -868,8 +868,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         attachments.push_back(depthStencilRenderTarget->getDrawImageView()->getHandle());
 
         ASSERT(attachmentsSize.empty() ||
-               attachmentsSize == depthStencilRenderTarget->getImageExtents());
-        attachmentsSize = depthStencilRenderTarget->getImageExtents();
+               attachmentsSize == depthStencilRenderTarget->getExtents());
+        attachmentsSize = depthStencilRenderTarget->getExtents();
     }
 
     ASSERT(!attachments.empty());
@@ -1167,9 +1167,9 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-const gl::Extents &FramebufferVk::getReadImageExtents() const
+gl::Extents FramebufferVk::getReadImageExtents() const
 {
-    return getColorReadRenderTarget()->getImageExtents();
+    return getColorReadRenderTarget()->getExtents();
 }
 
 RenderTargetVk *FramebufferVk::getFirstRenderTarget() const

@@ -71,7 +71,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageView *getReadImageView() const;
 
     const vk::Format &getImageFormat() const;
-    const gl::Extents &getImageExtents() const;
+    gl::Extents getExtents() const;
     size_t getLevelIndex() const { return mLevelIndex; }
     size_t getLayerIndex() const { return mLayerIndex; }
 

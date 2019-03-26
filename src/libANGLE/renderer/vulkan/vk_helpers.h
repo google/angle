@@ -610,6 +610,10 @@ class ImageHelper final : public CommandGraphResource
 
     VkImageLayout getCurrentLayout() const;
 
+    // Helper function to calculate the extents of a render target created for a certain mip of the
+    // image.
+    gl::Extents getLevelExtents2D(uint32_t level) const;
+
     void clearColor(const VkClearColorValue &color,
                     uint32_t baseMipLevel,
                     uint32_t levelCount,

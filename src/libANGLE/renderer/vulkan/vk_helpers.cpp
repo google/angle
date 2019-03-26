@@ -1546,6 +1546,14 @@ VkImageLayout ImageHelper::getCurrentLayout() const
     return kImageMemoryBarrierData[mCurrentLayout].layout;
 }
 
+gl::Extents ImageHelper::getLevelExtents2D(uint32_t level) const
+{
+    int width  = std::max(mExtents.width >> level, 1);
+    int height = std::max(mExtents.height >> level, 1);
+
+    return gl::Extents(width, height, 1);
+}
+
 bool ImageHelper::isLayoutChangeNecessary(ImageLayout newLayout) const
 {
     const ImageMemoryBarrierData &layoutData = kImageMemoryBarrierData[mCurrentLayout];
