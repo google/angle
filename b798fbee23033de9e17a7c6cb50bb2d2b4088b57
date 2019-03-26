@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "41166f36_05b2975d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2019-03-26T00:21:54Z",
+      "side": 1,
+      "message": "See angleproject:3311 where I copied the error from our perf lab. The error message makes it clear that a trailing forward slash is necessary.",
+      "parentUuid": "f57ed1da_35589684",
+      "revId": "b798fbee23033de9e17a7c6cb50bb2d2b4088b57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e3feb20_7849709a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -81,6 +99,30 @@
       "revId": "b798fbee23033de9e17a7c6cb50bb2d2b4088b57",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed0e8243_62506b8f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2019-03-26T00:21:54Z",
+      "side": 1,
+      "message": "Done. \n\nI created a new issue: angleproject:3311.",
+      "parentUuid": "1b6acfdf_50cdb8ee",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 10
+      },
+      "revId": "b798fbee23033de9e17a7c6cb50bb2d2b4088b57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
