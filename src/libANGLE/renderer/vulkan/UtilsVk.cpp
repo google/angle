@@ -581,14 +581,15 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY(renderer->getCompatibleRenderPass(contextVk, renderPassDesc, &renderPass));
+    vk::RenderPass *compatibleRenderPass = nullptr;
+    ANGLE_TRY(renderer->getCompatibleRenderPass(contextVk, renderPassDesc, &compatibleRenderPass));
 
     VkFramebufferCreateInfo framebufferInfo = {};
 
+    // Minimize the framebuffer coverage to only cover up to the render area.
     framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.flags           = 0;
-    framebufferInfo.renderPass      = renderPass->getHandle();
+    framebufferInfo.renderPass      = compatibleRenderPass->getHandle();
     framebufferInfo.attachmentCount = 1;
     framebufferInfo.pAttachments    = imageView->ptr();
     framebufferInfo.width           = renderArea.x + renderArea.width;
@@ -598,12 +599,19 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
     vk::Framebuffer framebuffer;
     ANGLE_VK_TRY(contextVk, framebuffer.init(contextVk->getDevice(), framebufferInfo));
 
-    // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
+    vk::AttachmentOpsArray renderPassAttachmentOps;
     std::vector<VkClearValue> clearValues = {{}};
     ASSERT(clearValues.size() == 1);
 
+    renderPassAttachmentOps.setLayout(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                      VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+    renderPassAttachmentOps.setLoadOp(0, VK_ATTACHMENT_LOAD_OP_LOAD,
+                                      VK_ATTACHMENT_LOAD_OP_DONT_CARE);
+    renderPassAttachmentOps.setStoreOp(0, VK_ATTACHMENT_STORE_OP_STORE,
+                                       VK_ATTACHMENT_STORE_OP_DONT_CARE);
+
     ANGLE_TRY(image->beginRenderPass(contextVk, framebuffer, renderArea, renderPassDesc,
-                                     clearValues, commandBufferOut));
+                                     renderPassAttachmentOps, clearValues, commandBufferOut));
 
     renderer->releaseObject(renderer->getCurrentQueueSerial(), &framebuffer);
 

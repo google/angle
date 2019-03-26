@@ -116,6 +116,10 @@ class AttachmentOpsArray final
     // Initializes an attachment op with whatever values. Used for compatible RenderPass checks.
     void initDummyOp(size_t index, VkImageLayout initialLayout, VkImageLayout finalLayout);
 
+    void setLayout(size_t index, VkImageLayout initialLayout, VkImageLayout finalLayout);
+    void setLoadOp(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentLoadOp stencilLoadOp);
+    void setStoreOp(size_t index, VkAttachmentStoreOp storeOp, VkAttachmentStoreOp stencilStoreOp);
+
     size_t hash() const;
 
   private:

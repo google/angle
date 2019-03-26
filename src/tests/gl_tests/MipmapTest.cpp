@@ -784,6 +784,9 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
     // http://anglebug.com/3145
     ANGLE_SKIP_TEST_IF(IsFuchsia() && IsIntel() && IsVulkan());
 
+    // http://anglebug.com/2822
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
 
     // Draw. Since the negative-Y face's is blue, this should be blue.
@@ -825,6 +828,9 @@ TEST_P(MipmapTest, TextureCubeRenderToLevelZero)
 {
     // http://anglebug.com/3145
     ANGLE_SKIP_TEST_IF(IsFuchsia() && IsIntel() && IsVulkan());
+
+    // http://anglebug.com/2822
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
 

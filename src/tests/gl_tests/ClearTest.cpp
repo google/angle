@@ -267,12 +267,12 @@ TEST_P(ClearTest, ChangeFramebufferAttachmentFromRGBAtoRGB)
                  GL_UNSIGNED_BYTE, nullptr);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 
-    glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+    glClearColor(0.5f, 0.5f, 0.5f, 0.75f);
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 
     // So far so good, we have an RGBA framebuffer that we've cleared to 0.5 everywhere.
-    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 128, 128, 1.0);
+    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 128, 192, 1.0);
 
     // In the Vulkan backend, RGB textures are emulated with an RGBA texture format
     // underneath and we keep a special mask to know that we shouldn't touch the alpha
@@ -350,7 +350,7 @@ TEST_P(ClearTest, ClearIssue)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);

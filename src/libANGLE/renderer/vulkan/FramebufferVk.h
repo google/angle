@@ -125,6 +125,14 @@ class FramebufferVk : public FramebufferImpl
                   const gl::FramebufferState &state,
                   WindowSurfaceVk *backbuffer);
 
+    angle::Result startNewRenderPassImpl(ContextVk *context,
+                                         bool clearColor,
+                                         bool clearDepth,
+                                         bool clearStencil,
+                                         const VkClearColorValue &clearColorValue,
+                                         const VkClearDepthStencilValue &clearDepthStencilValue,
+                                         vk::CommandBuffer **commandBufferOut);
+
     // Helper for appendToStarted/else startNewRenderPass.
     angle::Result getCommandBufferForDraw(ContextVk *contextVk,
                                           vk::CommandBuffer **commandBufferOut,
@@ -159,6 +167,12 @@ class FramebufferVk : public FramebufferImpl
 
     angle::Result getFramebuffer(ContextVk *contextVk, vk::Framebuffer **framebufferOut);
 
+    angle::Result clearWithRenderPassOp(ContextVk *contextVk,
+                                        bool clearColor,
+                                        bool clearDepth,
+                                        bool clearStencil,
+                                        const VkClearColorValue &clearColorValue,
+                                        const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithClearAttachments(ContextVk *contextVk,
                                             bool clearColor,
                                             bool clearDepth,

@@ -1217,6 +1217,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     {
         mFeatures.disableFifoPresentMode = true;
     }
+
+    if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.disableClearWithRenderPassLoadOp = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()

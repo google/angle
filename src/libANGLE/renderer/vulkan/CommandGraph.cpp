@@ -216,12 +216,14 @@ const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
     return mCurrentWritingNode->getRenderPassRenderArea();
 }
 
-angle::Result CommandGraphResource::beginRenderPass(ContextVk *contextVk,
-                                                    const Framebuffer &framebuffer,
-                                                    const gl::Rectangle &renderArea,
-                                                    const RenderPassDesc &renderPassDesc,
-                                                    const std::vector<VkClearValue> &clearValues,
-                                                    CommandBuffer **commandBufferOut)
+angle::Result CommandGraphResource::beginRenderPass(
+    ContextVk *contextVk,
+    const Framebuffer &framebuffer,
+    const gl::Rectangle &renderArea,
+    const RenderPassDesc &renderPassDesc,
+    const AttachmentOpsArray &renderPassAttachmentOps,
+    const std::vector<VkClearValue> &clearValues,
+    CommandBuffer **commandBufferOut)
 {
     // If a barrier has been inserted in the meantime, stop the command buffer.
     if (!hasChildlessWritingNode())
@@ -229,9 +231,8 @@ angle::Result CommandGraphResource::beginRenderPass(ContextVk *contextVk,
         startNewCommands(contextVk->getRenderer());
     }
 
-    // Hard-code RenderPass to clear the first render target to the current clear value.
-    // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
-    mCurrentWritingNode->storeRenderPassInfo(framebuffer, renderArea, renderPassDesc, clearValues);
+    mCurrentWritingNode->storeRenderPassInfo(framebuffer, renderArea, renderPassDesc,
+                                             renderPassAttachmentOps, clearValues);
 
     mCurrentWritingNode->setCommandBufferOwner(contextVk);
 
@@ -376,9 +377,11 @@ angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
 void CommandGraphNode::storeRenderPassInfo(const Framebuffer &framebuffer,
                                            const gl::Rectangle renderArea,
                                            const vk::RenderPassDesc &renderPassDesc,
+                                           const AttachmentOpsArray &renderPassAttachmentOps,
                                            const std::vector<VkClearValue> &clearValues)
 {
-    mRenderPassDesc = renderPassDesc;
+    mRenderPassDesc          = renderPassDesc;
+    mRenderPassAttachmentOps = renderPassAttachmentOps;
     mRenderPassFramebuffer.setHandle(framebuffer.getHandle());
     mRenderPassRenderArea = renderArea;
     std::copy(clearValues.begin(), clearValues.end(), mRenderPassClearValues.begin());
@@ -509,11 +512,12 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
 
             if (mInsideRenderPassCommands.valid())
             {
-                // Pull a compatible RenderPass from the cache.
-                // TODO(jmadill): Insert real ops and layout transitions.
+                // Pull a RenderPass from the cache.
+                // TODO(jmadill): Insert layout transitions.
                 RenderPass *renderPass = nullptr;
-                ANGLE_TRY(renderPassCache->getCompatibleRenderPass(context, serial, mRenderPassDesc,
-                                                                   &renderPass));
+                ANGLE_TRY(renderPassCache->getRenderPassWithOps(
+                    context, serial, mRenderPassDesc, mRenderPassAttachmentOps, &renderPass));
+
                 ANGLE_VK_TRY(context, mInsideRenderPassCommands.end());
 
                 VkRenderPassBeginInfo beginInfo = {};

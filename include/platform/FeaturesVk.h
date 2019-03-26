@@ -71,6 +71,10 @@ struct FeaturesVk
 
     // VK_PRESENT_MODE_FIFO_KHR causes random timeouts on Linux Intel. http://anglebug.com/3153
     bool disableFifoPresentMode = false;
+
+    // On Qualcomm, a bug is preventing us from using this optimization with inline commands in the
+    // render pass.  http://anglebug.com/2361
+    bool disableClearWithRenderPassLoadOp = false;
 };
 
 inline FeaturesVk::FeaturesVk() = default;
