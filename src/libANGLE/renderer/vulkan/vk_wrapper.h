@@ -172,6 +172,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     using WrappedObject::operator=;
 
+    static bool SupportsQueries(const VkPhysicalDeviceFeatures &features)
+    {
+        return features.inheritedQueries;
+    }
+
     VkResult begin(const VkCommandBufferBeginInfo &info);
 
     void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);

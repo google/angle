@@ -328,6 +328,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     SecondaryCommandBuffer();
     ~SecondaryCommandBuffer();
 
+    static bool SupportsQueries(const VkPhysicalDeviceFeatures &features) { return true; }
+
     // Add commands
     void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
 

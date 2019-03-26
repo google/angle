@@ -1141,8 +1141,8 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     maxVersion = gl::Version(2, 0);
 #endif
 
-    // Vulkan inherited queries are required to support any GL query type
-    if (!mPhysicalDeviceFeatures.inheritedQueries)
+    // If the command buffer doesn't support queries, we can't support ES3.
+    if (!vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
     {
         maxVersion = std::max(maxVersion, gl::Version(2, 0));
     }

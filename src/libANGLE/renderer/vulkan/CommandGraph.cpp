@@ -320,7 +320,7 @@ angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context
     inheritanceInfo.subpass     = 0;
     inheritanceInfo.framebuffer = VK_NULL_HANDLE;
     inheritanceInfo.occlusionQueryEnable =
-        context->getRenderer()->getPhysicalDeviceFeatures().inheritedQueries;
+        CommandBuffer::SupportsQueries(context->getRenderer()->getPhysicalDeviceFeatures());
     inheritanceInfo.queryFlags         = 0;
     inheritanceInfo.pipelineStatistics = 0;
 
@@ -348,7 +348,7 @@ angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
     inheritanceInfo.subpass     = 0;
     inheritanceInfo.framebuffer = mRenderPassFramebuffer.getHandle();
     inheritanceInfo.occlusionQueryEnable =
-        context->getRenderer()->getPhysicalDeviceFeatures().inheritedQueries;
+        CommandBuffer::SupportsQueries(context->getRenderer()->getPhysicalDeviceFeatures());
     inheritanceInfo.queryFlags         = 0;
     inheritanceInfo.pipelineStatistics = 0;
 
