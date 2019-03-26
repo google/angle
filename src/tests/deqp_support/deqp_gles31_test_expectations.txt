@@ -46,6 +46,7 @@
 // test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
 1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
+1729 D3D11 WIN7 NVIDIA : dEQP-GLES31.functional.atomic_counter.* = FAIL
 1951 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
 1951 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.ssbo.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.program_interface_query.* = SKIP
