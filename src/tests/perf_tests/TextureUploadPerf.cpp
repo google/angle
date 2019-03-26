@@ -27,7 +27,7 @@ struct TextureUploadParams final : public RenderTestParams
         iterationsPerStep = kIterationsPerStep;
         trackGpuTime      = true;
 
-        baseSize     = 2048;
+        baseSize     = 1024;
         subImageSize = 64;
 
         webgl = false;
