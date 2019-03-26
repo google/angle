@@ -464,6 +464,10 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     // Parse the cmds in this cmd buffer into given primary cmd buffer for execution
     void executeCommands(VkCommandBuffer cmdBuffer);
+
+    // Traverse the list of commands and build a summary for diagnostics.
+    std::string dumpCommands(const char *separator) const;
+
     // Pool Alloc uses 16kB pages w/ 16byte header = 16368bytes. To minimize waste
     //  using a 16368/12 = 1364. Also better perf than 1024 due to fewer block allocations
     static constexpr size_t kBlockSize = 1364;
@@ -483,7 +487,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // This will cause the SecondaryCommandBuffer to become invalid by clearing its allocator
     void releaseHandle() { mAllocator = nullptr; }
     // The SecondaryCommandBuffer is valid if it's been initialized
-    bool valid() { return mAllocator != nullptr; }
+    bool valid() const { return mAllocator != nullptr; }
 
   private:
     template <class StructType>

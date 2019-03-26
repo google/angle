@@ -158,6 +158,18 @@ void ExecuteCommands(PrimaryCommandBuffer *primCmdBuffer, priv::CommandBuffer *s
     primCmdBuffer->executeCommands(1, secCmdBuffer);
 }
 
+ANGLE_MAYBE_UNUSED
+std::string DumpCommands(const priv::SecondaryCommandBuffer &commandBuffer, const char *separator)
+{
+    return commandBuffer.dumpCommands(separator);
+}
+
+ANGLE_MAYBE_UNUSED
+std::string DumpCommands(const priv::CommandBuffer &commandBuffer, const char *separator)
+{
+    return "--blob--";
+}
+
 }  // anonymous namespace
 
 // CommandGraphResource implementation.
@@ -622,6 +634,24 @@ void CommandGraphNode::setDiagnosticInfo(CommandGraphResourceType resourceType,
     mResourceID   = resourceID;
 }
 
+std::string CommandGraphNode::dumpCommandsForDiagnostics(const char *separator) const
+{
+    std::string result;
+    if (mOutsideRenderPassCommands.valid())
+    {
+        result += separator;
+        result += "Outside RP:";
+        result += DumpCommands(mOutsideRenderPassCommands, separator);
+    }
+    if (mInsideRenderPassCommands.valid())
+    {
+        result += separator;
+        result += "Inside RP:";
+        result += DumpCommands(mInsideRenderPassCommands, separator);
+    }
+    return result;
+}
+
 const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
 {
     return mRenderPassRenderArea;
@@ -951,8 +981,8 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
         }
 
         const std::string &label = strstr.str();
-        out << "  " << nodeID << "[label =<" << label << "<BR/> <FONT POINT-SIZE=\"10\">Node ID "
-            << nodeID << "</FONT>>];" << std::endl;
+        out << "  " << nodeID << "[label =<" << label << "<BR/><FONT POINT-SIZE=\"10\">Node ID "
+            << nodeID << node->dumpCommandsForDiagnostics("<BR/>") << "</FONT>>];" << std::endl;
     }
 
     for (const CommandGraphNode *node : mNodes)

@@ -136,6 +136,7 @@ class CommandGraphNode final : angle::NonCopyable
 
     CommandGraphResourceType getResourceTypeForDiagnostics() const { return mResourceType; }
     uintptr_t getResourceIDForDiagnostics() const { return mResourceID; }
+    std::string dumpCommandsForDiagnostics(const char *separator) const;
 
     const gl::Rectangle &getRenderPassRenderArea() const;
 
