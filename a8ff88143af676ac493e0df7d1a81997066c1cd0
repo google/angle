@@ -22,6 +22,30 @@
       "revId": "a8ff88143af676ac493e0df7d1a81997066c1cd0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "039548ef_1e62756c",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-26T20:53:13Z",
+      "side": 0,
+      "message": "Agreed. And the offset could be passed as an argument to be updated by `store*Parameter` so the code is still succinct.",
+      "parentUuid": "e9a056ee_fe9fa969",
+      "range": {
+        "startLine": 670,
+        "startChar": 1,
+        "endLine": 673,
+        "endChar": 47
+      },
+      "revId": "a8ff88143af676ac493e0df7d1a81997066c1cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
