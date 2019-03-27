@@ -187,7 +187,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
 
     // Unpack the packed and split representation into the format required by Vulkan.
     gl::DrawBuffersVector<VkAttachmentReference> colorAttachmentRefs;
-    VkAttachmentReference depthStencilAttachmentRef = {};
+    VkAttachmentReference depthStencilAttachmentRef = {VK_ATTACHMENT_UNUSED};
     gl::AttachmentArray<VkAttachmentDescription> attachmentDescs;
     for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
     {
@@ -205,7 +205,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
         }
         else
         {
-            ASSERT(depthStencilAttachmentRef.attachment == 0);
+            ASSERT(depthStencilAttachmentRef.attachment == VK_ATTACHMENT_UNUSED);
             depthStencilAttachmentRef.attachment = attachmentIndex;
             depthStencilAttachmentRef.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
         }
@@ -224,7 +224,8 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
     subpassDesc.pColorAttachments    = colorAttachmentRefs.data();
     subpassDesc.pResolveAttachments  = nullptr;
     subpassDesc.pDepthStencilAttachment =
-        (depthStencilAttachmentRef.attachment > 0 ? &depthStencilAttachmentRef : nullptr);
+        (depthStencilAttachmentRef.attachment != VK_ATTACHMENT_UNUSED ? &depthStencilAttachmentRef
+                                                                      : nullptr);
     subpassDesc.preserveAttachmentCount = 0;
     subpassDesc.pPreserveAttachments    = nullptr;
 
