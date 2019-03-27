@@ -32,12 +32,13 @@ class FenceSyncVk
 
     void onDestroy(RendererVk *renderer);
 
-    angle::Result initialize(vk::Context *context);
+    angle::Result initialize(ContextVk *contextVk);
     angle::Result clientWait(vk::Context *context,
+                             ContextVk *contextVk,
                              bool flushCommands,
                              uint64_t timeout,
                              VkResult *outResult);
-    angle::Result serverWait(vk::Context *context);
+    angle::Result serverWait(vk::Context *context, ContextVk *contextVk);
     angle::Result getStatus(vk::Context *context, bool *signaled);
 
   private:
@@ -79,12 +80,17 @@ class EGLSyncVk final : public EGLSyncImpl
 
     void onDestroy(const egl::Display *display) override;
 
-    egl::Error initialize(const egl::Display *display, EGLenum type) override;
+    egl::Error initialize(const egl::Display *display,
+                          const gl::Context *context,
+                          EGLenum type) override;
     egl::Error clientWait(const egl::Display *display,
+                          const gl::Context *context,
                           EGLint flags,
                           EGLTime timeout,
                           EGLint *outResult) override;
-    egl::Error serverWait(const egl::Display *display, EGLint flags) override;
+    egl::Error serverWait(const egl::Display *display,
+                          const gl::Context *context,
+                          EGLint flags) override;
     egl::Error getStatus(const egl::Display *display, EGLint *outStatus) override;
 
   private:

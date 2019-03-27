@@ -22,6 +22,11 @@ class EGLImplFactory;
 class EGLSyncImpl;
 }  // namespace rx
 
+namespace gl
+{
+class Context;
+}  // namespace gl
+
 namespace egl
 {
 class Sync final : public angle::RefCountObject<Display, angle::Result>
@@ -32,9 +37,13 @@ class Sync final : public angle::RefCountObject<Display, angle::Result>
 
     void onDestroy(const Display *display) override;
 
-    Error initialize(const Display *display);
-    Error clientWait(const Display *display, EGLint flags, EGLTime timeout, EGLint *outResult);
-    Error serverWait(const Display *display, EGLint flags);
+    Error initialize(const Display *display, const gl::Context *context);
+    Error clientWait(const Display *display,
+                     const gl::Context *context,
+                     EGLint flags,
+                     EGLTime timeout,
+                     EGLint *outResult);
+    Error serverWait(const Display *display, const gl::Context *context, EGLint flags);
     Error getStatus(const Display *display, EGLint *outStatus) const;
 
     EGLenum getType() const { return mType; }
