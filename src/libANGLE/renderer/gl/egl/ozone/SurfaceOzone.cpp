@@ -34,7 +34,7 @@ FramebufferImpl *SurfaceOzone::createDefaultFramebuffer(const gl::Context *conte
     return mBuffer->framebufferGL(context, state);
 }
 
-egl::Error SurfaceOzone::makeCurrent()
+egl::Error SurfaceOzone::makeCurrent(const gl::Context *context)
 {
     return egl::NoError();
 }

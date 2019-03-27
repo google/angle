@@ -217,7 +217,7 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::makeCurrent()
+egl::Error WindowSurfaceCGL::makeCurrent(const gl::Context *context)
 {
     return egl::Error(EGL_SUCCESS);
 }

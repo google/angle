@@ -112,7 +112,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::initialize(const egl::Display *display
     return createSwapChain();
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::makeCurrent()
+egl::Error DXGISwapChainWindowSurfaceWGL::makeCurrent(const gl::Context *context)
 {
     return egl::NoError();
 }

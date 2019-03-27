@@ -29,7 +29,7 @@ class WindowSurfaceWGL : public SurfaceWGL
     ~WindowSurfaceWGL() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    egl::Error makeCurrent() override;
+    egl::Error makeCurrent(const gl::Context *context) override;
 
     egl::Error swap(const gl::Context *context) override;
     egl::Error postSubBuffer(const gl::Context *context,

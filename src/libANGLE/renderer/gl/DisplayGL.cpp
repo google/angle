@@ -76,7 +76,7 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface,
     if (drawSurface != nullptr)
     {
         SurfaceGL *glDrawSurface = GetImplAs<SurfaceGL>(drawSurface);
-        ANGLE_TRY(glDrawSurface->makeCurrent());
+        ANGLE_TRY(glDrawSurface->makeCurrent(context));
         mCurrentDrawSurface = drawSurface;
         return egl::NoError();
     }

@@ -59,7 +59,7 @@ egl::Error PbufferSurfaceCGL::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::makeCurrent()
+egl::Error PbufferSurfaceCGL::makeCurrent(const gl::Context *context)
 {
     return egl::NoError();
 }

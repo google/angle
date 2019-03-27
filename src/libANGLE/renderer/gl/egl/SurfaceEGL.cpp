@@ -30,7 +30,7 @@ SurfaceEGL::~SurfaceEGL()
     }
 }
 
-egl::Error SurfaceEGL::makeCurrent()
+egl::Error SurfaceEGL::makeCurrent(const gl::Context *context)
 {
     // Handling of makeCurrent is done in DisplayEGL
     return egl::NoError();

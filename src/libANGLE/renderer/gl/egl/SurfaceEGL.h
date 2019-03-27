@@ -23,7 +23,7 @@ class SurfaceEGL : public SurfaceGL
     SurfaceEGL(const egl::SurfaceState &state, const FunctionsEGL *egl, EGLConfig config);
     ~SurfaceEGL() override;
 
-    egl::Error makeCurrent() override;
+    egl::Error makeCurrent(const gl::Context *context) override;
     egl::Error swap(const gl::Context *context) override;
     egl::Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects) override;
     egl::Error postSubBuffer(const gl::Context *context,

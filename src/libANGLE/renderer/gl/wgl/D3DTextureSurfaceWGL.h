@@ -41,7 +41,7 @@ class D3DTextureSurfaceWGL : public SurfaceWGL
                                                      ID3D11Device *d3d11Device);
 
     egl::Error initialize(const egl::Display *display) override;
-    egl::Error makeCurrent() override;
+    egl::Error makeCurrent(const gl::Context *context) override;
     egl::Error unMakeCurrent() override;
 
     egl::Error swap(const gl::Context *context) override;

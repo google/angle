@@ -92,7 +92,7 @@ egl::Error WindowSurfaceWGL::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceWGL::makeCurrent()
+egl::Error WindowSurfaceWGL::makeCurrent(const gl::Context *context)
 {
     return egl::NoError();
 }
