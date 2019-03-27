@@ -314,7 +314,7 @@
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp":
     "d20e549634ef32d6ad4e9f0b28e52acf",
   "Vulkan mandatory format support table:third_party/vulkan-headers/src/registry/vk.xml":
-    "f5c8c9b8e521644ded34d44b1016c25e",
+    "8af0f992bd45c2d9500eb5ed60c256d6",
   "packed enum:src/common/PackedEGLEnums_autogen.cpp":
     "c9f7cea85751e5a39b92bccc1d97f3bd",
   "packed enum:src/common/PackedEGLEnums_autogen.h":

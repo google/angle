@@ -181,6 +181,12 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     bool clearColor = IsMaskFlagSet(static_cast<int>(mask), GL_COLOR_BUFFER_BIT);
 
+    // If the only thing to be cleared was depth and it's masked, there's nothing to do.
+    if (!clearColor && !clearDepth && !clearStencil)
+    {
+        return angle::Result::Continue;
+    }
+
     const gl::State &glState = context->getState();
 
     VkClearDepthStencilValue clearDepthStencilValue =

@@ -466,24 +466,6 @@ angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
         // have finished.  We therefore store the handle to the swapchain being destroyed in the
         // swap history (alongside the serial of the last submission) so it can be destroyed once we
         // wait on that serial as part of the CPU throttling.
-        //
-        // TODO(syoussefi): the spec specifically allows multiple retired swapchains to exist:
-        //
-        // > Multiple retired swapchains can be associated with the same VkSurfaceKHR through
-        // > multiple uses of oldSwapchain that outnumber calls to vkDestroySwapchainKHR.
-        //
-        // However, a bug in the validation layers currently forces us to limit this to one retired
-        // swapchain.  Once the issue is resolved, the following for loop can be removed.
-        // http://anglebug.com/3095
-        for (SwapHistory &swap : mSwapHistory)
-        {
-            if (swap.swapchain != VK_NULL_HANDLE)
-            {
-                ANGLE_TRY(renderer->finishToSerial(displayVk, swap.serial));
-                vkDestroySwapchainKHR(renderer->getDevice(), swap.swapchain, nullptr);
-                swap.swapchain = VK_NULL_HANDLE;
-            }
-        }
         mSwapHistory[swapHistoryIndex].swapchain = oldSwapchain;
     }
 
@@ -735,21 +717,27 @@ angle::Result WindowSurfaceVk::present(DisplayVk *displayVk,
 
     VkPresentRegionKHR presentRegion   = {};
     VkPresentRegionsKHR presentRegions = {};
-    std::vector<VkRectLayerKHR> vk_rects;
+    std::vector<VkRectLayerKHR> vkRects;
     if (renderer->getFeatures().supportsIncrementalPresent && (n_rects > 0))
     {
-        EGLint *egl_rects            = rects;
+        EGLint width  = getWidth();
+        EGLint height = getHeight();
+
+        EGLint *eglRects             = rects;
         presentRegion.rectangleCount = n_rects;
-        vk_rects.resize(n_rects);
-        for (EGLint rect = 0; rect < n_rects; rect++)
+        vkRects.resize(n_rects);
+        for (EGLint i = 0; i < n_rects; i++)
         {
-            vk_rects[rect].offset.x      = *egl_rects++;
-            vk_rects[rect].offset.y      = *egl_rects++;
-            vk_rects[rect].extent.width  = *egl_rects++;
-            vk_rects[rect].extent.height = *egl_rects++;
-            vk_rects[rect].layer         = 0;
+            VkRectLayerKHR &rect = vkRects[i];
+
+            // Make sure the damage rects are within swapchain bounds.
+            rect.offset.x      = gl::clamp(*eglRects++, 0, width);
+            rect.offset.y      = gl::clamp(*eglRects++, 0, height);
+            rect.extent.width  = gl::clamp(*eglRects++, 0, width - rect.offset.x);
+            rect.extent.height = gl::clamp(*eglRects++, 0, height - rect.offset.y);
+            rect.layer         = 0;
         }
-        presentRegion.pRectangles = vk_rects.data();
+        presentRegion.pRectangles = vkRects.data();
 
         presentRegions.sType          = VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR;
         presentRegions.pNext          = nullptr;

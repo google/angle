@@ -302,7 +302,6 @@ core_validation_sources = [
   "$vulkan_gen_dir/vk_safe_struct.h",
   "src/layers/buffer_validation.cpp",
   "src/layers/buffer_validation.h",
-  "src/layers/core_dispatch.cpp",
   "src/layers/core_validation.cpp",
   "src/layers/core_validation.h",
   "src/layers/convert_to_renderpass2.cpp",
@@ -368,9 +367,9 @@ chassis_deps = [
 layers = [
   [
     "core_validation",
-    core_validation_sources,
-    core_validation_deps,
-    [],
+    core_validation_sources + chassis_sources,
+    core_validation_deps + chassis_deps,
+    [ "BUILD_CORE_VALIDATION" ],
   ],
   [
     "object_lifetimes",
