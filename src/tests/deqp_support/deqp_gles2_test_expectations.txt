@@ -218,6 +218,14 @@
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_rgb888_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_rgba4444_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_l8_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_repeat_rgba8888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_repeat_rgb888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_repeat_rgba4444_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_repeat_l8_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_mirror_rgba8888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_mirror_rgb888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_mirror_rgba4444_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_mirror_l8_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_rgba8888_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_rgb888_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_rgba4444_pot = FAIL
@@ -230,6 +238,8 @@
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_rgb888_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_rgba4444_pot = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_l8_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.vertex.2d.filtering.linear_nearest_* = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_nearest_* = FAIL
 
 // Mac AMD OpenGL specific
 2137 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL

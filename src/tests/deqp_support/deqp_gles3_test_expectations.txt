@@ -436,8 +436,11 @@
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_x = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_x = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_x = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_y = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.filtering.2d_array.combinations.linear_nearest_* = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.filtering.2d.combinations.linear_nearest_* = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.filtering.3d.combinations.linear_nearest_* = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.filtering.cube.combinations.linear_nearest_* = FAIL
 
 // Android only failures
 1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.red_half_float_oes = FAIL
