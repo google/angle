@@ -280,6 +280,13 @@ static bool SizedHalfFloatRGBARenderbufferSupport(const Version &clientVersion,
            (extensions.colorBufferFloat || extensions.colorBufferHalfFloat);
 }
 
+static bool SizedFloatRGBARenderbufferSupport(const Version &clientVersion,
+                                              const Extensions &extensions)
+{
+    return (clientVersion >= Version(3, 0) || extensions.textureFloat) &&
+           (extensions.colorBufferFloat || extensions.colorBufferFloatRGBA);
+}
+
 // R32F, RG32F
 static bool SizedFloatRGSupport(const Version &clientVersion, const Extensions &extensions)
 {
@@ -783,7 +790,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddRGBAFormat(&map, GL_R32F,          true, 32,  0,  0,  0, 0, GL_RED,  GL_FLOAT,          GL_FLOAT,        false, SizedFloatRGSupport,        RequireExt<&Extensions::textureFloatLinear>, RequireExt<&Extensions::colorBufferFloat>,    RequireExt<&Extensions::colorBufferFloat>);
     AddRGBAFormat(&map, GL_RG32F,         true, 32, 32,  0,  0, 0, GL_RG,   GL_FLOAT,          GL_FLOAT,        false, SizedFloatRGSupport,        RequireExt<&Extensions::textureFloatLinear>, RequireExt<&Extensions::colorBufferFloat>,    RequireExt<&Extensions::colorBufferFloat>);
     AddRGBAFormat(&map, GL_RGB32F,        true, 32, 32, 32,  0, 0, GL_RGB,  GL_FLOAT,          GL_FLOAT,        false, SizedFloatRGBSupport,       RequireExt<&Extensions::textureFloatLinear>, RequireExt<&Extensions::colorBufferFloatRGB>, NeverSupported                           );
-    AddRGBAFormat(&map, GL_RGBA32F,       true, 32, 32, 32, 32, 0, GL_RGBA, GL_FLOAT,          GL_FLOAT,        false, SizedFloatRGBASupport,      RequireExt<&Extensions::textureFloatLinear>, SizedFloatRGBATextureAttachmentSupport,       RequireExt<&Extensions::colorBufferFloat>);
+    AddRGBAFormat(&map, GL_RGBA32F,       true, 32, 32, 32, 32, 0, GL_RGBA, GL_FLOAT,          GL_FLOAT,        false, SizedFloatRGBASupport,      RequireExt<&Extensions::textureFloatLinear>, SizedFloatRGBATextureAttachmentSupport,       SizedFloatRGBARenderbufferSupport);
 
     // Depth stencil formats
     //                         | Internal format         |sized| D |S | X | Format            | Type                             | Component type        | Texture supported                                                | Filterable                                      | Texture attachment                                                                   | Renderbuffer                                                                         |
