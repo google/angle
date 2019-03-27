@@ -232,17 +232,30 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
     bool maskedClearColor =
         clearColor && (mActiveColorComponents & colorMaskFlags) != mActiveColorComponents;
+    bool clearColorWithRenderPassLoadOp = clearColor && !maskedClearColor;
+    bool clearAnyWithRenderPassLoadOp =
+        clearColorWithRenderPassLoadOp || clearDepth || clearStencil;
 
-    if (!maskedClearColor && !isScissorTestEffectivelyEnabled &&
+    if (clearAnyWithRenderPassLoadOp && !isScissorTestEffectivelyEnabled &&
         !contextVk->getRenderer()->getFeatures().disableClearWithRenderPassLoadOp)
     {
-        // Note(syoussefi): A possible optimization could be to allow depth/stencil clear in
-        // presence of color mask, and leave the color clear to the following steps, i.e. start a
-        // render pass with depth/stencil = Clear and have a subsequent draw call within the render
-        // pass to clear the color.  That could render some of the depth/stencil clear paths below
-        // unnecessary.
-        return clearWithRenderPassOp(contextVk, clearColor, clearDepth, clearStencil,
-                                     contextVk->getClearColorValue().color, clearDepthStencilValue);
+        // If there's a color mask, only clear depth/stencil with render pass loadOp.
+        ANGLE_TRY(clearWithRenderPassOp(contextVk, clearColorWithRenderPassLoadOp, clearDepth,
+                                        clearStencil, contextVk->getClearColorValue().color,
+                                        clearDepthStencilValue));
+
+        // Fallback to other methods for whatever isn't cleared here.
+        clearDepth   = false;
+        clearStencil = false;
+        if (clearColorWithRenderPassLoadOp)
+        {
+            clearColor = false;
+        }
+
+        if (!clearColor)
+        {
+            return angle::Result::Continue;
+        }
     }
 
     // The most costly clear mode is when we need to mask out specific color channels. This can
@@ -275,6 +288,9 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
                                             clearDepthStencilValue));
         return angle::Result::Continue;
     }
+
+    // Unless working around driver bugs, every clear should have been covered at this point.
+    ASSERT(contextVk->getRenderer()->getFeatures().disableClearWithRenderPassLoadOp);
 
     // Standard Depth/stencil clear without scissor.
     if (clearDepth || clearStencil)
