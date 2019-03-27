@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "951e6373_77ed6d45",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-03-27T02:34:51Z",
+      "side": 1,
+      "message": "I believe this function is now unnecessary. By simply not assigning the return value of `storePointerParameter` for the last call, the expression in the `return` line should be optimized out.",
+      "revId": "e75abd1888b86d2e89160028c15b52cb550bd86b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
