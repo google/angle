@@ -970,7 +970,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     {
         TRACE_EVENT0("gpu.angle", "LineLoopHelper::getIndexBufferForElementArrayBuffer");
         // Needed before reading buffer or we could get stale data.
-        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+        ANGLE_TRY(contextVk->finishImpl());
 
         void *srcDataMapping = nullptr;
         ANGLE_TRY(elementArrayBufferVk->mapImpl(contextVk, &srcDataMapping));

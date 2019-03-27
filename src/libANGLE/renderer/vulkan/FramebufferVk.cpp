@@ -1346,7 +1346,6 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                             void *pixels)
 {
     TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
-    RendererVk *renderer = contextVk->getRenderer();
 
     ANGLE_TRY(renderTarget->ensureImageInitialized(contextVk));
 
@@ -1393,7 +1392,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 
     // Triggers a full finish.
     // TODO(jmadill): Don't block on asynchronous readback.
-    ANGLE_TRY(renderer->finish(contextVk));
+    ANGLE_TRY(contextVk->finishImpl());
 
     // The buffer we copied to needs to be invalidated before we read from it because its not been
     // created with the host coherent bit.

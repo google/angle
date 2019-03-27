@@ -84,7 +84,8 @@ DeviceImpl *DisplayVk::createDevice()
 egl::Error DisplayVk::waitClient(const gl::Context *context)
 {
     TRACE_EVENT0("gpu.angle", "DisplayVk::waitClient");
-    return angle::ToEGL(mRenderer->finish(this), this, EGL_BAD_ACCESS);
+    ContextVk *contextVk = vk::GetImpl(context);
+    return angle::ToEGL(contextVk->finishImpl(), this, EGL_BAD_ACCESS);
 }
 
 egl::Error DisplayVk::waitNative(const gl::Context *context, EGLint engine)

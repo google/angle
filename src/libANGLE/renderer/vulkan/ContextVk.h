@@ -25,6 +25,7 @@ struct FeaturesVk;
 namespace rx
 {
 class RendererVk;
+class WindowSurfaceVk;
 
 class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBufferOwner
 {
@@ -38,7 +39,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     // Flush and finish.
     angle::Result flush(const gl::Context *context) override;
+    angle::Result flushImpl();
     angle::Result finish(const gl::Context *context) override;
+    angle::Result finishImpl();
 
     // Drawing methods.
     angle::Result drawArrays(const gl::Context *context,
@@ -287,6 +290,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     vk::PipelineHelper *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
+
+    WindowSurfaceVk *mCurrentWindowSurface;
 
     // Keep a cached pipeline description structure that can be used to query the pipeline cache.
     // Kept in a pointer so allocations can be aligned, and structs can be portably packed.

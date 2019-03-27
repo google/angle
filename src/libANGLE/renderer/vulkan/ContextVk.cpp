@@ -27,6 +27,7 @@
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SamplerVk.h"
 #include "libANGLE/renderer/vulkan/ShaderVk.h"
+#include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/SyncVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
@@ -72,6 +73,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       vk::Context(renderer),
       mCurrentPipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
+      mCurrentWindowSurface(nullptr),
       mVertexArray(nullptr),
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
@@ -117,7 +119,7 @@ ContextVk::~ContextVk() = default;
 void ContextVk::onDestroy(const gl::Context *context)
 {
     // Force a flush on destroy.
-    (void)mRenderer->finish(this);
+    (void)finishImpl();
 
     mDriverUniformsSetLayout.reset();
     mIncompleteTextures.onDestroy(context);
@@ -190,12 +192,38 @@ angle::Result ContextVk::initialize()
 
 angle::Result ContextVk::flush(const gl::Context *context)
 {
-    return mRenderer->flush(this);
+    return flushImpl();
+}
+
+angle::Result ContextVk::flushImpl()
+{
+    const vk::Semaphore *waitSemaphore   = nullptr;
+    const vk::Semaphore *signalSemaphore = nullptr;
+    if (mCurrentWindowSurface && !mRenderer->getCommandGraph()->empty())
+    {
+        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
+                                                                    &signalSemaphore));
+    }
+
+    return mRenderer->flush(this, waitSemaphore, signalSemaphore);
 }
 
 angle::Result ContextVk::finish(const gl::Context *context)
 {
-    return mRenderer->finish(this);
+    return finishImpl();
+}
+
+angle::Result ContextVk::finishImpl()
+{
+    const vk::Semaphore *waitSemaphore   = nullptr;
+    const vk::Semaphore *signalSemaphore = nullptr;
+    if (mCurrentWindowSurface && !mRenderer->getCommandGraph()->empty())
+    {
+        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
+                                                                    &signalSemaphore));
+    }
+
+    return mRenderer->finish(this, waitSemaphore, signalSemaphore);
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
@@ -958,6 +986,15 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     mFlipYForCurrentSurface =
         drawSurface != nullptr && mRenderer->getFeatures().flipViewportY &&
         !IsMaskFlagSet(drawSurface->getOrientation(), EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE);
+
+    if (drawSurface && drawSurface->getType() == EGL_WINDOW_BIT)
+    {
+        mCurrentWindowSurface = GetImplAs<WindowSurfaceVk>(drawSurface);
+    }
+    else
+    {
+        mCurrentWindowSurface = nullptr;
+    }
 
     const gl::State &glState = context->getState();
     updateFlipViewportDrawFramebuffer(glState);

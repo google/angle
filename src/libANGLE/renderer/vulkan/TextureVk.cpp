@@ -970,7 +970,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
                                      copyBufferHandle, 1, &region);
 
     // Explicitly finish. If new use cases arise where we don't want to block we can change this.
-    ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+    ANGLE_TRY(contextVk->finishImpl());
 
     return angle::Result::Continue;
 }

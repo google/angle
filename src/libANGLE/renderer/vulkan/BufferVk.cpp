@@ -179,7 +179,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
 
     TRACE_EVENT0("gpu.angle", "BufferVk::getIndexRange");
     // Needed before reading buffer or we could get stale data.
-    ANGLE_TRY(renderer->finish(contextVk));
+    ANGLE_TRY(contextVk->finishImpl());
 
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());
