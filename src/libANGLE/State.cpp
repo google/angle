@@ -1543,7 +1543,7 @@ const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t 
     return mShaderStorageBuffers[index];
 }
 
-angle::Result State::detachBuffer(const Context *context, const Buffer *buffer)
+angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
 {
     if (!buffer->isBound())
     {
@@ -1564,7 +1564,11 @@ angle::Result State::detachBuffer(const Context *context, const Buffer *buffer)
         ANGLE_TRY(curTransformFeedback->detachBuffer(context, bufferName));
     }
 
-    getVertexArray()->detachBuffer(context, bufferName);
+    if (getVertexArray()->detachBuffer(context, bufferName))
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
+        context->getStateCache().onVertexArrayStateChange(context);
+    }
 
     for (auto &buf : mUniformBuffers)
     {

@@ -1799,6 +1799,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     std::shared_ptr<angle::WorkerThreadPool> getWorkerThreadPool() const { return mThreadPool; }
 
     const StateCache &getStateCache() const { return mStateCache; }
+    StateCache &getStateCache() { return mStateCache; }
 
     void onSubjectStateChange(const Context *context,
                               angle::SubjectIndex index,

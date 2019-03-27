@@ -170,9 +170,10 @@ const std::string &VertexArray::getLabel() const
     return mState.mLabel;
 }
 
-void VertexArray::detachBuffer(const Context *context, GLuint bufferName)
+bool VertexArray::detachBuffer(const Context *context, GLuint bufferName)
 {
     bool isBound = context->isCurrentVertexArray(this);
+    bool anyBufferDetached = false;
     for (size_t bindingIndex = 0; bindingIndex < gl::MAX_VERTEX_ATTRIB_BINDINGS; ++bindingIndex)
     {
         VertexBinding &binding = mState.mVertexBindings[bindingIndex];
@@ -185,6 +186,19 @@ void VertexArray::detachBuffer(const Context *context, GLuint bufferName)
             }
             binding.setBuffer(context, nullptr);
             mArrayBufferObserverBindings[bindingIndex].reset();
+
+            if (context->getClientVersion() >= ES_3_1)
+            {
+                setDirtyBindingBit(bindingIndex, DIRTY_BINDING_BUFFER);
+            }
+            else
+            {
+                ASSERT(binding.getBoundAttributesMask() == AttributesMask(1ull << bindingIndex));
+                setDirtyAttribBit(bindingIndex, DIRTY_ATTRIB_POINTER);
+            }
+
+            anyBufferDetached = true;
+            mState.mClientMemoryAttribsMask |= binding.getBoundAttributesMask();
         }
     }
 
@@ -193,7 +207,11 @@ void VertexArray::detachBuffer(const Context *context, GLuint bufferName)
         if (isBound && mState.mElementArrayBuffer.get())
             mState.mElementArrayBuffer->onNonTFBindingChanged(-1);
         mState.mElementArrayBuffer.bind(context, nullptr);
+        mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
+        anyBufferDetached = true;
     }
+
+    return anyBufferDetached;
 }
 
 const VertexAttribute &VertexArray::getVertexAttribute(size_t attribIndex) const
