@@ -264,8 +264,6 @@
 3309 GLES ANDROID : dEQP-GLES2.functional.uniform_api.random.54 = FAIL
 
 // General Vulkan failures
-3249 VULKAN : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgb = FAIL
-3249 VULKAN : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgba = FAIL
 3300 VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
 
 // Depth/stencil clear

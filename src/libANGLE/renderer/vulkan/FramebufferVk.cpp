@@ -1134,7 +1134,8 @@ angle::Result FramebufferVk::startNewRenderPassImpl(
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
 
-        colorRenderTarget->onColorDraw(&mFramebuffer, writeCommands, &renderPassDesc);
+        ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk, &mFramebuffer, writeCommands,
+                                                 &renderPassDesc));
 
         VkAttachmentLoadOp colorLoadOp =
             clearColor ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
@@ -1162,7 +1163,8 @@ angle::Result FramebufferVk::startNewRenderPassImpl(
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
     if (depthStencilRenderTarget)
     {
-        depthStencilRenderTarget->onDepthStencilDraw(&mFramebuffer, writeCommands, &renderPassDesc);
+        ANGLE_TRY(depthStencilRenderTarget->onDepthStencilDraw(contextVk, &mFramebuffer,
+                                                               writeCommands, &renderPassDesc));
 
         VkAttachmentLoadOp depthLoadOp =
             clearDepth ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
