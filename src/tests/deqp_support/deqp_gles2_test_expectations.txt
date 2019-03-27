@@ -183,30 +183,58 @@
 1143 MAC OPENGL : dEQP-GLES2.functional.shaders.scoping.valid.function_parameter_hides_struct_type_* = FAIL
 1143 MAC OPENGL : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.65 = FAIL
 2631 MAC OPENGL : dEQP-GLES2.functional.shaders.operator.sequence.side_effects.affect_* = FAIL
+3317 MAC OPENGL : dEQP-GLES2.functional.shaders.linkage.varying_4 = FAIL
 
-// Mac Intel OpenGL specific
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.complex_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.complex_rgba = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.long_masked_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.long_masked_rgba = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.masked_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.masked_rgba = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.masked_scissored_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.masked_scissored_rgba = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.scissored_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.scissored_rgba = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.color_clear.short_scissored_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_alpha = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance_alpha = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgb = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgba = FAIL
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.shaders.discard.dynamic_loop_never = SKIP
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.shaders.discard.function_static_loop_never = SKIP
-2137 MAC INTEL OPENGL : dEQP-GLES2.functional.shaders.discard.static_loop_never = SKIP
+// MAC OPENGL INTEL specific
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.complex_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.complex_rgba = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.long_masked_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.long_masked_rgba = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.masked_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.masked_rgba = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.masked_scissored_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.masked_scissored_rgba = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.scissored_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.scissored_rgba = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.color_clear.short_scissored_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_alpha = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance_alpha = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgb = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgba = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.discard.dynamic_loop_never = SKIP
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.discard.function_static_loop_never = SKIP
+2137 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.discard.static_loop_never = SKIP
+
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.polygon_offset.default_render_with_units = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_3 = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_3 = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.invariance.lowp.common_subexpression_1 = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.shaders.invariance.lowp.common_subexpression_3 = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_rgba8888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_rgb888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_rgba4444_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.2d.linear_nearest_clamp_l8_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_rgba8888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_rgb888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_rgba4444_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_clamp_l8_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_repeat_rgba8888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_repeat_rgb888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_repeat_rgba4444_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_repeat_l8_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_rgba8888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_rgb888_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_rgba4444_pot = FAIL
+3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.filtering.cube.linear_nearest_mirror_l8_pot = FAIL
 
 // Mac AMD OpenGL specific
-2137 MAC AMD OPENGL : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
+2137 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
+3317 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL
+3317 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 
 // Android GLES backend only failures
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_vertex = FAIL
