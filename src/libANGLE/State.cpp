@@ -725,6 +725,20 @@ void State::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha
 
 void State::setBlendColor(float red, float green, float blue, float alpha)
 {
+    // In ES2 without render-to-float extensions, BlendColor clamps to [0,1] on store.
+    // On ES3+, or with render-to-float exts enabled, it does not clamp on store.
+    const bool isES2 = mClientVersion.major == 2;
+    const bool hasFloatBlending =
+        mExtensions.colorBufferFloat || mExtensions.colorBufferHalfFloat ||
+        mExtensions.colorBufferFloatRGB || mExtensions.colorBufferFloatRGBA;
+    if (isES2 && !hasFloatBlending)
+    {
+        red   = clamp01(red);
+        green = clamp01(green);
+        blue  = clamp01(blue);
+        alpha = clamp01(alpha);
+    }
+
     mBlendColor.red   = red;
     mBlendColor.green = green;
     mBlendColor.blue  = blue;

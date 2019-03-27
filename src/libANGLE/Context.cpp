@@ -4924,7 +4924,7 @@ void Context::blendBarrier()
 
 void Context::blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
-    mState.setBlendColor(clamp01(red), clamp01(green), clamp01(blue), clamp01(alpha));
+    mState.setBlendColor(red, green, blue, alpha);
 }
 
 void Context::blendEquation(GLenum mode)

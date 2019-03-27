@@ -215,18 +215,19 @@ void main()
             0, 0, GLColor32F(floatData[0], floatData[1], floatData[2], floatData[3]), 1.0f);
     }
 
-    void TestExtFloatBlend(bool shouldBlend)
+    void TestExtFloatBlend(GLenum internalFormat, GLenum type, bool shouldBlend)
     {
         constexpr char kVS[] =
             R"(void main()
 {
+    gl_PointSize = 1.0;
     gl_Position = vec4(0, 0, 0, 1);
 })";
 
         constexpr char kFS[] =
             R"(void main()
 {
-    gl_FragColor = vec4(0, 1, 0, 1);
+    gl_FragColor = vec4(0.5, 0, 0, 0);
 })";
 
         ANGLE_GL_PROGRAM(program, kVS, kFS);
@@ -234,7 +235,7 @@ void main()
 
         GLTexture texture;
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA, GL_FLOAT, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 1, 1, 0, GL_RGBA, type, nullptr);
         EXPECT_GL_NO_ERROR();
 
         GLFramebuffer fbo;
@@ -242,20 +243,37 @@ void main()
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
         ASSERT_EGLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
+        glClearColor(1, 0, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_COLOR32F_NEAR(0, 0, GLColor32F(1, 0, 1, 1), 0.001f);
+
         glDisable(GL_BLEND);
         glDrawArrays(GL_POINTS, 0, 1);
         EXPECT_GL_NO_ERROR();
 
         glEnable(GL_BLEND);
+        glBlendFunc(GL_CONSTANT_COLOR, GL_ZERO);
+        glBlendColor(10, 1, 1, 1);
+        glViewport(0, 0, 1, 1);
         glDrawArrays(GL_POINTS, 0, 1);
-        if (shouldBlend)
-        {
-            EXPECT_GL_NO_ERROR();
-        }
-        else
+        if (!shouldBlend)
         {
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            return;
         }
+        EXPECT_GL_NO_ERROR();
+
+        if (!IsOpenGLES())
+        {
+            // GLES test machines will need a workaround.
+            EXPECT_PIXEL_COLOR32F_NEAR(0, 0, GLColor32F(5, 0, 0, 0), 0.001f);
+        }
+
+        // Check sure that non-float attachments clamp BLEND_COLOR.
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glDrawArrays(GL_POINTS, 0, 1);
+
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x80, 0, 0, 0), 1);
     }
 
     void TestDifferentStencilMaskAndRef(GLenum errIfMismatch);
@@ -3133,27 +3151,81 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+static void TestBlendColor(const bool shouldClamp)
+{
+    auto expected = GLColor32F(5, 0, 0, 0);
+    glBlendColor(expected.R, expected.G, expected.B, expected.A);
+    if (shouldClamp)
+    {
+        expected.R = 1;
+    }
+
+    float arr[4] = {};
+    glGetFloatv(GL_BLEND_COLOR, arr);
+    const auto actual = GLColor32F(arr[0], arr[1], arr[2], arr[3]);
+    EXPECT_COLOR_NEAR(expected, actual, 0.001);
+}
+
 // Test if blending of float32 color attachment generates GL_INVALID_OPERATION when
 // GL_EXT_float_blend is not enabled
 TEST_P(WebGLCompatibilityTest, FloatBlend)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_EXT_float_blend"));
     if (getClientMajorVersion() >= 3)
     {
+        TestBlendColor(false);
         ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
     }
     else
     {
+        TestBlendColor(true);
         ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_texture_float"));
         ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"));
     }
 
-    TestExtFloatBlend(false);
+    TestBlendColor(false);
 
-    glRequestExtensionANGLE("GL_EXT_float_blend");
+    // -
+
+    TestExtFloatBlend(GL_RGBA32F, GL_FLOAT, false);
+
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_float_blend"));
     ASSERT_GL_NO_ERROR();
 
-    TestExtFloatBlend(true);
+    // D3D9 supports float rendering explicitly, supports blending operations in practice,
+    // but cannot support float blend colors.
+    ANGLE_SKIP_TEST_IF(IsD3D9());
+
+    TestExtFloatBlend(GL_RGBA32F, GL_FLOAT, true);
+}
+
+// Test the blending of float16 color attachments
+TEST_P(WebGLCompatibilityTest, HalfFloatBlend)
+{
+    GLenum internalFormat = GL_RGBA16F;
+    GLenum type           = GL_FLOAT;
+    if (getClientMajorVersion() >= 3)
+    {
+        TestBlendColor(false);
+        ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
+    }
+    else
+    {
+        TestBlendColor(true);
+        ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_texture_half_float"));
+        ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
+        internalFormat = GL_RGBA;
+        type           = GL_HALF_FLOAT_OES;
+    }
+
+    TestBlendColor(false);
+
+    // -
+
+    // D3D9 supports float rendering explicitly, supports blending operations in practice,
+    // but cannot support float blend colors.
+    ANGLE_SKIP_TEST_IF(IsD3D9());
+
+    TestExtFloatBlend(internalFormat, type, true);
 }
 
 TEST_P(WebGLCompatibilityTest, R16FTextures)
