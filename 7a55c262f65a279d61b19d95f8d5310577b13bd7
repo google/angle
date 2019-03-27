@@ -389,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "c6efa5f3_0634e704",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-27T19:12:18Z",
+      "side": 1,
+      "message": "Yep, this is what I meant.  We can always expose the extension if drawbuffers are supported, it becomes pretty useless when the max buffers is 1 but makes our lives easier.",
+      "parentUuid": "72198ff0_565bb3be",
+      "range": {
+        "startLine": 1060,
+        "startChar": 0,
+        "endLine": 1063,
+        "endChar": 58
+      },
+      "revId": "7a55c262f65a279d61b19d95f8d5310577b13bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8811c958_88df34d6",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 18

@@ -34,6 +34,52 @@
       "revId": "185d0e3edf8b3b945a59ac47cb0c6b15cf384eca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfbfb49a_bfc0f4d8",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1538,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-27T19:12:18Z",
+      "side": 1,
+      "message": "No need to save/reapply the draw buffer state of the previous framebuffer, it\u0027s saved when you change the binding.\n\nThis probably works because the default framebuffer happened to be already bound.",
+      "range": {
+        "startLine": 1531,
+        "startChar": 0,
+        "endLine": 1538,
+        "endChar": 0
+      },
+      "revId": "185d0e3edf8b3b945a59ac47cb0c6b15cf384eca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f9fbcde_2feda2ce",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-03-27T19:12:18Z",
+      "side": 1,
+      "message": "This changes the state of the default framebuffer but does not change it back.",
+      "range": {
+        "startLine": 1543,
+        "startChar": 0,
+        "endLine": 1545,
+        "endChar": 39
+      },
+      "revId": "185d0e3edf8b3b945a59ac47cb0c6b15cf384eca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
