@@ -343,7 +343,7 @@ class State : angle::NonCopyable
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
 
     // Detach a buffer from all bindings
-    angle::Result detachBuffer(const Context *context, const Buffer *buffer);
+    angle::Result detachBuffer(Context *context, const Buffer *buffer);
 
     // Vertex attrib manipulation
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
