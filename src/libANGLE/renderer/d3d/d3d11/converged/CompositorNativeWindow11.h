@@ -14,9 +14,9 @@
 
 #include <DispatcherQueue.h>
 #include <VersionHelpers.h>
-#include <Windows.ui.composition.interop.h>
 #include <windows.foundation.metadata.h>
 #include <windows.ui.composition.h>
+#include <windows.ui.composition.interop.h>
 #include <wrl.h>
 
 namespace rx
