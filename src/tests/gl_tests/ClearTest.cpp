@@ -493,7 +493,105 @@ TEST_P(ClearTest, MaskedClearThenDrawWithUniform)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Requires ES3
+// Test that clearing multiple attachments in the presence of a color mask, scissor or both
+// correctly clears all the attachments.
+TEST_P(ClearTestES3, MaskedScissoredClearMultipleAttachments)
+{
+    constexpr uint32_t kSize            = 16;
+    constexpr uint32_t kAttachmentCount = 2;
+    std::vector<unsigned char> pixelData(kSize * kSize * 4, 255);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
+
+    GLTexture textures[kAttachmentCount];
+    GLenum drawBuffers[kAttachmentCount];
+
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixelData.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i],
+                               0);
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+
+    glDrawBuffers(kAttachmentCount, drawBuffers);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    // Masked clear
+    GLColor clearColorMasked(31, 63, 255, 191);
+    angle::Vector4 clearColor = GLColor(31, 63, 127, 191).toNormalizedVector();
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // All attachments should be cleared, with the blue channel untouched
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, clearColorMasked);
+    }
+
+    // Masked scissored clear
+    GLColor clearColorMaskedScissored(63, 127, 255, 31);
+    clearColor = GLColor(63, 127, 191, 31).toNormalizedVector();
+
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kSize / 4, kSize / 4, kSize / 2, kSize / 2);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // The corners should keep the previous value while the center is cleared, except its blue
+    // channel.
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, clearColorMasked);
+
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, clearColorMaskedScissored);
+    }
+
+    // Scissored clear
+    GLColor clearColorScissored(127, 191, 31, 63);
+    clearColor = GLColor(127, 191, 31, 63).toNormalizedVector();
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // The corners should keep the old value while all channels of the center are cleared.
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, clearColorMasked);
+
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, clearColorScissored);
+    }
+}
+
 // This tests a bug where in a masked clear when calling "ClearBuffer", we would
 // mistakenly clear every channel (including the masked-out ones)
 TEST_P(ClearTestES3, MaskedClearBufferBug)
