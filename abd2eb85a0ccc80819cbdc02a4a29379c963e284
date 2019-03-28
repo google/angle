@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "f4ea8a6c_08a74b0b",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-03-28T13:40:30Z",
+      "side": 1,
+      "message": "Created https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d3324\nto track the enhancement request.",
+      "parentUuid": "1eb65cb2_cfd137f3",
+      "revId": "abd2eb85a0ccc80819cbdc02a4a29379c963e284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0a9bee2_0d752459",
         "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.h",
         "patchSetId": 2
@@ -75,6 +93,30 @@
       "revId": "abd2eb85a0ccc80819cbdc02a4a29379c963e284",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f542a18_8eef6213",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-03-28T13:40:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0a9bee2_0d752459",
+      "range": {
+        "startLine": 54,
+        "startChar": 21,
+        "endLine": 54,
+        "endChar": 25
+      },
+      "revId": "abd2eb85a0ccc80819cbdc02a4a29379c963e284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
