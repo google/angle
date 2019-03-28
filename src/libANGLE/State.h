@@ -574,7 +574,11 @@ class State : angle::NonCopyable
     const DirtyBits &getDirtyBits() const { return mDirtyBits; }
     void clearDirtyBits() { mDirtyBits.reset(); }
     void clearDirtyBits(const DirtyBits &bitset) { mDirtyBits &= ~bitset; }
-    void setAllDirtyBits() { mDirtyBits.set(); }
+    void setAllDirtyBits()
+    {
+        mDirtyBits.set();
+        mDirtyCurrentValues.set();
+    }
 
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
     void clearDirtyObjects() { mDirtyObjects.reset(); }

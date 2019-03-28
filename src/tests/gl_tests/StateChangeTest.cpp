@@ -383,6 +383,81 @@ void main (void)
     EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, GLColor::black, kPixelTolerance);
 }
 
+// Tests that vertex attribute value is preserved across context switches.
+TEST_P(StateChangeTest, MultiContextVertexAttribute)
+{
+    EGLWindow *window   = getEGLWindow();
+    EGLDisplay display  = window->getDisplay();
+    EGLConfig config    = window->getConfig();
+    EGLSurface surface  = window->getSurface();
+    EGLContext context1 = window->getContext();
+
+    // Set up program in primary context
+    ANGLE_GL_PROGRAM(program1, kSimpleAttributeVS, kSimpleAttributeFS);
+    glUseProgram(program1);
+    GLint attribLoc   = glGetAttribLocation(program1, "testAttrib");
+    GLint positionLoc = glGetAttribLocation(program1, "position");
+    ASSERT_NE(-1, attribLoc);
+    ASSERT_NE(-1, positionLoc);
+
+    // Set up the position attribute in primary context
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    // Set primary context attribute to green and draw quad
+    glVertexAttrib4f(attribLoc, 0.0f, 1.0f, 0.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Set up and switch to secondary context
+    EGLint contextAttributes[] = {
+        EGL_CONTEXT_MAJOR_VERSION_KHR,
+        GetParam().majorVersion,
+        EGL_CONTEXT_MINOR_VERSION_KHR,
+        GetParam().minorVersion,
+        EGL_NONE,
+    };
+    EGLContext context2 = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttributes);
+    ASSERT_NE(context2, EGL_NO_CONTEXT);
+    eglMakeCurrent(display, surface, surface, context2);
+
+    // Set up program in secondary context
+    ANGLE_GL_PROGRAM(program2, kSimpleAttributeVS, kSimpleAttributeFS);
+    glUseProgram(program2);
+    ASSERT_EQ(attribLoc, glGetAttribLocation(program2, "testAttrib"));
+    ASSERT_EQ(positionLoc, glGetAttribLocation(program2, "position"));
+
+    // Set up the position attribute in secondary context
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    // attribLoc current value should be default - (0,0,0,1)
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Restore primary context
+    eglMakeCurrent(display, surface, surface, context1);
+    // ReadPixels to ensure context is switched
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Switch to secondary context second time
+    eglMakeCurrent(display, surface, surface, context2);
+    // Check that it still draws black
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Restore primary context second time
+    eglMakeCurrent(display, surface, surface, context1);
+    // Check if it still draws green
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Clean up
+    eglDestroyContext(display, context2);
+}
+
 // Ensure that CopyTexSubImage3D syncs framebuffer changes.
 TEST_P(StateChangeTestES3, CopyTexSubImage3DSync)
 {
