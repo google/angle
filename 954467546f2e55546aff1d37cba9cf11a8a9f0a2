@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "38d67c1e_0a48802f",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-03-28T23:40:42Z",
+      "side": 1,
+      "message": "Thinking a bit more, extensions.colorBufferFloat implies clientVersion \u003e\u003d Version(3, 0) and extensions.textureFloat is not needed for renderbuffer support.\nSo, this condition should be identical to SizedFloatRGBATextureAttachmentSupport.\n(extensions.textureFloat doesn\u0027t appear there either, since it\u0027s implied by extensions.colorBufferFloatRGBA).\n\nI\u0027d just rename SizedFloatRGBATextureAttachmentSupport to SizedFloatRGBARenderabilitySupport and use it for the last two arguments of AddRGBAFormat(GL_RGBA32F) below.\n\nJeff, could you please follow up?",
+      "parentUuid": "10fcfc1b_525394ef",
+      "range": {
+        "startLine": 283,
+        "startChar": 12,
+        "endLine": 283,
+        "endChar": 45
+      },
+      "revId": "954467546f2e55546aff1d37cba9cf11a8a9f0a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "65c4762a_0c43d18b",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 5
