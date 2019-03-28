@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "71631526_79bad0a2",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1538,
+      "author": {
+        "id": 1247585
+      },
+      "writtenOn": "2019-03-28T08:47:55Z",
+      "side": 1,
+      "message": "Ah yes, I\u0027ve moved this block down so now it\u0027s saving and thus restoring the default framebuffer\u0027s state.",
+      "parentUuid": "bfbfb49a_bfc0f4d8",
+      "range": {
+        "startLine": 1531,
+        "startChar": 0,
+        "endLine": 1538,
+        "endChar": 0
+      },
+      "revId": "185d0e3edf8b3b945a59ac47cb0c6b15cf384eca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f9fbcde_2feda2ce",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 20
@@ -80,6 +104,30 @@
       "revId": "185d0e3edf8b3b945a59ac47cb0c6b15cf384eca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bc4284b_7ebb4902",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1247585
+      },
+      "writtenOn": "2019-03-28T08:47:55Z",
+      "side": 1,
+      "message": "The next line does that since the saving is now after the default bind.",
+      "parentUuid": "0f9fbcde_2feda2ce",
+      "range": {
+        "startLine": 1543,
+        "startChar": 0,
+        "endLine": 1545,
+        "endChar": 39
+      },
+      "revId": "185d0e3edf8b3b945a59ac47cb0c6b15cf384eca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
