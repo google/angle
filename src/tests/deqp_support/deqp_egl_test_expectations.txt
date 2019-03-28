@@ -103,7 +103,6 @@
 
 // Windows OpenGL failures
 2546 WIN : dEQP-EGL.functional.resize.surface_size.shrink = SKIP
-2546 WIN : dEQP-EGL.functional.reusable_sync.invalid.* = SKIP
 2546 WIN : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
 2546 WIN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 WIN : dEQP-EGL.functional.thread_cleanup.* = SKIP
@@ -166,10 +165,6 @@
 2635 LINUX VULKAN : dEQP-EGL.functional.query_surface.set_attribute.pbuffer.rgba8888_no_depth_no_stencil = FAIL
 2715 LINUX VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgb888_depth_stencil = FAIL
 2715 LINUX VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgb888_no_depth_no_stencil = FAIL
-2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.grow = FAIL
-2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.shrink = FAIL
-2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_height = FAIL
-2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_width = FAIL
 2716 LINUX VULKAN : dEQP-EGL.functional.preserve_swap.no_preserve.* = FAIL
 
 // Mac failures
@@ -242,3 +237,7 @@
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.lose_context_on_reset = SKIP
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.index_buffer_out_of_bounds = SKIP
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.vertex_buffer_out_of_bounds = SKIP
+
+// Tests were being hidden by flakiness (anglebug.com/3271)
+3325 WIN MAC LINUX : dEQP-EGL.functional.fence_sync.* = SKIP
+3325 WIN MAC LINUX : dEQP-EGL.functional.reusable_sync.* = SKIP

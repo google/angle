@@ -702,3 +702,9 @@
 2950 VULKAN : dEQP-GLES3.functional.state_query.shader.program_active_uniform_blocks = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.shader.uniform_value_uint = FAIL
 2950 VULKAN : dEQP-GLES3.functional.lifetime.* = SKIP
+
+// Tests were being hidden by flakiness (anglebug.com/3271)
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.interpolation.highp_vec4_triangles_interleaved = FAIL
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.interpolation.highp_vec4_triangles_separate = FAIL
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.interleaved.triangles.* = FAIL
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.separate.triangles.* = FAIL

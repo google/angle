@@ -376,3 +376,6 @@
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).
 2976 VULKAN NVIDIA : dEQP-GLES2.functional.shaders.invariance.* = FAIL
+
+// Tests were being hidden by flakiness (anglebug.com/3271)
+3328 VULKAN WIN NVIDIA : dEQP-GLES2.functional.shaders.swizzles.vector_swizzles.mediump_vec4_qqqt_vertex = SKIP
