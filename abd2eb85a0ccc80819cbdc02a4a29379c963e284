@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1eb65cb2_cfd137f3",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-03-28T12:07:08Z",
+      "side": 1,
+      "message": "Can try it here and see if any problems pop up.\n\nEventually we should make a Texture contents change propagate to FramebufferImpl::syncState. But that\u0027s a bit trickier so we can handle that later.",
+      "parentUuid": "424098b9_ca83250c",
+      "revId": "abd2eb85a0ccc80819cbdc02a4a29379c963e284",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0a9bee2_0d752459",
         "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.h",
         "patchSetId": 2
