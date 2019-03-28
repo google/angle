@@ -287,30 +287,6 @@
 3254 VULKAN NVIDIA : dEQP-GLES2.functional.clipping.point.point_clip_viewport_center = FAIL
 3254 VULKAN NVIDIA : dEQP-GLES2.functional.clipping.point.point_clip_viewport_corner = FAIL
 
-// Fragment ops failures
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.stencil_fail_replace = FAIL
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.depth_fail_replace = FAIL
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.depth_pass_replace = FAIL
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.incr_wrap_stencil_fail = FAIL
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.zero_stencil_fail = FAIL
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.invert_stencil_fail = FAIL
-3244 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.cmp_not_equal = FAIL
-3245 VULKAN : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.11 = FAIL
-3245 VULKAN : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.20 = FAIL
-3245 VULKAN : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.24 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.2 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.19 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.48 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.67 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.74 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.84 = FAIL
-3247 VULKAN : dEQP-GLES2.functional.fragment_ops.random.91 = FAIL
-3248 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.46 = FAIL
-3248 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.70 = FAIL
-3248 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.71 = FAIL
-3248 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.85 = FAIL
-3248 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.97 = FAIL
-
 // Completeness failures
 3239 VULKAN : dEQP-GLES2.functional.texture.completeness.2d.npot_size = FAIL
 3239 VULKAN : dEQP-GLES2.functional.texture.completeness.2d.npot_size_level_1 = FAIL
