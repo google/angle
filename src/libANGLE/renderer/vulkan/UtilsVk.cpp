@@ -603,12 +603,8 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
     std::vector<VkClearValue> clearValues = {{}};
     ASSERT(clearValues.size() == 1);
 
-    renderPassAttachmentOps.setLayout(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                      VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-    renderPassAttachmentOps.setLoadOp(0, VK_ATTACHMENT_LOAD_OP_LOAD,
-                                      VK_ATTACHMENT_LOAD_OP_DONT_CARE);
-    renderPassAttachmentOps.setStoreOp(0, VK_ATTACHMENT_STORE_OP_STORE,
-                                       VK_ATTACHMENT_STORE_OP_DONT_CARE);
+    renderPassAttachmentOps.initWithLoadStore(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                              VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
     ANGLE_TRY(image->beginRenderPass(contextVk, framebuffer, renderArea, renderPassDesc,
                                      renderPassAttachmentOps, clearValues, commandBufferOut));
@@ -635,6 +631,27 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.clearValue;
 
+    // TODO(syoussefi): Currently, this only supports float clears.  Having the shader as-is support
+    // a mixture of types results in a large number of shader variations.  The solution would be to
+    // clear the render targets one by one.  However, we don't want to recreate the render pass for
+    // each one, so the shader should be able to select the render target to clear.  The variations
+    // of the shader could look like:
+    //
+    // "RenderTarget": [
+    //     "RT0",
+    //     "RT1",
+    //     ...
+    //     "RT7",
+    // ],
+    // "Format": [
+    //     "IsFloat",
+    //     "IsInt",
+    //     "IsUint"
+    // ]
+    //
+    // http://anglebug.com/3187
+    shaderParams.clearBufferMask = static_cast<uint32_t>(params.clearBufferMask->bits());
+
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
     pipelineDesc.setColorWriteMask(params.colorMaskFlags, *params.alphaMask);
@@ -650,11 +667,6 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     VkRect2D scissor;
     const gl::State &glState = contextVk->getState();
     gl_vk::GetScissor(glState, invertViewport, renderArea, &scissor);
-    // TODO(courtneygo): workaround for scissor issue on some devices. http://anglebug.com/3114
-    if ((scissor.extent.width == 0) || (scissor.extent.height == 0))
-    {
-        return angle::Result::Continue;
-    }
     pipelineDesc.setScissor(scissor);
 
     vk::ShaderLibrary &shaderLibrary                    = renderer->getShaderLibrary();

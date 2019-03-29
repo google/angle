@@ -252,7 +252,7 @@
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc":
     "287c50011ced97a7338b47a0a50127bf",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000000.inc":
-    "2d4b01d728c41ef1304ad3ef1305a1c7",
+    "94ccd6f202120a83e81202e5ce419fad",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000000.inc":
     "aa438413134a29ec32ae4551a04e60b5",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000001.inc":
@@ -296,7 +296,7 @@
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
     "1743adf55153edf91363fa7b4350d859",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ImageClear.frag":
-    "98d490413d20118e92dd2b160c1dfc6e",
+    "037fb888e77491bf7ae746069ea89a55",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ImageCopy.frag":
     "9b9fd690321f53163221f1ebba9f006d",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":

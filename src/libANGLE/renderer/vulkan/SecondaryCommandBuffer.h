@@ -489,6 +489,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // The SecondaryCommandBuffer is valid if it's been initialized
     bool valid() const { return mAllocator != nullptr; }
 
+    bool empty() const { return mCommands.size() == 0 || mCommands[0]->id == CommandID::Invalid; }
+
   private:
     template <class StructType>
     ANGLE_INLINE StructType *commonInit(CommandID cmdID, size_t allocationSize)

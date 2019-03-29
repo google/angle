@@ -101,6 +101,24 @@ class CommandGraphNode final : angle::NonCopyable
                              const AttachmentOpsArray &renderPassAttachmentOps,
                              const std::vector<VkClearValue> &clearValues);
 
+    void clearRenderPassColorAttachment(size_t attachmentIndex, const VkClearColorValue &clearValue)
+    {
+        mRenderPassAttachmentOps[attachmentIndex].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        mRenderPassClearValues[attachmentIndex].color    = clearValue;
+    }
+
+    void clearRenderPassDepthAttachment(size_t attachmentIndex, float depth)
+    {
+        mRenderPassAttachmentOps[attachmentIndex].loadOp           = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        mRenderPassClearValues[attachmentIndex].depthStencil.depth = depth;
+    }
+
+    void clearRenderPassStencilAttachment(size_t attachmentIndex, uint32_t stencil)
+    {
+        mRenderPassAttachmentOps[attachmentIndex].stencilLoadOp      = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        mRenderPassClearValues[attachmentIndex].depthStencil.stencil = stencil;
+    }
+
     // Dependency commands order node execution in the command graph.
     // Once a node has commands that must happen after it, recording is stopped and the node is
     // frozen forever.
@@ -289,6 +307,32 @@ class CommandGraphResource : angle::NonCopyable
         {
             return false;
         }
+    }
+
+    // Returns true if the render pass is started, but there are no commands yet recorded in it.
+    // This is useful to know if the render pass ops can be modified.
+    bool renderPassStartedButEmpty() const
+    {
+        return hasStartedRenderPass() &&
+               mCurrentWritingNode->getInsideRenderPassCommands()->empty();
+    }
+
+    void clearRenderPassColorAttachment(size_t attachmentIndex, const VkClearColorValue &clearValue)
+    {
+        ASSERT(renderPassStartedButEmpty());
+        mCurrentWritingNode->clearRenderPassColorAttachment(attachmentIndex, clearValue);
+    }
+
+    void clearRenderPassDepthAttachment(size_t attachmentIndex, float depth)
+    {
+        ASSERT(renderPassStartedButEmpty());
+        mCurrentWritingNode->clearRenderPassDepthAttachment(attachmentIndex, depth);
+    }
+
+    void clearRenderPassStencilAttachment(size_t attachmentIndex, uint32_t stencil)
+    {
+        ASSERT(renderPassStartedButEmpty());
+        mCurrentWritingNode->clearRenderPassStencilAttachment(attachmentIndex, stencil);
     }
 
     // Accessor for RenderPass RenderArea.

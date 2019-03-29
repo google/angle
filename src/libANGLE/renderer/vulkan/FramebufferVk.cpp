@@ -31,7 +31,15 @@ namespace rx
 
 namespace
 {
+// The value to assign an alpha channel that's emulated.  The type is unsigned int, though it will
+// automatically convert to the actual data type.
+constexpr unsigned int kEmulatedAlphaValue = 1;
+
 constexpr size_t kMinReadPixelsBufferSize = 128000;
+// Clear values are only used when loadOp=Clear is set in clearWithRenderPassOp.  When starting a
+// new render pass, the clear value is set to an unlikely value (bright pink) to stand out better
+// in case of a bug.
+constexpr VkClearValue kUninitializedClearValue = {{{0.95, 0.05, 0.95, 0.95}}};
 
 const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
                                                 RenderTargetVk *renderTarget)
@@ -93,6 +101,25 @@ const angle::Format &GetDepthStencilImageToBufferFormat(const angle::Format &ima
         default:
             UNREACHABLE();
             return imageFormat;
+    }
+}
+
+void SetEmulatedAlphaValue(const vk::Format &format, VkClearColorValue *value)
+{
+    if (format.vkFormatIsInt)
+    {
+        if (format.vkFormatIsUnsigned)
+        {
+            value->uint32[3] = kEmulatedAlphaValue;
+        }
+        else
+        {
+            value->int32[3] = kEmulatedAlphaValue;
+        }
+    }
+    else
+    {
+        value->float32[3] = kEmulatedAlphaValue;
     }
 }
 }  // anonymous namespace
@@ -165,21 +192,63 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    bool clearColor   = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_COLOR_BUFFER_BIT));
+    bool clearDepth   = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_DEPTH_BUFFER_BIT));
+    bool clearStencil = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_STENCIL_BUFFER_BIT));
+    gl::DrawBufferMask clearColorBuffers;
+    if (clearColor)
+    {
+        clearColorBuffers = mState.getEnabledDrawBuffers();
+    }
+
+    const VkClearColorValue &clearColorValue = contextVk->getClearColorValue().color;
+    const VkClearDepthStencilValue &clearDepthStencilValue =
+        contextVk->getClearDepthStencilValue().depthStencil;
+
+    return clearImpl(context, clearColorBuffers, clearDepth, clearStencil, clearColorValue,
+                     clearDepthStencilValue);
+}
+
+angle::Result FramebufferVk::clearImpl(const gl::Context *context,
+                                       gl::DrawBufferMask clearColorBuffers,
+                                       bool clearDepth,
+                                       bool clearStencil,
+                                       const VkClearColorValue &clearColorValue,
+                                       const VkClearDepthStencilValue &clearDepthStencilValue)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    const gl::State &glState     = context->getState();
+    const gl::Rectangle &scissor = glState.getScissor();
+    const gl::Rectangle renderArea(0, 0, mState.getDimensions().width,
+                                   mState.getDimensions().height);
+    gl::Rectangle scissorRenderAreaIntersection;
+    // Discard clear altogether if scissor has 0 width or height.
+    if (glState.isScissorTestEnabled() &&
+        !gl::ClipRectangle(scissor, renderArea, &scissorRenderAreaIntersection))
+    {
+        return angle::Result::Continue;
+    }
+
+    mFramebuffer.updateQueueSerial(contextVk->getRenderer()->getCurrentQueueSerial());
+
+    // This function assumes that only enabled attachments are asked to be cleared.
+    ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
+    bool clearColor = clearColorBuffers.any();
+
     // This command buffer is only started once.
     vk::CommandBuffer *commandBuffer = nullptr;
 
     const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
-    bool clearDepth = (depthAttachment && (mask & GL_DEPTH_BUFFER_BIT) != 0);
+    clearDepth                                       = clearDepth && depthAttachment;
     ASSERT(!clearDepth || depthAttachment->isAttached());
 
-    // If depth write is disabled, pretend that GL_DEPTH_BUFFER_BIT is not specified altogether.
+    // If depth write is disabled, pretend that depth clear is not requested altogether.
     clearDepth = clearDepth && contextVk->getState().getDepthStencilState().depthMask;
 
     const gl::FramebufferAttachment *stencilAttachment = mState.getStencilAttachment();
-    bool clearStencil = (stencilAttachment && (mask & GL_STENCIL_BUFFER_BIT) != 0);
+    clearStencil                                       = clearStencil && stencilAttachment;
     ASSERT(!clearStencil || stencilAttachment->isAttached());
-
-    bool clearColor = IsMaskFlagSet(static_cast<int>(mask), GL_COLOR_BUFFER_BIT);
 
     // If the only thing to be cleared was depth and it's masked, there's nothing to do.
     if (!clearColor && !clearDepth && !clearStencil)
@@ -187,13 +256,12 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         return angle::Result::Continue;
     }
 
-    const gl::State &glState = context->getState();
-
-    VkClearDepthStencilValue clearDepthStencilValue =
-        contextVk->getClearDepthStencilValue().depthStencil;
+    VkClearDepthStencilValue modifiedDepthStencilValue = clearDepthStencilValue;
 
     // Apply the stencil mask to the clear value.
-    clearDepthStencilValue.stencil &= contextVk->getState().getDepthStencilState().stencilWritemask;
+    // TODO(syoussefi): this logic is flawed.  See http://anglebug.com/3241#c9.
+    modifiedDepthStencilValue.stencil &=
+        contextVk->getState().getDepthStencilState().stencilWritemask;
 
     // If the depth or stencil is being cleared, and the image was originally requested to have a
     // single aspect, but it's emulated with a depth/stencil format, clear both aspects, setting the
@@ -206,24 +274,21 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         // GL_DEPTH_COMPONENT24 is always emulated with a format that has stencil.
         if (format.angleFormat().stencilBits == 0)
         {
-            clearStencil                   = true;
-            clearDepthStencilValue.stencil = 0;
+            clearStencil                      = true;
+            modifiedDepthStencilValue.stencil = 0;
         }
         // GL_STENCIL_INDEX8 may or may not be emulated.
         else if (format.angleFormat().depthBits == 0 && format.vkTextureFormat != VK_FORMAT_S8_UINT)
         {
-            clearDepth                   = true;
-            clearDepthStencilValue.depth = 0;
+            clearDepth                      = true;
+            modifiedDepthStencilValue.depth = 0;
         }
     }
 
     // If scissor is enabled, but covers the whole of framebuffer, it can be considered disabled for
     // the sake of clear.
-    const gl::Rectangle &scissorRect = glState.getScissor();
-    const gl::Rectangle renderArea(0, 0, mState.getDimensions().width,
-                                   mState.getDimensions().height);
     bool isScissorTestEffectivelyEnabled =
-        glState.isScissorTestEnabled() && scissorRect != renderArea;
+        glState.isScissorTestEnabled() && scissorRenderAreaIntersection != renderArea;
 
     // We can use render pass load ops if clearing depth/stencil or unmasked color.  If there's a
     // depth mask, depth clearing is disabled.  If there's a stencil mask, the clear value is
@@ -233,16 +298,26 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     bool maskedClearColor =
         clearColor && (mActiveColorComponents & colorMaskFlags) != mActiveColorComponents;
     bool clearColorWithRenderPassLoadOp = clearColor && !maskedClearColor;
+
+    // At least one of color, depth or stencil should be clearable with render pass loadOp for us
+    // to use this clear path.
     bool clearAnyWithRenderPassLoadOp =
         clearColorWithRenderPassLoadOp || clearDepth || clearStencil;
 
     if (clearAnyWithRenderPassLoadOp && !isScissorTestEffectivelyEnabled &&
         !contextVk->getRenderer()->getFeatures().disableClearWithRenderPassLoadOp)
     {
+        // Clearing color is indicated by the set bits in this mask.  If not clearing colors with
+        // render pass loadOp, the default value of all-zeros means the clear is not done in
+        // clearWithRenderPassOp below.
+        gl::DrawBufferMask clearBuffersWithRenderPassLoadOp;
+        if (clearColorWithRenderPassLoadOp)
+        {
+            clearBuffersWithRenderPassLoadOp = clearColorBuffers;
+        }
         // If there's a color mask, only clear depth/stencil with render pass loadOp.
-        ANGLE_TRY(clearWithRenderPassOp(contextVk, clearColorWithRenderPassLoadOp, clearDepth,
-                                        clearStencil, contextVk->getClearColorValue().color,
-                                        clearDepthStencilValue));
+        ANGLE_TRY(clearWithRenderPassOp(contextVk, clearBuffersWithRenderPassLoadOp, clearDepth,
+                                        clearStencil, clearColorValue, modifiedDepthStencilValue));
 
         // Fallback to other methods for whatever isn't cleared here.
         clearDepth   = false;
@@ -263,7 +338,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     // this method. Similarly for depth/stencil clear.
     if (maskedClearColor)
     {
-        ANGLE_TRY(clearWithDraw(contextVk, colorMaskFlags));
+        ANGLE_TRY(clearWithDraw(contextVk, clearColorBuffers, clearColorValue, colorMaskFlags));
 
         // Stencil clears must be handled separately. The only way to write out a stencil value from
         // a fragment shader in Vulkan is with VK_EXT_shader_stencil_export. Support for this
@@ -273,8 +348,9 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
         if (clearDepth || clearStencil)
         {
-            ANGLE_TRY(clearWithClearAttachments(contextVk, false, clearDepth, clearStencil,
-                                                clearDepthStencilValue));
+            ANGLE_TRY(clearWithClearAttachments(contextVk, gl::DrawBufferMask(), clearDepth,
+                                                clearStencil, clearColorValue,
+                                                modifiedDepthStencilValue));
         }
         return angle::Result::Continue;
     }
@@ -284,8 +360,8 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         // With scissor test enabled, we clear very differently and we don't need to access
         // the image inside each attachment we can just use clearCmdAttachments with our
         // scissor region instead.
-        ANGLE_TRY(clearWithClearAttachments(contextVk, clearColor, clearDepth, clearStencil,
-                                            clearDepthStencilValue));
+        ANGLE_TRY(clearWithClearAttachments(contextVk, clearColorBuffers, clearDepth, clearStencil,
+                                            clearColorValue, modifiedDepthStencilValue));
         return angle::Result::Continue;
     }
 
@@ -312,7 +388,8 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         }
 
         vk::ImageHelper *image = renderTarget->getImageForWrite(&mFramebuffer);
-        image->clearDepthStencil(aspectFlags, clearAspects, clearDepthStencilValue, commandBuffer);
+        image->clearDepthStencil(aspectFlags, clearAspects, modifiedDepthStencilValue,
+                                 commandBuffer);
     }
 
     if (!clearColor)
@@ -320,18 +397,14 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         return angle::Result::Continue;
     }
 
-    const auto *attachment = mState.getFirstNonNullAttachment();
-    ASSERT(attachment && attachment->isAttached());
-
     if (!commandBuffer)
     {
         ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
     }
 
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
-    const auto &colorRenderTargets           = mRenderTargetCache.getColors();
-    const VkClearColorValue &clearColorValue = contextVk->getClearColorValue().color;
-    for (size_t colorIndex : mState.getEnabledDrawBuffers())
+    const auto &colorRenderTargets = mRenderTargetCache.getColors();
+    for (size_t colorIndex : clearColorBuffers)
     {
         VkClearColorValue modifiedClearColorValue = clearColorValue;
         RenderTargetVk *colorRenderTarget         = colorRenderTargets[colorIndex];
@@ -341,7 +414,7 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         // clear value is in that case.
         if (mEmulatedAlphaAttachmentMask[colorIndex])
         {
-            modifiedClearColorValue.float32[3] = 1.0;
+            SetEmulatedAlphaValue(colorRenderTarget->getImageFormat(), &modifiedClearColorValue);
         }
 
         ASSERT(colorRenderTarget);
@@ -360,8 +433,27 @@ angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
                                            GLint drawbuffer,
                                            const GLfloat *values)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    VkClearValue clearValue;
+
+    bool clearDepth = false;
+    gl::DrawBufferMask clearColorBuffers;
+
+    if (buffer == GL_DEPTH)
+    {
+        clearDepth                    = true;
+        clearValue.depthStencil.depth = values[0];
+    }
+    else
+    {
+        clearColorBuffers.set(drawbuffer);
+        clearValue.color.float32[0] = values[0];
+        clearValue.color.float32[1] = values[1];
+        clearValue.color.float32[2] = values[2];
+        clearValue.color.float32[3] = values[3];
+    }
+
+    return clearImpl(context, clearColorBuffers, clearDepth, false, clearValue.color,
+                     clearValue.depthStencil);
 }
 
 angle::Result FramebufferVk::clearBufferuiv(const gl::Context *context,
@@ -369,8 +461,18 @@ angle::Result FramebufferVk::clearBufferuiv(const gl::Context *context,
                                             GLint drawbuffer,
                                             const GLuint *values)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    VkClearValue clearValue;
+
+    gl::DrawBufferMask clearColorBuffers;
+    clearColorBuffers.set(drawbuffer);
+
+    clearValue.color.uint32[0] = values[0];
+    clearValue.color.uint32[1] = values[1];
+    clearValue.color.uint32[2] = values[2];
+    clearValue.color.uint32[3] = values[3];
+
+    return clearImpl(context, clearColorBuffers, false, false, clearValue.color,
+                     clearValue.depthStencil);
 }
 
 angle::Result FramebufferVk::clearBufferiv(const gl::Context *context,
@@ -378,8 +480,28 @@ angle::Result FramebufferVk::clearBufferiv(const gl::Context *context,
                                            GLint drawbuffer,
                                            const GLint *values)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    VkClearValue clearValue;
+
+    bool clearStencil = false;
+    gl::DrawBufferMask clearColorBuffers;
+
+    if (buffer == GL_STENCIL)
+    {
+        clearStencil = true;
+        clearValue.depthStencil.stencil =
+            gl::clamp(values[0], 0, std::numeric_limits<uint8_t>::max());
+    }
+    else
+    {
+        clearColorBuffers.set(drawbuffer);
+        clearValue.color.int32[0] = values[0];
+        clearValue.color.int32[1] = values[1];
+        clearValue.color.int32[2] = values[2];
+        clearValue.color.int32[3] = values[3];
+    }
+
+    return clearImpl(context, clearColorBuffers, false, clearStencil, clearValue.color,
+                     clearValue.depthStencil);
 }
 
 angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
@@ -388,8 +510,13 @@ angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
                                            GLfloat depth,
                                            GLint stencil)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    VkClearValue clearValue;
+
+    clearValue.depthStencil.depth   = depth;
+    clearValue.depthStencil.stencil = gl::clamp(stencil, 0, std::numeric_limits<uint8_t>::max());
+
+    return clearImpl(context, gl::DrawBufferMask(), true, true, clearValue.color,
+                     clearValue.depthStencil);
 }
 
 GLenum FramebufferVk::getImplementationColorReadFormat(const gl::Context *context) const
@@ -942,22 +1069,69 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
 
 angle::Result FramebufferVk::clearWithRenderPassOp(
     ContextVk *contextVk,
-    bool clearColor,
+    gl::DrawBufferMask clearColorBuffers,
     bool clearDepth,
     bool clearStencil,
     const VkClearColorValue &clearColorValue,
     const VkClearDepthStencilValue &clearDepthStencilValue)
 {
-    vk::CommandBuffer *commandBuffer;
-    return startNewRenderPassImpl(contextVk, clearColor, clearDepth, clearStencil, clearColorValue,
-                                  clearDepthStencilValue, &commandBuffer);
+    // If render pass hasn't started, start it.  If it's started and contains commands, we cannot
+    // modify its ops, so start a new render pass.
+    if (!mFramebuffer.valid() || !mFramebuffer.renderPassStartedButEmpty())
+    {
+        vk::CommandBuffer *commandBuffer;
+        ANGLE_TRY(startNewRenderPass(contextVk, &commandBuffer));
+    }
+
+    size_t attachmentIndex = 0;
+
+    // Go through clearColorBuffers and set the appropriate loadOp and clear values.
+    // TODO: Support gaps in RenderTargets. http://anglebug.com/2394
+    for (size_t colorIndex : mState.getEnabledDrawBuffers())
+    {
+        if (clearColorBuffers.test(colorIndex))
+        {
+            RenderTargetVk *renderTarget = getColorReadRenderTarget();
+
+            // If the render target doesn't have alpha, but its emulated format has it, clear the
+            // alpha to 1.
+            VkClearColorValue value = clearColorValue;
+            if (mEmulatedAlphaAttachmentMask[colorIndex])
+            {
+                SetEmulatedAlphaValue(renderTarget->getImageFormat(), &value);
+            }
+
+            mFramebuffer.clearRenderPassColorAttachment(attachmentIndex, value);
+        }
+        ++attachmentIndex;
+    }
+
+    // Set the appropriate loadOp and clear values for depth and stencil.
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    if (depthStencilRenderTarget)
+    {
+        if (clearDepth)
+        {
+            mFramebuffer.clearRenderPassDepthAttachment(attachmentIndex,
+                                                        clearDepthStencilValue.depth);
+        }
+
+        if (clearStencil)
+        {
+            mFramebuffer.clearRenderPassStencilAttachment(attachmentIndex,
+                                                          clearDepthStencilValue.stencil);
+        }
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::clearWithClearAttachments(
     ContextVk *contextVk,
-    bool clearColor,
+    gl::DrawBufferMask clearColorBuffers,
     bool clearDepth,
     bool clearStencil,
+    const VkClearColorValue &clearColorValue,
     const VkClearDepthStencilValue &clearDepthStencilValue)
 {
     // Trigger a new command node to ensure overlapping writes happen sequentially.
@@ -995,21 +1169,21 @@ angle::Result FramebufferVk::clearWithClearAttachments(
     gl::AttachmentArray<VkClearAttachment> clearAttachments;
     int clearAttachmentIndex = 0;
 
-    if (clearColor)
+    if (clearColorBuffers.any())
     {
         RenderTargetVk *renderTarget = getColorReadRenderTarget();
         const vk::Format &format     = renderTarget->getImageFormat();
-        VkClearValue modifiedClear   = contextVk->getClearColorValue();
+        VkClearValue modifiedClear   = {clearColorValue};
 
         // We need to make sure we are not clearing the alpha channel if we are using a buffer
         // format that doesn't have an alpha channel.
         if (format.angleFormat().alphaBits == 0)
         {
-            modifiedClear.color.float32[3] = 1.0;
+            SetEmulatedAlphaValue(format, &modifiedClear.color);
         }
 
         // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
-        for (size_t colorIndex : mState.getEnabledDrawBuffers())
+        for (size_t colorIndex : clearColorBuffers)
         {
             VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
             clearAttachment.aspectMask         = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1059,28 +1233,19 @@ angle::Result FramebufferVk::clearWithClearAttachments(
 }
 
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
+                                           gl::DrawBufferMask clearColorBuffers,
+                                           const VkClearColorValue &clearColorValue,
                                            VkColorComponentFlags colorMaskFlags)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    // If the format of the framebuffer does not have an alpha channel, we need to make sure we do
-    // not affect the alpha channel of the type we're using to emulate the format.
-    // TODO(jmadill): Implement EXT_draw_buffers http://anglebug.com/2394
-    RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[0];
-    ASSERT(renderTarget);
-
     UtilsVk::ClearImageParameters params = {};
     params.colorMaskFlags                = colorMaskFlags;
+    params.renderAreaHeight              = mState.getDimensions().height;
+    params.clearValue                    = clearColorValue;
     params.alphaMask                     = &getEmulatedAlphaAttachmentMask();
+    params.clearBufferMask               = &clearColorBuffers;
     params.renderPassDesc                = &getRenderPassDesc();
-
-    const vk::Format &imageFormat = renderTarget->getImageFormat();
-    params.clearValue             = contextVk->getClearColorValue().color;
-    bool overrideAlphaWithOne =
-        imageFormat.textureFormat().alphaBits > 0 && imageFormat.angleFormat().alphaBits == 0;
-    params.clearValue.float32[3] = overrideAlphaWithOne ? 1.0f : params.clearValue.float32[3];
-
-    params.renderAreaHeight = mState.getDimensions().height;
 
     return renderer->getUtils().clearImage(contextVk, this, params);
 }
@@ -1112,22 +1277,6 @@ angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
 angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                 vk::CommandBuffer **commandBufferOut)
 {
-    VkClearColorValue unusedColor               = {};
-    VkClearDepthStencilValue unusedDepthStencil = {};
-
-    return startNewRenderPassImpl(contextVk, false, false, false, unusedColor, unusedDepthStencil,
-                                  commandBufferOut);
-}
-
-angle::Result FramebufferVk::startNewRenderPassImpl(
-    ContextVk *contextVk,
-    bool clearColor,
-    bool clearDepth,
-    bool clearStencil,
-    const VkClearColorValue &clearColorValue,
-    const VkClearDepthStencilValue &clearDepthStencilValue,
-    vk::CommandBuffer **commandBufferOut)
-{
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY(getFramebuffer(contextVk, &framebuffer));
 
@@ -1136,9 +1285,6 @@ angle::Result FramebufferVk::startNewRenderPassImpl(
 
     vk::CommandBuffer *writeCommands = nullptr;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &writeCommands));
-
-    VkClearValue clearValue;
-    clearValue.color = clearColorValue;
 
     vk::RenderPassDesc renderPassDesc;
 
@@ -1153,27 +1299,10 @@ angle::Result FramebufferVk::startNewRenderPassImpl(
         ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk, &mFramebuffer, writeCommands,
                                                  &renderPassDesc));
 
-        VkAttachmentLoadOp colorLoadOp =
-            clearColor ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
-
-        renderPassAttachmentOps.setLayout(attachmentClearValues.size(),
-                                          VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                          VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-        renderPassAttachmentOps.setLoadOp(attachmentClearValues.size(), colorLoadOp,
-                                          VK_ATTACHMENT_LOAD_OP_DONT_CARE);
-        renderPassAttachmentOps.setStoreOp(attachmentClearValues.size(),
-                                           VK_ATTACHMENT_STORE_OP_STORE,
-                                           VK_ATTACHMENT_STORE_OP_DONT_CARE);
-
-        // If the render target doesn't have alpha, but its emulated format has it, clear the alpha
-        // to 1.
-        VkClearValue value = clearValue;
-        if (mEmulatedAlphaAttachmentMask[colorIndex])
-        {
-            value.color.float32[3] = 1.0;
-        }
-
-        attachmentClearValues.emplace_back(value);
+        renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
+                                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
@@ -1182,21 +1311,10 @@ angle::Result FramebufferVk::startNewRenderPassImpl(
         ANGLE_TRY(depthStencilRenderTarget->onDepthStencilDraw(contextVk, &mFramebuffer,
                                                                writeCommands, &renderPassDesc));
 
-        VkAttachmentLoadOp depthLoadOp =
-            clearDepth ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
-        VkAttachmentLoadOp stencilLoadOp =
-            clearStencil ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
-
-        renderPassAttachmentOps.setLayout(attachmentClearValues.size(),
-                                          VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-                                          VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-        renderPassAttachmentOps.setLoadOp(attachmentClearValues.size(), depthLoadOp, stencilLoadOp);
-        renderPassAttachmentOps.setStoreOp(attachmentClearValues.size(),
-                                           VK_ATTACHMENT_STORE_OP_STORE,
-                                           VK_ATTACHMENT_STORE_OP_STORE);
-
-        clearValue.depthStencil = clearDepthStencilValue;
-        attachmentClearValues.emplace_back(clearValue);
+        renderPassAttachmentOps.initWithLoadStore(attachmentClearValues.size(),
+                                                  VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                                                  VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
 
     gl::Rectangle renderArea =

@@ -125,14 +125,6 @@ class FramebufferVk : public FramebufferImpl
                   const gl::FramebufferState &state,
                   WindowSurfaceVk *backbuffer);
 
-    angle::Result startNewRenderPassImpl(ContextVk *context,
-                                         bool clearColor,
-                                         bool clearDepth,
-                                         bool clearStencil,
-                                         const VkClearColorValue &clearColorValue,
-                                         const VkClearDepthStencilValue &clearDepthStencilValue,
-                                         vk::CommandBuffer **commandBufferOut);
-
     // Helper for appendToStarted/else startNewRenderPass.
     angle::Result getCommandBufferForDraw(ContextVk *contextVk,
                                           vk::CommandBuffer **commandBufferOut,
@@ -167,18 +159,28 @@ class FramebufferVk : public FramebufferImpl
 
     angle::Result getFramebuffer(ContextVk *contextVk, vk::Framebuffer **framebufferOut);
 
+    angle::Result clearImpl(const gl::Context *context,
+                            gl::DrawBufferMask clearColorBuffers,
+                            bool clearDepth,
+                            bool clearStencil,
+                            const VkClearColorValue &clearColorValue,
+                            const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithRenderPassOp(ContextVk *contextVk,
-                                        bool clearColor,
+                                        gl::DrawBufferMask clearColorBuffers,
                                         bool clearDepth,
                                         bool clearStencil,
                                         const VkClearColorValue &clearColorValue,
                                         const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithClearAttachments(ContextVk *contextVk,
-                                            bool clearColor,
+                                            gl::DrawBufferMask clearColorBuffers,
                                             bool clearDepth,
                                             bool clearStencil,
+                                            const VkClearColorValue &clearColorValue,
                                             const VkClearDepthStencilValue &clearDepthStencilValue);
-    angle::Result clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
+    angle::Result clearWithDraw(ContextVk *contextVk,
+                                gl::DrawBufferMask clearColorBuffers,
+                                const VkClearColorValue &clearColorValue,
+                                VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
 

@@ -65,6 +65,7 @@ class UtilsVk : angle::NonCopyable
         VkColorComponentFlags colorMaskFlags;
         GLint renderAreaHeight;
         const gl::DrawBufferMask *alphaMask;
+        const gl::DrawBufferMask *clearBufferMask;
         const vk::RenderPassDesc *renderPassDesc;
     };
 
@@ -142,6 +143,7 @@ class UtilsVk : angle::NonCopyable
     {
         // Structure matching PushConstants in ImageClear.frag
         VkClearColorValue clearValue = {};
+        uint32_t clearBufferMask     = 0;
     };
 
     struct ImageCopyShaderParams

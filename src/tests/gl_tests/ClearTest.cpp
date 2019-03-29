@@ -761,6 +761,9 @@ TEST_P(ClearTestES3, MaskedScissoredClearMultipleAttachments)
 // mistakenly clear every channel (including the masked-out ones)
 TEST_P(ClearTestES3, MaskedClearBufferBug)
 {
+    // Vulkan doesn't support gaps in render targets yet.  http://anglebug.com/2394
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     unsigned char pixelData[] = {255, 255, 255, 255};
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
@@ -896,6 +899,9 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 // flush or finish after ClearBufferfv or each draw.
 TEST_P(ClearTestES3, RepeatedClear)
 {
+    // ES3 shaders are not yet supported on Vulkan.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in highp vec2 position;\n"
@@ -1271,7 +1277,7 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
                        ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanClearTest, ES2_VULKAN());
 
