@@ -330,7 +330,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator|=(const BitSetT &
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator^=(const BitSetT &other)
 {
-    mBits = (mBits ^ other.mBits) & Mask(N);
+    mBits = mBits ^ other.mBits;
     return *this;
 }
 
@@ -350,14 +350,14 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator&=(BitsT value)
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator|=(BitsT value)
 {
-    mBits |= value;
+    mBits |= value & Mask(N);
     return *this;
 }
 
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator^=(BitsT value)
 {
-    mBits ^= value;
+    mBits ^= value & Mask(N);
     return *this;
 }
 
@@ -399,7 +399,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set(ParamT pos, bool value
 {
     if (value)
     {
-        mBits |= Bit(pos);
+        mBits |= Bit(pos) & Mask(N);
     }
     else
     {
@@ -432,7 +432,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip()
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip(ParamT pos)
 {
-    mBits ^= Bit(pos);
+    mBits ^= Bit(pos) & Mask(N);
     return *this;
 }
 
