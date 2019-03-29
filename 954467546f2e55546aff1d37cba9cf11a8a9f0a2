@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "66fe9a79_9cd9b34a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2019-03-29T00:53:36Z",
+      "side": 1,
+      "message": "Follow-up: https://chromium-review.googlesource.com/c/angle/angle/+/1544779",
+      "parentUuid": "38d67c1e_0a48802f",
+      "range": {
+        "startLine": 283,
+        "startChar": 12,
+        "endLine": 283,
+        "endChar": 45
+      },
+      "revId": "954467546f2e55546aff1d37cba9cf11a8a9f0a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65c4762a_0c43d18b",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 5
@@ -93,6 +117,30 @@
       "revId": "954467546f2e55546aff1d37cba9cf11a8a9f0a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fedca5c_130190db",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2019-03-29T00:53:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65c4762a_0c43d18b",
+      "range": {
+        "startLine": 304,
+        "startChar": 3,
+        "endLine": 304,
+        "endChar": 10
+      },
+      "revId": "954467546f2e55546aff1d37cba9cf11a8a9f0a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
