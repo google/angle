@@ -557,6 +557,107 @@ TEST_P(ClearTestES3, ClearMultipleAttachmentsFollowedBySpecificOne)
     }
 }
 
+// Test that clearing each render target individually works.  In the Vulkan backend, this should be
+// done in a single render pass.
+TEST_P(ClearTestES3, ClearMultipleAttachmentsIndividually)
+{
+    constexpr uint32_t kSize             = 16;
+    constexpr uint32_t kAttachmentCount  = 2;
+    constexpr float kDepthClearValue     = 0.125f;
+    constexpr int32_t kStencilClearValue = 0x67;
+    std::vector<unsigned char> pixelData(kSize * kSize * 4, 255);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
+
+    GLTexture textures[kAttachmentCount];
+    GLRenderbuffer depthStencil;
+    GLenum drawBuffers[kAttachmentCount];
+    GLColor clearValues[kAttachmentCount];
+
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixelData.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i],
+                               0);
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+
+        clearValues[i].R = static_cast<GLubyte>(1 + i * 20);
+        clearValues[i].G = static_cast<GLubyte>(7 + i * 20);
+        clearValues[i].B = static_cast<GLubyte>(12 + i * 20);
+        clearValues[i].A = static_cast<GLubyte>(16 + i * 20);
+    }
+
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+
+    glDrawBuffers(kAttachmentCount, drawBuffers);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glClearBufferfv(GL_COLOR, i, clearValues[i].toNormalizedVector().data());
+    }
+
+    glClearBufferfv(GL_DEPTH, 0, &kDepthClearValue);
+    glClearBufferiv(GL_STENCIL, 0, &kStencilClearValue);
+    ASSERT_GL_NO_ERROR();
+
+    for (uint32_t i = 0; i < kAttachmentCount; ++i)
+    {
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
+        ASSERT_GL_NO_ERROR();
+
+        const GLColor &expect = clearValues[i];
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, expect);
+        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, expect);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, expect);
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, expect);
+    }
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    for (uint32_t i = 1; i < kAttachmentCount; ++i)
+        drawBuffers[i] = GL_NONE;
+    glDrawBuffers(kAttachmentCount, drawBuffers);
+
+    // Use a small shader to verify depth.
+    ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(depthTestProgramFail, essl1_shaders::vs::Passthrough(),
+                     essl1_shaders::fs::Red());
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), kDepthClearValue * 2 - 1 - 0.01);
+    drawQuad(depthTestProgramFail, essl1_shaders::PositionAttrib(),
+             kDepthClearValue * 2 - 1 + 0.01);
+    glDisable(GL_DEPTH_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::blue, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, GLColor::blue, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, GLColor::blue, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, GLColor::blue, 1);
+
+    // Use another small shader to verify stencil.
+    ANGLE_GL_PROGRAM(stencilTestProgram, essl1_shaders::vs::Passthrough(),
+                     essl1_shaders::fs::Green());
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, kStencilClearValue, 0xFF);
+    drawQuad(stencilTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    glDisable(GL_STENCIL_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::green, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, GLColor::green, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, GLColor::green, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, GLColor::green, 1);
+}
+
 // Test that clearing multiple attachments in the presence of a color mask, scissor or both
 // correctly clears all the attachments.
 TEST_P(ClearTestES3, MaskedScissoredClearMultipleAttachments)
