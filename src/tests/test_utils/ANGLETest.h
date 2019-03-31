@@ -188,29 +188,41 @@ GLColor32F ReadColor32F(GLint x, GLint y);
         EXPECT_EQ(expectedColors, actualColors);                                                   \
     } while (0)
 
-#define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error)                  \
-    do                                                                  \
-    {                                                                   \
-        GLubyte pixel[4];                                               \
-        glReadPixels((x), (y), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel); \
-        EXPECT_GL_NO_ERROR();                                           \
-        EXPECT_NEAR((r), pixel[0], abs_error);                          \
-        EXPECT_NEAR((g), pixel[1], abs_error);                          \
-        EXPECT_NEAR((b), pixel[2], abs_error);                          \
-        EXPECT_NEAR((a), pixel[3], abs_error);                          \
+#define EXPECT_PIXEL_NEAR_HELPER(x, y, r, g, b, a, abs_error, ctype, format, type) \
+    do                                                                             \
+    {                                                                              \
+        ctype pixel[4];                                                            \
+        glReadPixels((x), (y), 1, 1, format, type, pixel);                         \
+        EXPECT_GL_NO_ERROR();                                                      \
+        EXPECT_NEAR((r), pixel[0], abs_error);                                     \
+        EXPECT_NEAR((g), pixel[1], abs_error);                                     \
+        EXPECT_NEAR((b), pixel[2], abs_error);                                     \
+        EXPECT_NEAR((a), pixel[3], abs_error);                                     \
     } while (0)
 
-#define EXPECT_PIXEL32F_NEAR(x, y, r, g, b, a, abs_error)       \
-    do                                                          \
-    {                                                           \
-        GLfloat pixel[4];                                       \
-        glReadPixels((x), (y), 1, 1, GL_RGBA, GL_FLOAT, pixel); \
-        EXPECT_GL_NO_ERROR();                                   \
-        EXPECT_NEAR((r), pixel[0], abs_error);                  \
-        EXPECT_NEAR((g), pixel[1], abs_error);                  \
-        EXPECT_NEAR((b), pixel[2], abs_error);                  \
-        EXPECT_NEAR((a), pixel[3], abs_error);                  \
+#define EXPECT_PIXEL_EQ_HELPER(x, y, r, g, b, a, ctype, format, type) \
+    do                                                                \
+    {                                                                 \
+        ctype pixel[4];                                               \
+        glReadPixels((x), (y), 1, 1, format, type, pixel);            \
+        EXPECT_GL_NO_ERROR();                                         \
+        EXPECT_EQ((r), pixel[0]);                                     \
+        EXPECT_EQ((g), pixel[1]);                                     \
+        EXPECT_EQ((b), pixel[2]);                                     \
+        EXPECT_EQ((a), pixel[3]);                                     \
     } while (0)
+
+#define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \
+    EXPECT_PIXEL_NEAR_HELPER(x, y, r, g, b, a, abs_error, GLubyte, GL_RGBA, GL_UNSIGNED_BYTE)
+
+#define EXPECT_PIXEL_32F_NEAR(x, y, r, g, b, a, abs_error) \
+    EXPECT_PIXEL_NEAR_HELPER(x, y, r, g, b, a, abs_error, GLfloat, GL_RGBA, GL_FLOAT)
+
+#define EXPECT_PIXEL_8I(x, y, r, g, b, a) \
+    EXPECT_PIXEL_EQ_HELPER(x, y, r, g, b, a, GLbyte, GL_RGBA_INTEGER, GL_BYTE)
+
+#define EXPECT_PIXEL_8UI(x, y, r, g, b, a) \
+    EXPECT_PIXEL_EQ_HELPER(x, y, r, g, b, a, GLubyte, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE)
 
 // TODO(jmadill): Figure out how we can use GLColor's nice printing with EXPECT_NEAR.
 #define EXPECT_PIXEL_COLOR_NEAR(x, y, angleColor, abs_error) \

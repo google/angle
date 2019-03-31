@@ -1,5 +1,5 @@
 //
-// Copyright 2018 The ANGLE Project Authors. All rights reserved.
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -7,53 +7,43 @@
 
 #version 450 core
 
+#if IsFloat
+#define Type vec4
+#elif IsInt
+#define Type ivec4
+#elif IsUint
+#define Type uvec4
+#else
+#error "Not all formats are accounted for"
+#endif
+
+#if Attachment0
+#define ATTACHMENT 0
+#elif Attachment1
+#define ATTACHMENT 1
+#elif Attachment2
+#define ATTACHMENT 2
+#elif Attachment3
+#define ATTACHMENT 3
+#elif Attachment4
+#define ATTACHMENT 4
+#elif Attachment5
+#define ATTACHMENT 5
+#elif Attachment6
+#define ATTACHMENT 6
+#elif Attachment7
+#define ATTACHMENT 7
+#else
+#error "Not all attachment index possibilities are accounted for"
+#endif
+
 layout(push_constant) uniform PushConstants {
-    vec4 clearColor;
-    int clearBufferMask;
+    Type clearColor;
 } params;
 
-// ANGLE supports a maximum of 8 draw buffers
-layout(location = 0) out vec4 colorOut0;
-layout(location = 1) out vec4 colorOut1;
-layout(location = 2) out vec4 colorOut2;
-layout(location = 3) out vec4 colorOut3;
-layout(location = 4) out vec4 colorOut4;
-layout(location = 5) out vec4 colorOut5;
-layout(location = 6) out vec4 colorOut6;
-layout(location = 7) out vec4 colorOut7;
+layout(location = ATTACHMENT) out Type colorOut;
 
 void main()
 {
-    if ((params.clearBufferMask & (1 << 0)) != 0)
-    {
-        colorOut0 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 1)) != 0)
-    {
-        colorOut1 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 2)) != 0)
-    {
-        colorOut2 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 3)) != 0)
-    {
-        colorOut3 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 4)) != 0)
-    {
-        colorOut4 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 5)) != 0)
-    {
-        colorOut5 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 6)) != 0)
-    {
-        colorOut6 = params.clearColor;
-    }
-    if ((params.clearBufferMask & (1 << 7)) != 0)
-    {
-        colorOut7 = params.clearColor;
-    }
+    colorOut = params.clearColor;
 }

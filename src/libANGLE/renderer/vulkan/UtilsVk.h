@@ -64,9 +64,9 @@ class UtilsVk : angle::NonCopyable
         VkClearColorValue clearValue;
         VkColorComponentFlags colorMaskFlags;
         GLint renderAreaHeight;
-        const gl::DrawBufferMask *alphaMask;
-        const gl::DrawBufferMask *clearBufferMask;
         const vk::RenderPassDesc *renderPassDesc;
+        const angle::Format *format;
+        uint32_t attachmentIndex;
     };
 
     struct CopyImageParameters
@@ -143,7 +143,6 @@ class UtilsVk : angle::NonCopyable
     {
         // Structure matching PushConstants in ImageClear.frag
         VkClearColorValue clearValue = {};
-        uint32_t clearBufferMask     = 0;
     };
 
     struct ImageCopyShaderParams
@@ -233,7 +232,9 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper
         mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kFlagsMask |
                                vk::InternalShader::ConvertVertex_comp::kConversionMask];
-    vk::ShaderProgramHelper mImageClearProgram;
+    vk::ShaderProgramHelper
+        mImageClearProgram[vk::InternalShader::ImageClear_frag::kAttachmentIndexMask |
+                           vk::InternalShader::ImageClear_frag::kFormatMask];
     vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kFlagsMask |
                                                vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
                                                vk::InternalShader::ImageCopy_frag::kDestFormatMask];

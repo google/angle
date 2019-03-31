@@ -858,6 +858,14 @@ void GraphicsPipelineDesc::setColorWriteMask(VkColorComponentFlags colorComponen
     }
 }
 
+void GraphicsPipelineDesc::setSingleColorWriteMask(uint32_t colorIndex,
+                                                   VkColorComponentFlags colorComponentFlags)
+{
+    PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend = mInputAssemblyAndColorBlendStateInfo;
+    uint8_t colorMask = static_cast<uint8_t>(colorComponentFlags);
+    Int4Array_Set(inputAndBlend.colorWriteMaskBits, colorIndex, colorMask);
+}
+
 void GraphicsPipelineDesc::updateColorWriteMask(GraphicsPipelineTransitionBits *transition,
                                                 VkColorComponentFlags colorComponentFlags,
                                                 const gl::DrawBufferMask &alphaMask)
@@ -869,6 +877,11 @@ void GraphicsPipelineDesc::updateColorWriteMask(GraphicsPipelineTransitionBits *
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
                                                          colorWriteMaskBits, colorIndex, 4));
     }
+}
+
+void GraphicsPipelineDesc::setDepthWriteEnabled(bool enabled)
+{
+    mDepthStencilStateInfo.enable.depthWrite = enabled;
 }
 
 void GraphicsPipelineDesc::updateDepthTestEnabled(GraphicsPipelineTransitionBits *transition,

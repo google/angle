@@ -18,6 +18,7 @@ namespace rx
 
 namespace BufferUtils_comp   = vk::InternalShader::BufferUtils_comp;
 namespace ConvertVertex_comp = vk::InternalShader::ConvertVertex_comp;
+namespace ImageClear_frag    = vk::InternalShader::ImageClear_frag;
 namespace ImageCopy_frag     = vk::InternalShader::ImageCopy_frag;
 
 namespace
@@ -117,6 +118,25 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     return flags;
 }
 
+uint32_t GetImageClearFlags(const angle::Format &format, uint32_t attachmentIndex)
+{
+    constexpr uint32_t kAttachmentFlagStep =
+        ImageClear_frag::kAttachment1 - ImageClear_frag::kAttachment0;
+
+    static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS == 8,
+                  "ImageClear shader assumes maximum 8 draw buffers");
+    static_assert(
+        ImageClear_frag::kAttachment0 + 7 * kAttachmentFlagStep == ImageClear_frag::kAttachment7,
+        "ImageClear AttachmentN flag calculation needs correction");
+
+    uint32_t flags = ImageClear_frag::kAttachment0 + attachmentIndex * kAttachmentFlagStep;
+
+    flags |= format.isInt()
+                 ? ImageClear_frag::kIsInt
+                 : format.isUint() ? ImageClear_frag::kIsUint : ImageClear_frag::kIsFloat;
+
+    return flags;
+}
 uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &destFormat)
 {
     const angle::Format &srcAngleFormat  = srcFormat.angleFormat();
@@ -180,7 +200,10 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
-    mImageClearProgram.destroy(device);
+    for (vk::ShaderProgramHelper &program : mImageClearProgram)
+    {
+        program.destroy(device);
+    }
     for (vk::ShaderProgramHelper &program : mImageCopyPrograms)
     {
         program.destroy(device);
@@ -631,31 +654,16 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.clearValue;
 
-    // TODO(syoussefi): Currently, this only supports float clears.  Having the shader as-is support
-    // a mixture of types results in a large number of shader variations.  The solution would be to
-    // clear the render targets one by one.  However, we don't want to recreate the render pass for
-    // each one, so the shader should be able to select the render target to clear.  The variations
-    // of the shader could look like:
-    //
-    // "RenderTarget": [
-    //     "RT0",
-    //     "RT1",
-    //     ...
-    //     "RT7",
-    // ],
-    // "Format": [
-    //     "IsFloat",
-    //     "IsInt",
-    //     "IsUint"
-    // ]
-    //
-    // http://anglebug.com/3187
-    shaderParams.clearBufferMask = static_cast<uint32_t>(params.clearBufferMask->bits());
+    uint32_t flags = GetImageClearFlags(*params.format, params.attachmentIndex);
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
-    pipelineDesc.setColorWriteMask(params.colorMaskFlags, *params.alphaMask);
+    pipelineDesc.setColorWriteMask(0, gl::DrawBufferMask());
+    pipelineDesc.setSingleColorWriteMask(params.attachmentIndex, params.colorMaskFlags);
     pipelineDesc.setRenderPassDesc(*params.renderPassDesc);
+    // Note: depth test is disabled by default so this should be unnecessary, but works around an
+    // Intel bug on windows.  http://anglebug.com/3348
+    pipelineDesc.setDepthWriteEnabled(false);
 
     const gl::Rectangle &renderArea = framebuffer->getFramebuffer()->getRenderPassRenderArea();
     bool invertViewport             = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -673,10 +681,10 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, 0, &fragmentShader));
+    ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
-                           &mImageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
+                           &mImageClearProgram[flags], &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
     return angle::Result::Continue;

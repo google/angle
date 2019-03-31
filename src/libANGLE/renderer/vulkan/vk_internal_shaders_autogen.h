@@ -66,7 +66,27 @@ namespace FullScreenQuad_vert
 {}  // namespace FullScreenQuad_vert
 
 namespace ImageClear_frag
-{}  // namespace ImageClear_frag
+{
+enum AttachmentIndex
+{
+    kAttachment0         = 0x00000000,
+    kAttachment1         = 0x00000001,
+    kAttachment2         = 0x00000002,
+    kAttachment3         = 0x00000003,
+    kAttachment4         = 0x00000004,
+    kAttachment5         = 0x00000005,
+    kAttachment6         = 0x00000006,
+    kAttachment7         = 0x00000007,
+    kAttachmentIndexMask = 0x00000007,
+};
+enum Format
+{
+    kIsFloat    = 0x00000000,
+    kIsInt      = 0x00000008,
+    kIsUint     = 0x00000010,
+    kFormatMask = 0x00000018,
+};
+}  // namespace ImageClear_frag
 
 namespace ImageCopy_frag
 {
@@ -126,7 +146,9 @@ class ShaderLibrary final : angle::NonCopyable
         mConvertVertex_comp_shaders[InternalShader::ConvertVertex_comp::kFlagsMask |
                                     InternalShader::ConvertVertex_comp::kConversionMask];
     RefCounted<ShaderAndSerial> mFullScreenQuad_vert_shaders[1];
-    RefCounted<ShaderAndSerial> mImageClear_frag_shaders[1];
+    RefCounted<ShaderAndSerial>
+        mImageClear_frag_shaders[InternalShader::ImageClear_frag::kAttachmentIndexMask |
+                                 InternalShader::ImageClear_frag::kFormatMask];
     RefCounted<ShaderAndSerial>
         mImageCopy_frag_shaders[InternalShader::ImageCopy_frag::kFlagsMask |
                                 InternalShader::ImageCopy_frag::kSrcFormatMask |

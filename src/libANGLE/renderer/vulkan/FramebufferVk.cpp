@@ -1240,14 +1240,28 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     UtilsVk::ClearImageParameters params = {};
-    params.colorMaskFlags                = colorMaskFlags;
     params.renderAreaHeight              = mState.getDimensions().height;
     params.clearValue                    = clearColorValue;
-    params.alphaMask                     = &getEmulatedAlphaAttachmentMask();
-    params.clearBufferMask               = &clearColorBuffers;
     params.renderPassDesc                = &getRenderPassDesc();
 
-    return renderer->getUtils().clearImage(contextVk, this, params);
+    const auto &colorRenderTargets = mRenderTargetCache.getColors();
+    for (size_t colorIndex : clearColorBuffers)
+    {
+        const RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
+        ASSERT(colorRenderTarget);
+
+        params.format          = &colorRenderTarget->getImage().getFormat().textureFormat();
+        params.attachmentIndex = colorIndex;
+        params.colorMaskFlags  = colorMaskFlags;
+        if (mEmulatedAlphaAttachmentMask[colorIndex])
+        {
+            params.colorMaskFlags &= ~VK_COLOR_COMPONENT_A_BIT;
+        }
+
+        ANGLE_TRY(renderer->getUtils().clearImage(contextVk, this, params));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
