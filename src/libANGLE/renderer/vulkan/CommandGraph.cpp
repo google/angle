@@ -138,11 +138,9 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
     kLabelColors[colorIndex].writeData(label->color);
 }
 
-#if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-constexpr VkSubpassContents kRenderPassContents = VK_SUBPASS_CONTENTS_INLINE;
-#else
-constexpr VkSubpassContents kRenderPassContents = VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
-#endif
+constexpr VkSubpassContents kRenderPassContents =
+    CommandBuffer::ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
+                                    : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 
 // Helpers to unify executeCommands call based on underlying cmd buffer type
 ANGLE_MAYBE_UNUSED

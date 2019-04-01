@@ -979,9 +979,10 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     enabledFeatures.features.independentBlend    = mPhysicalDeviceFeatures.independentBlend;
     enabledFeatures.features.robustBufferAccess  = mPhysicalDeviceFeatures.robustBufferAccess;
     enabledFeatures.features.samplerAnisotropy   = mPhysicalDeviceFeatures.samplerAnisotropy;
-#if !ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-    enabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
-#endif
+    if (!vk::CommandBuffer::ExecutesInline())
+    {
+        enabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
+    }
 
     VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT divisorFeatures = {};
     divisorFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT;
@@ -1253,9 +1254,12 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         mFeatures.disableFifoPresentMode = true;
     }
 
-    if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
+    if (vk::CommandBuffer::ExecutesInline())
     {
-        mFeatures.disableClearWithRenderPassLoadOp = true;
+        if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
+        {
+            mFeatures.restartRenderPassAfterLoadOpClear = true;
+        }
     }
 }
 

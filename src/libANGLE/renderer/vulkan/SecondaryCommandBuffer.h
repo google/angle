@@ -330,6 +330,10 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     static bool SupportsQueries(const VkPhysicalDeviceFeatures &features) { return true; }
 
+    // SecondaryCommandBuffer replays its commands inline when executed on the primary command
+    // buffer.
+    static constexpr bool ExecutesInline() { return true; }
+
     // Add commands
     void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
 

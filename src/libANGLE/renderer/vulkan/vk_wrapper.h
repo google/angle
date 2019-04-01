@@ -180,6 +180,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
         return features.inheritedQueries;
     }
 
+    // Vulkan command buffers are executed as secondary command buffers within a primary command
+    // buffer.
+    static constexpr bool ExecutesInline() { return false; }
+
     VkResult begin(const VkCommandBufferBeginInfo &info);
 
     void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);

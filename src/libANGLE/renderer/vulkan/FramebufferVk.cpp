@@ -236,9 +236,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
     bool clearColor = clearColorBuffers.any();
 
-    // This command buffer is only started once.
-    vk::CommandBuffer *commandBuffer = nullptr;
-
     const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
     clearDepth                                       = clearDepth && depthAttachment;
     ASSERT(!clearDepth || depthAttachment->isAttached());
@@ -304,8 +301,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     bool clearAnyWithRenderPassLoadOp =
         clearColorWithRenderPassLoadOp || clearDepth || clearStencil;
 
-    if (clearAnyWithRenderPassLoadOp && !isScissorTestEffectivelyEnabled &&
-        !contextVk->getRenderer()->getFeatures().disableClearWithRenderPassLoadOp)
+    if (clearAnyWithRenderPassLoadOp && !isScissorTestEffectivelyEnabled)
     {
         // Clearing color is indicated by the set bits in this mask.  If not clearing colors with
         // render pass loadOp, the default value of all-zeros means the clear is not done in
@@ -318,6 +314,13 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         // If there's a color mask, only clear depth/stencil with render pass loadOp.
         ANGLE_TRY(clearWithRenderPassOp(contextVk, clearBuffersWithRenderPassLoadOp, clearDepth,
                                         clearStencil, clearColorValue, modifiedDepthStencilValue));
+
+        // On some hardware, having inline commands at this point results in corrupted output.  In
+        // that case, end the render pass immediately.  http://anglebug.com/2361
+        if (contextVk->getRenderer()->getFeatures().restartRenderPassAfterLoadOpClear)
+        {
+            mFramebuffer.finishCurrentCommands(contextVk->getRenderer());
+        }
 
         // Fallback to other methods for whatever isn't cleared here.
         clearDepth   = false;
@@ -355,77 +358,13 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    if (isScissorTestEffectivelyEnabled)
-    {
-        // With scissor test enabled, we clear very differently and we don't need to access
-        // the image inside each attachment we can just use clearCmdAttachments with our
-        // scissor region instead.
-        ANGLE_TRY(clearWithClearAttachments(contextVk, clearColorBuffers, clearDepth, clearStencil,
-                                            clearColorValue, modifiedDepthStencilValue));
-        return angle::Result::Continue;
-    }
+    ASSERT(isScissorTestEffectivelyEnabled);
 
-    // Unless working around driver bugs, every clear should have been covered at this point.
-    ASSERT(contextVk->getRenderer()->getFeatures().disableClearWithRenderPassLoadOp);
-
-    // Standard Depth/stencil clear without scissor.
-    if (clearDepth || clearStencil)
-    {
-        ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
-
-        RenderTargetVk *renderTarget         = mRenderTargetCache.getDepthStencil();
-        const angle::Format &format          = renderTarget->getImageFormat().textureFormat();
-        const VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
-
-        VkImageAspectFlags clearAspects = aspectFlags;
-        if (!clearDepth)
-        {
-            clearAspects &= ~VK_IMAGE_ASPECT_DEPTH_BIT;
-        }
-        if (!clearStencil)
-        {
-            clearAspects &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
-        }
-
-        vk::ImageHelper *image = renderTarget->getImageForWrite(&mFramebuffer);
-        image->clearDepthStencil(aspectFlags, clearAspects, modifiedDepthStencilValue,
-                                 commandBuffer);
-    }
-
-    if (!clearColor)
-    {
-        return angle::Result::Continue;
-    }
-
-    if (!commandBuffer)
-    {
-        ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
-    }
-
-    // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
-    const auto &colorRenderTargets = mRenderTargetCache.getColors();
-    for (size_t colorIndex : clearColorBuffers)
-    {
-        VkClearColorValue modifiedClearColorValue = clearColorValue;
-        RenderTargetVk *colorRenderTarget         = colorRenderTargets[colorIndex];
-
-        // It's possible we're clearing a render target that has no alpha channel but we represent
-        // it with a texture that has one. We must not affect its alpha channel no matter what the
-        // clear value is in that case.
-        if (mEmulatedAlphaAttachmentMask[colorIndex])
-        {
-            SetEmulatedAlphaValue(colorRenderTarget->getImageFormat(), &modifiedClearColorValue);
-        }
-
-        ASSERT(colorRenderTarget);
-        vk::ImageHelper *image = colorRenderTarget->getImageForWrite(&mFramebuffer);
-
-        // If we're clearing a cube map face ensure we only clear the selected layer.
-        image->clearColorLayer(modifiedClearColorValue, colorRenderTarget->getLevelIndex(), 1,
-                               colorRenderTarget->getLayerIndex(), 1, commandBuffer);
-    }
-
-    return angle::Result::Continue;
+    // With scissor test enabled, we clear very differently and we don't need to access
+    // the image inside each attachment we can just use clearCmdAttachments with our
+    // scissor region instead.
+    return clearWithClearAttachments(contextVk, clearColorBuffers, clearDepth, clearStencil,
+                                     clearColorValue, modifiedDepthStencilValue);
 }
 
 angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
