@@ -84,6 +84,38 @@ angle::Result TextureNULL::copySubImage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureNULL::copyTexture(const gl::Context *context,
+                                       const gl::ImageIndex &index,
+                                       GLenum internalFormat,
+                                       GLenum type,
+                                       size_t sourceLevel,
+                                       bool unpackFlipY,
+                                       bool unpackPremultiplyAlpha,
+                                       bool unpackUnmultiplyAlpha,
+                                       const gl::Texture *source)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result TextureNULL::copySubTexture(const gl::Context *context,
+                                          const gl::ImageIndex &index,
+                                          const gl::Offset &destOffset,
+                                          size_t sourceLevel,
+                                          const gl::Box &sourceBox,
+                                          bool unpackFlipY,
+                                          bool unpackPremultiplyAlpha,
+                                          bool unpackUnmultiplyAlpha,
+                                          const gl::Texture *source)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result TextureNULL::copyCompressedTexture(const gl::Context *context,
+                                                 const gl::Texture *source)
+{
+    return angle::Result::Continue;
+}
+
 angle::Result TextureNULL::setStorage(const gl::Context *context,
                                       gl::TextureType type,
                                       size_t levels,

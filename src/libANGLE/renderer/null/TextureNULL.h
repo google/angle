@@ -64,6 +64,28 @@ class TextureNULL : public TextureImpl
                                const gl::Rectangle &sourceArea,
                                gl::Framebuffer *source) override;
 
+    angle::Result copyTexture(const gl::Context *context,
+                              const gl::ImageIndex &index,
+                              GLenum internalFormat,
+                              GLenum type,
+                              size_t sourceLevel,
+                              bool unpackFlipY,
+                              bool unpackPremultiplyAlpha,
+                              bool unpackUnmultiplyAlpha,
+                              const gl::Texture *source) override;
+    angle::Result copySubTexture(const gl::Context *context,
+                                 const gl::ImageIndex &index,
+                                 const gl::Offset &destOffset,
+                                 size_t sourceLevel,
+                                 const gl::Box &sourceBox,
+                                 bool unpackFlipY,
+                                 bool unpackPremultiplyAlpha,
+                                 bool unpackUnmultiplyAlpha,
+                                 const gl::Texture *source) override;
+
+    angle::Result copyCompressedTexture(const gl::Context *context,
+                                        const gl::Texture *source) override;
+
     angle::Result setStorage(const gl::Context *context,
                              gl::TextureType type,
                              size_t levels,
