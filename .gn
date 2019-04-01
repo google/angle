@@ -7,8 +7,8 @@
 # As a result this file will only affect stand-alone ANGLE builds,
 # not chromium builds.
 
-import("//dotfile_settings.gni")
 import("//build/dotfile_settings.gni")
+import("//dotfile_settings.gni")
 
 # Location of the build configuration file.
 buildconfig = "//build/config/BUILDCONFIG.gn"
@@ -34,6 +34,7 @@ exec_script_whitelist = angle_dotfile_settings.exec_script_whitelist +
                           "//build/config/win/BUILD.gn",
                           "//build/config/win/visual_studio_version.gni",
                           "//build/gn_helpers.py",
+                          "//build_overrides/build.gni",
                         ]
 
 default_args = {
