@@ -12,8 +12,8 @@
 
 #include "libANGLE/renderer/d3d/d3d11/NativeWindow11.h"
 
-#include <DispatcherQueue.h>
-#include <VersionHelpers.h>
+#include <dispatcherqueue.h>
+#include <versionhelpers.h>
 #include <windows.foundation.metadata.h>
 #include <windows.ui.composition.h>
 #include <windows.ui.composition.interop.h>
