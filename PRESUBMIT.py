@@ -20,6 +20,16 @@ _HEADER_EXTENSIONS = r'\.(h|hpp|hxx)$'
 
 
 def _CheckCodeGeneration(input_api, output_api):
+
+    class Msg(output_api.PresubmitError):
+      """Specialized error message"""
+      def __init__(self, message):
+        super(output_api.PresubmitError, self).__init__(message,
+          long_text='Please ensure your ANGLE repositiory is synced to tip-of-tree\n'
+          'and you have an up-to-date checkout of all ANGLE dependencies.\n'
+          'If you are using ANGLE inside Chromium you may need to bootstrap ANGLE \n'
+          'and run gclient sync. See the DevSetup documentation for details.\n')
+
     code_gen_path = input_api.os_path.join(input_api.PresubmitLocalPath(),
                                            'scripts/run_code_generation.py')
     cmd_name = 'run_code_generation'
@@ -28,7 +38,7 @@ def _CheckCodeGeneration(input_api, output_api):
           name=cmd_name,
           cmd=cmd,
           kwargs={},
-          message=output_api.PresubmitError)
+          message=Msg)
     if input_api.verbose:
         print('Running ' + cmd_name)
     return input_api.RunTests([test_cmd])
@@ -90,6 +100,7 @@ def CheckChangeOnUpload(input_api, output_api):
 
 def CheckChangeOnCommit(input_api, output_api):
     results = []
+    results.extend(_CheckCodeGeneration(input_api, output_api))
     results.extend(
       input_api.canned_checks.CheckPatchFormatted(input_api, output_api))
     results.extend(input_api.canned_checks.CheckChangeHasBugField(

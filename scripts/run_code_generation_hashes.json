@@ -192,7 +192,7 @@
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp":
     "ef0ea80cf33e60f76391bcfed10b3c0a",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
-    "01cad44301be0022141dbe6516a48c3e",
+    "4d8bd2e1c39b4f2443605c1a296f4b3d",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000000.inc":
     "155f523ecd36bae6b6abec5a41379e68",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000001.inc":
@@ -303,8 +303,8 @@
     "959f09bfb979cdc240f1df50b56d8429",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
     "e70f3fa32f5ff0e567ce4ed2a5dc759e",
-  "Vulkan internal shader programs:third_party/glslang/src/.git/HEAD":
-    "a0685ecac34264a88e8ffd36d8e1c7cf",
+  "Vulkan internal shader programs:third_party/glslang/src/glslang/Include/revision.h":
+    "bdb498ea2b9699b584fa32f1195b5d01",
   "Vulkan mandatory format support table:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":

@@ -466,8 +466,8 @@ def main():
         for shader in os.listdir(shaders_dir)
         if any([os.path.splitext(shader)[1] == ext for ext in valid_extensions])])
     if print_inputs:
-        glslang_git_head = '../../../../third_party/glslang/src/.git/HEAD'
-        print(",".join(input_shaders + [glslang_git_head]))
+        glslang_revision = '../../../../third_party/glslang/src/glslang/Include/revision.h'
+        print(",".join(input_shaders + [glslang_revision]))
         sys.exit(0)
 
     # STEP 1: Call glslang to generate the internal shaders into small .inc files.
