@@ -309,6 +309,30 @@
     },
     {
       "key": {
+        "uuid": "3b72e6a2_1703522b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-01T14:37:25Z",
+      "side": 1,
+      "message": "You\u0027re right. I was confusing the render area with the scissor.",
+      "parentUuid": "9e49eb15_4d84b31f",
+      "range": {
+        "startLine": 222,
+        "startChar": 47,
+        "endLine": 222,
+        "endChar": 81
+      },
+      "revId": "67f1411ee8ba692b9157bf8afb92b90a6cce52fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b17f4654_b2b18928",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 21
