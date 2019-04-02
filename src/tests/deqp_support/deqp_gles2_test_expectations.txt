@@ -266,12 +266,6 @@
 // General Vulkan failures
 3300 VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
 
-// Depth/stencil clear
-3241 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.stencil_masked = FAIL
-3241 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.stencil_scissored_masked = FAIL
-3241 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.depth_stencil_masked = FAIL
-3241 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.depth_stencil_scissored_masked = FAIL
-
 // Only seen failing on Android
 3241 VULKAN ANDROID : dEQP-GLES2.functional.depth_stencil_clear.depth_scissored_masked = FAIL
 

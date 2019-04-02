@@ -59,14 +59,22 @@ class UtilsVk : angle::NonCopyable
         size_t destOffset;
     };
 
-    struct ClearImageParameters
+    struct ClearFramebufferParameters
     {
-        VkClearColorValue clearValue;
-        VkColorComponentFlags colorMaskFlags;
-        GLint renderAreaHeight;
         const vk::RenderPassDesc *renderPassDesc;
-        const angle::Format *format;
-        uint32_t attachmentIndex;
+        GLint renderAreaHeight;
+
+        bool clearColor;
+        bool clearDepth;
+        bool clearStencil;
+
+        uint8_t stencilMask;
+        VkColorComponentFlags colorMaskFlags;
+        uint32_t colorAttachmentIndex;
+        const angle::Format *colorFormat;
+
+        VkClearColorValue colorClearValue;
+        VkClearDepthStencilValue depthStencilClearValue;
     };
 
     struct CopyImageParameters
@@ -95,12 +103,9 @@ class UtilsVk : angle::NonCopyable
                                       vk::BufferHelper *src,
                                       const ConvertVertexParameters &params);
 
-    // Note: this function takes a FramebufferVk instead of ImageHelper, as that's the only user,
-    // which avoids recreating a framebuffer.  An overload taking ImageHelper can be added when
-    // necessary.
-    angle::Result clearImage(ContextVk *contextVk,
-                             FramebufferVk *framebuffer,
-                             const ClearImageParameters &params);
+    angle::Result clearFramebuffer(ContextVk *contextVk,
+                                   FramebufferVk *framebuffer,
+                                   const ClearFramebufferParameters &params);
 
     angle::Result copyImage(ContextVk *contextVk,
                             vk::ImageHelper *dest,
@@ -232,6 +237,7 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper
         mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kFlagsMask |
                                vk::InternalShader::ConvertVertex_comp::kConversionMask];
+    vk::ShaderProgramHelper mImageClearProgramVSOnly;
     vk::ShaderProgramHelper
         mImageClearProgram[vk::InternalShader::ImageClear_frag::kAttachmentIndexMask |
                            vk::InternalShader::ImageClear_frag::kFormatMask];

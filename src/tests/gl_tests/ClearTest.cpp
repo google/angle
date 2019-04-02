@@ -84,6 +84,7 @@ class ClearTest : public ClearTestBase
   protected:
     void MaskedScissoredColorDepthStencilClear(bool mask,
                                                bool scissor,
+                                               bool clearColor,
                                                bool clearDepth,
                                                bool clearStencil);
 
@@ -1131,6 +1132,7 @@ TEST_P(ClearTestES3, RepeatedClear)
 
 void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
                                                       bool scissor,
+                                                      bool clearColor,
                                                       bool clearDepth,
                                                       bool clearStencil)
 {
@@ -1143,14 +1145,31 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     const int whalf = w >> 1;
     const int hhalf = h >> 1;
 
+    constexpr float kPreClearDepth     = 0.9f;
+    constexpr float kClearDepth        = 0.5f;
+    constexpr uint8_t kPreClearStencil = 0xFF;
+    constexpr uint8_t kClearStencil    = 0x16;
+    constexpr uint8_t kStencilMask     = 0x59;
+    constexpr uint8_t kMaskedClearStencil =
+        (kPreClearStencil & ~kStencilMask) | (kClearStencil & kStencilMask);
+
     // Clear to a random color, 0.9 depth and 0x00 stencil
     Vector4 color1(0.1f, 0.2f, 0.3f, 0.4f);
     GLColor color1RGB(color1);
 
     glClearColor(color1[0], color1[1], color1[2], color1[3]);
-    glClearDepthf(0.9f);
-    glClearStencil(0x00);
-    glClear(GL_COLOR_BUFFER_BIT | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
+    glClearDepthf(kPreClearDepth);
+    glClearStencil(kPreClearStencil);
+
+    if (!clearColor)
+    {
+        // If not asked to clear color, clear it anyway, but individually.  The clear value is
+        // still used to verify that the depth/stencil clear happened correctly.  This allows
+        // testing for depth/stencil-only clear implementations.
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    glClear((clearColor ? GL_COLOR_BUFFER_BIT : 0) | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
             (clearStencil ? GL_STENCIL_BUFFER_BIT : 0));
     ASSERT_GL_NO_ERROR();
 
@@ -1167,15 +1186,15 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     Vector4 color2(0.2f, 0.4f, 0.6f, 0.8f);
     GLColor color2RGB(color2);
     glClearColor(color2[0], color2[1], color2[2], color2[3]);
-    glClearDepthf(0.5f);
-    glClearStencil(0xFF);
+    glClearDepthf(kClearDepth);
+    glClearStencil(kClearStencil);
     if (mask)
     {
         glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
         glDepthMask(GL_FALSE);
-        glStencilMask(0x59);
+        glStencilMask(kStencilMask);
     }
-    glClear(GL_COLOR_BUFFER_BIT | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
+    glClear((clearColor ? GL_COLOR_BUFFER_BIT : 0) | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
             (clearStencil ? GL_STENCIL_BUFFER_BIT : 0));
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glDepthMask(GL_TRUE);
@@ -1188,7 +1207,10 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     // Verify second clear mask worked as expected.
     GLColor color2MaskedRGB(color2RGB[0], color1RGB[1], color2RGB[2], color1RGB[3]);
 
-    GLColor expectedCenterColorRGB = mask ? color2MaskedRGB : color2RGB;
+    // If not clearing color, the original color should be left both in the center and corners.  If
+    // using a scissor, the corners should be left to the original color, while the center is
+    // possibly changed.  If using a mask, the center (and corers if not scissored), h
+    GLColor expectedCenterColorRGB = !clearColor ? color1RGB : mask ? color2MaskedRGB : color2RGB;
     GLColor expectedCornerColorRGB = scissor ? color1RGB : expectedCenterColorRGB;
 
     EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
@@ -1207,8 +1229,8 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
                          essl1_shaders::fs::Blue());
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(mask ? GL_GREATER : GL_EQUAL);
-        // - If depth is cleared, but it's masked, 0.9 should be in the depth buffer.
-        // - If depth is cleared, but it's not masked, 0.5 should be in the depth buffer.
+        // - If depth is cleared, but it's masked, kPreClearDepth should be in the depth buffer.
+        // - If depth is cleared, but it's not masked, kClearDepth should be in the depth buffer.
         // - If depth is not cleared, the if above ensures there is no depth buffer at all,
         //   which means depth test will always pass.
         drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), mask ? 1.0f : 0.0f);
@@ -1237,11 +1259,13 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
         ANGLE_GL_PROGRAM(stencilTestProgram, essl1_shaders::vs::Passthrough(),
                          essl1_shaders::fs::Green());
         glEnable(GL_STENCIL_TEST);
-        // - If stencil is cleared, but it's masked, 0x59 should be in the stencil buffer.
-        // - If stencil is cleared, but it's not masked, 0xFF should be in the stencil buffer.
+        // - If stencil is cleared, but it's masked, kMaskedClearStencil should be in the stencil
+        //   buffer.
+        // - If stencil is cleared, but it's not masked, kClearStencil should be in the stencil
+        // buffer.
         // - If stencil is not cleared, the if above ensures there is no stencil buffer at all,
         //   which means stencil test will always pass.
-        glStencilFunc(GL_EQUAL, mask ? 0x59 : 0xFF, 0xFF);
+        glStencilFunc(GL_EQUAL, mask ? kMaskedClearStencil : kClearStencil, 0xFF);
         drawQuad(stencilTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
         glDisable(GL_STENCIL_TEST);
         ASSERT_GL_NO_ERROR();
@@ -1263,61 +1287,106 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
 // Tests combined color+depth+stencil clears.
 TEST_P(ClearTest, MaskedColorAndDepthClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, false, true, false);
+    MaskedScissoredColorDepthStencilClear(true, false, true, true, false);
 }
 
 TEST_P(ClearTest, MaskedColorAndStencilClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, false, false, true);
+    MaskedScissoredColorDepthStencilClear(true, false, true, false, true);
 }
 
 TEST_P(ClearTest, MaskedColorAndDepthAndStencilClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, false, true, true);
+    MaskedScissoredColorDepthStencilClear(true, false, true, true, true);
+}
+
+TEST_P(ClearTest, MaskedDepthClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, false, false, true, false);
+}
+
+TEST_P(ClearTest, MaskedStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, false, false, false, true);
+}
+
+TEST_P(ClearTest, MaskedDepthAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, false, false, true, true);
 }
 
 // Simple scissored clear.
 TEST_P(ScissoredClearTest, BasicScissoredColorClear)
 {
-    MaskedScissoredColorDepthStencilClear(false, true, false, false);
+    MaskedScissoredColorDepthStencilClear(false, true, true, false, false);
 }
 
 // Simple scissored masked clear.
 TEST_P(ScissoredClearTest, MaskedScissoredColorClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, true, false, false);
+    MaskedScissoredColorDepthStencilClear(true, true, true, false, false);
 }
 
 // Tests combined color+depth+stencil scissored clears.
 TEST_P(ScissoredClearTest, ScissoredColorAndDepthClear)
 {
-    MaskedScissoredColorDepthStencilClear(false, true, true, false);
+    MaskedScissoredColorDepthStencilClear(false, true, true, true, false);
 }
 
 TEST_P(ScissoredClearTest, ScissoredColorAndStencilClear)
 {
-    MaskedScissoredColorDepthStencilClear(false, true, false, true);
+    MaskedScissoredColorDepthStencilClear(false, true, true, false, true);
 }
 
 TEST_P(ScissoredClearTest, ScissoredColorAndDepthAndStencilClear)
 {
-    MaskedScissoredColorDepthStencilClear(false, true, true, true);
+    MaskedScissoredColorDepthStencilClear(false, true, true, true, true);
+}
+
+TEST_P(ScissoredClearTest, ScissoredDepthClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, false, true, false);
+}
+
+TEST_P(ScissoredClearTest, ScissoredStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, false, false, true);
+}
+
+TEST_P(ScissoredClearTest, ScissoredDepthAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, false, true, true);
 }
 
 // Tests combined color+depth+stencil scissored masked clears.
 TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, true, true, false);
+    MaskedScissoredColorDepthStencilClear(true, true, true, true, false);
 }
 
 TEST_P(ScissoredClearTest, MaskedScissoredColorAndStencilClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, true, false, true);
+    MaskedScissoredColorDepthStencilClear(true, true, true, false, true);
 }
 
 TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthAndStencilClear)
 {
-    MaskedScissoredColorDepthStencilClear(true, true, true, true);
+    MaskedScissoredColorDepthStencilClear(true, true, true, true, true);
+}
+
+TEST_P(ScissoredClearTest, MaskedScissoredgDepthClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, false, true, false);
+}
+
+TEST_P(ScissoredClearTest, MaskedScissoredgStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, false, false, true);
+}
+
+TEST_P(ScissoredClearTest, MaskedScissoredgDepthAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, false, true, true);
 }
 
 // Tests combined color+stencil scissored masked clears for a depth-stencil-emulated
@@ -1325,25 +1394,49 @@ TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthAndStencilClear)
 TEST_P(VulkanClearTest, ColorAndStencilClear)
 {
     bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(false, false, false, true);
+    MaskedScissoredColorDepthStencilClear(false, false, true, false, true);
 }
 
 TEST_P(VulkanClearTest, MaskedColorAndStencilClear)
 {
     bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(true, false, false, true);
+    MaskedScissoredColorDepthStencilClear(true, false, true, false, true);
 }
 
 TEST_P(VulkanClearTest, ScissoredColorAndStencilClear)
 {
     bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(false, true, false, true);
+    MaskedScissoredColorDepthStencilClear(false, true, true, false, true);
 }
 
 TEST_P(VulkanClearTest, MaskedScissoredColorAndStencilClear)
 {
     bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(true, true, false, true);
+    MaskedScissoredColorDepthStencilClear(true, true, true, false, true);
+}
+
+TEST_P(VulkanClearTest, StencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(false, false, false, false, true);
+}
+
+TEST_P(VulkanClearTest, MaskedStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(true, false, false, false, true);
+}
+
+TEST_P(VulkanClearTest, ScissoredStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(false, true, false, false, true);
+}
+
+TEST_P(VulkanClearTest, MaskedScissoredStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(true, true, false, false, true);
 }
 
 // Tests combined color+depth scissored masked clears for a depth-stencil-emulated
@@ -1352,28 +1445,56 @@ TEST_P(VulkanClearTest, ColorAndDepthClear)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(false, false, true, false);
+    MaskedScissoredColorDepthStencilClear(false, false, true, true, false);
 }
 
 TEST_P(VulkanClearTest, MaskedColorAndDepthClear)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(true, false, true, false);
+    MaskedScissoredColorDepthStencilClear(true, false, true, true, false);
 }
 
 TEST_P(VulkanClearTest, ScissoredColorAndDepthClear)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(false, true, true, false);
+    MaskedScissoredColorDepthStencilClear(false, true, true, true, false);
 }
 
 TEST_P(VulkanClearTest, MaskedScissoredColorAndDepthClear)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(true, true, true, false);
+    MaskedScissoredColorDepthStencilClear(true, true, true, true, false);
+}
+
+TEST_P(VulkanClearTest, DepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(false, false, false, true, false);
+}
+
+TEST_P(VulkanClearTest, MaskedDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(true, false, false, true, false);
+}
+
+TEST_P(VulkanClearTest, ScissoredDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(false, true, false, true, false);
+}
+
+TEST_P(VulkanClearTest, MaskedScissoredDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(true, true, false, true, false);
 }
 
 // Test that just clearing a nonexistent drawbuffer of the default framebuffer doesn't cause an

@@ -146,6 +146,8 @@ struct BlendState final
     BlendState();
     BlendState(const BlendState &other);
 
+    bool allChannelsMasked() const;
+
     bool blend;
     GLenum sourceBlendRGB;
     GLenum destBlendRGB;

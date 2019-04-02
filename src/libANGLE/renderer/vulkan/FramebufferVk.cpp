@@ -234,31 +234,43 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
-    bool clearColor = clearColorBuffers.any();
+
+    // Adjust clear behavior based on whether:
+    //
+    // - the respective attachments are present: if asked to clear a non-existent attachment, don't
+    //   attempt to clear it.
+    // - extra clear is necessary: if depth- or stencil-only attachments are emulated with a format
+    //   that has both aspects, clear the emulated aspect.
+
+    VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
+    bool clearColor                      = clearColorBuffers.any();
 
     const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
     clearDepth                                       = clearDepth && depthAttachment;
     ASSERT(!clearDepth || depthAttachment->isAttached());
 
-    // If depth write is disabled, pretend that depth clear is not requested altogether.
-    clearDepth = clearDepth && contextVk->getState().getDepthStencilState().depthMask;
-
     const gl::FramebufferAttachment *stencilAttachment = mState.getStencilAttachment();
     clearStencil                                       = clearStencil && stencilAttachment;
     ASSERT(!clearStencil || stencilAttachment->isAttached());
 
-    // If the only thing to be cleared was depth and it's masked, there's nothing to do.
+    uint8_t stencilMask =
+        static_cast<uint8_t>(contextVk->getState().getDepthStencilState().stencilWritemask);
+
+    // The front-end should ensure we don't attempt to clear color if all channels are masked.
+    ASSERT(!clearColor || colorMaskFlags != 0);
+    // The front-end should ensure we don't attempt to clear depth if depth write is disabled.
+    ASSERT(!clearDepth || contextVk->getState().getDepthStencilState().depthMask);
+    // The front-end should ensure we don't attempt to clear stencil if all bits are masked.
+    ASSERT(!clearStencil || stencilMask != 0);
+
+    // If there is nothing to clear, return right away (for example, if asked to clear depth, but
+    // there is no depth attachment).
     if (!clearColor && !clearDepth && !clearStencil)
     {
         return angle::Result::Continue;
     }
 
     VkClearDepthStencilValue modifiedDepthStencilValue = clearDepthStencilValue;
-
-    // Apply the stencil mask to the clear value.
-    // TODO(syoussefi): this logic is flawed.  See http://anglebug.com/3241#c9.
-    modifiedDepthStencilValue.stencil &=
-        contextVk->getState().getDepthStencilState().stencilWritemask;
 
     // If the depth or stencil is being cleared, and the image was originally requested to have a
     // single aspect, but it's emulated with a depth/stencil format, clear both aspects, setting the
@@ -287,19 +299,19 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     bool isScissorTestEffectivelyEnabled =
         glState.isScissorTestEnabled() && scissorRenderAreaIntersection != renderArea;
 
-    // We can use render pass load ops if clearing depth/stencil or unmasked color.  If there's a
-    // depth mask, depth clearing is disabled.  If there's a stencil mask, the clear value is
-    // already masked.  There is no depth/stencil condition prohibiting the use of render pass
-    // loadOp.
-    VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
+    // We can use render pass load ops if clearing depth, unmasked color or unmasked stencil.  If
+    // there's a depth mask, depth clearing is already disabled.
     bool maskedClearColor =
         clearColor && (mActiveColorComponents & colorMaskFlags) != mActiveColorComponents;
-    bool clearColorWithRenderPassLoadOp = clearColor && !maskedClearColor;
+    bool maskedClearStencil = stencilMask != 0xFF;
+
+    bool clearColorWithRenderPassLoadOp   = clearColor && !maskedClearColor;
+    bool clearStencilWithRenderPassLoadOp = clearStencil && !maskedClearStencil;
 
     // At least one of color, depth or stencil should be clearable with render pass loadOp for us
     // to use this clear path.
     bool clearAnyWithRenderPassLoadOp =
-        clearColorWithRenderPassLoadOp || clearDepth || clearStencil;
+        clearColorWithRenderPassLoadOp || clearDepth || clearStencilWithRenderPassLoadOp;
 
     if (clearAnyWithRenderPassLoadOp && !isScissorTestEffectivelyEnabled)
     {
@@ -313,7 +325,8 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
         // If there's a color mask, only clear depth/stencil with render pass loadOp.
         ANGLE_TRY(clearWithRenderPassOp(contextVk, clearBuffersWithRenderPassLoadOp, clearDepth,
-                                        clearStencil, clearColorValue, modifiedDepthStencilValue));
+                                        clearStencilWithRenderPassLoadOp, clearColorValue,
+                                        modifiedDepthStencilValue));
 
         // On some hardware, having inline commands at this point results in corrupted output.  In
         // that case, end the render pass immediately.  http://anglebug.com/2361
@@ -323,39 +336,34 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
 
         // Fallback to other methods for whatever isn't cleared here.
-        clearDepth   = false;
-        clearStencil = false;
+        clearDepth = false;
         if (clearColorWithRenderPassLoadOp)
         {
+            clearColorBuffers.reset();
             clearColor = false;
         }
+        if (clearStencilWithRenderPassLoadOp)
+        {
+            clearStencil = false;
+        }
 
-        if (!clearColor)
+        // If nothing left to clear, early out.
+        if (!clearColor && !clearStencil)
         {
             return angle::Result::Continue;
         }
     }
 
-    // The most costly clear mode is when we need to mask out specific color channels. This can
-    // only be done with a draw call. The scissor region however can easily be integrated with
-    // this method. Similarly for depth/stencil clear.
-    if (maskedClearColor)
+    // The most costly clear mode is when we need to mask out specific color channels or stencil
+    // bits. This can only be done with a draw call. The scissor region however can easily be
+    // integrated with this method.
+    //
+    // Since we have to have a draw call for the sake of masked color or stencil, we can make sure
+    // everything else is cleared with the draw call at the same time as well.
+    if (maskedClearColor || maskedClearStencil)
     {
-        ANGLE_TRY(clearWithDraw(contextVk, clearColorBuffers, clearColorValue, colorMaskFlags));
-
-        // Stencil clears must be handled separately. The only way to write out a stencil value from
-        // a fragment shader in Vulkan is with VK_EXT_shader_stencil_export. Support for this
-        // extension is sparse. Hence, we call into the RenderPass clear path. We similarly clear
-        // depth to keep the code simple, but depth clears could be combined with the masked color
-        // clears as an optimization.
-
-        if (clearDepth || clearStencil)
-        {
-            ANGLE_TRY(clearWithClearAttachments(contextVk, gl::DrawBufferMask(), clearDepth,
-                                                clearStencil, clearColorValue,
-                                                modifiedDepthStencilValue));
-        }
-        return angle::Result::Continue;
+        return clearWithDraw(contextVk, clearColorBuffers, clearDepth, clearStencil, colorMaskFlags,
+                             stencilMask, clearColorValue, modifiedDepthStencilValue);
     }
 
     ASSERT(isScissorTestEffectivelyEnabled);
@@ -1173,15 +1181,25 @@ angle::Result FramebufferVk::clearWithClearAttachments(
 
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            gl::DrawBufferMask clearColorBuffers,
+                                           bool clearDepth,
+                                           bool clearStencil,
+                                           VkColorComponentFlags colorMaskFlags,
+                                           uint8_t stencilMask,
                                            const VkClearColorValue &clearColorValue,
-                                           VkColorComponentFlags colorMaskFlags)
+                                           const VkClearDepthStencilValue &clearDepthStencilValue)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    UtilsVk::ClearImageParameters params = {};
-    params.renderAreaHeight              = mState.getDimensions().height;
-    params.clearValue                    = clearColorValue;
-    params.renderPassDesc                = &getRenderPassDesc();
+    UtilsVk::ClearFramebufferParameters params = {};
+    params.renderPassDesc                      = &getRenderPassDesc();
+    params.renderAreaHeight                    = mState.getDimensions().height;
+    params.colorClearValue                     = clearColorValue;
+    params.depthStencilClearValue              = clearDepthStencilValue;
+    params.stencilMask                         = stencilMask;
+
+    params.clearColor   = true;
+    params.clearDepth   = clearDepth;
+    params.clearStencil = clearStencil;
 
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
     for (size_t colorIndex : clearColorBuffers)
@@ -1189,15 +1207,26 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         const RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
 
-        params.format          = &colorRenderTarget->getImage().getFormat().textureFormat();
-        params.attachmentIndex = colorIndex;
-        params.colorMaskFlags  = colorMaskFlags;
+        params.colorFormat          = &colorRenderTarget->getImage().getFormat().textureFormat();
+        params.colorAttachmentIndex = colorIndex;
+        params.colorMaskFlags       = colorMaskFlags;
         if (mEmulatedAlphaAttachmentMask[colorIndex])
         {
             params.colorMaskFlags &= ~VK_COLOR_COMPONENT_A_BIT;
         }
 
-        ANGLE_TRY(renderer->getUtils().clearImage(contextVk, this, params));
+        ANGLE_TRY(renderer->getUtils().clearFramebuffer(contextVk, this, params));
+
+        // Clear depth/stencil only once!
+        params.clearDepth   = false;
+        params.clearStencil = false;
+    }
+
+    // If there was no color clear, clear depth/stencil alone.
+    if (params.clearDepth || params.clearStencil)
+    {
+        params.clearColor = false;
+        ANGLE_TRY(renderer->getUtils().clearFramebuffer(contextVk, this, params));
     }
 
     return angle::Result::Continue;

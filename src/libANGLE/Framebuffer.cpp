@@ -1349,7 +1349,31 @@ angle::Result Framebuffer::clear(const Context *context, GLbitfield mask)
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(mImpl->clear(context, mask));
+    // Remove clear bits that are ineffective. An effective clear changes at least one fragment. If
+    // color/depth/stencil masks make the clear ineffective we skip it altogether.
+
+    // If all color channels are masked, don't attempt to clear color.
+    if (context->getState().getBlendState().allChannelsMasked())
+    {
+        mask &= ~GL_COLOR_BUFFER_BIT;
+    }
+
+    // If depth write is disabled, don't attempt to clear depth.
+    if (!context->getState().getDepthStencilState().depthMask)
+    {
+        mask &= ~GL_DEPTH_BUFFER_BIT;
+    }
+
+    // If all stencil bits are masked, don't attempt to clear stencil.
+    if (context->getState().getDepthStencilState().stencilWritemask == 0)
+    {
+        mask &= ~GL_STENCIL_BUFFER_BIT;
+    }
+
+    if (mask != 0)
+    {
+        ANGLE_TRY(mImpl->clear(context, mask));
+    }
 
     return angle::Result::Continue;
 }
@@ -1364,6 +1388,23 @@ angle::Result Framebuffer::clearBufferfv(const Context *context,
         return angle::Result::Continue;
     }
 
+    if (buffer == GL_DEPTH)
+    {
+        // If depth write is disabled, don't attempt to clear depth.
+        if (!context->getState().getDepthStencilState().depthMask)
+        {
+            return angle::Result::Continue;
+        }
+    }
+    else
+    {
+        // If all color channels are masked, don't attempt to clear color.
+        if (context->getState().getBlendState().allChannelsMasked())
+        {
+            return angle::Result::Continue;
+        }
+    }
+
     ANGLE_TRY(mImpl->clearBufferfv(context, buffer, drawbuffer, values));
 
     return angle::Result::Continue;
@@ -1375,6 +1416,12 @@ angle::Result Framebuffer::clearBufferuiv(const Context *context,
                                           const GLuint *values)
 {
     if (context->getState().isRasterizerDiscardEnabled() || IsClearBufferMaskedOut(context, buffer))
+    {
+        return angle::Result::Continue;
+    }
+
+    // If all color channels are masked, don't attempt to clear color.
+    if (context->getState().getBlendState().allChannelsMasked())
     {
         return angle::Result::Continue;
     }
@@ -1394,6 +1441,23 @@ angle::Result Framebuffer::clearBufferiv(const Context *context,
         return angle::Result::Continue;
     }
 
+    if (buffer == GL_STENCIL)
+    {
+        // If all stencil bits are masked, don't attempt to clear stencil.
+        if (context->getState().getDepthStencilState().stencilWritemask == 0)
+        {
+            return angle::Result::Continue;
+        }
+    }
+    else
+    {
+        // If all color channels are masked, don't attempt to clear color.
+        if (context->getState().getBlendState().allChannelsMasked())
+        {
+            return angle::Result::Continue;
+        }
+    }
+
     ANGLE_TRY(mImpl->clearBufferiv(context, buffer, drawbuffer, values));
 
     return angle::Result::Continue;
@@ -1410,7 +1474,22 @@ angle::Result Framebuffer::clearBufferfi(const Context *context,
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(mImpl->clearBufferfi(context, buffer, drawbuffer, depth, stencil));
+    bool clearDepth   = context->getState().getDepthStencilState().depthMask;
+    bool clearStencil = context->getState().getDepthStencilState().stencilWritemask != 0;
+
+    if (clearDepth && clearStencil)
+    {
+        ASSERT(buffer == GL_DEPTH_STENCIL);
+        ANGLE_TRY(mImpl->clearBufferfi(context, GL_DEPTH_STENCIL, drawbuffer, depth, stencil));
+    }
+    else if (clearDepth && !clearStencil)
+    {
+        ANGLE_TRY(mImpl->clearBufferfv(context, GL_DEPTH, drawbuffer, &depth));
+    }
+    else if (!clearDepth && clearStencil)
+    {
+        ANGLE_TRY(mImpl->clearBufferiv(context, GL_STENCIL, drawbuffer, &stencil));
+    }
 
     return angle::Result::Continue;
 }

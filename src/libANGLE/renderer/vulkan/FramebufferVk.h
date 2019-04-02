@@ -179,8 +179,12 @@ class FramebufferVk : public FramebufferImpl
                                             const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithDraw(ContextVk *contextVk,
                                 gl::DrawBufferMask clearColorBuffers,
+                                bool clearDepth,
+                                bool clearStencil,
+                                VkColorComponentFlags colorMaskFlags,
+                                uint8_t stencilMask,
                                 const VkClearColorValue &clearColorValue,
-                                VkColorComponentFlags colorMaskFlags);
+                                const VkClearDepthStencilValue &clearDepthStencilValue);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
 

@@ -200,6 +200,7 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
+    mImageClearProgramVSOnly.destroy(device);
     for (vk::ShaderProgramHelper &program : mImageClearProgram)
     {
         program.destroy(device);
@@ -365,7 +366,10 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
     else
     {
         program->setShader(gl::ShaderType::Vertex, vsShader);
-        program->setShader(gl::ShaderType::Fragment, fsCsShader);
+        if (fsCsShader)
+        {
+            program->setShader(gl::ShaderType::Fragment, fsCsShader);
+        }
 
         // This value is not used but is passed to getGraphicsPipeline to avoid a nullptr check.
         const vk::GraphicsPipelineDesc *descPtr;
@@ -637,9 +641,9 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result UtilsVk::clearImage(ContextVk *contextVk,
-                                  FramebufferVk *framebuffer,
-                                  const ClearImageParameters &params)
+angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
+                                        FramebufferVk *framebuffer,
+                                        const ClearFramebufferParameters &params)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -652,24 +656,54 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     }
 
     ImageClearShaderParams shaderParams;
-    shaderParams.clearValue = params.clearValue;
-
-    uint32_t flags = GetImageClearFlags(*params.format, params.attachmentIndex);
+    shaderParams.clearValue = params.colorClearValue;
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
     pipelineDesc.setColorWriteMask(0, gl::DrawBufferMask());
-    pipelineDesc.setSingleColorWriteMask(params.attachmentIndex, params.colorMaskFlags);
+    pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndex, params.colorMaskFlags);
     pipelineDesc.setRenderPassDesc(*params.renderPassDesc);
     // Note: depth test is disabled by default so this should be unnecessary, but works around an
     // Intel bug on windows.  http://anglebug.com/3348
     pipelineDesc.setDepthWriteEnabled(false);
 
+    // Clear depth by enabling depth clamping and setting the viewport depth range to the clear
+    // value.
+    if (params.clearDepth)
+    {
+        pipelineDesc.setDepthTestEnabled(true);
+        pipelineDesc.setDepthWriteEnabled(true);
+        pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+        pipelineDesc.setDepthClampEnabled(true);
+    }
+
+    // Clear stencil by enabling stencil write with the right mask.
+    if (params.clearStencil)
+    {
+        const uint8_t compareMask = 0xFF;
+        const uint8_t clearStencilValue =
+            static_cast<uint8_t>(params.depthStencilClearValue.stencil);
+
+        pipelineDesc.setStencilTestEnabled(true);
+        pipelineDesc.setStencilFrontFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS, compareMask);
+        pipelineDesc.setStencilBackFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS, compareMask);
+        pipelineDesc.setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
+                                        VK_STENCIL_OP_REPLACE);
+        pipelineDesc.setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
+                                       VK_STENCIL_OP_REPLACE);
+        pipelineDesc.setStencilFrontWriteMask(params.stencilMask);
+        pipelineDesc.setStencilBackWriteMask(params.stencilMask);
+    }
+
     const gl::Rectangle &renderArea = framebuffer->getFramebuffer()->getRenderPassRenderArea();
     bool invertViewport             = contextVk->isViewportFlipEnabledForDrawFBO();
 
     VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, invertViewport, params.renderAreaHeight, &viewport);
+    // Set depth range to clear value.  If clearing depth, the vertex shader depth output is clamped
+    // to this value, thus clearing the depth buffer to the desired clear value.
+    const float clearDepthValue = params.depthStencilClearValue.depth;
+    gl_vk::GetViewport(renderArea, clearDepthValue, clearDepthValue, invertViewport,
+                       params.renderAreaHeight, &viewport);
     pipelineDesc.setViewport(viewport);
 
     VkRect2D scissor;
@@ -680,11 +714,18 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     vk::ShaderLibrary &shaderLibrary                    = renderer->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    vk::ShaderProgramHelper *imageClearProgram          = &mImageClearProgramVSOnly;
+
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
+    if (params.clearColor)
+    {
+        uint32_t flags = GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndex);
+        ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
+        imageClearProgram = &mImageClearProgram[flags];
+    }
 
     ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
-                           &mImageClearProgram[flags], &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
+                           imageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
     return angle::Result::Continue;

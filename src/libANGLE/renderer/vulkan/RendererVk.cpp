@@ -979,6 +979,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     enabledFeatures.features.independentBlend    = mPhysicalDeviceFeatures.independentBlend;
     enabledFeatures.features.robustBufferAccess  = mPhysicalDeviceFeatures.robustBufferAccess;
     enabledFeatures.features.samplerAnisotropy   = mPhysicalDeviceFeatures.samplerAnisotropy;
+    enabledFeatures.features.depthClamp          = mPhysicalDeviceFeatures.depthClamp;
     if (!vk::CommandBuffer::ExecutesInline())
     {
         enabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;

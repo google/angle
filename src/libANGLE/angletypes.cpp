@@ -59,6 +59,11 @@ BlendState::BlendState(const BlendState &other)
     memcpy(this, &other, sizeof(BlendState));
 }
 
+bool BlendState::allChannelsMasked() const
+{
+    return !colorMaskRed && !colorMaskGreen && !colorMaskBlue && !colorMaskAlpha;
+}
+
 bool operator==(const BlendState &a, const BlendState &b)
 {
     return memcmp(&a, &b, sizeof(BlendState)) == 0;
