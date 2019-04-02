@@ -22,6 +22,30 @@
       "revId": "8dc940c3548eafc82f0b965ed8d50843060b9a29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2691050_753ec30b",
+        "filename": "PRESUBMIT.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-02T15:51:44Z",
+      "side": 1,
+      "message": "Drat, forgot about this. Can do in a follow-up at some point. But the current message is better than what we had before.",
+      "parentUuid": "f39c4151_2ba6f515",
+      "range": {
+        "startLine": 28,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 78
+      },
+      "revId": "8dc940c3548eafc82f0b965ed8d50843060b9a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
