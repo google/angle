@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9cfc597b_26259b06",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-02T19:03:06Z",
+      "side": 1,
+      "message": "I took this out and am passing around isSubImage instead.   Otherwise, we hit:\n\nImageHelper::stageSubresourceUpdate()\n{\n[[[...]]]\n        ASSERT(storageFormat.pixelBytes !\u003d 0);\n\nThis is because we tell which Format we need to use, since Format is not always initialized for the glTexImage2D() case.",
+      "parentUuid": "a96374df_f5e4832b",
+      "range": {
+        "startLine": 132,
+        "startChar": 3,
+        "endLine": 132,
+        "endChar": 21
+      },
+      "revId": "e7b0519e13cfaf1750591c02ba38cf1d78c478dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d2ddf36_457a86b3",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2019-03-28T12:12:41Z",
       "side": 1,
       "message": "try    \n\nconst gl::ImageDesc \u0026levelDesc \u003d mState.getImageDesc(index);\nconst vk::Format \u0026format \u003d\n        contextVk-\u003egetRenderer()-\u003egetFormat(levelDesc.format.info-\u003esizedInternalFormat);\n\nand pass the vk::Format to stage.",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 48
+      },
+      "revId": "e7b0519e13cfaf1750591c02ba38cf1d78c478dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fa7242a_58313ba2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-02T19:03:06Z",
+      "side": 1,
+      "message": "This looks good.",
+      "parentUuid": "8d2ddf36_457a86b3",
       "range": {
         "startLine": 250,
         "startChar": 0,
