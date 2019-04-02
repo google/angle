@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "55109dbc_62cb3249",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-02T23:31:58Z",
+      "side": 1,
+      "message": "I\u0027ve moved the isSubImage checking into TextureVk::setSubImageImpl() and then passing the correct vk::Format based on that, which I think is matching what you\u0027re describing here.\n\nOr are you looking to have each call to setImageImpl() pass in the vk::Format, since they know whether it\u0027s a subimage already?",
+      "parentUuid": "fe1aa57d_97be7b32",
+      "range": {
+        "startLine": 132,
+        "startChar": 3,
+        "endLine": 132,
+        "endChar": 21
+      },
+      "revId": "e7b0519e13cfaf1750591c02ba38cf1d78c478dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d2ddf36_457a86b3",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
