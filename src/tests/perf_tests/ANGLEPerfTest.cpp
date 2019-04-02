@@ -525,7 +525,7 @@ void ANGLERenderTest::step()
 
 void ANGLERenderTest::startGpuTimer()
 {
-    if (shouldTrackGpuTime())
+    if (mTestParams.trackGpuTime)
     {
         glBeginQueryEXT(GL_TIME_ELAPSED_EXT, mTimestampQuery);
     }
@@ -533,7 +533,7 @@ void ANGLERenderTest::startGpuTimer()
 
 void ANGLERenderTest::stopGpuTimer()
 {
-    if (shouldTrackGpuTime())
+    if (mTestParams.trackGpuTime)
     {
         glEndQueryEXT(GL_TIME_ELAPSED_EXT);
         uint64_t gpuTimeNs = 0;
@@ -545,7 +545,7 @@ void ANGLERenderTest::stopGpuTimer()
 
 void ANGLERenderTest::startTest()
 {
-    if (shouldTrackGpuTime())
+    if (mTestParams.trackGpuTime)
     {
         glGenQueriesEXT(1, &mTimestampQuery);
         mGPUTimeNs = 0;
@@ -554,7 +554,7 @@ void ANGLERenderTest::startTest()
 
 void ANGLERenderTest::finishTest()
 {
-    if (shouldTrackGpuTime())
+    if (mTestParams.trackGpuTime)
     {
         glDeleteQueriesEXT(1, &mTimestampQuery);
     }
@@ -572,15 +572,6 @@ bool ANGLERenderTest::popEvent(Event *event)
 OSWindow *ANGLERenderTest::getWindow()
 {
     return mOSWindow;
-}
-
-bool ANGLERenderTest::shouldTrackGpuTime() const
-{
-    bool isD3D = mTestParams.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
-                 mTestParams.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
-
-    // TODO: On D3D, tracking GPU time causes crashes.  http://anglebug.com/3310
-    return mTestParams.trackGpuTime && !isD3D;
 }
 
 bool ANGLERenderTest::areExtensionPrerequisitesFulfilled() const

@@ -16,7 +16,9 @@
 #include "test_utils/gl_raii.h"
 #include "util/shader_utils.h"
 
-namespace angle
+using namespace angle;
+
+namespace
 {
 constexpr unsigned int kIterationsPerStep = 256;
 
@@ -73,7 +75,13 @@ class ClearBenchmark : public ANGLERenderTest, public ::testing::WithParamInterf
 
 ClearBenchmark::ClearBenchmark()
     : ANGLERenderTest("Clear", GetParam()), mProgram(0u), mPositionLoc(-1), mSamplerLoc(-1)
-{}
+{
+    // Crashes on nvidia+d3d11. http://crbug.com/945415
+    if (GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    {
+        mSkipTest = true;
+    }
+}
 
 void ClearBenchmark::initializeBenchmark()
 {
@@ -161,34 +169,32 @@ void ClearBenchmark::drawBenchmark()
     ASSERT_GL_NO_ERROR();
 }
 
-ClearParams ClearD3D11Params()
+ClearParams D3D11Params()
 {
     ClearParams params;
     params.eglParameters = egl_platform::D3D11();
     return params;
 }
 
-ClearParams ClearOpenGLOrGLESParams()
+ClearParams OpenGLOrGLESParams()
 {
     ClearParams params;
     params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
     return params;
 }
 
-ClearParams ClearVulkanParams()
+ClearParams VulkanParams()
 {
     ClearParams params;
     params.eglParameters = egl_platform::VULKAN();
     return params;
 }
 
+}  // anonymous namespace
+
 TEST_P(ClearBenchmark, Run)
 {
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(ClearBenchmark,
-                       ClearD3D11Params(),
-                       ClearOpenGLOrGLESParams(),
-                       ClearVulkanParams());
-}  // namespace angle
+ANGLE_INSTANTIATE_TEST(ClearBenchmark, D3D11Params(), OpenGLOrGLESParams(), VulkanParams());
