@@ -46,6 +46,30 @@
       "revId": "208af3ebda25d0dcd7d7106209d17bd1532ad710",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d531dd3e_46e48698",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1649,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-02T19:19:07Z",
+      "side": 0,
+      "message": "https://www.khronos.org/registry/webgl/specs/latest/1.0/#6.25\n\n6.25 Texture Type in TexSubImage2D Calls\nIn the WebGL API, the type argument passed to texSubImage2D must match the type used to originally define the texture object (i.e., using texImage2D).\n\nWe\u0027ll need to have two cases: the old validation with type for WebGL, and the new validation for just format with OpenGL ES 2.\n\nYou can check extensions.webglCompatibility to determine if we\u0027re using a WebGL compatible context and do the appropriate validation.",
+      "parentUuid": "c6912226_f485909c",
+      "range": {
+        "startLine": 1649,
+        "startChar": 8,
+        "endLine": 1649,
+        "endChar": 30
+      },
+      "revId": "208af3ebda25d0dcd7d7106209d17bd1532ad710",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

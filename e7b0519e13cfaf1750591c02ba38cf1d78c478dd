@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "fe1aa57d_97be7b32",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-02T19:19:07Z",
+      "side": 1,
+      "message": "Right right. We set the ImageDesc after the implementation call (TextureVk::setImage) returns. Can you instead pass the vk::Format to setImageImpl? Then you can determine the right vk::Format at the call site for setImageImpl. For subImage calls it\u0027ll be from the ImageDescs. For image definition commands it\u0027ll be available from the command arguments.",
+      "parentUuid": "9cfc597b_26259b06",
+      "range": {
+        "startLine": 132,
+        "startChar": 3,
+        "endLine": 132,
+        "endChar": 21
+      },
+      "revId": "e7b0519e13cfaf1750591c02ba38cf1d78c478dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d2ddf36_457a86b3",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
