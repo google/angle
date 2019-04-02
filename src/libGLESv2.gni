@@ -317,7 +317,7 @@ libangle_sources = [
   "src/libANGLE/renderer/TransformFeedbackImpl.h",
   "src/libANGLE/renderer/VertexArrayImpl.h",
   "src/libANGLE/renderer/copyvertex.h",
-  "src/libANGLE/renderer/copyvertex.inc",
+  "src/libANGLE/renderer/copyvertex.inc.h",
   "src/libANGLE/renderer/load_functions_table.h",
   "src/libANGLE/renderer/load_functions_table_autogen.cpp",
   "src/libANGLE/renderer/renderer_utils.cpp",
