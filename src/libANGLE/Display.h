@@ -114,7 +114,10 @@ class Display final : public LabeledObject, angle::NonCopyable
                      const AttributeMap &attribs,
                      Sync **outSync);
 
-    Error makeCurrent(Surface *drawSurface, Surface *readSurface, gl::Context *context);
+    Error makeCurrent(const Thread *thread,
+                      Surface *drawSurface,
+                      Surface *readSurface,
+                      gl::Context *context);
 
     Error destroySurface(Surface *surface);
     void destroyImage(Image *image);

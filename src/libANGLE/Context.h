@@ -301,7 +301,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     EGLLabelKHR getLabel() const override;
 
     egl::Error makeCurrent(egl::Display *display, egl::Surface *surface);
-    egl::Error releaseSurface(const egl::Display *display);
+    egl::Error unMakeCurrent(const egl::Display *display);
 
     // These create  and destroy methods are merely pass-throughs to
     // ResourceManager, which owns these object types

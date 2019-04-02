@@ -1003,6 +1003,14 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
     invalidateDriverUniforms();
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::onUnMakeCurrent(const gl::Context *context)
+{
+    ANGLE_TRY(flushImpl());
+    mCurrentWindowSurface = nullptr;
     return angle::Result::Continue;
 }
 

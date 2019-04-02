@@ -154,6 +154,7 @@ class ContextImpl : public GLImplFactory
 
     // Context switching
     virtual angle::Result onMakeCurrent(const gl::Context *context) = 0;
+    virtual angle::Result onUnMakeCurrent(const gl::Context *context);
 
     // Native capabilities, unmodified by gl::Context.
     virtual gl::Caps getNativeCaps() const                         = 0;

@@ -105,11 +105,9 @@ EGLBoolean EGLAPIENTRY EGL_Terminate(EGLDisplay dpy)
     ANGLE_EGL_TRY_RETURN(thread, ValidateTerminate(display), "eglTerminate",
                          GetDisplayIfValid(display), EGL_FALSE);
 
-    if (display->isValidContext(thread->getContext()))
-    {
-        SetContextCurrent(thread, nullptr);
-    }
-
+    ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(thread, nullptr, nullptr, nullptr),
+                         "eglTerminate", GetDisplayIfValid(display), EGL_FALSE);
+    SetContextCurrent(thread, nullptr);
     ANGLE_EGL_TRY_RETURN(thread, display->terminate(thread), "eglTerminate",
                          GetDisplayIfValid(display), EGL_FALSE);
 
@@ -447,15 +445,8 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
     // Only call makeCurrent if the context or surfaces have changed.
     if (previousDraw != drawSurface || previousRead != readSurface || previousContext != context)
     {
-        // Release the surface from the previously-current context, to allow
-        // destroyed surfaces to delete themselves.
-        if (previousContext != nullptr && context != previousContext)
-        {
-            ANGLE_EGL_TRY_RETURN(thread, previousContext->releaseSurface(display), "eglMakeCurrent",
-                                 GetContextIfValid(display, context), EGL_FALSE);
-        }
-
-        ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(drawSurface, readSurface, context),
+        ANGLE_EGL_TRY_RETURN(thread,
+                             display->makeCurrent(thread, drawSurface, readSurface, context),
                              "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
 
         SetContextCurrent(thread, context);
@@ -785,17 +776,10 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseThread(void)
     if (previousDraw != EGL_NO_SURFACE || previousRead != EGL_NO_SURFACE ||
         previousContext != EGL_NO_CONTEXT)
     {
-        // Release the surface from the previously-current context, to allow
-        // destroyed surfaces to delete themselves.
-        if (previousContext != nullptr && previousDisplay != EGL_NO_DISPLAY)
-        {
-            ANGLE_EGL_TRY_RETURN(thread, previousContext->releaseSurface(previousDisplay),
-                                 "eglReleaseThread", nullptr, EGL_FALSE);
-        }
-
         if (previousDisplay != EGL_NO_DISPLAY)
         {
-            ANGLE_EGL_TRY_RETURN(thread, previousDisplay->makeCurrent(nullptr, nullptr, nullptr),
+            ANGLE_EGL_TRY_RETURN(thread,
+                                 previousDisplay->makeCurrent(thread, nullptr, nullptr, nullptr),
                                  "eglReleaseThread", nullptr, EGL_FALSE);
         }
 

@@ -499,7 +499,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
         mGLES1Renderer->onDestroy(this, &mState);
     }
 
-    ANGLE_TRY(releaseSurface(display));
+    ANGLE_TRY(unMakeCurrent(display));
 
     for (auto fence : mFenceNVMap)
     {
@@ -605,7 +605,7 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     mState.setAllDirtyBits();
     mState.setAllDirtyObjects();
 
-    ANGLE_TRY(releaseSurface(display));
+    ASSERT(mCurrentSurface == nullptr);
 
     Framebuffer *newDefault = nullptr;
     if (surface != nullptr)
@@ -637,7 +637,7 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     return angle::ResultToEGL(mImplementation->onMakeCurrent(this));
 }
 
-egl::Error Context::releaseSurface(const egl::Display *display)
+egl::Error Context::unMakeCurrent(const egl::Display *display)
 {
     gl::Framebuffer *defaultFramebuffer = mState.mFramebufferManager->getFramebuffer(0);
 
@@ -668,7 +668,7 @@ egl::Error Context::releaseSurface(const egl::Display *display)
         mCurrentSurface = nullptr;
     }
 
-    return egl::NoError();
+    return angle::ResultToEGL(mImplementation->onUnMakeCurrent(this));
 }
 
 GLuint Context::createBuffer()
