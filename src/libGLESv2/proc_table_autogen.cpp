@@ -821,6 +821,10 @@ ProcEntry g_procTable[] = {
     {"glGetnUniformuivRobustANGLEContextANGLE", P(gl::GetnUniformuivRobustANGLEContextANGLE)},
     {"glHint", P(gl::Hint)},
     {"glHintContextANGLE", P(gl::HintContextANGLE)},
+    {"glImportMemoryFdEXT", P(gl::ImportMemoryFdEXT)},
+    {"glImportMemoryFdEXTContextANGLE", P(gl::ImportMemoryFdEXTContextANGLE)},
+    {"glImportSemaphoreFdEXT", P(gl::ImportSemaphoreFdEXT)},
+    {"glImportSemaphoreFdEXTContextANGLE", P(gl::ImportSemaphoreFdEXTContextANGLE)},
     {"glInsertEventMarkerEXT", P(gl::InsertEventMarkerEXT)},
     {"glInsertEventMarkerEXTContextANGLE", P(gl::InsertEventMarkerEXTContextANGLE)},
     {"glInvalidateFramebuffer", P(gl::InvalidateFramebuffer)},
@@ -1416,5 +1420,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1328;
+size_t g_numProcs = 1332;
 }  // namespace egl

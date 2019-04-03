@@ -336,8 +336,14 @@ struct Extensions
     // GL_EXT_memory_object
     bool memoryObject;
 
+    // GL_EXT_memory_object_fd
+    bool memoryObjectFd;
+
     // GL_EXT_semaphore
     bool semaphore;
+
+    // GL_EXT_semaphore_fd
+    bool semaphoreFd;
 
     // NV_EGL_stream_consumer_external
     bool eglStreamConsumerExternal;

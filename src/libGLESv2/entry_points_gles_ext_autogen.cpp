@@ -3503,6 +3503,24 @@ void GL_APIENTRY TexStorageMem3DMultisampleEXT(GLenum target,
     }
 }
 
+// GL_EXT_memory_object_fd
+void GL_APIENTRY ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleType, GLint fd)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memory = %u, GLuint64 size = %llu, GLenum handleType = 0x%X, GLint fd = %d)",
+          memory, static_cast<unsigned long long>(size), handleType, fd);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateImportMemoryFdEXT(context, memory, size, handleType, fd))
+        {
+            context->importMemoryFd(memory, size, handleType, fd);
+        }
+    }
+}
+
 // GL_EXT_occlusion_query_boolean
 // BeginQueryEXT is already defined.
 
@@ -3743,6 +3761,24 @@ void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
 // GetUnsignedBytei_vEXT is already defined.
 
 // GetUnsignedBytevEXT is already defined.
+
+// GL_EXT_semaphore_fd
+void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint fd)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u, GLenum handleType = 0x%X, GLint fd = %d)", semaphore, handleType,
+          fd);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateImportSemaphoreFdEXT(context, semaphore, handleType, fd))
+        {
+            context->importSemaphoreFd(semaphore, handleType, fd);
+        }
+    }
+}
 
 // GL_EXT_texture_storage
 void GL_APIENTRY TexStorage1DEXT(GLenum target,
@@ -10818,6 +10854,49 @@ void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
         if (context->skipValidation() || ValidateHint(context, target, mode))
         {
             context->hint(target, mode);
+        }
+    }
+}
+
+void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
+                                               GLuint memory,
+                                               GLuint64 size,
+                                               GLenum handleType,
+                                               GLint fd)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memory = %u, GLuint64 size = %llu, GLenum handleType = 0x%X, GLint fd = %d)",
+          memory, static_cast<unsigned long long>(size), handleType, fd);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateImportMemoryFdEXT(context, memory, size, handleType, fd))
+        {
+            context->importMemoryFd(memory, size, handleType, fd);
+        }
+    }
+}
+
+void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
+                                                  GLuint semaphore,
+                                                  GLenum handleType,
+                                                  GLint fd)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u, GLenum handleType = 0x%X, GLint fd = %d)", semaphore, handleType,
+          fd);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateImportSemaphoreFdEXT(context, semaphore, handleType, fd))
+        {
+            context->importSemaphoreFd(semaphore, handleType, fd);
         }
     }
 }

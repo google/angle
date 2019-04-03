@@ -207,6 +207,8 @@ typedef void (GL_APIENTRYP PFNGLGETUNSIGNEDBYTEVEXTCONTEXTANGLEPROC)(GLeglContex
 typedef void (GL_APIENTRYP PFNGLGETUNSIGNEDBYTEI_VEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLuint index, GLubyte *data);
 typedef void (GL_APIENTRYP PFNGLGETNUNIFORMFVEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 typedef void (GL_APIENTRYP PFNGLGETNUNIFORMIVEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLint location, GLsizei bufSize, GLint *params);
+typedef void (GL_APIENTRYP PFNGLIMPORTMEMORYFDEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint memory, GLuint64 size, GLenum handleType, GLint fd);
+typedef void (GL_APIENTRYP PFNGLIMPORTSEMAPHOREFDEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint semaphore, GLenum handleType, GLint fd);
 typedef void (GL_APIENTRYP PFNGLINSERTEVENTMARKEREXTCONTEXTANGLEPROC)(GLeglContext ctx, GLsizei length, const GLchar *marker);
 typedef GLboolean (GL_APIENTRYP PFNGLISFENCENVCONTEXTANGLEPROC)(GLeglContext ctx, GLuint fence);
 typedef GLboolean (GL_APIENTRYP PFNGLISMEMORYOBJECTEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint memoryObject);
@@ -556,6 +558,8 @@ GL_APICALL void GL_APIENTRY glGetUnsignedBytevEXTContextANGLE(GLeglContext ctx, 
 GL_APICALL void GL_APIENTRY glGetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index, GLubyte *data);
 GL_APICALL void GL_APIENTRY glGetnUniformfvEXTContextANGLE(GLeglContext ctx, GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 GL_APICALL void GL_APIENTRY glGetnUniformivEXTContextANGLE(GLeglContext ctx, GLuint program, GLint location, GLsizei bufSize, GLint *params);
+GL_APICALL void GL_APIENTRY glImportMemoryFdEXTContextANGLE(GLeglContext ctx, GLuint memory, GLuint64 size, GLenum handleType, GLint fd);
+GL_APICALL void GL_APIENTRY glImportSemaphoreFdEXTContextANGLE(GLeglContext ctx, GLuint semaphore, GLenum handleType, GLint fd);
 GL_APICALL void GL_APIENTRY glInsertEventMarkerEXTContextANGLE(GLeglContext ctx, GLsizei length, const GLchar *marker);
 GL_APICALL GLboolean GL_APIENTRY glIsFenceNVContextANGLE(GLeglContext ctx, GLuint fence);
 GL_APICALL GLboolean GL_APIENTRY glIsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint memoryObject);

@@ -977,6 +977,10 @@
         "glBufferStorageMemEXT"
     ],
 
+    "GL_EXT_memory_object_fd": [
+        "glImportMemoryFdEXT"
+    ],
+
     "GL_EXT_semaphore": [
         "glGenSemaphoresEXT",
         "glDeleteSemaphoresEXT",
@@ -985,5 +989,9 @@
         "glGetSemaphoreParameterui64vEXT",
         "glWaitSemaphoreEXT",
         "glSignalSemaphoreEXT"
+    ],
+
+    "GL_EXT_semaphore_fd": [
+        "glImportSemaphoreFdEXT"
     ]
 }

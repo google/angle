@@ -3770,6 +3770,12 @@ void GL_APIENTRY glTexStorageMem3DMultisampleEXT(GLenum target,
                                              fixedSampleLocations, memory, offset);
 }
 
+// GL_EXT_memory_object_fd
+void GL_APIENTRY glImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleType, GLint fd)
+{
+    return gl::ImportMemoryFdEXT(memory, size, handleType, fd);
+}
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness
@@ -3851,6 +3857,12 @@ void GL_APIENTRY glWaitSemaphoreEXT(GLuint semaphore,
 {
     return gl::WaitSemaphoreEXT(semaphore, numBufferBarriers, buffers, numTextureBarriers, textures,
                                 srcLayouts);
+}
+
+// GL_EXT_semaphore_fd
+void GL_APIENTRY glImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint fd)
+{
+    return gl::ImportSemaphoreFdEXT(semaphore, handleType, fd);
 }
 
 // GL_EXT_texture_storage
@@ -6393,6 +6405,23 @@ void GL_APIENTRY glGetnUniformivEXTContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glHintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
 {
     return gl::HintContextANGLE(ctx, target, mode);
+}
+
+void GL_APIENTRY glImportMemoryFdEXTContextANGLE(GLeglContext ctx,
+                                                 GLuint memory,
+                                                 GLuint64 size,
+                                                 GLenum handleType,
+                                                 GLint fd)
+{
+    return gl::ImportMemoryFdEXTContextANGLE(ctx, memory, size, handleType, fd);
+}
+
+void GL_APIENTRY glImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint semaphore,
+                                                    GLenum handleType,
+                                                    GLint fd)
+{
+    return gl::ImportSemaphoreFdEXTContextANGLE(ctx, semaphore, handleType, fd);
 }
 
 void GL_APIENTRY glInsertEventMarkerEXTContextANGLE(GLeglContext ctx,

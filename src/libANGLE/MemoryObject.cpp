@@ -18,9 +18,7 @@ MemoryObject::MemoryObject(rx::GLImplFactory *factory, GLuint id)
     : RefCountObject(id), mImplementation(factory->createMemoryObject())
 {}
 
-MemoryObject::~MemoryObject()
-{
-}
+MemoryObject::~MemoryObject() {}
 
 void MemoryObject::onDestroy(const Context *context)
 {

@@ -618,6 +618,9 @@ EXPORTS
     glTexStorageMem3DEXT
     glTexStorageMem3DMultisampleEXT
 
+    ; GL_EXT_memory_object_fd
+    glImportMemoryFdEXT
+
     ; GL_EXT_occlusion_query_boolean
 
     ; GL_EXT_robustness
@@ -634,6 +637,9 @@ EXPORTS
     glSemaphoreParameterui64vEXT
     glSignalSemaphoreEXT
     glWaitSemaphoreEXT
+
+    ; GL_EXT_semaphore_fd
+    glImportSemaphoreFdEXT
 
     ; GL_EXT_texture_storage
     glTexStorage1DEXT
@@ -1095,6 +1101,8 @@ EXPORTS
     glGetnUniformivRobustANGLEContextANGLE
     glGetnUniformuivRobustANGLEContextANGLE
     glHintContextANGLE
+    glImportMemoryFdEXTContextANGLE
+    glImportSemaphoreFdEXTContextANGLE
     glInsertEventMarkerEXTContextANGLE
     glInvalidateFramebufferContextANGLE
     glInvalidateSubFramebufferContextANGLE

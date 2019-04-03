@@ -363,6 +363,8 @@ enum class EntryPoint
     GetnUniformivRobustANGLE,
     GetnUniformuivRobustANGLE,
     Hint,
+    ImportMemoryFdEXT,
+    ImportSemaphoreFdEXT,
     InsertEventMarkerEXT,
     InvalidateFramebuffer,
     InvalidateSubFramebuffer,

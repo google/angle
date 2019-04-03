@@ -3175,6 +3175,22 @@ bool ValidateTexStorageMem3DEXT(Context *context,
     return false;
 }
 
+bool ValidateImportMemoryFdEXT(Context *context,
+                               GLuint memory,
+                               GLuint64 size,
+                               GLenum handleType,
+                               GLint fd)
+{
+    if (!context->getExtensions().memoryObjectFd)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateDeleteSemaphoresEXT(Context *context, GLsizei n, const GLuint *semaphores)
 {
     if (!context->getExtensions().semaphore)
@@ -3268,6 +3284,18 @@ bool ValidateWaitSemaphoreEXT(Context *context,
                               const GLenum *srcLayouts)
 {
     if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateImportSemaphoreFdEXT(Context *context, GLuint semaphore, GLenum handleType, GLint fd)
+{
+    if (!context->getExtensions().semaphoreFd)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;

@@ -7202,6 +7202,11 @@ void Context::bufferStorageMem(TextureType target, GLsizeiptr size, GLuint memor
     UNIMPLEMENTED();
 }
 
+void Context::importMemoryFd(GLuint memory, GLuint64 size, GLenum handleType, GLint fd)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::genSemaphores(GLsizei n, GLuint *semaphores)
 {
     UNIMPLEMENTED();
@@ -7244,6 +7249,11 @@ void Context::signalSemaphore(GLuint semaphore,
                               GLuint numTextureBarriers,
                               const GLuint *textures,
                               const GLenum *dstLayouts)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::importSemaphoreFd(GLuint semaphore, GLenum handleType, GLint fd)
 {
     UNIMPLEMENTED();
 }

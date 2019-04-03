@@ -755,6 +755,12 @@ ANGLE_EXPORT void GL_APIENTRY TexStorageMem3DMultisampleEXT(GLenum target,
                                                             GLuint memory,
                                                             GLuint64 offset);
 
+// GL_EXT_memory_object_fd
+ANGLE_EXPORT void GL_APIENTRY ImportMemoryFdEXT(GLuint memory,
+                                                GLuint64 size,
+                                                GLenum handleType,
+                                                GLint fd);
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness
@@ -798,6 +804,9 @@ ANGLE_EXPORT void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
                                                GLuint numTextureBarriers,
                                                const GLuint *textures,
                                                const GLenum *srcLayouts);
+
+// GL_EXT_semaphore_fd
+ANGLE_EXPORT void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint fd);
 
 // GL_EXT_texture_storage
 ANGLE_EXPORT void GL_APIENTRY TexStorage1DEXT(GLenum target,
@@ -2016,6 +2025,15 @@ ANGLE_EXPORT void GL_APIENTRY GetnUniformivEXTContextANGLE(GLeglContext ctx,
                                                            GLsizei bufSize,
                                                            GLint *params);
 ANGLE_EXPORT void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode);
+ANGLE_EXPORT void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
+                                                            GLuint memory,
+                                                            GLuint64 size,
+                                                            GLenum handleType,
+                                                            GLint fd);
+ANGLE_EXPORT void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
+                                                               GLuint semaphore,
+                                                               GLenum handleType,
+                                                               GLint fd);
 ANGLE_EXPORT void GL_APIENTRY InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
                                                                GLsizei length,
                                                                const GLchar *marker);
