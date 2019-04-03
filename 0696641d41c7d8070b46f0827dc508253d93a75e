@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "adc75f4c_06eb6e2c",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T12:51:29Z",
+      "side": 1,
+      "message": "should probably rename this one to kFormatMismatch",
+      "range": {
+        "startLine": 1654,
+        "startChar": 59,
+        "endLine": 1654,
+        "endChar": 72
+      },
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26214a6d_c5118d59",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1657,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T12:51:29Z",
+      "side": 1,
+      "message": "I think you can keep the validation here as format !\u003d textureInternalFormat.format if you put the GL_NONE check outside this whole block.",
+      "range": {
+        "startLine": 1649,
+        "startChar": 0,
+        "endLine": 1657,
+        "endChar": 0
+      },
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b10c5997_130b86d7",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1663,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T12:51:29Z",
+      "side": 1,
+      "message": "probably need to update this validation string. the text should be something like:\n\n\"type must match the type used to originally define the texture object\"",
+      "range": {
+        "startLine": 1663,
+        "startChar": 63,
+        "endLine": 1663,
+        "endChar": 76
+      },
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8b47e2c_7b40b5f3",
         "filename": "temp.txt",
         "patchSetId": 21
