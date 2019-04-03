@@ -3820,6 +3820,9 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
     // http://anglebug.com/1706
     ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
 
+    // Seems to fail on AMD D3D11. Possibly driver bug. http://anglebug.com/3342
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsD3D11());
+
     const int size = getWindowWidth();
 
     auto dim   = [size](int level) { return size >> level; };
