@@ -147,6 +147,14 @@ angle::CallCapture CaptureVertexAttribDivisorANGLE(const State &glState,
                                                    GLuint index,
                                                    GLuint divisor);
 
+// GL_ANGLE_memory_object_fuchsia
+angle::CallCapture CaptureImportMemoryZirconHandleANGLE(const State &glState,
+                                                        bool isCallValid,
+                                                        MemoryObjectID memoryPacked,
+                                                        GLuint64 size,
+                                                        HandleType handleTypePacked,
+                                                        GLuint handle);
+
 // GL_ANGLE_multi_draw
 angle::CallCapture CaptureMultiDrawArraysANGLE(const State &glState,
                                                bool isCallValid,
@@ -690,6 +698,13 @@ angle::CallCapture CaptureGetQueryObjectui64vRobustANGLE(const State &glState,
                                                          GLsizei bufSize,
                                                          GLsizei *length,
                                                          GLuint64 *params);
+
+// GL_ANGLE_semaphore_fuchsia
+angle::CallCapture CaptureImportSemaphoreZirconHandleANGLE(const State &glState,
+                                                           bool isCallValid,
+                                                           SemaphoreID semaphorePacked,
+                                                           HandleType handleTypePacked,
+                                                           GLuint handle);
 
 // GL_ANGLE_texture_external_update
 angle::CallCapture CaptureTexImage2DExternalANGLE(const State &glState,

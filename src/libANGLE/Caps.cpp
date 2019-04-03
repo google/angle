@@ -928,9 +928,11 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_EGL_sync"] = esOnlyExtension(&Extensions::eglSyncOES);
         map["GL_EXT_memory_object"] = enableableExtension(&Extensions::memoryObject);
         map["GL_EXT_memory_object_fd"] = enableableExtension(&Extensions::memoryObjectFd);
+        map["GL_ANGLE_memory_object_fuchsia"] = enableableExtension(&Extensions::memoryObjectFuchsiaANGLE);
         map["GL_EXT_semaphore"] = enableableExtension(&Extensions::semaphore);
         map["GL_EXT_semaphore_fd"] = enableableExtension(&Extensions::semaphoreFd);
         map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::eglStreamConsumerExternalNV);
+        map["GL_ANGLE_semaphore_fuchsia"] = enableableExtension(&Extensions::semaphoreFuchsiaANGLE);
         map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);
         map["GL_EXT_color_buffer_float"] = enableableExtension(&Extensions::colorBufferFloat);

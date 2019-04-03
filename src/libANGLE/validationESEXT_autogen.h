@@ -128,6 +128,13 @@ bool ValidateDrawElementsInstancedANGLE(const Context *context,
                                         GLsizei primcount);
 bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLuint divisor);
 
+// GL_ANGLE_memory_object_fuchsia
+bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
+                                           MemoryObjectID memoryPacked,
+                                           GLuint64 size,
+                                           HandleType handleTypePacked,
+                                           GLuint handle);
+
 // GL_ANGLE_multi_draw
 bool ValidateMultiDrawArraysANGLE(const Context *context,
                                   PrimitiveMode modePacked,
@@ -597,6 +604,12 @@ bool ValidateGetQueryObjectui64vRobustANGLE(const Context *context,
                                             GLsizei bufSize,
                                             const GLsizei *length,
                                             const GLuint64 *params);
+
+// GL_ANGLE_semaphore_fuchsia
+bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
+                                              SemaphoreID semaphorePacked,
+                                              HandleType handleTypePacked,
+                                              GLuint handle);
 
 // GL_ANGLE_texture_external_update
 bool ValidateTexImage2DExternalANGLE(const Context *context,

@@ -120,6 +120,12 @@ ANGLE_EXPORT void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
                                                          GLsizei primcount);
 ANGLE_EXPORT void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor);
 
+// GL_ANGLE_memory_object_fuchsia
+ANGLE_EXPORT void GL_APIENTRY ImportMemoryZirconHandleANGLE(GLuint memory,
+                                                            GLuint64 size,
+                                                            GLenum handleType,
+                                                            GLuint handle);
+
 // GL_ANGLE_multi_draw
 ANGLE_EXPORT void GL_APIENTRY MultiDrawArraysANGLE(GLenum mode,
                                                    const GLint *firsts,
@@ -518,6 +524,11 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
                                                              GLsizei bufSize,
                                                              GLsizei *length,
                                                              GLuint64 *params);
+
+// GL_ANGLE_semaphore_fuchsia
+ANGLE_EXPORT void GL_APIENTRY ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
+                                                               GLenum handleType,
+                                                               GLuint handle);
 
 // GL_ANGLE_texture_external_update
 ANGLE_EXPORT void GL_APIENTRY TexImage2DExternalANGLE(GLenum target,
@@ -4313,6 +4324,15 @@ ANGLE_EXPORT void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext
                                                                     GLenum format,
                                                                     GLenum type,
                                                                     void *pixels);
+ANGLE_EXPORT void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
+                                                                        GLuint memory,
+                                                                        GLuint64 size,
+                                                                        GLenum handleType,
+                                                                        GLuint handle);
+ANGLE_EXPORT void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
+                                                                           GLuint semaphore,
+                                                                           GLenum handleType,
+                                                                           GLuint handle);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

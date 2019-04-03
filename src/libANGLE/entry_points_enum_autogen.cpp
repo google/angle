@@ -1240,8 +1240,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glHint";
         case EntryPoint::ImportMemoryFdEXT:
             return "glImportMemoryFdEXT";
+        case EntryPoint::ImportMemoryZirconHandleANGLE:
+            return "glImportMemoryZirconHandleANGLE";
         case EntryPoint::ImportSemaphoreFdEXT:
             return "glImportSemaphoreFdEXT";
+        case EntryPoint::ImportSemaphoreZirconHandleANGLE:
+            return "glImportSemaphoreZirconHandleANGLE";
         case EntryPoint::IndexMask:
             return "glIndexMask";
         case EntryPoint::IndexPointer:

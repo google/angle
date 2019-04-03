@@ -55,8 +55,10 @@ gles_extensions = [
     "GL_ANGLE_framebuffer_blit",
     "GL_ANGLE_framebuffer_multisample",
     "GL_ANGLE_instanced_arrays",
+    "GL_ANGLE_memory_object_fuchsia",
     "GL_ANGLE_multi_draw",
     "GL_ANGLE_provoking_vertex",
+    "GL_ANGLE_semaphore_fuchsia",
     "GL_ANGLE_texture_multisample",
     "GL_ANGLE_translated_shader_source",
     "GL_EXT_blend_func_extended",
@@ -230,6 +232,10 @@ class RegistryXML:
         insertion_point = self.root.findall("./extensions")[0]
         for extension in angle_ext_root.iter('extensions'):
             insertion_point.extend(extension)
+
+        insertion_point = self.root
+        for enums in angle_ext_root.iter('enums'):
+            insertion_point.append(enums)
 
     def AddCommands(self, feature_name, annotation):
         xpath = ".//feature[@name='%s']//command" % feature_name

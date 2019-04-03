@@ -474,6 +474,36 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     }
 }
 
+// GL_ANGLE_memory_object_fuchsia
+void GL_APIENTRY ImportMemoryZirconHandleANGLE(GLuint memory,
+                                               GLuint64 size,
+                                               GLenum handleType,
+                                               GLuint handle)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glImportMemoryZirconHandleANGLE",
+          "context = %d, GLuint memory = %u, GLuint64 size = %llu, GLenum handleType = %s, GLuint "
+          "handle = %u",
+          CID(context), memory, static_cast<unsigned long long>(size),
+          GLenumToString(GLenumGroup::ExternalHandleType, handleType), handle);
+
+    if (context)
+    {
+        MemoryObjectID memoryPacked                           = FromGL<MemoryObjectID>(memory);
+        HandleType handleTypePacked                           = FromGL<HandleType>(handleType);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateImportMemoryZirconHandleANGLE(context, memoryPacked, size,
+                                                                  handleTypePacked, handle));
+        if (isCallValid)
+        {
+            context->importMemoryZirconHandle(memoryPacked, size, handleTypePacked, handle);
+        }
+        ANGLE_CAPTURE(ImportMemoryZirconHandleANGLE, isCallValid, context, memoryPacked, size,
+                      handleTypePacked, handle);
+    }
+}
+
 // GL_ANGLE_multi_draw
 void GL_APIENTRY MultiDrawArraysANGLE(GLenum mode,
                                       const GLint *firsts,
@@ -2597,6 +2627,34 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
         }
         ANGLE_CAPTURE(GetQueryObjectui64vRobustANGLE, isCallValid, context, idPacked, pname,
                       bufSize, length, params);
+    }
+}
+
+// GL_ANGLE_semaphore_fuchsia
+void GL_APIENTRY ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
+                                                  GLenum handleType,
+                                                  GLuint handle)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glImportSemaphoreZirconHandleANGLE",
+          "context = %d, GLuint semaphore = %u, GLenum handleType = %s, GLuint handle = %u",
+          CID(context), semaphore, GLenumToString(GLenumGroup::ExternalHandleType, handleType),
+          handle);
+
+    if (context)
+    {
+        SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
+        HandleType handleTypePacked                           = FromGL<HandleType>(handleType);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateImportSemaphoreZirconHandleANGLE(
+                                              context, semaphorePacked, handleTypePacked, handle));
+        if (isCallValid)
+        {
+            context->importSemaphoreZirconHandle(semaphorePacked, handleTypePacked, handle);
+        }
+        ANGLE_CAPTURE(ImportSemaphoreZirconHandleANGLE, isCallValid, context, semaphorePacked,
+                      handleTypePacked, handle);
     }
 }
 
@@ -26887,6 +26945,66 @@ void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, format, type,
                       pixels);
+    }
+}
+
+void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
+                                                           GLuint memory,
+                                                           GLuint64 size,
+                                                           GLenum handleType,
+                                                           GLuint handle)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glImportMemoryZirconHandleANGLE",
+          "context = %d, GLuint memory = %u, GLuint64 size = %llu, GLenum handleType = %s, GLuint "
+          "handle = %u",
+          CID(context), memory, static_cast<unsigned long long>(size),
+          GLenumToString(GLenumGroup::ExternalHandleType, handleType), handle);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        MemoryObjectID memoryPacked                           = FromGL<MemoryObjectID>(memory);
+        HandleType handleTypePacked                           = FromGL<HandleType>(handleType);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateImportMemoryZirconHandleANGLE(context, memoryPacked, size,
+                                                                  handleTypePacked, handle));
+        if (isCallValid)
+        {
+            context->importMemoryZirconHandle(memoryPacked, size, handleTypePacked, handle);
+        }
+        ANGLE_CAPTURE(ImportMemoryZirconHandleANGLE, isCallValid, context, memoryPacked, size,
+                      handleTypePacked, handle);
+    }
+}
+
+void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
+                                                              GLuint semaphore,
+                                                              GLenum handleType,
+                                                              GLuint handle)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glImportSemaphoreZirconHandleANGLE",
+          "context = %d, GLuint semaphore = %u, GLenum handleType = %s, GLuint handle = %u",
+          CID(context), semaphore, GLenumToString(GLenumGroup::ExternalHandleType, handleType),
+          handle);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
+        HandleType handleTypePacked                           = FromGL<HandleType>(handleType);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateImportSemaphoreZirconHandleANGLE(
+                                              context, semaphorePacked, handleTypePacked, handle));
+        if (isCallValid)
+        {
+            context->importSemaphoreZirconHandle(semaphorePacked, handleTypePacked, handle);
+        }
+        ANGLE_CAPTURE(ImportSemaphoreZirconHandleANGLE, isCallValid, context, semaphorePacked,
+                      handleTypePacked, handle);
     }
 }
 }  // namespace gl

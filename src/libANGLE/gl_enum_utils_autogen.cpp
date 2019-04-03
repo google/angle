@@ -1712,6 +1712,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_BGRA8_EXT";
                 case 0x93A6:
                     return "GL_PROGRAM_BINARY_ANGLE";
+                case 0x93AE:
+                    return "GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE";
+                case 0x93AF:
+                    return "GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE";
                 case 0x93B0:
                     return "GL_COMPRESSED_RGBA_ASTC_4x4";
                 case 0x93B1:

@@ -8123,6 +8123,14 @@ void Context::importMemoryFd(MemoryObjectID memory, GLuint64 size, HandleType ha
     ANGLE_CONTEXT_TRY(memoryObject->importFd(this, size, handleType, fd));
 }
 
+void Context::importMemoryZirconHandle(MemoryObjectID memory,
+                                       GLuint64 size,
+                                       HandleType handleType,
+                                       GLuint handle)
+{
+    UNREACHABLE();
+}
+
 void Context::genSemaphores(GLsizei n, SemaphoreID *semaphores)
 {
     for (int i = 0; i < n; i++)
@@ -8216,6 +8224,13 @@ void Context::importSemaphoreFd(SemaphoreID semaphore, HandleType handleType, GL
     Semaphore *semaphoreObject = getSemaphore(semaphore);
     ASSERT(semaphoreObject != nullptr);
     ANGLE_CONTEXT_TRY(semaphoreObject->importFd(this, handleType, fd));
+}
+
+void Context::importSemaphoreZirconHandle(SemaphoreID semaphore,
+                                          HandleType handleType,
+                                          GLuint handle)
+{
+    UNREACHABLE();
 }
 
 void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)

@@ -485,6 +485,9 @@ EXPORTS
     glDrawElementsInstancedANGLE
     glVertexAttribDivisorANGLE
 
+    ; GL_ANGLE_memory_object_fuchsia
+    glImportMemoryZirconHandleANGLE
+
     ; GL_ANGLE_multi_draw
     glMultiDrawArraysANGLE
     glMultiDrawArraysInstancedANGLE
@@ -565,6 +568,9 @@ EXPORTS
     glTexParameterivRobustANGLE
     glTexSubImage2DRobustANGLE
     glTexSubImage3DRobustANGLE
+
+    ; GL_ANGLE_semaphore_fuchsia
+    glImportSemaphoreZirconHandleANGLE
 
     ; GL_ANGLE_texture_external_update
     glInvalidateTextureANGLE
@@ -1257,7 +1263,9 @@ EXPORTS
     glGetnUniformuivRobustANGLEContextANGLE
     glHintContextANGLE
     glImportMemoryFdEXTContextANGLE
+    glImportMemoryZirconHandleANGLEContextANGLE
     glImportSemaphoreFdEXTContextANGLE
+    glImportSemaphoreZirconHandleANGLEContextANGLE
     glInsertEventMarkerEXTContextANGLE
     glInvalidateFramebufferContextANGLE
     glInvalidateSubFramebufferContextANGLE

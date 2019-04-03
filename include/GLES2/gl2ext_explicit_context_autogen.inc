@@ -382,6 +382,8 @@ typedef void (GL_APIENTRYP PFNGLTEXIMAGE2DEXTERNALANGLECONTEXTANGLEPROC)(GLeglCo
 typedef void (GL_APIENTRYP PFNGLINVALIDATETEXTUREANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target);
 typedef void (GL_APIENTRYP PFNGLGETTEXIMAGEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
 typedef void (GL_APIENTRYP PFNGLGETRENDERBUFFERIMAGEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum format, GLenum type, void *pixels);
+typedef void (GL_APIENTRYP PFNGLIMPORTMEMORYZIRCONHANDLEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint memory, GLuint64 size, GLenum handleType, GLuint handle);
+typedef void (GL_APIENTRYP PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint semaphore, GLenum handleType, GLuint handle);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glActiveTextureContextANGLE(GLeglContext ctx, GLenum texture);
 GL_APICALL void GL_APIENTRY glAttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader);
@@ -757,4 +759,6 @@ GL_APICALL void GL_APIENTRY glTexImage2DExternalANGLEContextANGLE(GLeglContext c
 GL_APICALL void GL_APIENTRY glInvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target);
 GL_APICALL void GL_APIENTRY glGetTexImageANGLEContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
 GL_APICALL void GL_APIENTRY glGetRenderbufferImageANGLEContextANGLE(GLeglContext ctx, GLenum target, GLenum format, GLenum type, void *pixels);
+GL_APICALL void GL_APIENTRY glImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx, GLuint memory, GLuint64 size, GLenum handleType, GLuint handle);
+GL_APICALL void GL_APIENTRY glImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx, GLuint semaphore, GLenum handleType, GLuint handle);
 #endif

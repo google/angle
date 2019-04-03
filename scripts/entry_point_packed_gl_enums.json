@@ -878,7 +878,15 @@
         "handleType": "HandleType",
         "memory": "MemoryObjectID"
     },
+    "glImportMemoryZirconHandle": {
+        "handleType": "HandleType",
+        "memory": "MemoryObjectID"
+    },
     "glImportSemaphoreFd": {
+        "handleType": "HandleType",
+        "semaphore": "SemaphoreID"
+    },
+    "glImportSemaphoreZirconHandle": {
         "handleType": "HandleType",
         "semaphore": "SemaphoreID"
     },

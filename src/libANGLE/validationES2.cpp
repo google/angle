@@ -3577,6 +3577,22 @@ bool ValidateImportMemoryFdEXT(const Context *context,
     return true;
 }
 
+bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
+                                           MemoryObjectID memory,
+                                           GLuint64 size,
+                                           HandleType handleType,
+                                           GLuint handle)
+{
+    if (!context->getExtensions().memoryObjectFuchsiaANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateDeleteSemaphoresEXT(const Context *context, GLsizei n, const SemaphoreID *semaphores)
 {
     if (!context->getExtensions().semaphore)
@@ -3713,6 +3729,21 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
     }
 
     return true;
+}
+
+bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
+                                              SemaphoreID semaphore,
+                                              HandleType handleTypePacked,
+                                              GLuint handle)
+{
+    if (!context->getExtensions().semaphoreFuchsiaANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
 }
 
 bool ValidateMapBufferBase(const Context *context, BufferBinding target)

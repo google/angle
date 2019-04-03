@@ -392,11 +392,17 @@ struct Extensions
     // GL_EXT_memory_object_fd
     bool memoryObjectFd = false;
 
+    // GL_ANGLE_memory_object_fuchsia
+    bool memoryObjectFuchsiaANGLE = false;
+
     // GL_EXT_semaphore
     bool semaphore = false;
 
     // GL_EXT_semaphore_fd
     bool semaphoreFd = false;
+
+    // GL_ANGLE_semaphore_fuchsia
+    bool semaphoreFuchsiaANGLE = false;
 
     // NV_EGL_stream_consumer_external
     bool eglStreamConsumerExternalNV = false;

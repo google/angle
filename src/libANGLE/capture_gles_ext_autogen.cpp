@@ -404,6 +404,23 @@ CallCapture CaptureVertexAttribDivisorANGLE(const State &glState,
     return CallCapture(gl::EntryPoint::VertexAttribDivisorANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureImportMemoryZirconHandleANGLE(const State &glState,
+                                                 bool isCallValid,
+                                                 MemoryObjectID memoryPacked,
+                                                 GLuint64 size,
+                                                 HandleType handleTypePacked,
+                                                 GLuint handle)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("memoryPacked", ParamType::TMemoryObjectID, memoryPacked);
+    paramBuffer.addValueParam("size", ParamType::TGLuint64, size);
+    paramBuffer.addValueParam("handleTypePacked", ParamType::THandleType, handleTypePacked);
+    paramBuffer.addValueParam("handle", ParamType::TGLuint, handle);
+
+    return CallCapture(gl::EntryPoint::ImportMemoryZirconHandleANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureMultiDrawArraysANGLE(const State &glState,
                                         bool isCallValid,
                                         PrimitiveMode modePacked,
@@ -2487,6 +2504,21 @@ CallCapture CaptureGetQueryObjectui64vRobustANGLE(const State &glState,
     paramBuffer.addParam(std::move(paramsParam));
 
     return CallCapture(gl::EntryPoint::GetQueryObjectui64vRobustANGLE, std::move(paramBuffer));
+}
+
+CallCapture CaptureImportSemaphoreZirconHandleANGLE(const State &glState,
+                                                    bool isCallValid,
+                                                    SemaphoreID semaphorePacked,
+                                                    HandleType handleTypePacked,
+                                                    GLuint handle)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("semaphorePacked", ParamType::TSemaphoreID, semaphorePacked);
+    paramBuffer.addValueParam("handleTypePacked", ParamType::THandleType, handleTypePacked);
+    paramBuffer.addValueParam("handle", ParamType::TGLuint, handle);
+
+    return CallCapture(gl::EntryPoint::ImportSemaphoreZirconHandleANGLE, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexImage2DExternalANGLE(const State &glState,

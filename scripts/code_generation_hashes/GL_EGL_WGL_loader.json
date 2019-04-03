@@ -6,7 +6,7 @@
   "scripts/generate_loader.py":
     "48c60c668bec42a80378179aae2acc61",
   "scripts/registry_xml.py":
-    "1cf8c2638c7a2ea439f79d3ba05592bd",
+    "1b633c9481f0e8aa148e8690dfe91cda",
   "scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "src/libEGL/egl_loader_autogen.cpp":
@@ -18,9 +18,9 @@
   "util/egl_loader_autogen.h":
     "55b54071e61b3e7beab28178dc20fd28",
   "util/gles_loader_autogen.cpp":
-    "6e5c9c20677fb0957c84fcc909f07496",
+    "5d066fcf01d897225820211035e2e748",
   "util/gles_loader_autogen.h":
-    "11c4005b8e8729353037e3a6bd4e8a70",
+    "b8814ac581daa3a2ac3ba0e84b02571b",
   "util/windows/wgl_loader_autogen.cpp":
     "c0d9a65eaa9aac356c6fd3f88638d2be",
   "util/windows/wgl_loader_autogen.h":
