@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8b47e2c_7b40b5f3",
+        "filename": "temp.txt",
+        "patchSetId": 21
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-03T01:16:31Z",
+      "side": 1,
+      "message": "Ugh, just noticed this got included somehow (part of working on a script I put together for CLion cmake stuff).   I\u0027ll get it cleaned up in the morning.",
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
