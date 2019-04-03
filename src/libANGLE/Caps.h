@@ -333,6 +333,12 @@ struct Extensions
     // GL_OES_EGL_sync
     bool eglSync;
 
+    // GL_EXT_memory_object
+    bool memoryObject;
+
+    // GL_EXT_semaphore
+    bool semaphore;
+
     // NV_EGL_stream_consumer_external
     bool eglStreamConsumerExternal;
 

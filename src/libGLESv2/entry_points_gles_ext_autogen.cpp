@@ -3242,6 +3242,267 @@ void *GL_APIENTRY MapBufferRangeEXT(GLenum target,
     return GetDefaultReturnValue<EntryPoint::MapBufferRangeEXT, void *>();
 }
 
+// GL_EXT_memory_object
+void GL_APIENTRY BufferStorageMemEXT(GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizeiptr size = %llu, GLuint memory = %u, GLuint64 offset = "
+        "%llu)",
+        target, static_cast<unsigned long long>(size), memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() ||
+            ValidateBufferStorageMemEXT(context, targetPacked, size, memory, offset))
+        {
+            context->bufferStorageMem(targetPacked, size, memory, offset);
+        }
+    }
+}
+
+void GL_APIENTRY CreateMemoryObjectsEXT(GLsizei n, GLuint *memoryObjects)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, GLuint *memoryObjects = 0x%016" PRIxPTR ")", n,
+          (uintptr_t)memoryObjects);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateCreateMemoryObjectsEXT(context, n, memoryObjects))
+        {
+            context->createMemoryObjects(n, memoryObjects);
+        }
+    }
+}
+
+void GL_APIENTRY DeleteMemoryObjectsEXT(GLsizei n, const GLuint *memoryObjects)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, const GLuint *memoryObjects = 0x%016" PRIxPTR ")", n,
+          (uintptr_t)memoryObjects);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateDeleteMemoryObjectsEXT(context, n, memoryObjects))
+        {
+            context->deleteMemoryObjects(n, memoryObjects);
+        }
+    }
+}
+
+void GL_APIENTRY GetMemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memoryObject = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")",
+          memoryObject, pname, (uintptr_t)params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateGetMemoryObjectParameterivEXT(context, memoryObject, pname, params))
+        {
+            context->getMemoryObjectParameteriv(memoryObject, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetUnsignedBytevEXT(GLenum pname, GLubyte *data)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum pname = 0x%X, GLubyte *data = 0x%016" PRIxPTR ")", pname, (uintptr_t)data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateGetUnsignedBytevEXT(context, pname, data))
+        {
+            context->getUnsignedBytev(pname, data);
+        }
+    }
+}
+
+void GL_APIENTRY GetUnsignedBytei_vEXT(GLenum target, GLuint index, GLubyte *data)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLuint index = %u, GLubyte *data = 0x%016" PRIxPTR ")", target,
+          index, (uintptr_t)data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateGetUnsignedBytei_vEXT(context, target, index, data))
+        {
+            context->getUnsignedBytei_v(target, index, data);
+        }
+    }
+}
+
+GLboolean GL_APIENTRY IsMemoryObjectEXT(GLuint memoryObject)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memoryObject = %u)", memoryObject);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateIsMemoryObjectEXT(context, memoryObject))
+        {
+            return context->isMemoryObject(memoryObject);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::IsMemoryObjectEXT, GLboolean>();
+}
+
+void GL_APIENTRY MemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, const GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memoryObject = %u, GLenum pname = 0x%X, const GLint *params = 0x%016" PRIxPTR
+          ")",
+          memoryObject, pname, (uintptr_t)params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateMemoryObjectParameterivEXT(context, memoryObject, pname, params))
+        {
+            context->memoryObjectParameteriv(memoryObject, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem2DEXT(GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalFormat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLuint memory,
+                                    GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalFormat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLuint memory = %u, GLuint64 offset = %llu)",
+        target, levels, internalFormat, width, height, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() ||
+            ValidateTexStorageMem2DEXT(context, targetPacked, levels, internalFormat, width, height,
+                                       memory, offset))
+        {
+            context->texStorageMem2D(targetPacked, levels, internalFormat, width, height, memory,
+                                     offset);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem2DMultisampleEXT(GLenum target,
+                                               GLsizei samples,
+                                               GLenum internalFormat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLboolean fixedSampleLocations,
+                                               GLuint memory,
+                                               GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalFormat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d, GLboolean fixedSampleLocations = %u, GLuint memory = %u, "
+        "GLuint64 offset = %llu)",
+        target, samples, internalFormat, width, height, fixedSampleLocations, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() || ValidateTexStorageMem2DMultisampleEXT(
+                                             context, targetPacked, samples, internalFormat, width,
+                                             height, fixedSampleLocations, memory, offset))
+        {
+            context->texStorageMem2DMultisample(targetPacked, samples, internalFormat, width,
+                                                height, fixedSampleLocations, memory, offset);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem3DEXT(GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalFormat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth,
+                                    GLuint memory,
+                                    GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalFormat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLsizei depth = %d, GLuint memory = %u, GLuint64 offset = %llu)",
+        target, levels, internalFormat, width, height, depth, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() ||
+            ValidateTexStorageMem3DEXT(context, targetPacked, levels, internalFormat, width, height,
+                                       depth, memory, offset))
+        {
+            context->texStorageMem3D(targetPacked, levels, internalFormat, width, height, depth,
+                                     memory, offset);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem3DMultisampleEXT(GLenum target,
+                                               GLsizei samples,
+                                               GLenum internalFormat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLsizei depth,
+                                               GLboolean fixedSampleLocations,
+                                               GLuint memory,
+                                               GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalFormat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedSampleLocations = %u, "
+        "GLuint memory = %u, GLuint64 offset = %llu)",
+        target, samples, internalFormat, width, height, depth, fixedSampleLocations, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() || ValidateTexStorageMem3DMultisampleEXT(
+                                             context, targetPacked, samples, internalFormat, width,
+                                             height, depth, fixedSampleLocations, memory, offset))
+        {
+            context->texStorageMem3DMultisample(targetPacked, samples, internalFormat, width,
+                                                height, depth, fixedSampleLocations, memory,
+                                                offset);
+        }
+    }
+}
+
 // GL_EXT_occlusion_query_boolean
 // BeginQueryEXT is already defined.
 
@@ -3338,6 +3599,150 @@ void GL_APIENTRY ReadnPixelsEXT(GLint x,
         }
     }
 }
+
+// GL_EXT_semaphore
+void GL_APIENTRY DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, const GLuint *semaphores = 0x%016" PRIxPTR ")", n,
+          (uintptr_t)semaphores);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateDeleteSemaphoresEXT(context, n, semaphores))
+        {
+            context->deleteSemaphores(n, semaphores);
+        }
+    }
+}
+
+void GL_APIENTRY GenSemaphoresEXT(GLsizei n, GLuint *semaphores)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, GLuint *semaphores = 0x%016" PRIxPTR ")", n, (uintptr_t)semaphores);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateGenSemaphoresEXT(context, n, semaphores))
+        {
+            context->genSemaphores(n, semaphores);
+        }
+    }
+}
+
+void GL_APIENTRY GetSemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, GLuint64 *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u, GLenum pname = 0x%X, GLuint64 *params = 0x%016" PRIxPTR ")",
+          semaphore, pname, (uintptr_t)params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateGetSemaphoreParameterui64vEXT(context, semaphore, pname, params))
+        {
+            context->getSemaphoreParameterui64v(semaphore, pname, params);
+        }
+    }
+}
+
+GLboolean GL_APIENTRY IsSemaphoreEXT(GLuint semaphore)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u)", semaphore);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() || ValidateIsSemaphoreEXT(context, semaphore))
+        {
+            return context->isSemaphore(semaphore);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::IsSemaphoreEXT, GLboolean>();
+}
+
+void GL_APIENTRY SemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, const GLuint64 *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u, GLenum pname = 0x%X, const GLuint64 *params = 0x%016" PRIxPTR
+          ")",
+          semaphore, pname, (uintptr_t)params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateSemaphoreParameterui64vEXT(context, semaphore, pname, params))
+        {
+            context->semaphoreParameterui64v(semaphore, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY SignalSemaphoreEXT(GLuint semaphore,
+                                    GLuint numBufferBarriers,
+                                    const GLuint *buffers,
+                                    GLuint numTextureBarriers,
+                                    const GLuint *textures,
+                                    const GLenum *dstLayouts)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint semaphore = %u, GLuint numBufferBarriers = %u, const GLuint *buffers = "
+        "0x%016" PRIxPTR ", GLuint numTextureBarriers = %u, const GLuint *textures = 0x%016" PRIxPTR
+        ", const GLenum *dstLayouts = 0x%016" PRIxPTR ")",
+        semaphore, numBufferBarriers, (uintptr_t)buffers, numTextureBarriers, (uintptr_t)textures,
+        (uintptr_t)dstLayouts);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateSignalSemaphoreEXT(context, semaphore, numBufferBarriers, buffers,
+                                       numTextureBarriers, textures, dstLayouts))
+        {
+            context->signalSemaphore(semaphore, numBufferBarriers, buffers, numTextureBarriers,
+                                     textures, dstLayouts);
+        }
+    }
+}
+
+void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
+                                  GLuint numBufferBarriers,
+                                  const GLuint *buffers,
+                                  GLuint numTextureBarriers,
+                                  const GLuint *textures,
+                                  const GLenum *srcLayouts)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint semaphore = %u, GLuint numBufferBarriers = %u, const GLuint *buffers = "
+        "0x%016" PRIxPTR ", GLuint numTextureBarriers = %u, const GLuint *textures = 0x%016" PRIxPTR
+        ", const GLenum *srcLayouts = 0x%016" PRIxPTR ")",
+        semaphore, numBufferBarriers, (uintptr_t)buffers, numTextureBarriers, (uintptr_t)textures,
+        (uintptr_t)srcLayouts);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (context->skipValidation() ||
+            ValidateWaitSemaphoreEXT(context, semaphore, numBufferBarriers, buffers,
+                                     numTextureBarriers, textures, srcLayouts))
+        {
+            context->waitSemaphore(semaphore, numBufferBarriers, buffers, numTextureBarriers,
+                                   textures, srcLayouts);
+        }
+    }
+}
+
+// GetUnsignedBytei_vEXT is already defined.
+
+// GetUnsignedBytevEXT is already defined.
 
 // GL_EXT_texture_storage
 void GL_APIENTRY TexStorage1DEXT(GLenum target,
@@ -5441,6 +5846,32 @@ void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLsizeiptr size,
+                                                 GLuint memory,
+                                                 GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizeiptr size = %llu, GLuint memory = %u, GLuint64 offset = "
+        "%llu)",
+        target, static_cast<unsigned long long>(size), memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() ||
+            ValidateBufferStorageMemEXT(context, targetPacked, size, memory, offset))
+        {
+            context->bufferStorageMem(targetPacked, size, memory, offset);
+        }
+    }
+}
+
 void GL_APIENTRY BufferSubDataContextANGLE(GLeglContext ctx,
                                            GLenum target,
                                            GLintptr offset,
@@ -6129,6 +6560,25 @@ void GL_APIENTRY CopyTexSubImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
+                                                    GLsizei n,
+                                                    GLuint *memoryObjects)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, GLuint *memoryObjects = 0x%016" PRIxPTR ")", n,
+          (uintptr_t)memoryObjects);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateCreateMemoryObjectsEXT(context, n, memoryObjects))
+        {
+            context->createMemoryObjects(n, memoryObjects);
+        }
+    }
+}
+
 GLuint GL_APIENTRY CreateProgramContextANGLE(GLeglContext ctx)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
@@ -6368,6 +6818,25 @@ void GL_APIENTRY DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
+                                                    GLsizei n,
+                                                    const GLuint *memoryObjects)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, const GLuint *memoryObjects = 0x%016" PRIxPTR ")", n,
+          (uintptr_t)memoryObjects);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateDeleteMemoryObjectsEXT(context, n, memoryObjects))
+        {
+            context->deleteMemoryObjects(n, memoryObjects);
+        }
+    }
+}
+
 void GL_APIENTRY DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
@@ -6485,6 +6954,25 @@ void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, con
         if (context->skipValidation() || ValidateDeleteSamplers(context, count, samplers))
         {
             context->deleteSamplers(count, samplers);
+        }
+    }
+}
+
+void GL_APIENTRY DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
+                                                 GLsizei n,
+                                                 const GLuint *semaphores)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, const GLuint *semaphores = 0x%016" PRIxPTR ")", n,
+          (uintptr_t)semaphores);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateDeleteSemaphoresEXT(context, n, semaphores))
+        {
+            context->deleteSemaphores(n, semaphores);
         }
     }
 }
@@ -7942,6 +8430,22 @@ void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint
     }
 }
 
+void GL_APIENTRY GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *semaphores)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLsizei n = %d, GLuint *semaphores = 0x%016" PRIxPTR ")", n, (uintptr_t)semaphores);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateGenSemaphoresEXT(context, n, semaphores))
+        {
+            context->genSemaphores(n, semaphores);
+        }
+    }
+}
+
 void GL_APIENTRY GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *textures)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
@@ -8790,6 +9294,27 @@ void GL_APIENTRY GetMaterialxvContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY GetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint memoryObject,
+                                                           GLenum pname,
+                                                           GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memoryObject = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")",
+          memoryObject, pname, (uintptr_t)params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateGetMemoryObjectParameterivEXT(context, memoryObject, pname, params))
+        {
+            context->getMemoryObjectParameteriv(memoryObject, pname, params);
+        }
+    }
+}
+
 void GL_APIENTRY GetMultisamplefvContextANGLE(GLeglContext ctx,
                                               GLenum pname,
                                               GLuint index,
@@ -9455,6 +9980,27 @@ void GL_APIENTRY GetSamplerParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY GetSemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint semaphore,
+                                                           GLenum pname,
+                                                           GLuint64 *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u, GLenum pname = 0x%X, GLuint64 *params = 0x%016" PRIxPTR ")",
+          semaphore, pname, (uintptr_t)params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateGetSemaphoreParameterui64vEXT(context, semaphore, pname, params))
+        {
+            context->getSemaphoreParameterui64v(semaphore, pname, params);
+        }
+    }
+}
+
 void GL_APIENTRY GetShaderInfoLogContextANGLE(GLeglContext ctx,
                                               GLuint shader,
                                               GLsizei bufSize,
@@ -10074,6 +10620,43 @@ void GL_APIENTRY GetUniformuivContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname, GLubyte *data)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum pname = 0x%X, GLubyte *data = 0x%016" PRIxPTR ")", pname, (uintptr_t)data);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateGetUnsignedBytevEXT(context, pname, data))
+        {
+            context->getUnsignedBytev(pname, data);
+        }
+    }
+}
+
+void GL_APIENTRY GetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLuint index,
+                                                   GLubyte *data)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLuint index = %u, GLubyte *data = 0x%016" PRIxPTR ")", target,
+          index, (uintptr_t)data);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateGetUnsignedBytei_vEXT(context, target, index, data))
+        {
+            context->getUnsignedBytei_v(target, index, data);
+        }
+    }
+}
+
 void GL_APIENTRY GetVertexAttribIivContextANGLE(GLeglContext ctx,
                                                 GLuint index,
                                                 GLenum pname,
@@ -10402,6 +10985,24 @@ GLboolean GL_APIENTRY IsFramebufferOESContextANGLE(GLeglContext ctx, GLuint fram
     return GetDefaultReturnValue<EntryPoint::IsFramebufferOES, GLboolean>();
 }
 
+GLboolean GL_APIENTRY IsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint memoryObject)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memoryObject = %u)", memoryObject);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateIsMemoryObjectEXT(context, memoryObject))
+        {
+            return context->isMemoryObject(memoryObject);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::IsMemoryObjectEXT, GLboolean>();
+}
+
 GLboolean GL_APIENTRY IsProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
@@ -10508,6 +11109,24 @@ GLboolean GL_APIENTRY IsRenderbufferOESContextANGLE(GLeglContext ctx, GLuint ren
     }
 
     return GetDefaultReturnValue<EntryPoint::IsRenderbufferOES, GLboolean>();
+}
+
+GLboolean GL_APIENTRY IsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaphore)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u)", semaphore);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() || ValidateIsSemaphoreEXT(context, semaphore))
+        {
+            return context->isSemaphore(semaphore);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::IsSemaphoreEXT, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
@@ -11143,6 +11762,28 @@ void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield 
         if (context->skipValidation() || ValidateMemoryBarrierByRegion(context, barriers))
         {
             context->memoryBarrierByRegion(barriers);
+        }
+    }
+}
+
+void GL_APIENTRY MemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
+                                                        GLuint memoryObject,
+                                                        GLenum pname,
+                                                        const GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint memoryObject = %u, GLenum pname = 0x%X, const GLint *params = 0x%016" PRIxPTR
+          ")",
+          memoryObject, pname, (uintptr_t)params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateMemoryObjectParameterivEXT(context, memoryObject, pname, params))
+        {
+            context->memoryObjectParameteriv(memoryObject, pname, params);
         }
     }
 }
@@ -13016,6 +13657,28 @@ ScissorContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei h
     }
 }
 
+void GL_APIENTRY SemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
+                                                        GLuint semaphore,
+                                                        GLenum pname,
+                                                        const GLuint64 *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint semaphore = %u, GLenum pname = 0x%X, const GLuint64 *params = 0x%016" PRIxPTR
+          ")",
+          semaphore, pname, (uintptr_t)params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateSemaphoreParameterui64vEXT(context, semaphore, pname, params))
+        {
+            context->semaphoreParameterui64v(semaphore, pname, params);
+        }
+    }
+}
+
 void GL_APIENTRY SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum condition)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
@@ -13093,6 +13756,36 @@ void GL_APIENTRY ShaderSourceContextANGLE(GLeglContext ctx,
             ValidateShaderSource(context, shader, count, string, length))
         {
             context->shaderSource(shader, count, string, length);
+        }
+    }
+}
+
+void GL_APIENTRY SignalSemaphoreEXTContextANGLE(GLeglContext ctx,
+                                                GLuint semaphore,
+                                                GLuint numBufferBarriers,
+                                                const GLuint *buffers,
+                                                GLuint numTextureBarriers,
+                                                const GLuint *textures,
+                                                const GLenum *dstLayouts)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint semaphore = %u, GLuint numBufferBarriers = %u, const GLuint *buffers = "
+        "0x%016" PRIxPTR ", GLuint numTextureBarriers = %u, const GLuint *textures = 0x%016" PRIxPTR
+        ", const GLenum *dstLayouts = 0x%016" PRIxPTR ")",
+        semaphore, numBufferBarriers, (uintptr_t)buffers, numTextureBarriers, (uintptr_t)textures,
+        (uintptr_t)dstLayouts);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateSignalSemaphoreEXT(context, semaphore, numBufferBarriers, buffers,
+                                       numTextureBarriers, textures, dstLayouts))
+        {
+            context->signalSemaphore(semaphore, numBufferBarriers, buffers, numTextureBarriers,
+                                     textures, dstLayouts);
         }
     }
 }
@@ -13902,6 +14595,137 @@ void GL_APIENTRY TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
         {
             context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,
                                              depth, fixedsamplelocations);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem2DEXTContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLsizei levels,
+                                                GLenum internalFormat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLuint memory,
+                                                GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalFormat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLuint memory = %u, GLuint64 offset = %llu)",
+        target, levels, internalFormat, width, height, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() ||
+            ValidateTexStorageMem2DEXT(context, targetPacked, levels, internalFormat, width, height,
+                                       memory, offset))
+        {
+            context->texStorageMem2D(targetPacked, levels, internalFormat, width, height, memory,
+                                     offset);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem2DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLsizei samples,
+                                                           GLenum internalFormat,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLboolean fixedSampleLocations,
+                                                           GLuint memory,
+                                                           GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalFormat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d, GLboolean fixedSampleLocations = %u, GLuint memory = %u, "
+        "GLuint64 offset = %llu)",
+        target, samples, internalFormat, width, height, fixedSampleLocations, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() || ValidateTexStorageMem2DMultisampleEXT(
+                                             context, targetPacked, samples, internalFormat, width,
+                                             height, fixedSampleLocations, memory, offset))
+        {
+            context->texStorageMem2DMultisample(targetPacked, samples, internalFormat, width,
+                                                height, fixedSampleLocations, memory, offset);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem3DEXTContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLsizei levels,
+                                                GLenum internalFormat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                GLuint memory,
+                                                GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalFormat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLsizei depth = %d, GLuint memory = %u, GLuint64 offset = %llu)",
+        target, levels, internalFormat, width, height, depth, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() ||
+            ValidateTexStorageMem3DEXT(context, targetPacked, levels, internalFormat, width, height,
+                                       depth, memory, offset))
+        {
+            context->texStorageMem3D(targetPacked, levels, internalFormat, width, height, depth,
+                                     memory, offset);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorageMem3DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLsizei samples,
+                                                           GLenum internalFormat,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLsizei depth,
+                                                           GLboolean fixedSampleLocations,
+                                                           GLuint memory,
+                                                           GLuint64 offset)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalFormat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedSampleLocations = %u, "
+        "GLuint memory = %u, GLuint64 offset = %llu)",
+        target, samples, internalFormat, width, height, depth, fixedSampleLocations, memory,
+        static_cast<unsigned long long>(offset));
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (context->skipValidation() || ValidateTexStorageMem3DMultisampleEXT(
+                                             context, targetPacked, samples, internalFormat, width,
+                                             height, depth, fixedSampleLocations, memory, offset))
+        {
+            context->texStorageMem3DMultisample(targetPacked, samples, internalFormat, width,
+                                                height, depth, fixedSampleLocations, memory,
+                                                offset);
         }
     }
 }
@@ -15259,6 +16083,36 @@ ViewportContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei 
         if (context->skipValidation() || ValidateViewport(context, x, y, width, height))
         {
             context->viewport(x, y, width, height);
+        }
+    }
+}
+
+void GL_APIENTRY WaitSemaphoreEXTContextANGLE(GLeglContext ctx,
+                                              GLuint semaphore,
+                                              GLuint numBufferBarriers,
+                                              const GLuint *buffers,
+                                              GLuint numTextureBarriers,
+                                              const GLuint *textures,
+                                              const GLenum *srcLayouts)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint semaphore = %u, GLuint numBufferBarriers = %u, const GLuint *buffers = "
+        "0x%016" PRIxPTR ", GLuint numTextureBarriers = %u, const GLuint *textures = 0x%016" PRIxPTR
+        ", const GLenum *srcLayouts = 0x%016" PRIxPTR ")",
+        semaphore, numBufferBarriers, (uintptr_t)buffers, numTextureBarriers, (uintptr_t)textures,
+        (uintptr_t)srcLayouts);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        if (context->skipValidation() ||
+            ValidateWaitSemaphoreEXT(context, semaphore, numBufferBarriers, buffers,
+                                     numTextureBarriers, textures, srcLayouts))
+        {
+            context->waitSemaphore(semaphore, numBufferBarriers, buffers, numTextureBarriers,
+                                   textures, srcLayouts);
         }
     }
 }

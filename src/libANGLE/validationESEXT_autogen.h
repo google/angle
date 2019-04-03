@@ -809,6 +809,62 @@ bool ValidateMapBufferRangeEXT(Context *context,
                                GLsizeiptr length,
                                GLbitfield access);
 
+// GL_EXT_memory_object
+bool ValidateBufferStorageMemEXT(Context *context,
+                                 TextureType targetPacked,
+                                 GLsizeiptr size,
+                                 GLuint memory,
+                                 GLuint64 offset);
+bool ValidateCreateMemoryObjectsEXT(Context *context, GLsizei n, GLuint *memoryObjects);
+bool ValidateDeleteMemoryObjectsEXT(Context *context, GLsizei n, const GLuint *memoryObjects);
+bool ValidateGetMemoryObjectParameterivEXT(Context *context,
+                                           GLuint memoryObject,
+                                           GLenum pname,
+                                           GLint *params);
+bool ValidateGetUnsignedBytevEXT(Context *context, GLenum pname, GLubyte *data);
+bool ValidateGetUnsignedBytei_vEXT(Context *context, GLenum target, GLuint index, GLubyte *data);
+bool ValidateIsMemoryObjectEXT(Context *context, GLuint memoryObject);
+bool ValidateMemoryObjectParameterivEXT(Context *context,
+                                        GLuint memoryObject,
+                                        GLenum pname,
+                                        const GLint *params);
+bool ValidateTexStorageMem2DEXT(Context *context,
+                                TextureType targetPacked,
+                                GLsizei levels,
+                                GLenum internalFormat,
+                                GLsizei width,
+                                GLsizei height,
+                                GLuint memory,
+                                GLuint64 offset);
+bool ValidateTexStorageMem2DMultisampleEXT(Context *context,
+                                           TextureType targetPacked,
+                                           GLsizei samples,
+                                           GLenum internalFormat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLboolean fixedSampleLocations,
+                                           GLuint memory,
+                                           GLuint64 offset);
+bool ValidateTexStorageMem3DEXT(Context *context,
+                                TextureType targetPacked,
+                                GLsizei levels,
+                                GLenum internalFormat,
+                                GLsizei width,
+                                GLsizei height,
+                                GLsizei depth,
+                                GLuint memory,
+                                GLuint64 offset);
+bool ValidateTexStorageMem3DMultisampleEXT(Context *context,
+                                           TextureType targetPacked,
+                                           GLsizei samples,
+                                           GLenum internalFormat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           GLboolean fixedSampleLocations,
+                                           GLuint memory,
+                                           GLuint64 offset);
+
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness
@@ -832,6 +888,33 @@ bool ValidateReadnPixelsEXT(Context *context,
                             GLenum type,
                             GLsizei bufSize,
                             void *data);
+
+// GL_EXT_semaphore
+bool ValidateDeleteSemaphoresEXT(Context *context, GLsizei n, const GLuint *semaphores);
+bool ValidateGenSemaphoresEXT(Context *context, GLsizei n, GLuint *semaphores);
+bool ValidateGetSemaphoreParameterui64vEXT(Context *context,
+                                           GLuint semaphore,
+                                           GLenum pname,
+                                           GLuint64 *params);
+bool ValidateIsSemaphoreEXT(Context *context, GLuint semaphore);
+bool ValidateSemaphoreParameterui64vEXT(Context *context,
+                                        GLuint semaphore,
+                                        GLenum pname,
+                                        const GLuint64 *params);
+bool ValidateSignalSemaphoreEXT(Context *context,
+                                GLuint semaphore,
+                                GLuint numBufferBarriers,
+                                const GLuint *buffers,
+                                GLuint numTextureBarriers,
+                                const GLuint *textures,
+                                const GLenum *dstLayouts);
+bool ValidateWaitSemaphoreEXT(Context *context,
+                              GLuint semaphore,
+                              GLuint numBufferBarriers,
+                              const GLuint *buffers,
+                              GLuint numTextureBarriers,
+                              const GLuint *textures,
+                              const GLenum *srcLayouts);
 
 // GL_EXT_texture_storage
 bool ValidateTexStorage1DEXT(Context *context,

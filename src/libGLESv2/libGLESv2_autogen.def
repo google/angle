@@ -604,6 +604,20 @@ EXPORTS
     glFlushMappedBufferRangeEXT
     glMapBufferRangeEXT
 
+    ; GL_EXT_memory_object
+    glBufferStorageMemEXT
+    glCreateMemoryObjectsEXT
+    glDeleteMemoryObjectsEXT
+    glGetMemoryObjectParameterivEXT
+    glGetUnsignedBytei_vEXT
+    glGetUnsignedBytevEXT
+    glIsMemoryObjectEXT
+    glMemoryObjectParameterivEXT
+    glTexStorageMem2DEXT
+    glTexStorageMem2DMultisampleEXT
+    glTexStorageMem3DEXT
+    glTexStorageMem3DMultisampleEXT
+
     ; GL_EXT_occlusion_query_boolean
 
     ; GL_EXT_robustness
@@ -611,6 +625,15 @@ EXPORTS
     glGetnUniformfvEXT
     glGetnUniformivEXT
     glReadnPixelsEXT
+
+    ; GL_EXT_semaphore
+    glDeleteSemaphoresEXT
+    glGenSemaphoresEXT
+    glGetSemaphoreParameterui64vEXT
+    glIsSemaphoreEXT
+    glSemaphoreParameterui64vEXT
+    glSignalSemaphoreEXT
+    glWaitSemaphoreEXT
 
     ; GL_EXT_texture_storage
     glTexStorage1DEXT
@@ -761,6 +784,7 @@ EXPORTS
     glBlitFramebufferContextANGLE
     glBlitFramebufferANGLEContextANGLE
     glBufferDataContextANGLE
+    glBufferStorageMemEXTContextANGLE
     glBufferSubDataContextANGLE
     glCheckFramebufferStatusContextANGLE
     glCheckFramebufferStatusOESContextANGLE
@@ -806,6 +830,7 @@ EXPORTS
     glCoverStrokePathCHROMIUMContextANGLE
     glCoverStrokePathInstancedCHROMIUMContextANGLE
     glCoverageModulationCHROMIUMContextANGLE
+    glCreateMemoryObjectsEXTContextANGLE
     glCreateProgramContextANGLE
     glCreateShaderContextANGLE
     glCreateShaderProgramvContextANGLE
@@ -818,6 +843,7 @@ EXPORTS
     glDeleteFencesNVContextANGLE
     glDeleteFramebuffersContextANGLE
     glDeleteFramebuffersOESContextANGLE
+    glDeleteMemoryObjectsEXTContextANGLE
     glDeletePathsCHROMIUMContextANGLE
     glDeleteProgramContextANGLE
     glDeleteProgramPipelinesContextANGLE
@@ -826,6 +852,7 @@ EXPORTS
     glDeleteRenderbuffersContextANGLE
     glDeleteRenderbuffersOESContextANGLE
     glDeleteSamplersContextANGLE
+    glDeleteSemaphoresEXTContextANGLE
     glDeleteShaderContextANGLE
     glDeleteSyncContextANGLE
     glDeleteTexturesContextANGLE
@@ -905,6 +932,7 @@ EXPORTS
     glGenRenderbuffersContextANGLE
     glGenRenderbuffersOESContextANGLE
     glGenSamplersContextANGLE
+    glGenSemaphoresEXTContextANGLE
     glGenTexturesContextANGLE
     glGenTransformFeedbacksContextANGLE
     glGenVertexArraysContextANGLE
@@ -960,6 +988,7 @@ EXPORTS
     glGetLightxvContextANGLE
     glGetMaterialfvContextANGLE
     glGetMaterialxvContextANGLE
+    glGetMemoryObjectParameterivEXTContextANGLE
     glGetMultisamplefvContextANGLE
     glGetMultisamplefvANGLEContextANGLE
     glGetMultisamplefvRobustANGLEContextANGLE
@@ -1007,6 +1036,7 @@ EXPORTS
     glGetSamplerParameterfvRobustANGLEContextANGLE
     glGetSamplerParameterivContextANGLE
     glGetSamplerParameterivRobustANGLEContextANGLE
+    glGetSemaphoreParameterui64vEXTContextANGLE
     glGetShaderInfoLogContextANGLE
     glGetShaderPrecisionFormatContextANGLE
     glGetShaderSourceContextANGLE
@@ -1047,6 +1077,8 @@ EXPORTS
     glGetUniformivRobustANGLEContextANGLE
     glGetUniformuivContextANGLE
     glGetUniformuivRobustANGLEContextANGLE
+    glGetUnsignedBytei_vEXTContextANGLE
+    glGetUnsignedBytevEXTContextANGLE
     glGetVertexAttribIivContextANGLE
     glGetVertexAttribIivRobustANGLEContextANGLE
     glGetVertexAttribIuivContextANGLE
@@ -1071,6 +1103,7 @@ EXPORTS
     glIsFenceNVContextANGLE
     glIsFramebufferContextANGLE
     glIsFramebufferOESContextANGLE
+    glIsMemoryObjectEXTContextANGLE
     glIsPathCHROMIUMContextANGLE
     glIsProgramContextANGLE
     glIsProgramPipelineContextANGLE
@@ -1079,6 +1112,7 @@ EXPORTS
     glIsRenderbufferContextANGLE
     glIsRenderbufferOESContextANGLE
     glIsSamplerContextANGLE
+    glIsSemaphoreEXTContextANGLE
     glIsShaderContextANGLE
     glIsSyncContextANGLE
     glIsTextureContextANGLE
@@ -1115,6 +1149,7 @@ EXPORTS
     glMaxShaderCompilerThreadsKHRContextANGLE
     glMemoryBarrierContextANGLE
     glMemoryBarrierByRegionContextANGLE
+    glMemoryObjectParameterivEXTContextANGLE
     glMultMatrixfContextANGLE
     glMultMatrixxContextANGLE
     glMultiDrawArraysANGLEContextANGLE
@@ -1222,10 +1257,12 @@ EXPORTS
     glScalefContextANGLE
     glScalexContextANGLE
     glScissorContextANGLE
+    glSemaphoreParameterui64vEXTContextANGLE
     glSetFenceNVContextANGLE
     glShadeModelContextANGLE
     glShaderBinaryContextANGLE
     glShaderSourceContextANGLE
+    glSignalSemaphoreEXTContextANGLE
     glStencilFillPathCHROMIUMContextANGLE
     glStencilFillPathInstancedCHROMIUMContextANGLE
     glStencilFuncContextANGLE
@@ -1278,6 +1315,10 @@ EXPORTS
     glTexStorage3DContextANGLE
     glTexStorage3DEXTContextANGLE
     glTexStorage3DMultisampleOESContextANGLE
+    glTexStorageMem2DEXTContextANGLE
+    glTexStorageMem2DMultisampleEXTContextANGLE
+    glTexStorageMem3DEXTContextANGLE
+    glTexStorageMem3DMultisampleEXTContextANGLE
     glTexSubImage2DContextANGLE
     glTexSubImage2DRobustANGLEContextANGLE
     glTexSubImage3DContextANGLE
@@ -1348,6 +1389,7 @@ EXPORTS
     glVertexBindingDivisorContextANGLE
     glVertexPointerContextANGLE
     glViewportContextANGLE
+    glWaitSemaphoreEXTContextANGLE
     glWaitSyncContextANGLE
     glWeightPointerOESContextANGLE
 

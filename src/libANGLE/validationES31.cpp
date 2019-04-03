@@ -949,6 +949,26 @@ bool ValidateTexStorage2DMultisample(Context *context,
                                                height);
 }
 
+bool ValidateTexStorageMem2DMultisampleEXT(Context *context,
+                                           TextureType target,
+                                           GLsizei samples,
+                                           GLenum internalFormat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLboolean fixedSampleLocations,
+                                           GLuint memory,
+                                           GLuint64 offset)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfloat *val)
 {
     if (context->getClientVersion() < ES_3_1)
@@ -1867,6 +1887,27 @@ bool ValidateTexStorage3DMultisampleOES(Context *context,
 
     return ValidateTexStorageMultisample(context, target, samples, sizedinternalformat, width,
                                          height);
+}
+
+bool ValidateTexStorageMem3DMultisampleEXT(Context *context,
+                                           TextureType target,
+                                           GLsizei samples,
+                                           GLenum internalFormat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           GLboolean fixedSampleLocations,
+                                           GLuint memory,
+                                           GLuint64 offset)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
 }
 
 bool ValidateGetProgramResourceLocationIndexEXT(Context *context,

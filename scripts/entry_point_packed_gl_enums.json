@@ -438,6 +438,21 @@
     "glTexStorage3DMultisampleOES": {
         "target": "TextureType"
     },
+    "glTexStorageMem2DEXT": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem2DMultisampleEXT": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem3DEXT": {
+        "target": "TextureType"
+    },
+    "glTexStorageMem3DMultisampleEXT": {
+        "target": "TextureType"
+    },
+    "glBufferStorageMemEXT": {
+        "target": "TextureType"
+    },
     "glTexStorage3D": {
         "target": "TextureType"
     },

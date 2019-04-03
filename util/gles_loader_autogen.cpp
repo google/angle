@@ -561,10 +561,29 @@ ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDEXTPROC glDrawElementsInstancedEXT;
 ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBDIVISOREXTPROC glVertexAttribDivisorEXT;
 ANGLE_UTIL_EXPORT PFNGLFLUSHMAPPEDBUFFERRANGEEXTPROC glFlushMappedBufferRangeEXT;
 ANGLE_UTIL_EXPORT PFNGLMAPBUFFERRANGEEXTPROC glMapBufferRangeEXT;
+ANGLE_UTIL_EXPORT PFNGLBUFFERSTORAGEMEMEXTPROC glBufferStorageMemEXT;
+ANGLE_UTIL_EXPORT PFNGLCREATEMEMORYOBJECTSEXTPROC glCreateMemoryObjectsEXT;
+ANGLE_UTIL_EXPORT PFNGLDELETEMEMORYOBJECTSEXTPROC glDeleteMemoryObjectsEXT;
+ANGLE_UTIL_EXPORT PFNGLGETMEMORYOBJECTPARAMETERIVEXTPROC glGetMemoryObjectParameterivEXT;
+ANGLE_UTIL_EXPORT PFNGLGETUNSIGNEDBYTEI_VEXTPROC glGetUnsignedBytei_vEXT;
+ANGLE_UTIL_EXPORT PFNGLGETUNSIGNEDBYTEVEXTPROC glGetUnsignedBytevEXT;
+ANGLE_UTIL_EXPORT PFNGLISMEMORYOBJECTEXTPROC glIsMemoryObjectEXT;
+ANGLE_UTIL_EXPORT PFNGLMEMORYOBJECTPARAMETERIVEXTPROC glMemoryObjectParameterivEXT;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM2DEXTPROC glTexStorageMem2DEXT;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTPROC glTexStorageMem2DMultisampleEXT;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM3DEXTPROC glTexStorageMem3DEXT;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTPROC glTexStorageMem3DMultisampleEXT;
 ANGLE_UTIL_EXPORT PFNGLGETGRAPHICSRESETSTATUSEXTPROC glGetGraphicsResetStatusEXT;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMFVEXTPROC glGetnUniformfvEXT;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMIVEXTPROC glGetnUniformivEXT;
 ANGLE_UTIL_EXPORT PFNGLREADNPIXELSEXTPROC glReadnPixelsEXT;
+ANGLE_UTIL_EXPORT PFNGLDELETESEMAPHORESEXTPROC glDeleteSemaphoresEXT;
+ANGLE_UTIL_EXPORT PFNGLGENSEMAPHORESEXTPROC glGenSemaphoresEXT;
+ANGLE_UTIL_EXPORT PFNGLGETSEMAPHOREPARAMETERUI64VEXTPROC glGetSemaphoreParameterui64vEXT;
+ANGLE_UTIL_EXPORT PFNGLISSEMAPHOREEXTPROC glIsSemaphoreEXT;
+ANGLE_UTIL_EXPORT PFNGLSEMAPHOREPARAMETERUI64VEXTPROC glSemaphoreParameterui64vEXT;
+ANGLE_UTIL_EXPORT PFNGLSIGNALSEMAPHOREEXTPROC glSignalSemaphoreEXT;
+ANGLE_UTIL_EXPORT PFNGLWAITSEMAPHOREEXTPROC glWaitSemaphoreEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE1DEXTPROC glTexStorage1DEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE2DEXTPROC glTexStorage2DEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE3DEXTPROC glTexStorage3DEXT;
@@ -1314,11 +1333,36 @@ ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBDIVISOREXTCONTEXTANGLEPROC glVertexAttribDivi
 ANGLE_UTIL_EXPORT PFNGLFLUSHMAPPEDBUFFERRANGEEXTCONTEXTANGLEPROC
     glFlushMappedBufferRangeEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLMAPBUFFERRANGEEXTCONTEXTANGLEPROC glMapBufferRangeEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBUFFERSTORAGEMEMEXTCONTEXTANGLEPROC glBufferStorageMemEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLCREATEMEMORYOBJECTSEXTCONTEXTANGLEPROC glCreateMemoryObjectsEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDELETEMEMORYOBJECTSEXTCONTEXTANGLEPROC glDeleteMemoryObjectsEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC
+    glGetMemoryObjectParameterivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETUNSIGNEDBYTEI_VEXTCONTEXTANGLEPROC glGetUnsignedBytei_vEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETUNSIGNEDBYTEVEXTCONTEXTANGLEPROC glGetUnsignedBytevEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLISMEMORYOBJECTEXTCONTEXTANGLEPROC glIsMemoryObjectEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC
+    glMemoryObjectParameterivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM2DEXTCONTEXTANGLEPROC glTexStorageMem2DEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTCONTEXTANGLEPROC
+    glTexStorageMem2DMultisampleEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM3DEXTCONTEXTANGLEPROC glTexStorageMem3DEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTCONTEXTANGLEPROC
+    glTexStorageMem3DMultisampleEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC
     glGetGraphicsResetStatusEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMFVEXTCONTEXTANGLEPROC glGetnUniformfvEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMIVEXTCONTEXTANGLEPROC glGetnUniformivEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLREADNPIXELSEXTCONTEXTANGLEPROC glReadnPixelsEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDELETESEMAPHORESEXTCONTEXTANGLEPROC glDeleteSemaphoresEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGENSEMAPHORESEXTCONTEXTANGLEPROC glGenSemaphoresEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC
+    glGetSemaphoreParameterui64vEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLISSEMAPHOREEXTCONTEXTANGLEPROC glIsSemaphoreEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC
+    glSemaphoreParameterui64vEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLSIGNALSEMAPHOREEXTCONTEXTANGLEPROC glSignalSemaphoreEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLWAITSEMAPHOREEXTCONTEXTANGLEPROC glWaitSemaphoreEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE1DEXTCONTEXTANGLEPROC glTexStorage1DEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE2DEXTCONTEXTANGLEPROC glTexStorage2DEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE3DEXTCONTEXTANGLEPROC glTexStorage3DEXTContextANGLE;
@@ -2287,13 +2331,50 @@ void LoadGLES(LoadProc loadProc)
         loadProc("glFlushMappedBufferRangeEXT"));
     glMapBufferRangeEXT =
         reinterpret_cast<PFNGLMAPBUFFERRANGEEXTPROC>(loadProc("glMapBufferRangeEXT"));
+    glBufferStorageMemEXT =
+        reinterpret_cast<PFNGLBUFFERSTORAGEMEMEXTPROC>(loadProc("glBufferStorageMemEXT"));
+    glCreateMemoryObjectsEXT =
+        reinterpret_cast<PFNGLCREATEMEMORYOBJECTSEXTPROC>(loadProc("glCreateMemoryObjectsEXT"));
+    glDeleteMemoryObjectsEXT =
+        reinterpret_cast<PFNGLDELETEMEMORYOBJECTSEXTPROC>(loadProc("glDeleteMemoryObjectsEXT"));
+    glGetMemoryObjectParameterivEXT = reinterpret_cast<PFNGLGETMEMORYOBJECTPARAMETERIVEXTPROC>(
+        loadProc("glGetMemoryObjectParameterivEXT"));
+    glGetUnsignedBytei_vEXT =
+        reinterpret_cast<PFNGLGETUNSIGNEDBYTEI_VEXTPROC>(loadProc("glGetUnsignedBytei_vEXT"));
+    glGetUnsignedBytevEXT =
+        reinterpret_cast<PFNGLGETUNSIGNEDBYTEVEXTPROC>(loadProc("glGetUnsignedBytevEXT"));
+    glIsMemoryObjectEXT =
+        reinterpret_cast<PFNGLISMEMORYOBJECTEXTPROC>(loadProc("glIsMemoryObjectEXT"));
+    glMemoryObjectParameterivEXT = reinterpret_cast<PFNGLMEMORYOBJECTPARAMETERIVEXTPROC>(
+        loadProc("glMemoryObjectParameterivEXT"));
+    glTexStorageMem2DEXT =
+        reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(loadProc("glTexStorageMem2DEXT"));
+    glTexStorageMem2DMultisampleEXT = reinterpret_cast<PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTPROC>(
+        loadProc("glTexStorageMem2DMultisampleEXT"));
+    glTexStorageMem3DEXT =
+        reinterpret_cast<PFNGLTEXSTORAGEMEM3DEXTPROC>(loadProc("glTexStorageMem3DEXT"));
+    glTexStorageMem3DMultisampleEXT = reinterpret_cast<PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTPROC>(
+        loadProc("glTexStorageMem3DMultisampleEXT"));
     glGetGraphicsResetStatusEXT = reinterpret_cast<PFNGLGETGRAPHICSRESETSTATUSEXTPROC>(
         loadProc("glGetGraphicsResetStatusEXT"));
     glGetnUniformfvEXT =
         reinterpret_cast<PFNGLGETNUNIFORMFVEXTPROC>(loadProc("glGetnUniformfvEXT"));
     glGetnUniformivEXT =
         reinterpret_cast<PFNGLGETNUNIFORMIVEXTPROC>(loadProc("glGetnUniformivEXT"));
-    glReadnPixelsEXT  = reinterpret_cast<PFNGLREADNPIXELSEXTPROC>(loadProc("glReadnPixelsEXT"));
+    glReadnPixelsEXT = reinterpret_cast<PFNGLREADNPIXELSEXTPROC>(loadProc("glReadnPixelsEXT"));
+    glDeleteSemaphoresEXT =
+        reinterpret_cast<PFNGLDELETESEMAPHORESEXTPROC>(loadProc("glDeleteSemaphoresEXT"));
+    glGenSemaphoresEXT =
+        reinterpret_cast<PFNGLGENSEMAPHORESEXTPROC>(loadProc("glGenSemaphoresEXT"));
+    glGetSemaphoreParameterui64vEXT = reinterpret_cast<PFNGLGETSEMAPHOREPARAMETERUI64VEXTPROC>(
+        loadProc("glGetSemaphoreParameterui64vEXT"));
+    glIsSemaphoreEXT = reinterpret_cast<PFNGLISSEMAPHOREEXTPROC>(loadProc("glIsSemaphoreEXT"));
+    glSemaphoreParameterui64vEXT = reinterpret_cast<PFNGLSEMAPHOREPARAMETERUI64VEXTPROC>(
+        loadProc("glSemaphoreParameterui64vEXT"));
+    glSignalSemaphoreEXT =
+        reinterpret_cast<PFNGLSIGNALSEMAPHOREEXTPROC>(loadProc("glSignalSemaphoreEXT"));
+    glWaitSemaphoreEXT =
+        reinterpret_cast<PFNGLWAITSEMAPHOREEXTPROC>(loadProc("glWaitSemaphoreEXT"));
     glTexStorage1DEXT = reinterpret_cast<PFNGLTEXSTORAGE1DEXTPROC>(loadProc("glTexStorage1DEXT"));
     glTexStorage2DEXT = reinterpret_cast<PFNGLTEXSTORAGE2DEXTPROC>(loadProc("glTexStorage2DEXT"));
     glTexStorage3DEXT = reinterpret_cast<PFNGLTEXSTORAGE3DEXTPROC>(loadProc("glTexStorage3DEXT"));
@@ -3694,6 +3775,37 @@ void LoadGLES(LoadProc loadProc)
             loadProc("glFlushMappedBufferRangeEXTContextANGLE"));
     glMapBufferRangeEXTContextANGLE = reinterpret_cast<PFNGLMAPBUFFERRANGEEXTCONTEXTANGLEPROC>(
         loadProc("glMapBufferRangeEXTContextANGLE"));
+    glBufferStorageMemEXTContextANGLE = reinterpret_cast<PFNGLBUFFERSTORAGEMEMEXTCONTEXTANGLEPROC>(
+        loadProc("glBufferStorageMemEXTContextANGLE"));
+    glCreateMemoryObjectsEXTContextANGLE =
+        reinterpret_cast<PFNGLCREATEMEMORYOBJECTSEXTCONTEXTANGLEPROC>(
+            loadProc("glCreateMemoryObjectsEXTContextANGLE"));
+    glDeleteMemoryObjectsEXTContextANGLE =
+        reinterpret_cast<PFNGLDELETEMEMORYOBJECTSEXTCONTEXTANGLEPROC>(
+            loadProc("glDeleteMemoryObjectsEXTContextANGLE"));
+    glGetMemoryObjectParameterivEXTContextANGLE =
+        reinterpret_cast<PFNGLGETMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC>(
+            loadProc("glGetMemoryObjectParameterivEXTContextANGLE"));
+    glGetUnsignedBytei_vEXTContextANGLE =
+        reinterpret_cast<PFNGLGETUNSIGNEDBYTEI_VEXTCONTEXTANGLEPROC>(
+            loadProc("glGetUnsignedBytei_vEXTContextANGLE"));
+    glGetUnsignedBytevEXTContextANGLE = reinterpret_cast<PFNGLGETUNSIGNEDBYTEVEXTCONTEXTANGLEPROC>(
+        loadProc("glGetUnsignedBytevEXTContextANGLE"));
+    glIsMemoryObjectEXTContextANGLE = reinterpret_cast<PFNGLISMEMORYOBJECTEXTCONTEXTANGLEPROC>(
+        loadProc("glIsMemoryObjectEXTContextANGLE"));
+    glMemoryObjectParameterivEXTContextANGLE =
+        reinterpret_cast<PFNGLMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC>(
+            loadProc("glMemoryObjectParameterivEXTContextANGLE"));
+    glTexStorageMem2DEXTContextANGLE = reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTCONTEXTANGLEPROC>(
+        loadProc("glTexStorageMem2DEXTContextANGLE"));
+    glTexStorageMem2DMultisampleEXTContextANGLE =
+        reinterpret_cast<PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTCONTEXTANGLEPROC>(
+            loadProc("glTexStorageMem2DMultisampleEXTContextANGLE"));
+    glTexStorageMem3DEXTContextANGLE = reinterpret_cast<PFNGLTEXSTORAGEMEM3DEXTCONTEXTANGLEPROC>(
+        loadProc("glTexStorageMem3DEXTContextANGLE"));
+    glTexStorageMem3DMultisampleEXTContextANGLE =
+        reinterpret_cast<PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTCONTEXTANGLEPROC>(
+            loadProc("glTexStorageMem3DMultisampleEXTContextANGLE"));
     glGetGraphicsResetStatusEXTContextANGLE =
         reinterpret_cast<PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC>(
             loadProc("glGetGraphicsResetStatusEXTContextANGLE"));
@@ -3703,6 +3815,22 @@ void LoadGLES(LoadProc loadProc)
         loadProc("glGetnUniformivEXTContextANGLE"));
     glReadnPixelsEXTContextANGLE = reinterpret_cast<PFNGLREADNPIXELSEXTCONTEXTANGLEPROC>(
         loadProc("glReadnPixelsEXTContextANGLE"));
+    glDeleteSemaphoresEXTContextANGLE = reinterpret_cast<PFNGLDELETESEMAPHORESEXTCONTEXTANGLEPROC>(
+        loadProc("glDeleteSemaphoresEXTContextANGLE"));
+    glGenSemaphoresEXTContextANGLE = reinterpret_cast<PFNGLGENSEMAPHORESEXTCONTEXTANGLEPROC>(
+        loadProc("glGenSemaphoresEXTContextANGLE"));
+    glGetSemaphoreParameterui64vEXTContextANGLE =
+        reinterpret_cast<PFNGLGETSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC>(
+            loadProc("glGetSemaphoreParameterui64vEXTContextANGLE"));
+    glIsSemaphoreEXTContextANGLE = reinterpret_cast<PFNGLISSEMAPHOREEXTCONTEXTANGLEPROC>(
+        loadProc("glIsSemaphoreEXTContextANGLE"));
+    glSemaphoreParameterui64vEXTContextANGLE =
+        reinterpret_cast<PFNGLSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC>(
+            loadProc("glSemaphoreParameterui64vEXTContextANGLE"));
+    glSignalSemaphoreEXTContextANGLE = reinterpret_cast<PFNGLSIGNALSEMAPHOREEXTCONTEXTANGLEPROC>(
+        loadProc("glSignalSemaphoreEXTContextANGLE"));
+    glWaitSemaphoreEXTContextANGLE = reinterpret_cast<PFNGLWAITSEMAPHOREEXTCONTEXTANGLEPROC>(
+        loadProc("glWaitSemaphoreEXTContextANGLE"));
     glTexStorage1DEXTContextANGLE = reinterpret_cast<PFNGLTEXSTORAGE1DEXTCONTEXTANGLEPROC>(
         loadProc("glTexStorage1DEXTContextANGLE"));
     glTexStorage2DEXTContextANGLE = reinterpret_cast<PFNGLTEXSTORAGE2DEXTCONTEXTANGLEPROC>(

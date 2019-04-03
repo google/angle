@@ -1214,6 +1214,16 @@ void Context::getQueryivRobust(QueryType target,
     getQueryiv(target, pname, params);
 }
 
+void Context::getUnsignedBytev(GLenum pname, GLubyte *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getUnsignedBytei_v(GLenum target, GLuint index, GLubyte *data)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::getQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
     ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
@@ -7085,6 +7095,131 @@ GLboolean Context::testFenceNV(GLuint fence)
     }
 
     return result;
+}
+
+void Context::deleteMemoryObjects(GLsizei n, const GLuint *memoryObjects)
+{
+    UNIMPLEMENTED();
+}
+
+GLboolean Context::isMemoryObject(GLuint memoryObject)
+{
+    UNIMPLEMENTED();
+    return GL_FALSE;
+}
+
+void Context::createMemoryObjects(GLsizei n, GLuint *memoryObjects)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::memoryObjectParameteriv(GLuint memoryObject, GLenum pname, const GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getMemoryObjectParameteriv(GLuint memoryObject, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMem2D(TextureType target,
+                              GLsizei levels,
+                              GLenum internalFormat,
+                              GLsizei width,
+                              GLsizei height,
+                              GLuint memory,
+                              GLuint64 offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMem2DMultisample(TextureType target,
+                                         GLsizei samples,
+                                         GLenum internalFormat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLboolean fixedSampleLocations,
+                                         GLuint memory,
+                                         GLuint64 offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMem3D(TextureType target,
+                              GLsizei levels,
+                              GLenum internalFormat,
+                              GLsizei width,
+                              GLsizei height,
+                              GLsizei depth,
+                              GLuint memory,
+                              GLuint64 offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMem3DMultisample(TextureType target,
+                                         GLsizei samples,
+                                         GLenum internalFormat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth,
+                                         GLboolean fixedSampleLocations,
+                                         GLuint memory,
+                                         GLuint64 offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bufferStorageMem(TextureType target, GLsizeiptr size, GLuint memory, GLuint64 offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::genSemaphores(GLsizei n, GLuint *semaphores)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::deleteSemaphores(GLsizei n, const GLuint *semaphores)
+{
+    UNIMPLEMENTED();
+}
+
+GLboolean Context::isSemaphore(GLuint semaphore)
+{
+    UNIMPLEMENTED();
+    return GL_FALSE;
+}
+
+void Context::semaphoreParameterui64v(GLuint semaphore, GLenum pname, const GLuint64 *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getSemaphoreParameterui64v(GLuint semaphore, GLenum pname, GLuint64 *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::waitSemaphore(GLuint semaphore,
+                            GLuint numBufferBarriers,
+                            const GLuint *buffers,
+                            GLuint numTextureBarriers,
+                            const GLuint *textures,
+                            const GLenum *srcLayouts)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::signalSemaphore(GLuint semaphore,
+                              GLuint numBufferBarriers,
+                              const GLuint *buffers,
+                              GLuint numTextureBarriers,
+                              const GLuint *textures,
+                              const GLenum *dstLayouts)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)

@@ -208,6 +208,8 @@ Extensions::Extensions()
       eglImageExternal(false),
       eglImageExternalEssl3(false),
       eglSync(false),
+      memoryObject(false),
+      semaphore(false),
       eglStreamConsumerExternal(false),
       unpackSubimage(false),
       packSubimage(false),
@@ -871,6 +873,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_EGL_image_external"] = enableableExtension(&Extensions::eglImageExternal);
         map["GL_OES_EGL_image_external_essl3"] = enableableExtension(&Extensions::eglImageExternalEssl3);
         map["GL_OES_EGL_sync"] = esOnlyExtension(&Extensions::eglSync);
+        map["GL_EXT_memory_object"] = enableableExtension(&Extensions::memoryObject);
+        map["GL_EXT_semaphore"] = enableableExtension(&Extensions::semaphore);
         map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::eglStreamConsumerExternal);
         map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);

@@ -1348,8 +1348,8 @@ angle::Result RendererVk::finish(vk::Context *context,
         vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(mDevice);
         ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
-        VkSubmitInfo submitInfo         = {};
-        VkPipelineStageFlags waitMask   = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VkSubmitInfo submitInfo       = {};
+        VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
         InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
                              signalSemaphore);
 
@@ -1768,7 +1768,7 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
     ANGLE_VK_TRY(context, fence.get().init(mDevice, fenceInfo));
 
     // Submit the command buffer
-    VkSubmitInfo submitInfo         = {};
+    VkSubmitInfo submitInfo = {};
     InitializeSubmitInfo(&submitInfo, commandBatch.get(), nullptr, nullptr, nullptr);
 
     ANGLE_VK_TRY(context, vkQueueSubmit(mQueue, 1, &submitInfo, fence.get().getHandle()));

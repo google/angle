@@ -349,6 +349,65 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void setFenceNV(GLuint fence, GLenum condition);
     GLboolean testFenceNV(GLuint fence);
 
+    // GL_EXT_memory_object
+    void deleteMemoryObjects(GLsizei n, const GLuint *memoryObjects);
+    GLboolean isMemoryObject(GLuint memoryObject);
+    void createMemoryObjects(GLsizei n, GLuint *memoryObjects);
+    void memoryObjectParameteriv(GLuint memoryObject, GLenum pname, const GLint *params);
+    void getMemoryObjectParameteriv(GLuint memoryObject, GLenum pname, GLint *params);
+    void texStorageMem2D(TextureType target,
+                         GLsizei levels,
+                         GLenum internalFormat,
+                         GLsizei width,
+                         GLsizei height,
+                         GLuint memory,
+                         GLuint64 offset);
+    void texStorageMem2DMultisample(TextureType target,
+                                    GLsizei samples,
+                                    GLenum internalFormat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLboolean fixedSampleLocations,
+                                    GLuint memory,
+                                    GLuint64 offset);
+    void texStorageMem3D(TextureType target,
+                         GLsizei levels,
+                         GLenum internalFormat,
+                         GLsizei width,
+                         GLsizei height,
+                         GLsizei depth,
+                         GLuint memory,
+                         GLuint64 offset);
+    void texStorageMem3DMultisample(TextureType target,
+                                    GLsizei samples,
+                                    GLenum internalFormat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth,
+                                    GLboolean fixedSampleLocations,
+                                    GLuint memory,
+                                    GLuint64 offset);
+    void bufferStorageMem(TextureType target, GLsizeiptr size, GLuint memory, GLuint64 offset);
+
+    // GL_EXT_semaphore
+    void genSemaphores(GLsizei n, GLuint *semaphores);
+    void deleteSemaphores(GLsizei n, const GLuint *semaphores);
+    GLboolean isSemaphore(GLuint semaphore);
+    void semaphoreParameterui64v(GLuint semaphore, GLenum pname, const GLuint64 *params);
+    void getSemaphoreParameterui64v(GLuint semaphore, GLenum pname, GLuint64 *params);
+    void waitSemaphore(GLuint semaphore,
+                       GLuint numBufferBarriers,
+                       const GLuint *buffers,
+                       GLuint numTextureBarriers,
+                       const GLuint *textures,
+                       const GLenum *srcLayouts);
+    void signalSemaphore(GLuint semaphore,
+                         GLuint numBufferBarriers,
+                         const GLuint *buffers,
+                         GLuint numTextureBarriers,
+                         const GLuint *textures,
+                         const GLenum *dstLayouts);
+
     // GLES1 emulation: Interface to entry points
     ANGLE_GLES1_CONTEXT_API
 
@@ -643,6 +702,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                GLsizei bufSize,
                                GLsizei *length,
                                GLint64 *data);
+    void getUnsignedBytev(GLenum pname, GLubyte *data);
+    void getUnsignedBytei_v(GLenum target, GLuint index, GLubyte *data);
 
     void activeShaderProgram(GLuint pipeline, GLuint program);
     void activeTexture(GLenum texture);
