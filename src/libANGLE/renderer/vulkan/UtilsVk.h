@@ -144,6 +144,14 @@ class UtilsVk : angle::NonCopyable
         uint32_t Ed             = 0;
     };
 
+    struct FullScreenQuadParams
+    {
+        // Structure matching PushConstants in FullScreenQuad.vert
+        float depth = 0;
+        // Padding to ensure following fragment shader push constants start at offset 16.
+        uint32_t padding[3] = {};
+    };
+
     struct ImageClearShaderParams
     {
         // Structure matching PushConstants in ImageClear.frag
@@ -196,8 +204,10 @@ class UtilsVk : angle::NonCopyable
                                vk::ShaderProgramHelper *program,
                                const vk::GraphicsPipelineDesc *pipelineDesc,
                                const VkDescriptorSet descriptorSet,
-                               const void *pushConstants,
-                               size_t pushConstantsSize,
+                               const void *fsCsPushConstants,
+                               size_t fsCsPushConstantsSize,
+                               const void *vsPushConstants,
+                               size_t vsPushConstantsSize,
                                vk::CommandBuffer *commandBuffer);
 
     // Initializes descriptor set layout, pipeline layout and descriptor pool corresponding to given
@@ -209,7 +219,8 @@ class UtilsVk : angle::NonCopyable
                                              Function function,
                                              VkDescriptorPoolSize *setSizes,
                                              size_t setSizesCount,
-                                             size_t pushConstantsSize);
+                                             size_t fsCsPushConstantsSize,
+                                             size_t vsPushConstantsSize);
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.

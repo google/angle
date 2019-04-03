@@ -894,11 +894,6 @@ void GraphicsPipelineDesc::setDepthFunc(VkCompareOp op)
     SetBitField(mDepthStencilStateInfo.depthCompareOp, op);
 }
 
-void GraphicsPipelineDesc::setDepthClampEnabled(bool enabled)
-{
-    mRasterizationAndMultisampleStateInfo.bits.depthClampEnable = enabled;
-}
-
 void GraphicsPipelineDesc::setStencilTestEnabled(bool enabled)
 {
     mDepthStencilStateInfo.enable.stencilTest = enabled;

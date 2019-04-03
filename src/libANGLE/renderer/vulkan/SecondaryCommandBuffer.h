@@ -178,6 +178,7 @@ struct PushConstantsParams
 {
     VkPipelineLayout layout;
     VkShaderStageFlags flag;
+    uint32_t offset;
     uint32_t size;
 };
 VERIFY_4_BYTE_ALIGNMENT(PushConstantsParams)
@@ -904,12 +905,12 @@ ANGLE_INLINE void SecondaryCommandBuffer::pushConstants(const PipelineLayout &la
                                                         const void *data)
 {
     ASSERT(size == static_cast<size_t>(size));
-    ASSERT(offset == 0);
     uint8_t *writePtr;
     PushConstantsParams *paramStruct = initCommand<PushConstantsParams>(
         CommandID::PushConstants, static_cast<size_t>(size), &writePtr);
     paramStruct->layout = layout.getHandle();
     paramStruct->flag   = flag;
+    paramStruct->offset = offset;
     paramStruct->size   = size;
     // Copy variable sized data
     storePointerParameter(writePtr, data, static_cast<size_t>(size));

@@ -215,7 +215,8 @@ angle::Result UtilsVk::ensureResourcesInitialized(vk::Context *context,
                                                   Function function,
                                                   VkDescriptorPoolSize *setSizes,
                                                   size_t setSizesCount,
-                                                  size_t pushConstantsSize)
+                                                  size_t fsCsPushConstantsSize,
+                                                  size_t vsPushConstantsSize)
 {
     RendererVk *renderer = context->getRenderer();
 
@@ -231,15 +232,24 @@ angle::Result UtilsVk::ensureResourcesInitialized(vk::Context *context,
     ANGLE_TRY(renderer->getDescriptorSetLayout(context, descriptorSetDesc,
                                                &mDescriptorSetLayouts[function][kSetIndex]));
 
-    gl::ShaderType pushConstantsShaderStage = function >= Function::ComputeStartIndex
-                                                  ? gl::ShaderType::Compute
-                                                  : gl::ShaderType::Fragment;
+    gl::ShaderType fsCsPushConstantsShaderStage = function >= Function::ComputeStartIndex
+                                                      ? gl::ShaderType::Compute
+                                                      : gl::ShaderType::Fragment;
 
     // Corresponding pipeline layouts:
     vk::PipelineLayoutDesc pipelineLayoutDesc;
 
     pipelineLayoutDesc.updateDescriptorSetLayout(kSetIndex, descriptorSetDesc);
-    pipelineLayoutDesc.updatePushConstantRange(pushConstantsShaderStage, 0, pushConstantsSize);
+
+    size_t pushConstantsOffset = 0;
+    if (vsPushConstantsSize > 0)
+    {
+        pipelineLayoutDesc.updatePushConstantRange(gl::ShaderType::Vertex, pushConstantsOffset,
+                                                   vsPushConstantsSize);
+        pushConstantsOffset = vsPushConstantsSize;
+    }
+    pipelineLayoutDesc.updatePushConstantRange(fsCsPushConstantsShaderStage, pushConstantsOffset,
+                                               fsCsPushConstantsSize);
 
     ANGLE_TRY(renderer->getPipelineLayout(
         context, pipelineLayoutDesc, mDescriptorSetLayouts[function], &mPipelineLayouts[function]));
@@ -264,7 +274,7 @@ angle::Result UtilsVk::ensureBufferClearResourcesInitialized(vk::Context *contex
     };
 
     return ensureResourcesInitialized(context, Function::BufferClear, setSizes, ArraySize(setSizes),
-                                      sizeof(BufferUtilsShaderParams));
+                                      sizeof(BufferUtilsShaderParams), 0);
 }
 
 angle::Result UtilsVk::ensureBufferCopyResourcesInitialized(vk::Context *context)
@@ -280,7 +290,7 @@ angle::Result UtilsVk::ensureBufferCopyResourcesInitialized(vk::Context *context
     };
 
     return ensureResourcesInitialized(context, Function::BufferCopy, setSizes, ArraySize(setSizes),
-                                      sizeof(BufferUtilsShaderParams));
+                                      sizeof(BufferUtilsShaderParams), 0);
 }
 
 angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(vk::Context *context)
@@ -296,7 +306,7 @@ angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(vk::Context *cont
     };
 
     return ensureResourcesInitialized(context, Function::ConvertVertexBuffer, setSizes,
-                                      ArraySize(setSizes), sizeof(ConvertVertexShaderParams));
+                                      ArraySize(setSizes), sizeof(ConvertVertexShaderParams), 0);
 }
 
 angle::Result UtilsVk::ensureImageClearResourcesInitialized(vk::Context *context)
@@ -308,7 +318,7 @@ angle::Result UtilsVk::ensureImageClearResourcesInitialized(vk::Context *context
 
     // The shader does not use any descriptor sets.
     return ensureResourcesInitialized(context, Function::ImageClear, nullptr, 0,
-                                      sizeof(ImageClearShaderParams));
+                                      sizeof(ImageClearShaderParams), sizeof(FullScreenQuadParams));
 }
 
 angle::Result UtilsVk::ensureImageCopyResourcesInitialized(vk::Context *context)
@@ -323,7 +333,7 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitialized(vk::Context *context)
     };
 
     return ensureResourcesInitialized(context, Function::ImageCopy, setSizes, ArraySize(setSizes),
-                                      sizeof(ImageCopyShaderParams));
+                                      sizeof(ImageCopyShaderParams), sizeof(FullScreenQuadParams));
 }
 
 angle::Result UtilsVk::setupProgram(vk::Context *context,
@@ -333,14 +343,16 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
                                     vk::ShaderProgramHelper *program,
                                     const vk::GraphicsPipelineDesc *pipelineDesc,
                                     const VkDescriptorSet descriptorSet,
-                                    const void *pushConstants,
-                                    size_t pushConstantsSize,
+                                    const void *fsCsPushConstants,
+                                    size_t fsCsPushConstantsSize,
+                                    const void *vsPushConstants,
+                                    size_t vsPushConstantsSize,
                                     vk::CommandBuffer *commandBuffer)
 {
     RendererVk *renderer = context->getRenderer();
 
     bool isCompute = function >= Function::ComputeStartIndex;
-    VkShaderStageFlags pushConstantsShaderStage =
+    VkShaderStageFlags fsCsPushConstantsShaderStage =
         isCompute ? VK_SHADER_STAGE_COMPUTE_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
 
     // If compute, vsShader and pipelineDesc should be nullptr, and if not compute they shouldn't
@@ -387,8 +399,15 @@ angle::Result UtilsVk::setupProgram(vk::Context *context,
         }
     }
 
-    commandBuffer->pushConstants(pipelineLayout.get(), pushConstantsShaderStage, 0,
-                                 pushConstantsSize, pushConstants);
+    size_t pushConstantsOffset = 0;
+    if (vsPushConstants)
+    {
+        commandBuffer->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_VERTEX_BIT,
+                                     pushConstantsOffset, vsPushConstantsSize, vsPushConstants);
+        pushConstantsOffset = vsPushConstantsSize;
+    }
+    commandBuffer->pushConstants(pipelineLayout.get(), fsCsPushConstantsShaderStage,
+                                 pushConstantsOffset, fsCsPushConstantsSize, fsCsPushConstants);
 
     return angle::Result::Continue;
 }
@@ -439,7 +458,7 @@ angle::Result UtilsVk::clearBuffer(vk::Context *context,
 
     ANGLE_TRY(setupProgram(context, Function::BufferClear, shader, nullptr,
                            &mBufferUtilsPrograms[flags], nullptr, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+                           sizeof(shaderParams), nullptr, 0, commandBuffer));
 
     commandBuffer->dispatch(UnsignedCeilDivide(params.size, 64), 1, 1);
 
@@ -508,7 +527,7 @@ angle::Result UtilsVk::copyBuffer(vk::Context *context,
 
     ANGLE_TRY(setupProgram(context, Function::BufferCopy, shader, nullptr,
                            &mBufferUtilsPrograms[flags], nullptr, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+                           sizeof(shaderParams), nullptr, 0, commandBuffer));
 
     commandBuffer->dispatch(UnsignedCeilDivide(params.size, 64), 1, 1);
 
@@ -590,7 +609,7 @@ angle::Result UtilsVk::convertVertexBuffer(vk::Context *context,
 
     ANGLE_TRY(setupProgram(context, Function::ConvertVertexBuffer, shader, nullptr,
                            &mConvertVertexPrograms[flags], nullptr, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+                           sizeof(shaderParams), nullptr, 0, commandBuffer));
 
     commandBuffer->dispatch(UnsignedCeilDivide(shaderParams.outputCount, 64), 1, 1);
 
@@ -655,6 +674,9 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, &commandBuffer));
     }
 
+    FullScreenQuadParams vsParams;
+    vsParams.depth = params.depthStencilClearValue.depth;
+
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.colorClearValue;
 
@@ -667,14 +689,13 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     // Intel bug on windows.  http://anglebug.com/3348
     pipelineDesc.setDepthWriteEnabled(false);
 
-    // Clear depth by enabling depth clamping and setting the viewport depth range to the clear
-    // value.
+    // Clear depth by enabling depth test+write and exporting the appropriate depth from the vertex
+    // shader.
     if (params.clearDepth)
     {
         pipelineDesc.setDepthTestEnabled(true);
         pipelineDesc.setDepthWriteEnabled(true);
         pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
-        pipelineDesc.setDepthClampEnabled(true);
     }
 
     // Clear stencil by enabling stencil write with the right mask.
@@ -699,11 +720,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     bool invertViewport             = contextVk->isViewportFlipEnabledForDrawFBO();
 
     VkViewport viewport;
-    // Set depth range to clear value.  If clearing depth, the vertex shader depth output is clamped
-    // to this value, thus clearing the depth buffer to the desired clear value.
-    const float clearDepthValue = params.depthStencilClearValue.depth;
-    gl_vk::GetViewport(renderArea, clearDepthValue, clearDepthValue, invertViewport,
-                       params.renderAreaHeight, &viewport);
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, invertViewport, params.renderAreaHeight, &viewport);
     pipelineDesc.setViewport(viewport);
 
     VkRect2D scissor;
@@ -726,7 +743,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
                            imageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+                           sizeof(shaderParams), &vsParams, sizeof(vsParams), commandBuffer));
     commandBuffer->draw(6, 0);
     return angle::Result::Continue;
 }
@@ -745,6 +762,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     const vk::Format &srcFormat  = src->getFormat();
     const vk::Format &destFormat = dest->getFormat();
 
+    FullScreenQuadParams vsParams;
     ImageCopyShaderParams shaderParams;
     shaderParams.flipY            = params.srcFlipY || params.destFlipY;
     shaderParams.premultiplyAlpha = params.srcPremultiplyAlpha;
@@ -850,7 +868,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     ANGLE_TRY(setupProgram(contextVk, Function::ImageCopy, fragmentShader, vertexShader,
                            &mImageCopyPrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+                           sizeof(shaderParams), &vsParams, sizeof(vsParams), commandBuffer));
     commandBuffer->draw(6, 0);
     descriptorPoolBinding.reset();
 

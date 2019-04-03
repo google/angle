@@ -7,16 +7,23 @@
 
 #version 450 core
 
-const vec4 kQuadVertices[] = {
-    vec4(-1, 1, 0, 1),
-    vec4(-1, -1, 0, 1),
-    vec4(1, -1, 0, 1),
-    vec4(-1, 1, 0, 1),
-    vec4(1, -1, 0, 1),
-    vec4(1, 1, 0, 1),
+// This push constant is placed in the range 0-4, so any fragment shader that uses this must have
+// its push constants start at an offset of at least 4.  As some fragment shaders' push constant
+// can start with vec4, it would be good practice to start them at offset 16.
+layout(push_constant) uniform PushConstants {
+    float depth;
+} params;
+
+const vec2 kQuadVertices[] = {
+    vec2(-1, 1),
+    vec2(-1, -1),
+    vec2(1, -1),
+    vec2(-1, 1),
+    vec2(1, -1),
+    vec2(1, 1),
 };
 
 void main()
 {
-    gl_Position = kQuadVertices[gl_VertexIndex];
+    gl_Position = vec4(kQuadVertices[gl_VertexIndex], params.depth, 1);
 }

@@ -45,7 +45,7 @@ layout(location = 0) out DestType dest;
 
 layout(push_constant) uniform PushConstants {
     // Translation from source to destination coordinates.
-    ivec2 srcOffset;
+    layout(offset=16) ivec2 srcOffset;
     ivec2 destOffset;
     int srcMip;
     int srcLayer;

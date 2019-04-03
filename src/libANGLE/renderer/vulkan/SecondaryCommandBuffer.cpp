@@ -244,8 +244,8 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                     const PushConstantsParams *params =
                         getParamPtr<PushConstantsParams>(currentCommand);
                     const void *data = Offset<void>(params, sizeof(PushConstantsParams));
-                    vkCmdPushConstants(cmdBuffer, params->layout, params->flag, 0, params->size,
-                                       data);
+                    vkCmdPushConstants(cmdBuffer, params->layout, params->flag, params->offset,
+                                       params->size, data);
                     break;
                 }
                 case CommandID::ResetEvent:
