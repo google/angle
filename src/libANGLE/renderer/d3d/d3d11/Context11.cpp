@@ -231,6 +231,12 @@ std::vector<PathImpl *> Context11::createPaths(GLsizei)
     return std::vector<PathImpl *>();
 }
 
+MemoryObjectImpl *Context11::createMemoryObject()
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 angle::Result Context11::flush(const gl::Context *context)
 {
     return mRenderer->flush(this);

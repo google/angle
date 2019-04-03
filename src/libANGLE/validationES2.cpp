@@ -3057,8 +3057,7 @@ bool ValidateCreateMemoryObjectsEXT(Context *context, GLsizei n, GLuint *memoryO
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateDeleteMemoryObjectsEXT(Context *context, GLsizei n, const GLuint *memoryObjects)
@@ -3069,8 +3068,7 @@ bool ValidateDeleteMemoryObjectsEXT(Context *context, GLsizei n, const GLuint *m
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateGetMemoryObjectParameterivEXT(Context *context,
@@ -3120,8 +3118,7 @@ bool ValidateIsMemoryObjectEXT(Context *context, GLuint memoryObject)
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    return true;
 }
 
 bool ValidateMemoryObjectParameterivEXT(Context *context,

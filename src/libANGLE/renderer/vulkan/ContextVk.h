@@ -155,6 +155,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     // Path object creation
     std::vector<PathImpl *> createPaths(GLsizei) override;
 
+    // Memory object creation.
+    MemoryObjectImpl *createMemoryObject() override;
+
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
                                   GLuint numGroupsY,

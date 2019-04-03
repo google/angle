@@ -53,6 +53,7 @@ class FenceNV;
 class Framebuffer;
 class GLES1Renderer;
 class MemoryProgramCache;
+class MemoryObject;
 class Program;
 class ProgramPipeline;
 class Query;
@@ -312,6 +313,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     GLuint genPaths(GLsizei range);
     GLuint createProgramPipeline();
     GLuint createShaderProgramv(ShaderType type, GLsizei count, const GLchar *const *strings);
+    GLuint createMemoryObject();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -320,6 +322,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void deleteRenderbuffer(GLuint renderbuffer);
     void deletePaths(GLuint first, GLsizei range);
     void deleteProgramPipeline(GLuint pipeline);
+    void deleteMemoryObject(GLuint memoryObject);
 
     // CHROMIUM_path_rendering
     bool isPath(GLuint path) const;
@@ -649,6 +652,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Query *getQuery(GLuint handle) const;
     TransformFeedback *getTransformFeedback(GLuint handle) const;
     ProgramPipeline *getProgramPipeline(GLuint handle) const;
+    MemoryObject *getMemoryObject(GLuint handle) const;
 
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);

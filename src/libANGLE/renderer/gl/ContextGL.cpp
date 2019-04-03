@@ -168,6 +168,12 @@ std::vector<PathImpl *> ContextGL::createPaths(GLsizei range)
     return ret;
 }
 
+MemoryObjectImpl *ContextGL::createMemoryObject()
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 angle::Result ContextGL::flush(const gl::Context *context)
 {
     return mRenderer->flush();

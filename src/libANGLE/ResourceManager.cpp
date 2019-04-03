@@ -12,6 +12,7 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Fence.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
@@ -474,6 +475,53 @@ GLuint ProgramPipelineManager::createProgramPipeline()
 ProgramPipeline *ProgramPipelineManager::getProgramPipeline(GLuint handle) const
 {
     return mObjectMap.query(handle);
+}
+
+// MemoryObjectManager Implementation.
+
+MemoryObjectManager::MemoryObjectManager() {}
+
+MemoryObjectManager::~MemoryObjectManager()
+{
+    ASSERT(mMemoryObjects.empty());
+}
+
+void MemoryObjectManager::reset(const Context *context)
+{
+    while (!mMemoryObjects.empty())
+    {
+        deleteMemoryObject(context, mMemoryObjects.begin()->first);
+    }
+    mMemoryObjects.clear();
+}
+
+GLuint MemoryObjectManager::createMemoryObject(rx::GLImplFactory *factory)
+{
+    GLuint handle = mHandleAllocator.allocate();
+    mMemoryObjects.assign(handle, new MemoryObject(factory, handle));
+    return handle;
+}
+
+void MemoryObjectManager::deleteMemoryObject(const Context *context, GLuint handle)
+{
+    MemoryObject *memoryObject = nullptr;
+    if (!mMemoryObjects.erase(handle, &memoryObject))
+    {
+        return;
+    }
+
+    // Requires an explicit this-> because of C++ template rules.
+    this->mHandleAllocator.release(handle);
+
+    if (memoryObject)
+    {
+        memoryObject->release(context);
+    }
+}
+
+MemoryObject *MemoryObjectManager::getMemoryObject(GLuint handle) const
+{
+    return mMemoryObjects.query(handle);
 }
 
 }  // namespace gl

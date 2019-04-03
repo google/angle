@@ -34,6 +34,7 @@ class BufferManager;
 struct Caps;
 class Context;
 class FramebufferManager;
+class MemoryObjectManager;
 class PathManager;
 class ProgramPipelineManager;
 class Query;
@@ -713,6 +714,7 @@ class State : angle::NonCopyable
     PathManager *mPathManager;
     FramebufferManager *mFramebufferManager;
     ProgramPipelineManager *mProgramPipelineManager;
+    MemoryObjectManager *mMemoryObjectManager;
 
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;

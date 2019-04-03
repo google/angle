@@ -1112,6 +1112,12 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
     return std::vector<PathImpl *>();
 }
 
+MemoryObjectImpl *ContextVk::createMemoryObject()
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
 void ContextVk::invalidateCurrentTextures()
 {
     ASSERT(mProgram);

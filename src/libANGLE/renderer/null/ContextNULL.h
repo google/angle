@@ -198,6 +198,9 @@ class ContextNULL : public ContextImpl
 
     std::vector<PathImpl *> createPaths(GLsizei range) override;
 
+    // Memory object creation.
+    MemoryObjectImpl *createMemoryObject() override;
+
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
                                   GLuint numGroupsY,

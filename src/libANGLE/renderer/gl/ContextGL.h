@@ -75,6 +75,9 @@ class ContextGL : public ContextImpl
     // Path object creation
     std::vector<PathImpl *> createPaths(GLsizei range) override;
 
+    // Memory object creation.
+    MemoryObjectImpl *createMemoryObject() override;
+
     // Flush and finish.
     angle::Result flush(const gl::Context *context) override;
     angle::Result finish(const gl::Context *context) override;

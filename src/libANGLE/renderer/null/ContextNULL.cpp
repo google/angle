@@ -392,6 +392,12 @@ std::vector<PathImpl *> ContextNULL::createPaths(GLsizei range)
     return result;
 }
 
+MemoryObjectImpl *ContextNULL::createMemoryObject()
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 angle::Result ContextNULL::dispatchCompute(const gl::Context *context,
                                            GLuint numGroupsX,
                                            GLuint numGroupsY,

@@ -26,6 +26,7 @@
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
@@ -727,6 +728,11 @@ GLuint Context::createShaderProgramv(ShaderType type, GLsizei count, const GLcha
     return 0u;
 }
 
+GLuint Context::createMemoryObject()
+{
+    return mState.mMemoryObjectManager->createMemoryObject(mImplementation.get());
+}
+
 void Context::deleteBuffer(GLuint bufferName)
 {
     Buffer *buffer = mState.mBufferManager->getBuffer(bufferName);
@@ -785,6 +791,11 @@ void Context::deleteProgramPipeline(GLuint pipeline)
     }
 
     mState.mProgramPipelineManager->deleteObject(this, pipeline);
+}
+
+void Context::deleteMemoryObject(GLuint memoryObject)
+{
+    mState.mMemoryObjectManager->deleteMemoryObject(this, memoryObject);
 }
 
 void Context::deletePaths(GLuint first, GLsizei range)
@@ -5682,6 +5693,11 @@ void Context::getProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *params)
     UNIMPLEMENTED();
 }
 
+MemoryObject *Context::getMemoryObject(GLuint handle) const
+{
+    return mState.mMemoryObjectManager->getMemoryObject(handle);
+}
+
 void Context::getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog)
 {
     Program *programObject = getProgramResolveLink(program);
@@ -7099,18 +7115,28 @@ GLboolean Context::testFenceNV(GLuint fence)
 
 void Context::deleteMemoryObjects(GLsizei n, const GLuint *memoryObjects)
 {
-    UNIMPLEMENTED();
+    for (int i = 0; i < n; i++)
+    {
+        deleteMemoryObject(memoryObjects[i]);
+    }
 }
 
 GLboolean Context::isMemoryObject(GLuint memoryObject)
 {
-    UNIMPLEMENTED();
-    return GL_FALSE;
+    if (memoryObject == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getMemoryObject(memoryObject) ? GL_TRUE : GL_FALSE);
 }
 
 void Context::createMemoryObjects(GLsizei n, GLuint *memoryObjects)
 {
-    UNIMPLEMENTED();
+    for (int i = 0; i < n; i++)
+    {
+        memoryObjects[i] = createMemoryObject();
+    }
 }
 
 void Context::memoryObjectParameteriv(GLuint memoryObject, GLenum pname, const GLint *params)
