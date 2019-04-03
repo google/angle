@@ -844,10 +844,15 @@ class ShaderProgramHelper : angle::NonCopyable
         ANGLE_TRY(renderPassCache->getCompatibleRenderPass(
             context, currentQueueSerial, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
 
-        return mGraphicsPipelines.getPipeline(
-            context, pipelineCache, *compatibleRenderPass, pipelineLayout,
-            activeAttribLocationsMask, mShaders[gl::ShaderType::Vertex].get().get(),
-            mShaders[gl::ShaderType::Fragment].get().get(), pipelineDesc, descPtrOut, pipelineOut);
+        ShaderModule *vertexShader   = &mShaders[gl::ShaderType::Vertex].get().get();
+        ShaderModule *fragmentShader = mShaders[gl::ShaderType::Fragment].valid()
+                                           ? &mShaders[gl::ShaderType::Fragment].get().get()
+                                           : nullptr;
+
+        return mGraphicsPipelines.getPipeline(context, pipelineCache, *compatibleRenderPass,
+                                              pipelineLayout, activeAttribLocationsMask,
+                                              vertexShader, fragmentShader, pipelineDesc,
+                                              descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(Context *context,

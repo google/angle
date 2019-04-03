@@ -328,8 +328,8 @@ class GraphicsPipelineDesc final
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
                                      const gl::AttributesMask &activeAttribLocationsMask,
-                                     const ShaderModule &vertexModule,
-                                     const ShaderModule &fragmentModule,
+                                     const ShaderModule *vertexModule,
+                                     const ShaderModule *fragmentModule,
                                      Pipeline *pipelineOut) const;
 
     // Vertex input state. For ES 3.1 this should be separated into binding and attribute.
@@ -728,8 +728,8 @@ class GraphicsPipelineCache final : angle::NonCopyable
                                            const vk::RenderPass &compatibleRenderPass,
                                            const vk::PipelineLayout &pipelineLayout,
                                            const gl::AttributesMask &activeAttribLocationsMask,
-                                           const vk::ShaderModule &vertexModule,
-                                           const vk::ShaderModule &fragmentModule,
+                                           const vk::ShaderModule *vertexModule,
+                                           const vk::ShaderModule *fragmentModule,
                                            const vk::GraphicsPipelineDesc &desc,
                                            const vk::GraphicsPipelineDesc **descPtrOut,
                                            vk::PipelineHelper **pipelineOut)
@@ -753,8 +753,8 @@ class GraphicsPipelineCache final : angle::NonCopyable
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
                                  const gl::AttributesMask &activeAttribLocationsMask,
-                                 const vk::ShaderModule &vertexModule,
-                                 const vk::ShaderModule &fragmentModule,
+                                 const vk::ShaderModule *vertexModule,
+                                 const vk::ShaderModule *fragmentModule,
                                  const vk::GraphicsPipelineDesc &desc,
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
