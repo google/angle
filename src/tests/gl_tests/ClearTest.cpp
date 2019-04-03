@@ -80,17 +80,7 @@ class ClearTestBase : public ANGLETest
 };
 
 class ClearTest : public ClearTestBase
-{
-  protected:
-    void MaskedScissoredColorDepthStencilClear(bool mask,
-                                               bool scissor,
-                                               bool clearColor,
-                                               bool clearDepth,
-                                               bool clearStencil);
-
-    bool mHasDepth   = true;
-    bool mHasStencil = true;
-};
+{};
 
 class ClearTestES3 : public ClearTestBase
 {
@@ -146,15 +136,125 @@ class ClearTestRGB : public ANGLETest
     }
 };
 
-class ScissoredClearTest : public ClearTest
+// Each int parameter can have three values: don't clear, clear, or masked clear.  The bool
+// parameter controls scissor.
+using MaskedScissoredClearVariationsTestParams =
+    std::tuple<angle::PlatformParameters, int, int, int, bool>;
+
+void ParseMaskedScissoredClearVariationsTestParams(
+    const MaskedScissoredClearVariationsTestParams &params,
+    bool *clearColor,
+    bool *clearDepth,
+    bool *clearStencil,
+    bool *maskColor,
+    bool *maskDepth,
+    bool *maskStencil,
+    bool *scissor)
+{
+    int colorClearInfo   = std::get<1>(params);
+    int depthClearInfo   = std::get<2>(params);
+    int stencilClearInfo = std::get<3>(params);
+
+    *clearColor   = colorClearInfo > 0;
+    *clearDepth   = depthClearInfo > 0;
+    *clearStencil = stencilClearInfo > 0;
+
+    *maskColor   = colorClearInfo > 1;
+    *maskDepth   = depthClearInfo > 1;
+    *maskStencil = stencilClearInfo > 1;
+
+    *scissor = std::get<4>(params);
+}
+
+std::string MaskedScissoredClearVariationsTestPrint(
+    const ::testing::TestParamInfo<MaskedScissoredClearVariationsTestParams> &paramsInfo)
+{
+    const MaskedScissoredClearVariationsTestParams &params = paramsInfo.param;
+    std::ostringstream out;
+
+    out << std::get<0>(params);
+
+    bool clearColor, clearDepth, clearStencil;
+    bool maskColor, maskDepth, maskStencil;
+    bool scissor;
+
+    ParseMaskedScissoredClearVariationsTestParams(params, &clearColor, &clearDepth, &clearStencil,
+                                                  &maskColor, &maskDepth, &maskStencil, &scissor);
+
+    if (scissor)
+    {
+        out << "_scissored";
+    }
+
+    if (clearColor || clearDepth || clearStencil)
+    {
+        out << "_clear_";
+        if (clearColor)
+        {
+            out << "c";
+        }
+        if (clearDepth)
+        {
+            out << "d";
+        }
+        if (clearStencil)
+        {
+            out << "s";
+        }
+    }
+
+    if (maskColor || maskDepth || maskStencil)
+    {
+        out << "_mask_";
+        if (maskColor)
+        {
+            out << "c";
+        }
+        if (maskDepth)
+        {
+            out << "d";
+        }
+        if (maskStencil)
+        {
+            out << "s";
+        }
+    }
+
+    return out.str();
+}
+
+class MaskedScissoredClearTestBase
+    : public ANGLETestWithParam<MaskedScissoredClearVariationsTestParams>
+{
+  protected:
+    MaskedScissoredClearTestBase()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
+    }
+
+    void MaskedScissoredColorDepthStencilClear(
+        const MaskedScissoredClearVariationsTestParams &params);
+
+    bool mHasDepth   = true;
+    bool mHasStencil = true;
+};
+
+class MaskedScissoredClearTest : public MaskedScissoredClearTestBase
 {};
 
-class VulkanClearTest : public ClearTest
+class VulkanClearTest : public MaskedScissoredClearTestBase
 {
   protected:
     void SetUp() override
     {
-        ANGLETest::SetUp();
+        ANGLETestWithParam::SetUp();
 
         glBindTexture(GL_TEXTURE_2D, mColorTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
@@ -1130,13 +1230,10 @@ TEST_P(ClearTestES3, RepeatedClear)
     ASSERT_GL_NO_ERROR();
 }
 
-void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
-                                                      bool scissor,
-                                                      bool clearColor,
-                                                      bool clearDepth,
-                                                      bool clearStencil)
+void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
+    const MaskedScissoredClearVariationsTestParams &params)
 {
-    // Flaky on Android Nexus 5x, possible driver bug.
+    // Flaky on Android Nexus 5x and Pixel 2, possible Qualcomm driver bug.
     // TODO(jmadill): Re-enable when possible. http://anglebug.com/2548
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
 
@@ -1152,6 +1249,13 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     constexpr uint8_t kStencilMask     = 0x59;
     constexpr uint8_t kMaskedClearStencil =
         (kPreClearStencil & ~kStencilMask) | (kClearStencil & kStencilMask);
+
+    bool clearColor, clearDepth, clearStencil;
+    bool maskColor, maskDepth, maskStencil;
+    bool scissor;
+
+    ParseMaskedScissoredClearVariationsTestParams(params, &clearColor, &clearDepth, &clearStencil,
+                                                  &maskColor, &maskDepth, &maskStencil, &scissor);
 
     // Clear to a random color, 0.9 depth and 0x00 stencil
     Vector4 color1(0.1f, 0.2f, 0.3f, 0.4f);
@@ -1188,10 +1292,16 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     glClearColor(color2[0], color2[1], color2[2], color2[3]);
     glClearDepthf(kClearDepth);
     glClearStencil(kClearStencil);
-    if (mask)
+    if (maskColor)
     {
         glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
+    }
+    if (maskDepth)
+    {
         glDepthMask(GL_FALSE);
+    }
+    if (maskStencil)
+    {
         glStencilMask(kStencilMask);
     }
     glClear((clearColor ? GL_COLOR_BUFFER_BIT : 0) | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
@@ -1204,15 +1314,17 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     glDisable(GL_SCISSOR_TEST);
     ASSERT_GL_NO_ERROR();
 
-    // Verify second clear mask worked as expected.
     GLColor color2MaskedRGB(color2RGB[0], color1RGB[1], color2RGB[2], color1RGB[3]);
 
     // If not clearing color, the original color should be left both in the center and corners.  If
     // using a scissor, the corners should be left to the original color, while the center is
-    // possibly changed.  If using a mask, the center (and corers if not scissored), h
-    GLColor expectedCenterColorRGB = !clearColor ? color1RGB : mask ? color2MaskedRGB : color2RGB;
+    // possibly changed.  If using a mask, the center (and corners if not scissored), changes to
+    // the masked results.
+    GLColor expectedCenterColorRGB =
+        !clearColor ? color1RGB : maskColor ? color2MaskedRGB : color2RGB;
     GLColor expectedCornerColorRGB = scissor ? color1RGB : expectedCenterColorRGB;
 
+    // Verify second clear color mask worked as expected.
     EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
 
     EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
@@ -1228,12 +1340,12 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
         ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(),
                          essl1_shaders::fs::Blue());
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(mask ? GL_GREATER : GL_EQUAL);
+        glDepthFunc(maskDepth ? GL_GREATER : GL_EQUAL);
         // - If depth is cleared, but it's masked, kPreClearDepth should be in the depth buffer.
         // - If depth is cleared, but it's not masked, kClearDepth should be in the depth buffer.
         // - If depth is not cleared, the if above ensures there is no depth buffer at all,
         //   which means depth test will always pass.
-        drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), mask ? 1.0f : 0.0f);
+        drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), maskDepth ? 1.0f : 0.0f);
         glDisable(GL_DEPTH_TEST);
         ASSERT_GL_NO_ERROR();
 
@@ -1242,7 +1354,7 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
         // If there is no depth, depth test always passes so the whole image must be blue.  Same if
         // depth write is masked.
         expectedCornerColorRGB =
-            mHasDepth && scissor && !mask ? expectedCornerColorRGB : GLColor::blue;
+            mHasDepth && scissor && !maskDepth ? expectedCornerColorRGB : GLColor::blue;
 
         EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
 
@@ -1262,10 +1374,10 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
         // - If stencil is cleared, but it's masked, kMaskedClearStencil should be in the stencil
         //   buffer.
         // - If stencil is cleared, but it's not masked, kClearStencil should be in the stencil
-        // buffer.
+        //   buffer.
         // - If stencil is not cleared, the if above ensures there is no stencil buffer at all,
         //   which means stencil test will always pass.
-        glStencilFunc(GL_EQUAL, mask ? kMaskedClearStencil : kClearStencil, 0xFF);
+        glStencilFunc(GL_EQUAL, maskStencil ? kMaskedClearStencil : kClearStencil, 0xFF);
         drawQuad(stencilTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
         glDisable(GL_STENCIL_TEST);
         ASSERT_GL_NO_ERROR();
@@ -1284,217 +1396,44 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     }
 }
 
-// Tests combined color+depth+stencil clears.
-TEST_P(ClearTest, MaskedColorAndDepthClear)
+// Tests combinations of color, depth, stencil clears with or without masks or scissor.
+TEST_P(MaskedScissoredClearTest, Test)
 {
-    MaskedScissoredColorDepthStencilClear(true, false, true, true, false);
+    MaskedScissoredColorDepthStencilClear(GetParam());
 }
 
-TEST_P(ClearTest, MaskedColorAndStencilClear)
+// Tests combinations of color, depth, stencil clears with or without masks or scissor.
+//
+// This uses depth/stencil attachments that are single-channel, but are emulated with a format
+// that has both channels.
+TEST_P(VulkanClearTest, Test)
 {
-    MaskedScissoredColorDepthStencilClear(true, false, true, false, true);
-}
+    bool clearColor, clearDepth, clearStencil;
+    bool maskColor, maskDepth, maskStencil;
+    bool scissor;
 
-TEST_P(ClearTest, MaskedColorAndDepthAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, false, true, true, true);
-}
+    ParseMaskedScissoredClearVariationsTestParams(GetParam(), &clearColor, &clearDepth,
+                                                  &clearStencil, &maskColor, &maskDepth,
+                                                  &maskStencil, &scissor);
 
-TEST_P(ClearTest, MaskedDepthClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, false, false, true, false);
-}
+    // We only care about clearing depth xor stencil.
+    if (clearDepth == clearStencil)
+    {
+        return;
+    }
 
-TEST_P(ClearTest, MaskedStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, false, false, false, true);
-}
+    if (clearDepth)
+    {
+        // Creating a depth-only renderbuffer is an ES3 feature.
+        ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+        bindColorDepthFBO();
+    }
+    else
+    {
+        bindColorStencilFBO();
+    }
 
-TEST_P(ClearTest, MaskedDepthAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, false, false, true, true);
-}
-
-// Simple scissored clear.
-TEST_P(ScissoredClearTest, BasicScissoredColorClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, true, false, false);
-}
-
-// Simple scissored masked clear.
-TEST_P(ScissoredClearTest, MaskedScissoredColorClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, true, false, false);
-}
-
-// Tests combined color+depth+stencil scissored clears.
-TEST_P(ScissoredClearTest, ScissoredColorAndDepthClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, true, true, false);
-}
-
-TEST_P(ScissoredClearTest, ScissoredColorAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, true, false, true);
-}
-
-TEST_P(ScissoredClearTest, ScissoredColorAndDepthAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, true, true, true);
-}
-
-TEST_P(ScissoredClearTest, ScissoredDepthClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, false, true, false);
-}
-
-TEST_P(ScissoredClearTest, ScissoredStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, false, false, true);
-}
-
-TEST_P(ScissoredClearTest, ScissoredDepthAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(false, true, false, true, true);
-}
-
-// Tests combined color+depth+stencil scissored masked clears.
-TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, true, true, false);
-}
-
-TEST_P(ScissoredClearTest, MaskedScissoredColorAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, true, false, true);
-}
-
-TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, true, true, true);
-}
-
-TEST_P(ScissoredClearTest, MaskedScissoredgDepthClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, false, true, false);
-}
-
-TEST_P(ScissoredClearTest, MaskedScissoredgStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, false, false, true);
-}
-
-TEST_P(ScissoredClearTest, MaskedScissoredgDepthAndStencilClear)
-{
-    MaskedScissoredColorDepthStencilClear(true, true, false, true, true);
-}
-
-// Tests combined color+stencil scissored masked clears for a depth-stencil-emulated
-// stencil-only-type.
-TEST_P(VulkanClearTest, ColorAndStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(false, false, true, false, true);
-}
-
-TEST_P(VulkanClearTest, MaskedColorAndStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(true, false, true, false, true);
-}
-
-TEST_P(VulkanClearTest, ScissoredColorAndStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(false, true, true, false, true);
-}
-
-TEST_P(VulkanClearTest, MaskedScissoredColorAndStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(true, true, true, false, true);
-}
-
-TEST_P(VulkanClearTest, StencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(false, false, false, false, true);
-}
-
-TEST_P(VulkanClearTest, MaskedStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(true, false, false, false, true);
-}
-
-TEST_P(VulkanClearTest, ScissoredStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(false, true, false, false, true);
-}
-
-TEST_P(VulkanClearTest, MaskedScissoredStencilClear)
-{
-    bindColorStencilFBO();
-    MaskedScissoredColorDepthStencilClear(true, true, false, false, true);
-}
-
-// Tests combined color+depth scissored masked clears for a depth-stencil-emulated
-// depth-only-type.
-TEST_P(VulkanClearTest, ColorAndDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(false, false, true, true, false);
-}
-
-TEST_P(VulkanClearTest, MaskedColorAndDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(true, false, true, true, false);
-}
-
-TEST_P(VulkanClearTest, ScissoredColorAndDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(false, true, true, true, false);
-}
-
-TEST_P(VulkanClearTest, MaskedScissoredColorAndDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(true, true, true, true, false);
-}
-
-TEST_P(VulkanClearTest, DepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(false, false, false, true, false);
-}
-
-TEST_P(VulkanClearTest, MaskedDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(true, false, false, true, false);
-}
-
-TEST_P(VulkanClearTest, ScissoredDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(false, true, false, true, false);
-}
-
-TEST_P(VulkanClearTest, MaskedScissoredDepthClear)
-{
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    bindColorDepthFBO();
-    MaskedScissoredColorDepthStencilClear(true, true, false, true, false);
+    MaskedScissoredColorDepthStencilClear(GetParam());
 }
 
 // Test that just clearing a nonexistent drawbuffer of the default framebuffer doesn't cause an
@@ -1510,8 +1449,13 @@ TEST_P(ClearTestES3, ClearBuffer1OnDefaultFramebufferNoAssert)
     EXPECT_GL_NO_ERROR();
 }
 
+#ifdef Bool
+// X11 craziness.
+#    undef Bool
+#endif
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against. Vulkan support disabled because of incomplete implementation.
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -1523,8 +1467,29 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_VULKAN(),
                        ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(VulkanClearTest, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_COMBINE_4(MaskedScissoredClearTest,
+                                 MaskedScissoredClearVariationsTestPrint,
+                                 testing::Range(0, 3),
+                                 testing::Range(0, 3),
+                                 testing::Range(0, 3),
+                                 testing::Bool(),
+                                 ES2_D3D9(),
+                                 ES2_D3D11(),
+                                 ES3_D3D11(),
+                                 ES2_OPENGL(),
+                                 ES3_OPENGL(),
+                                 ES2_OPENGLES(),
+                                 ES3_OPENGLES(),
+                                 ES2_VULKAN(),
+                                 ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_COMBINE_4(VulkanClearTest,
+                                 MaskedScissoredClearVariationsTestPrint,
+                                 testing::Range(0, 3),
+                                 testing::Range(0, 3),
+                                 testing::Range(0, 3),
+                                 testing::Bool(),
+                                 ES2_VULKAN(),
+                                 ES3_VULKAN());
 
 // Not all ANGLE backends support RGB backbuffers
 ANGLE_INSTANTIATE_TEST(ClearTestRGB, ES2_D3D11(), ES3_D3D11(), ES2_VULKAN(), ES3_VULKAN());

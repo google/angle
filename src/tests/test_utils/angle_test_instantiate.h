@@ -98,6 +98,13 @@ struct CombinedPrintToStringParamName
     const decltype(first) testName##params[] = {first, ##__VA_ARGS__};          \
     INSTANTIATE_TEST_SUITE_P(                                                   \
         , testName, testing::Combine(ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), combine1), print)
+#define ANGLE_INSTANTIATE_TEST_COMBINE_4(testName, print, combine1, combine2, combine3, combine4, \
+                                         first, ...)                                              \
+    const decltype(first) testName##params[] = {first, ##__VA_ARGS__};                            \
+    INSTANTIATE_TEST_SUITE_P(, testName,                                                          \
+                             testing::Combine(ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),         \
+                                              combine1, combine2, combine3, combine4),            \
+                             print)
 #define ANGLE_INSTANTIATE_TEST_COMBINE_5(testName, print, combine1, combine2, combine3, combine4, \
                                          combine5, first, ...)                                    \
     const decltype(first) testName##params[] = {first, ##__VA_ARGS__};                            \
