@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f2ce9a7_a57d814b",
+        "filename": "scripts/registry_xml.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "this could be one change to split up. You can initially leave the Context function unimplemented and implementation the validation. You can add a negative API test to verify the validation works correct in that split CL.",
+      "range": {
+        "startLine": 68,
+        "startChar": 5,
+        "endLine": 68,
+        "endChar": 34
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94094bbf_e6fc9c8b",
+        "filename": "scripts/run_code_generation.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "these changes we should omit. We explicitly want developers to only run code gen from ANGLE proper. Not from a Chromium checkout.\n\nSee https://chromium.googlesource.com/angle/angle/+/master/doc/BuildingAngleForChromiumDevelopment.md if you want to work within Chromium.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 71
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10b798f8_18a0df2d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "The translator changes could also be separated. The changes won\u0027t be testable unless you add specific compiler tests. Which wouldn\u0027t be a bad idea. But still probably worth splitting off to simplify the logic of each individual patch. Shouldn\u0027t cause too many rebase conflicts.",
+      "range": {
+        "startLine": 441,
+        "startChar": 9,
+        "endLine": 441,
+        "endChar": 29
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "593d7b35_be2f0597",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "Splitting off the refactor from binding to location/index would be helpful. It would greatly simplify the process of reviewing behaviour changes vs boilerplate refactoring. But it is a bit more difficult in terms of conflicts. Would you consider splitting it off?",
+      "range": {
+        "startLine": 65,
+        "startChar": 26,
+        "endLine": 66,
+        "endChar": 44
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab02a1c1_68fbd6cc",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "I would recommend each backend change also split into its own CL. The tests you can enable one backend at a time.",
+      "range": {
+        "startLine": 347,
+        "startChar": 4,
+        "endLine": 368,
+        "endChar": 0
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df357441_229e2881",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "similar comment here to the other generator. We should omit these changes. I\u0027m in the process of redoing this in any case to use a cloud storage binary.",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 182,
+        "endChar": 57
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b18f3004_08e727aa",
+        "filename": "src/libGLESv2/proc_table_data.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 968,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-03T17:14:04Z",
+      "side": 1,
+      "message": "this could be in the entry point extension split.",
+      "range": {
+        "startLine": 961,
+        "startChar": 0,
+        "endLine": 968,
+        "endChar": 1
+      },
+      "revId": "944c61c46f234f4293f44ccdccf529d823f087b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
