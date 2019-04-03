@@ -37,7 +37,23 @@ enum
     CONSTANT_VERTEX_BUFFER_SIZE = 4096
 };
 
-// Warning: you should ensure binding really matches attrib.bindingIndex before using this function.
+// Warning: ensure the binding matches attrib.bindingIndex before using these functions.
+int64_t GetMaxAttributeByteOffsetForDraw(const gl::VertexAttribute &attrib,
+                                         const gl::VertexBinding &binding,
+                                         int64_t elementCount)
+{
+    CheckedNumeric<int64_t> stride = ComputeVertexAttributeStride(attrib, binding);
+    CheckedNumeric<int64_t> offset = ComputeVertexAttributeOffset(attrib, binding);
+    CheckedNumeric<int64_t> size   = ComputeVertexAttributeTypeSize(attrib);
+
+    ASSERT(elementCount > 0);
+
+    CheckedNumeric<int64_t> result =
+        stride * (CheckedNumeric<int64_t>(elementCount) - 1) + size + offset;
+    return result.ValueOrDefault(std::numeric_limits<int64_t>::max());
+}
+
+// Warning: ensure the binding matches attrib.bindingIndex before using these functions.
 int ElementsInBuffer(const gl::VertexAttribute &attrib,
                      const gl::VertexBinding &binding,
                      unsigned int size)
@@ -489,10 +505,12 @@ angle::Result VertexDataManager::reserveSpaceForAttrib(const gl::Context *contex
         GLint firstVertexIndex = binding.getDivisor() > 0 ? 0 : start;
         int64_t maxVertexCount =
             static_cast<int64_t>(firstVertexIndex) + static_cast<int64_t>(totalCount);
-        int elementsInBuffer =
-            ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize()));
 
-        ANGLE_CHECK(GetImplAs<ContextD3D>(context), maxVertexCount <= elementsInBuffer,
+        int64_t maxByte = GetMaxAttributeByteOffsetForDraw(attrib, binding, maxVertexCount);
+
+        ASSERT(bufferD3D->getSize() <= static_cast<size_t>(std::numeric_limits<int64_t>::max()));
+        ANGLE_CHECK(GetImplAs<ContextD3D>(context),
+                    maxByte <= static_cast<int64_t>(bufferD3D->getSize()),
                     "Vertex buffer is not big enough for the draw call.", GL_INVALID_OPERATION);
     }
     return mStreamingBuffer.reserveVertexSpace(context, attrib, binding, totalCount, instances);
