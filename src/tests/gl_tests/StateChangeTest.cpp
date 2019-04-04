@@ -1381,9 +1381,6 @@ void SimpleStateChangeTest::simpleDrawWithColor(const GLColor &color)
 // frame.
 TEST_P(SimpleStateChangeTest, DrawArraysThenDrawElements)
 {
-    // http://anglebug.com/3124: Flaky on Nexus5X.
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 

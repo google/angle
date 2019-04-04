@@ -227,9 +227,6 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
     if (!isApplicable())
         return;
 
-    // TODO: Figure out why this fails on Android.
-    ANGLE_SKIP_TEST_IF(IsAndroid());
-
     // SAMPLE_ALPHA_TO_ONE is specified to transform alpha values of
     // covered samples to 1.0. In order to detect it, we use non-1.0
     // alpha.
@@ -379,7 +376,7 @@ TEST_P(MultisampleCompatibilityTest, DrawCoverageAndResolve)
         return;
 
     // TODO: Figure out why this fails on Android.
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 

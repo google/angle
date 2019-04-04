@@ -305,9 +305,6 @@ std::string EnumStr(const GLenum v)
 // Test all internalFormat/unpackFormat/unpackType combinations from ES3.0.
 TEST_P(TextureUploadFormatTest, All)
 {
-    // TODO(lucferron): Diagnose and fix http://anglebug.com/2657
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     ANGLE_SKIP_TEST_IF(IsD3D9() || IsD3D11_FL93());
 
     constexpr char kVertShaderES2[]     = R"(

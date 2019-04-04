@@ -915,7 +915,7 @@ TEST_P(TransformFeedbackTest, OffsetResetOnBeginTransformFeedback)
 {
     ANGLE_SKIP_TEST_IF(IsOSX() && IsAMD());
 
-    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     constexpr char kVS[] =
         "#version 300 es\n"

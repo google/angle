@@ -325,9 +325,6 @@ TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
 
 TEST_P(VertexAttributeTest, UnsignedByteNormalized)
 {
-    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     std::array<GLubyte, kVertexCount> inputData = {
         {0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -357,9 +354,6 @@ TEST_P(VertexAttributeTest, ByteUnnormalized)
 
 TEST_P(VertexAttributeTest, ByteNormalized)
 {
-    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     std::array<GLbyte, kVertexCount> inputData = {
         {0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126}};
     std::array<GLfloat, kVertexCount> expectedData;

@@ -563,7 +563,7 @@ TEST_P(RobustResourceInitTest, TexImageThenSubImage)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2407, but only fails on Nexus devices
-    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     // Put some data into the texture
 
@@ -736,7 +736,7 @@ TEST_P(RobustResourceInitTest, ReadingPartiallyInitializedTexture)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2407, but only fails on Nexus devices
-    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -866,7 +866,7 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
@@ -1301,7 +1301,7 @@ TEST_P(RobustResourceInitTest, MaskedDepthClear)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1318,7 +1318,7 @@ TEST_P(RobustResourceInitTestES3, MaskedDepthClearBuffer)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2407
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1377,7 +1377,7 @@ TEST_P(RobustResourceInitTest, MaskedStencilClear)
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     // http://anglebug.com/2407, but only fails on Nexus devices
-    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1399,7 +1399,7 @@ TEST_P(RobustResourceInitTestES3, MaskedStencilClearBuffer)
     ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL());
 
     // http://anglebug.com/2407, but only fails on Nexus devices
-    ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

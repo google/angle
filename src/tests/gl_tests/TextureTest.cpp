@@ -2750,8 +2750,8 @@ TEST_P(SamplerInStructTest, SamplerInStruct)
 // Use a sampler in a uniform struct that's passed as a function parameter.
 TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParameter)
 {
-    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
-    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsAdreno() && IsOpenGLES());
+    // Fails on Nexus 5X due to a driver bug. http://anglebug.com/1427
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     runSamplerInStructTest();
 }
@@ -2760,8 +2760,8 @@ TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParamete
 // parameter.
 TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFunctionParameter)
 {
-    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
-    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsAdreno() && IsOpenGLES());
+    // Fails on Nexus 5X due to a driver bug. http://anglebug.com/1427
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     runSamplerInStructTest();
 }
@@ -2770,8 +2770,8 @@ TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFuncti
 // parameter.
 TEST_P(SamplerInNestedStructAsFunctionParameterTest, SamplerInNestedStructAsFunctionParameter)
 {
-    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
-    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsAdreno() && IsOpenGLES());
+    // Fails on Nexus 5X due to a driver bug. http://anglebug.com/1427
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     runSamplerInStructTest();
 }
@@ -3734,8 +3734,8 @@ TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
 // GLES 3.0.4 section 3.8.3.
 TEST_P(Texture2DTestES3, UnpackSkipImages2D)
 {
-    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1429 is fixed
-    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsAdreno() && IsOpenGLES());
+    // Crashes on Nexus 5X due to a driver bug. http://anglebug.com/1429
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
 
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
