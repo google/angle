@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74cab1a6_2fcb4b79",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-04T19:23:18Z",
+      "side": 1,
+      "message": "nit: can you rename these kTextureFormatMismatch and kTextureTypeMismatch? Also can you sort them in alphabetically?",
+      "range": {
+        "startLine": 465,
+        "startChar": 4,
+        "endLine": 465,
+        "endChar": 20
+      },
+      "revId": "b331356f6c40727fd51f6f25e9568a4b66add9ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afc9b7bc_60325727",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-04T19:23:18Z",
+      "side": 1,
+      "message": "nit: you can remove this now.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 14
+      },
+      "revId": "b331356f6c40727fd51f6f25e9568a4b66add9ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82ae26c2_dbeec33e",
+        "filename": "src/libANGLE/validationES2.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-04T19:23:18Z",
+      "side": 1,
+      "message": "This looks like it should be kTextureTargetMismatch. Could you update this error?",
+      "range": {
+        "startLine": 143,
+        "startChar": 60,
+        "endLine": 143,
+        "endChar": 75
+      },
+      "revId": "b331356f6c40727fd51f6f25e9568a4b66add9ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
