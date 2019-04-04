@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1e65ee34_2ecaa39a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-04T00:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adc75f4c_06eb6e2c",
+      "range": {
+        "startLine": 1654,
+        "startChar": 59,
+        "endLine": 1654,
+        "endChar": 72
+      },
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26214a6d_c5118d59",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 21
@@ -36,6 +60,30 @@
       "writtenOn": "2019-04-03T12:51:29Z",
       "side": 1,
       "message": "I think you can keep the validation here as format !\u003d textureInternalFormat.format if you put the GL_NONE check outside this whole block.",
+      "range": {
+        "startLine": 1649,
+        "startChar": 0,
+        "endLine": 1657,
+        "endChar": 0
+      },
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f037edcb_e2ea2c35",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1657,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-04T00:20:55Z",
+      "side": 1,
+      "message": "Removing the GL_NONE check can be done anyway, since we\u0027ve already validated it\u0027s a good value before getting here.\n\nHowever, the rest seems to be necessary to pass all of the webgl conformance tests for compression.   I\u0027ll try and dig in a bit more tomorrow to see if I can figure out exactly why; those are a pain to debug though.",
+      "parentUuid": "26214a6d_c5118d59",
       "range": {
         "startLine": 1649,
         "startChar": 0,
@@ -68,6 +116,30 @@
       "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d6ec293_e353a928",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1663,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-04T00:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b10c5997_130b86d7",
+      "range": {
+        "startLine": 1663,
+        "startChar": 63,
+        "endLine": 1663,
+        "endChar": 76
+      },
+      "revId": "0696641d41c7d8070b46f0827dc508253d93a75e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
