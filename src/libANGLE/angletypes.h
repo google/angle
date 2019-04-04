@@ -48,6 +48,8 @@ struct Rectangle
     // Returns a rectangle with the same area but with height and width guaranteed to be positive.
     Rectangle removeReversal() const;
 
+    bool encloses(const gl::Rectangle &inside) const;
+
     int x;
     int y;
     int width;

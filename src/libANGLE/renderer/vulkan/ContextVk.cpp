@@ -260,10 +260,13 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     if (!mCommandBuffer)
     {
         mDirtyBits |= mNewCommandBufferDirtyBits;
+
+        gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
         if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer->getCurrentQueueSerial(),
-                                                         &mCommandBuffer))
+                                                         scissoredRenderArea, &mCommandBuffer))
         {
-            ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, &mCommandBuffer));
+            ANGLE_TRY(
+                mDrawFramebuffer->startNewRenderPass(this, scissoredRenderArea, &mCommandBuffer));
         }
     }
 
@@ -686,12 +689,11 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
 void ContextVk::updateScissor(const gl::State &glState)
 {
     FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
-    gl::Box dimensions           = framebufferVk->getState().getDimensions();
-    gl::Rectangle renderArea(0, 0, dimensions.width, dimensions.height);
-
-    VkRect2D scissor;
-    gl_vk::GetScissor(glState, isViewportFlipEnabledForDrawFBO(), renderArea, &scissor);
+    gl::Rectangle scissoredRenderArea = framebufferVk->getScissoredRenderArea(this);
+    VkRect2D scissor                  = gl_vk::GetRect(scissoredRenderArea);
     mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition, scissor);
+
+    framebufferVk->onScissorChange(this);
 }
 
 angle::Result ContextVk::syncState(const gl::Context *context,

@@ -257,6 +257,11 @@ Rectangle Rectangle::removeReversal() const
     return unreversed;
 }
 
+bool Rectangle::encloses(const gl::Rectangle &inside) const
+{
+    return x0() <= inside.x0() && y0() <= inside.y0() && x1() >= inside.x1() && y1() >= inside.y1();
+}
+
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection)
 {
     int minSourceX, maxSourceX, minSourceY, maxSourceY;

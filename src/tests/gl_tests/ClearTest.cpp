@@ -825,7 +825,7 @@ TEST_P(ClearTestES3, MaskedScissoredClearMultipleAttachments)
 
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glEnable(GL_SCISSOR_TEST);
-    glScissor(kSize / 4, kSize / 4, kSize / 2, kSize / 2);
+    glScissor(kSize / 6, kSize / 6, kSize / 3, kSize / 3);
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 
@@ -840,8 +840,11 @@ TEST_P(ClearTestES3, MaskedScissoredClearMultipleAttachments)
         EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, clearColorMasked);
         EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, clearColorMasked);
         EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 3, 2 * kSize / 3, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(2 * kSize / 3, kSize / 3, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(2 * kSize / 3, 2 * kSize / 3, clearColorMasked);
 
-        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, clearColorMaskedScissored);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 3, kSize / 3, clearColorMaskedScissored);
     }
 
     // Scissored clear
@@ -863,8 +866,11 @@ TEST_P(ClearTestES3, MaskedScissoredClearMultipleAttachments)
         EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, clearColorMasked);
         EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, clearColorMasked);
         EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 3, 2 * kSize / 3, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(2 * kSize / 3, kSize / 3, clearColorMasked);
+        EXPECT_PIXEL_COLOR_EQ(2 * kSize / 3, 2 * kSize / 3, clearColorMasked);
 
-        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, clearColorScissored);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 3, kSize / 3, clearColorScissored);
     }
 }
 
@@ -1239,8 +1245,8 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
 
     const int w     = getWindowWidth();
     const int h     = getWindowHeight();
-    const int whalf = w >> 1;
-    const int hhalf = h >> 1;
+    const int wthird = w / 3;
+    const int hthird = h / 3;
 
     constexpr float kPreClearDepth     = 0.9f;
     constexpr float kClearDepth        = 0.5f;
@@ -1283,7 +1289,7 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
     if (scissor)
     {
         glEnable(GL_SCISSOR_TEST);
-        glScissor(whalf / 2, hhalf / 2, whalf, hhalf);
+        glScissor(wthird / 2, hthird / 2, wthird, hthird);
     }
 
     // Use color and stencil masks to clear to a second color, 0.5 depth and 0x59 stencil.
@@ -1325,12 +1331,15 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
     GLColor expectedCornerColorRGB = scissor ? color1RGB : expectedCenterColorRGB;
 
     // Verify second clear color mask worked as expected.
-    EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(wthird, hthird, expectedCenterColorRGB, 1);
 
     EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
     EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, expectedCornerColorRGB, 1);
     EXPECT_PIXEL_COLOR_NEAR(0, h - 1, expectedCornerColorRGB, 1);
     EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, expectedCornerColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(wthird, 2 * hthird, expectedCornerColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(2 * wthird, hthird, expectedCornerColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(2 * wthird, 2 * hthird, expectedCornerColorRGB, 1);
 
     // If there is depth, but depth is not asked to be cleared, the depth buffer contains garbage,
     // so no particular behavior can be expected.
@@ -1356,12 +1365,15 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
         expectedCornerColorRGB =
             mHasDepth && scissor && !maskDepth ? expectedCornerColorRGB : GLColor::blue;
 
-        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(wthird, hthird, expectedCenterColorRGB, 1);
 
         EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
         EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, expectedCornerColorRGB, 1);
         EXPECT_PIXEL_COLOR_NEAR(0, h - 1, expectedCornerColorRGB, 1);
         EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(wthird, 2 * hthird, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(2 * wthird, hthird, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(2 * wthird, 2 * hthird, expectedCornerColorRGB, 1);
     }
 
     // If there is stencil, but it's not asked to be cleared, there is similarly no expectation.
@@ -1387,12 +1399,15 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
         // If there is no stencil, stencil test always passes so the whole image must be green.
         expectedCornerColorRGB = mHasStencil && scissor ? expectedCornerColorRGB : GLColor::green;
 
-        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(wthird, hthird, expectedCenterColorRGB, 1);
 
         EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
         EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, expectedCornerColorRGB, 1);
         EXPECT_PIXEL_COLOR_NEAR(0, h - 1, expectedCornerColorRGB, 1);
         EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(wthird, 2 * hthird, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(2 * wthird, hthird, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(2 * wthird, 2 * hthird, expectedCornerColorRGB, 1);
     }
 }
 

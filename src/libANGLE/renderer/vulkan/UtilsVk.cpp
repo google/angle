@@ -668,10 +668,13 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     ANGLE_TRY(ensureImageClearResourcesInitialized(contextVk));
 
+    const gl::Rectangle &scissoredRenderArea = params.clearArea;
+
     vk::CommandBuffer *commandBuffer;
-    if (!framebuffer->appendToStartedRenderPass(renderer->getCurrentQueueSerial(), &commandBuffer))
+    if (!framebuffer->appendToStartedRenderPass(renderer->getCurrentQueueSerial(),
+                                                scissoredRenderArea, &commandBuffer))
     {
-        ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, &commandBuffer));
+        ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, scissoredRenderArea, &commandBuffer));
     }
 
     FullScreenQuadParams vsParams;
@@ -716,17 +719,14 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         pipelineDesc.setStencilBackWriteMask(params.stencilMask);
     }
 
-    const gl::Rectangle &renderArea = framebuffer->getFramebuffer()->getRenderPassRenderArea();
-    bool invertViewport             = contextVk->isViewportFlipEnabledForDrawFBO();
-
     VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, invertViewport, params.renderAreaHeight, &viewport);
+    gl::Rectangle completeRenderArea = framebuffer->getCompleteRenderArea();
+    bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
+    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, params.renderAreaHeight,
+                       &viewport);
     pipelineDesc.setViewport(viewport);
 
-    VkRect2D scissor;
-    const gl::State &glState = contextVk->getState();
-    gl_vk::GetScissor(glState, invertViewport, renderArea, &scissor);
-    pipelineDesc.setScissor(scissor);
+    pipelineDesc.setScissor(gl_vk::GetRect(params.clearArea));
 
     vk::ShaderLibrary &shaderLibrary                    = renderer->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
@@ -874,5 +874,19 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     return angle::Result::Continue;
 }
+
+UtilsVk::ClearFramebufferParameters::ClearFramebufferParameters()
+    : renderPassDesc(nullptr),
+      renderAreaHeight(0),
+      clearColor(false),
+      clearDepth(false),
+      clearStencil(false),
+      stencilMask(0),
+      colorMaskFlags(0),
+      colorAttachmentIndex(0),
+      colorFormat(nullptr),
+      colorClearValue{},
+      depthStencilClearValue{}
+{}
 
 }  // namespace rx

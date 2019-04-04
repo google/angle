@@ -61,8 +61,13 @@ class UtilsVk : angle::NonCopyable
 
     struct ClearFramebufferParameters
     {
+        // Satisfy chromium-style with a constructor that does what = {} was already doing in a
+        // safer way.
+        ClearFramebufferParameters();
+
         const vk::RenderPassDesc *renderPassDesc;
         GLint renderAreaHeight;
+        gl::Rectangle clearArea;
 
         bool clearColor;
         bool clearDepth;

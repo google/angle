@@ -218,14 +218,10 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    const gl::State &glState     = context->getState();
-    const gl::Rectangle &scissor = glState.getScissor();
-    const gl::Rectangle renderArea(0, 0, mState.getDimensions().width,
-                                   mState.getDimensions().height);
-    gl::Rectangle scissorRenderAreaIntersection;
+    const gl::Rectangle scissoredRenderArea = getScissoredRenderArea(contextVk);
+
     // Discard clear altogether if scissor has 0 width or height.
-    if (glState.isScissorTestEnabled() &&
-        !gl::ClipRectangle(scissor, renderArea, &scissorRenderAreaIntersection))
+    if (scissoredRenderArea.width == 0 || scissoredRenderArea.height == 0)
     {
         return angle::Result::Continue;
     }
@@ -268,11 +264,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 
     VkClearDepthStencilValue modifiedDepthStencilValue = clearDepthStencilValue;
 
-    // If scissor is enabled, but covers the whole of framebuffer, it can be considered disabled for
-    // the sake of clear.
-    bool isScissorTestEffectivelyEnabled =
-        glState.isScissorTestEnabled() && scissorRenderAreaIntersection != renderArea;
-
     // We can use render pass load ops if clearing depth, unmasked color or unmasked stencil.  If
     // there's a depth mask, depth clearing is already disabled.
     bool maskedClearColor =
@@ -287,20 +278,20 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     bool clearAnyWithRenderPassLoadOp =
         clearColorWithRenderPassLoadOp || clearDepth || clearStencilWithRenderPassLoadOp;
 
-    if (clearAnyWithRenderPassLoadOp && !isScissorTestEffectivelyEnabled)
+    if (clearAnyWithRenderPassLoadOp)
     {
         // Clearing color is indicated by the set bits in this mask.  If not clearing colors with
         // render pass loadOp, the default value of all-zeros means the clear is not done in
-        // clearWithRenderPassOp below.
+        // clearWithRenderPassOp below.  In that case, only clear depth/stencil with render pass
+        // loadOp.
         gl::DrawBufferMask clearBuffersWithRenderPassLoadOp;
         if (clearColorWithRenderPassLoadOp)
         {
             clearBuffersWithRenderPassLoadOp = clearColorBuffers;
         }
-        // If there's a color mask, only clear depth/stencil with render pass loadOp.
-        ANGLE_TRY(clearWithRenderPassOp(contextVk, clearBuffersWithRenderPassLoadOp, clearDepth,
-                                        clearStencilWithRenderPassLoadOp, clearColorValue,
-                                        modifiedDepthStencilValue));
+        ANGLE_TRY(clearWithRenderPassOp(
+            contextVk, scissoredRenderArea, clearBuffersWithRenderPassLoadOp, clearDepth,
+            clearStencilWithRenderPassLoadOp, clearColorValue, modifiedDepthStencilValue));
 
         // On some hardware, having inline commands at this point results in corrupted output.  In
         // that case, end the render pass immediately.  http://anglebug.com/2361
@@ -328,25 +319,19 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
     }
 
+    // Note: if no driver bug workaround is necessary, the clearDepth feature of
+    // clearWithDraw can be removed.
+    ASSERT(clearDepth == false);
+
     // The most costly clear mode is when we need to mask out specific color channels or stencil
     // bits. This can only be done with a draw call. The scissor region however can easily be
     // integrated with this method.
     //
     // Since we have to have a draw call for the sake of masked color or stencil, we can make sure
     // everything else is cleared with the draw call at the same time as well.
-    if (maskedClearColor || maskedClearStencil)
-    {
-        return clearWithDraw(contextVk, clearColorBuffers, clearDepth, clearStencil, colorMaskFlags,
-                             stencilMask, clearColorValue, modifiedDepthStencilValue);
-    }
-
-    ASSERT(isScissorTestEffectivelyEnabled);
-
-    // With scissor test enabled, we clear very differently and we don't need to access
-    // the image inside each attachment we can just use clearCmdAttachments with our
-    // scissor region instead.
-    return clearWithClearAttachments(contextVk, clearColorBuffers, clearDepth, clearStencil,
-                                     clearColorValue, modifiedDepthStencilValue);
+    return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearDepth,
+                         clearStencil, colorMaskFlags, stencilMask, clearColorValue,
+                         modifiedDepthStencilValue);
 }
 
 angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
@@ -990,18 +975,27 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
 
 angle::Result FramebufferVk::clearWithRenderPassOp(
     ContextVk *contextVk,
+    const gl::Rectangle &clearArea,
     gl::DrawBufferMask clearColorBuffers,
     bool clearDepth,
     bool clearStencil,
     const VkClearColorValue &clearColorValue,
     const VkClearDepthStencilValue &clearDepthStencilValue)
 {
-    // If render pass hasn't started, start it.  If it's started and contains commands, we cannot
-    // modify its ops, so start a new render pass.
-    if (!mFramebuffer.valid() || !mFramebuffer.renderPassStartedButEmpty())
+    // Start a new render pass if:
+    //
+    // - no render pass has started,
+    // - there is a render pass started but it contains commands; we cannot modify its ops, so new
+    // render pass is needed,
+    // - the current render area doesn't match the clear area.  We need the render area to be
+    // exactly as specified by the scissor for the loadOp to clear only that area.  See
+    // onScissorChange for more information.
+
+    if (!mFramebuffer.valid() || !mFramebuffer.renderPassStartedButEmpty() ||
+        mFramebuffer.getRenderPassRenderArea() != clearArea)
     {
         vk::CommandBuffer *commandBuffer;
-        ANGLE_TRY(startNewRenderPass(contextVk, &commandBuffer));
+        ANGLE_TRY(startNewRenderPass(contextVk, clearArea, &commandBuffer));
     }
 
     size_t attachmentIndex = 0;
@@ -1047,113 +1041,8 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
     return angle::Result::Continue;
 }
 
-angle::Result FramebufferVk::clearWithClearAttachments(
-    ContextVk *contextVk,
-    gl::DrawBufferMask clearColorBuffers,
-    bool clearDepth,
-    bool clearStencil,
-    const VkClearColorValue &clearColorValue,
-    const VkClearDepthStencilValue &clearDepthStencilValue)
-{
-    // Trigger a new command node to ensure overlapping writes happen sequentially.
-    mFramebuffer.finishCurrentCommands(contextVk->getRenderer());
-
-    // This command can only happen inside a render pass, so obtain one if its already happening
-    // or create a new one if not.
-    vk::CommandBuffer *commandBuffer = nullptr;
-    vk::RecordingMode mode           = vk::RecordingMode::Start;
-    ANGLE_TRY(getCommandBufferForDraw(contextVk, &commandBuffer, &mode));
-
-    // The array layer is offset by the ImageView. So we shouldn't need to set a base array layer.
-    VkClearRect clearRect    = {};
-    clearRect.baseArrayLayer = 0;
-    clearRect.layerCount     = 1;
-
-    // When clearing, the scissor region must be clipped to the renderArea per the validation rules
-    // in Vulkan.
-    gl::Rectangle intersection;
-    if (!gl::ClipRectangle(contextVk->getState().getScissor(),
-                           mFramebuffer.getRenderPassRenderArea(), &intersection))
-    {
-        // There is nothing to clear since the scissor is outside of the render area.
-        return angle::Result::Continue;
-    }
-
-    clearRect.rect = gl_vk::GetRect(intersection);
-
-    if (contextVk->isViewportFlipEnabledForDrawFBO())
-    {
-        clearRect.rect.offset.y = mFramebuffer.getRenderPassRenderArea().height -
-                                  clearRect.rect.offset.y - clearRect.rect.extent.height;
-    }
-
-    gl::AttachmentArray<VkClearAttachment> clearAttachments;
-    int clearAttachmentIndex = 0;
-
-    if (clearColorBuffers.any())
-    {
-        RenderTargetVk *renderTarget = getColorReadRenderTarget();
-        const vk::Format &format     = renderTarget->getImageFormat();
-        VkClearValue modifiedClear   = {clearColorValue};
-
-        // We need to make sure we are not clearing the alpha channel if we are using a buffer
-        // format that doesn't have an alpha channel.
-        if (format.angleFormat().alphaBits == 0)
-        {
-            SetEmulatedAlphaValue(format, &modifiedClear.color);
-        }
-
-        // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
-        for (size_t colorIndex : clearColorBuffers)
-        {
-            VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
-            clearAttachment.aspectMask         = VK_IMAGE_ASPECT_COLOR_BIT;
-            clearAttachment.colorAttachment    = static_cast<uint32_t>(colorIndex);
-            clearAttachment.clearValue         = modifiedClear;
-            ++clearAttachmentIndex;
-        }
-    }
-
-    VkClearValue depthStencilClearValue = {};
-    depthStencilClearValue.depthStencil = clearDepthStencilValue;
-
-    if (clearDepth && clearStencil && mState.getDepthStencilAttachment() != nullptr)
-    {
-        // When we have a packed depth/stencil attachment we can do 1 clear for both when it
-        // applies.
-        VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
-        clearAttachment.aspectMask      = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-        clearAttachment.colorAttachment = VK_ATTACHMENT_UNUSED;
-        clearAttachment.clearValue      = depthStencilClearValue;
-        ++clearAttachmentIndex;
-    }
-    else
-    {
-        if (clearDepth)
-        {
-            VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
-            clearAttachment.aspectMask         = VK_IMAGE_ASPECT_DEPTH_BIT;
-            clearAttachment.colorAttachment    = VK_ATTACHMENT_UNUSED;
-            clearAttachment.clearValue         = depthStencilClearValue;
-            ++clearAttachmentIndex;
-        }
-
-        if (clearStencil)
-        {
-            VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
-            clearAttachment.aspectMask         = VK_IMAGE_ASPECT_STENCIL_BIT;
-            clearAttachment.colorAttachment    = VK_ATTACHMENT_UNUSED;
-            clearAttachment.clearValue         = depthStencilClearValue;
-            ++clearAttachmentIndex;
-        }
-    }
-
-    commandBuffer->clearAttachments(static_cast<uint32_t>(clearAttachmentIndex),
-                                    clearAttachments.data(), 1, &clearRect);
-    return angle::Result::Continue;
-}
-
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
+                                           const gl::Rectangle &clearArea,
                                            gl::DrawBufferMask clearColorBuffers,
                                            bool clearDepth,
                                            bool clearStencil,
@@ -1167,6 +1056,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     UtilsVk::ClearFramebufferParameters params = {};
     params.renderPassDesc                      = &getRenderPassDesc();
     params.renderAreaHeight                    = mState.getDimensions().height;
+    params.clearArea                           = clearArea;
     params.colorClearValue                     = clearColorValue;
     params.depthStencilClearValue              = clearDepthStencilValue;
     params.stencilMask                         = stencilMask;
@@ -1214,23 +1104,8 @@ angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
     return angle::Result::Stop;
 }
 
-angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
-                                                     vk::CommandBuffer **commandBufferOut,
-                                                     vk::RecordingMode *modeOut)
-{
-    RendererVk *renderer = contextVk->getRenderer();
-
-    // This will clear the current write operation if it is complete.
-    if (appendToStartedRenderPass(renderer->getCurrentQueueSerial(), commandBufferOut))
-    {
-        *modeOut = vk::RecordingMode::Append;
-        return angle::Result::Continue;
-    }
-
-    return startNewRenderPass(contextVk, commandBufferOut);
-}
-
 angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
+                                                const gl::Rectangle &renderArea,
                                                 vk::CommandBuffer **commandBufferOut)
 {
     vk::Framebuffer *framebuffer = nullptr;
@@ -1272,9 +1147,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                   VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
         attachmentClearValues.emplace_back(kUninitializedClearValue);
     }
-
-    gl::Rectangle renderArea =
-        gl::Rectangle(0, 0, mState.getDimensions().width, mState.getDimensions().height);
 
     return mFramebuffer.beginRenderPass(contextVk, *framebuffer, renderArea, mRenderPassDesc,
                                         renderPassAttachmentOps, attachmentClearValues,
@@ -1362,7 +1234,46 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 
 gl::Extents FramebufferVk::getReadImageExtents() const
 {
+    ASSERT(getColorReadRenderTarget()->getExtents().width == mState.getDimensions().width);
+    ASSERT(getColorReadRenderTarget()->getExtents().height == mState.getDimensions().height);
+
     return getColorReadRenderTarget()->getExtents();
+}
+
+gl::Rectangle FramebufferVk::getCompleteRenderArea() const
+{
+    return gl::Rectangle(0, 0, mState.getDimensions().width, mState.getDimensions().height);
+}
+
+gl::Rectangle FramebufferVk::getScissoredRenderArea(ContextVk *contextVk) const
+{
+    const gl::Rectangle renderArea(0, 0, mState.getDimensions().width,
+                                   mState.getDimensions().height);
+    bool invertViewport = contextVk->isViewportFlipEnabledForDrawFBO();
+
+    return ClipRectToScissor(contextVk->getState(), renderArea, invertViewport);
+}
+
+void FramebufferVk::onScissorChange(ContextVk *contextVk)
+{
+    gl::Rectangle scissoredRenderArea = getScissoredRenderArea(contextVk);
+
+    // If the scissor has grown beyond the previous scissoredRenderArea, make sure the render pass
+    // is restarted.  Otherwise, we can continue using the same renderpass area.
+    //
+    // Without a scissor, the render pass area covers the whole of the framebuffer.  With a
+    // scissored clear, the render pass area could be smaller than the framebuffer size.  When the
+    // scissor changes, if the scissor area is completely encompassed by the render pass area, it's
+    // possible to continue using the same render pass.  However, if the current render pass area
+    // is too small, we need to start a new one.  The latter can happen if a scissored clear starts
+    // a render pass, the scissor is disabled and a draw call is issued to affect the whole
+    // framebuffer.
+    mFramebuffer.updateQueueSerial(contextVk->getRenderer()->getCurrentQueueSerial());
+    if (mFramebuffer.hasStartedRenderPass() &&
+        !mFramebuffer.getRenderPassRenderArea().encloses(scissoredRenderArea))
+    {
+        mFramebuffer.finishCurrentCommands(contextVk->getRenderer());
+    }
 }
 
 RenderTargetVk *FramebufferVk::getFirstRenderTarget() const

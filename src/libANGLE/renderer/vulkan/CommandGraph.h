@@ -157,7 +157,7 @@ class CommandGraphNode final : angle::NonCopyable
     uintptr_t getResourceIDForDiagnostics() const { return mResourceID; }
     std::string dumpCommandsForDiagnostics(const char *separator) const;
 
-    const gl::Rectangle &getRenderPassRenderArea() const;
+    const gl::Rectangle &getRenderPassRenderArea() const { return mRenderPassRenderArea; }
 
     CommandGraphNodeFunction getFunction() const { return mFunction; }
 
@@ -292,21 +292,30 @@ class CommandGraphResource : angle::NonCopyable
                                   const std::vector<VkClearValue> &clearValues,
                                   CommandBuffer **commandBufferOut);
 
-    // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
-    // Returns the started command buffer in commandBufferOut.
+    // Checks if we're in a RenderPass without children.
+    bool hasStartedRenderPass() const
+    {
+        return hasChildlessWritingNode() &&
+               mCurrentWritingNode->getInsideRenderPassCommands()->valid();
+    }
+
+    // Checks if we're in a RenderPass that encompasses renderArea, returning true if so. Updates
+    // serial internally. Returns the started command buffer in commandBufferOut.
     ANGLE_INLINE bool appendToStartedRenderPass(Serial currentQueueSerial,
+                                                const gl::Rectangle &renderArea,
                                                 CommandBuffer **commandBufferOut)
     {
         updateQueueSerial(currentQueueSerial);
         if (hasStartedRenderPass())
         {
-            *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
-            return true;
+            if (mCurrentWritingNode->getRenderPassRenderArea().encloses(renderArea))
+            {
+                *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     // Returns true if the render pass is started, but there are no commands yet recorded in it.
@@ -336,7 +345,11 @@ class CommandGraphResource : angle::NonCopyable
     }
 
     // Accessor for RenderPass RenderArea.
-    const gl::Rectangle &getRenderPassRenderArea() const;
+    const gl::Rectangle &getRenderPassRenderArea() const
+    {
+        ASSERT(hasStartedRenderPass());
+        return mCurrentWritingNode->getRenderPassRenderArea();
+    }
 
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void finishCurrentCommands(RendererVk *renderer);
@@ -363,13 +376,6 @@ class CommandGraphResource : angle::NonCopyable
         ASSERT(mCurrentWritingNode == nullptr ||
                mCurrentWritingNode->getFunction() == CommandGraphNodeFunction::Generic);
         return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
-    }
-
-    // Checks if we're in a RenderPass without children.
-    bool hasStartedRenderPass() const
-    {
-        return hasChildlessWritingNode() &&
-               mCurrentWritingNode->getInsideRenderPassCommands()->valid();
     }
 
     void startNewCommands(RendererVk *renderer);

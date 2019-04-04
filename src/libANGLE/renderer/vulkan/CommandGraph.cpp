@@ -208,12 +208,6 @@ angle::Result CommandGraphResource::recordCommands(Context *context,
     return angle::Result::Continue;
 }
 
-const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
-{
-    ASSERT(hasStartedRenderPass());
-    return mCurrentWritingNode->getRenderPassRenderArea();
-}
-
 angle::Result CommandGraphResource::beginRenderPass(
     ContextVk *contextVk,
     const Framebuffer &framebuffer,
@@ -652,11 +646,6 @@ std::string CommandGraphNode::dumpCommandsForDiagnostics(const char *separator) 
         result += DumpCommands(mInsideRenderPassCommands, separator);
     }
     return result;
-}
-
-const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
-{
-    return mRenderPassRenderArea;
 }
 
 // CommandGraph implementation.

@@ -608,4 +608,32 @@ angle::Result GetVertexRangeInfo(const gl::Context *context,
     }
     return angle::Result::Continue;
 }
+
+gl::Rectangle ClipRectToScissor(const gl::State &glState, const gl::Rectangle &rect, bool invertY)
+{
+    if (glState.isScissorTestEnabled())
+    {
+        gl::Rectangle clippedRect;
+        if (!gl::ClipRectangle(glState.getScissor(), rect, &clippedRect))
+        {
+            return gl::Rectangle();
+        }
+
+        if (invertY)
+        {
+            clippedRect.y = rect.height - clippedRect.y - clippedRect.height;
+        }
+
+        return clippedRect;
+    }
+
+    // If the scissor test isn't enabled, assume it has infinite size.  Its intersection with the
+    // rect would be the rect itself.
+    //
+    // Note that on Vulkan, returning this (as opposed to a fixed max-int-sized rect) could lead to
+    // unnecessary pipeline creations if two otherwise identical pipelines are used on framebuffers
+    // with different sizes.  If such usage is observed in an application, we should investigate
+    // possible optimizations.
+    return rect;
+}
 }  // namespace rx
