@@ -235,12 +235,8 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
 
-    // Adjust clear behavior based on whether:
-    //
-    // - the respective attachments are present: if asked to clear a non-existent attachment, don't
-    //   attempt to clear it.
-    // - extra clear is necessary: if depth- or stencil-only attachments are emulated with a format
-    //   that has both aspects, clear the emulated aspect.
+    // Adjust clear behavior based on whether the respective attachments are present; if asked to
+    // clear a non-existent attachment, don't attempt to clear it.
 
     VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
     bool clearColor                      = clearColorBuffers.any();
@@ -271,28 +267,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     }
 
     VkClearDepthStencilValue modifiedDepthStencilValue = clearDepthStencilValue;
-
-    // If the depth or stencil is being cleared, and the image was originally requested to have a
-    // single aspect, but it's emulated with a depth/stencil format, clear both aspects, setting the
-    // other aspect to 0.
-    if (clearStencil || clearDepth)
-    {
-        RenderTargetVk *depthStencil = mRenderTargetCache.getDepthStencil();
-        const vk::Format &format     = depthStencil->getImageFormat();
-
-        // GL_DEPTH_COMPONENT24 is always emulated with a format that has stencil.
-        if (format.angleFormat().stencilBits == 0)
-        {
-            clearStencil                      = true;
-            modifiedDepthStencilValue.stencil = 0;
-        }
-        // GL_STENCIL_INDEX8 may or may not be emulated.
-        else if (format.angleFormat().depthBits == 0 && format.vkTextureFormat != VK_FORMAT_S8_UINT)
-        {
-            clearDepth                      = true;
-            modifiedDepthStencilValue.depth = 0;
-        }
-    }
 
     // If scissor is enabled, but covers the whole of framebuffer, it can be considered disabled for
     // the sake of clear.
@@ -380,7 +354,7 @@ angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
                                            GLint drawbuffer,
                                            const GLfloat *values)
 {
-    VkClearValue clearValue;
+    VkClearValue clearValue = {};
 
     bool clearDepth = false;
     gl::DrawBufferMask clearColorBuffers;
@@ -408,7 +382,7 @@ angle::Result FramebufferVk::clearBufferuiv(const gl::Context *context,
                                             GLint drawbuffer,
                                             const GLuint *values)
 {
-    VkClearValue clearValue;
+    VkClearValue clearValue = {};
 
     gl::DrawBufferMask clearColorBuffers;
     clearColorBuffers.set(drawbuffer);
@@ -427,7 +401,7 @@ angle::Result FramebufferVk::clearBufferiv(const gl::Context *context,
                                            GLint drawbuffer,
                                            const GLint *values)
 {
-    VkClearValue clearValue;
+    VkClearValue clearValue = {};
 
     bool clearStencil = false;
     gl::DrawBufferMask clearColorBuffers;
@@ -457,7 +431,7 @@ angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
                                            GLfloat depth,
                                            GLint stencil)
 {
-    VkClearValue clearValue;
+    VkClearValue clearValue = {};
 
     clearValue.depthStencil.depth   = depth;
     clearValue.depthStencil.stencil = gl::clamp(stencil, 0, std::numeric_limits<uint8_t>::max());
