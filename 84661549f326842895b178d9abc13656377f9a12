@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edb5c71a_a7234d03",
+        "filename": "infra/config/global/commit-queue.cfg",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-04T02:22:42Z",
+      "side": 1,
+      "message": "For my information, what does reuse mean here?",
+      "revId": "84661549f326842895b178d9abc13656377f9a12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
