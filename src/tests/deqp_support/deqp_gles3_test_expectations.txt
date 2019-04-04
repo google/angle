@@ -110,9 +110,9 @@
 // Failing everywhere
 2322 : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
 
-// Bind aliasing is not working currently
-3252 : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
-3252 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+// Bind aliasing max_cond crashes on Windows, fails on other platforms.
+// TODO(cnorthrop): Narrow skip list or fix the test
+3252 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = SKIP
 
 // Windows and Linux failures
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
@@ -503,6 +503,7 @@
 2567 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rg_unsigned_byte = FAIL
 
 // Nexus 5x failures
+3308 NEXUS5X GLES : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.polygon_offset.default_result_depth_clamp = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.polygon_offset.fixed24_result_depth_clamp = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.lines.3 = FAIL

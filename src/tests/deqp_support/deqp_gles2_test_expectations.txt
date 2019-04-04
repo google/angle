@@ -74,9 +74,9 @@
 1028 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
 1028 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
-// Bind aliasing is not working currently
-3252 : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
-3252 : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+// Bind aliasing max_cond crashes on Windows, fails on other platforms.
+// TODO(cnorthrop): Narrow skip list or fix the test
+3252 : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = SKIP
 
 // Half float OES either has an implementation bug or a dEQP bug.
 3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
@@ -250,6 +250,7 @@
 2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
 // Nexus 5x failures
+3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgb = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.polygon_offset.default_result_depth_clamp = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.return.output_write_in_func_always_vertex = FAIL
