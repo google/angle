@@ -1,4 +1,3 @@
-//#if
 
 // Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,54 +6,18 @@
 
 #include "GPUTestConfig.h"
 
-#include <stddef.h>
 #include <stdint.h>
+#include <iostream>
 
-#include "GPUInfo.h"
-#include "GPUTestExpectationsParser.h"
+#include "common/angleutils.h"
+#include "common/debug.h"
+#include "common/platform.h"
+#include "common/string_utils.h"
+#include "gpu_info_util/SystemInfo.h"
 
 #if defined(ANGLE_PLATFORM_APPLE)
 #    include "GPUTestConfig_mac.h"
 #endif
-
-#if !defined(ANGLE_PLATFORM_ANDROID)
-#    include "gpu_info_util/SystemInfo.h"
-#endif
-
-#if defined(ANGLE_PLATFORM_WINDOWS)
-
-namespace base
-{
-namespace
-{
-
-// Disable the deprecated function warning for GetVersionEx
-#    pragma warning(disable : 4996)
-
-class SysInfo
-{
-  public:
-    static void OperatingSystemVersionNumbers(int32_t *major_version,
-                                              int32_t *minor_version,
-                                              int32_t *bugfix_version);
-};
-
-// static
-void SysInfo::OperatingSystemVersionNumbers(int32_t *major_version,
-                                            int32_t *minor_version,
-                                            int32_t *bugfix_version)
-{
-    OSVERSIONINFOEX version_info = {sizeof version_info};
-    ::GetVersionEx(reinterpret_cast<OSVERSIONINFO *>(&version_info));
-    *major_version  = version_info.dwMajorVersion;
-    *minor_version  = version_info.dwMinorVersion;
-    *bugfix_version = version_info.dwBuildNumber;
-}
-
-}  // anonymous namespace
-}  // namespace base
-
-#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 namespace angle
 {
@@ -62,349 +25,545 @@ namespace angle
 namespace
 {
 
-GPUTestConfig::OS GetCurrentOS()
+// Generic function call to get the OS version information from any platform
+// defined below. This function will also cache the OS version info in static
+// variables.
+inline bool OperatingSystemVersionNumbers(int32_t *majorVersion, int32_t *minorVersion)
 {
-#if defined(ANGLE_PLATFORM_LINUX)
-    return GPUTestConfig::kOsLinux;
-#elif defined(ANGLE_PLATFORM_WINDOWS)
-    int32_t major_version  = 0;
-    int32_t minor_version  = 0;
-    int32_t bugfix_version = 0;
-    base::SysInfo::OperatingSystemVersionNumbers(&major_version, &minor_version, &bugfix_version);
-    if (major_version == 5)
-        return GPUTestConfig::kOsWinXP;
-    if (major_version == 6 && minor_version == 0)
-        return GPUTestConfig::kOsWinVista;
-    if (major_version == 6 && minor_version == 1)
-        return GPUTestConfig::kOsWin7;
-    if (major_version == 6 && (minor_version == 2 || minor_version == 3))
-        return GPUTestConfig::kOsWin8;
-    if (major_version == 10)
-        return GPUTestConfig::kOsWin10;
+    static int32_t sSavedMajorVersion = -1;
+    static int32_t sSavedMinorVersion = -1;
+    bool ret                          = false;
+    if (sSavedMajorVersion == -1 || sSavedMinorVersion == -1)
+    {
+#if defined(ANGLE_PLATFORM_WINDOWS)
+        OSVERSIONINFOEX version_info = {sizeof version_info};
+        ::GetVersionEx(reinterpret_cast<OSVERSIONINFO *>(&version_info));
+        sSavedMajorVersion = version_info.dwMajorVersion;
+        *majorVersion      = sSavedMajorVersion;
+        sSavedMinorVersion = version_info.dwMinorVersion;
+        *minorVersion      = sSavedMinorVersion;
+        ret                = true;
+
 #elif defined(ANGLE_PLATFORM_APPLE)
-    int32_t major_version  = 0;
-    int32_t minor_version  = 0;
-    int32_t bugfix_version = 0;
-    angle::GetOperatingSystemVersionNumbers(&major_version, &minor_version, &bugfix_version);
-    if (major_version == 10)
-    {
-        switch (minor_version)
-        {
-            case 5:
-                return GPUTestConfig::kOsMacLeopard;
-            case 6:
-                return GPUTestConfig::kOsMacSnowLeopard;
-            case 7:
-                return GPUTestConfig::kOsMacLion;
-            case 8:
-                return GPUTestConfig::kOsMacMountainLion;
-            case 9:
-                return GPUTestConfig::kOsMacMavericks;
-            case 10:
-                return GPUTestConfig::kOsMacYosemite;
-            case 11:
-                return GPUTestConfig::kOsMacElCapitan;
-            case 12:
-                return GPUTestConfig::kOsMacSierra;
-            case 13:
-                return GPUTestConfig::kOsMacHighSierra;
-            case 14:
-                return GPUTestConfig::kOsMacMojave;
-        }
-    }
-#elif defined(ANGLE_PLATFORM_ANDROID)
-    return GPUTestConfig::kOsAndroid;
-#elif defined(ANGLE_PLATFORM_FUCHSIA)
-    return GPUTestConfig::kOsFuchsia;
-#endif
-    return GPUTestConfig::kOsUnknown;
-}
+        GetOperatingSystemVersionNumbers(&sSavedMajorVersion, &sSavedMinorVersion);
+        *majorVersion = sSavedMajorVersion;
+        *minorVersion = sSavedMinorVersion;
+        ret           = true;
 
-#if !defined(ANGLE_PLATFORM_ANDROID)
-bool CollectBasicGraphicsInfo(GPUInfo *gpu_info)
-{
-    angle::SystemInfo info;
-    if (!angle::GetSystemInfo(&info))
-    {
-        return false;
-    }
-    const angle::GPUDeviceInfo &gpu = info.gpus[info.primaryGPUIndex];
-    gpu_info->gpu.vendor_id         = gpu.vendorId;
-    gpu_info->gpu.device_id         = gpu.deviceId;
-    gpu_info->gpu.active            = true;
-    return true;
-}
 #else
-bool CollectBasicGraphicsInfo(GPUInfo *gpu_info)
-{
-    gpu_info->gpu.vendor_id = 0;
-    gpu_info->gpu.device_id = 0;
-    gpu_info->gpu.active = true;
-    return false;
-}
-#endif  // defined(ANGLE_PLATFORM_ANDROID)
-}  // namespace
-
-GPUTestConfig::GPUTestConfig()
-    : validate_gpu_info_(true),
-      os_(kOsUnknown),
-      gpu_device_id_(0),
-      build_type_(kBuildTypeUnknown),
-      api_(kAPIUnknown)
-{}
-
-GPUTestConfig::GPUTestConfig(const GPUTestConfig &other) = default;
-
-GPUTestConfig::~GPUTestConfig() = default;
-
-void GPUTestConfig::set_os(int32_t os)
-{
-    ASSERT((0) == (os & ~(kOsAndroid | kOsWin | kOsMac | kOsLinux | kOsFuchsia)));
-    os_ = os;
-}
-
-void GPUTestConfig::AddGPUVendor(uint32_t gpu_vendor)
-{
-    ASSERT((0u) != (gpu_vendor));
-    for (size_t i = 0; i < gpu_vendor_.size(); ++i)
-        ASSERT((gpu_vendor_[i]) != (gpu_vendor));
-    gpu_vendor_.push_back(gpu_vendor);
-}
-
-void GPUTestConfig::set_gpu_device_id(uint32_t id)
-{
-    gpu_device_id_ = id;
-}
-
-void GPUTestConfig::set_build_type(int32_t build_type)
-{
-    ASSERT((0) == (build_type & ~(kBuildTypeRelease | kBuildTypeDebug)));
-    build_type_ = build_type;
-}
-
-void GPUTestConfig::set_api(int32_t api)
-{
-    ASSERT((0) == (api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES | kAPIVulkan)));
-    api_ = api;
-}
-
-bool GPUTestConfig::IsValid() const
-{
-    if (!validate_gpu_info_)
-        return true;
-    if (gpu_device_id_ != 0 && (gpu_vendor_.size() != 1 || gpu_vendor_[0] == 0))
-        return false;
-    return true;
-}
-
-bool GPUTestConfig::OverlapsWith(const GPUTestConfig &config) const
-{
-    ASSERT(IsValid());
-    ASSERT(config.IsValid());
-    if (config.os_ != kOsUnknown && os_ != kOsUnknown && (os_ & config.os_) == 0)
-        return false;
-    if (config.gpu_vendor_.size() > 0 && gpu_vendor_.size() > 0)
-    {
-        bool shared = false;
-        for (size_t i = 0; i < config.gpu_vendor_.size() && !shared; ++i)
-        {
-            for (size_t j = 0; j < gpu_vendor_.size(); ++j)
-            {
-                if (config.gpu_vendor_[i] == gpu_vendor_[j])
-                {
-                    shared = true;
-                    break;
-                }
-            }
-        }
-        if (!shared)
-            return false;
-    }
-    if (config.gpu_device_id_ != 0 && gpu_device_id_ != 0 &&
-        gpu_device_id_ != config.gpu_device_id_)
-        return false;
-    if (config.build_type_ != kBuildTypeUnknown && build_type_ != kBuildTypeUnknown &&
-        (build_type_ & config.build_type_) == 0)
-        return false;
-    if (config.api() != kAPIUnknown && api_ != kAPIUnknown && api_ != config.api_)
-        return false;
-    return true;
-}
-
-void GPUTestConfig::DisableGPUInfoValidation()
-{
-    validate_gpu_info_ = false;
-}
-
-void GPUTestConfig::ClearGPUVendor()
-{
-    gpu_vendor_.clear();
-}
-
-GPUTestBotConfig::~GPUTestBotConfig() = default;
-
-void GPUTestBotConfig::AddGPUVendor(uint32_t gpu_vendor)
-{
-    ASSERT((0u) == (GPUTestConfig::gpu_vendor().size()));
-    GPUTestConfig::AddGPUVendor(gpu_vendor);
-}
-
-bool GPUTestBotConfig::SetGPUInfo(const GPUInfo &gpu_info)
-{
-    ASSERT(validate_gpu_info_);
-    if (gpu_info.gpu.device_id == 0 || gpu_info.gpu.vendor_id == 0)
-        return false;
-    ClearGPUVendor();
-    AddGPUVendor(gpu_info.gpu.vendor_id);
-    set_gpu_device_id(gpu_info.gpu.device_id);
-    return true;
-}
-
-bool GPUTestBotConfig::IsValid() const
-{
-    switch (os())
-    {
-        case kOsWinXP:
-        case kOsWinVista:
-        case kOsWin7:
-        case kOsWin8:
-        case kOsWin10:
-        case kOsMacLeopard:
-        case kOsMacSnowLeopard:
-        case kOsMacLion:
-        case kOsMacMountainLion:
-        case kOsMacMavericks:
-        case kOsMacYosemite:
-        case kOsMacElCapitan:
-        case kOsMacSierra:
-        case kOsMacHighSierra:
-        case kOsMacMojave:
-        case kOsLinux:
-        case kOsAndroid:
-        case kOsFuchsia:
-            break;
-        default:
-            return false;
-    }
-    if (validate_gpu_info_)
-    {
-        if (gpu_vendor().size() != 1 || gpu_vendor()[0] == 0)
-            return false;
-        if (gpu_device_id() == 0)
-            return false;
-    }
-    switch (build_type())
-    {
-        case kBuildTypeRelease:
-        case kBuildTypeDebug:
-            break;
-        default:
-            return false;
-    }
-    return true;
-}
-
-bool GPUTestBotConfig::Matches(const GPUTestConfig &config) const
-{
-    ASSERT(IsValid());
-    ASSERT(config.IsValid());
-    if (config.os() != kOsUnknown && (os() & config.os()) == 0)
-        return false;
-    if (config.gpu_vendor().size() > 0)
-    {
-        bool contained = false;
-        for (size_t i = 0; i < config.gpu_vendor().size(); ++i)
-        {
-            if (!gpu_vendor().empty() && config.gpu_vendor()[i] == gpu_vendor()[0])
-            {
-                contained = true;
-                break;
-            }
-        }
-        if (!contained)
-            return false;
-    }
-    if (config.gpu_device_id() != 0 && gpu_device_id() != config.gpu_device_id())
-        return false;
-    if (config.build_type() != kBuildTypeUnknown && (build_type() & config.build_type()) == 0)
-        return false;
-    if (config.api() != 0 && (api() & config.api()) == 0)
-        return false;
-    return true;
-}
-
-bool GPUTestBotConfig::Matches(const std::string &config_data) const
-{
-    GPUTestExpectationsParser parser;
-    GPUTestConfig config;
-
-    if (!parser.ParseConfig(config_data, &config))
-        return false;
-    return Matches(config);
-}
-
-bool GPUTestBotConfig::LoadCurrentConfig(const GPUInfo *gpu_info)
-{
-    bool rt;
-    if (!gpu_info)
-    {
-        GPUInfo my_gpu_info;
-        if (!CollectBasicGraphicsInfo(&my_gpu_info))
-        {
-            std::cerr << "Fail to identify GPU\n";
-            DisableGPUInfoValidation();
-            rt = true;
-        }
-        else
-        {
-            rt = SetGPUInfo(my_gpu_info);
-        }
+        ret = false;
+#endif
     }
     else
     {
-        rt = SetGPUInfo(*gpu_info);
+        ret = true;
     }
-    set_os(GetCurrentOS());
-    if (os() == kOsUnknown)
-    {
-        std::cerr << "Unknown OS\n";
-        rt = false;
-    }
-#if defined(NDEBUG)
-    set_build_type(kBuildTypeRelease);
+    *majorVersion = sSavedMajorVersion;
+    *minorVersion = sSavedMinorVersion;
+    return ret;
+}
+
+// Check if the OS is any version of Windows
+inline bool IsWin()
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    return true;
 #else
-    set_build_type(kBuildTypeDebug);
+    return false;
 #endif
-    return rt;
 }
 
-// static
-bool GPUTestBotConfig::CurrentConfigMatches(const std::string &config_data)
+// Check if the OS is a specific major version of windows.
+inline bool IsWinVersion(const int32_t majorVersion)
 {
-    GPUTestBotConfig my_config;
-    if (!my_config.LoadCurrentConfig(nullptr))
-        return false;
-    return my_config.Matches(config_data);
-}
-
-// static
-bool GPUTestBotConfig::CurrentConfigMatches(const std::vector<std::string> &configs)
-{
-    GPUTestBotConfig my_config;
-    if (!my_config.LoadCurrentConfig(nullptr))
-        return false;
-    for (size_t i = 0; i < configs.size(); ++i)
+    if (IsWin())
     {
-        if (my_config.Matches(configs[i]))
-            return true;
+        int32_t currentMajorVersion = 0;
+        int32_t currentMinorVersion = 0;
+        if (OperatingSystemVersionNumbers(&currentMajorVersion, &currentMinorVersion))
+        {
+            if (currentMajorVersion == majorVersion)
+            {
+                return true;
+            }
+        }
     }
     return false;
 }
 
-// static
-bool GPUTestBotConfig::GpuBlacklistedOnBot()
+// Check if the OS is a specific major and minor version of windows.
+inline bool IsWinVersion(const int32_t majorVersion, const int32_t minorVersion)
 {
+    if (IsWin())
+    {
+        int32_t currentMajorVersion = 0;
+        int32_t currentMinorVersion = 0;
+        if (OperatingSystemVersionNumbers(&currentMajorVersion, &currentMinorVersion))
+        {
+            if (currentMajorVersion == majorVersion && currentMinorVersion == minorVersion)
+            {
+                return true;
+            }
+        }
+    }
     return false;
+}
+
+// Check if the OS is Windows XP
+inline bool IsWinXP()
+{
+    if (IsWinVersion(5))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is Windows Vista
+inline bool IsWinVista()
+{
+    if (IsWinVersion(6, 0))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is Windows 7
+inline bool IsWin7()
+{
+    if (IsWinVersion(6, 1))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is Windows 8
+inline bool IsWin8()
+{
+    if (IsWinVersion(6, 2) || IsWinVersion(6, 3))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is Windows 10
+inline bool IsWin10()
+{
+    if (IsWinVersion(10))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is any version of OSX
+inline bool IsMac()
+{
+#if defined(ANGLE_PLATFORM_APPLE)
+    return true;
+#else
+    return false;
+#endif
+}
+
+// Check if the OS is a specific major and minor version of OSX
+inline bool IsMacVersion(const int32_t majorVersion, const int32_t minorVersion)
+{
+    if (IsMac())
+    {
+        int32_t currentMajorVersion = 0;
+        int32_t currentMinorVersion = 0;
+        if (OperatingSystemVersionNumbers(&currentMajorVersion, &currentMinorVersion))
+        {
+            if (currentMajorVersion == majorVersion && currentMinorVersion == minorVersion)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Check if the OS is OSX Leopard
+inline bool IsMacLeopard()
+{
+    if (IsMacVersion(10, 5))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Snow Leopard
+inline bool IsMacSnowLeopard()
+{
+    if (IsMacVersion(10, 6))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Lion
+inline bool IsMacLion()
+{
+    if (IsMacVersion(10, 7))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Mountain Lion
+inline bool IsMacMountainLion()
+{
+    if (IsMacVersion(10, 8))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Mavericks
+inline bool IsMacMavericks()
+{
+    if (IsMacVersion(10, 9))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Yosemite
+inline bool IsMacYosemite()
+{
+    if (IsMacVersion(10, 10))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX El Capitan
+inline bool IsMacElCapitan()
+{
+    if (IsMacVersion(10, 11))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Sierra
+inline bool IsMacSierra()
+{
+    if (IsMacVersion(10, 12))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX High Sierra
+inline bool IsMacHighSierra()
+{
+    if (IsMacVersion(10, 13))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is OSX Mojave
+inline bool IsMacMojave()
+{
+    if (IsMacVersion(10, 14))
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check if the OS is any version of Linux
+inline bool IsLinux()
+{
+#if defined(ANGLE_PLATFORM_LINUX)
+    return true;
+#else
+    return false;
+#endif
+}
+
+// Check if the OS is any version of Android
+inline bool IsAndroid()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return true;
+#else
+    return false;
+#endif
+}
+
+// Generic function call to populate the SystemInfo struct. This function will
+// also cache the SystemInfo struct for future calls. Returns false if the
+// struct was not fully populated. Guaranteed to set sysInfo to a valid pointer
+inline bool GetGPUTestSystemInfo(SystemInfo **sysInfo)
+{
+    static SystemInfo *sSystemInfo = nullptr;
+    static bool sPopulated         = false;
+    if (sSystemInfo == nullptr)
+    {
+        sSystemInfo = new SystemInfo;
+        if (!GetSystemInfo(sSystemInfo))
+        {
+            std::cout << "Error populating SystemInfo for dEQP tests." << std::endl;
+        }
+        else
+        {
+            sPopulated = true;
+        }
+    }
+    *sysInfo = sSystemInfo;
+    ASSERT(*sysInfo != nullptr);
+    return sPopulated;
+}
+
+// Get the active GPUDeviceInfo from the SystemInfo struct.
+// Returns false if devInfo is not guaranteed to be set to the active device.
+inline bool GetActiveGPU(GPUDeviceInfo **devInfo)
+{
+    SystemInfo *systemInfo = nullptr;
+    GetGPUTestSystemInfo(&systemInfo);
+    if (systemInfo->gpus.size() <= 0)
+    {
+        return false;
+    }
+    uint32_t index = 0;
+    // See if the activeGPUIndex was set first
+    if (systemInfo->activeGPUIndex != -1)
+    {
+        index = systemInfo->activeGPUIndex;
+    }
+    // Else fallback to the primaryGPUIndex
+    else if (systemInfo->primaryGPUIndex != -1)
+    {
+        index = systemInfo->primaryGPUIndex;
+    }
+    ASSERT(index < systemInfo->gpus.size());
+    *devInfo = &(systemInfo->gpus[index]);
+    return true;
+}
+
+// Get the vendor ID of the active GPU from the SystemInfo struct.
+// Returns 0 if there is an error.
+inline VendorID GetActiveGPUVendorID()
+{
+    GPUDeviceInfo *activeGPU = nullptr;
+    if (GetActiveGPU(&activeGPU))
+    {
+        return activeGPU->vendorId;
+    }
+    else
+    {
+        return static_cast<VendorID>(0);
+    }
+}
+
+// Get the device ID of the active GPU from the SystemInfo struct.
+// Returns 0 if there is an error.
+inline DeviceID GetActiveGPUDeviceID()
+{
+    GPUDeviceInfo *activeGPU = nullptr;
+    if (GetActiveGPU(&activeGPU))
+    {
+        return activeGPU->deviceId;
+    }
+    else
+    {
+        return static_cast<DeviceID>(0);
+    }
+}
+
+// Check whether the active GPU is NVIDIA.
+inline bool IsNVIDIA()
+{
+    return angle::IsNVIDIA(GetActiveGPUVendorID());
+}
+
+// Check whether the active GPU is AMD.
+inline bool IsAMD()
+{
+    return angle::IsAMD(GetActiveGPUVendorID());
+}
+
+// Check whether the active GPU is Intel.
+inline bool IsIntel()
+{
+    return angle::IsIntel(GetActiveGPUVendorID());
+}
+
+// Check whether the active GPU is VMWare.
+inline bool IsVMWare()
+{
+    return angle::IsVMWare(GetActiveGPUVendorID());
+}
+
+// Check whether this is a debug build.
+inline bool IsDebug()
+{
+#if !defined(NDEBUG)
+    return true;
+#else
+    return false;
+#endif
+}
+
+// Check whether this is a release build.
+inline bool IsRelease()
+{
+    return !IsDebug();
+}
+
+// Check whether the system is a specific Android device based on the name.
+inline bool IsAndroidDevice(const std::string &deviceName)
+{
+    if (!IsAndroid())
+    {
+        return false;
+    }
+    SystemInfo *systemInfo = nullptr;
+    GetGPUTestSystemInfo(&systemInfo);
+    if (systemInfo->machineModelName == deviceName)
+    {
+        return true;
+    }
+    return false;
+}
+
+// Check whether the system is a Nexus 5X device.
+inline bool IsNexus5X()
+{
+    return IsAndroidDevice("Nexus 5X");
+}
+
+// Check whether the system is a Pixel 2 device.
+inline bool IsPixel2()
+{
+    return IsAndroidDevice("Pixel 2");
+}
+
+// Check whether the active GPU is a specific device based on the string device ID.
+inline bool IsDeviceIdGPU(const std::string &gpuDeviceId)
+{
+    uint32_t deviceId = 0;
+    if (!HexStringToUInt(gpuDeviceId, &deviceId) || deviceId == 0)
+    {
+        // PushErrorMessage(kErrorMessage[kErrorEntryWithGpuDeviceIdConflicts], line_number);
+        return false;
+    }
+    return (deviceId == GetActiveGPUDeviceID());
+}
+
+// Check whether the active GPU is a NVIDIA Quadro P400
+inline bool IsNVIDIAQuadroP400()
+{
+    if (!IsNVIDIA())
+    {
+        return false;
+    }
+    return IsDeviceIdGPU("0x1CB3");
+}
+
+// Check whether the backend API has been set to D3D9 in the constructor
+inline bool IsD3D9(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPID3D9);
+}
+
+// Check whether the backend API has been set to D3D11 in the constructor
+inline bool IsD3D11(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPID3D11);
+}
+
+// Check whether the backend API has been set to OpenGL in the constructor
+inline bool IsGLDesktop(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPIGLDesktop);
+}
+
+// Check whether the backend API has been set to OpenGLES in the constructor
+inline bool IsGLES(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPIGLES);
+}
+
+// Check whether the backend API has been set to Vulkan in the constructor
+inline bool IsVulkan(const GPUTestConfig::API &api)
+{
+    return (api == GPUTestConfig::kAPIVulkan);
+}
+
+}  // anonymous namespace
+
+// Load all conditions in the constructor since this data will not change during a test set.
+GPUTestConfig::GPUTestConfig()
+{
+    mConditions[kConditionNone]            = false;
+    mConditions[kConditionWinXP]           = IsWinXP();
+    mConditions[kConditionWinVista]        = IsWinVista();
+    mConditions[kConditionWin7]            = IsWin7();
+    mConditions[kConditionWin8]            = IsWin8();
+    mConditions[kConditionWin10]           = IsWin10();
+    mConditions[kConditionWin]             = IsWin();
+    mConditions[kConditionMacLeopard]      = IsMacLeopard();
+    mConditions[kConditionMacSnowLeopard]  = IsMacSnowLeopard();
+    mConditions[kConditionMacLion]         = IsMacLion();
+    mConditions[kConditionMacMountainLion] = IsMacMountainLion();
+    mConditions[kConditionMacMavericks]    = IsMacMavericks();
+    mConditions[kConditionMacYosemite]     = IsMacYosemite();
+    mConditions[kConditionMacElCapitan]    = IsMacElCapitan();
+    mConditions[kConditionMacSierra]       = IsMacSierra();
+    mConditions[kConditionMacHighSierra]   = IsMacHighSierra();
+    mConditions[kConditionMacMojave]       = IsMacMojave();
+    mConditions[kConditionMac]             = IsMac();
+    mConditions[kConditionLinux]           = IsLinux();
+    mConditions[kConditionAndroid]         = IsAndroid();
+    mConditions[kConditionNVIDIA]          = IsNVIDIA();
+    mConditions[kConditionAMD]             = IsAMD();
+    mConditions[kConditionIntel]           = IsIntel();
+    mConditions[kConditionVMWare]          = IsVMWare();
+    mConditions[kConditionRelease]         = IsRelease();
+    mConditions[kConditionDebug]           = IsDebug();
+    // If no API provided, pass these conditions by default
+    mConditions[kConditionD3D9]      = true;
+    mConditions[kConditionD3D11]     = true;
+    mConditions[kConditionGLDesktop] = true;
+    mConditions[kConditionGLES]      = true;
+    mConditions[kConditionVulkan]    = true;
+
+    mConditions[kConditionNexus5X]          = IsNexus5X();
+    mConditions[kConditionPixel2]           = IsPixel2();
+    mConditions[kConditionNVIDIAQuadroP400] = IsNVIDIAQuadroP400();
+}
+
+// If the constructor is passed an API, load those conditions as well
+GPUTestConfig::GPUTestConfig(const API &api) : GPUTestConfig()
+{
+    mConditions[kConditionD3D9]      = IsD3D9(api);
+    mConditions[kConditionD3D11]     = IsD3D11(api);
+    mConditions[kConditionGLDesktop] = IsGLDesktop(api);
+    mConditions[kConditionGLES]      = IsGLES(api);
+    mConditions[kConditionVulkan]    = IsVulkan(api);
+}
+
+// Return a const reference to the list of all pre-calculated conditions.
+const GPUTestConfig::ConditionArray &GPUTestConfig::getConditions() const
+{
+    return mConditions;
 }
 
 }  // namespace angle

@@ -139,6 +139,7 @@ angle_end2end_tests_sources = [
   "egl_tests/EGLSurfacelessContextTest.cpp",
   "egl_tests/EGLSurfaceTest.cpp",
   "egl_tests/EGLSyncTest.cpp",
+  "test_expectations/GPUTestExpectationsTest.cpp",
   "test_utils/ANGLETest.cpp",
   "test_utils/ANGLETest.h",
   "test_utils/MultiviewTest.cpp",

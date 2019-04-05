@@ -10,14 +10,12 @@
 #ifndef TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
 #define TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
 
-#include "GPUInfo.h"
+#include <stdint.h>
 
 namespace angle
 {
 
-void GetOperatingSystemVersionNumbers(int32_t *major_version,
-                                      int32_t *minor_version,
-                                      int32_t *bugfix_version);
+void GetOperatingSystemVersionNumbers(int32_t *majorVersion, int32_t *minorVersion);
 
 }  // namespace angle
 

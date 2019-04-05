@@ -37,6 +37,8 @@ std::string VendorName(VendorID vendor)
             return "Vivante";
         case kVendorID_VeriSilicon:
             return "VeriSilicon";
+        case kVendorID_VMWare:
+            return "VMWare";
         case kVendorID_Kazan:
             return "Kazan";
         default:
@@ -130,6 +132,11 @@ bool IsQualcomm(VendorID vendorId)
 bool IsVeriSilicon(VendorID vendorId)
 {
     return vendorId == kVendorID_VeriSilicon;
+}
+
+bool IsVMWare(VendorID vendorId)
+{
+    return vendorId == kVendorID_VMWare;
 }
 
 bool IsVivante(VendorID vendorId)

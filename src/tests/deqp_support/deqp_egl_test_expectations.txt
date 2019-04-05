@@ -6,27 +6,33 @@
 // format is:
 //  {BUG#} {MODIFIERS} : {TEST_NAME} = {PASS,FAIL,FLAKY,TIMEOUT,SKIP}
 //
-// MODIFIERS can be a combination of the below list:
-//  WIN XP VISTA WIN7 MAC LEOPARD SNOWLEOPARD LION LINUX CHROMEOS MOUNTAINLION
-//  MAVERICKS
+// MODIFIERS can be a combination of the below list, combined with a logical AND:
+//  WIN XP VISTA WIN7 WIN8 WIN10
+//  MAC LEOPARD SNOWLEOPARD LION MOUNTAINLION MAVERICKS YOSEMITE ELCAPITAN SIERRA HIGHSIERRA MOJAVE
+//  LINUX CHROMEOS ANDROID
 //  NVIDIA AMD INTEL
-//  0xabcd - GPU PCI device ID. Specifying a PCI id requires a vendor.
 //  DEBUG RELEASE
-// TODO(jmadill): Add ANGLE Renderer selection modifiers
+//  D3D9 D3D11 OPENGL GLES VULKAN
+//  NEXUS5X PIXEL2
+//  QUADROP400
+//
 //
 // TEST_NAME can be a specific test name, or have a '*' in the end, which
 // indicates a prefix matching.
 //
 // Examples:
-//  91530 MAC WIN LINUX : context_lost_restored = TIMEOUT
-//  91533 WIN : gl_min_uniforms = FAIL
-//  91531 MAC WIN LINUX : conformance_more_* = SKIP
-//  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
+// fails on both windows and mac (crash)
+//  91530 WIN : context_lost_restored = SKIP
+//  91530 MAC : context_lost_restored = SKIP
+// fails on windows using NVIDIA GPUs
+//  91533 WIN NVIDIA : gl_min_uniforms = FAIL
+// fails on Nexus5X with GLES backend (hangs)
+//  91531 NEXUS5X GLES : conformance_more_* = SKIP
 
 // ANGLE does not yet support multithreading
-1340 WIN MAC LINUX : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
-1340 WIN MAC LINUX : dEQP-EGL.functional.multithread.* = SKIP
-1340 WIN MAC LINUX : dEQP-EGL.functional.render.multi_thread.* = SKIP
+1340 : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
+1340 : dEQP-EGL.functional.multithread.* = SKIP
+1340 : dEQP-EGL.functional.render.multi_thread.* = SKIP
 
 // dEQP doesn't handle configs created for extensions
 1662 WIN : dEQP-EGL.functional.color_clears.single_context.gles2.other = FAIL
@@ -52,7 +58,7 @@
 1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_render = SKIP
 
 // Intentionally causes TDRs that eventually blacklist the application
-2319 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.shaders.infinite_loop.* = SKIP
+2319 : dEQP-EGL.functional.robustness.reset_context.shaders.infinite_loop.* = SKIP
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -169,9 +175,6 @@
 2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rg = FAIL
 2716 ANDROID GLES : dEQP-EGL.functional.preserve_swap.preserve.* = FAIL
 
-// Seems to crash on the 5x. Possibly other Android devices.
-3113 ANDROID GLES : dEQP-EGL.functional.reusable_sync.* = SKIP
-
 // Android failures
 2546 ANDROID : dEQP-EGL.functional.buffer_age.* = FAIL
 3270 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_red_value = FAIL
@@ -183,7 +186,6 @@
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_thread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.color_clears.single_context.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.multithread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
@@ -195,9 +197,7 @@
 2546 ANDROID : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
 2546 ANDROID : dEQP-EGL.functional.query_context.query_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.multi_context.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.render.multi_thread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.single_context.* = FAIL
-2546 ANDROID : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
 
@@ -218,17 +218,23 @@
 2546 ANDROID VULKAN : dEQP-EGL.functional.wide_color.window* = SKIP
 
 // ES 1 tests
-2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
-2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
-2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
+2306 WIN : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
+2306 WIN : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
+2306 WIN : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
+2306 MAC : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
+2306 MAC : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
+2306 MAC : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
+2306 LINUX : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
+2306 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
+2306 LINUX : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
 
 // Tests failing since the Jan 2018 roll of dEQP
-2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.* = SKIP
-2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.no_reset_notification = SKIP
-2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.lose_context_on_reset = SKIP
-2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.index_buffer_out_of_bounds = SKIP
-2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.vertex_buffer_out_of_bounds = SKIP
+2341 : dEQP-EGL.functional.swap_buffers.* = SKIP
+2330 : dEQP-EGL.functional.robustness.create_context.no_reset_notification = SKIP
+2330 : dEQP-EGL.functional.robustness.create_context.lose_context_on_reset = SKIP
+2330 : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.index_buffer_out_of_bounds = SKIP
+2330 : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.vertex_buffer_out_of_bounds = SKIP
 
 // Tests were being hidden by flakiness (anglebug.com/3271)
-3325 WIN MAC LINUX : dEQP-EGL.functional.fence_sync.* = SKIP
-3325 WIN MAC LINUX : dEQP-EGL.functional.reusable_sync.* = SKIP
+3325 : dEQP-EGL.functional.fence_sync.* = SKIP
+3325 : dEQP-EGL.functional.reusable_sync.* = SKIP
