@@ -77,7 +77,7 @@ def main():
     glslang_src = os.path.join(out_dir, glslang_exe)
     glslang_dst = os.path.join(sys.path[0], glslang_exe)
 
-    shutil.copyfile(glslang_src, glslang_dst)
+    shutil.copy(glslang_src, glslang_dst)
 
     # Step 5: Delete the build directory
     shutil.rmtree(out_dir)

@@ -296,6 +296,20 @@ hooks = [
     ],
   },
 
+  # Download glslang validator binary for Linux.
+  {
+    'name': 'linux_glslang_validator',
+    'pattern': '.',
+    'condition': 'checkout_linux and not build_with_chromium',
+    'action': [ 'download_from_google_storage',
+                '--no_resume',
+                '--platform=linux*',
+                '--no_auth',
+                '--bucket', 'angle-glslang-validator',
+                '-s', '{angle_root}/tools/glslang/glslang_validator.sha1',
+    ],
+  },
+
   # Download glslang validator binary for Windows.
   {
     'name': 'win_glslang_validator',

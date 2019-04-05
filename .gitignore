@@ -26,6 +26,7 @@
 .gclient_entries
 /src/tests/third_party/gles_conformance_tests
 /testing
+/tools/glslang/glslang_validator
 /tools/glslang/glslang_validator.exe
 /third_party/cherry
 /third_party/deqp/src

@@ -467,8 +467,9 @@ def main():
         for shader in os.listdir(shaders_dir)
         if any([os.path.splitext(shader)[1] == ext for ext in valid_extensions])])
     if print_inputs:
-        win_glslang_binary = get_win_glslang_exe_path() + '.sha1'
-        print(",".join(input_shaders + [win_glslang_binary]))
+        glslang_binaries = [get_linux_glslang_exe_path(), get_win_glslang_exe_path()]
+        glslang_binary_hashes = [path + '.sha1' for path in glslang_binaries]
+        print(",".join(input_shaders + glslang_binary_hashes))
         return 0
 
     # STEP 1: Call glslang to generate the internal shaders into small .inc files.
