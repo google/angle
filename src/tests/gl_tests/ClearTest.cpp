@@ -1243,8 +1243,8 @@ void MaskedScissoredClearTestBase::MaskedScissoredColorDepthStencilClear(
     // TODO(jmadill): Re-enable when possible. http://anglebug.com/2548
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
 
-    const int w     = getWindowWidth();
-    const int h     = getWindowHeight();
+    const int w      = getWindowWidth();
+    const int h      = getWindowHeight();
     const int wthird = w / 3;
     const int hthird = h / 3;
 

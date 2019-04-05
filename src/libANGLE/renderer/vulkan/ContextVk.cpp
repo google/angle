@@ -688,7 +688,7 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
 
 void ContextVk::updateScissor(const gl::State &glState)
 {
-    FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
+    FramebufferVk *framebufferVk      = vk::GetImpl(glState.getDrawFramebuffer());
     gl::Rectangle scissoredRenderArea = framebufferVk->getScissoredRenderArea(this);
     VkRect2D scissor                  = gl_vk::GetRect(scissoredRenderArea);
     mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition, scissor);

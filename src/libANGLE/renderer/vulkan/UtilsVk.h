@@ -69,8 +69,8 @@ class UtilsVk : angle::NonCopyable
         GLint renderAreaHeight;
         gl::Rectangle clearArea;
 
+        // Note that depth clear is never needed to be done with a draw call.
         bool clearColor;
-        bool clearDepth;
         bool clearStencil;
 
         uint8_t stencilMask;
@@ -79,7 +79,7 @@ class UtilsVk : angle::NonCopyable
         const angle::Format *colorFormat;
 
         VkClearColorValue colorClearValue;
-        VkClearDepthStencilValue depthStencilClearValue;
+        uint8_t stencilClearValue;
     };
 
     struct CopyImageParameters
@@ -149,14 +149,6 @@ class UtilsVk : angle::NonCopyable
         uint32_t Ed             = 0;
     };
 
-    struct FullScreenQuadParams
-    {
-        // Structure matching PushConstants in FullScreenQuad.vert
-        float depth = 0;
-        // Padding to ensure following fragment shader push constants start at offset 16.
-        uint32_t padding[3] = {};
-    };
-
     struct ImageClearShaderParams
     {
         // Structure matching PushConstants in ImageClear.frag
@@ -209,10 +201,8 @@ class UtilsVk : angle::NonCopyable
                                vk::ShaderProgramHelper *program,
                                const vk::GraphicsPipelineDesc *pipelineDesc,
                                const VkDescriptorSet descriptorSet,
-                               const void *fsCsPushConstants,
-                               size_t fsCsPushConstantsSize,
-                               const void *vsPushConstants,
-                               size_t vsPushConstantsSize,
+                               const void *pushConstants,
+                               size_t pushConstantsSize,
                                vk::CommandBuffer *commandBuffer);
 
     // Initializes descriptor set layout, pipeline layout and descriptor pool corresponding to given
@@ -224,8 +214,7 @@ class UtilsVk : angle::NonCopyable
                                              Function function,
                                              VkDescriptorPoolSize *setSizes,
                                              size_t setSizesCount,
-                                             size_t fsCsPushConstantsSize,
-                                             size_t vsPushConstantsSize);
+                                             size_t pushConstantsSize);
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.

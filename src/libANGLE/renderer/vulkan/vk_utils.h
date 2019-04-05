@@ -35,7 +35,7 @@ namespace egl
 {
 class Display;
 class Image;
-}
+}  // namespace egl
 
 namespace gl
 {

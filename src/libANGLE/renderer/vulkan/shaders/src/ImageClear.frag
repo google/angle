@@ -38,7 +38,7 @@
 #endif
 
 layout(push_constant) uniform PushConstants {
-    layout(offset=16) Type clearColor;
+    Type clearColor;
 } params;
 
 layout(location = ATTACHMENT) out Type colorOut;

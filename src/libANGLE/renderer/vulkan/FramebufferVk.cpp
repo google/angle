@@ -319,19 +319,14 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
     }
 
-    // Note: if no driver bug workaround is necessary, the clearDepth feature of
-    // clearWithDraw can be removed.
+    // Note: depth clear is always done through render pass loadOp.
     ASSERT(clearDepth == false);
 
     // The most costly clear mode is when we need to mask out specific color channels or stencil
-    // bits. This can only be done with a draw call. The scissor region however can easily be
-    // integrated with this method.
-    //
-    // Since we have to have a draw call for the sake of masked color or stencil, we can make sure
-    // everything else is cleared with the draw call at the same time as well.
-    return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearDepth,
-                         clearStencil, colorMaskFlags, stencilMask, clearColorValue,
-                         modifiedDepthStencilValue);
+    // bits. This can only be done with a draw call.
+    return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearStencil,
+                         colorMaskFlags, stencilMask, clearColorValue,
+                         static_cast<uint8_t>(modifiedDepthStencilValue.stencil));
 }
 
 angle::Result FramebufferVk::clearBufferfv(const gl::Context *context,
@@ -1044,12 +1039,11 @@ angle::Result FramebufferVk::clearWithRenderPassOp(
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            const gl::Rectangle &clearArea,
                                            gl::DrawBufferMask clearColorBuffers,
-                                           bool clearDepth,
                                            bool clearStencil,
                                            VkColorComponentFlags colorMaskFlags,
                                            uint8_t stencilMask,
                                            const VkClearColorValue &clearColorValue,
-                                           const VkClearDepthStencilValue &clearDepthStencilValue)
+                                           uint8_t clearStencilValue)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -1058,11 +1052,10 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     params.renderAreaHeight                    = mState.getDimensions().height;
     params.clearArea                           = clearArea;
     params.colorClearValue                     = clearColorValue;
-    params.depthStencilClearValue              = clearDepthStencilValue;
+    params.stencilClearValue                   = clearStencilValue;
     params.stencilMask                         = stencilMask;
 
     params.clearColor   = true;
-    params.clearDepth   = clearDepth;
     params.clearStencil = clearStencil;
 
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -1081,13 +1074,12 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
 
         ANGLE_TRY(renderer->getUtils().clearFramebuffer(contextVk, this, params));
 
-        // Clear depth/stencil only once!
-        params.clearDepth   = false;
+        // Clear stencil only once!
         params.clearStencil = false;
     }
 
-    // If there was no color clear, clear depth/stencil alone.
-    if (params.clearDepth || params.clearStencil)
+    // If there was no color clear, clear stencil alone.
+    if (params.clearStencil)
     {
         params.clearColor = false;
         ANGLE_TRY(renderer->getUtils().clearFramebuffer(contextVk, this, params));
