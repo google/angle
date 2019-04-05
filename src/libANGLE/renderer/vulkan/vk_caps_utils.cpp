@@ -194,6 +194,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxVaryingVectors =
         (mPhysicalDeviceProperties.limits.maxVertexOutputComponents / 4) - kReservedVaryingCount;
     mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxVaryingVectors * 4;
+
+    mNativeCaps.subPixelBits = mPhysicalDeviceProperties.limits.subPixelPrecisionBits;
 }
 
 namespace egl_vk

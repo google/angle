@@ -1462,7 +1462,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = mState.mCaps.maxDrawBuffers;
             break;
         case GL_SUBPIXEL_BITS:
-            *params = 4;
+            *params = mState.mCaps.subPixelBits;
             break;
         case GL_MAX_TEXTURE_SIZE:
             *params = mState.mCaps.max2DTextureSize;
