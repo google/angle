@@ -351,7 +351,7 @@ class Framebuffer final : public angle::ObserverInterface,
                               angle::SubjectIndex index,
                               angle::SubjectMessage message) override;
 
-    bool formsRenderingFeedbackLoopWith(const State &state) const;
+    bool formsRenderingFeedbackLoopWith(const Context *context) const;
     bool formsCopyingFeedbackLoopWith(GLuint copyTextureID,
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
@@ -439,6 +439,7 @@ class Framebuffer final : public angle::ObserverInterface,
 
     DirtyBits mDirtyBits;
     DrawBufferMask mFloat32ColorAttachmentBits;
+    DrawBufferMask mColorAttachmentBits;
 
     // The dirty bits guard is checked when we get a dependent state change message. We verify that
     // we don't set a dirty bit that isn't already set, when inside the dirty bits syncState.

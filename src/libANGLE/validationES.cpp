@@ -2746,7 +2746,7 @@ const char *ValidateDrawStates(Context *context)
             }
 
             // Detect rendering feedback loops for WebGL.
-            if (framebuffer->formsRenderingFeedbackLoopWith(state))
+            if (framebuffer->formsRenderingFeedbackLoopWith(context))
             {
                 return kFeedbackLoop;
             }
