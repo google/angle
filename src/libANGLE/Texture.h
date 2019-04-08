@@ -349,8 +349,7 @@ class Texture final : public RefCountObject,
                             GLenum internalFormat,
                             Framebuffer *source);
     angle::Result copySubImage(Context *context,
-                               TextureTarget target,
-                               GLint level,
+                               const ImageIndex &index,
                                const Offset &destOffset,
                                const Rectangle &sourceArea,
                                Framebuffer *source);

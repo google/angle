@@ -512,6 +512,40 @@ TEST_P(CopyTexImageTestES3, ReadBufferIsNone)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test CopyTexImage3D with some simple parameters with a 2D array texture.
+TEST_P(CopyTexImageTestES3, 2DArraySubImage)
+{
+    // Seems to fail on AMD OpenGL Windows.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() & IsWindows());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+
+    constexpr GLsizei kTexSize     = 4;
+    constexpr GLsizei kLayerOffset = 1;
+    constexpr GLsizei kLayers      = 2;
+
+    // Clear screen to green.
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Initialize a two-layer 2D array texture with red.
+    std::vector<GLColor> red(kTexSize * kTexSize * kLayers, GLColor::red);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kTexSize, kTexSize, kLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, red.data());
+    glCopyTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, kLayerOffset, 0, 0, kTexSize, kTexSize);
+    ASSERT_GL_NO_ERROR();
+
+    // Check level 0 (red from image data) and 1 (green from backbuffer clear).
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(CopyTexImageTest,
