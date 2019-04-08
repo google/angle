@@ -669,7 +669,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                         GLchar *label) const;
     void getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label) const;
 
-    Texture *getTargetTexture(TextureType type) const;
+    Texture *getTextureByType(TextureType type) const;
+    Texture *getTextureByTarget(TextureTarget target) const;
     Texture *getSamplerTexture(unsigned int sampler, TextureType type) const;
 
     Compiler *getCompiler() const;
@@ -921,7 +922,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                            GLsizei width,
                            GLsizei height);
 
-    void copyTexSubImage3D(TextureType target,
+    void copyTexSubImage3D(TextureTarget target,
                            GLint level,
                            GLint xoffset,
                            GLint yoffset,
@@ -1032,7 +1033,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                              GLenum type,
                              GLsizei bufSize,
                              const void *pixels);
-    void texSubImage3D(TextureType target,
+    void texSubImage3D(TextureTarget target,
                        GLint level,
                        GLint xoffset,
                        GLint yoffset,
@@ -1043,7 +1044,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                        GLenum format,
                        GLenum type,
                        const void *pixels);
-    void texSubImage3DRobust(TextureType target,
+    void texSubImage3DRobust(TextureTarget target,
                              GLint level,
                              GLint xoffset,
                              GLint yoffset,
@@ -1110,7 +1111,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                        GLsizei imageSize,
                                        GLsizei dataSize,
                                        const GLvoid *data);
-    void compressedTexSubImage3D(TextureType target,
+    void compressedTexSubImage3D(TextureTarget target,
                                  GLint level,
                                  GLint xoffset,
                                  GLint yoffset,
@@ -1121,7 +1122,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                  GLenum format,
                                  GLsizei imageSize,
                                  const void *data);
-    void compressedTexSubImage3DRobust(TextureType target,
+    void compressedTexSubImage3DRobust(TextureTarget target,
                                        GLint level,
                                        GLint xoffset,
                                        GLint yoffset,

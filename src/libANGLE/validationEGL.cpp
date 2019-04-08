@@ -2956,7 +2956,7 @@ Error ValidateBindTexImage(const Display *display,
     if (context)
     {
         gl::TextureType type = egl_gl::EGLTextureTargetToTextureType(surface->getTextureTarget());
-        *textureObject       = context->getTargetTexture(type);
+        *textureObject       = context->getTextureByType(type);
         ASSERT(*textureObject != nullptr);
 
         if ((*textureObject)->getImmutableFormat())

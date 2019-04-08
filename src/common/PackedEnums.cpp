@@ -38,8 +38,7 @@ TextureType TextureTargetToType(TextureTarget target)
             return TextureType::_2DMultisampleArray;
         case TextureTarget::_3D:
             return TextureType::_3D;
-        default:
-            UNREACHABLE();
+        case TextureTarget::InvalidEnum:
             return TextureType::InvalidEnum;
     }
 }

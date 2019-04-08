@@ -1325,10 +1325,15 @@ Query *Context::getQuery(GLuint handle) const
     return mQueryMap.query(handle);
 }
 
-Texture *Context::getTargetTexture(TextureType type) const
+Texture *Context::getTextureByType(TextureType type) const
 {
     ASSERT(ValidTextureTarget(this, type) || ValidTextureExternalTarget(this, type));
     return mState.getTargetTexture(type);
+}
+
+Texture *Context::getTextureByTarget(TextureTarget target) const
+{
+    return getTextureByType(TextureTargetToType(target));
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type) const
@@ -2031,7 +2036,7 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
 
 void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)
 {
-    const Texture *const texture = getTargetTexture(target);
+    const Texture *const texture = getTextureByType(target);
     QueryTexParameterfv(texture, pname, params);
 }
 
@@ -2046,19 +2051,19 @@ void Context::getTexParameterfvRobust(TextureType target,
 
 void Context::getTexParameteriv(TextureType target, GLenum pname, GLint *params)
 {
-    const Texture *const texture = getTargetTexture(target);
+    const Texture *const texture = getTextureByType(target);
     QueryTexParameteriv(texture, pname, params);
 }
 
 void Context::getTexParameterIiv(TextureType target, GLenum pname, GLint *params)
 {
-    const Texture *const texture = getTargetTexture(target);
+    const Texture *const texture = getTextureByType(target);
     QueryTexParameterIiv(texture, pname, params);
 }
 
 void Context::getTexParameterIuiv(TextureType target, GLenum pname, GLuint *params)
 {
-    const Texture *const texture = getTargetTexture(target);
+    const Texture *const texture = getTextureByType(target);
     QueryTexParameterIuiv(texture, pname, params);
 }
 
@@ -2091,7 +2096,7 @@ void Context::getTexParameterIuivRobust(TextureType target,
 
 void Context::getTexLevelParameteriv(TextureTarget target, GLint level, GLenum pname, GLint *params)
 {
-    Texture *texture = getTargetTexture(TextureTargetToType(target));
+    Texture *texture = getTextureByTarget(target);
     QueryTexLevelParameteriv(texture, target, level, pname, params);
 }
 
@@ -2110,7 +2115,7 @@ void Context::getTexLevelParameterfv(TextureTarget target,
                                      GLenum pname,
                                      GLfloat *params)
 {
-    Texture *texture = getTargetTexture(TextureTargetToType(target));
+    Texture *texture = getTextureByTarget(target);
     QueryTexLevelParameterfv(texture, target, level, pname, params);
 }
 
@@ -2126,13 +2131,13 @@ void Context::getTexLevelParameterfvRobust(TextureTarget target,
 
 void Context::texParameterf(TextureType target, GLenum pname, GLfloat param)
 {
-    Texture *const texture = getTargetTexture(target);
+    Texture *const texture = getTextureByType(target);
     SetTexParameterf(this, texture, pname, param);
 }
 
 void Context::texParameterfv(TextureType target, GLenum pname, const GLfloat *params)
 {
-    Texture *const texture = getTargetTexture(target);
+    Texture *const texture = getTextureByType(target);
     SetTexParameterfv(this, texture, pname, params);
 }
 
@@ -2146,25 +2151,25 @@ void Context::texParameterfvRobust(TextureType target,
 
 void Context::texParameteri(TextureType target, GLenum pname, GLint param)
 {
-    Texture *const texture = getTargetTexture(target);
+    Texture *const texture = getTextureByType(target);
     SetTexParameteri(this, texture, pname, param);
 }
 
 void Context::texParameteriv(TextureType target, GLenum pname, const GLint *params)
 {
-    Texture *const texture = getTargetTexture(target);
+    Texture *const texture = getTextureByType(target);
     SetTexParameteriv(this, texture, pname, params);
 }
 
 void Context::texParameterIiv(TextureType target, GLenum pname, const GLint *params)
 {
-    Texture *const texture = getTargetTexture(target);
+    Texture *const texture = getTextureByType(target);
     SetTexParameterIiv(this, texture, pname, params);
 }
 
 void Context::texParameterIuiv(TextureType target, GLenum pname, const GLuint *params)
 {
-    Texture *const texture = getTargetTexture(target);
+    Texture *const texture = getTextureByType(target);
     SetTexParameterIuiv(this, texture, pname, params);
 }
 
@@ -3702,7 +3707,7 @@ void Context::copyTexImage2D(TextureTarget target,
     Rectangle sourceArea(x, y, width, height);
 
     Framebuffer *framebuffer = mState.getReadFramebuffer();
-    Texture *texture         = getTargetTexture(TextureTargetToType(target));
+    Texture *texture         = getTextureByTarget(target);
     ANGLE_CONTEXT_TRY(
         texture->copyImage(this, target, level, sourceArea, internalformat, framebuffer));
 }
@@ -3730,11 +3735,11 @@ void Context::copyTexSubImage2D(TextureTarget target,
     ImageIndex index = ImageIndex::MakeFromTarget(target, level);
 
     Framebuffer *framebuffer = mState.getReadFramebuffer();
-    Texture *texture         = getTargetTexture(TextureTargetToType(target));
+    Texture *texture         = getTextureByTarget(target);
     ANGLE_CONTEXT_TRY(texture->copySubImage(this, index, destOffset, sourceArea, framebuffer));
 }
 
-void Context::copyTexSubImage3D(TextureType target,
+void Context::copyTexSubImage3D(TextureTarget target,
                                 GLint level,
                                 GLint xoffset,
                                 GLint yoffset,
@@ -3755,10 +3760,10 @@ void Context::copyTexSubImage3D(TextureType target,
     Offset destOffset(xoffset, yoffset, zoffset);
     Rectangle sourceArea(x, y, width, height);
 
-    ImageIndex index = ImageIndex::MakeFromType(target, level, zoffset);
+    ImageIndex index = ImageIndex::MakeFromType(TextureTargetToType(target), level, zoffset);
 
     Framebuffer *framebuffer = mState.getReadFramebuffer();
-    Texture *texture         = getTargetTexture(target);
+    Texture *texture         = getTextureByTarget(target);
     ANGLE_CONTEXT_TRY(texture->copySubImage(this, index, destOffset, sourceArea, framebuffer));
 }
 
@@ -3997,7 +4002,7 @@ void Context::texImage2D(TextureTarget target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Extents size(width, height, 1);
-    Texture *texture = getTargetTexture(TextureTargetToType(target));
+    Texture *texture = getTextureByTarget(target);
     ANGLE_CONTEXT_TRY(texture->setImage(this, mState.getUnpackState(), target, level,
                                         internalformat, size, format, type,
                                         static_cast<const uint8_t *>(pixels)));
@@ -4031,7 +4036,7 @@ void Context::texImage3D(TextureType target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Extents size(width, height, depth);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->setImage(this, mState.getUnpackState(),
                                         NonCubeTextureTypeToTarget(target), level, internalformat,
                                         size, format, type, static_cast<const uint8_t *>(pixels)));
@@ -4071,7 +4076,7 @@ void Context::texSubImage2D(TextureTarget target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Box area(xoffset, yoffset, 0, width, height, 1);
-    Texture *texture = getTargetTexture(TextureTargetToType(target));
+    Texture *texture = getTextureByTarget(target);
 
     gl::Buffer *unpackBuffer = mState.getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
@@ -4094,7 +4099,7 @@ void Context::texSubImage2DRobust(TextureTarget target,
     texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
 }
 
-void Context::texSubImage3D(TextureType target,
+void Context::texSubImage3D(TextureTarget target,
                             GLint level,
                             GLint xoffset,
                             GLint yoffset,
@@ -4115,16 +4120,16 @@ void Context::texSubImage3D(TextureType target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByTarget(target);
 
     gl::Buffer *unpackBuffer = mState.getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
-    ANGLE_CONTEXT_TRY(texture->setSubImage(this, mState.getUnpackState(), unpackBuffer,
-                                           NonCubeTextureTypeToTarget(target), level, area, format,
-                                           type, static_cast<const uint8_t *>(pixels)));
+    ANGLE_CONTEXT_TRY(texture->setSubImage(this, mState.getUnpackState(), unpackBuffer, target,
+                                           level, area, format, type,
+                                           static_cast<const uint8_t *>(pixels)));
 }
 
-void Context::texSubImage3DRobust(TextureType target,
+void Context::texSubImage3DRobust(TextureTarget target,
                                   GLint level,
                                   GLint xoffset,
                                   GLint yoffset,
@@ -4153,7 +4158,7 @@ void Context::compressedTexImage2D(TextureTarget target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Extents size(width, height, 1);
-    Texture *texture = getTargetTexture(TextureTargetToType(target));
+    Texture *texture = getTextureByTarget(target);
     ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, mState.getUnpackState(), target, level,
                                                   internalformat, size, imageSize,
                                                   static_cast<const uint8_t *>(data)));
@@ -4185,7 +4190,7 @@ void Context::compressedTexImage3D(TextureType target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Extents size(width, height, depth);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->setCompressedImage(
         this, mState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, internalformat,
         size, imageSize, static_cast<const uint8_t *>(data)));
@@ -4219,7 +4224,7 @@ void Context::compressedTexSubImage2D(TextureTarget target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Box area(xoffset, yoffset, 0, width, height, 1);
-    Texture *texture = getTargetTexture(TextureTargetToType(target));
+    Texture *texture = getTextureByTarget(target);
     ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, mState.getUnpackState(), target, level,
                                                      area, format, imageSize,
                                                      static_cast<const uint8_t *>(data)));
@@ -4240,7 +4245,7 @@ void Context::compressedTexSubImage2DRobust(TextureTarget target,
                             data);
 }
 
-void Context::compressedTexSubImage3D(TextureType target,
+void Context::compressedTexSubImage3D(TextureTarget target,
                                       GLint level,
                                       GLint xoffset,
                                       GLint yoffset,
@@ -4261,13 +4266,13 @@ void Context::compressedTexSubImage3D(TextureType target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
-    Texture *texture = getTargetTexture(target);
-    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(
-        this, mState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, area, format,
-        imageSize, static_cast<const uint8_t *>(data)));
+    Texture *texture = getTextureByTarget(target);
+    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, mState.getUnpackState(), target, level,
+                                                     area, format, imageSize,
+                                                     static_cast<const uint8_t *>(data)));
 }
 
-void Context::compressedTexSubImage3DRobust(TextureType target,
+void Context::compressedTexSubImage3DRobust(TextureTarget target,
                                             GLint level,
                                             GLint xoffset,
                                             GLint yoffset,
@@ -4286,7 +4291,7 @@ void Context::compressedTexSubImage3DRobust(TextureType target,
 
 void Context::generateMipmap(TextureType target)
 {
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->generateMipmap(this));
 }
 
@@ -5159,7 +5164,7 @@ void Context::texStorage2DMultisample(TextureType target,
                                       GLboolean fixedsamplelocations)
 {
     Extents size(width, height, 1);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->setStorageMultisample(this, target, samples, internalformat, size,
                                                      ConvertToBool(fixedsamplelocations)));
 }
@@ -5173,7 +5178,7 @@ void Context::texStorage3DMultisample(TextureType target,
                                       GLboolean fixedsamplelocations)
 {
     Extents size(width, height, depth);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->setStorageMultisample(this, target, samples, internalformat, size,
                                                      ConvertToBool(fixedsamplelocations)));
 }
@@ -5293,7 +5298,7 @@ void Context::texStorage2D(TextureType target,
                            GLsizei height)
 {
     Extents size(width, height, 1);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->setStorage(this, target, levels, internalFormat, size));
 }
 
@@ -5305,7 +5310,7 @@ void Context::texStorage3D(TextureType target,
                            GLsizei depth)
 {
     Extents size(width, height, depth);
-    Texture *texture = getTargetTexture(target);
+    Texture *texture = getTextureByType(target);
     ANGLE_CONTEXT_TRY(texture->setStorage(this, target, levels, internalFormat, size));
 }
 
@@ -7263,7 +7268,7 @@ void Context::importSemaphoreFd(GLuint semaphore, GLenum handleType, GLint fd)
 
 void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)
 {
-    Texture *texture        = getTargetTexture(target);
+    Texture *texture        = getTextureByType(target);
     egl::Image *imageObject = static_cast<egl::Image *>(image);
     ANGLE_CONTEXT_TRY(texture->setEGLImageTarget(this, target, imageObject));
 }

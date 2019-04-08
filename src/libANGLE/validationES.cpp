@@ -5100,7 +5100,7 @@ bool ValidateGetTexParameterBase(Context *context,
         return false;
     }
 
-    if (context->getTargetTexture(target) == nullptr)
+    if (context->getTextureByType(target) == nullptr)
     {
         // Should only be possible for external textures
         context->validationError(GL_INVALID_ENUM, kTextureNotBound);
@@ -5559,7 +5559,7 @@ bool ValidateTexParameterBase(Context *context,
         return false;
     }
 
-    if (context->getTargetTexture(target) == nullptr)
+    if (context->getTextureByType(target) == nullptr)
     {
         // Should only be possible for external textures
         context->validationError(GL_INVALID_ENUM, kTextureNotBound);
@@ -6262,7 +6262,7 @@ bool ValidateTexStorageMultisample(Context *context,
         return false;
     }
 
-    Texture *texture = context->getTargetTexture(target);
+    Texture *texture = context->getTextureByType(target);
     if (!texture || texture->id() == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kZeroBoundToTarget);
@@ -6319,7 +6319,7 @@ bool ValidateGetTexLevelParameterBase(Context *context,
         return false;
     }
 
-    if (context->getTargetTexture(type) == nullptr)
+    if (context->getTextureByType(type) == nullptr)
     {
         context->validationError(GL_INVALID_ENUM, kTextureNotBound);
         return false;

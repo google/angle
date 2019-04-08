@@ -431,7 +431,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
             return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(texType);
+    gl::Texture *texture = context->getTextureByType(texType);
     if (!texture)
     {
         context->validationError(GL_INVALID_OPERATION, kMissingTexture);
@@ -1125,7 +1125,7 @@ bool ValidateES3TexStorageParametersBase(Context *context,
             return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(target);
+    gl::Texture *texture = context->getTextureByType(target);
     if (!texture || texture->id() == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kMissingTexture);
@@ -1995,7 +1995,7 @@ bool ValidateDrawBuffers(Context *context, GLsizei n, const GLenum *bufs)
 }
 
 bool ValidateCopyTexSubImage3D(Context *context,
-                               TextureType target,
+                               TextureTarget target,
                                GLint level,
                                GLint xoffset,
                                GLint yoffset,
@@ -2011,8 +2011,9 @@ bool ValidateCopyTexSubImage3D(Context *context,
         return false;
     }
 
-    return ValidateES3CopyTexImage3DParameters(context, target, level, GL_NONE, true, xoffset,
-                                               yoffset, zoffset, x, y, width, height, 0);
+    return ValidateES3CopyTexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE,
+                                               true, xoffset, yoffset, zoffset, x, y, width, height,
+                                               0);
 }
 
 bool ValidateCopyTexture3DANGLE(Context *context,
@@ -2219,7 +2220,7 @@ bool ValidateTexImage3DRobustANGLE(Context *context,
 }
 
 bool ValidateTexSubImage3D(Context *context,
-                           TextureType target,
+                           TextureTarget target,
                            GLint level,
                            GLint xoffset,
                            GLint yoffset,
@@ -2237,13 +2238,13 @@ bool ValidateTexSubImage3D(Context *context,
         return false;
     }
 
-    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
-                                           yoffset, zoffset, width, height, depth, 0, format, type,
-                                           -1, pixels);
+    return ValidateES3TexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE,
+                                           false, true, xoffset, yoffset, zoffset, width, height,
+                                           depth, 0, format, type, -1, pixels);
 }
 
 bool ValidateTexSubImage3DRobustANGLE(Context *context,
-                                      TextureType target,
+                                      TextureTarget target,
                                       GLint level,
                                       GLint xoffset,
                                       GLint yoffset,
@@ -2267,13 +2268,13 @@ bool ValidateTexSubImage3DRobustANGLE(Context *context,
         return false;
     }
 
-    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
-                                           yoffset, zoffset, width, height, depth, 0, format, type,
-                                           bufSize, pixels);
+    return ValidateES3TexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE,
+                                           false, true, xoffset, yoffset, zoffset, width, height,
+                                           depth, 0, format, type, bufSize, pixels);
 }
 
 bool ValidateCompressedTexSubImage3D(Context *context,
-                                     TextureType target,
+                                     TextureTarget target,
                                      GLint level,
                                      GLint xoffset,
                                      GLint yoffset,
@@ -2311,9 +2312,9 @@ bool ValidateCompressedTexSubImage3D(Context *context,
         return false;
     }
 
-    if (!ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, xoffset,
-                                         yoffset, zoffset, width, height, depth, 0, format, GL_NONE,
-                                         -1, data))
+    if (!ValidateES3TexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE, true,
+                                         true, xoffset, yoffset, zoffset, width, height, depth, 0,
+                                         format, GL_NONE, -1, data))
     {
         return false;
     }
@@ -2328,7 +2329,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
 }
 
 bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
-                                                TextureType target,
+                                                TextureTarget target,
                                                 GLint level,
                                                 GLint xoffset,
                                                 GLint yoffset,

@@ -1203,7 +1203,7 @@ bool ValidateES2TexImageParameters(Context *context,
             return false;
     }
 
-    gl::Texture *texture = context->getTargetTexture(texType);
+    gl::Texture *texture = context->getTextureByType(texType);
     if (!texture)
     {
         context->validationError(GL_INVALID_OPERATION, kBufferNotBound);
@@ -1905,7 +1905,7 @@ bool ValidateES2TexStorageParameters(Context *context,
             break;
     }
 
-    gl::Texture *texture = context->getTargetTexture(target);
+    gl::Texture *texture = context->getTextureByType(target);
     if (!texture || texture->id() == 0)
     {
         context->validationError(GL_INVALID_OPERATION, kMissingTexture);
@@ -6225,7 +6225,7 @@ bool ValidateGenerateMipmap(Context *context, TextureType target)
         return false;
     }
 
-    Texture *texture = context->getTargetTexture(target);
+    Texture *texture = context->getTextureByType(target);
 
     if (texture == nullptr)
     {

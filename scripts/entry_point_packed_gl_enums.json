@@ -55,10 +55,10 @@
         "target": "TextureTarget"
     },
     "glCompressedTexSubImage3D": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glCompressedTexSubImage3DRobustANGLE": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glCopyTexImage2D": {
         "target": "TextureTarget"
@@ -73,7 +73,7 @@
         "target": "TextureTarget"
     },
     "glCopyTexSubImage3D": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glCopySubTexture3DANGLE": {
         "destTarget": "TextureTarget"
@@ -466,10 +466,10 @@
         "target": "TextureTarget"
     },
     "glTexSubImage3D": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glTexSubImage3DRobustANGLE": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glUnmapBuffer": {
         "target": "BufferBinding"
