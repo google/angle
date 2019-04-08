@@ -923,7 +923,7 @@ void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (context->skipValidation() ||
             ValidateTexImage3DRobustANGLE(context, targetPacked, level, internalformat, width,
                                           height, depth, border, format, type, bufSize, pixels))
@@ -1057,7 +1057,7 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (context->skipValidation() || ValidateCompressedTexImage3DRobustANGLE(
                                              context, targetPacked, level, internalformat, width,
                                              height, depth, border, imageSize, dataSize, data))
@@ -6393,7 +6393,7 @@ void GL_APIENTRY CompressedTexImage3DContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (context->skipValidation() ||
             ValidateCompressedTexImage3D(context, targetPacked, level, internalformat, width,
                                          height, depth, border, imageSize, data))
@@ -14306,7 +14306,7 @@ void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (context->skipValidation() ||
             ValidateTexImage3D(context, targetPacked, level, internalformat, width, height, depth,
                                border, format, type, pixels))
@@ -17520,7 +17520,7 @@ void GL_APIENTRY TexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (context->skipValidation() ||
             ValidateTexImage3DRobustANGLE(context, targetPacked, level, internalformat, width,
                                           height, depth, border, format, type, bufSize, pixels))
@@ -17662,7 +17662,7 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        TextureType targetPacked = FromGLenum<TextureType>(target);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (context->skipValidation() || ValidateCompressedTexImage3DRobustANGLE(
                                              context, targetPacked, level, internalformat, width,
                                              height, depth, border, imageSize, dataSize, data))

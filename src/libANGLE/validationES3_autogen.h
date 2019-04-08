@@ -53,7 +53,7 @@ bool ValidateClearBufferiv(Context *context, GLenum buffer, GLint drawbuffer, co
 bool ValidateClearBufferuiv(Context *context, GLenum buffer, GLint drawbuffer, const GLuint *value);
 bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout);
 bool ValidateCompressedTexImage3D(Context *context,
-                                  TextureType targetPacked,
+                                  TextureTarget targetPacked,
                                   GLint level,
                                   GLenum internalformat,
                                   GLsizei width,
@@ -245,7 +245,7 @@ bool ValidateSamplerParameterfv(Context *context,
 bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
 bool ValidateSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, const GLint *param);
 bool ValidateTexImage3D(Context *context,
-                        TextureType targetPacked,
+                        TextureTarget targetPacked,
                         GLint level,
                         GLint internalformat,
                         GLsizei width,

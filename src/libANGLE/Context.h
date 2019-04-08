@@ -993,7 +993,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                           GLenum type,
                           GLsizei bufSize,
                           const void *pixels);
-    void texImage3D(TextureType target,
+    void texImage3D(TextureTarget target,
                     GLint level,
                     GLint internalformat,
                     GLsizei width,
@@ -1003,7 +1003,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                     GLenum format,
                     GLenum type,
                     const void *pixels);
-    void texImage3DRobust(TextureType target,
+    void texImage3DRobust(TextureTarget target,
                           GLint level,
                           GLint internalformat,
                           GLsizei width,
@@ -1073,7 +1073,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                     GLsizei imageSize,
                                     GLsizei dataSize,
                                     const GLvoid *data);
-    void compressedTexImage3D(TextureType target,
+    void compressedTexImage3D(TextureTarget target,
                               GLint level,
                               GLenum internalformat,
                               GLsizei width,
@@ -1082,7 +1082,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                               GLint border,
                               GLsizei imageSize,
                               const void *data);
-    void compressedTexImage3DRobust(TextureType target,
+    void compressedTexImage3DRobust(TextureTarget target,
                                     GLint level,
                                     GLenum internalformat,
                                     GLsizei width,

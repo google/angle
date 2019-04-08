@@ -4022,7 +4022,7 @@ void Context::texImage2DRobust(TextureTarget target,
     texImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 }
 
-void Context::texImage3D(TextureType target,
+void Context::texImage3D(TextureTarget target,
                          GLint level,
                          GLint internalformat,
                          GLsizei width,
@@ -4036,13 +4036,13 @@ void Context::texImage3D(TextureType target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Extents size(width, height, depth);
-    Texture *texture = getTextureByType(target);
-    ANGLE_CONTEXT_TRY(texture->setImage(this, mState.getUnpackState(),
-                                        NonCubeTextureTypeToTarget(target), level, internalformat,
-                                        size, format, type, static_cast<const uint8_t *>(pixels)));
+    Texture *texture = getTextureByTarget(target);
+    ANGLE_CONTEXT_TRY(texture->setImage(this, mState.getUnpackState(), target, level,
+                                        internalformat, size, format, type,
+                                        static_cast<const uint8_t *>(pixels)));
 }
 
-void Context::texImage3DRobust(TextureType target,
+void Context::texImage3DRobust(TextureTarget target,
                                GLint level,
                                GLint internalformat,
                                GLsizei width,
@@ -4177,7 +4177,7 @@ void Context::compressedTexImage2DRobust(TextureTarget target,
     compressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 }
 
-void Context::compressedTexImage3D(TextureType target,
+void Context::compressedTexImage3D(TextureTarget target,
                                    GLint level,
                                    GLenum internalformat,
                                    GLsizei width,
@@ -4190,13 +4190,13 @@ void Context::compressedTexImage3D(TextureType target,
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Extents size(width, height, depth);
-    Texture *texture = getTextureByType(target);
-    ANGLE_CONTEXT_TRY(texture->setCompressedImage(
-        this, mState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, internalformat,
-        size, imageSize, static_cast<const uint8_t *>(data)));
+    Texture *texture = getTextureByTarget(target);
+    ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, mState.getUnpackState(), target, level,
+                                                  internalformat, size, imageSize,
+                                                  static_cast<const uint8_t *>(data)));
 }
 
-void Context::compressedTexImage3DRobust(TextureType target,
+void Context::compressedTexImage3DRobust(TextureTarget target,
                                          GLint level,
                                          GLenum internalformat,
                                          GLsizei width,

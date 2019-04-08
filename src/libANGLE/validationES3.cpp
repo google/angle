@@ -622,7 +622,7 @@ bool ValidateES3TexImage2DParameters(Context *context,
 }
 
 bool ValidateES3TexImage3DParameters(Context *context,
-                                     TextureType target,
+                                     TextureTarget target,
                                      GLint level,
                                      GLenum internalformat,
                                      bool isCompressed,
@@ -645,17 +645,16 @@ bool ValidateES3TexImage3DParameters(Context *context,
         return false;
     }
 
-    if (IsETC2EACFormat(format) && target != TextureType::_2DArray)
+    if (IsETC2EACFormat(format) && target != TextureTarget::_2DArray)
     {
         // ES 3.1, Section 8.7, page 169.
         context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
         return false;
     }
 
-    return ValidateES3TexImageParametersBase(context, NonCubeTextureTypeToTarget(target), level,
-                                             internalformat, isCompressed, isSubImage, xoffset,
-                                             yoffset, zoffset, width, height, depth, border, format,
-                                             type, bufSize, pixels);
+    return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,
+                                             isSubImage, xoffset, yoffset, zoffset, width, height,
+                                             depth, border, format, type, bufSize, pixels);
 }
 
 struct EffectiveInternalFormatInfo
@@ -998,7 +997,7 @@ bool ValidateES3CopyTexImage2DParameters(Context *context,
 }
 
 bool ValidateES3CopyTexImage3DParameters(Context *context,
-                                         TextureType target,
+                                         TextureTarget target,
                                          GLint level,
                                          GLenum internalformat,
                                          bool isSubImage,
@@ -1017,9 +1016,9 @@ bool ValidateES3CopyTexImage3DParameters(Context *context,
         return false;
     }
 
-    return ValidateES3CopyTexImageParametersBase(context, NonCubeTextureTypeToTarget(target), level,
-                                                 internalformat, isSubImage, xoffset, yoffset,
-                                                 zoffset, x, y, width, height, border);
+    return ValidateES3CopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
+                                                 xoffset, yoffset, zoffset, x, y, width, height,
+                                                 border);
 }
 
 bool ValidateES3TexStorageParametersBase(Context *context,
@@ -1508,7 +1507,7 @@ bool ValidateReadBuffer(Context *context, GLenum src)
 }
 
 bool ValidateCompressedTexImage3D(Context *context,
-                                  TextureType target,
+                                  TextureTarget target,
                                   GLint level,
                                   GLenum internalformat,
                                   GLsizei width,
@@ -1524,14 +1523,15 @@ bool ValidateCompressedTexImage3D(Context *context,
         return false;
     }
 
-    if (!ValidTextureTarget(context, target))
+    if (!ValidTextureTarget(context, TextureTargetToType(target)))
     {
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
         return false;
     }
 
     // Validate image size
-    if (!ValidImageSizeParameters(context, target, level, width, height, depth, false))
+    if (!ValidImageSizeParameters(context, TextureTargetToType(target), level, width, height, depth,
+                                  false))
     {
         // Error already generated.
         return false;
@@ -1558,7 +1558,7 @@ bool ValidateCompressedTexImage3D(Context *context,
     }
 
     // 3D texture target validation
-    if (target != TextureType::_3D && target != TextureType::_2DArray)
+    if (target != TextureTarget::_3D && target != TextureTarget::_2DArray)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
         return false;
@@ -1576,7 +1576,7 @@ bool ValidateCompressedTexImage3D(Context *context,
 }
 
 bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
-                                             TextureType target,
+                                             TextureTarget target,
                                              GLint level,
                                              GLenum internalformat,
                                              GLsizei width,
@@ -2011,9 +2011,8 @@ bool ValidateCopyTexSubImage3D(Context *context,
         return false;
     }
 
-    return ValidateES3CopyTexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE,
-                                               true, xoffset, yoffset, zoffset, x, y, width, height,
-                                               0);
+    return ValidateES3CopyTexImage3DParameters(context, target, level, GL_NONE, true, xoffset,
+                                               yoffset, zoffset, x, y, width, height, 0);
 }
 
 bool ValidateCopyTexture3DANGLE(Context *context,
@@ -2168,7 +2167,7 @@ bool ValidateCopySubTexture3DANGLE(Context *context,
 }
 
 bool ValidateTexImage3D(Context *context,
-                        TextureType target,
+                        TextureTarget target,
                         GLint level,
                         GLint internalformat,
                         GLsizei width,
@@ -2191,7 +2190,7 @@ bool ValidateTexImage3D(Context *context,
 }
 
 bool ValidateTexImage3DRobustANGLE(Context *context,
-                                   TextureType target,
+                                   TextureTarget target,
                                    GLint level,
                                    GLint internalformat,
                                    GLsizei width,
@@ -2238,9 +2237,9 @@ bool ValidateTexSubImage3D(Context *context,
         return false;
     }
 
-    return ValidateES3TexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE,
-                                           false, true, xoffset, yoffset, zoffset, width, height,
-                                           depth, 0, format, type, -1, pixels);
+    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                           yoffset, zoffset, width, height, depth, 0, format, type,
+                                           -1, pixels);
 }
 
 bool ValidateTexSubImage3DRobustANGLE(Context *context,
@@ -2268,9 +2267,9 @@ bool ValidateTexSubImage3DRobustANGLE(Context *context,
         return false;
     }
 
-    return ValidateES3TexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE,
-                                           false, true, xoffset, yoffset, zoffset, width, height,
-                                           depth, 0, format, type, bufSize, pixels);
+    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                           yoffset, zoffset, width, height, depth, 0, format, type,
+                                           bufSize, pixels);
 }
 
 bool ValidateCompressedTexSubImage3D(Context *context,
@@ -2312,9 +2311,9 @@ bool ValidateCompressedTexSubImage3D(Context *context,
         return false;
     }
 
-    if (!ValidateES3TexImage3DParameters(context, TextureTargetToType(target), level, GL_NONE, true,
-                                         true, xoffset, yoffset, zoffset, width, height, depth, 0,
-                                         format, GL_NONE, -1, data))
+    if (!ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, xoffset,
+                                         yoffset, zoffset, width, height, depth, 0, format, GL_NONE,
+                                         -1, data))
     {
         return false;
     }

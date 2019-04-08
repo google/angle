@@ -43,7 +43,7 @@ bool ValidTexture2DTarget(const Context *context, TextureType type);
 bool ValidTexture3DTarget(const Context *context, TextureType target);
 bool ValidTextureExternalTarget(const Context *context, TextureType target);
 bool ValidTexture2DDestinationTarget(const Context *context, TextureTarget target);
-bool ValidTexture3DDestinationTarget(const Context *context, TextureType target);
+bool ValidTexture3DDestinationTarget(const Context *context, TextureTarget target);
 bool ValidTexLevelDestinationTarget(const Context *context, TextureType type);
 bool ValidFramebufferTarget(const Context *context, GLenum target);
 bool ValidMipLevel(const Context *context, TextureType type, GLint level);

@@ -43,10 +43,10 @@
         "target": "TextureTarget"
     },
     "glCompressedTexImage3D": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glCompressedTexImage3DRobustANGLE": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glCompressedTexSubImage2D": {
         "target": "TextureTarget"
@@ -382,10 +382,10 @@
         "target": "TextureTarget"
     },
     "glTexImage3D": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glTexImage3DRobustANGLE": {
-        "target": "TextureType"
+        "target": "TextureTarget"
     },
     "glTexParameterf": {
         "target": "TextureType"

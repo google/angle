@@ -683,12 +683,12 @@ bool ValidateDrawInstancedANGLE(Context *context)
     return false;
 }
 
-bool ValidTexture3DDestinationTarget(const Context *context, TextureType target)
+bool ValidTexture3DDestinationTarget(const Context *context, TextureTarget target)
 {
     switch (target)
     {
-        case TextureType::_3D:
-        case TextureType::_2DArray:
+        case TextureTarget::_3D:
+        case TextureTarget::_2DArray:
             return true;
         default:
             return false;
