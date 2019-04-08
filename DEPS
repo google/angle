@@ -60,6 +60,11 @@ deps = {
     'url': '{chromium_git}/external/deqp@{deqp_revision}',
   },
 
+  '{angle_root}/third_party/fuchsia-sdk': {
+    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@8e8db13b538ecb251e5ce9d5c781fc142f9752fd',
+    'condition': 'checkout_fuchsia and not build_with_chromium',
+  },
+
   # glmark2 is a GPL3-licensed OpenGL ES 2.0 benchmark. We use it for testing.
   '{angle_root}/third_party/glmark2/src': {
     'url': '{chromium_git}/external/github.com/glmark2/glmark2@c4b3ff5a481348e8bdc2b71ee275864db91e40b1',
@@ -100,6 +105,11 @@ deps = {
     'url' : '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@f572e8e42e22cfcf5ab0aea26574f408943edfa4',
     'condition': 'not build_with_chromium',
    },
+
+  '{angle_root}/third_party/Python-Markdown': {
+    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@b08af21eb795e522e1b972cb85bff59edb1ae209',
+    'condition': 'not build_with_chromium',
+  },
 
   '{angle_root}/third_party/qemu-linux-x64': {
       'packages': [
@@ -173,9 +183,9 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
-  '{angle_root}/third_party/fuchsia-sdk': {
-    'url': '{chromium_git}/chromium/src/third_party/fuchsia-sdk.git@8e8db13b538ecb251e5ce9d5c781fc142f9752fd',
-    'condition': 'checkout_fuchsia and not build_with_chromium',
+  '{angle_root}/tools/md_browser': {
+    'url': '{chromium_git}/chromium/src/tools/md_browser@e9462696241f3ca832890473173e03e7bcfe6adc',
+    'condition': 'not build_with_chromium',
   },
 }
 

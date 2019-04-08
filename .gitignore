@@ -37,6 +37,7 @@
 /third_party/libjpeg_turbo
 /third_party/libpng/src
 /third_party/llvm-build
+/third_party/Python-Markdown
 /third_party/qemu-linux-x64
 /third_party/qemu-mac-x64
 /third_party/rapidjson/src
@@ -48,6 +49,7 @@
 /third_party/vulkan-validation-layers/src
 /third_party/yasm
 /third_party/zlib
+/tools/md_browser
 angle_internal
 build
 buildtools/
