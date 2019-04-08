@@ -154,3 +154,24 @@ const string &str;
 
 *   If modifying pre-existing code that does not match the standard, the altered
     portions of the code should be changed to match the standard.
+
+### Generated Source Files
+
+Prefer storing generated sources as baked files in the repository. Avoid using
+GN actions to run Python scripts.
+
+**Definition:**
+
+Sometimes helper scripts can create compilable sources more easily from XML or
+JSON data sources than maintaining source files by hand. These scripts are often
+written in Python and output generated sources.
+
+**Decision**
+
+Storing generated sources in the repository makes integration easier for non-GN
+users. Python scripts can be expensive and slow to run at compile-time.
+Generated sources can be a pain point for messing up builds.
+
+It could be possible to solve the build clobbering problem. And we could replace
+Python with something faster. But to allow for easier integration with our tools
+and customers we should bake generated files into the repository.
