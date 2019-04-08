@@ -1771,6 +1771,7 @@ void Texture::onSubjectStateChange(const gl::Context *context,
     if (message == angle::SubjectMessage::DEPENDENT_DIRTY_BITS)
     {
         mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
+        signalDirtyState(context, DIRTY_BIT_IMPLEMENTATION);
     }
 }
 }  // namespace gl

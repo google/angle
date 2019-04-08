@@ -97,6 +97,9 @@ struct GLColor
 
     const GLubyte &operator[](size_t index) const { return (&R)[index]; }
 
+    const GLubyte *data() const { return &R; }
+    GLubyte *data() { return &R; }
+
     testing::AssertionResult ExpectNear(const GLColor &expected, const GLColor &err) const;
 
     GLubyte R, G, B, A;

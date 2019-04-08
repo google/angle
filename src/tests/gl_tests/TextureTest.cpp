@@ -1721,6 +1721,48 @@ TEST_P(Texture2DTest, NPOTSubImageParameters)
     EXPECT_GL_NO_ERROR();
 }
 
+// Regression test for http://crbug.com/949985 to make sure dirty bits are propagated up from
+// TextureImpl and the texture is synced before being used in a draw call.
+TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
+{
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
+
+    // The workaround in the GL backend required to trigger this bug generates driver warning
+    // messages.
+    ScopedIgnorePlatformMessages ignoreMessages;
+
+    setUpProgram();
+    glUseProgram(mProgram);
+    glActiveTexture(GL_TEXTURE0 + mTexture2DUniformLocation);
+
+    GLTexture dest;
+    glBindTexture(GL_TEXTURE_2D, dest);
+
+    GLTexture source;
+    glBindTexture(GL_TEXTURE_2D, source);
+
+    // Put data in mip 0 and 1
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 GLColor::red.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 GLColor::green.data());
+
+    // Disable mipmapping so source is complete
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Force the dirty bits to be synchronized in source
+    drawQuad(mProgram, "position", 1.0f);
+
+    // Copy from mip 1 of the source.  In the GL backend this internally sets the base level to mip
+    // 1 and sets a dirty bit.
+    glCopyTextureCHROMIUM(source, 1, GL_TEXTURE_2D, dest, 0, GL_RGBA, GL_UNSIGNED_BYTE, GL_FALSE,
+                          GL_FALSE, GL_FALSE);
+
+    // Draw again, assertions are generated if the texture has internal dirty bits at draw time
+    drawQuad(mProgram, "position", 1.0f);
+}
+
 // Test to check that texture completeness is determined correctly when the texture base level is
 // greater than 0, and also that level 0 is not sampled when base level is greater than 0.
 TEST_P(Texture2DTestES3, DrawWithBaseLevel1)
