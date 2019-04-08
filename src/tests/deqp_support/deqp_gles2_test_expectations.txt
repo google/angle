@@ -82,7 +82,8 @@
 3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
 
 // Shader failures.
-3285 : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_fragment = FAIL
+3285 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_fragment = FAIL
+3285 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_vertex = FAIL
 3287 : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_vertex = FAIL
 3287 : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_fragment = FAIL
 

@@ -282,11 +282,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         additionalOptions |= SH_USE_UNUSED_STANDARD_SHARED_BLOCKS;
     }
 
-    if (workarounds.dontRemoveInvariantForFragmentInput)
-    {
-        additionalOptions |= SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT;
-    }
-
     if (workarounds.removeInvariantAndCentroidForESSL3)
     {
         additionalOptions |= SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3;

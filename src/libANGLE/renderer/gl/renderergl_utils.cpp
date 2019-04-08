@@ -1390,9 +1390,6 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     VendorID vendor = GetVendorID(functions);
     uint32_t device = GetDeviceID(functions);
 
-    workarounds->dontRemoveInvariantForFragmentInput =
-        functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor);
-
     // Don't use 1-bit alpha formats on desktop GL with AMD or Intel drivers.
     workarounds->avoid1BitAlphaTextureFormats =
         functions->standard == STANDARD_GL_DESKTOP && (IsAMD(vendor));

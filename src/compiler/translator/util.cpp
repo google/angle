@@ -707,6 +707,11 @@ bool IsBuiltinFragmentInputVariable(TQualifier qualifier)
     return false;
 }
 
+bool IsShaderOutput(TQualifier qualifier)
+{
+    return IsVaryingOut(qualifier) || IsBuiltinOutputVariable(qualifier);
+}
+
 bool IsOutputESSL(ShShaderOutput output)
 {
     return output == SH_ESSL_OUTPUT;

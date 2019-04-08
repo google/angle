@@ -17,6 +17,7 @@
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/StaticType.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -196,7 +197,7 @@ void TSymbolTable::addInvariantVarying(const TVariable &variable)
 bool TSymbolTable::isVaryingInvariant(const TVariable &variable) const
 {
     ASSERT(atGlobalLevel());
-    if (mGlobalInvariant)
+    if (mGlobalInvariant && (IsShaderOutput(variable.getType().getQualifier())))
     {
         return true;
     }
