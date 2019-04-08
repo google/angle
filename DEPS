@@ -295,6 +295,20 @@ hooks = [
       '{angle_root}/build/fuchsia/update_sdk.py',
     ],
   },
+
+  # Download glslang validator binary for Windows.
+  {
+    'name': 'win_glslang_validator',
+    'pattern': '.',
+    'condition': 'checkout_win and not build_with_chromium',
+    'action': [ 'download_from_google_storage',
+                '--no_resume',
+                '--platform=win32*',
+                '--no_auth',
+                '--bucket', 'angle-glslang-validator',
+                '-s', '{angle_root}/tools/glslang/glslang_validator.exe.sha1',
+    ],
+  },
 ]
 
 recursedeps = [

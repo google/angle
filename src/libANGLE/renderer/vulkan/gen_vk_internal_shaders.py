@@ -13,6 +13,7 @@ from datetime import date
 import io
 import json
 import os
+import platform
 import re
 import subprocess
 import sys
@@ -20,6 +21,9 @@ import sys
 out_file_cpp = 'vk_internal_shaders_autogen.cpp'
 out_file_h = 'vk_internal_shaders_autogen.h'
 out_file_gni = 'vk_internal_shaders_autogen.gni'
+
+is_windows = platform.system() == 'Windows'
+is_linux  = platform.system() == 'Linux'
 
 # Templates for the generated files:
 template_shader_library_cpp = u"""// GENERATED FILE - DO NOT EDIT.
@@ -174,21 +178,18 @@ def get_output_path(name):
     return os.path.join('shaders', 'gen', name + ".inc")
 
 # Finds a path to GN's out directory
-def find_build_path():
-    path = sys.path[0] # Directory of this script
-    out = os.path.join(path, "../../../../out") # Out is in angle base dir
-    if (os.path.isdir(out)):
-        # Prefer release directories.
-        for pattern in ['elease', '']:
-            for o in os.listdir(out):
-                subdir = os.path.join(out, o)
-                if os.path.isdir(subdir) and pattern in o:
-                    argsgn = os.path.join(subdir, "args.gn")
-                    if os.path.isfile(argsgn):
-                        return subdir
+def get_linux_glslang_exe_path():
+    return '../../../../tools/glslang/glslang_validator'
 
-    # If we reached this point, there was no build directory in the angle repo
-    raise Exception("Could not find GN out directory")
+def get_win_glslang_exe_path():
+    return get_linux_glslang_exe_path() + '.exe'
+
+def get_glslang_exe_path():
+    glslang_exe = get_win_glslang_exe_path() if is_windows else get_linux_glslang_exe_path()
+    if not os.path.isfile(glslang_exe):
+        raise Exception('Could not find %s' % glslang_exe)
+    return glslang_exe
+
 
 # Generates the code for a shader blob array entry.
 def gen_shader_blob_entry(shader):
@@ -466,29 +467,17 @@ def main():
         for shader in os.listdir(shaders_dir)
         if any([os.path.splitext(shader)[1] == ext for ext in valid_extensions])])
     if print_inputs:
-        glslang_revision = '../../../../third_party/glslang/src/glslang/Include/revision.h'
-        print(",".join(input_shaders + [glslang_revision]))
-        sys.exit(0)
+        win_glslang_binary = get_win_glslang_exe_path() + '.sha1'
+        print(",".join(input_shaders + [win_glslang_binary]))
+        return 0
 
     # STEP 1: Call glslang to generate the internal shaders into small .inc files.
+    # Iterates over the shaders and call glslang with the right arguments.
 
-    # a) Get the path to the glslang binary from the script directory.
     glslang_path = None
     if not print_outputs:
-        build_path = find_build_path()
-        print("Using glslang_validator from '" + build_path + "'")
-        result = subprocess.call(['ninja', '-C', build_path, 'glslang_validator'])
-        if result != 0:
-            raise Exception("Error building glslang_validator")
+        glslang_path = get_glslang_exe_path()
 
-        glslang_binary = 'glslang_validator'
-        if os.name == 'nt':
-            glslang_binary += '.exe'
-        glslang_path = os.path.join(build_path, glslang_binary)
-        if not os.path.isfile(glslang_path):
-            raise Exception("Could not find " + glslang_binary)
-
-    # b) Iterate over the shaders and call glslang with the right arguments.
     output_shaders = []
 
     input_shaders_and_variations = [ShaderAndVariations(shader_file) for shader_file in input_shaders]
@@ -522,7 +511,7 @@ def main():
 
     if print_outputs:
         print(','.join(outputs))
-        sys.exit(0)
+        return 0
 
     # STEP 2: Consolidate the .inc files into an auto-generated cpp/h library.
     with open(out_file_cpp, 'w') as outfile:
@@ -574,6 +563,8 @@ def main():
             shaders_list = ',\n'.join(['  "' + slash(shader) + '"' for shader in output_shaders]))
         outfile.write(outcode)
         outfile.close()
+
+    return 0
 
 
 if __name__ == '__main__':
