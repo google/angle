@@ -58,6 +58,11 @@
 2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.bind_all = SKIP
 2428 D3D11 NVIDIA : dEQP-GLES3.functional.polygon_offset.default_render_with_units = SKIP
 
+// Tests were being hidden by flakiness (anglebug.com/3271)
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.interpolation.flat.* = FAIL
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.interleaved.triangles.* = FAIL
+3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.separate.triangles.* = FAIL
+
 // Missing the SampleCmp instruction in vertex shaders.
 1435 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_vertex = FAIL
 1435 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
@@ -595,6 +600,7 @@
 2950 VULKAN : dEQP-GLES3.functional.fragment_out.* = SKIP
 
 // Formats:
+2950 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
 2950 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgba32f = FAIL
 2950 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
 
@@ -703,7 +709,10 @@
 2950 VULKAN : dEQP-GLES3.functional.state_query.shader.uniform_value_uint = FAIL
 2950 VULKAN : dEQP-GLES3.functional.lifetime.* = SKIP
 
-// Tests were being hidden by flakiness (anglebug.com/3271)
-3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.interpolation.flat.* = FAIL
-3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.interleaved.triangles.* = FAIL
-3329 D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.separate.triangles.* = FAIL
+// Android Vulkan failures
+2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
+2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_uniform_blocks = FAIL
+2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_getfloat = FAIL
+2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_getinteger64 = FAIL
+2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_getfloat = FAIL
+2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_getinteger64 = FAIL
