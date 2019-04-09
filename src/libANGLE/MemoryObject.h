@@ -32,6 +32,8 @@ class MemoryObject final : public RefCountObject
 
     void onDestroy(const Context *context) override;
 
+    rx::MemoryObjectImpl *getImplementation() const { return mImplementation.get(); }
+
     angle::Result importFd(Context *context, GLuint64 size, HandleType handleType, GLint fd);
 
   private:

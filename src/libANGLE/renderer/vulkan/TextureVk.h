@@ -96,6 +96,14 @@ class TextureVk : public TextureImpl
                              GLenum internalFormat,
                              const gl::Extents &size) override;
 
+    angle::Result setStorageExternalMemory(const gl::Context *context,
+                                           gl::TextureType type,
+                                           size_t levels,
+                                           GLenum internalFormat,
+                                           const gl::Extents &size,
+                                           gl::MemoryObject *memoryObject,
+                                           GLuint64 offset) override;
+
     angle::Result setEGLImageTarget(const gl::Context *context,
                                     gl::TextureType type,
                                     egl::Image *image) override;

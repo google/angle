@@ -7151,7 +7151,12 @@ void Context::texStorageMem2D(TextureType target,
                               GLuint memory,
                               GLuint64 offset)
 {
-    UNIMPLEMENTED();
+    MemoryObject *memoryObject = getMemoryObject(memory);
+    ASSERT(memoryObject);
+    Extents size(width, height, 1);
+    Texture *texture = getTextureByType(target);
+    ANGLE_CONTEXT_TRY(texture->setStorageExternalMemory(this, target, levels, internalFormat, size,
+                                                        memoryObject, offset));
 }
 
 void Context::texStorageMem2DMultisample(TextureType target,

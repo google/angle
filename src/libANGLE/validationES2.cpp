@@ -3157,8 +3157,15 @@ bool ValidateTexStorageMem2DEXT(Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2TexStorageParameters(context, target, levels, internalFormat, width,
+                                               height);
+    }
+
+    ASSERT(context->getClientMajorVersion() >= 3);
+    return ValidateES3TexStorage2DParameters(context, target, levels, internalFormat, width, height,
+                                             1);
 }
 
 bool ValidateTexStorageMem3DEXT(Context *context,

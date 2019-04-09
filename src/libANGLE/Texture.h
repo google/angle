@@ -43,6 +43,7 @@ class TextureGL;
 namespace gl
 {
 class Framebuffer;
+class MemoryObject;
 class Sampler;
 class State;
 class Texture;
@@ -388,6 +389,14 @@ class Texture final : public RefCountObject,
                                         GLint internalformat,
                                         const Extents &size,
                                         bool fixedSampleLocations);
+
+    angle::Result setStorageExternalMemory(Context *context,
+                                           TextureType type,
+                                           GLsizei levels,
+                                           GLenum internalFormat,
+                                           const Extents &size,
+                                           MemoryObject *memoryObject,
+                                           GLuint64 offset);
 
     angle::Result setEGLImageTarget(Context *context, TextureType type, egl::Image *imageTarget);
 

@@ -25,6 +25,7 @@
     PROC(Buffer)                 \
     PROC(Context)                \
     PROC(Framebuffer)            \
+    PROC(MemoryObject)           \
     PROC(Program)                \
     PROC(Texture)                \
     PROC(VertexArray)

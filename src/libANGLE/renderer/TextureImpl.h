@@ -32,6 +32,7 @@ struct Extents;
 struct Offset;
 struct Rectangle;
 class Framebuffer;
+class MemoryObject;
 struct PixelUnpackState;
 class TextureState;
 }  // namespace gl
@@ -146,6 +147,14 @@ class TextureImpl : public FramebufferAttachmentObjectImpl, public angle::Subjec
                                                 GLint internalformat,
                                                 const gl::Extents &size,
                                                 bool fixedSampleLocations) = 0;
+
+    virtual angle::Result setStorageExternalMemory(const gl::Context *context,
+                                                   gl::TextureType type,
+                                                   size_t levels,
+                                                   GLenum internalFormat,
+                                                   const gl::Extents &size,
+                                                   gl::MemoryObject *memoryObject,
+                                                   GLuint64 offset) = 0;
 
     virtual angle::Result setEGLImageTarget(const gl::Context *context,
                                             gl::TextureType type,

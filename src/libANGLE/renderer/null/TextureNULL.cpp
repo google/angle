@@ -125,6 +125,17 @@ angle::Result TextureNULL::setStorage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureNULL::setStorageExternalMemory(const gl::Context *context,
+                                                    gl::TextureType type,
+                                                    size_t levels,
+                                                    GLenum internalFormat,
+                                                    const gl::Extents &size,
+                                                    gl::MemoryObject *memoryObject,
+                                                    GLuint64 offset)
+{
+    return angle::Result::Continue;
+}
+
 angle::Result TextureNULL::setEGLImageTarget(const gl::Context *context,
                                              gl::TextureType type,
                                              egl::Image *image)

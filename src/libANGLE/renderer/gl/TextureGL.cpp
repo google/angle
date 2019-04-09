@@ -1048,6 +1048,18 @@ angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureGL::setStorageExternalMemory(const gl::Context *context,
+                                                  gl::TextureType type,
+                                                  size_t levels,
+                                                  GLenum internalFormat,
+                                                  const gl::Extents &size,
+                                                  gl::MemoryObject *memoryObject,
+                                                  GLuint64 offset)
+{
+    ANGLE_GL_UNREACHABLE(GetImplAs<ContextGL>(context));
+    return angle::Result::Stop;
+}
+
 angle::Result TextureGL::setImageExternal(const gl::Context *context,
                                           gl::TextureType type,
                                           egl::Stream *stream,

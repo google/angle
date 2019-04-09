@@ -14,10 +14,12 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Image.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ImageVk.h"
+#include "libANGLE/renderer/vulkan/MemoryObjectVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -775,6 +777,44 @@ angle::Result TextureVk::setStorage(const gl::Context *context,
     }
 
     ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels), commandBuffer));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
+                                                  gl::TextureType type,
+                                                  size_t levels,
+                                                  GLenum internalFormat,
+                                                  const gl::Extents &size,
+                                                  gl::MemoryObject *memoryObject,
+                                                  GLuint64 offset)
+{
+    ContextVk *contextVk           = vk::GetImpl(context);
+    RendererVk *renderer           = contextVk->getRenderer();
+    MemoryObjectVk *memoryObjectVk = vk::GetImpl(memoryObject);
+
+    releaseAndDeleteImage(context, renderer);
+
+    const vk::Format &format = renderer->getFormat(internalFormat);
+
+    setImageHelper(renderer, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
+
+    ANGLE_TRY(
+        memoryObjectVk->createImage(context, type, levels, internalFormat, size, offset, mImage));
+
+    ANGLE_TRY(initImageViews(contextVk, format, levels));
+
+    // TODO(spang): This needs to be reworked when semaphores are added.
+    // http://anglebug.com/3289
+    uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
+    if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
+    {
+        vk::CommandBuffer *commandBuffer = nullptr;
+        ANGLE_TRY(mImage->recordCommands(contextVk, &commandBuffer));
+        mImage->changeLayoutAndQueue(VK_IMAGE_ASPECT_COLOR_BIT,
+                                     vk::ImageLayout::FragmentShaderReadOnly,
+                                     rendererQueueFamilyIndex, commandBuffer);
+    }
+
     return angle::Result::Continue;
 }
 

@@ -55,7 +55,7 @@ class VulkanExternalImageTest : public ANGLETest
 };
 
 // glImportMemoryFdEXT must be able to import a valid opaque fd.
-TEST_P(VulkanExternalImageTest, ShouldImportVulkanExternalOpaqueFd)
+TEST_P(VulkanExternalImageTest, ShouldImportOpaqueFd)
 {
     ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object_fd"));
 
@@ -82,6 +82,56 @@ TEST_P(VulkanExternalImageTest, ShouldImportVulkanExternalOpaqueFd)
     {
         GLMemoryObject memoryObject;
         glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    vkDestroyImage(helper.getDevice(), image, nullptr);
+    vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
+// Test creating and clearing a simple RGBA8 texture in a opaque fd.
+TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
+{
+    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object_fd"));
+
+    VulkanExternalHelper helper;
+    helper.initialize();
+
+    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+    ANGLE_SKIP_TEST_IF(
+        !helper.canCreateImageOpaqueFd(format, VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL));
+
+    VkImage image                 = VK_NULL_HANDLE;
+    VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+    VkDeviceSize deviceMemorySize = 0;
+
+    VkExtent3D extent = {1, 1, 1};
+    VkResult result =
+        helper.createImage2DOpaqueFd(format, extent, &image, &deviceMemory, &deviceMemorySize);
+    EXPECT_EQ(result, VK_SUCCESS);
+
+    int fd = kInvalidFd;
+    result = helper.exportMemoryOpaqueFd(deviceMemory, &fd);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(fd, kInvalidFd);
+
+    {
+        GLMemoryObject memoryObject;
+        glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+        glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        EXPECT_PIXEL_NEAR(0, 0, 128, 128, 128, 128, 1.0);
     }
 
     EXPECT_GL_NO_ERROR();

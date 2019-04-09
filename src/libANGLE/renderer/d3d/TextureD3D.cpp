@@ -184,6 +184,18 @@ angle::Result TextureD3D::setStorageMultisample(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureD3D::setStorageExternalMemory(const gl::Context *context,
+                                                   gl::TextureType type,
+                                                   size_t levels,
+                                                   GLenum internalFormat,
+                                                   const gl::Extents &size,
+                                                   gl::MemoryObject *memoryObject,
+                                                   GLuint64 offset)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
 bool TextureD3D::shouldUseSetData(const ImageD3D *image) const
 {
     if (!mRenderer->getWorkarounds().setDataFasterThanImageUpload)

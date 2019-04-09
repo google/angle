@@ -28,6 +28,14 @@ class MemoryObjectVk : public MemoryObjectImpl
                            gl::HandleType handleType,
                            GLint fd) override;
 
+    angle::Result createImage(const gl::Context *context,
+                              gl::TextureType type,
+                              size_t levels,
+                              GLenum internalFormat,
+                              const gl::Extents &size,
+                              GLuint64 offset,
+                              vk::ImageHelper *image);
+
   private:
     angle::Result importOpaqueFd(gl::Context *context, GLuint64 size, GLint fd);
 
