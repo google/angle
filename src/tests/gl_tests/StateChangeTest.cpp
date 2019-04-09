@@ -1176,6 +1176,9 @@ class LineLoopStateChangeTest : public StateChangeTest
 // Draw an hourglass with a drawElements call followed by a square with drawArrays.
 TEST_P(LineLoopStateChangeTest, DrawElementsThenDrawArrays)
 {
+    // http://anglebug.com/3361
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan() && IsWindows());
+
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
