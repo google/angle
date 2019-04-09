@@ -190,10 +190,6 @@
 2546 ANDROID : dEQP-EGL.functional.partial_update.odd_clear_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.odd_render_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.render_* = FAIL
-2546 ANDROID : dEQP-EGL.functional.query_context.get_current_context.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.query_context.get_current_display.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
-2546 ANDROID : dEQP-EGL.functional.query_context.query_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.multi_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.single_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
@@ -237,3 +233,9 @@
 // Tests were being hidden by flakiness (anglebug.com/3271)
 3325 : dEQP-EGL.functional.fence_sync.* = SKIP
 3325 : dEQP-EGL.functional.reusable_sync.* = SKIP
+
+// Nexus 5x
+2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_context.* = SKIP
+2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_display.* = SKIP
+2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
+2546 NEXUS5X : dEQP-EGL.functional.query_context.query_context.* = SKIP
