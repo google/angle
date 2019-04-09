@@ -2752,8 +2752,10 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     createInfo.basePipelineHandle = VK_NULL_HANDLE;
     createInfo.basePipelineIndex  = 0;
 
+    vk::PipelineCache *pipelineCache = nullptr;
+    ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     ANGLE_VK_TRY(context, mComputePipeline.get().initCompute(context->getDevice(), createInfo,
-                                                             renderer->getPipelineCache()));
+                                                             *pipelineCache));
 
     *pipelineOut = &mComputePipeline;
     return angle::Result::Continue;

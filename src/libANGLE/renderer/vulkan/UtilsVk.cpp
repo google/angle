@@ -587,11 +587,12 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
         // This value is not used but is passed to getGraphicsPipeline to avoid a nullptr check.
         const vk::GraphicsPipelineDesc *descPtr;
         vk::PipelineHelper *helper;
-
-        ANGLE_TRY(program->getGraphicsPipeline(
-            contextVk, &contextVk->getRenderPassCache(), renderer->getPipelineCache(), serial,
-            pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), gl::ComponentTypeMask(),
-            &descPtr, &helper));
+        vk::PipelineCache *pipelineCache = nullptr;
+        ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
+        ANGLE_TRY(program->getGraphicsPipeline(contextVk, &contextVk->getRenderPassCache(),
+                                               *pipelineCache, serial, pipelineLayout.get(),
+                                               *pipelineDesc, gl::AttributesMask(),
+                                               gl::ComponentTypeMask(), &descPtr, &helper));
         helper->updateSerial(serial);
         commandBuffer->bindGraphicsPipeline(helper->getPipeline());
     }

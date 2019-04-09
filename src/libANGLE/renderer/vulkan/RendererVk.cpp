@@ -47,8 +47,8 @@ namespace rx
 
 namespace
 {
-// Update the pipeline cache every this many swaps (if 60fps, this means every 10 minutes)
-constexpr uint32_t kPipelineCacheVkUpdatePeriod = 10 * 60 * 60;
+// Update the pipeline cache every this many swaps.
+constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // Wait a maximum of 10s.  If that times out, we declare it a failure.
 constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
 // Per the Vulkan specification, as long as Vulkan 1.1+ is returned by vkEnumerateInstanceVersion,
@@ -496,7 +496,9 @@ RendererVk::RendererVk()
       mMaxVertexAttribDivisor(1),
       mDevice(VK_NULL_HANDLE),
       mDeviceLost(false),
-      mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod)
+      mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
+      mPipelineCacheDirty(false),
+      mPipelineCacheInitialized(false)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -1026,7 +1028,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     vkGetDeviceQueue(mDevice, mCurrentQueueFamilyIndex, 0, &mQueue);
 
     // Initialize the vulkan pipeline cache.
-    ANGLE_TRY(initPipelineCache(displayVk));
+    bool success = false;
+    ANGLE_TRY(initPipelineCache(displayVk, &mPipelineCache, &success));
 
     return angle::Result::Continue;
 }
@@ -1315,22 +1318,49 @@ void RendererVk::initPipelineCacheVkKey()
                                hashString.length(), mPipelineCacheVkBlobKey.data());
 }
 
-angle::Result RendererVk::initPipelineCache(DisplayVk *display)
+angle::Result RendererVk::initPipelineCache(DisplayVk *display,
+                                            vk::PipelineCache *pipelineCache,
+                                            bool *success)
 {
     initPipelineCacheVkKey();
 
     egl::BlobCache::Value initialData;
-    bool success = display->getBlobCache()->get(display->getScratchBuffer(),
-                                                mPipelineCacheVkBlobKey, &initialData);
+    *success = display->getBlobCache()->get(display->getScratchBuffer(), mPipelineCacheVkBlobKey,
+                                            &initialData);
 
     VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
 
     pipelineCacheCreateInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
     pipelineCacheCreateInfo.flags           = 0;
-    pipelineCacheCreateInfo.initialDataSize = success ? initialData.size() : 0;
-    pipelineCacheCreateInfo.pInitialData    = success ? initialData.data() : nullptr;
+    pipelineCacheCreateInfo.initialDataSize = *success ? initialData.size() : 0;
+    pipelineCacheCreateInfo.pInitialData    = *success ? initialData.data() : nullptr;
 
-    ANGLE_VK_TRY(display, mPipelineCache.init(mDevice, pipelineCacheCreateInfo));
+    ANGLE_VK_TRY(display, pipelineCache->init(mDevice, pipelineCacheCreateInfo));
+
+    return angle::Result::Continue;
+}
+
+angle::Result RendererVk::getPipelineCache(vk::PipelineCache **pipelineCache)
+{
+    if (mPipelineCacheInitialized)
+    {
+        *pipelineCache = &mPipelineCache;
+        return angle::Result::Continue;
+    }
+
+    // We should now recreate the pipeline cache with the blob cache pipeline data.
+    vk::PipelineCache pCache;
+    bool success = false;
+    ANGLE_TRY(initPipelineCache(vk::GetImpl(mDisplay), &pCache, &success));
+    if (success)
+    {
+        // Merge the newly created pipeline cache into the existing one.
+        mPipelineCache.merge(mDevice, mPipelineCache.getHandle(), 1, pCache.ptr());
+    }
+    mPipelineCacheInitialized = true;
+    pCache.destroy(mDevice);
+
+    *pipelineCache = &mPipelineCache;
     return angle::Result::Continue;
 }
 
@@ -1387,6 +1417,11 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
     {
         return angle::Result::Continue;
     }
+    if (!mPipelineCacheDirty)
+    {
+        mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
+        return angle::Result::Continue;
+    }
 
     mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
 
@@ -1420,6 +1455,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk)
     }
 
     displayVk->getBlobCache()->putApplication(mPipelineCacheVkBlobKey, *pipelineCacheData);
+    mPipelineCacheDirty = false;
 
     return angle::Result::Continue;
 }

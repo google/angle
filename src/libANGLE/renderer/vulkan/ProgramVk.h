@@ -141,8 +141,10 @@ class ProgramVk : public ProgramImpl
         ANGLE_TRY(initGraphicsShaders(contextVk, mode, &shaderProgram));
         ASSERT(shaderProgram->isGraphicsProgram());
         RendererVk *renderer = contextVk->getRenderer();
+        vk::PipelineCache *pipelineCache = nullptr;
+        ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
         return shaderProgram->getGraphicsPipeline(
-            contextVk, &contextVk->getRenderPassCache(), renderer->getPipelineCache(),
+            contextVk, &contextVk->getRenderPassCache(), *pipelineCache,
             contextVk->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
             mState.getAttributesTypeMask(), descPtrOut, pipelineOut);
     }

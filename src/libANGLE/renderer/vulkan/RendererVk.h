@@ -128,8 +128,6 @@ class RendererVk : angle::NonCopyable
 
     bool isMockICDEnabled() const { return mEnableMockICD; }
 
-    const vk::PipelineCache &getPipelineCache() const { return mPipelineCache; }
-
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
     // device (first time only).
@@ -160,13 +158,18 @@ class RendererVk : angle::NonCopyable
     static constexpr size_t kMaxExtensionNames = 200;
     using ExtensionNameList = angle::FixedVector<const char *, kMaxExtensionNames>;
 
+    angle::Result getPipelineCache(vk::PipelineCache **pipelineCache);
+    void onNewGraphicsPipeline() { mPipelineCacheDirty = true; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
 
     void initFeatures(const ExtensionNameList &extensions);
     void initPipelineCacheVkKey();
-    angle::Result initPipelineCache(DisplayVk *display);
+    angle::Result initPipelineCache(DisplayVk *display,
+                                    vk::PipelineCache *pipelineCache,
+                                    bool *success);
 
     template <VkFormatFeatureFlags VkFormatProperties::*features>
     VkFormatFeatureFlags getFormatFeatureBits(VkFormat format,
@@ -223,6 +226,8 @@ class RendererVk : angle::NonCopyable
     vk::PipelineCache mPipelineCache;
     egl::BlobCache::Key mPipelineCacheVkBlobKey;
     uint32_t mPipelineCacheVkUpdateTimeout;
+    bool mPipelineCacheDirty;
+    bool mPipelineCacheInitialized;
 
     // A cache of VkFormatProperties as queried from the device over time.
     std::array<VkFormatProperties, vk::kNumVkFormats> mFormatProperties;
