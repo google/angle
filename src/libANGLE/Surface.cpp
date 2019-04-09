@@ -185,7 +185,7 @@ Error Surface::setIsCurrent(const gl::Context *context, bool isCurrent)
         return NoError();
     }
 
-    return releaseRef(context->getCurrentDisplay());
+    return releaseRef(context->getDisplay());
 }
 
 Error Surface::releaseRef(const Display *display)
@@ -435,7 +435,7 @@ Error Surface::releaseTexImageFromTexture(const gl::Context *context)
 {
     ASSERT(mTexture);
     mTexture = nullptr;
-    return releaseRef(context->getCurrentDisplay());
+    return releaseRef(context->getDisplay());
 }
 
 gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const

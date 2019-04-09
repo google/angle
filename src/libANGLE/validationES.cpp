@@ -3364,8 +3364,8 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context, TextureType type, GLeg
 
     egl::Image *imageObject = static_cast<egl::Image *>(image);
 
-    ASSERT(context->getCurrentDisplay());
-    if (!context->getCurrentDisplay()->isValidImage(imageObject))
+    ASSERT(context->getDisplay());
+    if (!context->getDisplay()->isValidImage(imageObject))
     {
         context->validationError(GL_INVALID_VALUE, kInvalidEGLImage);
         return false;
@@ -3408,8 +3408,8 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 
     egl::Image *imageObject = static_cast<egl::Image *>(image);
 
-    ASSERT(context->getCurrentDisplay());
-    if (!context->getCurrentDisplay()->isValidImage(imageObject))
+    ASSERT(context->getDisplay());
+    if (!context->getDisplay()->isValidImage(imageObject))
     {
         context->validationError(GL_INVALID_VALUE, kInvalidEGLImage);
         return false;

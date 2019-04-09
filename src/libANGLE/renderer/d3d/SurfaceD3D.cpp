@@ -346,7 +346,7 @@ egl::Error SurfaceD3D::checkForOutOfDateSwapChain(DisplayD3D *displayD3D)
 
 egl::Error SurfaceD3D::swap(const gl::Context *context)
 {
-    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getCurrentDisplay());
+    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getDisplay());
     return swapRect(displayD3D, 0, 0, mWidth, mHeight);
 }
 
@@ -356,7 +356,7 @@ egl::Error SurfaceD3D::postSubBuffer(const gl::Context *context,
                                      EGLint width,
                                      EGLint height)
 {
-    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getCurrentDisplay());
+    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getDisplay());
     return swapRect(displayD3D, x, y, width, height);
 }
 

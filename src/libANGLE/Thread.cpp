@@ -107,11 +107,11 @@ gl::Context *Thread::getValidContext() const
     return mContext;
 }
 
-Display *Thread::getCurrentDisplay() const
+Display *Thread::getDisplay() const
 {
     if (mContext)
     {
-        return mContext->getCurrentDisplay();
+        return mContext->getDisplay();
     }
     return nullptr;
 }

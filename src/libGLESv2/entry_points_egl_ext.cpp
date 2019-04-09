@@ -891,7 +891,7 @@ ANGLE_EXPORT EGLSync EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy,
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     gl::Context *currentContext  = thread->getContext();
-    egl::Display *currentDisplay = currentContext ? currentContext->getCurrentDisplay() : nullptr;
+    egl::Display *currentDisplay = currentContext ? currentContext->getDisplay() : nullptr;
 
     ANGLE_EGL_TRY_RETURN(
         thread, ValidateCreateSyncKHR(display, type, attributes, currentDisplay, currentContext),

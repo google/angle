@@ -299,7 +299,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mSurfacelessSupported(displayExtensions.surfacelessContext),
       mExplicitContextAvailable(clientExtensions.explicitContext),
       mCurrentSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
-      mCurrentDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
+      mDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
       mWebGLContext(GetWebGLContext(attribs)),
       mBufferAccessValidationEnabled(false),
       mExtensionsEnabled(GetExtensionsEnabled(attribs, mWebGLContext)),
@@ -570,7 +570,7 @@ EGLLabelKHR Context::getLabel() const
 
 egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
-    mCurrentDisplay = display;
+    mDisplay = display;
 
     if (!mHasBeenCurrent)
     {
@@ -3235,8 +3235,8 @@ Extensions Context::generateSupportedExtensions() const
     }
 
     // If EGL_KHR_fence_sync is not enabled, don't expose GL_OES_EGL_sync.
-    ASSERT(mCurrentDisplay);
-    if (!mCurrentDisplay->getExtensions().fenceSync)
+    ASSERT(mDisplay);
+    if (!mDisplay->getExtensions().fenceSync)
     {
         supportedExtensions.eglSync = false;
     }

@@ -1796,7 +1796,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
 
     bool hasBeenCurrent() const { return mHasBeenCurrent; }
-    egl::Display *getCurrentDisplay() const { return mCurrentDisplay; }
+    egl::Display *getDisplay() const { return mDisplay; }
     egl::Surface *getCurrentDrawSurface() const { return mCurrentSurface; }
     egl::Surface *getCurrentReadSurface() const { return mCurrentSurface; }
 
@@ -1988,7 +1988,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const bool mSurfacelessSupported;
     const bool mExplicitContextAvailable;
     egl::Surface *mCurrentSurface;
-    egl::Display *mCurrentDisplay;
+    egl::Display *mDisplay;
     const bool mWebGLContext;
     bool mBufferAccessValidationEnabled;
     const bool mExtensionsEnabled;
