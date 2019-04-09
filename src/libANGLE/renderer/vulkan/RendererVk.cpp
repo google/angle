@@ -1222,13 +1222,6 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         mFeatures.clampPointSize = true;
     }
 
-    // We also need to clamp point size on several Android drivers.
-    // TODO(jmadill): Remove suppression once fixed. http://anglebug.com/2599
-    if (IsAndroid())
-    {
-        mFeatures.clampPointSize = true;
-    }
-
 #if defined(ANGLE_PLATFORM_ANDROID)
     // Work around ineffective compute-graphics barriers on Nexus 5X.
     // TODO(syoussefi): Figure out which other vendors and driver versions are affected.
