@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70cfefdb_50022640",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-04-09T21:40:29Z",
+      "side": 1,
+      "message": "I don\u0027t understand this invert calculation. Say you have a Rect sitting on the x-axis with a height of 10 that gets clipped to a height of 8. Then doesn\u0027t that give a clippedRect.y of 10-8-8 \u003d -6? But it seems like inverted clipped rect of on x-axis w/ a height 8 should have clippedRect.y of -8.\n\nI suspect that I\u0027m missing something as this appear to be passing testing. If my confusion is obvious, perhaps a comment that could help dispel it?",
+      "revId": "0f2acc6b83b6c9b801bc469778a2c5f30a2bfd7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
