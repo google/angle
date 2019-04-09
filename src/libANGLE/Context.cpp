@@ -548,6 +548,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mState.mPathManager->release(this);
     mState.mFramebufferManager->release(this);
     mState.mProgramPipelineManager->release(this);
+    mState.mMemoryObjectManager->release(this);
 
     mThreadPool.reset();
 
