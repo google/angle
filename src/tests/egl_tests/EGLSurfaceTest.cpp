@@ -353,6 +353,9 @@ TEST_P(EGLSurfaceTest, SwapInterval)
 {
     // On OSX, maxInterval >= 1 is advertised, but is not implemented.  http://anglebug.com/3140
     ANGLE_SKIP_TEST_IF(IsOSX());
+    // Flaky hang on Nexus 5X and 6P. http://anglebug.com/3364
+    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) &&
+                       GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
 
     initializeDisplay();
     initializeSurfaceWithDefaultConfig();
