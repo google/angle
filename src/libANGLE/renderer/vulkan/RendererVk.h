@@ -163,6 +163,7 @@ class RendererVk : angle::NonCopyable
 
     // Get (or allocate) the fence that will be signaled on next submission.
     angle::Result getSubmitFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
+    vk::Shared<vk::Fence> getLastSubmittedFence() const;
 
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.

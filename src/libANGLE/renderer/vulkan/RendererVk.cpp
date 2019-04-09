@@ -1726,6 +1726,17 @@ angle::Result RendererVk::getSubmitFence(vk::Context *context,
     return angle::Result::Continue;
 }
 
+vk::Shared<vk::Fence> RendererVk::getLastSubmittedFence() const
+{
+    vk::Shared<vk::Fence> fence;
+    if (!mInFlightCommands.empty())
+    {
+        fence.copy(getDevice(), mInFlightCommands.back().fence);
+    }
+
+    return fence;
+}
+
 angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestampOut)
 {
     // The intent of this function is to query the timestamp without stalling the GPU.  Currently,
