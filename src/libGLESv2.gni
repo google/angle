@@ -780,6 +780,8 @@ libangle_vulkan_sources = [
   "src/libANGLE/renderer/vulkan/GlslangWrapper.h",
   "src/libANGLE/renderer/vulkan/ImageVk.cpp",
   "src/libANGLE/renderer/vulkan/ImageVk.h",
+  "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+  "src/libANGLE/renderer/vulkan/MemoryObjectVk.h",
   "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
   "src/libANGLE/renderer/vulkan/ProgramVk.h",
   "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",

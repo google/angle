@@ -958,6 +958,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         enabledDeviceExtensions.push_back(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME);
     }
 
+    if (getFeatures().supportsAndroidHardwareBuffer || getFeatures().supportsExternalMemoryFd)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME);
+    }
+
 #if defined(ANGLE_PLATFORM_ANDROID)
     if (getFeatures().supportsAndroidHardwareBuffer)
     {
@@ -969,6 +974,21 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 #else
     ASSERT(!getFeatures().supportsAndroidHardwareBuffer);
 #endif
+
+    if (getFeatures().supportsExternalMemoryFd)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME);
+    }
+
+    if (getFeatures().supportsExternalSemaphoreFd)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME);
+    }
+
+    if (getFeatures().supportsExternalSemaphoreFd)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME);
+    }
 
     std::sort(enabledDeviceExtensions.begin(), enabledDeviceExtensions.end(), StrLess);
     ANGLE_VK_TRY(displayVk, VerifyExtensionsPresent(deviceExtensionNames, enabledDeviceExtensions));
@@ -1241,6 +1261,16 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
                        deviceExtensionNames) &&
         ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames);
 #endif
+
+    if (ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames))
+    {
+        mFeatures.supportsExternalMemoryFd = true;
+    }
+
+    if (ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames))
+    {
+        mFeatures.supportsExternalSemaphoreFd = true;
+    }
 
     if (IsLinux() && IsIntel(mPhysicalDeviceProperties.vendorID))
     {

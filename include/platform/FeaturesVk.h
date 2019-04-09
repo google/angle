@@ -69,6 +69,14 @@ struct FeaturesVk
     // extension, on which the EGL_ANDROID_image_native_buffer extension can be layered.
     bool supportsAndroidHardwareBuffer = false;
 
+    // Whether the VkDevice supports the VK_KHR_external_memory_fd
+    // extension, on which the GL_EXT_memory_object_fd extension can be layered.
+    bool supportsExternalMemoryFd = false;
+
+    // Whether the VkDevice supports the VK_KHR_external_semaphore_fd
+    // extension, on which the GL_EXT_semaphore_fd extension can be layered.
+    bool supportsExternalSemaphoreFd = false;
+
     // VK_PRESENT_MODE_FIFO_KHR causes random timeouts on Linux Intel. http://anglebug.com/3153
     bool disableFifoPresentMode = false;
 

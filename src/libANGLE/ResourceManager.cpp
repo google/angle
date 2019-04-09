@@ -498,7 +498,9 @@ void MemoryObjectManager::reset(const Context *context)
 GLuint MemoryObjectManager::createMemoryObject(rx::GLImplFactory *factory)
 {
     GLuint handle = mHandleAllocator.allocate();
-    mMemoryObjects.assign(handle, new MemoryObject(factory, handle));
+    MemoryObject *memoryObject = new MemoryObject(factory, handle);
+    memoryObject->addRef();
+    mMemoryObjects.assign(handle, memoryObject);
     return handle;
 }
 

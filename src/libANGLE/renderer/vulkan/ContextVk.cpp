@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/FenceNVVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/MemoryObjectVk.h"
 #include "libANGLE/renderer/vulkan/ProgramPipelineVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
@@ -1114,8 +1115,7 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
 
 MemoryObjectImpl *ContextVk::createMemoryObject()
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    return new MemoryObjectVk();
 }
 
 void ContextVk::invalidateCurrentTextures()

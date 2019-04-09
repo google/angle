@@ -75,6 +75,7 @@ angle_end2end_tests_sources = [
   "gl_tests/LinkAndRelinkTest.cpp",
   "gl_tests/MaxTextureSizeTest.cpp",
   "gl_tests/MemorySizeTest.cpp",
+  "gl_tests/MemoryObjectTest.cpp",
   "gl_tests/MipmapTest.cpp",
   "gl_tests/MultiDrawTest.cpp",
   "gl_tests/MultisampleCompatibilityTest.cpp",
