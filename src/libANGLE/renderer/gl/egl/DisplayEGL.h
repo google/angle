@@ -33,7 +33,7 @@ class DisplayEGL : public DisplayGL
 
     std::string getVendorString() const override;
 
-    void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) override;
+    egl::Error setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) override;
 
     virtual void destroyNativeContext(EGLContext context) = 0;
 

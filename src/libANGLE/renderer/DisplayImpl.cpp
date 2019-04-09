@@ -63,4 +63,9 @@ const egl::Caps &DisplayImpl::getCaps() const
     return mCaps;
 }
 
+egl::Error DisplayImpl::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get)
+{
+    return egl::NoError();
+}
+
 }  // namespace rx

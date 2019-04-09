@@ -88,7 +88,7 @@ class DisplayImpl : public EGLImplFactory
     virtual gl::Version getMaxSupportedESVersion() const                     = 0;
     const egl::Caps &getCaps() const;
 
-    virtual void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) {}
+    virtual egl::Error setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get);
 
     const egl::DisplayExtensions &getExtensions() const;
 

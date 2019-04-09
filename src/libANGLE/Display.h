@@ -155,7 +155,7 @@ class Display final : public LabeledObject, angle::NonCopyable
     bool testDeviceLost();
     void notifyDeviceLost();
 
-    void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get);
+    Error setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get);
     bool areBlobCacheFuncsSet() const { return mBlobCache.areBlobCacheFuncsSet(); }
     BlobCache &getBlobCache() { return mBlobCache; }
 
