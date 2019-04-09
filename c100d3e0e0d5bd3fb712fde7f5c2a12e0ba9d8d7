@@ -16,6 +16,24 @@
       "revId": "c100d3e0e0d5bd3fb712fde7f5c2a12e0ba9d8d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31ec20c4_1f066904",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-04-09T22:53:22Z",
+      "side": 1,
+      "message": "\u003e Wouldn\u0027t `gl::ClipRectangle(clippedRect, glState.getViewport(), \u0026clippedAgainRect)` basically achieve this?\n\nAhh!  I was looking for a merge function, but didn\u0027t realize this was what I was looking for.  Thanks!\n\n\u003e After that change lands, we would have to pass the viewport in as well, clip `renderArea` and `viewport` together and then proceed with the `if (scissor enabled)`.\n\nJust to make sure I understand, after your CL lands, I\u0027ll need to add that to this CL.  Correct?",
+      "parentUuid": "367423ee_0baca62d",
+      "revId": "c100d3e0e0d5bd3fb712fde7f5c2a12e0ba9d8d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
