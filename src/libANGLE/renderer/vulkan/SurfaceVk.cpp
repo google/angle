@@ -559,7 +559,6 @@ angle::Result WindowSurfaceVk::recreateSwapchain(DisplayVk *displayVk,
                  vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
 
     mSwapchainImages.resize(imageCount);
-    ANGLE_TRY(resizeSwapHistory(displayVk, imageCount));
 
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
@@ -834,78 +833,6 @@ angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
 
     // Update RenderTarget pointers.
     mColorRenderTarget.updateSwapchainImage(&image.image, &image.imageView);
-
-    return angle::Result::Continue;
-}
-
-angle::Result WindowSurfaceVk::resizeSwapHistory(DisplayVk *displayVk, size_t imageCount)
-{
-    // The number of swapchain images can change if the present mode is changed.  If that number is
-    // increased, we need to rearrange the history (which is a circular buffer) so it remains
-    // continuous.  If it shrinks, we have to additionally make sure we clean up any old swapchains
-    // that can no longer fit in the history.
-    //
-    // Assume the following history buffer identified with serials:
-    //
-    //   mCurrentSwapHistoryIndex
-    //           V
-    //   +----+----+----+
-    //   | 11 |  9 | 10 |
-    //   +----+----+----+
-    //
-    // When shrinking to size 2, we want to clean up 9, and rearrange to the following:
-    //
-    //   mCurrentSwapHistoryIndex
-    //      V
-    //   +----+----+
-    //   | 10 | 11 |
-    //   +----+----+
-    //
-    // When expanding back to 3, we want to rearrange to the following:
-    //
-    //   mCurrentSwapHistoryIndex
-    //      V
-    //   +----+----+----+
-    //   |  0 | 10 | 11 |
-    //   +----+----+----+
-
-    if (mSwapHistory.size() == imageCount)
-    {
-        return angle::Result::Continue;
-    }
-
-    RendererVk *renderer = displayVk->getRenderer();
-
-    // First, clean up anything that won't fit in the resized history.
-    if (imageCount < mSwapHistory.size())
-    {
-        size_t toClean = mSwapHistory.size() - imageCount;
-        for (size_t i = 0; i < toClean; ++i)
-        {
-            size_t historyIndex = (mCurrentSwapHistoryIndex + i) % mSwapHistory.size();
-            SwapHistory &swap   = mSwapHistory[historyIndex];
-
-            ANGLE_TRY(renderer->finishToSerial(displayVk, swap.serial));
-            swap.destroy(renderer->getDevice());
-        }
-    }
-
-    // Now, move the history, from most recent to oldest (as much as fits), into a new vector.
-    std::vector<SwapHistory> resizedHistory(imageCount);
-
-    size_t toCopy = std::min(imageCount, mSwapHistory.size());
-    for (size_t i = 0; i < toCopy; ++i)
-    {
-        size_t historyIndex =
-            (mCurrentSwapHistoryIndex + mSwapHistory.size() - i - 1) % mSwapHistory.size();
-        size_t resizedHistoryIndex          = imageCount - i - 1;
-        resizedHistory[resizedHistoryIndex] = std::move(mSwapHistory[historyIndex]);
-    }
-
-    // Set this as the new history.  Note that after rearranging in either case, the oldest history
-    // is at index 0.
-    mSwapHistory             = std::move(resizedHistory);
-    mCurrentSwapHistoryIndex = 0;
 
     return angle::Result::Continue;
 }

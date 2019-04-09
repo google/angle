@@ -163,7 +163,6 @@ class WindowSurfaceVk : public SurfaceImpl
                           EGLint n_rects,
                           bool &swapchainOutOfDate);
     angle::Result swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects);
-    angle::Result resizeSwapHistory(DisplayVk *displayVk, size_t imageCount);
 
     VkSurfaceCapabilitiesKHR mSurfaceCaps;
     std::vector<VkPresentModeKHR> mPresentModes;
@@ -212,9 +211,9 @@ class WindowSurfaceVk : public SurfaceImpl
     // results cannot affect the images in a swap chain.
     std::vector<vk::Semaphore> mFlushSemaphoreChain;
 
-    // A circular buffer, with the same size as mSwapchainImages (N), that stores the serial of the
-    // renderer on every swap.  The CPU is throttled by waiting for the Nth previous serial to
-    // finish.  Old swapchains are scheduled to be destroyed at the same time.
+    // A circular buffer that stores the serial of the renderer on every swap.  The CPU is
+    // throttled by waiting for the 2nd previous serial to finish.  Old swapchains are scheduled to
+    // be destroyed at the same time.
     struct SwapHistory : angle::NonCopyable
     {
         SwapHistory();
@@ -228,7 +227,8 @@ class WindowSurfaceVk : public SurfaceImpl
         std::vector<vk::Semaphore> semaphores;
         VkSwapchainKHR swapchain = VK_NULL_HANDLE;
     };
-    std::vector<SwapHistory> mSwapHistory;
+    static constexpr size_t kSwapHistorySize = 2;
+    std::array<SwapHistory, kSwapHistorySize> mSwapHistory;
     size_t mCurrentSwapHistoryIndex;
 
     vk::ImageHelper mDepthStencilImage;
