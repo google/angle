@@ -7,11 +7,7 @@ As an ANGLE Sheriff. Your job is to:
  1. Monitor the
     [Chromium GPU FYI Waterfall](https://ci.chromium.org/p/chromium/g/chromium.gpu.fyi/console)
     and respond to ANGLE bugs.
- 1. Control and monitor the ANGLE auto-rollers:
-    * [ANGLE into Chromium](https://autoroll.skia.org/r/angle-chromium-autoroll),
-    * [SPIRV-Headers into ANGLE](https://autoroll.skia.org/r/spirv-headers-angle-autoroll),
-    * [SPIRV-Tools into ANGLE](https://autoroll.skia.org/r/spirv-tools-angle-autoroll) and
-    * [glslang into ANGLE](https://autoroll.skia.org/r/glslang-angle-autoroll)
+ 1. Control and monitor the [ANGLE auto-rollers](#task-3_the-auto_rollers).
  1. Keep the [ANGLE Standalone Testers](README.md) in good working order.
 
 If you're not an ANGLE team member, you can contact us on the public ANGLE project
@@ -67,17 +63,25 @@ the tag `Hotlist-PixelWrangler` for bugs that aren't caused by ANGLE regressions
  1. For test failures: record `parent_got_angle_revision` in both builds.
  1. For compile failures record `got_angle_revision`.
  1. Use this URL:
-    https://chromium.googlesource.com/angle/angle.git/+log/<last good revision>..<first bad revision>
+    `https://chromium.googlesource.com/angle/angle.git/+log/<last passing revision>..<first failing revision>`
 
-## Task 3: The Auto-Roller
+## Task 3: The Auto-Rollers
 
 The [ANGLE auto-roller](https://autoroll.skia.org/r/angle-chromium-autoroll) automatically updates
 Chrome with the latest ANGLE changes.
 
- 1. You will be cc'ed on ANGLE rolls. Please check failed rolls to verify there is no blocking
+ 1. **Roller health**: You will be cc'ed on all rolls. Please check failed rolls to verify there is no blocking
     breakage.
- 1. You are also responsible for pausing the roller 24h before branch days, and resuming afterwards.
+ 1. **Chrome Branching**: You are responsible for pausing the roller 24h before branch days, and resuming afterwards.
     See the [Chrome Release Schedule](https://chromiumdash.appspot.com/schedule).
+
+We also use additional auto-rollers to roll third party libraries into ANGLE once per day:
+
+ * [SPIRV-Headers into ANGLE](https://autoroll.skia.org/r/spirv-headers-angle-autoroll),
+ * [SPIRV-Tools into ANGLE](https://autoroll.skia.org/r/spirv-tools-angle-autoroll) and
+ * [glslang into ANGLE](https://autoroll.skia.org/r/glslang-angle-autoroll)
+
+Please ensure these rollers are also healthy and unblocked.
 
 ## Task 4: ANGLE Standalone Testing
 
