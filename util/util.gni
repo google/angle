@@ -35,12 +35,10 @@ util_win_sources = [
   "util/windows/Windows_system_utils.cpp",
   "util/windows/WindowsTimer.cpp",
   "util/windows/WindowsTimer.h",
-]
-
-util_win_shared_sources = [
-  "util/windows/WGLWindow.cpp",
   "util/windows/WGLWindow.h",
 ]
+
+util_win_shared_sources = [ "util/windows/WGLWindow.cpp" ]
 
 util_winrt_sources = [
   "util/windows/winrt/WinRT_system_utils.cpp",

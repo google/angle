@@ -943,4 +943,7 @@ libegl_sources = [
   "src/libEGL/libEGL.cpp",
   "src/libEGL/libEGL.rc",
   "src/libEGL/resource.h",
+  "src/libGLESv2/entry_points_egl.h",
+  "src/libGLESv2/entry_points_egl_ext.h",
+  "src/libEGL/egl_loader_autogen.h",
 ]
