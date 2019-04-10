@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8dada0cc_76827550",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-10T16:57:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f382f919_cf1e5676",
+      "range": {
+        "startLine": 15,
+        "startChar": 18,
+        "endLine": 15,
+        "endChar": 22
+      },
+      "revId": "0ed18c328e41791dc5f917e3685c6e45ebfa4bd6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d2afbee_5b55ba72",
         "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
         "patchSetId": 2
@@ -69,6 +93,30 @@
       "revId": "0ed18c328e41791dc5f917e3685c6e45ebfa4bd6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdc09f19_ad42db1f",
+        "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-10T16:57:03Z",
+      "side": 1,
+      "message": "We _could_ have different expectations on GLES and Vulkan. I saw little value in that, as they are clearly stuff we don\u0027t support. Some are already marked as SKIP, and probably the fact that some FAIL instead of crash were just happy coincidences.\n\nAdded explanation to the commit message",
+      "parentUuid": "8d2afbee_5b55ba72",
+      "range": {
+        "startLine": 183,
+        "startChar": 66,
+        "endLine": 183,
+        "endChar": 70
+      },
+      "revId": "0ed18c328e41791dc5f917e3685c6e45ebfa4bd6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
