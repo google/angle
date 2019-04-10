@@ -1726,6 +1726,8 @@ TEST_P(Texture2DTest, NPOTSubImageParameters)
 TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
 {
     ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
+    // Flaky hangs on Win10 AMD RX 550 GL. http://anglebug.com/3371
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
 
     // The workaround in the GL backend required to trigger this bug generates driver warning
     // messages.
