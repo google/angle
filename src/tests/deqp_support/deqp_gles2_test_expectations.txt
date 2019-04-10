@@ -285,12 +285,6 @@
 3254 VULKAN NVIDIA : dEQP-GLES2.functional.clipping.point.point_clip_viewport_center = FAIL
 3254 VULKAN NVIDIA : dEQP-GLES2.functional.clipping.point.point_clip_viewport_corner = FAIL
 
-// Completeness failures
-3239 VULKAN : dEQP-GLES2.functional.texture.completeness.2d.npot_size = FAIL
-3239 VULKAN : dEQP-GLES2.functional.texture.completeness.2d.npot_size_level_1 = FAIL
-3239 VULKAN : dEQP-GLES2.functional.texture.completeness.cube.npot_size_level_1 = FAIL
-3239 VULKAN : dEQP-GLES2.functional.texture.completeness.cube.npot_size_level_1_neg_x = FAIL
-
 // These seem to fail on both D3D11 and Vulkan
 3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
 3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL

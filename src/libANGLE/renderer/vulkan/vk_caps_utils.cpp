@@ -94,6 +94,9 @@ void RendererVk::ensureCapsInitialized() const
             ? mPhysicalDeviceProperties.limits.maxSamplerAnisotropy
             : 0.0f;
 
+    // Vulkan natively supports non power-of-two textures
+    mNativeExtensions.textureNPOT = true;
+
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
