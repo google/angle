@@ -164,15 +164,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
 
 void HardwareBufferImageSiblingVkAndroid::onDestroy(const egl::Display *display)
 {
-    DisplayVk *displayVk = vk::GetImpl(display);
-    RendererVk *renderer = displayVk->getRenderer();
-
-    if (mImage != nullptr)
-    {
-        mImage->releaseImage(renderer);
-        mImage->releaseStagingBuffer(renderer);
-        SafeDelete(mImage);
-    }
+    ASSERT(mImage == nullptr);
 }
 
 gl::Format HardwareBufferImageSiblingVkAndroid::getFormat() const
@@ -205,4 +197,16 @@ vk::ImageHelper *HardwareBufferImageSiblingVkAndroid::getImage() const
 {
     return mImage;
 }
+
+void HardwareBufferImageSiblingVkAndroid::release(DisplayVk *display,
+                                                  std::vector<vk::GarbageObjectBase> *garbageQueue)
+{
+    if (mImage != nullptr)
+    {
+        mImage->releaseImage(display, garbageQueue);
+        mImage->releaseStagingBuffer(display, garbageQueue);
+        SafeDelete(mImage);
+    }
+}
+
 }  // namespace rx

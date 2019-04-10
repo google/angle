@@ -31,6 +31,14 @@ void FenceSyncVk::onDestroy(RendererVk *renderer)
     mFence.reset(renderer->getDevice());
 }
 
+void FenceSyncVk::onDestroy(DisplayVk *display)
+{
+    std::vector<vk::GarbageObjectBase> garbage;
+    mEvent.dumpResources(&garbage);
+
+    display->getRenderer()->addGarbage(std::move(mFence), std::move(garbage));
+}
+
 angle::Result FenceSyncVk::initialize(ContextVk *contextVk)
 {
     ASSERT(!mEvent.valid());

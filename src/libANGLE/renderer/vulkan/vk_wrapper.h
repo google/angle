@@ -39,6 +39,16 @@ class WrappedObject : angle::NonCopyable
         }
     }
 
+    template <typename ResourceOutType>
+    void dumpResources(std::vector<ResourceOutType> *outQueue)
+    {
+        if (valid())
+        {
+            outQueue->emplace_back(*static_cast<DerivedT *>(this));
+            mHandle = VK_NULL_HANDLE;
+        }
+    }
+
   protected:
     WrappedObject() : mHandle(VK_NULL_HANDLE) {}
     ~WrappedObject() { ASSERT(!valid()); }

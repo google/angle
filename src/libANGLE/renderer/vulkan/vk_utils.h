@@ -163,14 +163,28 @@ GetImplType<T> *GetImpl(const T *glObject)
     return GetImplAs<GetImplType<T>>(glObject);
 }
 
-class GarbageObject final
+class GarbageObjectBase
 {
   public:
     template <typename ObjectT>
-    GarbageObject(Serial serial, const ObjectT &object)
-        : mSerial(serial),
-          mHandleType(HandleTypeHelper<ObjectT>::kHandleType),
+    GarbageObjectBase(const ObjectT &object)
+        : mHandleType(HandleTypeHelper<ObjectT>::kHandleType),
           mHandle(reinterpret_cast<VkDevice>(object.getHandle()))
+    {}
+    GarbageObjectBase();
+
+    void destroy(VkDevice device);
+
+  private:
+    HandleType mHandleType;
+    VkDevice mHandle;
+};
+
+class GarbageObject final : public GarbageObjectBase
+{
+  public:
+    template <typename ObjectT>
+    GarbageObject(Serial serial, const ObjectT &object) : GarbageObjectBase(object), mSerial(serial)
     {}
 
     GarbageObject();
@@ -178,15 +192,12 @@ class GarbageObject final
     GarbageObject &operator=(const GarbageObject &other);
 
     bool destroyIfComplete(VkDevice device, Serial completedSerial);
-    void destroy(VkDevice device);
 
   private:
     // TODO(jmadill): Since many objects will have the same serial, it might be more efficient to
     // store the serial outside of the garbage object itself. We could index ranges of garbage
     // objects in the Renderer, using a circular buffer.
     Serial mSerial;
-    HandleType mHandleType;
-    VkDevice mHandle;
 };
 
 class MemoryProperties final : angle::NonCopyable
@@ -465,6 +476,7 @@ class Shared final : angle::NonCopyable
   private:
     RefCounted<T> *mRefCounted;
 };
+
 }  // namespace vk
 
 // List of function pointers for used extensions.

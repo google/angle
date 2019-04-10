@@ -12,6 +12,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
@@ -375,6 +376,21 @@ void DynamicBuffer::release(RendererVk *renderer)
     }
 }
 
+void DynamicBuffer::release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
+{
+    reset();
+    releaseRetainedBuffers(display, garbageQueue);
+
+    if (mBuffer)
+    {
+        mBuffer->unmap(display->getDevice());
+
+        mBuffer->release(display, garbageQueue);
+        delete mBuffer;
+        mBuffer = nullptr;
+    }
+}
+
 void DynamicBuffer::releaseRetainedBuffers(RendererVk *renderer)
 {
     for (BufferHelper *toFree : mRetainedBuffers)
@@ -382,6 +398,18 @@ void DynamicBuffer::releaseRetainedBuffers(RendererVk *renderer)
         // See note in release().
         toFree->updateQueueSerial(renderer->getCurrentQueueSerial());
         toFree->release(renderer);
+        delete toFree;
+    }
+
+    mRetainedBuffers.clear();
+}
+
+void DynamicBuffer::releaseRetainedBuffers(DisplayVk *display,
+                                           std::vector<GarbageObjectBase> *garbageQueue)
+{
+    for (BufferHelper *toFree : mRetainedBuffers)
+    {
+        toFree->release(display, garbageQueue);
         delete toFree;
     }
 
@@ -1120,6 +1148,17 @@ void BufferHelper::release(RendererVk *renderer)
     renderer->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
 }
 
+void BufferHelper::release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
+{
+    unmap(display->getDevice());
+    mSize       = 0;
+    mViewFormat = nullptr;
+
+    mBuffer.dumpResources(garbageQueue);
+    mBufferView.dumpResources(garbageQueue);
+    mDeviceMemory.dumpResources(garbageQueue);
+}
+
 void BufferHelper::onWrite(VkAccessFlagBits writeAccessType)
 {
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
@@ -1351,6 +1390,12 @@ void ImageHelper::releaseImage(RendererVk *renderer)
     renderer->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
 }
 
+void ImageHelper::releaseImage(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
+{
+    mImage.dumpResources(garbageQueue);
+    mDeviceMemory.dumpResources(garbageQueue);
+}
+
 void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
 {
     // Remove updates that never made it to the texture.
@@ -1359,6 +1404,18 @@ void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
         update.release(renderer);
     }
     mStagingBuffer.release(renderer);
+    mSubresourceUpdates.clear();
+}
+
+void ImageHelper::releaseStagingBuffer(DisplayVk *display,
+                                       std::vector<GarbageObjectBase> *garbageQueue)
+{
+    // Remove updates that never made it to the texture.
+    for (SubresourceUpdate &update : mSubresourceUpdates)
+    {
+        update.release(display, garbageQueue);
+    }
+    mStagingBuffer.release(display, garbageQueue);
     mSubresourceUpdates.clear();
 }
 
@@ -2265,6 +2322,17 @@ void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
     {
         image.image->releaseImage(renderer);
         image.image->releaseStagingBuffer(renderer);
+        SafeDelete(image.image);
+    }
+}
+
+void ImageHelper::SubresourceUpdate::release(DisplayVk *display,
+                                             std::vector<GarbageObjectBase> *garbageQueue)
+{
+    if (updateSource == UpdateSource::Image)
+    {
+        image.image->releaseImage(display, garbageQueue);
+        image.image->releaseStagingBuffer(display, garbageQueue);
         SafeDelete(image.image);
     }
 }

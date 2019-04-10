@@ -415,27 +415,11 @@ angle::Result InitShaderAndSerial(Context *context,
     return angle::Result::Continue;
 }
 
-// GarbageObject implementation.
-GarbageObject::GarbageObject()
-    : mSerial(), mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
+GarbageObjectBase::GarbageObjectBase() : mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
 {}
 
-GarbageObject::GarbageObject(const GarbageObject &other) = default;
-
-GarbageObject &GarbageObject::operator=(const GarbageObject &other) = default;
-
-bool GarbageObject::destroyIfComplete(VkDevice device, Serial completedSerial)
-{
-    if (completedSerial >= mSerial)
-    {
-        destroy(device);
-        return true;
-    }
-
-    return false;
-}
-
-void GarbageObject::destroy(VkDevice device)
+// GarbageObjectBase implementation
+void GarbageObjectBase::destroy(VkDevice device)
 {
     switch (mHandleType)
     {
@@ -503,6 +487,25 @@ void GarbageObject::destroy(VkDevice device)
             break;
     }
 }
+
+// GarbageObject implementation.
+GarbageObject::GarbageObject() : mSerial() {}
+
+GarbageObject::GarbageObject(const GarbageObject &other) = default;
+
+GarbageObject &GarbageObject::operator=(const GarbageObject &other) = default;
+
+bool GarbageObject::destroyIfComplete(VkDevice device, Serial completedSerial)
+{
+    if (completedSerial >= mSerial)
+    {
+        destroy(device);
+        return true;
+    }
+
+    return false;
+}
+
 }  // namespace vk
 
 // VK_EXT_debug_utils

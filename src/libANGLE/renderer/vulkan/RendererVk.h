@@ -213,6 +213,10 @@ class RendererVk : angle::NonCopyable
     void pushDebugMarker(GLenum source, GLuint id, std::string &&marker);
     void popDebugMarker();
 
+    void addGarbage(vk::Shared<vk::Fence> &&fence, std::vector<vk::GarbageObjectBase> &&garbage);
+    void addGarbage(std::vector<vk::Shared<vk::Fence>> &&fences,
+                    std::vector<vk::GarbageObjectBase> &&garbage);
+
     static constexpr size_t kMaxExtensionNames = 200;
     using ExtensionNameList = angle::FixedVector<const char *, kMaxExtensionNames>;
 
@@ -253,6 +257,8 @@ class RendererVk : angle::NonCopyable
     bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
     void nextSerial();
+
+    angle::Result cleanupFencedGarbage(vk::Context *context, bool block);
 
     egl::Display *mDisplay;
 
@@ -302,6 +308,11 @@ class RendererVk : angle::NonCopyable
 
     std::vector<CommandBatch> mInFlightCommands;
     std::vector<vk::GarbageObject> mGarbage;
+
+    using FencedGarbage =
+        std::pair<std::vector<vk::Shared<vk::Fence>>, std::vector<vk::GarbageObjectBase>>;
+    std::vector<FencedGarbage> mFencedGarbage;
+
     vk::MemoryProperties mMemoryProperties;
     vk::FormatTable mFormatTable;
 

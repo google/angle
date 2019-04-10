@@ -58,9 +58,11 @@ class DynamicBuffer : angle::NonCopyable
 
     // This releases resources when they might currently be in use.
     void release(RendererVk *renderer);
+    void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     // This releases all the buffers that have been allocated since this was last called.
     void releaseRetainedBuffers(RendererVk *renderer);
+    void releaseRetainedBuffers(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     // This frees resources immediately.
     void destroy(VkDevice device);
@@ -397,7 +399,9 @@ class BufferHelper final : public CommandGraphResource
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
     void destroy(VkDevice device);
+
     void release(RendererVk *renderer);
+    void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     bool valid() const { return mBuffer.valid(); }
     const Buffer &getBuffer() const { return mBuffer; }
@@ -585,7 +589,10 @@ class ImageHelper final : public CommandGraphResource
                                 uint32_t layerCount);
 
     void releaseImage(RendererVk *renderer);
+    void releaseImage(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+
     void releaseStagingBuffer(RendererVk *renderer);
+    void releaseStagingBuffer(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     bool valid() const { return mImage.valid(); }
 
@@ -756,6 +763,7 @@ class ImageHelper final : public CommandGraphResource
         SubresourceUpdate(const SubresourceUpdate &other);
 
         void release(RendererVk *renderer);
+        void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
         const VkImageSubresourceLayers &dstSubresource() const
         {
