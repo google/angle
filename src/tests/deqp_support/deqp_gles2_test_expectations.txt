@@ -87,8 +87,6 @@
 
 // Shader failures.
 3285 : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_fragment = FAIL
-3285 : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_vertex = FAIL
-3285 : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_fragment = FAIL
 3287 : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_vertex = FAIL
 3287 : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_fragment = FAIL
 
