@@ -16,6 +16,24 @@
       "revId": "0f2acc6b83b6c9b801bc469778a2c5f30a2bfd7c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3998c283_2ed90f16",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-11T17:32:41Z",
+      "side": 1,
+      "message": "Let\u0027s say `rect` (render area when called by Vulkan) has a height of 100. With invertY\u003dfalse, let\u0027s say that means 0 is bottom, and y grows upwards. With invertY\u003dtrue, it means that you want y\u003d0 to correspond to top and y would grow downwards. Note that while we want y to grown downwards in that case conceptually, y still grows up in reality.\n\nLet\u0027s focus on invertY\u003dtrue. Say scissor is from y\u003d10 to y\u003d30. Then clippedRect is also from y\u003d10 to y\u003d30 (i.e. y\u003d10, height\u003d20).  Inverting y, you would want to get y to range from y\u003d100-10 to y\u003d100-30, i.e. y\u003d90, height\u003d-20.\n\nWe can\u0027t have height\u003d-20, so instead of thinking of the rect ranging in y from 90 to 70, with a height of -20, we think of it as y ranging from 70 to 90, with a height of 20.\n\nThat means invertedY \u003d 100 - 10 - 20, and the height remaining constant.",
+      "parentUuid": "70cfefdb_50022640",
+      "revId": "0f2acc6b83b6c9b801bc469778a2c5f30a2bfd7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
