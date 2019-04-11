@@ -197,7 +197,7 @@
 2546 ANDROID : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
 2546 ANDROID : dEQP-EGL.functional.query_context.query_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.multi_context.* = SKIP
-2546 ANDROID : dEQP-EGL.functional.render.single_context.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.single_context.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
 2546 ANDROID : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
 
@@ -214,7 +214,7 @@
 2546 ANDROID VULKAN : dEQP-EGL.functional.query_context.get_current_surface.other = SKIP
 2546 ANDROID VULKAN : dEQP-EGL.functional.query_surface.set_attribute.window.other = SKIP
 2546 ANDROID VULKAN : dEQP-EGL.functional.query_surface.simple.window.other = SKIP
-2546 ANDROID VULKAN : dEQP-EGL.functional.resize.pixel_density.shrink = SKIP
+2546 ANDROID VULKAN : dEQP-EGL.functional.resize.pixel_density.* = SKIP
 2546 ANDROID VULKAN : dEQP-EGL.functional.wide_color.window* = SKIP
 
 // ES 1 tests
