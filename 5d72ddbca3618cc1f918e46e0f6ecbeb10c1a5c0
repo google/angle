@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa11a2f_31e55e97",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1149,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-11T13:43:15Z",
+      "side": 1,
+      "message": "nit: can be const",
+      "range": {
+        "startLine": 1149,
+        "startChar": 9,
+        "endLine": 1149,
+        "endChar": 35
+      },
+      "revId": "5d72ddbca3618cc1f918e46e0f6ecbeb10c1a5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27d3a57f_2f6bf890",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1173,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-11T13:43:15Z",
+      "side": 1,
+      "message": "while you\u0027re at it can you make this a local in each test?",
+      "range": {
+        "startLine": 1173,
+        "startChar": 4,
+        "endLine": 1173,
+        "endChar": 28
+      },
+      "revId": "5d72ddbca3618cc1f918e46e0f6ecbeb10c1a5c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
