@@ -382,6 +382,9 @@ class ParallelShaderCompileTestES31 : public ParallelShaderCompileTest
 // Test to compile and link many computing programs in parallel.
 TEST_P(ParallelShaderCompileTestES31, LinkAndDispatchManyPrograms)
 {
+    // Flaky on Win NVIDIA D3D11. http://anglebug.com/3359
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsD3D11());
+
     ANGLE_SKIP_TEST_IF(!ensureParallelShaderCompileExtensionAvailable());
 
     TaskRunner<ImageLoadStore> runner;
