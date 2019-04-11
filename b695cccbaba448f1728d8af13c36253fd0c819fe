@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "9ee559f8_bfbab513",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-11T20:52:08Z",
+      "side": 1,
+      "message": "You\u0027re not kidding.   It\u0027s a little rough seeing both of these within a few lines of each other:\n\n    Texture *texture \u003d getTextureByTarget(target);\n\n    Texture *texture \u003d getTextureByType(target);\n\nIt\u0027s certainly not pretty, but thankfully we can lean on the compiler to make sure the right types are being passed around.\n\nPersonally, I would prefer we rename the parameters to solve a problem we have now, rather than live with it to hopefully solve a problem we may have in the future.   I don\u0027t know enough about the gl.xml stuff though to know how big the trade-off is though.",
+      "parentUuid": "319d75be_377cfb1d",
+      "revId": "b695cccbaba448f1728d8af13c36253fd0c819fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "143ba104_c2223a26",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
