@@ -10,6 +10,7 @@ Contributors
 
     Geoff Lang
     Olli Etuaho
+    Sunny Sachanandani
 
 Contacts
 
@@ -90,8 +91,9 @@ Additions to Chapter 3 of the EGL 1.5 Specification (EGL Functions and Errors)
                        DXGI_FORMAT_B8G8R8A8_UNORM_SRGB (support is optional),
                        DXGI_FORMAT_R8G8B8A8_TYPELESS (support is optional),
                        DXGI_FORMAT_B8G8R8A8_TYPELESS (support is optional),
-                       DXGI_FORMAT_R16G16B16A16_FLOAT or
-                       DXGI_FORMAT_R32G32B32A32_FLOAT.
+                       DXGI_FORMAT_R16G16B16A16_FLOAT,
+                       DXGI_FORMAT_R32G32B32A32_FLOAT or
+                       DXGI_FORMAT_R10G10B10A2_UNORM.
     --------------------------------------------------------------------------
     Table egl.restrictions - Restrictions on D3D resources that can be used
     as a <buffer>.
@@ -134,6 +136,8 @@ Issues
     PROPOSED: Support for typeless textures is currently limited to D3D11.
 
 Revision History
+
+    Version 4, 2019/04/15 - added support for DXGI_FORMAT_R10G10B10A2_UNORM.
 
     Version 3, 2018/01/23 - added support for typeless textures.
 
