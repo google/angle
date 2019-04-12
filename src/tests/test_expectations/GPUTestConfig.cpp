@@ -331,9 +331,9 @@ inline bool GetGPUTestSystemInfo(SystemInfo **sysInfo)
     return sPopulated;
 }
 
-// Get the active GPUDeviceInfo from the SystemInfo struct.
-// Returns false if devInfo is not guaranteed to be set to the active device.
-inline bool GetActiveGPU(GPUDeviceInfo **devInfo)
+// Get the primary GPUDeviceInfo from the SystemInfo struct.
+// Returns false if devInfo is not guaranteed to be set to the primary device.
+inline bool GetPrimaryGPU(GPUDeviceInfo **devInfo)
 {
     SystemInfo *systemInfo = nullptr;
     GetGPUTestSystemInfo(&systemInfo);
@@ -341,14 +341,10 @@ inline bool GetActiveGPU(GPUDeviceInfo **devInfo)
     {
         return false;
     }
+    // Default to the first index
     uint32_t index = 0;
-    // See if the activeGPUIndex was set first
-    if (systemInfo->activeGPUIndex != -1)
-    {
-        index = systemInfo->activeGPUIndex;
-    }
-    // Else fallback to the primaryGPUIndex
-    else if (systemInfo->primaryGPUIndex != -1)
+    // See if the primaryGPUIndex was set first
+    if (systemInfo->primaryGPUIndex != -1)
     {
         index = systemInfo->primaryGPUIndex;
     }
@@ -357,14 +353,14 @@ inline bool GetActiveGPU(GPUDeviceInfo **devInfo)
     return true;
 }
 
-// Get the vendor ID of the active GPU from the SystemInfo struct.
+// Get the vendor ID of the primary GPU from the SystemInfo struct.
 // Returns 0 if there is an error.
-inline VendorID GetActiveGPUVendorID()
+inline VendorID GetPrimaryGPUVendorID()
 {
-    GPUDeviceInfo *activeGPU = nullptr;
-    if (GetActiveGPU(&activeGPU))
+    GPUDeviceInfo *primaryGPU = nullptr;
+    if (GetPrimaryGPU(&primaryGPU))
     {
-        return activeGPU->vendorId;
+        return primaryGPU->vendorId;
     }
     else
     {
@@ -372,14 +368,14 @@ inline VendorID GetActiveGPUVendorID()
     }
 }
 
-// Get the device ID of the active GPU from the SystemInfo struct.
+// Get the device ID of the primary GPU from the SystemInfo struct.
 // Returns 0 if there is an error.
-inline DeviceID GetActiveGPUDeviceID()
+inline DeviceID GetPrimaryGPUDeviceID()
 {
-    GPUDeviceInfo *activeGPU = nullptr;
-    if (GetActiveGPU(&activeGPU))
+    GPUDeviceInfo *primaryGPU = nullptr;
+    if (GetPrimaryGPU(&primaryGPU))
     {
-        return activeGPU->deviceId;
+        return primaryGPU->deviceId;
     }
     else
     {
@@ -387,28 +383,28 @@ inline DeviceID GetActiveGPUDeviceID()
     }
 }
 
-// Check whether the active GPU is NVIDIA.
+// Check whether the primary GPU is NVIDIA.
 inline bool IsNVIDIA()
 {
-    return angle::IsNVIDIA(GetActiveGPUVendorID());
+    return angle::IsNVIDIA(GetPrimaryGPUVendorID());
 }
 
-// Check whether the active GPU is AMD.
+// Check whether the primary GPU is AMD.
 inline bool IsAMD()
 {
-    return angle::IsAMD(GetActiveGPUVendorID());
+    return angle::IsAMD(GetPrimaryGPUVendorID());
 }
 
-// Check whether the active GPU is Intel.
+// Check whether the primary GPU is Intel.
 inline bool IsIntel()
 {
-    return angle::IsIntel(GetActiveGPUVendorID());
+    return angle::IsIntel(GetPrimaryGPUVendorID());
 }
 
-// Check whether the active GPU is VMWare.
+// Check whether the primary GPU is VMWare.
 inline bool IsVMWare()
 {
-    return angle::IsVMWare(GetActiveGPUVendorID());
+    return angle::IsVMWare(GetPrimaryGPUVendorID());
 }
 
 // Check whether this is a debug build.
@@ -464,7 +460,7 @@ inline bool IsDeviceIdGPU(const std::string &gpuDeviceId)
         // PushErrorMessage(kErrorMessage[kErrorEntryWithGpuDeviceIdConflicts], line_number);
         return false;
     }
-    return (deviceId == GetActiveGPUDeviceID());
+    return (deviceId == GetPrimaryGPUDeviceID());
 }
 
 // Check whether the active GPU is a NVIDIA Quadro P400
