@@ -2191,7 +2191,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
     {
         if (mShaderConstants.onFirstVertexChange(firstVertex))
         {
-            mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS);
+            mInternalDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
         }
     }
 

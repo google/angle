@@ -643,6 +643,89 @@ void main() {
     }
 }
 
+// Helper function for the GLVertexIDIntegerTextureDrawArrays test
+void GLVertexIDIntegerTextureDrawArrays_helper(int first, int count, GLenum err)
+{
+    glDrawArrays(GL_POINTS, first, count);
+
+    int pixel[4];
+    glReadPixels(0, 0, 1, 1, GL_RGBA_INTEGER, GL_INT, pixel);
+    // If we call this function with err as GL_NO_ERROR, then we expect no error and check the
+    // pixels.
+    if (err == static_cast<GLenum>(GL_NO_ERROR))
+    {
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(pixel[0], first + count - 1);
+    }
+    else
+    {
+        // If we call this function with err set, we will allow the error, but check the pixels if
+        // the error hasn't occurred.
+        GLenum glError = glGetError();
+        if (glError == err || glError == static_cast<GLenum>(GL_NO_ERROR))
+        {
+            EXPECT_EQ(pixel[0], first + count - 1);
+        }
+    }
+}
+
+// Ensure gl_VertexID gets passed to an integer texture properly when drawArrays is called. This
+// is based off the WebGL test:
+// https://github.com/KhronosGroup/WebGL/blob/master/sdk/tests/conformance2/rendering/vertex-id.html
+TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawArrays)
+{
+    // Have to set a large point size because the window size is much larger than the texture
+    constexpr char kVS[] = R"(#version 300 es
+flat out highp int vVertexID;
+void main() {
+    vVertexID = gl_VertexID;
+    gl_Position = vec4(0,0,0,1);
+    gl_PointSize = 1000.0;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+flat in highp int vVertexID;
+out highp int oVertexID;
+void main() {
+    oVertexID = vVertexID;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, 1, 1);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the texture to 42 to ensure the first test case doesn't accidentally pass
+    GLint val = 42;
+    glClearBufferiv(GL_COLOR, 0, &val);
+    int pixel[4];
+    glReadPixels(0, 0, 1, 1, GL_RGBA_INTEGER, GL_INT, pixel);
+    EXPECT_EQ(pixel[0], val);
+
+    GLVertexIDIntegerTextureDrawArrays_helper(0, 1, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(1, 1, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(10000, 1, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(100000, 1, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(1000000, 1, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(0, 2, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(1, 2, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(10000, 2, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(100000, 2, GL_NO_ERROR);
+    GLVertexIDIntegerTextureDrawArrays_helper(1000000, 2, GL_NO_ERROR);
+
+    int32_t int32Max = 0x7FFFFFFF;
+    GLVertexIDIntegerTextureDrawArrays_helper(int32Max - 2, 1, GL_OUT_OF_MEMORY);
+    GLVertexIDIntegerTextureDrawArrays_helper(int32Max - 1, 1, GL_OUT_OF_MEMORY);
+    GLVertexIDIntegerTextureDrawArrays_helper(int32Max, 1, GL_OUT_OF_MEMORY);
+}
+
 // Draw an array of points with the first vertex offset at 5 using gl_VertexID
 TEST_P(GLSLTest_ES3, GLVertexIDOffsetFiveDrawArray)
 {
