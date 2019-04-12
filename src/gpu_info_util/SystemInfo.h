@@ -67,6 +67,8 @@ struct SystemInfo
 
     bool isOptimus       = false;
     bool isAMDSwitchable = false;
+    // Only true on dual-GPU Mac laptops.
+    bool isMacSwitchable = false;
 
     // Only available on Android
     std::string machineManufacturer;
