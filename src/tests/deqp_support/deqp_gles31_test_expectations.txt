@@ -515,6 +515,7 @@
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_lowp_geometry = FAIL
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_mediump_geometry = FAIL
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_highp_geometry = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBMinusOne.highp_compute = FAIL
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_constants.geometry_shader.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.state_query.program.geometry_shader_state_get_programiv = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.query.* = FAIL
