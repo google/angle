@@ -57,6 +57,13 @@
         "Exp2": "GL_EXP2",
         "Linear": "GL_LINEAR"
     },
+    "GraphicsResetStatus":
+    {
+        "NoError": "GL_NO_ERROR",
+        "GuiltyContextReset": "GL_GUILTY_CONTEXT_RESET",
+        "InnocentContextReset": "GL_INNOCENT_CONTEXT_RESET",
+        "UnknownContextReset": "GL_UNKNOWN_CONTEXT_RESET"
+    },
     "HintSetting":
     {
         "DontCare": "GL_DONT_CARE",

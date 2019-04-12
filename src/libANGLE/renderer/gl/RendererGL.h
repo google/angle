@@ -138,7 +138,7 @@ class RendererGL : angle::NonCopyable
                                              GLenum transformType,
                                              const GLfloat *transformValues);
 
-    GLenum getResetStatus();
+    gl::GraphicsResetStatus getResetStatus();
 
     // EXT_debug_marker
     void insertEventMarker(GLsizei length, const char *marker);

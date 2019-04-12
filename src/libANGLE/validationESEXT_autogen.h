@@ -620,6 +620,11 @@ bool ValidateCoverageModulationCHROMIUM(Context *context, GLenum components);
 bool ValidateMatrixLoadfCHROMIUM(Context *context, GLenum matrixMode, const GLfloat *matrix);
 bool ValidateMatrixLoadIdentityCHROMIUM(Context *context, GLenum matrixMode);
 
+// GL_CHROMIUM_lose_context
+bool ValidateLoseContextCHROMIUM(Context *context,
+                                 GraphicsResetStatus currentPacked,
+                                 GraphicsResetStatus otherPacked);
+
 // GL_CHROMIUM_path_rendering
 bool ValidateGenPathsCHROMIUM(Context *context, GLsizei range);
 bool ValidateDeletePathsCHROMIUM(Context *context, GLuint first, GLsizei range);

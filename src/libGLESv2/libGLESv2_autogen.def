@@ -533,6 +533,9 @@ EXPORTS
     glMatrixLoadIdentityCHROMIUM
     glMatrixLoadfCHROMIUM
 
+    ; GL_CHROMIUM_lose_context
+    glLoseContextCHROMIUM
+
     ; GL_CHROMIUM_path_rendering
     glBindFragmentInputLocationCHROMIUM
     glCoverFillPathCHROMIUM
@@ -1143,6 +1146,7 @@ EXPORTS
     glLoadMatrixxContextANGLE
     glLoadPaletteFromModelViewMatrixOESContextANGLE
     glLogicOpContextANGLE
+    glLoseContextCHROMIUMContextANGLE
     glMapBufferOESContextANGLE
     glMapBufferRangeContextANGLE
     glMapBufferRangeEXTContextANGLE

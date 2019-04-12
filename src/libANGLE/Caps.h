@@ -492,6 +492,9 @@ struct Extensions
 
     // GL_ANGLE_provoking_vertex
     bool provokingVertex = false;
+
+    // GL_CHROMIUM_lose_context
+    bool loseContextCHROMIUM = false;
 };
 
 struct ExtensionInfo

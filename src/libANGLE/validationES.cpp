@@ -6402,4 +6402,40 @@ void RecordDrawAttribsError(Context *context)
         context->validationError(GL_INVALID_OPERATION, kInsufficientVertexBufferSize);
     }
 }
+
+bool ValidateLoseContextCHROMIUM(Context *context,
+                                 GraphicsResetStatus current,
+                                 GraphicsResetStatus other)
+{
+    if (!context->getExtensions().loseContextCHROMIUM)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (current)
+    {
+        case GraphicsResetStatus::GuiltyContextReset:
+        case GraphicsResetStatus::InnocentContextReset:
+        case GraphicsResetStatus::UnknownContextReset:
+            break;
+
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidResetStatus);
+    }
+
+    switch (other)
+    {
+        case GraphicsResetStatus::GuiltyContextReset:
+        case GraphicsResetStatus::InnocentContextReset:
+        case GraphicsResetStatus::UnknownContextReset:
+            break;
+
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidResetStatus);
+    }
+
+    return true;
+}
+
 }  // namespace gl

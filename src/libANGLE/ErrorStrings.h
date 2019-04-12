@@ -283,6 +283,7 @@ MSG kInvalidRenderbufferName = "name is not a valid renderbuffer.";
 MSG kInvalidRenderbufferTarget = "Invalid renderbuffer target.";
 MSG kInvalidRenderbufferTextureParameter = "Invalid parameter name for renderbuffer attachment.";
 MSG kInvalidRenderbufferWidthHeight = "Renderbuffer width and height cannot be negative and cannot exceed maximum texture size.";
+MSG kInvalidResetStatus = "Reset status is not valid";
 MSG kInvalidSampleMaskNumber = "MaskNumber cannot be greater than or equal to the value of MAX_SAMPLE_MASK_WORDS.";
 MSG kInvalidSampler = "Sampler is not valid";
 MSG kInvalidSamplerName = "name is not a valid sampler.";

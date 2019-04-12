@@ -63,6 +63,7 @@ struct ANGLE_UTIL_EXPORT ConfigParameters
     bool robustAccess;
     EGLint samples;
     Optional<bool> contextProgramCacheEnabled;
+    EGLenum resetStrategy;
 };
 
 class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable

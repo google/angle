@@ -697,7 +697,7 @@ bool DisplayGLX::testDeviceLost()
 {
     if (mHasARBCreateContextRobustness)
     {
-        return mRenderer->getResetStatus() != GL_NO_ERROR;
+        return mRenderer->getResetStatus() != gl::GraphicsResetStatus::NoError;
     }
 
     return false;

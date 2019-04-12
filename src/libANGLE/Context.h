@@ -339,6 +339,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void getPathParameteriv(GLuint path, GLenum pname, GLint *value);
     void pathStencilFunc(GLenum func, GLint ref, GLuint mask);
 
+    // GL_CHROMIUM_lose_context
+    void loseContext(GraphicsResetStatus current, GraphicsResetStatus other);
+
     // Framebuffers are owned by the Context, so these methods do not pass through
     GLuint createFramebuffer();
     void deleteFramebuffer(GLuint framebuffer);
@@ -1758,7 +1761,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void validationError(GLenum errorCode, const char *message);
 
     GLenum getError();
-    void markContextLost();
+    void markContextLost(GraphicsResetStatus status);
 
     bool isContextLost() const { return mContextLost; }
 
@@ -1977,7 +1980,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Current/lost context flags
     bool mHasBeenCurrent;
     bool mContextLost;
-    GLenum mResetStatus;
+    GraphicsResetStatus mResetStatus;
     bool mContextLostForced;
     GLenum mResetStrategy;
     const bool mRobustAccess;

@@ -992,5 +992,9 @@
 
     "GL_EXT_semaphore_fd": [
         "glImportSemaphoreFdEXT"
+    ],
+
+    "GL_CHROMIUM_lose_context": [
+        "glLoseContextCHROMIUM"
     ]
 }

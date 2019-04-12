@@ -341,7 +341,7 @@ def default_return_value(cmd_name, return_type):
     return "GetDefaultReturnValue<EntryPoint::" + cmd_name[2:] + ", " + return_type + ">()"
 
 def get_context_getter_function(cmd_name, is_explicit_context):
-    if cmd_name == "glGetError":
+    if cmd_name == "glGetError" or cmd_name == "glGetGraphicsResetStatusEXT":
         return "GetGlobalContext()"
     elif is_explicit_context:
         return "static_cast<gl::Context *>(ctx)"

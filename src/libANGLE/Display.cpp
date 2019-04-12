@@ -1067,7 +1067,7 @@ void Display::notifyDeviceLost()
     for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end();
          context++)
     {
-        (*context)->markContextLost();
+        (*context)->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
     }
 
     mDeviceLost = true;

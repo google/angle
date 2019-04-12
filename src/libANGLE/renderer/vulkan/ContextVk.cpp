@@ -593,17 +593,17 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
     return angle::Result::Stop;
 }
 
-GLenum ContextVk::getResetStatus()
+gl::GraphicsResetStatus ContextVk::getResetStatus()
 {
     if (mRenderer->isDeviceLost())
     {
         // TODO(geofflang): It may be possible to track which context caused the device lost and
         // return either GL_GUILTY_CONTEXT_RESET or GL_INNOCENT_CONTEXT_RESET.
         // http://anglebug.com/2787
-        return GL_UNKNOWN_CONTEXT_RESET;
+        return gl::GraphicsResetStatus::UnknownContextReset;
     }
 
-    return GL_NO_ERROR;
+    return gl::GraphicsResetStatus::NoError;
 }
 
 std::string ContextVk::getVendorString() const

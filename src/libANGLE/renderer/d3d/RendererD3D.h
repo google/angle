@@ -343,7 +343,7 @@ class RendererD3D : public BufferFactoryD3D
                                                   const gl::Box &destArea)    = 0;
 
     // Device lost
-    GLenum getResetStatus();
+    gl::GraphicsResetStatus getResetStatus();
     void notifyDeviceLost();
     virtual bool resetDevice()          = 0;
     virtual bool testDeviceLost()       = 0;

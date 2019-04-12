@@ -2233,6 +2233,25 @@ void GL_APIENTRY MatrixLoadIdentityCHROMIUM(GLenum matrixMode)
     }
 }
 
+// GL_CHROMIUM_lose_context
+void GL_APIENTRY LoseContextCHROMIUM(GLenum current, GLenum other)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum current = 0x%X, GLenum other = 0x%X)", current, other);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GraphicsResetStatus currentPacked = FromGLenum<GraphicsResetStatus>(current);
+        GraphicsResetStatus otherPacked   = FromGLenum<GraphicsResetStatus>(other);
+        if (context->skipValidation() ||
+            ValidateLoseContextCHROMIUM(context, currentPacked, otherPacked))
+        {
+            context->loseContext(currentPacked, otherPacked);
+        }
+    }
+}
+
 // GL_CHROMIUM_path_rendering
 GLuint GL_APIENTRY GenPathsCHROMIUM(GLsizei range)
 {
@@ -3490,7 +3509,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXT()
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT("()");
 
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     if (context)
     {
         if (context->skipValidation() || ValidateGetGraphicsResetStatusEXT(context))
@@ -9142,7 +9161,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx)
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT("()");
 
-    Context *context = static_cast<gl::Context *>(ctx);
+    Context *context = GetGlobalContext();
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
@@ -19019,6 +19038,25 @@ void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
         if (context->skipValidation() || ValidateProvokingVertexANGLE(context, modePacked))
         {
             context->provokingVertex(modePacked);
+        }
+    }
+}
+
+void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum current = 0x%X, GLenum other = 0x%X)", current, other);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        GraphicsResetStatus currentPacked = FromGLenum<GraphicsResetStatus>(current);
+        GraphicsResetStatus otherPacked   = FromGLenum<GraphicsResetStatus>(other);
+        if (context->skipValidation() ||
+            ValidateLoseContextCHROMIUM(context, currentPacked, otherPacked))
+        {
+            context->loseContext(currentPacked, otherPacked);
         }
     }
 }

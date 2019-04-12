@@ -164,7 +164,7 @@ class ContextGL : public ContextImpl
                                              const GLfloat *transformValues) override;
 
     // Device loss
-    GLenum getResetStatus() override;
+    gl::GraphicsResetStatus getResetStatus() override;
 
     // Vendor and description strings.
     std::string getVendorString() const override;

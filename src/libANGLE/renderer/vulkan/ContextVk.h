@@ -81,7 +81,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                                        const void *indirect) override;
 
     // Device loss
-    GLenum getResetStatus() override;
+    gl::GraphicsResetStatus getResetStatus() override;
 
     // Vendor and description strings.
     std::string getVendorString() const override;

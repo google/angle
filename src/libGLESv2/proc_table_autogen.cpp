@@ -898,6 +898,8 @@ ProcEntry g_procTable[] = {
      P(gl::LoadPaletteFromModelViewMatrixOESContextANGLE)},
     {"glLogicOp", P(gl::LogicOp)},
     {"glLogicOpContextANGLE", P(gl::LogicOpContextANGLE)},
+    {"glLoseContextCHROMIUM", P(gl::LoseContextCHROMIUM)},
+    {"glLoseContextCHROMIUMContextANGLE", P(gl::LoseContextCHROMIUMContextANGLE)},
     {"glMapBufferOES", P(gl::MapBufferOES)},
     {"glMapBufferOESContextANGLE", P(gl::MapBufferOESContextANGLE)},
     {"glMapBufferRange", P(gl::MapBufferRange)},
@@ -1416,5 +1418,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1330;
+size_t g_numProcs = 1332;
 }  // namespace egl

@@ -146,6 +146,21 @@ template <>
 FogMode FromGLenum<FogMode>(GLenum from);
 GLenum ToGLenum(FogMode from);
 
+enum class GraphicsResetStatus : uint8_t
+{
+    NoError              = 0,
+    GuiltyContextReset   = 1,
+    InnocentContextReset = 2,
+    UnknownContextReset  = 3,
+
+    InvalidEnum = 4,
+    EnumCount   = 4,
+};
+
+template <>
+GraphicsResetStatus FromGLenum<GraphicsResetStatus>(GLenum from);
+GLenum ToGLenum(GraphicsResetStatus from);
+
 enum class HandleType : uint8_t
 {
     OpaqueFd = 0,

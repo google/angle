@@ -286,6 +286,10 @@
     "glLogicOp" : {
         "opcode" : "LogicalOperation"
     },
+    "glLoseContextCHROMIUM" : {
+        "current" : "GraphicsResetStatus",
+        "other" : "GraphicsResetStatus"
+    },
     "glMapBuffer": {
         "target": "BufferBinding"
     },

@@ -3309,6 +3309,12 @@ void GL_APIENTRY glMatrixLoadIdentityCHROMIUM(GLenum matrixMode)
     return gl::MatrixLoadIdentityCHROMIUM(matrixMode);
 }
 
+// GL_CHROMIUM_lose_context
+void GL_APIENTRY glLoseContextCHROMIUM(GLenum current, GLenum other)
+{
+    return gl::LoseContextCHROMIUM(current, other);
+}
+
 // GL_CHROMIUM_path_rendering
 GLuint GL_APIENTRY glGenPathsCHROMIUM(GLsizei range)
 {
@@ -9543,6 +9549,11 @@ void GL_APIENTRY glSampleMaskiANGLEContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
 {
     return gl::ProvokingVertexANGLEContextANGLE(ctx, mode);
+}
+
+void GL_APIENTRY glLoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other)
+{
+    return gl::LoseContextCHROMIUMContextANGLE(ctx, current, other);
 }
 
 }  // extern "C"

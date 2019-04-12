@@ -1116,6 +1116,11 @@ void ANGLETestBase::setContextVirtualization(bool enabled)
     mCurrentPlatform->configParams.contextVirtualization = enabled;
 }
 
+void ANGLETestBase::setContextResetStrategy(EGLenum resetStrategy)
+{
+    mCurrentPlatform->configParams.resetStrategy = resetStrategy;
+}
+
 void ANGLETestBase::forceNewDisplay()
 {
     mForceNewDisplay = true;

@@ -125,7 +125,7 @@ class ContextImpl : public GLImplFactory
                                                      const GLfloat *transformValues);
 
     // Device loss
-    virtual GLenum getResetStatus() = 0;
+    virtual gl::GraphicsResetStatus getResetStatus() = 0;
 
     // Vendor and description strings.
     virtual std::string getVendorString() const        = 0;

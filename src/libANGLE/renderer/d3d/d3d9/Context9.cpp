@@ -213,7 +213,7 @@ angle::Result Context9::drawElementsIndirect(const gl::Context *context,
     return angle::Result::Stop;
 }
 
-GLenum Context9::getResetStatus()
+gl::GraphicsResetStatus Context9::getResetStatus()
 {
     return mRenderer->getResetStatus();
 }

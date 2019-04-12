@@ -110,7 +110,7 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
                                        const void *indirect) override;
 
     // Device loss
-    GLenum getResetStatus() override;
+    gl::GraphicsResetStatus getResetStatus() override;
 
     // Vendor and description strings.
     std::string getVendorString() const override;

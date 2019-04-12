@@ -431,9 +431,9 @@ void RendererGL::stencilThenCoverStrokePathInstanced(const gl::State &state,
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
-GLenum RendererGL::getResetStatus()
+gl::GraphicsResetStatus RendererGL::getResetStatus()
 {
-    return mFunctions->getGraphicsResetStatus();
+    return gl::FromGLenum<gl::GraphicsResetStatus>(mFunctions->getGraphicsResetStatus());
 }
 
 void RendererGL::insertEventMarker(GLsizei length, const char *marker) {}

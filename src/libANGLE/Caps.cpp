@@ -922,6 +922,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_texture_multisample"] = enableableExtension(&Extensions::textureMultisample);
         map["GL_ANGLE_multi_draw"] = enableableExtension(&Extensions::multiDraw);
         map["GL_ANGLE_provoking_vertex"] = enableableExtension(&Extensions::provokingVertex);
+        map["GL_CHROMIUM_lose_context"] = enableableExtension(&Extensions::loseContextCHROMIUM);
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);

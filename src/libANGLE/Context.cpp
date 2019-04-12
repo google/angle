@@ -292,7 +292,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mClientType(EGL_OPENGL_ES_API),
       mHasBeenCurrent(false),
       mContextLost(false),
-      mResetStatus(GL_NO_ERROR),
+      mResetStatus(GraphicsResetStatus::NoError),
       mContextLostForced(false),
       mResetStrategy(GetResetStrategy(attribs)),
       mRobustAccess(GetRobustAccess(attribs)),
@@ -901,6 +901,14 @@ void Context::getPathParameteriv(GLuint path, GLenum pname, GLint *value)
 void Context::pathStencilFunc(GLenum func, GLint ref, GLuint mask)
 {
     mState.setPathStencilFunc(func, ref, mask);
+}
+
+// GL_CHROMIUM_lose_context
+void Context::loseContext(GraphicsResetStatus current, GraphicsResetStatus other)
+{
+    // TODO(geofflang): mark the rest of the share group lost. Requires access to the entire share
+    // group from a context. http://anglebug.com/3379
+    markContextLost(current);
 }
 
 void Context::deleteFramebuffer(GLuint framebuffer)
@@ -2608,11 +2616,12 @@ GLenum Context::getError()
 }
 
 // NOTE: this function should not assume that this context is current!
-void Context::markContextLost()
+void Context::markContextLost(GraphicsResetStatus status)
 {
+    ASSERT(status != GraphicsResetStatus::NoError);
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
     {
-        mResetStatus       = GL_UNKNOWN_CONTEXT_RESET_EXT;
+        mResetStatus       = status;
         mContextLostForced = true;
     }
     mContextLost = true;
@@ -2624,7 +2633,7 @@ GLenum Context::getGraphicsResetStatus()
     // as it will allow us to skip all the calls.
     if (mResetStrategy == GL_NO_RESET_NOTIFICATION_EXT)
     {
-        if (!mContextLost && mImplementation->getResetStatus() != GL_NO_ERROR)
+        if (!mContextLost && mImplementation->getResetStatus() != GraphicsResetStatus::NoError)
         {
             mContextLost = true;
         }
@@ -2640,15 +2649,15 @@ GLenum Context::getGraphicsResetStatus()
     // once the device has finished resetting.
     if (!mContextLost)
     {
-        ASSERT(mResetStatus == GL_NO_ERROR);
+        ASSERT(mResetStatus == GraphicsResetStatus::NoError);
         mResetStatus = mImplementation->getResetStatus();
 
-        if (mResetStatus != GL_NO_ERROR)
+        if (mResetStatus != GraphicsResetStatus::NoError)
         {
             mContextLost = true;
         }
     }
-    else if (!mContextLostForced && mResetStatus != GL_NO_ERROR)
+    else if (!mContextLostForced && mResetStatus != GraphicsResetStatus::NoError)
     {
         // If markContextLost was used to mark the context lost then
         // assume that is not recoverable, and continue to report the
@@ -2656,7 +2665,7 @@ GLenum Context::getGraphicsResetStatus()
         mResetStatus = mImplementation->getResetStatus();
     }
 
-    return mResetStatus;
+    return ToGLenum(mResetStatus);
 }
 
 bool Context::isResetNotificationEnabled()
@@ -3248,6 +3257,9 @@ Extensions Context::generateSupportedExtensions() const
     }
 
     supportedExtensions.memorySize = true;
+
+    // GL_CHROMIUM_lose_context is implemented in the frontend
+    supportedExtensions.loseContextCHROMIUM = true;
 
     return supportedExtensions;
 }
@@ -8212,7 +8224,7 @@ void ErrorSet::handleError(GLenum errorCode,
 {
     if (errorCode == GL_OUT_OF_MEMORY && mContext->getWorkarounds().loseContextOnOutOfMemory)
     {
-        mContext->markContextLost();
+        mContext->markContextLost(GraphicsResetStatus::UnknownContextReset);
     }
 
     std::stringstream errorStream;

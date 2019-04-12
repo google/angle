@@ -109,7 +109,7 @@ class Context9 : public ContextD3D
                                        const void *indirect) override;
 
     // Device loss
-    GLenum getResetStatus() override;
+    gl::GraphicsResetStatus getResetStatus() override;
 
     // Vendor and description strings.
     std::string getVendorString() const override;

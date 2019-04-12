@@ -104,7 +104,8 @@ ConfigParameters::ConfigParameters()
       bindGeneratesResource(true),
       clientArraysEnabled(true),
       robustAccess(false),
-      samples(-1)
+      samples(-1),
+      resetStrategy(EGL_NO_RESET_NOTIFICATION_EXT)
 {}
 
 ConfigParameters::~ConfigParameters() = default;
@@ -395,7 +396,9 @@ EGLContext EGLWindow::createContext(EGLContext share) const
     }
 
     bool hasRobustness = strstr(displayExtensions, "EGL_EXT_create_context_robustness") != nullptr;
-    if (mConfigParams.robustAccess && !hasRobustness)
+    if ((mConfigParams.robustAccess ||
+         mConfigParams.resetStrategy != EGL_NO_RESET_NOTIFICATION_EXT) &&
+        !hasRobustness)
     {
         std::cerr << "EGL_EXT_create_context_robustness missing.\n";
         return EGL_NO_CONTEXT;
@@ -470,6 +473,9 @@ EGLContext EGLWindow::createContext(EGLContext share) const
         {
             contextAttributes.push_back(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT);
             contextAttributes.push_back(mConfigParams.robustAccess ? EGL_TRUE : EGL_FALSE);
+
+            contextAttributes.push_back(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT);
+            contextAttributes.push_back(mConfigParams.resetStrategy);
         }
 
         if (hasBindGeneratesResource)

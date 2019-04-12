@@ -660,6 +660,15 @@ GL_APICALL void GL_APIENTRY glBindUniformLocationCHROMIUM(GLuint program, GLint 
 #endif
 #endif /* GL_CHROMIUM_bind_uniform_location */
 
+/* GL_CHROMIUM_lose_context */
+#ifndef GL_CHROMIUM_lose_context
+#define GL_CHROMIUM_lose_context 1
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glLoseContextCHROMIUM(GLenum current, GLenum other);
+#endif
+typedef void (GL_APIENTRYP PFNGLLOSECONTEXTCHROMIUMPROC) (GLenum current, GLenum other);
+#endif  /* GL_CHROMIUM_lose_context */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

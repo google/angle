@@ -72,7 +72,7 @@ bool RendererD3D::skipDraw(const gl::State &glState, gl::PrimitiveMode drawMode)
     return false;
 }
 
-GLenum RendererD3D::getResetStatus()
+gl::GraphicsResetStatus RendererD3D::getResetStatus()
 {
     if (!mDeviceLost)
     {
@@ -80,17 +80,17 @@ GLenum RendererD3D::getResetStatus()
         {
             mDeviceLost = true;
             notifyDeviceLost();
-            return GL_UNKNOWN_CONTEXT_RESET_EXT;
+            return gl::GraphicsResetStatus::UnknownContextReset;
         }
-        return GL_NO_ERROR;
+        return gl::GraphicsResetStatus::NoError;
     }
 
     if (testDeviceResettable())
     {
-        return GL_NO_ERROR;
+        return gl::GraphicsResetStatus::NoError;
     }
 
-    return GL_UNKNOWN_CONTEXT_RESET_EXT;
+    return gl::GraphicsResetStatus::UnknownContextReset;
 }
 
 void RendererD3D::notifyDeviceLost()

@@ -372,6 +372,7 @@ class ANGLETestBase
     void setRobustResourceInit(bool enabled);
     void setContextProgramCacheEnabled(bool enabled, angle::CacheProgramFunc cacheProgramFunc);
     void setContextVirtualization(bool enabled);
+    void setContextResetStrategy(EGLenum resetStrategy);
     void forceNewDisplay();
 
     // Some EGL extension tests would like to defer the Context init until the test body.
