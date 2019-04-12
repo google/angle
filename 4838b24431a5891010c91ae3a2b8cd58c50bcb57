@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac1a5e2d_6ebfc1e3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-12T20:33:15Z",
+      "side": 1,
+      "message": "I would take this workaround out of this function, and put it in ContextVk::updateScissor. Note that this function has been moved down to renderer/renderer_utils.cpp (ClipRectToScissor).\n\nAlso, please add a flag in `include/platforms/FeaturesVk.h` and only enable the workaround on the failing configuration (in RendererVk.cpp). Then make this hack conditional to that flag. You can follow other flags set in that file to see how they are set and used.",
+      "range": {
+        "startLine": 833,
+        "startChar": 0,
+        "endLine": 839,
+        "endChar": 42
+      },
+      "revId": "4838b24431a5891010c91ae3a2b8cd58c50bcb57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
