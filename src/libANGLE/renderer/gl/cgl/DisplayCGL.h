@@ -74,6 +74,11 @@ class DisplayCGL : public DisplayGL
 
     WorkerContext *createWorkerContext(std::string *infoLog);
 
+    // Support for dual-GPU MacBook Pros. If the context was created
+    // preferring the high-power GPU, unreference that GPU during
+    // context destruction.
+    void unreferenceDiscreteGPU();
+
   private:
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
@@ -85,6 +90,9 @@ class DisplayCGL : public DisplayGL
     egl::Display *mEGLDisplay;
     CGLContextObj mContext;
     CGLPixelFormatObj mPixelFormat;
+    bool mSupportsGPUSwitching;
+    CGLPixelFormatObj mDiscreteGPUPixelFormat;
+    int mDiscreteGPURefs;
 };
 
 }  // namespace rx
