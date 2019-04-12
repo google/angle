@@ -125,19 +125,10 @@ config("extra_warnings") {
     ]
   }
   if (is_clang) {
-    if (!is_fuchsia) {
-      cflags += [
-        # Remove when crbug.com/926235 is resolved.
-        "-Wextra-semi",
-      ]
-    }
-
     cflags += [
       # Enable after anglebug.com/3128 is fixed.
       # "-Wextra-semi-stmt",
 
-      # Remove when crbug.com/428099 is resolved.
-      "-Winconsistent-missing-override",
       "-Wnon-virtual-dtor",
       "-Wunneeded-internal-declaration",
     ]
