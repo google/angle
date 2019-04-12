@@ -1144,8 +1144,11 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
                 // Zero textures are the "default" textures instead of NULL
                 Texture *zeroTexture = zeroTextures[type].get();
                 ASSERT(zeroTexture != nullptr);
+                if (mCompleteTextureBindings[bindingIndex].getSubject() == binding.get())
+                {
+                    updateActiveTexture(context, bindingIndex, zeroTexture);
+                }
                 binding.set(context, zeroTexture);
-                updateActiveTexture(context, bindingIndex, zeroTexture);
             }
         }
     }
