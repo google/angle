@@ -1121,7 +1121,7 @@ void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params)
 
 void QueryProgramiv(Context *context, const Program *program, GLenum pname, GLint *params)
 {
-    ASSERT(program != nullptr);
+    ASSERT(program != nullptr || pname == GL_COMPLETION_STATUS_KHR);
 
     switch (pname)
     {
@@ -1132,7 +1132,14 @@ void QueryProgramiv(Context *context, const Program *program, GLenum pname, GLin
             *params = program->isLinked();
             return;
         case GL_COMPLETION_STATUS_KHR:
-            *params = program->isLinking() ? GL_FALSE : GL_TRUE;
+            if (context->isContextLost())
+            {
+                *params = GL_TRUE;
+            }
+            else
+            {
+                *params = program->isLinking() ? GL_FALSE : GL_TRUE;
+            }
             return;
         case GL_VALIDATE_STATUS:
             *params = program->isValidated();
@@ -1267,9 +1274,9 @@ void QueryRenderbufferiv(const Context *context,
     }
 }
 
-void QueryShaderiv(Shader *shader, GLenum pname, GLint *params)
+void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *params)
 {
-    ASSERT(shader != nullptr);
+    ASSERT(shader != nullptr || pname == GL_COMPLETION_STATUS_KHR);
 
     switch (pname)
     {
@@ -1283,7 +1290,14 @@ void QueryShaderiv(Shader *shader, GLenum pname, GLint *params)
             *params = shader->isCompiled() ? GL_TRUE : GL_FALSE;
             return;
         case GL_COMPLETION_STATUS_KHR:
-            *params = shader->isCompleted() ? GL_TRUE : GL_FALSE;
+            if (context->isContextLost())
+            {
+                *params = GL_TRUE;
+            }
+            else
+            {
+                *params = shader->isCompleted() ? GL_TRUE : GL_FALSE;
+            }
             return;
         case GL_INFO_LOG_LENGTH:
             *params = shader->getInfoLogLength();
@@ -1480,7 +1494,7 @@ angle::Result QuerySynciv(const Context *context,
                           GLsizei *length,
                           GLint *values)
 {
-    ASSERT(sync);
+    ASSERT(sync != nullptr || pname == GL_SYNC_STATUS);
 
     // All queries return one value, exit early if the buffer can't fit anything.
     if (bufSize < 1)
@@ -1504,7 +1518,14 @@ angle::Result QuerySynciv(const Context *context,
             *values = clampCast<GLint>(sync->getFlags());
             break;
         case GL_SYNC_STATUS:
-            ANGLE_TRY(sync->getStatus(context, values));
+            if (context->isContextLost())
+            {
+                *values = GL_SIGNALED;
+            }
+            else
+            {
+                ANGLE_TRY(sync->getStatus(context, values));
+            }
             break;
 
         default:

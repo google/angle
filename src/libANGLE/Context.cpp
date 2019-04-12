@@ -106,7 +106,7 @@ std::vector<Path *> GatherPaths(PathManager &resourceManager,
 template <typename T>
 angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLenum pname, T *params)
 {
-    ASSERT(query != nullptr);
+    ASSERT(query != nullptr || pname == GL_QUERY_RESULT_AVAILABLE_EXT);
 
     switch (pname)
     {
@@ -114,8 +114,15 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
             return query->getResult(context, params);
         case GL_QUERY_RESULT_AVAILABLE_EXT:
         {
-            bool available;
-            ANGLE_TRY(query->isResultAvailable(context, &available));
+            bool available = false;
+            if (context->isContextLost())
+            {
+                available = true;
+            }
+            else
+            {
+                ANGLE_TRY(query->isResultAvailable(context, &available));
+            }
             *params = CastFromStateValue<T>(pname, static_cast<GLuint>(available));
             return angle::Result::Continue;
         }
@@ -5223,7 +5230,11 @@ void Context::renderbufferStorageMultisample(GLenum target,
 
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
-    const Sync *syncObject = getSync(sync);
+    const Sync *syncObject = nullptr;
+    if (!mContextLost)
+    {
+        syncObject = getSync(sync);
+    }
     ANGLE_CONTEXT_TRY(QuerySynciv(this, syncObject, pname, bufSize, length, values));
 }
 
@@ -5666,10 +5677,14 @@ void Context::getIntegervRobust(GLenum pname, GLsizei bufSize, GLsizei *length, 
 
 void Context::getProgramiv(GLuint program, GLenum pname, GLint *params)
 {
-    // Don't resolve link if checking the link completion status.
-    Program *programObject = (pname == GL_COMPLETION_STATUS_KHR ? getProgramNoResolveLink(program)
-                                                                : getProgramResolveLink(program));
-    ASSERT(programObject);
+    Program *programObject = nullptr;
+    if (!mContextLost)
+    {
+        // Don't resolve link if checking the link completion status.
+        programObject = (pname == GL_COMPLETION_STATUS_KHR ? getProgramNoResolveLink(program)
+                                                           : getProgramResolveLink(program));
+        ASSERT(programObject);
+    }
     QueryProgramiv(this, programObject, pname, params);
 }
 
@@ -5709,9 +5724,13 @@ void Context::getProgramPipelineInfoLog(GLuint pipeline,
 
 void Context::getShaderiv(GLuint shader, GLenum pname, GLint *params)
 {
-    Shader *shaderObject = getShader(shader);
-    ASSERT(shaderObject);
-    QueryShaderiv(shaderObject, pname, params);
+    Shader *shaderObject = nullptr;
+    if (!mContextLost)
+    {
+        shaderObject = getShader(shader);
+        ASSERT(shaderObject);
+    }
+    QueryShaderiv(this, shaderObject, pname, params);
 }
 
 void Context::getShaderivRobust(GLuint shader,

@@ -988,7 +988,7 @@ GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *va
           ", GLint *values = 0x%016" PRIxPTR ")",
           (uintptr_t)sync, pname, bufSize, (uintptr_t)length, (uintptr_t)values);
 
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     if (context)
     {
         if (context->skipValidation() ||

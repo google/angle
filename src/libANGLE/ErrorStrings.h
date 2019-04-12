@@ -69,6 +69,7 @@ MSG kCompressedMismatch = "Compressed data is valid if-and-only-if the texture i
 MSG kCompressedTextureDimensionsMustMatchData = "Compressed texture dimensions must exactly match the dimensions of the data passed in.";
 MSG kCompressedTexturesNotAttachable = "Compressed textures cannot be attached to a framebuffer.";
 MSG kConstantColorAlphaLimitation = "Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this implementation.";
+MSG kContextLost = "Context has been lost.";
 MSG kCopyAlias = "The read and write copy regions alias memory.";
 MSG kCubemapFacesEqualDimensions = "Each cubemap face must have equal width and height.";
 MSG kCubemapIncomplete = "Texture is not cubemap complete. All cubemaps faces must be defined and be the same size.";

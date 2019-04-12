@@ -3047,6 +3047,22 @@ bool ValidateGetSynciv(Context *context,
         return false;
     }
 
+    if (context->isContextLost())
+    {
+        context->validationError(GL_CONTEXT_LOST, kContextLost);
+
+        if (pname == GL_SYNC_STATUS)
+        {
+            // Generate an error but still return true, the context still needs to return a
+            // value in this case.
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     Sync *syncObject = context->getSync(sync);
     if (!syncObject)
     {

@@ -341,12 +341,21 @@ def default_return_value(cmd_name, return_type):
     return "GetDefaultReturnValue<EntryPoint::" + cmd_name[2:] + ", " + return_type + ">()"
 
 def get_context_getter_function(cmd_name, is_explicit_context):
-    if cmd_name == "glGetError" or cmd_name == "glGetGraphicsResetStatusEXT":
-        return "GetGlobalContext()"
-    elif is_explicit_context:
+    if is_explicit_context:
         return "static_cast<gl::Context *>(ctx)"
-    else:
-        return "GetValidGlobalContext()"
+
+    lost_context_acceptable_cmds = [
+        "glGetError",
+        "glGetSync",
+        "glGetQueryObjecti",
+        "glGetProgramiv",
+        "glGetGraphicsResetStatus",
+        "glGetShaderiv",
+    ]
+    for context_lost_entry_pont in lost_context_acceptable_cmds:
+        if cmd_name.startswith(context_lost_entry_pont):
+            return "GetGlobalContext()"
+    return "GetValidGlobalContext()"
 
 def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})

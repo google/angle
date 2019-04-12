@@ -1817,7 +1817,23 @@ bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, 
 {
     if (numParams)
     {
-        *numParams = 0;
+        *numParams = 1;
+    }
+
+    if (context->isContextLost())
+    {
+        context->validationError(GL_CONTEXT_LOST, kContextLost);
+
+        if (pname == GL_QUERY_RESULT_AVAILABLE_EXT)
+        {
+            // Generate an error but still return true, the context still needs to return a
+            // value in this case.
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     Query *queryObject = context->getQuery(id, false, QueryType::InvalidEnum);
@@ -1843,11 +1859,6 @@ bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, 
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
-    }
-
-    if (numParams)
-    {
-        *numParams = 1;
     }
 
     return true;
@@ -4160,6 +4171,22 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
         *numParams = 1;
     }
 
+    if (context->isContextLost())
+    {
+        context->validationError(GL_CONTEXT_LOST, kContextLost);
+
+        if (context->getExtensions().parallelShaderCompile && pname == GL_COMPLETION_STATUS_KHR)
+        {
+            // Generate an error but still return true, the context still needs to return a
+            // value in this case.
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     // Special case for GL_COMPLETION_STATUS_KHR: don't resolve the link. Otherwise resolve it now.
     Program *programObject = (pname == GL_COMPLETION_STATUS_KHR)
                                  ? GetValidProgramNoResolve(context, program)
@@ -5026,6 +5053,22 @@ bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsi
     if (length)
     {
         *length = 0;
+    }
+
+    if (context->isContextLost())
+    {
+        context->validationError(GL_CONTEXT_LOST, kContextLost);
+
+        if (context->getExtensions().parallelShaderCompile && pname == GL_COMPLETION_STATUS_KHR)
+        {
+            // Generate an error but still return true, the context still needs to return a
+            // value in this case.
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     if (GetValidShader(context, shader) == nullptr)

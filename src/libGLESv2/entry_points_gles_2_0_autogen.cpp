@@ -1169,7 +1169,7 @@ void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
     EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", program,
           pname, (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     if (context)
     {
         if (context->skipValidation() || ValidateGetProgramiv(context, program, pname, params))
@@ -1259,7 +1259,7 @@ void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params)
     EVENT("(GLuint shader = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", shader,
           pname, (uintptr_t)params);
 
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     if (context)
     {
         if (context->skipValidation() || ValidateGetShaderiv(context, shader, pname, params))
