@@ -201,102 +201,6 @@ bool FindFlatInterpolationVarying(const gl::ShaderMap<gl::Shader *> &shaders)
     return false;
 }
 
-class InterfaceBlockInfo final : angle::NonCopyable
-{
-  public:
-    InterfaceBlockInfo() {}
-
-    void getShaderBlockInfo(const std::vector<sh::InterfaceBlock> &interfaceBlocks);
-
-    bool getBlockSize(const std::string &name, const std::string &mappedName, size_t *sizeOut);
-    bool getBlockMemberInfo(const std::string &name,
-                            const std::string &mappedName,
-                            sh::BlockMemberInfo *infoOut);
-
-  private:
-    size_t getBlockInfo(const sh::InterfaceBlock &interfaceBlock);
-
-    std::map<std::string, size_t> mBlockSizes;
-    sh::BlockLayoutMap mBlockLayout;
-};
-
-void InterfaceBlockInfo::getShaderBlockInfo(const std::vector<sh::InterfaceBlock> &interfaceBlocks)
-{
-    for (const sh::InterfaceBlock &interfaceBlock : interfaceBlocks)
-    {
-        if (!interfaceBlock.active && interfaceBlock.layout == sh::BLOCKLAYOUT_PACKED)
-            continue;
-
-        if (mBlockSizes.count(interfaceBlock.name) > 0)
-            continue;
-
-        size_t dataSize                  = getBlockInfo(interfaceBlock);
-        mBlockSizes[interfaceBlock.name] = dataSize;
-    }
-}
-
-size_t InterfaceBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
-{
-    ASSERT(interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED);
-
-    // define member uniforms
-    sh::Std140BlockEncoder std140Encoder;
-    sh::Std430BlockEncoder std430Encoder;
-    sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
-    sh::BlockLayoutEncoder *encoder = nullptr;
-
-    if (interfaceBlock.layout == sh::BLOCKLAYOUT_STD140)
-    {
-        encoder = &std140Encoder;
-    }
-    else if (interfaceBlock.layout == sh::BLOCKLAYOUT_STD430)
-    {
-        encoder = &std430Encoder;
-    }
-    else
-    {
-        encoder = &hlslEncoder;
-    }
-
-    sh::GetInterfaceBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
-                              &mBlockLayout);
-
-    return encoder->getCurrentOffset();
-}
-
-bool InterfaceBlockInfo::getBlockSize(const std::string &name,
-                                      const std::string &mappedName,
-                                      size_t *sizeOut)
-{
-    size_t nameLengthWithoutArrayIndex;
-    gl::ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
-    std::string baseName = name.substr(0u, nameLengthWithoutArrayIndex);
-    auto sizeIter        = mBlockSizes.find(baseName);
-    if (sizeIter == mBlockSizes.end())
-    {
-        *sizeOut = 0;
-        return false;
-    }
-
-    *sizeOut = sizeIter->second;
-    return true;
-}
-
-bool InterfaceBlockInfo::getBlockMemberInfo(const std::string &name,
-                                            const std::string &mappedName,
-                                            sh::BlockMemberInfo *infoOut)
-{
-    auto infoIter = mBlockLayout.find(name);
-    if (infoIter == mBlockLayout.end())
-    {
-        *infoOut = sh::kDefaultBlockMemberInfo;
-        return false;
-    }
-
-    *infoOut = infoIter->second;
-    return true;
-}
-
 // Helper class that gathers uniform info from the default uniform block.
 class UniformEncodingVisitorD3D : public sh::BlockEncoderVisitor
 {
@@ -355,6 +259,15 @@ class UniformEncodingVisitorD3D : public sh::BlockEncoderVisitor
     gl::ShaderType mShaderType;
     HLSLRegisterType mRegisterType;
     D3DUniformMap *mUniformMapOut;
+};
+
+class HLSLBlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
+{
+  public:
+    sh::BlockLayoutEncoder *makeEncoder() override
+    {
+        return new sh::HLSLBlockEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
+    }
 };
 }  // anonymous namespace
 
@@ -3288,80 +3201,13 @@ void ProgramD3D::updateCachedComputeExecutableIndex()
 
 void ProgramD3D::linkResources(const gl::ProgramLinkedResources &resources)
 {
-    InterfaceBlockInfo uniformBlockInfo;
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        gl::Shader *shader = mState.getAttachedShader(shaderType);
-        if (shader)
-        {
-            uniformBlockInfo.getShaderBlockInfo(shader->getUniformBlocks());
-        }
-    }
+    HLSLBlockLayoutEncoderFactory hlslEncoderFactory;
+    gl::ProgramLinkedResourcesLinker linker(&hlslEncoderFactory);
 
-    // Gather interface block info.
-    auto getUniformBlockSize = [&uniformBlockInfo](const std::string &name,
-                                                   const std::string &mappedName, size_t *sizeOut) {
-        return uniformBlockInfo.getBlockSize(name, mappedName, sizeOut);
-    };
+    linker.linkResources(mState, resources);
 
-    auto getUniformBlockMemberInfo = [&uniformBlockInfo](const std::string &name,
-                                                         const std::string &mappedName,
-                                                         sh::BlockMemberInfo *infoOut) {
-        return uniformBlockInfo.getBlockMemberInfo(name, mappedName, infoOut);
-    };
-
-    resources.uniformBlockLinker.linkBlocks(getUniformBlockSize, getUniformBlockMemberInfo);
     initializeUniformBlocks();
-
-    InterfaceBlockInfo shaderStorageBlockInfo;
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        gl::Shader *shader = mState.getAttachedShader(shaderType);
-        if (shader)
-        {
-            shaderStorageBlockInfo.getShaderBlockInfo(shader->getShaderStorageBlocks());
-        }
-    }
-    auto getShaderStorageBlockSize = [&shaderStorageBlockInfo](const std::string &name,
-                                                               const std::string &mappedName,
-                                                               size_t *sizeOut) {
-        return shaderStorageBlockInfo.getBlockSize(name, mappedName, sizeOut);
-    };
-
-    auto getShaderStorageBlockMemberInfo = [&shaderStorageBlockInfo](const std::string &name,
-                                                                     const std::string &mappedName,
-                                                                     sh::BlockMemberInfo *infoOut) {
-        return shaderStorageBlockInfo.getBlockMemberInfo(name, mappedName, infoOut);
-    };
-
-    resources.shaderStorageBlockLinker.linkBlocks(getShaderStorageBlockSize,
-                                                  getShaderStorageBlockMemberInfo);
     initializeShaderStorageBlocks();
-
-    std::map<int, unsigned int> sizeMap;
-    getAtomicCounterBufferSizeMap(sizeMap);
-    resources.atomicCounterBufferLinker.link(sizeMap);
-}
-
-void ProgramD3D::getAtomicCounterBufferSizeMap(std::map<int, unsigned int> &sizeMapOut) const
-{
-    for (unsigned int index : mState.getAtomicCounterUniformRange())
-    {
-        const gl::LinkedUniform &glUniform = mState.getUniforms()[index];
-
-        auto &bufferDataSize = sizeMapOut[glUniform.binding];
-
-        // Calculate the size of the buffer by finding the end of the last uniform with the same
-        // binding. The end of the uniform is calculated by finding the initial offset of the
-        // uniform and adding size of the uniform. For arrays, the size is the number of elements
-        // times the element size (should always by 4 for atomic_units).
-        unsigned dataOffset =
-            glUniform.offset + (glUniform.getBasicTypeElementCount() * glUniform.getElementSize());
-        if (dataOffset > bufferDataSize)
-        {
-            bufferDataSize = dataOffset;
-        }
-    }
 }
 
 }  // namespace rx

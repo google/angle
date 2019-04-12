@@ -4741,10 +4741,6 @@ void main()
 // field.
 TEST_P(GLSLTest_ES3, ErrorMessageOfLinkInterfaceBlockFieldMismatch)
 {
-    // TODO(syoussefi): missing ES3 shader feature support.
-    // http://anglebug.com/3199
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kVS[] = R"(#version 300 es
 uniform S {
     vec2 val1;
@@ -4780,10 +4776,6 @@ void main()
 // struct field.
 TEST_P(GLSLTest_ES3, ErrorMessageOfLinkInterfaceBlockStructFieldMismatch)
 {
-    // TODO(syoussefi): missing ES3 shader feature support.
-    // http://anglebug.com/3199
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kVS[] = R"(#version 300 es
 struct T
 {

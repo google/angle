@@ -20,6 +20,7 @@
 
 namespace sh
 {
+class BlockLayoutEncoder;
 struct BlockMemberInfo;
 struct InterfaceBlock;
 struct ShaderVariable;
@@ -207,6 +208,33 @@ struct ProgramLinkedResources
     ShaderStorageBlockLinker shaderStorageBlockLinker;
     AtomicCounterBufferLinker atomicCounterBufferLinker;
     std::vector<UnusedUniform> unusedUniforms;
+};
+
+class CustomBlockLayoutEncoderFactory : angle::NonCopyable
+{
+  public:
+    virtual ~CustomBlockLayoutEncoderFactory() {}
+
+    virtual sh::BlockLayoutEncoder *makeEncoder() = 0;
+};
+
+// Used by the backends in Program*::linkResources to parse interface blocks and provide
+// information to ProgramLinkedResources' linkers.
+class ProgramLinkedResourcesLinker final : angle::NonCopyable
+{
+  public:
+    ProgramLinkedResourcesLinker(CustomBlockLayoutEncoderFactory *customEncoderFactory)
+        : mCustomEncoderFactory(customEncoderFactory)
+    {}
+
+    void linkResources(const gl::ProgramState &programState,
+                       const gl::ProgramLinkedResources &resources) const;
+
+  private:
+    void getAtomicCounterBufferSizeMap(const gl::ProgramState &programState,
+                                       std::map<int, unsigned int> &sizeMapOut) const;
+
+    CustomBlockLayoutEncoderFactory *mCustomEncoderFactory;
 };
 
 }  // namespace gl

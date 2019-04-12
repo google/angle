@@ -1159,7 +1159,7 @@ void BufferHelper::release(DisplayVk *display, std::vector<GarbageObjectBase> *g
     mDeviceMemory.dumpResources(garbageQueue);
 }
 
-void BufferHelper::onWrite(VkAccessFlagBits writeAccessType)
+void BufferHelper::onWrite(VkAccessFlags writeAccessType)
 {
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
     {
@@ -1172,19 +1172,20 @@ void BufferHelper::onWrite(VkAccessFlagBits writeAccessType)
 
 angle::Result BufferHelper::copyFromBuffer(Context *context,
                                            const Buffer &buffer,
+                                           VkAccessFlags bufferAccessType,
                                            const VkBufferCopy &copyRegion)
 {
     // 'recordCommands' will implicitly stop any reads from using the old buffer data.
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(recordCommands(context, &commandBuffer));
 
-    if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
+    if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0 || bufferAccessType != 0)
     {
         // Insert a barrier to ensure reads/writes are complete.
         // Use a global memory barrier to keep things simple.
         VkMemoryBarrier memoryBarrier = {};
         memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-        memoryBarrier.srcAccessMask   = mCurrentReadAccess | mCurrentWriteAccess;
+        memoryBarrier.srcAccessMask   = mCurrentReadAccess | mCurrentWriteAccess | bufferAccessType;
         memoryBarrier.dstAccessMask   = VK_ACCESS_TRANSFER_WRITE_BIT;
 
         commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,

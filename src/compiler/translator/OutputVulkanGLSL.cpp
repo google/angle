@@ -61,32 +61,73 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     TIntermSymbol *symbol = variable->getAsSymbolNode();
     ASSERT(symbol);
 
+    ImmutableString name      = symbol->getName();
+    const char *blockStorage  = nullptr;
+    const char *matrixPacking = nullptr;
+
+    // For interface blocks, use the block name instead.  When the layout qualifier is being
+    // replaced in the backend, that would be the name that's available.
+    if (type.isInterfaceBlock())
+    {
+        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+        name                                  = interfaceBlock->name();
+
+        // Make sure block storage format is specified.
+        if (interfaceBlock->blockStorage() != EbsUnspecified)
+        {
+            blockStorage = getBlockStorageString(interfaceBlock->blockStorage());
+        }
+    }
+
+    // Specify matrix packing if necessary.
+    if (layoutQualifier.matrixPacking != EmpUnspecified)
+    {
+        matrixPacking = getMatrixPackingString(layoutQualifier.matrixPacking);
+    }
+
     if (needsCustomLayout)
     {
-        out << "@@ LAYOUT-" << symbol->getName() << "() @@";
+        out << "@@ LAYOUT-" << name << "(";
     }
     else
     {
         out << "layout(";
     }
 
-    if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)
+    // Output the list of qualifiers already known at this stage, i.e. everything other than
+    // `location` and `set`/`binding`.
+    std::string otherQualifiers = getCommonLayoutQualifiers(variable);
+
+    const char *separator = "";
+    if (blockStorage)
     {
-        ASSERT(type.getQualifier() == EvqTemporary || type.getQualifier() == EvqUniform);
-        out << getImageInternalFormatString(layoutQualifier.imageInternalFormat);
+        out << separator << blockStorage;
+        separator = ", ";
+    }
+    if (matrixPacking)
+    {
+        out << separator << matrixPacking;
+        separator = ", ";
+    }
+    if (!otherQualifiers.empty())
+    {
+        out << separator << otherQualifiers;
     }
 
-    if (!needsCustomLayout)
+    out << ") ";
+    if (needsCustomLayout)
     {
-        out << ") ";
+        out << "@@";
     }
 }
 
-void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier, const TSymbol *symbol)
+void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
+                                       const TType &type,
+                                       const TSymbol *symbol)
 {
     if (qualifier != EvqUniform && qualifier != EvqAttribute && !sh::IsVarying(qualifier))
     {
-        TOutputGLSLBase::writeQualifier(qualifier, symbol);
+        TOutputGLSLBase::writeQualifier(qualifier, type, symbol);
         return;
     }
 
@@ -95,8 +136,17 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier, const TSymbol *symb
         return;
     }
 
+    ImmutableString name = symbol->name();
+
+    // For interface blocks, use the block name instead.  When the qualifier is being replaced in
+    // the backend, that would be the name that's available.
+    if (type.isInterfaceBlock())
+    {
+        name = type.getInterfaceBlock()->name();
+    }
+
     TInfoSinkBase &out = objSink();
-    out << "@@ QUALIFIER-" << symbol->name().data() << " @@ ";
+    out << "@@ QUALIFIER-" << name.data() << " @@ ";
 }
 
 void TOutputVulkanGLSL::writeVariableType(const TType &type, const TSymbol *symbol)

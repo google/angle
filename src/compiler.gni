@@ -160,6 +160,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/RewriteDoWhile.h",
   "src/compiler/translator/tree_ops/RewriteExpressionsWithShaderStorageBlock.cpp",
   "src/compiler/translator/tree_ops/RewriteExpressionsWithShaderStorageBlock.h",
+  "src/compiler/translator/tree_ops/RedefineInterfaceBlockLayoutQualifiersWithStd.cpp",
+  "src/compiler/translator/tree_ops/RedefineInterfaceBlockLayoutQualifiersWithStd.h",
   "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
   "src/compiler/translator/tree_ops/RewriteStructSamplers.h",
   "src/compiler/translator/tree_ops/RewriteRepeatedAssignToSwizzled.cpp",

@@ -100,6 +100,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_TEXTURES);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+    mNewCommandBufferDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 
     mDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] = &ContextVk::handleDirtyDefaultAttribs;
@@ -108,6 +109,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mDirtyBitHandlers[DIRTY_BIT_VERTEX_BUFFERS]  = &ContextVk::handleDirtyVertexBuffers;
     mDirtyBitHandlers[DIRTY_BIT_INDEX_BUFFER]    = &ContextVk::handleDirtyIndexBuffer;
     mDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] = &ContextVk::handleDirtyDriverUniforms;
+    mDirtyBitHandlers[DIRTY_BIT_UNIFORM_BUFFERS] = &ContextVk::handleDirtyUniformBuffers;
     mDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] = &ContextVk::handleDirtyDescriptorSets;
 
     mDirtyBits = mNewCommandBufferDirtyBits;
@@ -158,10 +160,14 @@ angle::Result ContextVk::initialize()
     // Note that this may reserve more sets than strictly necessary for a particular layout.
     VkDescriptorPoolSize uniformSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
                                            GetUniformBufferDescriptorCount()};
+    VkDescriptorPoolSize uniformBlockSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                                mRenderer->getMaxUniformBlocks()};
     VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                            mRenderer->getMaxActiveTextures()};
     VkDescriptorPoolSize driverSetSize  = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1};
     ANGLE_TRY(mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(this, &uniformSetSize, 1));
+    ANGLE_TRY(mDynamicDescriptorPools[kUniformBlockDescriptorSetIndex].init(
+        this, &uniformBlockSetSize, 1));
     ANGLE_TRY(mDynamicDescriptorPools[kTextureDescriptorSetIndex].init(this, &textureSetSize, 1));
     ANGLE_TRY(
         mDynamicDescriptorPools[kDriverUniformsDescriptorSetIndex].init(this, &driverSetSize, 1));
@@ -459,6 +465,17 @@ angle::Result ContextVk::handleDirtyIndexBuffer(const gl::Context *context,
     vk::FramebufferHelper *framebuffer = mDrawFramebuffer->getFramebuffer();
     elementArrayBuffer->onRead(framebuffer, VK_ACCESS_INDEX_READ_BIT);
 
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyUniformBuffers(const gl::Context *context,
+                                                   vk::CommandBuffer *commandBuffer)
+{
+    if (mProgram->hasUniformBuffers())
+    {
+        ANGLE_TRY(
+            mProgram->updateUniformBuffersDescriptorSet(this, mDrawFramebuffer->getFramebuffer()));
+    }
     return angle::Result::Continue;
 }
 
@@ -914,6 +931,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 invalidateCurrentTextures();
+                invalidateCurrentUniformBuffers();
                 // No additional work is needed here. We will update the pipeline desc later.
                 invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
                 bool useVertexBuffer = (mProgram->getState().getMaxActiveAttribLocation());
@@ -934,6 +952,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
+                invalidateCurrentUniformBuffers();
                 break;
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 break;
@@ -1133,6 +1152,16 @@ void ContextVk::invalidateCurrentTextures()
     if (mProgram->hasTextures())
     {
         mDirtyBits.set(DIRTY_BIT_TEXTURES);
+        mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+    }
+}
+
+void ContextVk::invalidateCurrentUniformBuffers()
+{
+    ASSERT(mProgram);
+    if (mProgram->hasUniformBuffers())
+    {
+        mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFERS);
         mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
 }

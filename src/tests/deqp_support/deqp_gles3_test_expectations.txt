@@ -521,19 +521,12 @@
 // General Vulkan failures
 
 // Limits:
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements* = SKIP
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_indices = SKIP
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_vertices = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.num_compressed_texture_formats = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_vertex_uniform_blocks = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_uniform_blocks = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_input_components = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_program_texel_offset = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.min_program_texel_offset = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_uniform_buffer_bindings = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_uniform_block_size = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_vertex_uniform_components = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_fragment_uniform_components = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_uniform_blocks = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_transform_feedback_* = SKIP
 
 // 3D texture (anglebug.com/3188), 2D array (anglebug.com/3189):
@@ -656,10 +649,6 @@
 2950 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
 2950 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
 
-// UBO:
-2950 VULKAN : dEQP-GLES3.functional.ubo.* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.uniform_block.* = SKIP
-
 // PBO:
 2950 VULKAN : dEQP-GLES3.functional.pbo.* = SKIP
 
@@ -704,18 +693,10 @@
 // - ES3 State queries:
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_indices_getfloat = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_vertices_getfloat = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_vertex_uniform_blocks_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_uniform_blocks_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_program_texel_offset_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_uniform_buffer_bindings_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_samples_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.min_program_texel_offset_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.indexed.uniform_buffer* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_uniform_block_size_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_vertex_uniform_components_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_fragment_uniform_components_get* = FAIL
 
 // Misc failures:
@@ -723,7 +704,6 @@
 2950 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_color_encoding = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.rbo.renderbuffer_internal_format = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.rbo.renderbuffer_component_size_color = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.shader.program_active_uniform_blocks = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.shader.uniform_value_uint = FAIL
 2950 VULKAN : dEQP-GLES3.functional.lifetime.* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.clipping.line.line_clip_viewport_center = FAIL

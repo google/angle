@@ -33,6 +33,7 @@
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
 #include "compiler/translator/tree_ops/PruneNoOps.h"
+#include "compiler/translator/tree_ops/RedefineInterfaceBlockLayoutQualifiersWithStd.h"
 #include "compiler/translator/tree_ops/RegenerateStructNames.h"
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
@@ -721,6 +722,13 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
+    }
+
+    if (compileOptions & SH_REDEFINE_INTERFACE_LAYOUT_QUALIFIERS_WITH_STD)
+    {
+        // Change the interface block layouts based on GL_KHR_vulkan_glsl.  Only std140 and std430
+        // are allowed in Vulkan GLSL.
+        RedefineInterfaceBlockLayoutQualifiersWithStd(root, &mSymbolTable);
     }
 
     if (shouldCollectVariables(compileOptions))

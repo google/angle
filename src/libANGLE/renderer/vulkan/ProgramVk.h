@@ -107,6 +107,8 @@ class ProgramVk : public ProgramImpl
     angle::Result updateUniforms(ContextVk *contextVk);
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk,
                                               vk::FramebufferHelper *framebuffer);
+    angle::Result updateUniformBuffersDescriptorSet(ContextVk *contextVk,
+                                                    vk::FramebufferHelper *framebuffer);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
 
@@ -116,6 +118,7 @@ class ProgramVk : public ProgramImpl
     const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
 
     bool hasTextures() const { return !mState.getSamplerBindings().empty(); }
+    bool hasUniformBuffers() const { return !mState.getUniformBlocks().empty(); }
 
     bool dirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
 
@@ -157,6 +160,7 @@ class ProgramVk : public ProgramImpl
     angle::Result linkImpl(const gl::Context *glContext,
                            const gl::ProgramLinkedResources &resources,
                            gl::InfoLog &infoLog);
+    void linkResources(const gl::ProgramLinkedResources &resources);
 
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
                                            gl::PrimitiveMode mode,
@@ -215,7 +219,7 @@ class ProgramVk : public ProgramImpl
 
     // Descriptor sets for uniform blocks and textures for this program.
     std::vector<VkDescriptorSet> mDescriptorSets;
-    gl::RangeUI mUsedDescriptorSetRange;
+    vk::DescriptorSetLayoutArray<VkDescriptorSet> mEmptyDescriptorSets;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.

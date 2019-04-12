@@ -455,8 +455,6 @@ class ProgramD3D : public ProgramImpl
                              std::vector<Image> &outImages,
                              gl::RangeUI *outUsedRange);
 
-    void getAtomicCounterBufferSizeMap(std::map<int, unsigned int> &sizeMapOut) const;
-
     template <typename DestT>
     void getUniformInternal(GLint location, DestT *dataOut) const;
 

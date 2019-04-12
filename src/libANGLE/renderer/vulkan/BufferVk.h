@@ -73,6 +73,10 @@ class BufferVk : public BufferImpl
     angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
     angle::Result unmapImpl(ContextVk *contextVk);
 
+    angle::Result onRead(ContextVk *contextVk,
+                         vk::CommandGraphResource *reader,
+                         VkAccessFlagBits readAccessType);
+
     // Calls copyBuffer internally.
     angle::Result copyToBuffer(ContextVk *contextVk,
                                vk::BufferHelper *destBuffer,
@@ -87,6 +91,7 @@ class BufferVk : public BufferImpl
     void release(RendererVk *renderer);
 
     vk::BufferHelper mBuffer;
+    VkAccessFlags mDataWriteAccessFlags;
 };
 
 }  // namespace rx

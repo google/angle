@@ -694,6 +694,9 @@ class UniformTestES3 : public ANGLETest
 // Test queries for transposed arrays of non-square matrix uniforms.
 TEST_P(UniformTestES3, TransposedMatrixArrayUniformStateQuery)
 {
+    // TODO(syoussefi): Bug in glGetUniformfv.  http://anglebug.com/3387
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kFS[] =
         "#version 300 es\n"
         "precision mediump float;\n"
@@ -1279,19 +1282,20 @@ TEST_P(UniformTest, UniformWithReservedOpenGLName)
 ANGLE_INSTANTIATE_TEST(SimpleUniformTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
-                       ES2_OPENGL(),
                        ES3_D3D11(),
+                       ES2_OPENGL(),
                        ES3_OPENGL(),
-                       ES3_OPENGLES(),
                        ES2_OPENGLES(),
-                       ES2_VULKAN());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(UniformTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(UniformTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(UniformTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(UniformTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
 }  // namespace

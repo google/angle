@@ -83,6 +83,12 @@ struct FeaturesVk
     // On Qualcomm, a bug is preventing us from using loadOp=Clear with inline commands in the
     // render pass.  http://anglebug.com/2361
     bool restartRenderPassAfterLoadOpClear = false;
+
+    // On Qualcomm, gaps in bound descriptor set indices causes the post-gap sets to misbehave.
+    // For example, binding only descriptor set 3 results in zero being read from a uniform buffer
+    // object within that set.  This flag results in empty descriptor sets being bound for any
+    // unused descriptor set to work around this issue.  http://anglebug.com/2727
+    bool bindEmptyForUnusedDescriptorSets = false;
 };
 
 inline FeaturesVk::FeaturesVk() = default;

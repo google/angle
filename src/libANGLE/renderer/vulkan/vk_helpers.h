@@ -406,24 +406,26 @@ class BufferHelper final : public CommandGraphResource
     bool valid() const { return mBuffer.valid(); }
     const Buffer &getBuffer() const { return mBuffer; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
+    VkDeviceSize getSize() const { return mSize; }
 
     // Helpers for setting the graph dependencies *and* setting the appropriate barrier.
-    ANGLE_INLINE void onRead(CommandGraphResource *reader, VkAccessFlagBits readAccessType)
+    ANGLE_INLINE void onRead(CommandGraphResource *reader, VkAccessFlags readAccessType)
     {
         addReadDependency(reader);
 
-        if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) == 0)
+        if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) != readAccessType)
         {
             reader->addGlobalMemoryBarrier(mCurrentWriteAccess, readAccessType);
             mCurrentReadAccess |= readAccessType;
         }
     }
 
-    void onWrite(VkAccessFlagBits writeAccessType);
+    void onWrite(VkAccessFlags writeAccessType);
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(Context *context,
                                  const Buffer &buffer,
+                                 VkAccessFlags bufferAccessType,
                                  const VkBufferCopy &copyRegion);
 
     // Note: currently only one view is allowed.  If needs be, multiple views can be created

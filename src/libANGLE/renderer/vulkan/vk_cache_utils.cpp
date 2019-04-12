@@ -1221,8 +1221,8 @@ void DescriptorSetLayoutDesc::update(uint32_t bindingIndex, VkDescriptorType typ
 
     PackedDescriptorSetBinding &packedBinding = mPackedDescriptorSetLayout[bindingIndex];
 
-    packedBinding.type  = static_cast<uint16_t>(type);
-    packedBinding.count = static_cast<uint16_t>(count);
+    SetBitField(packedBinding.type, type);
+    SetBitField(packedBinding.count, count);
 }
 
 void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *bindings) const
@@ -1237,8 +1237,7 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
         binding.binding                      = bindingIndex;
         binding.descriptorCount              = packedBinding.count;
         binding.descriptorType               = static_cast<VkDescriptorType>(packedBinding.type);
-        binding.stageFlags =
-            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT;
+        binding.stageFlags                   = VK_SHADER_STAGE_ALL;
         binding.pImmutableSamplers = nullptr;
 
         bindings->push_back(binding);

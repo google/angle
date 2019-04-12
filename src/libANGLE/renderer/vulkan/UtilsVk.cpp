@@ -220,6 +220,7 @@ angle::Result UtilsVk::ensureResourcesInitialized(vk::Context *context,
     RendererVk *renderer = context->getRenderer();
 
     vk::DescriptorSetLayoutDesc descriptorSetDesc;
+    bool isCompute = function >= Function::ComputeStartIndex;
 
     uint32_t currentBinding = 0;
     for (size_t i = 0; i < setSizesCount; ++i)
@@ -231,9 +232,8 @@ angle::Result UtilsVk::ensureResourcesInitialized(vk::Context *context,
     ANGLE_TRY(renderer->getDescriptorSetLayout(context, descriptorSetDesc,
                                                &mDescriptorSetLayouts[function][kSetIndex]));
 
-    gl::ShaderType pushConstantsShaderStage = function >= Function::ComputeStartIndex
-                                                  ? gl::ShaderType::Compute
-                                                  : gl::ShaderType::Fragment;
+    gl::ShaderType pushConstantsShaderStage =
+        isCompute ? gl::ShaderType::Compute : gl::ShaderType::Fragment;
 
     // Corresponding pipeline layouts:
     vk::PipelineLayoutDesc pipelineLayoutDesc;

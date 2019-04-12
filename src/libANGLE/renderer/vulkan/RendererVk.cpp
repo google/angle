@@ -1305,12 +1305,14 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         mFeatures.disableFifoPresentMode = true;
     }
 
-    if (vk::CommandBuffer::ExecutesInline())
+    if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
     {
-        if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
+        if (vk::CommandBuffer::ExecutesInline())
         {
             mFeatures.restartRenderPassAfterLoadOpClear = true;
         }
+
+        mFeatures.bindEmptyForUnusedDescriptorSets = true;
     }
 }
 
@@ -1376,10 +1378,16 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
-uint32_t RendererVk::getMaxActiveTextures()
+uint32_t RendererVk::getMaxUniformBlocks() const
+{
+    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetUniformBuffers,
+                              gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
+}
+
+uint32_t RendererVk::getMaxActiveTextures() const
 {
     // TODO(lucferron): expose this limitation to GL in Context Caps
-    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers,
+    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetSamplers,
                               gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
 }
 

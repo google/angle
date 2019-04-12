@@ -313,6 +313,6 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST(VulkanUniformUpdatesTest, ES2_VULKAN());
+ANGLE_INSTANTIATE_TEST(VulkanUniformUpdatesTest, ES2_VULKAN(), ES3_VULKAN());
 
 }  // anonymous namespace
