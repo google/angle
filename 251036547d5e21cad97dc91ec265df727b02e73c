@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d63a9f57_12526244",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-04-12T20:25:51Z",
+      "side": 1,
+      "message": "No.  There are 3 rect\u0027s to merge: renderArea, app-set scissor, and the app-set viewport.",
+      "parentUuid": "0c9cea11_a64ecaab",
+      "range": {
+        "startLine": 831,
+        "startChar": 53,
+        "endLine": 831,
+        "endChar": 63
+      },
+      "revId": "251036547d5e21cad97dc91ec265df727b02e73c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "106957d5_4a6ba5e1",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f89580aa_ce1f4a15",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-04-12T20:25:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "106957d5_4a6ba5e1",
+      "range": {
+        "startLine": 838,
+        "startChar": 22,
+        "endLine": 838,
+        "endChar": 38
+      },
+      "revId": "251036547d5e21cad97dc91ec265df727b02e73c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e4f3e91_d21b4565",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 7
@@ -68,6 +116,30 @@
       "revId": "251036547d5e21cad97dc91ec265df727b02e73c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e60be7c1_1f9706d8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-04-12T20:25:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e4f3e91_d21b4565",
+      "range": {
+        "startLine": 858,
+        "startChar": 0,
+        "endLine": 862,
+        "endChar": 9
+      },
+      "revId": "251036547d5e21cad97dc91ec265df727b02e73c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
