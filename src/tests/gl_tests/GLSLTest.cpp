@@ -612,6 +612,9 @@ void main()
 // Draw an array of points with the first vertex offset at 0 using gl_VertexID
 TEST_P(GLSLTest_ES3, GLVertexIDOffsetZeroDrawArray)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.  http://anglebug.com/3221
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr int kStartIndex  = 0;
     constexpr int kArrayLength = 5;
     constexpr char kVS[]       = R"(#version 300 es
@@ -674,6 +677,9 @@ void GLVertexIDIntegerTextureDrawArrays_helper(int first, int count, GLenum err)
 // https://github.com/KhronosGroup/WebGL/blob/master/sdk/tests/conformance2/rendering/vertex-id.html
 TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawArrays)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.  http://anglebug.com/3221
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Have to set a large point size because the window size is much larger than the texture
     constexpr char kVS[] = R"(#version 300 es
 flat out highp int vVertexID;
@@ -731,6 +737,9 @@ TEST_P(GLSLTest_ES3, GLVertexIDOffsetFiveDrawArray)
 {
     // Bug in Nexus drivers, offset does not work. (anglebug.com/3264)
     ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
+
+    // TODO(syoussefi): missing ES3 shader feature support.  http://anglebug.com/3221
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr int kStartIndex  = 5;
     constexpr int kArrayLength = 5;
@@ -2391,6 +2400,10 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 // Convers a bug with the unary minus operator on unsigned integer workaround.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorUnsignedInt)
 {
+    // TODO(syoussefi): missing [gs]etUniform support with unsigned formats.
+    // http://anglebug.com/2392
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in highp vec4 position;\n"
@@ -3329,6 +3342,10 @@ TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInFragmentShader)
 // Test that a varying struct that gets used in the fragment shader works.
 TEST_P(GLSLTest_ES3, VaryingStructUsedInFragmentShader)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.
+    // http://anglebug.com/3199
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in vec4 inputAttribute;\n"
@@ -4183,6 +4200,10 @@ void main()
 // Test that a varying struct that's defined as a part of the declaration is handled correctly.
 TEST_P(GLSLTest_ES3, VaryingStructWithInlineDefinition)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.
+    // http://anglebug.com/3199
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] = R"(#version 300 es
 in vec4 inputAttribute;
 
@@ -4279,6 +4300,10 @@ void main() {
 // is handled correctly.
 TEST_P(GLSLTest_ES3, FlatVaryingUsedInFoldedTernary)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.
+    // http://anglebug.com/3219
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] = R"(#version 300 es
 
 in vec4 inputAttribute;
@@ -4498,6 +4523,10 @@ void main()
 // field.
 TEST_P(GLSLTest_ES3, ErrorMessageOfLinkInterfaceBlockFieldMismatch)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.
+    // http://anglebug.com/3199
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] = R"(#version 300 es
 uniform S {
     vec2 val1;
@@ -4533,6 +4562,10 @@ void main()
 // struct field.
 TEST_P(GLSLTest_ES3, ErrorMessageOfLinkInterfaceBlockStructFieldMismatch)
 {
+    // TODO(syoussefi): missing ES3 shader feature support.
+    // http://anglebug.com/3199
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] = R"(#version 300 es
 struct T
 {
@@ -5304,7 +5337,7 @@ ANGLE_INSTANTIATE_TEST(GLSLTestNoValidation,
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(WebGLGLSLTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 
