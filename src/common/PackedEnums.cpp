@@ -40,6 +40,9 @@ TextureType TextureTargetToType(TextureTarget target)
             return TextureType::_3D;
         case TextureTarget::InvalidEnum:
             return TextureType::InvalidEnum;
+        default:
+            UNREACHABLE();
+            return TextureType::InvalidEnum;
     }
 }
 

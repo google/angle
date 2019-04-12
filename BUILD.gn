@@ -120,6 +120,7 @@ config("extra_warnings") {
       "/we4244",  # Conversion: possible loss of data.
       "/we4456",  # Variable shadowing.
       "/we4458",  # declaration hides class member.
+      "/we4715",  # not all control paths return a value
       "/we4800",  # forcing value to bool.
       "/we4838",  # narrowing conversion.
     ]
