@@ -621,7 +621,8 @@ std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfV
             }
             else if (varying.isStruct())
             {
-                const auto *field = FindShaderVarField(varying, tfVaryingName);
+                GLuint fieldIndex = 0;
+                const auto *field = FindShaderVarField(varying, tfVaryingName, &fieldIndex);
                 ASSERT(field != nullptr && !field->isStruct() && !field->isArray());
                 return varying.mappedName + "." + field->mappedName;
             }

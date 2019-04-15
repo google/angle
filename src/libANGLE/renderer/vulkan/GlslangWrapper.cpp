@@ -214,6 +214,19 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
     {
         const auto &varying = *varyingReg.packedVarying;
 
+        // In Vulkan GLSL, struct fields are not allowed to have location assignments.  The varying
+        // of a struct type is thus given a location equal to the one assigned to its first field.
+        if (varying.isStructField() && varying.fieldIndex > 0)
+        {
+            continue;
+        }
+
+        // Similarly, assign array varying locations to the assigned location of the first element.
+        if (varying.isArrayElement() && varying.arrayIndex != 0)
+        {
+            continue;
+        }
+
         std::string locationString = "location = " + Str(varyingReg.registerRow);
         if (varyingReg.registerColumn > 0)
         {
@@ -222,12 +235,22 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
             locationString += ", component = " + Str(varyingReg.registerColumn);
         }
 
-        InsertLayoutSpecifierString(&vertexSource, varying.varying->name, locationString);
-        InsertLayoutSpecifierString(&fragmentSource, varying.varying->name, locationString);
+        // In the following:
+        //
+        //     struct S { vec4 field; };
+        //     out S varStruct;
+        //
+        // "varStruct" is found through `parentStructName`, with `varying->name` being "field".  In
+        // such a case, use `parentStructName`.
+        const std::string &name =
+            varying.isStructField() ? varying.parentStructName : varying.varying->name;
+
+        InsertLayoutSpecifierString(&vertexSource, name, locationString);
+        InsertLayoutSpecifierString(&fragmentSource, name, locationString);
 
         ASSERT(varying.interpolation == sh::INTERPOLATION_SMOOTH);
-        InsertQualifierSpecifierString(&vertexSource, varying.varying->name, "out");
-        InsertQualifierSpecifierString(&fragmentSource, varying.varying->name, "in");
+        InsertQualifierSpecifierString(&vertexSource, name, "out");
+        InsertQualifierSpecifierString(&fragmentSource, name, "in");
     }
 
     // Remove all the markers for unused varyings.

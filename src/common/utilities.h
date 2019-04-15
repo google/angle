@@ -62,7 +62,8 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
 // Find the child field which matches 'fullName' == var.name + "." + field.name.
 // Return nullptr if not found.
 const sh::ShaderVariable *FindShaderVarField(const sh::ShaderVariable &var,
-                                             const std::string &fullName);
+                                             const std::string &fullName,
+                                             GLuint *fieldIndexOut);
 
 // Find the range of index values in the provided indices pointer.  Primitive restart indices are
 // only counted in the range if primitive restart is disabled.
