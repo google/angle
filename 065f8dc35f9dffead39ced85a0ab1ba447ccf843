@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c01060ed_99192d68",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-15T13:08:28Z",
+      "side": 1,
+      "message": "Tim, thinking about this more, we probably should not set the ES3 conformant bit. Could you make a follow up to remove this? We just aren\u0027t anywhere close to conformant.",
+      "range": {
+        "startLine": 268,
+        "startChar": 45,
+        "endLine": 268,
+        "endChar": 55
+      },
+      "revId": "065f8dc35f9dffead39ced85a0ab1ba447ccf843",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
