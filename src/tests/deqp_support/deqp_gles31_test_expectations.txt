@@ -51,18 +51,6 @@
 1442 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
 1442 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
-1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
-// TODO(xinghua.cao@intel.com): FAIL expectation instead of SKIP should be sufficient for OpenGL, but the
-// test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
-
-1729 D3D11 : dEQP-GLES31.functional.atomic_counter.* = SKIP
-1951 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
-1951 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.ssbo.* = SKIP
-1442 D3D11 : dEQP-GLES31.functional.program_interface_query.* = SKIP
-1442 D3D11 : dEQP-GLES31.functional.synchronization.* = SKIP
-1442 D3D11 : dEQP-GLES31.functional.layout_binding.image.* = SKIP
-// This case is skipped since it uses atomic counter builtin functions which haven't been implemented.
-1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP
 
 // D3D11 Failing Tests
 // Below cases are failed due to binding multi-UAVs to a single buffer is not supported in D3D backend.
@@ -605,3 +593,16 @@
 1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.exceed_shared_memory_size_limit = FAIL
 1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.exceed_shared_memory_size_limit = FAIL
 1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.compute.exceed_shared_memory_size_limit = FAIL
+
+1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
+// TODO(xinghua.cao@intel.com): FAIL expectation instead of SKIP should be sufficient for OpenGL, but the
+// test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
+
+1729 D3D11 : dEQP-GLES31.functional.atomic_counter.* = SKIP
+1951 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
+1951 D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.ssbo.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.program_interface_query.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.synchronization.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.layout_binding.image.* = SKIP
+// This case is skipped since it uses atomic counter builtin functions which haven't been implemented.
+1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP

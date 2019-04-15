@@ -30,8 +30,6 @@
 //  91531 NEXUS5X GLES : conformance_more_* = SKIP
 
 // Don't run these tests for faster turnover
-998 : dEQP-GLES3.performance.* = SKIP
-998 : dEQP-GLES3.stress.* = SKIP
 1101 : dEQP-GLES3.functional.flush_finish.* = SKIP
 
 // Figure out why this caused this regression in Chrome:
@@ -121,10 +119,6 @@
 1095 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
 
 // Windows only failure
-1092 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_fixed_fragment = FAIL
-1092 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_float_fragment = FAIL
-1092 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_fixed_fragment = FAIL
-1092 WIN D3D11 : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_float_fragment = FAIL
 1096 WIN D3D11 : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
 1096 WIN D3D11 : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
 1096 WIN D3D11 : dEQP-GLES3.functional.fragment_ops.depth_stencil.write_mask.* = FAIL
@@ -274,12 +268,6 @@
 1323 LINUX OPENGL : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
 1323 LINUX OPENGL : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
 1323 LINUX OPENGL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.points = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_clamp = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_mirror = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_repeat = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_linear_clamp = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_linear_mirror = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_linear_repeat = FAIL
 
 // While loops with 'continue' seem flaky on Linux. (Possibly all GL renderers)
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.conditional_continue_vertex = FAIL
@@ -700,9 +688,6 @@
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_samples_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.min_program_texel_offset_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_uniform_block_size_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_vertex_uniform_components_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_fragment_uniform_components_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.indexed.uniform_buffer* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_uniform_block_size_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_vertex_uniform_components_get* = FAIL

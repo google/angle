@@ -352,4 +352,73 @@ TEST(GPUTestExpectationsParserTest, GPUTestExpectationsParserComment)
         GPUTestExpectationsParser::kGpuTestPass);
 }
 
+// A misspelled expectation should not be matched from getTestExpectation, and should lead to an
+// unused expectation when later queried.
+TEST(GPUTestExpectationsParserTest, GPUTestExpectationsParserMisspelledExpectation)
+{
+    GPUTestConfigTester config;
+    std::string line =
+        R"(100 : dEQP-GLES31.functionaal.layout_binding.ubo.* = SKIP)";  // "functionaal"
+    GPUTestExpectationsParser parser;
+    EXPECT_TRUE(parser.loadTestExpectations(config, line));
+    EXPECT_TRUE(parser.getErrorMessages().empty());
+    // Default behavior is to let missing tests pass
+    EXPECT_EQ(
+        parser.getTestExpectation("dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max"),
+        GPUTestExpectationsParser::kGpuTestPass);
+    EXPECT_EQ(parser.getUnusedExpectationsMessages().size(), 1u);
+    if (parser.getUnusedExpectationsMessages().size() >= 1)
+        EXPECT_EQ(parser.getUnusedExpectationsMessages()[0], "Line 1: expectation was unused.");
+}
+
+// Wild characters that match groups of expectations can be overridden with more specific lines.
+// The parse should still compute correctly which lines were used and which were unused.
+TEST(GPUTestExpectationsParserTest, GPUTestExpectationsParserOverrideExpectation)
+{
+    GPUTestConfigTester config;
+    // Fail all layout_binding tests, but skip the layout_binding.ubo subset.
+    std::string line = R"(100 : dEQP-GLES31.functional.layout_binding.* = FAIL
+100 : dEQP-GLES31.functional.layout_binding.ubo.* = SKIP)";
+    GPUTestExpectationsParser parser;
+    EXPECT_TRUE(parser.loadTestExpectations(config, line));
+    EXPECT_TRUE(parser.getErrorMessages().empty());
+    // Default behavior is to let missing tests pass
+    EXPECT_EQ(
+        parser.getTestExpectation("dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max"),
+        GPUTestExpectationsParser::kGpuTestSkip);
+    // The FAIL expectation was unused because it was overridden.
+    EXPECT_EQ(parser.getUnusedExpectationsMessages().size(), 1u);
+    if (parser.getUnusedExpectationsMessages().size() >= 1)
+        EXPECT_EQ(parser.getUnusedExpectationsMessages()[0], "Line 1: expectation was unused.");
+    // Now try a test that doesn't match the override criteria
+    EXPECT_EQ(parser.getTestExpectation("dEQP-GLES31.functional.layout_binding.image.test"),
+              GPUTestExpectationsParser::kGpuTestFail);
+    EXPECT_TRUE(parser.getUnusedExpectationsMessages().empty());
+}
+
+// This test is the same as GPUTestExpectationsParserOverrideExpectation, but verifying the order
+// doesn't matter when overriding.
+TEST(GPUTestExpectationsParserTest, GPUTestExpectationsParserOverrideExpectationOtherOrder)
+{
+    GPUTestConfigTester config;
+    // Fail all layout_binding tests, but skip the layout_binding.ubo subset.
+    std::string line = R"(100 : dEQP-GLES31.functional.layout_binding.ubo.* = SKIP
+100 : dEQP-GLES31.functional.layout_binding.* = FAIL)";
+    GPUTestExpectationsParser parser;
+    EXPECT_TRUE(parser.loadTestExpectations(config, line));
+    EXPECT_TRUE(parser.getErrorMessages().empty());
+    // Default behavior is to let missing tests pass
+    EXPECT_EQ(
+        parser.getTestExpectation("dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max"),
+        GPUTestExpectationsParser::kGpuTestSkip);
+    // The FAIL expectation was unused because it was overridden.
+    EXPECT_EQ(parser.getUnusedExpectationsMessages().size(), 1u);
+    if (parser.getUnusedExpectationsMessages().size() >= 1)
+        EXPECT_EQ(parser.getUnusedExpectationsMessages()[0], "Line 2: expectation was unused.");
+    // Now try a test that doesn't match the override criteria
+    EXPECT_EQ(parser.getTestExpectation("dEQP-GLES31.functional.layout_binding.image.test"),
+              GPUTestExpectationsParser::kGpuTestFail);
+    EXPECT_TRUE(parser.getUnusedExpectationsMessages().empty());
+}
+
 }  // anonymous namespace

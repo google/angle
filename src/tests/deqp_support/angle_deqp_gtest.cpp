@@ -296,6 +296,19 @@ void dEQPCaseList::initialize()
         int expectation = mTestExpectationsParser.getTestExpectation(dEQPName);
         mCaseInfoList.push_back(CaseInfo(dEQPName, gTestName, expectation));
     }
+
+    std::stringstream unusedMsgStream;
+    bool anyUnused = false;
+    for (const auto &message : mTestExpectationsParser.getUnusedExpectationsMessages())
+    {
+        anyUnused = true;
+        unusedMsgStream << std::endl << " " << message;
+    }
+    if (anyUnused)
+    {
+        std::cerr << "Failed to validate test expectations." << unusedMsgStream.str() << std::endl;
+        Die();
+    }
 }
 
 template <size_t TestModuleIndex>

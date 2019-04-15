@@ -42,17 +42,21 @@ class GPUTestExpectationsParser
     // Query error messages from the last LoadTestExpectations() call.
     const std::vector<std::string> &getErrorMessages() const;
 
+    // Query error messages from any expectations that weren't used before being queried.
+    std::vector<std::string> getUnusedExpectationsMessages() const;
+
     // Get the test expectation of a given test on a given bot.
-    int32_t getTestExpectation(const std::string &testName) const;
+    int32_t getTestExpectation(const std::string &testName);
 
   private:
     struct GPUTestExpectationEntry
     {
         GPUTestExpectationEntry();
 
-        std::string mTestName;
-        int32_t mTestExpectation;
-        size_t mLineNumber;
+        std::string testName;
+        int32_t testExpectation;
+        size_t lineNumber;
+        bool used;
     };
 
     // Parse a line of text. If we have a valid entry, save it; otherwise,
@@ -68,6 +72,9 @@ class GPUTestExpectationsParser
     // Check if two entries' config overlap with each other. May generate an
     // error message.
     bool detectConflictsBetweenEntries();
+
+    // Query a list of any expectations that were's used before being queried.
+    std::vector<GPUTestExpectationEntry> getUnusedExpectations() const;
 
     // Save an error message, which can be queried later.
     void pushErrorMessage(const std::string &message, size_t lineNumber);

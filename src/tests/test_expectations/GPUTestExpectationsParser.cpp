@@ -272,12 +272,27 @@ bool GPUTestExpectationsParser::loadTestExpectationsFromFile(const GPUTestConfig
     return loadTestExpectations(config, data);
 }
 
-int32_t GPUTestExpectationsParser::getTestExpectation(const std::string &testName) const
+int32_t GPUTestExpectationsParser::getTestExpectation(const std::string &testName)
 {
+    size_t maxExpectationLen            = 0;
+    GPUTestExpectationEntry *foundEntry = nullptr;
     for (size_t i = 0; i < mEntries.size(); ++i)
     {
-        if (NamesMatching(mEntries[i].mTestName, testName))
-            return mEntries[i].mTestExpectation;
+        if (NamesMatching(mEntries[i].testName, testName))
+        {
+            size_t expectationLen = mEntries[i].testName.length();
+            // The longest/most specific matching expectation overrides any others.
+            if (expectationLen > maxExpectationLen)
+            {
+                maxExpectationLen = expectationLen;
+                foundEntry        = &mEntries[i];
+            }
+        }
+    }
+    if (foundEntry != nullptr)
+    {
+        foundEntry->used = true;
+        return foundEntry->testExpectation;
     }
     return kGpuTestPass;
 }
@@ -285,6 +300,20 @@ int32_t GPUTestExpectationsParser::getTestExpectation(const std::string &testNam
 const std::vector<std::string> &GPUTestExpectationsParser::getErrorMessages() const
 {
     return mErrorMessages;
+}
+
+std::vector<std::string> GPUTestExpectationsParser::getUnusedExpectationsMessages() const
+{
+    std::vector<std::string> messages;
+    std::vector<GPUTestExpectationsParser::GPUTestExpectationEntry> unusedExpectations =
+        getUnusedExpectations();
+    for (size_t i = 0; i < unusedExpectations.size(); ++i)
+    {
+        std::string message =
+            "Line " + ToString(unusedExpectations[i].lineNumber) + ": expectation was unused.";
+        messages.push_back(message);
+    }
+    return messages;
 }
 
 bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
@@ -295,7 +324,8 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
         SplitString(lineData, kWhitespaceASCII, KEEP_WHITESPACE, SPLIT_WANT_NONEMPTY);
     int32_t stage = kLineParserBegin;
     GPUTestExpectationEntry entry;
-    entry.mLineNumber = lineNumber;
+    entry.lineNumber  = lineNumber;
+    entry.used        = false;
     bool skipLine     = false;
     for (size_t i = 0; i < tokens.size() && !skipLine; ++i)
     {
@@ -392,7 +422,7 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
                 }
                 else if (stage == kLineParserColon)
                 {
-                    entry.mTestName = tokens[i];
+                    entry.testName = tokens[i];
                 }
                 else
                 {
@@ -412,13 +442,13 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
                     pushErrorMessage(kErrorMessage[kErrorIllegalEntry], lineNumber);
                     return false;
                 }
-                if (entry.mTestExpectation != 0)
+                if (entry.testExpectation != 0)
                 {
                     pushErrorMessage(kErrorMessage[kErrorEntryWithExpectationConflicts],
                                      lineNumber);
                     return false;
                 }
-                entry.mTestExpectation = kTokenData[token].expectation;
+                entry.testExpectation = kTokenData[token].expectation;
                 if (stage == kLineParserEqual)
                     stage++;
                 break;
@@ -472,15 +502,29 @@ bool GPUTestExpectationsParser::detectConflictsBetweenEntries()
     {
         for (size_t j = i + 1; j < mEntries.size(); ++j)
         {
-            if (mEntries[i].mTestName == mEntries[j].mTestName)
+            if (mEntries[i].testName == mEntries[j].testName)
             {
-                pushErrorMessage(kErrorMessage[kErrorEntriesOverlap], mEntries[i].mLineNumber,
-                                 mEntries[j].mLineNumber);
+                pushErrorMessage(kErrorMessage[kErrorEntriesOverlap], mEntries[i].lineNumber,
+                                 mEntries[j].lineNumber);
                 rt = true;
             }
         }
     }
     return rt;
+}
+
+std::vector<GPUTestExpectationsParser::GPUTestExpectationEntry>
+GPUTestExpectationsParser::getUnusedExpectations() const
+{
+    std::vector<GPUTestExpectationsParser::GPUTestExpectationEntry> unusedExpectations;
+    for (size_t i = 0; i < mEntries.size(); ++i)
+    {
+        if (!mEntries[i].used)
+        {
+            unusedExpectations.push_back(mEntries[i]);
+        }
+    }
+    return unusedExpectations;
 }
 
 void GPUTestExpectationsParser::pushErrorMessage(const std::string &message, size_t lineNumber)
@@ -497,7 +541,7 @@ void GPUTestExpectationsParser::pushErrorMessage(const std::string &message,
 }
 
 GPUTestExpectationsParser::GPUTestExpectationEntry::GPUTestExpectationEntry()
-    : mTestExpectation(0), mLineNumber(0)
+    : testExpectation(0), lineNumber(0)
 {}
 
 }  // namespace angle

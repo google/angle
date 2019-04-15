@@ -84,7 +84,6 @@
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba5551_window = FAIL
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba5551_pbuffer = FAIL
 1340 WIN : dEQP-EGL.functional.negative_api.choose_config = SKIP
-1340 WIN : dEQP-EGL.functional.negative_api.get_display = FAIL
 1340 WIN : dEQP-EGL.functional.negative_api.surface_attrib = SKIP
 1340 WIN : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2382 WIN : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
@@ -142,7 +141,6 @@
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pixmap.rgba8888_depth_stencil = SKIP
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pixmap.rgba8888_no_depth_no_stencil = SKIP
 2546 LINUX : dEQP-EGL.functional.render.multi_context.* = SKIP
-2546 LINUX : dEQP-EGL.functional.render.multi_context.gles2.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.render.single_context.gles2.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.render.single_context.gles3.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.thread_cleanup.* = SKIP
@@ -220,13 +218,10 @@
 // ES 1 tests
 2306 WIN : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
 2306 WIN : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
-2306 WIN : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
 2306 MAC : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
 2306 MAC : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
-2306 MAC : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
 2306 LINUX : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
 2306 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
-2306 LINUX : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
 
 // Tests failing since the Jan 2018 roll of dEQP
 2341 : dEQP-EGL.functional.swap_buffers.* = SKIP

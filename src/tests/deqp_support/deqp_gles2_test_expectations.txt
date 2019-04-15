@@ -32,10 +32,6 @@
 // Skip these tests due to timeouts
 1034 : dEQP-GLES2.functional.flush_finish.* = SKIP
 
-// Don't run these tests for faster turnover
-998 : dEQP-GLES2.performance.* = SKIP
-998 : dEQP-GLES2.stress.* = SKIP
-
 // Failures related to not supporting separate depth/stencil masks on D3D11.
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
@@ -292,12 +288,19 @@
 3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
 3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
 3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
-3243 D3D11 : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
-3243 D3D11 : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
-3243 D3D11 : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-3243 D3D11 : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-3243 D3D11 : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
-3243 D3D11 : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
+// D3D11 AMD already covered by Line 148
+3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
+3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
+3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
+3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
+3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
+3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
+3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
+3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
+3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
+3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
+3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
+3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
 
 // Fail with very tiny pixel differences
 3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
