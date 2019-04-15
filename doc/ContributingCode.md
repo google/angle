@@ -96,22 +96,11 @@
     * `git pull --rebase`
 
 ### Selecting reviewers
-ANGLE has a loose owners structure but the following mapping can be useful for choosing initial reviewers:
- * Compiler/preprocessor `src/compiler`
-   * `cwallez at chromium dot org`
- * OpenGL ES/EGL frontend `src/libANGLE`
-   * `geofflang at chromium dot org`
-   * `jmadill at chromium dot org`
- * Direct3D backends `src/libANGLE/renderer/d3d`
-   * `jmadill at chromium dot org`
- * OpenGL backend `src/libANGLE/renderer/gl`
-   * `geofflang at chromium dot org`
- * Vulkan backend `src/libANGLE/renderer/vulkan`
-   * `jmadill at chromium dot org`
- * Android integration `src/libANGLE/renderer/*/android`
-   * `ynovikov at chromium dot org`
- * ChromeOS integration `src/libANGLE/renderer/*/ozone`
-   * `fjhenigman at chromium dot org`
+When your CL is ready to review, add any of the following reviewers. They will be able to route your CL to additional reviewers as neccssary and answer any questions you may have about the process.
+ * `geofflang at chromium dot org`
+ * `jmadill at chromium dot org`
+ * `syoussefi at chromium dot org`
+ * `ynovikov at chromium dot org`
 
 ### Committer status
 Similar to [Chromium's committer status](https://dev.chromium.org/getting-involved/become-a-committer), long-term contributors to the ANGLE project may request to join the `angle-committers` group.  This allows you to give `+2` on code reviews and land patches without assistance.  After about 6 months of regular contributions, you may request committer status from a core ANGLE team member via email or code review.  Chromium committers may ask at any time.
