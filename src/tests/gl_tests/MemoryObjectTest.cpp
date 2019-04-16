@@ -27,6 +27,7 @@ class MemoryObjectTest : public ANGLETest
     }
 };
 
+// glIsMemoryObjectEXT must identify memory objects.
 TEST_P(MemoryObjectTest, MemoryObjectShouldBeMemoryObject)
 {
     ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object"));
@@ -47,13 +48,28 @@ TEST_P(MemoryObjectTest, MemoryObjectShouldBeMemoryObject)
     EXPECT_GL_NO_ERROR();
 }
 
+// glImportMemoryFdEXT must fail for handle types that are not file descriptors.
+TEST_P(MemoryObjectTest, ShouldFailValidationOnImportFdUnsupportedHandleType)
+{
+    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object_fd"));
+
+    {
+        GLMemoryObject memoryObject;
+        GLsizei deviceMemorySize = 1;
+        int fd                   = -1;
+        glImportMemoryFdEXT(memoryObject, deviceMemorySize, GL_HANDLE_TYPE_OPAQUE_WIN32_EXT, fd);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(MemoryObjectTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES3_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),

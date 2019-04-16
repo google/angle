@@ -9,6 +9,7 @@
 #define LIBANGLE_RENDERER_MEMORYOBJECTIMPL_H_
 
 #include "angle_gl.h"
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 
@@ -27,6 +28,11 @@ class MemoryObjectImpl : angle::NonCopyable
     virtual ~MemoryObjectImpl() {}
 
     virtual void onDestroy(const gl::Context *context) = 0;
+
+    virtual angle::Result importFd(gl::Context *context,
+                                   GLuint64 size,
+                                   gl::HandleType handleType,
+                                   GLint fd) = 0;
 };
 
 }  // namespace rx

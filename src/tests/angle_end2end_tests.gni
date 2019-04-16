@@ -161,3 +161,8 @@ angle_end2end_tests_win_sources = [
   "egl_tests/media/yuvtest.inl",
 ]
 angle_end2end_tests_x11_sources = [ "egl_tests/EGLX11VisualTest.cpp" ]
+angle_end2end_tests_vulkan_sources = [
+  "gl_tests/VulkanExternalImageTest.cpp",
+  "test_utils/VulkanExternalHelper.cpp",
+  "test_utils/VulkanExternalHelper.h",
+]

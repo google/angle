@@ -176,6 +176,9 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
     if (use_x11) {
       sources += angle_end2end_tests_x11_sources
     }
+    if (angle_enable_vulkan) {
+      sources += angle_end2end_tests_vulkan_sources
+    }
 
     configs += [
       "${angle_root}:libANGLE_config",
@@ -199,6 +202,9 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
 
     if (is_android) {
       use_native_activity = true
+    }
+    if (angle_enable_vulkan) {
+      deps += [ "${angle_root}:angle_vulkan" ]
     }
   }
 }

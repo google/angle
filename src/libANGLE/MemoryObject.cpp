@@ -25,4 +25,12 @@ void MemoryObject::onDestroy(const Context *context)
     mImplementation->onDestroy(context);
 }
 
+angle::Result MemoryObject::importFd(Context *context,
+                                     GLuint64 size,
+                                     HandleType handleType,
+                                     GLint fd)
+{
+    return mImplementation->importFd(context, size, handleType, fd);
+}
+
 }  // namespace gl

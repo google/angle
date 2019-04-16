@@ -86,6 +86,11 @@ class GLFramebuffer : public GLWrapper
   public:
     GLFramebuffer() : GLWrapper(&glGenFramebuffers, &glDeleteFramebuffers) {}
 };
+class GLMemoryObject : public GLWrapper
+{
+  public:
+    GLMemoryObject() : GLWrapper(&glCreateMemoryObjectsEXT, &glDeleteMemoryObjectsEXT) {}
+};
 class GLRenderbuffer : public GLWrapper
 {
   public:

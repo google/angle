@@ -216,6 +216,7 @@ MSG kInvalidFramebufferLayer = "Framebuffer layer cannot be less than 0 or great
 MSG kInvalidFramebufferName = "name is not a valid framebuffer.";
 MSG kInvalidFramebufferTarget = "Invalid framebuffer target.";
 MSG kInvalidFramebufferTextureLevel = "Mipmap level must be 0 when attaching a texture.";
+MSG kInvalidHandleType = "Invalid handle type.";
 MSG kInvalidImageAccess = "access is not one of the supported tokens.";
 MSG kInvalidImageFormat = "format is not one of supported image unit formats.";
 MSG kInvalidIndentifier = "Invalid identifier.";

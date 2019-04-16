@@ -9,6 +9,7 @@
 #define LIBANGLE_MEMORYOBJECT_H_
 
 #include "angle_gl.h"
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
@@ -21,6 +22,7 @@ class MemoryObjectImpl;
 
 namespace gl
 {
+class Context;
 
 class MemoryObject final : public RefCountObject
 {
@@ -29,6 +31,8 @@ class MemoryObject final : public RefCountObject
     ~MemoryObject() override;
 
     void onDestroy(const Context *context) override;
+
+    angle::Result importFd(Context *context, GLuint64 size, HandleType handleType, GLint fd);
 
   private:
     std::unique_ptr<rx::MemoryObjectImpl> mImplementation;
