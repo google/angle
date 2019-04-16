@@ -103,6 +103,9 @@ void main()
 // It should be successful.
 TEST_P(ComputeShaderTest, DetachShaderAfterLinkSuccess)
 {
+    // Flaky crash on teardown, see http://anglebug.com/3349
+    ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel() && IsWindows());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1) in;
 void main()
@@ -384,6 +387,9 @@ void main()
 // Basic test for DispatchComputeIndirect.
 TEST_P(ComputeShaderTest, DispatchComputeIndirect)
 {
+    // Flaky crash on teardown, see http://anglebug.com/3349
+    ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel() && IsWindows());
+
     GLTexture texture;
     GLFramebuffer framebuffer;
     const char kCSSource[] = R"(#version 310 es
