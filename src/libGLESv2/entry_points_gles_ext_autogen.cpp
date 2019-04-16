@@ -3460,10 +3460,11 @@ void GL_APIENTRY ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleTy
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        HandleType handleTypePacked = FromGLenum<HandleType>(handleType);
         if (context->skipValidation() ||
-            ValidateImportMemoryFdEXT(context, memory, size, handleType, fd))
+            ValidateImportMemoryFdEXT(context, memory, size, handleTypePacked, fd))
         {
-            context->importMemoryFd(memory, size, handleType, fd);
+            context->importMemoryFd(memory, size, handleTypePacked, fd);
         }
     }
 }
@@ -3719,10 +3720,11 @@ void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        HandleType handleTypePacked = FromGLenum<HandleType>(handleType);
         if (context->skipValidation() ||
-            ValidateImportSemaphoreFdEXT(context, semaphore, handleType, fd))
+            ValidateImportSemaphoreFdEXT(context, semaphore, handleTypePacked, fd))
         {
-            context->importSemaphoreFd(semaphore, handleType, fd);
+            context->importSemaphoreFd(semaphore, handleTypePacked, fd);
         }
     }
 }
@@ -10876,10 +10878,11 @@ void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        HandleType handleTypePacked = FromGLenum<HandleType>(handleType);
         if (context->skipValidation() ||
-            ValidateImportMemoryFdEXT(context, memory, size, handleType, fd))
+            ValidateImportMemoryFdEXT(context, memory, size, handleTypePacked, fd))
         {
-            context->importMemoryFd(memory, size, handleType, fd);
+            context->importMemoryFd(memory, size, handleTypePacked, fd);
         }
     }
 }
@@ -10897,10 +10900,11 @@ void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        HandleType handleTypePacked = FromGLenum<HandleType>(handleType);
         if (context->skipValidation() ||
-            ValidateImportSemaphoreFdEXT(context, semaphore, handleType, fd))
+            ValidateImportSemaphoreFdEXT(context, semaphore, handleTypePacked, fd))
         {
-            context->importSemaphoreFd(semaphore, handleType, fd);
+            context->importSemaphoreFd(semaphore, handleTypePacked, fd);
         }
     }
 }

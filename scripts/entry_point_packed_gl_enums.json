@@ -265,6 +265,12 @@
     "glGetTexParameterxv": {
         "target": "TextureType"
     },
+    "glImportMemoryFdEXT": {
+        "handleType": "HandleType"
+    },
+    "glImportSemaphoreFdEXT": {
+        "handleType": "HandleType"
+    },
     "glLightf" : {
         "pname" : "LightParameter"
     },

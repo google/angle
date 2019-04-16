@@ -255,5 +255,9 @@
     {
         "FirstVertexConvention": "GL_FIRST_VERTEX_CONVENTION",
         "LastVertexConvention": "GL_LAST_VERTEX_CONVENTION"
+    },
+    "HandleType":
+    {
+        "OpaqueFd": "GL_HANDLE_TYPE_OPAQUE_FD_EXT"
     }
 }

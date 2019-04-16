@@ -146,6 +146,18 @@ template <>
 FogMode FromGLenum<FogMode>(GLenum from);
 GLenum ToGLenum(FogMode from);
 
+enum class HandleType : uint8_t
+{
+    OpaqueFd = 0,
+
+    InvalidEnum = 1,
+    EnumCount   = 1,
+};
+
+template <>
+HandleType FromGLenum<HandleType>(GLenum from);
+GLenum ToGLenum(HandleType from);
+
 enum class HintSetting : uint8_t
 {
     DontCare = 0,

@@ -3184,7 +3184,7 @@ bool ValidateTexStorageMem3DEXT(Context *context,
 bool ValidateImportMemoryFdEXT(Context *context,
                                GLuint memory,
                                GLuint64 size,
-                               GLenum handleType,
+                               HandleType handleType,
                                GLint fd)
 {
     if (!context->getExtensions().memoryObjectFd)
@@ -3299,7 +3299,10 @@ bool ValidateWaitSemaphoreEXT(Context *context,
     return false;
 }
 
-bool ValidateImportSemaphoreFdEXT(Context *context, GLuint semaphore, GLenum handleType, GLint fd)
+bool ValidateImportSemaphoreFdEXT(Context *context,
+                                  GLuint semaphore,
+                                  HandleType handleType,
+                                  GLint fd)
 {
     if (!context->getExtensions().semaphoreFd)
     {

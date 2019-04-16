@@ -393,7 +393,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void bufferStorageMem(TextureType target, GLsizeiptr size, GLuint memory, GLuint64 offset);
 
     // GL_EXT_memory_object_fd
-    void importMemoryFd(GLuint memory, GLuint64 size, GLenum handleType, GLint fd);
+    void importMemoryFd(GLuint memory, GLuint64 size, HandleType handleType, GLint fd);
 
     // GL_EXT_semaphore
     void genSemaphores(GLsizei n, GLuint *semaphores);
@@ -415,7 +415,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                          const GLenum *dstLayouts);
 
     // GL_EXT_semaphore_fd
-    void importSemaphoreFd(GLuint semaphore, GLenum handleType, GLint fd);
+    void importSemaphoreFd(GLuint semaphore, HandleType handleType, GLint fd);
 
     // GLES1 emulation: Interface to entry points
     ANGLE_GLES1_CONTEXT_API

@@ -336,6 +336,30 @@ GLenum ToGLenum(FogMode from)
 }
 
 template <>
+HandleType FromGLenum<HandleType>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_HANDLE_TYPE_OPAQUE_FD_EXT:
+            return HandleType::OpaqueFd;
+        default:
+            return HandleType::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(HandleType from)
+{
+    switch (from)
+    {
+        case HandleType::OpaqueFd:
+            return GL_HANDLE_TYPE_OPAQUE_FD_EXT;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 HintSetting FromGLenum<HintSetting>(GLenum from)
 {
     switch (from)
