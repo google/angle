@@ -110,9 +110,11 @@
 // Failing everywhere
 2322 : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
 
-// Bind aliasing max_cond crashes on Windows, fails on other platforms.
-// TODO(cnorthrop): Narrow skip list or fix the test
-3252 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = SKIP
+// Vertex attribute aliasing is not supported on D3D
+3467 D3D9 : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
+3467 D3D9 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+3467 D3D11 : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
+3467 D3D11 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
 // Windows and Linux failures
 1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
@@ -342,6 +344,8 @@
 2349 LINUX OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.default_framebuffer* = FAIL
 
 // Mac failures (overbroad suppresions)
+3466 MAC OPENGL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = SKIP
+3466 MAC OPENGL : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = SKIP
 2137 MAC OPENGL : dEQP-GLES3.functional.fbo.blit.default_framebuffer.* = FAIL
 2137 MAC OPENGL : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_* = FAIL
 2137 MAC OPENGL : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
@@ -504,6 +508,7 @@
 
 // Nexus 5x failures
 3308 NEXUS5X GLES : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
+3308 NEXUS5X GLES : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.polygon_offset.default_result_depth_clamp = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.polygon_offset.fixed24_result_depth_clamp = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.lines.3 = FAIL

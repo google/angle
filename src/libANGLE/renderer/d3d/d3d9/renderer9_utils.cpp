@@ -757,6 +757,9 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // D3D9 cannot support packing more than one variable to a single varying.
     // TODO(jmadill): Implement more sophisticated component packing in D3D9.
     limitations->noFlexibleVaryingPacking = true;
+
+    // D3D9 does not support vertex attribute aliasing
+    limitations->noVertexAttributeAliasing = true;
 }
 
 }  // namespace d3d9_gl

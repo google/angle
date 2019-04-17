@@ -292,7 +292,8 @@ Limitations::Limitations()
       shadersRequireIndexedLoopValidation(false),
       noSimultaneousConstantColorAndAlphaBlendFunc(false),
       noFlexibleVaryingPacking(false),
-      noDoubleBoundTransformFeedbackBuffers(false)
+      noDoubleBoundTransformFeedbackBuffers(false),
+      noVertexAttributeAliasing(false)
 {}
 
 static bool GetFormatSupportBase(const TextureCapsMap &textureCaps,

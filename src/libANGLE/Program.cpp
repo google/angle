@@ -1364,8 +1364,7 @@ angle::Result Program::link(const Context *context)
             data.getCaps().maxVaryingVectors, packMode, &mState.mUniformBlocks, &mState.mUniforms,
             &mState.mShaderStorageBlocks, &mState.mBufferVariables, &mState.mAtomicCounterBuffers));
 
-        if (!linkAttributes(context->getCaps(), mInfoLog,
-                            context->getExtensions().webglCompatibility))
+        if (!linkAttributes(context, mInfoLog))
         {
             return angle::Result::Continue;
         }
@@ -3133,8 +3132,12 @@ bool Program::linkAtomicCounterBuffers()
 }
 
 // Assigns locations to all attributes from the bindings and program locations.
-bool Program::linkAttributes(const Caps &caps, InfoLog &infoLog, bool webglCompatibility)
+bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 {
+    const Caps &caps               = context->getCaps();
+    const Limitations &limitations = context->getLimitations();
+    bool webglCompatibility        = context->getExtensions().webglCompatibility;
+
     Shader *vertexShader = mState.getAttachedShader(ShaderType::Vertex);
 
     int shaderVersion = vertexShader->getShaderVersion();
@@ -3152,13 +3155,6 @@ bool Program::linkAttributes(const Caps &caps, InfoLog &infoLog, bool webglCompa
         mState.mAttributes = vertexShader->getActiveAttributes();
     }
     GLuint maxAttribs = caps.maxVertexAttributes;
-
-    // TODO(jmadill): handle aliasing robustly
-    if (mState.mAttributes.size() > maxAttribs)
-    {
-        infoLog << "Too many vertex attributes.";
-        return false;
-    }
 
     std::vector<sh::Attribute *> usedAttribMap(maxAttribs, nullptr);
 
@@ -3197,10 +3193,11 @@ bool Program::linkAttributes(const Caps &caps, InfoLog &infoLog, bool webglCompa
                 // In GLSL ES 3.00.6 and in WebGL, attribute aliasing produces a link error.
                 // In non-WebGL GLSL ES 1.00.17, attribute aliasing is allowed with some
                 // restrictions - see GLSL ES 1.00.17 section 2.10.4, but ANGLE currently has a bug.
-                // TODO: Remaining failures: http://anglebug.com/3252
+                // In D3D 9 and 11, aliasing is not supported, so check a limitation.
                 if (linkedAttribute)
                 {
-                    if (shaderVersion >= 300 || webglCompatibility)
+                    if (shaderVersion >= 300 || webglCompatibility ||
+                        limitations.noVertexAttributeAliasing)
                     {
                         infoLog << "Attribute '" << attribute.name << "' aliases attribute '"
                                 << linkedAttribute->name << "' at location " << regLocation;
