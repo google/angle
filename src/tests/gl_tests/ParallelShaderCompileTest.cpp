@@ -383,7 +383,8 @@ class ParallelShaderCompileTestES31 : public ParallelShaderCompileTest
 TEST_P(ParallelShaderCompileTestES31, LinkAndDispatchManyPrograms)
 {
     // Flaky on Win NVIDIA D3D11. http://anglebug.com/3359
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsD3D11());
+    // Suspectable to the flakyness of http://anglebug.com/3349.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
 
     ANGLE_SKIP_TEST_IF(!ensureParallelShaderCompileExtensionAvailable());
 

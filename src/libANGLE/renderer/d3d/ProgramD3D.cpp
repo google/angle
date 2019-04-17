@@ -1952,9 +1952,24 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(const gl::Contex
         return std::make_unique<LinkEventDone>(result);
     }
     auto computeTask = std::make_shared<GetComputeExecutableTask>(this);
-    return std::make_unique<ComputeProgramLinkEvent>(
-        infoLog, computeTask,
-        WorkerThreadPool::PostWorkerTask(context->getWorkerThreadPool(), computeTask));
+
+    std::shared_ptr<WaitableEvent> waitableEvent;
+
+    // TODO(jie.a.chen@intel.com): Fix the flaky bug.
+    // http://anglebug.com/3349
+    bool compileInParallel = false;
+    if (!compileInParallel)
+    {
+        (*computeTask)();
+        waitableEvent = std::make_shared<WaitableEventDone>();
+    }
+    else
+    {
+        waitableEvent =
+            WorkerThreadPool::PostWorkerTask(context->getWorkerThreadPool(), computeTask);
+    }
+
+    return std::make_unique<ComputeProgramLinkEvent>(infoLog, computeTask, waitableEvent);
 }
 
 angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
