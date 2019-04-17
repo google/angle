@@ -31,6 +31,8 @@ namespace
 bool gGlobalError = false;
 bool gExpectError = false;
 
+constexpr char kInfoTag[] = "*RESULT";
+
 // Stored as globals to work around a Clang bug. http://crbug.com/951458
 std::vector<std::string> gUnexpectedFailed;
 std::vector<std::string> gUnexpectedPasses;
@@ -143,6 +145,11 @@ const APIInfo *GetDefaultAPIInfo()
     const APIInfo *defaultInfo = FindAPIInfo(GetDefaultAPIName());
     ASSERT(defaultInfo);
     return defaultInfo;
+}
+
+std::string GetTestStatLine(const std::string &key, const std::string &value)
+{
+    return std::string(kInfoTag) + ": " + key + ": " + value + "\n";
 }
 
 // During the CaseList initialization we cannot use the GTEST FAIL macro to quit the program because
@@ -414,16 +421,18 @@ class dEQPTest : public testing::TestWithParam<size_t>
             sTestCount - (sPassedTestCount + sFailedTestCount + sNotSupportedTestCount +
                           sTestExceptionCount + sSkippedTestCount);
 
-        std::cout << "Total: " << sTestCount << " tests.\n";
-        std::cout << "Passed: " << sPassedTestCount << " tests.\n";
-        std::cout << "Failed: " << sFailedTestCount << " tests.\n";
-        std::cout << "Skipped: " << sSkippedTestCount << " tests.\n";
-        std::cout << "Not Supported: " << sNotSupportedTestCount << " tests.\n";
-        std::cout << "Exception: " << sTestExceptionCount << " tests.\n";
-        std::cout << "Crashed: " << crashedCount << " tests.\n";
+        std::cout << GetTestStatLine("Total", std::to_string(sTestCount));
+        std::cout << GetTestStatLine("Passed", std::to_string(sPassedTestCount));
+        std::cout << GetTestStatLine("Failed", std::to_string(sFailedTestCount));
+        std::cout << GetTestStatLine("Skipped", std::to_string(sSkippedTestCount));
+        std::cout << GetTestStatLine("Not Supported", std::to_string(sNotSupportedTestCount));
+        std::cout << GetTestStatLine("Exception", std::to_string(sTestExceptionCount));
+        std::cout << GetTestStatLine("Crashed", std::to_string(crashedCount));
 
         if (!gUnexpectedPasses.empty())
         {
+            std::cout << GetTestStatLine("Unexpected Passed",
+                                         std::to_string(gUnexpectedPasses.size()));
             std::cout << "\nSome tests unexpectedly passed:\n";
             for (const std::string &testName : gUnexpectedPasses)
             {
@@ -433,6 +442,8 @@ class dEQPTest : public testing::TestWithParam<size_t>
 
         if (!gUnexpectedFailed.empty())
         {
+            std::cout << GetTestStatLine("Unexpected Failed",
+                                         std::to_string(gUnexpectedFailed.size()));
             std::cout << "\nSome tests unexpectedly failed:\n";
             for (const std::string &testName : gUnexpectedFailed)
             {
