@@ -85,12 +85,8 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
                                         &mImageView, 0, 1));
 
         // Clear the renderbuffer if it has emulated channels.
-        if (vkFormat.hasEmulatedChannels())
-        {
-            mImage->stageSubresourceEmulatedClear(gl::ImageIndex::Make2D(0),
-                                                  vkFormat.angleFormat());
-            ANGLE_TRY(mImage->flushAllStagedUpdates(vk::GetImpl(context)));
-        }
+        ANGLE_TRY(mImage->clearIfEmulatedFormat(vk::GetImpl(context), gl::ImageIndex::Make2D(0),
+                                                vkFormat));
 
         mRenderTarget.init(mImage, &mImageView, 0, 0, nullptr);
     }

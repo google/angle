@@ -674,6 +674,12 @@ class ImageHelper final : public CommandGraphResource
     // values.
     void stageSubresourceEmulatedClear(const gl::ImageIndex &index, const angle::Format &format);
 
+    // If the image has emulated channels, we clear them once so as not to leave garbage on those
+    // channels.
+    angle::Result clearIfEmulatedFormat(Context *context,
+                                        const gl::ImageIndex &index,
+                                        const Format &format);
+
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.
     angle::Result allocateStagingMemory(ContextVk *contextVk,
