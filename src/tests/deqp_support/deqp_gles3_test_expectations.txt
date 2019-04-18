@@ -533,6 +533,7 @@
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_uniform_block_size = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_vertex_uniform_components = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_fragment_uniform_components = SKIP
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_uniform_blocks = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_transform_feedback_* = SKIP
 
 // 3D texture (anglebug.com/3188), 2D array (anglebug.com/3189):
@@ -700,6 +701,7 @@
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_vertices_getfloat = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_vertex_uniform_blocks_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_uniform_blocks_get* = FAIL
+2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_program_texel_offset_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_uniform_buffer_bindings_get* = FAIL
@@ -739,11 +741,8 @@
 
 // Android Vulkan failures
 2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
-2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_uniform_blocks = FAIL
 2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_getfloat = FAIL
 2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_getinteger64 = FAIL
-2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_getfloat = FAIL
-2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_getinteger64 = FAIL
 2950 ANDROID VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_func_alpha_func.* = SKIP
 2950 ANDROID VULKAN : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_ops.* = SKIP
 2950 ANDROID VULKAN : dEQP-GLES3.functional.polygon_offset.* = FAIL

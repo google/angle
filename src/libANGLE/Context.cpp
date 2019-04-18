@@ -1513,7 +1513,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::Fragment];
             break;
         case GL_MAX_COMBINED_UNIFORM_BLOCKS:
-            *params = mState.mCaps.maxCombinedTextureImageUnits;
+            *params = mState.mCaps.maxCombinedUniformBlocks;
             break;
         case GL_MAX_VERTEX_OUTPUT_COMPONENTS:
             *params = mState.mCaps.maxVertexOutputComponents;
