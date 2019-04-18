@@ -361,6 +361,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
 
         if (caseInfo.mExpectation == angle::GPUTestExpectationsParser::kGpuTestSkip)
         {
+            sSkippedTestCount++;
             std::cout << "Test skipped.\n";
             return;
         }
