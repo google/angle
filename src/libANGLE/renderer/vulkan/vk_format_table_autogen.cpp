@@ -27,18 +27,18 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
     switch (angleFormat.id)
     {
         case angle::FormatID::A16_FLOAT:
-            internalFormat             = GL_ALPHA16F_EXT;
-            textureFormatID            = angle::FormatID::R16_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R16_SFLOAT;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_ALPHA16F_EXT;
+            imageFormatID            = angle::FormatID::R16_FLOAT;
+            vkImageFormat            = VK_FORMAT_R16_SFLOAT;
+            imageInitializerFunction = nullptr;
 
             break;
 
         case angle::FormatID::A1R5G5B5_UNORM:
             internalFormat               = GL_A1RGB5_ANGLEX;
-            textureFormatID              = angle::FormatID::A1R5G5B5_UNORM;
-            vkTextureFormat              = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::A1R5G5B5_UNORM;
+            vkImageFormat                = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::A1R5G5B5_UNORM;
             vkBufferFormat               = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -47,26 +47,26 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::A32_FLOAT:
-            internalFormat             = GL_ALPHA32F_EXT;
-            textureFormatID            = angle::FormatID::R32_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R32_SFLOAT;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_ALPHA32F_EXT;
+            imageFormatID            = angle::FormatID::R32_FLOAT;
+            vkImageFormat            = VK_FORMAT_R32_SFLOAT;
+            imageInitializerFunction = nullptr;
 
             break;
 
         case angle::FormatID::A8_UNORM:
-            internalFormat             = GL_ALPHA8_EXT;
-            textureFormatID            = angle::FormatID::R8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_ALPHA8_EXT;
+            imageFormatID            = angle::FormatID::R8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8_UNORM;
+            imageInitializerFunction = nullptr;
 
             break;
 
         case angle::FormatID::ASTC_10x10_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x10_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x10_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x10_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -76,9 +76,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x10_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x10_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x10_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x10_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -88,9 +88,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x5_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x5_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x5_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x5_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -100,9 +100,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x5_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x5_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x5_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x5_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -112,9 +112,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x6_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x6_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x6_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x6_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -124,9 +124,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x6_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x6_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x6_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x6_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -136,9 +136,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x8_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x8_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x8_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x8_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -148,9 +148,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_10x8_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
-            textureFormatID              = angle::FormatID::ASTC_10x8_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_10x8_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_10x8_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -160,9 +160,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_12x10_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
-            textureFormatID              = angle::FormatID::ASTC_12x10_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_12x10_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_12x10_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -172,9 +172,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_12x10_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
-            textureFormatID              = angle::FormatID::ASTC_12x10_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_12x10_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_12x10_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -184,9 +184,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_12x12_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
-            textureFormatID              = angle::FormatID::ASTC_12x12_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_12x12_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_12x12_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -196,9 +196,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_12x12_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
-            textureFormatID              = angle::FormatID::ASTC_12x12_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_12x12_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_12x12_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -208,9 +208,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_4x4_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
-            textureFormatID              = angle::FormatID::ASTC_4x4_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_4x4_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_4x4_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -220,9 +220,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_4x4_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
-            textureFormatID              = angle::FormatID::ASTC_4x4_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_4x4_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_4x4_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -232,9 +232,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_5x4_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
-            textureFormatID              = angle::FormatID::ASTC_5x4_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_5x4_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_5x4_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -244,9 +244,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_5x4_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
-            textureFormatID              = angle::FormatID::ASTC_5x4_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_5x4_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_5x4_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -256,9 +256,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_5x5_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_5x5_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_5x5_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_5x5_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -268,9 +268,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_5x5_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_5x5_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_5x5_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_5x5_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -280,9 +280,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_6x5_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_6x5_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_6x5_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_6x5_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -292,9 +292,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_6x5_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_6x5_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_6x5_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_6x5_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -304,9 +304,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_6x6_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
-            textureFormatID              = angle::FormatID::ASTC_6x6_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_6x6_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_6x6_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -316,9 +316,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_6x6_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
-            textureFormatID              = angle::FormatID::ASTC_6x6_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_6x6_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_6x6_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -328,9 +328,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_8x5_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_8x5_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_8x5_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_8x5_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -340,9 +340,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_8x5_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
-            textureFormatID              = angle::FormatID::ASTC_8x5_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_8x5_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_8x5_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -352,9 +352,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_8x6_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
-            textureFormatID              = angle::FormatID::ASTC_8x6_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_8x6_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_8x6_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -364,9 +364,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_8x6_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
-            textureFormatID              = angle::FormatID::ASTC_8x6_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_8x6_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_8x6_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -376,9 +376,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_8x8_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
-            textureFormatID              = angle::FormatID::ASTC_8x8_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_8x8_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_8x8_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -388,9 +388,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ASTC_8x8_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
-            textureFormatID              = angle::FormatID::ASTC_8x8_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ASTC_8x8_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ASTC_8x8_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -400,9 +400,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::B4G4R4A4_UNORM:
             internalFormat               = GL_BGRA4_ANGLEX;
-            textureFormatID              = angle::FormatID::B4G4R4A4_UNORM;
-            vkTextureFormat              = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::B4G4R4A4_UNORM;
+            vkImageFormat                = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::B4G4R4A4_UNORM;
             vkBufferFormat               = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -412,9 +412,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::B5G5R5A1_UNORM:
             internalFormat               = GL_BGR5_A1_ANGLEX;
-            textureFormatID              = angle::FormatID::B5G5R5A1_UNORM;
-            vkTextureFormat              = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::B5G5R5A1_UNORM;
+            vkImageFormat                = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::B5G5R5A1_UNORM;
             vkBufferFormat               = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -424,9 +424,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::B5G6R5_UNORM:
             internalFormat               = GL_BGR565_ANGLEX;
-            textureFormatID              = angle::FormatID::B5G6R5_UNORM;
-            vkTextureFormat              = VK_FORMAT_B5G6R5_UNORM_PACK16;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::B5G6R5_UNORM;
+            vkImageFormat                = VK_FORMAT_B5G6R5_UNORM_PACK16;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::B5G6R5_UNORM;
             vkBufferFormat               = VK_FORMAT_B5G6R5_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -444,9 +444,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::B8G8R8A8_UNORM:
             internalFormat               = GL_BGRA8_EXT;
-            textureFormatID              = angle::FormatID::B8G8R8A8_UNORM;
-            vkTextureFormat              = VK_FORMAT_B8G8R8A8_UNORM;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::B8G8R8A8_UNORM;
+            vkImageFormat                = VK_FORMAT_B8G8R8A8_UNORM;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::B8G8R8A8_UNORM;
             vkBufferFormat               = VK_FORMAT_B8G8R8A8_UNORM;
             vkBufferFormatIsPacked       = false;
@@ -456,9 +456,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::B8G8R8A8_UNORM_SRGB:
             internalFormat               = GL_BGRA8_SRGB_ANGLEX;
-            textureFormatID              = angle::FormatID::B8G8R8A8_UNORM_SRGB;
-            vkTextureFormat              = VK_FORMAT_B8G8R8A8_SRGB;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::B8G8R8A8_UNORM_SRGB;
+            vkImageFormat                = VK_FORMAT_B8G8R8A8_SRGB;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::B8G8R8A8_UNORM_SRGB;
             vkBufferFormat               = VK_FORMAT_B8G8R8A8_SRGB;
             vkBufferFormatIsPacked       = false;
@@ -468,9 +468,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::B8G8R8X8_UNORM:
             internalFormat               = GL_BGRX8_ANGLEX;
-            textureFormatID              = angle::FormatID::B8G8R8A8_UNORM;
-            vkTextureFormat              = VK_FORMAT_B8G8R8A8_UNORM;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::B8G8R8A8_UNORM;
+            vkImageFormat                = VK_FORMAT_B8G8R8A8_UNORM;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::NONE;
             vkBufferFormat               = VK_FORMAT_UNDEFINED;
             vkBufferFormatIsPacked       = false;
@@ -480,9 +480,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC1_RGBA_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-            textureFormatID              = angle::FormatID::BC1_RGBA_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC1_RGBA_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC1_RGBA_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -492,9 +492,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
-            textureFormatID              = angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -504,9 +504,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC1_RGB_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-            textureFormatID              = angle::FormatID::BC1_RGB_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC1_RGB_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC1_RGB_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -516,9 +516,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
-            textureFormatID              = angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC1_RGB_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC1_RGB_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC1_RGB_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -528,9 +528,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC2_RGBA_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE;
-            textureFormatID              = angle::FormatID::BC2_RGBA_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC2_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC2_RGBA_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC2_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC2_RGBA_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC2_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -540,9 +540,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT;
-            textureFormatID              = angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC2_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC2_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC2_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -552,9 +552,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC3_RGBA_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE;
-            textureFormatID              = angle::FormatID::BC3_RGBA_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC3_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC3_RGBA_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC3_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC3_RGBA_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC3_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -564,9 +564,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
-            textureFormatID              = angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC3_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC3_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC3_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -576,9 +576,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA_BPTC_UNORM_EXT;
-            textureFormatID              = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC7_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC7_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC7_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -588,9 +588,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK:
             internalFormat               = GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT;
-            textureFormatID              = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC6H_SFLOAT_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC6H_SFLOAT_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC6H_SFLOAT_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -600,9 +600,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK:
             internalFormat               = GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT;
-            textureFormatID              = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC6H_UFLOAT_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC6H_UFLOAT_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC6H_UFLOAT_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -612,9 +612,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT;
-            textureFormatID              = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_BC7_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_BC7_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_BC7_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -624,9 +624,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::D16_UNORM:
             internalFormat               = GL_DEPTH_COMPONENT16;
-            textureFormatID              = angle::FormatID::D16_UNORM;
-            vkTextureFormat              = VK_FORMAT_D16_UNORM;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::D16_UNORM;
+            vkImageFormat                = VK_FORMAT_D16_UNORM;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::D16_UNORM;
             vkBufferFormat               = VK_FORMAT_D16_UNORM;
             vkBufferFormatIsPacked       = false;
@@ -637,11 +637,11 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
         case angle::FormatID::D24_UNORM_S8_UINT:
             internalFormat = GL_DEPTH24_STENCIL8;
             {
-                static constexpr TextureFormatInitInfo kInfo[] = {
+                static constexpr ImageFormatInitInfo kInfo[] = {
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr},
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr}};
-                initTextureFallback(renderer, kInfo, ArraySize(kInfo));
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
             }
             bufferFormatID               = angle::FormatID::D24_UNORM_S8_UINT;
             vkBufferFormat               = VK_FORMAT_D24_UNORM_S8_UINT;
@@ -653,11 +653,11 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
         case angle::FormatID::D24_UNORM_X8_UINT:
             internalFormat = GL_DEPTH_COMPONENT24;
             {
-                static constexpr TextureFormatInitInfo kInfo[] = {
+                static constexpr ImageFormatInitInfo kInfo[] = {
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr},
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr}};
-                initTextureFallback(renderer, kInfo, ArraySize(kInfo));
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
             }
             bufferFormatID               = angle::FormatID::NONE;
             vkBufferFormat               = VK_FORMAT_UNDEFINED;
@@ -668,9 +668,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::D32_FLOAT:
             internalFormat               = GL_DEPTH_COMPONENT32F;
-            textureFormatID              = angle::FormatID::D32_FLOAT;
-            vkTextureFormat              = VK_FORMAT_D32_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::D32_FLOAT;
+            vkImageFormat                = VK_FORMAT_D32_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::D32_FLOAT;
             vkBufferFormat               = VK_FORMAT_D32_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -681,11 +681,11 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
         case angle::FormatID::D32_FLOAT_S8X24_UINT:
             internalFormat = GL_DEPTH32F_STENCIL8;
             {
-                static constexpr TextureFormatInitInfo kInfo[] = {
+                static constexpr ImageFormatInitInfo kInfo[] = {
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr},
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr}};
-                initTextureFallback(renderer, kInfo, ArraySize(kInfo));
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
             }
             bufferFormatID               = angle::FormatID::D32_FLOAT_S8X24_UINT;
             vkBufferFormat               = VK_FORMAT_D32_SFLOAT_S8_UINT;
@@ -700,9 +700,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::EAC_R11G11_SNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_SIGNED_RG11_EAC;
-            textureFormatID              = angle::FormatID::EAC_R11G11_SNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::EAC_R11G11_SNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::EAC_R11G11_SNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -712,9 +712,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::EAC_R11G11_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RG11_EAC;
-            textureFormatID              = angle::FormatID::EAC_R11G11_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::EAC_R11G11_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::EAC_R11G11_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -724,9 +724,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::EAC_R11_SNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_SIGNED_R11_EAC;
-            textureFormatID              = angle::FormatID::EAC_R11_SNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_EAC_R11_SNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::EAC_R11_SNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_EAC_R11_SNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::EAC_R11_SNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_EAC_R11_SNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -736,9 +736,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::EAC_R11_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_R11_EAC;
-            textureFormatID              = angle::FormatID::EAC_R11_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_EAC_R11_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::EAC_R11_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_EAC_R11_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::EAC_R11_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_EAC_R11_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -752,9 +752,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK:
             internalFormat               = GL_ETC1_RGB8_OES;
-            textureFormatID              = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::NONE;
             vkBufferFormat               = VK_FORMAT_UNDEFINED;
             vkBufferFormatIsPacked       = false;
@@ -764,9 +764,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;
-            textureFormatID              = angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -775,22 +775,22 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
-            textureFormatID            = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
-            textureInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
-            bufferFormatID             = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
-            vkBufferFormatIsPacked     = false;
-            vertexLoadFunction         = CopyNativeVertexData<GLubyte, 4, 4, 0>;
+            internalFormat           = GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            imageFormatID            = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
+            vkImageFormat            = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
+            imageInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            bufferFormatID           = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
+            vkBufferFormat           = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
+            vkBufferFormatIsPacked   = false;
+            vertexLoadFunction       = CopyNativeVertexData<GLubyte, 4, 4, 0>;
             vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC;
-            textureFormatID              = angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -800,9 +800,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGBA8_ETC2_EAC;
-            textureFormatID              = angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -812,9 +812,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ETC2;
-            textureFormatID              = angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
+            vkImageFormat                = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
             vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -824,9 +824,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK:
             internalFormat               = GL_COMPRESSED_RGB8_ETC2;
-            textureFormatID              = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
-            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
+            vkImageFormat                = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
             vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
             vkBufferFormatIsPacked       = false;
@@ -851,18 +851,18 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::L8A8_UNORM:
-            internalFormat             = GL_LUMINANCE8_ALPHA8_EXT;
-            textureFormatID            = angle::FormatID::R8G8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_LUMINANCE8_ALPHA8_EXT;
+            imageFormatID            = angle::FormatID::R8G8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8G8_UNORM;
+            imageInitializerFunction = nullptr;
 
             break;
 
         case angle::FormatID::L8_UNORM:
-            internalFormat             = GL_LUMINANCE8_EXT;
-            textureFormatID            = angle::FormatID::R8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_LUMINANCE8_EXT;
+            imageFormatID            = angle::FormatID::R8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8_UNORM;
+            imageInitializerFunction = nullptr;
 
             break;
 
@@ -872,9 +872,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R10G10B10A2_SINT:
             internalFormat               = GL_RGB10_A2_SINT_ANGLEX;
-            textureFormatID              = angle::FormatID::R10G10B10A2_SINT;
-            vkTextureFormat              = VK_FORMAT_A2B10G10R10_SINT_PACK32;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R10G10B10A2_SINT;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_SINT_PACK32;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R10G10B10A2_SINT;
             vkBufferFormat               = VK_FORMAT_A2B10G10R10_SINT_PACK32;
             vkBufferFormatIsPacked       = true;
@@ -884,9 +884,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R10G10B10A2_SNORM:
             internalFormat               = GL_RGB10_A2_SNORM_ANGLEX;
-            textureFormatID              = angle::FormatID::R10G10B10A2_SNORM;
-            vkTextureFormat              = VK_FORMAT_A2B10G10R10_SNORM_PACK32;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R10G10B10A2_SNORM;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_SNORM_PACK32;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R10G10B10A2_SNORM;
             vkBufferFormat               = VK_FORMAT_A2B10G10R10_SNORM_PACK32;
             vkBufferFormatIsPacked       = true;
@@ -896,9 +896,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R10G10B10A2_SSCALED:
             internalFormat               = GL_RGB10_A2_SSCALED_ANGLEX;
-            textureFormatID              = angle::FormatID::R10G10B10A2_SSCALED;
-            vkTextureFormat              = VK_FORMAT_A2B10G10R10_SSCALED_PACK32;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R10G10B10A2_SSCALED;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_SSCALED_PACK32;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R10G10B10A2_SSCALED;
             vkBufferFormat               = VK_FORMAT_A2B10G10R10_SSCALED_PACK32;
             vkBufferFormatIsPacked       = true;
@@ -908,9 +908,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R10G10B10A2_UINT:
             internalFormat               = GL_RGB10_A2UI;
-            textureFormatID              = angle::FormatID::R10G10B10A2_UINT;
-            vkTextureFormat              = VK_FORMAT_A2B10G10R10_UINT_PACK32;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R10G10B10A2_UINT;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_UINT_PACK32;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R10G10B10A2_UINT;
             vkBufferFormat               = VK_FORMAT_A2B10G10R10_UINT_PACK32;
             vkBufferFormatIsPacked       = true;
@@ -920,9 +920,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R10G10B10A2_UNORM:
             internalFormat               = GL_RGB10_A2;
-            textureFormatID              = angle::FormatID::R10G10B10A2_UNORM;
-            vkTextureFormat              = VK_FORMAT_A2B10G10R10_UNORM_PACK32;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R10G10B10A2_UNORM;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_UNORM_PACK32;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R10G10B10A2_UNORM;
             vkBufferFormat               = VK_FORMAT_A2B10G10R10_UNORM_PACK32;
             vkBufferFormatIsPacked       = true;
@@ -932,9 +932,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R10G10B10A2_USCALED:
             internalFormat               = GL_RGB10_A2_USCALED_ANGLEX;
-            textureFormatID              = angle::FormatID::R10G10B10A2_USCALED;
-            vkTextureFormat              = VK_FORMAT_A2B10G10R10_USCALED_PACK32;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R10G10B10A2_USCALED;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_USCALED_PACK32;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R10G10B10A2_USCALED;
             vkBufferFormat               = VK_FORMAT_A2B10G10R10_USCALED_PACK32;
             vkBufferFormatIsPacked       = true;
@@ -948,9 +948,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16B16A16_FLOAT:
             internalFormat               = GL_RGBA16F;
-            textureFormatID              = angle::FormatID::R16G16B16A16_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R16G16B16A16_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16B16A16_FLOAT;
+            vkImageFormat                = VK_FORMAT_R16G16B16A16_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16B16A16_FLOAT;
             vkBufferFormat               = VK_FORMAT_R16G16B16A16_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -960,9 +960,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16B16A16_SINT:
             internalFormat               = GL_RGBA16I;
-            textureFormatID              = angle::FormatID::R16G16B16A16_SINT;
-            vkTextureFormat              = VK_FORMAT_R16G16B16A16_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16B16A16_SINT;
+            vkImageFormat                = VK_FORMAT_R16G16B16A16_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16B16A16_SINT;
             vkBufferFormat               = VK_FORMAT_R16G16B16A16_SINT;
             vkBufferFormatIsPacked       = false;
@@ -971,10 +971,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16A16_SNORM:
-            internalFormat             = GL_RGBA16_SNORM_EXT;
-            textureFormatID            = angle::FormatID::R16G16B16A16_SNORM;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA16_SNORM_EXT;
+            imageFormatID            = angle::FormatID::R16G16B16A16_SNORM;
+            vkImageFormat            = VK_FORMAT_R16G16B16A16_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16A16_SNORM, VK_FORMAT_R16G16B16A16_SNORM, false,
@@ -986,10 +986,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16A16_SSCALED:
-            internalFormat             = GL_RGBA16_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16G16B16A16_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA16_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16G16B16A16_SSCALED;
+            vkImageFormat            = VK_FORMAT_R16G16B16A16_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16A16_SSCALED, VK_FORMAT_R16G16B16A16_SSCALED, false,
@@ -1002,9 +1002,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16B16A16_UINT:
             internalFormat               = GL_RGBA16UI;
-            textureFormatID              = angle::FormatID::R16G16B16A16_UINT;
-            vkTextureFormat              = VK_FORMAT_R16G16B16A16_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16B16A16_UINT;
+            vkImageFormat                = VK_FORMAT_R16G16B16A16_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16B16A16_UINT;
             vkBufferFormat               = VK_FORMAT_R16G16B16A16_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1013,10 +1013,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16A16_UNORM:
-            internalFormat             = GL_RGBA16_EXT;
-            textureFormatID            = angle::FormatID::R16G16B16A16_UNORM;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA16_EXT;
+            imageFormatID            = angle::FormatID::R16G16B16A16_UNORM;
+            vkImageFormat            = VK_FORMAT_R16G16B16A16_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16A16_UNORM, VK_FORMAT_R16G16B16A16_UNORM, false,
@@ -1028,10 +1028,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16A16_USCALED:
-            internalFormat             = GL_RGBA16_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16G16B16A16_USCALED;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA16_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16G16B16A16_USCALED;
+            vkImageFormat            = VK_FORMAT_R16G16B16A16_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16A16_USCALED, VK_FORMAT_R16G16B16A16_USCALED, false,
@@ -1044,9 +1044,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16B16_FLOAT:
             internalFormat               = GL_RGB16F;
-            textureFormatID              = angle::FormatID::R16G16B16_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R16G16B16_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16B16_FLOAT;
+            vkImageFormat                = VK_FORMAT_R16G16B16_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16B16_FLOAT;
             vkBufferFormat               = VK_FORMAT_R16G16B16_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1056,9 +1056,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16B16_SINT:
             internalFormat               = GL_RGB16I;
-            textureFormatID              = angle::FormatID::R16G16B16_SINT;
-            vkTextureFormat              = VK_FORMAT_R16G16B16_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16B16_SINT;
+            vkImageFormat                = VK_FORMAT_R16G16B16_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16B16_SINT;
             vkBufferFormat               = VK_FORMAT_R16G16B16_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1067,10 +1067,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_SNORM:
-            internalFormat             = GL_RGB16_SNORM_EXT;
-            textureFormatID            = angle::FormatID::R16G16B16_SNORM;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB16_SNORM_EXT;
+            imageFormatID            = angle::FormatID::R16G16B16_SNORM;
+            vkImageFormat            = VK_FORMAT_R16G16B16_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16_SNORM, VK_FORMAT_R16G16B16_SNORM, false,
@@ -1082,10 +1082,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_SSCALED:
-            internalFormat             = GL_RGB16_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16G16B16_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB16_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16G16B16_SSCALED;
+            vkImageFormat            = VK_FORMAT_R16G16B16_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16_SSCALED, VK_FORMAT_R16G16B16_SSCALED, false,
@@ -1098,9 +1098,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16B16_UINT:
             internalFormat               = GL_RGB16UI;
-            textureFormatID              = angle::FormatID::R16G16B16_UINT;
-            vkTextureFormat              = VK_FORMAT_R16G16B16_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16B16_UINT;
+            vkImageFormat                = VK_FORMAT_R16G16B16_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16B16_UINT;
             vkBufferFormat               = VK_FORMAT_R16G16B16_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1109,10 +1109,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_UNORM:
-            internalFormat             = GL_RGB16_EXT;
-            textureFormatID            = angle::FormatID::R16G16B16_UNORM;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB16_EXT;
+            imageFormatID            = angle::FormatID::R16G16B16_UNORM;
+            vkImageFormat            = VK_FORMAT_R16G16B16_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16_UNORM, VK_FORMAT_R16G16B16_UNORM, false,
@@ -1124,10 +1124,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_USCALED:
-            internalFormat             = GL_RGB16_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16G16B16_USCALED;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB16_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16G16B16_USCALED;
+            vkImageFormat            = VK_FORMAT_R16G16B16_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16B16_USCALED, VK_FORMAT_R16G16B16_USCALED, false,
@@ -1140,9 +1140,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16_FLOAT:
             internalFormat               = GL_RG16F;
-            textureFormatID              = angle::FormatID::R16G16_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R16G16_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16_FLOAT;
+            vkImageFormat                = VK_FORMAT_R16G16_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16_FLOAT;
             vkBufferFormat               = VK_FORMAT_R16G16_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1152,9 +1152,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16_SINT:
             internalFormat               = GL_RG16I;
-            textureFormatID              = angle::FormatID::R16G16_SINT;
-            vkTextureFormat              = VK_FORMAT_R16G16_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16_SINT;
+            vkImageFormat                = VK_FORMAT_R16G16_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16_SINT;
             vkBufferFormat               = VK_FORMAT_R16G16_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1163,10 +1163,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16_SNORM:
-            internalFormat             = GL_RG16_SNORM_EXT;
-            textureFormatID            = angle::FormatID::R16G16_SNORM;
-            vkTextureFormat            = VK_FORMAT_R16G16_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG16_SNORM_EXT;
+            imageFormatID            = angle::FormatID::R16G16_SNORM;
+            vkImageFormat            = VK_FORMAT_R16G16_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16_SNORM, VK_FORMAT_R16G16_SNORM, false,
@@ -1178,10 +1178,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16_SSCALED:
-            internalFormat             = GL_RG16_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16G16_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R16G16_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG16_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16G16_SSCALED;
+            vkImageFormat            = VK_FORMAT_R16G16_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16_SSCALED, VK_FORMAT_R16G16_SSCALED, false,
@@ -1194,9 +1194,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16G16_UINT:
             internalFormat               = GL_RG16UI;
-            textureFormatID              = angle::FormatID::R16G16_UINT;
-            vkTextureFormat              = VK_FORMAT_R16G16_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16G16_UINT;
+            vkImageFormat                = VK_FORMAT_R16G16_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16G16_UINT;
             vkBufferFormat               = VK_FORMAT_R16G16_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1205,10 +1205,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16_UNORM:
-            internalFormat             = GL_RG16_EXT;
-            textureFormatID            = angle::FormatID::R16G16_UNORM;
-            vkTextureFormat            = VK_FORMAT_R16G16_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG16_EXT;
+            imageFormatID            = angle::FormatID::R16G16_UNORM;
+            vkImageFormat            = VK_FORMAT_R16G16_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16_UNORM, VK_FORMAT_R16G16_UNORM, false,
@@ -1220,10 +1220,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16_USCALED:
-            internalFormat             = GL_RG16_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16G16_USCALED;
-            vkTextureFormat            = VK_FORMAT_R16G16_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG16_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16G16_USCALED;
+            vkImageFormat            = VK_FORMAT_R16G16_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16G16_USCALED, VK_FORMAT_R16G16_USCALED, false,
@@ -1236,9 +1236,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16_FLOAT:
             internalFormat               = GL_R16F;
-            textureFormatID              = angle::FormatID::R16_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R16_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16_FLOAT;
+            vkImageFormat                = VK_FORMAT_R16_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16_FLOAT;
             vkBufferFormat               = VK_FORMAT_R16_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1248,9 +1248,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16_SINT:
             internalFormat               = GL_R16I;
-            textureFormatID              = angle::FormatID::R16_SINT;
-            vkTextureFormat              = VK_FORMAT_R16_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16_SINT;
+            vkImageFormat                = VK_FORMAT_R16_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16_SINT;
             vkBufferFormat               = VK_FORMAT_R16_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1259,10 +1259,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16_SNORM:
-            internalFormat             = GL_R16_SNORM_EXT;
-            textureFormatID            = angle::FormatID::R16_SNORM;
-            vkTextureFormat            = VK_FORMAT_R16_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R16_SNORM_EXT;
+            imageFormatID            = angle::FormatID::R16_SNORM;
+            vkImageFormat            = VK_FORMAT_R16_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16_SNORM, VK_FORMAT_R16_SNORM, false,
@@ -1274,10 +1274,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16_SSCALED:
-            internalFormat             = GL_R16_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R16_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R16_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16_SSCALED;
+            vkImageFormat            = VK_FORMAT_R16_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16_SSCALED, VK_FORMAT_R16_SSCALED, false,
@@ -1290,9 +1290,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R16_UINT:
             internalFormat               = GL_R16UI;
-            textureFormatID              = angle::FormatID::R16_UINT;
-            vkTextureFormat              = VK_FORMAT_R16_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R16_UINT;
+            vkImageFormat                = VK_FORMAT_R16_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R16_UINT;
             vkBufferFormat               = VK_FORMAT_R16_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1301,10 +1301,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16_UNORM:
-            internalFormat             = GL_R16_EXT;
-            textureFormatID            = angle::FormatID::R16_UNORM;
-            vkTextureFormat            = VK_FORMAT_R16_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R16_EXT;
+            imageFormatID            = angle::FormatID::R16_UNORM;
+            vkImageFormat            = VK_FORMAT_R16_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16_UNORM, VK_FORMAT_R16_UNORM, false,
@@ -1316,10 +1316,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16_USCALED:
-            internalFormat             = GL_R16_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R16_USCALED;
-            vkTextureFormat            = VK_FORMAT_R16_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R16_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R16_USCALED;
+            vkImageFormat            = VK_FORMAT_R16_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R16_USCALED, VK_FORMAT_R16_USCALED, false,
@@ -1342,9 +1342,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32B32A32_FLOAT:
             internalFormat               = GL_RGBA32F;
-            textureFormatID              = angle::FormatID::R32G32B32A32_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R32G32B32A32_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32B32A32_FLOAT;
+            vkImageFormat                = VK_FORMAT_R32G32B32A32_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32B32A32_FLOAT;
             vkBufferFormat               = VK_FORMAT_R32G32B32A32_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1354,9 +1354,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32B32A32_SINT:
             internalFormat               = GL_RGBA32I;
-            textureFormatID              = angle::FormatID::R32G32B32A32_SINT;
-            vkTextureFormat              = VK_FORMAT_R32G32B32A32_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32B32A32_SINT;
+            vkImageFormat                = VK_FORMAT_R32G32B32A32_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32B32A32_SINT;
             vkBufferFormat               = VK_FORMAT_R32G32B32A32_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1374,9 +1374,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32B32A32_UINT:
             internalFormat               = GL_RGBA32UI;
-            textureFormatID              = angle::FormatID::R32G32B32A32_UINT;
-            vkTextureFormat              = VK_FORMAT_R32G32B32A32_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32B32A32_UINT;
+            vkImageFormat                = VK_FORMAT_R32G32B32A32_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32B32A32_UINT;
             vkBufferFormat               = VK_FORMAT_R32G32B32A32_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1404,9 +1404,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32B32_FLOAT:
             internalFormat               = GL_RGB32F;
-            textureFormatID              = angle::FormatID::R32G32B32_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R32G32B32_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32B32_FLOAT;
+            vkImageFormat                = VK_FORMAT_R32G32B32_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32B32_FLOAT;
             vkBufferFormat               = VK_FORMAT_R32G32B32_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1416,9 +1416,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32B32_SINT:
             internalFormat               = GL_RGB32I;
-            textureFormatID              = angle::FormatID::R32G32B32_SINT;
-            vkTextureFormat              = VK_FORMAT_R32G32B32_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32B32_SINT;
+            vkImageFormat                = VK_FORMAT_R32G32B32_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32B32_SINT;
             vkBufferFormat               = VK_FORMAT_R32G32B32_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1436,9 +1436,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32B32_UINT:
             internalFormat               = GL_RGB32UI;
-            textureFormatID              = angle::FormatID::R32G32B32_UINT;
-            vkTextureFormat              = VK_FORMAT_R32G32B32_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32B32_UINT;
+            vkImageFormat                = VK_FORMAT_R32G32B32_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32B32_UINT;
             vkBufferFormat               = VK_FORMAT_R32G32B32_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1466,9 +1466,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32_FLOAT:
             internalFormat               = GL_RG32F;
-            textureFormatID              = angle::FormatID::R32G32_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R32G32_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32_FLOAT;
+            vkImageFormat                = VK_FORMAT_R32G32_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32_FLOAT;
             vkBufferFormat               = VK_FORMAT_R32G32_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1478,9 +1478,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32_SINT:
             internalFormat               = GL_RG32I;
-            textureFormatID              = angle::FormatID::R32G32_SINT;
-            vkTextureFormat              = VK_FORMAT_R32G32_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32_SINT;
+            vkImageFormat                = VK_FORMAT_R32G32_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32_SINT;
             vkBufferFormat               = VK_FORMAT_R32G32_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1498,9 +1498,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32G32_UINT:
             internalFormat               = GL_RG32UI;
-            textureFormatID              = angle::FormatID::R32G32_UINT;
-            vkTextureFormat              = VK_FORMAT_R32G32_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32G32_UINT;
+            vkImageFormat                = VK_FORMAT_R32G32_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32G32_UINT;
             vkBufferFormat               = VK_FORMAT_R32G32_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1528,9 +1528,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32_FLOAT:
             internalFormat               = GL_R32F;
-            textureFormatID              = angle::FormatID::R32_FLOAT;
-            vkTextureFormat              = VK_FORMAT_R32_SFLOAT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32_FLOAT;
+            vkImageFormat                = VK_FORMAT_R32_SFLOAT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32_FLOAT;
             vkBufferFormat               = VK_FORMAT_R32_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1540,9 +1540,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32_SINT:
             internalFormat               = GL_R32I;
-            textureFormatID              = angle::FormatID::R32_SINT;
-            vkTextureFormat              = VK_FORMAT_R32_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32_SINT;
+            vkImageFormat                = VK_FORMAT_R32_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32_SINT;
             vkBufferFormat               = VK_FORMAT_R32_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1560,9 +1560,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R32_UINT:
             internalFormat               = GL_R32UI;
-            textureFormatID              = angle::FormatID::R32_UINT;
-            vkTextureFormat              = VK_FORMAT_R32_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R32_UINT;
+            vkImageFormat                = VK_FORMAT_R32_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R32_UINT;
             vkBufferFormat               = VK_FORMAT_R32_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1580,9 +1580,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R4G4B4A4_UNORM:
             internalFormat               = GL_RGBA4;
-            textureFormatID              = angle::FormatID::R8G8B8A8_UNORM;
-            vkTextureFormat              = VK_FORMAT_R8G8B8A8_UNORM;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8B8A8_UNORM;
+            vkImageFormat                = VK_FORMAT_R8G8B8A8_UNORM;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R4G4B4A4_UNORM;
             vkBufferFormat               = VK_FORMAT_R4G4B4A4_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -1592,9 +1592,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R5G5B5A1_UNORM:
             internalFormat               = GL_RGB5_A1;
-            textureFormatID              = angle::FormatID::A1R5G5B5_UNORM;
-            vkTextureFormat              = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::A1R5G5B5_UNORM;
+            vkImageFormat                = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R5G5B5A1_UNORM;
             vkBufferFormat               = VK_FORMAT_R5G5B5A1_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -1604,9 +1604,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R5G6B5_UNORM:
             internalFormat               = GL_RGB565;
-            textureFormatID              = angle::FormatID::R5G6B5_UNORM;
-            vkTextureFormat              = VK_FORMAT_R5G6B5_UNORM_PACK16;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R5G6B5_UNORM;
+            vkImageFormat                = VK_FORMAT_R5G6B5_UNORM_PACK16;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R5G6B5_UNORM;
             vkBufferFormat               = VK_FORMAT_R5G6B5_UNORM_PACK16;
             vkBufferFormatIsPacked       = true;
@@ -1616,9 +1616,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8B8A8_SINT:
             internalFormat               = GL_RGBA8I;
-            textureFormatID              = angle::FormatID::R8G8B8A8_SINT;
-            vkTextureFormat              = VK_FORMAT_R8G8B8A8_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8B8A8_SINT;
+            vkImageFormat                = VK_FORMAT_R8G8B8A8_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8B8A8_SINT;
             vkBufferFormat               = VK_FORMAT_R8G8B8A8_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1627,10 +1627,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8A8_SNORM:
-            internalFormat             = GL_RGBA8_SNORM;
-            textureFormatID            = angle::FormatID::R8G8B8A8_SNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA8_SNORM;
+            imageFormatID            = angle::FormatID::R8G8B8A8_SNORM;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8A8_SNORM, VK_FORMAT_R8G8B8A8_SNORM, false,
@@ -1642,10 +1642,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8A8_SSCALED:
-            internalFormat             = GL_RGBA8_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8G8B8A8_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA8_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8G8B8A8_SSCALED;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8A8_SSCALED, VK_FORMAT_R8G8B8A8_SSCALED, false,
@@ -1666,9 +1666,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8B8A8_UINT:
             internalFormat               = GL_RGBA8UI;
-            textureFormatID              = angle::FormatID::R8G8B8A8_UINT;
-            vkTextureFormat              = VK_FORMAT_R8G8B8A8_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8B8A8_UINT;
+            vkImageFormat                = VK_FORMAT_R8G8B8A8_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8B8A8_UINT;
             vkBufferFormat               = VK_FORMAT_R8G8B8A8_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1677,10 +1677,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8A8_UNORM:
-            internalFormat             = GL_RGBA8;
-            textureFormatID            = angle::FormatID::R8G8B8A8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA8;
+            imageFormatID            = angle::FormatID::R8G8B8A8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, false,
@@ -1693,9 +1693,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8B8A8_UNORM_SRGB:
             internalFormat               = GL_SRGB8_ALPHA8;
-            textureFormatID              = angle::FormatID::R8G8B8A8_UNORM_SRGB;
-            vkTextureFormat              = VK_FORMAT_R8G8B8A8_SRGB;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+            vkImageFormat                = VK_FORMAT_R8G8B8A8_SRGB;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8B8A8_UNORM_SRGB;
             vkBufferFormat               = VK_FORMAT_R8G8B8A8_SRGB;
             vkBufferFormatIsPacked       = false;
@@ -1704,10 +1704,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8A8_USCALED:
-            internalFormat             = GL_RGBA8_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8G8B8A8_USCALED;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGBA8_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8G8B8A8_USCALED;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8A8_USCALED, VK_FORMAT_R8G8B8A8_USCALED, false,
@@ -1720,9 +1720,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8B8_SINT:
             internalFormat               = GL_RGB8I;
-            textureFormatID              = angle::FormatID::R8G8B8_SINT;
-            vkTextureFormat              = VK_FORMAT_R8G8B8_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8B8_SINT;
+            vkImageFormat                = VK_FORMAT_R8G8B8_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8B8_SINT;
             vkBufferFormat               = VK_FORMAT_R8G8B8_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1731,10 +1731,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_SNORM:
-            internalFormat             = GL_RGB8_SNORM;
-            textureFormatID            = angle::FormatID::R8G8B8_SNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8B8_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB8_SNORM;
+            imageFormatID            = angle::FormatID::R8G8B8_SNORM;
+            vkImageFormat            = VK_FORMAT_R8G8B8_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8_SNORM, VK_FORMAT_R8G8B8_SNORM, false,
@@ -1746,10 +1746,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_SSCALED:
-            internalFormat             = GL_RGB8_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8G8B8_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R8G8B8_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB8_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8G8B8_SSCALED;
+            vkImageFormat            = VK_FORMAT_R8G8B8_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8_SSCALED, VK_FORMAT_R8G8B8_SSCALED, false,
@@ -1762,9 +1762,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8B8_UINT:
             internalFormat               = GL_RGB8UI;
-            textureFormatID              = angle::FormatID::R8G8B8_UINT;
-            vkTextureFormat              = VK_FORMAT_R8G8B8_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8B8_UINT;
+            vkImageFormat                = VK_FORMAT_R8G8B8_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8B8_UINT;
             vkBufferFormat               = VK_FORMAT_R8G8B8_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1773,10 +1773,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_UNORM:
-            internalFormat             = GL_RGB8;
-            textureFormatID            = angle::FormatID::R8G8B8A8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_UNORM;
-            textureInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            internalFormat           = GL_RGB8;
+            imageFormatID            = angle::FormatID::R8G8B8A8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_UNORM;
+            imageInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8_UNORM, VK_FORMAT_R8G8B8_UNORM, false,
@@ -1788,22 +1788,22 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_UNORM_SRGB:
-            internalFormat             = GL_SRGB8;
-            textureFormatID            = angle::FormatID::R8G8B8A8_UNORM_SRGB;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_SRGB;
-            textureInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
-            bufferFormatID             = angle::FormatID::R8G8B8_UNORM_SRGB;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_SRGB;
-            vkBufferFormatIsPacked     = false;
-            vertexLoadFunction         = CopyNativeVertexData<GLubyte, 3, 3, 0>;
+            internalFormat           = GL_SRGB8;
+            imageFormatID            = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+            vkImageFormat            = VK_FORMAT_R8G8B8A8_SRGB;
+            imageInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            bufferFormatID           = angle::FormatID::R8G8B8_UNORM_SRGB;
+            vkBufferFormat           = VK_FORMAT_R8G8B8_SRGB;
+            vkBufferFormatIsPacked   = false;
+            vertexLoadFunction       = CopyNativeVertexData<GLubyte, 3, 3, 0>;
             vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::R8G8B8_USCALED:
-            internalFormat             = GL_RGB8_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8G8B8_USCALED;
-            vkTextureFormat            = VK_FORMAT_R8G8B8_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RGB8_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8G8B8_USCALED;
+            vkImageFormat            = VK_FORMAT_R8G8B8_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8_USCALED, VK_FORMAT_R8G8B8_USCALED, false,
@@ -1816,9 +1816,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8_SINT:
             internalFormat               = GL_RG8I;
-            textureFormatID              = angle::FormatID::R8G8_SINT;
-            vkTextureFormat              = VK_FORMAT_R8G8_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8_SINT;
+            vkImageFormat                = VK_FORMAT_R8G8_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8_SINT;
             vkBufferFormat               = VK_FORMAT_R8G8_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1827,10 +1827,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8_SNORM:
-            internalFormat             = GL_RG8_SNORM;
-            textureFormatID            = angle::FormatID::R8G8_SNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG8_SNORM;
+            imageFormatID            = angle::FormatID::R8G8_SNORM;
+            vkImageFormat            = VK_FORMAT_R8G8_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8_SNORM, VK_FORMAT_R8G8_SNORM, false,
@@ -1842,10 +1842,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8_SSCALED:
-            internalFormat             = GL_RG8_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8G8_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R8G8_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG8_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8G8_SSCALED;
+            vkImageFormat            = VK_FORMAT_R8G8_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8_SSCALED, VK_FORMAT_R8G8_SSCALED, false,
@@ -1858,9 +1858,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8G8_UINT:
             internalFormat               = GL_RG8UI;
-            textureFormatID              = angle::FormatID::R8G8_UINT;
-            vkTextureFormat              = VK_FORMAT_R8G8_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8G8_UINT;
+            vkImageFormat                = VK_FORMAT_R8G8_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8G8_UINT;
             vkBufferFormat               = VK_FORMAT_R8G8_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1869,10 +1869,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8_UNORM:
-            internalFormat             = GL_RG8;
-            textureFormatID            = angle::FormatID::R8G8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG8;
+            imageFormatID            = angle::FormatID::R8G8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8G8_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8_UNORM, VK_FORMAT_R8G8_UNORM, false,
@@ -1884,10 +1884,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8_USCALED:
-            internalFormat             = GL_RG8_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8G8_USCALED;
-            vkTextureFormat            = VK_FORMAT_R8G8_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_RG8_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8G8_USCALED;
+            vkImageFormat            = VK_FORMAT_R8G8_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8_USCALED, VK_FORMAT_R8G8_USCALED, false,
@@ -1900,9 +1900,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8_SINT:
             internalFormat               = GL_R8I;
-            textureFormatID              = angle::FormatID::R8_SINT;
-            vkTextureFormat              = VK_FORMAT_R8_SINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8_SINT;
+            vkImageFormat                = VK_FORMAT_R8_SINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8_SINT;
             vkBufferFormat               = VK_FORMAT_R8_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1911,10 +1911,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8_SNORM:
-            internalFormat             = GL_R8_SNORM;
-            textureFormatID            = angle::FormatID::R8_SNORM;
-            vkTextureFormat            = VK_FORMAT_R8_SNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R8_SNORM;
+            imageFormatID            = angle::FormatID::R8_SNORM;
+            vkImageFormat            = VK_FORMAT_R8_SNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8_SNORM, VK_FORMAT_R8_SNORM, false,
@@ -1926,10 +1926,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8_SSCALED:
-            internalFormat             = GL_R8_SSCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8_SSCALED;
-            vkTextureFormat            = VK_FORMAT_R8_SSCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R8_SSCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8_SSCALED;
+            vkImageFormat            = VK_FORMAT_R8_SSCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8_SSCALED, VK_FORMAT_R8_SSCALED, false,
@@ -1942,9 +1942,9 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
 
         case angle::FormatID::R8_UINT:
             internalFormat               = GL_R8UI;
-            textureFormatID              = angle::FormatID::R8_UINT;
-            vkTextureFormat              = VK_FORMAT_R8_UINT;
-            textureInitializerFunction   = nullptr;
+            imageFormatID                = angle::FormatID::R8_UINT;
+            vkImageFormat                = VK_FORMAT_R8_UINT;
+            imageInitializerFunction     = nullptr;
             bufferFormatID               = angle::FormatID::R8_UINT;
             vkBufferFormat               = VK_FORMAT_R8_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1953,10 +1953,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8_UNORM:
-            internalFormat             = GL_R8;
-            textureFormatID            = angle::FormatID::R8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8_UNORM;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R8;
+            imageFormatID            = angle::FormatID::R8_UNORM;
+            vkImageFormat            = VK_FORMAT_R8_UNORM;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8_UNORM, VK_FORMAT_R8_UNORM, false,
@@ -1968,10 +1968,10 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8_USCALED:
-            internalFormat             = GL_R8_USCALED_ANGLEX;
-            textureFormatID            = angle::FormatID::R8_USCALED;
-            vkTextureFormat            = VK_FORMAT_R8_USCALED;
-            textureInitializerFunction = nullptr;
+            internalFormat           = GL_R8_USCALED_ANGLEX;
+            imageFormatID            = angle::FormatID::R8_USCALED;
+            vkImageFormat            = VK_FORMAT_R8_USCALED;
+            imageInitializerFunction = nullptr;
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8_USCALED, VK_FORMAT_R8_USCALED, false,
@@ -1989,12 +1989,12 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
         case angle::FormatID::S8_UINT:
             internalFormat = GL_STENCIL_INDEX8;
             {
-                static constexpr TextureFormatInitInfo kInfo[] = {
+                static constexpr ImageFormatInitInfo kInfo[] = {
                     {angle::FormatID::S8_UINT, VK_FORMAT_S8_UINT, nullptr},
                     {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr},
                     {angle::FormatID::S8_UINT, VK_FORMAT_S8_UINT, nullptr}};
-                initTextureFallback(renderer, kInfo, ArraySize(kInfo));
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
             }
             bufferFormatID               = angle::FormatID::S8_UINT;
             vkBufferFormat               = VK_FORMAT_S8_UINT;

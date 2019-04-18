@@ -98,13 +98,13 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_VK_TRY(displayVk, vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer,
                                                                         &bufferProperties));
 
-    const vk::Format &vkFormat         = renderer->getFormat(internalFormat);
-    const angle::Format &textureFormat = vkFormat.textureFormat();
-    bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
+    const vk::Format &vkFormat       = renderer->getFormat(internalFormat);
+    const angle::Format &imageFormat = vkFormat.imageFormat();
+    bool isDepthOrStencilFormat      = imageFormat.depthBits > 0 || imageFormat.stencilBits > 0;
     const VkImageUsageFlags usage =
         VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
         VK_IMAGE_USAGE_SAMPLED_BIT |
-        (textureFormat.redBits > 0 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) |
+        (imageFormat.redBits > 0 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) |
         (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
 
     VkExternalFormatANDROID externalFormat = {};
@@ -149,15 +149,15 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
 
     constexpr uint32_t kColorRenderableRequiredBits        = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
     constexpr uint32_t kDepthStencilRenderableRequiredBits = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    mRenderable = renderer->hasTextureFormatFeatureBits(vkFormat.vkTextureFormat,
-                                                        kColorRenderableRequiredBits) ||
-                  renderer->hasTextureFormatFeatureBits(vkFormat.vkTextureFormat,
-                                                        kDepthStencilRenderableRequiredBits);
+    mRenderable =
+        renderer->hasImageFormatFeatureBits(vkFormat.vkImageFormat, kColorRenderableRequiredBits) ||
+        renderer->hasImageFormatFeatureBits(vkFormat.vkImageFormat,
+                                            kDepthStencilRenderableRequiredBits);
 
     constexpr uint32_t kTextureableRequiredBits =
         VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
     mTextureable =
-        renderer->hasTextureFormatFeatureBits(vkFormat.vkTextureFormat, kTextureableRequiredBits);
+        renderer->hasImageFormatFeatureBits(vkFormat.vkImageFormat, kTextureableRequiredBits);
 
     return angle::Result::Continue;
 }

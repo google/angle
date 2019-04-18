@@ -1324,7 +1324,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.pNext                 = externalImageCreateInfo;
     imageInfo.flags                 = GetImageCreateFlags(textureType);
     imageInfo.imageType             = gl_vk::GetImageType(textureType);
-    imageInfo.format                = format.vkTextureFormat;
+    imageInfo.format                = format.vkImageFormat;
     imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
     imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
     imageInfo.extent.depth          = 1;
@@ -1419,7 +1419,7 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
     viewInfo.flags                 = 0;
     viewInfo.image                 = mImage.getHandle();
     viewInfo.viewType              = gl_vk::GetImageViewType(textureType);
-    viewInfo.format                = mFormat->vkTextureFormat;
+    viewInfo.format                = mFormat->vkImageFormat;
     if (swizzleMap.swizzleRequired())
     {
         viewInfo.components.r = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
@@ -1491,7 +1491,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.flags                 = 0;
     imageInfo.imageType             = VK_IMAGE_TYPE_2D;
-    imageInfo.format                = format.vkTextureFormat;
+    imageInfo.format                = format.vkImageFormat;
     imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
     imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
     imageInfo.extent.depth          = 1;
@@ -1516,7 +1516,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
-    return GetFormatAspectFlags(mFormat->textureFormat());
+    return GetFormatAspectFlags(mFormat->imageFormat());
 }
 
 void ImageHelper::dumpResources(Serial serial, std::vector<GarbageObject> *garbageQueue)
@@ -1654,7 +1654,7 @@ void ImageHelper::clear(const VkClearValue &value,
     if (isDepthStencil)
     {
         ASSERT(mipLevel == 0 && baseArrayLayer == 0 && layerCount == 1);
-        const VkImageAspectFlags aspect = vk::GetDepthStencilAspectFlags(mFormat->textureFormat());
+        const VkImageAspectFlags aspect = vk::GetDepthStencilAspectFlags(mFormat->imageFormat());
         clearDepthStencil(aspect, aspect, value.depthStencil, commandBuffer);
     }
     else
@@ -1828,7 +1828,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                         formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
                                                     applySkipImages, &inputSkipBytes));
 
-    const angle::Format &storageFormat = vkFormat.textureFormat();
+    const angle::Format &storageFormat = vkFormat.imageFormat();
 
     size_t outputRowPitch;
     size_t outputDepthPitch;
@@ -1965,7 +1965,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     RendererVk *renderer = contextVk->getRenderer();
 
     const vk::Format &vkFormat         = renderer->getFormat(formatInfo.sizedInternalFormat);
-    const angle::Format &storageFormat = vkFormat.textureFormat();
+    const angle::Format &storageFormat = vkFormat.imageFormat();
     LoadImageFunctionInfo loadFunction = vkFormat.textureLoadFunctions(formatInfo.type);
 
     size_t outputRowPitch   = storageFormat.pixelBytes * clippedRectangle.width;
@@ -2065,7 +2065,7 @@ angle::Result ImageHelper::clearIfEmulatedFormat(Context *context,
                                                  const gl::ImageIndex &index,
                                                  const Format &format)
 {
-    if (format.hasEmulatedChannels())
+    if (format.hasEmulatedImageChannels())
     {
         stageSubresourceEmulatedClear(index, format.angleFormat());
         ANGLE_TRY(flushAllStagedUpdates(context));
@@ -2124,7 +2124,7 @@ angle::Result ImageHelper::flushStagedUpdates(Context *context,
     ANGLE_TRY(mStagingBuffer.flush(context));
 
     std::vector<SubresourceUpdate> updatesToKeep;
-    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(mFormat->textureFormat());
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(mFormat->imageFormat());
 
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {

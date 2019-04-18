@@ -45,7 +45,7 @@ const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
                                                 RenderTargetVk *renderTarget)
 {
     GLenum implFormat =
-        renderTarget->getImageFormat().textureFormat().fboImplementationInternalFormat;
+        renderTarget->getImageFormat().imageFormat().fboImplementationInternalFormat;
     return gl::GetSizedInternalFormatInfo(implFormat);
 }
 
@@ -62,12 +62,12 @@ bool HasSrcAndDstBlitProperties(RendererVk *renderer,
                                 RenderTargetVk *srcRenderTarget,
                                 RenderTargetVk *dstRenderTarget)
 {
-    const VkFormat srcFormat = srcRenderTarget->getImageFormat().vkTextureFormat;
-    const VkFormat dstFormat = dstRenderTarget->getImageFormat().vkTextureFormat;
+    const VkFormat srcFormat = srcRenderTarget->getImageFormat().vkImageFormat;
+    const VkFormat dstFormat = dstRenderTarget->getImageFormat().vkImageFormat;
 
     // Verifies if the draw and read images have the necessary prerequisites for blitting.
-    return renderer->hasTextureFormatFeatureBits(srcFormat, VK_FORMAT_FEATURE_BLIT_SRC_BIT) &&
-           renderer->hasTextureFormatFeatureBits(dstFormat, VK_FORMAT_FEATURE_BLIT_DST_BIT);
+    return renderer->hasImageFormatFeatureBits(srcFormat, VK_FORMAT_FEATURE_BLIT_SRC_BIT) &&
+           renderer->hasImageFormatFeatureBits(dstFormat, VK_FORMAT_FEATURE_BLIT_DST_BIT);
 }
 
 // Special rules apply to VkBufferImageCopy with depth/stencil. The components are tightly packed
@@ -539,7 +539,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
                                               RenderTargetVk *drawRenderTarget)
 {
     RendererVk *renderer            = contextVk->getRenderer();
-    const angle::Format &readFormat = readRenderTarget->getImageFormat().textureFormat();
+    const angle::Format &readFormat = readRenderTarget->getImageFormat().imageFormat();
 
     ASSERT(aspect == VK_IMAGE_ASPECT_DEPTH_BIT || aspect == VK_IMAGE_ASPECT_STENCIL_BIT);
 
@@ -752,7 +752,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     const vk::Format &readImageFormat = readRenderTarget->getImageFormat();
     VkImageAspectFlags aspectMask =
         colorBlit ? VK_IMAGE_ASPECT_COLOR_BIT
-                  : vk::GetDepthStencilAspectFlags(readImageFormat.textureFormat());
+                  : vk::GetDepthStencilAspectFlags(readImageFormat.imageFormat());
     vk::ImageHelper *srcImage = readRenderTarget->getImageForRead(
         &mFramebuffer, vk::ImageLayout::TransferSrc, commandBuffer);
 
@@ -845,7 +845,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 if (renderTarget)
                 {
                     const angle::Format &emulatedFormat =
-                        renderTarget->getImageFormat().textureFormat();
+                        renderTarget->getImageFormat().imageFormat();
                     updateActiveColorMasks(
                         colorIndex, emulatedFormat.redBits > 0, emulatedFormat.greenBits > 0,
                         emulatedFormat.blueBits > 0, emulatedFormat.alphaBits > 0);
@@ -1064,7 +1064,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         const RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
 
-        params.colorFormat          = &colorRenderTarget->getImage().getFormat().textureFormat();
+        params.colorFormat          = &colorRenderTarget->getImage().getFormat().imageFormat();
         params.colorAttachmentIndex = colorIndex;
         params.colorMaskFlags       = colorMaskFlags;
         if (mEmulatedAlphaAttachmentMask[colorIndex])
@@ -1177,7 +1177,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     vk::ImageHelper *srcImage =
         renderTarget->getImageForRead(&mFramebuffer, vk::ImageLayout::TransferSrc, commandBuffer);
 
-    const angle::Format *readFormat = &srcImage->getFormat().textureFormat();
+    const angle::Format *readFormat = &srcImage->getFormat().imageFormat();
 
     if (copyAspectFlags != VK_IMAGE_ASPECT_COLOR_BIT)
     {

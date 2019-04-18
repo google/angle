@@ -66,20 +66,20 @@ break;
 
 format_entry_template = """case angle::FormatID::{format_id}:
 internalFormat = {internal_format};
-{texture_template}
+{image_template}
 {buffer_template}
 break;
 """
 
-texture_basic_template = """textureFormatID = {texture};
-vkTextureFormat = {vk_texture_format};
-textureInitializerFunction = {texture_initializer};"""
+image_basic_template = """imageFormatID = {image};
+vkImageFormat = {vk_image_format};
+imageInitializerFunction = {image_initializer};"""
 
-texture_struct_template="{{{texture}, {vk_texture_format}, {texture_initializer}}}"
+image_struct_template="{{{image}, {vk_image_format}, {image_initializer}}}"
 
-texture_fallback_template = """{{
-static constexpr TextureFormatInitInfo kInfo[] = {{{texture_list}}};
-initTextureFallback(renderer, kInfo, ArraySize(kInfo));
+image_fallback_template = """{{
+static constexpr ImageFormatInitInfo kInfo[] = {{{image_list}}};
+initImageFallback(renderer, kInfo, ArraySize(kInfo));
 }}"""
 
 buffer_basic_template = """bufferFormatID = {buffer};
@@ -108,7 +108,7 @@ def gen_format_case(angle, internal_format, vk_json_data):
     args = dict(
         format_id=angle,
         internal_format=internal_format,
-        texture_template="",
+        image_template="",
         buffer_template="")
 
     if ((angle not in vk_map) and (angle not in vk_overrides) and
@@ -124,11 +124,11 @@ def gen_format_case(angle, internal_format, vk_json_data):
             fallbacks = [fallbacks]
         return [format] + fallbacks
 
-    def texture_args(format):
+    def image_args(format):
         return dict(
-            texture="angle::FormatID::" + format,
-            vk_texture_format=vk_map[format],
-            texture_initializer=angle_format.get_internal_format_initializer(
+            image="angle::FormatID::" + format,
+            vk_image_format=vk_map[format],
+            image_initializer=angle_format.get_internal_format_initializer(
                 internal_format, format))
 
     def buffer_args(format):
@@ -141,16 +141,16 @@ def gen_format_case(angle, internal_format, vk_json_data):
             vertex_load_converts='false' if angle == format else 'true',
         )
 
-    textures = get_formats(angle, "texture")
-    if len(textures) == 1:
-        args.update(texture_template=texture_basic_template)
-        args.update(texture_args(textures[0]))
-    elif len(textures) > 1:
+    images = get_formats(angle, "image")
+    if len(images) == 1:
+        args.update(image_template=image_basic_template)
+        args.update(image_args(images[0]))
+    elif len(images) > 1:
         args.update(
-            texture_template=texture_fallback_template,
-            texture_list=", ".join(
-                texture_struct_template.format(**texture_args(i))
-                for i in textures))
+            image_template=image_fallback_template,
+            image_list=", ".join(
+                image_struct_template.format(**image_args(i))
+                for i in images))
 
     buffers = get_formats(angle, "buffer")
     if len(buffers) == 1:

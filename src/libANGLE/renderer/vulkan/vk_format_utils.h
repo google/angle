@@ -34,7 +34,7 @@ namespace vk
 // VkFormat values in range [0, kNumVkFormats) are used as indices in various tables.
 constexpr uint32_t kNumVkFormats = 185;
 
-struct TextureFormatInitInfo final
+struct ImageFormatInitInfo final
 {
     angle::FormatID format;
     VkFormat vkFormat;
@@ -56,32 +56,42 @@ struct Format final : private angle::NonCopyable
 
     bool valid() const { return internalFormat != 0; }
 
-    // This is an auto-generated method in vk_format_table_autogen.cpp.
-    void initialize(RendererVk *renderer, const angle::Format &angleFormat);
-
-    void initTextureFallback(RendererVk *renderer, const TextureFormatInitInfo *info, int numInfo);
-    void initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo);
-
+    // The ANGLE format is the front-end format.
     const angle::Format &angleFormat() const { return angle::Format::Get(angleFormatID); }
-    const angle::Format &textureFormat() const { return angle::Format::Get(textureFormatID); }
+
+    // The Image format is the VkFormat used to implement the front-end format for VkImages.
+    const angle::Format &imageFormat() const { return angle::Format::Get(imageFormatID); }
+
+    // The Buffer format is the VkFormat used to implement the front-end format for VkBuffers.
     const angle::Format &bufferFormat() const { return angle::Format::Get(bufferFormatID); }
 
-    // Get buffer alignment for image-copy operations (to or from a buffer).
+    // Returns OpenGL format information for the front-end format.
     const gl::InternalFormat &getInternalFormatInfo(GLenum type) const
     {
         return gl::GetInternalFormatInfo(internalFormat, type);
     }
+
+    // Get buffer alignment for image-copy operations (to or from a buffer).
     size_t getImageCopyBufferAlignment() const;
 
-    bool hasEmulatedChannels() const;
+    // Returns true if the Image format has more channels than the ANGLE format.
+    bool hasEmulatedImageChannels() const;
+
+    // This is an auto-generated method in vk_format_table_autogen.cpp.
+    void initialize(RendererVk *renderer, const angle::Format &angleFormat);
+
+    // These are used in the format table init.
+    void initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *info, int numInfo);
+    void initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo);
 
     angle::FormatID angleFormatID;
     GLenum internalFormat;
-    angle::FormatID textureFormatID;
-    VkFormat vkTextureFormat;
+    angle::FormatID imageFormatID;
+    VkFormat vkImageFormat;
     angle::FormatID bufferFormatID;
     VkFormat vkBufferFormat;
-    InitializeTextureDataFunction textureInitializerFunction;
+
+    InitializeTextureDataFunction imageInitializerFunction;
     LoadFunctionMap textureLoadFunctions;
     VertexCopyFunction vertexLoadFunction;
 

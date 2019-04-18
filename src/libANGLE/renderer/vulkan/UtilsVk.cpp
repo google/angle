@@ -159,7 +159,7 @@ uint32_t GetFormatDefaultChannelMask(const vk::Format &format)
     uint32_t mask = 0;
 
     const angle::Format &angleFormat   = format.angleFormat();
-    const angle::Format &textureFormat = format.textureFormat();
+    const angle::Format &textureFormat = format.imageFormat();
 
     // Red can never be introduced due to format emulation (except for luma which is handled
     // especially)

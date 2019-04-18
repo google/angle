@@ -63,7 +63,7 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
             mOwnsImage = true;
         }
 
-        const angle::Format &textureFormat = vkFormat.textureFormat();
+        const angle::Format &textureFormat = vkFormat.imageFormat();
         bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
         const VkImageUsageFlags usage =
             VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
@@ -117,7 +117,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     mOwnsImage       = false;
 
     const vk::Format &vkFormat = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
-    const angle::Format &textureFormat = vkFormat.textureFormat();
+    const angle::Format &textureFormat = vkFormat.imageFormat();
 
     VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 

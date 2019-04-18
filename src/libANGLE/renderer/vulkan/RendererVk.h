@@ -202,8 +202,8 @@ class RendererVk : angle::NonCopyable
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
     // device (first time only).
-    bool hasLinearTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
-    bool hasTextureFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    bool hasLinearImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    bool hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
     bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
     void insertDebugMarker(GLenum source, GLuint id, std::string &&marker);

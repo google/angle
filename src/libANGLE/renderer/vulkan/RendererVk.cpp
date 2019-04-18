@@ -1818,14 +1818,13 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
 
 // These functions look at the mandatory format for support, and fallback to querying the device (if
 // necessary) to test the availability of the bits.
-bool RendererVk::hasLinearTextureFormatFeatureBits(VkFormat format,
-                                                   const VkFormatFeatureFlags featureBits)
+bool RendererVk::hasLinearImageFormatFeatureBits(VkFormat format,
+                                                 const VkFormatFeatureFlags featureBits)
 {
     return hasFormatFeatureBits<&VkFormatProperties::linearTilingFeatures>(format, featureBits);
 }
 
-bool RendererVk::hasTextureFormatFeatureBits(VkFormat format,
-                                             const VkFormatFeatureFlags featureBits)
+bool RendererVk::hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
 {
     return hasFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(format, featureBits);
 }

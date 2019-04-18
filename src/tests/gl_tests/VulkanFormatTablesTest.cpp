@@ -73,17 +73,17 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
             // Now lets verify that that agaisnt vulkan.
             VkFormatProperties formatProperties;
             vkGetPhysicalDeviceFormatProperties(renderer->getPhysicalDevice(),
-                                                vkFormat.vkTextureFormat, &formatProperties);
+                                                vkFormat.vkImageFormat, &formatProperties);
 
             VkImageFormatProperties imageProperties;
 
             // isTexturable?
             bool isTexturable =
                 vkGetPhysicalDeviceImageFormatProperties(
-                    renderer->getPhysicalDevice(), vkFormat.vkTextureFormat, params.imageType,
+                    renderer->getPhysicalDevice(), vkFormat.vkImageFormat, params.imageType,
                     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_SAMPLED_BIT, params.createFlags,
                     &imageProperties) == VK_SUCCESS;
-            EXPECT_EQ(isTexturable, textureCaps.texturable) << vkFormat.vkTextureFormat;
+            EXPECT_EQ(isTexturable, textureCaps.texturable) << vkFormat.vkImageFormat;
 
             // TODO(jmadill): Support ES3 textures.
 
@@ -91,23 +91,23 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
             bool isFilterable = (formatProperties.optimalTilingFeatures &
                                  VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT) ==
                                 VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
-            EXPECT_EQ(isFilterable, textureCaps.filterable) << vkFormat.vkTextureFormat;
+            EXPECT_EQ(isFilterable, textureCaps.filterable) << vkFormat.vkImageFormat;
 
             // isRenderable?
             const bool isRenderableColor =
                 (vkGetPhysicalDeviceImageFormatProperties(
-                    renderer->getPhysicalDevice(), vkFormat.vkTextureFormat, params.imageType,
+                    renderer->getPhysicalDevice(), vkFormat.vkImageFormat, params.imageType,
                     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                     params.createFlags, &imageProperties)) == VK_SUCCESS;
             const bool isRenderableDepthStencil =
                 (vkGetPhysicalDeviceImageFormatProperties(
-                    renderer->getPhysicalDevice(), vkFormat.vkTextureFormat, params.imageType,
+                    renderer->getPhysicalDevice(), vkFormat.vkImageFormat, params.imageType,
                     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
                     params.createFlags, &imageProperties)) == VK_SUCCESS;
 
             bool isRenderable = isRenderableColor || isRenderableDepthStencil;
-            EXPECT_EQ(isRenderable, textureCaps.textureAttachment) << vkFormat.vkTextureFormat;
-            EXPECT_EQ(isRenderable, textureCaps.renderbuffer) << vkFormat.vkTextureFormat;
+            EXPECT_EQ(isRenderable, textureCaps.textureAttachment) << vkFormat.vkImageFormat;
+            EXPECT_EQ(isRenderable, textureCaps.renderbuffer) << vkFormat.vkImageFormat;
         }
     }
 }

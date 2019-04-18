@@ -45,20 +45,20 @@ bool CanCopyWithTransfer(RendererVk *renderer,
     // NOTE(syoussefi): technically, you can transfer between formats as long as they have the same
     // size and are compatible, but for now, let's just support same-format copies with transfer.
     return srcFormat.internalFormat == destFormat.internalFormat &&
-           renderer->hasTextureFormatFeatureBits(srcFormat.vkTextureFormat,
-                                                 VK_FORMAT_FEATURE_TRANSFER_SRC_BIT) &&
-           renderer->hasTextureFormatFeatureBits(destFormat.vkTextureFormat,
-                                                 VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
+           renderer->hasImageFormatFeatureBits(srcFormat.vkImageFormat,
+                                               VK_FORMAT_FEATURE_TRANSFER_SRC_BIT) &&
+           renderer->hasImageFormatFeatureBits(destFormat.vkImageFormat,
+                                               VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
 }
 
 bool CanCopyWithDraw(RendererVk *renderer,
                      const vk::Format &srcFormat,
                      const vk::Format &destFormat)
 {
-    return renderer->hasTextureFormatFeatureBits(srcFormat.vkTextureFormat,
-                                                 VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) &&
-           renderer->hasTextureFormatFeatureBits(destFormat.vkTextureFormat,
-                                                 VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
+    return renderer->hasImageFormatFeatureBits(srcFormat.vkImageFormat,
+                                               VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) &&
+           renderer->hasImageFormatFeatureBits(destFormat.vkImageFormat,
+                                               VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
 }
 
 bool ForceCpuPathForCopy(RendererVk *renderer, vk::ImageHelper *image)
@@ -492,8 +492,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->copyImageDataToBuffer(contextVk, sourceLevel, 1, sourceArea, &sourceData));
 
-    const angle::Format &sourceTextureFormat = sourceVkFormat.textureFormat();
-    const angle::Format &destTextureFormat   = destVkFormat.textureFormat();
+    const angle::Format &sourceTextureFormat = sourceVkFormat.imageFormat();
+    const angle::Format &destTextureFormat   = destVkFormat.imageFormat();
     size_t destinationAllocationSize =
         sourceArea.width * sourceArea.height * destTextureFormat.pixelBytes;
 
@@ -670,7 +670,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         // TODO(syoussefi): If the cube map is LUMA, we need swizzle.  http://anglebug.com/2911
         // This can't happen when copying from framebuffers, so only source of concern would be
         // copy[Sub]Texture copying from a LUMA cube map.
-        ASSERT(!srcImage->getFormat().textureFormat().isLUMA());
+        ASSERT(!srcImage->getFormat().imageFormat().isLUMA());
 
         gl::TextureType arrayTextureType =
             Get2DTextureType(srcImage->getLayerCount(), srcImage->getSamples());
@@ -991,7 +991,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     // Make sure the source is initialized and it's images are flushed.
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
-    const angle::Format &imageFormat = getImage().getFormat().textureFormat();
+    const angle::Format &imageFormat = getImage().getFormat().imageFormat();
     size_t sourceCopyAllocationSize =
         sourceArea.width * sourceArea.height * imageFormat.pixelBytes * layerCount;
 
@@ -1044,7 +1044,7 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
     ANGLE_TRY(copyImageDataToBuffer(contextVk, mState.getEffectiveBaseLevel(), imageLayerCount,
                                     imageArea, &imageData));
 
-    const angle::Format &angleFormat = mImage->getFormat().textureFormat();
+    const angle::Format &angleFormat = mImage->getFormat().imageFormat();
     GLuint sourceRowPitch            = baseLevelExtents.width * angleFormat.pixelBytes;
     size_t baseLevelAllocationSize   = sourceRowPitch * baseLevelExtents.height;
 
@@ -1092,8 +1092,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
     // Check if the image supports blit. If it does, we can do the mipmap generation on the gpu
     // only.
-    if (renderer->hasTextureFormatFeatureBits(mImage->getFormat().vkTextureFormat,
-                                              kBlitFeatureFlags))
+    if (renderer->hasImageFormatFeatureBits(mImage->getFormat().vkImageFormat, kBlitFeatureFlags))
     {
         ANGLE_TRY(ensureImageInitialized(contextVk));
         ANGLE_TRY(mImage->generateMipmapsWithBlit(contextVk, mState.getMipmapMaxLevel()));
@@ -1317,7 +1316,7 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
                                                     vk::ImageView **imageViewOut)
 {
     ASSERT(mImage->valid());
-    ASSERT(!mImage->getFormat().textureFormat().isBlock);
+    ASSERT(!mImage->getFormat().imageFormat().isBlock);
 
     // Lazily allocate the storage for image views
     if (mLayerLevelDrawImageViews.empty())
@@ -1359,7 +1358,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                                    vk::CommandBuffer *commandBuffer)
 {
     const RendererVk *renderer         = contextVk->getRenderer();
-    const angle::Format &textureFormat = format.textureFormat();
+    const angle::Format &textureFormat = format.imageFormat();
 
     VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
                                         VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
@@ -1382,7 +1381,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     // If the image has an emulated channel, always clear it.  These channels will be masked out in
     // future writes, and shouldn't contain uninitialized values.
-    if (format.hasEmulatedChannels())
+    if (format.hasEmulatedImageChannels())
     {
         uint32_t levelCount = mImage->getLevelCount();
         uint32_t layerCount = mImage->getLayerCount();
@@ -1418,7 +1417,7 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
                                          mappedSwizzle, &mReadBaseLevelImageView, baseLevel, 1,
                                          baseLayer, layerCount));
-    if (!format.textureFormat().isBlock)
+    if (!format.imageFormat().isBlock)
     {
         ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
                                              gl::SwizzleState(), &mDrawBaseLevelImageView,

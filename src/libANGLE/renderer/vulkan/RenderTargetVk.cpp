@@ -58,7 +58,7 @@ angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk,
                                           vk::RenderPassDesc *renderPassDesc)
 {
     ASSERT(commandBuffer->valid());
-    ASSERT(!mImage->getFormat().textureFormat().hasDepthOrStencilBits());
+    ASSERT(!mImage->getFormat().imageFormat().hasDepthOrStencilBits());
 
     // Store the attachment info in the renderPassDesc.
     renderPassDesc->packAttachment(mImage->getFormat());
@@ -81,13 +81,13 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk,
                                                  vk::RenderPassDesc *renderPassDesc)
 {
     ASSERT(commandBuffer->valid());
-    ASSERT(mImage->getFormat().textureFormat().hasDepthOrStencilBits());
+    ASSERT(mImage->getFormat().imageFormat().hasDepthOrStencilBits());
 
     // Store the attachment info in the renderPassDesc.
     renderPassDesc->packAttachment(mImage->getFormat());
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-    const angle::Format &format    = mImage->getFormat().textureFormat();
+    const angle::Format &format    = mImage->getFormat().imageFormat();
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
     ANGLE_TRY(ensureImageInitialized(contextVk));
