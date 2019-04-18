@@ -1824,6 +1824,12 @@ bool RendererVk::hasLinearImageFormatFeatureBits(VkFormat format,
     return hasFormatFeatureBits<&VkFormatProperties::linearTilingFeatures>(format, featureBits);
 }
 
+VkFormatFeatureFlags RendererVk::getImageFormatFeatureBits(VkFormat format,
+                                                           const VkFormatFeatureFlags featureBits)
+{
+    return getFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(format, featureBits);
+}
+
 bool RendererVk::hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
 {
     return hasFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(format, featureBits);
@@ -2188,7 +2194,8 @@ void RendererVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpu
 }
 
 template <VkFormatFeatureFlags VkFormatProperties::*features>
-bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+VkFormatFeatureFlags RendererVk::getFormatFeatureBits(VkFormat format,
+                                                      const VkFormatFeatureFlags featureBits)
 {
     ASSERT(static_cast<uint32_t>(format) < vk::kNumVkFormats);
     VkFormatProperties &deviceProperties = mFormatProperties[format];
@@ -2200,14 +2207,20 @@ bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlag
         const VkFormatProperties &mandatoryProperties = vk::GetMandatoryFormatSupport(format);
         if (IsMaskFlagSet(mandatoryProperties.*features, featureBits))
         {
-            return true;
+            return featureBits;
         }
 
         // Otherwise query the format features and cache it.
         vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, format, &deviceProperties);
     }
 
-    return IsMaskFlagSet(deviceProperties.*features, featureBits);
+    return deviceProperties.*features & featureBits;
+}
+
+template <VkFormatFeatureFlags VkFormatProperties::*features>
+bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+{
+    return IsMaskFlagSet(getFormatFeatureBits<features>(format, featureBits), featureBits);
 }
 
 uint32_t GetUniformBufferDescriptorCount()

@@ -87,16 +87,10 @@ angle::Result MemoryObjectVk::createImage(const gl::Context *context,
 
     const vk::Format &vkFormat = renderer->getFormat(internalFormat);
 
-    static constexpr VkImageUsageFlags kAllImageUsageFlags =
-        VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT |
-        VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
-
     // All supported usage flags must be specified.
     // See EXT_external_objects issue 13.
-    // TODO(spang): Query supported usage for format via vkGetPhysicalDeviceFormatProperties.
-    // http://anglebug.com/3389
-    VkImageUsageFlags imageUsageFlags = kAllImageUsageFlags;
+    VkImageUsageFlags imageUsageFlags =
+        vk::GetMaximalImageUsageFlags(renderer, vkFormat.vkImageFormat);
 
     VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
     externalMemoryImageCreateInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;

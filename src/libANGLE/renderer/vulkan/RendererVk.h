@@ -203,6 +203,8 @@ class RendererVk : angle::NonCopyable
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
     // device (first time only).
     bool hasLinearImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    VkFormatFeatureFlags getImageFormatFeatureBits(VkFormat format,
+                                                   const VkFormatFeatureFlags featureBits);
     bool hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
     bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
 
@@ -241,6 +243,10 @@ class RendererVk : angle::NonCopyable
                                     const char *name);
     angle::Result checkCompletedGpuEvents(vk::Context *context);
     void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
+
+    template <VkFormatFeatureFlags VkFormatProperties::*features>
+    VkFormatFeatureFlags getFormatFeatureBits(VkFormat format,
+                                              const VkFormatFeatureFlags featureBits);
 
     template <VkFormatFeatureFlags VkFormatProperties::*features>
     bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);

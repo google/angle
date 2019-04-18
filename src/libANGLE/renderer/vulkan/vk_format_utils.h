@@ -138,6 +138,8 @@ class FormatTable final : angle::NonCopyable
 // initialized to 0.
 const VkFormatProperties &GetMandatoryFormatSupport(VkFormat vkFormat);
 
+VkImageUsageFlags GetMaximalImageUsageFlags(RendererVk *renderer, VkFormat format);
+
 }  // namespace vk
 
 // Checks if a vkFormat supports all the features needed to use it as a GL texture format

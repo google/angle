@@ -240,6 +240,32 @@ void FormatTable::initialize(RendererVk *renderer,
         }
     }
 }
+
+VkImageUsageFlags GetMaximalImageUsageFlags(RendererVk *renderer, VkFormat format)
+{
+    constexpr VkFormatFeatureFlags kImageUsageFeatureBits =
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT |
+        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT |
+        VK_FORMAT_FEATURE_TRANSFER_SRC_BIT | VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
+    VkFormatFeatureFlags featureBits =
+        renderer->getImageFormatFeatureBits(format, kImageUsageFeatureBits);
+    VkImageUsageFlags imageUsageFlags = 0;
+    if (featureBits & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)
+        imageUsageFlags |= VK_IMAGE_USAGE_SAMPLED_BIT;
+    if (featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)
+        imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
+    if (featureBits & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
+        imageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if (featureBits & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+        imageUsageFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (featureBits & VK_FORMAT_FEATURE_TRANSFER_SRC_BIT)
+        imageUsageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    if (featureBits & VK_FORMAT_FEATURE_TRANSFER_DST_BIT)
+        imageUsageFlags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    return imageUsageFlags;
+}
+
 }  // namespace vk
 
 bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat)
