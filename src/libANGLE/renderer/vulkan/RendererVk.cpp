@@ -1320,6 +1320,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     {
         mFeatures.forceNonZeroScissor.enabled = true;
     }
+
+    if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.forceD16TexFilter.enabled = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()
@@ -2284,6 +2289,12 @@ VkFormatFeatureFlags RendererVk::getFormatFeatureBits(VkFormat format,
 
         // Otherwise query the format features and cache it.
         vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, format, &deviceProperties);
+        // Workaround for some Android devices that don't indicate filtering
+        // support on D16_UNORM and they should.
+        if (mFeatures.forceD16TexFilter.enabled && format == VK_FORMAT_D16_UNORM)
+        {
+            deviceProperties.*features |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+        }
     }
 
     return deviceProperties.*features & featureBits;

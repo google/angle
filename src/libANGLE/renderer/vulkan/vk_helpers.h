@@ -754,6 +754,10 @@ class ImageHelper final : public CommandGraphResource
     void clearDepthStencil(VkImageAspectFlags imageAspectFlags,
                            VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
+                           uint32_t baseMipLevel,
+                           uint32_t levelCount,
+                           uint32_t baseArrayLayer,
+                           uint32_t layerCount,
                            vk::CommandBuffer *commandBuffer);
 
     struct SubresourceUpdate

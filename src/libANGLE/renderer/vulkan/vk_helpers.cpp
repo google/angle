@@ -1683,6 +1683,10 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
 void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
                                     VkImageAspectFlags clearAspectFlags,
                                     const VkClearDepthStencilValue &depthStencil,
+                                    uint32_t baseMipLevel,
+                                    uint32_t levelCount,
+                                    uint32_t baseArrayLayer,
+                                    uint32_t layerCount,
                                     vk::CommandBuffer *commandBuffer)
 {
     ASSERT(valid());
@@ -1691,10 +1695,10 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
 
     VkImageSubresourceRange clearRange = {
         /*aspectMask*/ clearAspectFlags,
-        /*baseMipLevel*/ 0,
-        /*levelCount*/ 1,
-        /*baseArrayLayer*/ 0,
-        /*layerCount*/ 1,
+        /*baseMipLevel*/ baseMipLevel,
+        /*levelCount*/ levelCount,
+        /*baseArrayLayer*/ baseArrayLayer,
+        /*layerCount*/ layerCount,
     };
 
     commandBuffer->clearDepthStencilImage(mImage, getCurrentLayout(), depthStencil, 1, &clearRange);
@@ -1711,9 +1715,9 @@ void ImageHelper::clear(const VkClearValue &value,
 
     if (isDepthStencil)
     {
-        ASSERT(mipLevel == 0 && baseArrayLayer == 0 && layerCount == 1);
         const VkImageAspectFlags aspect = vk::GetDepthStencilAspectFlags(mFormat->imageFormat());
-        clearDepthStencil(aspect, aspect, value.depthStencil, commandBuffer);
+        clearDepthStencil(aspect, aspect, value.depthStencil, mipLevel, 1, baseArrayLayer,
+                          layerCount, commandBuffer);
     }
     else
     {
@@ -1945,12 +1949,12 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     loadFunction.loadFunction(extents.width, extents.height, extents.depth, source, inputRowPitch,
                               inputDepthPitch, stagingPointer, outputRowPitch, outputDepthPitch);
 
-    VkBufferImageCopy copy = {};
+    VkBufferImageCopy copy         = {};
+    VkImageAspectFlags aspectFlags = GetFormatAspectFlags(vkFormat.imageFormat());
 
     copy.bufferOffset                    = stagingOffset;
     copy.bufferRowLength                 = bufferRowLength;
     copy.bufferImageHeight               = bufferImageHeight;
-    copy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     copy.imageSubresource.mipLevel       = index.getLevelIndex();
     copy.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
     copy.imageSubresource.layerCount     = index.getLayerCount();
@@ -1958,7 +1962,19 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(extents, &copy.imageExtent);
 
-    mSubresourceUpdates.emplace_back(bufferHandle, copy);
+    // TODO: http://anglebug.com/3437 - need to split packed depth_stencil into
+    // staging buffers for upload.
+    // Ignore stencil for now.
+    if (aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT)
+    {
+        aspectFlags &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
+    }
+
+    if (aspectFlags)
+    {
+        copy.imageSubresource.aspectMask = aspectFlags;
+        mSubresourceUpdates.emplace_back(bufferHandle, copy);
+    }
 
     return angle::Result::Continue;
 }
@@ -1983,6 +1999,9 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
     copy.imageSubresource.mipLevel       = imageIndex.getLevelIndex();
     copy.imageSubresource.baseArrayLayer = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
     copy.imageSubresource.layerCount     = imageIndex.getLayerCount();
+
+    // Note: Only support color now
+    ASSERT(getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT);
 
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(extents, &copy.imageExtent);

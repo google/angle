@@ -117,7 +117,9 @@ class DepthStencilFormatsTestES3 : public DepthStencilFormatsTestBase
 
 TEST_P(DepthStencilFormatsTest, DepthTexture)
 {
-    bool shouldHaveTextureSupport = IsGLExtensionEnabled("GL_ANGLE_depth_texture");
+    bool shouldHaveTextureSupport = (IsGLExtensionEnabled("GL_ANGLE_depth_texture") ||
+                                     IsGLExtensionEnabled("GL_OES_depth_texture"));
+
     EXPECT_EQ(shouldHaveTextureSupport,
               checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT));
     EXPECT_EQ(shouldHaveTextureSupport,
@@ -140,14 +142,331 @@ TEST_P(DepthStencilFormatsTest, PackedDepthStencil)
     EXPECT_EQ(shouldHaveRenderbufferSupport,
               checkRenderbufferFormatSupport(GL_DEPTH24_STENCIL8_OES));
 
-    bool shouldHaveTextureSupport = IsGLExtensionEnabled("GL_OES_packed_depth_stencil") &&
+    bool shouldHaveTextureSupport = (IsGLExtensionEnabled("GL_OES_packed_depth_stencil") &&
+                                     IsGLExtensionEnabled("GL_OES_depth_texture")) ||
                                     IsGLExtensionEnabled("GL_ANGLE_depth_texture");
     EXPECT_EQ(shouldHaveTextureSupport,
               checkTexImageFormatSupport(GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES));
 
     if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
     {
-        EXPECT_EQ(shouldHaveTextureSupport, checkTexStorageFormatSupport(GL_DEPTH24_STENCIL8_OES));
+        bool shouldHaveTexStorageSupport = IsGLExtensionEnabled("GL_OES_packed_depth_stencil") ||
+                                           IsGLExtensionEnabled("GL_ANGLE_depth_texture");
+        EXPECT_EQ(shouldHaveTexStorageSupport,
+                  checkTexStorageFormatSupport(GL_DEPTH24_STENCIL8_OES));
+    }
+}
+
+// This test will initialize a depth texture and then render with it and verify
+// pixel correctness.
+// This is modeled after webgl-depth-texture.html
+TEST_P(DepthStencilFormatsTest, DepthTextureRender)
+{
+    constexpr char kVS[] = R"(attribute vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform sampler2D u_texture;
+uniform vec2 u_resolution;
+void main()
+{
+    vec2 texcoord = (gl_FragCoord.xy - vec2(0.5)) / (u_resolution - vec2(1.0));
+    gl_FragColor = texture2D(u_texture, texcoord);
+})";
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_depth_texture") &&
+                       !IsGLExtensionEnabled("GL_ANGLE_depth_texture"));
+
+    // http://anglebug.com/3454
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsD3D9());
+
+    const int res     = 2;
+    const int destRes = 4;
+    GLint resolution;
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glUseProgram(program);
+    resolution = glGetUniformLocation(program, "u_resolution");
+    ASSERT_NE(-1, resolution);
+    glUniform2f(resolution, static_cast<float>(destRes), static_cast<float>(destRes));
+
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    float verts[] = {
+        1, 1, 1, -1, 1, 0, -1, -1, -1, 1, 1, 1, -1, -1, -1, 1, -1, 0,
+    };
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+    // OpenGL ES does not have a FLIPY PixelStore attribute
+    // glPixelStorei(GL_UNPACK_FLIP)
+
+    enum ObjType
+    {
+        GL,
+        EXT
+    };
+    struct TypeInfo
+    {
+        ObjType obj;
+        GLuint attachment;
+        GLuint format;
+        GLuint type;
+        void *data;
+        int depthBits;
+        int stencilBits;
+    };
+
+    GLuint fakeData[10] = {0};
+
+    std::vector<TypeInfo> types = {
+        {ObjType::GL, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, fakeData, 16, 0},
+        {ObjType::GL, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, fakeData, 16, 0},
+        {ObjType::EXT, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8_OES,
+         fakeData, 24, 8},
+    };
+
+    for (const TypeInfo &type : types)
+    {
+        GLTexture cubeTex;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+        ASSERT_GL_NO_ERROR();
+
+        std::vector<GLuint> targets{GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                                    GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+                                    GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
+
+        for (const GLuint target : targets)
+        {
+            glTexImage2D(target, 0, type.format, 1, 1, 0, type.format, type.type, nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+
+        std::vector<GLuint> filterModes = {GL_LINEAR, GL_NEAREST};
+
+        const bool supportPackedDepthStencilFramebuffer = getClientMajorVersion() >= 3;
+
+        for (const GLuint filterMode : filterModes)
+        {
+            GLTexture tex;
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
+
+            // test level > 0
+            glTexImage2D(GL_TEXTURE_2D, 1, type.format, 1, 1, 0, type.format, type.type, nullptr);
+            if (IsGLExtensionEnabled("GL_OES_depth_texture"))
+            {
+                EXPECT_GL_NO_ERROR();
+            }
+            else
+            {
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            }
+
+            // test with data
+            glTexImage2D(GL_TEXTURE_2D, 0, type.format, 1, 1, 0, type.format, type.type, type.data);
+            if (IsGLExtensionEnabled("GL_OES_depth_texture"))
+            {
+                EXPECT_GL_NO_ERROR();
+            }
+            else
+            {
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            }
+
+            // test copyTexImage2D
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, type.format, 0, 0, 1, 1, 0);
+            GLuint error = glGetError();
+            ASSERT_TRUE(error == GL_INVALID_ENUM || error == GL_INVALID_OPERATION);
+
+            // test real thing
+            glTexImage2D(GL_TEXTURE_2D, 0, type.format, res, res, 0, type.format, type.type,
+                         nullptr);
+            EXPECT_GL_NO_ERROR();
+
+            // test texSubImage2D
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, type.format, type.type, type.data);
+            if (IsGLExtensionEnabled("GL_OES_depth_texture"))
+            {
+                EXPECT_GL_NO_ERROR();
+            }
+            else
+            {
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            }
+
+            // test copyTexSubImage2D
+            glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            // test generateMipmap
+            glGenerateMipmap(GL_TEXTURE_2D);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            GLuint fbo = 0;
+            glGenFramebuffers(1, &fbo);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            if (type.depthBits > 0 && type.stencilBits > 0 && !supportPackedDepthStencilFramebuffer)
+            {
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tex, 0);
+                EXPECT_GL_NO_ERROR();
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, tex,
+                                       0);
+                EXPECT_GL_NO_ERROR();
+            }
+            else
+            {
+                glFramebufferTexture2D(GL_FRAMEBUFFER, type.attachment, GL_TEXTURE_2D, tex, 0);
+                EXPECT_GL_NO_ERROR();
+            }
+
+            // Ensure DEPTH_BITS returns >= 16 bits for UNSIGNED_SHORT and UNSIGNED_INT, >= 24
+            // UNSIGNED_INT_24_8_WEBGL. If there is stencil, ensure STENCIL_BITS reports >= 8 for
+            // UNSIGNED_INT_24_8_WEBGL.
+
+            GLint depthBits = 0;
+            glGetIntegerv(GL_DEPTH_BITS, &depthBits);
+            EXPECT_GE(depthBits, type.depthBits);
+
+            GLint stencilBits = 0;
+            glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+            EXPECT_GE(stencilBits, type.stencilBits);
+
+            // TODO: remove this check if the spec is updated to require these combinations to work.
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            {
+                // try adding a color buffer.
+                GLuint colorTex = 0;
+                glGenTextures(1, &colorTex);
+                glBindTexture(GL_TEXTURE_2D, colorTex);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res, res, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                             nullptr);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                       colorTex, 0);
+                EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            }
+
+            EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+            // use the default texture to render with while we return to the depth texture.
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            /* Setup 2x2 depth texture:
+             * 1 0.6 0.8
+             * |
+             * 0 0.2 0.4
+             *    0---1
+             */
+            const GLfloat d00 = 0.2;
+            const GLfloat d01 = 0.4;
+            const GLfloat d10 = 0.6;
+            const GLfloat d11 = 0.8;
+            glEnable(GL_SCISSOR_TEST);
+            glScissor(0, 0, 1, 1);
+            glClearDepthf(d00);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            glScissor(1, 0, 1, 1);
+            glClearDepthf(d10);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            glScissor(0, 1, 1, 1);
+            glClearDepthf(d01);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            glScissor(1, 1, 1, 1);
+            glClearDepthf(d11);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            glDisable(GL_SCISSOR_TEST);
+
+            // render the depth texture.
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glViewport(0, 0, destRes, destRes);
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glDisable(GL_DITHER);
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(1, 0, 0, 1);
+            glClearDepthf(1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            GLubyte actualPixels[destRes * destRes * 4];
+            glReadPixels(0, 0, destRes, destRes, GL_RGBA, GL_UNSIGNED_BYTE, actualPixels);
+            const GLfloat eps = 0.002;
+            std::vector<GLfloat> expectedMin;
+            std::vector<GLfloat> expectedMax;
+            if (filterMode == GL_NEAREST)
+            {
+                GLfloat init[] = {d00, d00, d10, d10, d00, d00, d10, d10,
+                                  d01, d01, d11, d11, d01, d01, d11, d11};
+                expectedMin.insert(expectedMin.begin(), init, init + 16);
+                expectedMax.insert(expectedMax.begin(), init, init + 16);
+
+                for (int i = 0; i < 16; i++)
+                {
+                    expectedMin[i] = expectedMin[i] - eps;
+                    expectedMax[i] = expectedMax[i] + eps;
+                }
+            }
+            else
+            {
+                GLfloat initMin[] = {
+                    d00 - eps, d00, d00, d10 - eps, d00,       d00, d00, d10,
+                    d00,       d00, d00, d10,       d01 - eps, d01, d01, d11 - eps,
+                };
+                GLfloat initMax[] = {
+                    d00 + eps, d10, d10, d10 + eps, d01,       d11, d11, d11,
+                    d01,       d11, d11, d11,       d01 + eps, d11, d11, d11 + eps,
+                };
+                expectedMin.insert(expectedMin.begin(), initMin, initMin + 16);
+                expectedMax.insert(expectedMax.begin(), initMax, initMax + 16);
+            }
+            for (int yy = 0; yy < destRes; ++yy)
+            {
+                for (int xx = 0; xx < destRes; ++xx)
+                {
+                    const int t        = xx + destRes * yy;
+                    const GLfloat was  = (GLfloat)(actualPixels[4 * t] / 255.0);  // 4bpp
+                    const GLfloat eMin = expectedMin[t];
+                    const GLfloat eMax = expectedMax[t];
+                    EXPECT_TRUE(was >= eMin && was <= eMax)
+                        << "At " << xx << ", " << yy << ", expected within [" << eMin << ", "
+                        << eMax << "] was " << was;
+                }
+            }
+
+            // check limitations
+            // Note: What happens if current attachment type is GL_DEPTH_STENCIL_ATTACHMENT
+            // and you try to call glFramebufferTexture2D with GL_DEPTH_ATTACHMENT?
+            // The webGL test this code came from expected that to fail.
+            // I think due to this line in ES3 spec:
+            // GL_INVALID_OPERATION is generated if textarget and texture are not compatible
+            // However, that's not the behavior I'm seeing, nor does it seem that a depth_stencil
+            // buffer isn't compatible with a depth attachment (e.g. stencil is unused).
+            if (type.attachment == GL_DEPTH_ATTACHMENT)
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, type.attachment, GL_TEXTURE_2D, 0, 0);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                       tex, 0);
+                EXPECT_GLENUM_NE(GL_NO_ERROR, glGetError());
+                EXPECT_GLENUM_NE(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+                glClear(GL_DEPTH_BUFFER_BIT);
+                EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                EXPECT_GL_NO_ERROR();
+            }
+        }
     }
 }
 

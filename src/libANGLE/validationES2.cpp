@@ -730,9 +730,7 @@ bool ValidateES2CopyTexImageParameters(Context *context,
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_COMPONENT16:
             case GL_DEPTH_COMPONENT32_OES:
-            case GL_DEPTH_STENCIL_OES:
-            case GL_DEPTH24_STENCIL8_OES:
-                if (context->getExtensions().depthTextureANGLE)
+                if (context->getExtensions().depthTextureAny())
                 {
                     context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
                     return false;
@@ -742,6 +740,21 @@ bool ValidateES2CopyTexImageParameters(Context *context,
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
                 }
+                break;
+            case GL_DEPTH_STENCIL_OES:
+            case GL_DEPTH24_STENCIL8_OES:
+                if (context->getExtensions().depthTextureAny() ||
+                    context->getExtensions().packedDepthStencil)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
+                    return false;
+                }
+                else
+                {
+                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                    return false;
+                }
+                break;
             default:
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -1497,7 +1510,9 @@ bool ValidateES2TexImageParameters(Context *context,
                 break;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
-                if (!context->getExtensions().depthTextureANGLE)
+                if (!context->getExtensions().depthTextureANGLE &&
+                    !(context->getExtensions().packedDepthStencil &&
+                      context->getExtensions().depthTextureOES))
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
@@ -1509,15 +1524,18 @@ bool ValidateES2TexImageParameters(Context *context,
                 }
                 // OES_depth_texture supports loading depth data and multiple levels,
                 // but ANGLE_depth_texture does not
-                if (pixels != nullptr)
+                if (!context->getExtensions().depthTextureOES)
                 {
-                    context->validationError(GL_INVALID_OPERATION, kPixelDataNotNull);
-                    return false;
-                }
-                if (level != 0)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kLevelNotZero);
-                    return false;
+                    if (pixels != nullptr)
+                    {
+                        context->validationError(GL_INVALID_OPERATION, kPixelDataNotNull);
+                        return false;
+                    }
+                    if (level != 0)
+                    {
+                        context->validationError(GL_INVALID_OPERATION, kLevelNotZero);
+                        return false;
+                    }
                 }
                 break;
             default:
@@ -1587,8 +1605,16 @@ bool ValidateES2TexImageParameters(Context *context,
                     break;
 
                 case GL_DEPTH_COMPONENT:
+                    if (!(context->getExtensions().depthTextureAny()))
+                    {
+                        context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+                        return false;
+                    }
+                    break;
+
                 case GL_DEPTH_STENCIL:
-                    if (!context->getExtensions().depthTextureANGLE)
+                    if (!(context->getExtensions().depthTextureANGLE ||
+                          context->getExtensions().packedDepthStencil))
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1883,8 +1909,7 @@ bool ValidateES2TexStorageParameters(Context *context,
             break;
         case GL_DEPTH_COMPONENT16:
         case GL_DEPTH_COMPONENT32_OES:
-        case GL_DEPTH24_STENCIL8_OES:
-            if (!context->getExtensions().depthTextureANGLE)
+            if (!(context->getExtensions().depthTextureAny()))
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -1895,12 +1920,39 @@ bool ValidateES2TexStorageParameters(Context *context,
                 return false;
             }
             // ANGLE_depth_texture only supports 1-level textures
-            if (levels != 1)
+            if (!context->getExtensions().depthTextureOES)
             {
-                context->validationError(GL_INVALID_OPERATION, kInvalidMipLevels);
-                return false;
+                if (levels != 1)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidMipLevels);
+                    return false;
+                }
             }
             break;
+        case GL_DEPTH24_STENCIL8_OES:
+            if (!(context->getExtensions().depthTextureANGLE ||
+                  (context->getExtensions().packedDepthStencil &&
+                   context->getExtensions().textureStorage)))
+            {
+                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                return false;
+            }
+            if (target != TextureType::_2D)
+            {
+                context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                return false;
+            }
+            if (!context->getExtensions().packedDepthStencil)
+            {
+                // ANGLE_depth_texture only supports 1-level textures
+                if (levels != 1)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidMipLevels);
+                    return false;
+                }
+            }
+            break;
+
         default:
             break;
     }

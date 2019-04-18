@@ -117,6 +117,9 @@ struct Extensions
     // GL_EXT_texture_compression_bptc
     void setTextureExtensionSupport(const TextureCapsMap &textureCaps);
 
+    // indicate if any depth texture extension is available
+    bool depthTextureAny() const { return (depthTextureANGLE || depthTextureOES); }
+
     // ES2 Extension support
 
     // GL_OES_element_index_uint
@@ -239,6 +242,9 @@ struct Extensions
 
     // GL_ANGLE_depth_texture
     bool depthTextureANGLE;
+
+    // OES_depth_texture
+    bool depthTextureOES;
 
     // GL_OES_depth32
     // Allows DEPTH_COMPONENT32_OES as a valid Renderbuffer format.

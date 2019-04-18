@@ -143,6 +143,18 @@ struct FeaturesVk : angle::FeatureSetBase
         "On Windows Intel, when the scissor is (0,0,0,0), the driver acts as if the "
         "scissor was disabled",
         &members, "http://anglebug.com/3153"};
+
+    // OES_depth_texture is a commonly expected feature on Android. However it
+    // requires that D16_UNORM support texture filtering
+    // (e.g. VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT) and some devices
+    // do not. Work-around this by setting saying D16_UNORM supports filtering
+    // anyway.
+    angle::Feature forceD16TexFilter = {
+        "force_D16_texture_filter", angle::FeatureCategory::VulkanWorkarounds,
+        "On some Android devices, VK_FORMAT_D16_UNORM does not support "
+        "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, "
+        "which prevents OES_depth_texture from being supported.",
+        &members, "http://anglebug.com/3452"};
 };
 
 inline FeaturesVk::FeaturesVk() = default;

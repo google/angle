@@ -695,7 +695,19 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::D32_UNORM:
-            // This format is not implemented in Vulkan.
+            internalFormat = GL_DEPTH_COMPONENT32_OES;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
+                    {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr},
+                    {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
+            bufferFormatID               = angle::FormatID::NONE;
+            vkBufferFormat               = VK_FORMAT_UNDEFINED;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::EAC_R11G11_SNORM_BLOCK:

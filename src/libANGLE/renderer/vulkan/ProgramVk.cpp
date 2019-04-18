@@ -221,9 +221,7 @@ ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
 
 ProgramVk::DefaultUniformBlock::~DefaultUniformBlock() = default;
 
-ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state), mUniformBlocksOffsets{}
-{
-}
+ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state), mUniformBlocksOffsets{} {}
 
 ProgramVk::~ProgramVk() = default;
 
@@ -998,8 +996,10 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
                 vk::CommandBuffer *srcLayoutChange;
                 ANGLE_TRY(image.recordCommands(contextVk, &srcLayoutChange));
 
-                image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT,
-                                   vk::ImageLayout::FragmentShaderReadOnly, srcLayoutChange);
+                VkImageAspectFlags aspectFlags = image.getAspectFlags();
+                ASSERT(aspectFlags != 0);
+                image.changeLayout(aspectFlags, vk::ImageLayout::FragmentShaderReadOnly,
+                                   srcLayoutChange);
             }
 
             image.addReadDependency(framebuffer);
@@ -1092,8 +1092,8 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
             descSet = mEmptyDescriptorSets[descriptorSetIndex];
         }
 
-        constexpr uint32_t kShaderTypeMin = static_cast<uint32_t>(gl::kGLES2ShaderTypeMin);
-        constexpr uint32_t kShaderTypeMax = static_cast<uint32_t>(gl::kGLES2ShaderTypeMax);
+        constexpr uint32_t kShaderTypeMin   = static_cast<uint32_t>(gl::kGLES2ShaderTypeMin);
+        constexpr uint32_t kShaderTypeMax   = static_cast<uint32_t>(gl::kGLES2ShaderTypeMax);
         constexpr uint32_t kShaderTypeCount = kShaderTypeMax - kShaderTypeMin + 1;
 
         // Default uniforms are encompassed in a block per shader stage, and they are assigned
