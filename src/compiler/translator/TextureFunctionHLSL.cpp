@@ -602,7 +602,8 @@ void OutputIntegerTextureSampleFunctionComputations(
     const ImmutableString &textureReference,
     ImmutableString *texCoordX,
     ImmutableString *texCoordY,
-    ImmutableString *texCoordZ)
+    ImmutableString *texCoordZ,
+    bool getDimensionsIgnoresBaseLevel)
 {
     if (!IsIntegerSampler(textureFunction.sampler))
     {
@@ -752,6 +753,15 @@ void OutputIntegerTextureSampleFunctionComputations(
         }
         else if (IsSampler2D(textureFunction.sampler))
         {
+            if (getDimensionsIgnoresBaseLevel)
+            {
+                out << "    int baseLevel = samplerMetadata[samplerIndex].baseLevel;\n";
+            }
+            else
+            {
+                out << "    int baseLevel = 0;\n";
+            }
+
             out << "    float width; float height; float levels;\n";
 
             if (textureFunction.method == TextureFunctionHLSL::TextureFunction::LOD0)
@@ -764,7 +774,8 @@ void OutputIntegerTextureSampleFunctionComputations(
             }
             else
             {
-                out << "    " << textureReference << ".GetDimensions(0, width, height, levels);\n";
+                out << "    " << textureReference
+                    << ".GetDimensions(baseLevel, width, height, levels);\n";
 
                 if (textureFunction.method == TextureFunctionHLSL::TextureFunction::IMPLICIT ||
                     textureFunction.method == TextureFunctionHLSL::TextureFunction::BIAS)
@@ -791,7 +802,8 @@ void OutputIntegerTextureSampleFunctionComputations(
                 out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
             }
 
-            out << "    " << textureReference << ".GetDimensions(mip, width, height, levels);\n";
+            out << "    " << textureReference
+                << ".GetDimensions(baseLevel + mip, width, height, levels);\n";
         }
         else if (IsSampler3D(textureFunction.sampler))
         {
@@ -1458,9 +1470,9 @@ void TextureFunctionHLSL::textureFunctionHeader(TInfoSinkBase &out,
             else
             {
                 ProjectTextureCoordinates(textureFunction, &texCoordX, &texCoordY, &texCoordZ);
-                OutputIntegerTextureSampleFunctionComputations(out, textureFunction, outputType,
-                                                               textureReference, &texCoordX,
-                                                               &texCoordY, &texCoordZ);
+                OutputIntegerTextureSampleFunctionComputations(
+                    out, textureFunction, outputType, textureReference, &texCoordX, &texCoordY,
+                    &texCoordZ, getDimensionsIgnoresBaseLevel);
                 OutputTextureSampleFunctionReturnStatement(out, textureFunction, outputType,
                                                            textureReference, samplerReference,
                                                            texCoordX, texCoordY, texCoordZ);

@@ -1152,6 +1152,38 @@ class SamplerInStructAndOtherVariableTest : public SamplerInStructTest
     }
 };
 
+class Texture2DIntegerTestES3 : public Texture2DTest
+{
+  protected:
+    Texture2DIntegerTestES3() : Texture2DTest() {}
+
+    const char *getVertexShaderSource() override
+    {
+        return "#version 300 es\n"
+               "out vec2 texcoord;\n"
+               "in vec4 position;\n"
+               "void main()\n"
+               "{\n"
+               "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+               "    texcoord = (position.xy * 0.5) + 0.5;\n"
+               "}\n";
+    }
+
+    const char *getFragmentShaderSource() override
+    {
+        return "#version 300 es\n"
+               "precision highp float;\n"
+               "precision highp usampler2D;\n"
+               "uniform usampler2D tex;\n"
+               "in vec2 texcoord;\n"
+               "out vec4 fragColor;\n"
+               "void main()\n"
+               "{\n"
+               "    fragColor = vec4(texture(tex, texcoord));\n"
+               "}\n";
+    }
+};
+
 TEST_P(Texture2DTest, NegativeAPISubImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -4440,6 +4472,33 @@ TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, angle::GLColor::white);
 }
 
+// Draw a quad with an integer texture with a non-zero base level, and test that the color of the
+// texture is output.
+TEST_P(Texture2DIntegerTestES3, IntegerTextureNonZeroBaseLevel)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    int width     = getWindowWidth();
+    int height    = getWindowHeight();
+    GLColor color = GLColor::green;
+    std::vector<GLColor> pixels(width * height, color);
+    GLint baseLevel = 1;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, baseLevel);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, baseLevel, GL_RGBA8UI, width, height, 0, GL_RGBA_INTEGER,
+                 GL_UNSIGNED_BYTE, pixels.data());
+
+    setUpProgram();
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+    EXPECT_PIXEL_COLOR_EQ(width - 1, height - 1, color);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
@@ -4539,5 +4598,6 @@ ANGLE_INSTANTIATE_TEST(TextureBorderClampIntegerTestES3, ES3_D3D11(), ES3_OPENGL
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureCubeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(Texture2DIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
 
 }  // anonymous namespace
