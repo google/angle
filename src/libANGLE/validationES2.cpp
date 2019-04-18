@@ -732,7 +732,7 @@ bool ValidateES2CopyTexImageParameters(Context *context,
             case GL_DEPTH_COMPONENT32_OES:
             case GL_DEPTH_STENCIL_OES:
             case GL_DEPTH24_STENCIL8_OES:
-                if (context->getExtensions().depthTextures)
+                if (context->getExtensions().depthTextureANGLE)
                 {
                     context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
                     return false;
@@ -1497,7 +1497,7 @@ bool ValidateES2TexImageParameters(Context *context,
                 break;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
-                if (!context->getExtensions().depthTextures)
+                if (!context->getExtensions().depthTextureANGLE)
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
@@ -1588,7 +1588,7 @@ bool ValidateES2TexImageParameters(Context *context,
 
                 case GL_DEPTH_COMPONENT:
                 case GL_DEPTH_STENCIL:
-                    if (!context->getExtensions().depthTextures)
+                    if (!context->getExtensions().depthTextureANGLE)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1884,7 +1884,7 @@ bool ValidateES2TexStorageParameters(Context *context,
         case GL_DEPTH_COMPONENT16:
         case GL_DEPTH_COMPONENT32_OES:
         case GL_DEPTH24_STENCIL8_OES:
-            if (!context->getExtensions().depthTextures)
+            if (!context->getExtensions().depthTextureANGLE)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;

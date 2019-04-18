@@ -673,7 +673,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
         // Disable depth texture support on AMD cards (See ANGLE issue 839)
         if (IsAMD(adapterId.VendorId))
         {
-            extensions->depthTextures = false;
+            extensions->depthTextureANGLE = false;
         }
     }
     else
