@@ -70,6 +70,30 @@
       "revId": "6cde84bd848fb93812595be1568701d0f98558fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ba36b0d_d30e19e1",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-18T12:56:36Z",
+      "side": 1,
+      "message": "Unexpected passing count would be useful statistic too, why not? The gles3 suppressions on Vulkan are a bit too broad at the moment, so unexpected passes would give us a better understanding of how many tests really pass.",
+      "parentUuid": "3d79a726_6fd27fb3",
+      "range": {
+        "startLine": 97,
+        "startChar": 10,
+        "endLine": 97,
+        "endChar": 76
+      },
+      "revId": "6cde84bd848fb93812595be1568701d0f98558fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
