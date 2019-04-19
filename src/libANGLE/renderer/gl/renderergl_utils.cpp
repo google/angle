@@ -1108,6 +1108,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
     if (functions->hasGLExtension("GL_NV_viewport_array2"))
     {
+        extensions->multiview  = true;
         extensions->multiview2 = true;
         // GL_MAX_ARRAY_TEXTURE_LAYERS is guaranteed to be at least 256.
         const int maxLayers = QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS);
@@ -1204,8 +1205,8 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureStorageMultisample2DArray =
         functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2));
 
-    extensions->multiviewMultisample =
-        extensions->textureStorageMultisample2DArray && extensions->multiview2;
+    extensions->multiviewMultisample = extensions->textureStorageMultisample2DArray &&
+                                       (extensions->multiview || extensions->multiview2);
 
     extensions->textureMultisample = functions->isAtLeastGL(gl::Version(3, 2)) ||
                                      functions->hasGLExtension("GL_ARB_texture_multisample");

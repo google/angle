@@ -1866,7 +1866,7 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
 
     mShaderConstants.init(caps);
 
-    mIsMultiviewEnabled = extensions.multiview2;
+    mIsMultiviewEnabled = extensions.multiview || extensions.multiview2;
 
     ANGLE_TRY(mVertexDataManager.initialize(context));
 

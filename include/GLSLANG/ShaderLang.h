@@ -332,6 +332,7 @@ struct ShBuiltInResources
     int EXT_shader_framebuffer_fetch;
     int NV_shader_framebuffer_fetch;
     int ARM_shader_framebuffer_fetch;
+    int OVR_multiview;
     int OVR_multiview2;
     int EXT_YUV_target;
     int EXT_geometry_shader;

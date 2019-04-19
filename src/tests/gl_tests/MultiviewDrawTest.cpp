@@ -57,7 +57,8 @@ std::ostream &operator<<(std::ostream &os, const MultiviewRenderTestParams &para
     return os;
 }
 
-class MultiviewFramebufferTestBase : public MultiviewTestBase
+class MultiviewFramebufferTestBase : public MultiviewTestBase,
+                                     public ::testing::TestWithParam<MultiviewRenderTestParams>
 {
   protected:
     MultiviewFramebufferTestBase(const PlatformParameters &params, int samples)
@@ -181,6 +182,49 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
         return ReadColor(x, y);
     }
 
+    // Requests the OVR_multiview(2) extension and returns true if the operation succeeds.
+    bool requestMultiviewExtension(bool requireMultiviewMultisample)
+    {
+        if (!EnsureGLExtensionEnabled(extensionName()))
+        {
+            std::cout << "Test skipped due to missing " << extensionName() << "." << std::endl;
+            return false;
+        }
+
+        if (requireMultiviewMultisample)
+        {
+            if (!EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+            {
+                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                          << std::endl;
+                return false;
+            }
+
+            if (!EnsureGLExtensionEnabled("GL_ANGLE_multiview_multisample"))
+            {
+                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                          << std::endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool requestMultiviewExtension() { return requestMultiviewExtension(false); }
+    std::string extensionName()
+    {
+        switch (GetParam().mMultiviewExtension)
+        {
+            case multiview:
+                return "GL_OVR_multiview";
+            case multiview2:
+                return "GL_OVR_multiview2";
+            default:
+                // Ignore unknown.
+                return "";
+        }
+    }
+
     bool isMultisampled() { return mSamples > 0; }
 
     int mViewWidth;
@@ -236,8 +280,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
     }
 };
 
-class MultiviewRenderTest : public MultiviewFramebufferTestBase,
-                            public ::testing::TestWithParam<MultiviewRenderTestParams>
+class MultiviewRenderTest : public MultiviewFramebufferTestBase
 {
   protected:
     MultiviewRenderTest() : MultiviewFramebufferTestBase(GetParam(), GetParam().mSamples) {}
@@ -263,24 +306,61 @@ class MultiviewRenderTest : public MultiviewFramebufferTestBase,
     }
 };
 
-constexpr char kDualViewVSSource[] = R"(#version 300 es
-#extension GL_OVR_multiview2 : require
-layout(num_views = 2) in;
-in vec4 vPosition;
-void main()
+std::string DualViewVS(ExtensionName multiviewExtension)
 {
-   gl_Position.x = (gl_ViewID_OVR == 0u ? vPosition.x * 0.5 + 0.5 : vPosition.x * 0.5 - 0.5);
-   gl_Position.yzw = vPosition.yzw;
-})";
+    std::string ext;
+    switch (multiviewExtension)
+    {
+        case multiview:
+            ext = "GL_OVR_multiview";
+            break;
+        case multiview2:
+            ext = "GL_OVR_multiview2";
+            break;
+    }
 
-constexpr char kDualViewFSSource[] = R"(#version 300 es
-#extension GL_OVR_multiview2 : require
-precision mediump float;
-out vec4 col;
-void main()
+    std::string dualViewVSSource =
+        "#version 300 es\n"
+        "#extension " +
+        ext +
+        " : require\n"
+        "layout(num_views = 2) in;\n"
+        "in vec4 vPosition;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position.x = (gl_ViewID_OVR == 0u ? vPosition.x * 0.5 + 0.5 : vPosition.x * 0.5 - "
+        "0.5);\n"
+        "   gl_Position.yzw = vPosition.yzw;\n"
+        "}\n";
+    return dualViewVSSource;
+}
+
+std::string DualViewFS(ExtensionName multiviewExtension)
 {
-   col = vec4(0,1,0,1);
-})";
+    std::string ext;
+    switch (multiviewExtension)
+    {
+        case multiview:
+            ext = "GL_OVR_multiview";
+            break;
+        case multiview2:
+            ext = "GL_OVR_multiview2";
+            break;
+    }
+
+    std::string dualViewFSSource =
+        "#version 300 es\n"
+        "#extension " +
+        ext +
+        " : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "  col = vec4(0,1,0,1);\n"
+        "}\n";
+    return dualViewFSSource;
+}
 
 class MultiviewRenderDualViewTest : public MultiviewRenderTest
 {
@@ -295,7 +375,8 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
         }
 
         updateFBOs(2, 1, 2);
-        mProgram = CompileProgram(kDualViewVSSource, kDualViewFSSource);
+        mProgram = CompileProgram(DualViewVS(GetParam().mMultiviewExtension).c_str(),
+                                  DualViewFS(GetParam().mMultiviewExtension).c_str());
         ASSERT_NE(mProgram, 0u);
         glUseProgram(mProgram);
         ASSERT_GL_NO_ERROR();
@@ -367,12 +448,7 @@ class MultiviewOcclusionQueryTest : public MultiviewRenderTest
 
     bool requestOcclusionQueryExtension()
     {
-        if (IsGLExtensionRequestable("GL_EXT_occlusion_query_boolean"))
-        {
-            glRequestExtensionANGLE("GL_EXT_occlusion_query_boolean");
-        }
-
-        if (!IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"))
+        if (!EnsureGLExtensionEnabled("GL_EXT_occlusion_query_boolean"))
         {
             std::cout << "Test skipped due to missing GL_EXT_occlusion_query_boolean." << std::endl;
             return false;
@@ -444,8 +520,7 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
     GLuint mVBO;
 };
 
-class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase,
-                                   public ::testing::TestWithParam<MultiviewImplementationParams>
+class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase
 {
   protected:
     MultiviewLayeredRenderTest() : MultiviewFramebufferTestBase(GetParam(), 0) {}
@@ -462,9 +537,11 @@ TEST_P(MultiviewDrawValidationTest, IndirectDraw)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 color;\n"
         "void main()\n"
@@ -486,13 +563,15 @@ TEST_P(MultiviewDrawValidationTest, IndirectDraw)
 
     // Check that no errors are generated with the framebuffer having 2 views.
     {
-        constexpr char kVS[] =
+        const std::string VS =
             "#version 300 es\n"
-            "#extension GL_OVR_multiview2 : require\n"
+            "#extension " +
+            extensionName() +
+            ": require\n"
             "layout(num_views = 2) in;\n"
             "void main()\n"
             "{}\n";
-        ANGLE_GL_PROGRAM(program, kVS, kFS);
+        ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
         glUseProgram(program);
 
         GLTexture tex2DArray;
@@ -509,13 +588,15 @@ TEST_P(MultiviewDrawValidationTest, IndirectDraw)
 
     // Check that no errors are generated if the number of views is 1.
     {
-        constexpr char kVS[] =
+        const std::string VS =
             "#version 300 es\n"
-            "#extension GL_OVR_multiview2 : require\n"
+            "#extension " +
+            extensionName() +
+            ": require\n"
             "layout(num_views = 1) in;\n"
             "void main()\n"
             "{}\n";
-        ANGLE_GL_PROGRAM(program, kVS, kFS);
+        ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
         glUseProgram(program);
 
         GLTexture tex2D;
@@ -539,20 +620,24 @@ TEST_P(MultiviewDrawValidationTest, NumViewsMismatch)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{}\n";
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 color;\n"
         "void main()\n"
         "{color = vec4(1);}\n";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     glUseProgram(program);
 
     GLVertexArray vao;
@@ -663,7 +748,9 @@ void main()
 
     std::vector<std::string> dualViewTFVaryings;
     dualViewTFVaryings.emplace_back("gl_Position");
-    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(dualViewProgram, kDualViewVSSource, kDualViewFSSource,
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(dualViewProgram,
+                                        DualViewVS(GetParam().mMultiviewExtension).c_str(),
+                                        DualViewFS(GetParam().mMultiviewExtension).c_str(),
                                         dualViewTFVaryings, GL_SEPARATE_ATTRIBS);
 
     GLVertexArray vao;
@@ -757,7 +844,8 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
 
-    ANGLE_GL_PROGRAM(dualViewProgram, kDualViewVSSource, kDualViewFSSource);
+    ANGLE_GL_PROGRAM(dualViewProgram, DualViewVS(GetParam().mMultiviewExtension).c_str(),
+                     DualViewFS(GetParam().mMultiviewExtension).c_str());
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -876,9 +964,11 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        " : require\n"
         "layout(num_views = 4) in;\n"
         "in vec4 vPosition;\n"
         "void main()\n"
@@ -895,9 +985,11 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
         "   gl_Position.yzw = vPosition.yzw;\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        " : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -906,7 +998,7 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
         "}\n";
 
     updateFBOs(4, 1, 4);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -934,9 +1026,11 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec4 vPosition;\n"
         "void main()\n"
@@ -951,9 +1045,11 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
         "       gl_Position.yzw = p.yzw;\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -965,7 +1061,7 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
     const int kViewHeight = 2;
     const int kNumViews   = 2;
     updateFBOs(kViewWidth, kViewHeight, kNumViews);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     drawQuadInstanced(program, "vPosition", 0.0f, 1.0f, true, 2u);
     ASSERT_GL_NO_ERROR();
@@ -1007,9 +1103,11 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         ignoreD3D11SDKLayersWarnings();
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        " : require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "in float offsetX;\n"
@@ -1022,9 +1120,11 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         "       gl_Position.yzw = p.yzw;\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1036,7 +1136,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
     const int kViewHeight = 4;
     const int kNumViews   = 2;
     updateFBOs(kViewWidth, kViewHeight, kNumViews);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     GLBuffer xOffsetVBO;
     glBindBuffer(GL_ARRAY_BUFFER, xOffsetVBO);
@@ -1087,9 +1187,11 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
     updateFBOs(1, 1, 2);
 
     // Create multiview program.
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "layout(location = 0) in vec2 vPosition;\n"
         "layout(location = 1) in float offsetX;\n"
@@ -1100,9 +1202,11 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
         "       gl_Position = p;\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        " : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1110,7 +1214,7 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
         "    col = vec4(0,1,0,1);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     constexpr char kDummyVS[] =
         "#version 300 es\n"
@@ -1247,9 +1351,11 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryNothingVisible)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
     ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "void main()\n"
@@ -1258,16 +1364,18 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryNothingVisible)
         "       gl_Position.yzw = vec3(vPosition.yz, 1.);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        " : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
         "    col = vec4(1,0,0,0);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     updateFBOs(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
@@ -1282,9 +1390,11 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
     ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "void main()\n"
@@ -1293,16 +1403,18 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
         "       gl_Position.yzw = vec3(vPosition.yz, 1.);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
         "    col = vec4(1,0,0,0);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     updateFBOs(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
@@ -1317,9 +1429,11 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
     ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "void main()\n"
@@ -1328,16 +1442,18 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
         "       gl_Position.yzw = vec3(vPosition.yz, 1.);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
         "    col = vec4(1,0,0,0);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     updateFBOs(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
@@ -1354,23 +1470,27 @@ TEST_P(MultiviewProgramGenerationTest, SimpleProgram)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     glUseProgram(program);
 
     EXPECT_GL_NO_ERROR();
@@ -1385,9 +1505,11 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInVertexShader)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
@@ -1398,15 +1520,17 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInVertexShader)
         "   }\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     glUseProgram(program);
 
     EXPECT_GL_NO_ERROR();
@@ -1421,17 +1545,21 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInFragmentShader)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1443,7 +1571,7 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInFragmentShader)
         "   }\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     glUseProgram(program);
 
     EXPECT_GL_NO_ERROR();
@@ -1460,9 +1588,11 @@ TEST_P(MultiviewRenderPrimitiveTest, Points)
     // Test failing on P400 graphics card (anglebug.com/2228)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "layout(location=0) in vec2 vPosition;\n"
         "void main()\n"
@@ -1471,16 +1601,18 @@ TEST_P(MultiviewRenderPrimitiveTest, Points)
         "   gl_Position = vec4(vPosition.xy, 0.0, 1.0);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
         "   col = vec4(0,1,0,1);\n"
         "}\n";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
     glUseProgram(program);
 
     const int kViewWidth  = 4;
@@ -1513,7 +1645,7 @@ TEST_P(MultiviewRenderPrimitiveTest, Lines)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram(2);
+    GLuint program = CreateSimplePassthroughProgram(2, GetParam().mMultiviewExtension);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1550,7 +1682,7 @@ TEST_P(MultiviewRenderPrimitiveTest, LineStrip)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram(2);
+    GLuint program = CreateSimplePassthroughProgram(2, GetParam().mMultiviewExtension);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1587,7 +1719,7 @@ TEST_P(MultiviewRenderPrimitiveTest, LineLoop)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram(2);
+    GLuint program = CreateSimplePassthroughProgram(2, GetParam().mMultiviewExtension);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1621,7 +1753,7 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleStrip)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram(2);
+    GLuint program = CreateSimplePassthroughProgram(2, GetParam().mMultiviewExtension);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1652,7 +1784,7 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram(2);
+    GLuint program = CreateSimplePassthroughProgram(2, GetParam().mMultiviewExtension);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1696,9 +1828,11 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
     const int kViewHeight = 1;
     const int kNumViews   = 2;
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "in vec4 oColor;\n"
         "out vec4 col;\n"
@@ -1707,10 +1841,12 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
         "    col = oColor;\n"
         "}\n";
 
-    auto generateVertexShaderSource = [](int numViews) -> std::string {
+    auto generateVertexShaderSource = [](int numViews, std::string extensionName) -> std::string {
         std::string source =
             "#version 300 es\n"
-            "#extension GL_OVR_multiview2 : require\n"
+            "#extension " +
+            extensionName +
+            ": require\n"
             "layout(num_views = " +
             ToString(numViews) +
             ") in;\n"
@@ -1728,8 +1864,8 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
         return source;
     };
 
-    std::string vsSource = generateVertexShaderSource(kNumViews);
-    ANGLE_GL_PROGRAM(program, vsSource.c_str(), kFS);
+    std::string vsSource = generateVertexShaderSource(kNumViews, extensionName());
+    ANGLE_GL_PROGRAM(program, vsSource.c_str(), FS.c_str());
     glUseProgram(program);
 
     GLint positionLoc;
@@ -1774,12 +1910,12 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
 
     {
         const int kNewNumViews = 3;
-        vsSource               = generateVertexShaderSource(kNewNumViews);
+        vsSource               = generateVertexShaderSource(kNewNumViews, extensionName());
         updateFBOs(kViewWidth, kViewHeight, kNewNumViews);
 
         GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource.c_str());
         ASSERT_NE(0u, vs);
-        GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
+        GLuint fs = CompileShader(GL_FRAGMENT_SHADER, FS.c_str());
         ASSERT_NE(0u, fs);
 
         GLint numAttachedShaders = 0;
@@ -1859,7 +1995,7 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
         updateFBOs(4, 1, numViews);
         ASSERT_GL_NO_ERROR();
 
-        GLuint program = CreateSimplePassthroughProgram(numViews);
+        GLuint program = CreateSimplePassthroughProgram(numViews, GetParam().mMultiviewExtension);
         ASSERT_NE(program, 0u);
         glUseProgram(program);
         ASSERT_GL_NO_ERROR();
@@ -1891,9 +2027,11 @@ TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 3) in;\n"
         "in vec3 vPosition;\n"
         "void main()\n"
@@ -1901,9 +2039,11 @@ TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
         "   gl_Position = vec4(vPosition, 1.);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1920,7 +2060,7 @@ TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
         "}\n";
 
     updateFBOs(1, 1, 3);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -1940,9 +2080,11 @@ TEST_P(MultiviewLayeredRenderTest, RenderToSubrangeOfLayers)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "void main()\n"
@@ -1950,9 +2092,11 @@ TEST_P(MultiviewLayeredRenderTest, RenderToSubrangeOfLayers)
         "   gl_Position = vec4(vPosition, 1.);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1961,7 +2105,7 @@ TEST_P(MultiviewLayeredRenderTest, RenderToSubrangeOfLayers)
         "}\n";
 
     updateFBOs(1, 1, 2, 4, 1);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -1986,9 +2130,11 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "flat out int oInstanceID;\n"
@@ -1998,9 +2144,11 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
         "   oInstanceID = gl_InstanceID;\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "flat in int oInstanceID;\n"
         "out vec4 col;\n"
@@ -2017,7 +2165,7 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
         "}\n";
 
     updateFBOs(1, 1, 2);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -2036,9 +2184,11 @@ TEST_P(MultiviewRenderTest, FlatInterpolation2)
         return;
     }
 
-    constexpr char kVS[] =
+    const std::string VS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "flat out int flatVarying;\n"
@@ -2048,9 +2198,11 @@ TEST_P(MultiviewRenderTest, FlatInterpolation2)
         "   flatVarying = int(gl_ViewID_OVR);\n"
         "}\n";
 
-    constexpr char kFS[] =
+    const std::string FS =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
         "precision mediump float;\n"
         "flat in int flatVarying;\n"
         "out vec4 col;\n"
@@ -2064,7 +2216,7 @@ TEST_P(MultiviewRenderTest, FlatInterpolation2)
         "}\n";
 
     updateFBOs(1, 1, 2);
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, VS.c_str(), FS.c_str());
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -2074,56 +2226,81 @@ TEST_P(MultiviewRenderTest, FlatInterpolation2)
     EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 }
 
-MultiviewRenderTestParams VertexShaderOpenGL()
+MultiviewRenderTestParams VertexShaderOpenGL(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(0, VertexShaderOpenGL(3, 0));
+    return MultiviewRenderTestParams(0, VertexShaderOpenGL(3, 0, multiviewExtension));
 }
 
-MultiviewRenderTestParams GeomShaderD3D11()
+MultiviewRenderTestParams GeomShaderD3D11(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(0, GeomShaderD3D11(3, 0));
+    return MultiviewRenderTestParams(0, GeomShaderD3D11(3, 0, multiviewExtension));
 }
 
-MultiviewRenderTestParams VertexShaderD3D11()
+MultiviewRenderTestParams VertexShaderD3D11(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(0, VertexShaderD3D11(3, 0));
+    return MultiviewRenderTestParams(0, VertexShaderD3D11(3, 0, multiviewExtension));
 }
 
-MultiviewRenderTestParams MultisampledVertexShaderOpenGL()
+MultiviewRenderTestParams MultisampledVertexShaderOpenGL(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(2, VertexShaderOpenGL(3, 1));
+    return MultiviewRenderTestParams(2, VertexShaderOpenGL(3, 1, multiviewExtension));
 }
 
-MultiviewRenderTestParams MultisampledVertexShaderD3D11()
+MultiviewRenderTestParams MultisampledVertexShaderD3D11(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(2, VertexShaderD3D11(3, 1));
+    return MultiviewRenderTestParams(2, VertexShaderD3D11(3, 1, multiviewExtension));
 }
 
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest,
-                       VertexShaderOpenGL(3, 1),
-                       VertexShaderD3D11(3, 1));
+                       VertexShaderOpenGL(3, 1, ExtensionName::multiview),
+                       VertexShaderD3D11(3, 1, ExtensionName::multiview),
+                       VertexShaderOpenGL(3, 1, ExtensionName::multiview2),
+                       VertexShaderD3D11(3, 1, ExtensionName::multiview2));
 ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest,
-                       VertexShaderOpenGL(),
-                       MultisampledVertexShaderOpenGL(),
-                       GeomShaderD3D11(),
-                       VertexShaderD3D11(),
-                       MultisampledVertexShaderD3D11());
+                       VertexShaderOpenGL(ExtensionName::multiview),
+                       MultisampledVertexShaderOpenGL(ExtensionName::multiview),
+                       GeomShaderD3D11(ExtensionName::multiview),
+                       VertexShaderD3D11(ExtensionName::multiview),
+                       MultisampledVertexShaderD3D11(ExtensionName::multiview),
+                       VertexShaderOpenGL(ExtensionName::multiview2),
+                       MultisampledVertexShaderOpenGL(ExtensionName::multiview2),
+                       GeomShaderD3D11(ExtensionName::multiview2),
+                       VertexShaderD3D11(ExtensionName::multiview2),
+                       MultisampledVertexShaderD3D11(ExtensionName::multiview2));
 ANGLE_INSTANTIATE_TEST(MultiviewRenderTest,
-                       VertexShaderOpenGL(),
-                       MultisampledVertexShaderOpenGL(),
-                       GeomShaderD3D11(),
-                       VertexShaderD3D11(),
-                       MultisampledVertexShaderD3D11());
+                       VertexShaderOpenGL(ExtensionName::multiview),
+                       MultisampledVertexShaderOpenGL(ExtensionName::multiview),
+                       GeomShaderD3D11(ExtensionName::multiview),
+                       VertexShaderD3D11(ExtensionName::multiview),
+                       MultisampledVertexShaderD3D11(ExtensionName::multiview),
+                       VertexShaderOpenGL(ExtensionName::multiview2),
+                       MultisampledVertexShaderOpenGL(ExtensionName::multiview2),
+                       GeomShaderD3D11(ExtensionName::multiview2),
+                       VertexShaderD3D11(ExtensionName::multiview2),
+                       MultisampledVertexShaderD3D11(ExtensionName::multiview2));
 ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest,
-                       VertexShaderOpenGL(),
-                       GeomShaderD3D11(),
-                       VertexShaderD3D11());
+                       VertexShaderOpenGL(ExtensionName::multiview),
+                       GeomShaderD3D11(ExtensionName::multiview),
+                       VertexShaderD3D11(ExtensionName::multiview),
+                       VertexShaderOpenGL(ExtensionName::multiview2),
+                       GeomShaderD3D11(ExtensionName::multiview2),
+                       VertexShaderD3D11(ExtensionName::multiview2));
 ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest,
-                       VertexShaderOpenGL(3, 0),
-                       GeomShaderD3D11(3, 0),
-                       VertexShaderD3D11(3, 0));
+                       VertexShaderOpenGL(3, 0, ExtensionName::multiview),
+                       GeomShaderD3D11(3, 0, ExtensionName::multiview),
+                       VertexShaderD3D11(3, 0, ExtensionName::multiview),
+                       VertexShaderOpenGL(3, 0, ExtensionName::multiview2),
+                       GeomShaderD3D11(3, 0, ExtensionName::multiview2),
+                       VertexShaderD3D11(3, 0, ExtensionName::multiview2));
 ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
-                       VertexShaderOpenGL(),
-                       GeomShaderD3D11(),
-                       VertexShaderD3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest, VertexShaderOpenGL(3, 0), GeomShaderD3D11(3, 0));
+                       VertexShaderOpenGL(ExtensionName::multiview),
+                       GeomShaderD3D11(ExtensionName::multiview),
+                       VertexShaderD3D11(ExtensionName::multiview),
+                       VertexShaderOpenGL(ExtensionName::multiview2),
+                       GeomShaderD3D11(ExtensionName::multiview2),
+                       VertexShaderD3D11(ExtensionName::multiview2));
+ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest,
+                       VertexShaderOpenGL(ExtensionName::multiview),
+                       GeomShaderD3D11(ExtensionName::multiview),
+                       VertexShaderOpenGL(ExtensionName::multiview2),
+                       GeomShaderD3D11(ExtensionName::multiview2));

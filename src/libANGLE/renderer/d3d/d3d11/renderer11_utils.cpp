@@ -1619,8 +1619,9 @@ void GenerateCaps(ID3D11Device *device,
     extensions->standardDerivatives    = GetDerivativeInstructionSupport(featureLevel);
     extensions->shaderTextureLOD       = GetShaderTextureLODSupport(featureLevel);
     extensions->fragDepth              = true;
+    extensions->multiview              = IsMultiviewSupported(featureLevel);
     extensions->multiview2             = IsMultiviewSupported(featureLevel);
-    if (extensions->multiview2)
+    if (extensions->multiview || extensions->multiview2)
     {
         extensions->maxViews =
             std::min(static_cast<GLuint>(gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS),
@@ -1643,12 +1644,12 @@ void GenerateCaps(ID3D11Device *device,
     extensions->copyTexture                      = true;
     extensions->copyCompressedTexture            = true;
     extensions->textureStorageMultisample2DArray = true;
-    extensions->multiviewMultisample =
-        (extensions->multiview2 && extensions->textureStorageMultisample2DArray);
-    extensions->copyTexture3d      = true;
-    extensions->textureBorderClamp = true;
-    extensions->textureMultisample = true;
-    extensions->provokingVertex    = true;
+    extensions->multiviewMultisample     = ((extensions->multiview || extensions->multiview2) &&
+                                        extensions->textureStorageMultisample2DArray);
+    extensions->copyTexture3d            = true;
+    extensions->textureBorderClamp       = true;
+    extensions->textureMultisample       = true;
+    extensions->provokingVertex          = true;
     extensions->blendFuncExtended        = true;
     extensions->maxDualSourceDrawBuffers = 1;
 

@@ -100,6 +100,7 @@ angle_unittests_sources = [
   "../tests/compiler_tests/UnfoldShortCircuitAST_test.cpp",
   "../tests/compiler_tests/VariablePacker_test.cpp",
   "../tests/compiler_tests/VectorizeVectorScalarArithmetic_test.cpp",
+  "../tests/compiler_tests/OVR_multiview_test.cpp",
   "../tests/compiler_tests/OVR_multiview2_test.cpp",
   "../tests/compiler_tests/WorkGroupSize_test.cpp",
   "../tests/test_expectations/GPUTestExpectationsParser_unittest.cpp",

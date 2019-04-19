@@ -42,6 +42,7 @@ class TParseContext : angle::NonCopyable
                   const ShBuiltInResources &resources);
     ~TParseContext();
 
+    bool anyMultiviewExtensionAvailable();
     const angle::pp::Preprocessor &getPreprocessor() const { return mPreprocessor; }
     angle::pp::Preprocessor &getPreprocessor() { return mPreprocessor; }
     void *getScanner() const { return mScanner; }

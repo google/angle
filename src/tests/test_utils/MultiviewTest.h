@@ -14,10 +14,15 @@
 
 namespace angle
 {
+enum ExtensionName
+{
+    multiview,
+    multiview2
+};
 
 // Creates a simple program that passes through two-dimensional vertices and renders green
 // fragments.
-GLuint CreateSimplePassthroughProgram(int numViews);
+GLuint CreateSimplePassthroughProgram(int numViews, ExtensionName multiviewExtension);
 
 // Create a 2D texture array to use for multiview rendering. Texture ids should be
 // created beforehand. If depthTexture or stencilTexture is 0, it will not be initialized.
@@ -60,17 +65,26 @@ struct MultiviewImplementationParams : public PlatformParameters
     MultiviewImplementationParams(GLint majorVersion,
                                   GLint minorVersion,
                                   bool forceUseGeometryShaderOnD3D,
-                                  const EGLPlatformParameters &eglPlatformParameters)
+                                  const EGLPlatformParameters &eglPlatformParameters,
+                                  ExtensionName multiviewExtension)
         : PlatformParameters(majorVersion, minorVersion, eglPlatformParameters),
-          mForceUseGeometryShaderOnD3D(forceUseGeometryShaderOnD3D)
+          mForceUseGeometryShaderOnD3D(forceUseGeometryShaderOnD3D),
+          mMultiviewExtension(multiviewExtension)
     {}
     bool mForceUseGeometryShaderOnD3D;
+    ExtensionName mMultiviewExtension;
 };
 std::ostream &operator<<(std::ostream &os, const MultiviewImplementationParams &params);
 
-MultiviewImplementationParams VertexShaderOpenGL(GLint majorVersion, GLint minorVersion);
-MultiviewImplementationParams VertexShaderD3D11(GLint majorVersion, GLint minorVersion);
-MultiviewImplementationParams GeomShaderD3D11(GLint majorVersion, GLint minorVersion);
+MultiviewImplementationParams VertexShaderOpenGL(GLint majorVersion,
+                                                 GLint minorVersion,
+                                                 ExtensionName multiviewExtension);
+MultiviewImplementationParams VertexShaderD3D11(GLint majorVersion,
+                                                GLint minorVersion,
+                                                ExtensionName multiviewExtension);
+MultiviewImplementationParams GeomShaderD3D11(GLint majorVersion,
+                                              GLint minorVersion,
+                                              ExtensionName multiviewExtension);
 
 class MultiviewTestBase : public ANGLETestBase
 {
@@ -93,43 +107,6 @@ class MultiviewTestBase : public ANGLETestBase
 
     void MultiviewTestBaseTearDown() { ANGLETestBase::ANGLETestTearDown(); }
 
-    // Requests the OVR_multiview2 extension and returns true if the operation succeeds.
-    bool requestMultiviewExtension(bool requireMultiviewMultisample)
-    {
-        if (IsGLExtensionRequestable("GL_OVR_multiview2"))
-        {
-            glRequestExtensionANGLE("GL_OVR_multiview2");
-        }
-
-        if (!IsGLExtensionEnabled("GL_OVR_multiview2"))
-        {
-            std::cout << "Test skipped due to missing GL_OVR_multiview2." << std::endl;
-            return false;
-        }
-
-        if (requireMultiviewMultisample)
-        {
-            if (IsGLExtensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
-            {
-                glRequestExtensionANGLE("GL_OES_texture_storage_multisample_2d_array");
-            }
-            if (IsGLExtensionRequestable("GL_ANGLE_multiview_multisample"))
-            {
-                glRequestExtensionANGLE("GL_ANGLE_multiview_multisample");
-            }
-
-            if (!IsGLExtensionEnabled("GL_ANGLE_multiview_multisample"))
-            {
-                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
-                          << std::endl;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool requestMultiviewExtension() { return requestMultiviewExtension(false); }
-
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
@@ -144,6 +121,50 @@ class MultiviewTest : public MultiviewTestBase,
 
     virtual void testSetUp() {}
     virtual void testTearDown() {}
+
+    // Requests the OVR_multiview(2) extension and returns true if the operation succeeds.
+    bool requestMultiviewExtension(bool requireMultiviewMultisample)
+    {
+        if (!EnsureGLExtensionEnabled(extensionName()))
+        {
+            std::cout << "Test skipped due to missing " << extensionName() << "." << std::endl;
+            return false;
+        }
+
+        if (requireMultiviewMultisample)
+        {
+            if (!EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+            {
+                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                          << std::endl;
+                return false;
+            }
+
+            if (!EnsureGLExtensionEnabled("GL_ANGLE_multiview_multisample"))
+            {
+                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                          << std::endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool requestMultiviewExtension() { return requestMultiviewExtension(false); }
+
+    std::string extensionName()
+    {
+        switch (GetParam().mMultiviewExtension)
+        {
+            case multiview:
+                return "GL_OVR_multiview";
+            case multiview2:
+                return "GL_OVR_multiview2";
+            default:
+                // Ignore unknown.
+                return "";
+        }
+    }
 
   private:
     void SetUp() override

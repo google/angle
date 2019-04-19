@@ -197,8 +197,9 @@ Extensions::Extensions()
       standardDerivatives(false),
       shaderTextureLOD(false),
       fragDepth(false),
-      multiview2(false),
+      multiview(false),
       maxViews(1u),
+      multiview2(false),
       textureUsage(false),
       translatedShaderSource(false),
       fboRenderMipmap(false),
@@ -865,6 +866,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivatives);
         map["GL_EXT_shader_texture_lod"] = enableableExtension(&Extensions::shaderTextureLOD);
         map["GL_EXT_frag_depth"] = enableableExtension(&Extensions::fragDepth);
+        map["GL_OVR_multiview"] = enableableExtension(&Extensions::multiview);
         map["GL_OVR_multiview2"] = enableableExtension(&Extensions::multiview2);
         map["GL_ANGLE_texture_usage"] = enableableExtension(&Extensions::textureUsage);
         map["GL_ANGLE_translated_shader_source"] = esOnlyExtension(&Extensions::translatedShaderSource);

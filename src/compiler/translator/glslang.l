@@ -82,7 +82,6 @@ static int reserved_word(yyscan_t yyscanner);
 static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
-static int ES2_ident_ES3_keyword_multiview_keyword(TParseContext *context, int token);
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
@@ -213,7 +212,7 @@ O           [0-7]
 
 "struct"       { return STRUCT; }
 
-"layout"  { return ES2_ident_ES3_keyword_multiview_keyword(context, LAYOUT); }
+"layout"  { return ES2_ident_ES3_keyword(context, LAYOUT); }
 
 "yuvCscStandardEXT"    { return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, YUVCSCSTANDARDEXT); }
 "itu_601"              { return yuvcscstandardext_constant(context); }
@@ -515,22 +514,6 @@ int ES2_ident_ES3_keyword(TParseContext *context, int token)
 
     // not a reserved word in GLSL ES 1.00, so could be used as an identifier/type name
     if (context->getShaderVersion() < 300)
-    {
-        yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
-        return check_type(yyscanner);
-    }
-
-    return token;
-}
-
-int ES2_ident_ES3_keyword_multiview_keyword(TParseContext *context, int token)
-{
-    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
-    yyscan_t yyscanner = (yyscan_t) context->getScanner();
-
-    // not a reserved word in GLSL ES 1.00, so could be used as an identifier/type name
-    // except when multiview extension is enabled
-    if (context->getShaderVersion() < 300 && !context->isExtensionEnabled(TExtension::OVR_multiview))
     {
         yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
         return check_type(yyscanner);

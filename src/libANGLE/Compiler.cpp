@@ -92,6 +92,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;
 
+    // OVR_multiview state
+    mResources.OVR_multiview = extensions.multiview;
+
     // OVR_multiview2 state
     mResources.OVR_multiview2 = extensions.multiview2;
     mResources.MaxViewsOVR    = extensions.maxViews;

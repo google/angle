@@ -756,7 +756,13 @@ TEST_P(FramebufferMultiviewTest, NegativeMultisampledFramebufferTest)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, VertexShaderOpenGL(3, 0), GeomShaderD3D11(3, 0));
+ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest,
+                       VertexShaderOpenGL(3, 0, ExtensionName::multiview),
+                       GeomShaderD3D11(3, 0, ExtensionName::multiview),
+                       VertexShaderOpenGL(3, 0, ExtensionName::multiview2),
+                       GeomShaderD3D11(3, 0, ExtensionName::multiview2));
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewLayeredClearTest,
-                       VertexShaderOpenGL(3, 0),
-                       GeomShaderD3D11(3, 0));
+                       VertexShaderOpenGL(3, 0, ExtensionName::multiview),
+                       GeomShaderD3D11(3, 0, ExtensionName::multiview),
+                       VertexShaderOpenGL(3, 0, ExtensionName::multiview2),
+                       GeomShaderD3D11(3, 0, ExtensionName::multiview2));

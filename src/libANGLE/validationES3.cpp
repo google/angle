@@ -36,7 +36,7 @@ bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
                                                   GLint level,
                                                   GLsizei numViews)
 {
-    if (!context->getExtensions().multiview2)
+    if (!(context->getExtensions().multiview || context->getExtensions().multiview2))
     {
         context->validationError(GL_INVALID_OPERATION, kMultiviewNotAvailable);
         return false;
