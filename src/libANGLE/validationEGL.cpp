@@ -1127,20 +1127,6 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
-            case EGL_POWER_PREFERENCE_ANGLE:
-                if (!display->getExtensions().powerPreference)
-                {
-                    return EglBadAttribute() << "Attribute EGL_POWER_PREFERENCE_ANGLE "
-                                                "requires EGL_ANGLE_power_preference.";
-                }
-                if (value != EGL_LOW_POWER_ANGLE && value != EGL_HIGH_POWER_ANGLE)
-                {
-                    return EglBadAttribute()
-                           << "EGL_POWER_PREFERENCE_ANGLE must be "
-                              "either EGL_LOW_POWER_ANGLE or EGL_HIGH_POWER_ANGLE.";
-                }
-                break;
-
             default:
                 return EglBadAttribute() << "Unknown attribute.";
         }

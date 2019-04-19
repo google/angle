@@ -13,9 +13,8 @@
 #include <dlfcn.h>
 
 #include "common/debug.h"
-#include "gpu_info_util/SystemInfo.h"
 #include "libANGLE/Display.h"
-#include "libANGLE/renderer/gl/cgl/ContextCGL.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
 #include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
 #include "libANGLE/renderer/gl/cgl/RendererCGL.h"
@@ -50,13 +49,7 @@ class FunctionsGLCGL : public FunctionsGL
 };
 
 DisplayCGL::DisplayCGL(const egl::DisplayState &state)
-    : DisplayGL(state),
-      mEGLDisplay(nullptr),
-      mContext(nullptr),
-      mPixelFormat(nullptr),
-      mSupportsGPUSwitching(false),
-      mDiscreteGPUPixelFormat(nullptr),
-      mDiscreteGPURefs(0)
+    : DisplayGL(state), mEGLDisplay(nullptr), mContext(nullptr), mPixelFormat(nullptr)
 {}
 
 DisplayCGL::~DisplayCGL() {}
@@ -65,25 +58,13 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
 {
     mEGLDisplay = display;
 
-    angle::SystemInfo info;
-    if (!angle::GetSystemInfo(&info))
-    {
-        return egl::EglNotInitialized() << "Unable to query ANGLE's SystemInfo.";
-    }
-    mSupportsGPUSwitching = info.isMacSwitchable;
-
     {
         // TODO(cwallez) investigate which pixel format we want
-        std::vector<CGLPixelFormatAttribute> attribs;
-        attribs.push_back(kCGLPFAOpenGLProfile);
-        attribs.push_back(static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core));
-        if (mSupportsGPUSwitching)
-        {
-            attribs.push_back(kCGLPFAAllowOfflineRenderers);
-        }
-        attribs.push_back(static_cast<CGLPixelFormatAttribute>(0));
+        CGLPixelFormatAttribute attribs[] = {
+            kCGLPFAOpenGLProfile, static_cast<CGLPixelFormatAttribute>(kCGLOGLPVersion_3_2_Core),
+            static_cast<CGLPixelFormatAttribute>(0)};
         GLint nVirtualScreens = 0;
-        CGLChoosePixelFormat(attribs.data(), &mPixelFormat, &nVirtualScreens);
+        CGLChoosePixelFormat(attribs, &mPixelFormat, &nVirtualScreens);
 
         if (mPixelFormat == nullptr)
         {
@@ -180,29 +161,7 @@ ContextImpl *DisplayCGL::createContext(const gl::State &state,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs)
 {
-    bool usesDiscreteGPU = false;
-
-    if (attribs.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE) == EGL_HIGH_POWER_ANGLE)
-    {
-        // Should have been rejected by validation if not supported.
-        ASSERT(mSupportsGPUSwitching);
-        // Create discrete pixel format if necessary.
-        if (!mDiscreteGPUPixelFormat)
-        {
-            CGLPixelFormatAttribute discreteAttribs[] = {static_cast<CGLPixelFormatAttribute>(0)};
-            GLint numPixelFormats                     = 0;
-            if (CGLChoosePixelFormat(discreteAttribs, &mDiscreteGPUPixelFormat, &numPixelFormats) !=
-                kCGLNoError)
-            {
-                ERR() << "Error choosing discrete pixel format.";
-                return nullptr;
-            }
-        }
-        ++mDiscreteGPURefs;
-        usesDiscreteGPU = true;
-    }
-
-    return new ContextCGL(state, errorSet, mRenderer, usesDiscreteGPU);
+    return new ContextGL(state, errorSet, mRenderer);
 }
 
 DeviceImpl *DisplayCGL::createDevice()
@@ -329,11 +288,6 @@ void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
 
-    if (mSupportsGPUSwitching)
-    {
-        outExtensions->powerPreference = true;
-    }
-
     DisplayGL::generateExtensions(outExtensions);
 }
 
@@ -415,15 +369,5 @@ WorkerContext *DisplayCGL::createWorkerContext(std::string *infoLog)
     }
 
     return new WorkerContextCGL(context);
-}
-
-void DisplayCGL::unreferenceDiscreteGPU()
-{
-    ASSERT(mDiscreteGPURefs > 0);
-    if (--mDiscreteGPURefs == 0)
-    {
-        CGLDestroyPixelFormat(mDiscreteGPUPixelFormat);
-        mDiscreteGPUPixelFormat = nullptr;
-    }
 }
 }

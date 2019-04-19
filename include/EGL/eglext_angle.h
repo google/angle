@@ -202,13 +202,6 @@ EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
 #endif
 #endif /* EGL_CHROMIUM_get_sync_values */
 
-#ifndef EGL_ANGLE_power_preference
-#define EGL_ANGLE_power_preference 1
-#define EGL_POWER_PREFERENCE_ANGLE 0x3482
-#define EGL_LOW_POWER_ANGLE 0x0001
-#define EGL_HIGH_POWER_ANGLE 0x0002
-#endif /* EGL_ANGLE_power_preference */
-
 // clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

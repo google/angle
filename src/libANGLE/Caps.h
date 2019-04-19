@@ -870,9 +870,6 @@ struct DisplayExtensions
 
     // EGL_ANDROID_recordable
     bool recordable;
-
-    // EGL_ANGLE_power_preference
-    bool powerPreference;
 };
 
 struct DeviceExtensions
