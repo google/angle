@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "2ea91e41_cd99edef",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-04-19T14:20:23Z",
+      "side": 1,
+      "message": "I think it is technically not supported on 100% of Vulkan devices for uniform buffers. Basically std140 is supported in VK 1.0 but you need the VK_KHR_relaxed_block_layout extension for full std430 support on uniform buffers.",
+      "parentUuid": "12855d5a_47067875",
+      "range": {
+        "startLine": 287,
+        "startChar": 20,
+        "endLine": 287,
+        "endChar": 59
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3e39b6f_ca6de037",
         "filename": "src/compiler.gni",
         "patchSetId": 8
@@ -88,6 +112,23 @@
         "endLine": 107,
         "endChar": 46
       },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93b900d4_3ab82ef9",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2019-04-19T14:20:23Z",
+      "side": 1,
+      "message": "Any chance we can reuse logic in TOutputGLSLBase::writeLayoutQualifier more? It seems all we need to add are the @@ directives?",
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
