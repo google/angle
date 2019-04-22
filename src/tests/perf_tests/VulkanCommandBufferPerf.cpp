@@ -4,6 +4,9 @@
 //
 // VulkanCommandBufferPerf:
 //   Performance benchmark for Vulkan Primary/Secondary Command Buffer implementations.
+//  Can run just these tests by adding "--gtest_filter=VulkanCommandBufferPerfTest*"
+//   option to angle_white_box_perftests.
+//  When running on Android, use logcat to view output.
 
 #include "ANGLEPerfTest.h"
 #include "common/platform.h"
@@ -11,12 +14,17 @@
 
 #if defined(ANDROID)
 #    define NUM_CMD_BUFFERS 1000
+// Android devices tend to be slower so only do 10 frames to avoid timeout
 #    define NUM_FRAMES 10
 #else
 #    define NUM_CMD_BUFFERS 1000
 #    define NUM_FRAMES 100
 #endif
 
+// These are minimal shaders used to submit trivial draw commands to command
+//  buffers so that we can create large batches of cmd buffers with consistent
+//  draw patterns but size/type of cmd buffers can be varied to test cmd buffer
+//  differences across devices.
 constexpr char kVertShaderText[] = R"(
 #version 400
 #extension GL_ARB_separate_shader_objects : enable
@@ -229,6 +237,7 @@ void Present(sample_info &info, VkFence drawFence)
     ASSERT_EQ(VK_SUCCESS, res);
 }
 
+// 100 separate primary cmd buffers, each with 1 Draw
 void PrimaryCommandBufferBenchmarkHundredIndividual(sample_info &info,
                                                     VkClearValue *clear_values,
                                                     VkFence drawFence,
@@ -294,6 +303,7 @@ void PrimaryCommandBufferBenchmarkHundredIndividual(sample_info &info,
     Present(info, drawFence);
 }
 
+// 100 of the same Draw cmds in the same primary cmd buffer
 void PrimaryCommandBufferBenchmarkOneWithOneHundred(sample_info &info,
                                                     VkClearValue *clear_values,
                                                     VkFence drawFence,
@@ -360,6 +370,7 @@ void PrimaryCommandBufferBenchmarkOneWithOneHundred(sample_info &info,
     Present(info, drawFence);
 }
 
+// 100 separate secondary cmd buffers, each with 1 Draw
 void SecondaryCommandBufferBenchmark(sample_info &info,
                                      VkClearValue *clear_values,
                                      VkFence drawFence,
@@ -450,6 +461,22 @@ void SecondaryCommandBufferBenchmark(sample_info &info,
 
     Present(info, drawFence);
 }
+
+// Details on the following functions that stress various cmd buffer reset methods.
+// All of these functions wrap the SecondaryCommandBufferBenchmark() test above,
+// adding additional overhead with various reset methods.
+// -CommandPoolDestroyBenchmark: Reset command buffers by destroying and re-creating
+//   command buffer pool.
+// -CommandPoolHardResetBenchmark: Reset the command pool w/ the RELEASE_RESOURCES
+//   bit set.
+// -CommandPoolSoftResetBenchmark: Reset to command pool w/o the RELEASE_RESOURCES
+//   bit set.
+// -CommandBufferExplicitHardResetBenchmark: Reset each individual command buffer
+//   w/ the RELEASE_RESOURCES bit set.
+// -CommandBufferExplicitSoftResetBenchmark: Reset each individual command buffer
+//   w/o the RELEASE_RESOURCES bit set.
+// -CommandBufferImplicitResetBenchmark: Reset each individual command buffer
+//   implicitly by calling "Begin" on previously used cmd buffer.
 
 void CommandPoolDestroyBenchmark(sample_info &info,
                                  VkClearValue *clear_values,
