@@ -10,7 +10,6 @@
 #ifndef UTIL_FUCHSIA_SCENIC_WINDOW_H
 #define UTIL_FUCHSIA_SCENIC_WINDOW_H
 
-#include <fuchsia/ui/input/cpp/fidl.h>
 #include <fuchsia/ui/policy/cpp/fidl.h>
 #include <fuchsia/ui/scenic/cpp/fidl.h>
 #include <fuchsia_egl.h>

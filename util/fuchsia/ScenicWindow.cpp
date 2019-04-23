@@ -9,6 +9,8 @@
 
 #include "util/fuchsia/ScenicWindow.h"
 
+#include <fuchsia/images/cpp/fidl.h>
+#include <fuchsia/ui/views/cpp/fidl.h>
 #include <lib/async-loop/cpp/loop.h>
 #include <lib/fdio/directory.h>
 #include <lib/fidl/cpp/interface_ptr.h>

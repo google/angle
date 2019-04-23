@@ -963,10 +963,9 @@ foreach(is_shared_library,
         "//third_party/fuchsia-sdk/sdk:fdio",
         "//third_party/fuchsia-sdk/sdk:images",
         "//third_party/fuchsia-sdk/sdk:scenic_cpp",
-        "//third_party/fuchsia-sdk/sdk:ui_gfx",
         "//third_party/fuchsia-sdk/sdk:ui_policy",
         "//third_party/fuchsia-sdk/sdk:ui_scenic",
-        "//third_party/fuchsia-sdk/sdk:ui_viewsv1",
+        "//third_party/fuchsia-sdk/sdk:ui_views",
       ]
     } else if (use_ozone) {
       sources += util_ozone_sources
