@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "69b48267_cbd8edba",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-04-23T15:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ff8771a_27790d04",
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5710253_53b5edc0",
         "filename": "scripts/generate_deqp_stats.py",
         "patchSetId": 2
@@ -77,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "2b824d94_0a2d03a7",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-04-23T15:54:17Z",
+      "side": 1,
+      "message": "I tried to do this but the CIPD packages are missing google-auth-oauthlib.\nFor now it at least prints a helpful error when a package is missing.",
+      "parentUuid": "a5710253_53b5edc0",
+      "range": {
+        "startLine": 31,
+        "startChar": 5,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee83306a_d9d120a6",
         "filename": "scripts/generate_deqp_stats.py",
         "patchSetId": 2
@@ -91,6 +133,24 @@
       "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccc9a85f_59da2d3a",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-04-23T15:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee83306a_d9d120a6",
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "79c925a5_396d0018",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-04-23T15:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "965288ec_a084c53c",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 35
+      },
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45a04153_6da2d430",
         "filename": "scripts/generate_deqp_stats.py",
         "patchSetId": 2
@@ -137,6 +221,30 @@
       "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9b94771_2dd66036",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-04-23T15:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45a04153_6da2d430",
+      "range": {
+        "startLine": 448,
+        "startChar": 14,
+        "endLine": 448,
+        "endChar": 23
+      },
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
