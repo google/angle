@@ -7,29 +7,14 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="{{manifest_package|default('com.android.angle')}}">
+          package="{{manifest_package|default('com.chromium.angle')}}">
 
     <uses-sdk android:minSdkVersion="26"
               android:targetSdkVersion="28">
     </uses-sdk>
 
-    <application android:label="Android System Angle"
-                 android:icon="@{{manifest_package|default('com.android.angle')}}:drawable/icon"
+    <application android:label="Angle for Android"
                  android:extractNativeLibs="false"
                  android:multiArch="true">
-
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.INFO"/>
-            </intent-filter>
-
-            <!-- Indicate that this PKG is ANGLE. -->
-            <intent-filter android:priority="1">
-                <action android:name="android.app.action.ANGLE_FOR_ANDROID" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
     </application>
 </manifest>

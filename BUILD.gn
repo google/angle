@@ -1099,22 +1099,15 @@ if (!is_component_build && is_android && symbol_level != 0) {
 
 if (!is_component_build && is_android &&
     current_toolchain == default_toolchain) {
-  # Package ANGLE libraries for pre-installed system image
-  angle_apk("aosp_apk") {
-    package_name = "com.android.angle"
+  # Package ANGLE libraries
+  angle_apk("angle_chromium_apk") {
+    package_name = "com.chromium.angle"
     apk_name = "AngleLibraries"
   }
 
   group("angle_apks") {
     deps = [
-      ":aosp_apk",
-    ]
-  }
-
-  # Include a temporary target until we update builders to use angle_apks
-  group("angle_apk") {
-    deps = [
-      ":angle_apks",
+      ":angle_chromium_apk",
     ]
   }
 }

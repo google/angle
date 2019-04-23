@@ -30,11 +30,6 @@ template("angle_apk") {
     variables = [ "manifest_package=${invoker.package_name}" ]
   }
 
-  android_resources("${invoker.package_name}_resources") {
-    resource_dirs = [ "android/res" ]
-    custom_package = "${invoker.package_name}"
-  }
-
   android_assets("${invoker.package_name}_assets") {
     disable_compression = true
     sources = [
@@ -48,7 +43,6 @@ template("angle_apk") {
     android_manifest_dep = ":$manifest_target_name"
     deps = [
       ":${invoker.package_name}_assets",
-      ":${invoker.package_name}_resources",
     ]
     if (symbol_level != 0) {
       deps += [ ":compressed_symbols" ]
