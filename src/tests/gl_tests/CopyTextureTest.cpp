@@ -966,6 +966,38 @@ TEST_P(CopyTextureTest, CubeMapTarget)
     }
 }
 
+// Test that we can successfully copy into incomplete cube maps. Regression test for
+// http://anglebug.com/3384
+TEST_P(CopyTextureTest, IncompleteCubeMap)
+{
+    if (!checkExtensions())
+    {
+        return;
+    }
+
+    GLTexture texture2D;
+    GLColor rgbaPixels[4 * 4] = {GLColor::red, GLColor::green, GLColor::blue, GLColor::black};
+    glBindTexture(GL_TEXTURE_2D, texture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
+
+    GLTexture textureCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureCube);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         face++)
+    {
+        glTexImage2D(face, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    // Set one face to 2x2
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 rgbaPixels);
+
+    // Copy into the incomplete face
+    glCopySubTextureCHROMIUM(texture2D, 0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, textureCube, 0, 0, 0, 0,
+                             0, 2, 2, false, false, false);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test BGRA to RGBA cube map copy
 TEST_P(CopyTextureTest, CubeMapTargetBGRA)
 {

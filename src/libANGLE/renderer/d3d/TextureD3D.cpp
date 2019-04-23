@@ -2180,14 +2180,6 @@ bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
         return false;
     }
 
-    // "isCubeComplete" checks for base level completeness and we must call that
-    // to determine if any face at level 0 is complete. We omit that check here
-    // to avoid re-checking cube-completeness for every face at level 0.
-    if (level == 0)
-    {
-        return true;
-    }
-
     // Check that non-zero levels are consistent with the base level.
     const ImageD3D *faceLevelImage = mImageArray[faceIndex][level].get();
 
