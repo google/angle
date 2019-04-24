@@ -52,6 +52,8 @@ except ImportError:
 ####################
 
 HOME_DIR = os.path.expanduser('~')
+SCRIPT_DIR = sys.path[0]
+ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, '..'))
 
 LOGGER = logging.getLogger('generate_stats')
 
@@ -92,13 +94,16 @@ def get_latest_success_build_info(bot_name):
       ['bb', 'ls', bot_name, '-n', '1', '-status', 'success', '-A'],
       stdout=subprocess.PIPE,
       stderr=subprocess.PIPE)
-  LOGGER.debug("Ran [bb ls '" + bot_name + "'-n 1 -status success -A]")
+  LOGGER.debug("Ran [bb ls '" + bot_name + "' -n 1 -status success -A]")
   out, err = bb.communicate()
   if err:
     raise ValueError("Unexpected error from bb ls: '" + err + "'")
   if not out:
     raise ValueError("Unexpected empty result from bb ls of bot '" + bot_name +
                      "'")
+  # Example output (line 1):
+  # ci.chromium.org/b/8915280275579996928 SUCCESS   'chromium/ci/Win10 FYI dEQP Release (NVIDIA)/26877'
+  # ...
   if 'SUCCESS' not in out:
     raise ValueError("Unexpected result from bb ls: '" + out + "'")
   info = {}
@@ -106,16 +111,29 @@ def get_latest_success_build_info(bot_name):
     # The first line holds the build name
     if 'build_name' not in info:
       info['build_name'] = line.strip().split("'")[1]
+      # Remove the bot name and prepend the build link
       info['build_link'] = BUILD_LINK_PREFIX + urllib.quote(
           info['build_name'].split(BOT_NAME_PREFIX)[1])
     if 'Created' in line:
+      # Example output of line with 'Created':
+      # ...
+      # Created today at 12:26:39, waited 2.056319s, started at 12:26:41, ran for 1h16m48.14963s, ended at 13:43:30
+      # ...
       info['time'] = re.findall(r'[0-9]{1,2}:[0-9]{2}:[0-9]{2}',
                                 line.split(',', 1)[0])[0]
-      # Format date in US format so Sheets can read it properly
+      # Format today's date in US format so Sheets can read it properly
       info['date'] = datetime.datetime.now().strftime('%m/%d/%y')
     if 'got_angle_revision' in line:
+      # Example output of line with angle revision:
+      # ...
+      #   "parent_got_angle_revision": "8cbd321cafa92ffbf0495e6d0aeb9e1a97940fee",
+      # ...
       info['angle_revision'] = filter(str.isalnum, line.split(':')[1])
     if '"revision"' in line:
+      # Example output of line with chromium revision:
+      # ...
+      #   "revision": "3b68405a27f1f9590f83ae07757589dba862f141",
+      # ...
       info['revision'] = filter(str.isalnum, line.split(':')[1])
   if 'build_name' not in info:
     raise ValueError("Could not find build_name from bot '" + bot_name + "'")
@@ -135,6 +153,19 @@ def get_step_names(build_name):
   if err:
     raise ValueError("Unexpected error from bb get: '" + err + "'")
   step_names = []
+  # Example output (relevant lines to a single step):
+  # ...
+  # Step "angle_deqp_egl_vulkan_tests on (nvidia-quadro-p400-win10-stable) GPU on Windows on Windows-10"                                      SUCCESS   4m12s     Logs: "stdout", "chromium_swarming.summary", "Merge script log", "Flaky failure: dEQP.EGL&#x2f;info_version (status CRASH,SUCCESS)", "step_metadata"
+  # Run on OS: 'Windows-10'<br>Max shard duration: 0:04:07.309848 (shard \#1)<br>Min shard duration: 0:02:26.402128 (shard \#0)<br/>flaky failures [ignored]:<br/>dEQP.EGL/info\_version<br/>
+  #  * [shard #0 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=9a5999a59d332e55f54f495948d0c9f959e60ed2)
+  #  * [shard #0 (128.3 sec)](https://chromium-swarm.appspot.com/user/task/446903ae365b8110)
+  #  * [shard #1 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=d71e1bdd91dee61b536b4057a9222e642bd3809f)
+  #  * [shard #1 (229.3 sec)](https://chromium-swarm.appspot.com/user/task/446903b7b0d90210)
+  #  * [shard #2 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=ac9ba85b1cca77774061b87335c077980e1eef85)
+  #  * [shard #2 (144.5 sec)](https://chromium-swarm.appspot.com/user/task/446903c18e15a010)
+  #  * [shard #3 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=976d586386864abecf53915fbac3e085f672e30f)
+  #  * [shard #3 (138.4 sec)](https://chromium-swarm.appspot.com/user/task/446903cc8da0ad10)
+  # ...
   for line in out.splitlines():
     if 'Step "angle_' not in line:
       continue
@@ -181,6 +212,17 @@ def get_step_info(build_name, step_name):
                    step_name + "': '" + err + "'")
     return None
   step_info = {}
+  # Example output (relevant lines of stdout):
+  # ...
+  # *RESULT: Total: 155
+  # *RESULT: Passed: 11
+  # *RESULT: Failed: 0
+  # *RESULT: Skipped: 12
+  # *RESULT: Not Supported: 132
+  # *RESULT: Exception: 0
+  # *RESULT: Crashed: 0
+  # *RESULT: Unexpected Passed: 12
+  # ...
   for line in out.splitlines():
     if INFO_TAG not in line:
       continue
@@ -231,31 +273,36 @@ def get_spreadsheet(service, spreadsheet_id):
 
 # Returns a nicely formatted string based on the bot_name and step_name
 def format_sheet_name(bot_name, step_name):
+  # Some tokens should be ignored for readability in the name
   unneccesary_tokens = ['FYI', 'Release', 'Vk', 'dEQP', '(', ')']
   for token in unneccesary_tokens:
     bot_name = bot_name.replace(token, '')
   bot_name = ' '.join(bot_name.strip().split())  # Remove extra spaces
   step_name = re.findall(r'angle\w*', step_name)[0]  # Separate test name
+  # Test names are formatted as 'angle_deqp_<frontend>_<backend>_tests'
   new_step_name = ''
+  # Put the frontend first
   if '_egl_' in step_name:
-    new_step_name += 'EGL '
+    new_step_name += ' EGL'
   if '_gles2_' in step_name:
-    new_step_name += 'GLES 2.0 '
+    new_step_name += ' GLES 2.0 '
   if '_gles3_' in step_name:
-    new_step_name += 'GLES 3.0 '
+    new_step_name += ' GLES 3.0 '
   if '_gles31_' in step_name:
-    new_step_name += 'GLES 3.1 '
+    new_step_name += ' GLES 3.1 '
+  # Put the backend second
   if '_d3d9_' in step_name:
-    new_step_name += 'D3D9 '
+    new_step_name += ' D3D9 '
   if '_d3d11' in step_name:
-    new_step_name += 'D3D11 '
+    new_step_name += ' D3D11 '
   if '_gl_' in step_name:
-    new_step_name += 'Desktop OpenGL '
+    new_step_name += ' Desktop OpenGL '
   if '_gles_' in step_name:
-    new_step_name += 'OpenGLES '
+    new_step_name += ' OpenGLES '
   if '_vulkan_' in step_name:
-    new_step_name += 'Vulkan '
-  return new_step_name + bot_name
+    new_step_name += ' Vulkan '
+  new_step_name = ' '.join(new_step_name.strip().split())  # Remove extra spaces
+  return new_step_name + ' ' + bot_name
 
 
 # Returns the full list of sheet names that should be populated based on the
@@ -327,6 +374,7 @@ def get_headers(service, spreadsheet_id, sheet_names):
   headers = {}
   for k, sheet_name in enumerate(sheet_names):
     if 'values' in response['valueRanges'][k]:
+      # Headers are in the first row of values
       headers[sheet_name] = response['valueRanges'][k]['values'][0]
     else:
       headers[sheet_name] = []
@@ -337,7 +385,7 @@ def get_headers(service, spreadsheet_id, sheet_names):
 # to update on the service.
 def batch_update_values(service, spreadsheet_id, data):
   batch_update_values_request_body = {
-      'valueInputOption': 'USER_ENTERED',
+      'valueInputOption': 'USER_ENTERED', # Helps with formatting of dates
       'data': data,
   }
   LOGGER.debug("Called [spreadsheets.values().batchUpdate(spreadsheetId='" +
@@ -385,7 +433,7 @@ def update_headers(service, spreadsheet_id, headers, info):
 def append_values(service, spreadsheet_id, sheet_name, values):
   header_range = sheet_name + '!A1:Z'
   insert_data_option = 'INSERT_ROWS'
-  value_input_option = 'USER_ENTERED'
+  value_input_option = 'USER_ENTERED' # Helps with formatting of dates
   append_values_request_body = {
       'range': header_range,
       'majorDimension': 'ROWS',
@@ -413,6 +461,9 @@ def update_values(service, spreadsheet_id, headers, info):
     for step_name in info[bot_name]['step_names']:
       sheet_name = format_sheet_name(bot_name, step_name)
       values = []
+      # For each key in the list of headers, either add the corresponding value
+      # or add a blank value. It's necessary for the values to match the order
+      # of the headers
       for key in headers[sheet_name]:
         if key in info[bot_name] and key in REQUIRED_COLUMNS:
           values.append(info[bot_name][key])
@@ -525,6 +576,7 @@ def initialize_logging(verbosity):
 
 
 def main():
+  os.chdir(ROOT_DIR)
   args = parse_args()
   verbosity = args.verbosity.strip().upper()
   initialize_logging(verbosity)
