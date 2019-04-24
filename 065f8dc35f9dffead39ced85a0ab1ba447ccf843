@@ -22,6 +22,30 @@
       "revId": "065f8dc35f9dffead39ced85a0ab1ba447ccf843",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66a1628d_0df5f77c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-04-24T15:47:54Z",
+      "side": 1,
+      "message": "I can do that, but as part of that change I\u0027d also remove this line since there should only be a single place that\u0027s required to be updated when the supported ES version changes.\n\ngl::Version RendererVk::getMaxSupportedESVersion() const\n{\n[[[...]]]\n#if ANGLE_VULKAN_CONFORMANT_CONFIGS_ONLY\n    // TODO: Disallow ES 3.0 until supported. http://crbug.com/angleproject/2950\n    maxVersion \u003d gl::Version(2, 0);\n#endif\n\nDo you want the supported ES version to be determined in getMaxSupportedESVersion() or GenerateDefaultConfig()?",
+      "parentUuid": "c01060ed_99192d68",
+      "range": {
+        "startLine": 268,
+        "startChar": 45,
+        "endLine": 268,
+        "endChar": 55
+      },
+      "revId": "065f8dc35f9dffead39ced85a0ab1ba447ccf843",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
