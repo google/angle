@@ -1765,6 +1765,77 @@ TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
     drawQuad(mProgram, "position", 1.0f);
 }
 
+// This test case changes the base level of a texture that's attached to a framebuffer, clears every
+// level to green, and then samples the texture when rendering. Test is taken from
+// https://www.khronos.org/registry/webgl/sdk/tests/conformance2/rendering/framebuffer-texture-changing-base-level.html
+TEST_P(Texture2DTestES3, FramebufferTextureChangingBaselevel)
+{
+    // TODO(geofflang): Investigate on D3D11. http://anglebug.com/2291
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    setUpProgram();
+
+    constexpr GLint width  = 8;
+    constexpr GLint height = 4;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Create all mipmap levels for the texture from level 0 to the 1x1 pixel level.
+    GLint level  = 0;
+    GLint levelW = width;
+    GLint levelH = height;
+    glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, levelW, levelH, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    while (levelW > 1 || levelH > 1)
+    {
+        ++level;
+        levelW = static_cast<GLint>(std::max(1.0, std::floor(width / std::pow(2, level))));
+        levelH = static_cast<GLint>(std::max(1.0, std::floor(height / std::pow(2, level))));
+        glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, levelW, levelH, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+    }
+
+    // Clear each level of the texture using an FBO. Change the base level to match the level used
+    // for the FBO on each iteration.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    level  = 0;
+    levelW = width;
+    levelH = height;
+    while (levelW > 1 || levelH > 1)
+    {
+        levelW = static_cast<GLint>(std::floor(width / std::pow(2, level)));
+        levelH = static_cast<GLint>(std::floor(height / std::pow(2, level)));
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, level);
+
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        EXPECT_GL_NO_ERROR();
+
+        glClearColor(0, 1, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        ++level;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, 16, 16);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test to check that texture completeness is determined correctly when the texture base level is
 // greater than 0, and also that level 0 is not sampled when base level is greater than 0.
 TEST_P(Texture2DTestES3, DrawWithBaseLevel1)
