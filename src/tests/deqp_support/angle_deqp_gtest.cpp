@@ -437,7 +437,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
             std::cout << "\nSome tests unexpectedly passed:\n";
             for (const std::string &testName : gUnexpectedPasses)
             {
-                std::cout << testName << " unexpectedly passed.\n";
+                std::cout << GetTestStatLine("Unexpected Passed Test", testName);
             }
         }
 
@@ -448,7 +448,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
             std::cout << "\nSome tests unexpectedly failed:\n";
             for (const std::string &testName : gUnexpectedFailed)
             {
-                std::cout << testName << " unexpectedly failed.\n";
+                std::cout << GetTestStatLine("Unexpected Failed Test", testName);
             }
         }
     }
