@@ -716,4 +716,28 @@ TEST_F(OVRMultiview2VertexShaderOutputCodeTest, GlLayerIsSet)
     EXPECT_TRUE(foundInCodeInOrder(SH_GLSL_COMPATIBILITY_OUTPUT, expectedStrings));
 }
 
+// Test that the OVR_multiview2 without emulation is emits OVR_multiview2 output.
+TEST_F(OVRMultiview2VertexShaderOutputCodeTest, NativeOvrMultiview2Output)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 3) in;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    compile(shaderString);
+
+    std::vector<const char *> expectedStrings = {"#extension GL_OVR_multiview2",
+                                                 "layout(num_views"};
+    EXPECT_TRUE(foundInCodeInOrder(SH_ESSL_OUTPUT, expectedStrings));
+    EXPECT_TRUE(foundInCodeInOrder(SH_GLSL_COMPATIBILITY_OUTPUT, expectedStrings));
+
+    EXPECT_FALSE(foundInGLSLCode("#extension GL_NV_viewport_array2"));
+    EXPECT_FALSE(foundInESSLCode("#extension GL_NV_viewport_array2"));
+
+    EXPECT_FALSE(foundInGLSLCode("gl_ViewportIndex"));
+    EXPECT_FALSE(foundInESSLCode("gl_ViewportIndex"));
+}
+
 }  // namespace

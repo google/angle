@@ -1720,6 +1720,9 @@ TEST_P(MultiviewRenderPrimitiveTest, LineLoop)
     {
         return;
     }
+    // Only this subtest fails on intel-hd-630-ubuntu-stable. Driver bug?
+    // https://bugs.chromium.org/p/angleproject/issues/detail?id=3472
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
 
     GLuint program = CreateSimplePassthroughProgram(2, GetParam().mMultiviewExtension);
     ASSERT_NE(program, 0u);
