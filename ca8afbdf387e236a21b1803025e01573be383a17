@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "107500d8_7dcfc7c1",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-04-25T18:09:43Z",
+      "side": 1,
+      "message": "Maybe these lines are not needed?",
+      "range": {
+        "startLine": 437,
+        "startChar": 27,
+        "endLine": 437,
+        "endChar": 58
+      },
+      "revId": "ca8afbdf387e236a21b1803025e01573be383a17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
