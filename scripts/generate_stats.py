@@ -42,8 +42,7 @@ try:
   from googleapiclient.discovery import build
   from google_auth_oauthlib.flow import InstalledAppFlow
 except ImportError:
-  print('ERROR: Missing prerequisites. '
-        'Follow the quickstart guide:\n'
+  print('ERROR: Missing prerequisites. Follow the quickstart guide:\n'
         'https://devsite.googleplex.com/sheets/api/quickstart/python')
   exit(1)
 
@@ -90,17 +89,15 @@ INFO_TAG = '*RESULT'
 # Info contains the build_name, time, date, angle_revision, and chrome revision
 # Uses: bb ls '<botname>' -n 1 -status success -A
 def get_latest_success_build_info(bot_name):
-  bb = subprocess.Popen(
-      ['bb', 'ls', bot_name, '-n', '1', '-status', 'success', '-A'],
-      stdout=subprocess.PIPE,
-      stderr=subprocess.PIPE)
+  bb = subprocess.Popen(['bb', 'ls', bot_name, '-n', '1', '-status', 'success', '-A'],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE)
   LOGGER.debug("Ran [bb ls '" + bot_name + "' -n 1 -status success -A]")
   out, err = bb.communicate()
   if err:
     raise ValueError("Unexpected error from bb ls: '" + err + "'")
   if not out:
-    raise ValueError("Unexpected empty result from bb ls of bot '" + bot_name +
-                     "'")
+    raise ValueError("Unexpected empty result from bb ls of bot '" + bot_name + "'")
   # Example output (line 1):
   # ci.chromium.org/b/8915280275579996928 SUCCESS   'chromium/ci/Win10 FYI dEQP Release (NVIDIA)/26877'
   # ...
@@ -119,8 +116,7 @@ def get_latest_success_build_info(bot_name):
       # ...
       # Created today at 12:26:39, waited 2.056319s, started at 12:26:41, ran for 1h16m48.14963s, ended at 13:43:30
       # ...
-      info['time'] = re.findall(r'[0-9]{1,2}:[0-9]{2}:[0-9]{2}',
-                                line.split(',', 1)[0])[0]
+      info['time'] = re.findall(r'[0-9]{1,2}:[0-9]{2}:[0-9]{2}', line.split(',', 1)[0])[0]
       # Format today's date in US format so Sheets can read it properly
       info['date'] = datetime.datetime.now().strftime('%m/%d/%y')
     if 'got_angle_revision' in line:
@@ -182,17 +178,12 @@ def validate_step_info(step_info, build_name, step_name):
     return False
 
   if 'Total' in step_info:
-    partial_sum_keys = [
-        'Passed', 'Failed', 'Skipped', 'Not Supported', 'Exception', 'Crashed'
-    ]
-    partial_sum_values = [
-        int(step_info[key]) for key in partial_sum_keys if key in step_info
-    ]
+    partial_sum_keys = ['Passed', 'Failed', 'Skipped', 'Not Supported', 'Exception', 'Crashed']
+    partial_sum_values = [int(step_info[key]) for key in partial_sum_keys if key in step_info]
     computed_total = sum(partial_sum_values)
     if step_info['Total'] != computed_total:
-      LOGGER.warning('Step info does not sum to total for ' + print_name +
-                     ' | Total: ' + str(step_info['Total']) +
-                     ' - Computed total: ' + str(computed_total) + '\n')
+      LOGGER.warning('Step info does not sum to total for ' + print_name + ' | Total: ' +
+                     str(step_info['Total']) + ' - Computed total: ' + str(computed_total) + '\n')
   return True
 
 
@@ -208,8 +199,8 @@ def get_step_info(build_name, step_name):
   LOGGER.debug("Ran [bb log '" + build_name + "' '" + step_name + "']")
   out, err = bb.communicate()
   if err:
-    LOGGER.warning("Unexpected error from bb log '" + build_name + "' '" +
-                   step_name + "': '" + err + "'")
+    LOGGER.warning("Unexpected error from bb log '" + build_name + "' '" + step_name + "': '" +
+                   err + "'")
     return None
   step_info = {}
   # Example output (relevant lines of stdout):
@@ -223,6 +214,7 @@ def get_step_info(build_name, step_name):
   # *RESULT: Crashed: 0
   # *RESULT: Unexpected Passed: 12
   # ...
+  append_errors = []
   for line in out.splitlines():
     if INFO_TAG not in line:
       continue
@@ -232,13 +224,35 @@ def get_step_info(build_name, step_name):
       LOGGER.warning("Line improperly formatted: '" + line + "'\n")
       continue
     key = line_columns[1].strip()
-    if key not in step_info:
-      step_info[key] = 0
-    val = int(filter(str.isdigit, line_columns[2]))
-    if val is not None:
-      step_info[key] += val
+    # If the value is clearly an int, sum it. Otherwise, concatenate it as a
+    # string
+    isInt = False
+    intVal = 0
+    try:
+      intVal = int(line_columns[2])
+      if intVal is not None:
+        isInt = True
+    except Exception as error:
+      isInt = False
+
+    if isInt:
+      if key not in step_info:
+        step_info[key] = 0
+      step_info[key] += intVal
     else:
-      step_info[key] += ', ' + line_columns[2]
+      if key not in step_info:
+        step_info[key] = line_columns[2].strip()
+      else:
+        append_string = '\n' + line_columns[2].strip()
+        # Sheets has a limit of 50000 characters per cell, so make sure to
+        # stop appending below this limit
+        if len(step_info[key]) + len(append_string) < 50000:
+          step_info[key] += append_string
+        else:
+          if key not in append_errors:
+            append_errors.append(key)
+            LOGGER.warning("Too many characters in column '" + key + "'. Output capped.")
+
   if validate_step_info(step_info, build_name, step_name):
     return step_info
   return None
@@ -262,8 +276,7 @@ def get_bot_info(bot_name):
 # Get an individual spreadsheet based on the spreadsheet id. Returns the result
 # of spreadsheets.get(), or throws an exception if the sheet could not open.
 def get_spreadsheet(service, spreadsheet_id):
-  LOGGER.debug("Called [spreadsheets.get(spreadsheetId='" + spreadsheet_id +
-               "')]")
+  LOGGER.debug("Called [spreadsheets.get(spreadsheetId='" + spreadsheet_id + "')]")
   request = service.get(spreadsheetId=spreadsheet_id)
   spreadsheet = request.execute()
   if not spreadsheet:
@@ -340,24 +353,16 @@ def batch_update(service, spreadsheet_id, updates):
   batch_update_request_body = {
       'requests': updates,
   }
-  LOGGER.debug("Called [spreadsheets.batchUpdate(spreadsheetId='" +
-               spreadsheet_id + "', body=" + str(batch_update_request_body) +
-               ')]')
-  request = service.batchUpdate(
-      spreadsheetId=spreadsheet_id, body=batch_update_request_body)
+  LOGGER.debug("Called [spreadsheets.batchUpdate(spreadsheetId='" + spreadsheet_id + "', body=" +
+               str(batch_update_request_body) + ')]')
+  request = service.batchUpdate(spreadsheetId=spreadsheet_id, body=batch_update_request_body)
   request.execute()
 
 
 # Creates sheets given a service and spreadsheed id based on a list of sheet
 # names input
 def create_sheets(service, spreadsheet_id, sheet_names):
-  updates = [{
-      'addSheet': {
-          'properties': {
-              'title': sheet_name,
-          }
-      }
-  } for sheet_name in sheet_names]
+  updates = [{'addSheet': {'properties': {'title': sheet_name,}}} for sheet_name in sheet_names]
   batch_update(service, spreadsheet_id, updates)
 
 
@@ -366,10 +371,9 @@ def create_sheets(service, spreadsheet_id, sheet_names):
 # sheet_name.
 def get_headers(service, spreadsheet_id, sheet_names):
   header_ranges = [sheet_name + '!A1:Z' for sheet_name in sheet_names]
-  LOGGER.debug("Called [spreadsheets.values().batchGet(spreadsheetId='" +
-               spreadsheet_id + ', ranges=' + str(header_ranges) + "')]")
-  request = service.values().batchGet(
-      spreadsheetId=spreadsheet_id, ranges=header_ranges)
+  LOGGER.debug("Called [spreadsheets.values().batchGet(spreadsheetId='" + spreadsheet_id +
+               ', ranges=' + str(header_ranges) + "')]")
+  request = service.values().batchGet(spreadsheetId=spreadsheet_id, ranges=header_ranges)
   response = request.execute()
   headers = {}
   for k, sheet_name in enumerate(sheet_names):
@@ -385,12 +389,11 @@ def get_headers(service, spreadsheet_id, sheet_names):
 # to update on the service.
 def batch_update_values(service, spreadsheet_id, data):
   batch_update_values_request_body = {
-      'valueInputOption': 'USER_ENTERED', # Helps with formatting of dates
+      'valueInputOption': 'USER_ENTERED',  # Helps with formatting of dates
       'data': data,
   }
-  LOGGER.debug("Called [spreadsheets.values().batchUpdate(spreadsheetId='" +
-               spreadsheet_id + "', body=" +
-               str(batch_update_values_request_body) + ')]')
+  LOGGER.debug("Called [spreadsheets.values().batchUpdate(spreadsheetId='" + spreadsheet_id +
+               "', body=" + str(batch_update_values_request_body) + ')]')
   request = service.values().batchUpdate(
       spreadsheetId=spreadsheet_id, body=batch_update_values_request_body)
   request.execute()
@@ -433,16 +436,15 @@ def update_headers(service, spreadsheet_id, headers, info):
 def append_values(service, spreadsheet_id, sheet_name, values):
   header_range = sheet_name + '!A1:Z'
   insert_data_option = 'INSERT_ROWS'
-  value_input_option = 'USER_ENTERED' # Helps with formatting of dates
+  value_input_option = 'USER_ENTERED'  # Helps with formatting of dates
   append_values_request_body = {
       'range': header_range,
       'majorDimension': 'ROWS',
       'values': [values],
   }
-  LOGGER.debug("Called [spreadsheets.values().append(spreadsheetId='" +
-               spreadsheet_id + "', body=" + str(append_values_request_body) +
-               ", range='" + header_range + "', insertDataOption='" +
-               insert_data_option + "', valueInputOption='" +
+  LOGGER.debug("Called [spreadsheets.values().append(spreadsheetId='" + spreadsheet_id +
+               "', body=" + str(append_values_request_body) + ", range='" + header_range +
+               "', insertDataOption='" + insert_data_option + "', valueInputOption='" +
                value_input_option + "')]")
   request = service.values().append(
       spreadsheetId=spreadsheet_id,
@@ -472,7 +474,10 @@ def update_values(service, spreadsheet_id, headers, info):
         else:
           values.append('')
       LOGGER.info("Appending new rows to sheet '" + sheet_name + "'...")
-      append_values(service, spreadsheet_id, sheet_name, values)
+      try:
+        append_values(service, spreadsheet_id, sheet_name, values)
+      except Exception as error:
+        LOGGER.warning('%s\n' % str(error))
 
 
 # Updates the given spreadsheed_id with the info struct passed in.
@@ -506,12 +511,11 @@ def get_sheets_service(auth_path):
     LOGGER.info("Creating auth dir '" + auth_path + "'")
     os.makedirs(auth_path)
   if not os.path.exists(credentials_path):
-    raise Exception(
-        'Missing credentials.json.\n'
-        'Go to: https://developers.google.com/sheets/api/quickstart/python\n'
-        "Under Step 1, click 'ENABLE THE GOOGLE SHEETS API'\n"
-        "Click 'DOWNLOAD CLIENT CONFIGURATION'\n"
-        'Save to your auth_path (' + auth_path + ') as credentials.json')
+    raise Exception('Missing credentials.json.\n'
+                    'Go to: https://developers.google.com/sheets/api/quickstart/python\n'
+                    "Under Step 1, click 'ENABLE THE GOOGLE SHEETS API'\n"
+                    "Click 'DOWNLOAD CLIENT CONFIGURATION'\n"
+                    'Save to your auth_path (' + auth_path + ') as credentials.json')
   if os.path.exists(token_path):
     with open(token_path, 'rb') as token:
       creds = pickle.load(token)
@@ -603,8 +607,8 @@ def main():
     LOGGER.error('%s\n' % str(error))
     quit(1)
 
-  LOGGER.info('Info was successfully parsed to sheet: '
-              'https://docs.google.com/spreadsheets/d/' + args.spreadsheet)
+  LOGGER.info('Info was successfully parsed to sheet: https://docs.google.com/spreadsheets/d/' +
+              args.spreadsheet)
 
 
 if __name__ == '__main__':

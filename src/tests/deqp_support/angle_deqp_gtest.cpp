@@ -432,23 +432,21 @@ class dEQPTest : public testing::TestWithParam<size_t>
 
         if (!gUnexpectedPasses.empty())
         {
-            std::cout << GetTestStatLine("Unexpected Passed",
+            std::cout << GetTestStatLine("Unexpected Passed Count",
                                          std::to_string(gUnexpectedPasses.size()));
-            std::cout << "\nSome tests unexpectedly passed:\n";
             for (const std::string &testName : gUnexpectedPasses)
             {
-                std::cout << GetTestStatLine("Unexpected Passed Test", testName);
+                std::cout << GetTestStatLine("Unexpected Passed Tests", testName);
             }
         }
 
         if (!gUnexpectedFailed.empty())
         {
-            std::cout << GetTestStatLine("Unexpected Failed",
+            std::cout << GetTestStatLine("Unexpected Failed Count",
                                          std::to_string(gUnexpectedFailed.size()));
-            std::cout << "\nSome tests unexpectedly failed:\n";
             for (const std::string &testName : gUnexpectedFailed)
             {
-                std::cout << GetTestStatLine("Unexpected Failed Test", testName);
+                std::cout << GetTestStatLine("Unexpected Failed Tests", testName);
             }
         }
     }
