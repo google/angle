@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81f0093b_f7ec540d",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1066,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-04-26T18:32:35Z",
+      "side": 0,
+      "message": "This should fail with the new behavior.\nI guess there is a bug if it doesn\u0027t?\n\nMaybe should succeed in WebGL compatibility mode, so should move to WebGLCompatibility tests if so.",
+      "range": {
+        "startLine": 1066,
+        "startChar": 52,
+        "endLine": 1066,
+        "endChar": 60
+      },
+      "revId": "51ac37eecbce0519b0adc57755e8d4d0f410334e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20553c22_4798ad8f",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1071,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-04-26T18:32:35Z",
+      "side": 0,
+      "message": "This comment applies to the reason this test is skipped on Desktop GL.\nIt\u0027s possible that this was fixed at some point, I don\u0027t remember.\nEither the SKIP goes or the comment stays.",
+      "range": {
+        "startLine": 1069,
+        "startChar": 0,
+        "endLine": 1071,
+        "endChar": 80
+      },
+      "revId": "51ac37eecbce0519b0adc57755e8d4d0f410334e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b692c51_e2b9c0f9",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-04-26T18:32:35Z",
+      "side": 0,
+      "message": "Probably should move to WebGLCompatibility tests instead of being removed.",
+      "range": {
+        "startLine": 1246,
+        "startChar": 0,
+        "endLine": 1263,
+        "endChar": 0
+      },
+      "revId": "51ac37eecbce0519b0adc57755e8d4d0f410334e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
