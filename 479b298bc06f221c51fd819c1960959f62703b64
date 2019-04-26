@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22cca9ff_add6c1a8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3429,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-04-26T13:40:34Z",
+      "side": 1,
+      "message": "This is the core of the fix. All the other code is really get to this point so that when we\u0027re linking we can know two things:\n1. Are we dealing with an input invariant due to \"#pragma STDGL invariant(all)\"?\n2. Are we in webGL compatibility mode?\n\nIf 2 is true we always create a link error as webGL behavior deviates from ESSL100 spec in this case. Otherwise if the input invariant is due to a pragma, let the link occur despite a mismatch which allows the 1 pathological dEQP GLES2 test to pass.",
+      "revId": "479b298bc06f221c51fd819c1960959f62703b64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
