@@ -15,6 +15,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
@@ -704,10 +706,34 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
 
 void ContextVk::updateScissor(const gl::State &glState)
 {
-    FramebufferVk *framebufferVk      = vk::GetImpl(glState.getDrawFramebuffer());
-    gl::Rectangle scissoredRenderArea = framebufferVk->getScissoredRenderArea(this);
-    VkRect2D scissor                  = gl_vk::GetRect(scissoredRenderArea);
-    mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition, scissor);
+    FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
+    gl::Rectangle renderArea     = framebufferVk->getCompleteRenderArea();
+
+    // Clip the render area to the viewport.
+    gl::Rectangle viewportClippedRenderArea;
+    gl::ClipRectangle(renderArea, glState.getViewport(), &viewportClippedRenderArea);
+
+    gl::Rectangle scissoredArea = ClipRectToScissor(getState(), viewportClippedRenderArea, false);
+    if (isViewportFlipEnabledForDrawFBO())
+    {
+        scissoredArea.y = renderArea.height - scissoredArea.y - scissoredArea.height;
+    }
+
+    if (getRenderer()->getFeatures().forceNonZeroScissor && scissoredArea.width == 0 &&
+        scissoredArea.height == 0)
+    {
+        // There is no overlap between the app-set viewport and clippedRect.  This code works
+        // around an Intel driver bug that causes the driver to treat a (0,0,0,0) scissor as if
+        // scissoring is disabled.  In this case, set the scissor to be just outside of the
+        // renderArea.  Remove this work-around when driver version 25.20.100.6519 has been
+        // deployed.  http://anglebug.com/3407
+        scissoredArea.x      = renderArea.x;
+        scissoredArea.y      = renderArea.y;
+        scissoredArea.width  = 1;
+        scissoredArea.height = 1;
+    }
+    mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition,
+                                         gl_vk::GetRect(scissoredArea));
 
     framebufferVk->onScissorChange(this);
 }
@@ -736,6 +762,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
                 updateViewport(framebufferVk, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
+                // Update the scissor, which will be constrained to the viewport
+                updateScissor(glState);
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:

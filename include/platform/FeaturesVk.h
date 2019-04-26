@@ -89,6 +89,11 @@ struct FeaturesVk
     // object within that set.  This flag results in empty descriptor sets being bound for any
     // unused descriptor set to work around this issue.  http://anglebug.com/2727
     bool bindEmptyForUnusedDescriptorSets = false;
+
+    // When the scissor is (0,0,0,0) on Windows Intel, the driver acts as if the scissor was
+    // disabled.  Work-around this by setting the scissor to just outside of the render area
+    // (e.g. (renderArea.x, renderArea.y, 1, 1)). http://anglebug.com/3153
+    bool forceNonZeroScissor = false;
 };
 
 inline FeaturesVk::FeaturesVk() = default;

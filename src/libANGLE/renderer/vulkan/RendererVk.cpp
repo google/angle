@@ -1314,6 +1314,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
         mFeatures.bindEmptyForUnusedDescriptorSets = true;
     }
+
+    if (IsWindows() && IsIntel(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.forceNonZeroScissor = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()
