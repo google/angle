@@ -354,11 +354,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     RendererVk *renderer = displayVk->getRenderer();
     VkDevice device      = renderer->getDevice();
     VkInstance instance  = renderer->getInstance();
-    bool swapchainOutOfDate;
 
-    // Queueing the image for presentation ensures the image is no longer in use when
-    // we delete the window surface.
-    (void)present(displayVk, nullptr, 0, swapchainOutOfDate);
     // We might not need to flush the pipe here.
     (void)renderer->finish(displayVk, nullptr, nullptr);
 
