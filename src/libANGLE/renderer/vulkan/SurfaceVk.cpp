@@ -827,17 +827,17 @@ angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
 {
     VkDevice device = displayVk->getDevice();
 
-    vk::Semaphore aquireImageSemaphore;
-    ANGLE_VK_TRY(displayVk, aquireImageSemaphore.init(device));
+    vk::Scoped<vk::Semaphore> aquireImageSemaphore(device);
+    ANGLE_VK_TRY(displayVk, aquireImageSemaphore.get().init(device));
 
     ANGLE_VK_TRY(displayVk, vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX,
-                                                  aquireImageSemaphore.getHandle(), VK_NULL_HANDLE,
-                                                  &mCurrentSwapchainImageIndex));
+                                                  aquireImageSemaphore.get().getHandle(),
+                                                  VK_NULL_HANDLE, &mCurrentSwapchainImageIndex));
 
     // After presenting, the flush semaphore chain is cleared. The semaphore returned by
     // vkAcquireNextImage will start a new chain.
     ASSERT(mFlushSemaphoreChain.empty());
-    mFlushSemaphoreChain.push_back(std::move(aquireImageSemaphore));
+    mFlushSemaphoreChain.push_back(aquireImageSemaphore.release());
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
