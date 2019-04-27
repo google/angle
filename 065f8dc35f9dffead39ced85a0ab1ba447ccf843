@@ -46,6 +46,30 @@
       "revId": "065f8dc35f9dffead39ced85a0ab1ba447ccf843",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf0deb26_7b1b4809",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-27T15:41:53Z",
+      "side": 1,
+      "message": "getMax... but supported isn\u0027t the same as conformant. I don\u0027t think can be computed in the same place. I\u0027d recommend computing the max supported in getMaxSupported and the current conformant set here. Feel free to remove the conformant configs only setting if you like.",
+      "parentUuid": "66a1628d_0df5f77c",
+      "range": {
+        "startLine": 268,
+        "startChar": 45,
+        "endLine": 268,
+        "endChar": 55
+      },
+      "revId": "065f8dc35f9dffead39ced85a0ab1ba447ccf843",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
