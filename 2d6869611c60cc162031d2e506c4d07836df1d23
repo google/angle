@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "86d14021_b48fa991",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-04-27T15:43:41Z",
+      "side": 1,
+      "message": "OK, can you ping me Tuesday so you can explain? Kinda curious what it means that CIPD packages are missing a particular package. Maybe we can install them somehow.",
+      "parentUuid": "2b824d94_0a2d03a7",
+      "range": {
+        "startLine": 31,
+        "startChar": 5,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee83306a_d9d120a6",
         "filename": "scripts/generate_deqp_stats.py",
         "patchSetId": 2
