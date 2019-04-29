@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "79112f7a_a286888e",
+        "filename": "scripts/generate_deqp_stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-04-29T13:24:38Z",
+      "side": 1,
+      "message": "Sure. The list of available wheels are here: https://chrome-infra-packages.appspot.com/p/infra/python/wheels\nBut we require the google-auth-oauthlib wheel which is missing. I tried all the similar named wheels but they aren\u0027t the correct packages.",
+      "parentUuid": "86d14021_b48fa991",
+      "range": {
+        "startLine": 31,
+        "startChar": 5,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "2d6869611c60cc162031d2e506c4d07836df1d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee83306a_d9d120a6",
         "filename": "scripts/generate_deqp_stats.py",
         "patchSetId": 2
