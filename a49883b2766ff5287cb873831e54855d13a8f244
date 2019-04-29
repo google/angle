@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c5f5dbb_47ea98ee",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-04-29T14:29:20Z",
+      "side": 1,
+      "message": "Check this first, it will be much faster than the other check.",
+      "range": {
+        "startLine": 697,
+        "startChar": 8,
+        "endLine": 697,
+        "endChar": 56
+      },
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee6a8db3_54cf6e88",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-04-29T14:29:20Z",
+      "side": 1,
+      "message": "Don\u0027t we need to update both the y and height to invert?",
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
