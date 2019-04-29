@@ -11,22 +11,20 @@
 #   https://devsite.googleplex.com/sheets/api/quickstart/python
 #   Follow the quickstart guide.
 #
-# usage: generate_deqp_stats.py [-h] [--auth_path [AUTH_PATH]]
-#                               [--spreadsheet [SPREADSHEET]]
+# usage: generate_deqp_stats.py [-h] [--auth_path [AUTH_PATH]] [--spreadsheet [SPREADSHEET]]
 #                               [--verbosity [VERBOSITY]]
 #
 # optional arguments:
 #   -h, --help            show this help message and exit
 #   --auth_path [AUTH_PATH]
-#                         path to directory containing authorization data
-#                         (credentials.json and token.pickle).
-#                         [default=<home>/.auth]
+#                         path to directory containing authorization data (credentials.json and
+#                         token.pickle). [default=<home>/.auth]
 #   --spreadsheet [SPREADSHEET]
 #                         ID of the spreadsheet to write stats to. [default
 #                         ='1D6Yh7dAPP-aYLbX3HHQD8WubJV9XPuxvkKowmn2qhIw']
 #   --verbosity [VERBOSITY]
-#                         Verbosity of output. Valid options are [DEBUG, INFO,
-#                         WARNING, ERROR]. [default=INFO]
+#                         Verbosity of output. Valid options are [DEBUG, INFO, WARNING, ERROR].
+#                         [default=INFO]
 
 import argparse
 import datetime
@@ -85,8 +83,8 @@ INFO_TAG = '*RESULT'
 ######################
 
 
-# Returns a struct with info about the latest successful build given a bot name
-# Info contains the build_name, time, date, angle_revision, and chrome revision
+# Returns a struct with info about the latest successful build given a bot name. Info contains the
+# build_name, time, date, angle_revision, and chrome revision.
 # Uses: bb ls '<botname>' -n 1 -status success -A
 def get_latest_success_build_info(bot_name):
   bb = subprocess.Popen(['bb', 'ls', bot_name, '-n', '1', '-status', 'success', '-A'],
@@ -136,10 +134,9 @@ def get_latest_success_build_info(bot_name):
   return info
 
 
-# Returns a list of step names that we're interested in given a build name. We
-# are interested in step names starting with 'angle_'.
+# Returns a list of step names that we're interested in given a build name. We are interested in
+# step names starting with 'angle_'. May raise an exception.
 # Uses: bb get '<build_name>' -steps
-# May raise an exception.
 def get_step_names(build_name):
   bb = subprocess.Popen(['bb', 'get', build_name, '-steps'],
                         stdout=subprocess.PIPE,
@@ -169,8 +166,8 @@ def get_step_names(build_name):
   return step_names
 
 
-# Performs some heuristic validation of the step_info struct returned from a
-# single step log. Returns True if valid, False if invalid. May write to stderr
+# Performs some heuristic validation of the step_info struct returned from a single step log.
+# Returns True if valid, False if invalid. May write to stderr
 def validate_step_info(step_info, build_name, step_name):
   print_name = "'" + build_name + "': '" + step_name + "'"
   if not step_info:
@@ -187,8 +184,8 @@ def validate_step_info(step_info, build_name, step_name):
   return True
 
 
-# Returns a struct containing parsed info from a given step log. The info is
-# parsed by looking for lines with the following format in stdout:
+# Returns a struct containing parsed info from a given step log. The info is parsed by looking for
+# lines with the following format in stdout:
 # '[TESTSTATS]: <key>: <value>''
 # May write to stderr
 # Uses: bb log '<build_name>' '<step_name>'
@@ -224,8 +221,7 @@ def get_step_info(build_name, step_name):
       LOGGER.warning("Line improperly formatted: '" + line + "'\n")
       continue
     key = line_columns[1].strip()
-    # If the value is clearly an int, sum it. Otherwise, concatenate it as a
-    # string
+    # If the value is clearly an int, sum it. Otherwise, concatenate it as a string
     isInt = False
     intVal = 0
     try:
@@ -244,8 +240,8 @@ def get_step_info(build_name, step_name):
         step_info[key] = line_columns[2].strip()
       else:
         append_string = '\n' + line_columns[2].strip()
-        # Sheets has a limit of 50000 characters per cell, so make sure to
-        # stop appending below this limit
+        # Sheets has a limit of 50000 characters per cell, so make sure to stop appending below
+        # this limit
         if len(step_info[key]) + len(append_string) < 50000:
           step_info[key] += append_string
         else:
@@ -273,8 +269,8 @@ def get_bot_info(bot_name):
 #####################
 
 
-# Get an individual spreadsheet based on the spreadsheet id. Returns the result
-# of spreadsheets.get(), or throws an exception if the sheet could not open.
+# Get an individual spreadsheet based on the spreadsheet id. Returns the result of
+# spreadsheets.get(), or throws an exception if the sheet could not open.
 def get_spreadsheet(service, spreadsheet_id):
   LOGGER.debug("Called [spreadsheets.get(spreadsheetId='" + spreadsheet_id + "')]")
   request = service.get(spreadsheetId=spreadsheet_id)
@@ -318,8 +314,7 @@ def format_sheet_name(bot_name, step_name):
   return new_step_name + ' ' + bot_name
 
 
-# Returns the full list of sheet names that should be populated based on the
-# info struct
+# Returns the full list of sheet names that should be populated based on the info struct
 def get_sheet_names(info):
   sheet_names = []
   for bot_name in info:
@@ -337,8 +332,8 @@ def sheet_exists(spreadsheet, step_name):
   return False
 
 
-# Validates the spreadsheets object against the list of sheet names which
-# should appear. Returns a list of sheets that need creation.
+# Validates the spreadsheets object against the list of sheet names which should appear. Returns a
+# list of sheets that need creation.
 def validate_sheets(spreadsheet, sheet_names):
   create_sheets = []
   for sheet_name in sheet_names:
@@ -347,8 +342,8 @@ def validate_sheets(spreadsheet, sheet_names):
   return create_sheets
 
 
-# Performs a batch update with a given service, spreadsheet id, and list of
-# updates <object(Request)> to do.
+# Performs a batch update with a given service, spreadsheet id, and list <object(Request)> of
+# updates to do.
 def batch_update(service, spreadsheet_id, updates):
   batch_update_request_body = {
       'requests': updates,
@@ -359,16 +354,14 @@ def batch_update(service, spreadsheet_id, updates):
   request.execute()
 
 
-# Creates sheets given a service and spreadsheed id based on a list of sheet
-# names input
+# Creates sheets given a service and spreadsheed id based on a list of sheet names input
 def create_sheets(service, spreadsheet_id, sheet_names):
   updates = [{'addSheet': {'properties': {'title': sheet_name,}}} for sheet_name in sheet_names]
   batch_update(service, spreadsheet_id, updates)
 
 
-# Calls a values().batchGet() on the service to find the list of column names
-# from each sheet in sheet_names. Returns a dictionary with one list per
-# sheet_name.
+# Calls a values().batchGet() on the service to find the list of column names from each sheet in
+# sheet_names. Returns a dictionary with one list per sheet_name.
 def get_headers(service, spreadsheet_id, sheet_names):
   header_ranges = [sheet_name + '!A1:Z' for sheet_name in sheet_names]
   LOGGER.debug("Called [spreadsheets.values().batchGet(spreadsheetId='" + spreadsheet_id +
@@ -385,8 +378,8 @@ def get_headers(service, spreadsheet_id, sheet_names):
   return headers
 
 
-# Calls values().batchUpdate() with supplied list of data <object(ValueRange)>
-# to update on the service.
+# Calls values().batchUpdate() with supplied list of data <object(ValueRange)> to update on the
+# service.
 def batch_update_values(service, spreadsheet_id, data):
   batch_update_values_request_body = {
       'valueInputOption': 'USER_ENTERED',  # Helps with formatting of dates
@@ -399,8 +392,8 @@ def batch_update_values(service, spreadsheet_id, data):
   request.execute()
 
 
-# Populates the headers with any missing/desired rows based on the info struct,
-# and calls batch update to update the corresponding sheets if necessary.
+# Populates the headers with any missing/desired rows based on the info struct, and calls
+# batch update to update the corresponding sheets if necessary.
 def update_headers(service, spreadsheet_id, headers, info):
   data = []
   sheet_names = []
@@ -455,17 +448,16 @@ def append_values(service, spreadsheet_id, sheet_name, values):
   request.execute()
 
 
-# Uses the list of headers and the info struct to come up with a list of values
-# for each step from the latest builds.
+# Uses the list of headers and the info struct to come up with a list of values for each step
+# from the latest builds.
 def update_values(service, spreadsheet_id, headers, info):
   data = []
   for bot_name in info:
     for step_name in info[bot_name]['step_names']:
       sheet_name = format_sheet_name(bot_name, step_name)
       values = []
-      # For each key in the list of headers, either add the corresponding value
-      # or add a blank value. It's necessary for the values to match the order
-      # of the headers
+      # For each key in the list of headers, either add the corresponding value or add a blank
+      # value. It's necessary for the values to match the order of the headers
       for key in headers[sheet_name]:
         if key in info[bot_name] and key in REQUIRED_COLUMNS:
           values.append(info[bot_name][key])
@@ -501,8 +493,8 @@ def update_spreadsheet(service, spreadsheet_id, info):
 #####################
 
 
-# Loads or creates credentials and connects to the Sheets API. Returns a
-# Spreadsheets object with an open connection.
+# Loads or creates credentials and connects to the Sheets API. Returns a Spreadsheets object with
+# an open connection.
 def get_sheets_service(auth_path):
   credentials_path = auth_path + '/credentials.json'
   token_path = auth_path + '/token.pickle'
