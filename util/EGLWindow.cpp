@@ -96,7 +96,6 @@ ConfigParameters::ConfigParameters()
       alphaBits(-1),
       depthBits(-1),
       stencilBits(-1),
-      swapInterval(-1),
       componentType(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT),
       multisample(false),
       debug(false),
@@ -182,7 +181,9 @@ bool EGLWindow::initializeGL(OSWindow *osWindow,
         return false;
     if (!initializeSurface(osWindow, glWindowingLibrary, params))
         return false;
-    return initializeContext();
+    if (!initializeContext())
+        return false;
+    return true;
 }
 
 bool EGLWindow::initializeDisplay(OSWindow *osWindow,
@@ -527,17 +528,10 @@ bool EGLWindow::initializeContext()
         return false;
     }
 
-    eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
-    if (eglGetError() != EGL_SUCCESS)
+    if (!makeCurrent())
     {
-        std::cerr << "Error during eglMakeCurrent.\n";
         destroyGL();
         return false;
-    }
-
-    if (mConfigParams.swapInterval != -1)
-    {
-        eglSwapInterval(mDisplay, mConfigParams.swapInterval);
     }
 
     return true;
@@ -621,9 +615,27 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     return EGL_FALSE;
 }
 
-void EGLWindow::makeCurrent()
+bool EGLWindow::makeCurrent()
 {
-    eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
+    if (eglMakeCurrent(mDisplay, mSurface, mSurface, mContext) == EGL_FALSE ||
+        eglGetError() != EGL_SUCCESS)
+    {
+        std::cerr << "Error during eglMakeCurrent.\n";
+        return false;
+    }
+
+    return true;
+}
+
+bool EGLWindow::setSwapInterval(EGLint swapInterval)
+{
+    if (eglSwapInterval(mDisplay, swapInterval) == EGL_FALSE || eglGetError() != EGL_SUCCESS)
+    {
+        std::cerr << "Error during eglSwapInterval.\n";
+        return false;
+    }
+
+    return true;
 }
 
 bool EGLWindow::hasError() const

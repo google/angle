@@ -416,9 +416,6 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    // Disable vsync.
-    mConfigParams.swapInterval = 0;
-
     mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
     mPlatformMethods.logError                    = EmptyPlatformMethod;
     mPlatformMethods.logWarning                  = EmptyPlatformMethod;
@@ -442,6 +439,14 @@ void ANGLERenderTest::SetUp()
     {
         mSkipTest = true;
         FAIL() << "Failed initializing GL Window";
+        // FAIL returns.
+    }
+
+    // Disable vsync.
+    if (!mGLWindow->setSwapInterval(0))
+    {
+        mSkipTest = true;
+        FAIL() << "Failed setting swap interval";
         // FAIL returns.
     }
 

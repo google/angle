@@ -47,7 +47,6 @@ struct ANGLE_UTIL_EXPORT ConfigParameters
     int alphaBits;
     int depthBits;
     int stencilBits;
-    int swapInterval;
 
     Optional<bool> webGLCompatibility;
     Optional<bool> robustResourceInit;
@@ -81,16 +80,9 @@ class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable
     virtual bool isGLInitialized() const                      = 0;
     virtual void swap()                                       = 0;
     virtual void destroyGL()                                  = 0;
-    virtual void makeCurrent()                                = 0;
+    virtual bool makeCurrent()                                = 0;
     virtual bool hasError() const                             = 0;
-
-    int getConfigRedBits() const { return mConfigParams.redBits; }
-    int getConfigGreenBits() const { return mConfigParams.greenBits; }
-    int getConfigBlueBits() const { return mConfigParams.blueBits; }
-    int getConfigAlphaBits() const { return mConfigParams.alphaBits; }
-    int getConfigDepthBits() const { return mConfigParams.depthBits; }
-    int getConfigStencilBits() const { return mConfigParams.stencilBits; }
-    int getSwapInterval() const { return mConfigParams.swapInterval; }
+    virtual bool setSwapInterval(EGLint swapInterval)         = 0;
 
     bool isMultisample() const { return mConfigParams.multisample; }
     bool isDebugEnabled() const { return mConfigParams.debug; }
@@ -121,8 +113,6 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
 
-    void swap() override;
-
     const EGLPlatformParameters &getPlatform() const { return mPlatform; }
     EGLConfig getConfig() const;
     EGLDisplay getDisplay() const;
@@ -133,6 +123,13 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     bool initializeGL(OSWindow *osWindow,
                       angle::Library *glWindowingLibrary,
                       const ConfigParameters &params) override;
+
+    bool isGLInitialized() const override;
+    void swap() override;
+    void destroyGL() override;
+    bool makeCurrent() override;
+    bool hasError() const override;
+    bool setSwapInterval(EGLint swapInterval) override;
 
     // Only initializes the Display.
     bool initializeDisplay(OSWindow *osWindow,
@@ -150,12 +147,8 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     // Only initializes the Context.
     bool initializeContext();
 
-    void destroyGL() override;
     void destroySurface();
     void destroyContext();
-    bool isGLInitialized() const override;
-    void makeCurrent() override;
-    bool hasError() const override;
 
     bool isDisplayInitialized() const { return mDisplay != EGL_NO_DISPLAY; }
 

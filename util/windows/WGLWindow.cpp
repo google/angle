@@ -116,7 +116,10 @@ bool WGLWindow::initializeGL(OSWindow *osWindow,
         return false;
     }
 
-    makeCurrent();
+    if (!makeCurrent())
+    {
+        return false;
+    }
 
     // Reload entry points to capture extensions.
     angle::LoadWGL(GetProcAddressWithFallback);
@@ -164,21 +167,9 @@ bool WGLWindow::initializeGL(OSWindow *osWindow,
         return false;
     }
 
-    makeCurrent();
-
-    if (mConfigParams.swapInterval != -1)
+    if (!makeCurrent())
     {
-        if (_wglSwapIntervalEXT)
-        {
-            if (_wglSwapIntervalEXT(mConfigParams.swapInterval) == FALSE)
-            {
-                std::cerr << "Error setting swap interval." << std::endl;
-            }
-        }
-        else
-        {
-            std::cerr << "Error setting swap interval." << std::endl;
-        }
+        return false;
     }
 
     angle::LoadGLES(GetProcAddressWithFallback);
@@ -205,19 +196,32 @@ bool WGLWindow::isGLInitialized() const
     return mWGLContext != nullptr;
 }
 
-void WGLWindow::makeCurrent()
+bool WGLWindow::makeCurrent()
 {
     if (_wglMakeCurrent(mDeviceContext, mWGLContext) == FALSE)
     {
-        std::cerr << "Error during wglMakeCurrent." << std::endl;
+        std::cerr << "Error during wglMakeCurrent.\n";
+        return false;
     }
+
+    return true;
+}
+
+bool WGLWindow::setSwapInterval(EGLint swapInterval)
+{
+    if (!_wglSwapIntervalEXT || _wglSwapIntervalEXT(swapInterval) == FALSE)
+    {
+        std::cerr << "Error during wglSwapIntervalEXT.\n";
+        return false;
+    }
+    return true;
 }
 
 void WGLWindow::swap()
 {
     if (SwapBuffers(mDeviceContext) == FALSE)
     {
-        std::cerr << "Error during SwapBuffers." << std::endl;
+        std::cerr << "Error during SwapBuffers.\n";
     }
 }
 

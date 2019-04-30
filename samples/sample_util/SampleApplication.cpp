@@ -136,10 +136,13 @@ int SampleApplication::run()
     configParams.depthBits   = 24;
     configParams.stencilBits = 8;
 
-    // Disable vsync
-    configParams.swapInterval = 0;
-
     if (!mEGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), configParams))
+    {
+        return -1;
+    }
+
+    // Disable vsync
+    if (!mEGLWindow->setSwapInterval(0))
     {
         return -1;
     }
