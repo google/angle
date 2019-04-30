@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90beebcc_c57e7361",
+        "filename": "src/tests/perf_tests/VulkanCommandBufferPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-30T14:08:27Z",
+      "side": 1,
+      "message": "We wrap at 100 chars in ANGLE, so some of these don\u0027t need a line break. Also, I would write `with` and `without` completely, to avoid confusion if a non-native speaker is not familiar with the shorthand versions.",
+      "revId": "47b5b1c289e03dc5fa2b5a9f88bc15e955699542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
