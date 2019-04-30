@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "98f05732_87f0b44e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-30T14:38:20Z",
+      "side": 1,
+      "message": "Instead of reintroducing GetScissor, I would just do the following:\n\n    // Clip the render area to the viewport.\n    gl::Rectangle viewportClippedRenderArea;\n    gl::ClipRectangle(renderArea, glState.getViewport(), \u0026viewportClippedRenderArea);\n\n    gl::Rectangle scissoredRenderArea \u003d ClipRectToScissor(contextVk-\u003egetState(),\n         viewportClippedRenderArea,\n         contextVk-\u003eisViewportFlipEnabledForDrawFBO(),\n         renderArea.height);\n\n    if (getRenderer()-\u003egetFeatures().forceNonZeroScissor \u0026\u0026\n        scissoredRenderArea.width \u003d\u003d 0 \u0026\u0026 scissoredRenderArea.height \u003d\u003d 0)\n    {\n        // workaround\n    }\n\nYou would need to add some `height` parameter to `ClipRectToScissor` for y-inversion as it can no longer use the height of the rect that\u0027s passed.",
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c5f5dbb_47ea98ee",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
@@ -25,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "b2dc4e7f_d2946c7c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-30T14:38:20Z",
+      "side": 1,
+      "message": "My suggestion would rework this, but nevertheless, the code here is using the side effect of calculating the scissor in the previous expression.",
+      "parentUuid": "1c5f5dbb_47ea98ee",
+      "range": {
+        "startLine": 697,
+        "startChar": 8,
+        "endLine": 697,
+        "endChar": 56
+      },
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ee6a8db3_54cf6e88",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 11
@@ -36,6 +77,24 @@
       "writtenOn": "2019-04-29T14:29:20Z",
       "side": 1,
       "message": "Don\u0027t we need to update both the y and height to invert?",
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c62323e_9e94c6bb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-04-30T14:38:20Z",
+      "side": 1,
+      "message": "No, the height is constant (and positive). It\u0027s just the `y` that\u0027s shifted to correspond to an inverted viewport (also why there\u0027s a `- scissorOut-\u003eextent.height`).",
+      "parentUuid": "ee6a8db3_54cf6e88",
       "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
