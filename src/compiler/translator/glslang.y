@@ -58,6 +58,7 @@ using namespace sh;
 %code requires {
 #define YYLTYPE TSourceLoc
 #define YYLTYPE_IS_DECLARED 1
+#define YYLTYPE_IS_TRIVIAL 1
 }
 
 %union {

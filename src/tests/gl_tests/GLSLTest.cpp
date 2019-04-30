@@ -508,6 +508,22 @@ class GLSLTest_ES31 : public GLSLTest
     void SetUp() override { ANGLETest::SetUp(); }
 };
 
+std::string BuillBigInitialStackShader(int length)
+{
+    std::string result;
+    result += "void main() { \n";
+    for (int i = 0; i < length; i++)
+    {
+        result += "  if (true) { \n";
+    }
+    result += "  int temp; \n";
+    for (int i = 0; i <= length; i++)
+    {
+        result += "} \n";
+    }
+    return result;
+}
+
 TEST_P(GLSLTest, NamelessScopedStructs)
 {
     constexpr char kFS[] = R"(precision mediump float;
@@ -5516,6 +5532,15 @@ TEST_P(GLSLTest, FragData)
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test angle can handle big initial stack size with dynamic stack allocation.
+TEST_P(GLSLTest, MemoryExhaustedTest)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
+    GLuint program =
+        CompileProgram(essl1_shaders::vs::Simple(), BuillBigInitialStackShader(36).c_str());
+    EXPECT_NE(0u, program);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
