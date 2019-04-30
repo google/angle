@@ -161,7 +161,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
         ASSERT_GL_NO_ERROR();
 
-        if (extensionEnabled("GL_EXT_draw_buffers"))
+        if (IsGLExtensionEnabled("GL_EXT_draw_buffers"))
         {
             glGenFramebuffers(1, &mMRTFBO);
             glBindFramebuffer(GL_FRAMEBUFFER, mMRTFBO);
@@ -182,8 +182,8 @@ class BlitFramebufferANGLETest : public ANGLETest
             ASSERT_GL_NO_ERROR();
         }
 
-        if (extensionEnabled("GL_ANGLE_framebuffer_multisample") &&
-            extensionEnabled("GL_OES_rgb8_rgba8"))
+        if (IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample") &&
+            IsGLExtensionEnabled("GL_OES_rgb8_rgba8"))
         {
             // RGBA single-sampled framebuffer
             glGenTextures(1, &mRGBAColorbuffer);
@@ -213,7 +213,7 @@ class BlitFramebufferANGLETest : public ANGLETest
             ASSERT_GL_NO_ERROR();
             ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
-            if (extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+            if (IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"))
             {
                 // BGRA single-sampled framebuffer
                 glGenTextures(1, &mBGRAColorbuffer);
@@ -271,7 +271,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glDeleteFramebuffers(1, &mDiffSizeFBO);
         glDeleteTextures(1, &mDiffSizeColorBuffer);
 
-        if (extensionEnabled("GL_EXT_draw_buffers"))
+        if (IsGLExtensionEnabled("GL_EXT_draw_buffers"))
         {
             glDeleteFramebuffers(1, &mMRTFBO);
             glDeleteTextures(1, &mMRTColorBuffer0);
@@ -343,7 +343,7 @@ class BlitFramebufferANGLETest : public ANGLETest
 
     bool checkExtension(const std::string &extension)
     {
-        if (!extensionEnabled(extension))
+        if (!IsGLExtensionEnabled(extension))
         {
             std::cout << "Test skipped because " << extension << " not supported." << std::endl;
             return false;
@@ -393,7 +393,7 @@ class BlitFramebufferANGLETest : public ANGLETest
 // Draw to user-created framebuffer, blit whole-buffer color to original framebuffer.
 TEST_P(BlitFramebufferANGLETest, BlitColorToDefault)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -422,7 +422,7 @@ TEST_P(BlitFramebufferANGLETest, BlitColorToDefault)
 // Draw to system framebuffer, blit whole-buffer color to user-created framebuffer.
 TEST_P(BlitFramebufferANGLETest, ReverseColorBlit)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     // TODO(jmadill): Fix this. http://anglebug.com/2743
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
@@ -454,7 +454,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseColorBlit)
 // blit from user-created FBO to system framebuffer, with the scissor test enabled.
 TEST_P(BlitFramebufferANGLETest, ScissoredBlit)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -491,7 +491,7 @@ TEST_P(BlitFramebufferANGLETest, ScissoredBlit)
 // blit from system FBO to user-created framebuffer, with the scissor test enabled.
 TEST_P(BlitFramebufferANGLETest, ReverseScissoredBlit)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     // TODO(jmadill): Fix this. http://anglebug.com/2743
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
@@ -531,7 +531,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseScissoredBlit)
 // blit from user-created FBO to system framebuffer, using region larger than buffer.
 TEST_P(BlitFramebufferANGLETest, OversizedBlit)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -564,7 +564,7 @@ TEST_P(BlitFramebufferANGLETest, OversizedBlit)
 // blit from system FBO to user-created framebuffer, using region larger than buffer.
 TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     // TODO(jmadill): Fix this. http://anglebug.com/2743
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
@@ -599,7 +599,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 // blit from user-created FBO to system framebuffer, with depth buffer.
 TEST_P(BlitFramebufferANGLETest, BlitWithDepthUserToDefault)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -652,7 +652,7 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepthUserToDefault)
 // blit from system FBO to user-created framebuffer, with depth buffer.
 TEST_P(BlitFramebufferANGLETest, BlitWithDepthDefaultToUser)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -705,7 +705,7 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepthDefaultToUser)
 // blit from one region of the system fbo to another-- this should fail.
 TEST_P(BlitFramebufferANGLETest, BlitSameBufferOriginal)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -723,7 +723,7 @@ TEST_P(BlitFramebufferANGLETest, BlitSameBufferOriginal)
 // blit from one region of the system fbo to another.
 TEST_P(BlitFramebufferANGLETest, BlitSameBufferUser)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -740,7 +740,7 @@ TEST_P(BlitFramebufferANGLETest, BlitSameBufferUser)
 
 TEST_P(BlitFramebufferANGLETest, BlitPartialColor)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -772,7 +772,7 @@ TEST_P(BlitFramebufferANGLETest, BlitPartialColor)
 
 TEST_P(BlitFramebufferANGLETest, BlitDifferentSizes)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -802,7 +802,7 @@ TEST_P(BlitFramebufferANGLETest, BlitDifferentSizes)
 
 TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mColorOnlyFBO);
 
@@ -839,7 +839,7 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 
 TEST_P(BlitFramebufferANGLETest, BlitStencil)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     // TODO(jmadill): Figure out if we can fix this on D3D9.
     // https://code.google.com/p/angleproject/issues/detail?id=2205
@@ -905,7 +905,7 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
 // make sure that attempting to blit a partial depth buffer issues an error
 TEST_P(BlitFramebufferANGLETest, BlitPartialDepthStencil)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -927,9 +927,9 @@ TEST_P(BlitFramebufferANGLETest, BlitPartialDepthStencil)
 // Test blit with MRT framebuffers
 TEST_P(BlitFramebufferANGLETest, BlitMRT)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
-    if (!extensionEnabled("GL_EXT_draw_buffers"))
+    if (!IsGLExtensionEnabled("GL_EXT_draw_buffers"))
     {
         return;
     }
@@ -980,7 +980,7 @@ TEST_P(BlitFramebufferANGLETest, BlitMRT)
 // Test multisampled framebuffer blits if supported
 TEST_P(BlitFramebufferANGLETest, MultisampledRGBAToRGBA)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     if (!checkExtension("GL_ANGLE_framebuffer_multisample"))
         return;
@@ -993,7 +993,7 @@ TEST_P(BlitFramebufferANGLETest, MultisampledRGBAToRGBA)
 
 TEST_P(BlitFramebufferANGLETest, MultisampledRGBAToBGRA)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     if (!checkExtension("GL_ANGLE_framebuffer_multisample"))
         return;
@@ -1009,7 +1009,7 @@ TEST_P(BlitFramebufferANGLETest, MultisampledRGBAToBGRA)
 
 TEST_P(BlitFramebufferANGLETest, MultisampledBGRAToRGBA)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     if (!checkExtension("GL_ANGLE_framebuffer_multisample"))
         return;
@@ -1025,7 +1025,7 @@ TEST_P(BlitFramebufferANGLETest, MultisampledBGRAToRGBA)
 
 TEST_P(BlitFramebufferANGLETest, MultisampledBGRAToBGRA)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     if (!checkExtension("GL_ANGLE_framebuffer_multisample"))
         return;
@@ -1042,7 +1042,7 @@ TEST_P(BlitFramebufferANGLETest, MultisampledBGRAToBGRA)
 // Make sure that attempts to stretch in a blit call issue an error
 TEST_P(BlitFramebufferANGLETest, ErrorStretching)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -1063,7 +1063,7 @@ TEST_P(BlitFramebufferANGLETest, ErrorStretching)
 // Make sure that attempts to flip in a blit call issue an error
 TEST_P(BlitFramebufferANGLETest, ErrorFlipping)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -1083,7 +1083,7 @@ TEST_P(BlitFramebufferANGLETest, ErrorFlipping)
 
 TEST_P(BlitFramebufferANGLETest, Errors)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 

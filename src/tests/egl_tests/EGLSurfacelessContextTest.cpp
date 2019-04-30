@@ -107,7 +107,7 @@ class EGLSurfacelessContextTest : public EGLTest,
 
     bool checkExtension(bool verbose = true) const
     {
-        if (!ANGLETest::eglDisplayExtensionEnabled(mDisplay, "EGL_KHR_surfaceless_context"))
+        if (!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_surfaceless_context"))
         {
             if (verbose)
             {

@@ -39,7 +39,8 @@ class BlendMinMaxTest : public ANGLETest
 
     void runTest(GLenum colorFormat, GLenum type)
     {
-        ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"));
+        ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                           !IsGLExtensionEnabled("GL_EXT_blend_minmax"));
 
         SetUpFramebuffer(colorFormat);
 
@@ -171,8 +172,8 @@ TEST_P(BlendMinMaxTest, RGBA8)
 
 TEST_P(BlendMinMaxTest, RGBA32F)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 || !extensionEnabled("GL_EXT_float_blend") ||
-                       !extensionEnabled("GL_EXT_color_buffer_float"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 || !IsGLExtensionEnabled("GL_EXT_float_blend") ||
+                       !IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     // Ignore SDK layers messages on D3D11 FL 9.3 (http://anglebug.com/1284)
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
@@ -183,7 +184,7 @@ TEST_P(BlendMinMaxTest, RGBA32F)
 TEST_P(BlendMinMaxTest, RGBA16F)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
-                       !extensionEnabled("GL_EXT_color_buffer_half_float"));
+                       !IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
 
     runTest(GL_RGBA16F, GL_FLOAT);
 }

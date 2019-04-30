@@ -240,7 +240,7 @@ void main()
     {
         if (getClientMajorVersion() <= 2)
         {
-            ASSERT_TRUE(extensionEnabled("GL_ANGLE_instanced_arrays"));
+            ASSERT_TRUE(IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"));
             glVertexAttribDivisorANGLE(location, divisor);
         }
         else
@@ -373,12 +373,12 @@ void main()
 
     bool requestMultiDrawExtension()
     {
-        if (extensionRequestable("GL_ANGLE_multi_draw"))
+        if (IsGLExtensionRequestable("GL_ANGLE_multi_draw"))
         {
             glRequestExtensionANGLE("GL_ANGLE_multi_draw");
         }
 
-        if (!extensionEnabled("GL_ANGLE_multi_draw"))
+        if (!IsGLExtensionEnabled("GL_ANGLE_multi_draw"))
         {
             return false;
         }
@@ -388,12 +388,12 @@ void main()
 
     bool requestInstancedExtension()
     {
-        if (extensionRequestable("GL_ANGLE_instanced_arrays"))
+        if (IsGLExtensionRequestable("GL_ANGLE_instanced_arrays"))
         {
             glRequestExtensionANGLE("GL_ANGLE_instanced_arrays");
         }
 
-        if (!extensionEnabled("GL_ANGLE_instanced_arrays"))
+        if (!IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"))
         {
             return false;
         }
@@ -473,7 +473,7 @@ TEST_P(MultiDrawTest, MultiDrawElements)
 // Check that glMultiDraw*Instanced without instancing support results in GL_INVALID_OPERATION
 TEST_P(MultiDrawNoInstancingSupportTest, InvalidOperation)
 {
-    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_ANGLE_instanced_arrays"));
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"));
     requestMultiDrawExtension();
     SetupBuffers();
     SetupProgram();

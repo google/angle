@@ -67,7 +67,7 @@ class ProgramBinaryTest : public ANGLETest
 
     bool supported() const
     {
-        if (!extensionEnabled("GL_OES_get_program_binary"))
+        if (!IsGLExtensionEnabled("GL_OES_get_program_binary"))
         {
             std::cout << "Test skipped because GL_OES_get_program_binary is not available."
                       << std::endl;
@@ -619,7 +619,7 @@ void main()
 // should not internally cause a vertex shader recompile (for conversion).
 TEST_P(ProgramBinaryTransformFeedbackTest, GetTransformFeedbackVarying)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_get_program_binary"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_get_program_binary"));
 
     ANGLE_SKIP_TEST_IF(!getAvailableProgramBinaryFormatCount());
 

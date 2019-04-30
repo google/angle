@@ -36,7 +36,7 @@ class DrawBuffersTest : public ANGLETest
     // method instead of calling on directly.
     void setDrawBuffers(GLsizei n, const GLenum *drawBufs)
     {
-        if (extensionEnabled("GL_EXT_draw_buffers"))
+        if (IsGLExtensionEnabled("GL_EXT_draw_buffers"))
         {
             glDrawBuffersEXT(n, drawBufs);
         }
@@ -50,8 +50,8 @@ class DrawBuffersTest : public ANGLETest
     // Use this method to filter if we can support these tests.
     bool setupTest()
     {
-        if (getClientMajorVersion() < 3 && (!ensureExtensionEnabled("GL_EXT_draw_buffers") ||
-                                            !ensureExtensionEnabled("GL_ANGLE_framebuffer_blit")))
+        if (getClientMajorVersion() < 3 && (!EnsureGLExtensionEnabled("GL_EXT_draw_buffers") ||
+                                            !EnsureGLExtensionEnabled("GL_ANGLE_framebuffer_blit")))
         {
             return false;
         }

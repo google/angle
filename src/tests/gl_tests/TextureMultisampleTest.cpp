@@ -96,7 +96,7 @@ class TextureMultisampleTest : public ANGLETest
     bool lessThanES31MultisampleExtNotSupported()
     {
         return getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-               !ensureExtensionEnabled("GL_ANGLE_texture_multisample");
+               !EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample");
     }
 
     const char *multisampleTextureFragmentShader()
@@ -184,12 +184,12 @@ class TextureMultisampleArrayWebGLTest : public TextureMultisampleTest
     // succeeds.
     bool requestArrayExtension()
     {
-        if (extensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
+        if (IsGLExtensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
         {
             glRequestExtensionANGLE("GL_OES_texture_storage_multisample_2d_array");
         }
 
-        if (!extensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+        if (!IsGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
         {
             return false;
         }
@@ -205,7 +205,7 @@ void TextureMultisampleTest::texStorageMultisample(GLenum target,
                                                    GLboolean fixedsamplelocations)
 {
     if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
     {
         glTexStorage2DMultisampleANGLE(target, samples, internalformat, width, height,
                                        fixedsamplelocations);
@@ -223,7 +223,7 @@ void TextureMultisampleTest::getTexLevelParameterfv(GLenum target,
                                                     GLfloat *params)
 {
     if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
     {
         glGetTexLevelParameterfvANGLE(target, level, pname, params);
     }
@@ -239,7 +239,7 @@ void TextureMultisampleTest::getTexLevelParameteriv(GLenum target,
                                                     GLint *params)
 {
     if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
     {
         glGetTexLevelParameterivANGLE(target, level, pname, params);
     }
@@ -252,7 +252,7 @@ void TextureMultisampleTest::getTexLevelParameteriv(GLenum target,
 void TextureMultisampleTest::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 {
     if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
     {
         glGetMultisamplefvANGLE(pname, index, val);
     }
@@ -265,7 +265,7 @@ void TextureMultisampleTest::getMultisamplefv(GLenum pname, GLuint index, GLfloa
 void TextureMultisampleTest::sampleMaski(GLuint maskNumber, GLbitfield mask)
 {
     if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
     {
         glSampleMaskiANGLE(maskNumber, mask);
     }
@@ -444,7 +444,7 @@ TEST_P(TextureMultisampleTest, CheckSamplePositions)
 // Test textureSize and texelFetch when using ANGLE_texture_multisample extension
 TEST_P(TextureMultisampleTest, SimpleTexelFetch)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_ANGLE_texture_multisample"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"));
 
     ANGLE_GL_PROGRAM(texelFetchProgram, essl3_shaders::vs::Passthrough(),
                      multisampleTextureFragmentShader());
@@ -509,7 +509,7 @@ TEST_P(TextureMultisampleTest, SampleMaski)
 // not enabled, the feature isn't supported.
 TEST_P(NegativeTextureMultisampleTest, Negtive)
 {
-    ANGLE_SKIP_TEST_IF(ensureExtensionEnabled("GL_ANGLE_texture_multisample"));
+    ANGLE_SKIP_TEST_IF(EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"));
 
     GLint maxSamples = 0;
     glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_R8, GL_SAMPLES, 1, &maxSamples);

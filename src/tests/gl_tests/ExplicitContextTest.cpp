@@ -31,8 +31,8 @@ class ExplicitContextTest : public ANGLETest
 // Test to ensure that the basic functionality of the extension works.
 TEST_P(ExplicitContextTest, BasicTest)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_explicit_context") ||
-                       !extensionEnabled("GL_ANGLE_explicit_context_gles1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_explicit_context") ||
+                       !IsGLExtensionEnabled("GL_ANGLE_explicit_context_gles1"));
 
     EGLContext context = getEGLWindow()->getContext();
 
@@ -48,8 +48,8 @@ TEST_P(ExplicitContextTest, BasicTest)
 // Test to ensure that extension works with eglGetProcAddress
 TEST_P(ExplicitContextTest, GetProcAddress)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_explicit_context") ||
-                       !extensionEnabled("GL_ANGLE_explicit_context_gles1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_explicit_context") ||
+                       !IsGLExtensionEnabled("GL_ANGLE_explicit_context_gles1"));
 
     EGLContext context = getEGLWindow()->getContext();
 
@@ -65,8 +65,8 @@ TEST_P(ExplicitContextTest, GetProcAddress)
 // Test to ensure that a passed context of null results in a no-op
 TEST_P(ExplicitContextTest, NullContext)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_explicit_context") ||
-                       !extensionEnabled("GL_ANGLE_explicit_context_gles1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_explicit_context") ||
+                       !IsGLExtensionEnabled("GL_ANGLE_explicit_context_gles1"));
 
     EGLContext context = getEGLWindow()->getContext();
 

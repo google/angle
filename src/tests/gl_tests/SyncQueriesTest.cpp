@@ -42,7 +42,7 @@ class SyncQueriesTest : public ANGLETest
 // Test basic usage of sync queries
 TEST_P(SyncQueriesTest, Basic)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_sync_query"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_sync_query"));
 
     glGenQueriesEXT(1, &mQuery);
     glBeginQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM, mQuery);
@@ -64,9 +64,9 @@ TEST_P(SyncQueriesTest, Basic)
 TEST_P(SyncQueriesTest, Validation)
 {
     // Need the GL_EXT_occlusion_query_boolean extension for the entry points
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_occlusion_query_boolean"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
-    bool extensionAvailable = extensionEnabled("GL_CHROMIUM_sync_query");
+    bool extensionAvailable = IsGLExtensionEnabled("GL_CHROMIUM_sync_query");
 
     glGenQueriesEXT(1, &mQuery);
 

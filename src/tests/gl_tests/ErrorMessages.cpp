@@ -75,7 +75,7 @@ class ErrorMessagesTest : public ANGLETest
 // Verify functionality of WebGL specific errors using KHR_debug
 TEST_P(ErrorMessagesTest, ErrorMessages)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_KHR_debug"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_debug"));
 
     glEnable(GL_DEBUG_OUTPUT);
 

@@ -278,7 +278,6 @@ class ANGLETestBase
 
   public:
     void setWindowVisible(bool isVisible);
-    static bool eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
 
     virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
     virtual void overrideFeaturesVk(angle::FeaturesVk *workaroundsVulkan) {}
@@ -343,12 +342,6 @@ class ANGLETestBase
                             GLfloat positionAttribXYScale,
                             bool useVertexBuffer,
                             float layer);
-
-    static bool extensionEnabled(const std::string &extName);
-    static bool extensionRequestable(const std::string &extName);
-    static bool ensureExtensionEnabled(const std::string &extName);
-    static bool eglClientExtensionEnabled(const std::string &extName);
-    static bool eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName);
 
     void setWindowWidth(int width);
     void setWindowHeight(int height);
@@ -535,9 +528,13 @@ bool IsVulkan();
 bool IsDebug();
 bool IsRelease();
 
-bool IsDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
+bool EnsureGLExtensionEnabled(const std::string &extName);
+bool IsEGLClientExtensionEnabled(const std::string &extName);
+bool IsEGLDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName);
+bool IsEGLDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
+bool IsGLExtensionEnabled(const std::string &extName);
+bool IsGLExtensionRequestable(const std::string &extName);
 
-// Note: git cl format messes up this formatting.
 #define ANGLE_SKIP_TEST_IF(COND)                                  \
     do                                                            \
     {                                                             \

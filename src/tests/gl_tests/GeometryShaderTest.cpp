@@ -54,7 +54,7 @@ class GeometryShaderTestES3 : public ANGLETest
 // Verify that Geometry Shader cannot be created in an OpenGL ES 3.0 context.
 TEST_P(GeometryShaderTestES3, CreateGeometryShaderInES3)
 {
-    EXPECT_TRUE(!extensionEnabled("GL_EXT_geometry_shader"));
+    EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
     GLuint geometryShader = glCreateShader(GL_GEOMETRY_SHADER_EXT);
     EXPECT_EQ(0u, geometryShader);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
@@ -63,7 +63,7 @@ TEST_P(GeometryShaderTestES3, CreateGeometryShaderInES3)
 // Verify that Geometry Shader can be created and attached to a program.
 TEST_P(GeometryShaderTest, CreateAndAttachGeometryShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kGS[] = R"(#version 310 es
 #extension GL_EXT_geometry_shader : require
@@ -102,7 +102,7 @@ void main()
 // requirement of GL_EXT_geometry_shader SPEC.
 TEST_P(GeometryShaderTest, GeometryShaderImplementationDependentLimits)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     const std::map<GLenum, int> limits = {{GL_MAX_FRAMEBUFFER_LAYERS_EXT, 256},
                                           {GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT, 1024},
@@ -137,7 +137,7 @@ TEST_P(GeometryShaderTest, GeometryShaderImplementationDependentLimits)
 // Verify that all the combined resource limits meet the requirement of GL_EXT_geometry_shader SPEC.
 TEST_P(GeometryShaderTest, CombinedResourceLimits)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     // See http://anglebug.com/2261.
     ANGLE_SKIP_TEST_IF(IsAndroid());
@@ -159,7 +159,7 @@ TEST_P(GeometryShaderTest, CombinedResourceLimits)
 // Verify that linking a program with an uncompiled geometry shader causes a link failure.
 TEST_P(GeometryShaderTest, LinkWithUncompiledGeometryShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLuint vertexShader   = CompileShader(GL_VERTEX_SHADER, essl31_shaders::vs::Simple());
     GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, essl31_shaders::fs::Red());
@@ -190,7 +190,7 @@ TEST_P(GeometryShaderTest, LinkWithUncompiledGeometryShader)
 // in this program causes a link error.
 TEST_P(GeometryShaderTest, LinkWhenShaderVersionMismatch)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     const std::string &emptyGeometryShader = CreateEmptyGeometryShader("points", "points", 2, 1);
 
@@ -203,7 +203,7 @@ TEST_P(GeometryShaderTest, LinkWhenShaderVersionMismatch)
 // output primitive, or declaration on 'max_vertices' causes a link failure.
 TEST_P(GeometryShaderTest, LinkValidationOnGeometryShaderLayouts)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     const std::string gsWithoutInputPrimitive  = CreateEmptyGeometryShader("", "points", 2, 1);
     const std::string gsWithoutOutputPrimitive = CreateEmptyGeometryShader("points", "", 2, 1);
@@ -239,7 +239,7 @@ TEST_P(GeometryShaderTest, LinkValidationOnGeometryShaderLayouts)
 // geometry shader in the program.
 TEST_P(GeometryShaderTest, VertexShaderArrayOutput)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kVS[] = R"(#version 310 es
 in vec4 vertex_in;
@@ -284,7 +284,7 @@ void main()
 // from those in a geometry shader.
 TEST_P(GeometryShaderTest, UniformMismatchBetweenGeometryAndFragmentShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kVS[] = R"(#version 310 es
 uniform highp vec4 uniform_value_vert;
@@ -330,7 +330,7 @@ void main()
 // MAX_GEOMETRY_UNIFORM_BLOCKS_EXT.
 TEST_P(GeometryShaderTest, TooManyUniformBlocks)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLint maxGeometryUniformBlocks = 0;
     glGetIntegerv(GL_MAX_GEOMETRY_UNIFORM_BLOCKS_EXT, &maxGeometryUniformBlocks);
@@ -369,7 +369,7 @@ TEST_P(GeometryShaderTest, TooManyUniformBlocks)
 // exceeds MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT.
 TEST_P(GeometryShaderTest, TooManyShaderStorageBlocks)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLint maxGeometryShaderStorageBlocks = 0;
     glGetIntegerv(GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT, &maxGeometryShaderStorageBlocks);
@@ -408,7 +408,7 @@ TEST_P(GeometryShaderTest, TooManyShaderStorageBlocks)
 // different from that in a geometry shader.
 TEST_P(GeometryShaderTest, UniformBlockMismatchBetweenVertexAndGeometryShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kVS[] = R"(#version 310 es
 uniform ubo
@@ -449,7 +449,7 @@ void main()
 // shader is different from that in a fragment shader.
 TEST_P(GeometryShaderTest, ShaderStorageBlockMismatchBetweenGeometryAndFragmentShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLint maxGeometryShaderStorageBlocks = 0;
     glGetIntegerv(GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT, &maxGeometryShaderStorageBlocks);
@@ -501,7 +501,7 @@ void main()
 // EXT_geometry_shader, or we will get an INVALID_ENUM error.
 TEST_P(GeometryShaderTest, ReferencedByGeometryShaderWithoutExtensionEnabled)
 {
-    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kFS[] = R"(#version 310 es
 precision highp float;
@@ -532,7 +532,7 @@ void main()
 // EXT_geometry_shader.
 TEST_P(GeometryShaderTest, ReferencedByGeometryShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kVS[] = R"(#version 310 es
 precision highp float;
@@ -681,7 +681,7 @@ void main()
 // Verify correct errors can be reported when we use illegal parameters on FramebufferTextureEXT.
 TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -727,7 +727,7 @@ TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
 // Verify CheckFramebufferStatus can work correctly on layered depth and stencil attachments.
 TEST_P(GeometryShaderTest, LayeredFramebufferCompletenessWithDepthAttachment)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLint maxFramebufferLayers;
     glGetIntegerv(GL_MAX_FRAMEBUFFER_LAYERS_EXT, &maxFramebufferLayers);
@@ -800,7 +800,7 @@ TEST_P(GeometryShaderTest, LayeredFramebufferCompletenessWithDepthAttachment)
 // Verify correct errors can be reported when we use layered cube map attachments on a framebuffer.
 TEST_P(GeometryShaderTest, NegativeLayeredFramebufferCompletenessWithCubeMapTextures)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);

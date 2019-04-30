@@ -93,7 +93,7 @@ TEST_P(SRGBTextureTest, SRGBValidation)
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel() && IsOpenGLES());
 
-    bool supported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
+    bool supported = IsGLExtensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
 
     GLuint tex = 0;
     glGenTextures(1, &tex);
@@ -127,7 +127,7 @@ TEST_P(SRGBTextureTest, SRGBAValidation)
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel() && IsOpenGLES());
 
-    bool supported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
+    bool supported = IsGLExtensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
 
     GLuint tex = 0;
     glGenTextures(1, &tex);
@@ -189,7 +189,7 @@ TEST_P(SRGBTextureTest, SRGBASizedValidation)
 
 TEST_P(SRGBTextureTest, SRGBARenderbuffer)
 {
-    bool supported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
+    bool supported = IsGLExtensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
 
     GLuint rbo = 0;
     glGenRenderbuffers(1, &rbo);
@@ -236,10 +236,10 @@ TEST_P(SRGBTextureTest, SRGBARenderbuffer)
 // Verify that if the srgb decode extension is available, srgb textures are too
 TEST_P(SRGBTextureTest, SRGBDecodeExtensionAvailability)
 {
-    bool hasSRGBDecode = extensionEnabled("GL_EXT_texture_sRGB_decode");
+    bool hasSRGBDecode = IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode");
     if (hasSRGBDecode)
     {
-        bool hasSRGBTextures = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() >= 3;
+        bool hasSRGBTextures = IsGLExtensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() >= 3;
         EXPECT_TRUE(hasSRGBTextures);
     }
 }
@@ -250,7 +250,7 @@ TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel() && IsOpenGLES());
 
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_sRGB_decode"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode"));
 
     GLColor linearColor(64, 127, 191, 255);
     GLColor srgbColor(13, 54, 133, 255);
@@ -279,7 +279,7 @@ TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
 // Test basic functionality of SRGB decode using the sampler parameter
 TEST_P(SRGBTextureTest, SRGBDecodeSamplerParameter)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_sRGB_decode") ||
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode") ||
                        getClientMajorVersion() < 3);
 
     GLColor linearColor(64, 127, 191, 255);

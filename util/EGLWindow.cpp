@@ -643,12 +643,6 @@ bool EGLWindow::hasError() const
     return eglGetError() != EGL_SUCCESS;
 }
 
-// static
-bool EGLWindow::ClientExtensionEnabled(const std::string &extName)
-{
-    return CheckExtensionExists(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS), extName);
-}
-
 bool CheckExtensionExists(const char *allExtensions, const std::string &extName)
 {
     const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");

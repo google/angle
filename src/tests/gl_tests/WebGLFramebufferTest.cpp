@@ -825,7 +825,7 @@ TEST_P(WebGLFramebufferTest, CheckValidColorDepthCombination)
 // Test to cover a bug in preserving the texture image index for WebGL framebuffer attachments
 TEST_P(WebGLFramebufferTest, TextureAttachmentCommitBug)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_ANGLE_depth_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_depth_texture"));
 
     GLTexture depthTexture;
     glBindTexture(GL_TEXTURE_2D, depthTexture.get());

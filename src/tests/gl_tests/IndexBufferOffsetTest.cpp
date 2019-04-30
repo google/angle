@@ -138,7 +138,7 @@ TEST_P(IndexBufferOffsetTest, UInt16Index)
 TEST_P(IndexBufferOffsetTest, UInt32Index)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
-                       !extensionEnabled("GL_OES_element_index_uint"));
+                       !IsGLExtensionEnabled("GL_OES_element_index_uint"));
 
     GLuint indexData[] = {0, 1, 2, 1, 2, 3};
     runTest(GL_UNSIGNED_INT, 4, indexData);

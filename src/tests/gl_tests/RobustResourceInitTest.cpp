@@ -209,12 +209,15 @@ class RobustResourceInitTest : public ANGLETest
         forceNewDisplay();
     }
 
-    bool hasGLExtension() { return extensionEnabled("GL_ANGLE_robust_resource_initialization"); }
+    bool hasGLExtension()
+    {
+        return IsGLExtensionEnabled("GL_ANGLE_robust_resource_initialization");
+    }
 
     bool hasEGLExtension()
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
-                                          "EGL_ANGLE_robust_resource_initialization");
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
+                                            "EGL_ANGLE_robust_resource_initialization");
     }
 
     bool hasRobustSurfaceInit()
@@ -318,7 +321,7 @@ TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 TEST_P(RobustResourceInitTest, Queries)
 {
     // If context extension string exposed, check queries.
-    if (extensionEnabled("GL_ANGLE_robust_resource_initialization"))
+    if (IsGLExtensionEnabled("GL_ANGLE_robust_resource_initialization"))
     {
         GLboolean enabled = 0;
         glGetBooleanv(GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
@@ -785,7 +788,7 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfBoundsCopiedTextureWithUnpackBuffe
 
     // GL_ALPHA texture can't be read with glReadPixels, for convenience this test uses
     // glCopyTextureCHROMIUM to copy GL_ALPHA into GL_RGBA
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_copy_texture"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
     PFNGLCOPYTEXTURECHROMIUMPROC glCopyTextureCHROMIUM =
         reinterpret_cast<PFNGLCOPYTEXTURECHROMIUMPROC>(eglGetProcAddress("glCopyTextureCHROMIUM"));
 
@@ -1600,7 +1603,7 @@ TEST_P(RobustResourceInitTestES3, Texture2DArray)
 TEST_P(RobustResourceInitTestES3, CompressedSubImage)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     constexpr int width     = 8;
     constexpr int height    = 8;
@@ -1786,11 +1789,11 @@ TEST_P(RobustResourceInitTestES31, Multisample2DTextureArray)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
-    if (extensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
+    if (IsGLExtensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
     {
         glRequestExtensionANGLE("GL_OES_texture_storage_multisample_2d_array");
     }
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
 
     const GLsizei kLayers = 4;
 

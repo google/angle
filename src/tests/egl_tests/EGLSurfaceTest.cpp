@@ -542,8 +542,7 @@ TEST_P(EGLSurfaceTest, FixedSizeWindow)
     initializeDisplay();
     ANGLE_SKIP_TEST_IF(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &mConfig) == EGL_FALSE);
 
-    ANGLE_SKIP_TEST_IF(
-        !ANGLETest::eglDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_window_fixed_size"));
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_window_fixed_size"));
 
     constexpr EGLint kInitialSize = 64;
     constexpr EGLint kUpdateSize  = 32;
@@ -598,11 +597,7 @@ class EGLSurfaceTestD3D11 : public EGLSurfaceTest
 // Test that rendering to an IDCompositionSurface using a pbuffer works.
 TEST_P(EGLSurfaceTestD3D11, CreateDirectCompositionSurface)
 {
-    if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_platform_angle_d3d"));
     initializeDisplay();
 
     EGLAttrib device       = 0;
@@ -673,11 +668,7 @@ TEST_P(EGLSurfaceTestD3D11, CreateDirectCompositionSurface)
 
 TEST_P(EGLSurfaceTestD3D11, CreateSurfaceWithMSAA)
 {
-    if (!ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"))
-    {
-        std::cout << "D3D Platform not supported in ANGLE" << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_platform_angle_d3d"));
 
     // clang-format off
     const EGLint configAttributes[] =

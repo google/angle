@@ -72,7 +72,7 @@ void main()
 
 TEST_P(DXT1CompressedTextureTest, CompressedTexImage)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -119,11 +119,11 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexImage)
 
 TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
-    ANGLE_SKIP_TEST_IF(
-        getClientMajorVersion() < 3 &&
-        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       (!IsGLExtensionEnabled("GL_EXT_texture_storage") ||
+                        !IsGLExtensionEnabled("GL_OES_rgb8_rgba8")));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -183,7 +183,7 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
 // Test validation of glCompressedTexSubImage2D with DXT formats
 TEST_P(DXT1CompressedTextureTest, CompressedTexSubImageValidation)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture.get());
@@ -211,7 +211,7 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexSubImageValidation)
 // Test that it's not possible to call CopyTexSubImage2D on a compressed texture
 TEST_P(DXT1CompressedTextureTest, CopyTexSubImage2DDisallowed)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture.get());
@@ -226,14 +226,14 @@ TEST_P(DXT1CompressedTextureTest, CopyTexSubImage2DDisallowed)
 
 TEST_P(DXT1CompressedTextureTest, PBOCompressedTexStorage)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
-                       !extensionEnabled("GL_NV_pixel_buffer_object"));
+                       !IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
 
-    ANGLE_SKIP_TEST_IF(
-        getClientMajorVersion() < 3 &&
-        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       (!IsGLExtensionEnabled("GL_EXT_texture_storage") ||
+                        !IsGLExtensionEnabled("GL_OES_rgb8_rgba8")));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -311,7 +311,7 @@ class DXT1CompressedTextureTestES3 : public DXT1CompressedTextureTest
 
 TEST_P(DXT1CompressedTextureTestES3, PBOCompressedTexImage)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -376,7 +376,7 @@ TEST_P(DXT1CompressedTextureTestES3, PBOCompressedTexImage)
 // Test validation of glCompressedTexSubImage3D with DXT formats
 TEST_P(DXT1CompressedTextureTestES3, CompressedTexSubImageValidation)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D_ARRAY, texture.get());
@@ -403,7 +403,7 @@ TEST_P(DXT1CompressedTextureTestES3, CompressedTexSubImageValidation)
 // Test validation of glCompressedTexSubImage3D with DXT formats
 TEST_P(DXT1CompressedTextureTestES3, CopyTexSubImage3DDisallowed)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D_ARRAY, texture.get());

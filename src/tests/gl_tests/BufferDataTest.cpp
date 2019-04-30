@@ -413,16 +413,16 @@ TEST_P(BufferDataTestES3, BufferResizing)
 // Verify OES_mapbuffer is present if EXT_map_buffer_range is.
 TEST_P(BufferDataTest, ExtensionDependency)
 {
-    if (extensionEnabled("GL_EXT_map_buffer_range"))
+    if (IsGLExtensionEnabled("GL_EXT_map_buffer_range"))
     {
-        ASSERT_TRUE(extensionEnabled("GL_OES_mapbuffer"));
+        ASSERT_TRUE(IsGLExtensionEnabled("GL_OES_mapbuffer"));
     }
 }
 
 // Test mapping with the OES extension.
 TEST_P(BufferDataTest, MapBufferOES)
 {
-    if (!extensionEnabled("GL_EXT_map_buffer_range"))
+    if (!IsGLExtensionEnabled("GL_EXT_map_buffer_range"))
     {
         // Needed for test validation.
         return;

@@ -19,14 +19,14 @@ class EGLSyncTest : public ANGLETest
   protected:
     bool hasFenceSyncExtension() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_fence_sync");
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_fence_sync");
     }
     bool hasWaitSyncExtension() const
     {
         return hasFenceSyncExtension() &&
-               eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_wait_sync");
+               IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), "EGL_KHR_wait_sync");
     }
-    bool hasGLSyncExtension() const { return extensionEnabled("GL_OES_EGL_sync"); }
+    bool hasGLSyncExtension() const { return IsGLExtensionEnabled("GL_OES_EGL_sync"); }
 };
 
 // Test error cases for all EGL_KHR_fence_sync functions

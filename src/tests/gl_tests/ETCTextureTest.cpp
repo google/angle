@@ -48,7 +48,7 @@ class ETCTextureTest : public ANGLETest
 // Tests a texture with ETC1 lossy decode format
 TEST_P(ETCTextureTest, ETC1Validation)
 {
-    bool supported = extensionEnabled("GL_ANGLE_lossy_etc_decode");
+    bool supported = IsGLExtensionEnabled("GL_ANGLE_lossy_etc_decode");
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
@@ -80,7 +80,7 @@ TEST_P(ETCTextureTest, ETC1Validation)
 // Tests a texture with ETC2 RGB8 lossy decode format
 TEST_P(ETCTextureTest, ETC2RGB8Validation)
 {
-    bool supported = extensionEnabled("GL_ANGLE_lossy_etc_decode");
+    bool supported = IsGLExtensionEnabled("GL_ANGLE_lossy_etc_decode");
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
@@ -123,7 +123,7 @@ TEST_P(ETCTextureTest, ETC2RGB8Validation)
 // Tests a texture with ETC2 SRGB8 lossy decode format
 TEST_P(ETCTextureTest, ETC2SRGB8Validation)
 {
-    bool supported = extensionEnabled("GL_ANGLE_lossy_etc_decode");
+    bool supported = IsGLExtensionEnabled("GL_ANGLE_lossy_etc_decode");
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
@@ -167,7 +167,7 @@ TEST_P(ETCTextureTest, ETC2SRGB8Validation)
 // Tests a texture with ETC2 RGB8 punchthrough A1 lossy decode format
 TEST_P(ETCTextureTest, ETC2RGB8A1Validation)
 {
-    bool supported = extensionEnabled("GL_ANGLE_lossy_etc_decode");
+    bool supported = IsGLExtensionEnabled("GL_ANGLE_lossy_etc_decode");
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
@@ -215,7 +215,7 @@ TEST_P(ETCTextureTest, ETC2RGB8A1Validation)
 // Tests a texture with ETC2 SRGB8 punchthrough A1 lossy decode format
 TEST_P(ETCTextureTest, ETC2SRGB8A1Validation)
 {
-    bool supported = extensionEnabled("GL_ANGLE_lossy_etc_decode");
+    bool supported = IsGLExtensionEnabled("GL_ANGLE_lossy_etc_decode");
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 

@@ -330,7 +330,7 @@ TEST_P(ProvokingVertexTest, ANGLEProvokingVertex)
 
     fnExpectId(2);
 
-    const bool hasExt = extensionEnabled("GL_ANGLE_provoking_vertex");
+    const bool hasExt = IsGLExtensionEnabled("GL_ANGLE_provoking_vertex");
     if (IsD3D11())
     {
         EXPECT_TRUE(hasExt);

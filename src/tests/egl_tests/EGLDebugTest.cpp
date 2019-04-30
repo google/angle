@@ -23,7 +23,7 @@ class EGLDebugTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    bool hasExtension() const { return eglClientExtensionEnabled("EGL_KHR_debug"); }
+    bool hasExtension() const { return IsEGLClientExtensionEnabled("EGL_KHR_debug"); }
 
     static void EGLAPIENTRY StubCallback(EGLenum error,
                                          const char *command,

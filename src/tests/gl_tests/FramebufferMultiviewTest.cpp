@@ -740,7 +740,7 @@ TEST_P(FramebufferMultiviewTest, NegativeMultisampledFramebufferTest)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
 
     // We don't enable OVR_multiview2_multisample
 

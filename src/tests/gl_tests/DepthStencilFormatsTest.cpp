@@ -121,13 +121,13 @@ class DepthStencilFormatsTestES3 : public DepthStencilFormatsTestBase
 
 TEST_P(DepthStencilFormatsTest, DepthTexture)
 {
-    bool shouldHaveTextureSupport = extensionEnabled("GL_ANGLE_depth_texture");
+    bool shouldHaveTextureSupport = IsGLExtensionEnabled("GL_ANGLE_depth_texture");
     EXPECT_EQ(shouldHaveTextureSupport,
               checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT));
     EXPECT_EQ(shouldHaveTextureSupport,
               checkTexImageFormatSupport(GL_DEPTH_COMPONENT, GL_UNSIGNED_INT));
 
-    if (extensionEnabled("GL_EXT_texture_storage"))
+    if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
     {
         EXPECT_EQ(shouldHaveTextureSupport, checkTexStorageFormatSupport(GL_DEPTH_COMPONENT16));
         EXPECT_EQ(shouldHaveTextureSupport, checkTexStorageFormatSupport(GL_DEPTH_COMPONENT32_OES));
@@ -140,16 +140,16 @@ TEST_P(DepthStencilFormatsTest, PackedDepthStencil)
     // Expected to fail in D3D11 if GL_OES_packed_depth_stencil or GL_ANGLE_depth_texture is not
     // present.
 
-    bool shouldHaveRenderbufferSupport = extensionEnabled("GL_OES_packed_depth_stencil");
+    bool shouldHaveRenderbufferSupport = IsGLExtensionEnabled("GL_OES_packed_depth_stencil");
     EXPECT_EQ(shouldHaveRenderbufferSupport,
               checkRenderbufferFormatSupport(GL_DEPTH24_STENCIL8_OES));
 
-    bool shouldHaveTextureSupport = extensionEnabled("GL_OES_packed_depth_stencil") &&
-                                    extensionEnabled("GL_ANGLE_depth_texture");
+    bool shouldHaveTextureSupport = IsGLExtensionEnabled("GL_OES_packed_depth_stencil") &&
+                                    IsGLExtensionEnabled("GL_ANGLE_depth_texture");
     EXPECT_EQ(shouldHaveTextureSupport,
               checkTexImageFormatSupport(GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES));
 
-    if (extensionEnabled("GL_EXT_texture_storage"))
+    if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
     {
         EXPECT_EQ(shouldHaveTextureSupport, checkTexStorageFormatSupport(GL_DEPTH24_STENCIL8_OES));
     }

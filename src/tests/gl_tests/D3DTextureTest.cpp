@@ -84,7 +84,7 @@ class D3DTextureTest : public ANGLETest
 
         EGLWindow *window  = getEGLWindow();
         EGLDisplay display = window->getDisplay();
-        if (eglDisplayExtensionEnabled(display, "EGL_EXT_device_query"))
+        if (IsEGLDisplayExtensionEnabled(display, "EGL_EXT_device_query"))
         {
             PFNEGLQUERYDISPLAYATTRIBEXTPROC eglQueryDisplayAttribEXT =
                 reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBEXTPROC>(
@@ -100,7 +100,7 @@ class D3DTextureTest : public ANGLETest
                 device = reinterpret_cast<EGLDeviceEXT>(result);
             }
 
-            if (eglDeviceExtensionEnabled(device, "EGL_ANGLE_device_d3d"))
+            if (IsEGLDeviceExtensionEnabled(device, "EGL_ANGLE_device_d3d"))
             {
                 EGLAttrib result = 0;
                 if (eglQueryDeviceAttribEXT(device, EGL_D3D11_DEVICE_ANGLE, &result))
@@ -241,7 +241,7 @@ class D3DTextureTest : public ANGLETest
     {
         EGLWindow *window  = getEGLWindow();
         EGLDisplay display = window->getDisplay();
-        if (!eglDisplayExtensionEnabled(display, "EGL_ANGLE_d3d_texture_client_buffer"))
+        if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_d3d_texture_client_buffer"))
         {
             std::cout << "Test skipped due to missing EGL_ANGLE_d3d_texture_client_buffer"
                       << std::endl;
@@ -309,7 +309,7 @@ class D3DTextureTest : public ANGLETest
 // Test creating pbuffer from textures with several different DXGI formats.
 TEST_P(D3DTextureTest, TestD3D11SupportedFormatsSurface)
 {
-    bool srgbSupported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
+    bool srgbSupported = IsGLExtensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
     ANGLE_SKIP_TEST_IF(!valid() || !mD3D11Device || !srgbSupported);
 
     const DXGI_FORMAT formats[] = {DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
@@ -362,7 +362,8 @@ TEST_P(D3DTextureTest, TestD3D11SupportedFormatsTexture)
     bool srgb8alpha8TextureAttachmentSupported = getClientMajorVersion() >= 3;
     ANGLE_SKIP_TEST_IF(!valid() || !mD3D11Device || !srgb8alpha8TextureAttachmentSupported);
 
-    bool srgbWriteControlSupported = extensionEnabled("GL_EXT_sRGB_write_control") && !IsOpenGL();
+    bool srgbWriteControlSupported =
+        IsGLExtensionEnabled("GL_EXT_sRGB_write_control") && !IsOpenGL();
 
     const DXGI_FORMAT formats[] = {DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,
                                    DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
@@ -654,7 +655,7 @@ TEST_P(D3DTextureTest, GlColorspaceNotAllowedForTypedD3DTexture)
     ANGLE_SKIP_TEST_IF(!mD3D11Device);
 
     // SRGB support is required.
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3);
 
     EGLint attribsExplicitColorspace[] = {
         EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA,       EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
@@ -682,7 +683,7 @@ TEST_P(D3DTextureTest, TypelessD3DTextureNotSupported)
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     // SRGB support is required.
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3);
 
     EGLint attribs[] = {
         EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA, EGL_TEXTURE_TARGET,

@@ -176,26 +176,26 @@ void main()
 
         if (getClientMajorVersion() < 3)
         {
-            ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage") ||
-                               !extensionEnabled("GL_OES_texture_float"));
+            ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage") ||
+                               !IsGLExtensionEnabled("GL_OES_texture_float"));
 
             ANGLE_SKIP_TEST_IF((sourceImageChannels < 3 || destImageChannels < 3) &&
-                               !extensionEnabled("GL_EXT_texture_rg"));
+                               !IsGLExtensionEnabled("GL_EXT_texture_rg"));
 
             ANGLE_SKIP_TEST_IF(destImageChannels == 3 &&
-                               !extensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"));
+                               !IsGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"));
 
             ANGLE_SKIP_TEST_IF(destImageChannels == 4 &&
-                               !extensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"));
+                               !IsGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"));
 
             ANGLE_SKIP_TEST_IF(destImageChannels <= 2);
         }
         else
         {
-            ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_color_buffer_float"));
+            ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_color_buffer_float"));
 
             ANGLE_SKIP_TEST_IF(destImageChannels == 3 &&
-                               !extensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"));
+                               !IsGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"));
         }
 
         // clang-format off
@@ -264,7 +264,7 @@ void main()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, sourceUnsizedFormat, GL_FLOAT, imageData);
 
-        if (sourceImageChannels < 3 && !extensionEnabled("GL_EXT_texture_rg"))
+        if (sourceImageChannels < 3 && !IsGLExtensionEnabled("GL_EXT_texture_rg"))
         {
             // This is not supported
             ASSERT_GL_ERROR(GL_INVALID_OPERATION);
@@ -1163,7 +1163,7 @@ TEST_P(Texture2DTest, NegativeAPISubImage)
     glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
-    if (extensionEnabled("GL_EXT_texture_storage"))
+    if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
     {
         // Create a 1-level immutable texture.
         glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
@@ -1186,8 +1186,8 @@ TEST_P(Texture2DTest, QueryBinding)
     EXPECT_EQ(0, textureBinding);
 
     glGetIntegerv(GL_TEXTURE_BINDING_EXTERNAL_OES, &textureBinding);
-    if (extensionEnabled("GL_OES_EGL_image_external") ||
-        extensionEnabled("GL_NV_EGL_stream_consumer_external"))
+    if (IsGLExtensionEnabled("GL_OES_EGL_image_external") ||
+        IsGLExtensionEnabled("GL_NV_EGL_stream_consumer_external"))
     {
         EXPECT_GL_NO_ERROR();
         EXPECT_EQ(0, textureBinding);
@@ -1440,7 +1440,8 @@ TEST_P(TextureCubeTest, CubeMapFBOScissoredClear)
 // default color.
 TEST_P(Texture2DTest, TexStorage)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_EXT_texture_storage"));
 
     int width  = getWindowWidth();
     int height = getWindowHeight();
@@ -1495,7 +1496,7 @@ TEST_P(Texture2DTest, TexStorage)
 // initialized the image with a default color.
 TEST_P(Texture2DTest, TexStorageWithPBO)
 {
-    if (extensionEnabled("NV_pixel_buffer_object"))
+    if (IsGLExtensionEnabled("NV_pixel_buffer_object"))
     {
         int width  = getWindowWidth();
         int height = getWindowHeight();
@@ -1621,7 +1622,7 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
     const int potTexSize  = 4;  // Should be less than npotTexSize
     GLuint tex2D;
 
-    if (extensionEnabled("GL_OES_texture_npot"))
+    if (IsGLExtensionEnabled("GL_OES_texture_npot"))
     {
         // This test isn't applicable if texture_npot is enabled
         return;
@@ -2595,7 +2596,7 @@ TEST_P(Texture2DTest, TextureLuminanceAlphaRGBSame)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTest, TextureLuminance32ImplicitAlpha1)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_float"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float"));
     ANGLE_SKIP_TEST_IF(IsD3D9());
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
@@ -2615,7 +2616,7 @@ TEST_P(Texture2DTest, TextureLuminance32ImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTest, TextureLuminance16ImplicitAlpha1)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_float"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float"));
     ANGLE_SKIP_TEST_IF(IsD3D9());
     ANGLE_SKIP_TEST_IF(IsVulkan());
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
@@ -2871,7 +2872,7 @@ class TextureAnisotropyTest : public Texture2DTest
 // Tests that setting anisotropic filtering doesn't cause failures at draw time.
 TEST_P(TextureAnisotropyTest, AnisotropyFunctional)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_filter_anisotropic"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_filter_anisotropic"));
 
     setUpProgram();
 
@@ -2925,7 +2926,7 @@ class TextureBorderClampTest : public Texture2DTest
 // GL_CLAMP_TO_BORDER wrap mode (set with glTexParameter).
 TEST_P(TextureBorderClampTest, TextureBorderClampFunctional)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     setUpProgram();
 
@@ -2948,7 +2949,7 @@ TEST_P(TextureBorderClampTest, TextureBorderClampFunctional)
 // Test reading back GL_TEXTURE_BORDER_COLOR by glGetTexParameter.
 TEST_P(TextureBorderClampTest, TextureBorderClampFunctional2)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -2979,7 +2980,7 @@ TEST_P(TextureBorderClampTest, TextureBorderClampFunctional2)
 // Test GL_TEXTURE_BORDER_COLOR parameter validation at glTexParameter.
 TEST_P(TextureBorderClampTest, TextureBorderClampValidation)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -3033,7 +3034,7 @@ class TextureBorderClampTestES3 : public TextureBorderClampTest
 // GL_CLAMP_TO_BORDER wrap mode (set with glSamplerParameter).
 TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Functional)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     setUpProgram();
 
@@ -3058,7 +3059,7 @@ TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Functional)
 // Test reading back GL_TEXTURE_BORDER_COLOR by glGetSamplerParameter.
 TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Functional2)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     glActiveTexture(GL_TEXTURE0);
 
@@ -3127,7 +3128,7 @@ TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Functional2)
 // Test GL_TEXTURE_BORDER_COLOR parameter validation at glSamplerParameter.
 TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Validation)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     glActiveTexture(GL_TEXTURE0);
 
@@ -3223,7 +3224,7 @@ class TextureBorderClampIntegerTestES3 : public Texture2DTest
 // integer texture in GL_CLAMP_TO_BORDER wrap mode (set with glTexParameterIivOES).
 TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampInteger)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     setUpProgram();
 
@@ -3250,7 +3251,7 @@ TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampInteger)
 // integer texture in GL_CLAMP_TO_BORDER wrap mode (set with glTexParameterIivOES).
 TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampInteger2)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     setUpProgram();
 
@@ -3279,7 +3280,7 @@ TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampInteger2)
 // of the unsigned integer texture in GL_CLAMP_TO_BORDER wrap mode (set with glTexParameterIuivOES).
 TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     isUnsignedIntTest = true;
 
@@ -3309,7 +3310,7 @@ TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned)
 // glSamplerParameterIuivOES).
 TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned2)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_border_clamp"));
 
     isUnsignedIntTest = true;
 
@@ -3785,7 +3786,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 // Test texture formats enabled by the GL_EXT_texture_norm16 extension.
 TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_norm16"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
 
     testNorm16Texture(GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
     testNorm16Texture(GL_RG16_EXT, GL_RG, GL_UNSIGNED_SHORT);

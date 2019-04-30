@@ -96,12 +96,12 @@ class MultiviewTestBase : public ANGLETestBase
     // Requests the OVR_multiview2 extension and returns true if the operation succeeds.
     bool requestMultiviewExtension(bool requireMultiviewMultisample)
     {
-        if (extensionRequestable("GL_OVR_multiview2"))
+        if (IsGLExtensionRequestable("GL_OVR_multiview2"))
         {
             glRequestExtensionANGLE("GL_OVR_multiview2");
         }
 
-        if (!extensionEnabled("GL_OVR_multiview2"))
+        if (!IsGLExtensionEnabled("GL_OVR_multiview2"))
         {
             std::cout << "Test skipped due to missing GL_OVR_multiview2." << std::endl;
             return false;
@@ -109,16 +109,16 @@ class MultiviewTestBase : public ANGLETestBase
 
         if (requireMultiviewMultisample)
         {
-            if (extensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
+            if (IsGLExtensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
             {
                 glRequestExtensionANGLE("GL_OES_texture_storage_multisample_2d_array");
             }
-            if (extensionRequestable("GL_ANGLE_multiview_multisample"))
+            if (IsGLExtensionRequestable("GL_ANGLE_multiview_multisample"))
             {
                 glRequestExtensionANGLE("GL_ANGLE_multiview_multisample");
             }
 
-            if (!extensionEnabled("GL_ANGLE_multiview_multisample"))
+            if (!IsGLExtensionEnabled("GL_ANGLE_multiview_multisample"))
             {
                 std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
                           << std::endl;

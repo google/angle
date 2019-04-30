@@ -55,7 +55,7 @@ void main()
     {
         glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
 
-        if ((getClientMajorVersion() == 3) || extensionEnabled("GL_EXT_unpack_subimage"))
+        if ((getClientMajorVersion() == 3) || IsGLExtensionEnabled("GL_EXT_unpack_subimage"))
         {
             // Only texSize * texSize region is filled as WHITE, other parts are BLACK.
             // If the UNPACK_ROW_LENGTH is implemented correctly, all texels inside this texture are

@@ -30,7 +30,7 @@ class MemoryObjectTest : public ANGLETest
 // glIsMemoryObjectEXT must identify memory objects.
 TEST_P(MemoryObjectTest, MemoryObjectShouldBeMemoryObject)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object"));
 
     constexpr GLsizei kMemoryObjectCount = 2;
     GLuint memoryObjects[kMemoryObjectCount];
@@ -51,7 +51,7 @@ TEST_P(MemoryObjectTest, MemoryObjectShouldBeMemoryObject)
 // glImportMemoryFdEXT must fail for handle types that are not file descriptors.
 TEST_P(MemoryObjectTest, ShouldFailValidationOnImportFdUnsupportedHandleType)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object_fd"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     {
         GLMemoryObject memoryObject;

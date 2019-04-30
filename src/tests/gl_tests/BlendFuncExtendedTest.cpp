@@ -244,7 +244,7 @@ class EXTBlendFuncExtendedDrawTestES3 : public EXTBlendFuncExtendedDrawTest
 // Test EXT_blend_func_extended related gets.
 TEST_P(EXTBlendFuncExtendedTest, TestMaxDualSourceDrawBuffers)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     GLint maxDualSourceDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
@@ -257,7 +257,7 @@ TEST_P(EXTBlendFuncExtendedTest, TestMaxDualSourceDrawBuffers)
 // Outputs to primary color buffer using primary and secondary colors.
 TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     const char *kFragColorShader =
         "#extension GL_EXT_blend_func_extended : require\n"
@@ -278,7 +278,7 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)
 // Outputs to a color buffer using primary and secondary frag data.
 TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     const char *kFragColorShader =
         "#extension GL_EXT_blend_func_extended : require\n"
@@ -298,7 +298,7 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
 // Test an ESSL 3.00 shader that uses two fragment outputs with locations specified in the shader.
 TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsInShader)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     const char *kFragColorShader = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
@@ -323,7 +323,7 @@ void main() {
 // Test an ESSL 3.00 shader that uses two fragment outputs with locations specified through the API.
 TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationAPI)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
@@ -354,7 +354,7 @@ void main() {
 // the API and location for another being set automatically.
 TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsAPIAndAutomatic)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
@@ -384,7 +384,7 @@ void main() {
 // the API.
 TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentArrayOutputLocationsAPI)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     // TODO: Investigate this mac-only failure.  http://angleproject.com/1085
     ANGLE_SKIP_TEST_IF(IsOSX());
@@ -428,7 +428,7 @@ void main() {
 // Test an ESSL 3.00 program with a link-time fragment output location conflict.
 TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationConflict)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
@@ -469,7 +469,7 @@ void main() {
 // create link-time conflicts.
 TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationForNonexistentOutput)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
@@ -508,7 +508,7 @@ void main() {
 // Test mixing shader-assigned and automatic output locations.
 TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationsPartiallyAutomatic)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     GLint maxDrawBuffers;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
@@ -547,7 +547,7 @@ void main() {
 // Test a fragment output array that doesn't fit because contiguous locations are not available.
 TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputArrayDoesntFit)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
     GLint maxDrawBuffers;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);

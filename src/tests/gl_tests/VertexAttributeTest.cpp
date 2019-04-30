@@ -772,7 +772,7 @@ class VertexAttributeOORTest : public VertexAttributeTest
 TEST_P(VertexAttributeOORTest, ANGLEDrawArraysBufferTooSmall)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
-    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"));
 
     std::array<GLfloat, kVertexCount> inputData;
     std::array<GLfloat, kVertexCount> expectedData;
@@ -791,7 +791,7 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawArraysBufferTooSmall)
 TEST_P(VertexAttributeOORTest, ANGLEDrawElementsBufferTooSmall)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
-    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"));
 
     std::array<GLfloat, kVertexCount> inputData;
     std::array<GLfloat, kVertexCount> expectedData;
@@ -810,7 +810,7 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawElementsBufferTooSmall)
 TEST_P(VertexAttributeOORTest, ANGLEDrawArraysOutOfBoundsCases)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
-    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"));
 
     initBasicProgram();
 

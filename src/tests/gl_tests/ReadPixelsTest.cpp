@@ -412,7 +412,7 @@ class ReadPixelsMultisampleTest : public ReadPixelsTest
 // Test ReadPixels from a multisampled framebuffer.
 TEST_P(ReadPixelsMultisampleTest, BasicClear)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+    if (getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample"))
     {
         std::cout
             << "Test skipped because ES3 or GL_ANGLE_framebuffer_multisample is not available."
@@ -420,7 +420,7 @@ TEST_P(ReadPixelsMultisampleTest, BasicClear)
         return;
     }
 
-    if (extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+    if (IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample"))
     {
         glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 2, GL_RGBA8, 4, 4);
     }

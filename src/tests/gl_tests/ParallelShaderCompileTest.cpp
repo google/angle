@@ -43,12 +43,12 @@ class ParallelShaderCompileTest : public ANGLETest
 
     bool ensureParallelShaderCompileExtensionAvailable()
     {
-        if (extensionRequestable("GL_KHR_parallel_shader_compile"))
+        if (IsGLExtensionRequestable("GL_KHR_parallel_shader_compile"))
         {
             glRequestExtensionANGLE("GL_KHR_parallel_shader_compile");
         }
 
-        if (!extensionEnabled("GL_KHR_parallel_shader_compile"))
+        if (!IsGLExtensionEnabled("GL_KHR_parallel_shader_compile"))
         {
             return false;
         }

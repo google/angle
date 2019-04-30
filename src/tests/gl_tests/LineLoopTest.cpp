@@ -120,7 +120,7 @@ TEST_P(LineLoopTest, LineLoopUShortIndices)
 
 TEST_P(LineLoopTest, LineLoopUIntIndices)
 {
-    if (!extensionEnabled("GL_OES_element_index_uint"))
+    if (!IsGLExtensionEnabled("GL_OES_element_index_uint"))
     {
         return;
     }
@@ -168,7 +168,7 @@ TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
 
 TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
 {
-    if (!extensionEnabled("GL_OES_element_index_uint"))
+    if (!IsGLExtensionEnabled("GL_OES_element_index_uint"))
     {
         return;
     }

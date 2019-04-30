@@ -377,7 +377,7 @@ class D3D11TextureStreamSamplingTest : public ANGLETest
 
         EGLWindow *window = getEGLWindow();
         mDisplay          = window->getDisplay();
-        if (!eglDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_stream_producer_d3d_texture"))
+        if (!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_stream_producer_d3d_texture"))
         {
             std::cout << "Stream producer d3d texture not supported" << std::endl;
             return;
@@ -435,7 +435,7 @@ TEST_P(D3D11TextureStreamSamplingTest, RGBA)
     EGLWindow *window  = getEGLWindow();
     EGLDisplay display = window->getDisplay();
     ANGLE_SKIP_TEST_IF(
-        !eglDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
 
     constexpr char kVertShader[] = R"(
         attribute vec4 aPos;
@@ -525,7 +525,7 @@ TEST_P(D3D11TextureStreamSamplingTest, NV12)
     EGLWindow *window  = getEGLWindow();
     EGLDisplay display = window->getDisplay();
     ANGLE_SKIP_TEST_IF(
-        !eglDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
     ANGLE_SKIP_TEST_IF(!CheckNV12TextureSupport(mD3D));
 
     constexpr char kVertShader[] = R"(
@@ -653,10 +653,10 @@ TEST_P(EGLStreamTest, StreamProducerTextureNV12End2End)
     EGLWindow *window  = getEGLWindow();
     EGLDisplay display = window->getDisplay();
     ANGLE_SKIP_TEST_IF(
-        !eglDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture"));
 
     bool useESSL3Shaders =
-        getClientMajorVersion() >= 3 && extensionEnabled("GL_OES_EGL_image_external_essl3");
+        getClientMajorVersion() >= 3 && IsGLExtensionEnabled("GL_OES_EGL_image_external_essl3");
 
     // yuv to rgb conversion shader using Microsoft's given conversion formulas
     const char *yuvVS = nullptr;

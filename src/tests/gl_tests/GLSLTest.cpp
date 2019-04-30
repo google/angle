@@ -1955,7 +1955,7 @@ TEST_P(GLSLTest, VerifyMaxFragmentUniformVectorsExceeded)
 // Test compiling shaders using the GL_EXT_shader_texture_lod extension
 TEST_P(GLSLTest, TextureLOD)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_shader_texture_lod"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_texture_lod"));
 
     constexpr char kFS[] =
         "#extension GL_EXT_shader_texture_lod : require\n"
@@ -2473,7 +2473,7 @@ TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
 // Test that using a sampler2D and samplerExternalOES in the same shader works (anglebug.com/1534)
 TEST_P(GLSLTest, ExternalAnd2DSampler)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_EGL_image_external"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image_external"));
 
     constexpr char kFS[] = R"(#extension GL_OES_EGL_image_external : enable
 precision mediump float;

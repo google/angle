@@ -19,14 +19,14 @@ class ContextLostTest : public ANGLETest
 // GL_CHROMIUM_lose_context is implemented in the frontend
 TEST_P(ContextLostTest, ExtensionStringExposed)
 {
-    EXPECT_TRUE(ensureExtensionEnabled("GL_CHROMIUM_lose_context"));
+    EXPECT_TRUE(EnsureGLExtensionEnabled("GL_CHROMIUM_lose_context"));
 }
 
 // Use GL_CHROMIUM_lose_context to lose a context and verify
 TEST_P(ContextLostTest, BasicUsage)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_CHROMIUM_lose_context"));
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_robustness"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_lose_context"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_robustness"));
 
     glLoseContextCHROMIUM(GL_GUILTY_CONTEXT_RESET, GL_INNOCENT_CONTEXT_RESET);
     EXPECT_GL_NO_ERROR();
@@ -40,7 +40,7 @@ TEST_P(ContextLostTest, BasicUsage)
 // return GL_SIGNALED
 TEST_P(ContextLostTest, PollingQuery)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_CHROMIUM_lose_context"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_lose_context"));
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -65,8 +65,8 @@ TEST_P(ContextLostTest, PollingQuery)
 // return GL_SIGNALED
 TEST_P(ContextLostTest, ParallelCompileReadyQuery)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_CHROMIUM_lose_context"));
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_KHR_parallel_shader_compile"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_lose_context"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_parallel_shader_compile"));
 
     GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, essl1_shaders::fs::UniformColor());

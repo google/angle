@@ -93,7 +93,7 @@ class DXTSRGBCompressedTextureTest : public ANGLETest
 
     void runTest(GLenum format)
     {
-        ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_s3tc_srgb"));
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_s3tc_srgb"));
 
         const TestCase &test = kTests.at(format);
 

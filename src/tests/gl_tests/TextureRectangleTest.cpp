@@ -29,7 +29,7 @@ class TextureRectangleTest : public ANGLETest
 
     bool checkExtensionSupported() const
     {
-        if (!extensionEnabled("GL_ANGLE_texture_rectangle"))
+        if (!IsGLExtensionEnabled("GL_ANGLE_texture_rectangle"))
         {
             std::cout << "Test skipped because GL_ANGLE_texture_rectangle is not available."
                       << std::endl;
@@ -89,7 +89,7 @@ TEST_P(TextureRectangleTest, TexImage2D)
 TEST_P(TextureRectangleTest, CompressedTexImage2DDisallowed)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     const char data[128] = {0};
 
@@ -116,7 +116,8 @@ TEST_P(TextureRectangleTest, CompressedTexImage2DDisallowed)
 TEST_P(TextureRectangleTest, TexStorage2D)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_EXT_texture_storage"));
 
     bool useES3       = getClientMajorVersion() >= 3;
     auto TexStorage2D = [useES3](GLenum target, GLint levels, GLenum format, GLint width,
@@ -174,7 +175,7 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     }
 
     // Compressed formats are disallowed
-    if (extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    if (IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);

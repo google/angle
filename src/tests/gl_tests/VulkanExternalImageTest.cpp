@@ -57,7 +57,7 @@ class VulkanExternalImageTest : public ANGLETest
 // glImportMemoryFdEXT must be able to import a valid opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldImportOpaqueFd)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object_fd"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     VulkanExternalHelper helper;
     helper.initialize();
@@ -93,7 +93,7 @@ TEST_P(VulkanExternalImageTest, ShouldImportOpaqueFd)
 // Test creating and clearing a simple RGBA8 texture in a opaque fd.
 TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_memory_object_fd"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
 
     VulkanExternalHelper helper;
     helper.initialize();

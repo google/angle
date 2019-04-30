@@ -66,7 +66,7 @@ TEST_P(EGLChooseConfigTest, Defaults)
         eglGetConfigAttrib(display, config, EGL_TRANSPARENT_TYPE, &transparentType);
         ASSERT_EQ(transparentType, EGL_NONE);
 
-        if (ANGLETest::eglDisplayExtensionEnabled(display, "EGL_EXT_pixel_format_float"))
+        if (IsEGLDisplayExtensionEnabled(display, "EGL_EXT_pixel_format_float"))
         {
             eglGetConfigAttrib(display, config, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType);
             ASSERT_EQ(colorComponentType, EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
@@ -85,7 +85,7 @@ TEST_P(EGLChooseConfigTest, Defaults)
         eglGetConfigAttrib(display, config, EGL_RENDERABLE_TYPE, &renderableType);
         eglGetConfigAttrib(display, config, EGL_SURFACE_TYPE, &surfaceType);
         eglGetConfigAttrib(display, config, EGL_TRANSPARENT_TYPE, &transparentType);
-        if (ANGLETest::eglDisplayExtensionEnabled(display, "EGL_EXT_pixel_format_float"))
+        if (IsEGLDisplayExtensionEnabled(display, "EGL_EXT_pixel_format_float"))
         {
             eglGetConfigAttrib(display, config, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType);
         }

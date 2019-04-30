@@ -75,7 +75,7 @@ class CHROMIUMPathRenderingTest : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    bool isApplicable() const { return extensionEnabled("GL_CHROMIUM_path_rendering"); }
+    bool isApplicable() const { return IsGLExtensionEnabled("GL_CHROMIUM_path_rendering"); }
 
     void tryAllDrawFunctions(GLuint path, GLenum err)
     {
@@ -700,7 +700,7 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    bool isApplicable() const { return extensionEnabled("GL_CHROMIUM_path_rendering"); }
+    bool isApplicable() const { return IsGLExtensionEnabled("GL_CHROMIUM_path_rendering"); }
 
     void setupStateForTestPattern()
     {
@@ -1053,7 +1053,7 @@ class CHROMIUMPathRenderingWithTexturingTest : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    bool isApplicable() const { return extensionEnabled("GL_CHROMIUM_path_rendering"); }
+    bool isApplicable() const { return IsGLExtensionEnabled("GL_CHROMIUM_path_rendering"); }
 
     void TearDown() override
     {

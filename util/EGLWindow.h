@@ -152,8 +152,6 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
 
     bool isDisplayInitialized() const { return mDisplay != EGL_NO_DISPLAY; }
 
-    static bool ClientExtensionEnabled(const std::string &extName);
-
   private:
     EGLWindow(EGLint glesMajorVersion,
               EGLint glesMinorVersion,

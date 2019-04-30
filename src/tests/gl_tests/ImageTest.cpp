@@ -108,7 +108,7 @@ class ImageTest : public ANGLETest
 
         mTextureUniformLocation = glGetUniformLocation(mTextureProgram, "tex");
 
-        if (extensionEnabled("GL_OES_EGL_image_external"))
+        if (IsGLExtensionEnabled("GL_OES_EGL_image_external"))
         {
             mTextureExternalProgram = CompileProgram(kVS, kTextureExternalFS);
             ASSERT_NE(0u, mTextureExternalProgram) << "shader compilation failed.";
@@ -116,7 +116,7 @@ class ImageTest : public ANGLETest
             mTextureExternalUniformLocation = glGetUniformLocation(mTextureExternalProgram, "tex");
         }
 
-        if (extensionEnabled("GL_OES_EGL_image_external_essl3"))
+        if (IsGLExtensionEnabled("GL_OES_EGL_image_external_essl3"))
         {
             mTextureExternalESSL3Program = CompileProgram(kVSESSL3, kTextureExternalESSL3FS);
             ASSERT_NE(0u, mTextureExternalESSL3Program) << "shader compilation failed.";
@@ -427,40 +427,40 @@ class ImageTest : public ANGLETest
         return reinterpret_cast<destType>(sourceSizeT);
     }
 
-    bool hasOESExt() const { return extensionEnabled(kOESExt); }
+    bool hasOESExt() const { return IsGLExtensionEnabled(kOESExt); }
 
-    bool hasExternalExt() const { return extensionEnabled(kExternalExt); }
+    bool hasExternalExt() const { return IsGLExtensionEnabled(kExternalExt); }
 
-    bool hasExternalESSL3Ext() const { return extensionEnabled(kExternalESSL3Ext); }
+    bool hasExternalESSL3Ext() const { return IsGLExtensionEnabled(kExternalESSL3Ext); }
 
     bool hasBaseExt() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kBaseExt);
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kBaseExt);
     }
 
     bool has2DTextureExt() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), k2DTextureExt);
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), k2DTextureExt);
     }
 
     bool has3DTextureExt() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), k3DTextureExt);
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), k3DTextureExt);
     }
 
     bool hasPixmapExt() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kPixmapExt);
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kPixmapExt);
     }
 
     bool hasRenderbufferExt() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kRenderbufferExt);
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kRenderbufferExt);
     }
 
     bool hasCubemapExt() const
     {
-        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kCubemapExt);
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kCubemapExt);
     }
 
     GLuint mTextureProgram;
@@ -894,7 +894,7 @@ TEST_P(ImageTest, ValidationGLImage)
         EXPECT_EQ(image, EGL_NO_IMAGE_KHR);
         EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 
-        if (extensionEnabled("GL_ANGLE_framebuffer_multisample"))
+        if (IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample"))
         {
             GLuint renderbuffer;
             glGenRenderbuffers(1, &renderbuffer);
@@ -1327,7 +1327,7 @@ TEST_P(ImageTest, Source3DTargetTexture)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
 
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1365,7 +1365,7 @@ TEST_P(ImageTest, Source3DTargetRenderbuffer)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
 
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1400,7 +1400,7 @@ TEST_P(ImageTest, Source3DTargetExternal)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalExt() || !hasBaseExt() || !has3DTextureExt());
 
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1436,7 +1436,7 @@ TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() ||
                        !has3DTextureExt());
 
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {

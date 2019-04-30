@@ -44,7 +44,7 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
     {
         EGLWindow *window  = getEGLWindow();
         EGLDisplay display = window->getDisplay();
-        if (!eglDisplayExtensionEnabled(display, "EGL_EXT_create_context_robustness"))
+        if (!IsEGLDisplayExtensionEnabled(display, "EGL_EXT_create_context_robustness"))
         {
             return false;
         }
@@ -52,7 +52,7 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
         ANGLETest::TearDown();
         setRobustAccess(true);
         ANGLETest::SetUp();
-        if (!extensionEnabled("GL_KHR_robust_buffer_access_behavior"))
+        if (!IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"))
         {
             return false;
         }
@@ -271,7 +271,7 @@ void main()
 TEST_P(RobustBufferAccessBehaviorTest, VeryLargeVertexCountWithDynamicVertexData)
 {
     ANGLE_SKIP_TEST_IF(!initExtension());
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_element_index_uint"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_element_index_uint"));
 
     constexpr GLsizei kIndexCount           = 32;
     std::array<GLuint, kIndexCount> indices = {{}};

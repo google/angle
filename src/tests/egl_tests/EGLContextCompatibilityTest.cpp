@@ -120,7 +120,7 @@ class EGLContextCompatibilityTest : public EGLTest,
 
         EGLint colorComponentType1 = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
         EGLint colorComponentType2 = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
-        if (IsDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
+        if (IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
         {
             eglGetConfigAttrib(mDisplay, c1, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType1);
             eglGetConfigAttrib(mDisplay, c2, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType2);
@@ -214,7 +214,7 @@ class EGLContextCompatibilityTest : public EGLTest,
         ASSERT_GL_NO_ERROR();
 
         EGLint surfaceCompontentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
-        if (IsDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
+        if (IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
         {
             eglGetConfigAttrib(mDisplay, surfaceConfig, EGL_COLOR_COMPONENT_TYPE_EXT,
                                &surfaceCompontentType);

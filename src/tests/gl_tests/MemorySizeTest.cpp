@@ -30,13 +30,13 @@ class MemorySizeTest : public ANGLETest
 // GL_ANGLE_memory_size is implemented in the front-end and should always be exposed.
 TEST_P(MemorySizeTest, ExtensionStringExposed)
 {
-    EXPECT_TRUE(ensureExtensionEnabled("GL_ANGLE_memory_size"));
+    EXPECT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_memory_size"));
 }
 
 // Test basic queries of textures
 TEST_P(MemorySizeTest, BasicUsageTexture)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_ANGLE_memory_size"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_size"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -66,7 +66,7 @@ TEST_P(MemorySizeTest, BasicUsageTexture)
 // Test basic queries of buffers
 TEST_P(MemorySizeTest, BasicUsageBuffer)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_ANGLE_memory_size"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_size"));
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -111,7 +111,7 @@ TEST_P(MemorySizeTest, BasicUsageBuffer)
 // Test basic queries of renderbuffers
 TEST_P(MemorySizeTest, BasicUsageRenderbuffer)
 {
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_ANGLE_memory_size"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_size"));
 
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);

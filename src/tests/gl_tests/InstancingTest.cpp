@@ -106,11 +106,11 @@ class InstancingTest : public ANGLETest
     {
         if (vendor == Angle)
         {
-            ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
+            ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"));
         }
         else if (vendor == Ext)
         {
-            ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_instanced_arrays"));
+            ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_instanced_arrays"));
         }
 
         // TODO: Fix these.  http://anglebug.com/3129
@@ -403,7 +403,7 @@ class InstancingTestES31 : public InstancingTest
 // Verify that VertexAttribDivisor can update both binding divisor and attribBinding.
 TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"));
 
     glUseProgram(mProgram[0]);
 

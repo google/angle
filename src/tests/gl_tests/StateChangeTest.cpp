@@ -158,7 +158,7 @@ TEST_P(StateChangeTest, FramebufferIncompleteColorAttachment)
 // Test that caching works when color attachments change with TexStorage.
 TEST_P(StateChangeTest, FramebufferIncompleteWithTexStorage)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -254,7 +254,7 @@ TEST_P(StateChangeTest, FramebufferIncompleteStencilAttachment)
 TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
-                       !extensionEnabled("GL_OES_packed_depth_stencil"));
+                       !IsGLExtensionEnabled("GL_OES_packed_depth_stencil"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -3304,7 +3304,7 @@ TEST_P(ValidationStateChangeTest, TransformFeedbackDrawModes)
 // Tests a valid rendering setup with two textures. Followed by a draw with conflicting samplers.
 TEST_P(ValidationStateChangeTest, TextureConflict)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
 
     GLint maxTextures = 0;
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxTextures);

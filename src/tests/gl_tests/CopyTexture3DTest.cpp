@@ -57,7 +57,7 @@ class CopyTexture3DTest : public ANGLETest
 
     bool checkExtensions() const
     {
-        if (!extensionEnabled("GL_ANGLE_copy_texture_3d"))
+        if (!IsGLExtensionEnabled("GL_ANGLE_copy_texture_3d"))
         {
             std::cout << "Test skipped because GL_ANGLE_copy_texture_3d is not available."
                       << std::endl;

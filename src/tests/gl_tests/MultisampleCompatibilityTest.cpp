@@ -133,9 +133,9 @@ class EXTMultisampleCompatibilityTest : public ANGLETest
 
     bool isApplicable() const
     {
-        return extensionEnabled("GL_EXT_multisample_compatibility") &&
-               extensionEnabled("GL_ANGLE_framebuffer_multisample") &&
-               extensionEnabled("GL_OES_rgb8_rgba8") && !IsAMD();
+        return IsGLExtensionEnabled("GL_EXT_multisample_compatibility") &&
+               IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample") &&
+               IsGLExtensionEnabled("GL_OES_rgb8_rgba8") && !IsAMD();
     }
     GLuint mSampleFBO;
     GLuint mResolveFBO;
@@ -359,8 +359,8 @@ class MultisampleCompatibilityTest : public ANGLETest
 
     bool isApplicable() const
     {
-        return extensionEnabled("GL_ANGLE_framebuffer_multisample") &&
-               extensionEnabled("GL_OES_rgb8_rgba8");
+        return IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample") &&
+               IsGLExtensionEnabled("GL_OES_rgb8_rgba8");
     }
 
     GLuint mSampleFBO;

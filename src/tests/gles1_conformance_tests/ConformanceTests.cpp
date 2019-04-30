@@ -479,7 +479,7 @@ TEST_P(GLES1ConformanceTest, ZBFunc)
 
 TEST_P(GLES1ConformanceTest, DrawTex)
 {
-    ASSERT_TRUE(extensionEnabled("GL_OES_draw_texture"));
+    ASSERT_TRUE(IsGLExtensionEnabled("GL_OES_draw_texture"));
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DrawTexExec());
 }
 

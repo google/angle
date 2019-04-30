@@ -32,7 +32,7 @@ class ClientArraysTest : public ANGLETest
 // the GL extension should always be present
 TEST_P(ClientArraysTest, ExtensionStringExposed)
 {
-    EXPECT_TRUE(extensionEnabled("GL_ANGLE_client_arrays"));
+    EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_client_arrays"));
 }
 
 // Verify that GL_CLIENT_ARRAYS_ANGLE can be queried but not changed

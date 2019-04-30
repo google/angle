@@ -29,8 +29,8 @@ class CHROMIUMFramebufferMixedSamplesTest : public ANGLETest
 
     bool isApplicable() const
     {
-        return extensionEnabled("GL_CHROMIUM_framebuffer_mixed_samples") &&
-               extensionEnabled("GL_OES_rgb8_rgba8");
+        return IsGLExtensionEnabled("GL_CHROMIUM_framebuffer_mixed_samples") &&
+               IsGLExtensionEnabled("GL_OES_rgb8_rgba8");
     }
 
     void SetUp() override

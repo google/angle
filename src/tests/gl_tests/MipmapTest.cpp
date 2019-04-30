@@ -747,9 +747,9 @@ TEST_P(MipmapTest, DefineValidExtraLevelAndUseItLater)
 // Regression test for a bug that cause mipmaps to only generate using the top left corner as input.
 TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage") ||
-                       !extensionEnabled("GL_OES_rgb8_rgba8") ||
-                       !extensionEnabled("GL_ANGLE_texture_usage"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage") ||
+                       !IsGLExtensionEnabled("GL_OES_rgb8_rgba8") ||
+                       !IsGLExtensionEnabled("GL_ANGLE_texture_usage"));
 
     const GLColor mip0Color[4] = {
         GLColor::red,

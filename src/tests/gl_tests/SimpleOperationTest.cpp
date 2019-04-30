@@ -59,7 +59,7 @@ class SimpleOperationTest : public ANGLETest
 
 void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum binding)
 {
-    if (!extensionEnabled("GL_EXT_map_buffer_range"))
+    if (!IsGLExtensionEnabled("GL_EXT_map_buffer_range"))
     {
         return;
     }

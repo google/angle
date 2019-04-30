@@ -358,12 +358,12 @@ class MultiviewOcclusionQueryTest : public MultiviewRenderTest
 
     bool requestOcclusionQueryExtension()
     {
-        if (extensionRequestable("GL_EXT_occlusion_query_boolean"))
+        if (IsGLExtensionRequestable("GL_EXT_occlusion_query_boolean"))
         {
             glRequestExtensionANGLE("GL_EXT_occlusion_query_boolean");
         }
 
-        if (!extensionEnabled("GL_EXT_occlusion_query_boolean"))
+        if (!IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"))
         {
             std::cout << "Test skipped due to missing GL_EXT_occlusion_query_boolean." << std::endl;
             return false;
@@ -751,7 +751,7 @@ void main()
 TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
-    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_EXT_disjoint_timer_query"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
 
     ANGLE_GL_PROGRAM(dualViewProgram, kDualViewVSSource, kDualViewFSSource);
 

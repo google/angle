@@ -957,46 +957,6 @@ void ANGLETestBase::checkD3D11SDKLayersMessages()
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 }
 
-bool ANGLETestBase::extensionEnabled(const std::string &extName)
-{
-    return CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
-                                extName);
-}
-
-bool ANGLETestBase::extensionRequestable(const std::string &extName)
-{
-    return CheckExtensionExists(
-        reinterpret_cast<const char *>(glGetString(GL_REQUESTABLE_EXTENSIONS_ANGLE)), extName);
-}
-
-bool ANGLETestBase::ensureExtensionEnabled(const std::string &extName)
-{
-    if (extensionEnabled("GL_ANGLE_request_extension") && extensionRequestable(extName))
-    {
-        glRequestExtensionANGLE(extName.c_str());
-    }
-
-    return extensionEnabled(extName);
-}
-
-bool ANGLETestBase::eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
-{
-    return CheckExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
-}
-
-bool ANGLETestBase::eglClientExtensionEnabled(const std::string &extName)
-{
-    return EGLWindow::ClientExtensionEnabled(extName);
-}
-
-bool ANGLETestBase::eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName)
-{
-    PFNEGLQUERYDEVICESTRINGEXTPROC eglQueryDeviceStringEXT =
-        reinterpret_cast<PFNEGLQUERYDEVICESTRINGEXTPROC>(
-            eglGetProcAddress("eglQueryDeviceStringEXT"));
-    return CheckExtensionExists(eglQueryDeviceStringEXT(device, EGL_EXTENSIONS), extName);
-}
-
 void ANGLETestBase::setWindowWidth(int width)
 {
     mWidth = width;
@@ -1347,7 +1307,39 @@ void EGLTest::SetUp()
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
 }
 
-bool IsDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
+bool EnsureGLExtensionEnabled(const std::string &extName)
+{
+    if (IsGLExtensionEnabled("GL_ANGLE_request_extension") && IsGLExtensionRequestable(extName))
+    {
+        glRequestExtensionANGLE(extName.c_str());
+    }
+
+    return IsGLExtensionEnabled(extName);
+}
+
+bool IsEGLClientExtensionEnabled(const std::string &extName)
+{
+    return CheckExtensionExists(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS), extName);
+}
+
+bool IsEGLDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName)
+{
+    return CheckExtensionExists(eglQueryDeviceStringEXT(device, EGL_EXTENSIONS), extName);
+}
+
+bool IsEGLDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
 {
     return CheckExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
+}
+
+bool IsGLExtensionEnabled(const std::string &extName)
+{
+    return CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
+                                extName);
+}
+
+bool IsGLExtensionRequestable(const std::string &extName)
+{
+    return CheckExtensionExists(
+        reinterpret_cast<const char *>(glGetString(GL_REQUESTABLE_EXTENSIONS_ANGLE)), extName);
 }

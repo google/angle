@@ -30,7 +30,7 @@ class DebugTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        mDebugExtensionAvailable = extensionEnabled("GL_KHR_debug");
+        mDebugExtensionAvailable = IsGLExtensionEnabled("GL_KHR_debug");
         if (mDebugExtensionAvailable)
         {
             glEnable(GL_DEBUG_OUTPUT);
