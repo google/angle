@@ -57,7 +57,7 @@ std::vector<std::string> SplitString(const std::string &input,
 
         if (resultType == SPLIT_WANT_ALL || !piece.empty())
         {
-            result.push_back(piece);
+            result.push_back(std::move(piece));
         }
     }
 
@@ -99,6 +99,26 @@ std::string TrimString(const std::string &input, const std::string &trimChars)
     }
 
     return input.substr(begin, end - begin + 1);
+}
+
+std::string GetPrefix(const std::string &input, size_t offset, const char *delimiter)
+{
+    size_t match = input.find(delimiter, offset);
+    if (match == std::string::npos)
+    {
+        return input.substr(offset);
+    }
+    return input.substr(offset, match - offset);
+}
+
+std::string GetPrefix(const std::string &input, size_t offset, char delimiter)
+{
+    size_t match = input.find(delimiter, offset);
+    if (match == std::string::npos)
+    {
+        return input.substr(offset);
+    }
+    return input.substr(offset, match - offset);
 }
 
 bool HexStringToUInt(const std::string &input, unsigned int *uintOut)

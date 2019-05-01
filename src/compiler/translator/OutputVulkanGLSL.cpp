@@ -63,7 +63,7 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 
     if (needsCustomLayout)
     {
-        out << "@@ LAYOUT-" << symbol->getName() << " @@";
+        out << "@@ LAYOUT-" << symbol->getName() << "() @@";
     }
     else
     {
