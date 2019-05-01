@@ -3522,9 +3522,6 @@ TEST_P(GLSLTest_ES3, ComplexVaryingStructsUsedInFragmentShader)
 // Test that an inactive varying struct that doesn't get used in the fragment shader works.
 TEST_P(GLSLTest_ES3, InactiveVaryingStructUnusedInFragmentShader)
 {
-    // TODO(syoussefi): http://anglebug.com/3412
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kVS[] =
         "#version 300 es\n"
         "in vec4 inputAttribute;\n"

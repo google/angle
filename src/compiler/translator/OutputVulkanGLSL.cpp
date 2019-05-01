@@ -84,8 +84,7 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 
 void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier, const TSymbol *symbol)
 {
-    if (qualifier != EvqUniform && qualifier != EvqVaryingIn && qualifier != EvqVaryingOut &&
-        qualifier != EvqAttribute)
+    if (qualifier != EvqUniform && qualifier != EvqAttribute && !sh::IsVarying(qualifier))
     {
         TOutputGLSLBase::writeQualifier(qualifier, symbol);
         return;
