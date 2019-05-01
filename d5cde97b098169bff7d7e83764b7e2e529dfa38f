@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ac0f8e02_89b14adb",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "681a6927_92db7796",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9f3d72a_c5a7cc1d",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2019-04-18T19:30:05Z",
       "side": 1,
       "message": "you could limit this to the Vulkan back-end. Otherwise it might have uses for other compiler clients. you could mention this.",
+      "range": {
+        "startLine": 285,
+        "startChar": 12,
+        "endLine": 286,
+        "endChar": 33
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffaeaff6_c1c3ede2",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "How would I go about restricting this to the Vulkan backend? I don\u0027t really follow your comment here (\"Restrict to X, otherwise it may be good for Y\").\n\nThat said, I originally did this so other backends could use it if necessary one day, but now I\u0027m thinking it may be simpler to have `SH_VULKAN_SEMANTICS` instead and not have to have more bits for that in the future.",
+      "parentUuid": "a9f3d72a_c5a7cc1d",
       "range": {
         "startLine": 285,
         "startChar": 12,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "71cd1acf_73521aa4",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Yeap. In fact, the support is not even close to 100% (per gpuinfo.org)",
+      "parentUuid": "2ea91e41_cd99edef",
+      "range": {
+        "startLine": 287,
+        "startChar": 20,
+        "endLine": 287,
+        "endChar": 59
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3e39b6f_ca6de037",
         "filename": "src/compiler.gni",
         "patchSetId": 8
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "e5438b7f_46121425",
+        "filename": "src/compiler.gni",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Following in another comment.",
+      "parentUuid": "c3e39b6f_ca6de037",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 46
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93b900d4_3ab82ef9",
         "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
         "patchSetId": 8
@@ -135,6 +231,24 @@
     },
     {
       "key": {
+        "uuid": "9170d662_0e702d5c",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "There is some overlap, but not everything matches. For example that possibly writes `location`, which we don\u0027t want (it\u0027s determined later on). This instead writes the matrix packing which the other one doesn\u0027t (maybe that\u0027s a bug?).\n\nI have a solution to increase reuse that would be upcoming.",
+      "parentUuid": "93b900d4_3ab82ef9",
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "77ca00b0_9f53eb43",
         "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
         "patchSetId": 8
@@ -146,6 +260,30 @@
       "writtenOn": "2019-04-18T19:30:05Z",
       "side": 1,
       "message": "I think I see why you made the decision about set binding and layout qualifiers. It would be better I think to update InterfaceBlockLinker::defineInterfaceBlock to store the extra block layout information in gl::InterfaceBlock. These values are available to us we just didn\u0027t bother passing through through to the linking stage. Because we haven\u0027t needed them yet.\n\nThis will allow you to recreate the layout qualifier in GlslangWrapper. That\u0027s the intent of the @@ LAYOUT-xxx @@ stuff. Instead of writing the layout qualifier in the shader compilation step we\u0027d write it in the linking step.\n\nSuper long term it would be cool if we could move the linking step into the translator. But that\u0027s far off.",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 5
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "258a04b8_ec860b7e",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Talked offline. I\u0027ll create something like @@ LAYOUT-xxx(std140, row_major) @@ for replacement, which has the possibility to entirely remove the layout (for example for unused blocks), avoids recovering and passing around information that\u0027s not easily findable in `InterfaceBlockLinker::defineInterfaceBlock` and satisfies Corentin\u0027s comment for logic reuse.",
+      "parentUuid": "77ca00b0_9f53eb43",
       "range": {
         "startLine": 92,
         "startChar": 0,
@@ -181,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "af2bea08_2546a8a6",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Tried it. `instanceName` is empty at least for a case where the name is autogenerated, such as with: `uniform uni { vec4 color; };`",
+      "parentUuid": "220d737b_87126194",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 158,
+        "endChar": 0
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "82e0c1df_644a2140",
         "filename": "src/compiler/translator/tree_ops/RedefineInterfaceBlockLayoutQualifiersWithStd.cpp",
         "patchSetId": 8
@@ -192,6 +354,24 @@
       "writtenOn": "2019-04-18T19:30:05Z",
       "side": 1,
       "message": "This is a good first pass. But any existing references in the tree to the interface block will point to the old type. For instance if you reference the uniform in an expression. The type of the TIntermSymbol node (or whatever it ends up being) will be pointing to the TInterfaceBlock with the old type. This will leave the tree in an inconsistent state. Even if the Vulkan translation currently works correctly. It might mess up future tree transformation. You probably need to use ReplaceVariable or something similar. It could be fine to do this as a follow-up. But it\u0027s important to keep track of.",
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "635d39b5_d7da8e86",
+        "filename": "src/compiler/translator/tree_ops/RedefineInterfaceBlockLayoutQualifiersWithStd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "I believe the call to `queueReplacementWithParent` in `visitDeclaration` followed by the `updateTree` after the traversal is doing exactly this, isn\u0027t that right?",
+      "parentUuid": "82e0c1df_644a2140",
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -221,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "9cf590ae_ade5e76a",
+        "filename": "src/compiler/translator/tree_ops/RedefineInterfaceBlockLayoutQualifiersWithStd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac17ae47_e999247f",
+      "range": {
+        "startLine": 34,
+        "startChar": 47,
+        "endLine": 34,
+        "endChar": 54
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6781adf2_f6f0652f",
         "filename": "src/libANGLE/renderer/renderer_utils.cpp",
         "patchSetId": 8
@@ -241,6 +445,30 @@
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e27c72d6_c63f8385",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6781adf2_f6f0652f",
+      "range": {
+        "startLine": 482,
+        "startChar": 6,
+        "endLine": 482,
+        "endChar": 25
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -267,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "74c08802_6c467415",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done. I just sent in a `sh::BlockLayoutEncoder *` as a \"non-standard\" encoder coming from the backend (nullptr on Vulkan).",
+      "parentUuid": "ca1af31d_48e8c17f",
+      "range": {
+        "startLine": 524,
+        "startChar": 4,
+        "endLine": 524,
+        "endChar": 81
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b3c84b3_7bef83ed",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 8
@@ -290,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "ad029f07_7b1be488",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Following up in another comment.",
+      "parentUuid": "7b3c84b3_7bef83ed",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 35
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aee32a8_5b66fbcd",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 8
@@ -301,6 +577,30 @@
       "writtenOn": "2019-04-18T19:30:05Z",
       "side": 1,
       "message": "q: these types are guaranteed to be the same bit-width and signedness? if not might want to make a safer cast.",
+      "range": {
+        "startLine": 912,
+        "startChar": 11,
+        "endLine": 912,
+        "endChar": 61
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cde904a2_56875007",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "How about this?\n\n    static_assert(sizeof(VkDeviceSize) \u003e\u003d sizeof(bufferBinding.getSize()));\n    ASSERT(bufferBinding.getSize() \u003e\u003d 0);",
+      "parentUuid": "1aee32a8_5b66fbcd",
       "range": {
         "startLine": 912,
         "startChar": 11,
@@ -336,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "ace496ab_d9c6af46",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 921,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4806fd48_1924aab3",
+      "range": {
+        "startLine": 918,
+        "startChar": 11,
+        "endLine": 921,
+        "endChar": 45
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37a12b3e_518ac058",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 8
@@ -356,6 +680,30 @@
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0d45e30_39442709",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37a12b3e_518ac058",
+      "range": {
+        "startLine": 922,
+        "startChar": 28,
+        "endLine": 922,
+        "endChar": 33
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -382,6 +730,30 @@
     },
     {
       "key": {
+        "uuid": "a89dd074_cead2de1",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 935,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd480361_4d7aebe0",
+      "range": {
+        "startLine": 935,
+        "startChar": 18,
+        "endLine": 935,
+        "endChar": 35
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "194cdf44_cb9c0586",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 8
@@ -402,6 +774,30 @@
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90d02e8b_48a4d68d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "194cdf44_cb9c0586",
+      "range": {
+        "startLine": 1057,
+        "startChar": 55,
+        "endLine": 1057,
+        "endChar": 90
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -428,6 +824,30 @@
     },
     {
       "key": {
+        "uuid": "9d458251_81d1b456",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f46535f6_ec139bf2",
+      "range": {
+        "startLine": 1351,
+        "startChar": 21,
+        "endLine": 1351,
+        "endChar": 40
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01659623_c9837278",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 8
@@ -448,6 +868,30 @@
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5db3bf0_7b6a88c5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "This is less about VS/FS separation and more about Graphics/Compute. It comes for free as it doesn\u0027t affect the memory footprint of this class but allows tighter specifications for the driver to use.\n\nI\u0027ll separate out the change into another CL though, it\u0027s not necessary for this change.",
+      "parentUuid": "01659623_c9837278",
+      "range": {
+        "startLine": 469,
+        "startChar": 15,
+        "endLine": 469,
+        "endChar": 41
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -474,6 +918,30 @@
     },
     {
       "key": {
+        "uuid": "07d08f0c_9ece9f17",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 822,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c13e66d8_a4278930",
+      "range": {
+        "startLine": 822,
+        "startChar": 30,
+        "endLine": 822,
+        "endChar": 94
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03b5a9f9_cd811727",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 8
@@ -497,6 +965,30 @@
     },
     {
       "key": {
+        "uuid": "9805bc8b_e91b0655",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03b5a9f9_cd811727",
+      "range": {
+        "startLine": 186,
+        "startChar": 74,
+        "endLine": 186,
+        "endChar": 75
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52afbe8c_29015fd3",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 8
@@ -517,6 +1009,30 @@
       "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca19e8f6_6500606e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T19:21:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52afbe8c_29015fd3",
+      "range": {
+        "startLine": 200,
+        "startChar": 8,
+        "endLine": 200,
+        "endChar": 48
+      },
+      "revId": "d5cde97b098169bff7d7e83764b7e2e529dfa38f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
