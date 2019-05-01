@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04ef5aa9_55328b08",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-01T14:19:16Z",
+      "side": 0,
+      "message": "Can you verify that anglebug.com/3057 does not return with this?",
+      "revId": "3fb957a00ba37257efd6b635ce58e57127253557",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
