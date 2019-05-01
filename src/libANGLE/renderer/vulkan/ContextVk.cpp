@@ -1302,7 +1302,7 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
     if (!mDriverUniformsSetLayout.valid())
     {
         vk::DescriptorSetLayoutDesc desc;
-        desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+        desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_ALL_GRAPHICS);
 
         ANGLE_TRY(mRenderer->getDescriptorSetLayout(this, desc, &mDriverUniformsSetLayout));
     }

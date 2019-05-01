@@ -221,11 +221,14 @@ angle::Result UtilsVk::ensureResourcesInitialized(vk::Context *context,
 
     vk::DescriptorSetLayoutDesc descriptorSetDesc;
     bool isCompute = function >= Function::ComputeStartIndex;
+    const VkShaderStageFlags descStages =
+        isCompute ? VK_SHADER_STAGE_COMPUTE_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
 
     uint32_t currentBinding = 0;
     for (size_t i = 0; i < setSizesCount; ++i)
     {
-        descriptorSetDesc.update(currentBinding, setSizes[i].type, setSizes[i].descriptorCount);
+        descriptorSetDesc.update(currentBinding, setSizes[i].type, setSizes[i].descriptorCount,
+                                 descStages);
         currentBinding += setSizes[i].descriptorCount;
     }
 

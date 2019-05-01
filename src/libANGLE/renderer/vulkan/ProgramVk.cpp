@@ -311,9 +311,9 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext,
     // don't already exist in the cache.
     vk::DescriptorSetLayoutDesc uniformsSetDesc;
     uniformsSetDesc.update(kVertexUniformsBindingIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                           1);
+                           1, VK_SHADER_STAGE_VERTEX_BIT);
     uniformsSetDesc.update(kFragmentUniformsBindingIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                           1);
+                           1, VK_SHADER_STAGE_FRAGMENT_BIT);
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(
         contextVk, uniformsSetDesc, &mDescriptorSetLayouts[kUniformsDescriptorSetIndex]));
@@ -325,7 +325,8 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext,
     {
         const uint32_t arraySize = GetUniformBlockArraySize(uniformBlocks, bufferIndex);
 
-        uniformBlocksSetDesc.update(bufferIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, arraySize);
+        uniformBlocksSetDesc.update(bufferIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, arraySize,
+                                    VK_SHADER_STAGE_ALL_GRAPHICS);
 
         bufferIndex += arraySize;
     }
@@ -342,14 +343,16 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext,
 
         // The front-end always binds array sampler units sequentially.
         const uint32_t count = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
-        texturesSetDesc.update(textureIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, count);
+        texturesSetDesc.update(textureIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, count,
+                               VK_SHADER_STAGE_ALL_GRAPHICS);
     }
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(contextVk, texturesSetDesc,
                                                &mDescriptorSetLayouts[kTextureDescriptorSetIndex]));
 
     vk::DescriptorSetLayoutDesc driverUniformsSetDesc;
-    driverUniformsSetDesc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+    driverUniformsSetDesc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1,
+                                 VK_SHADER_STAGE_ALL_GRAPHICS);
     ANGLE_TRY(renderer->getDescriptorSetLayout(
         contextVk, driverUniformsSetDesc,
         &mDescriptorSetLayouts[kDriverUniformsDescriptorSetIndex]));
