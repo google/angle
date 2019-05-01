@@ -46,6 +46,30 @@
       "revId": "6ad215912f29e6a7cccfca4164d47bbcd5a3c33c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fb23f2e_0c27002f",
+        "filename": "util/windows/WGLWindow.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-05-01T19:16:31Z",
+      "side": 1,
+      "message": "That\u0027s meaningful only for cout.\ncerr flushes all the time anyway, so there is no behavioral difference between \"\\n\" and std::endl.\nWhich works well for errors, since we\u0027d want it to be output before process dies.",
+      "parentUuid": "8d0a3287_4f0141c5",
+      "range": {
+        "startLine": 224,
+        "startChar": 47,
+        "endLine": 224,
+        "endChar": 49
+      },
+      "revId": "6ad215912f29e6a7cccfca4164d47bbcd5a3c33c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
