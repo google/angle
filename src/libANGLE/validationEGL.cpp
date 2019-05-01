@@ -1202,12 +1202,6 @@ Error ValidateCreateContext(Display *display,
         {
             return EglBadMatch();
         }
-
-        if (shareContext->getClientMajorVersion() != clientMajorVersion ||
-            shareContext->getClientMinorVersion() != clientMinorVersion)
-        {
-            return EglBadContext();
-        }
     }
 
     return NoError();
