@@ -1914,6 +1914,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // A small helper method to facilitate using the ANGLE_CONTEXT_TRY macro.
     void tryGenPaths(GLsizei range, GLuint *createdOut);
 
+    egl::Error setDefaultFramebuffer(egl::Surface *surface);
+    egl::Error unsetDefaultFramebuffer();
+
     void initRendererString();
     void initVersionStrings();
     void initExtensionStrings();

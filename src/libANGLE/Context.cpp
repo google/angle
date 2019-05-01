@@ -605,68 +605,24 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     mState.setAllDirtyBits();
     mState.setAllDirtyObjects();
 
-    ASSERT(mCurrentSurface == nullptr);
-
-    Framebuffer *newDefault = nullptr;
-    if (surface != nullptr)
-    {
-        ANGLE_TRY(surface->setIsCurrent(this, true));
-        mCurrentSurface = surface;
-        newDefault      = surface->createDefaultFramebuffer(this);
-    }
-    else
-    {
-        newDefault = new Framebuffer(mImplementation.get());
-    }
-
-    // Update default framebuffer, the binding of the previous default
-    // framebuffer (or lack of) will have a nullptr.
-    {
-        mState.mFramebufferManager->setDefaultFramebuffer(newDefault);
-        if (mState.getReadFramebuffer() == nullptr)
-        {
-            bindReadFramebuffer(0);
-        }
-        if (mState.getDrawFramebuffer() == nullptr)
-        {
-            bindDrawFramebuffer(0);
-        }
-    }
+    ANGLE_TRY(setDefaultFramebuffer(surface));
 
     // Notify the renderer of a context switch.
-    return angle::ResultToEGL(mImplementation->onMakeCurrent(this));
+    angle::Result implResult = mImplementation->onMakeCurrent(this);
+
+    // If the implementation fails onMakeCurrent, unset the default framebuffer.
+    if (implResult != angle::Result::Continue)
+    {
+        ANGLE_TRY(unsetDefaultFramebuffer());
+        return angle::ResultToEGL(implResult);
+    }
+
+    return egl::NoError();
 }
 
 egl::Error Context::unMakeCurrent(const egl::Display *display)
 {
-    gl::Framebuffer *defaultFramebuffer = mState.mFramebufferManager->getFramebuffer(0);
-
-    // Remove the default framebuffer
-    if (mState.getReadFramebuffer() == defaultFramebuffer)
-    {
-        mState.setReadFramebufferBinding(nullptr);
-        mReadFramebufferObserverBinding.bind(nullptr);
-    }
-
-    if (mState.getDrawFramebuffer() == defaultFramebuffer)
-    {
-        mState.setDrawFramebufferBinding(nullptr);
-        mDrawFramebufferObserverBinding.bind(nullptr);
-    }
-
-    if (defaultFramebuffer)
-    {
-        defaultFramebuffer->onDestroy(this);
-        delete defaultFramebuffer;
-    }
-
-    mState.mFramebufferManager->setDefaultFramebuffer(nullptr);
-
-    if (mCurrentSurface)
-    {
-        ANGLE_TRY(mCurrentSurface->setIsCurrent(this, false));
-        mCurrentSurface = nullptr;
-    }
+    ANGLE_TRY(unsetDefaultFramebuffer());
 
     return angle::ResultToEGL(mImplementation->onUnMakeCurrent(this));
 }
@@ -8233,6 +8189,75 @@ angle::Result Context::onProgramLink(Program *programObject)
     }
 
     return angle::Result::Continue;
+}
+
+egl::Error Context::setDefaultFramebuffer(egl::Surface *surface)
+{
+    ASSERT(mCurrentSurface == nullptr);
+
+    Framebuffer *newDefault = nullptr;
+    if (surface != nullptr)
+    {
+        ANGLE_TRY(surface->setIsCurrent(this, true));
+        mCurrentSurface = surface;
+        newDefault      = surface->createDefaultFramebuffer(this);
+    }
+    else
+    {
+        newDefault = new Framebuffer(mImplementation.get());
+    }
+
+    // Update default framebuffer, the binding of the previous default
+    // framebuffer (or lack of) will have a nullptr.
+    {
+        mState.mFramebufferManager->setDefaultFramebuffer(newDefault);
+        if (mState.getReadFramebuffer() == nullptr)
+        {
+            bindReadFramebuffer(0);
+        }
+        if (mState.getDrawFramebuffer() == nullptr)
+        {
+            bindDrawFramebuffer(0);
+        }
+    }
+
+    return egl::NoError();
+}
+
+egl::Error Context::unsetDefaultFramebuffer()
+{
+    gl::Framebuffer *defaultFramebuffer = mState.mFramebufferManager->getFramebuffer(0);
+
+    // Remove the default framebuffer
+    if (mState.getReadFramebuffer() == defaultFramebuffer)
+    {
+        mState.setReadFramebufferBinding(nullptr);
+        mReadFramebufferObserverBinding.bind(nullptr);
+    }
+
+    if (mState.getDrawFramebuffer() == defaultFramebuffer)
+    {
+        mState.setDrawFramebufferBinding(nullptr);
+        mDrawFramebufferObserverBinding.bind(nullptr);
+    }
+
+    if (defaultFramebuffer)
+    {
+        defaultFramebuffer->onDestroy(this);
+        delete defaultFramebuffer;
+    }
+
+    mState.mFramebufferManager->setDefaultFramebuffer(nullptr);
+
+    // Always unset the current surface, even if setIsCurrent fails.
+    egl::Surface *surface = mCurrentSurface;
+    mCurrentSurface       = nullptr;
+    if (surface)
+    {
+        ANGLE_TRY(surface->setIsCurrent(this, false));
+    }
+
+    return egl::NoError();
 }
 
 // ErrorSet implementation.
