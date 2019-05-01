@@ -259,7 +259,6 @@ void FindActiveGPU(SystemInfo *info)
 
     // Assume that a combination of NVIDIA or AMD with Intel means Optimus or AMD Switchable
     info->activeGPUIndex  = active;
-    info->primaryGPUIndex = active;
     info->isOptimus       = hasIntel && IsNVIDIA(info->gpus[active].vendorId);
     info->isAMDSwitchable = hasIntel && IsAMD(info->gpus[active].vendorId);
 }

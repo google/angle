@@ -62,9 +62,6 @@ struct SystemInfo
     // some platforms. On windows, this is accurate.
     int activeGPUIndex = -1;
 
-    // Deprecated, same as activeGPUIndex
-    int primaryGPUIndex = -1;
-
     bool isOptimus       = false;
     bool isAMDSwitchable = false;
     // Only true on dual-GPU Mac laptops.
