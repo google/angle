@@ -85,6 +85,10 @@ call to [`gl::Context::onSubjectStateChange`][ContextStateChange] which in turn 
 [`gl::StateCache::updateBasicDrawStatesError`][StateCacheUpdate] to re-validate the draw
 framebuffer's completeness. On subsequent draw calls we skip re-validation at minimal cost.
 
+See the below diagram for the dependency relations between Subjects and Observers.
+
+![State Change Notification Flow](https://raw.githubusercontent.com/google/angle/master/doc/img/StateNotificationFlow.svg?sanitize=true)
+
 ## Back-end specific Optimizations
 
 See the [Vulkan README][VulkanREADME] for additional information for how we implement state change
