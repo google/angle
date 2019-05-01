@@ -70,6 +70,30 @@
       "revId": "6ad215912f29e6a7cccfca4164d47bbcd5a3c33c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f40c3f6_b7469e5b",
+        "filename": "util/windows/WGLWindow.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-01T19:19:33Z",
+      "side": 1,
+      "message": "Good to know. If cerr flushes anyway then it seems safe to use \\n for all cases. But it\u0027s a fairly minor point.",
+      "parentUuid": "3fb23f2e_0c27002f",
+      "range": {
+        "startLine": 224,
+        "startChar": 47,
+        "endLine": 224,
+        "endChar": 49
+      },
+      "revId": "6ad215912f29e6a7cccfca4164d47bbcd5a3c33c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
