@@ -87,7 +87,7 @@ framebuffer's completeness. On subsequent draw calls we skip re-validation at mi
 
 See the below diagram for the dependency relations between Subjects and Observers.
 
-![State Change Notification Flow](https://raw.githubusercontent.com/google/angle/master/doc/img/StateNotificationFlow.svg?sanitize=true)
+![State Change Notification Flow](https://raw.githubusercontent.com/google/angle/master/doc/img/StateChangeNotificationFlow.svg?sanitize=true)
 
 ## Back-end specific Optimizations
 
