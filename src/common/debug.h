@@ -248,7 +248,7 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define EVENT(message, ...) (void(0))
 #endif
 
-#if defined(COMPILER_GCC) || defined(__clang__)
+#if defined(__GNUC__)
 #    define ANGLE_CRASH() __builtin_trap()
 #else
 #    define ANGLE_CRASH() ((void)(*(volatile char *)0 = 0)), __assume(0)
@@ -336,7 +336,7 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS \
         _Pragma("clang diagnostic push") _Pragma("clang diagnostic error \"-Wpadded\"")
 #    define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS _Pragma("clang diagnostic pop")
-#elif defined(COMPILER_GCC)
+#elif defined(__GNUC__)
 #    define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS \
         _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic error \"-Wpadded\"")
 #    define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS _Pragma("GCC diagnostic pop")
