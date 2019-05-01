@@ -27,7 +27,6 @@ class MultithreadingTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setContextVirtualization(false);
     }
 
     bool platformSupportsMultithreading() const { return (IsOpenGLES() && IsAndroid()); }
@@ -158,9 +157,9 @@ TEST_P(MultithreadingTest, MakeCurrentMultiContext)
 // TODO(geofflang): Test sharing a program between multiple shared contexts on multiple threads
 
 ANGLE_INSTANTIATE_TEST(MultithreadingTest,
-                       ES2_OPENGL(),
-                       ES3_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       WithNoVirtualContexts(ES2_OPENGL()),
+                       WithNoVirtualContexts(ES3_OPENGL()),
+                       WithNoVirtualContexts(ES2_OPENGLES()),
+                       WithNoVirtualContexts(ES3_OPENGLES()));
 
 }  // namespace angle

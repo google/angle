@@ -362,7 +362,7 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
     switch (testParams.driver)
     {
         case angle::GLESDriverType::AngleEGL:
-            mGLWindow = createEGLWindow(testParams);
+            mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
             mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
             break;
         case angle::GLESDriverType::SystemEGL:
@@ -426,8 +426,6 @@ void ANGLERenderTest::SetUp()
     mPlatformMethods.monotonicallyIncreasingTime = MonotonicallyIncreasingTime;
     mPlatformMethods.context                     = this;
 
-    mConfigParams.platformMethods = &mPlatformMethods;
-
     if (!mOSWindow->initialize(mName, mTestParams.windowWidth, mTestParams.windowHeight))
     {
         mSkipTest = true;
@@ -435,7 +433,11 @@ void ANGLERenderTest::SetUp()
         // FAIL returns.
     }
 
-    if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), mConfigParams))
+    // Override platform method parameter.
+    EGLPlatformParameters withMethods = mTestParams.eglParameters;
+    withMethods.platformMethods       = &mPlatformMethods;
+
+    if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), withMethods, mConfigParams))
     {
         mSkipTest = true;
         FAIL() << "Failed initializing GL Window";
@@ -606,11 +608,4 @@ void ANGLERenderTest::setRobustResourceInit(bool enabled)
 std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
 {
     return mTraceEventBuffer;
-}
-
-// static
-EGLWindow *ANGLERenderTest::createEGLWindow(const RenderTestParams &testParams)
-{
-    return EGLWindow::New(testParams.majorVersion, testParams.minorVersion,
-                          testParams.eglParameters);
 }

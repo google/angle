@@ -36,10 +36,10 @@ bool IsANGLEConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
     eglLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
 #endif
 
-    EGLWindow *eglWindow =
-        EGLWindow::New(param.majorVersion, param.minorVersion, param.eglParameters);
+    EGLWindow *eglWindow = EGLWindow::New(param.majorVersion, param.minorVersion);
     ConfigParameters configParams;
-    bool result = eglWindow->initializeGL(osWindow, eglLibrary.get(), configParams);
+    bool result =
+        eglWindow->initializeGL(osWindow, eglLibrary.get(), param.eglParameters, configParams);
     eglWindow->destroyGL();
     EGLWindow::Delete(&eglWindow);
     return result;
@@ -52,7 +52,8 @@ bool IsWGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
 
     WGLWindow *wglWindow = WGLWindow::New(param.majorVersion, param.minorVersion);
     ConfigParameters configParams;
-    bool result = wglWindow->initializeGL(osWindow, openglLibrary.get(), configParams);
+    bool result =
+        wglWindow->initializeGL(osWindow, openglLibrary.get(), param.eglParameters, configParams);
     wglWindow->destroyGL();
     WGLWindow::Delete(&wglWindow);
     return result;
@@ -433,6 +434,8 @@ bool IsPlatformAvailable(const PlatformParameters &param)
                       << " because it is not available." << std::endl;
         }
 
+        // Uncomment this to print available platforms.
+        // std::cout << "Platform: " << param << " (" << paramAvailabilityCache.size() << ")\n";
         return result;
     }
 }

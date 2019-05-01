@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 
+#include "util/EGLPlatformParameters.h"
 #include "util/OSWindow.h"
 #include "util/Timer.h"
 #include "util/egl_loader_autogen.h"
@@ -63,6 +64,8 @@ class SampleApplication
     std::unique_ptr<Timer> mTimer;
     EGLWindow *mEGLWindow;
     OSWindow *mOSWindow;
+
+    EGLPlatformParameters mPlatformParams;
 
     // Handle to the entry point binding library.
     std::unique_ptr<angle::Library> mEntryPointsLib;

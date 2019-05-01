@@ -323,22 +323,26 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
       mDeferContextInit(false),
       mAlwaysForceNewDisplay(angle::ShouldAlwaysForceNewDisplay()),
       mForceNewDisplay(mAlwaysForceNewDisplay),
-      mCurrentPlatform(nullptr)
+      mCurrentParams(nullptr),
+      mFixture(nullptr)
 {
-    auto iter = gPlatforms.find(params);
+    // Override the default platform methods with the ANGLE test methods pointer.
+    angle::PlatformParameters withMethods     = params;
+    withMethods.eglParameters.platformMethods = &gDefaultPlatformMethods;
+
+    auto iter = gPlatforms.find(withMethods);
     if (iter != gPlatforms.end())
     {
-        mCurrentPlatform = &iter->second;
-        mCurrentPlatform->configParams.reset();
-
-        // Default debug layers to enabled in tests.
-        mCurrentPlatform->configParams.debugLayersEnabled = true;
+        mCurrentParams = &iter->first;
+        mFixture       = &iter->second;
+        mFixture->configParams.reset();
         return;
     }
 
-    Platform platform;
-    auto insertIter  = gPlatforms.emplace(params, platform);
-    mCurrentPlatform = &insertIter.first->second;
+    TestFixture platform;
+    auto insertIter = gPlatforms.emplace(withMethods, platform);
+    mCurrentParams  = &insertIter.first->first;
+    mFixture        = &insertIter.first->second;
 
     std::stringstream windowNameStream;
     windowNameStream << "ANGLE Tests - " << params;
@@ -346,29 +350,28 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
 
     if (mAlwaysForceNewDisplay)
     {
-        mCurrentPlatform->osWindow = mOSWindowSingleton;
+        mFixture->osWindow = mOSWindowSingleton;
     }
 
-    if (!mCurrentPlatform->osWindow)
+    if (!mFixture->osWindow)
     {
-        mCurrentPlatform->osWindow = OSWindow::New();
-        if (!mCurrentPlatform->osWindow->initialize(windowName.c_str(), 128, 128))
+        mFixture->osWindow = OSWindow::New();
+        if (!mFixture->osWindow->initialize(windowName.c_str(), 128, 128))
         {
             std::cerr << "Failed to initialize OS Window.";
         }
 
-        mOSWindowSingleton = mCurrentPlatform->osWindow;
+        mOSWindowSingleton = mFixture->osWindow;
     }
 
     // On Linux we must keep the test windows visible. On Windows it doesn't seem to need it.
-    mCurrentPlatform->osWindow->setVisible(!angle::IsWindows());
+    mFixture->osWindow->setVisible(!angle::IsWindows());
 
     switch (params.driver)
     {
         case angle::GLESDriverType::AngleEGL:
         {
-            mCurrentPlatform->eglWindow =
-                EGLWindow::New(params.majorVersion, params.minorVersion, params.eglParameters);
+            mFixture->eglWindow = EGLWindow::New(params.majorVersion, params.minorVersion);
             break;
         }
 
@@ -385,9 +388,6 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
             break;
         }
     }
-
-    // Default debug layers to enabled in tests.
-    mCurrentPlatform->configParams.debugLayersEnabled = true;
 }
 
 ANGLETestBase::~ANGLETestBase()
@@ -418,7 +418,6 @@ void ANGLETestBase::ANGLETestSetUp()
     gDefaultPlatformMethods.logWarning             = angle::TestPlatform_logWarning;
     gDefaultPlatformMethods.logInfo                = angle::TestPlatform_logInfo;
     gDefaultPlatformMethods.context                = &gPlatformContext;
-    mCurrentPlatform->configParams.platformMethods = &gDefaultPlatformMethods;
 
     gPlatformContext.ignoreMessages   = false;
     gPlatformContext.warningsAsErrors = false;
@@ -427,10 +426,9 @@ void ANGLETestBase::ANGLETestSetUp()
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
     bool needSwap = false;
-    if (mCurrentPlatform->osWindow->getWidth() != mWidth ||
-        mCurrentPlatform->osWindow->getHeight() != mHeight)
+    if (mFixture->osWindow->getWidth() != mWidth || mFixture->osWindow->getHeight() != mHeight)
     {
-        if (!mCurrentPlatform->osWindow->resize(mWidth, mHeight))
+        if (!mFixture->osWindow->resize(mWidth, mHeight))
         {
             FAIL() << "Failed to resize ANGLE test window.";
         }
@@ -438,33 +436,34 @@ void ANGLETestBase::ANGLETestSetUp()
     }
 
     // WGL tests are currently disabled.
-    if (mCurrentPlatform->wglWindow)
+    if (mFixture->wglWindow)
     {
         FAIL() << "Unsupported driver.";
     }
     else
     {
-        if (mForceNewDisplay || !mCurrentPlatform->eglWindow->isDisplayInitialized() ||
-            !ConfigParameters::CanShareDisplay(mCurrentPlatform->configParams,
-                                               mCurrentPlatform->eglWindow->getConfigParams()))
+        if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized())
         {
-            mCurrentPlatform->eglWindow->destroyGL();
-            if (!mCurrentPlatform->eglWindow->initializeDisplay(
-                    mCurrentPlatform->osWindow, ANGLETestEnvironment::GetEGLLibrary(),
-                    mCurrentPlatform->configParams))
+            mFixture->eglWindow->destroyGL();
+            if (!mFixture->eglWindow->initializeDisplay(mFixture->osWindow,
+                                                        ANGLETestEnvironment::GetEGLLibrary(),
+                                                        mCurrentParams->eglParameters))
             {
-                FAIL() << "egl display init failed.";
+                FAIL() << "EGL Display init failed.";
             }
         }
+        else if (mCurrentParams->eglParameters != mFixture->eglWindow->getPlatform())
+        {
+            FAIL() << "Internal parameter conflict error.";
+        }
 
-        if (!mCurrentPlatform->eglWindow->initializeSurface(mCurrentPlatform->osWindow,
-                                                            ANGLETestEnvironment::GetEGLLibrary(),
-                                                            mCurrentPlatform->configParams))
+        if (!mFixture->eglWindow->initializeSurface(
+                mFixture->osWindow, ANGLETestEnvironment::GetEGLLibrary(), mFixture->configParams))
         {
             FAIL() << "egl surface init failed.";
         }
 
-        if (!mDeferContextInit && !mCurrentPlatform->eglWindow->initializeContext())
+        if (!mDeferContextInit && !mFixture->eglWindow->initializeContext())
         {
             FAIL() << "GL Context init failed.";
         }
@@ -495,27 +494,27 @@ void ANGLETestBase::ANGLETestTearDown()
     angle::WriteDebugMessage("Exiting %s.%s\n", info->test_case_name(), info->name());
 
     swapBuffers();
-    mCurrentPlatform->osWindow->messageLoop();
+    mFixture->osWindow->messageLoop();
 
-    if (mCurrentPlatform->eglWindow)
+    if (mFixture->eglWindow)
     {
         checkD3D11SDKLayersMessages();
     }
 
-    if (mCurrentPlatform->reuseCounter++ >= kWindowReuseLimit || mForceNewDisplay)
+    if (mFixture->reuseCounter++ >= kWindowReuseLimit || mForceNewDisplay)
     {
-        mCurrentPlatform->reuseCounter = 0;
+        mFixture->reuseCounter = 0;
         getGLWindow()->destroyGL();
     }
     else
     {
-        mCurrentPlatform->eglWindow->destroyContext();
-        mCurrentPlatform->eglWindow->destroySurface();
+        mFixture->eglWindow->destroyContext();
+        mFixture->eglWindow->destroySurface();
     }
 
     // Check for quit message
     Event myEvent;
-    while (mCurrentPlatform->osWindow->popEvent(&myEvent))
+    while (mFixture->osWindow->popEvent(&myEvent))
     {
         if (myEvent.Type == Event::EVENT_CLOSED)
         {
@@ -530,7 +529,7 @@ void ANGLETestBase::swapBuffers()
     {
         getGLWindow()->swap();
 
-        if (mCurrentPlatform->eglWindow)
+        if (mFixture->eglWindow)
         {
             EXPECT_EGL_SUCCESS();
         }
@@ -882,15 +881,14 @@ void ANGLETestBase::checkD3D11SDKLayersMessages()
     // On Windows D3D11, check ID3D11InfoQueue to see if any D3D11 SDK Layers messages
     // were outputted by the test. We enable the Debug layers in Release tests as well.
     if (mIgnoreD3D11SDKLayersWarnings ||
-        mCurrentPlatform->eglWindow->getPlatform().renderer !=
-            EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
-        mCurrentPlatform->eglWindow->getDisplay() == EGL_NO_DISPLAY)
+        mFixture->eglWindow->getPlatform().renderer != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
+        mFixture->eglWindow->getDisplay() == EGL_NO_DISPLAY)
     {
         return;
     }
 
     const char *extensionString = static_cast<const char *>(
-        eglQueryString(mCurrentPlatform->eglWindow->getDisplay(), EGL_EXTENSIONS));
+        eglQueryString(mFixture->eglWindow->getDisplay(), EGL_EXTENSIONS));
     if (!extensionString)
     {
         std::cout << "Error getting extension string from EGL Window." << std::endl;
@@ -915,8 +913,8 @@ void ANGLETestBase::checkD3D11SDKLayersMessages()
     ASSERT_NE(nullptr, queryDisplayAttribEXT);
     ASSERT_NE(nullptr, queryDeviceAttribEXT);
 
-    ASSERT_EGL_TRUE(queryDisplayAttribEXT(mCurrentPlatform->eglWindow->getDisplay(), EGL_DEVICE_EXT,
-                                          &angleDevice));
+    ASSERT_EGL_TRUE(
+        queryDisplayAttribEXT(mFixture->eglWindow->getDisplay(), EGL_DEVICE_EXT, &angleDevice));
     ASSERT_EGL_TRUE(queryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(angleDevice),
                                          EGL_D3D11_DEVICE_ANGLE, &device));
     ID3D11Device *d3d11Device = reinterpret_cast<ID3D11Device *>(device);
@@ -970,115 +968,105 @@ void ANGLETestBase::setWindowHeight(int height)
 GLWindowBase *ANGLETestBase::getGLWindow() const
 {
     // WGL tests are currently disabled.
-    assert(!mCurrentPlatform->wglWindow);
-    return mCurrentPlatform->eglWindow;
+    assert(!mFixture->wglWindow);
+    return mFixture->eglWindow;
 }
 
 void ANGLETestBase::setConfigRedBits(int bits)
 {
-    mCurrentPlatform->configParams.redBits = bits;
+    mFixture->configParams.redBits = bits;
 }
 
 void ANGLETestBase::setConfigGreenBits(int bits)
 {
-    mCurrentPlatform->configParams.greenBits = bits;
+    mFixture->configParams.greenBits = bits;
 }
 
 void ANGLETestBase::setConfigBlueBits(int bits)
 {
-    mCurrentPlatform->configParams.blueBits = bits;
+    mFixture->configParams.blueBits = bits;
 }
 
 void ANGLETestBase::setConfigAlphaBits(int bits)
 {
-    mCurrentPlatform->configParams.alphaBits = bits;
+    mFixture->configParams.alphaBits = bits;
 }
 
 void ANGLETestBase::setConfigDepthBits(int bits)
 {
-    mCurrentPlatform->configParams.depthBits = bits;
+    mFixture->configParams.depthBits = bits;
 }
 
 void ANGLETestBase::setConfigStencilBits(int bits)
 {
-    mCurrentPlatform->configParams.stencilBits = bits;
+    mFixture->configParams.stencilBits = bits;
 }
 
 void ANGLETestBase::setConfigComponentType(EGLenum componentType)
 {
-    mCurrentPlatform->configParams.componentType = componentType;
+    mFixture->configParams.componentType = componentType;
 }
 
 void ANGLETestBase::setMultisampleEnabled(bool enabled)
 {
-    mCurrentPlatform->configParams.multisample = enabled;
+    mFixture->configParams.multisample = enabled;
 }
 
 void ANGLETestBase::setSamples(EGLint samples)
 {
-    mCurrentPlatform->configParams.samples = samples;
+    mFixture->configParams.samples = samples;
 }
 
 void ANGLETestBase::setDebugEnabled(bool enabled)
 {
-    mCurrentPlatform->configParams.debug = enabled;
+    mFixture->configParams.debug = enabled;
 }
 
 void ANGLETestBase::setNoErrorEnabled(bool enabled)
 {
-    mCurrentPlatform->configParams.noError = enabled;
+    mFixture->configParams.noError = enabled;
 }
 
 void ANGLETestBase::setWebGLCompatibilityEnabled(bool webglCompatibility)
 {
-    mCurrentPlatform->configParams.webGLCompatibility = webglCompatibility;
+    mFixture->configParams.webGLCompatibility = webglCompatibility;
 }
 
 void ANGLETestBase::setExtensionsEnabled(bool extensionsEnabled)
 {
-    mCurrentPlatform->configParams.extensionsEnabled = extensionsEnabled;
+    mFixture->configParams.extensionsEnabled = extensionsEnabled;
 }
 
 void ANGLETestBase::setRobustAccess(bool enabled)
 {
-    mCurrentPlatform->configParams.robustAccess = enabled;
+    mFixture->configParams.robustAccess = enabled;
 }
 
 void ANGLETestBase::setBindGeneratesResource(bool bindGeneratesResource)
 {
-    mCurrentPlatform->configParams.bindGeneratesResource = bindGeneratesResource;
-}
-
-void ANGLETestBase::setDebugLayersEnabled(bool enabled)
-{
-    mCurrentPlatform->configParams.debugLayersEnabled = enabled;
+    mFixture->configParams.bindGeneratesResource = bindGeneratesResource;
 }
 
 void ANGLETestBase::setClientArraysEnabled(bool enabled)
 {
-    mCurrentPlatform->configParams.clientArraysEnabled = enabled;
+    mFixture->configParams.clientArraysEnabled = enabled;
 }
 
 void ANGLETestBase::setRobustResourceInit(bool enabled)
 {
-    mCurrentPlatform->configParams.robustResourceInit = enabled;
+    mFixture->configParams.robustResourceInit = enabled;
 }
 
 void ANGLETestBase::setContextProgramCacheEnabled(bool enabled,
                                                   angle::CacheProgramFunc cacheProgramFunc)
 {
-    mCurrentPlatform->configParams.contextProgramCacheEnabled = enabled;
+    mFixture->configParams.contextProgramCacheEnabled         = enabled;
     gDefaultPlatformMethods.cacheProgram                      = cacheProgramFunc;
-}
-
-void ANGLETestBase::setContextVirtualization(bool enabled)
-{
-    mCurrentPlatform->configParams.contextVirtualization = enabled;
 }
 
 void ANGLETestBase::setContextResetStrategy(EGLenum resetStrategy)
 {
-    mCurrentPlatform->configParams.resetStrategy = resetStrategy;
+    mFixture->configParams.resetStrategy = resetStrategy;
 }
 
 void ANGLETestBase::forceNewDisplay()
@@ -1103,7 +1091,7 @@ int ANGLETestBase::getClientMinorVersion() const
 
 EGLWindow *ANGLETestBase::getEGLWindow() const
 {
-    return mCurrentPlatform->eglWindow;
+    return mFixture->eglWindow;
 }
 
 int ANGLETestBase::getWindowWidth() const
@@ -1118,12 +1106,12 @@ int ANGLETestBase::getWindowHeight() const
 
 bool ANGLETestBase::isMultisampleEnabled() const
 {
-    return mCurrentPlatform->eglWindow->isMultisample();
+    return mFixture->eglWindow->isMultisample();
 }
 
 void ANGLETestBase::setWindowVisible(bool isVisible)
 {
-    mCurrentPlatform->osWindow->setVisible(isVisible);
+    mFixture->osWindow->setVisible(isVisible);
 }
 
 bool IsIntel()
@@ -1219,13 +1207,13 @@ bool IsRelease()
     return !IsDebug();
 }
 
-ANGLETestBase::Platform::Platform()  = default;
-ANGLETestBase::Platform::~Platform() = default;
+ANGLETestBase::TestFixture::TestFixture()  = default;
+ANGLETestBase::TestFixture::~TestFixture() = default;
 
 EGLint ANGLETestBase::getPlatformRenderer() const
 {
-    assert(mCurrentPlatform->eglWindow);
-    return mCurrentPlatform->eglWindow->getPlatform().renderer;
+    assert(mFixture->eglWindow);
+    return mFixture->eglWindow->getPlatform().renderer;
 }
 
 void ANGLETestBase::ignoreD3D11SDKLayersWarnings()
@@ -1254,7 +1242,7 @@ ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
 }
 
 OSWindow *ANGLETestBase::mOSWindowSingleton = nullptr;
-std::map<angle::PlatformParameters, ANGLETestBase::Platform> ANGLETestBase::gPlatforms;
+std::map<angle::PlatformParameters, ANGLETestBase::TestFixture> ANGLETestBase::gPlatforms;
 Optional<EGLint> ANGLETestBase::mLastRendererType;
 
 std::unique_ptr<angle::Library> ANGLETestEnvironment::gEGLLibrary;

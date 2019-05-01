@@ -360,11 +360,9 @@ class ANGLETestBase
     void setExtensionsEnabled(bool extensionsEnabled);
     void setRobustAccess(bool enabled);
     void setBindGeneratesResource(bool bindGeneratesResource);
-    void setDebugLayersEnabled(bool enabled);
     void setClientArraysEnabled(bool enabled);
     void setRobustResourceInit(bool enabled);
     void setContextProgramCacheEnabled(bool enabled, angle::CacheProgramFunc cacheProgramFunc);
-    void setContextVirtualization(bool enabled);
     void setContextResetStrategy(EGLenum resetStrategy);
     void forceNewDisplay();
 
@@ -387,7 +385,7 @@ class ANGLETestBase
     // Allows a test to be more restrictive about platform warnings.
     void treatPlatformWarningsAsErrors();
 
-    OSWindow *getOSWindow() { return mCurrentPlatform->osWindow; }
+    OSWindow *getOSWindow() { return mFixture->osWindow; }
 
     GLuint get2DTexturedQuadProgram();
 
@@ -412,10 +410,10 @@ class ANGLETestBase
                   bool useInstancedDrawCalls,
                   GLuint numInstances);
 
-    struct Platform
+    struct TestFixture
     {
-        Platform();
-        ~Platform();
+        TestFixture();
+        ~TestFixture();
 
         EGLWindow *eglWindow = nullptr;
         WGLWindow *wglWindow = nullptr;
@@ -446,8 +444,9 @@ class ANGLETestBase
     // different config. This OSWindow sharing seemed to lead to driver bugs on some platforms.
     static OSWindow *mOSWindowSingleton;
 
-    static std::map<angle::PlatformParameters, Platform> gPlatforms;
-    Platform *mCurrentPlatform;
+    static std::map<angle::PlatformParameters, TestFixture> gPlatforms;
+    const angle::PlatformParameters *mCurrentParams;
+    TestFixture *mFixture;
 
     // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
     static Optional<EGLint> mLastRendererType;

@@ -45,10 +45,14 @@ struct PlatformParameters
 
     EGLint getRenderer() const;
 
+    void initDefaultParameters();
+
+    auto tie() const { return std::tie(driver, eglParameters, majorVersion, minorVersion); }
+
+    GLESDriverType driver;
+    EGLPlatformParameters eglParameters;
     EGLint majorVersion;
     EGLint minorVersion;
-    EGLPlatformParameters eglParameters;
-    GLESDriverType driver;
 };
 
 bool operator<(const PlatformParameters &a, const PlatformParameters &b);
@@ -172,6 +176,13 @@ PlatformParameters ES3_VULKAN_NULL();
 
 PlatformParameters ES2_WGL();
 PlatformParameters ES3_WGL();
+
+inline PlatformParameters WithNoVirtualContexts(const PlatformParameters &params)
+{
+    PlatformParameters withNoVirtualContexts                  = params;
+    withNoVirtualContexts.eglParameters.contextVirtualization = EGL_FALSE;
+    return withNoVirtualContexts;
+}
 
 }  // namespace angle
 

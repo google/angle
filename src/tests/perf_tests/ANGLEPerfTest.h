@@ -157,8 +157,6 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     bool areExtensionPrerequisitesFulfilled() const;
 
-    static EGLWindow *createEGLWindow(const RenderTestParams &testParams);
-
     GLWindowBase *mGLWindow;
     OSWindow *mOSWindow;
     std::vector<const char *> mExtensionPrerequisites;

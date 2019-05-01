@@ -30,7 +30,8 @@ class ANGLE_UTIL_EXPORT WGLWindow : public GLWindowBase
     // Internally initializes GL resources.
     bool initializeGL(OSWindow *osWindow,
                       angle::Library *glWindowingLibrary,
-                      const ConfigParameters &params) override;
+                      const EGLPlatformParameters &platformParams,
+                      const ConfigParameters &configParams) override;
     void destroyGL() override;
     bool isGLInitialized() const override;
 

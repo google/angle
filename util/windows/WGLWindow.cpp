@@ -71,9 +71,9 @@ WGLWindow::~WGLWindow() {}
 // Internally initializes GL resources.
 bool WGLWindow::initializeGL(OSWindow *osWindow,
                              angle::Library *glWindowingLibrary,
-                             const ConfigParameters &params)
+                             const EGLPlatformParameters &platformParams,
+                             const ConfigParameters &configParams)
 {
-    mConfigParams = params;
     glWindowingLibrary->getAs("wglGetProcAddress", &gCurrentWGLGetProcAddress);
 
     if (!gCurrentWGLGetProcAddress)
@@ -141,7 +141,7 @@ bool WGLWindow::initializeGL(OSWindow *osWindow,
         return false;
     }
 
-    if (mConfigParams.webGLCompatibility.valid() || mConfigParams.robustResourceInit.valid())
+    if (configParams.webGLCompatibility.valid() || configParams.robustResourceInit.valid())
     {
         std::cerr << "WGLWindow does not support the requested feature set." << std::endl;
         return false;
@@ -171,6 +171,9 @@ bool WGLWindow::initializeGL(OSWindow *osWindow,
     {
         return false;
     }
+
+    mPlatform     = platformParams;
+    mConfigParams = configParams;
 
     angle::LoadGLES(GetProcAddressWithFallback);
     return true;

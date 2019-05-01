@@ -12,47 +12,51 @@
 namespace angle
 {
 
-PlatformParameters::PlatformParameters() : PlatformParameters(2, 0, EGLPlatformParameters()) {}
+PlatformParameters::PlatformParameters() : PlatformParameters(2, 0, GLESDriverType::AngleEGL) {}
 
 PlatformParameters::PlatformParameters(EGLint majorVersion,
                                        EGLint minorVersion,
                                        const EGLPlatformParameters &eglPlatformParameters)
-    : majorVersion(majorVersion),
-      minorVersion(minorVersion),
+    : driver(GLESDriverType::AngleEGL),
       eglParameters(eglPlatformParameters),
-      driver(GLESDriverType::AngleEGL)
-{}
+      majorVersion(majorVersion),
+      minorVersion(minorVersion)
+{
+    initDefaultParameters();
+}
 
 PlatformParameters::PlatformParameters(EGLint majorVersion,
                                        EGLint minorVersion,
                                        GLESDriverType driver)
-    : majorVersion(majorVersion), minorVersion(minorVersion), driver(driver)
-{}
+    : driver(driver), majorVersion(majorVersion), minorVersion(minorVersion)
+{
+    initDefaultParameters();
+}
 
 EGLint PlatformParameters::getRenderer() const
 {
     return eglParameters.renderer;
 }
 
+void PlatformParameters::initDefaultParameters()
+{
+    // Default debug layers to enabled in tests.
+    eglParameters.debugLayersEnabled = EGL_TRUE;
+}
+
 bool operator<(const PlatformParameters &a, const PlatformParameters &b)
 {
-    if (a.majorVersion != b.majorVersion)
-    {
-        return a.majorVersion < b.majorVersion;
-    }
-
-    if (a.minorVersion != b.minorVersion)
-    {
-        return a.minorVersion < b.minorVersion;
-    }
-
-    return a.eglParameters < b.eglParameters;
+    return a.tie() < b.tie();
 }
 
 bool operator==(const PlatformParameters &a, const PlatformParameters &b)
 {
-    return (a.majorVersion == b.majorVersion) && (a.minorVersion == b.minorVersion) &&
-           (a.eglParameters == b.eglParameters);
+    return a.tie() == b.tie();
+}
+
+bool operator!=(const PlatformParameters &a, const PlatformParameters &b)
+{
+    return a.tie() != b.tie();
 }
 
 std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
@@ -158,6 +162,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         default:
             stream << "_ERR";
             break;
+    }
+
+    if (pp.eglParameters.contextVirtualization == EGL_FALSE)
+    {
+        stream << "_NO_VIRTUAL";
     }
 
     return stream;

@@ -8,32 +8,72 @@
 #ifndef UTIL_EGLPLATFORMPARAMETERS_H_
 #define UTIL_EGLPLATFORMPARAMETERS_H_
 
-#include <EGL/eglplatform.h>
+#include "util/util_gl.h"
 
-#include "util/util_export.h"
+#include <tuple>
 
-struct ANGLE_UTIL_EXPORT EGLPlatformParameters
+namespace angle
 {
-    EGLint renderer;
-    EGLint majorVersion;
-    EGLint minorVersion;
-    EGLint deviceType;
-    EGLint presentPath;
+struct PlatformMethods;
+}  // namespace angle
 
-    EGLPlatformParameters();
-    explicit EGLPlatformParameters(EGLint renderer);
+struct EGLPlatformParameters
+{
+    EGLPlatformParameters() = default;
+
+    explicit EGLPlatformParameters(EGLint renderer) : renderer(renderer) {}
+
     EGLPlatformParameters(EGLint renderer,
                           EGLint majorVersion,
                           EGLint minorVersion,
-                          EGLint deviceType);
+                          EGLint deviceType)
+        : renderer(renderer),
+          majorVersion(majorVersion),
+          minorVersion(minorVersion),
+          deviceType(deviceType)
+    {}
+
     EGLPlatformParameters(EGLint renderer,
                           EGLint majorVersion,
                           EGLint minorVersion,
                           EGLint deviceType,
-                          EGLint presentPath);
+                          EGLint presentPath)
+        : renderer(renderer),
+          majorVersion(majorVersion),
+          minorVersion(minorVersion),
+          deviceType(deviceType),
+          presentPath(presentPath)
+    {}
+
+    auto tie() const
+    {
+        return std::tie(renderer, majorVersion, minorVersion, deviceType, presentPath,
+                        debugLayersEnabled, contextVirtualization, platformMethods);
+    }
+
+    EGLint renderer                         = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+    EGLint majorVersion                     = EGL_DONT_CARE;
+    EGLint minorVersion                     = EGL_DONT_CARE;
+    EGLint deviceType                       = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+    EGLint presentPath                      = EGL_DONT_CARE;
+    EGLint debugLayersEnabled               = EGL_DONT_CARE;
+    EGLint contextVirtualization            = EGL_DONT_CARE;
+    angle::PlatformMethods *platformMethods = nullptr;
 };
 
-ANGLE_UTIL_EXPORT bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
-ANGLE_UTIL_EXPORT bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+inline bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
+{
+    return a.tie() < b.tie();
+}
+
+inline bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
+{
+    return a.tie() == b.tie();
+}
+
+inline bool operator!=(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
+{
+    return a.tie() != b.tie();
+}
 
 #endif  // UTIL_EGLPLATFORMPARAMETERS_H_

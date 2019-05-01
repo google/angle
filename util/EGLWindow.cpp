@@ -16,81 +16,9 @@
 #include "util/OSWindow.h"
 #include "util/system_utils.h"
 
-EGLPlatformParameters::EGLPlatformParameters()
-    : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
-      majorVersion(EGL_DONT_CARE),
-      minorVersion(EGL_DONT_CARE),
-      deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE),
-      presentPath(EGL_DONT_CARE)
-{}
-
-EGLPlatformParameters::EGLPlatformParameters(EGLint renderer)
-    : renderer(renderer),
-      majorVersion(EGL_DONT_CARE),
-      minorVersion(EGL_DONT_CARE),
-      deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE),
-      presentPath(EGL_DONT_CARE)
-{}
-
-EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
-                                             EGLint majorVersion,
-                                             EGLint minorVersion,
-                                             EGLint deviceType)
-    : renderer(renderer),
-      majorVersion(majorVersion),
-      minorVersion(minorVersion),
-      deviceType(deviceType),
-      presentPath(EGL_DONT_CARE)
-{}
-
-EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
-                                             EGLint majorVersion,
-                                             EGLint minorVersion,
-                                             EGLint deviceType,
-                                             EGLint presentPath)
-    : renderer(renderer),
-      majorVersion(majorVersion),
-      minorVersion(minorVersion),
-      deviceType(deviceType),
-      presentPath(presentPath)
-{}
-
-bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
-{
-    if (a.renderer != b.renderer)
-    {
-        return a.renderer < b.renderer;
-    }
-
-    if (a.majorVersion != b.majorVersion)
-    {
-        return a.majorVersion < b.majorVersion;
-    }
-
-    if (a.minorVersion != b.minorVersion)
-    {
-        return a.minorVersion < b.minorVersion;
-    }
-
-    if (a.deviceType != b.deviceType)
-    {
-        return a.deviceType < b.deviceType;
-    }
-
-    return a.presentPath < b.presentPath;
-}
-
-bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b)
-{
-    return (a.renderer == b.renderer) && (a.majorVersion == b.majorVersion) &&
-           (a.minorVersion == b.minorVersion) && (a.deviceType == b.deviceType) &&
-           (a.presentPath == b.presentPath);
-}
-
 // ConfigParameters implementation.
 ConfigParameters::ConfigParameters()
-    : platformMethods(nullptr),
-      redBits(-1),
+    : redBits(-1),
       greenBits(-1),
       blueBits(-1),
       alphaBits(-1),
@@ -114,14 +42,6 @@ void ConfigParameters::reset()
     *this = ConfigParameters();
 }
 
-// static
-bool ConfigParameters::CanShareDisplay(const ConfigParameters &a, const ConfigParameters &b)
-{
-    return a.debugLayersEnabled == b.debugLayersEnabled &&
-           a.contextVirtualization == b.contextVirtualization &&
-           a.platformMethods == b.platformMethods;
-}
-
 // GLWindowBase implementation.
 GLWindowBase::GLWindowBase(EGLint glesMajorVersion, EGLint glesMinorVersion)
     : mClientMajorVersion(glesMajorVersion), mClientMinorVersion(glesMinorVersion)
@@ -130,17 +50,14 @@ GLWindowBase::GLWindowBase(EGLint glesMajorVersion, EGLint glesMinorVersion)
 GLWindowBase::~GLWindowBase() = default;
 
 // EGLWindow implementation.
-EGLWindow::EGLWindow(EGLint glesMajorVersion,
-                     EGLint glesMinorVersion,
-                     const EGLPlatformParameters &platform)
+EGLWindow::EGLWindow(EGLint glesMajorVersion, EGLint glesMinorVersion)
     : GLWindowBase(glesMajorVersion, glesMinorVersion),
       mConfig(0),
       mDisplay(EGL_NO_DISPLAY),
       mSurface(EGL_NO_SURFACE),
       mContext(EGL_NO_CONTEXT),
       mEGLMajorVersion(0),
-      mEGLMinorVersion(0),
-      mPlatform(platform)
+      mEGLMinorVersion(0)
 {}
 
 EGLWindow::~EGLWindow()
@@ -175,11 +92,12 @@ EGLContext EGLWindow::getContext() const
 
 bool EGLWindow::initializeGL(OSWindow *osWindow,
                              angle::Library *glWindowingLibrary,
-                             const ConfigParameters &params)
+                             const EGLPlatformParameters &platformParams,
+                             const ConfigParameters &configParams)
 {
-    if (!initializeDisplay(osWindow, glWindowingLibrary, params))
+    if (!initializeDisplay(osWindow, glWindowingLibrary, platformParams))
         return false;
-    if (!initializeSurface(osWindow, glWindowingLibrary, params))
+    if (!initializeSurface(osWindow, glWindowingLibrary, configParams))
         return false;
     if (!initializeContext())
         return false;
@@ -188,10 +106,8 @@ bool EGLWindow::initializeGL(OSWindow *osWindow,
 
 bool EGLWindow::initializeDisplay(OSWindow *osWindow,
                                   angle::Library *glWindowingLibrary,
-                                  const ConfigParameters &params)
+                                  const EGLPlatformParameters &params)
 {
-    mConfigParams = params;
-
 #if defined(ANGLE_USE_UTIL_LOADER)
     PFNEGLGETPROCADDRESSPROC getProcAddress;
     glWindowingLibrary->getAs("eglGetProcAddress", &getProcAddress);
@@ -206,19 +122,19 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
 
     std::vector<EGLAttrib> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-    displayAttributes.push_back(mPlatform.renderer);
+    displayAttributes.push_back(params.renderer);
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
-    displayAttributes.push_back(mPlatform.majorVersion);
+    displayAttributes.push_back(params.majorVersion);
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
-    displayAttributes.push_back(mPlatform.minorVersion);
+    displayAttributes.push_back(params.minorVersion);
 
-    if (mPlatform.deviceType != EGL_DONT_CARE)
+    if (params.deviceType != EGL_DONT_CARE)
     {
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
-        displayAttributes.push_back(mPlatform.deviceType);
+        displayAttributes.push_back(params.deviceType);
     }
 
-    if (mPlatform.presentPath != EGL_DONT_CARE)
+    if (params.presentPath != EGL_DONT_CARE)
     {
         const char *extensionString =
             static_cast<const char *>(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
@@ -229,30 +145,28 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         }
 
         displayAttributes.push_back(EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE);
-        displayAttributes.push_back(mPlatform.presentPath);
+        displayAttributes.push_back(params.presentPath);
     }
 
     // Set debug layer settings if requested.
-    if (mConfigParams.debugLayersEnabled.valid())
+    if (params.debugLayersEnabled != EGL_DONT_CARE)
     {
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE);
-        displayAttributes.push_back(mConfigParams.debugLayersEnabled.value() ? EGL_TRUE
-                                                                             : EGL_FALSE);
+        displayAttributes.push_back(params.debugLayersEnabled);
     }
 
-    if (mConfigParams.contextVirtualization.valid())
+    if (params.contextVirtualization != EGL_DONT_CARE)
     {
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE);
-        displayAttributes.push_back(mConfigParams.contextVirtualization.value() ? EGL_TRUE
-                                                                                : EGL_FALSE);
+        displayAttributes.push_back(params.contextVirtualization);
     }
 
-    if (mConfigParams.platformMethods)
+    if (params.platformMethods)
     {
-        static_assert(sizeof(EGLAttrib) == sizeof(mConfigParams.platformMethods),
+        static_assert(sizeof(EGLAttrib) == sizeof(params.platformMethods),
                       "Unexpected pointer size");
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX);
-        displayAttributes.push_back(reinterpret_cast<EGLAttrib>(mConfigParams.platformMethods));
+        displayAttributes.push_back(reinterpret_cast<EGLAttrib>(params.platformMethods));
     }
 
     displayAttributes.push_back(EGL_NONE);
@@ -272,6 +186,7 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         return false;
     }
 
+    mPlatform = params;
     return true;
 }
 
@@ -658,11 +573,9 @@ void GLWindowBase::Delete(GLWindowBase **window)
 }
 
 // static
-EGLWindow *EGLWindow::New(EGLint glesMajorVersion,
-                          EGLint glesMinorVersion,
-                          const EGLPlatformParameters &platform)
+EGLWindow *EGLWindow::New(EGLint glesMajorVersion, EGLint glesMinorVersion)
 {
-    return new EGLWindow(glesMajorVersion, glesMinorVersion, platform);
+    return new EGLWindow(glesMajorVersion, glesMinorVersion);
 }
 
 // static
