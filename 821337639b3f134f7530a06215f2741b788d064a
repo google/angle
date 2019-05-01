@@ -16,6 +16,24 @@
       "revId": "821337639b3f134f7530a06215f2741b788d064a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d433d177_5220d4e9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-05-01T18:27:25Z",
+      "side": 1,
+      "message": "Have a speculative fix: https://chromium-review.googlesource.com/c/angle/angle/+/1592064",
+      "parentUuid": "2aa54bb5_956dbcb0",
+      "revId": "821337639b3f134f7530a06215f2741b788d064a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
