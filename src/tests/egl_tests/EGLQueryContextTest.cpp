@@ -147,7 +147,6 @@ TEST_P(EGLQueryContextTest, BadAttribute)
 ANGLE_INSTANTIATE_TEST(EGLQueryContextTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES2_VULKAN(),
                        ES3_D3D11(),

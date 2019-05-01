@@ -2036,7 +2036,6 @@ void main()
 ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),

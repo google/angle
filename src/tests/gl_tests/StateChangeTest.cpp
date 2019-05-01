@@ -3534,12 +3534,7 @@ ANGLE_INSTANTIATE_TEST(LineLoopStateChangeTest,
                        ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_VULKAN());
-ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_D3D11_FL9_3(),
-                       ES2_VULKAN());
+ANGLE_INSTANTIATE_TEST(StateChangeRenderTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_D3D11(), ES2_VULKAN(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES3, ES3_OPENGL(), ES3_D3D11());

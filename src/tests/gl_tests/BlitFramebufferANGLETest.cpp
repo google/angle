@@ -1497,12 +1497,10 @@ TEST_P(BlitFramebufferTest, BlitFramebufferSizeOverflow)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES2_D3D9(),
-                       ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE),
-                       ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE),
+                       ES2_D3D11(),
+                       ES2_D3D11_PRESENT_PATH_FAST(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_VULKAN());
 
-// We're specifically testing GL 4.4 and GL 4.3 since on versions earlier than 4.4 FramebufferGL
-// takes a different path for blitting SRGB textures.
-ANGLE_INSTANTIATE_TEST(BlitFramebufferTest, ES3_D3D11(), ES3_OPENGL(4, 4), ES3_OPENGL(4, 3));
+ANGLE_INSTANTIATE_TEST(BlitFramebufferTest, ES3_D3D11(), ES3_OPENGL());

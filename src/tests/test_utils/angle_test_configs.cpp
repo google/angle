@@ -211,10 +211,11 @@ EGLPlatformParameters D3D11()
                                  EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
-EGLPlatformParameters D3D11(EGLenum presentPath)
+EGLPlatformParameters D3D11_PRESENT_PATH_FAST()
 {
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
-                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE, presentPath);
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE,
+                                 EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL11_1()
@@ -401,9 +402,9 @@ PlatformParameters ES2_D3D11()
     return PlatformParameters(2, 0, egl_platform::D3D11());
 }
 
-PlatformParameters ES2_D3D11(EGLenum presentPath)
+PlatformParameters ES2_D3D11_PRESENT_PATH_FAST()
 {
-    return PlatformParameters(2, 0, egl_platform::D3D11(presentPath));
+    return PlatformParameters(2, 0, egl_platform::D3D11_PRESENT_PATH_FAST());
 }
 
 PlatformParameters ES2_D3D11_FL11_0()

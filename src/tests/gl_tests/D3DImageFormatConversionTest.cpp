@@ -169,7 +169,6 @@ TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR8G8B8)
 ANGLE_INSTANTIATE_TEST(D3DImageFormatConversionTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES2_VULKAN());
 

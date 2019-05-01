@@ -770,7 +770,6 @@ TEST_P(TextureUploadFormatTest, All)
 
 ANGLE_INSTANTIATE_TEST(TextureUploadFormatTest,
                        ES3_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_D3D9(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),

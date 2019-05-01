@@ -369,4 +369,4 @@ TEST_P(EGLPresentPathD3D11, ClientBufferPresentPathCopy)
     checkPixelsUsingD3D(false);
 }
 
-ANGLE_INSTANTIATE_TEST(EGLPresentPathD3D11, ES2_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(EGLPresentPathD3D11, ES2_D3D11());

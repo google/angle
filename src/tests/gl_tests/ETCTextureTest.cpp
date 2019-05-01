@@ -263,7 +263,6 @@ TEST_P(ETCTextureTest, ETC2SRGB8A1Validation)
 ANGLE_INSTANTIATE_TEST(ETCTextureTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES3_D3D11(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),

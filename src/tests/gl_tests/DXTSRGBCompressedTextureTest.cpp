@@ -156,7 +156,6 @@ TEST_P(DXTSRGBCompressedTextureTest, Decompression8x8RGBADXT5)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(DXTSRGBCompressedTextureTest,
                        ES2_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES3_D3D11(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),

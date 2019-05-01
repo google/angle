@@ -539,7 +539,6 @@ TEST_P(BindUniformLocationES31Test, ArrayOfArrays)
 ANGLE_INSTANTIATE_TEST(BindUniformLocationTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN());

@@ -435,13 +435,7 @@ TEST_P(SwizzleTest, SubUpdate)
     EXPECT_PIXEL_COLOR_EQ(0, 0, expectedUpdateData);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
-ANGLE_INSTANTIATE_TEST(SwizzleTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGL(3, 3), ES3_OPENGLES());
-ANGLE_INSTANTIATE_TEST(SwizzleIntegerTest,
-                       ES3_D3D11(),
-                       ES3_OPENGL(),
-                       ES3_OPENGL(3, 3),
-                       ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SwizzleTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SwizzleIntegerTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 }  // namespace
