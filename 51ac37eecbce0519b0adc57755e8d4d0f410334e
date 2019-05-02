@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7632a805_30678254",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1066,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-05-02T17:30:31Z",
+      "side": 0,
+      "message": "The new behavior allows for invariant/variant mis-match for any variables in FS where invariant(all) applies so this case should pass based on that behavior.",
+      "parentUuid": "81f0093b_f7ec540d",
+      "range": {
+        "startLine": 1066,
+        "startChar": 52,
+        "endLine": 1066,
+        "endChar": 60
+      },
+      "revId": "51ac37eecbce0519b0adc57755e8d4d0f410334e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "20553c22_4798ad8f",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8ae2e570_980e77ca",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1071,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-05-02T17:30:31Z",
+      "side": 0,
+      "message": "Yes, killed desktop exception (as well as comment). We\u0027ll see where that\u0027s at in the farm.",
+      "parentUuid": "20553c22_4798ad8f",
+      "range": {
+        "startLine": 1069,
+        "startChar": 0,
+        "endLine": 1071,
+        "endChar": 80
+      },
+      "revId": "51ac37eecbce0519b0adc57755e8d4d0f410334e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7b692c51_e2b9c0f9",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2019-04-26T18:32:35Z",
       "side": 0,
       "message": "Probably should move to WebGLCompatibility tests instead of being removed.",
+      "range": {
+        "startLine": 1246,
+        "startChar": 0,
+        "endLine": 1263,
+        "endChar": 0
+      },
+      "revId": "51ac37eecbce0519b0adc57755e8d4d0f410334e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b09e9fe_26670d5c",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2019-05-02T17:30:31Z",
+      "side": 0,
+      "message": "There already is a webGL test for this behavior. Is there some other set of webglcompatibility tests that I should move this to?",
+      "parentUuid": "7b692c51_e2b9c0f9",
       "range": {
         "startLine": 1246,
         "startChar": 0,
