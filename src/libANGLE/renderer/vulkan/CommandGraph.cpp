@@ -182,6 +182,13 @@ bool CommandGraphResource::isResourceInUse(RendererVk *renderer) const
     return renderer->isSerialInUse(mStoredQueueSerial);
 }
 
+void CommandGraphResource::resetQueueSerial()
+{
+    mCurrentWritingNode = nullptr;
+    mCurrentReadingNodes.clear();
+    mStoredQueueSerial = Serial();
+}
+
 angle::Result CommandGraphResource::recordCommands(Context *context,
                                                    CommandBuffer **commandBufferOut)
 {

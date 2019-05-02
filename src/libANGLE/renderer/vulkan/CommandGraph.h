@@ -277,6 +277,10 @@ class CommandGraphResource : angle::NonCopyable
         }
     }
 
+    // Reset the current queue serial for this resource. Will clear dependencies if the resource
+    // was not used in this set of command nodes.
+    void resetQueueSerial();
+
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     // Will append to an existing command buffer/graph node if possible.

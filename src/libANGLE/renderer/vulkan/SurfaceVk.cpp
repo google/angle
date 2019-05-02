@@ -837,6 +837,17 @@ angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
+    // This swap chain image is new, reset any dependency information it has.
+    //
+    // When the Vulkan backend is multithreading, different contexts can have very different current
+    // serials.  If a surface is rendered to by multiple contexts in different frames, the last
+    // context to write a particular swap chain image has no bearing on the current context writing
+    // to that image.
+    //
+    // Clear the image's queue serial because it's possible that it appears to be in the future to
+    // the next context that writes to the image.
+    image.image.resetQueueSerial();
+
     // Update RenderTarget pointers.
     mColorRenderTarget.updateSwapchainImage(&image.image, &image.imageView);
 
