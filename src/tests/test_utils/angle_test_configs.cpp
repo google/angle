@@ -74,7 +74,7 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             switch (pp.eglParameters.renderer)
             {
                 case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-                    stream << "DEFAULT";
+                    stream << "Default";
                     break;
                 case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
                     stream << "D3D9";
@@ -83,19 +83,19 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
                     stream << "D3D11";
                     break;
                 case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
-                    stream << "NULL";
+                    stream << "Null";
                     break;
                 case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-                    stream << "OPENGL";
+                    stream << "OpenGL";
                     break;
                 case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-                    stream << "OPENGLES";
+                    stream << "OpenGLES";
                     break;
                 case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
-                    stream << "VULKAN";
+                    stream << "Vulkan";
                     break;
                 default:
-                    stream << "UNDEFINED";
+                    stream << "Undefined";
                     break;
             }
             break;
@@ -107,7 +107,7 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             stream << "GLES";
             break;
         default:
-            stream << "ERROR";
+            stream << "Error";
             break;
     }
 
@@ -129,30 +129,30 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             break;
 
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-            stream << "_NULL";
+            stream << "_Null";
             break;
 
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
-            stream << "_REFERENCE";
+            stream << "_Reference";
             break;
 
         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
-            stream << "_WARP";
+            stream << "_Warp";
             break;
 
         default:
-            stream << "_ERR";
+            stream << "_Error";
             break;
     }
 
     switch (pp.eglParameters.presentPath)
     {
         case EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE:
-            stream << "_PRESENT_PATH_COPY";
+            stream << "_PresentPathCopy";
             break;
 
         case EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE:
-            stream << "_PRESENT_PATH_FAST";
+            stream << "_PresentPathFast";
             break;
 
         case EGL_DONT_CARE:
@@ -160,13 +160,13 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             break;
 
         default:
-            stream << "_ERR";
+            stream << "_Error";
             break;
     }
 
     if (pp.eglParameters.contextVirtualization == EGL_FALSE)
     {
-        stream << "_NO_VIRTUAL";
+        stream << "_NoVirtual";
     }
 
     return stream;

@@ -842,6 +842,9 @@ TEST_P(RobustResourceInitTest, ReadingOutOfBoundsCopiedTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
+    // Flaky failure on Linux / NV / Vulkan when run in a sequence. http://anglebug.com/3416
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsLinux());
+
     GLTexture tex;
     setupTexture(&tex);
     GLFramebuffer fbo;
