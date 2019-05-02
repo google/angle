@@ -1,4 +1,80 @@
-#!/usr/bin/python
+#!/usr/bin/env vpython
+#
+# [VPYTHON:BEGIN]
+# wheel: <
+#   name: "infra/python/wheels/google-auth-py2_py3"
+#   version: "version:1.2.1"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/pyasn1-py2_py3"
+#   version: "version:0.4.5"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/pyasn1_modules-py2_py3"
+#   version: "version:0.2.4"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/six"
+#   version: "version:1.10.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/cachetools-py2_py3"
+#   version: "version:2.0.1"
+# >
+# wheel: <
+#   name: "infra/python/wheels/rsa-py2_py3"
+#   version: "version:4.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/requests"
+#   version: "version:2.13.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/google-api-python-client-py2_py3"
+#   version: "version:1.6.2"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/httplib2-py2_py3"
+#   version: "version:0.12.1"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/oauth2client-py2_py3"
+#   version: "version:3.0.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/uritemplate-py2_py3"
+#   version: "version:3.0.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/google-auth-oauthlib-py2_py3"
+#   version: "version:0.3.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/requests-oauthlib-py2_py3"
+#   version: "version:1.2.0"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/oauthlib-py2_py3"
+#   version: "version:3.0.1"
+# >
+#
+# wheel: <
+#   name: "infra/python/wheels/google-auth-httplib2-py2_py3"
+#   version: "version:0.0.3"
+# >
+# [VPYTHON:END]
 #
 # Copyright 2019 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -35,14 +111,9 @@ import re
 import subprocess
 import sys
 import urllib
-try:
-  from google.auth.transport.requests import Request
-  from googleapiclient.discovery import build
-  from google_auth_oauthlib.flow import InstalledAppFlow
-except ImportError:
-  print('ERROR: Missing prerequisites. Follow the quickstart guide:\n'
-        'https://devsite.googleplex.com/sheets/api/quickstart/python')
-  exit(1)
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 ####################
 # Global Constants #
