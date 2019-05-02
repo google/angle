@@ -312,11 +312,6 @@ void Display_logInfo(angle::PlatformMethods *platform, const char *infoMessage)
 void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
 {
     angle::PlatformMethods *platformMethods = ANGLEPlatformCurrent();
-    if (platformMethods->logError != angle::DefaultLogError)
-    {
-        // Don't reset pre-set Platform to Default
-        return;
-    }
 
     ANGLEResetDisplayPlatform(display);
     platformMethods->logError   = Display_logError;
@@ -490,12 +485,6 @@ void Display::setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap
     mImplementation = impl;
 
     mAttributeMap = attribMap;
-}
-
-Error Display::initialize()
-{
-    ASSERT(mImplementation != nullptr);
-    mImplementation->setBlobCache(&mBlobCache);
 
     // TODO(jmadill): Store Platform in Display and init here.
     const angle::PlatformMethods *platformMethods =
@@ -509,6 +498,12 @@ Error Display::initialize()
     {
         ANGLESetDefaultDisplayPlatform(this);
     }
+}
+
+Error Display::initialize()
+{
+    ASSERT(mImplementation != nullptr);
+    mImplementation->setBlobCache(&mBlobCache);
 
     gl::InitializeDebugAnnotations(&mAnnotator);
 
