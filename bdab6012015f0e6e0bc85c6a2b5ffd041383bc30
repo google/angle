@@ -22,6 +22,30 @@
       "revId": "bdab6012015f0e6e0bc85c6a2b5ffd041383bc30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d3182a1_a55b785c",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-05-03T21:11:04Z",
+      "side": 1,
+      "message": "Interesting.  I didn\u0027t add these lines.  I deleted lines above it in one of the PatchSets (and had a merge conflict that I thought I fixed).  I\u0027ll see what happened here and make sure that I\u0027m not accidentally adding lines.",
+      "parentUuid": "ccb6158a_221c790f",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 5
+      },
+      "revId": "bdab6012015f0e6e0bc85c6a2b5ffd041383bc30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
