@@ -22,6 +22,30 @@
       "revId": "f940424673e9e527f0184b57b870daddce0e0576",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e6c1eb8_e800f512",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5316,
+      "author": {
+        "id": 1158749
+      },
+      "writtenOn": "2019-05-03T15:31:48Z",
+      "side": 1,
+      "message": "good point, moved it up.",
+      "parentUuid": "0b6d4b41_77bcb00b",
+      "range": {
+        "startLine": 5316,
+        "startChar": 0,
+        "endLine": 5316,
+        "endChar": 50
+      },
+      "revId": "f940424673e9e527f0184b57b870daddce0e0576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
