@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b6d4b41_77bcb00b",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5316,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-05-03T13:56:34Z",
+      "side": 1,
+      "message": "nit: throw this in any anonymous namespace",
+      "range": {
+        "startLine": 5316,
+        "startChar": 0,
+        "endLine": 5316,
+        "endChar": 50
+      },
+      "revId": "f940424673e9e527f0184b57b870daddce0e0576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
