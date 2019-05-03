@@ -22,6 +22,30 @@
       "revId": "69f72b4183a6271865075754e1e44a232d562f5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39e1ba96_78ab105b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-03T16:49:41Z",
+      "side": 1,
+      "message": "It\u0027s possible. Or they could be more visible because I disabled shard retries. If they\u0027re crashes it\u0027s probably the same flakiness issue we\u0027re trying to sovle.",
+      "parentUuid": "0c0d3d65_5be6ce6c",
+      "range": {
+        "startLine": 11,
+        "startChar": 15,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "69f72b4183a6271865075754e1e44a232d562f5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
