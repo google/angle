@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ccb6158a_221c790f",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-03T20:44:32Z",
+      "side": 1,
+      "message": "fyi this bug was closed. I re-opened it and assigned to you. So we can ensure this is tracked.",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 5
+      },
+      "revId": "bdab6012015f0e6e0bc85c6a2b5ffd041383bc30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
