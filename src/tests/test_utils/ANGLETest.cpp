@@ -332,22 +332,34 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
     angle::PlatformParameters withMethods     = params;
     withMethods.eglParameters.platformMethods = &gDefaultPlatformMethods;
 
-    auto iter = gPlatforms.find(withMethods);
-    if (iter != gPlatforms.end())
+    auto iter = gFixtures.find(withMethods);
+    if (iter != gFixtures.end())
     {
         mCurrentParams = &iter->first;
-        mFixture       = &iter->second;
-        mFixture->configParams.reset();
+
+        if (!params.noFixture)
+        {
+            mFixture = &iter->second;
+            mFixture->configParams.reset();
+        }
         return;
     }
 
     TestFixture platform;
-    auto insertIter = gPlatforms.emplace(withMethods, platform);
+    auto insertIter = gFixtures.emplace(withMethods, platform);
     mCurrentParams  = &insertIter.first->first;
-    mFixture        = &insertIter.first->second;
 
+    if (!params.noFixture)
+    {
+        mFixture = &insertIter.first->second;
+        initOSWindow();
+    }
+}
+
+void ANGLETestBase::initOSWindow()
+{
     std::stringstream windowNameStream;
-    windowNameStream << "ANGLE Tests - " << params;
+    windowNameStream << "ANGLE Tests - " << *mCurrentParams;
     std::string windowName = windowNameStream.str();
 
     if (mAlwaysForceNewDisplay)
@@ -369,11 +381,12 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
     // On Linux we must keep the test windows visible. On Windows it doesn't seem to need it.
     mFixture->osWindow->setVisible(!angle::IsWindows());
 
-    switch (params.driver)
+    switch (mCurrentParams->driver)
     {
         case angle::GLESDriverType::AngleEGL:
         {
-            mFixture->eglWindow = EGLWindow::New(params.majorVersion, params.minorVersion);
+            mFixture->eglWindow =
+                EGLWindow::New(mCurrentParams->majorVersion, mCurrentParams->minorVersion);
             break;
         }
 
@@ -424,6 +437,25 @@ void ANGLETestBase::ANGLETestSetUp()
     gPlatformContext.ignoreMessages   = false;
     gPlatformContext.warningsAsErrors = false;
     gPlatformContext.currentTest      = this;
+
+    if (angle::IsWindows())
+    {
+        const auto &info = testing::UnitTest::GetInstance()->current_test_info();
+        angle::WriteDebugMessage("Entering %s.%s\n", info->test_case_name(), info->name());
+    }
+
+    if (mCurrentParams->noFixture)
+    {
+#if defined(ANGLE_USE_UTIL_LOADER)
+        PFNEGLGETPROCADDRESSPROC getProcAddress;
+        ANGLETestEnvironment::GetEGLLibrary()->getAs("eglGetProcAddress", &getProcAddress);
+        ASSERT_NE(nullptr, getProcAddress);
+
+        angle::LoadEGL(getProcAddress);
+        angle::LoadGLES(getProcAddress);
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+        return;
+    }
 
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
@@ -483,17 +515,22 @@ void ANGLETestBase::ANGLETestSetUp()
     // taking OpenGL traces can guess the size of the default framebuffer and show it
     // in their UIs
     glViewport(0, 0, mWidth, mHeight);
-
-    const auto &info = testing::UnitTest::GetInstance()->current_test_info();
-    angle::WriteDebugMessage("Entering %s.%s\n", info->test_case_name(), info->name());
 }
 
 void ANGLETestBase::ANGLETestTearDown()
 {
     gPlatformContext.currentTest = nullptr;
 
-    const testing::TestInfo *info = testing::UnitTest::GetInstance()->current_test_info();
-    angle::WriteDebugMessage("Exiting %s.%s\n", info->test_case_name(), info->name());
+    if (angle::IsWindows())
+    {
+        const testing::TestInfo *info = testing::UnitTest::GetInstance()->current_test_info();
+        angle::WriteDebugMessage("Exiting %s.%s\n", info->test_case_name(), info->name());
+    }
+
+    if (mCurrentParams->noFixture)
+    {
+        return;
+    }
 
     swapBuffers();
     mFixture->osWindow->messageLoop();
@@ -1062,8 +1099,8 @@ void ANGLETestBase::setRobustResourceInit(bool enabled)
 void ANGLETestBase::setContextProgramCacheEnabled(bool enabled,
                                                   angle::CacheProgramFunc cacheProgramFunc)
 {
-    mFixture->configParams.contextProgramCacheEnabled         = enabled;
-    gDefaultPlatformMethods.cacheProgram                      = cacheProgramFunc;
+    mFixture->configParams.contextProgramCacheEnabled = enabled;
+    gDefaultPlatformMethods.cacheProgram              = cacheProgramFunc;
 }
 
 void ANGLETestBase::setContextResetStrategy(EGLenum resetStrategy)
@@ -1244,7 +1281,7 @@ ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
 }
 
 OSWindow *ANGLETestBase::mOSWindowSingleton = nullptr;
-std::map<angle::PlatformParameters, ANGLETestBase::TestFixture> ANGLETestBase::gPlatforms;
+std::map<angle::PlatformParameters, ANGLETestBase::TestFixture> ANGLETestBase::gFixtures;
 Optional<EGLint> ANGLETestBase::mLastRendererType;
 
 std::unique_ptr<angle::Library> ANGLETestEnvironment::gEGLLibrary;
@@ -1287,22 +1324,6 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
             angle::gSelectedConfig = std::string(argv[argIndex] + strlen(kUseConfig));
         }
     }
-}
-
-EGLTest::EGLTest() = default;
-
-EGLTest::~EGLTest() = default;
-
-void EGLTest::SetUp()
-{
-#if defined(ANGLE_USE_UTIL_LOADER)
-    PFNEGLGETPROCADDRESSPROC getProcAddress;
-    ANGLETestEnvironment::GetEGLLibrary()->getAs("eglGetProcAddress", &getProcAddress);
-    ASSERT_NE(nullptr, getProcAddress);
-
-    angle::LoadEGL(getProcAddress);
-    angle::LoadGLES(getProcAddress);
-#endif  // defined(ANGLE_USE_UTIL_LOADER)
 }
 
 bool EnsureGLExtensionEnabled(const std::string &extName)

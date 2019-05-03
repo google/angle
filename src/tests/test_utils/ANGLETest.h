@@ -399,6 +399,17 @@ class ANGLETestBase
         ~ScopedIgnorePlatformMessages();
     };
 
+    // Can be used before we get a GL context.
+    bool isGLRenderer() const
+    {
+        return mCurrentParams->getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
+    }
+
+    bool isD3D11Renderer() const
+    {
+        return mCurrentParams->getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
+    }
+
   private:
     void checkD3D11SDKLayersMessages();
 
@@ -409,6 +420,8 @@ class ANGLETestBase
                   bool useVertexBuffer,
                   bool useInstancedDrawCalls,
                   GLuint numInstances);
+
+    void initOSWindow();
 
     struct TestFixture
     {
@@ -444,7 +457,7 @@ class ANGLETestBase
     // different config. This OSWindow sharing seemed to lead to driver bugs on some platforms.
     static OSWindow *mOSWindowSingleton;
 
-    static std::map<angle::PlatformParameters, TestFixture> gPlatforms;
+    static std::map<angle::PlatformParameters, TestFixture> gFixtures;
     const angle::PlatformParameters *mCurrentParams;
     TestFixture *mFixture;
 
@@ -491,16 +504,6 @@ class ANGLETestEnvironment : public testing::Environment
     // For loading entry points.
     static std::unique_ptr<angle::Library> gEGLLibrary;
     static std::unique_ptr<angle::Library> gWGLLibrary;
-};
-
-// This base fixture loads the EGL entry points.
-class EGLTest : public testing::Test
-{
-  public:
-    EGLTest();
-    ~EGLTest();
-
-    void SetUp() override;
 };
 
 // Driver vendors

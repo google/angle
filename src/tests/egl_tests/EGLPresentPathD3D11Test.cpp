@@ -14,7 +14,7 @@
 
 using namespace angle;
 
-class EGLPresentPathD3D11 : public EGLTest, public testing::WithParamInterface<PlatformParameters>
+class EGLPresentPathD3D11 : public ANGLETest
 {
   protected:
     EGLPresentPathD3D11()
@@ -29,7 +29,7 @@ class EGLPresentPathD3D11 : public EGLTest, public testing::WithParamInterface<P
 
     void SetUp() override
     {
-        EGLTest::SetUp();
+        ANGLETest::SetUp();
 
         mOSWindow    = OSWindow::New();
         mWindowWidth = 64;
@@ -170,6 +170,8 @@ class EGLPresentPathD3D11 : public EGLTest, public testing::WithParamInterface<P
 
         mOSWindow->destroy();
         OSWindow::Delete(&mOSWindow);
+
+        ANGLETest::TearDown();
     }
 
     void drawQuadUsingGL()
@@ -369,4 +371,4 @@ TEST_P(EGLPresentPathD3D11, ClientBufferPresentPathCopy)
     checkPixelsUsingD3D(false);
 }
 
-ANGLE_INSTANTIATE_TEST(EGLPresentPathD3D11, ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(EGLPresentPathD3D11, WithNoFixture(ES2_D3D11()));

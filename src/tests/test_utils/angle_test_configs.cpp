@@ -18,6 +18,7 @@ PlatformParameters::PlatformParameters(EGLint majorVersion,
                                        EGLint minorVersion,
                                        const EGLPlatformParameters &eglPlatformParameters)
     : driver(GLESDriverType::AngleEGL),
+      noFixture(false),
       eglParameters(eglPlatformParameters),
       majorVersion(majorVersion),
       minorVersion(minorVersion)
@@ -28,7 +29,7 @@ PlatformParameters::PlatformParameters(EGLint majorVersion,
 PlatformParameters::PlatformParameters(EGLint majorVersion,
                                        EGLint minorVersion,
                                        GLESDriverType driver)
-    : driver(driver), majorVersion(majorVersion), minorVersion(minorVersion)
+    : driver(driver), noFixture(false), majorVersion(majorVersion), minorVersion(minorVersion)
 {
     initDefaultParameters();
 }
@@ -162,6 +163,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         default:
             stream << "_Error";
             break;
+    }
+
+    if (pp.noFixture)
+    {
+        stream << "_NoFixture";
     }
 
     if (pp.eglParameters.contextVirtualization == EGL_FALSE)

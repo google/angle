@@ -10,12 +10,12 @@
 
 using namespace angle;
 
-class EGLQueryContextTest : public EGLTest, public testing::WithParamInterface<PlatformParameters>
+class EGLQueryContextTest : public ANGLETest
 {
   public:
     void SetUp() override
     {
-        EGLTest::SetUp();
+        ANGLETest::SetUp();
 
         int clientVersion = GetParam().majorVersion;
 
@@ -59,6 +59,8 @@ class EGLQueryContextTest : public EGLTest, public testing::WithParamInterface<P
             eglTerminate(mDisplay);
         }
         ASSERT_EGL_SUCCESS() << "Error during test TearDown";
+
+        ANGLETest::TearDown();
     }
 
     EGLDisplay mDisplay;
@@ -145,9 +147,9 @@ TEST_P(EGLQueryContextTest, BadAttribute)
 }
 
 ANGLE_INSTANTIATE_TEST(EGLQueryContextTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_VULKAN(),
-                       ES3_D3D11(),
-                       ES3_OPENGL());
+                       WithNoFixture(ES2_D3D9()),
+                       WithNoFixture(ES2_D3D11()),
+                       WithNoFixture(ES2_OPENGL()),
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_D3D11()),
+                       WithNoFixture(ES3_OPENGL()));

@@ -8,6 +8,11 @@
 //   This test will try to use all combinations of context configs and
 //   surface configs. If the configs are compatible, it checks that simple
 //   rendering works, otherwise it checks an error is generated one MakeCurrent.
+//
+// Only run the EGLContextCompatibilityTest on release builds.  The execution time of this test
+// scales with the square of the number of configs exposed and can time out in some debug builds.
+// http://anglebug.com/2121
+
 #include <gtest/gtest.h>
 
 #include <vector>
@@ -25,15 +30,14 @@ namespace
 const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 }
 
-class EGLContextCompatibilityTest : public EGLTest,
-                                    public testing::WithParamInterface<PlatformParameters>
+class EGLContextCompatibilityTest : public ANGLETest
 {
   public:
     EGLContextCompatibilityTest() : mDisplay(0) {}
 
     void SetUp() override
     {
-        EGLTest::SetUp();
+        ANGLETest::SetUp();
 
         ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
@@ -59,6 +63,8 @@ class EGLContextCompatibilityTest : public EGLTest,
     {
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         eglTerminate(mDisplay);
+
+        ANGLETest::TearDown();
     }
 
   protected:
@@ -248,6 +254,8 @@ class EGLContextCompatibilityTest : public EGLTest,
 // same config can render.
 TEST_P(EGLContextCompatibilityTest, WindowSameConfig)
 {
+    ANGLE_SKIP_TEST_IF(IsDebug());  // http://anglebug.com/2121
+
     for (size_t i = 0; i < mConfigs.size(); i++)
     {
         EGLConfig config = mConfigs[i];
@@ -275,6 +283,8 @@ TEST_P(EGLContextCompatibilityTest, WindowSameConfig)
 // same config can render.
 TEST_P(EGLContextCompatibilityTest, PbufferSameConfig)
 {
+    ANGLE_SKIP_TEST_IF(IsDebug());  // http://anglebug.com/2121
+
     for (size_t i = 0; i < mConfigs.size(); i++)
     {
         EGLConfig config = mConfigs[i];
@@ -301,6 +311,8 @@ TEST_P(EGLContextCompatibilityTest, PbufferSameConfig)
 // config works or errors according to the EGL compatibility rules
 TEST_P(EGLContextCompatibilityTest, WindowDifferentConfig)
 {
+    ANGLE_SKIP_TEST_IF(IsDebug());  // http://anglebug.com/2121
+
     // anglebug.com/2183
     // Actually failed only on (IsIntel() && IsWindows() && IsD3D11()),
     // but it's impossible to do other tests since GL_RENDERER is NULL
@@ -348,6 +360,8 @@ TEST_P(EGLContextCompatibilityTest, WindowDifferentConfig)
 // config works or errors according to the EGL compatibility rules
 TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
 {
+    ANGLE_SKIP_TEST_IF(IsDebug());  // http://anglebug.com/2121
+
     for (size_t i = 0; i < mConfigs.size(); i++)
     {
         EGLConfig config1 = mConfigs[i];
@@ -384,14 +398,9 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
     }
 }
 
-// Only run the EGLContextCompatibilityTest on release builds.  The execution time of this test
-// scales with the square of the number of configs exposed and can time out in some debug builds.
-// http://anglebug.com/2121
-#if defined(NDEBUG)
 ANGLE_INSTANTIATE_TEST(EGLContextCompatibilityTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES2_VULKAN());
-#endif  // defined(NDEBUG)
+                       WithNoFixture(ES2_D3D9()),
+                       WithNoFixture(ES2_D3D11()),
+                       WithNoFixture(ES2_OPENGL()),
+                       WithNoFixture(ES2_OPENGLES()),
+                       WithNoFixture(ES2_VULKAN()));

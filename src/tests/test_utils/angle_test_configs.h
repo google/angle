@@ -47,9 +47,13 @@ struct PlatformParameters
 
     void initDefaultParameters();
 
-    auto tie() const { return std::tie(driver, eglParameters, majorVersion, minorVersion); }
+    auto tie() const
+    {
+        return std::tie(driver, noFixture, eglParameters, majorVersion, minorVersion);
+    }
 
     GLESDriverType driver;
+    bool noFixture;
     EGLPlatformParameters eglParameters;
     EGLint majorVersion;
     EGLint minorVersion;
@@ -184,6 +188,12 @@ inline PlatformParameters WithNoVirtualContexts(const PlatformParameters &params
     return withNoVirtualContexts;
 }
 
+inline PlatformParameters WithNoFixture(const PlatformParameters &params)
+{
+    PlatformParameters withNoFixture = params;
+    withNoFixture.noFixture          = true;
+    return withNoFixture;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_
