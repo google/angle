@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "360f6ba9_ae7bf393",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-05-03T18:30:50Z",
+      "side": 1,
+      "message": "Some tests needed D3D9, I think.\nLike EGLDeviceCreationTest.AnyD3D9Device",
+      "parentUuid": "88edb073_e6c2443d",
+      "range": {
+        "startLine": 539,
+        "startChar": 60,
+        "endLine": 539,
+        "endChar": 80
+      },
+      "revId": "dd1b041f9ca21415b927a59ba63afe91cc3ea7e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0e3beee_fc1cb242",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 16

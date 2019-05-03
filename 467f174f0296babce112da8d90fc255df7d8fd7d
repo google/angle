@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58b736e5_8c52e47f",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-05-03T18:30:50Z",
+      "side": 1,
+      "message": "Would we get \"Entering\" without a corresponding \"Exiting\" in case of FAIL()?\nOn the surface, seemed more correct that \"Entering\" would be printed after there is no chance to FAIL(), however, this depends on whether TearDown() is reached after FAIL() or not.",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 446,
+        "endChar": 0
+      },
+      "revId": "467f174f0296babce112da8d90fc255df7d8fd7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
