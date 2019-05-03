@@ -122,8 +122,15 @@ bool IsConfigSupported(const PlatformParameters &param);
 // Returns shared test system information. Can be used globally in the tests.
 SystemInfo *GetTestSystemInfo();
 
+// Returns a list of all enabled test platform names. For use in configuration enumeration.
+std::vector<std::string> GetAvailableTestPlatformNames();
+
 // Active config (e.g. ES2_Vulkan).
 extern std::string gSelectedConfig;
+
+// Use a separate isolated process per test config. This works around driver flakiness when using
+// multiple APIs/windows/etc in the same process.
+extern bool gSeparateProcessPerConfig;
 }  // namespace angle
 
 #endif  // ANGLE_TEST_INSTANTIATE_H_

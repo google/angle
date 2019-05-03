@@ -193,7 +193,11 @@ bool RunApp(const std::vector<const char *> &args,
     {
         startInfo.hStdError = GetStdHandle(STD_ERROR_HANDLE);
     }
-    startInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+    if (stderrOut || stdoutOut)
+    {
+        startInfo.dwFlags |= STARTF_USESTDHANDLES;
+    }
 
     // Create the child process.
     PROCESS_INFORMATION processInfo = {};
