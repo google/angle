@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ae88467d_6abd659a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-05-03T16:22:55Z",
+      "side": 1,
+      "message": "I tried this (out of all-day meetings finally), and there\u0027s a problem.  ClipRectToScissor() doesn\u0027t flip Y if there\u0027s no scissor.  I like the compactness of this approach, and so I simply did the Y-flip myself.",
+      "parentUuid": "98f05732_87f0b44e",
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c5f5dbb_47ea98ee",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
@@ -66,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "d018e74b_c1dd2e82",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-05-03T16:22:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2dc4e7f_d2946c7c",
+      "range": {
+        "startLine": 697,
+        "startChar": 8,
+        "endLine": 697,
+        "endChar": 56
+      },
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee6a8db3_54cf6e88",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 11
@@ -98,6 +140,24 @@
       "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39d62507_d7dcf92d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-05-03T16:22:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4c62323e_9e94c6bb",
+      "revId": "a49883b2766ff5287cb873831e54855d13a8f244",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
