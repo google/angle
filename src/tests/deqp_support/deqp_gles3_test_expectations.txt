@@ -638,11 +638,19 @@
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.first.int2_10_10_10* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.offset.int2_10_10_10* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.vertex_array_objects.all_attributes = SKIP
-3193 VULKAN : dEQP-GLES3.functional.draw.* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.int.* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.ivec* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.uint.* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.uvec* = SKIP
+3193 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
+3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
+3193 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
+3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.user_ptr.index_int = FAIL
+3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.unaligned_user_ptr.index_int = FAIL
+3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.user_ptr.index_int = FAIL
+3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.unaligned_user_ptr.index_int = FAIL
+3193 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
+3193 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
 // Polygon offset:
 2950 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
@@ -686,9 +694,6 @@
 
 // - ES3 Query Types:
 2950 VULKAN : dEQP-GLES3.functional.negative_api.fragment.begin_query = SKIP
-
-// - ContextVk::drawRangeElements:
-2950 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_element* = SKIP
 
 // - TextureVk::setBaseLevel:
 2950 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_2d_texture_base_level_gettexparameter* = SKIP

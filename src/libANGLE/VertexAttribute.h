@@ -149,7 +149,7 @@ struct VertexAttribCurrentValueData
         GLfloat FloatValues[4];
         GLint IntValues[4];
         GLuint UnsignedIntValues[4];
-    };
+    } Values;
     VertexAttribType Type;
 
     VertexAttribCurrentValueData();

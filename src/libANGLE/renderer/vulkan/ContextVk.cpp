@@ -59,7 +59,7 @@ constexpr VkColorComponentFlags kAllColorChannelsMask =
      VK_COLOR_COMPONENT_A_BIT);
 
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-constexpr size_t kDefaultValueSize              = sizeof(float) * 4;
+constexpr size_t kDefaultValueSize              = sizeof(gl::VertexAttribCurrentValueData::Values);
 constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
 }  // anonymous namespace
 
@@ -567,8 +567,7 @@ angle::Result ContextVk::drawRangeElements(const gl::Context *context,
                                            gl::DrawElementsType type,
                                            const void *indices)
 {
-    ANGLE_VK_UNREACHABLE(this);
-    return angle::Result::Stop;
+    return drawElements(context, mode, count, type, indices);
 }
 
 VkDevice ContextVk::getDevice() const
@@ -1362,10 +1361,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     const gl::State &glState = mState;
     const gl::VertexAttribCurrentValueData &defaultValue =
         glState.getVertexAttribCurrentValues()[attribIndex];
-
-    ASSERT(defaultValue.Type == gl::VertexAttribType::Float);
-
-    memcpy(ptr, defaultValue.FloatValues, kDefaultValueSize);
+    memcpy(ptr, &defaultValue.Values, kDefaultValueSize);
 
     ANGLE_TRY(defaultBuffer.flush(this));
 

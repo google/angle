@@ -395,7 +395,28 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
 
 ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex)
 {
-    contextVk->onVertexAttributeChange(attribIndex, 0, 0, VK_FORMAT_R32G32B32A32_SFLOAT, 0);
+    const gl::State &glState = contextVk->getState();
+    const gl::VertexAttribCurrentValueData &defaultValue =
+        glState.getVertexAttribCurrentValues()[attribIndex];
+
+    switch (defaultValue.Type)
+    {
+        case gl::VertexAttribType::Float:
+            contextVk->onVertexAttributeChange(attribIndex, 0, 0, VK_FORMAT_R32G32B32A32_SFLOAT, 0);
+            break;
+
+        case gl::VertexAttribType::Int:
+            contextVk->onVertexAttributeChange(attribIndex, 0, 0, VK_FORMAT_R32G32B32A32_SINT, 0);
+            break;
+
+        case gl::VertexAttribType::UnsignedInt:
+            contextVk->onVertexAttributeChange(attribIndex, 0, 0, VK_FORMAT_R32G32B32A32_UINT, 0);
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
