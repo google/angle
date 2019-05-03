@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "5ea5a446_3f098c52",
+        "filename": "src/tests/egl_tests/EGLDeviceTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-03T18:33:54Z",
+      "side": 1,
+      "message": "The configuration parameter isn\u0027t used. So the test should behave identically. It only applies to the IsPlatformAvailable filtering step. Which should return the same result for D3D9 and D3D11.",
+      "parentUuid": "360f6ba9_ae7bf393",
+      "range": {
+        "startLine": 539,
+        "startChar": 60,
+        "endLine": 539,
+        "endChar": 80
+      },
+      "revId": "dd1b041f9ca21415b927a59ba63afe91cc3ea7e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0e3beee_fc1cb242",
         "filename": "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
         "patchSetId": 16
