@@ -69,6 +69,8 @@ bool IsNativeConfigSupported(const PlatformParameters &param, OSWindow *osWindow
 }
 }  // namespace
 
+std::string gSelectedConfig;
+
 SystemInfo *GetTestSystemInfo()
 {
     static SystemInfo *sSystemInfo = nullptr;
@@ -412,11 +414,22 @@ bool IsPlatformAvailable(const PlatformParameters &param)
     {
         return iter->second;
     }
+
+    bool result = false;
+
+    if (!gSelectedConfig.empty())
+    {
+        std::stringstream strstr;
+        strstr << param;
+        if (strstr.str() == gSelectedConfig)
+        {
+            result = true;
+        }
+    }
     else
     {
         const SystemInfo *systemInfo = GetTestSystemInfo();
 
-        bool result = false;
         if (systemInfo)
         {
             result = IsConfigWhitelisted(*systemInfo, param);
@@ -425,18 +438,18 @@ bool IsPlatformAvailable(const PlatformParameters &param)
         {
             result = IsConfigSupported(param);
         }
-
-        paramAvailabilityCache[param] = result;
-
-        if (!result)
-        {
-            std::cout << "Skipping tests using configuration " << param
-                      << " because it is not available." << std::endl;
-        }
-
-        // Uncomment this to print available platforms.
-        // std::cout << "Platform: " << param << " (" << paramAvailabilityCache.size() << ")\n";
-        return result;
     }
+
+    paramAvailabilityCache[param] = result;
+
+    if (!result)
+    {
+        std::cout << "Skipping tests using configuration " << param
+                  << " because it is not available." << std::endl;
+    }
+
+    // Uncomment this to print available platforms.
+    // std::cout << "Platform: " << param << " (" << paramAvailabilityCache.size() << ")\n";
+    return result;
 }
 }  // namespace angle

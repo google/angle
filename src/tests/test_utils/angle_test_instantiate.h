@@ -121,6 +121,9 @@ bool IsConfigSupported(const PlatformParameters &param);
 
 // Returns shared test system information. Can be used globally in the tests.
 SystemInfo *GetTestSystemInfo();
+
+// Active config (e.g. ES2_Vulkan).
+extern std::string gSelectedConfig;
 }  // namespace angle
 
 #endif  // ANGLE_TEST_INSTANTIATE_H_

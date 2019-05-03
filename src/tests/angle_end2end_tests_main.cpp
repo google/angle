@@ -10,8 +10,8 @@ void ANGLEProcessTestArgs(int *argc, char *argv[]);
 
 int main(int argc, char **argv)
 {
-    testing::InitGoogleTest(&argc, argv);
     ANGLEProcessTestArgs(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     int rt = RUN_ALL_TESTS();
     return rt;
 }
