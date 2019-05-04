@@ -1701,6 +1701,11 @@ angle::Result StateManager11::onMakeCurrent(const gl::Context *context)
         }
     }
 
+    // Reset the cache objects.
+    mProgramD3D    = nullptr;
+    mVertexArray11 = nullptr;
+    mFramebuffer11 = nullptr;
+
     return angle::Result::Continue;
 }
 
