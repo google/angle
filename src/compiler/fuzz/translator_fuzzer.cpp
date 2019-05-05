@@ -155,7 +155,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     validOutputs.push_back(SH_SPIRV_VULKAN_OUTPUT);
     validOutputs.push_back(SH_HLSL_3_0_OUTPUT);
     validOutputs.push_back(SH_HLSL_4_1_OUTPUT);
-    validOutputs.push_back(SH_HLSL_4_0_FL9_3_OUTPUT);
     bool found = false;
     for (auto valid : validOutputs)
     {
