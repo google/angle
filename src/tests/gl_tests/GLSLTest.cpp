@@ -3364,10 +3364,10 @@ TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInVertexShader)
     // https://www.khronos.org/registry/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.pdf or
     // section 4.3.5 in https://www.khronos.org/files/opengles_shading_language.pdf
     //
-    // However, windows nvidia OpenGL ES driver fails to link this program.
+    // However, nvidia OpenGL ES drivers fail to link this program.
     //
     // http://anglebug.com/3413
-    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsWindows() && IsNVIDIA());
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsNVIDIA());
 
     constexpr char kVS[] =
         "#version 300 es\n"
