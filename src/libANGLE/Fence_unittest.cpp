@@ -12,6 +12,7 @@
 #include "libANGLE/renderer/SyncImpl.h"
 
 using ::testing::_;
+using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SetArgumentPointee;
 
