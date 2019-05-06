@@ -96,14 +96,14 @@ class UtilsVk : angle::NonCopyable
         bool destFlipY;
     };
 
-    angle::Result clearBuffer(vk::Context *context,
+    angle::Result clearBuffer(ContextVk *context,
                               vk::BufferHelper *dest,
                               const ClearParameters &params);
-    angle::Result copyBuffer(vk::Context *context,
+    angle::Result copyBuffer(ContextVk *context,
                              vk::BufferHelper *dest,
                              vk::BufferHelper *src,
                              const CopyParameters &params);
-    angle::Result convertVertexBuffer(vk::Context *context,
+    angle::Result convertVertexBuffer(ContextVk *context,
                                       vk::BufferHelper *dest,
                                       vk::BufferHelper *src,
                                       const ConvertVertexParameters &params);
@@ -194,7 +194,7 @@ class UtilsVk : angle::NonCopyable
     // compute shader, vsShader and pipelineDesc should be nullptr, and this will set up a dispatch
     // call. Otherwise fsCsShader is expected to be a fragment shader and this will set up a draw
     // call.
-    angle::Result setupProgram(vk::Context *context,
+    angle::Result setupProgram(ContextVk *context,
                                Function function,
                                vk::RefCounted<vk::ShaderAndSerial> *fsCsShader,
                                vk::RefCounted<vk::ShaderAndSerial> *vsShader,
@@ -210,7 +210,7 @@ class UtilsVk : angle::NonCopyable
     // this array has two entries {STORAGE_TEXEL_BUFFER, 1} and {UNIFORM_TEXEL_BUFFER, 3}, then the
     // created set layout would be binding 0 for storage texel buffer and bindings 1 through 3 for
     // uniform texel buffer.  All resources are put in set 0.
-    angle::Result ensureResourcesInitialized(vk::Context *context,
+    angle::Result ensureResourcesInitialized(ContextVk *context,
                                              Function function,
                                              VkDescriptorPoolSize *setSizes,
                                              size_t setSizesCount,
@@ -218,11 +218,11 @@ class UtilsVk : angle::NonCopyable
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.
-    angle::Result ensureBufferClearResourcesInitialized(vk::Context *context);
-    angle::Result ensureBufferCopyResourcesInitialized(vk::Context *context);
-    angle::Result ensureConvertVertexResourcesInitialized(vk::Context *context);
-    angle::Result ensureImageClearResourcesInitialized(vk::Context *context);
-    angle::Result ensureImageCopyResourcesInitialized(vk::Context *context);
+    angle::Result ensureBufferClearResourcesInitialized(ContextVk *context);
+    angle::Result ensureBufferCopyResourcesInitialized(ContextVk *context);
+    angle::Result ensureConvertVertexResourcesInitialized(ContextVk *context);
+    angle::Result ensureImageClearResourcesInitialized(ContextVk *context);
+    angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
                                   vk::ImageHelper *image,

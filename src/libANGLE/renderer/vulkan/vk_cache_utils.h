@@ -778,7 +778,7 @@ class GraphicsPipelineCache final : angle::NonCopyable
     ~GraphicsPipelineCache();
 
     void destroy(VkDevice device);
-    void release(RendererVk *renderer);
+    void release(ContextVk *context);
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
 

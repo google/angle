@@ -99,7 +99,7 @@ class VertexArrayVk : public VertexArrayImpl
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
                                          const vk::Format &vertexFormat);
-    void ensureConversionReleased(RendererVk *renderer, size_t attribIndex);
+    void ensureConversionReleased(ContextVk *contextVk, size_t attribIndex);
 
     angle::Result syncDirtyAttrib(ContextVk *contextVk,
                                   const gl::VertexAttribute &attrib,

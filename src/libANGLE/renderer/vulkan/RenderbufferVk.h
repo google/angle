@@ -48,8 +48,8 @@ class RenderbufferVk : public RenderbufferImpl
     void releaseOwnershipOfImage(const gl::Context *context);
 
   private:
-    void releaseAndDeleteImage(const gl::Context *context, RendererVk *renderer);
-    void releaseImage(const gl::Context *context, RendererVk *renderer);
+    void releaseAndDeleteImage(ContextVk *contextVk);
+    void releaseImage(ContextVk *contextVk);
 
     bool mOwnsImage;
     vk::ImageHelper *mImage;

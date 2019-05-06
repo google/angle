@@ -35,14 +35,13 @@ BufferVk::~BufferVk() {}
 void BufferVk::destroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
 
-    release(renderer);
+    release(contextVk);
 }
 
-void BufferVk::release(RendererVk *renderer)
+void BufferVk::release(ContextVk *contextVk)
 {
-    mBuffer.release(renderer);
+    mBuffer.release(contextVk);
 }
 
 angle::Result BufferVk::setData(const gl::Context *context,
@@ -56,7 +55,7 @@ angle::Result BufferVk::setData(const gl::Context *context,
     if (size > static_cast<size_t>(mState.getSize()))
     {
         // Release and re-create the memory and buffer.
-        release(contextVk->getRenderer());
+        release(contextVk);
 
         // We could potentially use multiple backing buffers for different usages.
         // For now keep a single buffer with all relevant usage flags.
@@ -223,11 +222,10 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                     size_t size,
                                     size_t offset)
 {
-    RendererVk *renderer = contextVk->getRenderer();
     VkDevice device      = contextVk->getDevice();
 
     // Use map when available.
-    if (mBuffer.isResourceInUse(renderer))
+    if (mBuffer.isResourceInUse(contextVk))
     {
         vk::StagingBuffer stagingBuffer;
         ANGLE_TRY(stagingBuffer.init(contextVk, static_cast<VkDeviceSize>(size),
@@ -247,7 +245,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                          VK_ACCESS_HOST_WRITE_BIT, copyRegion));
 
         // Immediately release staging buffer. We should probably be using a DynamicBuffer here.
-        renderer->releaseObject(renderer->getCurrentQueueSerial(), &stagingBuffer);
+        contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &stagingBuffer);
     }
     else
     {

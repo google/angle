@@ -88,7 +88,7 @@ class BufferVk : public BufferImpl
                               const uint8_t *data,
                               size_t size,
                               size_t offset);
-    void release(RendererVk *renderer);
+    void release(ContextVk *context);
 
     vk::BufferHelper mBuffer;
     VkAccessFlags mDataWriteAccessFlags;

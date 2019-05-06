@@ -64,6 +64,44 @@ constexpr VkColorComponentFlags kAllColorChannelsMask =
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 constexpr size_t kDefaultValueSize              = sizeof(gl::VertexAttribCurrentValueData::Values);
 constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
+constexpr size_t kDefaultPoolAllocatorPageSize  = 16 * 1024;
+
+// Wait a maximum of 10s.  If that times out, we declare it a failure.
+constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+
+constexpr size_t kInFlightCommandsLimit = 100u;
+
+// Initially dumping the command graphs is disabled.
+constexpr bool kEnableCommandGraphDiagnostics = false;
+
+void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
+                          const vk::PrimaryCommandBuffer &commandBuffer,
+                          const vk::Semaphore *waitSemaphore,
+                          VkPipelineStageFlags *waitStageMask,
+                          const vk::Semaphore *signalSemaphore)
+{
+    // Verify that the submitInfo has been zero'd out.
+    ASSERT(submitInfo->waitSemaphoreCount == 0);
+    ASSERT(submitInfo->signalSemaphoreCount == 0);
+
+    submitInfo->sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo->commandBufferCount = 1;
+    submitInfo->pCommandBuffers    = commandBuffer.ptr();
+
+    if (waitSemaphore)
+    {
+        submitInfo->waitSemaphoreCount = 1;
+        submitInfo->pWaitSemaphores    = waitSemaphore->ptr();
+        submitInfo->pWaitDstStageMask  = waitStageMask;
+    }
+
+    if (signalSemaphore)
+    {
+        submitInfo->signalSemaphoreCount = 1;
+        submitInfo->pSignalSemaphores    = signalSemaphore->ptr();
+    }
+}
+
 }  // anonymous namespace
 
 // std::array only uses aggregate init. Thus we make a helper macro to reduce on code duplication.
@@ -71,6 +109,30 @@ constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
     {                                                \
         kVertexBufferUsage, kDefaultBufferSize, true \
     }
+
+// CommandBatch implementation.
+ContextVk::CommandBatch::CommandBatch() = default;
+
+ContextVk::CommandBatch::~CommandBatch() = default;
+
+ContextVk::CommandBatch::CommandBatch(CommandBatch &&other)
+{
+    *this = std::move(other);
+}
+
+ContextVk::CommandBatch &ContextVk::CommandBatch::operator=(CommandBatch &&other)
+{
+    std::swap(commandPool, other.commandPool);
+    std::swap(fence, other.fence);
+    std::swap(serial, other.serial);
+    return *this;
+}
+
+void ContextVk::CommandBatch::destroy(VkDevice device)
+{
+    commandPool.destroy(device);
+    fence.reset(device);
+}
 
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer)
     : ContextImpl(state, errorSet),
@@ -88,7 +150,14 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16, true),
       mDriverUniformsDescriptorSet(VK_NULL_HANDLE),
       mDefaultAttribBuffers{{INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT,
-                             INIT, INIT, INIT, INIT}}
+                             INIT, INIT, INIT, INIT}},
+      mLastCompletedQueueSerial(renderer->nextSerial()),
+      mCurrentQueueSerial(renderer->nextSerial()),
+      mPoolAllocator(kDefaultPoolAllocatorPageSize, 1),
+      mCommandGraph(kEnableCommandGraphDiagnostics, &mPoolAllocator),
+      mGpuEventsEnabled(false),
+      mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
+      mGpuEventTimestampOrigin(0)
 {
     TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
@@ -127,24 +196,43 @@ void ContextVk::onDestroy(const gl::Context *context)
     // Force a flush on destroy.
     (void)finishImpl();
 
+    VkDevice device = getDevice();
+
     mDriverUniformsSetLayout.reset();
     mIncompleteTextures.onDestroy(context);
-    mDriverUniformsBuffer.destroy(getDevice());
+    mDriverUniformsBuffer.destroy(device);
     mDriverUniformsDescriptorPoolBinding.reset();
 
     for (vk::DynamicDescriptorPool &descriptorPool : mDynamicDescriptorPools)
     {
-        descriptorPool.destroy(getDevice());
+        descriptorPool.destroy(device);
     }
 
     for (vk::DynamicBuffer &defaultBuffer : mDefaultAttribBuffers)
     {
-        defaultBuffer.destroy(getDevice());
+        defaultBuffer.destroy(device);
     }
 
     for (vk::DynamicQueryPool &queryPool : mQueryPools)
     {
-        queryPool.destroy(getDevice());
+        queryPool.destroy(device);
+    }
+
+    if (!mInFlightCommands.empty() || !mGarbage.empty())
+    {
+        (void)finishImpl();
+    }
+
+    mUtils.destroy(device);
+
+    mRenderPassCache.destroy(device);
+    mSubmitFence.reset(device);
+    mShaderLibrary.destroy(device);
+    mGpuEventQueryPool.destroy(device);
+
+    if (mCommandPool.valid())
+    {
+        mCommandPool.destroy(device);
     }
 }
 
@@ -197,6 +285,34 @@ angle::Result ContextVk::initialize()
         buffer.init(1, mRenderer);
     }
 
+    // Initialize the command pool now that we know the queue family index.
+    VkCommandPoolCreateInfo commandPoolInfo = {};
+    commandPoolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    commandPoolInfo.queueFamilyIndex        = getRenderer()->getQueueFamilyIndex();
+
+    VkDevice device = getDevice();
+    ANGLE_VK_TRY(this, mCommandPool.init(device, commandPoolInfo));
+
+#if ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // GPU tracing workaround for anglebug.com/2927.  The renderer should not emit gpu events during
+    // platform discovery.
+    const unsigned char *gpuEventsEnabled =
+        platform->getTraceCategoryEnabledFlag(platform, "gpu.angle.gpu");
+    mGpuEventsEnabled = gpuEventsEnabled && *gpuEventsEnabled;
+#endif
+
+    if (mGpuEventsEnabled)
+    {
+        // Calculate the difference between CPU and GPU clocks for GPU event reporting.
+        ANGLE_TRY(mGpuEventQueryPool.init(this, VK_QUERY_TYPE_TIMESTAMP,
+                                          vk::kDefaultTimestampQueryPoolSize));
+        ANGLE_TRY(synchronizeCpuGpuTime(nullptr, nullptr));
+    }
+
     return angle::Result::Continue;
 }
 
@@ -205,35 +321,9 @@ angle::Result ContextVk::flush(const gl::Context *context)
     return flushImpl();
 }
 
-angle::Result ContextVk::flushImpl()
-{
-    const vk::Semaphore *waitSemaphore   = nullptr;
-    const vk::Semaphore *signalSemaphore = nullptr;
-    if (mCurrentWindowSurface && !mRenderer->getCommandGraph()->empty())
-    {
-        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
-                                                                    &signalSemaphore));
-    }
-
-    return mRenderer->flush(this, waitSemaphore, signalSemaphore);
-}
-
 angle::Result ContextVk::finish(const gl::Context *context)
 {
     return finishImpl();
-}
-
-angle::Result ContextVk::finishImpl()
-{
-    const vk::Semaphore *waitSemaphore   = nullptr;
-    const vk::Semaphore *signalSemaphore = nullptr;
-    if (mCurrentWindowSurface && !mRenderer->getCommandGraph()->empty())
-    {
-        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
-                                                                    &signalSemaphore));
-    }
-
-    return mRenderer->finish(this, waitSemaphore, signalSemaphore);
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
@@ -271,7 +361,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mDirtyBits |= mNewCommandBufferDirtyBits;
 
         gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
-        if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer->getCurrentQueueSerial(),
+        if (!mDrawFramebuffer->appendToStartedRenderPass(getCurrentQueueSerial(),
                                                          scissoredRenderArea, &mCommandBuffer))
         {
             ANGLE_TRY(
@@ -413,7 +503,7 @@ angle::Result ContextVk::handleDirtyPipeline(const gl::Context *context,
     commandBuffer->bindGraphicsPipeline(mCurrentPipeline->getPipeline());
     // Update the queue serial for the pipeline object.
     ASSERT(mCurrentPipeline && mCurrentPipeline->valid());
-    mCurrentPipeline->updateSerial(mRenderer->getCurrentQueueSerial());
+    mCurrentPipeline->updateSerial(getCurrentQueueSerial());
     return angle::Result::Continue;
 }
 
@@ -492,6 +582,450 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
                                               kDriverUniformsDescriptorSetIndex, 1,
                                               &mDriverUniformsDescriptorSet, 0, nullptr);
     return angle::Result::Continue;
+}
+
+angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
+                                     vk::PrimaryCommandBuffer &&commandBuffer)
+{
+    TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags             = 0;
+
+    VkDevice device = getDevice();
+    vk::Scoped<CommandBatch> scopedBatch(device);
+    CommandBatch &batch = scopedBatch.get();
+    ANGLE_TRY(getSubmitFence(&batch.fence));
+
+    ANGLE_TRY(getRenderer()->queueSubmit(this, submitInfo, batch.fence.get()));
+
+    // TODO: this comment still valid?
+    // Notify the Contexts that they should be starting new command buffers.
+    // We use one command pool per serial/submit associated with this VkQueue. We can also
+    // have multiple Contexts sharing one VkQueue. In ContextVk::setupDraw we don't explicitly
+    // check for a new serial when starting a new command buffer. We just check that the current
+    // recording command buffer is valid. Thus we need to explicitly notify every other Context
+    // using this VkQueue that they their current command buffer is no longer valid.
+    onCommandBufferFinished();
+
+    // Store this command buffer in the in-flight list.
+    batch.commandPool = std::move(mCommandPool);
+    batch.serial      = mCurrentQueueSerial;
+
+    mInFlightCommands.emplace_back(scopedBatch.release());
+
+    // Make sure a new fence is created for the next submission.
+    mSubmitFence.reset(device);
+
+    // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done on
+    // swap() though, and there could be multiple submissions in between (through glFlush() calls),
+    // so the limit is larger than the expected number of images.  The
+    // InterleavedAttributeDataBenchmark perf test for example issues a large number of flushes.
+    ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
+
+    mLastSubmittedQueueSerial = mCurrentQueueSerial;
+    mCurrentQueueSerial       = getRenderer()->nextSerial();
+
+    ANGLE_TRY(checkCompletedCommands());
+
+    if (mGpuEventsEnabled)
+    {
+        ANGLE_TRY(checkCompletedGpuEvents());
+    }
+
+    // Simply null out the command buffer here - it was allocated using the command pool.
+    commandBuffer.releaseHandle();
+
+    // Reallocate the command pool for next frame.
+    VkCommandPoolCreateInfo poolInfo = {};
+    poolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    poolInfo.queueFamilyIndex        = getRenderer()->getQueueFamilyIndex();
+
+    ANGLE_VK_TRY(this, mCommandPool.init(device, poolInfo));
+    return angle::Result::Continue;
+}
+
+void ContextVk::freeAllInFlightResources()
+{
+    VkDevice device = getDevice();
+
+    for (CommandBatch &batch : mInFlightCommands)
+    {
+        // On device loss we need to wait for fence to be signaled before destroying it
+        if (getRenderer()->isDeviceLost())
+        {
+            VkResult status = batch.fence.get().wait(device, kMaxFenceWaitTimeNs);
+            // If wait times out, it is probably not possible to recover from lost device
+            ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
+        }
+        batch.commandPool.destroy(device);
+        batch.fence.reset(device);
+    }
+    mInFlightCommands.clear();
+
+    for (auto &garbage : mGarbage)
+    {
+        garbage.destroy(device);
+    }
+    mGarbage.clear();
+
+    mLastCompletedQueueSerial = mLastSubmittedQueueSerial;
+}
+
+angle::Result ContextVk::flushCommandGraph(vk::PrimaryCommandBuffer *commandBatch)
+{
+    return mCommandGraph.submitCommands(this, mCurrentQueueSerial, &mRenderPassCache, &mCommandPool,
+                                        commandBatch);
+}
+
+angle::Result ContextVk::synchronizeCpuGpuTime(const vk::Semaphore *waitSemaphore,
+                                               const vk::Semaphore *signalSemaphore)
+{
+    ASSERT(mGpuEventsEnabled);
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // To synchronize CPU and GPU times, we need to get the CPU timestamp as close as possible to
+    // the GPU timestamp.  The process of getting the GPU timestamp is as follows:
+    //
+    //             CPU                            GPU
+    //
+    //     Record command buffer
+    //     with timestamp query
+    //
+    //     Submit command buffer
+    //
+    //     Post-submission work             Begin execution
+    //
+    //            ????                    Write timestamp Tgpu
+    //
+    //            ????                       End execution
+    //
+    //            ????                    Return query results
+    //
+    //            ????
+    //
+    //       Get query results
+    //
+    // The areas of unknown work (????) on the CPU indicate that the CPU may or may not have
+    // finished post-submission work while the GPU is executing in parallel. With no further work,
+    // querying CPU timestamps before submission and after getting query results give the bounds to
+    // Tgpu, which could be quite large.
+    //
+    // Using VkEvents, the GPU can be made to wait for the CPU and vice versa, in an effort to
+    // reduce this range. This function implements the following procedure:
+    //
+    //             CPU                            GPU
+    //
+    //     Record command buffer
+    //     with timestamp query
+    //
+    //     Submit command buffer
+    //
+    //     Post-submission work             Begin execution
+    //
+    //            ????                    Set Event GPUReady
+    //
+    //    Wait on Event GPUReady         Wait on Event CPUReady
+    //
+    //       Get CPU Time Ts             Wait on Event CPUReady
+    //
+    //      Set Event CPUReady           Wait on Event CPUReady
+    //
+    //      Get CPU Time Tcpu              Get GPU Time Tgpu
+    //
+    //    Wait on Event GPUDone            Set Event GPUDone
+    //
+    //       Get CPU Time Te                 End Execution
+    //
+    //            Idle                    Return query results
+    //
+    //      Get query results
+    //
+    // If Te-Ts > epsilon, a GPU or CPU interruption can be assumed and the operation can be
+    // retried.  Once Te-Ts < epsilon, Tcpu can be taken to presumably match Tgpu.  Finding an
+    // epsilon that's valid for all devices may be difficult, so the loop can be performed only a
+    // limited number of times and the Tcpu,Tgpu pair corresponding to smallest Te-Ts used for
+    // calibration.
+    //
+    // Note: Once VK_EXT_calibrated_timestamps is ubiquitous, this should be redone.
+
+    // Make sure nothing is running
+    ASSERT(mCommandGraph.empty());
+
+    TRACE_EVENT0("gpu.angle", "RendererVk::synchronizeCpuGpuTime");
+
+    // Create a query used to receive the GPU timestamp
+    vk::QueryHelper timestampQuery;
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &timestampQuery));
+
+    // Create the three events
+    VkEventCreateInfo eventCreateInfo = {};
+    eventCreateInfo.sType             = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO;
+    eventCreateInfo.flags             = 0;
+
+    VkDevice device = getDevice();
+    vk::Scoped<vk::Event> cpuReady(device), gpuReady(device), gpuDone(device);
+    ANGLE_VK_TRY(this, cpuReady.get().init(device, eventCreateInfo));
+    ANGLE_VK_TRY(this, gpuReady.get().init(device, eventCreateInfo));
+    ANGLE_VK_TRY(this, gpuDone.get().init(device, eventCreateInfo));
+
+    constexpr uint32_t kRetries = 10;
+
+    // Time suffixes used are S for seconds and Cycles for cycles
+    double tightestRangeS = 1e6f;
+    double TcpuS          = 0;
+    uint64_t TgpuCycles   = 0;
+    for (uint32_t i = 0; i < kRetries; ++i)
+    {
+        // Reset the events
+        ANGLE_VK_TRY(this, cpuReady.get().reset(device));
+        ANGLE_VK_TRY(this, gpuReady.get().reset(device));
+        ANGLE_VK_TRY(this, gpuDone.get().reset(device));
+
+        // Record the command buffer
+        vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(device);
+        vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
+
+        VkCommandBufferAllocateInfo commandBufferInfo = {};
+        commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferInfo.commandPool        = mCommandPool.getHandle();
+        commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        commandBufferInfo.commandBufferCount = 1;
+
+        ANGLE_VK_TRY(this, commandBuffer.init(device, commandBufferInfo));
+
+        VkCommandBufferBeginInfo beginInfo = {};
+        beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags                    = 0;
+        beginInfo.pInheritanceInfo         = nullptr;
+
+        ANGLE_VK_TRY(this, commandBuffer.begin(beginInfo));
+
+        commandBuffer.setEvent(gpuReady.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+        commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
+                                 VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, nullptr, 0, nullptr, 0,
+                                 nullptr);
+
+        commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
+                                     timestampQuery.getQuery(), 1);
+        commandBuffer.writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                                     timestampQuery.getQueryPool()->getHandle(),
+                                     timestampQuery.getQuery());
+
+        commandBuffer.setEvent(gpuDone.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+
+        ANGLE_VK_TRY(this, commandBuffer.end());
+
+        // Submit the command buffer
+        VkSubmitInfo submitInfo       = {};
+        VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
+                             signalSemaphore);
+
+        ANGLE_TRY(submitFrame(submitInfo, std::move(commandBuffer)));
+
+        // Wait for GPU to be ready.  This is a short busy wait.
+        VkResult result = VK_EVENT_RESET;
+        do
+        {
+            result = gpuReady.get().getStatus(device);
+            if (result != VK_EVENT_SET && result != VK_EVENT_RESET)
+            {
+                ANGLE_VK_TRY(this, result);
+            }
+        } while (result == VK_EVENT_RESET);
+
+        double TsS = platform->monotonicallyIncreasingTime(platform);
+
+        // Tell the GPU to go ahead with the timestamp query.
+        ANGLE_VK_TRY(this, cpuReady.get().set(device));
+        double cpuTimestampS = platform->monotonicallyIncreasingTime(platform);
+
+        // Wait for GPU to be done.  Another short busy wait.
+        do
+        {
+            result = gpuDone.get().getStatus(device);
+            if (result != VK_EVENT_SET && result != VK_EVENT_RESET)
+            {
+                ANGLE_VK_TRY(this, result);
+            }
+        } while (result == VK_EVENT_RESET);
+
+        double TeS = platform->monotonicallyIncreasingTime(platform);
+
+        // Get the query results
+        ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
+
+        constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
+
+        uint64_t gpuTimestampCycles = 0;
+        ANGLE_VK_TRY(this, timestampQuery.getQueryPool()->getResults(
+                               device, timestampQuery.getQuery(), 1, sizeof(gpuTimestampCycles),
+                               &gpuTimestampCycles, sizeof(gpuTimestampCycles), queryFlags));
+
+        // Use the first timestamp queried as origin.
+        if (mGpuEventTimestampOrigin == 0)
+        {
+            mGpuEventTimestampOrigin = gpuTimestampCycles;
+        }
+
+        // Take these CPU and GPU timestamps if there is better confidence.
+        double confidenceRangeS = TeS - TsS;
+        if (confidenceRangeS < tightestRangeS)
+        {
+            tightestRangeS = confidenceRangeS;
+            TcpuS          = cpuTimestampS;
+            TgpuCycles     = gpuTimestampCycles;
+        }
+    }
+
+    mGpuEventQueryPool.freeQuery(this, &timestampQuery);
+
+    // timestampPeriod gives nanoseconds/cycle.
+    double TgpuS =
+        (TgpuCycles - mGpuEventTimestampOrigin) *
+        static_cast<double>(getRenderer()->getPhysicalDeviceProperties().limits.timestampPeriod) /
+        1'000'000'000.0;
+
+    flushGpuEvents(TgpuS, TcpuS);
+
+    mGpuClockSync.gpuTimestampS = TgpuS;
+    mGpuClockSync.cpuTimestampS = TcpuS;
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::traceGpuEventImpl(vk::PrimaryCommandBuffer *commandBuffer,
+                                           char phase,
+                                           const char *name)
+{
+    ASSERT(mGpuEventsEnabled);
+
+    GpuEventQuery event;
+
+    event.name   = name;
+    event.phase  = phase;
+    event.serial = mCurrentQueueSerial;
+
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &event.queryPoolIndex, &event.queryIndex));
+
+    commandBuffer->resetQueryPool(
+        mGpuEventQueryPool.getQueryPool(event.queryPoolIndex)->getHandle(), event.queryIndex, 1);
+    commandBuffer->writeTimestamp(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+        mGpuEventQueryPool.getQueryPool(event.queryPoolIndex)->getHandle(), event.queryIndex);
+
+    mInFlightGpuEventQueries.push_back(std::move(event));
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::checkCompletedGpuEvents()
+{
+    ASSERT(mGpuEventsEnabled);
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    int finishedCount = 0;
+
+    for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
+    {
+        // Only check the timestamp query if the submission has finished.
+        if (eventQuery.serial > mLastCompletedQueueSerial)
+        {
+            break;
+        }
+
+        // See if the results are available.
+        uint64_t gpuTimestampCycles = 0;
+        VkResult result             = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex)
+                              ->getResults(getDevice(), eventQuery.queryIndex, 1,
+                                           sizeof(gpuTimestampCycles), &gpuTimestampCycles,
+                                           sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
+        if (result == VK_NOT_READY)
+        {
+            break;
+        }
+        ANGLE_VK_TRY(this, result);
+
+        mGpuEventQueryPool.freeQuery(this, eventQuery.queryPoolIndex, eventQuery.queryIndex);
+
+        GpuEvent event;
+        event.gpuTimestampCycles = gpuTimestampCycles;
+        event.name               = eventQuery.name;
+        event.phase              = eventQuery.phase;
+
+        mGpuEvents.emplace_back(event);
+
+        ++finishedCount;
+    }
+
+    mInFlightGpuEventQueries.erase(mInFlightGpuEventQueries.begin(),
+                                   mInFlightGpuEventQueries.begin() + finishedCount);
+
+    return angle::Result::Continue;
+}
+
+void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS)
+{
+    if (mGpuEvents.size() == 0)
+    {
+        return;
+    }
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // Find the slope of the clock drift for adjustment
+    double lastGpuSyncTimeS  = mGpuClockSync.gpuTimestampS;
+    double lastGpuSyncDiffS  = mGpuClockSync.cpuTimestampS - mGpuClockSync.gpuTimestampS;
+    double gpuSyncDriftSlope = 0;
+
+    double nextGpuSyncTimeS = nextSyncGpuTimestampS;
+    double nextGpuSyncDiffS = nextSyncCpuTimestampS - nextSyncGpuTimestampS;
+
+    // No gpu trace events should have been generated before the clock sync, so if there is no
+    // "previous" clock sync, there should be no gpu events (i.e. the function early-outs above).
+    ASSERT(mGpuClockSync.gpuTimestampS != std::numeric_limits<double>::max() &&
+           mGpuClockSync.cpuTimestampS != std::numeric_limits<double>::max());
+
+    gpuSyncDriftSlope =
+        (nextGpuSyncDiffS - lastGpuSyncDiffS) / (nextGpuSyncTimeS - lastGpuSyncTimeS);
+
+    for (const GpuEvent &event : mGpuEvents)
+    {
+        double gpuTimestampS =
+            (event.gpuTimestampCycles - mGpuEventTimestampOrigin) *
+            static_cast<double>(
+                getRenderer()->getPhysicalDeviceProperties().limits.timestampPeriod) *
+            1e-9;
+
+        // Account for clock drift.
+        gpuTimestampS += lastGpuSyncDiffS + gpuSyncDriftSlope * (gpuTimestampS - lastGpuSyncTimeS);
+
+        // Generate the trace now that the GPU timestamp is available and clock drifts are accounted
+        // for.
+        static long long eventId = 1;
+        static const unsigned char *categoryEnabled =
+            TRACE_EVENT_API_GET_CATEGORY_ENABLED("gpu.angle.gpu");
+        platform->addTraceEvent(platform, event.phase, categoryEnabled, event.name, eventId++,
+                                gpuTimestampS, 0, nullptr, nullptr, nullptr, TRACE_EVENT_FLAG_NONE);
+    }
+
+    mGpuEvents.clear();
+}
+
+void ContextVk::handleDeviceLost()
+{
+    mCommandGraph.clear();
+    // TODO: generate a new serial neccessary here?
+    freeAllInFlightResources();
+
+    mRenderer->notifyDeviceLost();
 }
 
 angle::Result ContextVk::drawArrays(const gl::Context *context,
@@ -639,30 +1173,28 @@ std::string ContextVk::getRendererDescription() const
 void ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
     std::string markerStr(marker, length <= 0 ? strlen(marker) : length);
-    mRenderer->insertDebugMarker(GL_DEBUG_SOURCE_APPLICATION, static_cast<GLuint>(-1),
-                                 std::move(markerStr));
+    mCommandGraph.insertDebugMarker(GL_DEBUG_SOURCE_APPLICATION, std::move(marker));
 }
 
 void ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
     std::string markerStr(marker, length <= 0 ? strlen(marker) : length);
-    mRenderer->pushDebugMarker(GL_DEBUG_SOURCE_APPLICATION, static_cast<GLuint>(-1),
-                               std::move(markerStr));
+    mCommandGraph.pushDebugMarker(GL_DEBUG_SOURCE_APPLICATION, std::move(marker));
 }
 
 void ContextVk::popGroupMarker()
 {
-    mRenderer->popDebugMarker();
+    mCommandGraph.popDebugMarker();
 }
 
 void ContextVk::pushDebugGroup(GLenum source, GLuint id, const std::string &message)
 {
-    mRenderer->pushDebugMarker(source, id, std::string(message));
+    mCommandGraph.insertDebugMarker(source, std::string(message));
 }
 
 void ContextVk::popDebugGroup()
 {
-    mRenderer->popDebugMarker();
+    mCommandGraph.popDebugMarker();
 }
 
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
@@ -1073,13 +1605,16 @@ GLint64 ContextVk::getTimestamp()
 {
     uint64_t timestamp = 0;
 
-    (void)mRenderer->getTimestamp(this, &timestamp);
+    (void)getTimestamp(&timestamp);
 
     return static_cast<GLint64>(timestamp);
 }
 
 angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
 {
+    ASSERT(mCommandGraph.empty());
+    mCurrentQueueSerial = getRenderer()->nextSerial();
+
     // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that the
     // surface is flipped.
     egl::Surface *drawSurface = context->getCurrentDrawSurface();
@@ -1323,7 +1858,7 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
                                                    vk::CommandBuffer *commandBuffer)
 {
     // Release any previously retained buffers.
-    mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
+    mDriverUniformsBuffer.releaseRetainedBuffers(this);
 
     const gl::Rectangle &glViewport = mState.getViewport();
     float halfRenderAreaHeight =
@@ -1360,7 +1895,7 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
         vk::DescriptorSetLayoutDesc desc;
         desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_ALL_GRAPHICS);
 
-        ANGLE_TRY(mRenderer->getDescriptorSetLayout(this, desc, &mDriverUniformsSetLayout));
+        ANGLE_TRY(getRenderer()->getDescriptorSetLayout(this, desc, &mDriverUniformsSetLayout));
     }
 
     // Allocate a new descriptor set.
@@ -1405,7 +1940,7 @@ void ContextVk::handleError(VkResult errorCode,
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
         WARN() << errorStream.str();
-        mRenderer->notifyDeviceLost();
+        handleDeviceLost();
     }
 
     mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
@@ -1444,6 +1979,332 @@ const gl::ActiveTextureArray<TextureVk *> &ContextVk::getActiveTextures() const
     return mActiveTextures;
 }
 
+angle::Result ContextVk::flushImpl()
+{
+    if (mCommandGraph.empty())
+    {
+        return angle::Result::Continue;
+    }
+
+    TRACE_EVENT0("gpu.angle", "ContextVk::flush");
+
+    vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
+    ANGLE_TRY(flushCommandGraph(&commandBatch.get()));
+
+    const vk::Semaphore *waitSemaphore   = nullptr;
+    const vk::Semaphore *signalSemaphore = nullptr;
+    if (mCurrentWindowSurface)
+    {
+        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
+                                                                    &signalSemaphore));
+    }
+
+    VkSubmitInfo submitInfo       = {};
+    VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
+                         signalSemaphore);
+
+    ANGLE_TRY(submitFrame(submitInfo, commandBatch.release()));
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::finishImpl()
+{
+    if (!mCommandGraph.empty())
+    {
+        TRACE_EVENT0("gpu.angle", "ContextVk::finish");
+
+        vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
+        ANGLE_TRY(flushCommandGraph(&commandBatch.get()));
+
+        const vk::Semaphore *waitSemaphore   = nullptr;
+        const vk::Semaphore *signalSemaphore = nullptr;
+        if (mCurrentWindowSurface)
+        {
+            ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
+                                                                        &signalSemaphore));
+        }
+
+        VkSubmitInfo submitInfo       = {};
+        VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
+                             signalSemaphore);
+
+        ANGLE_TRY(submitFrame(submitInfo, std::move(commandBatch.get())));
+    }
+
+    ANGLE_TRY(finishToSerial(mLastSubmittedQueueSerial));
+    freeAllInFlightResources();
+
+    if (mGpuEventsEnabled)
+    {
+        // This loop should in practice execute once since the queue is already idle.
+        while (mInFlightGpuEventQueries.size() > 0)
+        {
+            ANGLE_TRY(checkCompletedGpuEvents());
+        }
+        // Recalculate the CPU/GPU time difference to account for clock drifting.  Avoid unnecessary
+        // synchronization if there is no event to be adjusted (happens when finish() gets called
+        // multiple times towards the end of the application).
+        if (mGpuEvents.size() > 0)
+        {
+            ANGLE_TRY(synchronizeCpuGpuTime(nullptr, nullptr));
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+const vk::CommandPool &ContextVk::getCommandPool() const
+{
+    return mCommandPool;
+}
+
+bool ContextVk::isSerialInUse(Serial serial) const
+{
+    return serial > mLastCompletedQueueSerial;
+}
+
+angle::Result ContextVk::checkCompletedCommands()
+{
+    VkDevice device = getDevice();
+
+    int finishedCount = 0;
+
+    for (CommandBatch &batch : mInFlightCommands)
+    {
+        VkResult result = batch.fence.get().getStatus(device);
+        if (result == VK_NOT_READY)
+        {
+            break;
+        }
+        ANGLE_VK_TRY(this, result);
+
+        ASSERT(batch.serial > mLastCompletedQueueSerial);
+        mLastCompletedQueueSerial = batch.serial;
+
+        batch.fence.reset(device);
+        TRACE_EVENT0("gpu.angle", "commandPool.destroy");
+        batch.commandPool.destroy(device);
+        ++finishedCount;
+    }
+
+    mInFlightCommands.erase(mInFlightCommands.begin(), mInFlightCommands.begin() + finishedCount);
+
+    size_t freeIndex = 0;
+    for (; freeIndex < mGarbage.size(); ++freeIndex)
+    {
+        if (!mGarbage[freeIndex].destroyIfComplete(device, mLastCompletedQueueSerial))
+            break;
+    }
+
+    // Remove the entries from the garbage list - they should be ready to go.
+    if (freeIndex > 0)
+    {
+        mGarbage.erase(mGarbage.begin(), mGarbage.begin() + freeIndex);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::finishToSerial(Serial serial)
+{
+    bool timedOut        = false;
+    angle::Result result = finishToSerialOrTimeout(serial, kMaxFenceWaitTimeNs, &timedOut);
+
+    // Don't tolerate timeout.  If such a large wait time results in timeout, something's wrong.
+    if (timedOut)
+    {
+        result = angle::Result::Stop;
+    }
+    return result;
+}
+
+angle::Result ContextVk::finishToSerialOrTimeout(Serial serial, uint64_t timeout, bool *outTimedOut)
+{
+    *outTimedOut = false;
+
+    if (!isSerialInUse(serial) || mInFlightCommands.empty())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Find the first batch with serial equal to or bigger than given serial (note that
+    // the batch serials are unique, otherwise upper-bound would have been necessary).
+    size_t batchIndex = mInFlightCommands.size() - 1;
+    for (size_t i = 0; i < mInFlightCommands.size(); ++i)
+    {
+        if (mInFlightCommands[i].serial >= serial)
+        {
+            batchIndex = i;
+            break;
+        }
+    }
+    const CommandBatch &batch = mInFlightCommands[batchIndex];
+
+    // Wait for it finish
+    VkDevice device = getDevice();
+    VkResult status = batch.fence.get().wait(device, kMaxFenceWaitTimeNs);
+
+    // If timed out, report it as such.
+    if (status == VK_TIMEOUT)
+    {
+        *outTimedOut = true;
+        return angle::Result::Continue;
+    }
+
+    ANGLE_VK_TRY(this, status);
+
+    // Clean up finished batches.
+    return checkCompletedCommands();
+}
+
+angle::Result ContextVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
+                                                 vk::RenderPass **renderPassOut)
+{
+    return mRenderPassCache.getCompatibleRenderPass(this, mCurrentQueueSerial, desc, renderPassOut);
+}
+
+angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
+                                              const vk::AttachmentOpsArray &ops,
+                                              vk::RenderPass **renderPassOut)
+{
+    return mRenderPassCache.getRenderPassWithOps(this, mCurrentQueueSerial, desc, ops,
+                                                 renderPassOut);
+}
+
+angle::Result ContextVk::getSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut)
+{
+    VkDevice device = getDevice();
+    if (!mSubmitFence.isReferenced())
+    {
+        vk::Fence fence;
+        VkFenceCreateInfo fenceCreateInfo = {};
+        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceCreateInfo.flags             = 0;
+        ANGLE_VK_TRY(this, fence.init(device, fenceCreateInfo));
+        mSubmitFence.assign(device, std::move(fence));
+    }
+    sharedFenceOut->copy(device, mSubmitFence);
+    return angle::Result::Continue;
+}
+
+vk::Shared<vk::Fence> ContextVk::getLastSubmittedFence() const
+{
+    vk::Shared<vk::Fence> fence;
+    if (!mInFlightCommands.empty())
+    {
+        fence.copy(getDevice(), mInFlightCommands.back().fence);
+    }
+
+    return fence;
+}
+
+vk::CommandGraph *ContextVk::getCommandGraph()
+{
+    return &mCommandGraph;
+}
+
+angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
+{
+    // The intent of this function is to query the timestamp without stalling the GPU.  Currently,
+    // that seems impossible, so instead, we are going to make a small submission with just a
+    // timestamp query.  First, the disjoint timer query extension says:
+    //
+    // > This will return the GL time after all previous commands have reached the GL server but
+    // have not yet necessarily executed.
+    //
+    // The previous commands are stored in the command graph at the moment and are not yet flushed.
+    // The wording allows us to make a submission to get the timestamp without performing a flush.
+    //
+    // Second:
+    //
+    // > By using a combination of this synchronous get command and the asynchronous timestamp query
+    // object target, applications can measure the latency between when commands reach the GL server
+    // and when they are realized in the framebuffer.
+    //
+    // This fits with the above strategy as well, although inevitably we are possibly introducing a
+    // GPU bubble.  This function directly generates a command buffer and submits it instead of
+    // using the other member functions.  This is to avoid changing any state, such as the queue
+    // serial.
+
+    // Create a query used to receive the GPU timestamp
+    VkDevice device = getDevice();
+    vk::Scoped<vk::DynamicQueryPool> timestampQueryPool(device);
+    vk::QueryHelper timestampQuery;
+    ANGLE_TRY(timestampQueryPool.get().init(this, VK_QUERY_TYPE_TIMESTAMP, 1));
+    ANGLE_TRY(timestampQueryPool.get().allocateQuery(this, &timestampQuery));
+
+    // Record the command buffer
+    vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(device);
+    vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
+
+    VkCommandBufferAllocateInfo commandBufferInfo = {};
+    commandBufferInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBufferInfo.commandPool                 = mCommandPool.getHandle();
+    commandBufferInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBufferInfo.commandBufferCount          = 1;
+
+    ANGLE_VK_TRY(this, commandBuffer.init(device, commandBufferInfo));
+
+    VkCommandBufferBeginInfo beginInfo = {};
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags                    = 0;
+    beginInfo.pInheritanceInfo         = nullptr;
+
+    ANGLE_VK_TRY(this, commandBuffer.begin(beginInfo));
+
+    commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
+                                 timestampQuery.getQuery(), 1);
+    commandBuffer.writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                                 timestampQuery.getQueryPool()->getHandle(),
+                                 timestampQuery.getQuery());
+
+    ANGLE_VK_TRY(this, commandBuffer.end());
+
+    // Create fence for the submission
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags             = 0;
+
+    vk::Scoped<vk::Fence> fence(device);
+    ANGLE_VK_TRY(this, fence.get().init(device, fenceInfo));
+
+    // Submit the command buffer
+    VkSubmitInfo submitInfo         = {};
+    submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.waitSemaphoreCount   = 0;
+    submitInfo.pWaitSemaphores      = nullptr;
+    submitInfo.pWaitDstStageMask    = nullptr;
+    submitInfo.commandBufferCount   = 1;
+    submitInfo.pCommandBuffers      = commandBuffer.ptr();
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores    = nullptr;
+
+    ANGLE_TRY(getRenderer()->queueSubmit(this, submitInfo, fence.get()));
+
+    // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
+    // in parallel with what's already running on the GPU.
+    ANGLE_VK_TRY(this, fence.get().wait(device, kMaxFenceWaitTimeNs));
+
+    // Get the query results
+    constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
+
+    ANGLE_VK_TRY(this, timestampQuery.getQueryPool()->getResults(
+                           device, timestampQuery.getQuery(), 1, sizeof(*timestampOut),
+                           timestampOut, sizeof(*timestampOut), queryFlags));
+
+    timestampQueryPool.get().freeQuery(this, &timestampQuery);
+
+    // Convert results to nanoseconds.
+    *timestampOut = static_cast<uint64_t>(
+        *timestampOut *
+        static_cast<double>(getRenderer()->getPhysicalDeviceProperties().limits.timestampPeriod));
+
+    return angle::Result::Continue;
+}
+
 void ContextVk::invalidateDefaultAttribute(size_t attribIndex)
 {
     mDirtyDefaultAttribsMask.set(attribIndex);
@@ -1463,7 +2324,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 {
     vk::DynamicBuffer &defaultBuffer = mDefaultAttribBuffers[attribIndex];
 
-    defaultBuffer.releaseRetainedBuffers(mRenderer);
+    defaultBuffer.releaseRetainedBuffers(this);
 
     uint8_t *ptr;
     VkBuffer bufferHandle = VK_NULL_HANDLE;

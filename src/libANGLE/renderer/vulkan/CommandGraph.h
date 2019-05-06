@@ -87,12 +87,12 @@ class CommandGraphNode final : angle::NonCopyable
     }
 
     // For outside the render pass (copies, transitions, etc).
-    angle::Result beginOutsideRenderPassRecording(Context *context,
+    angle::Result beginOutsideRenderPassRecording(ContextVk *context,
                                                   const CommandPool &commandPool,
                                                   CommandBuffer **commandsOut);
 
     // For rendering commands (draws).
-    angle::Result beginInsideRenderPassRecording(Context *context, CommandBuffer **commandsOut);
+    angle::Result beginInsideRenderPassRecording(ContextVk *context, CommandBuffer **commandsOut);
 
     // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
     void storeRenderPassInfo(const Framebuffer &framebuffer,
@@ -251,7 +251,7 @@ class CommandGraphResource : angle::NonCopyable
     virtual ~CommandGraphResource();
 
     // Returns true if the resource is in use by the renderer.
-    bool isResourceInUse(RendererVk *renderer) const;
+    bool isResourceInUse(ContextVk *context) const;
 
     // Get the current queue serial for this resource. Used to release resources, and for
     // queries, to know if the queue they are submitted on has finished execution.
@@ -284,7 +284,7 @@ class CommandGraphResource : angle::NonCopyable
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     // Will append to an existing command buffer/graph node if possible.
-    angle::Result recordCommands(Context *context, CommandBuffer **commandBufferOut);
+    angle::Result recordCommands(ContextVk *context, CommandBuffer **commandBufferOut);
 
     // Begins a command buffer on the current graph node for in-RenderPass rendering.
     // Called from FramebufferVk::startNewRenderPass and UtilsVk functions.
@@ -356,7 +356,7 @@ class CommandGraphResource : angle::NonCopyable
     }
 
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
-    void finishCurrentCommands(RendererVk *renderer);
+    void finishCurrentCommands(ContextVk *contextVk);
 
     // Store a deferred memory barrier. Will be recorded into a primary command buffer at submit.
     void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
@@ -382,7 +382,7 @@ class CommandGraphResource : angle::NonCopyable
         return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
     }
 
-    void startNewCommands(RendererVk *renderer);
+    void startNewCommands(ContextVk *contextVk);
 
     void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
 
@@ -430,7 +430,7 @@ class CommandGraph final : angle::NonCopyable
     // dependencies between the previous barrier, the new barrier and all nodes in between.
     CommandGraphNode *allocateNode(CommandGraphNodeFunction function);
 
-    angle::Result submitCommands(Context *context,
+    angle::Result submitCommands(ContextVk *context,
                                  Serial serial,
                                  RenderPassCache *renderPassCache,
                                  CommandPool *commandPool,

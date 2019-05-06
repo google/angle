@@ -134,8 +134,8 @@ class ProgramVk : public ProgramImpl
         ASSERT(shaderProgram->isGraphicsProgram());
         RendererVk *renderer = contextVk->getRenderer();
         return shaderProgram->getGraphicsPipeline(
-            contextVk, &renderer->getRenderPassCache(), renderer->getPipelineCache(),
-            renderer->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
+            contextVk, &contextVk->getRenderPassCache(), renderer->getPipelineCache(),
+            contextVk->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
             descPtrOut, pipelineOut);
     }
 
@@ -146,7 +146,7 @@ class ProgramVk : public ProgramImpl
                             GLboolean transpose,
                             const GLfloat *value);
 
-    void reset(RendererVk *renderer);
+    void reset(ContextVk *contextVk);
     angle::Result allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
     angle::Result initDefaultUniformBlocks(const gl::Context *glContext);
 
@@ -240,7 +240,7 @@ class ProgramVk : public ProgramImpl
                                   const std::string &vertexSource,
                                   const std::string &fragmentSource,
                                   bool enableLineRasterEmulation);
-        void release(RendererVk *renderer);
+        void release(ContextVk *contextVk);
 
         ANGLE_INLINE bool valid() const { return mShaders[gl::ShaderType::Vertex].get().valid(); }
 

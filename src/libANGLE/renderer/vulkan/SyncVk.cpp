@@ -21,14 +21,14 @@ FenceSyncVk::FenceSyncVk() {}
 
 FenceSyncVk::~FenceSyncVk() {}
 
-void FenceSyncVk::onDestroy(RendererVk *renderer)
+void FenceSyncVk::onDestroy(ContextVk *contextVk)
 {
     if (mEvent.valid())
     {
-        renderer->releaseObject(renderer->getCurrentQueueSerial(), &mEvent);
+        contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mEvent);
     }
 
-    mFence.reset(renderer->getDevice());
+    mFence.reset(contextVk->getDevice());
 }
 
 void FenceSyncVk::onDestroy(DisplayVk *display)
@@ -53,11 +53,11 @@ angle::Result FenceSyncVk::initialize(ContextVk *contextVk)
     vk::Scoped<vk::Event> event(device);
     ANGLE_VK_TRY(contextVk, event.get().init(device, eventCreateInfo));
 
-    ANGLE_TRY(renderer->getSubmitFence(contextVk, &mFence));
+    ANGLE_TRY(contextVk->getSubmitFence(&mFence));
 
     mEvent        = event.release();
 
-    renderer->getCommandGraph()->setFenceSync(mEvent);
+    contextVk->getCommandGraph()->setFenceSync(mEvent);
     return angle::Result::Continue;
 }
 
@@ -106,13 +106,16 @@ angle::Result FenceSyncVk::clientWait(vk::Context *context,
 
 angle::Result FenceSyncVk::serverWait(vk::Context *context, ContextVk *contextVk)
 {
-    context->getRenderer()->getCommandGraph()->waitFenceSync(mEvent);
+    if (contextVk)
+    {
+        contextVk->getCommandGraph()->waitFenceSync(mEvent);
+    }
     return angle::Result::Continue;
 }
 
 angle::Result FenceSyncVk::getStatus(vk::Context *context, bool *signaled)
 {
-    VkResult result = mEvent.getStatus(context->getRenderer()->getDevice());
+    VkResult result = mEvent.getStatus(context->getDevice());
     if (result != VK_EVENT_SET && result != VK_EVENT_RESET)
     {
         ANGLE_VK_TRY(context, result);
@@ -127,7 +130,7 @@ SyncVk::~SyncVk() {}
 
 void SyncVk::onDestroy(const gl::Context *context)
 {
-    mFenceSync.onDestroy(vk::GetImpl(context)->getRenderer());
+    mFenceSync.onDestroy(vk::GetImpl(context));
 }
 
 angle::Result SyncVk::set(const gl::Context *context, GLenum condition, GLbitfield flags)
@@ -201,7 +204,7 @@ EGLSyncVk::~EGLSyncVk() {}
 
 void EGLSyncVk::onDestroy(const egl::Display *display)
 {
-    mFenceSync.onDestroy(vk::GetImpl(display)->getRenderer());
+    mFenceSync.onDestroy(vk::GetImpl(display));
 }
 
 egl::Error EGLSyncVk::initialize(const egl::Display *display,

@@ -43,7 +43,7 @@ class DynamicBuffer : angle::NonCopyable
     // a new buffer to be created (which is returned in the optional parameter
     // `newBufferAllocatedOut`).  The new region will be in the returned buffer at given offset. If
     // a memory pointer is given, the buffer will be automatically map()ed.
-    angle::Result allocate(Context *context,
+    angle::Result allocate(ContextVk *context,
                            size_t sizeInBytes,
                            uint8_t **ptrOut,
                            VkBuffer *bufferOut,
@@ -51,17 +51,17 @@ class DynamicBuffer : angle::NonCopyable
                            bool *newBufferAllocatedOut);
 
     // After a sequence of writes, call flush to ensure the data is visible to the device.
-    angle::Result flush(Context *context);
+    angle::Result flush(ContextVk *context);
 
     // After a sequence of writes, call invalidate to ensure the data is visible to the host.
-    angle::Result invalidate(Context *context);
+    angle::Result invalidate(ContextVk *context);
 
     // This releases resources when they might currently be in use.
-    void release(RendererVk *renderer);
+    void release(ContextVk *context);
     void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     // This releases all the buffers that have been allocated since this was last called.
-    void releaseRetainedBuffers(RendererVk *renderer);
+    void releaseRetainedBuffers(ContextVk *context);
     void releaseRetainedBuffers(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     // This frees resources immediately.
@@ -113,7 +113,7 @@ class DescriptorPoolHelper
                        uint32_t maxSets);
     void destroy(VkDevice device);
 
-    angle::Result allocateSets(Context *context,
+    angle::Result allocateSets(ContextVk *context,
                                const VkDescriptorSetLayout *descriptorSetLayout,
                                uint32_t descriptorSetCount,
                                VkDescriptorSet *descriptorSetsOut);
@@ -140,14 +140,14 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // The DynamicDescriptorPool only handles one pool size at this time.
     // Note that setSizes[i].descriptorCount is expected to be the number of descriptors in
     // an individual set.  The pool size will be calculated accordingly.
-    angle::Result init(Context *context,
+    angle::Result init(ContextVk *context,
                        const VkDescriptorPoolSize *setSizes,
                        uint32_t setSizeCount);
     void destroy(VkDevice device);
 
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
-    angle::Result allocateSets(Context *context,
+    angle::Result allocateSets(ContextVk *context,
                                const VkDescriptorSetLayout *descriptorSetLayout,
                                uint32_t descriptorSetCount,
                                RefCountedDescriptorPoolBinding *bindingOut,
@@ -157,7 +157,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     void setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
 
   private:
-    angle::Result allocateNewPool(Context *context);
+    angle::Result allocateNewPool(ContextVk *context);
 
     uint32_t mMaxSetsPerPool;
     size_t mCurrentPoolIndex;
@@ -180,13 +180,13 @@ class DynamicallyGrowingPool : angle::NonCopyable
 
     // Checks to see if any pool is already free, in which case it sets it as current pool and
     // returns true.
-    bool findFreeEntryPool(Context *context);
+    bool findFreeEntryPool(ContextVk *context);
 
     // Allocates a new entry and initializes it with the given pool.
-    angle::Result allocateNewEntryPool(Context *context, Pool &&pool);
+    angle::Result allocateNewEntryPool(ContextVk *context, Pool &&pool);
 
     // Called by the implementation whenever an entry is freed.
-    void onEntryFreed(Context *context, size_t poolIndex);
+    void onEntryFreed(ContextVk *context, size_t poolIndex);
 
     // The pool size, to know when a pool is completely freed.
     uint32_t mPoolSize;
@@ -228,21 +228,21 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
     DynamicQueryPool();
     ~DynamicQueryPool() override;
 
-    angle::Result init(Context *context, VkQueryType type, uint32_t poolSize);
+    angle::Result init(ContextVk *context, VkQueryType type, uint32_t poolSize);
     void destroy(VkDevice device);
 
-    angle::Result allocateQuery(Context *context, QueryHelper *queryOut);
-    void freeQuery(Context *context, QueryHelper *query);
+    angle::Result allocateQuery(ContextVk *context, QueryHelper *queryOut);
+    void freeQuery(ContextVk *context, QueryHelper *query);
 
     // Special allocator that doesn't work with QueryHelper, which is a CommandGraphResource.
     // Currently only used with RendererVk::GpuEventQuery.
-    angle::Result allocateQuery(Context *context, size_t *poolIndex, uint32_t *queryIndex);
-    void freeQuery(Context *context, size_t poolIndex, uint32_t queryIndex);
+    angle::Result allocateQuery(ContextVk *context, size_t *poolIndex, uint32_t *queryIndex);
+    void freeQuery(ContextVk *context, size_t poolIndex, uint32_t queryIndex);
 
     const QueryPool *getQueryPool(size_t index) const { return &mPools[index]; }
 
   private:
-    angle::Result allocateNewPool(Context *context);
+    angle::Result allocateNewPool(ContextVk *context);
 
     // Information required to create new query pools
     VkQueryType mQueryType;
@@ -277,12 +277,12 @@ class QueryHelper final
     // Used only by DynamicQueryPool.
     size_t getQueryPoolIndex() const { return mQueryPoolIndex; }
 
-    void beginQuery(vk::Context *context);
-    void endQuery(vk::Context *context);
-    void writeTimestamp(vk::Context *context);
+    void beginQuery(ContextVk *context);
+    void endQuery(ContextVk *context);
+    void writeTimestamp(ContextVk *context);
 
     Serial getStoredQueueSerial() { return mMostRecentSerial; }
-    bool hasPendingWork(RendererVk *renderer);
+    bool hasPendingWork(ContextVk *renderer);
 
   private:
     const DynamicQueryPool *mDynamicQueryPool;
@@ -306,18 +306,18 @@ class DynamicSemaphorePool final : public DynamicallyGrowingPool<std::vector<Sem
     DynamicSemaphorePool();
     ~DynamicSemaphorePool() override;
 
-    angle::Result init(Context *context, uint32_t poolSize);
+    angle::Result init(ContextVk *context, uint32_t poolSize);
     void destroy(VkDevice device);
 
     bool isValid() { return mPoolSize > 0; }
 
     // autoFree can be used to allocate a semaphore that's expected to be freed at the end of the
     // frame.  This renders freeSemaphore unnecessary and saves an eventual search.
-    angle::Result allocateSemaphore(Context *context, SemaphoreHelper *semaphoreOut);
-    void freeSemaphore(Context *context, SemaphoreHelper *semaphore);
+    angle::Result allocateSemaphore(ContextVk *context, SemaphoreHelper *semaphoreOut);
+    void freeSemaphore(ContextVk *context, SemaphoreHelper *semaphore);
 
   private:
-    angle::Result allocateNewPool(Context *context);
+    angle::Result allocateNewPool(ContextVk *context);
 };
 
 // Semaphores that are allocated from the semaphore pool are encapsulated in a helper object,
@@ -378,7 +378,7 @@ class LineLoopHelper final : angle::NonCopyable
                                 vk::BufferHelper **bufferOut,
                                 VkDeviceSize *bufferOffsetOut);
 
-    void release(RendererVk *renderer);
+    void release(ContextVk *context);
     void destroy(VkDevice device);
 
     static void Draw(uint32_t count, vk::CommandBuffer *commandBuffer);
@@ -395,12 +395,12 @@ class BufferHelper final : public CommandGraphResource
     BufferHelper();
     ~BufferHelper() override;
 
-    angle::Result init(Context *context,
+    angle::Result init(ContextVk *context,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
     void destroy(VkDevice device);
 
-    void release(RendererVk *renderer);
+    void release(ContextVk *context);
     void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     bool valid() const { return mBuffer.valid(); }
@@ -423,14 +423,14 @@ class BufferHelper final : public CommandGraphResource
     void onWrite(VkAccessFlags writeAccessType);
 
     // Also implicitly sets up the correct barriers.
-    angle::Result copyFromBuffer(Context *context,
+    angle::Result copyFromBuffer(ContextVk *context,
                                  const Buffer &buffer,
                                  VkAccessFlags bufferAccessType,
                                  const VkBufferCopy &copyRegion);
 
     // Note: currently only one view is allowed.  If needs be, multiple views can be created
     // based on format.
-    angle::Result initBufferView(Context *context, const Format &format);
+    angle::Result initBufferView(ContextVk *context, const Format &format);
 
     const BufferView &getBufferView() const
     {
@@ -444,7 +444,7 @@ class BufferHelper final : public CommandGraphResource
         return *mViewFormat;
     }
 
-    angle::Result map(Context *context, uint8_t **ptrOut)
+    angle::Result map(ContextVk *context, uint8_t **ptrOut)
     {
         if (!mMappedMemory)
         {
@@ -456,13 +456,13 @@ class BufferHelper final : public CommandGraphResource
     void unmap(VkDevice device);
 
     // After a sequence of writes, call flush to ensure the data is visible to the device.
-    angle::Result flush(Context *context, size_t offset, size_t size);
+    angle::Result flush(ContextVk *context, size_t offset, size_t size);
 
     // After a sequence of writes, call invalidate to ensure the data is visible to the host.
-    angle::Result invalidate(Context *context, size_t offset, size_t size);
+    angle::Result invalidate(ContextVk *context, size_t offset, size_t size);
 
   private:
-    angle::Result mapImpl(Context *context);
+    angle::Result mapImpl(ContextVk *context);
 
     // Vulkan objects.
     Buffer mBuffer;
@@ -591,10 +591,10 @@ class ImageHelper final : public CommandGraphResource
                                 VkImageUsageFlags usage,
                                 uint32_t layerCount);
 
-    void releaseImage(RendererVk *renderer);
+    void releaseImage(ContextVk *context);
     void releaseImage(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
-    void releaseStagingBuffer(RendererVk *renderer);
+    void releaseStagingBuffer(ContextVk *context);
     void releaseStagingBuffer(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     bool valid() const { return mImage.valid(); }
@@ -649,7 +649,7 @@ class ImageHelper final : public CommandGraphResource
     void resolve(ImageHelper *dest, const VkImageResolve &region, vk::CommandBuffer *commandBuffer);
 
     // Data staging
-    void removeStagedUpdates(RendererVk *renderer, const gl::ImageIndex &index);
+    void removeStagedUpdates(ContextVk *context, const gl::ImageIndex &index);
 
     angle::Result stageSubresourceUpdate(ContextVk *contextVk,
                                          const gl::ImageIndex &index,
@@ -690,7 +690,7 @@ class ImageHelper final : public CommandGraphResource
 
     // If the image has emulated channels, we clear them once so as not to leave garbage on those
     // channels.
-    void clearIfEmulatedFormat(Context *context, const gl::ImageIndex &index, const Format &format);
+    void stageClearIfEmulatedFormat(const gl::ImageIndex &index, const Format &format);
 
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.
@@ -704,7 +704,7 @@ class ImageHelper final : public CommandGraphResource
     // Flushes staged updates to a range of levels and layers from start to (but not including) end.
     // Due to the nature of updates (done wholly to a VkImageSubresourceLayers), some unsolicited
     // layers may also be updated.
-    angle::Result flushStagedUpdates(Context *context,
+    angle::Result flushStagedUpdates(ContextVk *context,
                                      uint32_t levelStart,
                                      uint32_t levelEnd,
                                      uint32_t layerStart,
@@ -713,7 +713,7 @@ class ImageHelper final : public CommandGraphResource
     // Creates a command buffer and flushes all staged updates.  This is used for one-time
     // initialization of resources that we don't expect to accumulate further staged updates, such
     // as with renderbuffers or surface images.
-    angle::Result flushAllStagedUpdates(Context *context);
+    angle::Result flushAllStagedUpdates(ContextVk *context);
 
     bool hasStagedUpdates() const { return !mSubresourceUpdates.empty(); }
 
@@ -771,7 +771,7 @@ class ImageHelper final : public CommandGraphResource
         SubresourceUpdate(const VkClearValue &clearValue, const gl::ImageIndex &imageIndex);
         SubresourceUpdate(const SubresourceUpdate &other);
 
-        void release(RendererVk *renderer);
+        void release(ContextVk *context);
         void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
         const VkImageSubresourceLayers &dstSubresource() const
@@ -844,7 +844,7 @@ class FramebufferHelper : public CommandGraphResource
     ~FramebufferHelper() override;
 
     angle::Result init(ContextVk *contextVk, const VkFramebufferCreateInfo &createInfo);
-    void release(RendererVk *renderer);
+    void release(ContextVk *contextVk);
 
     bool valid() { return mFramebuffer.valid(); }
 
@@ -873,7 +873,7 @@ class ShaderProgramHelper : angle::NonCopyable
 
     bool valid() const;
     void destroy(VkDevice device);
-    void release(RendererVk *renderer);
+    void release(ContextVk *contextVk);
 
     bool isGraphicsProgram() const
     {

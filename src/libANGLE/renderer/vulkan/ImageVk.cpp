@@ -157,7 +157,7 @@ angle::Result ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sib
     // Flush the context to make sure the fence has been submitted.
     ANGLE_TRY(contextVk->flushImpl());
 
-    vk::Shared<vk::Fence> fence = contextVk->getRenderer()->getLastSubmittedFence();
+    vk::Shared<vk::Fence> fence = contextVk->getLastSubmittedFence();
     if (fence.isReferenced())
     {
         mImageLastUseFences.push_back(std::move(fence));
