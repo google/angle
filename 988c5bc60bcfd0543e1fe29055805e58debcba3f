@@ -71,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "1ac76e0d_56f4731e",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-05-06T19:29:53Z",
+      "side": 1,
+      "message": "maybe \"customEncoder\"?",
+      "range": {
+        "startLine": 272,
+        "startChar": 57,
+        "endLine": 272,
+        "endChar": 69
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3e8a804_9eac8644",
         "filename": "src/libANGLE/renderer/renderer_utils.h",
         "patchSetId": 18
@@ -87,6 +110,29 @@
         "startChar": 0,
         "endLine": 283,
         "endChar": 2
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5311dfba_d8f60262",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-05-06T19:29:53Z",
+      "side": 1,
+      "message": "Does the value of mDataWriteAccessFlags matter given that it\u0027s only compared to zero and not passed here directly?  Should it be a bool instead?",
+      "range": {
+        "startLine": 174,
+        "startChar": 24,
+        "endLine": 174,
+        "endChar": 48
       },
       "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
