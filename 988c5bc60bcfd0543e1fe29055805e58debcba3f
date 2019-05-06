@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9de86776_c122f422",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-06T19:18:44Z",
+      "side": 1,
+      "message": "I think we should probably do this on all drivers and do away with the gaps between descriptor sets. Then we can also do away with the mUsedDescriptorSetRange stuff.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 50
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00486a3e_b150738c",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-06T19:18:44Z",
+      "side": 1,
+      "message": "adding APIs to the block layout classes always makes me wonder if there\u0027s another way to get what you want. I\u0027ll check in the code but maybe we can discuss offline.",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 25
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa1f8937_962d8f7f",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-06T19:18:44Z",
+      "side": 1,
+      "message": "aha, I see. Can you instead pass a factory that generates new encoders? I\u0027d like to keep the block layout encoder APIs as minimal as possible. A new encoder should always do the trick.",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 221,
+        "endChar": 5
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3e8a804_9eac8644",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-06T19:18:44Z",
+      "side": 1,
+      "message": "can this go in ProgramLinkedResources.h?",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 2
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
