@@ -4512,6 +4512,7 @@ void Context::colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolea
 {
     mState.setColorMask(ConvertToBool(red), ConvertToBool(green), ConvertToBool(blue),
                         ConvertToBool(alpha));
+    mStateCache.onColorMaskChange(this);
 }
 
 void Context::cullFace(CullFaceMode mode)
@@ -8521,6 +8522,11 @@ void StateCache::onActiveTransformFeedbackChange(Context *context)
 }
 
 void StateCache::onUniformBufferStateChange(Context *context)
+{
+    updateBasicDrawStatesError();
+}
+
+void StateCache::onColorMaskChange(Context *context)
 {
     updateBasicDrawStatesError();
 }

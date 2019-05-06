@@ -89,7 +89,7 @@ class State : angle::NonCopyable
 
     // State chunk getters
     const RasterizerState &getRasterizerState() const;
-    const BlendState &getBlendState() const;
+    const BlendState &getBlendState() const { return mBlend; }
     const DepthStencilState &getDepthStencilState() const;
 
     // Clear behavior setters & state parameter block generation function

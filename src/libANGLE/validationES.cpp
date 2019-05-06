@@ -2778,16 +2778,19 @@ const char *ValidateDrawStates(Context *context)
                 return kVertexShaderTypeMismatch;
             }
 
-            // Detect that if there's active color buffer without fragment shader output
-            if (!ValidateFragmentShaderColorBufferMaskMatch(context))
+            if (!context->getState().getBlendState().allChannelsMasked())
             {
-                return kDrawBufferMaskMismatch;
-            }
+                // Detect that if there's active color buffer without fragment shader output
+                if (!ValidateFragmentShaderColorBufferMaskMatch(context))
+                {
+                    return kDrawBufferMaskMismatch;
+                }
 
-            // Detect that the color buffer types match the fragment shader output types
-            if (!ValidateFragmentShaderColorBufferTypeMatch(context))
-            {
-                return kDrawBufferTypeMismatch;
+                // Detect that the color buffer types match the fragment shader output types
+                if (!ValidateFragmentShaderColorBufferTypeMatch(context))
+                {
+                    return kDrawBufferTypeMismatch;
+                }
             }
 
             const VertexArray *vao = context->getState().getVertexArray();

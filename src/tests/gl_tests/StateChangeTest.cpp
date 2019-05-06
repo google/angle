@@ -3027,6 +3027,16 @@ void main()
     ASSERT_GL_NO_ERROR() << "Draw to float texture with invalid mask";
     glDrawArrays(GL_TRIANGLES, 0, 6);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    // Set all 4 channels of color mask to false. Validate success.
+    glColorMask(false, false, false, false);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+    glColorMask(false, true, false, false);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glColorMask(true, true, true, true);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Restore state.
     glDrawBuffers(2, kColor0Enabled);

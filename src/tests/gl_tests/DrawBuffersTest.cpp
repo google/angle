@@ -444,6 +444,16 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
     setDrawBuffers(kMaxBuffers, allBufs);
     drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+    // Exception: when all 4 channels of color mask are set to false.
+    glColorMask(false, false, false, false);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    glColorMask(false, true, false, false);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+    glColorMask(true, true, true, true);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Clear again. All attachments should be cleared.
     glClear(GL_COLOR_BUFFER_BIT);

@@ -580,11 +580,6 @@ const RasterizerState &State::getRasterizerState() const
     return mRasterizer;
 }
 
-const BlendState &State::getBlendState() const
-{
-    return mBlend;
-}
-
 const DepthStencilState &State::getDepthStencilState() const
 {
     return mDepthStencil;
