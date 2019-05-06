@@ -81,7 +81,7 @@ deps = {
   },
 
   '{angle_root}/third_party/googletest/src': {
-    'url': '{chromium_git}/external/github.com/google/googletest.git@9997a830ee5589c2da79198bc3b60d1c47e50118',
+    'url': '{chromium_git}/external/github.com/google/googletest.git@3f5b5b8f8493a03fa25f1e4a7eae7678514a431d',
     'condition': 'not build_with_chromium',
   },
 
