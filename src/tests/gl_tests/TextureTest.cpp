@@ -1178,6 +1178,59 @@ class Texture2DIntegerTestES3 : public Texture2DTest
     }
 };
 
+class TextureCubeIntegerTestES3 : public TexCoordDrawTest
+{
+  protected:
+    TextureCubeIntegerTestES3()
+        : TexCoordDrawTest(), mTextureCube(0), mTextureCubeUniformLocation(-1)
+    {}
+
+    const char *getVertexShaderSource() override
+    {
+        return "#version 300 es\n"
+               "out vec2 texcoord;\n"
+               "in vec4 position;\n"
+               "void main()\n"
+               "{\n"
+               "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+               "    texcoord = 0.5*position.xy;\n"
+               "}\n";
+    }
+
+    const char *getFragmentShaderSource() override
+    {
+        return "#version 300 es\n"
+               "precision highp float;\n"
+               "precision highp usamplerCube;\n"
+               "uniform usamplerCube texCube;\n"
+               "in vec2 texcoord;\n"
+               "out vec4 fragColor;\n"
+               "void main()\n"
+               "{\n"
+               "    fragColor = vec4(texture(texCube, vec3(texcoord, 1)))/255.0;\n"
+               "}\n";
+    }
+
+    void testSetUp() override
+    {
+        TexCoordDrawTest::testSetUp();
+        glGenTextures(1, &mTextureCube);
+        setUpProgram();
+
+        mTextureCubeUniformLocation = glGetUniformLocation(mProgram, "texCube");
+        ASSERT_NE(-1, mTextureCubeUniformLocation);
+    }
+
+    void testTearDown() override
+    {
+        glDeleteTextures(1, &mTextureCube);
+        TexCoordDrawTest::testTearDown();
+    }
+
+    GLuint mTextureCube;
+    GLint mTextureCubeUniformLocation;
+};
+
 TEST_P(Texture2DTest, NegativeAPISubImage)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -4492,6 +4545,42 @@ TEST_P(Texture2DIntegerTestES3, IntegerTextureNonZeroBaseLevel)
     EXPECT_PIXEL_COLOR_EQ(width - 1, height - 1, color);
 }
 
+// Draw a quad with an integer cube texture with a non-zero base level, and test that the color of
+// the texture is output.
+TEST_P(TextureCubeIntegerTestES3, IntegerCubeTextureNonZeroBaseLevel)
+{
+    // All output checks returned black, rather than the texture color.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
+    GLint baseLevel = 1;
+    int width       = getWindowWidth();
+    int height      = getWindowHeight();
+    GLColor color   = GLColor::green;
+    std::vector<GLColor> pixels(width * height, color);
+    for (GLenum faceIndex = 0; faceIndex < 6; faceIndex++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, baseLevel, GL_RGBA8UI, width,
+                     height, 0, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE, pixels.data());
+        EXPECT_GL_NO_ERROR();
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, baseLevel);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureCubeUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+    EXPECT_PIXEL_COLOR_EQ(width - 1, 0, color);
+    EXPECT_PIXEL_COLOR_EQ(0, height - 1, color);
+    EXPECT_PIXEL_COLOR_EQ(width - 1, height - 1, color);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
@@ -4592,5 +4681,6 @@ ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLE
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureCubeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(TextureCubeIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
 
 }  // anonymous namespace

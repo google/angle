@@ -611,12 +611,21 @@ void OutputIntegerTextureSampleFunctionComputations(
     }
     if (IsSamplerCube(textureFunction.sampler))
     {
+        if (getDimensionsIgnoresBaseLevel)
+        {
+            out << "    int baseLevel = samplerMetadata[samplerIndex].baseLevel;\n";
+        }
+        else
+        {
+            out << "    int baseLevel = 0;\n";
+        }
+
         out << "    float width; float height; float layers; float levels;\n";
 
         out << "    uint mip = 0;\n";
 
         out << "    " << textureReference
-            << ".GetDimensions(mip, width, height, layers, levels);\n";
+            << ".GetDimensions(baseLevel + mip, width, height, layers, levels);\n";
 
         out << "    bool xMajor = abs(t.x) > abs(t.y) && abs(t.x) > abs(t.z);\n";
         out << "    bool yMajor = abs(t.y) > abs(t.z) && abs(t.y) > abs(t.x);\n";
@@ -687,7 +696,7 @@ void OutputIntegerTextureSampleFunctionComputations(
             }
             out << "    mip = uint(min(max(round(lod), 0), levels - 1));\n"
                 << "    " << textureReference
-                << ".GetDimensions(mip, width, height, layers, levels);\n";
+                << ".GetDimensions(baseLevel + mip, width, height, layers, levels);\n";
         }
 
         // Convert from normalized floating-point to integer
