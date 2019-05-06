@@ -108,13 +108,17 @@ strip_suffixes = ["ANGLE", "EXT", "KHR", "OES", "CHROMIUM"]
 # Toggle generation here.
 support_EGL_ANGLE_explicit_context = True
 
+
 def script_relative(path):
     return os.path.join(os.path.dirname(sys.argv[0]), path)
+
 
 def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
 
+
 class GLCommandNames:
+
     def __init__(self):
         self.command_names = {}
 
@@ -136,8 +140,10 @@ class GLCommandNames:
         # Add the commands that aren't duplicates
         self.command_names[version] += commands
 
+
 class RegistryXML:
-    def __init__(self, xml_file, ext_file = None):
+
+    def __init__(self, xml_file, ext_file=None):
         tree = etree.parse(script_relative(xml_file))
         self.root = tree.getroot()
         if (ext_file):

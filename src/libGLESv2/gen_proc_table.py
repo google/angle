@@ -56,6 +56,7 @@ size_t g_numProcs = {num_procs};
 sys.path.append('../libANGLE/renderer')
 import angle_format
 
+
 def main():
 
     # auto_script parameters.
@@ -82,21 +83,23 @@ def main():
                 all_functions[function] = "gl::" + function[2:]
                 # Special handling for EGL_ANGLE_explicit_context extension
                 if support_egl_ANGLE_explicit_context:
-                    all_functions[function + "ContextANGLE"] = "gl::" + function[2:] + "ContextANGLE"
+                    all_functions[function +
+                                  "ContextANGLE"] = "gl::" + function[2:] + "ContextANGLE"
             elif function.startswith("egl"):
                 all_functions[function] = "EGL_" + function[3:]
             else:
                 all_functions[function] = function
 
-    proc_data = [('    {"%s", P(%s)}' % (func, angle_func)) for func, angle_func in sorted(all_functions.iteritems())]
+    proc_data = [('    {"%s", P(%s)}' % (func, angle_func))
+                 for func, angle_func in sorted(all_functions.iteritems())]
 
     with open(out_file_name, 'w') as out_file:
         output_cpp = template_cpp.format(
-            script_name = sys.argv[0],
-            data_source_name = data_source_name,
-            copyright_year = date.today().year,
-            proc_data = ",\n".join(proc_data),
-            num_procs = len(proc_data))
+            script_name=sys.argv[0],
+            data_source_name=data_source_name,
+            copyright_year=date.today().year,
+            proc_data=",\n".join(proc_data),
+            num_procs=len(proc_data))
         out_file.write(output_cpp)
         out_file.close()
     return 0

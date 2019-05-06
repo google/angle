@@ -18,24 +18,29 @@ root_dir = os.path.abspath(os.path.join(script_dir, '..'))
 
 # auto_script is a standard way for scripts to return their inputs and outputs.
 
+
 def get_child_script_dirname(script):
     # All script names are relative to ANGLE's root
     return os.path.dirname(os.path.abspath(os.path.join(root_dir, script)))
 
+
 # Replace all backslashes with forward slashes to be platform independent
 def clean_path_slashes(path):
     return path.replace("\\", "/")
+
 
 # Takes a script file name which is relative to the code generation script's directory and
 # changes it to be relative to the angle root directory
 def rebase_script_path(script_path, relative_path):
     return os.path.relpath(os.path.join(os.path.dirname(script_path), relative_path), root_dir)
 
+
 def grab_from_script(script, param):
     res = subprocess.check_output(['python', script, param]).strip()
     if res == '':
         return []
     return [clean_path_slashes(rebase_script_path(script, name)) for name in res.split(',')]
+
 
 def auto_script(script):
     # Set the CWD to the script directory.
@@ -48,6 +53,7 @@ def auto_script(script):
     # Reset the CWD to the root ANGLE directory.
     os.chdir(root_dir)
     return info
+
 
 hash_fname = "run_code_generation_hashes.json"
 
@@ -183,8 +189,12 @@ def main():
             update_output_hashes(name, info['outputs'], new_hashes)
 
         os.chdir(script_dir)
-        json.dump(new_hashes, open(hash_fname, "w"), indent=2, sort_keys=True,
-                  separators=(',', ':\n    '))
+        json.dump(
+            new_hashes,
+            open(hash_fname, "w"),
+            indent=2,
+            sort_keys=True,
+            separators=(',', ':\n    '))
 
 
 if __name__ == '__main__':

@@ -39,10 +39,9 @@ def main():
     isolated_file = os.path.join(out_file_path, '%s.isolated' % args.test)
 
     isolate_args = [
-        'python', isolate_script_path, 'archive',
-        '-I', 'https://isolateserver.appspot.com',
-        '-i', isolate_file,
-        '-s', isolated_file]
+        'python', isolate_script_path, 'archive', '-I', 'https://isolateserver.appspot.com', '-i',
+        isolate_file, '-s', isolated_file
+    ]
     stdout = subprocess.check_output(isolate_args)
     sha = stdout[:40]
 
@@ -50,14 +49,11 @@ def main():
     swarming_script_path = os.path.join('tools', 'swarming_client', 'swarming.py')
 
     swarmings_args = [
-        'python', swarming_script_path, 'trigger',
-        '-S', 'chromium-swarm.appspot.com',
-        '-I', 'isolateserver.appspot.com',
-        '-d', 'os', args.os_dim,
-        '-d', 'pool', args.pool,
-        '-d', 'gpu', args.gpu_dim,
-        '--shards=%d' % args.shards,
-        '-s', sha]
+        'python', swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-I',
+        'isolateserver.appspot.com', '-d', 'os', args.os_dim, '-d', 'pool', args.pool, '-d', 'gpu',
+        args.gpu_dim,
+        '--shards=%d' % args.shards, '-s', sha
+    ]
 
     if args.extra_args:
         swarmings_args += ['--'] + args.extra_args

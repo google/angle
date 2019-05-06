@@ -263,38 +263,46 @@ EXPORTS
 {exports}
 """
 
+
 def script_relative(path):
     return os.path.join(os.path.dirname(sys.argv[0]), path)
+
 
 with open(script_relative('entry_point_packed_gl_enums.json')) as f:
     cmd_packed_gl_enums = json.loads(f.read())
 
+
 def format_entry_point_decl(cmd_name, proto, params, is_explicit_context):
     comma_if_needed = ", " if len(params) > 0 else ""
     return template_entry_point_decl.format(
-        name = cmd_name[2:],
-        return_type = proto[:-len(cmd_name)],
-        params = ", ".join(params),
-        comma_if_needed = comma_if_needed,
-        explicit_context_suffix = "ContextANGLE" if is_explicit_context else "",
-        explicit_context_param = "GLeglContext ctx" if is_explicit_context else "",
-        explicit_context_comma = ", " if is_explicit_context and len(params) > 0 else "")
+        name=cmd_name[2:],
+        return_type=proto[:-len(cmd_name)],
+        params=", ".join(params),
+        comma_if_needed=comma_if_needed,
+        explicit_context_suffix="ContextANGLE" if is_explicit_context else "",
+        explicit_context_param="GLeglContext ctx" if is_explicit_context else "",
+        explicit_context_comma=", " if is_explicit_context and len(params) > 0 else "")
+
 
 def type_name_sep_index(param):
     space = param.rfind(" ")
     pointer = param.rfind("*")
     return max(space, pointer)
 
+
 def just_the_type(param):
     if "*" in param:
         return param[:type_name_sep_index(param) + 1]
     return param[:type_name_sep_index(param)]
 
+
 def just_the_name(param):
-    return param[type_name_sep_index(param)+1:]
+    return param[type_name_sep_index(param) + 1:]
+
 
 def make_param(param_type, param_name):
     return param_type + " " + param_name
+
 
 def just_the_type_packed(param, entry):
     name = just_the_name(param)
@@ -303,12 +311,14 @@ def just_the_type_packed(param, entry):
     else:
         return just_the_type(param)
 
+
 def just_the_name_packed(param, reserved_set):
     name = just_the_name(param)
     if name in reserved_set:
         return name + 'Packed'
     else:
         return name
+
 
 def param_print_argument(param):
     name_only = just_the_name(param)
@@ -325,6 +335,7 @@ def param_print_argument(param):
 
     return name_only
 
+
 def param_format_string(param):
     if "*" in param:
         return param + " = 0x%016\" PRIxPTR \""
@@ -335,10 +346,12 @@ def param_format_string(param):
 
         return param + " = " + format_dict[type_only]
 
+
 def default_return_value(cmd_name, return_type):
     if return_type == "void":
         return ""
     return "GetDefaultReturnValue<EntryPoint::" + cmd_name[2:] + ", " + return_type + ">()"
+
 
 def get_context_getter_function(cmd_name, is_explicit_context):
     if is_explicit_context:
@@ -357,6 +370,7 @@ def get_context_getter_function(cmd_name, is_explicit_context):
             return "GetGlobalContext()"
     return "GetValidGlobalContext()"
 
+
 def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
     internal_params = [just_the_name_packed(param, packed_gl_enums) for param in params]
@@ -366,8 +380,10 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
         if name in packed_gl_enums:
             internal_name = name + "Packed"
             internal_type = packed_gl_enums[name]
-            packed_gl_enum_conversions += ["\n        " + internal_type + " " + internal_name +" = FromGLenum<" +
-                                          internal_type + ">(" + name + ");"]
+            packed_gl_enum_conversions += [
+                "\n        " + internal_type + " " + internal_name + " = FromGLenum<" +
+                internal_type + ">(" + name + ");"
+            ]
 
     pass_params = [param_print_argument(param) for param in params]
     format_params = [param_format_string(param) for param in params]
@@ -381,30 +397,36 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
             name_lower_no_suffix = name_lower_no_suffix[0:-len(suffix)]
 
     return template_entry_point_def.format(
-        name = cmd_name[2:],
-        name_lower_no_suffix = name_lower_no_suffix,
-        return_type = return_type,
-        params = ", ".join(params),
-        internal_params = ", ".join(internal_params),
-        packed_gl_enum_conversions = "".join(packed_gl_enum_conversions),
-        pass_params = ", ".join(pass_params),
-        comma_if_needed = ", " if len(params) > 0 else "",
-        validate_params = ", ".join(["context"] + internal_params),
-        format_params = ", ".join(format_params),
-        return_if_needed = "" if default_return == "" else "return ",
-        default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",
-        context_getter = get_context_getter_function(cmd_name, is_explicit_context),
-        event_comment = event_comment,
-        explicit_context_suffix = "ContextANGLE" if is_explicit_context else "",
-        explicit_context_param = "GLeglContext ctx" if is_explicit_context else "",
-        explicit_context_comma = ", " if is_explicit_context and len(params) > 0 else "",
-        assert_explicit_context = "\nASSERT(context == GetValidGlobalContext());"
-            if is_explicit_context else "")
+        name=cmd_name[2:],
+        name_lower_no_suffix=name_lower_no_suffix,
+        return_type=return_type,
+        params=", ".join(params),
+        internal_params=", ".join(internal_params),
+        packed_gl_enum_conversions="".join(packed_gl_enum_conversions),
+        pass_params=", ".join(pass_params),
+        comma_if_needed=", " if len(params) > 0 else "",
+        validate_params=", ".join(["context"] + internal_params),
+        format_params=", ".join(format_params),
+        return_if_needed="" if default_return == "" else "return ",
+        default_return_if_needed=""
+        if default_return == "" else "\n    return " + default_return + ";\n",
+        context_getter=get_context_getter_function(cmd_name, is_explicit_context),
+        event_comment=event_comment,
+        explicit_context_suffix="ContextANGLE" if is_explicit_context else "",
+        explicit_context_param="GLeglContext ctx" if is_explicit_context else "",
+        explicit_context_comma=", " if is_explicit_context and len(params) > 0 else "",
+        assert_explicit_context="\nASSERT(context == GetValidGlobalContext());"
+        if is_explicit_context else "")
+
 
 def get_internal_params(cmd_name, params):
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
-    return ", ".join([make_param(just_the_type_packed(param, packed_gl_enums),
-                                 just_the_name_packed(param, packed_gl_enums)) for param in params])
+    return ", ".join([
+        make_param(
+            just_the_type_packed(param, packed_gl_enums),
+            just_the_name_packed(param, packed_gl_enums)) for param in params
+    ])
+
 
 def format_context_gles_decl(cmd_name, proto, params):
     internal_params = get_internal_params(cmd_name, params)
@@ -417,30 +439,34 @@ def format_context_gles_decl(cmd_name, proto, params):
             name_lower_no_suffix = name_lower_no_suffix[0:-len(suffix)]
 
     return context_gles_decl.format(
-        return_type = return_type,
-        name_lower_no_suffix = name_lower_no_suffix,
-        internal_params = internal_params)
+        return_type=return_type,
+        name_lower_no_suffix=name_lower_no_suffix,
+        internal_params=internal_params)
+
 
 def format_libgles_entry_point_def(cmd_name, proto, params, is_explicit_context):
     internal_params = [just_the_name(param) for param in params]
     return_type = proto[:-len(cmd_name)]
 
     return libgles_entry_point_def.format(
-        name = cmd_name[2:],
-        return_type = return_type,
-        params = ", ".join(params),
-        internal_params = ", ".join(internal_params),
-        explicit_context_suffix = "ContextANGLE" if is_explicit_context else "",
-        explicit_context_param = "GLeglContext ctx" if is_explicit_context else "",
-        explicit_context_comma = ", " if is_explicit_context and len(params) > 0 else "",
-        explicit_context_internal_param = "ctx" if is_explicit_context else "")
+        name=cmd_name[2:],
+        return_type=return_type,
+        params=", ".join(params),
+        internal_params=", ".join(internal_params),
+        explicit_context_suffix="ContextANGLE" if is_explicit_context else "",
+        explicit_context_param="GLeglContext ctx" if is_explicit_context else "",
+        explicit_context_comma=", " if is_explicit_context and len(params) > 0 else "",
+        explicit_context_internal_param="ctx" if is_explicit_context else "")
+
 
 def format_validation_proto(cmd_name, params):
     internal_params = get_internal_params(cmd_name, ["Context *context"] + params)
     return template_validation_proto % (cmd_name[2:], internal_params)
 
+
 def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
+
 
 def get_entry_points(all_commands, gles_commands, is_explicit_context):
     decls = []
@@ -457,16 +483,17 @@ def get_entry_points(all_commands, gles_commands, is_explicit_context):
 
         param_text = ["".join(param.itertext()) for param in command.findall('param')]
         proto_text = "".join(proto.itertext())
-        decls.append(format_entry_point_decl(cmd_name, proto_text, param_text,
-            is_explicit_context))
+        decls.append(
+            format_entry_point_decl(cmd_name, proto_text, param_text, is_explicit_context))
         defs.append(format_entry_point_def(cmd_name, proto_text, param_text, is_explicit_context))
 
-        export_defs.append(format_libgles_entry_point_def(cmd_name, proto_text, param_text,
-            is_explicit_context))
+        export_defs.append(
+            format_libgles_entry_point_def(cmd_name, proto_text, param_text, is_explicit_context))
 
         validation_protos.append(format_validation_proto(cmd_name, param_text))
 
     return decls, defs, export_defs, validation_protos
+
 
 def get_gles1_decls(all_commands, gles_commands):
     decls = []
@@ -486,12 +513,13 @@ def get_gles1_decls(all_commands, gles_commands):
 
     return decls
 
+
 def get_glext_decls(all_commands, gles_commands, version, is_explicit_context):
     glext_ptrs = []
     glext_protos = []
     is_gles1 = False
 
-    if(version == ""):
+    if (version == ""):
         is_gles1 = True
 
     for command in all_commands:
@@ -516,25 +544,25 @@ def get_glext_decls(all_commands, gles_commands, version, is_explicit_context):
             "explicit_context_comma": ", " if is_explicit_context and len(params) > 0 else "",
             "explicit_context_suffix": "ContextANGLE" if is_explicit_context else "",
             "explicit_context_suffix_upper": "CONTEXTANGLE" if is_explicit_context else "",
-            "explicit_context_param": "GLeglContext ctx" if is_explicit_context else ""}
+            "explicit_context_param": "GLeglContext ctx" if is_explicit_context else ""
+        }
 
-        glext_ptrs.append(template_glext_function_pointer.format(
-            **format_params))
-        glext_protos.append(template_glext_function_prototype.format(
-            **format_params))
+        glext_ptrs.append(template_glext_function_pointer.format(**format_params))
+        glext_protos.append(template_glext_function_prototype.format(**format_params))
 
     return glext_ptrs, glext_protos
 
+
 def write_file(annotation, comment, template, entry_points, suffix, includes, file):
     content = template.format(
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = file,
-        year = date.today().year,
-        annotation_lower = annotation.lower(),
-        annotation_upper = annotation.upper(),
-        comment = comment,
-        includes = includes,
-        entry_points = entry_points)
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name=file,
+        year=date.today().year,
+        annotation_lower=annotation.lower(),
+        annotation_upper=annotation.upper(),
+        comment=comment,
+        includes=includes,
+        entry_points=entry_points)
 
     path = path_to("libGLESv2", "entry_points_gles_{}_autogen.{}".format(
         annotation.lower(), suffix))
@@ -543,19 +571,21 @@ def write_file(annotation, comment, template, entry_points, suffix, includes, fi
         out.write(content)
         out.close()
 
+
 def write_export_files(entry_points, includes):
     content = template_libgles_entry_point_source.format(
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = "gl.xml and gl_angle_ext.xml",
-        year = date.today().year,
-        includes = includes,
-        entry_points = entry_points)
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name="gl.xml and gl_angle_ext.xml",
+        year=date.today().year,
+        includes=includes,
+        entry_points=entry_points)
 
     path = path_to("libGLESv2", "libGLESv2_autogen.cpp")
 
     with open(path, "w") as out:
         out.write(content)
         out.close()
+
 
 def write_context_api_decls(annotation, template, decls):
     interface_lines = []
@@ -568,12 +598,12 @@ def write_context_api_decls(annotation, template, decls):
         interface_lines.extend(decls['exts'][extname])
 
     content = template.format(
-        annotation_lower = annotation.lower(),
-        annotation_upper = annotation.upper(),
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = "gl.xml",
-        year = date.today().year,
-        interface = "\n".join(interface_lines))
+        annotation_lower=annotation.lower(),
+        annotation_upper=annotation.upper(),
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name="gl.xml",
+        year=date.today().year,
+        interface="\n".join(interface_lines))
 
     path = path_to("libANGLE", "Context_gles_%s_autogen.h" % annotation.lower())
 
@@ -581,32 +611,35 @@ def write_context_api_decls(annotation, template, decls):
         out.write(content)
         out.close()
 
+
 def write_glext_explicit_context_inc(version, ptrs, protos):
     folder_version = version if version != "31" else "3"
 
     content = template_glext_explicit_context_inc.format(
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = "gl.xml and gl_angle_ext.xml",
-        year = date.today().year,
-        version = version,
-        function_pointers = ptrs,
-        function_prototypes = protos)
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name="gl.xml and gl_angle_ext.xml",
+        year=date.today().year,
+        version=version,
+        function_pointers=ptrs,
+        function_prototypes=protos)
 
-    path = os.path.join(script_relative(".."), "include", "GLES{}".format(folder_version),
+    path = os.path.join(
+        script_relative(".."), "include", "GLES{}".format(folder_version),
         "gl{}ext_explicit_context_autogen.inc".format(version))
 
     with open(path, "w") as out:
         out.write(content)
         out.close()
 
+
 def write_validation_header(annotation, comment, protos):
     content = template_validation_header.format(
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = "gl.xml and gl_angle_ext.xml",
-        year = date.today().year,
-        annotation = annotation,
-        comment = comment,
-        prototypes = "\n".join(protos))
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name="gl.xml and gl_angle_ext.xml",
+        year=date.today().year,
+        annotation=annotation,
+        comment=comment,
+        prototypes="\n".join(protos))
 
     path = path_to("libANGLE", "validationES%s_autogen.h" % annotation)
 
@@ -614,14 +647,15 @@ def write_validation_header(annotation, comment, protos):
         out.write(content)
         out.close()
 
+
 def write_windows_def_file(data_source_name, lib, exports):
 
     content = template_windows_def_file.format(
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = data_source_name,
-        exports = "\n".join(exports),
-        year = date.today().year,
-        lib = lib)
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name=data_source_name,
+        exports="\n".join(exports),
+        year=date.today().year,
+        lib=lib)
 
     path = path_to(lib, "%s_autogen.def" % lib)
 
@@ -629,11 +663,13 @@ def write_windows_def_file(data_source_name, lib, exports):
         out.write(content)
         out.close()
 
-def get_exports(commands, fmt = None):
+
+def get_exports(commands, fmt=None):
     if fmt:
         return ["    %s" % fmt(cmd) for cmd in sorted(commands)]
     else:
         return ["    %s" % cmd for cmd in sorted(commands)]
+
 
 # Get EGL exports
 def get_egl_exports():
@@ -670,6 +706,7 @@ def get_egl_exports():
         exports += get_exports(ext_cmd_names, capser)
 
     return exports
+
 
 def main():
 
@@ -762,19 +799,18 @@ def main():
         if major_version == 3 and minor_version == 1:
             header_includes += "\n#include \"common/platform.h\"\n"
 
-        source_includes = template_sources_includes.format(
-            annotation.lower(), major_version, minor_if_not_zero)
+        source_includes = template_sources_includes.format(annotation.lower(), major_version,
+                                                           minor_if_not_zero)
 
-        write_file(annotation, comment, template_entry_point_header,
-                   "\n".join(decls), "h", header_includes, "gl.xml")
-        write_file(annotation, comment, template_entry_point_source,
-                   "\n".join(defs), "cpp", source_includes, "gl.xml")
+        write_file(annotation, comment, template_entry_point_header, "\n".join(decls), "h",
+                   header_includes, "gl.xml")
+        write_file(annotation, comment, template_entry_point_source, "\n".join(defs), "cpp",
+                   source_includes, "gl.xml")
         if is_gles1:
             gles1decls['core'] = get_gles1_decls(all_commands, gles_commands)
 
         validation_annotation = "%s%s" % (major_version, minor_if_not_zero)
         write_validation_header(validation_annotation, comment, validation_protos)
-
 
     # After we finish with the main entry points, we process the extensions.
     extension_defs = []
@@ -848,27 +884,27 @@ def main():
             version = "{}{}".format(major_if_not_one, minor_if_not_zero)
 
             glext_ptrs, glext_protos = get_glext_decls(all_commands,
-                xml.all_cmd_names.get_commands(annotation), version, True)
+                                                       xml.all_cmd_names.get_commands(annotation),
+                                                       version, True)
 
             glext_ext_ptrs = []
             glext_ext_protos = []
 
             # Append extensions for 1.0 and 2.0
-            if(annotation == "1_0"):
-                glext_ext_ptrs, glext_ext_protos = get_glext_decls(all_commands,
-                    xml.all_cmd_names.get_commands("glext"), version, True)
-            elif(annotation == "2_0"):
-                glext_ext_ptrs, glext_ext_protos = get_glext_decls(all_commands,
-                    xml.all_cmd_names.get_commands("gl2ext"), version, True)
+            if (annotation == "1_0"):
+                glext_ext_ptrs, glext_ext_protos = get_glext_decls(
+                    all_commands, xml.all_cmd_names.get_commands("glext"), version, True)
+            elif (annotation == "2_0"):
+                glext_ext_ptrs, glext_ext_protos = get_glext_decls(
+                    all_commands, xml.all_cmd_names.get_commands("gl2ext"), version, True)
 
             glext_ptrs += glext_ext_ptrs
             glext_protos += glext_ext_protos
 
-            write_glext_explicit_context_inc(version, "\n".join(glext_ptrs), "\n".join(glext_protos))
+            write_glext_explicit_context_inc(version, "\n".join(glext_ptrs),
+                                             "\n".join(glext_protos))
 
-
-    header_includes = template_header_includes.format(
-        major="", minor="")
+    header_includes = template_header_includes.format(major="", minor="")
     header_includes += """
     #include <GLES/glext.h>
     #include <GLES2/gl2.h>
@@ -883,24 +919,23 @@ def main():
     #include "libANGLE/validationES31.h"
     """
 
-    write_file("ext", "extension", template_entry_point_header,
-               "\n".join([item for item in extension_decls]), "h", header_includes,
-               "gl.xml and gl_angle_ext.xml")
-    write_file("ext", "extension", template_entry_point_source,
-               "\n".join([item for item in extension_defs]), "cpp", source_includes,
-               "gl.xml and gl_angle_ext.xml")
+    write_file("ext", "extension", template_entry_point_header, "\n".join(
+        [item for item in extension_decls]), "h", header_includes, "gl.xml and gl_angle_ext.xml")
+    write_file("ext", "extension", template_entry_point_source, "\n".join(
+        [item for item in extension_defs]), "cpp", source_includes, "gl.xml and gl_angle_ext.xml")
 
     write_validation_header("EXT", "extension", ext_validation_protos)
 
     write_context_api_decls("1_0", context_gles_header, gles1decls)
 
-    sorted_cmd_names = ["Invalid"] + [cmd[2:] for cmd in sorted(xml.all_cmd_names.get_all_commands())]
+    sorted_cmd_names = ["Invalid"
+                       ] + [cmd[2:] for cmd in sorted(xml.all_cmd_names.get_all_commands())]
 
     entry_points_enum = template_entry_points_enum_header.format(
-        script_name = os.path.basename(sys.argv[0]),
-        data_source_name = "gl.xml and gl_angle_ext.xml",
-        year = date.today().year,
-        entry_points_list = ",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
+        script_name=os.path.basename(sys.argv[0]),
+        data_source_name="gl.xml and gl_angle_ext.xml",
+        year=date.today().year,
+        entry_points_list=",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
 
     entry_points_enum_header_path = path_to("libGLESv2", "entry_points_enum_autogen.h")
     with open(entry_points_enum_header_path, "w") as out:
@@ -925,6 +960,7 @@ def main():
 
     everything = "Khronos and ANGLE XML files"
     write_windows_def_file(everything, "libGLESv2", libgles_ep_exports)
+
 
 if __name__ == '__main__':
     sys.exit(main())

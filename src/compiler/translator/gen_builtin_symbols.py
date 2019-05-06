@@ -255,56 +255,23 @@ namespace BuiltInGroup
 parsed_variables = None
 
 basic_types_enumeration = [
-    'Void',
-    'Float',
-    'Int',
-    'UInt',
-    'Bool',
-    'AtomicCounter',
-    'YuvCscStandardEXT',
-    'Sampler2D',
-    'Sampler3D',
-    'SamplerCube',
-    'Sampler2DArray',
-    'SamplerExternalOES',
-    'SamplerExternal2DY2YEXT',
-    'Sampler2DRect',
-    'Sampler2DMS',
-    'Sampler2DMSArray',
-    'ISampler2D',
-    'ISampler3D',
-    'ISamplerCube',
-    'ISampler2DArray',
-    'ISampler2DMS',
-    'ISampler2DMSArray',
-    'USampler2D',
-    'USampler3D',
-    'USamplerCube',
-    'USampler2DArray',
-    'USampler2DMS',
-    'USampler2DMSArray',
-    'Sampler2DShadow',
-    'SamplerCubeShadow',
-    'Sampler2DArrayShadow',
-    'Image2D',
-    'IImage2D',
-    'UImage2D',
-    'Image3D',
-    'IImage3D',
-    'UImage3D',
-    'Image2DArray',
-    'IImage2DArray',
-    'UImage2DArray',
-    'ImageCube',
-    'IImageCube',
-    'UImageCube'
+    'Void', 'Float', 'Int', 'UInt', 'Bool', 'AtomicCounter', 'YuvCscStandardEXT', 'Sampler2D',
+    'Sampler3D', 'SamplerCube', 'Sampler2DArray', 'SamplerExternalOES', 'SamplerExternal2DY2YEXT',
+    'Sampler2DRect', 'Sampler2DMS', 'Sampler2DMSArray', 'ISampler2D', 'ISampler3D', 'ISamplerCube',
+    'ISampler2DArray', 'ISampler2DMS', 'ISampler2DMSArray', 'USampler2D', 'USampler3D',
+    'USamplerCube', 'USampler2DArray', 'USampler2DMS', 'USampler2DMSArray', 'Sampler2DShadow',
+    'SamplerCubeShadow', 'Sampler2DArrayShadow', 'Image2D', 'IImage2D', 'UImage2D', 'Image3D',
+    'IImage3D', 'UImage3D', 'Image2DArray', 'IImage2DArray', 'UImage2DArray', 'ImageCube',
+    'IImageCube', 'UImageCube'
 ]
 
 id_counter = 0
 
+
 def set_working_dir():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(script_dir)
+
 
 def get_basic_mangled_name(basic):
     index = basic_types_enumeration.index(basic)
@@ -312,7 +279,9 @@ def get_basic_mangled_name(basic):
         return chr(ord('A') + index)
     return chr(ord('a') + index - 26)
 
+
 levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
+
 
 def get_shader_version_condition_for_level(level):
     if level == 'ESSL3_1_BUILTINS':
@@ -326,8 +295,10 @@ def get_shader_version_condition_for_level(level):
     else:
         raise Exception('Unsupported symbol table level')
 
+
 class GroupedList:
     """"Class for storing a list of objects grouped by symbol table level and condition."""
+
     def __init__(self):
         self.objs = OrderedDict()
         self.max_name_length = 0
@@ -366,12 +337,12 @@ class GroupedList:
                 continue
             level_condition = get_shader_version_condition_for_level(level)
             if level_condition != '':
-                code.append('if ({condition})\n {{'.format(condition = level_condition))
+                code.append('if ({condition})\n {{'.format(condition=level_condition))
 
             for condition, objs in self.objs[level].iteritems():
                 if len(objs) > 0:
                     if condition != 'NO_CONDITION':
-                        condition_header = '  if ({condition})\n {{'.format(condition = condition)
+                        condition_header = '  if ({condition})\n {{'.format(condition=condition)
                         code.append(condition_header.replace('shaderType', 'mShaderType'))
 
                     switch = {}
@@ -396,7 +367,9 @@ class GroupedList:
         code.append('return nullptr;')
         return '\n'.join(code)
 
+
 class TType:
+
     def __init__(self, glsl_header_type):
         if isinstance(glsl_header_type, basestring):
             self.data = self.parse_type(glsl_header_type)
@@ -409,7 +382,8 @@ class TType:
         # are overridden when the specific types are generated.
         if 'primarySize' not in self.data:
             if ('secondarySize' in self.data):
-                raise Exception('Unexpected secondarySize on type that does not have primarySize set')
+                raise Exception(
+                    'Unexpected secondarySize on type that does not have primarySize set')
             self.data['primarySize'] = 1
         if 'secondarySize' not in self.data:
             self.data['secondarySize'] = 1
@@ -553,6 +527,7 @@ class TType:
 
         raise Exception('Unrecognized type: ' + str(glsl_header_type))
 
+
 def get_parsed_functions(functions_txt_filename):
 
     def parse_function_parameters(parameters):
@@ -567,7 +542,9 @@ def get_parsed_functions(functions_txt_filename):
     lines = []
     with open(functions_txt_filename) as f:
         lines = f.readlines()
-    lines = [line.strip() for line in lines if line.strip() != '' and not line.strip().startswith('//')]
+    lines = [
+        line.strip() for line in lines if line.strip() != '' and not line.strip().startswith('//')
+    ]
 
     fun_re = re.compile(r'^(\w+) (\w+)\((.*)\);$')
 
@@ -580,11 +557,7 @@ def get_parsed_functions(functions_txt_filename):
         if line.startswith('GROUP BEGIN '):
             group_rest = line[12:].strip()
             group_parts = group_rest.split(' ', 1)
-            current_group = {
-                'functions': [],
-                'name': group_parts[0],
-                'subgroups': {}
-            }
+            current_group = {'functions': [], 'name': group_parts[0], 'subgroups': {}}
             if len(group_parts) > 1:
                 group_metadata = json.loads(group_parts[1])
                 current_group.update(group_metadata)
@@ -593,7 +566,8 @@ def get_parsed_functions(functions_txt_filename):
             group_end_name = line[10:].strip()
             current_group = group_stack[-1]
             if current_group['name'] != group_end_name:
-                raise Exception('GROUP END: Unexpected function group name "' + group_end_name + '" was expecting "' + current_group['name'] + '"')
+                raise Exception('GROUP END: Unexpected function group name "' + group_end_name +
+                                '" was expecting "' + current_group['name'] + '"')
             group_stack.pop()
             is_top_level_group = (len(group_stack) == 0)
             if is_top_level_group:
@@ -621,7 +595,10 @@ def get_parsed_functions(functions_txt_filename):
 
     return parsed_functions
 
+
 fnvPrime = 16777619
+
+
 def hash32(str):
     fnvOffsetBasis = 0x811c9dc5
     hash = fnvOffsetBasis
@@ -630,7 +607,8 @@ def hash32(str):
         hash = (hash * fnvPrime) & 0xffffffff
     return hash
 
-def mangledNameHash(str, script_generated_hash_tests, save_test = True):
+
+def mangledNameHash(str, script_generated_hash_tests, save_test=True):
     hash = hash32(str)
     index = 0
     max_six_bit_value = (1 << 6) - 1
@@ -642,21 +620,26 @@ def mangledNameHash(str, script_generated_hash_tests, save_test = True):
         elif c == '{' or c == '[':
             has_array_or_block_param_bit = 1
         index += 1
-    hash = ((hash >> 13) ^ (hash & 0x1fff)) | (index << 19) | (paren_location << 25) | (has_array_or_block_param_bit << 31)
+    hash = ((hash >> 13) ^ (hash & 0x1fff)) | (index << 19) | (paren_location << 25) | (
+        has_array_or_block_param_bit << 31)
     if save_test:
-        sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(hash = ('%08x' % hash), str = str)
+        sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(
+            hash=('%08x' % hash), str=str)
         script_generated_hash_tests.update({sanity_check: None})
     return hash
+
 
 def get_suffix(props):
     if 'suffix' in props:
         return props['suffix']
     return ''
 
+
 def get_extension(props):
     if 'extension' in props:
         return props['extension']
     return 'UNDEFINED'
+
 
 def get_op(name, function_props):
     if 'op' not in function_props:
@@ -665,21 +648,25 @@ def get_op(name, function_props):
         return name[0].upper() + name[1:]
     return function_props['op']
 
+
 def get_known_to_not_have_side_effects(function_props):
     if 'op' in function_props and function_props['op'] != 'CallBuiltInFunction':
         if 'hasSideEffects' in function_props:
             return 'false'
         else:
             for param in get_parameters(function_props):
-                if 'qualifier' in param.data and (param.data['qualifier'] == 'Out' or param.data['qualifier'] == 'InOut'):
+                if 'qualifier' in param.data and (param.data['qualifier'] == 'Out' or
+                                                  param.data['qualifier'] == 'InOut'):
                     return 'false'
             return 'true'
     return 'false'
+
 
 def get_parameters(function_props):
     if 'parameters' in function_props:
         return function_props['parameters']
     return []
+
 
 def get_function_mangled_name(function_name, parameters):
     mangled_name = function_name + '('
@@ -687,11 +674,13 @@ def get_function_mangled_name(function_name, parameters):
         mangled_name += param.get_mangled_name()
     return mangled_name
 
+
 def get_function_human_readable_name(function_name, parameters):
     name = function_name
     for param in parameters:
         name += '_' + param.get_human_readable_name()
     return name
+
 
 def gen_parameters_variant_ids(str_len, ttype_mangled_name_variants):
     # Note that this doesn't generate variants with array parameters or struct / interface block parameters. They are assumed to have been filtered out separately.
@@ -700,7 +689,9 @@ def gen_parameters_variant_ids(str_len, ttype_mangled_name_variants):
     num_variants = pow(len(ttype_mangled_name_variants), str_len / 2)
     return xrange(num_variants)
 
-def get_parameters_mangled_name_variant(variant_id, paren_location, total_length, ttype_mangled_name_variants):
+
+def get_parameters_mangled_name_variant(variant_id, paren_location, total_length,
+                                        ttype_mangled_name_variants):
     str_len = total_length - paren_location - 1
     if str_len % 2 != 0:
         raise Exception('Expecting parameters mangled name length to be divisible by two')
@@ -714,11 +705,12 @@ def get_parameters_mangled_name_variant(variant_id, paren_location, total_length
         variant += ttype_mangled_name_variants[parameter_variant_index]
     return variant
 
+
 # Calculate the mangled name hash of a common prefix string that's been pre-hashed with hash32()
 # plus a variant of the parameters. This is faster than constructing the whole string and then
 # calculating the hash for that.
 def get_mangled_name_variant_hash(prefix_hash32, variant_id, paren_location, total_length,
-        num_type_variants, ttype_mangled_name_variants):
+                                  num_type_variants, ttype_mangled_name_variants):
     hash = prefix_hash32
     parameter_count = (total_length - paren_location) >> 1
     parameter_variant_id_base = variant_id
@@ -732,8 +724,10 @@ def get_mangled_name_variant_hash(prefix_hash32, variant_id, paren_location, tot
         parameter_variant_id_base = parameter_variant_id_base / num_type_variants
     return ((hash >> 13) ^ (hash & 0x1fff)) | (total_length << 19) | (paren_location << 25)
 
-def mangled_name_hash_can_collide_with_different_parameters(function_variant_props, num_type_variants,
-        ttype_mangled_name_variants, script_generated_hash_tests):
+
+def mangled_name_hash_can_collide_with_different_parameters(
+        function_variant_props, num_type_variants, ttype_mangled_name_variants,
+        script_generated_hash_tests):
     # We exhaustively search through all possible lists of parameters and see if any other mangled
     # name has the same hash.
     mangled_name = function_variant_props['mangled_name']
@@ -747,20 +741,24 @@ def mangled_name_hash_can_collide_with_different_parameters(function_variant_pro
     if (parameters_mangled_name_len > 6):
         # This increases the complexity of searching for hash collisions considerably, so rather than doing it we just conservatively assume that a hash collision may be possible.
         return True
-    for variant_id in gen_parameters_variant_ids(parameters_mangled_name_len, ttype_mangled_name_variants):
-        variant_hash = get_mangled_name_variant_hash(prefix_hash32, variant_id, paren_location, mangled_name_len,
-             num_type_variants, ttype_mangled_name_variants)
-        manged_name_variant = get_parameters_mangled_name_variant(variant_id, paren_location, mangled_name_len,
-             ttype_mangled_name_variants)
+    for variant_id in gen_parameters_variant_ids(parameters_mangled_name_len,
+                                                 ttype_mangled_name_variants):
+        variant_hash = get_mangled_name_variant_hash(prefix_hash32, variant_id, paren_location,
+                                                     mangled_name_len, num_type_variants,
+                                                     ttype_mangled_name_variants)
+        manged_name_variant = get_parameters_mangled_name_variant(
+            variant_id, paren_location, mangled_name_len, ttype_mangled_name_variants)
         if variant_hash == hash and manged_name_variant != parameters_mangled_name:
             return True
     return False
+
 
 def get_unique_identifier_name(function_name, parameters):
     unique_name = function_name + '_'
     for param in parameters:
         unique_name += param.get_mangled_name()
     return unique_name
+
 
 def get_variable_name_to_store_parameter(param):
     unique_name = 'pt'
@@ -771,6 +769,7 @@ def get_variable_name_to_store_parameter(param):
             unique_name += '_io_'
     unique_name += param.get_mangled_name()
     return unique_name
+
 
 def get_variable_name_to_store_parameters(parameters):
     if len(parameters) == 0:
@@ -785,9 +784,11 @@ def get_variable_name_to_store_parameters(parameters):
         unique_name += param.get_mangled_name()
     return unique_name
 
+
 def define_constexpr_variable(template_args, variable_declarations):
     template_variable_declaration = 'constexpr const TVariable kVar_{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
     variable_declarations.append(template_variable_declaration.format(**template_args))
+
 
 def gen_function_variants(function_name, function_props):
     function_variants = []
@@ -797,10 +798,12 @@ def gen_function_variants(function_name, function_props):
     for param in parameters:
         if 'genType' in param.data:
             if param.data['genType'] not in ['sampler_or_image', 'vec', 'yes']:
-                raise Exception('Unexpected value of genType "' + str(param.data['genType']) + '" should be "sampler_or_image", "vec", or "yes"')
+                raise Exception('Unexpected value of genType "' + str(param.data['genType']) +
+                                '" should be "sampler_or_image", "vec", or "yes"')
             gen_type.add(param.data['genType'])
             if len(gen_type) > 1:
-                raise Exception('Unexpected multiple values of genType set on the same function: ' + str(list(gen_type)))
+                raise Exception('Unexpected multiple values of genType set on the same function: '
+                                + str(list(gen_type)))
     if len(gen_type) == 0:
         function_variants.append(function_props)
         return function_variants
@@ -815,7 +818,8 @@ def gen_function_variants(function_name, function_props):
             for param in parameters:
                 variant_parameters.append(param.specific_sampler_or_image_type(type))
             variant_props['parameters'] = variant_parameters
-            variant_props['returnType'] = function_props['returnType'].specific_sampler_or_image_type(type)
+            variant_props['returnType'] = function_props[
+                'returnType'].specific_sampler_or_image_type(type)
             function_variants.append(variant_props)
         return function_variants
 
@@ -833,10 +837,13 @@ def gen_function_variants(function_name, function_props):
         function_variants.append(variant_props)
     return function_variants
 
-def process_single_function_group(condition, group_name, group, num_type_variants, parameter_declarations, ttype_mangled_name_variants,
-        name_declarations, unmangled_function_if_statements, unmangled_builtin_declarations, defined_function_variants,
-        builtin_id_declarations, builtin_id_definitions, defined_parameter_names, variable_declarations, function_declarations,
-        script_generated_hash_tests, get_builtin_if_statements):
+
+def process_single_function_group(
+        condition, group_name, group, num_type_variants, parameter_declarations,
+        ttype_mangled_name_variants, name_declarations, unmangled_function_if_statements,
+        unmangled_builtin_declarations, defined_function_variants, builtin_id_declarations,
+        builtin_id_definitions, defined_parameter_names, variable_declarations,
+        function_declarations, script_generated_hash_tests, get_builtin_if_statements):
     global id_counter
 
     if 'functions' not in group:
@@ -867,21 +874,30 @@ def process_single_function_group(condition, group_name, group, num_type_variant
     return &UnmangledBuiltIns::{extension};
 }}"""
         unmangled_if = template_unmangled_if.format(**template_args)
-        unmangled_builtin_no_condition = unmangled_function_if_statements.get(level, 'NO_CONDITION', function_name)
-        if unmangled_builtin_no_condition != None and unmangled_builtin_no_condition['extension'] == 'UNDEFINED':
+        unmangled_builtin_no_condition = unmangled_function_if_statements.get(
+            level, 'NO_CONDITION', function_name)
+        if unmangled_builtin_no_condition != None and unmangled_builtin_no_condition[
+                'extension'] == 'UNDEFINED':
             # We already have this unmangled name without a condition nor extension on the same level. No need to add a duplicate with a condition.
             pass
-        elif (not unmangled_function_if_statements.has_key(level, condition, function_name)) or extension == 'UNDEFINED':
+        elif (not unmangled_function_if_statements.has_key(
+                level, condition, function_name)) or extension == 'UNDEFINED':
             # We don't have this unmangled builtin recorded yet or we might replace an unmangled builtin from an extension with one from core.
-            unmangled_function_if_statements.add_obj(level, condition, function_name, {'hash_matched_code': unmangled_if, 'extension': extension})
-            unmangled_builtin_declarations.add('constexpr const UnmangledBuiltIn {extension}(TExtension::{extension});'.format(**template_args))
+            unmangled_function_if_statements.add_obj(level, condition, function_name, {
+                'hash_matched_code': unmangled_if,
+                'extension': extension
+            })
+            unmangled_builtin_declarations.add(
+                'constexpr const UnmangledBuiltIn {extension}(TExtension::{extension});'.format(
+                    **template_args))
 
         for function_props in function_variants:
             template_args['id'] = id_counter
 
             parameters = get_parameters(function_props)
 
-            template_args['unique_name'] = get_unique_identifier_name(template_args['name_with_suffix'], parameters)
+            template_args['unique_name'] = get_unique_identifier_name(
+                template_args['name_with_suffix'], parameters)
 
             if template_args['unique_name'] in defined_function_variants:
                 continue
@@ -890,7 +906,8 @@ def process_single_function_group(condition, group_name, group, num_type_variant
             template_args['param_count'] = len(parameters)
             template_args['return_type'] = function_props['returnType'].get_statictype_string()
             template_args['mangled_name'] = get_function_mangled_name(function_name, parameters)
-            template_args['human_readable_name'] = get_function_human_readable_name(template_args['name_with_suffix'], parameters)
+            template_args['human_readable_name'] = get_function_human_readable_name(
+                template_args['name_with_suffix'], parameters)
             template_args['mangled_name_length'] = len(template_args['mangled_name'])
 
             template_builtin_id_declaration = '    static constexpr const TSymbolUniqueId {human_readable_name} = TSymbolUniqueId({id});'
@@ -911,19 +928,26 @@ def process_single_function_group(condition, group_name, group, num_type_variant
                     id_counter += 1
                     param_template_args['id'] = id_counter
                     template_builtin_id_declaration = '    static constexpr const TSymbolUniqueId {name_with_suffix} = TSymbolUniqueId({id});'
-                    builtin_id_declarations.append(template_builtin_id_declaration.format(**param_template_args))
+                    builtin_id_declarations.append(
+                        template_builtin_id_declaration.format(**param_template_args))
                     define_constexpr_variable(param_template_args, variable_declarations)
                     defined_parameter_names.add(unique_param_name)
-                parameters_list.append('&BuiltInVariable::kVar_{name_with_suffix}'.format(**param_template_args));
+                parameters_list.append('&BuiltInVariable::kVar_{name_with_suffix}'.format(
+                    **param_template_args))
 
-            template_args['parameters_var_name'] = get_variable_name_to_store_parameters(parameters)
+            template_args['parameters_var_name'] = get_variable_name_to_store_parameters(
+                parameters)
             if len(parameters) > 0:
                 template_args['parameters_list'] = ', '.join(parameters_list)
                 template_parameter_list_declaration = 'constexpr const TVariable *{parameters_var_name}[{param_count}] = {{ {parameters_list} }};'
-                parameter_declarations[template_args['parameters_var_name']] = template_parameter_list_declaration.format(**template_args)
+                parameter_declarations[template_args[
+                    'parameters_var_name']] = template_parameter_list_declaration.format(
+                        **template_args)
             else:
                 template_parameter_list_declaration = 'constexpr const TVariable **{parameters_var_name} = nullptr;'
-                parameter_declarations[template_args['parameters_var_name']] = template_parameter_list_declaration.format(**template_args)
+                parameter_declarations[template_args[
+                    'parameters_var_name']] = template_parameter_list_declaration.format(
+                        **template_args)
 
             template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
@@ -932,8 +956,9 @@ def process_single_function_group(condition, group_name, group, num_type_variant
             # name and hash, then we can only check the mangled name length and the function name
             # instead of checking the whole mangled name.
             template_mangled_if = ''
-            if mangled_name_hash_can_collide_with_different_parameters(template_args, num_type_variants,
-                    ttype_mangled_name_variants, script_generated_hash_tests):
+            if mangled_name_hash_can_collide_with_different_parameters(
+                    template_args, num_type_variants, ttype_mangled_name_variants,
+                    script_generated_hash_tests):
                 template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name}("{mangled_name}");'
                 name_declarations.add(template_mangled_name_declaration.format(**template_args))
                 template_mangled_if = """if (name == BuiltInName::{unique_name})
@@ -947,15 +972,18 @@ def process_single_function_group(condition, group_name, group, num_type_variant
     return &BuiltInFunction::kFunction_{unique_name};
 }}"""
             mangled_if = template_mangled_if.format(**template_args)
-            get_builtin_if_statements.add_obj(level, condition, template_args['mangled_name'], {'hash_matched_code': mangled_if})
+            get_builtin_if_statements.add_obj(level, condition, template_args['mangled_name'],
+                                              {'hash_matched_code': mangled_if})
 
             id_counter += 1
 
-def process_function_group(group_name, group, num_type_variants, parameter_declarations, ttype_mangled_name_variants,
+
+def process_function_group(
+        group_name, group, num_type_variants, parameter_declarations, ttype_mangled_name_variants,
         name_declarations, unmangled_function_if_statements, unmangled_builtin_declarations,
-        defined_function_variants, builtin_id_declarations, builtin_id_definitions, defined_parameter_names,
-        variable_declarations, function_declarations, script_generated_hash_tests, get_builtin_if_statements,
-        is_in_group_definitions):
+        defined_function_variants, builtin_id_declarations, builtin_id_definitions,
+        defined_parameter_names, variable_declarations, function_declarations,
+        script_generated_hash_tests, get_builtin_if_statements, is_in_group_definitions):
     global id_counter
     first_id = id_counter
 
@@ -963,25 +991,25 @@ def process_function_group(group_name, group, num_type_variants, parameter_decla
     if 'condition' in group:
         condition = group['condition']
 
-    process_single_function_group(condition, group_name, group, num_type_variants, parameter_declarations,
-        ttype_mangled_name_variants, name_declarations, unmangled_function_if_statements, unmangled_builtin_declarations,
-        defined_function_variants, builtin_id_declarations, builtin_id_definitions, defined_parameter_names,
-        variable_declarations, function_declarations, script_generated_hash_tests, get_builtin_if_statements)
+    process_single_function_group(
+        condition, group_name, group, num_type_variants, parameter_declarations,
+        ttype_mangled_name_variants, name_declarations, unmangled_function_if_statements,
+        unmangled_builtin_declarations, defined_function_variants, builtin_id_declarations,
+        builtin_id_definitions, defined_parameter_names, variable_declarations,
+        function_declarations, script_generated_hash_tests, get_builtin_if_statements)
 
     if 'subgroups' in group:
         for subgroup_name, subgroup in group['subgroups'].iteritems():
-            process_function_group(group_name + subgroup_name, subgroup, num_type_variants, parameter_declarations,
+            process_function_group(
+                group_name + subgroup_name, subgroup, num_type_variants, parameter_declarations,
                 ttype_mangled_name_variants, name_declarations, unmangled_function_if_statements,
                 unmangled_builtin_declarations, defined_function_variants, builtin_id_declarations,
-                builtin_id_definitions, defined_parameter_names, variable_declarations, function_declarations,
-                script_generated_hash_tests, get_builtin_if_statements, is_in_group_definitions)
+                builtin_id_definitions, defined_parameter_names, variable_declarations,
+                function_declarations, script_generated_hash_tests, get_builtin_if_statements,
+                is_in_group_definitions)
 
     if 'queryFunction' in group:
-        template_args = {
-            'first_id': first_id,
-            'last_id': id_counter - 1,
-            'group_name': group_name
-        }
+        template_args = {'first_id': first_id, 'last_id': id_counter - 1, 'group_name': group_name}
         template_is_in_group_definition = """bool is{group_name}(const TFunction *func)
 {{
     int id = func->uniqueId().get();
@@ -989,11 +1017,13 @@ def process_function_group(group_name, group, num_type_variants, parameter_decla
 }}"""
         is_in_group_definitions.append(template_is_in_group_definition.format(**template_args))
 
+
 def prune_parameters_arrays(parameter_declarations, function_declarations):
     # We can share parameters arrays between functions in case one array is a subarray of another.
     parameter_variable_name_replacements = {}
     used_param_variable_names = set()
-    for param_variable_name, param_declaration in sorted(parameter_declarations.iteritems(), key=lambda item: -len(item[0])):
+    for param_variable_name, param_declaration in sorted(
+            parameter_declarations.iteritems(), key=lambda item: -len(item[0])):
         replaced = False
         for used in used_param_variable_names:
             if used.startswith(param_variable_name):
@@ -1005,13 +1035,20 @@ def prune_parameters_arrays(parameter_declarations, function_declarations):
 
     for i in xrange(len(function_declarations)):
         for replaced, replacement in parameter_variable_name_replacements.iteritems():
-            function_declarations[i] = function_declarations[i].replace('BuiltInParameters::' + replaced + ',', 'BuiltInParameters::' + replacement + ',')
+            function_declarations[i] = function_declarations[i].replace(
+                'BuiltInParameters::' + replaced + ',', 'BuiltInParameters::' + replacement + ',')
 
-    return [value for key, value in parameter_declarations.iteritems() if key in used_param_variable_names]
+    return [
+        value for key, value in parameter_declarations.iteritems()
+        if key in used_param_variable_names
+    ]
 
-def process_single_variable_group(condition, group_name, group, builtin_id_declarations, builtin_id_definitions, name_declarations,
-        init_member_variables, get_variable_declarations, get_builtin_if_statements, declare_member_variables, variable_declarations,
-        get_variable_definitions, variable_name_count):
+
+def process_single_variable_group(condition, group_name, group, builtin_id_declarations,
+                                  builtin_id_definitions, name_declarations, init_member_variables,
+                                  get_variable_declarations, get_builtin_if_statements,
+                                  declare_member_variables, variable_declarations,
+                                  get_variable_definitions, variable_name_count):
     global id_counter
     if 'variables' not in group:
         return
@@ -1046,7 +1083,8 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
             # Handle struct and interface block definitions.
             template_args['class'] = props['class']
             template_args['fields'] = 'fields_{name_with_suffix}'.format(**template_args)
-            init_member_variables.append('    TFieldList *{fields} = new TFieldList();'.format(**template_args))
+            init_member_variables.append('    TFieldList *{fields} = new TFieldList();'.format(
+                **template_args))
             for field_name, field_type in props['fields'].iteritems():
                 template_args['field_name'] = field_name
                 template_args['field_type'] = TType(field_type).get_dynamic_type_string()
@@ -1074,7 +1112,8 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
         elif 'value' in props:
             # Handle variables with constant value, such as gl_MaxDrawBuffers.
             if props['value'] != 'resources':
-                raise Exception('Unrecognized value source in variable properties: ' + str(props['value']))
+                raise Exception('Unrecognized value source in variable properties: ' +
+                                str(props['value']))
             resources_key = variable_name[3:]
             if 'valueKey' in props:
                 resources_key = props['valueKey']
@@ -1104,14 +1143,16 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
             is_member = False
 
             template_get_variable_declaration = 'const TVariable *{name_with_suffix}();'
-            get_variable_declarations.append(template_get_variable_declaration.format(**template_args))
+            get_variable_declarations.append(
+                template_get_variable_declaration.format(**template_args))
 
             template_get_variable_definition = """const TVariable *{name_with_suffix}()
 {{
     return &kVar_{name_with_suffix};
 }}
 """
-            get_variable_definitions.append(template_get_variable_definition.format(**template_args))
+            get_variable_definitions.append(
+                template_get_variable_definition.format(**template_args))
 
             if level != 'GLSL_BUILTINS':
                 template_name_if = """if (name == BuiltInName::{name})
@@ -1119,15 +1160,20 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
     return &BuiltInVariable::kVar_{name_with_suffix};
 }}"""
                 name_if = template_name_if.format(**template_args)
-                get_builtin_if_statements.add_obj(level, condition, template_args['name'], {'hash_matched_code': name_if})
+                get_builtin_if_statements.add_obj(level, condition, template_args['name'],
+                                                  {'hash_matched_code': name_if})
 
         if is_member:
             get_condition = condition
-            init_conditionally = (condition != 'NO_CONDITION' and variable_name_count[variable_name] == 1)
+            init_conditionally = (
+                condition != 'NO_CONDITION' and variable_name_count[variable_name] == 1)
             if init_conditionally:
                 # Instead of having the condition if statement at lookup, it's cheaper to have it at initialization time.
-                init_member_variables.append('    if ({condition})\n    {{'.format(condition = condition))
-                template_args['condition_comment'] = '\n    // Only initialized if {condition}'.format(condition = condition)
+                init_member_variables.append(
+                    '    if ({condition})\n    {{'.format(condition=condition))
+                template_args[
+                    'condition_comment'] = '\n    // Only initialized if {condition}'.format(
+                        condition=condition)
                 get_condition = 'NO_CONDITION'
             else:
                 template_args['condition_comment'] = ''
@@ -1136,7 +1182,8 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
                 init_member_variables.append('    }')
 
             template_declare_member_variable = '{class} *mVar_{name_with_suffix} = nullptr;'
-            declare_member_variables.append(template_declare_member_variable.format(**template_args))
+            declare_member_variables.append(
+                template_declare_member_variable.format(**template_args))
 
             if level != 'GLSL_BUILTINS':
                 template_name_if = """if (name == BuiltInName::{name})
@@ -1144,9 +1191,11 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
     return mVar_{name_with_suffix};
 }}"""
                 name_if = template_name_if.format(**template_args)
-                get_builtin_if_statements.add_obj(level, get_condition, variable_name, {'hash_matched_code': name_if})
+                get_builtin_if_statements.add_obj(level, get_condition, variable_name,
+                                                  {'hash_matched_code': name_if})
 
         id_counter += 1
+
 
 def count_variable_names(group, variable_name_count):
     if 'variables' in group:
@@ -1159,9 +1208,12 @@ def count_variable_names(group, variable_name_count):
         for subgroup_name, subgroup in group['subgroups'].iteritems():
             count_variable_names(subgroup, variable_name_count)
 
-def process_variable_group(parent_condition, group_name, group, builtin_id_declarations, builtin_id_definitions, name_declarations,
-        init_member_variables, get_variable_declarations, get_builtin_if_statements, declare_member_variables, variable_declarations,
-        get_variable_definitions, variable_name_count):
+
+def process_variable_group(parent_condition, group_name, group, builtin_id_declarations,
+                           builtin_id_definitions, name_declarations, init_member_variables,
+                           get_variable_declarations, get_builtin_if_statements,
+                           declare_member_variables, variable_declarations,
+                           get_variable_definitions, variable_name_count):
     global id_counter
     condition = 'NO_CONDITION'
     if 'condition' in group:
@@ -1171,17 +1223,21 @@ def process_variable_group(parent_condition, group_name, group, builtin_id_decla
         if condition == 'NO_CONDITION':
             condition = parent_condition
         else:
-            condition = '({cond1}) && ({cond2})'.format(cond1 = parent_condition, cond2 = condition)
+            condition = '({cond1}) && ({cond2})'.format(cond1=parent_condition, cond2=condition)
 
-    process_single_variable_group(condition, group_name, group, builtin_id_declarations, builtin_id_definitions, name_declarations,
-        init_member_variables, get_variable_declarations, get_builtin_if_statements, declare_member_variables, variable_declarations,
-        get_variable_definitions, variable_name_count)
+    process_single_variable_group(condition, group_name, group, builtin_id_declarations,
+                                  builtin_id_definitions, name_declarations, init_member_variables,
+                                  get_variable_declarations, get_builtin_if_statements,
+                                  declare_member_variables, variable_declarations,
+                                  get_variable_definitions, variable_name_count)
 
     if 'subgroups' in group:
         for subgroup_name, subgroup in group['subgroups'].iteritems():
-            process_variable_group(condition, subgroup_name, subgroup, builtin_id_declarations, builtin_id_definitions, name_declarations,
-            init_member_variables, get_variable_declarations, get_builtin_if_statements, declare_member_variables, variable_declarations,
-            get_variable_definitions, variable_name_count)
+            process_variable_group(
+                condition, subgroup_name, subgroup, builtin_id_declarations,
+                builtin_id_definitions, name_declarations, init_member_variables,
+                get_variable_declarations, get_builtin_if_statements, declare_member_variables,
+                variable_declarations, get_variable_definitions, variable_name_count)
 
 
 def main():
@@ -1189,7 +1245,10 @@ def main():
     set_working_dir()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dump-intermediate-json', help='Dump parsed function data as a JSON file builtin_functions.json', action="store_true")
+    parser.add_argument(
+        '--dump-intermediate-json',
+        help='Dump parsed function data as a JSON file builtin_functions.json',
+        action="store_true")
     parser.add_argument('auto_script_command', nargs='?', default='')
     args = parser.parse_args()
 
@@ -1221,7 +1280,6 @@ def main():
             print('Invalid script parameters')
             return 1
         return 0
-
 
     all_inputs = [os.path.abspath(__file__), variables_json_filename, functions_txt_filename]
     # This script takes a while to run since it searches for hash collisions of mangled names. To avoid
@@ -1287,17 +1345,19 @@ def main():
     defined_function_variants = set()
     defined_parameter_names = set()
 
-
     parsed_functions = get_parsed_functions(functions_txt_filename)
 
     if args.dump_intermediate_json:
         with open('builtin_functions.json', 'w') as outfile:
+
             def serialize_obj(obj):
                 if isinstance(obj, TType):
                     return obj.data
                 else:
                     raise "Cannot serialize to JSON: " + str(obj)
-            json.dump(parsed_functions, outfile, indent=4, separators=(',', ': '), default=serialize_obj)
+
+            json.dump(
+                parsed_functions, outfile, indent=4, separators=(',', ': '), default=serialize_obj)
 
     with open(variables_json_filename) as f:
         parsed_variables = json.load(f, object_pairs_hook=OrderedDict)
@@ -1311,24 +1371,31 @@ def main():
             secondary_sizes = [1, 2, 3, 4]
         for primary_size in primary_sizes:
             for secondary_size in secondary_sizes:
-                type = TType({'basic': basic_type, 'primarySize': primary_size, 'secondarySize': secondary_size})
+                type = TType({
+                    'basic': basic_type,
+                    'primarySize': primary_size,
+                    'secondarySize': secondary_size
+                })
                 ttype_mangled_name_variants.append(type.get_mangled_name())
 
     num_type_variants = len(ttype_mangled_name_variants)
 
     # Sanity check for get_mangled_name_variant_hash:
-    variant_hash = get_mangled_name_variant_hash(hash32("atan("), 3, 4, len("atan(0123"), num_type_variants,
-        ttype_mangled_name_variants)
-    mangled_name_hash = mangledNameHash("atan(" + get_parameters_mangled_name_variant(3, 4, len("atan(0123"),
-        ttype_mangled_name_variants), script_generated_hash_tests)
+    variant_hash = get_mangled_name_variant_hash(
+        hash32("atan("), 3, 4, len("atan(0123"), num_type_variants, ttype_mangled_name_variants)
+    mangled_name_hash = mangledNameHash(
+        "atan(" + get_parameters_mangled_name_variant(
+            3, 4, len("atan(0123"), ttype_mangled_name_variants), script_generated_hash_tests)
     if variant_hash != mangled_name_hash:
         raise Exception("get_mangled_name_variant_hash sanity check failed")
 
     for group_name, group in parsed_functions.iteritems():
-        process_function_group(group_name, group, num_type_variants, parameter_declarations, ttype_mangled_name_variants,
-            name_declarations, unmangled_function_if_statements, unmangled_builtin_declarations,
-            defined_function_variants, builtin_id_declarations, builtin_id_definitions, defined_parameter_names,
-            variable_declarations, function_declarations, script_generated_hash_tests, get_builtin_if_statements,
+        process_function_group(
+            group_name, group, num_type_variants, parameter_declarations,
+            ttype_mangled_name_variants, name_declarations, unmangled_function_if_statements,
+            unmangled_builtin_declarations, defined_function_variants, builtin_id_declarations,
+            builtin_id_definitions, defined_parameter_names, variable_declarations,
+            function_declarations, script_generated_hash_tests, get_builtin_if_statements,
             is_in_group_definitions)
 
     parameter_declarations = prune_parameters_arrays(parameter_declarations, function_declarations)
@@ -1337,40 +1404,57 @@ def main():
         count_variable_names(group, variable_name_count)
 
     for group_name, group in parsed_variables.iteritems():
-        process_variable_group('NO_CONDITION', group_name, group, builtin_id_declarations, builtin_id_definitions, name_declarations,
-            init_member_variables, get_variable_declarations, get_builtin_if_statements, declare_member_variables, variable_declarations,
-            get_variable_definitions, variable_name_count)
+        process_variable_group('NO_CONDITION', group_name, group, builtin_id_declarations,
+                               builtin_id_definitions, name_declarations, init_member_variables,
+                               get_variable_declarations, get_builtin_if_statements,
+                               declare_member_variables, variable_declarations,
+                               get_variable_definitions, variable_name_count)
 
     output_strings = {
-        'script_name': os.path.basename(__file__),
-        'copyright_year': date.today().year,
-
-        'builtin_id_declarations': '\n'.join(builtin_id_declarations),
-        'builtin_id_definitions': '\n'.join(builtin_id_definitions),
-        'last_builtin_id': id_counter - 1,
-        'name_declarations': '\n'.join(sorted(list(name_declarations))),
-
-        'function_data_source_name': functions_txt_filename,
-        'function_declarations': '\n'.join(function_declarations),
-        'parameter_declarations': '\n'.join(sorted(parameter_declarations)),
-
-        'is_in_group_definitions': '\n'.join(is_in_group_definitions),
-
-        'variable_data_source_name': variables_json_filename,
-        'variable_declarations': '\n'.join(sorted(variable_declarations)),
-        'get_variable_declarations': '\n'.join(sorted(get_variable_declarations)),
-        'get_variable_definitions': '\n'.join(sorted(get_variable_definitions)),
-        'unmangled_builtin_declarations': '\n'.join(sorted(unmangled_builtin_declarations)),
-
-        'declare_member_variables': '\n'.join(declare_member_variables),
-        'init_member_variables': '\n'.join(init_member_variables),
-
-        'get_unmangled_builtin': unmangled_function_if_statements.get_switch_code(script_generated_hash_tests),
-        'get_builtin': get_builtin_if_statements.get_switch_code(script_generated_hash_tests),
-        'max_unmangled_name_length': unmangled_function_if_statements.get_max_name_length(),
-        'max_mangled_name_length': get_builtin_if_statements.get_max_name_length(),
-
-        'script_generated_hash_tests': '\n'.join(script_generated_hash_tests.iterkeys())
+        'script_name':
+            os.path.basename(__file__),
+        'copyright_year':
+            date.today().year,
+        'builtin_id_declarations':
+            '\n'.join(builtin_id_declarations),
+        'builtin_id_definitions':
+            '\n'.join(builtin_id_definitions),
+        'last_builtin_id':
+            id_counter - 1,
+        'name_declarations':
+            '\n'.join(sorted(list(name_declarations))),
+        'function_data_source_name':
+            functions_txt_filename,
+        'function_declarations':
+            '\n'.join(function_declarations),
+        'parameter_declarations':
+            '\n'.join(sorted(parameter_declarations)),
+        'is_in_group_definitions':
+            '\n'.join(is_in_group_definitions),
+        'variable_data_source_name':
+            variables_json_filename,
+        'variable_declarations':
+            '\n'.join(sorted(variable_declarations)),
+        'get_variable_declarations':
+            '\n'.join(sorted(get_variable_declarations)),
+        'get_variable_definitions':
+            '\n'.join(sorted(get_variable_definitions)),
+        'unmangled_builtin_declarations':
+            '\n'.join(sorted(unmangled_builtin_declarations)),
+        'declare_member_variables':
+            '\n'.join(declare_member_variables),
+        'init_member_variables':
+            '\n'.join(init_member_variables),
+        'get_unmangled_builtin':
+            unmangled_function_if_statements.get_switch_code(script_generated_hash_tests),
+        'get_builtin':
+            get_builtin_if_statements.get_switch_code(script_generated_hash_tests),
+        'max_unmangled_name_length':
+            unmangled_function_if_statements.get_max_name_length(),
+        'max_mangled_name_length':
+            get_builtin_if_statements.get_max_name_length(),
+        'script_generated_hash_tests':
+            '\n'.join(script_generated_hash_tests.iterkeys())
     }
 
     with open(test_filename, 'wt') as outfile_cpp:
