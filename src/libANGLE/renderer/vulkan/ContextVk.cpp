@@ -595,7 +595,7 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     VkDevice device = getDevice();
     vk::Scoped<CommandBatch> scopedBatch(device);
     CommandBatch &batch = scopedBatch.get();
-    ANGLE_TRY(getSubmitFence(&batch.fence));
+    ANGLE_TRY(getNextSubmitFence(&batch.fence));
 
     ANGLE_TRY(getRenderer()->queueSubmit(this, submitInfo, batch.fence.get()));
 
@@ -2174,7 +2174,7 @@ angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
                                                  renderPassOut);
 }
 
-angle::Result ContextVk::getSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut)
+angle::Result ContextVk::getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut)
 {
     VkDevice device = getDevice();
     if (!mSubmitFence.isReferenced())

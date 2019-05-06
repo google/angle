@@ -259,7 +259,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                                        vk::RenderPass **renderPassOut);
 
     // Get (or allocate) the fence that will be signaled on next submission.
-    angle::Result getSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut);
+    angle::Result getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut);
     vk::Shared<vk::Fence> getLastSubmittedFence() const;
 
     // This should only be called from ResourceVk.

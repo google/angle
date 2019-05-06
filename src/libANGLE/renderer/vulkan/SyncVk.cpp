@@ -53,7 +53,7 @@ angle::Result FenceSyncVk::initialize(ContextVk *contextVk)
     vk::Scoped<vk::Event> event(device);
     ANGLE_VK_TRY(contextVk, event.get().init(device, eventCreateInfo));
 
-    ANGLE_TRY(contextVk->getSubmitFence(&mFence));
+    ANGLE_TRY(contextVk->getNextSubmitFence(&mFence));
 
     mEvent        = event.release();
 
