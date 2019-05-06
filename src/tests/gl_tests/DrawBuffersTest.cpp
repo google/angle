@@ -256,6 +256,10 @@ TEST_P(DrawBuffersTest, Gaps)
     // TODO(ynovikov): Investigate the failure (http://anglebug.com/1535)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
+    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
 
@@ -279,6 +283,10 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 
     // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
+
+    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
@@ -310,6 +318,10 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
 
     // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
+
+    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     bool flags[8]  = {false};
     GLenum bufs[8] = {GL_NONE};
@@ -363,6 +375,10 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
 
     // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
+
+    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     ANGLE_SKIP_TEST_IF(!setupTest());
 
@@ -611,8 +627,9 @@ ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(DrawBuffersWebGL2Test, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(DrawBuffersWebGL2Test, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(DrawBuffersTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

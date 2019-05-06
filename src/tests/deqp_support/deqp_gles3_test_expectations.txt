@@ -532,10 +532,11 @@
 // 3D texture (anglebug.com/3188), 2D array (anglebug.com/3189):
 3189 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2darrayshadow_vertex = SKIP
 3189 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.2darr* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.* = SKIP
+3188 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.3d* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.fbo.color.tex2darray.* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.fbo.color.tex3d.* = SKIP
+3188 VULKAN : dEQP-GLES3.functional.fbo.color.tex3d.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.* = SKIP
 
 // Multisampling:
 3204 VULKAN : dEQP-GLES3.functional.fbo.completeness.samples.* = SKIP
@@ -546,6 +547,7 @@
 3204 VULKAN : dEQP-GLES3.functional.state_query.rbo.renderbuffer_samples = SKIP
 3204 VULKAN : dEQP-GLES3.functional.fragment_out.* = SKIP
 3204 VULKAN : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample* = SKIP
+3204 VULKAN : dEQP-GLES3.functional.shaders.derivate.* = SKIP
 
 // Formats:
 2950 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
@@ -607,10 +609,36 @@
 3194 VULKAN : dEQP-GLES3.functional.buffer.copy.* = SKIP
 
 // Shader support:
-3219 VULKAN : dEQP-GLES3.functional.shaders.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.constants.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.conversions.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.functions.datatypes.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.qualification_order.variables.valid.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.matrix.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.loops.while_dynamic_iterations.infinite_with_unconditional_break_first_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.loops.while_dynamic_iterations.infinite_with_unconditional_break_last_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.infinite_with_unconditional_break_first_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.infinite_with_unconditional_break_last_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.loops.for_dynamic_iterations.infinite_with_unconditional_break_first_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.loops.for_dynamic_iterations.infinite_with_unconditional_break_last_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.float_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.int_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.bool_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.struct_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.builtin* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.indexing.uniform_array.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.invariance.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.precision.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.random.conditionals.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.random.all_features.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.struct.local.parameter_* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.struct.local.array_member_equality_vertex = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.struct.uniform.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.operator.sequence.no_side_effects.* = FAIL
 
 // New vertex attribute formats:
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.strides.int2_10_10_10.* = SKIP
@@ -635,15 +663,6 @@
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.ivec* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.uint.* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.uvec* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.user_ptr.index_int = FAIL
-3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.unaligned_user_ptr.index_int = FAIL
-3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.user_ptr.index_int = FAIL
-3193 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.unaligned_user_ptr.index_int = FAIL
-3193 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
-3193 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
 // Polygon offset:
 2950 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
@@ -657,18 +676,20 @@
 2950 VULKAN : dEQP-GLES3.functional.uniform_api.random.* = SKIP
 
 // Transform feedback:
-2950 VULKAN : dEQP-GLES3.functional.negative_api.shader.uniform_block_binding = FAIL
-2950 VULKAN : dEQP-GLES3.functional.negative_api.shader.bind_transform_feedback = FAIL
-2950 VULKAN : dEQP-GLES3.functional.negative_api.shader.begin_transform_feedback = FAIL
-2950 VULKAN : dEQP-GLES3.functional.negative_api.shader.pause_transform_feedback = FAIL
-2950 VULKAN : dEQP-GLES3.functional.negative_api.shader.resume_transform_feedback = FAIL
-2950 VULKAN : dEQP-GLES3.functional.negative_api.shader.end_transform_feedback = FAIL
-2950 VULKAN : dEQP-GLES3.functional.transform_feedback.* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.boolean.transform_feedback_* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_transform_feedback_* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.transform_feedback_* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.indexed.transform_feedback_* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.shader.transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.uniform_block_binding = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.bind_transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.begin_transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.pause_transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.resume_transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.end_transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.transform_feedback.* = FAIL
+3205 VULKAN : dEQP-GLES3.functional.state_query.boolean.transform_feedback_* = FAIL
+3205 VULKAN : dEQP-GLES3.functional.state_query.integers.max_transform_feedback_* = FAIL
+3205 VULKAN : dEQP-GLES3.functional.state_query.integers.transform_feedback_* = FAIL
+3205 VULKAN : dEQP-GLES3.functional.state_query.indexed.transform_feedback_* = FAIL
+3205 VULKAN : dEQP-GLES3.functional.state_query.shader.transform_feedback = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
+3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
 // Misc unimplemented:
 
@@ -712,6 +733,11 @@
 2950 VULKAN : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 2950 VULKAN : dEQP-GLES3.functional.clipping.point.point_clip_viewport_center = FAIL
 2950 VULKAN : dEQP-GLES3.functional.clipping.point.point_clip_viewport_corner = FAIL
+2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
+2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
+2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
+3199 VULKAN : dEQP-GLES3.functional.shaders.linkage.uniform.block.layout_qualifier_mismatch_1 = FAIL
+3199 VULKAN : dEQP-GLES3.functional.shaders.linkage.uniform.block.layout_qualifier_mismatch_2 = FAIL
 
 // To be triaged:
 2950 VULKAN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = SKIP
@@ -723,6 +749,10 @@
 2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_uniform* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_active_unifor* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_active_attrib = SKIP
+2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.user_ptr.index_int = FAIL
+2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.unaligned_user_ptr.index_int = FAIL
+2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.user_ptr.index_int = FAIL
+2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.unaligned_user_ptr.index_int = FAIL
 
 // Android Vulkan failures
 2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL

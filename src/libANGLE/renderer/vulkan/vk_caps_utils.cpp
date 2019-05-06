@@ -43,6 +43,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.mapBuffer              = true;
     mNativeExtensions.mapBufferRange         = true;
     mNativeExtensions.textureStorage         = true;
+    mNativeExtensions.drawBuffers            = true;
     mNativeExtensions.framebufferBlit        = true;
     mNativeExtensions.copyTexture            = true;
     mNativeExtensions.copyCompressedTexture  = true;
@@ -100,8 +101,6 @@ void RendererVk::ensureCapsInitialized() const
     // Vulkan natively supports standard derivatives
     mNativeExtensions.standardDerivatives = true;
 
-    // TODO(lucferron): Eventually remove everything above this line in this function as the caps
-    // get implemented.
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize      = mPhysicalDeviceProperties.limits.maxImageDimension3D;

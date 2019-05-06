@@ -53,12 +53,10 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     angle::Result onColorDraw(ContextVk *contextVk,
                               vk::FramebufferHelper *framebufferVk,
-                              vk::CommandBuffer *commandBuffer,
-                              vk::RenderPassDesc *renderPassDesc);
+                              vk::CommandBuffer *commandBuffer);
     angle::Result onDepthStencilDraw(ContextVk *contextVk,
                                      vk::FramebufferHelper *framebufferVk,
-                                     vk::CommandBuffer *commandBuffer,
-                                     vk::RenderPassDesc *renderPassDesc);
+                                     vk::CommandBuffer *commandBuffer);
 
     vk::ImageHelper &getImage();
     const vk::ImageHelper &getImage() const;

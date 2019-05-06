@@ -664,7 +664,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
     pipelineDesc.setColorWriteMask(0, gl::DrawBufferMask());
-    pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndex, params.colorMaskFlags);
+    pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
     pipelineDesc.setRenderPassDesc(*params.renderPassDesc);
     // Note: depth test is disabled by default so this should be unnecessary, but works around an
     // Intel bug on windows.  http://anglebug.com/3348
@@ -704,7 +704,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
     if (params.clearColor)
     {
-        uint32_t flags = GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndex);
+        uint32_t flags = GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndexGL);
         ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
         imageClearProgram = &mImageClearProgram[flags];
     }
@@ -771,7 +771,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dest->getSamples());
-    renderPassDesc.packAttachment(destFormat);
+    renderPassDesc.packColorAttachment(0, destFormat.angleFormatID);
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
@@ -849,7 +849,7 @@ UtilsVk::ClearFramebufferParameters::ClearFramebufferParameters()
       clearStencil(false),
       stencilMask(0),
       colorMaskFlags(0),
-      colorAttachmentIndex(0),
+      colorAttachmentIndexGL(0),
       colorFormat(nullptr),
       colorClearValue{},
       stencilClearValue(0)

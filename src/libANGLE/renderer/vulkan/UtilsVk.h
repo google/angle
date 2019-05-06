@@ -75,7 +75,7 @@ class UtilsVk : angle::NonCopyable
 
         uint8_t stencilMask;
         VkColorComponentFlags colorMaskFlags;
-        uint32_t colorAttachmentIndex;
+        uint32_t colorAttachmentIndexGL;
         const angle::Format *colorFormat;
 
         VkClearColorValue colorClearValue;
