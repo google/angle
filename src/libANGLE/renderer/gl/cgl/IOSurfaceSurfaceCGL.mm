@@ -71,7 +71,6 @@ IOSurfaceSurfaceCGL::IOSurfaceSurfaceCGL(const egl::SurfaceState &state,
     : SurfaceGL(state),
       mCGLContext(cglContext),
       mIOSurface(nullptr),
-      mCurrentContext(nullptr),
       mWidth(0),
       mHeight(0),
       mPlane(0),
@@ -108,16 +107,12 @@ egl::Error IOSurfaceSurfaceCGL::initialize(const egl::Display *display)
 
 egl::Error IOSurfaceSurfaceCGL::makeCurrent(const gl::Context *context)
 {
-    ASSERT(!mCurrentContext);
-    mCurrentContext = context;
     return egl::NoError();
 }
 
-egl::Error IOSurfaceSurfaceCGL::unMakeCurrent()
+egl::Error IOSurfaceSurfaceCGL::unMakeCurrent(const gl::Context *context)
 {
-    ASSERT(mCurrentContext);
-    GetFunctionsGL(mCurrentContext)->flush();
-    mCurrentContext = nullptr;
+    GetFunctionsGL(context)->flush();
     return egl::NoError();
 }
 

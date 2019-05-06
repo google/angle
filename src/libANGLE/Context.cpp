@@ -8198,7 +8198,7 @@ egl::Error Context::setDefaultFramebuffer(egl::Surface *surface)
     Framebuffer *newDefault = nullptr;
     if (surface != nullptr)
     {
-        ANGLE_TRY(surface->setIsCurrent(this, true));
+        ANGLE_TRY(surface->makeCurrent(this));
         mCurrentSurface = surface;
         newDefault      = surface->createDefaultFramebuffer(this);
     }
@@ -8254,7 +8254,7 @@ egl::Error Context::unsetDefaultFramebuffer()
     mCurrentSurface       = nullptr;
     if (surface)
     {
-        ANGLE_TRY(surface->setIsCurrent(this, false));
+        ANGLE_TRY(surface->unMakeCurrent(this));
     }
 
     return egl::NoError();

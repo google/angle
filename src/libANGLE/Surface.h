@@ -68,6 +68,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLint getType() const;
 
     Error initialize(const Display *display);
+    Error makeCurrent(const gl::Context *context);
+    Error unMakeCurrent(const gl::Context *context);
     Error swap(const gl::Context *context);
     Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects);
     Error postSubBuffer(const gl::Context *context,
@@ -85,7 +87,6 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLint isPostSubBufferSupported() const;
 
     void setSwapInterval(EGLint interval);
-    Error setIsCurrent(const gl::Context *context, bool isCurrent);
     Error onDestroy(const Display *display);
 
     void setMipmapLevel(EGLint level);

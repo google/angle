@@ -359,7 +359,7 @@ egl::Error D3DTextureSurfaceWGL::makeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error D3DTextureSurfaceWGL::unMakeCurrent()
+egl::Error D3DTextureSurfaceWGL::unMakeCurrent(const gl::Context *context)
 {
     if (!mFunctionsWGL->dxUnlockObjectsNV(mDeviceHandle, 1, &mBoundObjectRenderbufferHandle))
     {

@@ -34,11 +34,6 @@ egl::Error SurfaceGL::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuin
     return egl::EglBadSurface();
 }
 
-egl::Error SurfaceGL::unMakeCurrent()
-{
-    return egl::NoError();
-}
-
 angle::Result SurfaceGL::initializeContents(const gl::Context *context,
                                             const gl::ImageIndex &imageIndex)
 {

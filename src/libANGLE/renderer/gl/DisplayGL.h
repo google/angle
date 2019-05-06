@@ -48,8 +48,6 @@ class DisplayGL : public DisplayImpl
 
   private:
     virtual egl::Error makeCurrentSurfaceless(gl::Context *context);
-
-    egl::Surface *mCurrentDrawSurface;
 };
 
 }  // namespace rx

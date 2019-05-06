@@ -39,7 +39,7 @@ class IOSurfaceSurfaceCGL : public SurfaceGL
 
     egl::Error initialize(const egl::Display *display) override;
     egl::Error makeCurrent(const gl::Context *context) override;
-    egl::Error unMakeCurrent() override;
+    egl::Error unMakeCurrent(const gl::Context *context) override;
 
     egl::Error swap(const gl::Context *context) override;
     egl::Error postSubBuffer(const gl::Context *context,
@@ -67,7 +67,6 @@ class IOSurfaceSurfaceCGL : public SurfaceGL
   private:
     CGLContextObj mCGLContext;
     IOSurfaceRef mIOSurface;
-    const gl::Context *mCurrentContext;
     int mWidth;
     int mHeight;
     int mPlane;
