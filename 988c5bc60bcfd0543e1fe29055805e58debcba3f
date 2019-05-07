@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "709c64e9_1c55b69c",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-07T14:30:15Z",
+      "side": 1,
+      "message": "Right, that\u0027s fine. My idea was we can set descriptor sets in an array instead of individually. As long as you\u0027re fine with changing this when we get into optimizing the code.",
+      "parentUuid": "991eba4c_91228300",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 50
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "00486a3e_b150738c",
         "filename": "src/compiler/translator/blocklayout.h",
         "patchSetId": 18
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "Done, though trading a `reset` for a factory and new/delete doesn\u0027t sound too good to me.",
       "parentUuid": "fa1f8937_962d8f7f",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 221,
+        "endChar": 5
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "363bcde7_73df79a5",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-07T14:30:15Z",
+      "side": 1,
+      "message": "Thanks.",
+      "parentUuid": "a30e11c6_8aa508b2",
       "range": {
         "startLine": 218,
         "startChar": 0,

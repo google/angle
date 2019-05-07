@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a76e40d_d4aa8f22",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-07T14:30:15Z",
+      "side": 1,
+      "message": "nit: probably best to avoid using the identifier \u0027set\u0027 as it overloads with other c++ names.",
+      "range": {
+        "startLine": 1063,
+        "startChar": 24,
+        "endLine": 1063,
+        "endChar": 28
+      },
+      "revId": "88332304737019980bb5fdf5993685f1c858dff4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
