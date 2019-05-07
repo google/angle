@@ -612,33 +612,16 @@
 3219 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.constants.* = FAIL
 3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.conversions.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.functions.datatypes.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.qualification_order.variables.valid.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.matrix.* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.loops.while_dynamic_iterations.infinite_with_unconditional_break_first_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.loops.while_dynamic_iterations.infinite_with_unconditional_break_last_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.infinite_with_unconditional_break_first_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.infinite_with_unconditional_break_last_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.loops.for_dynamic_iterations.infinite_with_unconditional_break_first_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.loops.for_dynamic_iterations.infinite_with_unconditional_break_last_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.float_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.int_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.bool_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.arrays.length.struct_vertex = FAIL
 3219 VULKAN : dEQP-GLES3.functional.shaders.builtin* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.indexing.uniform_array.* = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.invariance.* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.common.min_u* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.common.max_u* = FAIL
+3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.common.clamp_u* = FAIL
 3219 VULKAN : dEQP-GLES3.functional.shaders.precision.* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.random.conditionals.* = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.random.all_features.* = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.struct.local.parameter_* = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.struct.local.array_member_equality_vertex = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.struct.uniform.* = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.operator.sequence.no_side_effects.* = FAIL
 
 // New vertex attribute formats:
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.strides.int2_10_10_10.* = SKIP
@@ -672,8 +655,9 @@
 2950 VULKAN : dEQP-GLES3.functional.pbo.* = SKIP
 
 // Uniform API:
-2950 VULKAN : dEQP-GLES3.functional.uniform_api.value.* = SKIP
-2950 VULKAN : dEQP-GLES3.functional.uniform_api.random.* = SKIP
+3198 VULKAN : dEQP-GLES3.functional.uniform_api.value.* = SKIP
+3198 VULKAN : dEQP-GLES3.functional.uniform_api.random.* = SKIP
+3198 VULKAN : dEQP-GLES3.functional.shaders.constants.uint* = FAIL
 
 // Transform feedback:
 3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.uniform_block_binding = FAIL
@@ -738,6 +722,9 @@
 2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
 3199 VULKAN : dEQP-GLES3.functional.shaders.linkage.uniform.block.layout_qualifier_mismatch_1 = FAIL
 3199 VULKAN : dEQP-GLES3.functional.shaders.linkage.uniform.block.layout_qualifier_mismatch_2 = FAIL
+
+// Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).
+2976 VULKAN NVIDIA : dEQP-GLES3.functional.shaders.invariance.* = FAIL
 
 // To be triaged:
 2950 VULKAN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = SKIP

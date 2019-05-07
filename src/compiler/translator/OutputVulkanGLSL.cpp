@@ -125,7 +125,8 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier,
                                        const TType &type,
                                        const TSymbol *symbol)
 {
-    if (qualifier != EvqUniform && qualifier != EvqAttribute && !sh::IsVarying(qualifier))
+    if (qualifier != EvqUniform && qualifier != EvqAttribute && qualifier != EvqVertexIn &&
+        !sh::IsVarying(qualifier))
     {
         TOutputGLSLBase::writeQualifier(qualifier, type, symbol);
         return;
