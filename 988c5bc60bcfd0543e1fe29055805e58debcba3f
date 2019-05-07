@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "2295ee33_bbe23ccb",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T15:28:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "709c64e9_1c55b69c",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 50
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "00486a3e_b150738c",
         "filename": "src/compiler/translator/blocklayout.h",
         "patchSetId": 18
