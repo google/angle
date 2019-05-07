@@ -97,6 +97,9 @@ void RendererVk::ensureCapsInitialized() const
     // Vulkan natively supports non power-of-two textures
     mNativeExtensions.textureNPOT = true;
 
+    // Vulkan natively supports standard derivatives
+    mNativeExtensions.standardDerivatives = true;
+
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
