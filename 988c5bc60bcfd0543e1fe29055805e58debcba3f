@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "991eba4c_91228300",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T14:23:49Z",
+      "side": 1,
+      "message": "I have already got rid of `mUsedDescriptorSetRange`. I\u0027d like to keep this as a workaround so it could be easy to get rid of as the driver is already fixed in newer versions.",
+      "parentUuid": "9de86776_c122f422",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 50
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "00486a3e_b150738c",
         "filename": "src/compiler/translator/blocklayout.h",
         "patchSetId": 18
@@ -45,6 +69,30 @@
       "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "396556f3_9206c4cb",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T14:23:49Z",
+      "side": 1,
+      "message": "Following up in another comment.",
+      "parentUuid": "00486a3e_b150738c",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 25
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a30e11c6_8aa508b2",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T14:23:49Z",
+      "side": 1,
+      "message": "Done, though trading a `reset` for a factory and new/delete doesn\u0027t sound too good to me.",
+      "parentUuid": "fa1f8937_962d8f7f",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 221,
+        "endChar": 5
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ac76e0d_56f4731e",
         "filename": "src/libANGLE/renderer/renderer_utils.h",
         "patchSetId": 18
@@ -91,6 +163,30 @@
       "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a90424f7_52782631",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T14:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ac76e0d_56f4731e",
+      "range": {
+        "startLine": 272,
+        "startChar": 57,
+        "endLine": 272,
+        "endChar": 69
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7b487fbe_cd4c74f4",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T14:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3e8a804_9eac8644",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 2
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5311dfba_d8f60262",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 18
@@ -128,6 +248,30 @@
       "writtenOn": "2019-05-06T19:29:53Z",
       "side": 1,
       "message": "Does the value of mDataWriteAccessFlags matter given that it\u0027s only compared to zero and not passed here directly?  Should it be a bool instead?",
+      "range": {
+        "startLine": 174,
+        "startChar": 24,
+        "endLine": 174,
+        "endChar": 48
+      },
+      "revId": "988c5bc60bcfd0543e1fe29055805e58debcba3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b07e7b94_0fd7ddb7",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-07T14:23:49Z",
+      "side": 1,
+      "message": "My bad, this was supposed to use `mDataWriteAccessFlags`.",
+      "parentUuid": "5311dfba_d8f60262",
       "range": {
         "startLine": 174,
         "startChar": 24,
