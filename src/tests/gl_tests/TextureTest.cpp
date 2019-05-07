@@ -72,20 +72,14 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
+    void testSetUp() override { setUpFramebuffer(); }
 
-        setUpFramebuffer();
-    }
-
-    void TearDown() override
+    void testTearDown() override
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDeleteFramebuffers(1, &mFramebuffer);
         glDeleteTextures(1, &mFramebufferColorTexture);
         glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
     }
 
     void setUpFramebuffer()
@@ -155,18 +149,18 @@ void main()
         ASSERT_NE(-1, mTexture2DUniformLocation);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
         mTexture2D = create2DTexture();
 
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture2D);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     // Tests CopyTexSubImage with floating point textures of various formats.
@@ -350,9 +344,9 @@ class Texture2DTestES3 : public Texture2DTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        Texture2DTest::SetUp();
+        Texture2DTest::testSetUp();
         setUpProgram();
     }
 };
@@ -389,9 +383,9 @@ class Texture2DIntegerAlpha1TestES3 : public Texture2DTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        Texture2DTest::SetUp();
+        Texture2DTest::testSetUp();
         setUpProgram();
     }
 };
@@ -428,9 +422,9 @@ class Texture2DUnsignedIntegerAlpha1TestES3 : public Texture2DTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        Texture2DTest::SetUp();
+        Texture2DTest::testSetUp();
         setUpProgram();
     }
 };
@@ -456,9 +450,9 @@ class Texture2DTestWithDrawScale : public Texture2DTest
             })";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        Texture2DTest::SetUp();
+        Texture2DTest::testSetUp();
 
         setUpProgram();
 
@@ -497,9 +491,9 @@ class Sampler2DAsFunctionParameterTest : public Texture2DTest
             })";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        Texture2DTest::SetUp();
+        Texture2DTest::testSetUp();
         setUpProgram();
     }
 };
@@ -530,9 +524,9 @@ class TextureCubeTest : public TexCoordDrawTest
             })";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         glGenTextures(1, &mTextureCube);
         glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
@@ -553,10 +547,10 @@ class TextureCubeTest : public TexCoordDrawTest
         ASSERT_NE(-1, mTextureCubeUniformLocation);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTextureCube);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     GLuint mTexture2D;
@@ -595,9 +589,9 @@ class SamplerArrayTest : public TexCoordDrawTest
             })";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         setUpProgram();
 
@@ -611,11 +605,11 @@ class SamplerArrayTest : public TexCoordDrawTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture2DA);
         glDeleteTextures(1, &mTexture2DB);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     void testSamplerArrayDraw()
@@ -705,9 +699,9 @@ class Texture2DArrayTestES3 : public TexCoordDrawTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         setUpProgram();
 
@@ -718,10 +712,10 @@ class Texture2DArrayTestES3 : public TexCoordDrawTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &m2DArrayTexture);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     GLuint m2DArrayTexture;
@@ -755,9 +749,9 @@ class TextureSizeTextureArrayTest : public TexCoordDrawTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         setUpProgram();
 
@@ -771,11 +765,11 @@ class TextureSizeTextureArrayTest : public TexCoordDrawTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture2DA);
         glDeleteTextures(1, &mTexture2DB);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     GLuint mTexture2DA;
@@ -814,9 +808,9 @@ class Texture3DTestES3 : public TexCoordDrawTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         glGenTextures(1, &mTexture3D);
 
@@ -826,10 +820,10 @@ class Texture3DTestES3 : public TexCoordDrawTest
         ASSERT_NE(-1, mTexture3DUniformLocation);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture3D);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     GLuint mTexture3D;
@@ -876,9 +870,9 @@ class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         glGenTextures(1, &mTexture3D);
 
@@ -896,11 +890,11 @@ class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
         ASSERT_NE(-1, mDepthRefUniformLocation);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTextureShadow);
         glDeleteTextures(1, &mTexture3D);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     GLuint mTextureShadow;
@@ -959,9 +953,9 @@ class SamplerTypeMixTestES3 : public TexCoordDrawTest
                "}\n";
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        TexCoordDrawTest::SetUp();
+        TexCoordDrawTest::testSetUp();
 
         glGenTextures(1, &mTexture2D);
         glGenTextures(1, &mTextureCube);
@@ -990,13 +984,13 @@ class SamplerTypeMixTestES3 : public TexCoordDrawTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture2D);
         glDeleteTextures(1, &mTextureCube);
         glDeleteTextures(1, &mTexture2DShadow);
         glDeleteTextures(1, &mTextureCubeShadow);
-        TexCoordDrawTest::TearDown();
+        TexCoordDrawTest::testTearDown();
     }
 
     GLuint mTexture2D;
@@ -3390,10 +3384,8 @@ class TextureLimitsTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mMaxVertexTextures);
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &mMaxFragmentTextures);
         glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &mMaxCombinedTextures);
@@ -3401,7 +3393,7 @@ class TextureLimitsTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram != 0)
         {
@@ -3413,8 +3405,6 @@ class TextureLimitsTest : public ANGLETest
                 glDeleteTextures(static_cast<GLsizei>(mTextures.size()), &mTextures[0]);
             }
         }
-
-        ANGLETest::TearDown();
     }
 
     void compileProgramWithTextureCounts(const std::string &vertexPrefix,
@@ -3703,9 +3693,9 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
   protected:
     Texture2DNorm16TestES3() : Texture2DTestES3(), mTextures{0, 0, 0}, mFBO(0), mRenderbuffer(0) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        Texture2DTestES3::SetUp();
+        Texture2DTestES3::testSetUp();
 
         glActiveTexture(GL_TEXTURE0);
         glGenTextures(3, mTextures);
@@ -3724,13 +3714,13 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(3, mTextures);
         glDeleteFramebuffers(1, &mFBO);
         glDeleteRenderbuffers(1, &mRenderbuffer);
 
-        Texture2DTestES3::TearDown();
+        Texture2DTestES3::testTearDown();
     }
 
     void testNorm16Texture(GLint internalformat, GLenum format, GLenum type)

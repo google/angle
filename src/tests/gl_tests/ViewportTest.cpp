@@ -122,10 +122,8 @@ class ViewportTest : public ANGLETest
         }
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
         if (mProgram == 0)
         {
@@ -145,12 +143,7 @@ class ViewportTest : public ANGLETest
         glDisable(GL_DEPTH_TEST);
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     GLuint mProgram;
 };

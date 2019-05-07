@@ -24,10 +24,8 @@ class CopyCompressedTextureTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenTextures(2, mTextures);
 
         constexpr char kVS[] =
@@ -59,12 +57,10 @@ class CopyCompressedTextureTest : public ANGLETest
         }
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(2, mTextures);
         glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
     }
 
     bool checkExtensions() const

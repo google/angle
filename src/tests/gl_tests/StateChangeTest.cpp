@@ -32,10 +32,8 @@ class StateChangeTest : public ANGLETest
         setNoErrorEnabled(true);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenFramebuffers(1, &mFramebuffer);
         glGenTextures(2, mTextures.data());
         glGenRenderbuffers(1, &mRenderbuffer);
@@ -43,7 +41,7 @@ class StateChangeTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mFramebuffer != 0)
         {
@@ -58,8 +56,6 @@ class StateChangeTest : public ANGLETest
         }
 
         glDeleteRenderbuffers(1, &mRenderbuffer);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mFramebuffer           = 0;
@@ -607,9 +603,9 @@ class StateChangeRenderTest : public StateChangeTest
   protected:
     StateChangeRenderTest() : mProgram(0), mRenderbuffer(0) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        StateChangeTest::SetUp();
+        StateChangeTest::testSetUp();
 
         constexpr char kVS[] =
             "attribute vec2 position;\n"
@@ -628,12 +624,12 @@ class StateChangeRenderTest : public StateChangeTest
         glGenRenderbuffers(1, &mRenderbuffer);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteRenderbuffers(1, &mRenderbuffer);
 
-        StateChangeTest::TearDown();
+        StateChangeTest::testTearDown();
     }
 
     void setUniformColor(const GLColor &color)
@@ -1279,10 +1275,8 @@ class SimpleStateChangeTestES3 : public SimpleStateChangeTest
 class SimpleStateChangeTestES31 : public SimpleStateChangeTest
 {
   protected:
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenFramebuffers(1, &mFramebuffer);
         glGenTextures(1, &mTexture);
 
@@ -1312,7 +1306,7 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mFramebuffer != 0)
         {
@@ -1326,7 +1320,6 @@ void main()
             mTexture = 0;
         }
         glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram;

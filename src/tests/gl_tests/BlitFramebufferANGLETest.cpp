@@ -61,10 +61,8 @@ class BlitFramebufferANGLETest : public ANGLETest
         mBGRAMultisampledFBO          = 0;
     }
 
-    virtual void SetUp()
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mCheckerProgram =
             CompileProgram(essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Checkered());
         mBlueProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
@@ -248,7 +246,7 @@ class BlitFramebufferANGLETest : public ANGLETest
         glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
     }
 
-    virtual void TearDown()
+    void testTearDown() override
     {
         glDeleteProgram(mCheckerProgram);
         glDeleteProgram(mBlueProgram);
@@ -317,8 +315,6 @@ class BlitFramebufferANGLETest : public ANGLETest
         {
             glDeleteFramebuffers(1, &mBGRAMultisampledFBO);
         }
-
-        ANGLETest::TearDown();
     }
 
     void multisampleTestHelper(GLuint readFramebuffer, GLuint drawFramebuffer)

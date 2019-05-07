@@ -27,10 +27,8 @@ class PackUnpackTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         // Fragment Shader source
         constexpr char kSNormFS[] = R"(#version 300 es
 precision mediump float;
@@ -93,15 +91,13 @@ void main()
         glClearBufferfv(GL_COLOR, 0, color);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mOffscreenTexture2D);
         glDeleteFramebuffers(1, &mOffscreenFramebuffer);
         glDeleteProgram(mSNormProgram);
         glDeleteProgram(mUNormProgram);
         glDeleteProgram(mHalfProgram);
-
-        ANGLETest::TearDown();
     }
 
     void compareBeforeAfter(GLuint program, float input1, float input2)

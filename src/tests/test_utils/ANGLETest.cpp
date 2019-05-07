@@ -287,9 +287,10 @@ GLColor32F ReadColor32F(GLint x, GLint y)
 
 using namespace angle;
 
+PlatformMethods gDefaultPlatformMethods;
+
 namespace
 {
-PlatformMethods gDefaultPlatformMethods;
 TestPlatformContext gPlatformContext;
 
 // After a fixed number of iterations we reset the test window. This works around some driver bugs.
@@ -374,6 +375,8 @@ ANGLETestBase::ANGLETestBase(const PlatformParameters &params)
       mDeferContextInit(false),
       mAlwaysForceNewDisplay(ShouldAlwaysForceNewDisplay()),
       mForceNewDisplay(mAlwaysForceNewDisplay),
+      mSetUpCalled(false),
+      mTearDownCalled(false),
       mCurrentParams(nullptr),
       mFixture(nullptr)
 {
@@ -472,10 +475,22 @@ ANGLETestBase::~ANGLETestBase()
     {
         glDeleteProgram(m3DTexturedQuadProgram);
     }
+
+    if (!mSetUpCalled)
+    {
+        GTEST_NONFATAL_FAILURE_("SetUp not called.");
+    }
+
+    if (!mTearDownCalled)
+    {
+        GTEST_NONFATAL_FAILURE_("TearDown not called.");
+    }
 }
 
 void ANGLETestBase::ANGLETestSetUp()
 {
+    mSetUpCalled = true;
+
     gDefaultPlatformMethods.overrideWorkaroundsD3D = TestPlatform_overrideWorkaroundsD3D;
     gDefaultPlatformMethods.overrideFeaturesVk     = TestPlatform_overrideFeaturesVk;
     gDefaultPlatformMethods.logError               = TestPlatform_logError;
@@ -568,6 +583,7 @@ void ANGLETestBase::ANGLETestSetUp()
 
 void ANGLETestBase::ANGLETestTearDown()
 {
+    mTearDownCalled              = true;
     gPlatformContext.currentTest = nullptr;
 
     if (IsWindows())
@@ -1145,10 +1161,9 @@ void ANGLETestBase::setRobustResourceInit(bool enabled)
     mFixture->configParams.robustResourceInit = enabled;
 }
 
-void ANGLETestBase::setContextProgramCacheEnabled(bool enabled, CacheProgramFunc cacheProgramFunc)
+void ANGLETestBase::setContextProgramCacheEnabled(bool enabled)
 {
     mFixture->configParams.contextProgramCacheEnabled = enabled;
-    gDefaultPlatformMethods.cacheProgram              = cacheProgramFunc;
 }
 
 void ANGLETestBase::setContextResetStrategy(EGLenum resetStrategy)

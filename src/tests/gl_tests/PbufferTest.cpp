@@ -23,10 +23,8 @@ class PbufferTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] =
             R"(precision highp float;
             attribute vec4 position;
@@ -93,14 +91,12 @@ class PbufferTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void testTearDown() override
     {
         glDeleteProgram(mTextureProgram);
 
         EGLWindow *window = getEGLWindow();
         eglDestroySurface(window->getDisplay(), mPbuffer);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mTextureProgram;

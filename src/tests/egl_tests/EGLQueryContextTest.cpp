@@ -13,10 +13,8 @@ using namespace angle;
 class EGLQueryContextTest : public ANGLETest
 {
   public:
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         int clientVersion = GetParam().majorVersion;
 
         EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
@@ -49,7 +47,7 @@ class EGLQueryContextTest : public ANGLETest
         EXPECT_TRUE(mSurface != EGL_NO_SURFACE);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mDisplay != EGL_NO_DISPLAY)
         {
@@ -59,8 +57,6 @@ class EGLQueryContextTest : public ANGLETest
             eglTerminate(mDisplay);
         }
         ASSERT_EGL_SUCCESS() << "Error during test TearDown";
-
-        ANGLETest::TearDown();
     }
 
     EGLDisplay mDisplay;
@@ -122,7 +118,7 @@ TEST_P(EGLQueryContextTest, BadDisplay)
 TEST_P(EGLQueryContextTest, NotInitialized)
 {
     EGLint val;
-    TearDown();
+    testTearDown();
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_TYPE, &val) == EGL_FALSE);
     EXPECT_TRUE(eglGetError() == EGL_NOT_INITIALIZED);
 

@@ -38,7 +38,7 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
   protected:
     FramebufferMultiviewLayeredClearTest() : mMultiviewFBO(0), mDepthTex(0), mDepthStencilTex(0) {}
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mMultiviewFBO != 0)
         {
@@ -67,7 +67,7 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
             glDeleteTextures(1, &mDepthTex);
             mDepthTex = 0u;
         }
-        MultiviewTest::TearDown();
+        MultiviewTest::testTearDown();
     }
 
     void initializeFBOs(int width,

@@ -37,10 +37,6 @@ class ParallelShaderCompileTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override { ANGLETest::SetUp(); }
-
-    void TearDown() override { ANGLETest::TearDown(); }
-
     bool ensureParallelShaderCompileExtensionAvailable()
     {
         if (IsGLExtensionRequestable("GL_KHR_parallel_shader_compile"))

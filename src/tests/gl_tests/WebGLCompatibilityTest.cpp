@@ -67,9 +67,8 @@ class WebGLCompatibilityTest : public ANGLETest
         setWebGLCompatibilityEnabled(true);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
         glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
             eglGetProcAddress("glRequestExtensionANGLE"));
     }

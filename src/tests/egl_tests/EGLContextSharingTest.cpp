@@ -33,7 +33,7 @@ class EGLContextSharingTest : public ANGLETest
   public:
     EGLContextSharingTest() : mContexts{EGL_NO_CONTEXT, EGL_NO_CONTEXT}, mTexture(0) {}
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture);
 
@@ -49,8 +49,6 @@ class EGLContextSharingTest : public ANGLETest
 
         // Set default test state to not give an error on shutdown.
         getEGLWindow()->makeCurrent();
-
-        ANGLETest::TearDown();
     }
 
     EGLContext mContexts[2];

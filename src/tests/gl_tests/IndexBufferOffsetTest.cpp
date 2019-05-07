@@ -24,10 +24,8 @@ class IndexBufferOffsetTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] =
             R"(precision highp float;
             attribute vec2 position;
@@ -61,12 +59,11 @@ class IndexBufferOffsetTest : public ANGLETest
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(1, &mVertexBuffer);
         glDeleteBuffers(1, &mIndexBuffer);
         glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
     }
 
     void runTest(GLenum type, int typeWidth, void *indexData)

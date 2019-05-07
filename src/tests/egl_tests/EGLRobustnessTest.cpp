@@ -19,10 +19,8 @@ using namespace angle;
 class EGLRobustnessTest : public ANGLETest
 {
   public:
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mOSWindow = OSWindow::New();
         mOSWindow->initialize("EGLRobustnessTest", 500, 500);
         mOSWindow->setVisible(true);
@@ -74,7 +72,7 @@ class EGLRobustnessTest : public ANGLETest
         mInitialized = true;
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         eglDestroySurface(mDisplay, mWindow);
         eglDestroyContext(mDisplay, mContext);
@@ -83,8 +81,6 @@ class EGLRobustnessTest : public ANGLETest
         EXPECT_EGL_SUCCESS();
 
         OSWindow::Delete(&mOSWindow);
-
-        ANGLETest::TearDown();
     }
 
     void createContext(EGLint resetStrategy)
@@ -205,8 +201,7 @@ TEST_P(EGLRobustnessTest, DISABLED_ResettingDisplayWorks)
     forceContextReset();
     ASSERT_TRUE(glGetGraphicsResetStatusEXT() != GL_NO_ERROR);
 
-    TearDown();
-    SetUp();
+    recreateTestFixture();
     ASSERT_TRUE(glGetGraphicsResetStatusEXT() == GL_NO_ERROR);
 }
 

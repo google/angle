@@ -24,10 +24,8 @@ class DXT1CompressedTextureTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(precision highp float;
 attribute vec4 position;
 varying vec2 texcoord;
@@ -59,12 +57,7 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
-    {
-        glDeleteProgram(mTextureProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mTextureProgram); }
 
     GLuint mTextureProgram;
     GLint mTextureUniformLocation;

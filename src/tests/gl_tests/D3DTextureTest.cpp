@@ -33,10 +33,8 @@ class D3DTextureTest : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] =
             R"(precision highp float;
             attribute vec4 position;
@@ -123,7 +121,7 @@ class D3DTextureTest : public ANGLETest
         }
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(mTextureProgram);
 
@@ -141,8 +139,6 @@ class D3DTextureTest : public ANGLETest
             mD3D9Device->Release();
             mD3D9Device = nullptr;
         }
-
-        ANGLETest::TearDown();
     }
 
     EGLSurface createD3D11PBuffer(size_t width,

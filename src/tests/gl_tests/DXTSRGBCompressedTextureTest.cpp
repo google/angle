@@ -31,10 +31,8 @@ class DXTSRGBCompressedTextureTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] =
             "precision highp float;\n"
             "attribute vec4 position;\n"
@@ -62,12 +60,7 @@ class DXTSRGBCompressedTextureTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mTextureProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mTextureProgram); }
 
     void runTestChecks(const TestCase &test)
     {

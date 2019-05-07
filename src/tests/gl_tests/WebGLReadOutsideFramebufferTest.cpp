@@ -231,10 +231,8 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
         setWebGLCompatibilityEnabled(true);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(
 attribute vec3 a_position;
 varying vec2 v_texCoord;
@@ -266,11 +264,7 @@ void main() {
         drawQuad(mProgram, "a_position", 0.0f, 1.0f, true);
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     using TestFunc = void (WebGLReadOutsideFramebufferTest::*)(int x,
                                                                int y,

@@ -25,10 +25,8 @@ class UniformBufferTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mkFS = R"(#version 300 es
 precision highp float;
 uniform uni { vec4 color; };
@@ -49,11 +47,10 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(1, &mUniformBuffer);
         glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
     }
 
     const char *mkFS;

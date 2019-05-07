@@ -362,7 +362,7 @@ class ANGLETestBase
     void setBindGeneratesResource(bool bindGeneratesResource);
     void setClientArraysEnabled(bool enabled);
     void setRobustResourceInit(bool enabled);
-    void setContextProgramCacheEnabled(bool enabled, angle::CacheProgramFunc cacheProgramFunc);
+    void setContextProgramCacheEnabled(bool enabled);
     void setContextResetStrategy(EGLenum resetStrategy);
     void forceNewDisplay();
 
@@ -452,6 +452,9 @@ class ANGLETestBase
     bool mAlwaysForceNewDisplay;
     bool mForceNewDisplay;
 
+    bool mSetUpCalled;
+    bool mTearDownCalled;
+
     // On most systems we force a new display on every test instance. For these configs we can
     // share a single OSWindow instance. With display reuse we need a separate OSWindow for each
     // different config. This OSWindow sharing seemed to lead to driver bugs on some platforms.
@@ -471,10 +474,27 @@ class ANGLETestWithParam : public ANGLETestBase, public ::testing::TestWithParam
   protected:
     ANGLETestWithParam();
 
-  public:
-    void SetUp() override { ANGLETestBase::ANGLETestSetUp(); }
+    virtual void testSetUp() {}
+    virtual void testTearDown() {}
 
-    void TearDown() override { ANGLETestBase::ANGLETestTearDown(); }
+    void recreateTestFixture()
+    {
+        TearDown();
+        SetUp();
+    }
+
+  private:
+    void SetUp() final
+    {
+        ANGLETestBase::ANGLETestSetUp();
+        testSetUp();
+    }
+
+    void TearDown() final
+    {
+        testTearDown();
+        ANGLETestBase::ANGLETestTearDown();
+    }
 };
 
 template <typename Params>
@@ -536,6 +556,8 @@ bool IsEGLDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName
 bool IsEGLDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
 bool IsGLExtensionEnabled(const std::string &extName);
 bool IsGLExtensionRequestable(const std::string &extName);
+
+extern angle::PlatformMethods gDefaultPlatformMethods;
 
 #define ANGLE_SKIP_TEST_IF(COND)                                  \
     do                                                            \

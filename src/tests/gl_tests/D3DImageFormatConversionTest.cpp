@@ -28,10 +28,8 @@ class D3DImageFormatConversionTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(precision highp float;
 attribute vec4 position;
 varying vec2 texcoord;
@@ -55,12 +53,7 @@ void main()
         mTexture2DUniformLocation = glGetUniformLocation(m2DProgram, "tex");
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(m2DProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(m2DProgram); }
 
     // Uses ColorStructType::writeColor to populate initial data for a texture, pass it to
     // glTexImage2D, then render with it. The resulting colors should match the colors passed into

@@ -29,13 +29,12 @@ class BindUniformLocationTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram != 0)
         {
             glDeleteProgram(mProgram);
         }
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram = 0;

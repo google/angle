@@ -64,10 +64,8 @@ class DepthStencilFormatsTestBase : public ANGLETest
         return (glGetError() == GL_NO_ERROR);
     }
 
-    virtual void SetUp()
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(precision highp float;
 attribute vec4 position;
 varying vec2 texcoord;
@@ -100,12 +98,10 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void testTearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteTextures(1, &mTexture);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram;

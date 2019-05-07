@@ -139,10 +139,23 @@ class MultiviewTest : public MultiviewTestBase,
 {
   protected:
     MultiviewTest() : MultiviewTestBase(GetParam()) {}
-    void SetUp() override { MultiviewTestBase::MultiviewTestBaseSetUp(); }
-    void TearDown() override { MultiviewTestBase::MultiviewTestBaseTearDown(); }
 
     void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) final;
+
+    virtual void testSetUp() {}
+    virtual void testTearDown() {}
+
+  private:
+    void SetUp() override
+    {
+        MultiviewTestBase::MultiviewTestBaseSetUp();
+        testSetUp();
+    }
+    void TearDown() override
+    {
+        testTearDown();
+        MultiviewTestBase::MultiviewTestBaseTearDown();
+    }
 };
 
 }  // namespace angle

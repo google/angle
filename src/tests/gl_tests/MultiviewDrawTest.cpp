@@ -241,12 +241,25 @@ class MultiviewRenderTest : public MultiviewFramebufferTestBase,
 {
   protected:
     MultiviewRenderTest() : MultiviewFramebufferTestBase(GetParam(), GetParam().mSamples) {}
-    void SetUp() override { MultiviewFramebufferTestBase::FramebufferTestSetUp(); }
-    void TearDown() override { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
 
     void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
     {
         workarounds->selectViewInGeometryShader = GetParam().mForceUseGeometryShaderOnD3D;
+    }
+
+    virtual void testSetUp() {}
+    virtual void testTearDown() {}
+
+  private:
+    void SetUp() override
+    {
+        MultiviewFramebufferTestBase::FramebufferTestSetUp();
+        testSetUp();
+    }
+    void TearDown() override
+    {
+        testTearDown();
+        MultiviewFramebufferTestBase::FramebufferTestTearDown();
     }
 };
 
@@ -274,10 +287,8 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
   protected:
     MultiviewRenderDualViewTest() : mProgram(0u) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        MultiviewRenderTest::SetUp();
-
         if (!requestMultiviewExtension(isMultisampled()))
         {
             return;
@@ -290,15 +301,13 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram != 0u)
         {
             glDeleteProgram(mProgram);
             mProgram = 0u;
         }
-
-        MultiviewRenderTest::TearDown();
     }
 
     void checkOutput()
@@ -395,20 +404,15 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
   protected:
     MultiviewRenderPrimitiveTest() : mVBO(0u) {}
 
-    void SetUp() override
-    {
-        MultiviewRenderTest::SetUp();
-        glGenBuffers(1, &mVBO);
-    }
+    void testSetUp() override { glGenBuffers(1, &mVBO); }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mVBO)
         {
             glDeleteBuffers(1, &mVBO);
             mVBO = 0u;
         }
-        MultiviewRenderTest::TearDown();
     }
 
     void setupGeometry(const std::vector<Vector2> &vertexData)

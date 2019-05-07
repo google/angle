@@ -27,10 +27,8 @@ class IndexedPointsTest : public ANGLETest
 
     float getIndexPositionY(size_t idx) { return (idx == 2 || idx == 3) ? -0.5f : 0.5f; }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(precision highp float;
 attribute vec2 position;
 
@@ -100,7 +98,7 @@ void main()
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(1, &mVertexBuffer);
         glDeleteBuffers(1, &mIndexBuffer);
@@ -108,7 +106,6 @@ void main()
 
         glDeleteBuffers(1, &mVertexWithColorBuffer);
         glDeleteProgram(mVertexWithColorBufferProgram);
-        ANGLETest::TearDown();
     }
 
     void runTest(GLuint firstIndex, bool useVertexBufferWithColor = false)

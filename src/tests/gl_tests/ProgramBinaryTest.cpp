@@ -33,10 +33,8 @@ class ProgramBinaryTest : public ANGLETest
         forceNewDisplay();
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
         if (mProgram == 0)
         {
@@ -51,11 +49,10 @@ class ProgramBinaryTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteBuffers(1, &mBuffer);
-        ANGLETest::TearDown();
     }
 
     GLint getAvailableProgramBinaryFormatCount() const
@@ -227,8 +224,7 @@ TEST_P(ProgramBinaryTest, CallProgramBinaryBeforeLink)
     ASSERT_GL_NO_ERROR();
 
     // Shutdown and restart GL entirely.
-    TearDown();
-    SetUp();
+    recreateTestFixture();
 
     ANGLE_GL_BINARY_OES_PROGRAM(binaryProgram, binaryBlob, binaryFormat);
     ASSERT_GL_NO_ERROR();
@@ -565,10 +561,8 @@ class ProgramBinaryTransformFeedbackTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(#version 300 es
 in vec4 inputAttribute;
 out vec4 outputVarying;
@@ -598,12 +592,7 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     GLint getAvailableProgramBinaryFormatCount() const
     {

@@ -40,10 +40,8 @@ class ImageTest : public ANGLETest
         setConfigDepthBits(24);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] =
             "precision highp float;\n"
             "attribute vec4 position;\n"
@@ -133,13 +131,11 @@ class ImageTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(mTextureProgram);
         glDeleteProgram(mTextureExternalProgram);
         glDeleteProgram(mTextureExternalESSL3Program);
-
-        ANGLETest::TearDown();
     }
 
     void createEGLImage2DTextureSource(size_t width,

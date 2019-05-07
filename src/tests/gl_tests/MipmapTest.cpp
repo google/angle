@@ -123,10 +123,8 @@ void main()
         ASSERT_NE(0u, mCubeProgram);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         setUp2DProgram();
 
         setUpCubeProgram();
@@ -166,15 +164,13 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(m2DProgram);
         glDeleteProgram(mCubeProgram);
         glDeleteFramebuffers(1, &mOffscreenFramebuffer);
         glDeleteTextures(1, &mTexture2D);
         glDeleteTextures(1, &mTextureCube);
-
-        ANGLETest::TearDown();
     }
 
     std::vector<GLubyte> createRGBInitData(GLint width, GLint height, GLint r, GLint g, GLint b)
@@ -359,10 +355,8 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenTextures(1, &mTexture);
         ASSERT_GL_NO_ERROR();
 
@@ -372,7 +366,7 @@ void main()
         setUpCubeProgram();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(1, &mTexture);
 
@@ -380,8 +374,6 @@ void main()
         glDeleteProgram(m3DProgram);
         glDeleteProgram(m2DProgram);
         glDeleteProgram(mCubeProgram);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mTexture;

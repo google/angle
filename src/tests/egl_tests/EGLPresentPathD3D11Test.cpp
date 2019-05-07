@@ -27,10 +27,8 @@ class EGLPresentPathD3D11 : public ANGLETest
           mWindowWidth(0)
     {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mOSWindow    = OSWindow::New();
         mWindowWidth = 64;
         mOSWindow->initialize("EGLPresentPathD3D11", mWindowWidth, mWindowWidth);
@@ -144,7 +142,7 @@ class EGLPresentPathD3D11 : public ANGLETest
 
     void makeCurrent() { ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, mSurface, mSurface, mContext)); }
 
-    void TearDown() override
+    void testTearDown() override
     {
         SafeRelease(mOffscreenSurfaceD3D11Texture);
 
@@ -170,8 +168,6 @@ class EGLPresentPathD3D11 : public ANGLETest
 
         mOSWindow->destroy();
         OSWindow::Delete(&mOSWindow);
-
-        ANGLETest::TearDown();
     }
 
     void drawQuadUsingGL()

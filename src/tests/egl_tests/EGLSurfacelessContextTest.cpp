@@ -23,10 +23,8 @@ class EGLSurfacelessContextTest : public ANGLETest
   public:
     EGLSurfacelessContextTest() : mDisplay(0) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
         mDisplay           = eglGetPlatformDisplayEXT(
             EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
@@ -56,7 +54,7 @@ class EGLSurfacelessContextTest : public ANGLETest
         ASSERT_NE(nullptr, mConfig);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
@@ -71,8 +69,6 @@ class EGLSurfacelessContextTest : public ANGLETest
         }
 
         eglTerminate(mDisplay);
-
-        ANGLETest::TearDown();
     }
 
   protected:

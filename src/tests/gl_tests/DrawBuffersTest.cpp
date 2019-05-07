@@ -23,13 +23,11 @@ class DrawBuffersTest : public ANGLETest
         setConfigDepthBits(24);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteFramebuffers(1, &mFBO);
         glDeleteFramebuffers(1, &mReadFramebuffer);
         glDeleteTextures(4, mTextures);
-
-        ANGLETest::TearDown();
     }
 
     // We must call a different DrawBuffers method depending on extension support. Use this

@@ -95,15 +95,11 @@ class IOSurfaceClientBufferTest : public ANGLETest
   protected:
     IOSurfaceClientBufferTest() : mConfig(0), mDisplay(nullptr) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mConfig  = getEGLWindow()->getConfig();
         mDisplay = getEGLWindow()->getDisplay();
     }
-
-    void TearDown() override { ANGLETest::TearDown(); }
 
     void createIOSurfacePbuffer(const ScopedIOSurfaceRef &ioSurface,
                                 EGLint width,

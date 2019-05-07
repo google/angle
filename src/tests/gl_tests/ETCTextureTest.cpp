@@ -27,20 +27,13 @@ class ETCTextureTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenTextures(1, &mTexture);
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
-    {
-        glDeleteTextures(1, &mTexture);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteTextures(1, &mTexture); }
 
     GLuint mTexture;
 };

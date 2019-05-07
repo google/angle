@@ -40,8 +40,6 @@ class PointSpritesTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp() { ANGLETest::SetUp(); }
-
     float s2p(float s) { return (s + 1.0f) * 0.5f * (GLfloat)windowWidth; }
 
     void testPointCoordAndPointSizeCompliance(GLProgram program)

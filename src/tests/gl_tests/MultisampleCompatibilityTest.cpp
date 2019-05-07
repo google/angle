@@ -32,10 +32,8 @@ class EXTMultisampleCompatibilityTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
 
         GLuint position_loc = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
@@ -52,12 +50,10 @@ class EXTMultisampleCompatibilityTest : public ANGLETest
         glVertexAttribPointer(position_loc, 2, GL_FLOAT, GL_FALSE, 0, 0);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(1, &mVBO);
         glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
     }
 
     void prepareForDraw()

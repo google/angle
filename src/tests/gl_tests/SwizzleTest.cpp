@@ -60,10 +60,8 @@ class SwizzleTest : public ANGLETest
         }
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(precision highp float;
 attribute vec4 position;
 varying vec2 texcoord;
@@ -93,12 +91,10 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteTextures(1, &mTexture);
-
-        ANGLETest::TearDown();
     }
 
     template <typename T>
@@ -204,10 +200,8 @@ void main()
 class SwizzleIntegerTest : public SwizzleTest
 {
   protected:
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] =
             "#version 300 es\n"
             "precision highp float;\n"

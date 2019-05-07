@@ -110,10 +110,8 @@ class BlendMinMaxTest : public ANGLETest
         }
     }
 
-    virtual void SetUp()
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
         if (mProgram == 0)
         {
@@ -149,13 +147,11 @@ class BlendMinMaxTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void testTearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteFramebuffers(1, &mFramebuffer);
         glDeleteRenderbuffers(1, &mColorRenderbuffer);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram;

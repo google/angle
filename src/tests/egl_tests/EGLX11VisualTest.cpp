@@ -27,11 +27,7 @@ const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 class EGLX11VisualHintTest : public ANGLETest
 {
   public:
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-        mDisplay = XOpenDisplay(nullptr);
-    }
+    void testSetUp() override { mDisplay = XOpenDisplay(nullptr); }
 
     std::vector<EGLint> getDisplayAttributes(int visualId) const
     {

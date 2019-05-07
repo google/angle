@@ -34,11 +34,7 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
         forceNewDisplay();
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     bool initExtension()
     {
@@ -48,10 +44,7 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
         {
             return false;
         }
-
-        ANGLETest::TearDown();
         setRobustAccess(true);
-        ANGLETest::SetUp();
         if (!IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"))
         {
             return false;

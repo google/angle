@@ -26,10 +26,8 @@ class CopyTexture3DTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         const char *vertexShaderSource   = getVertexShaderSource();
         const char *fragmentShaderSource = getFragmentShaderSource();
 
@@ -52,8 +50,6 @@ class CopyTexture3DTest : public ANGLETest
                "    texcoord = (position.xyz * 0.5) + 0.5;\n"
                "}\n";
     }
-
-    void TearDown() override { ANGLETest::TearDown(); }
 
     bool checkExtensions() const
     {

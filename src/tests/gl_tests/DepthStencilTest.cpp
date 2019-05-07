@@ -33,10 +33,8 @@ class DepthStencilTest : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glBindTexture(GL_TEXTURE_2D, mColorTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, nullptr);
@@ -71,8 +69,6 @@ class DepthStencilTest : public ANGLETest
 
         ASSERT_GL_NO_ERROR();
     }
-
-    void TearDown() override { ANGLETest::TearDown(); }
 
     void bindColorStencilFBO()
     {

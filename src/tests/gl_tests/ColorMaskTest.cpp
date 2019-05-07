@@ -25,22 +25,15 @@ class ColorMaskTest : public ANGLETest
         setConfigDepthBits(24);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
         ASSERT_NE(0u, mProgram) << "shader compilation failed.";
 
         mColorUniform = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     GLuint mProgram     = 0;
     GLint mColorUniform = -1;

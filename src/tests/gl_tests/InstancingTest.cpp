@@ -46,19 +46,15 @@ class InstancingTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(1, &mInstanceBuffer);
         glDeleteProgram(mProgram[0]);
         glDeleteProgram(mProgram[1]);
-
-        ANGLETest::TearDown();
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         for (unsigned i = 0; i < kMaxDrawn; ++i)
         {
             mInstanceData[i] = i * kDrawSize;

@@ -31,10 +31,8 @@ class BufferDataTest : public ANGLETest
         mAttribLocation = -1;
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(attribute vec4 position;
 attribute float in_attrib;
 varying float v_attrib;
@@ -69,12 +67,10 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(1, &mBuffer);
         glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mBuffer;
@@ -233,10 +229,8 @@ class IndexedBufferCopyTest : public ANGLETest
         setConfigDepthBits(24);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = R"(attribute vec3 in_attrib;
 varying vec3 v_attrib;
 void main()
@@ -273,13 +267,11 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteBuffers(2, mBuffers);
         glDeleteBuffers(1, &mElementBuffer);
         glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
     }
 
     GLuint mBuffers[2];

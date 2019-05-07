@@ -186,10 +186,8 @@ class VertexAttributeTest : public ANGLETest
         }
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glClearColor(0, 0, 0, 0);
         glClearDepthf(0.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -199,13 +197,11 @@ class VertexAttributeTest : public ANGLETest
         glGenBuffers(1, &mBuffer);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteProgram(mProgram);
         glDeleteBuffers(1, &mBuffer);
         glDeleteBuffers(1, &mQuadBuffer);
-
-        ANGLETest::TearDown();
     }
 
     // Override a feature to force emulation of attribute formats.
@@ -1041,9 +1037,9 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
         glEnableVertexAttribArray(mExpectedAttrib);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
-        VertexAttributeTestES3::TearDown();
+        VertexAttributeTestES3::testTearDown();
 
         glDeleteBuffers(1, &mExpectedBuffer);
         glDeleteVertexArrays(1, &mVAO);
@@ -1530,7 +1526,7 @@ class VertexAttributeCachingTest : public VertexAttributeTest
   protected:
     VertexAttributeCachingTest() {}
 
-    void SetUp() override;
+    void testSetUp() override;
 
     template <typename DestT>
     static std::vector<GLfloat> GetExpectedData(const std::vector<GLubyte> &srcData,
@@ -1625,9 +1621,9 @@ std::vector<GLfloat> VertexAttributeCachingTest::GetExpectedData(
     return expectedData;
 }
 
-void VertexAttributeCachingTest::SetUp()
+void VertexAttributeCachingTest::testSetUp()
 {
-    VertexAttributeTest::SetUp();
+    VertexAttributeTest::testSetUp();
 
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 

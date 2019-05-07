@@ -42,16 +42,14 @@ class EGLSurfaceTest : public ANGLETest
           mOSWindow(nullptr)
     {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mOSWindow = OSWindow::New();
         mOSWindow->initialize("EGLSurfaceTest", 64, 64);
     }
 
     // Release any resources created in the test body
-    void TearDown() override
+    void testTearDown() override
     {
         if (mDisplay != EGL_NO_DISPLAY)
         {
@@ -89,8 +87,6 @@ class EGLSurfaceTest : public ANGLETest
         OSWindow::Delete(&mOSWindow);
 
         ASSERT_TRUE(mWindowSurface == EGL_NO_SURFACE && mContext == EGL_NO_CONTEXT);
-
-        ANGLETest::TearDown();
     }
 
     void initializeDisplay()

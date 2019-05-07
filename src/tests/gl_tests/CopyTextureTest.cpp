@@ -26,10 +26,8 @@ class CopyTextureTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenTextures(2, mTextures);
         glBindTexture(GL_TEXTURE_2D, mTextures[1]);
 
@@ -52,12 +50,10 @@ class CopyTextureTest : public ANGLETest
         }
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(2, mTextures);
         glDeleteFramebuffers(1, &mFramebuffer);
-
-        ANGLETest::TearDown();
     }
 
     bool checkExtensions() const
@@ -210,10 +206,8 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETestWithParam::SetUp();
-
         glGenTextures(2, mTextures);
         glBindTexture(GL_TEXTURE_2D, mTextures[1]);
 
@@ -236,12 +230,10 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
         }
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteTextures(2, mTextures);
         glDeleteFramebuffers(1, &mFramebuffer);
-
-        ANGLETestWithParam::TearDown();
     }
 
     bool checkExtensions(GLenum sourceFormat, GLenum destFormat) const

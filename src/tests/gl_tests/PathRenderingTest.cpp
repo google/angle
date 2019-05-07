@@ -1055,20 +1055,17 @@ class CHROMIUMPathRenderingWithTexturingTest : public ANGLETest
 
     bool isApplicable() const { return IsGLExtensionEnabled("GL_CHROMIUM_path_rendering"); }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram)
         {
             glDeleteProgram(mProgram);
             ASSERT_GL_NO_ERROR();
         }
-
-        ANGLETest::TearDown();
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
         mBindUniformLocation = reinterpret_cast<PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC>(
             eglGetProcAddress("glBindUniformLocationCHROMIUM"));
     }

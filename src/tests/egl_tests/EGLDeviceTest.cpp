@@ -38,10 +38,8 @@ class EGLDeviceCreationTest : public ANGLETest
           mConfig(0)
     {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         ASSERT_TRUE(isD3D11Renderer());
 
         mD3D11Module = LoadLibrary(TEXT("d3d11.dll"));
@@ -70,7 +68,7 @@ class EGLDeviceCreationTest : public ANGLETest
         }
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         SafeRelease(mDevice);
         SafeRelease(mDeviceContext);
@@ -94,8 +92,6 @@ class EGLDeviceCreationTest : public ANGLETest
             eglTerminate(mDisplay);
             mDisplay = EGL_NO_DISPLAY;
         }
-
-        ANGLETest::TearDown();
     }
 
     void CreateD3D11Device()
@@ -261,7 +257,7 @@ TEST_P(EGLDeviceCreationTest, RenderingUsingD3D11Device)
 
     // Note that we must call TearDown() before we release the EGL device, since the display
     // depends on the device
-    TearDown();
+    testTearDown();
 
     eglReleaseDeviceANGLE(eglDevice);
 }
@@ -323,7 +319,7 @@ TEST_P(EGLDeviceCreationTest, D3D11DeviceRecovery)
 
     // Note that we must call TearDown() before we release the EGL device, since the display
     // depends on the device
-    TearDown();
+    testTearDown();
 
     eglReleaseDeviceANGLE(eglDevice);
 }
@@ -408,10 +404,8 @@ class EGLDeviceQueryTest : public ANGLETest
   protected:
     EGLDeviceQueryTest() {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         const char *extensionString =
             static_cast<const char *>(eglQueryString(getEGLWindow()->getDisplay(), EGL_EXTENSIONS));
 

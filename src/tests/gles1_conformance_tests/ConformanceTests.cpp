@@ -128,11 +128,7 @@ class GLES1ConformanceTest : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-        ExtTestDriverSetup();
-    }
+    void testSetUp() override { ExtTestDriverSetup(); }
 };
 
 TEST_P(GLES1ConformanceTest, AmbLight)

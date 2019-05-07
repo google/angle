@@ -50,17 +50,15 @@ class ClearTestBase : public ANGLETest
         setConfigStencilBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         mFBOs.resize(2, 0);
         glGenFramebuffers(2, mFBOs.data());
 
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (!mFBOs.empty())
         {
@@ -71,8 +69,6 @@ class ClearTestBase : public ANGLETest
         {
             glDeleteTextures(static_cast<GLsizei>(mTextures.size()), mTextures.data());
         }
-
-        ANGLETest::TearDown();
     }
 
     std::vector<GLuint> mFBOs;
@@ -252,10 +248,8 @@ class MaskedScissoredClearTest : public MaskedScissoredClearTestBase
 class VulkanClearTest : public MaskedScissoredClearTestBase
 {
   protected:
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETestWithParam::SetUp();
-
         glBindTexture(GL_TEXTURE_2D, mColorTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, nullptr);

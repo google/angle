@@ -26,8 +26,6 @@ class GLSLTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp() { ANGLETest::SetUp(); }
-
     std::string GenerateVaryingType(GLint vectorSize)
     {
         char varyingType[10];
@@ -499,14 +497,10 @@ class GLSLTestNoValidation : public GLSLTest
 };
 
 class GLSLTest_ES3 : public GLSLTest
-{
-    void SetUp() override { ANGLETest::SetUp(); }
-};
+{};
 
 class GLSLTest_ES31 : public GLSLTest
-{
-    void SetUp() override { ANGLETest::SetUp(); }
-};
+{};
 
 std::string BuillBigInitialStackShader(int length)
 {

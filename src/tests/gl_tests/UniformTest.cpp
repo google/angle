@@ -322,10 +322,8 @@ class UniformTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kVS[] = "void main() { gl_Position = vec4(1); }";
         constexpr char kFS[] =
             "precision mediump float;\n"
@@ -357,11 +355,7 @@ class UniformTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     GLuint mProgram;
     GLint mUniformFLocation;
@@ -677,15 +671,13 @@ class UniformTestES3 : public ANGLETest
   protected:
     UniformTestES3() : mProgram(0) {}
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram != 0)
         {
             glDeleteProgram(mProgram);
             mProgram = 0;
         }
-
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram;
@@ -1100,15 +1092,13 @@ class UniformTestES31 : public ANGLETest
   protected:
     UniformTestES31() : mProgram(0) {}
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram != 0)
         {
             glDeleteProgram(mProgram);
             mProgram = 0;
         }
-
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram;

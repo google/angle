@@ -242,10 +242,8 @@ class AttributeLayoutTest : public ANGLETest
 
     void GetTestCases(void);
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glClearColor(.2f, .2f, .2f, .0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -277,12 +275,11 @@ class AttributeLayoutTest : public ANGLETest
         GetTestCases();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         mTestCases.clear();
         glDeleteProgram(mProgram);
         glDeleteBuffers(1, &mIndexBuffer);
-        ANGLETest::TearDown();
     }
 
     virtual bool Skip(const TestCase &) { return false; }

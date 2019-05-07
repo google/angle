@@ -35,10 +35,8 @@ class EGLContextCompatibilityTest : public ANGLETest
   public:
     EGLContextCompatibilityTest() : mDisplay(0) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
         EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
@@ -59,12 +57,10 @@ class EGLContextCompatibilityTest : public ANGLETest
         ASSERT_TRUE(nConfigs == nReturnedConfigs);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         eglTerminate(mDisplay);
-
-        ANGLETest::TearDown();
     }
 
   protected:

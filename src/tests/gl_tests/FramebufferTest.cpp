@@ -148,18 +148,14 @@ class FramebufferFormatsTest : public ANGLETest
         EXPECT_GL_NO_ERROR();
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenFramebuffers(1, &mFramebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
-        ANGLETest::TearDown();
-
         if (mTexture != 0)
         {
             glDeleteTextures(1, &mTexture);

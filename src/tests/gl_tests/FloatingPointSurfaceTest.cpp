@@ -24,10 +24,8 @@ class FloatingPointSurfaceTest : public ANGLETest
         setConfigComponentType(EGL_COLOR_COMPONENT_TYPE_FLOAT_EXT);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         constexpr char kFS[] =
             "precision highp float;\n"
             "void main()\n"
@@ -41,12 +39,7 @@ class FloatingPointSurfaceTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
-    {
-        glDeleteProgram(mProgram);
-
-        ANGLETest::TearDown();
-    }
+    void testTearDown() override { glDeleteProgram(mProgram); }
 
     GLuint mProgram;
 };

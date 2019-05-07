@@ -28,10 +28,8 @@ class TransformFeedbackTestBase : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenBuffers(1, &mTransformFeedbackBuffer);
         glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
         glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, nullptr,
@@ -42,7 +40,7 @@ class TransformFeedbackTestBase : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         if (mProgram != 0)
         {
@@ -61,8 +59,6 @@ class TransformFeedbackTestBase : public ANGLETest
             glDeleteTransformFeedbacks(1, &mTransformFeedback);
             mTransformFeedback = 0;
         }
-
-        ANGLETest::TearDown();
     }
 
     GLuint mProgram;
@@ -1044,10 +1040,8 @@ class TransformFeedbackLifetimeTest : public TransformFeedbackTest
   protected:
     TransformFeedbackLifetimeTest() : mVertexArray(0) {}
 
-    void SetUp() override
+    void testSetUp() override
     {
-        ANGLETest::SetUp();
-
         glGenVertexArrays(1, &mVertexArray);
         glBindVertexArray(mVertexArray);
 
@@ -1066,10 +1060,10 @@ class TransformFeedbackLifetimeTest : public TransformFeedbackTest
         ASSERT_GL_NO_ERROR();
     }
 
-    void TearDown() override
+    void testTearDown() override
     {
         glDeleteVertexArrays(1, &mVertexArray);
-        TransformFeedbackTest::TearDown();
+        TransformFeedbackTest::testTearDown();
     }
 
     GLuint mVertexArray;
