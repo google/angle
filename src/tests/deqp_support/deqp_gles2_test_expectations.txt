@@ -82,8 +82,7 @@
 3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
 
 // Shader failures.
-3285 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_fragment = FAIL
-3285 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_vertex = FAIL
+3434 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_* = FAIL
 3287 : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_vertex = FAIL
 3287 : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_fragment = FAIL
 
@@ -174,6 +173,7 @@
 3303 OPENGL NVIDIA LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = FAIL
 
 // Mac OpenGL specific failures
+3433 MAC OPENGL : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_vertex = FAIL
 1143 MAC OPENGL : dEQP-GLES2.functional.shaders.scoping.valid.local_int_variable_hides_struct_type_* = FAIL
 1143 MAC OPENGL : dEQP-GLES2.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_* = FAIL
 1143 MAC OPENGL : dEQP-GLES2.functional.shaders.scoping.valid.function_parameter_hides_struct_type_* = FAIL
