@@ -609,19 +609,16 @@
 3194 VULKAN : dEQP-GLES3.functional.buffer.copy.* = SKIP
 
 // Shader support:
-3219 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.basic_types.mat* = SKIP
+3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.mat* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.conversions.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.functions.datatypes.* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.qualification_order.variables.valid.* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.matrix.* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.builtin* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.common.min_u* = FAIL
 3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.common.max_u* = FAIL
 3219 VULKAN : dEQP-GLES3.functional.shaders.constant_expressions.builtin_functions.common.clamp_u* = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.precision.* = SKIP
 
 // New vertex attribute formats:
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.strides.int2_10_10_10.* = SKIP
@@ -646,6 +643,9 @@
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.ivec* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.uint.* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.default_vertex_attrib.uvec* = SKIP
+
+// Vertex ID, Index ID
+3221 VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.vertex_id = FAIL
 
 // Polygon offset:
 2950 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
@@ -674,6 +674,12 @@
 3205 VULKAN : dEQP-GLES3.functional.state_query.shader.transform_feedback = FAIL
 3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
 3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
+
+// Flat shading
+3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
+3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.basic_types.u* = FAIL
+3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.u* = FAIL
+3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
 
 // Misc unimplemented:
 
@@ -751,3 +757,4 @@
 2950 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.fbo.rbo_singlesample.primitives.lines = FAIL
 2950 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.fbo.texture_2d.primitives.lines = FAIL
 2950 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.primitives.line* = FAIL
+2950 ANDROID VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_w = FAIL

@@ -411,9 +411,25 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
         vertexSource.insertLayoutSpecifier(name, locationString);
         fragmentSource.insertLayoutSpecifier(name, locationString);
 
-        ASSERT(varying.interpolation == sh::INTERPOLATION_SMOOTH);
-        vertexSource.insertQualifierSpecifier(name, "out");
-        fragmentSource.insertQualifierSpecifier(name, "in");
+        const char *vsQualifier = "out";
+        const char *fsQualifier = "in";
+        switch (varying.interpolation)
+        {
+            case sh::INTERPOLATION_SMOOTH:
+                break;
+            case sh::INTERPOLATION_CENTROID:
+                vsQualifier = "centroid out";
+                fsQualifier = "centroid in";
+                break;
+            case sh::INTERPOLATION_FLAT:
+                vsQualifier = "flat out";
+                fsQualifier = "flat in";
+                break;
+            default:
+                UNREACHABLE();
+        }
+        vertexSource.insertQualifierSpecifier(name, vsQualifier);
+        fragmentSource.insertQualifierSpecifier(name, fsQualifier);
     }
 
     // Remove all the markers for unused varyings.
@@ -427,8 +443,6 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
 
     // Bind the default uniforms for vertex and fragment shaders.
     // See corresponding code in OutputVulkanGLSL.cpp.
-    const std::string uniformsSearchString("@@ DEFAULT-UNIFORMS-SET-BINDING @@");
-
     const std::string driverUniformsDescriptorSet =
         "set = " + Str(kDriverUniformsDescriptorSetIndex);
     const std::string uniformsDescriptorSet      = "set = " + Str(kUniformsDescriptorSetIndex);
