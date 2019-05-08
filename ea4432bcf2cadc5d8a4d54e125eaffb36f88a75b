@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "892e03e8_3ce00805",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-05-08T15:58:59Z",
+      "side": 1,
+      "message": "Blast, I accidentally included that change into the following CL.\nDONE",
+      "parentUuid": "1654dc5b_4bb54d04",
+      "range": {
+        "startLine": 241,
+        "startChar": 9,
+        "endLine": 241,
+        "endChar": 27
+      },
+      "revId": "ea4432bcf2cadc5d8a4d54e125eaffb36f88a75b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae099f0c_4e2d05d5",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 6
@@ -93,6 +117,30 @@
       "revId": "ea4432bcf2cadc5d8a4d54e125eaffb36f88a75b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f23bf72c_208e511a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-05-08T15:58:59Z",
+      "side": 1,
+      "message": "I\u0027ve tweaked the spacing to make it fit better. Even before I made changes there are elements that are too long to fit in the columns provided.",
+      "parentUuid": "27f8159c_7732c728",
+      "range": {
+        "startLine": 789,
+        "startChar": 163,
+        "endLine": 789,
+        "endChar": 220
+      },
+      "revId": "ea4432bcf2cadc5d8a4d54e125eaffb36f88a75b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
