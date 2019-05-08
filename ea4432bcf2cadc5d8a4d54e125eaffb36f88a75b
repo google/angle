@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1654dc5b_4bb54d04",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-08T15:39:08Z",
+      "side": 1,
+      "message": "re-nit, seems to not be changed in latest commit",
+      "parentUuid": "d2396371_77f9376f",
+      "range": {
+        "startLine": 241,
+        "startChar": 9,
+        "endLine": 241,
+        "endChar": 27
+      },
+      "revId": "ea4432bcf2cadc5d8a4d54e125eaffb36f88a75b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ae099f0c_4e2d05d5",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2019-04-30T15:34:55Z",
       "side": 1,
       "message": "nit: you might have to realign this header... the alignment is a bit hard to read in gerrit.",
+      "range": {
+        "startLine": 789,
+        "startChar": 163,
+        "endLine": 789,
+        "endChar": 220
+      },
+      "revId": "ea4432bcf2cadc5d8a4d54e125eaffb36f88a75b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27f8159c_7732c728",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-08T15:39:08Z",
+      "side": 1,
+      "message": "same",
+      "parentUuid": "ae099f0c_4e2d05d5",
       "range": {
         "startLine": 789,
         "startChar": 163,
