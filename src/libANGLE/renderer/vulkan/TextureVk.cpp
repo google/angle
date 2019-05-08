@@ -63,7 +63,7 @@ bool CanCopyWithDraw(RendererVk *renderer,
 
 bool ForceCpuPathForCopy(RendererVk *renderer, vk::ImageHelper *image)
 {
-    return image->getLayerCount() > 1 && renderer->getFeatures().forceCpuPathForCubeMapCopy;
+    return image->getLayerCount() > 1 && renderer->getFeatures().forceCpuPathForCubeMapCopy.enabled;
 }
 
 gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples)

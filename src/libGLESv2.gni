@@ -152,6 +152,7 @@ libangle_includes = [
   "include/GLSLANG/ShaderVars.h",
   "include/KHR/khrplatform.h",
   "include/WGL/wgl.h",
+  "include/platform/Feature.h",
   "include/platform/FeaturesVk.h",
   "include/platform/Platform.h",
   "include/platform/WorkaroundsD3D.h",

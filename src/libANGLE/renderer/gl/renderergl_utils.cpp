@@ -893,7 +893,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
         // OpenGL 4.3 has no limit on maximum value of stride.
         // [OpenGL 4.3 (Core Profile) - February 14, 2013] Chapter 10.3.1 Page 298
-        if (workarounds.emulateMaxVertexAttribStride ||
+        if (workarounds.emulateMaxVertexAttribStride.enabled ||
             (functions->standard == STANDARD_GL_DESKTOP && functions->version == gl::Version(4, 3)))
         {
             caps->maxVertexAttribStride = 2048;
@@ -1165,7 +1165,7 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->disjointTimerQuery = true;
 
         // If we can't query the counter bits, leave them at 0.
-        if (!workarounds.queryCounterBitsGeneratesErrors)
+        if (!workarounds.queryCounterBitsGeneratesErrors.enabled)
         {
             extensions->queryCounterBitsTimeElapsed =
                 QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
@@ -1351,7 +1351,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // EXT_blend_func_extended.
     // Note that this could be implemented also on top of native EXT_blend_func_extended, but it's
     // currently not fully implemented.
-    extensions->blendFuncExtended = !workarounds.disableBlendFuncExtended &&
+    extensions->blendFuncExtended = !workarounds.disableBlendFuncExtended.enabled &&
                                     functions->standard == STANDARD_GL_DESKTOP &&
                                     functions->hasGLExtension("GL_ARB_blend_func_extended");
     if (extensions->blendFuncExtended)
@@ -1375,7 +1375,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // To work around broken unsized sRGB textures, sized sRGB textures are used. Disable EXT_sRGB
     // if those formats are not available.
-    if (workarounds.unsizedsRGBReadPixelsDoesntTransform &&
+    if (workarounds.unsizedsRGBReadPixelsDoesntTransform.enabled &&
         !functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         extensions->sRGB = false;
@@ -1392,86 +1392,87 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     uint32_t device = GetDeviceID(functions);
 
     // Don't use 1-bit alpha formats on desktop GL with AMD or Intel drivers.
-    workarounds->avoid1BitAlphaTextureFormats =
+    workarounds->avoid1BitAlphaTextureFormats.enabled =
         functions->standard == STANDARD_GL_DESKTOP && (IsAMD(vendor));
 
-    workarounds->rgba4IsNotSupportedForColorRendering =
+    workarounds->rgba4IsNotSupportedForColorRendering.enabled =
         functions->standard == STANDARD_GL_DESKTOP && IsIntel(vendor);
 
-    workarounds->emulateAbsIntFunction = IsIntel(vendor);
+    workarounds->emulateAbsIntFunction.enabled = IsIntel(vendor);
 
-    workarounds->addAndTrueToLoopCondition = IsIntel(vendor);
+    workarounds->addAndTrueToLoopCondition.enabled = IsIntel(vendor);
 
-    workarounds->emulateIsnanFloat = IsIntel(vendor);
+    workarounds->emulateIsnanFloat.enabled = IsIntel(vendor);
 
-    workarounds->doesSRGBClearsOnLinearFramebufferAttachments =
+    workarounds->doesSRGBClearsOnLinearFramebufferAttachments.enabled =
         functions->standard == STANDARD_GL_DESKTOP && (IsIntel(vendor) || IsAMD(vendor));
 
-    workarounds->emulateMaxVertexAttribStride =
+    workarounds->emulateMaxVertexAttribStride.enabled =
         IsLinux() && functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor);
-    workarounds->useUnusedBlocksWithStandardOrSharedLayout = IsLinux() && IsAMD(vendor);
+    workarounds->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsLinux() && IsAMD(vendor);
 
-    workarounds->doWhileGLSLCausesGPUHang                  = IsApple();
-    workarounds->useUnusedBlocksWithStandardOrSharedLayout = IsApple();
-    workarounds->rewriteFloatUnaryMinusOperator            = IsApple() && IsIntel(vendor);
+    workarounds->doWhileGLSLCausesGPUHang.enabled                  = IsApple();
+    workarounds->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsApple();
+    workarounds->rewriteFloatUnaryMinusOperator.enabled            = IsApple() && IsIntel(vendor);
 
     // Triggers a bug on Marshmallow Adreno (4xx?) driver.
     // http://anglebug.com/2046
-    workarounds->dontInitializeUninitializedLocals = IsAndroid() && IsQualcomm(vendor);
+    workarounds->dontInitializeUninitializedLocals.enabled = IsAndroid() && IsQualcomm(vendor);
 
-    workarounds->finishDoesNotCauseQueriesToBeAvailable =
+    workarounds->finishDoesNotCauseQueriesToBeAvailable.enabled =
         functions->standard == STANDARD_GL_DESKTOP && IsNvidia(vendor);
 
     // TODO(cwallez): Disable this workaround for MacOSX versions 10.9 or later.
-    workarounds->alwaysCallUseProgramAfterLink = true;
+    workarounds->alwaysCallUseProgramAfterLink.enabled = true;
 
-    workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer = IsNvidia(vendor);
-    workarounds->packOverlappingRowsSeparatelyPackBuffer     = IsNvidia(vendor);
+    workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer.enabled = IsNvidia(vendor);
+    workarounds->packOverlappingRowsSeparatelyPackBuffer.enabled     = IsNvidia(vendor);
 
-    workarounds->initializeCurrentVertexAttributes = IsNvidia(vendor);
+    workarounds->initializeCurrentVertexAttributes.enabled = IsNvidia(vendor);
 
-    workarounds->unpackLastRowSeparatelyForPaddingInclusion = IsApple() || IsNvidia(vendor);
-    workarounds->packLastRowSeparatelyForPaddingInclusion   = IsApple() || IsNvidia(vendor);
+    workarounds->unpackLastRowSeparatelyForPaddingInclusion.enabled = IsApple() || IsNvidia(vendor);
+    workarounds->packLastRowSeparatelyForPaddingInclusion.enabled   = IsApple() || IsNvidia(vendor);
 
-    workarounds->removeInvariantAndCentroidForESSL3 =
+    workarounds->removeInvariantAndCentroidForESSL3.enabled =
         functions->isAtMostGL(gl::Version(4, 1)) ||
         (functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor));
 
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions that came after
     // 364 are known to be affected, at least up to 375.
-    workarounds->emulateAtan2Float = IsNvidia(vendor);
+    workarounds->emulateAtan2Float.enabled = IsNvidia(vendor);
 
-    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = IsAMD(vendor);
+    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram.enabled = IsAMD(vendor);
 
-    workarounds->rewriteVectorScalarArithmetic = IsNvidia(vendor);
+    workarounds->rewriteVectorScalarArithmetic.enabled = IsNvidia(vendor);
 
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions at least up to
     // 390 are known to be affected. Versions after that are expected not to be affected.
-    workarounds->clampFragDepth = IsNvidia(vendor);
+    workarounds->clampFragDepth.enabled = IsNvidia(vendor);
 
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions since 397.31 are
     // not affected.
-    workarounds->rewriteRepeatedAssignToSwizzled = IsNvidia(vendor);
+    workarounds->rewriteRepeatedAssignToSwizzled.enabled = IsNvidia(vendor);
 
     // TODO(jmadill): Narrow workaround range for specific devices.
-    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = IsAndroid();
+    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram.enabled = IsAndroid();
 
-    workarounds->clampPointSize = IsAndroid() || IsNvidia(vendor);
+    workarounds->clampPointSize.enabled = IsAndroid() || IsNvidia(vendor);
 
-    workarounds->dontUseLoopsToInitializeVariables = IsAndroid() && !IsNvidia(vendor);
+    workarounds->dontUseLoopsToInitializeVariables.enabled = IsAndroid() && !IsNvidia(vendor);
 
-    workarounds->disableBlendFuncExtended = IsAMD(vendor) || IsIntel(vendor);
+    workarounds->disableBlendFuncExtended.enabled = IsAMD(vendor) || IsIntel(vendor);
 
-    workarounds->unsizedsRGBReadPixelsDoesntTransform = IsAndroid() && IsQualcomm(vendor);
+    workarounds->unsizedsRGBReadPixelsDoesntTransform.enabled = IsAndroid() && IsQualcomm(vendor);
 
-    workarounds->queryCounterBitsGeneratesErrors = IsNexus5X(vendor, device);
+    workarounds->queryCounterBitsGeneratesErrors.enabled = IsNexus5X(vendor, device);
 
-    workarounds->dontRelinkProgramsInParallel = IsAndroid() || (IsWindows() && IsIntel(vendor));
+    workarounds->dontRelinkProgramsInParallel.enabled =
+        IsAndroid() || (IsWindows() && IsIntel(vendor));
 
     // TODO(jie.a.chen@intel.com): Clean up the bugs.
     // anglebug.com/3031
     // crbug.com/922936
-    workarounds->disableWorkerContexts =
+    workarounds->disableWorkerContexts.enabled =
         (IsWindows() && (IsIntel(vendor) || IsAMD(vendor))) || (IsLinux() && IsNvidia(vendor));
 }
 
@@ -1479,8 +1480,9 @@ void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds
 {
     VendorID vendor = GetVendorID(functions);
 
-    workarounds->disableProgramCachingForTransformFeedback = IsAndroid() && IsQualcomm(vendor);
-    workarounds->syncFramebufferBindingsOnTexImage         = IsWindows() && IsIntel(vendor);
+    workarounds->disableProgramCachingForTransformFeedback.enabled =
+        IsAndroid() && IsQualcomm(vendor);
+    workarounds->syncFramebufferBindingsOnTexImage.enabled = IsWindows() && IsIntel(vendor);
 }
 
 }  // namespace nativegl_gl

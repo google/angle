@@ -105,7 +105,7 @@ void ProgramGL::reapplyUBOBindingsIfNeeded(const gl::Context *context)
 {
     // Re-apply UBO bindings to work around driver bugs.
     const WorkaroundsGL &workaroundsGL = GetImplAs<ContextGL>(context)->getWorkaroundsGL();
-    if (workaroundsGL.reapplyUBOBindingsAfterUsingBinaryProgram)
+    if (workaroundsGL.reapplyUBOBindingsAfterUsingBinaryProgram.enabled)
     {
         const auto &blocks = mState.getUniformBlocks();
         for (size_t blockIndex : mState.getActiveUniformBlockBindingsMask())
@@ -453,7 +453,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
             return angle::Result::Incomplete;
         }
 
-        if (mWorkarounds.alwaysCallUseProgramAfterLink)
+        if (mWorkarounds.alwaysCallUseProgramAfterLink.enabled)
         {
             mStateManager->forceUseProgram(mProgramID);
         }
@@ -470,7 +470,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         return std::make_unique<LinkEventNativeParallel>(postLinkImplTask, mFunctions, mProgramID);
     }
     else if (workerPool->isAsync() &&
-             (!mWorkarounds.dontRelinkProgramsInParallel || !mLinkedInParallel))
+             (!mWorkarounds.dontRelinkProgramsInParallel.enabled || !mLinkedInParallel))
     {
         mLinkedInParallel = true;
         return std::make_unique<LinkEventGL>(workerPool, linkTask, postLinkImplTask);

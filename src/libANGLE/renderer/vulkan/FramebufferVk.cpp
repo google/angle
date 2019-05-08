@@ -295,7 +295,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 
         // On some hardware, having inline commands at this point results in corrupted output.  In
         // that case, end the render pass immediately.  http://anglebug.com/2361
-        if (contextVk->getRenderer()->getFeatures().restartRenderPassAfterLoadOpClear)
+        if (contextVk->getRenderer()->getFeatures().restartRenderPassAfterLoadOpClear.enabled)
         {
             mFramebuffer.finishCurrentCommands(contextVk->getRenderer());
         }

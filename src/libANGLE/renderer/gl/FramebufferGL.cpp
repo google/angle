@@ -451,9 +451,9 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
 
     stateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
 
-    bool useOverlappingRowsWorkaround = workarounds.packOverlappingRowsSeparatelyPackBuffer &&
-                                        packBuffer && packState.rowLength != 0 &&
-                                        packState.rowLength < clippedArea.width;
+    bool useOverlappingRowsWorkaround =
+        workarounds.packOverlappingRowsSeparatelyPackBuffer.enabled && packBuffer &&
+        packState.rowLength != 0 && packState.rowLength < clippedArea.width;
 
     GLubyte *outPtr = static_cast<GLubyte *>(pixels);
     int leftClip    = clippedArea.x - area.x;
@@ -487,7 +487,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
     }
 
     bool useLastRowPaddingWorkaround = false;
-    if (workarounds.packLastRowSeparatelyForPaddingInclusion)
+    if (workarounds.packLastRowSeparatelyForPaddingInclusion.enabled)
     {
         ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(
             contextGL, gl::Extents(clippedArea.width, clippedArea.height, 1), packState, packBuffer,
@@ -735,7 +735,7 @@ void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
         StateManagerGL *stateManager     = GetStateManagerGL(context);
         const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
 
-        if (workarounds.doesSRGBClearsOnLinearFramebufferAttachments &&
+        if (workarounds.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
             (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
         {
             bool hasSRGBAttachment = false;
@@ -768,8 +768,8 @@ void FramebufferGL::syncClearBufferState(const gl::Context *context,
         StateManagerGL *stateManager     = GetStateManagerGL(context);
         const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
 
-        if (workarounds.doesSRGBClearsOnLinearFramebufferAttachments && buffer == GL_COLOR &&
-            !mIsDefault)
+        if (workarounds.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
+            buffer == GL_COLOR && !mIsDefault)
         {
             // If doing a clear on a color buffer, set SRGB blend enabled only if the color buffer
             // is an SRGB format.

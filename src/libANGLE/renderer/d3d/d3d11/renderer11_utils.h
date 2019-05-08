@@ -305,8 +305,9 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
     }
 }
 
-angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                                          const DXGI_ADAPTER_DESC &adapterDesc);
+void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
+                         const DXGI_ADAPTER_DESC &adapterDesc,
+                         angle::WorkaroundsD3D *workarounds);
 
 enum ReservedConstantBufferSlot
 {

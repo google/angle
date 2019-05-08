@@ -22,7 +22,7 @@ namespace rx
 {
 ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
 {
-    return contextVk->getFeatures().basicGLLineRasterization && gl::IsLineMode(mode);
+    return contextVk->getFeatures().basicGLLineRasterization.enabled && gl::IsLineMode(mode);
 }
 
 class ProgramVk : public ProgramImpl

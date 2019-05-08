@@ -976,23 +976,24 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     mFeaturesInitialized = true;
 
     // Selectively enable KHR_MAINTENANCE1 to support viewport flipping.
-    if ((getFeatures().flipViewportY) &&
+    if ((getFeatures().flipViewportY.enabled) &&
         (mPhysicalDeviceProperties.apiVersion < VK_MAKE_VERSION(1, 1, 0)))
     {
         enabledDeviceExtensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
     }
-    if (getFeatures().supportsIncrementalPresent)
+    if (getFeatures().supportsIncrementalPresent.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME);
     }
 
-    if (getFeatures().supportsAndroidHardwareBuffer || getFeatures().supportsExternalMemoryFd)
+    if (getFeatures().supportsAndroidHardwareBuffer.enabled ||
+        getFeatures().supportsExternalMemoryFd.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME);
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    if (getFeatures().supportsAndroidHardwareBuffer)
+    if (getFeatures().supportsAndroidHardwareBuffer.enabled)
     {
         enabledDeviceExtensions.push_back(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME);
         enabledDeviceExtensions.push_back(
@@ -1000,20 +1001,20 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         InitExternalMemoryHardwareBufferANDROIDFunctions(mInstance);
     }
 #else
-    ASSERT(!getFeatures().supportsAndroidHardwareBuffer);
+    ASSERT(!getFeatures().supportsAndroidHardwareBuffer.enabled);
 #endif
 
-    if (getFeatures().supportsExternalMemoryFd)
+    if (getFeatures().supportsExternalMemoryFd.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME);
     }
 
-    if (getFeatures().supportsExternalSemaphoreFd)
+    if (getFeatures().supportsExternalSemaphoreFd.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME);
     }
 
-    if (getFeatures().supportsExternalSemaphoreFd)
+    if (getFeatures().supportsExternalSemaphoreFd.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME);
     }
@@ -1239,9 +1240,9 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 // Use OpenGL line rasterization rules by default.
 // TODO(jmadill): Fix Android support. http://anglebug.com/2830
 #if defined(ANGLE_PLATFORM_ANDROID)
-    mFeatures.basicGLLineRasterization = false;
+    mFeatures.basicGLLineRasterization.enabled = false;
 #else
-    mFeatures.basicGLLineRasterization = true;
+    mFeatures.basicGLLineRasterization.enabled = true;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
     if ((mPhysicalDeviceProperties.apiVersion >= VK_MAKE_VERSION(1, 1, 0)) ||
@@ -1249,15 +1250,15 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     {
         // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
         // investigation. http://anglebug.com/2728
-        mFeatures.flipViewportY = !IsIntel(mPhysicalDeviceProperties.vendorID);
+        mFeatures.flipViewportY.enabled = !IsIntel(mPhysicalDeviceProperties.vendorID);
     }
 
 #ifdef ANGLE_PLATFORM_WINDOWS
     // http://anglebug.com/2838
-    mFeatures.extraCopyBufferRegion = IsIntel(mPhysicalDeviceProperties.vendorID);
+    mFeatures.extraCopyBufferRegion.enabled = IsIntel(mPhysicalDeviceProperties.vendorID);
 
     // http://anglebug.com/3055
-    mFeatures.forceCpuPathForCubeMapCopy = IsIntel(mPhysicalDeviceProperties.vendorID);
+    mFeatures.forceCpuPathForCubeMapCopy.enabled = IsIntel(mPhysicalDeviceProperties.vendorID);
 #endif
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
@@ -1267,24 +1268,24 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     // TODO(jmadill): Narrow driver range once fixed. http://anglebug.com/2970
     if (IsNvidia(mPhysicalDeviceProperties.vendorID))
     {
-        mFeatures.clampPointSize = true;
+        mFeatures.clampPointSize.enabled = true;
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     // Work around ineffective compute-graphics barriers on Nexus 5X.
     // TODO(syoussefi): Figure out which other vendors and driver versions are affected.
     // http://anglebug.com/3019
-    mFeatures.flushAfterVertexConversion =
+    mFeatures.flushAfterVertexConversion.enabled =
         IsNexus5X(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 #endif
 
     if (ExtensionFound(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME, deviceExtensionNames))
     {
-        mFeatures.supportsIncrementalPresent = true;
+        mFeatures.supportsIncrementalPresent.enabled = true;
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    mFeatures.supportsAndroidHardwareBuffer =
+    mFeatures.supportsAndroidHardwareBuffer.enabled =
         ExtensionFound(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME,
                        deviceExtensionNames) &&
         ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames);
@@ -1292,32 +1293,32 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 
     if (ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames))
     {
-        mFeatures.supportsExternalMemoryFd = true;
+        mFeatures.supportsExternalMemoryFd.enabled = true;
     }
 
     if (ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames))
     {
-        mFeatures.supportsExternalSemaphoreFd = true;
+        mFeatures.supportsExternalSemaphoreFd.enabled = true;
     }
 
     if (IsLinux() && IsIntel(mPhysicalDeviceProperties.vendorID))
     {
-        mFeatures.disableFifoPresentMode = true;
+        mFeatures.disableFifoPresentMode.enabled = true;
     }
 
     if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
     {
         if (vk::CommandBuffer::ExecutesInline())
         {
-            mFeatures.restartRenderPassAfterLoadOpClear = true;
+            mFeatures.restartRenderPassAfterLoadOpClear.enabled = true;
         }
 
-        mFeatures.bindEmptyForUnusedDescriptorSets = true;
+        mFeatures.bindEmptyForUnusedDescriptorSets.enabled = true;
     }
 
     if (IsWindows() && IsIntel(mPhysicalDeviceProperties.vendorID))
     {
-        mFeatures.forceNonZeroScissor = true;
+        mFeatures.forceNonZeroScissor.enabled = true;
     }
 }
 

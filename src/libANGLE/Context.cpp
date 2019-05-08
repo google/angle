@@ -3454,9 +3454,10 @@ void Context::initWorkarounds()
 
     // Lose the context upon out of memory error if the application is
     // expecting to watch for those events.
-    mWorkarounds.loseContextOnOutOfMemory = (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
+    mWorkarounds.loseContextOnOutOfMemory.enabled =
+        (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 
-    if (mWorkarounds.syncFramebufferBindingsOnTexImage)
+    if (mWorkarounds.syncFramebufferBindingsOnTexImage.enabled)
     {
         // Update the Framebuffer bindings on TexImage to work around an Intel bug.
         mTexImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
@@ -8272,7 +8273,8 @@ void ErrorSet::handleError(GLenum errorCode,
                            const char *function,
                            unsigned int line)
 {
-    if (errorCode == GL_OUT_OF_MEMORY && mContext->getWorkarounds().loseContextOnOutOfMemory)
+    if (errorCode == GL_OUT_OF_MEMORY &&
+        mContext->getWorkarounds().loseContextOnOutOfMemory.enabled)
     {
         mContext->markContextLost(GraphicsResetStatus::UnknownContextReset);
     }

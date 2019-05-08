@@ -1480,9 +1480,9 @@ void Program::resolveLinkImpl(const Context *context)
 
     // Save to the program cache.
     auto *cache = linkingState->context->getMemoryProgramCache();
-    if (cache &&
-        (mState.mLinkedTransformFeedbackVaryings.empty() ||
-         !linkingState->context->getWorkarounds().disableProgramCachingForTransformFeedback))
+    if (cache && (mState.mLinkedTransformFeedbackVaryings.empty() ||
+                  !linkingState->context->getWorkarounds()
+                       .disableProgramCachingForTransformFeedback.enabled))
     {
         cache->putProgram(linkingState->programHash, linkingState->context, this);
     }
@@ -4463,7 +4463,7 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
 
     // Warn the app layer if saving a binary with unsupported transform feedback.
     if (!mState.getLinkedTransformFeedbackVaryings().empty() &&
-        context->getWorkarounds().disableProgramCachingForTransformFeedback)
+        context->getWorkarounds().disableProgramCachingForTransformFeedback.enabled)
     {
         WARN() << "Saving program binary with transform feedback, which is not supported on this "
                   "driver.";
@@ -4682,7 +4682,7 @@ angle::Result Program::deserialize(const Context *context,
 
     // Reject programs that use transform feedback varyings if the hardware cannot support them.
     if (transformFeedbackVaryingCount > 0 &&
-        context->getWorkarounds().disableProgramCachingForTransformFeedback)
+        context->getWorkarounds().disableProgramCachingForTransformFeedback.enabled)
     {
         infoLog << "Current driver does not support transform feedback in binary programs.";
         return angle::Result::Incomplete;

@@ -918,7 +918,7 @@ void Renderer11::populateRenderer11DeviceCaps()
     mRenderer11DeviceCaps.supportsMultisampledDepthStencilSRVs =
         mRenderer11DeviceCaps.featureLevel > D3D_FEATURE_LEVEL_10_0;
 
-    if (getWorkarounds().disableB5G6R5Support)
+    if (getWorkarounds().disableB5G6R5Support.enabled)
     {
         mRenderer11DeviceCaps.B5G6R5support    = 0;
         mRenderer11DeviceCaps.B5G6R5maxSamples = 0;
@@ -1496,7 +1496,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
             return drawTriangleFan(context, clampedVertexCount, gl::DrawElementsType::InvalidEnum,
                                    nullptr, 0, adjustedInstanceCount);
         case gl::PrimitiveMode::Points:
-            if (getWorkarounds().useInstancedPointSpriteEmulation)
+            if (getWorkarounds().useInstancedPointSpriteEmulation.enabled)
             {
                 // This code should not be reachable by multi-view programs.
                 ASSERT(programD3D->getState().usesMultiview() == false);
@@ -2176,7 +2176,7 @@ const angle::WorkaroundsD3D &RendererD3D::getWorkarounds() const
 {
     if (!mWorkaroundsInitialized)
     {
-        mWorkarounds            = generateWorkarounds();
+        generateWorkarounds(&mWorkarounds);
         mWorkaroundsInitialized = true;
     }
 
@@ -3692,9 +3692,9 @@ void Renderer11::generateCaps(gl::Caps *outCaps,
                            outCaps, outTextureCaps, outExtensions, outLimitations);
 }
 
-angle::WorkaroundsD3D Renderer11::generateWorkarounds() const
+void Renderer11::generateWorkarounds(angle::WorkaroundsD3D *workarounds) const
 {
-    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
+    d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription, workarounds);
 }
 
 DeviceImpl *Renderer11::createEGLDevice()
@@ -3925,7 +3925,7 @@ angle::Result Renderer11::clearRenderTarget(const gl::Context *context,
 
 bool Renderer11::canSelectViewInVertexShader() const
 {
-    return !getWorkarounds().selectViewInGeometryShader &&
+    return !getWorkarounds().selectViewInGeometryShader.enabled &&
            getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
 }
 

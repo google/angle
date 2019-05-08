@@ -97,7 +97,7 @@ inline bool isDeviceLostError(HRESULT errorCode)
     }
 }
 
-angle::WorkaroundsD3D GenerateWorkarounds();
+void GenerateWorkarounds(angle::WorkaroundsD3D *workarounds);
 }  // namespace d3d9
 
 }  // namespace rx

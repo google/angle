@@ -57,10 +57,10 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.eglImageExternalEssl3 = false;
 
     mNativeExtensions.memoryObject   = true;
-    mNativeExtensions.memoryObjectFd = getFeatures().supportsExternalMemoryFd;
+    mNativeExtensions.memoryObjectFd = getFeatures().supportsExternalMemoryFd.enabled;
 
     mNativeExtensions.semaphore   = true;
-    mNativeExtensions.semaphoreFd = getFeatures().supportsExternalSemaphoreFd;
+    mNativeExtensions.semaphoreFd = getFeatures().supportsExternalSemaphoreFd.enabled;
 
     // TODO: Enable this always and emulate instanced draws if any divisor exceeds the maximum
     // supported.  http://anglebug.com/2672

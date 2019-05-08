@@ -408,7 +408,7 @@ class RendererD3D : public BufferFactoryD3D
   private:
     void ensureCapsInitialized() const;
 
-    virtual angle::WorkaroundsD3D generateWorkarounds() const = 0;
+    virtual void generateWorkarounds(angle::WorkaroundsD3D *workarounds) const = 0;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;

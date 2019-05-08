@@ -189,7 +189,8 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->glTextureCubemapImage = true;
     outExtensions->glTexture3DImage      = false;
     outExtensions->glRenderbufferImage   = true;
-    outExtensions->imageNativeBuffer = getRenderer()->getFeatures().supportsAndroidHardwareBuffer;
+    outExtensions->imageNativeBuffer =
+        getRenderer()->getFeatures().supportsAndroidHardwareBuffer.enabled;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

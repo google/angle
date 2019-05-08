@@ -92,33 +92,34 @@ ShaderD3D::ShaderD3D(const gl::ShaderState &data,
 {
     uncompile();
 
-    if (workarounds.expandIntegerPowExpressions)
+    if (workarounds.expandIntegerPowExpressions.enabled)
     {
         mAdditionalOptions |= SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS;
     }
 
-    if (workarounds.getDimensionsIgnoresBaseLevel)
+    if (workarounds.getDimensionsIgnoresBaseLevel.enabled)
     {
         mAdditionalOptions |= SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL;
     }
 
-    if (workarounds.preAddTexelFetchOffsets)
+    if (workarounds.preAddTexelFetchOffsets.enabled)
     {
         mAdditionalOptions |= SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH;
     }
-    if (workarounds.rewriteUnaryMinusOperator)
+    if (workarounds.rewriteUnaryMinusOperator.enabled)
     {
         mAdditionalOptions |= SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR;
     }
-    if (workarounds.emulateIsnanFloat)
+    if (workarounds.emulateIsnanFloat.enabled)
     {
         mAdditionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
     }
-    if (workarounds.skipVSConstantRegisterZero && mData.getShaderType() == gl::ShaderType::Vertex)
+    if (workarounds.skipVSConstantRegisterZero.enabled &&
+        mData.getShaderType() == gl::ShaderType::Vertex)
     {
         mAdditionalOptions |= SH_SKIP_D3D_CONSTANT_REGISTER_ZERO;
     }
-    if (workarounds.forceAtomicValueResolution)
+    if (workarounds.forceAtomicValueResolution.enabled)
     {
         mAdditionalOptions |= SH_FORCE_ATOMIC_VALUE_RESOLUTION;
     }

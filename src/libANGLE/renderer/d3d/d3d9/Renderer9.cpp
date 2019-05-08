@@ -2976,9 +2976,9 @@ void Renderer9::generateCaps(gl::Caps *outCaps,
                           outExtensions, outLimitations);
 }
 
-angle::WorkaroundsD3D Renderer9::generateWorkarounds() const
+void Renderer9::generateWorkarounds(angle::WorkaroundsD3D *workarounds) const
 {
-    return d3d9::GenerateWorkarounds();
+    d3d9::GenerateWorkarounds(workarounds);
 }
 
 DeviceImpl *Renderer9::createEGLDevice()

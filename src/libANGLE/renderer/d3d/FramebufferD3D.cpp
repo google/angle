@@ -370,7 +370,7 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
                    drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + attachmentIndex));
             colorAttachmentsForRender.push_back(&colorAttachment);
         }
-        else if (!workarounds.mrtPerfWorkaround)
+        else if (!workarounds.mrtPerfWorkaround.enabled)
         {
             colorAttachmentsForRender.push_back(nullptr);
         }
@@ -379,7 +379,7 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
     // When rendering with no render target on D3D, two bugs lead to incorrect behavior on Intel
     // drivers < 4815. The rendering samples always pass neglecting discard statements in pixel
     // shader. We add a dummy texture as render target in such case.
-    if (mRenderer->getWorkarounds().addDummyTextureNoRenderTarget &&
+    if (mRenderer->getWorkarounds().addDummyTextureNoRenderTarget.enabled &&
         colorAttachmentsForRender.empty() && activeProgramOutputs.any())
     {
         static_assert(static_cast<size_t>(activeProgramOutputs.size()) <= 32,

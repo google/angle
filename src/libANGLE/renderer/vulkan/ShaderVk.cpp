@@ -30,7 +30,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
 
     ContextVk *contextVk = vk::GetImpl(context);
 
-    if (contextVk->getFeatures().clampPointSize)
+    if (contextVk->getFeatures().clampPointSize.enabled)
     {
         compileOptions |= SH_CLAMP_POINT_SIZE;
     }

@@ -51,7 +51,7 @@ angle::Result TransformFeedback11::begin(const gl::Context *context,
 angle::Result TransformFeedback11::end(const gl::Context *context)
 {
     mRenderer->getStateManager()->invalidateTransformFeedback();
-    if (mRenderer->getWorkarounds().flushAfterEndingTransformFeedback)
+    if (mRenderer->getWorkarounds().flushAfterEndingTransformFeedback.enabled)
     {
         mRenderer->getDeviceContext()->Flush();
     }

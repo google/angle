@@ -391,7 +391,7 @@ angle::Result Buffer11::setSubData(const gl::Context *context,
             // TODO(jmadill): Use Context caps.
             if (offset == 0 && size >= mSize &&
                 size <= static_cast<UINT>(mRenderer->getNativeCaps().maxUniformBlockSize) &&
-                !mRenderer->getWorkarounds().useSystemMemoryForConstantBuffers)
+                !mRenderer->getWorkarounds().useSystemMemoryForConstantBuffers.enabled)
             {
                 ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_UNIFORM, &writeBuffer));
             }
@@ -605,7 +605,7 @@ angle::Result Buffer11::checkForDeallocation(const gl::Context *context, BufferU
 bool Buffer11::canDeallocateSystemMemory() const
 {
     // Must keep system memory on Intel.
-    if (mRenderer->getWorkarounds().useSystemMemoryForConstantBuffers)
+    if (mRenderer->getWorkarounds().useSystemMemoryForConstantBuffers.enabled)
     {
         return false;
     }

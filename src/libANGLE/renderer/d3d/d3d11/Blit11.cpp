@@ -1310,7 +1310,7 @@ angle::Result Blit11::copyAndConvert(const gl::Context *context,
                                  copySize, srcPixelStride, destPixelStride, convertFunction));
 
     // Work around timeouts/TDRs in older NVIDIA drivers.
-    if (mRenderer->getWorkarounds().depthStencilBlitExtraCopy)
+    if (mRenderer->getWorkarounds().depthStencilBlitExtraCopy.enabled)
     {
         D3D11_MAPPED_SUBRESOURCE mapped;
         ANGLE_TRY(

@@ -551,7 +551,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
                 // We shouldn't reach here if deviceContext1 is unavailable.
                 ASSERT(deviceContext1);
                 deviceContext1->ClearView(framebufferRTV.get(), clearValues, &scissorRect, 1);
-                if (mRenderer->getWorkarounds().callClearTwice)
+                if (mRenderer->getWorkarounds().callClearTwice.enabled)
                 {
                     deviceContext1->ClearView(framebufferRTV.get(), clearValues, &scissorRect, 1);
                 }
@@ -559,7 +559,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
             else
             {
                 deviceContext->ClearRenderTargetView(framebufferRTV.get(), clearValues);
-                if (mRenderer->getWorkarounds().callClearTwice)
+                if (mRenderer->getWorkarounds().callClearTwice.enabled)
                 {
                     deviceContext->ClearRenderTargetView(framebufferRTV.get(), clearValues);
                 }
