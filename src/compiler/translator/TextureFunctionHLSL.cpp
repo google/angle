@@ -627,8 +627,8 @@ void OutputIntegerTextureSampleFunctionComputations(
         out << "    " << textureReference
             << ".GetDimensions(baseLevel + mip, width, height, layers, levels);\n";
 
-        out << "    bool xMajor = abs(t.x) > abs(t.y) && abs(t.x) > abs(t.z);\n";
-        out << "    bool yMajor = abs(t.y) > abs(t.z) && abs(t.y) > abs(t.x);\n";
+        out << "    bool xMajor = abs(t.x) >= abs(t.y) && abs(t.x) >= abs(t.z);\n";
+        out << "    bool yMajor = abs(t.y) >= abs(t.z) && abs(t.y) > abs(t.x);\n";
         out << "    bool zMajor = abs(t.z) > abs(t.x) && abs(t.z) > abs(t.y);\n";
         out << "    bool negative = (xMajor && t.x < 0.0f) || (yMajor && t.y < 0.0f) || "
                "(zMajor && t.z < 0.0f);\n";
@@ -645,6 +645,7 @@ void OutputIntegerTextureSampleFunctionComputations(
         out << "    float v = yMajor ? t.z : (negative ? t.y : -t.y);\n";
         out << "    float m = xMajor ? t.x : (yMajor ? t.y : t.z);\n";
 
+        out << "    float3 r = any(t) ? t : float3(1, 0, 0);\n";
         out << "    t.x = (u * 0.5f / m) + 0.5f;\n";
         out << "    t.y = (v * 0.5f / m) + 0.5f;\n";
 
@@ -655,10 +656,76 @@ void OutputIntegerTextureSampleFunctionComputations(
         {
             if (textureFunction.method == TextureFunctionHLSL::TextureFunction::IMPLICIT)
             {
-                out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
-                       "    float2 dx = ddx(tSized);\n"
-                       "    float2 dy = ddy(tSized);\n"
-                       "    float lod = 0.5f * log2(max(dot(dx, dx), dot(dy, dy)));\n";
+                // We would like to calculate tha maximum of how many texels we move in the major
+                // face's texture as we move across the screen in any direction. Namely, we want the
+                // length of the directional derivative of the function p (defined below), maximized
+                // over screen space directions. (For short: we want the norm of Dp.) For
+                // simplicity, assume that z-axis is the major axis. By symmetry, we can assume that
+                // the positive z direction is major. (The calculated value will be the same even if
+                // this is false.) Let r denote the function from screen position to cube texture
+                // coordinates. Then p can be written as p = s . P . r, where P(r) = (r.x, r.y)/r.z
+                // is the projection onto the major cube face, and s = diag(width, height)/2. (s
+                // linearly maps from the cube face into texture space, so that p(r) is in units of
+                // texels.) The derivative is
+                // Dp(r) = s |1 0 -r.x/r.z|
+                //           |0 1 -r.y/r.z| |ddx(r) ddy(r)| / r.z
+                //       = |dot(a, ddx(r)) dot(a, ddy(r))|
+                //         |dot(b, ddx(r)) dot(b, ddy(r))| / (2 r.z)
+                // where a = w * vec3(1, 0, -r.x/r.z)
+                //       b = h * vec3(0, 1, -r.y/r.z)
+                // We would like to know max(L(x)) over unit vectors x, where L(x) = |Dp(r) x|^2.
+                // Since ddx(r) and ddy(r) are unknown, the best we can do is to sample L in some
+                // directions and take the maximum across the samples.
+                //
+                // Some implementations use max(L(n1), L(n2)) where n1 = vec2(1,0) and n2 =
+                // vec2(0,1).
+                //
+                // Some implementations use max(L(n1), L(n2), L(n3), L(n4)),
+                // where n3 = (n1 + n2) / |n1 + n2| = (n1 + n2)/sqrt(2)
+                //       n4 = (n1 - n2) / |n1 - n2| = (n1 - n2)/sqrt(2).
+                // In other words, two samples along the diagonal screen space directions have been
+                // added, giving a strictly better estimate of the true maximum.
+                //
+                // It turns out we can get twice the sample count very cheaply.
+                // We can use the linearity of Dp(r) to get these extra samples of L cheaply in
+                // terms of the already taken samples, L(n1) and L(n2):
+                // Denoting
+                // dpx = Dp(r)n1
+                // dpy = Dp(r)n2
+                // dpxx = dot(dpx, dpx)
+                // dpyy = dot(dpy, dpy)
+                // dpxy = dot(dpx, dpy)
+                // we obtain
+                // L(n3) = |Dp(r)n1 + Dp(r)n2|^2/2 = (dpxx + dpyy)/2 + dpxy
+                // L(n4) = |Dp(r)n1 - Dp(r)n2|^2/2 = (dpxx + dpyy)/2 - dpxy
+                // max(L(n1), L(n2), L(n3), L(n4))
+                // = max(max(L(n1), L(n2)), max(L(n3), L(n4)))
+                // = max(max(dpxx, dpyy), (dpxx + dpyy)/2 + abs(dpxy))
+                // So the extra cost is: one dot, one abs, one add, one multiply-add and one max.
+                // (All scalar.)
+                //
+                // In section 3.8.10.1, the OpenGL ES 3 specification defines the "scale factor",
+                // rho. In our terminology, this definition works out to taking sqrt(max(L(n1),
+                // L(n2))). Some implementations will use this estimate, here we use the strictly
+                // better sqrt(max(L(n1), L(n2), L(n3), L(n4))), since it's not much more expensive
+                // to calculate.
+
+                // Swap coordinates such that we can assume that the positive z-axis is major, in
+                // what follows.
+                out << "    float3 ddxr = xMajor ? ddx(r).yzx : yMajor ? ddx(r).zxy : ddx(r).xyz;\n"
+                       "    float3 ddyr = xMajor ? ddy(r).yzx : yMajor ? ddy(r).zxy : ddy(r).xyz;\n"
+                       "    r = xMajor ? r.yzx : yMajor ? r.zxy : r.xyz;\n";
+
+                out << "    float2 s = 0.5*float2(width, height);\n"
+                       "    float2 dpx = s * (ddxr.xy - ddxr.z*r.xy/r.z)/r.z;\n"
+                       "    float2 dpy = s * (ddyr.xy - ddyr.z*r.xy/r.z)/r.z;\n"
+                       "    float dpxx = dot(dpx, dpx);\n;"
+                       "    float dpyy = dot(dpy, dpy);\n;"
+                       "    float dpxy = dot(dpx, dpy);\n"
+                       "    float ma = max(dpxx, dpyy);\n"
+                       "    float mb = 0.5 * (dpxx + dpyy) + abs(dpxy);\n"
+                       "    float mab = max(ma, mb);\n"
+                       "    float lod = 0.5f * log2(mab);\n";
             }
             else if (textureFunction.method == TextureFunctionHLSL::TextureFunction::GRAD)
             {
