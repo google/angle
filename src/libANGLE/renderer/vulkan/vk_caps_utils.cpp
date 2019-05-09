@@ -44,6 +44,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.mapBufferRange         = true;
     mNativeExtensions.textureStorage         = true;
     mNativeExtensions.drawBuffers            = true;
+    mNativeExtensions.fragDepth              = true;
     mNativeExtensions.framebufferBlit        = true;
     mNativeExtensions.copyTexture            = true;
     mNativeExtensions.copyCompressedTexture  = true;
