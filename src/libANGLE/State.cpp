@@ -2087,7 +2087,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = mStencilRef;
             break;
         case GL_STENCIL_VALUE_MASK:
-            *params = CastMaskValue(context, mDepthStencil.stencilMask);
+            *params = CastMaskValue(mDepthStencil.stencilMask);
             break;
         case GL_STENCIL_BACK_FUNC:
             *params = mDepthStencil.stencilBackFunc;
@@ -2096,7 +2096,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = mStencilBackRef;
             break;
         case GL_STENCIL_BACK_VALUE_MASK:
-            *params = CastMaskValue(context, mDepthStencil.stencilBackMask);
+            *params = CastMaskValue(mDepthStencil.stencilBackMask);
             break;
         case GL_STENCIL_FAIL:
             *params = mDepthStencil.stencilFail;
@@ -2138,10 +2138,10 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = mBlend.blendEquationAlpha;
             break;
         case GL_STENCIL_WRITEMASK:
-            *params = CastMaskValue(context, mDepthStencil.stencilWritemask);
+            *params = CastMaskValue(mDepthStencil.stencilWritemask);
             break;
         case GL_STENCIL_BACK_WRITEMASK:
-            *params = CastMaskValue(context, mDepthStencil.stencilBackWritemask);
+            *params = CastMaskValue(mDepthStencil.stencilBackWritemask);
             break;
         case GL_STENCIL_CLEAR_VALUE:
             *params = mStencilClearValue;
