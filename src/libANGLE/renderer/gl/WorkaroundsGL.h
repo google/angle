@@ -100,10 +100,6 @@ struct WorkaroundsGL
     // Also used on Linux AMD.
     bool useUnusedBlocksWithStandardOrSharedLayout = false;
 
-    // This flag will keep invariant declaration for input in fragment shader for GLSL >=4.20
-    // on AMD.
-    bool dontRemoveInvariantForFragmentInput = false;
-
     // This flag is used to fix spec difference between GLSL 4.1 or lower and ESSL3.
     bool removeInvariantAndCentroidForESSL3 = false;
 
