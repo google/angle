@@ -1284,7 +1284,8 @@ ANGLE_INSTANTIATE_TEST(UniformTest,
                        ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(UniformTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(UniformTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 

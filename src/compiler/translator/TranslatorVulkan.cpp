@@ -99,7 +99,8 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
 
         TIntermTyped *variable = sequence.front()->getAsTyped();
         const TType &type      = variable->getType();
-        bool isUniform = (type.getQualifier() == EvqUniform) && !IsOpaqueType(type.getBasicType());
+        bool isUniform         = type.getQualifier() == EvqUniform && !type.isInterfaceBlock() &&
+                         !IsOpaqueType(type.getBasicType());
 
         if (visit == PreVisit)
         {

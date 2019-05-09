@@ -618,22 +618,22 @@ void ProgramVk::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 
 void ProgramVk::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_UNSIGNED_INT);
 }
 
 void ProgramVk::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_UNSIGNED_INT_VEC2);
 }
 
 void ProgramVk::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_UNSIGNED_INT_VEC3);
 }
 
 void ProgramVk::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_UNSIGNED_INT_VEC4);
 }
 
 template <int cols, int rows>
@@ -784,7 +784,7 @@ void ProgramVk::getUniformiv(const gl::Context *context, GLint location, GLint *
 
 void ProgramVk::getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const
 {
-    UNIMPLEMENTED();
+    getUniformImpl(location, params, GL_UNSIGNED_INT);
 }
 
 angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
