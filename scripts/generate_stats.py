@@ -145,9 +145,12 @@ BOT_NAMES = [
 BOT_NAME_PREFIX = 'chromium/ci/'
 BUILD_LINK_PREFIX = 'https://ci.chromium.org/p/chromium/builders/ci/'
 
-REQUIRED_COLUMNS = ['build_link', 'time', 'date', 'revision', 'angle_revision']
+REQUIRED_COLUMNS = ['build_link', 'time', 'date', 'revision', 'angle_revision', 'duplicate']
+MAIN_RESULT_COLUMNS = ['Passed', 'Failed', 'Skipped', 'Not Supported', 'Exception', 'Crashed']
 
 INFO_TAG = '*RESULT'
+
+WORKAROUND_FORMATTING_ERROR_STRING = "Still waiting for the following processes to finish:"
 
 ######################
 # Build Info Parsing #
@@ -246,7 +249,7 @@ def validate_step_info(step_info, build_name, step_name):
         return False
 
     if 'Total' in step_info:
-        partial_sum_keys = ['Passed', 'Failed', 'Skipped', 'Not Supported', 'Exception', 'Crashed']
+        partial_sum_keys = MAIN_RESULT_COLUMNS
         partial_sum_values = [int(step_info[key]) for key in partial_sum_keys if key in step_info]
         computed_total = sum(partial_sum_values)
         if step_info['Total'] != computed_total:
@@ -284,9 +287,40 @@ def get_step_info(build_name, step_name):
     # *RESULT: Unexpected Passed: 12
     # ...
     append_errors = []
+    # Hacky workaround to fix issue where messages are dropped into the middle of lines by another
+    # process:
+    # eg.
+    # *RESULT: <start_of_result>Still waiting for the following processes to finish:
+    # "c:\b\s\w\ir\out\Release\angle_deqp_gles3_tests.exe" --deqp-egl-display-type=angle-vulkan --gtest_flagfile="c:\b\s\w\itlcgdrz\scoped_dir7104_364984996\8ad93729-f679-406d-973b-06b9d1bf32de.tmp" --single-process-tests --test-launcher-batch-limit=400 --test-launcher-output="c:\b\s\w\itlcgdrz\7104_437216092\test_results.xml" --test-launcher-summary-output="c:\b\s\w\iosuk8ai\output.json"
+    # <end_of_result>
+    #
+    # Removes the message and skips the line following it, and then appends the <start_of_result>
+    # and <end_of_result> back together
+    workaround_prev_line = ""
+    workaround_prev_line_count = 0
     for line in out.splitlines():
+        # Skip lines if the workaround still has lines to skip
+        if workaround_prev_line_count > 0:
+            workaround_prev_line_count -= 1
+            continue
+        # If there are no more lines to skip and there is a previous <start_of_result> to append,
+        # append it and finish the workaround
+        elif workaround_prev_line != "":
+            line = workaround_prev_line + line
+            workaround_prev_line = ""
+            workaround_prev_line_count = 0
+            LOGGER.debug("Formatting error workaround rebuilt line as: '" + line + "'\n")
+
         if INFO_TAG not in line:
             continue
+
+        # When the workaround string is detected, start the workaround with 1 line to skip and save
+        # the <start_of_result>, but continue the loop until the workaround is finished
+        if WORKAROUND_FORMATTING_ERROR_STRING in line:
+            workaround_prev_line = line.split(WORKAROUND_FORMATTING_ERROR_STRING)[0]
+            workaround_prev_line_count = 1
+            continue
+
         found_stat = True
         line_columns = line.split(INFO_TAG, 1)[1].split(':')
         if len(line_columns) is not 3:
@@ -312,8 +346,8 @@ def get_step_info(build_name, step_name):
                 step_info[key] = line_columns[2].strip()
             else:
                 append_string = '\n' + line_columns[2].strip()
-                # Sheets has a limit of 50000 characters per cell, so make sure to stop appending below
-                # this limit
+                # Sheets has a limit of 50000 characters per cell, so make sure to stop appending
+                # below this limit
                 if len(step_info[key]) + len(append_string) < 50000:
                     step_info[key] += append_string
                 else:
@@ -465,6 +499,45 @@ def batch_update_values(service, spreadsheet_id, data):
     request.execute()
 
 
+# Get the sheetId of a sheet based on its name
+def get_sheet_id(spreadsheet, sheet_name):
+    for sheet in spreadsheet['sheets']:
+        if sheet['properties']['title'] == sheet_name:
+            return sheet['properties']['sheetId']
+    return -1
+
+
+# Update the filters on sheets with a 'duplicate' column. Filter out any duplicate rows
+def update_filters(service, spreadsheet_id, headers, info, spreadsheet):
+    updates = []
+    for bot_name in info:
+        for step_name in info[bot_name]['step_names']:
+            sheet_name = format_sheet_name(bot_name, step_name)
+            duplicate_found = 'duplicate' in headers[sheet_name]
+            if duplicate_found:
+                sheet_id = get_sheet_id(spreadsheet, sheet_name)
+                if sheet_id > -1:
+                    updates.append({
+                        "setBasicFilter": {
+                            "filter": {
+                                "range": {
+                                    "sheetId": sheet_id,
+                                    "startColumnIndex": 0,
+                                    "endColumnIndex": len(headers[sheet_name])
+                                },
+                                "criteria": {
+                                    str(headers[sheet_name].index('duplicate')): {
+                                        "hiddenValues":
+                                            ["1"]  # Hide rows when duplicate is 1 (true)
+                                    }
+                                }
+                            }
+                        }
+                    })
+    if updates:
+        LOGGER.info('Updating sheet filters...')
+        batch_update(service, spreadsheet_id, updates)
+
 # Populates the headers with any missing/desired rows based on the info struct, and calls
 # batch update to update the corresponding sheets if necessary.
 def update_headers(service, spreadsheet_id, headers, info):
@@ -521,6 +594,46 @@ def append_values(service, spreadsheet_id, sheet_name, values):
     request.execute()
 
 
+# Formula to determine whether a row is a duplicate of the previous row based on checking the
+# columns listed in filter_columns.
+# Eg.
+# date | pass | fail
+# Jan 1  100    50
+# Jan 2  100    50
+# Jan 3  99     51
+#
+# If we want to filter based on only the "pass" and "fail" columns, we generate the following
+# formula in the 'duplicate' column: 'IF(B1=B0, IF(C1=C0,1,0) ,0);
+# This formula is recursively generated for each column in filter_columns, using the column
+# position as determined by headers. The formula uses a more generalized form with
+# 'INDIRECT(ADDRESS(<row>, <col>))'' instead of 'B1', where <row> is Row() and Row()-1, and col is
+# determined by the column's position in headers
+def generate_duplicate_formula(headers, filter_columns):
+    # No more columns, put a 1 in the IF statement true branch
+    if len(filter_columns) == 0:
+        return '1'
+    # Next column is found, generate the formula for duplicate checking, and remove from the list
+    # for recursion
+    for i in range(len(headers)):
+        if headers[i] == filter_columns[0]:
+            col = str(i + 1)
+            return "IF(INDIRECT(ADDRESS(ROW(), " + col + "))=INDIRECT(ADDRESS(ROW() - 1, " + col +
+            "))," + generate_duplicate_formula(
+                headers, filter_columns[1:]) + ",0)"
+    # Next column not found, remove from recursion but just return whatever the next one is
+    return generate_duplicate_formula(headers, filter_columns[1:])
+
+
+# Helper function to start the recursive call to generate_duplicate_formula
+def generate_duplicate_formula_helper(headers):
+    filter_columns = MAIN_RESULT_COLUMNS
+    formula = generate_duplicate_formula(headers, filter_columns)
+    if (formula == "1"):
+        return ""
+    else:
+        # Final result needs to be prepended with =
+        return "=" + formula
+
 # Uses the list of headers and the info struct to come up with a list of values for each step
 # from the latest builds.
 def update_values(service, spreadsheet_id, headers, info):
@@ -536,6 +649,8 @@ def update_values(service, spreadsheet_id, headers, info):
                     values.append(info[bot_name][key])
                 elif key in info[bot_name][step_name]:
                     values.append(info[bot_name][step_name][key])
+                elif key == "duplicate" and key in REQUIRED_COLUMNS:
+                    values.append(generate_duplicate_formula_helper(headers[sheet_name]))
                 else:
                     values.append('')
             LOGGER.info("Appending new rows to sheet '" + sheet_name + "'...")
@@ -558,6 +673,7 @@ def update_spreadsheet(service, spreadsheet_id, info):
     LOGGER.info('Parsing sheet headers...')
     headers = get_headers(service, spreadsheet_id, sheet_names)
     update_headers(service, spreadsheet_id, headers, info)
+    update_filters(service, spreadsheet_id, headers, info, spreadsheet)
     update_values(service, spreadsheet_id, headers, info)
 
 
