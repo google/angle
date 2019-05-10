@@ -36,7 +36,7 @@ TEST(ObserverTest, BasicUsage)
 
     binding.bind(&subject);
     ASSERT_FALSE(observer.wasNotified);
-    subject.onStateChange(nullptr, SubjectMessage::STORAGE_CHANGED);
+    subject.onStateChange(nullptr, SubjectMessage::SubjectChanged);
     ASSERT_TRUE(observer.wasNotified);
 }
 

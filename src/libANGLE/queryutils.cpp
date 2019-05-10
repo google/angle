@@ -494,7 +494,7 @@ void SetSamplerParameterBase(Context *context,
             break;
     }
 
-    sampler->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+    sampler->onStateChange(context, angle::SubjectMessage::ContentsChanged);
 }
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using this function.

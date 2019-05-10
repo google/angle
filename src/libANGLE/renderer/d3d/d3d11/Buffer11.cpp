@@ -952,13 +952,13 @@ bool Buffer11::supportsDirectBinding() const
 void Buffer11::initializeStaticData(const gl::Context *context)
 {
     BufferD3D::initializeStaticData(context);
-    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+    onStateChange(context, angle::SubjectMessage::SubjectChanged);
 }
 
 void Buffer11::invalidateStaticData(const gl::Context *context)
 {
     BufferD3D::invalidateStaticData(context);
-    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+    onStateChange(context, angle::SubjectMessage::SubjectChanged);
 }
 
 void Buffer11::onCopyStorage(BufferStorage *dest, BufferStorage *source)
@@ -1151,7 +1151,7 @@ angle::Result Buffer11::NativeStorage::resize(const gl::Context *context,
     // Notify that the storage has changed.
     if (mOnStorageChanged)
     {
-        mOnStorageChanged->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+        mOnStorageChanged->onStateChange(context, angle::SubjectMessage::SubjectChanged);
     }
 
     return angle::Result::Continue;

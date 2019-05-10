@@ -39,7 +39,7 @@ const std::string &Sampler::getLabel() const
 void Sampler::setMinFilter(const Context *context, GLenum minFilter)
 {
     mState.setMinFilter(minFilter);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getMinFilter() const
@@ -50,7 +50,7 @@ GLenum Sampler::getMinFilter() const
 void Sampler::setMagFilter(const Context *context, GLenum magFilter)
 {
     mState.setMagFilter(magFilter);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getMagFilter() const
@@ -61,7 +61,7 @@ GLenum Sampler::getMagFilter() const
 void Sampler::setWrapS(const Context *context, GLenum wrapS)
 {
     mState.setWrapS(wrapS);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getWrapS() const
@@ -72,7 +72,7 @@ GLenum Sampler::getWrapS() const
 void Sampler::setWrapT(const Context *context, GLenum wrapT)
 {
     mState.setWrapT(wrapT);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getWrapT() const
@@ -83,7 +83,7 @@ GLenum Sampler::getWrapT() const
 void Sampler::setWrapR(const Context *context, GLenum wrapR)
 {
     mState.setWrapR(wrapR);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getWrapR() const
@@ -94,7 +94,7 @@ GLenum Sampler::getWrapR() const
 void Sampler::setMaxAnisotropy(const Context *context, float maxAnisotropy)
 {
     mState.setMaxAnisotropy(maxAnisotropy);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 float Sampler::getMaxAnisotropy() const
@@ -105,7 +105,7 @@ float Sampler::getMaxAnisotropy() const
 void Sampler::setMinLod(const Context *context, GLfloat minLod)
 {
     mState.setMinLod(minLod);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLfloat Sampler::getMinLod() const
@@ -116,7 +116,7 @@ GLfloat Sampler::getMinLod() const
 void Sampler::setMaxLod(const Context *context, GLfloat maxLod)
 {
     mState.setMaxLod(maxLod);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLfloat Sampler::getMaxLod() const
@@ -127,7 +127,7 @@ GLfloat Sampler::getMaxLod() const
 void Sampler::setCompareMode(const Context *context, GLenum compareMode)
 {
     mState.setCompareMode(compareMode);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getCompareMode() const
@@ -138,7 +138,7 @@ GLenum Sampler::getCompareMode() const
 void Sampler::setCompareFunc(const Context *context, GLenum compareFunc)
 {
     mState.setCompareFunc(compareFunc);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getCompareFunc() const
@@ -149,7 +149,7 @@ GLenum Sampler::getCompareFunc() const
 void Sampler::setSRGBDecode(const Context *context, GLenum sRGBDecode)
 {
     mState.setSRGBDecode(sRGBDecode);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Sampler::getSRGBDecode() const
@@ -160,7 +160,7 @@ GLenum Sampler::getSRGBDecode() const
 void Sampler::setBorderColor(const Context *context, const ColorGeneric &color)
 {
     mState.setBorderColor(color);
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 const ColorGeneric &Sampler::getBorderColor() const

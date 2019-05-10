@@ -955,7 +955,7 @@ void Framebuffer::invalidateCompletenessCache(const Context *context)
     if (mState.mId != 0)
     {
         mCachedStatus.reset();
-        onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+        onStateChange(context, angle::SubjectMessage::SubjectChanged);
     }
 }
 
@@ -1853,16 +1853,16 @@ void Framebuffer::onSubjectStateChange(const Context *context,
                                        angle::SubjectIndex index,
                                        angle::SubjectMessage message)
 {
-    if (message != angle::SubjectMessage::STORAGE_CHANGED)
+    if (message != angle::SubjectMessage::SubjectChanged)
     {
         // This can be triggered by the GL back-end TextureGL class.
-        ASSERT(message == angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+        ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
         return;
     }
 
     ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
     mDirtyBits.set(index);
-    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
 
     invalidateCompletenessCache(context);
 

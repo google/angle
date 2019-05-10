@@ -136,7 +136,7 @@ void Surface::postSwap(const gl::Context *context)
     if (mRobustResourceInitialization && mSwapBehavior != EGL_BUFFER_PRESERVED)
     {
         mInitState = gl::InitState::MayNeedInit;
-        onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+        onStateChange(context, angle::SubjectMessage::SubjectChanged);
     }
 }
 
