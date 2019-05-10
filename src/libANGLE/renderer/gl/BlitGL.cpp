@@ -159,6 +159,7 @@ using ClearBindTargetVector = angle::FixedVector<GLenum, 3>;
 angle::Result PrepareForClear(StateManagerGL *stateManager,
                               GLenum sizedInternalFormat,
                               ClearBindTargetVector *outBindtargets,
+                              ClearBindTargetVector *outUnbindTargets,
                               GLbitfield *outClearMask)
 {
     const gl::InternalFormat &internalFormatInfo =
@@ -172,13 +173,25 @@ angle::Result PrepareForClear(StateManagerGL *stateManager,
     {
         outBindtargets->push_back(GL_COLOR_ATTACHMENT0);
     }
+    else
+    {
+        outUnbindTargets->push_back(GL_COLOR_ATTACHMENT0);
+    }
     if (bindDepth)
     {
         outBindtargets->push_back(GL_DEPTH_ATTACHMENT);
     }
+    else
+    {
+        outUnbindTargets->push_back(GL_DEPTH_ATTACHMENT);
+    }
     if (bindStencil)
     {
         outBindtargets->push_back(GL_STENCIL_ATTACHMENT);
+    }
+    else
+    {
+        outUnbindTargets->push_back(GL_STENCIL_ATTACHMENT);
     }
 
     ANGLE_TRY(SetClearState(stateManager, bindColor, bindDepth, bindStencil, outClearMask));
@@ -718,10 +731,13 @@ angle::Result BlitGL::clearRenderableTexture(TextureGL *source,
     ANGLE_TRY(initializeResources());
 
     ClearBindTargetVector bindTargets;
+    ClearBindTargetVector unbindTargets;
     GLbitfield clearMask = 0;
-    ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &clearMask));
+    ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &unbindTargets,
+                              &clearMask));
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    UnbindAttachments(mFunctions, GL_FRAMEBUFFER, unbindTargets);
 
     if (nativegl::UseTexImage2D(source->getType()))
     {
@@ -814,10 +830,14 @@ angle::Result BlitGL::clearRenderbuffer(RenderbufferGL *source, GLenum sizedInte
     ANGLE_TRY(initializeResources());
 
     ClearBindTargetVector bindTargets;
+    ClearBindTargetVector unbindTargets;
     GLbitfield clearMask = 0;
-    ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &clearMask));
+    ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &unbindTargets,
+                              &clearMask));
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    UnbindAttachments(mFunctions, GL_FRAMEBUFFER, unbindTargets);
+
     for (GLenum bindTarget : bindTargets)
     {
         mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, bindTarget, GL_RENDERBUFFER,

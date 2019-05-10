@@ -1853,6 +1853,73 @@ TEST_P(RobustResourceInitTest, DynamicVertexArrayOffsetOutOfBounds)
     // Either no error or invalid operation is okay.
 }
 
+// Test to cover a bug that the multisampled depth attachment of a framebuffer are not successfully
+// initialized before it is used as the read framebuffer in blitFramebuffer.
+// Referenced from the following WebGL CTS:
+// conformance2/renderbuffers/multisampled-depth-renderbuffer-initialization.html
+TEST_P(RobustResourceInitTestES3, InitializeMultisampledDepthRenderbufferAfterCopyTextureCHROMIUM)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    // Call glCopyTextureCHROMIUM to set destTexture as the color attachment of the internal
+    // framebuffer mScratchFBO.
+    GLTexture sourceTexture;
+    glBindTexture(GL_TEXTURE_2D, sourceTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    GLTexture destTexture;
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+    glCopyTextureCHROMIUM(sourceTexture, 0, GL_TEXTURE_2D, destTexture, 0, GL_RGBA,
+                          GL_UNSIGNED_BYTE, GL_FALSE, GL_FALSE, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer drawFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFbo);
+
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    GLRenderbuffer drawDepthRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, drawDepthRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, kWidth, kHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, drawDepthRbo);
+
+    // Clear drawDepthRbo to 0.0f
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    constexpr uint32_t kReadDepthRboSampleCount = 4;
+    GLFramebuffer readFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+    GLRenderbuffer readDepthRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, readDepthRbo);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, kReadDepthRboSampleCount,
+                                     GL_DEPTH_COMPONENT16, kWidth, kHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, readDepthRbo);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFbo);
+
+    // Blit from readDepthRbo to drawDepthRbo. When robust resource init is enabled, readDepthRbo
+    // should be initialized to 1.0f by default, so the data in drawDepthRbo should also be 1.0f.
+    glBlitFramebuffer(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_DEPTH_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFbo);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    // If drawDepthRbo is correctly set to 1.0f, the depth test can always pass, so the result
+    // should be green.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 ANGLE_INSTANTIATE_TEST(RobustResourceInitTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
