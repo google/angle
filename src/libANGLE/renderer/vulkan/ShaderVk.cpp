@@ -25,8 +25,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
                                                         gl::ShCompilerInstance *compilerInstance,
                                                         ShCompileOptions options)
 {
-    ShCompileOptions compileOptions =
-        SH_INITIALIZE_UNINITIALIZED_LOCALS | SH_REDEFINE_INTERFACE_LAYOUT_QUALIFIERS_WITH_STD;
+    ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
 
     ContextVk *contextVk = vk::GetImpl(context);
 

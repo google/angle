@@ -617,6 +617,7 @@
 3219 VULKAN : dEQP-GLES3.functional.shaders.conversions.matrix* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.functions.datatypes.mat* = SKIP
 3219 VULKAN : dEQP-GLES3.functional.shaders.matrix.* = SKIP
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.10 = FAIL
 
 // New vertex attribute formats:
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.strides.int2_10_10_10.* = SKIP
@@ -714,8 +715,6 @@
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
-3199 VULKAN : dEQP-GLES3.functional.shaders.linkage.uniform.block.layout_qualifier_mismatch_1 = FAIL
-3199 VULKAN : dEQP-GLES3.functional.shaders.linkage.uniform.block.layout_qualifier_mismatch_2 = FAIL
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).
 2976 VULKAN NVIDIA : dEQP-GLES3.functional.shaders.invariance.* = FAIL

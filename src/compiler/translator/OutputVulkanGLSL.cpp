@@ -71,12 +71,20 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     {
         const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
         name                                  = interfaceBlock->name();
+        TLayoutBlockStorage storage           = interfaceBlock->blockStorage();
 
         // Make sure block storage format is specified.
-        if (interfaceBlock->blockStorage() != EbsUnspecified)
+        if (storage != EbsStd430)
         {
-            blockStorage = getBlockStorageString(interfaceBlock->blockStorage());
+            // Change interface block layout qualifiers to std140 for any layout that is not
+            // explicitly set to std430.  This is to comply with GL_KHR_vulkan_glsl where shared and
+            // packed are not allowed (and std140 could be used instead) and unspecified layouts can
+            // assume either std140 or std430 (and we choose std140 as std430 is not yet universally
+            // supported).
+            storage = EbsStd140;
         }
+
+        blockStorage = getBlockStorageString(storage);
     }
 
     // Specify matrix packing if necessary.

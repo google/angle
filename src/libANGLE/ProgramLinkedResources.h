@@ -108,7 +108,8 @@ class InterfaceBlockLinker : angle::NonCopyable
                     const GetBlockMemberInfoFunc &getMemberInfo) const;
 
   protected:
-    InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut);
+    InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut,
+                         std::vector<std::string> *unusedInterfaceBlocksOut);
     void defineInterfaceBlock(const GetBlockSizeFunc &getBlockSize,
                               const GetBlockMemberInfoFunc &getMemberInfo,
                               const sh::InterfaceBlock &interfaceBlock,
@@ -119,6 +120,7 @@ class InterfaceBlockLinker : angle::NonCopyable
     ShaderMap<const std::vector<sh::InterfaceBlock> *> mShaderBlocks;
 
     std::vector<InterfaceBlock> *mBlocksOut;
+    std::vector<std::string> *mUnusedInterfaceBlocksOut;
 
     virtual sh::ShaderVariableVisitor *getVisitor(const GetBlockMemberInfoFunc &getMemberInfo,
                                                   const std::string &namePrefix,
@@ -131,7 +133,8 @@ class UniformBlockLinker final : public InterfaceBlockLinker
 {
   public:
     UniformBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                       std::vector<LinkedUniform> *uniformsOut);
+                       std::vector<LinkedUniform> *uniformsOut,
+                       std::vector<std::string> *unusedInterfaceBlocksOut);
     ~UniformBlockLinker() override;
 
   private:
@@ -150,7 +153,8 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
 {
   public:
     ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                             std::vector<BufferVariable> *bufferVariablesOut);
+                             std::vector<BufferVariable> *bufferVariablesOut,
+                             std::vector<std::string> *unusedInterfaceBlocksOut);
     ~ShaderStorageBlockLinker() override;
 
   private:
@@ -208,6 +212,7 @@ struct ProgramLinkedResources
     ShaderStorageBlockLinker shaderStorageBlockLinker;
     AtomicCounterBufferLinker atomicCounterBufferLinker;
     std::vector<UnusedUniform> unusedUniforms;
+    std::vector<std::string> unusedInterfaceBlocks;
 };
 
 class CustomBlockLayoutEncoderFactory : angle::NonCopyable

@@ -165,6 +165,12 @@ uint32_t GetUniformBlockArraySize(const std::vector<gl::InterfaceBlock> &uniform
 
     return arraySize;
 }
+
+class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
+{
+  public:
+    sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
+};
 }  // anonymous namespace
 
 // ProgramVk::ShaderInfo implementation.
@@ -366,7 +372,8 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext,
 
 void ProgramVk::linkResources(const gl::ProgramLinkedResources &resources)
 {
-    gl::ProgramLinkedResourcesLinker linker(nullptr);
+    Std140BlockLayoutEncoderFactory std140EncoderFactory;
+    gl::ProgramLinkedResourcesLinker linker(&std140EncoderFactory);
 
     linker.linkResources(mState, resources);
 }

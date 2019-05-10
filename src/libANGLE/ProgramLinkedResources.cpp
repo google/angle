@@ -564,7 +564,7 @@ void InterfaceBlockInfo::getShaderBlockInfo(const std::vector<sh::InterfaceBlock
 {
     for (const sh::InterfaceBlock &interfaceBlock : interfaceBlocks)
     {
-        if (!interfaceBlock.active && interfaceBlock.layout == sh::BLOCKLAYOUT_PACKED)
+        if (!IsActiveInterfaceBlock(interfaceBlock))
             continue;
 
         if (mBlockSizes.count(interfaceBlock.name) > 0)
@@ -577,7 +577,7 @@ void InterfaceBlockInfo::getShaderBlockInfo(const std::vector<sh::InterfaceBlock
 
 size_t InterfaceBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
 {
-    ASSERT(interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED);
+    ASSERT(IsActiveInterfaceBlock(interfaceBlock));
 
     // define member uniforms
     sh::Std140BlockEncoder std140Encoder;
@@ -1030,8 +1030,9 @@ bool UniformLinker::checkMaxCombinedAtomicCounters(const Caps &caps, InfoLog &in
 }
 
 // InterfaceBlockLinker implementation.
-InterfaceBlockLinker::InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut)
-    : mShaderBlocks({}), mBlocksOut(blocksOut)
+InterfaceBlockLinker::InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut,
+                                           std::vector<std::string> *unusedInterfaceBlocksOut)
+    : mShaderBlocks({}), mBlocksOut(blocksOut), mUnusedInterfaceBlocksOut(unusedInterfaceBlocksOut)
 {}
 
 InterfaceBlockLinker::~InterfaceBlockLinker() {}
@@ -1059,7 +1060,10 @@ void InterfaceBlockLinker::linkBlocks(const GetBlockSizeFunc &getBlockSize,
         for (const sh::InterfaceBlock &block : *mShaderBlocks[shaderType])
         {
             if (!IsActiveInterfaceBlock(block))
+            {
+                mUnusedInterfaceBlocksOut->push_back(block.name);
                 continue;
+            }
 
             if (visitedList.count(block.name) == 0)
             {
@@ -1069,7 +1073,10 @@ void InterfaceBlockLinker::linkBlocks(const GetBlockSizeFunc &getBlockSize,
             }
 
             if (!block.active)
+            {
+                mUnusedInterfaceBlocksOut->push_back(block.name);
                 continue;
+            }
 
             for (InterfaceBlock &priorBlock : *mBlocksOut)
             {
@@ -1151,8 +1158,9 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSizeFunc &getBlock
 
 // UniformBlockLinker implementation.
 UniformBlockLinker::UniformBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                                       std::vector<LinkedUniform> *uniformsOut)
-    : InterfaceBlockLinker(blocksOut), mUniformsOut(uniformsOut)
+                                       std::vector<LinkedUniform> *uniformsOut,
+                                       std::vector<std::string> *unusedInterfaceBlocksOut)
+    : InterfaceBlockLinker(blocksOut, unusedInterfaceBlocksOut), mUniformsOut(uniformsOut)
 {}
 
 UniformBlockLinker::~UniformBlockLinker() {}
@@ -1174,9 +1182,12 @@ sh::ShaderVariableVisitor *UniformBlockLinker::getVisitor(
 }
 
 // ShaderStorageBlockLinker implementation.
-ShaderStorageBlockLinker::ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                                                   std::vector<BufferVariable> *bufferVariablesOut)
-    : InterfaceBlockLinker(blocksOut), mBufferVariablesOut(bufferVariablesOut)
+ShaderStorageBlockLinker::ShaderStorageBlockLinker(
+    std::vector<InterfaceBlock> *blocksOut,
+    std::vector<BufferVariable> *bufferVariablesOut,
+    std::vector<std::string> *unusedInterfaceBlocksOut)
+    : InterfaceBlockLinker(blocksOut, unusedInterfaceBlocksOut),
+      mBufferVariablesOut(bufferVariablesOut)
 {}
 
 ShaderStorageBlockLinker::~ShaderStorageBlockLinker() {}
@@ -1224,8 +1235,8 @@ ProgramLinkedResources::ProgramLinkedResources(
     std::vector<BufferVariable> *bufferVariablesOut,
     std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut)
     : varyingPacking(maxVaryingVectors, packMode),
-      uniformBlockLinker(uniformBlocksOut, uniformsOut),
-      shaderStorageBlockLinker(shaderStorageBlocksOut, bufferVariablesOut),
+      uniformBlockLinker(uniformBlocksOut, uniformsOut, &unusedInterfaceBlocks),
+      shaderStorageBlockLinker(shaderStorageBlocksOut, bufferVariablesOut, &unusedInterfaceBlocks),
       atomicCounterBufferLinker(atomicCounterBuffersOut)
 {}
 
