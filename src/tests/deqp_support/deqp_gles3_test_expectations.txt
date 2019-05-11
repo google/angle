@@ -611,12 +611,6 @@
 // Shader support:
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
-3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.basic_types.mat* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.mat* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.conversions.scalar_to_matrix.* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.conversions.matrix* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.functions.datatypes.mat* = SKIP
-3219 VULKAN : dEQP-GLES3.functional.shaders.matrix.* = SKIP
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.10 = FAIL
 
 // New vertex attribute formats:

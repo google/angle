@@ -2602,16 +2602,13 @@ void ProgramD3D::setUniformMatrixfvInternal(GLint location,
     unsigned int arrayElementOffset             = uniformLocation.arrayIndex;
     unsigned int elementCount                   = targetUniform->getArraySizeProduct();
 
-    // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
-    transpose = !transpose;
-
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         if (targetUniform->mShaderData[shaderType])
         {
-            if (SetFloatUniformMatrix<cols, rows>(arrayElementOffset, elementCount, countIn,
-                                                  transpose, value,
-                                                  targetUniform->mShaderData[shaderType]))
+            if (SetFloatUniformMatrixHLSL<cols, rows>(arrayElementOffset, elementCount, countIn,
+                                                      transpose, value,
+                                                      targetUniform->mShaderData[shaderType]))
             {
                 mShaderUniformsDirty.set(shaderType);
             }
