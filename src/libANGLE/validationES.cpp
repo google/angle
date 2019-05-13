@@ -2778,7 +2778,8 @@ const char *ValidateDrawStates(Context *context)
                 return kVertexShaderTypeMismatch;
             }
 
-            if (!context->getState().getBlendState().allChannelsMasked())
+            if (!context->getState().getRasterizerState().rasterizerDiscard &&
+                !context->getState().getBlendState().allChannelsMasked())
             {
                 // Detect that if there's active color buffer without fragment shader output
                 if (!ValidateFragmentShaderColorBufferMaskMatch(context))

@@ -444,6 +444,11 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
     setDrawBuffers(kMaxBuffers, allBufs);
     drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+    // Exception: when RASTERIZER_DISCARD is enabled.
+    glEnable(GL_RASTERIZER_DISCARD);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    glDisable(GL_RASTERIZER_DISCARD);
     // Exception: when all 4 channels of color mask are set to false.
     glColorMask(false, false, false, false);
     drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
