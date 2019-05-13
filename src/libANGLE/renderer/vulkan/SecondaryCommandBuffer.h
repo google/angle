@@ -56,6 +56,7 @@ enum class CommandID : uint16_t
     PushConstants,
     ResetEvent,
     ResetQueryPool,
+    ResolveImage,
     SetEvent,
     WaitEvents,
     WriteTimestamp,
@@ -279,6 +280,14 @@ struct ResetQueryPoolParams
 };
 VERIFY_4_BYTE_ALIGNMENT(ResetQueryPoolParams)
 
+struct ResolveImageParams
+{
+    VkImage srcImage;
+    VkImage dstImage;
+    VkImageResolve region;
+};
+VERIFY_4_BYTE_ALIGNMENT(ResolveImageParams)
+
 struct BeginQueryParams
 {
     VkQueryPool queryPool;
@@ -364,7 +373,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                    const Image &dstImage,
                    VkImageLayout dstImageLayout,
                    uint32_t regionCount,
-                   const VkImageBlit *pRegions,
+                   const VkImageBlit *regions,
                    VkFilter filter);
 
     void clearAttachments(uint32_t attachmentCount,
@@ -447,6 +456,13 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
 
     void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
+
+    void resolveImage(const Image &srcImage,
+                      VkImageLayout srcImageLayout,
+                      const Image &dstImage,
+                      VkImageLayout dstImageLayout,
+                      uint32_t regionCount,
+                      const VkImageResolve *regions);
 
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
 
@@ -676,7 +692,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::blitImage(const Image &srcImage,
                                                     const Image &dstImage,
                                                     VkImageLayout dstImageLayout,
                                                     uint32_t regionCount,
-                                                    const VkImageBlit *pRegions,
+                                                    const VkImageBlit *regions,
                                                     VkFilter filter)
 {
     // Currently ANGLE uses limited params so verify those assumptions and update if they change
@@ -687,7 +703,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::blitImage(const Image &srcImage,
     paramStruct->srcImage        = srcImage.getHandle();
     paramStruct->dstImage        = dstImage.getHandle();
     paramStruct->filter          = filter;
-    paramStruct->region          = pRegions[0];
+    paramStruct->region          = regions[0];
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::clearAttachments(uint32_t attachmentCount,
@@ -932,6 +948,23 @@ ANGLE_INLINE void SecondaryCommandBuffer::resetQueryPool(VkQueryPool queryPool,
     paramStruct->queryPool  = queryPool;
     paramStruct->firstQuery = firstQuery;
     paramStruct->queryCount = queryCount;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::resolveImage(const Image &srcImage,
+                                                       VkImageLayout srcImageLayout,
+                                                       const Image &dstImage,
+                                                       VkImageLayout dstImageLayout,
+                                                       uint32_t regionCount,
+                                                       const VkImageResolve *regions)
+{
+    // Currently ANGLE uses limited params so verify those assumptions and update if they change.
+    ASSERT(srcImageLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+    ASSERT(dstImageLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    ASSERT(regionCount == 1);
+    ResolveImageParams *paramStruct = initCommand<ResolveImageParams>(CommandID::ResolveImage);
+    paramStruct->srcImage           = srcImage.getHandle();
+    paramStruct->dstImage           = dstImage.getHandle();
+    paramStruct->region             = regions[0];
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)

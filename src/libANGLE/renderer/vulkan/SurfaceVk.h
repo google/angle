@@ -71,7 +71,8 @@ class OffscreenSurfaceVk : public SurfaceImpl
         angle::Result initialize(DisplayVk *displayVk,
                                  EGLint width,
                                  EGLint height,
-                                 const vk::Format &vkFormat);
+                                 const vk::Format &vkFormat,
+                                 GLint samples);
         void destroy(const egl::Display *display);
 
         vk::ImageHelper image;
@@ -164,6 +165,8 @@ class WindowSurfaceVk : public SurfaceImpl
                           bool &swapchainOutOfDate);
     angle::Result swapImpl(DisplayVk *displayVk, EGLint *rects, EGLint n_rects);
 
+    bool isMultiSampled() const;
+
     VkSurfaceCapabilitiesKHR mSurfaceCaps;
     std::vector<VkPresentModeKHR> mPresentModes;
 
@@ -235,8 +238,14 @@ class WindowSurfaceVk : public SurfaceImpl
     std::array<SwapHistory, kSwapHistorySize> mSwapHistory;
     size_t mCurrentSwapHistoryIndex;
 
+    // Depth/stencil image.  Possibly multisampled.
     vk::ImageHelper mDepthStencilImage;
     vk::ImageView mDepthStencilImageView;
+
+    // Multisample color image, view and framebuffer, if multisampling enabled.
+    vk::ImageHelper mColorImageMS;
+    vk::ImageView mColorImageViewMS;
+    vk::Framebuffer mFramebufferMS;
 };
 
 }  // namespace rx

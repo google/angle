@@ -466,6 +466,8 @@ using UniformBuffersArray = std::array<T, IMPLEMENTATION_MAX_UNIFORM_BUFFER_BIND
 
 using ImageUnitMask = angle::BitSet<IMPLEMENTATION_MAX_IMAGE_UNITS>;
 
+using SupportedSampleSet = std::set<GLuint>;
+
 // OffsetBindingPointer.getSize() returns the size specified by the user, which may be larger than
 // the size of the bound buffer. This function reduces the returned size to fit the bound buffer if
 // necessary. Returns 0 if no buffer is bound or if integer overflow occurs.

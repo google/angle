@@ -195,11 +195,11 @@ struct RasterizationStateBits final
     uint32_t polygonMode : 4;
     uint32_t cullMode : 4;
     uint32_t frontFace : 4;
-    uint32_t depthBiasEnable : 4;
-    uint32_t rasterizationSamples : 4;
+    uint32_t depthBiasEnable : 1;
     uint32_t sampleShadingEnable : 1;
     uint32_t alphaToCoverageEnable : 1;
-    uint32_t alphaToOneEnable : 2;
+    uint32_t alphaToOneEnable : 1;
+    uint32_t rasterizationSamples : 8;
 };
 
 constexpr size_t kRasterizationStateBitsSize = sizeof(RasterizationStateBits);
@@ -383,6 +383,15 @@ class GraphicsPipelineDesc final
                          const gl::RasterizerState &rasterState,
                          bool invertFrontFace);
     void updateLineWidth(GraphicsPipelineTransitionBits *transition, float lineWidth);
+
+    // Multisample states
+    void updateRasterizationSamples(GraphicsPipelineTransitionBits *transition,
+                                    uint32_t rasterizationSamples);
+    void updateAlphaToCoverageEnable(GraphicsPipelineTransitionBits *transition, bool enable);
+    void updateAlphaToOneEnable(GraphicsPipelineTransitionBits *transition, bool enable);
+    void updateSampleMask(GraphicsPipelineTransitionBits *transition,
+                          uint32_t maskNumber,
+                          uint32_t mask);
 
     // RenderPass description.
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }

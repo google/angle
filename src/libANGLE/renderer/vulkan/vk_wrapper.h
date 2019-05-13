@@ -223,7 +223,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                    const Image &dstImage,
                    VkImageLayout dstImageLayout,
                    uint32_t regionCount,
-                   VkImageBlit *pRegions,
+                   const VkImageBlit *regions,
                    VkFilter filter);
 
     void clearColorImage(const Image &image,
@@ -313,6 +313,12 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     VkResult reset();
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
+    void resolveImage(const Image &srcImage,
+                      VkImageLayout srcImageLayout,
+                      const Image &dstImage,
+                      VkImageLayout dstImageLayout,
+                      uint32_t regionCount,
+                      const VkImageResolve *regions);
     void waitEvents(uint32_t eventCount,
                     const VkEvent *events,
                     VkPipelineStageFlags srcStageMask,
@@ -578,13 +584,13 @@ ANGLE_INLINE void CommandBuffer::blitImage(const Image &srcImage,
                                            const Image &dstImage,
                                            VkImageLayout dstImageLayout,
                                            uint32_t regionCount,
-                                           VkImageBlit *pRegions,
+                                           const VkImageBlit *regions,
                                            VkFilter filter)
 {
     ASSERT(valid() && srcImage.valid() && dstImage.valid());
     ASSERT(regionCount == 1);
     vkCmdBlitImage(mHandle, srcImage.getHandle(), srcImageLayout, dstImage.getHandle(),
-                   dstImageLayout, 1, pRegions, filter);
+                   dstImageLayout, 1, regions, filter);
 }
 
 ANGLE_INLINE VkResult CommandBuffer::begin(const VkCommandBufferBeginInfo &info)

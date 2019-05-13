@@ -685,6 +685,16 @@ void ContextVk::updateColorMask(const gl::BlendState &blendState)
                                                 framebufferVk->getEmulatedAlphaAttachmentMask());
 }
 
+void ContextVk::updateSampleMask(const gl::State &glState)
+{
+    for (uint32_t maskNumber = 0; maskNumber < glState.getMaxSampleMaskWords(); ++maskNumber)
+    {
+        static_assert(sizeof(uint32_t) == sizeof(GLbitfield), "Vulkan assumes 32-bit sample masks");
+        uint32_t mask = glState.isSampleMaskEnabled() ? glState.getSampleMaskWord(maskNumber) : 0;
+        mGraphicsPipelineDesc->updateSampleMask(&mGraphicsPipelineTransition, maskNumber, mask);
+    }
+}
+
 void ContextVk::updateViewport(FramebufferVk *framebufferVk,
                                const gl::Rectangle &viewport,
                                float nearPlane,
@@ -789,14 +799,43 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateColorMask(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
+                mGraphicsPipelineDesc->updateAlphaToCoverageEnable(
+                    &mGraphicsPipelineTransition, glState.isSampleAlphaToCoverageEnabled());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
+                // TODO(syoussefi): glSampleCoverage and `GL_SAMPLE_COVERAGE` have a similar
+                // behavior to alphaToCoverage, without native support in Vulkan.  Sample coverage
+                // results in a mask that's applied *on top of* alphaToCoverage.  More importantly,
+                // glSampleCoverage can choose to invert the applied mask; a feature that's not
+                // easily emulatable.  For example, say there are 4 samples {0, 1, 2, 3} and
+                // alphaToCoverage (both in GL and Vulkan, as well as sampleCoverage in GL) is
+                // implemented such that the alpha value selects the set of samples
+                // {0, ..., round(alpha * 4)}.  With glSampleCoverage, an application can blend two
+                // object LODs as such the following, covering all samples in a pixel:
+                //
+                //      glSampleCoverage(0.5, GL_FALSE); // covers samples {0, 1}
+                //      drawLOD0();
+                //      glSampleCoverage(0.5, GL_TRUE);  // covers samples {2, 3}
+                //      drawLOD1();
+                //
+                // In Vulkan, it's not possible to restrict drawing to samples {2, 3} through
+                // alphaToCoverage alone.
+                //
+                // One way to acheive this behavior is to modify the shader to output to
+                // gl_SampleMask with values we emulate for sample coverage, taking inversion
+                // into account.
+                //
+                // http://anglebug.com/3204
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE:
+                // TODO(syoussefi): See DIRTY_BIT_SAMPLE_COVERAGE_ENABLED.
+                // http://anglebug.com/3204
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
+                updateSampleMask(glState);
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_MASK:
+                updateSampleMask(glState);
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
@@ -919,6 +958,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
+                updateSampleMask(glState);
+                mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
+                                                                  mDrawFramebuffer->getSamples());
                 mGraphicsPipelineDesc->updateCullMode(&mGraphicsPipelineTransition,
                                                       glState.getRasterizerState());
                 updateScissor(glState);
@@ -987,8 +1029,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
+                // TODO(syoussefi): this should configure the pipeline to render as if
+                // single-sampled, and write the results to all samples of a pixel regardless of
+                // coverage. See EXT_multisample_compatibility.  http://anglebug.com/3204
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
+                // TODO(syoussefi): this is part of EXT_multisample_compatibility.  The alphaToOne
+                // Vulkan feature should be enabled to support this extension.
+                // http://anglebug.com/3204
+                mGraphicsPipelineDesc->updateAlphaToOneEnable(&mGraphicsPipelineTransition,
+                                                              glState.isSampleAlphaToOneEnabled());
                 break;
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 break;

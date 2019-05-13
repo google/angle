@@ -544,6 +544,12 @@ void GetViewport(const gl::Rectangle &viewport,
                  VkViewport *viewportOut);
 }  // namespace gl_vk
 
+namespace vk_gl
+{
+// Find set bits in sampleCounts and add the corresponding sample count to the set.
+void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *outSet);
+}  // namespace vk_gl
+
 }  // namespace rx
 
 #define ANGLE_VK_TRY(context, command)                                                 \

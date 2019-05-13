@@ -1842,6 +1842,18 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
     return angle::Result::Continue;
 }
 
+void ImageHelper::resolve(ImageHelper *dest,
+                          const VkImageResolve &region,
+                          vk::CommandBuffer *commandBuffer)
+{
+    ASSERT(mCurrentLayout == vk::ImageLayout::TransferSrc);
+    dest->changeLayout(region.dstSubresource.aspectMask, vk::ImageLayout::TransferDst,
+                       commandBuffer);
+
+    commandBuffer->resolveImage(getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dest->getImage(),
+                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+}
+
 void ImageHelper::removeStagedUpdates(RendererVk *renderer, const gl::ImageIndex &index)
 {
     // Find any staged updates for this index and removes them from the pending list.

@@ -18,19 +18,6 @@ namespace rx
 {
 namespace
 {
-void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *outSet)
-{
-    // The possible bits are VK_SAMPLE_COUNT_n_BIT = n, with n = 1 << b.  At the time of this
-    // writing, b is in [0, 6], however, we test all 32 bits in case the enum is extended.
-    for (unsigned int i = 0; i < 32; ++i)
-    {
-        if ((sampleCounts & (1 << i)) != 0)
-        {
-            outSet->insert(1 << i);
-        }
-    }
-}
-
 void FillTextureFormatCaps(RendererVk *renderer, VkFormat format, gl::TextureCaps *outTextureCaps)
 {
     const VkPhysicalDeviceLimits &physicalDeviceLimits =
@@ -52,15 +39,15 @@ void FillTextureFormatCaps(RendererVk *renderer, VkFormat format, gl::TextureCap
     {
         if (hasColorAttachmentFeatureBit)
         {
-            AddSampleCounts(physicalDeviceLimits.framebufferColorSampleCounts,
-                            &outTextureCaps->sampleCounts);
+            vk_gl::AddSampleCounts(physicalDeviceLimits.framebufferColorSampleCounts,
+                                   &outTextureCaps->sampleCounts);
         }
         if (hasDepthAttachmentFeatureBit)
         {
-            AddSampleCounts(physicalDeviceLimits.framebufferDepthSampleCounts,
-                            &outTextureCaps->sampleCounts);
-            AddSampleCounts(physicalDeviceLimits.framebufferStencilSampleCounts,
-                            &outTextureCaps->sampleCounts);
+            vk_gl::AddSampleCounts(physicalDeviceLimits.framebufferDepthSampleCounts,
+                                   &outTextureCaps->sampleCounts);
+            vk_gl::AddSampleCounts(physicalDeviceLimits.framebufferStencilSampleCounts,
+                                   &outTextureCaps->sampleCounts);
         }
     }
 }

@@ -23,8 +23,6 @@ namespace gl
 
 struct Extensions;
 
-typedef std::set<GLuint> SupportedSampleSet;
-
 struct TextureCaps
 {
     TextureCaps();

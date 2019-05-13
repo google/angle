@@ -262,6 +262,15 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                                         params->queryCount);
                     break;
                 }
+                case CommandID::ResolveImage:
+                {
+                    const ResolveImageParams *params =
+                        getParamPtr<ResolveImageParams>(currentCommand);
+                    vkCmdResolveImage(cmdBuffer, params->srcImage,
+                                      VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, params->dstImage,
+                                      VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &params->region);
+                    break;
+                }
                 case CommandID::SetEvent:
                 {
                     const SetEventParams *params = getParamPtr<SetEventParams>(currentCommand);

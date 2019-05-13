@@ -496,7 +496,7 @@ void GraphicsPipelineDesc::initDefaults()
     mRasterizationAndMultisampleStateInfo.minSampleShading          = 0.0f;
     for (uint32_t &sampleMask : mRasterizationAndMultisampleStateInfo.sampleMask)
     {
-        sampleMask = 0;
+        sampleMask = 0xFFFFFFFF;
     }
     mRasterizationAndMultisampleStateInfo.bits.alphaToCoverageEnable = 0;
     mRasterizationAndMultisampleStateInfo.bits.alphaToOneEnable      = 0;
@@ -848,6 +848,40 @@ void GraphicsPipelineDesc::updateLineWidth(GraphicsPipelineTransitionBits *trans
 {
     mRasterizationAndMultisampleStateInfo.lineWidth = lineWidth;
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, lineWidth));
+}
+
+void GraphicsPipelineDesc::updateRasterizationSamples(GraphicsPipelineTransitionBits *transition,
+                                                      uint32_t rasterizationSamples)
+{
+    mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = rasterizationSamples;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
+}
+
+void GraphicsPipelineDesc::updateAlphaToCoverageEnable(GraphicsPipelineTransitionBits *transition,
+                                                       bool enable)
+{
+    mRasterizationAndMultisampleStateInfo.bits.alphaToCoverageEnable = enable;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
+}
+
+void GraphicsPipelineDesc::updateAlphaToOneEnable(GraphicsPipelineTransitionBits *transition,
+                                                  bool enable)
+{
+    mRasterizationAndMultisampleStateInfo.bits.alphaToOneEnable = enable;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
+}
+
+void GraphicsPipelineDesc::updateSampleMask(GraphicsPipelineTransitionBits *transition,
+                                            uint32_t maskNumber,
+                                            uint32_t mask)
+{
+    ASSERT(maskNumber < gl::MAX_SAMPLE_MASK_WORDS);
+    mRasterizationAndMultisampleStateInfo.sampleMask[maskNumber] = mask;
+
+    constexpr size_t kMaskBits =
+        sizeof(mRasterizationAndMultisampleStateInfo.sampleMask[0]) * kBitsPerByte;
+    transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo,
+                                                     sampleMask, maskNumber, kMaskBits));
 }
 
 void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *transition,

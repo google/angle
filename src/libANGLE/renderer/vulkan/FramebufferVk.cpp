@@ -1169,6 +1169,8 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 {
     TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
 
+    RendererVk *renderer = contextVk->getRenderer();
+
     ANGLE_TRY(renderTarget->ensureImageInitialized(contextVk));
 
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -1186,6 +1188,56 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
         readFormat = &GetDepthStencilImageToBufferFormat(*readFormat, copyAspectFlags);
     }
 
+    size_t level         = renderTarget->getLevelIndex();
+    size_t layer         = renderTarget->getLayerIndex();
+    VkOffset3D srcOffset = {area.x, area.y, 0};
+    VkExtent3D srcExtent = {static_cast<uint32_t>(area.width), static_cast<uint32_t>(area.height),
+                            1};
+
+    // If the source image is multisampled, we need to resolve it into a temporary image before
+    // performing a readback.
+    bool isMultisampled = srcImage->getSamples() > 1;
+    vk::Scoped<vk::ImageHelper> resolvedImage(contextVk->getDevice());
+    if (isMultisampled)
+    {
+        ANGLE_TRY(resolvedImage.get().init2DStaging(
+            contextVk, renderer->getMemoryProperties(), gl::Extents(area.width, area.height, 1),
+            srcImage->getFormat(),
+            VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT, 1));
+        resolvedImage.get().updateQueueSerial(renderer->getCurrentQueueSerial());
+
+        // TODO(syoussefi): resolve only works on color images (not depth/stencil).  If readback
+        // on multisampled depth/stencil image is done, we would need a different path.  One
+        // possible solution would be a compute shader that directly reads from the multisampled
+        // image, performs the resolve and outputs to the buffer in one go.
+        // http://anglebug.com/3200
+        ASSERT(copyAspectFlags == VK_IMAGE_ASPECT_COLOR_BIT);
+
+        VkImageResolve resolveRegion                = {};
+        resolveRegion.srcSubresource.aspectMask     = copyAspectFlags;
+        resolveRegion.srcSubresource.mipLevel       = level;
+        resolveRegion.srcSubresource.baseArrayLayer = layer;
+        resolveRegion.srcSubresource.layerCount     = 1;
+        resolveRegion.srcOffset                     = srcOffset;
+        resolveRegion.dstSubresource.aspectMask     = copyAspectFlags;
+        resolveRegion.dstSubresource.mipLevel       = 0;
+        resolveRegion.dstSubresource.baseArrayLayer = 0;
+        resolveRegion.dstSubresource.layerCount     = 1;
+        resolveRegion.dstOffset                     = {};
+        resolveRegion.extent                        = srcExtent;
+
+        srcImage->resolve(&resolvedImage.get(), resolveRegion, commandBuffer);
+
+        resolvedImage.get().changeLayout(copyAspectFlags, vk::ImageLayout::TransferSrc,
+                                         commandBuffer);
+
+        // Make the resolved image the target of buffer copy.
+        srcImage  = &resolvedImage.get();
+        level     = 0;
+        layer     = 0;
+        srcOffset = {0, 0, 0};
+    }
+
     VkBuffer bufferHandle      = VK_NULL_HANDLE;
     uint8_t *readPixelBuffer   = nullptr;
     VkDeviceSize stagingOffset = 0;
@@ -1195,19 +1247,15 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                         &stagingOffset, nullptr));
 
     VkBufferImageCopy region               = {};
-    region.bufferImageHeight               = area.height;
+    region.bufferImageHeight               = srcExtent.height;
     region.bufferOffset                    = stagingOffset;
-    region.bufferRowLength                 = area.width;
-    region.imageExtent.width               = area.width;
-    region.imageExtent.height              = area.height;
-    region.imageExtent.depth               = 1;
-    region.imageOffset.x                   = area.x;
-    region.imageOffset.y                   = area.y;
-    region.imageOffset.z                   = 0;
+    region.bufferRowLength                 = srcExtent.width;
+    region.imageExtent                     = srcExtent;
+    region.imageOffset                     = srcOffset;
     region.imageSubresource.aspectMask     = copyAspectFlags;
-    region.imageSubresource.baseArrayLayer = renderTarget->getLayerIndex();
+    region.imageSubresource.baseArrayLayer = layer;
     region.imageSubresource.layerCount     = 1;
-    region.imageSubresource.mipLevel       = renderTarget->getLevelIndex();
+    region.imageSubresource.mipLevel       = level;
 
     commandBuffer->copyImageToBuffer(srcImage->getImage(), srcImage->getCurrentLayout(),
                                      bufferHandle, 1, &region);
