@@ -913,24 +913,17 @@ void WindowSurfaceVk::setSwapInterval(EGLint interval)
 
     mDesiredSwapchainPresentMode = GetDesiredPresentMode(mPresentModes, interval);
 
-    // Determine the number of swapchain images:
-    //
-    // - On mailbox, we use minImageCount.  The drivers may increase the number so that non-blocking
-    //   mailbox actually makes sense.
-    // - On immediate, we use max(2, minImageCount).  The vkQueuePresentKHR call immediately frees
-    //   up the other image, so there is no point in having any more images.
-    // - On fifo, we use max(3, minImageCount).  Triple-buffering allows us to present an image,
-    //   have one in the queue and record in another.  Note: on certain configurations (windows +
+    // - On mailbox, we need at least three images; one is being displayed to the user until the
+    //   next v-sync, and the application alternatingly renders to the other two, one being
+    //   recorded, and the other queued for presentation if v-sync happens in the meantime.
+    // - On immediate, we need at least two images; the application alternates between the two
+    //   images.
+    // - On fifo, we use at least three images.  Triple-buffering allows us to present an image,
+    //   have one in the queue, and record in another.  Note: on certain configurations (windows +
     //   nvidia + windowed mode), we could get away with a smaller number.
-    mMinImageCount = mSurfaceCaps.minImageCount;
-    if (mDesiredSwapchainPresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR)
-    {
-        mMinImageCount = std::max(2u, mMinImageCount);
-    }
-    else if (mDesiredSwapchainPresentMode == VK_PRESENT_MODE_FIFO_KHR)
-    {
-        mMinImageCount = std::max(3u, mMinImageCount);
-    }
+    //
+    // For simplicity, we always allocate at least three images.
+    mMinImageCount = std::max(3u, mSurfaceCaps.minImageCount);
 
     // Make sure we don't exceed maxImageCount.
     if (mSurfaceCaps.maxImageCount > 0 && mMinImageCount > mSurfaceCaps.maxImageCount)
