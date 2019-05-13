@@ -525,6 +525,10 @@ def update_filters(service, spreadsheet_id, headers, info, spreadsheet):
                                     "startColumnIndex": 0,
                                     "endColumnIndex": len(headers[sheet_name])
                                 },
+                                "sortSpecs": [{
+                                    "dimensionIndex": headers[sheet_name].index('date'),
+                                    "sortOrder": "ASCENDING"
+                                }],
                                 "criteria": {
                                     str(headers[sheet_name].index('duplicate')): {
                                         "hiddenValues":
@@ -617,9 +621,9 @@ def generate_duplicate_formula(headers, filter_columns):
     for i in range(len(headers)):
         if headers[i] == filter_columns[0]:
             col = str(i + 1)
-            return "IF(INDIRECT(ADDRESS(ROW(), " + col + "))=INDIRECT(ADDRESS(ROW() - 1, " + col +
-            "))," + generate_duplicate_formula(
-                headers, filter_columns[1:]) + ",0)"
+            formula = "IF(INDIRECT(ADDRESS(ROW(), " + col + "))=INDIRECT(ADDRESS(ROW() - 1, " + \
+                col + "))," + generate_duplicate_formula(headers, filter_columns[1:]) + ",0)"
+            return formula
     # Next column not found, remove from recursion but just return whatever the next one is
     return generate_duplicate_formula(headers, filter_columns[1:])
 
@@ -728,10 +732,10 @@ def parse_args():
         '[default=<home>/.auth]')
     parser.add_argument(
         '--spreadsheet',
-        default='1D6Yh7dAPP-aYLbX3HHQD8WubJV9XPuxvkKowmn2qhIw',
+        default='1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek',
         nargs='?',
         help='ID of the spreadsheet to write stats to. '
-        "[default='1D6Yh7dAPP-aYLbX3HHQD8WubJV9XPuxvkKowmn2qhIw']")
+        "[default='1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek']")
     parser.add_argument(
         '--verbosity',
         default='INFO',
