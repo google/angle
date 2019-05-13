@@ -531,7 +531,8 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
 
     void popError(d3d::Context *context)
     {
-        context->handleResult(mStoredHR, mStoredMessage, mStoredFile, mStoredFunction, mStoredLine);
+        context->handleResult(mStoredHR, mStoredMessage.c_str(), mStoredFile, mStoredFunction,
+                              mStoredLine);
     }
 
   protected:
@@ -540,7 +541,7 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
     gl::InfoLog mInfoLog;
     ShaderExecutableD3D *mExecutable = nullptr;
     HRESULT mStoredHR                = S_OK;
-    const char *mStoredMessage       = nullptr;
+    std::string mStoredMessage;
     const char *mStoredFile          = nullptr;
     const char *mStoredFunction      = nullptr;
     unsigned int mStoredLine         = 0;
