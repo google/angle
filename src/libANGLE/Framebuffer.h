@@ -352,7 +352,9 @@ class Framebuffer final : public angle::ObserverInterface,
                                                           GLenum buffer,
                                                           GLint drawbuffer);
     angle::Result ensureDrawAttachmentsInitialized(const Context *context);
-    angle::Result ensureReadAttachmentInitialized(const Context *context, GLbitfield blitMask);
+
+    // Conservatively initializes both read color and depth. Blit can access the depth buffer.
+    angle::Result ensureReadAttachmentsInitialized(const Context *context);
     Box getDimensions() const;
 
   private:

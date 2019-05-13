@@ -489,6 +489,8 @@ void Context::initialize()
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
 
+    mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
+
     ANGLE_CONTEXT_TRY(mImplementation->initialize());
 }
 
@@ -3428,13 +3430,18 @@ void Context::updateCaps()
     mThreadPool = angle::WorkerThreadPool::Create(mState.mExtensions.parallelShaderCompile);
 
     // Reinitialize some dirty bits that depend on extensions.
-    bool robustInit = mState.isRobustResourceInitEnabled();
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS, robustInit);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT, robustInit);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT, robustInit);
-    mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS, robustInit);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT, robustInit);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT, robustInit);
+    if (mState.isRobustResourceInitEnabled())
+    {
+        mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        mDrawDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT);
+        mDrawDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT);
+        mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
+        mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT);
+        mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT);
+        mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
+        mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
+    }
 
     // We need to validate buffer bounds if we are in a WebGL or robust access context and the
     // back-end does not support robust buffer access behaviour.
@@ -3678,8 +3685,7 @@ void Context::copyTexImage2D(TextureTarget target,
                              GLsizei height,
                              GLint border)
 {
-    // Only sync the read FBO
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, GL_READ_FRAMEBUFFER));
+    ANGLE_CONTEXT_TRY(mState.syncDirtyObjects(this, mCopyImageDirtyObjects));
 
     Rectangle sourceArea(x, y, width, height);
 
@@ -3703,8 +3709,7 @@ void Context::copyTexSubImage2D(TextureTarget target,
         return;
     }
 
-    // Only sync the read FBO
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, GL_READ_FRAMEBUFFER));
+    ANGLE_CONTEXT_TRY(mState.syncDirtyObjects(this, mCopyImageDirtyObjects));
 
     Offset destOffset(xoffset, yoffset, 0);
     Rectangle sourceArea(x, y, width, height);
@@ -3731,8 +3736,7 @@ void Context::copyTexSubImage3D(TextureTarget target,
         return;
     }
 
-    // Only sync the read FBO
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, GL_READ_FRAMEBUFFER));
+    ANGLE_CONTEXT_TRY(mState.syncDirtyObjects(this, mCopyImageDirtyObjects));
 
     Offset destOffset(xoffset, yoffset, zoffset);
     Rectangle sourceArea(x, y, width, height);
@@ -8137,17 +8141,13 @@ void Context::onSubjectStateChange(const Context *context,
             break;
 
         case kReadFramebufferSubjectIndex:
-            if (message == angle::SubjectMessage::DirtyBitsFlagged)
-            {
-                mState.setObjectDirty(GL_READ_FRAMEBUFFER);
-            }
+            ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
+            mState.setReadFramebufferDirty();
             break;
 
         case kDrawFramebufferSubjectIndex:
-            if (message == angle::SubjectMessage::DirtyBitsFlagged)
-            {
-                mState.setDrawFramebufferDirty();
-            }
+            ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
+            mState.setDrawFramebufferDirty();
             mStateCache.onDrawFramebufferChange(this);
             break;
 

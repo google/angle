@@ -2014,6 +2014,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     State::DirtyObjects mBlitDirtyObjects;
     State::DirtyBits mComputeDirtyBits;
     State::DirtyObjects mComputeDirtyObjects;
+    State::DirtyObjects mCopyImageDirtyObjects;
 
     Workarounds mWorkarounds;
 

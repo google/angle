@@ -2552,6 +2552,53 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
+angle::Result State::syncTexturesInit(const Context *context)
+{
+    ASSERT(mRobustResourceInit);
+
+    if (!mProgram)
+        return angle::Result::Continue;
+
+    for (size_t textureUnitIndex : mProgram->getActiveSamplersMask())
+    {
+        Texture *texture = mActiveTexturesCache[textureUnitIndex];
+        if (texture)
+        {
+            ANGLE_TRY(texture->ensureInitialized(context));
+        }
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result State::syncImagesInit(const Context *context)
+{
+    ASSERT(mRobustResourceInit);
+    ASSERT(mProgram);
+    for (size_t imageUnitIndex : mProgram->getActiveImagesMask())
+    {
+        Texture *texture = mImageUnits[imageUnitIndex].texture.get();
+        if (texture)
+        {
+            ANGLE_TRY(texture->ensureInitialized(context));
+        }
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result State::syncReadAttachments(const Context *context)
+{
+    ASSERT(mReadFramebuffer);
+    ASSERT(mRobustResourceInit);
+    return mReadFramebuffer->ensureReadAttachmentsInitialized(context);
+}
+
+angle::Result State::syncDrawAttachments(const Context *context)
+{
+    ASSERT(mDrawFramebuffer);
+    ASSERT(mRobustResourceInit);
+    return mDrawFramebuffer->ensureDrawAttachmentsInitialized(context);
+}
+
 angle::Result State::syncReadFramebuffer(const Context *context)
 {
     ASSERT(mReadFramebuffer);
@@ -2562,14 +2609,6 @@ angle::Result State::syncDrawFramebuffer(const Context *context)
 {
     ASSERT(mDrawFramebuffer);
     return mDrawFramebuffer->syncState(context);
-}
-
-angle::Result State::syncDrawAttachments(const Context *context)
-{
-    ASSERT(mDrawFramebuffer);
-    ASSERT(!mDrawFramebuffer->hasAnyDirtyBit());
-    ASSERT(mRobustResourceInit);
-    return mDrawFramebuffer->ensureDrawAttachmentsInitialized(context);
 }
 
 angle::Result State::syncTextures(const Context *context)
@@ -2618,39 +2657,6 @@ angle::Result State::syncVertexArray(const Context *context)
 angle::Result State::syncProgram(const Context *context)
 {
     return mProgram->syncState(context);
-}
-
-angle::Result State::syncTexturesInit(const Context *context)
-{
-    ASSERT(mRobustResourceInit);
-
-    if (!mProgram)
-        return angle::Result::Continue;
-
-    for (size_t textureUnitIndex : mProgram->getActiveSamplersMask())
-    {
-        Texture *texture = mActiveTexturesCache[textureUnitIndex];
-        if (texture)
-        {
-            ANGLE_TRY(texture->ensureInitialized(context));
-        }
-    }
-    return angle::Result::Continue;
-}
-
-angle::Result State::syncImagesInit(const Context *context)
-{
-    ASSERT(mRobustResourceInit);
-    ASSERT(mProgram);
-    for (size_t imageUnitIndex : mProgram->getActiveImagesMask())
-    {
-        Texture *texture = mImageUnits[imageUnitIndex].texture.get();
-        if (texture)
-        {
-            ANGLE_TRY(texture->ensureInitialized(context));
-        }
-    }
-    return angle::Result::Continue;
 }
 
 angle::Result State::syncDirtyObject(const Context *context, GLenum target)
