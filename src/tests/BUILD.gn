@@ -570,6 +570,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "/EHsc",  # dEQP requires exceptions
         "/wd4091",  # typedef ignored when no variable is declared
         "/wd4100",
+        "/wd4101",  # unreferenced local variable
         "/wd4125",  # decimal digit terminates octal escape sequence
         "/wd4127",  # conditional expression constant
         "/wd4244",  # possible loss of data

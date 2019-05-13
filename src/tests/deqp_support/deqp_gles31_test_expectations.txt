@@ -51,6 +51,8 @@
 1442 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
 1442 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
+// Times out shader compilation because it uses so many resources.
+3445 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer.48 = SKIP
 
 // D3D11 Failing Tests
 // Below cases are failed due to binding multi-UAVs to a single buffer is not supported in D3D backend.
@@ -523,6 +525,11 @@
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8.texture_swizzle.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8i.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8ui.* = FAIL
+
+// Failing with dEQP roll
+3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.22 = FAIL
+3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.41 = FAIL
+3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.45 = SKIP
 
 // OPENGL Failing Tests
 1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL

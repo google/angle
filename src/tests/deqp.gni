@@ -42,6 +42,7 @@ deqp_include_dirs = [
   "$_deqp_path/modules/glshared",
   "$_deqp_path/modules/glusecases",
 ]
+
 deqp_gles2_sources = [
   "$_deqp_path/modules/gles2/accuracy/es2aAccuracyTests.cpp",
   "$_deqp_path/modules/gles2/accuracy/es2aAccuracyTests.hpp",
@@ -255,6 +256,7 @@ deqp_gles2_sources = [
   "$_deqp_path/modules/gles2/tes2TestPackage.hpp",
   "$_deqp_path/modules/gles2/tes2TestPackageEntry.cpp",
 ]
+
 deqp_gles3_sources = [
   "$_deqp_path/modules/gles3/accuracy/es3aAccuracyTests.cpp",
   "$_deqp_path/modules/gles3/accuracy/es3aAccuracyTests.hpp",
@@ -538,6 +540,7 @@ deqp_gles3_sources = [
   "$_deqp_path/modules/gles3/tes3TestPackage.hpp",
   "$_deqp_path/modules/gles3/tes3TestPackageEntry.cpp",
 ]
+
 deqp_gles31_sources = [
   "$_deqp_path/modules/gles31/functional/es31fAdvancedBlendTests.cpp",
   "$_deqp_path/modules/gles31/functional/es31fAdvancedBlendTests.hpp",
@@ -749,6 +752,7 @@ deqp_gles31_sources = [
   "$_deqp_path/modules/gles31/tes31TestPackage.hpp",
   "$_deqp_path/modules/gles31/tes31TestPackageEntry.cpp",
 ]
+
 deqp_egl_sources = [
   "$_deqp_path/modules/egl/teglAndroidUtil.cpp",
   "$_deqp_path/modules/egl/teglAndroidUtil.hpp",
@@ -854,6 +858,7 @@ deqp_egl_sources = [
   "$_deqp_path/modules/egl/teglWideColorTests.cpp",
   "$_deqp_path/modules/egl/teglWideColorTests.hpp",
 ]
+
 deqp_libtester_decpp_sources = [
   "$_deqp_path/framework/delibs/decpp/deArrayBuffer.cpp",
   "$_deqp_path/framework/delibs/decpp/deBlockBuffer.cpp",
@@ -880,6 +885,7 @@ deqp_libtester_decpp_sources = [
   "$_deqp_path/framework/delibs/decpp/deThreadSafeRingBuffer.cpp",
   "$_deqp_path/framework/delibs/decpp/deUniquePtr.cpp",
 ]
+
 deqp_libtester_sources = [
   "$_deqp_path/execserver/xsDefs.cpp",
   "$_deqp_path/execserver/xsExecutionServer.cpp",
@@ -989,21 +995,14 @@ deqp_libtester_sources = [
   "$_deqp_path/framework/egl/egluGLContextFactory.cpp",
   "$_deqp_path/framework/egl/egluGLFunctionLoader.cpp",
   "$_deqp_path/framework/egl/egluGLUtil.cpp",
-
-  # TODO(jmadill): Remove override when upstreamed. http://anglebug.com/2564
-  #"$_deqp_path/framework/egl/egluNativeDisplay.cpp",
-  "deqp_support/egluNativeDisplay_override.cpp",
-  "deqp_support/egluNativeDisplay_override.hpp",
+  "$_deqp_path/framework/egl/egluNativeDisplay.cpp",
   "$_deqp_path/framework/egl/egluNativePixmap.cpp",
   "$_deqp_path/framework/egl/egluNativeWindow.cpp",
   "$_deqp_path/framework/egl/egluPlatform.cpp",
   "$_deqp_path/framework/egl/egluStaticESLibrary.cpp",
   "$_deqp_path/framework/egl/egluStrUtil.cpp",
   "$_deqp_path/framework/egl/egluUnique.cpp",
-
-  # TODO(jmadill): Remove override when upstreamed. http://anglebug.com/2564
-  #"$_deqp_path/framework/egl/egluUtil.cpp",
-  "deqp_support/egluUtil_override.cpp",
+  "$_deqp_path/framework/egl/egluUtil.cpp",
   "$_deqp_path/framework/egl/wrapper/eglwDefs.cpp",
   "$_deqp_path/framework/egl/wrapper/eglwFunctions.cpp",
   "$_deqp_path/framework/egl/wrapper/eglwLibrary.cpp",
@@ -1126,12 +1125,14 @@ deqp_libtester_sources = [
   "deqp_support/tcuRandomOrderExecutor.cpp",
   "deqp_support/tcuRandomOrderExecutor.h",
 ]
+
 deqp_libtester_sources_win = [
   "$_deqp_path/framework/delibs/dethread/win32/deMutexWin32.c",
   "$_deqp_path/framework/delibs/dethread/win32/deSemaphoreWin32.c",
   "$_deqp_path/framework/delibs/dethread/win32/deThreadLocalWin32.c",
   "$_deqp_path/framework/delibs/dethread/win32/deThreadWin32.c",
 ]
+
 deqp_libtester_sources_unix = [
   "$_deqp_path/framework/delibs/dethread/unix/deMutexUnix.c",
   "$_deqp_path/framework/delibs/dethread/unix/deNamedSemaphoreUnix.c",
@@ -1139,6 +1140,7 @@ deqp_libtester_sources_unix = [
   "$_deqp_path/framework/delibs/dethread/unix/deThreadLocalUnix.c",
   "$_deqp_path/framework/delibs/dethread/unix/deThreadUnix.c",
 ]
+
 deqp_libtester_sources_android = [
   "$_deqp_path/framework/platform/android/tcuAndroidInternals.cpp",
   "$_deqp_path/framework/platform/android/tcuAndroidInternals.hpp",
