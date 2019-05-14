@@ -1094,14 +1094,15 @@ if (!is_component_build && is_android && symbol_level != 0) {
     ]
 
     android_nm = "${android_tool_prefix}nm"
+    android_strip = "${android_tool_prefix}strip"
 
     args = [
       "--objcopy",
       rebase_path(android_objcopy, root_build_dir),
       "--nm",
       rebase_path(android_nm, root_build_dir),
-      "--sofile",
-      "{{source}}",
+      "--strip",
+      rebase_path(android_strip, root_build_dir),
       "--unstrippedsofile",
       "{{source_dir}}/lib.unstripped/{{source_file_part}}",
       "--output",
