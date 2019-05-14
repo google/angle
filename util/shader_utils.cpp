@@ -316,6 +316,21 @@ void main()
 })";
 }
 
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// texcoord.
+const char *Texture()
+{
+    return R"(precision highp float;
+attribute vec4 a_position;
+varying vec2 texcoord;
+
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    texcoord = a_position.xy;
+})";
+}
+
 }  // namespace vs
 
 namespace fs
@@ -381,6 +396,19 @@ const char *Blue()
 void main()
 {
     gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+}
+
+// A shader that samples the texture.
+const char *Texture()
+{
+    return R"(precision highp float;
+uniform sampler2D tex;
+varying vec2 texcoord;
+
+void main()
+{
+    gl_FragColor = vec4(texture2D(tex, texcoord).rgb, 1.0);
 })";
 }
 

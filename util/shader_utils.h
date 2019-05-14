@@ -66,6 +66,8 @@ ANGLE_UTIL_EXPORT const char *Simple();
 // v_position.
 ANGLE_UTIL_EXPORT const char *Passthrough();
 
+ANGLE_UTIL_EXPORT const char *Texture();
+
 }  // namespace vs
 
 namespace fs
@@ -86,6 +88,9 @@ ANGLE_UTIL_EXPORT const char *Green();
 
 // A shader that fills with 100% opaque blue.
 ANGLE_UTIL_EXPORT const char *Blue();
+
+// A shader that samples the texture
+ANGLE_UTIL_EXPORT const char *Texture();
 
 }  // namespace fs
 }  // namespace essl1_shaders
