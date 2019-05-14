@@ -668,7 +668,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
 
     if (defaultUniformCount > 0)
     {
-        sink << "\n@@ LAYOUT-defaultUniforms() @@ uniform defaultUniforms\n{\n";
+        sink << "\n@@ LAYOUT-defaultUniforms(std140) @@ uniform defaultUniforms\n{\n";
 
         DeclareDefaultUniformsTraverser defaultTraverser(&sink, getHashFunction(), &getNameMap());
         root->traverse(&defaultTraverser);
