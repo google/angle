@@ -119,10 +119,13 @@ struct WorkaroundsD3D : angle::FeatureSetBase
     // In Intel driver, the data with format DXGI_FORMAT_B5G6R5_UNORM will be parsed incorrectly.
     // This workaroud will disable B5G6R5 support when it's Intel driver. By default, it will use
     // R8G8B8A8 format. This bug is fixed in version 4539 on Intel drivers.
-    angle::Feature disableB5G6R5Support = {
-        "disable_b5g6r5_support", angle::FeatureCategory::D3DWorkarounds,
-        "In Intel driver, the data with format DXGI_FORMAT_B5G6R5_UNORM will be parsed incorrectly",
-        &members};
+    // On older AMD drivers, the data in DXGI_FORMAT_B5G6R5_UNORM becomes corrupted for unknown
+    // reasons.
+    angle::Feature disableB5G6R5Support = {"disable_b5g6r5_support",
+                                           angle::FeatureCategory::D3DWorkarounds,
+                                           "On Intel and AMD drivers, textures with the format "
+                                           "DXGI_FORMAT_B5G6R5_UNORM have incorrect data",
+                                           &members};
 
     // On some Intel drivers, evaluating unary minus operator on integer may get wrong answer in
     // vertex shaders. To work around this bug, we translate -(int) into ~(int)+1.

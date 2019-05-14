@@ -2419,6 +2419,11 @@ void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
         }
     }
 
+    if (IsAMD(adapterDesc.VendorId))
+    {
+        workarounds->disableB5G6R5Support.enabled = true;
+    }
+
     // TODO(jmadill): Disable when we have a fixed driver version.
     workarounds->emulateTinyStencilTextures.enabled = IsAMD(adapterDesc.VendorId);
 
