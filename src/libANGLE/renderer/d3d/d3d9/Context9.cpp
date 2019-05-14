@@ -139,6 +139,12 @@ MemoryObjectImpl *Context9::createMemoryObject()
     return nullptr;
 }
 
+SemaphoreImpl *Context9::createSemaphore()
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 angle::Result Context9::flush(const gl::Context *context)
 {
     return mRenderer->flush(context);

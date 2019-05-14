@@ -29,6 +29,7 @@
 #include "libANGLE/renderer/vulkan/RenderbufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SamplerVk.h"
+#include "libANGLE/renderer/vulkan/SemaphoreVk.h"
 #include "libANGLE/renderer/vulkan/ShaderVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/SyncVk.h"
@@ -1222,6 +1223,11 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
 MemoryObjectImpl *ContextVk::createMemoryObject()
 {
     return new MemoryObjectVk();
+}
+
+SemaphoreImpl *ContextVk::createSemaphore()
+{
+    return new SemaphoreVk();
 }
 
 void ContextVk::invalidateCurrentTextures()

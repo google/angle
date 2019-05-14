@@ -68,6 +68,9 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     // Memory object creation.
     MemoryObjectImpl *createMemoryObject() override;
 
+    // Semaphore creation.
+    SemaphoreImpl *createSemaphore() override;
+
     // Flush and finish.
     angle::Result flush(const gl::Context *context) override;
     angle::Result finish(const gl::Context *context) override;

@@ -18,6 +18,7 @@
 #include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
+#include "libANGLE/Semaphore.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/renderer/ContextImpl.h"
@@ -524,6 +525,55 @@ void MemoryObjectManager::deleteMemoryObject(const Context *context, GLuint hand
 MemoryObject *MemoryObjectManager::getMemoryObject(GLuint handle) const
 {
     return mMemoryObjects.query(handle);
+}
+
+// SemaphoreManager Implementation.
+
+SemaphoreManager::SemaphoreManager() {}
+
+SemaphoreManager::~SemaphoreManager()
+{
+    ASSERT(mSemaphores.empty());
+}
+
+void SemaphoreManager::reset(const Context *context)
+{
+    while (!mSemaphores.empty())
+    {
+        deleteSemaphore(context, mSemaphores.begin()->first);
+    }
+    mSemaphores.clear();
+}
+
+GLuint SemaphoreManager::createSemaphore(rx::GLImplFactory *factory)
+{
+    GLuint handle        = mHandleAllocator.allocate();
+    Semaphore *semaphore = new Semaphore(factory, handle);
+    semaphore->addRef();
+    mSemaphores.assign(handle, semaphore);
+    return handle;
+}
+
+void SemaphoreManager::deleteSemaphore(const Context *context, GLuint handle)
+{
+    Semaphore *semaphore = nullptr;
+    if (!mSemaphores.erase(handle, &semaphore))
+    {
+        return;
+    }
+
+    // Requires an explicit this-> because of C++ template rules.
+    this->mHandleAllocator.release(handle);
+
+    if (semaphore)
+    {
+        semaphore->release(context);
+    }
+}
+
+Semaphore *SemaphoreManager::getSemaphore(GLuint handle) const
+{
+    return mSemaphores.query(handle);
 }
 
 }  // namespace gl

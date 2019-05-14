@@ -59,6 +59,7 @@ class ProgramPipeline;
 class Query;
 class Renderbuffer;
 class Sampler;
+class Semaphore;
 class Shader;
 class Sync;
 class Texture;
@@ -316,6 +317,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     GLuint createProgramPipeline();
     GLuint createShaderProgramv(ShaderType type, GLsizei count, const GLchar *const *strings);
     GLuint createMemoryObject();
+    GLuint createSemaphore();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -325,6 +327,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void deletePaths(GLuint first, GLsizei range);
     void deleteProgramPipeline(GLuint pipeline);
     void deleteMemoryObject(GLuint memoryObject);
+    void deleteSemaphore(GLuint semaphore);
 
     // CHROMIUM_path_rendering
     bool isPath(GLuint path) const;
@@ -664,6 +667,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     TransformFeedback *getTransformFeedback(GLuint handle) const;
     ProgramPipeline *getProgramPipeline(GLuint handle) const;
     MemoryObject *getMemoryObject(GLuint handle) const;
+    Semaphore *getSemaphore(GLuint handle) const;
 
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);

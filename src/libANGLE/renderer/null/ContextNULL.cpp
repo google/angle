@@ -398,6 +398,12 @@ MemoryObjectImpl *ContextNULL::createMemoryObject()
     return nullptr;
 }
 
+SemaphoreImpl *ContextNULL::createSemaphore()
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 angle::Result ContextNULL::dispatchCompute(const gl::Context *context,
                                            GLuint numGroupsX,
                                            GLuint numGroupsY,

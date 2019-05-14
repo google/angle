@@ -40,6 +40,7 @@ class ProgramPipelineManager;
 class Query;
 class RenderbufferManager;
 class SamplerManager;
+class SemaphoreManager;
 class ShaderProgramManager;
 class SyncManager;
 class TextureManager;
@@ -731,6 +732,7 @@ class State : angle::NonCopyable
     FramebufferManager *mFramebufferManager;
     ProgramPipelineManager *mProgramPipelineManager;
     MemoryObjectManager *mMemoryObjectManager;
+    SemaphoreManager *mSemaphoreManager;
 
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;

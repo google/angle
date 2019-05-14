@@ -34,6 +34,7 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Sampler.h"
+#include "libANGLE/Semaphore.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
@@ -558,6 +559,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mState.mFramebufferManager->release(this);
     mState.mProgramPipelineManager->release(this);
     mState.mMemoryObjectManager->release(this);
+    mState.mSemaphoreManager->release(this);
 
     mThreadPool.reset();
 
@@ -699,6 +701,11 @@ GLuint Context::createMemoryObject()
     return mState.mMemoryObjectManager->createMemoryObject(mImplementation.get());
 }
 
+GLuint Context::createSemaphore()
+{
+    return mState.mSemaphoreManager->createSemaphore(mImplementation.get());
+}
+
 void Context::deleteBuffer(GLuint bufferName)
 {
     Buffer *buffer = mState.mBufferManager->getBuffer(bufferName);
@@ -762,6 +769,11 @@ void Context::deleteProgramPipeline(GLuint pipeline)
 void Context::deleteMemoryObject(GLuint memoryObject)
 {
     mState.mMemoryObjectManager->deleteMemoryObject(this, memoryObject);
+}
+
+void Context::deleteSemaphore(GLuint semaphore)
+{
+    mState.mSemaphoreManager->deleteSemaphore(this, semaphore);
 }
 
 void Context::deletePaths(GLuint first, GLsizei range)
@@ -5670,6 +5682,11 @@ MemoryObject *Context::getMemoryObject(GLuint handle) const
     return mState.mMemoryObjectManager->getMemoryObject(handle);
 }
 
+Semaphore *Context::getSemaphore(GLuint handle) const
+{
+    return mState.mSemaphoreManager->getSemaphore(handle);
+}
+
 void Context::getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog)
 {
     Program *programObject = getProgramResolveLink(program);
@@ -7192,18 +7209,28 @@ void Context::importMemoryFd(GLuint memory, GLuint64 size, HandleType handleType
 
 void Context::genSemaphores(GLsizei n, GLuint *semaphores)
 {
-    UNIMPLEMENTED();
+    for (int i = 0; i < n; i++)
+    {
+        semaphores[i] = createSemaphore();
+    }
 }
 
 void Context::deleteSemaphores(GLsizei n, const GLuint *semaphores)
 {
-    UNIMPLEMENTED();
+    for (int i = 0; i < n; i++)
+    {
+        deleteSemaphore(semaphores[i]);
+    }
 }
 
 GLboolean Context::isSemaphore(GLuint semaphore)
 {
-    UNIMPLEMENTED();
-    return GL_FALSE;
+    if (semaphore == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return ConvertToGLBoolean(getSemaphore(semaphore));
 }
 
 void Context::semaphoreParameterui64v(GLuint semaphore, GLenum pname, const GLuint64 *params)

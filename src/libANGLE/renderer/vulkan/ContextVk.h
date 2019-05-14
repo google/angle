@@ -159,6 +159,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     // Memory object creation.
     MemoryObjectImpl *createMemoryObject() override;
 
+    // Semaphore creation.
+    SemaphoreImpl *createSemaphore() override;
+
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
                                   GLuint numGroupsY,

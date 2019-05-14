@@ -3272,8 +3272,7 @@ bool ValidateDeleteSemaphoresEXT(Context *context, GLsizei n, const GLuint *sema
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateGenSemaphoresEXT(Context *context, GLsizei n, GLuint *semaphores)
@@ -3284,8 +3283,7 @@ bool ValidateGenSemaphoresEXT(Context *context, GLsizei n, GLuint *semaphores)
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateGetSemaphoreParameterui64vEXT(Context *context,
@@ -3311,8 +3309,7 @@ bool ValidateIsSemaphoreEXT(Context *context, GLuint semaphore)
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    return true;
 }
 
 bool ValidateSemaphoreParameterui64vEXT(Context *context,

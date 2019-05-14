@@ -100,6 +100,7 @@ class MockGLFactory : public GLImplFactory
                  TransformFeedbackImpl *(const gl::TransformFeedbackState &));
     MOCK_METHOD1(createSampler, SamplerImpl *(const gl::SamplerState &));
     MOCK_METHOD1(createPaths, std::vector<PathImpl *>(GLsizei));
+    MOCK_METHOD0(createSemaphore, SemaphoreImpl *());
 };
 
 class MockEGLFactory : public EGLImplFactory

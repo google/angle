@@ -42,6 +42,7 @@ class ProgramPipelineImpl;
 class QueryImpl;
 class RenderbufferImpl;
 class SamplerImpl;
+class SemaphoreImpl;
 class ShaderImpl;
 class TextureImpl;
 class TransformFeedbackImpl;
@@ -92,6 +93,9 @@ class GLImplFactory : angle::NonCopyable
 
     // Memory object creation
     virtual MemoryObjectImpl *createMemoryObject() = 0;
+
+    // Semaphore creation
+    virtual SemaphoreImpl *createSemaphore() = 0;
 };
 
 }  // namespace rx

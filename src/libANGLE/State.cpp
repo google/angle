@@ -258,6 +258,8 @@ State::State(ContextID contextIn,
       mProgramPipelineManager(new ProgramPipelineManager()),
       mMemoryObjectManager(
           AllocateOrGetSharedResourceManager(shareContextState, &State::mMemoryObjectManager)),
+      mSemaphoreManager(
+          AllocateOrGetSharedResourceManager(shareContextState, &State::mSemaphoreManager)),
       mMaxDrawBuffers(0),
       mMaxCombinedTextureImageUnits(0),
       mDepthClearValue(0),
