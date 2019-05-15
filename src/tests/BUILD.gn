@@ -564,8 +564,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   config("angle_deqp_support") {
     include_dirs = deqp_include_dirs
     if (is_win && !is_clang) {
-      include_dirs +=
-          [ "$angle_root/third_party/deqp/src/framework/platform/win32" ]
+      include_dirs += [ "$deqp_path/framework/platform/win32" ]
       cflags = [
         "/EHsc",  # dEQP requires exceptions
         "/wd4091",  # typedef ignored when no variable is declared
@@ -589,8 +588,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ]
     }
     if (is_android) {
-      include_dirs +=
-          [ "$angle_root/third_party/deqp/src/framework/platform/android" ]
+      include_dirs += [ "$deqp_path/framework/platform/android" ]
     }
     defines = [
       "DEQP_SUPPORT_GLES31=1",
@@ -785,8 +783,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     angle_deqp_gtest(target_name) {
       forward_variables_from(invoker, "*")
       data = [
-        "$angle_root/third_party/deqp/src/$mustpass_dir/master/${target_name}-master.txt",
-        "$angle_root/third_party/deqp/src/data/",
+        "$deqp_path/$mustpass_dir/master/${target_name}-master.txt",
+        "$deqp_path/data/",
         "deqp_support/deqp_${target_name}_test_expectations.txt",
       ]
     }
