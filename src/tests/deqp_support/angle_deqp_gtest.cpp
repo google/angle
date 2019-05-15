@@ -37,7 +37,7 @@ constexpr char kInfoTag[] = "*RESULT";
 std::vector<std::string> gUnexpectedFailed;
 std::vector<std::string> gUnexpectedPasses;
 
-void HandlePlatformError(angle::PlatformMethods *platform, const char *errorMessage)
+void HandlePlatformError(PlatformMethods *platform, const char *errorMessage)
 {
     if (!gExpectError)
     {
@@ -90,15 +90,12 @@ const char *gTestExpectationsFiles[] = {
     "deqp_egl_test_expectations.txt",
 };
 
-using APIInfo = std::pair<const char *, angle::GPUTestConfig::API>;
+using APIInfo = std::pair<const char *, GPUTestConfig::API>;
 
 const APIInfo gEGLDisplayAPIs[] = {
-    {"angle-d3d9", angle::GPUTestConfig::kAPID3D9},
-    {"angle-d3d11", angle::GPUTestConfig::kAPID3D11},
-    {"angle-gl", angle::GPUTestConfig::kAPIGLDesktop},
-    {"angle-gles", angle::GPUTestConfig::kAPIGLES},
-    {"angle-null", angle::GPUTestConfig::kAPIUnknown},
-    {"angle-vulkan", angle::GPUTestConfig::kAPIVulkan},
+    {"angle-d3d9", GPUTestConfig::kAPID3D9},    {"angle-d3d11", GPUTestConfig::kAPID3D11},
+    {"angle-gl", GPUTestConfig::kAPIGLDesktop}, {"angle-gles", GPUTestConfig::kAPIGLES},
+    {"angle-null", GPUTestConfig::kAPIUnknown}, {"angle-vulkan", GPUTestConfig::kAPIVulkan},
 };
 
 const char *gdEQPEGLString  = "--deqp-egl-display-type=";
@@ -227,7 +224,7 @@ class dEQPCaseList
 
   private:
     std::vector<CaseInfo> mCaseInfoList;
-    angle::GPUTestExpectationsParser mTestExpectationsParser;
+    GPUTestExpectationsParser mTestExpectationsParser;
     size_t mTestModuleIndex;
     bool mInitialized = false;
 };
@@ -243,7 +240,7 @@ void dEQPCaseList::initialize()
 
     mInitialized = true;
 
-    std::string exeDir = angle::GetExecutableDirectory();
+    std::string exeDir = GetExecutableDirectory();
 
     Optional<std::string> caseListPath = FindCaseListPath(exeDir, mTestModuleIndex);
     if (!caseListPath.valid())
@@ -259,14 +256,14 @@ void dEQPCaseList::initialize()
         Die();
     }
 
-    angle::GPUTestConfig::API api = GetDefaultAPIInfo()->second;
+    GPUTestConfig::API api = GetDefaultAPIInfo()->second;
     // Set the API from the command line, or using the default platform API.
     if (gInitAPI)
     {
         api = gInitAPI->second;
     }
 
-    angle::GPUTestConfig testConfig = angle::GPUTestConfig(api);
+    GPUTestConfig testConfig = GPUTestConfig(api);
 
     if (!mTestExpectationsParser.loadTestExpectationsFromFile(testConfig,
                                                               testExpectationsPath.value()))
@@ -293,7 +290,7 @@ void dEQPCaseList::initialize()
         std::string inString;
         std::getline(caseListStream, inString);
 
-        std::string dEQPName = angle::TrimString(inString, angle::kWhitespaceASCII);
+        std::string dEQPName = TrimString(inString, kWhitespaceASCII);
         if (dEQPName.empty())
             continue;
         std::string gTestName = DrawElementsToGoogleTestName(dEQPName);
@@ -359,14 +356,14 @@ class dEQPTest : public testing::TestWithParam<size_t>
         // crashed tests we track how many tests we "tried" to run.
         sTestCount++;
 
-        if (caseInfo.mExpectation == angle::GPUTestExpectationsParser::kGpuTestSkip)
+        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestSkip)
         {
             sSkippedTestCount++;
             std::cout << "Test skipped.\n";
             return;
         }
 
-        gExpectError = (caseInfo.mExpectation != angle::GPUTestExpectationsParser::kGpuTestPass);
+        gExpectError      = (caseInfo.mExpectation != GPUTestExpectationsParser::kGpuTestPass);
         TestResult result = deqp_libtester_run(caseInfo.mDEQPName.c_str());
 
         bool testSucceeded = countTestResultAndReturnSuccess(result);
@@ -378,7 +375,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
             gGlobalError  = false;
         }
 
-        if (caseInfo.mExpectation == angle::GPUTestExpectationsParser::kGpuTestPass)
+        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestPass)
         {
             EXPECT_TRUE(testSucceeded);
 
