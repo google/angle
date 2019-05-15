@@ -297,4 +297,14 @@ bool IsDirectory(const char *filename)
 
     return false;
 }
+
+bool IsDebuggerAttached()
+{
+    return !!::IsDebuggerPresent();
+}
+
+void BreakDebugger()
+{
+    __debugbreak();
+}
 }  // namespace angle

@@ -23,6 +23,7 @@
 
 #include "common/Optional.h"
 #include "common/angleutils.h"
+#include "common/system_utils.h"
 
 namespace gl
 {
@@ -168,7 +169,14 @@ LogMessage::~LogMessage()
 
     if (mSeverity == LOG_FATAL)
     {
-        ANGLE_CRASH();
+        if (angle::IsDebuggerAttached())
+        {
+            angle::BreakDebugger();
+        }
+        else
+        {
+            ANGLE_CRASH();
+        }
     }
 }
 

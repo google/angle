@@ -52,6 +52,12 @@ class Library : angle::NonCopyable
 };
 
 Library *OpenSharedLibrary(const char *libraryName);
+
+// Returns true if the process is currently being debugged.
+bool IsDebuggerAttached();
+
+// Calls system APIs to break into the debugger.
+void BreakDebugger();
 }  // namespace angle
 
 #endif  // COMMON_SYSTEM_UTILS_H_
