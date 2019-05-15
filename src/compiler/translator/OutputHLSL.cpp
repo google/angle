@@ -173,6 +173,37 @@ TReferencedBlock::TReferencedBlock(const TInterfaceBlock *aBlock,
     : block(aBlock), instanceVariable(aInstanceVariable)
 {}
 
+bool OutputHLSL::needStructMapping(TIntermTyped *node)
+{
+    for (unsigned int n = 0u; getAncestorNode(n) != nullptr; ++n)
+    {
+        TIntermNode *ancestor               = getAncestorNode(n);
+        const TIntermBinary *ancestorBinary = ancestor->getAsBinaryNode();
+        if (ancestorBinary && ancestorBinary->getLeft()->getBasicType() == EbtStruct)
+        {
+            switch (ancestorBinary->getOp())
+            {
+                case EOpIndexDirectStruct:
+                case EOpIndexDirect:
+                case EOpIndexIndirect:
+                    break;
+                default:
+                    return true;
+            }
+        }
+        else
+        {
+            const TIntermAggregate *ancestorAggregate = ancestor->getAsAggregate();
+            if (ancestorAggregate)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+    return true;
+}
+
 void OutputHLSL::writeFloat(TInfoSinkBase &out, float f)
 {
     // This is known not to work for NaN on all drivers but make the best effort to output NaNs
@@ -253,7 +284,8 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
       mMaxDualSourceDrawBuffers(maxDualSourceDrawBuffers),
       mCurrentFunctionMetadata(nullptr),
       mWorkGroupSize(workGroupSize),
-      mPerfDiagnostics(perfDiagnostics)
+      mPerfDiagnostics(perfDiagnostics),
+      mNeedStructMapping(false)
 {
     mUsesFragColor   = false;
     mUsesFragData    = false;
@@ -564,7 +596,11 @@ void OutputHLSL::header(TInfoSinkBase &out,
                         const std::vector<MappedStruct> &std140Structs,
                         const BuiltInFunctionEmulator *builtInFunctionEmulator) const
 {
-    TString mappedStructs = generateStructMapping(std140Structs);
+    TString mappedStructs;
+    if (mNeedStructMapping)
+    {
+        mappedStructs = generateStructMapping(std140Structs);
+    }
 
     out << mStructureHLSL->structsHeader();
 
@@ -1054,8 +1090,10 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     TInfoSinkBase &out = getInfoSink();
 
     // Handle accessing std140 structs by value
-    if (IsInStd140UniformBlock(node) && node->getBasicType() == EbtStruct)
+    if (IsInStd140UniformBlock(node) && node->getBasicType() == EbtStruct &&
+        needStructMapping(node))
     {
+        mNeedStructMapping = true;
         out << "map";
     }
 
@@ -1594,10 +1632,12 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         case EOpIndexDirectInterfaceBlock:
         {
             ASSERT(!IsInShaderStorageBlock(node->getLeft()));
-            bool structInStd140UniformBlock =
-                node->getBasicType() == EbtStruct && IsInStd140UniformBlock(node->getLeft());
+            bool structInStd140UniformBlock = node->getBasicType() == EbtStruct &&
+                                              IsInStd140UniformBlock(node->getLeft()) &&
+                                              needStructMapping(node);
             if (visit == PreVisit && structInStd140UniformBlock)
             {
+                mNeedStructMapping = true;
                 out << "map";
             }
             if (visit == InVisit)

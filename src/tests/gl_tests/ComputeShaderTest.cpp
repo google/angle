@@ -2369,6 +2369,38 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that a large struct array in std140 uniform block won't consume too much time.
+TEST_P(ComputeShaderTest, LargeStructArraySize)
+{
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
+layout(local_size_x=8) in;
+precision mediump float;
+
+struct InstancingData
+{
+    mat4 transformation;
+};
+
+#define MAX_INSTANCE_COUNT 800
+
+layout(std140) uniform InstanceBlock
+{
+    InstancingData instances[MAX_INSTANCE_COUNT];
+};
+
+layout(std140, binding = 1) buffer blockB {
+    mat4 v[];
+} instanceB;
+
+void main()
+{
+    instanceB.v[gl_GlobalInvocationID.x] = instances[gl_GlobalInvocationID.x].transformation;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)
