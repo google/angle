@@ -198,6 +198,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_util/NodeSearch.h",
   "src/compiler/translator/tree_util/ReplaceVariable.cpp",
   "src/compiler/translator/tree_util/ReplaceVariable.h",
+  "src/compiler/translator/tree_util/ReplaceShadowingVariables.cpp",
+  "src/compiler/translator/tree_util/ReplaceShadowingVariables.h",
   "src/compiler/translator/tree_util/RunAtTheEndOfShader.cpp",
   "src/compiler/translator/tree_util/RunAtTheEndOfShader.h",
   "src/compiler/translator/tree_util/Visit.h",

@@ -650,6 +650,9 @@ class TParseContext : angle::NonCopyable
     int mGeometryShaderMaxVertices;
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
+
+    // Track when we add new scope for func body in ESSL 1.00 spec
+    bool mFunctionBodyNewScope;
 };
 
 int PaParseStrings(size_t count,

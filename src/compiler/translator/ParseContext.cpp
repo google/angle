@@ -214,7 +214,8 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mGeometryShaderInvocations(0),
       mGeometryShaderMaxVertices(-1),
       mMaxGeometryShaderInvocations(resources.MaxGeometryShaderInvocations),
-      mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices)
+      mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices),
+      mFunctionBodyNewScope(false)
 {}
 
 TParseContext::~TParseContext() {}
@@ -3262,6 +3263,13 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     TIntermBlock *functionBody,
     const TSourceLoc &location)
 {
+    // Undo push at end of parseFunctionDefinitionHeader() below for ESSL1.00 case
+    if (mFunctionBodyNewScope)
+    {
+        mFunctionBodyNewScope = false;
+        symbolTable.pop();
+    }
+
     // Check that non-void functions have at least one return statement.
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
@@ -3301,6 +3309,13 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 
     *prototypeOut = createPrototypeNodeFromFunction(*function, location, true);
     setLoopNestingLevel(0);
+
+    // ESSL 1.00 spec allows for variable in function body to redefine parameter
+    if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
+    {
+        mFunctionBodyNewScope = true;
+        symbolTable.push();
+    }
 }
 
 TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TFunction *function)

@@ -68,6 +68,8 @@ bool IsOutputVulkan(ShShaderOutput output);
 bool IsInShaderStorageBlock(TIntermTyped *node);
 
 GLenum GetImageInternalFormatType(TLayoutImageInternalFormat iifq);
+// ESSL 1.00 shaders nest function body scope within function parameter scope
+bool IsSpecWithFunctionBodyNewScope(ShShaderSpec shaderSpec, int shaderVersion);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_UTIL_H_
