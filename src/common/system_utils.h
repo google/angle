@@ -24,6 +24,7 @@ bool UnsetEnvironmentVar(const char *variableName);
 std::string GetEnvironmentVar(const char *variableName);
 const char *GetPathSeparator();
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path);
+bool IsDirectory(const char *filename);
 
 // Run an application and get the output.  Gets a nullptr-terminated set of args to execute the
 // application with, and returns the stdout and stderr outputs as well as the exit code.

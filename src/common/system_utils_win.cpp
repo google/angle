@@ -283,4 +283,18 @@ Library *OpenSharedLibrary(const char *libraryName)
 {
     return new Win32Library(libraryName);
 }
+
+bool IsDirectory(const char *filename)
+{
+    WIN32_FILE_ATTRIBUTE_DATA fileInformation;
+
+    BOOL result = GetFileAttributesExA(filename, GetFileExInfoStandard, &fileInformation);
+    if (result)
+    {
+        DWORD attribs = fileInformation.dwFileAttributes;
+        return (attribs != INVALID_FILE_ATTRIBUTES) && ((attribs & FILE_ATTRIBUTE_DIRECTORY) > 0);
+    }
+
+    return false;
+}
 }  // namespace angle

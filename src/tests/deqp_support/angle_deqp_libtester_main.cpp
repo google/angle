@@ -22,16 +22,6 @@
 #include "tcuTestLog.hpp"
 #include "util/system_utils.h"
 
-#if (DE_OS == DE_OS_WIN32)
-#    include <Windows.h>
-#elif (DE_OS == DE_OS_UNIX) || (DE_OS == DE_OS_OSX)
-#    include <sys/stat.h>
-#    include <sys/types.h>
-#    include <sys/unistd.h>
-#elif (DE_OS == DE_OS_ANDROID)
-#    include <sys/stat.h>
-#endif
-
 tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc);
 
 namespace
@@ -55,37 +45,11 @@ const char *g_dEQPDataSearchDirs[] = {
     "third_party/deqp/src/data",
 };
 
-// TODO(jmadill): upstream to dEQP?
-#if (DE_OS == DE_OS_WIN32)
-deBool deIsDir(const char *filename)
-{
-    WIN32_FILE_ATTRIBUTE_DATA fileInformation;
-
-    BOOL result = GetFileAttributesExA(filename, GetFileExInfoStandard, &fileInformation);
-    if (result)
-    {
-        DWORD attribs = fileInformation.dwFileAttributes;
-        return (attribs != INVALID_FILE_ATTRIBUTES) && ((attribs & FILE_ATTRIBUTE_DIRECTORY) > 0);
-    }
-
-    return false;
-}
-#elif (DE_OS == DE_OS_UNIX) || (DE_OS == DE_OS_OSX) || (DE_OS == DE_OS_ANDROID)
-deBool deIsDir(const char *filename)
-{
-    struct stat st;
-    int result = stat(filename, &st);
-    return result == 0 && ((st.st_mode & S_IFDIR) == S_IFDIR);
-}
-#else
-#    error TODO(jmadill): support other platforms
-#endif
-
 bool FindDataDir(std::string *dataDirOut)
 {
     for (auto searchDir : g_dEQPDataSearchDirs)
     {
-        if (deIsDir((std::string(searchDir) + "/gles2").c_str()))
+        if (angle::IsDirectory((std::string(searchDir) + "/gles2").c_str()))
         {
             *dataDirOut = searchDir;
             return true;
@@ -97,7 +61,7 @@ bool FindDataDir(std::string *dataDirOut)
         dirStream << "/gles2";
         std::string searchPath = dirStream.str();
 
-        if (deIsDir(searchPath.c_str()))
+        if (angle::IsDirectory(searchPath.c_str()))
         {
             *dataDirOut = dataDir;
             return true;
