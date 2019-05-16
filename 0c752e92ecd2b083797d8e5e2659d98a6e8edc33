@@ -93,6 +93,30 @@
       "revId": "0c752e92ecd2b083797d8e5e2659d98a6e8edc33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "420ae1c5_7c3f22f6",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 990,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-05-16T23:32:42Z",
+      "side": 1,
+      "message": "I didn\u0027t want this to apply to Pixel 3 if we add it and it has a different driver.\nI also wouldn\u0027t want this to apply to Q if it has a fix, but I don\u0027t think we have a way to restrict this to P now.",
+      "parentUuid": "b52d2a57_f382b661",
+      "range": {
+        "startLine": 990,
+        "startChar": 37,
+        "endLine": 990,
+        "endChar": 46
+      },
+      "revId": "0c752e92ecd2b083797d8e5e2659d98a6e8edc33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
