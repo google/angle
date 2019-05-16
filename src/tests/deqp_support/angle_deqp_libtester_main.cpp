@@ -35,35 +35,27 @@ tcu::TestContext *g_testCtx          = nullptr;
 tcu::TestPackageRoot *g_root         = nullptr;
 tcu::RandomOrderExecutor *g_executor = nullptr;
 
-const char *g_dEQPDataSearchDirs[] = {
-    "../../../third_party/deqp/src/data",
-    "../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/data",
-    "../../third_party/angle/third_party/deqp/src/data",
-    "../../third_party/deqp/src/data",
-    "../third_party/deqp/src/data",
-    "data",
-    "third_party/deqp/src/data",
+const char *gDataDirHaystack[] = {
+    "../../../third_party/deqp/src",
+    "../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src",
+    "../../third_party/angle/third_party/deqp/src",
+    "../../third_party/deqp/src",
+    "../third_party/deqp/src",
+    ".",
+    "third_party/deqp/src",
 };
 
-bool FindDataDir(std::string *dataDirOut)
+bool FindDataDir(const char *needle, std::string *dataDirOut)
 {
-    for (auto searchDir : g_dEQPDataSearchDirs)
+    for (const char *searchDir : gDataDirHaystack)
     {
-        if (angle::IsDirectory((std::string(searchDir) + "/gles2").c_str()))
-        {
-            *dataDirOut = searchDir;
-            return true;
-        }
-
         std::stringstream dirStream;
-        dirStream << angle::GetExecutableDirectory() << "/" << searchDir;
-        std::string dataDir = dirStream.str();
-        dirStream << "/gles2";
-        std::string searchPath = dirStream.str();
+        dirStream << angle::GetExecutableDirectory() << "/" << searchDir << "/" << needle;
+        std::string candidateDataDir = dirStream.str();
 
-        if (angle::IsDirectory(searchPath.c_str()))
+        if (angle::IsDirectory(candidateDataDir.c_str()))
         {
-            *dataDirOut = dataDir;
+            *dataDirOut = candidateDataDir;
             return true;
         }
     }
@@ -102,7 +94,7 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
         }
 
         std::string deqpDataDir;
-        if (!FindDataDir(&deqpDataDir))
+        if (!FindDataDir(ANGLE_DEQP_DATA_DIR, &deqpDataDir))
         {
             std::cout << "Failed to find dEQP data directory." << std::endl;
             return false;

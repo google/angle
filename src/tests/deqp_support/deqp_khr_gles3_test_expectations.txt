@@ -1,0 +1,62 @@
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// This file contains a list of defective dEQP conformance tests. The expected
+// format is:
+//  {BUG#} {MODIFIERS} : {TEST_NAME} = {PASS,FAIL,FLAKY,TIMEOUT,SKIP}
+//
+// MODIFIERS can be a combination of the below list, combined with a logical AND:
+//  WIN XP VISTA WIN7 WIN8 WIN10
+//  MAC LEOPARD SNOWLEOPARD LION MOUNTAINLION MAVERICKS YOSEMITE ELCAPITAN SIERRA HIGHSIERRA MOJAVE
+//  LINUX CHROMEOS ANDROID
+//  NVIDIA AMD INTEL
+//  DEBUG RELEASE
+//  D3D9 D3D11 OPENGL GLES VULKAN
+//  NEXUS5X PIXEL2
+//  QUADROP400
+//
+//
+// TEST_NAME can be a specific test name, or have a '*' in the end, which
+// indicates a prefix matching.
+//
+// Examples:
+// fails on both windows and mac (crash)
+//  91530 WIN : context_lost_restored = SKIP
+//  91530 MAC : context_lost_restored = SKIP
+// fails on windows using NVIDIA GPUs
+//  91533 WIN NVIDIA : gl_min_uniforms = FAIL
+// fails on Nexus5X with GLES backend (hangs)
+//  91531 NEXUS5X GLES : conformance_more_* = SKIP
+
+// For now we only log Vulkan test expectations. More back-ends can follow as we need them.
+
+// Crashes trying to load non-existent texture load function.
+3455 VULKAN : KHR-GLES3.texture_filter_anisotropic.drawing = SKIP
+3455 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.* = SKIP
+3455 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.renderbuffer_* = SKIP
+3455 VULKAN : KHR-GLES3.packed_pixels.rectangle.r* = SKIP
+3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.r* = SKIP
+3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.srgb8_alpha8 = SKIP
+
+// Failures related to RGB5A1 texture formats.
+3456 VULKAN : KHR-GLES3.core.internalformat.texture2d.rgba_unsigned_byte_rgb5_a1 = SKIP
+3456 VULKAN : KHR-GLES3.core.internalformat.copy_tex_image.rgb5_a1 = SKIP
+
+// Depth/stencil related failures
+3457 VULKAN : KHR-GLES3.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth24_stencil8 = FAIL
+3457 VULKAN : KHR-GLES3.packed_pixels.rectangle.depth* = SKIP
+3457 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.depth* = SKIP
+3457 VULKAN : KHR-GLES3.packed_depth_stencil.* = SKIP
+
+// CopyTexImage conversion bugs.
+3458 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.* = FAIL
+
+// Require 3D textures.
+3188 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.* = SKIP
+
+// Shader related failure. Not Vulkan-specific.
+3459 : KHR-GLES3.shaders.uniform_block.common.name_matching = FAIL
+
+// Issues with repeat filtering mode.
+3460 VULKAN : KHR-GLES3.texture_repeat_mode.* = FAIL
