@@ -46,6 +46,30 @@
       "revId": "967ac3846e06e812321079cb17accbb3b8ebe9a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6139f694_5bcc261c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-16T12:45:53Z",
+      "side": 1,
+      "message": "It might be cleaner to make a small separate TIntermTraverser that calculates the caches \"needsStructMapping\". But it\u0027s a pretty minor point.",
+      "parentUuid": "efeec6d1_6ec04aed",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 206,
+        "endChar": 0
+      },
+      "revId": "967ac3846e06e812321079cb17accbb3b8ebe9a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
