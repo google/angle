@@ -58,19 +58,27 @@ std::string DrawElementsToGoogleTestName(const std::string &dEQPName)
 
 // We look for a GLES Khronos master list first. We keep the Android CTS so we can locate a version
 // of egl-master.txt that has the full list of tests.
+#define ANDROID_DEQP_DIR "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src"
+#define ANGLE_DEQP_DIR "/../../third_party/deqp/src"
+#define CHROME_DEQP_DIR "/../../third_party/angle/third_party/deqp/src"
+#define OPENGL_CTS_DIR "/external/openglcts/data/mustpass/gles"
+
 const char *gCaseListSearchPaths[] = {
-    "/../../third_party/deqp/src/external/openglcts/data/mustpass/gles/aosp_mustpass/master/",
-    "/../../third_party/deqp/src/external/openglcts/data/mustpass/gles/khronos_mustpass/master/",
-    "/../../third_party/angle/third_party/deqp/src/external/openglcts/data/mustpass/gles/"
-    "aosp_mustpass/master/",
-    "khronos_mustpass/master/",
-    "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/external/openglcts/"
-    "data/mustpass/gles/aosp_mustpass/master/",
-    "data/mustpass/gles/khronos_mustpass/master/",
-    "/../../third_party/deqp/src/android/cts/master/",
-    "/../../third_party/angle/third_party/deqp/src/android/cts/master/",
-    "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/android/cts/master/",
+    ANDROID_DEQP_DIR "/android/cts/master/",
+    ANDROID_DEQP_DIR OPENGL_CTS_DIR "/aosp_mustpass/master/",
+    ANDROID_DEQP_DIR OPENGL_CTS_DIR "/khronos_mustpass/master/",
+    ANGLE_DEQP_DIR "/android/cts/master/",
+    ANGLE_DEQP_DIR OPENGL_CTS_DIR "/aosp_mustpass/master/",
+    ANGLE_DEQP_DIR OPENGL_CTS_DIR "/khronos_mustpass/master/",
+    CHROME_DEQP_DIR "/android/cts/master/",
+    CHROME_DEQP_DIR OPENGL_CTS_DIR "/aosp_mustpass/master/",
+    CHROME_DEQP_DIR OPENGL_CTS_DIR "/khronos_mustpass/master/",
 };
+
+#undef ANDROID_DEQP_DIR
+#undef ANGLE_DEQP_DIR
+#undef CHROME_DEQP_DIR
+#undef OPENGL_CTS_DIR
 
 const char *gTestExpectationsSearchPaths[] = {
     "/../../src/tests/deqp_support/",

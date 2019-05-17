@@ -846,7 +846,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   set_defaults("angle_deqp_gtest") {
     deps = []
     sources = []
-    deqp_data_dir = "data"
     data = []
   }
 
@@ -856,7 +855,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     config_name = "angle_deqp_${_api}_config"
     config(config_name) {
       defines = invoker.defines
-      defines += [ "ANGLE_DEQP_DATA_DIR=\"${invoker.deqp_data_dir}\"" ]
     }
 
     shared_library_name = "angle_deqp_lib${_api}"
@@ -866,7 +864,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
                              [
                                "mustpass_dir",
                                "data",
-                               "deqp_data_dir",
                              ])
 
       deps += [
@@ -907,12 +904,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "deqp_support/angle_deqp_gtest.cpp",
       ]
 
-      _deqp_data_dir = invoker.deqp_data_dir
-
-      data = invoker.data + [
-               "deqp_support/deqp_${_api}_test_expectations.txt",
-               "$deqp_path/$_deqp_data_dir/",
-             ]
+      data =
+          invoker.data + [ "deqp_support/deqp_${_api}_test_expectations.txt" ]
 
       if (is_android) {
         use_native_activity = true
@@ -920,36 +913,38 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     }
   }
 
-  set_defaults("angle_deqp_gtest_with_mustpass") {
+  set_defaults("angle_deqp_core_gtest") {
     # Default the master lists to the Khronos version. The EGL tests must override this.
     mustpass_dir = "external/openglcts/data/mustpass/gles/aosp_mustpass"
   }
 
-  template("angle_deqp_gtest_with_mustpass") {
+  template("angle_deqp_core_gtest") {
     angle_deqp_gtest(target_name) {
       forward_variables_from(invoker, "*")
+      defines += [ "ANGLE_DEQP_DATA_DIR=\"data\"" ]
       data = [
         "$deqp_path/$mustpass_dir/master/${target_name}-master.txt",
+        "$deqp_path/data/",
       ]
     }
   }
 
-  angle_deqp_gtest_with_mustpass("gles2") {
+  angle_deqp_core_gtest("gles2") {
     defines = [ "ANGLE_DEQP_GLES2_TESTS" ]
     sources = deqp_gles2_sources
   }
 
-  angle_deqp_gtest_with_mustpass("gles3") {
+  angle_deqp_core_gtest("gles3") {
     defines = [ "ANGLE_DEQP_GLES3_TESTS" ]
     sources = deqp_gles3_sources
   }
 
-  angle_deqp_gtest_with_mustpass("gles31") {
+  angle_deqp_core_gtest("gles31") {
     defines = [ "ANGLE_DEQP_GLES31_TESTS" ]
     sources = deqp_gles31_sources
   }
 
-  angle_deqp_gtest_with_mustpass("egl") {
+  angle_deqp_core_gtest("egl") {
     defines = [ "ANGLE_DEQP_EGL_TESTS" ]
     sources = deqp_egl_sources
     mustpass_dir = "android/cts"
@@ -988,18 +983,9 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     include_dirs = [ "$deqp_path/external/vulkancts/framework/vulkan" ]
   }
 
-  angle_deqp_gtest("khr_gles2") {
-    defines = [ "ANGLE_DEQP_KHR_GLES2_TESTS" ]
-    deps = [
-      ":angle_deqp_khr_common",
-    ]
-
-    deqp_data_dir = data_dir
-  }
-
   # The KHR dEQP tests expect a root prefix of "gl_cts" for some reason.
   # This means we need an extra copy step to make them happy.
-  copy("angle_deqp_khr_gles3_shaders") {
+  copy("angle_deqp_khr_data") {
     sources = [
       "$deqp_path/external/openglcts/data/gles3/arrays.test",
       "$deqp_path/external/openglcts/data/gles3/declarations.test",
@@ -1014,13 +1000,29 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     ]
   }
 
-  angle_deqp_gtest("khr_gles3") {
-    defines = [ "ANGLE_DEQP_KHR_GLES3_TESTS" ]
-    deps = [
-      ":angle_deqp_khr_common",
-      ":angle_deqp_khr_gles3_shaders",
-    ]
+  template("angle_deqp_khr_gtest") {
+    _mp = invoker.mustpass_name
+    angle_deqp_gtest(target_name) {
+      forward_variables_from(invoker, "*", [ "mustpass_name" ])
+      deps = [
+        ":angle_deqp_khr_common",
+        ":angle_deqp_khr_data",
+      ]
+      defines += [ "ANGLE_DEQP_DATA_DIR=\"$data_dir\"" ]
+      data = [
+        "$deqp_path/external/openglcts/data/mustpass/gles/khronos_mustpass/master/$_mp",
+        "$root_out_dir/$data_dir/gl_cts/",
+      ]
+    }
+  }
 
-    deqp_data_dir = data_dir
+  angle_deqp_khr_gtest("khr_gles2") {
+    defines = [ "ANGLE_DEQP_KHR_GLES2_TESTS" ]
+    mustpass_name = "gles2-khr-master.txt"
+  }
+
+  angle_deqp_khr_gtest("khr_gles3") {
+    defines = [ "ANGLE_DEQP_KHR_GLES3_TESTS" ]
+    mustpass_name = "gles3-khr-master.txt"
   }
 }
