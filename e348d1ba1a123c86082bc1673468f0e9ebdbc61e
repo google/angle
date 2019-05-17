@@ -280,6 +280,24 @@
       "revId": "e348d1ba1a123c86082bc1673468f0e9ebdbc61e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b33526c_7b780478",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3645,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-17T17:31:34Z",
+      "side": 1,
+      "message": "The default framebuffer can be inverted, so yes there\u0027s definitely value in testing both the default and user framebuffers.",
+      "parentUuid": "28062245_c803b04d",
+      "revId": "e348d1ba1a123c86082bc1673468f0e9ebdbc61e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
