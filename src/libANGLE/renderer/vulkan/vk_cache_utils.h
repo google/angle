@@ -385,6 +385,7 @@ class GraphicsPipelineDesc final
     void updateLineWidth(GraphicsPipelineTransitionBits *transition, float lineWidth);
 
     // Multisample states
+    void setRasterizationSamples(uint32_t rasterizationSamples);
     void updateRasterizationSamples(GraphicsPipelineTransitionBits *transition,
                                     uint32_t rasterizationSamples);
     void updateAlphaToCoverageEnable(GraphicsPipelineTransitionBits *transition, bool enable);

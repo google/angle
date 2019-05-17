@@ -549,7 +549,10 @@
 3204 VULKAN : dEQP-GLES3.functional.fbo.msaa.* = SKIP
 3204 VULKAN : dEQP-GLES3.functional.negative_api.buffer.read_pixels_fbo_format_mismatch = SKIP
 3204 VULKAN : dEQP-GLES3.functional.negative_api.buffer.blit_framebuffer_multisample = SKIP
-3204 VULKAN : dEQP-GLES3.functional.multisample.* = SKIP
+3204 VULKAN : dEQP-GLES3.functional.multisample.default_framebuffer.sample_coverage_invert = FAIL
+3204 VULKAN : dEQP-GLES3.functional.multisample.default_framebuffer.proportionality_sample_coverage = FAIL
+3204 VULKAN : dEQP-GLES3.functional.multisample.default_framebuffer.proportionality_sample_coverage_inverted = FAIL
+3204 VULKAN : dEQP-GLES3.functional.multisample.fbo* = SKIP
 3204 VULKAN : dEQP-GLES3.functional.state_query.rbo.renderbuffer_samples = SKIP
 3204 VULKAN : dEQP-GLES3.functional.fragment_out.* = SKIP
 3204 VULKAN : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample* = SKIP

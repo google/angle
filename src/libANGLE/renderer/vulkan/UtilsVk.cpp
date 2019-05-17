@@ -668,6 +668,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     pipelineDesc.initDefaults();
     pipelineDesc.setColorWriteMask(0, gl::DrawBufferMask());
     pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
+    pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
     pipelineDesc.setRenderPassDesc(*params.renderPassDesc);
     // Note: depth test is disabled by default so this should be unnecessary, but works around an
     // Intel bug on windows.  http://anglebug.com/3348
@@ -775,6 +776,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dest->getSamples());
     renderPassDesc.packColorAttachment(0, destFormat.angleFormatID);
+
+    // Multisampled copy is not yet supported.
+    ASSERT(src->getSamples() == 1 && dest->getSamples() == 1);
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();

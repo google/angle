@@ -850,10 +850,15 @@ void GraphicsPipelineDesc::updateLineWidth(GraphicsPipelineTransitionBits *trans
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, lineWidth));
 }
 
+void GraphicsPipelineDesc::setRasterizationSamples(uint32_t rasterizationSamples)
+{
+    mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = rasterizationSamples;
+}
+
 void GraphicsPipelineDesc::updateRasterizationSamples(GraphicsPipelineTransitionBits *transition,
                                                       uint32_t rasterizationSamples)
 {
-    mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = rasterizationSamples;
+    setRasterizationSamples(rasterizationSamples);
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }
 
