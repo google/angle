@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Error.inl: Inline definitions of egl::Error and gl::Error classes which encapsulate API errors
+// Error.inc: Inline definitions of egl::Error and gl::Error classes which encapsulate API errors
 // and optional error messages.
 
 #include "common/angleutils.h"

@@ -10,7 +10,7 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
-#include "media/pixel.inl"
+#include "media/pixel.inc"
 
 #include "DXTSRGBCompressedTextureTestData.inl"
 

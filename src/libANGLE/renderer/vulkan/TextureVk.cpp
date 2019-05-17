@@ -10,7 +10,7 @@
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 
 #include "common/debug.h"
-#include "image_util/generatemip.inl"
+#include "image_util/generatemip.inc"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Image.h"

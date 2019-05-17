@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// VertexAttribute.inl: Inline vertex attribute methods
+// VertexAttribute.inc: Inline vertex attribute methods
 //
 
 namespace gl

@@ -164,6 +164,6 @@ bool operator!=(const VertexAttribCurrentValueData &a, const VertexAttribCurrent
 
 }  // namespace gl
 
-#include "VertexAttribute.inl"
+#include "VertexAttribute.inc"
 
 #endif  // LIBANGLE_VERTEXATTRIBUTE_H_

@@ -104,8 +104,6 @@ angle_translator_sources = [
   "src/compiler/translator/blocklayout.cpp",
   "src/compiler/translator/blocklayout.h",
   "src/compiler/translator/glslang.h",
-  "src/compiler/translator/glslang.l",
-  "src/compiler/translator/glslang.y",
   "src/compiler/translator/glslang_lex.cpp",
   "src/compiler/translator/glslang_tab.cpp",
   "src/compiler/translator/glslang_tab.h",
@@ -290,7 +288,6 @@ angle_preprocessor_sources = [
   "src/compiler/preprocessor/DirectiveParser.h",
   "src/compiler/preprocessor/ExpressionParser.cpp",
   "src/compiler/preprocessor/ExpressionParser.h",
-  "src/compiler/preprocessor/ExpressionParser.y",
   "src/compiler/preprocessor/Input.cpp",
   "src/compiler/preprocessor/Input.h",
   "src/compiler/preprocessor/Lexer.cpp",
@@ -306,6 +303,5 @@ angle_preprocessor_sources = [
   "src/compiler/preprocessor/Token.h",
   "src/compiler/preprocessor/Tokenizer.cpp",
   "src/compiler/preprocessor/Tokenizer.h",
-  "src/compiler/preprocessor/Tokenizer.l",
   "src/compiler/preprocessor/numeric_lex.h",
 ]

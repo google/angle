@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// copyimage.inl: Defines image copying functions
+// copyimage.inc: Defines image copying functions
 
 namespace angle
 {

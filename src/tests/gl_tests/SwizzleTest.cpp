@@ -380,7 +380,7 @@ TEST_P(SwizzleTest, LA32F_2D)
     runTest2D();
 }
 
-#include "media/pixel.inl"
+#include "media/pixel.inc"
 
 TEST_P(SwizzleTest, CompressedDXT_2D)
 {

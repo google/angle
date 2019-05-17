@@ -723,6 +723,6 @@ void LoadETC2SRGBA8ToSRGBA8(size_t width,
 
 }  // namespace angle
 
-#include "loadimage.inl"
+#include "loadimage.inc"
 
 #endif  // IMAGEUTIL_LOADIMAGE_H_

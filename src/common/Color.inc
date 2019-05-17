@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Color.inl : Inline definitions of some functions from Color.h
+// Color.inc : Inline definitions of some functions from Color.h
 
 namespace angle
 {

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// angletypes.inl : Inline definitions of some functions from angletypes.h
+// angletypes.inc : Inline definitions of some functions from angletypes.h
 
 namespace gl
 {

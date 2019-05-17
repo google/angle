@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// generatemip.inl: Defines the GenerateMip function, templated on the format
+// generatemip.inc: Defines the GenerateMip function, templated on the format
 // type of the image for which mip levels are being generated.
 
 #include "common/mathutil.h"

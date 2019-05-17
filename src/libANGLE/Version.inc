@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Version.inl: Encapsulation of a GL version.
+// Version.inc: Encapsulation of a GL version.
 
 #include <tuple>
 

@@ -83,7 +83,7 @@ angle_end2end_tests_sources = [
   "gl_tests/MultisampleTest.cpp",
   "gl_tests/MultithreadingTest.cpp",
   "gl_tests/MultiviewDrawTest.cpp",
-  "gl_tests/media/pixel.inl",
+  "gl_tests/media/pixel.inc",
   "gl_tests/PackUnpackTest.cpp",
   "gl_tests/PathRenderingTest.cpp",
   "gl_tests/PbufferTest.cpp",
