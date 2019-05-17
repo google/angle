@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24852ce3_68f28e89",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-17T16:05:33Z",
+      "side": 1,
+      "message": "Use `essl1_shaders::vs::Simple()` and `essl1_shaders::fs::Green()` instead.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 4
+      },
+      "revId": "e348d1ba1a123c86082bc1673468f0e9ebdbc61e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0f15843_b396570e",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3548,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-17T16:05:33Z",
+      "side": 1,
+      "message": "You could refactor these out into a helper function with a few parameters, like selecting which face to cull or whether to clear. Then call that from these tests with the appropriate parameters.",
+      "revId": "e348d1ba1a123c86082bc1673468f0e9ebdbc61e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
