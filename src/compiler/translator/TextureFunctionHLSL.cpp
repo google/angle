@@ -784,6 +784,14 @@ void OutputIntegerTextureSampleFunctionComputations(
     {
         if (IsSamplerArray(textureFunction.sampler))
         {
+            if (getDimensionsIgnoresBaseLevel)
+            {
+                out << "    int baseLevel = samplerMetadata[samplerIndex].baseLevel;\n";
+            }
+            else
+            {
+                out << "    int baseLevel = 0;\n";
+            }
             out << "    float width; float height; float layers; float levels;\n";
 
             if (textureFunction.method == TextureFunctionHLSL::TextureFunction::LOD0)
@@ -798,7 +806,7 @@ void OutputIntegerTextureSampleFunctionComputations(
             {
 
                 out << "    " << textureReference
-                    << ".GetDimensions(0, width, height, layers, levels);\n";
+                    << ".GetDimensions(baseLevel, width, height, layers, levels);\n";
                 if (textureFunction.method == TextureFunctionHLSL::TextureFunction::IMPLICIT ||
                     textureFunction.method == TextureFunctionHLSL::TextureFunction::BIAS)
                 {
@@ -825,7 +833,7 @@ void OutputIntegerTextureSampleFunctionComputations(
             }
 
             out << "    " << textureReference
-                << ".GetDimensions(mip, width, height, layers, levels);\n";
+                << ".GetDimensions(baseLevel + mip, width, height, layers, levels);\n";
         }
         else if (IsSampler2D(textureFunction.sampler))
         {
