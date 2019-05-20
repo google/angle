@@ -1173,7 +1173,7 @@ class Texture2DIntegerTestES3 : public Texture2DTest
                "out vec4 fragColor;\n"
                "void main()\n"
                "{\n"
-               "    fragColor = vec4(texture(tex, texcoord));\n"
+               "    fragColor = vec4(texture(tex, texcoord))/255.0;\n"
                "}\n";
     }
 };
@@ -4551,9 +4551,6 @@ TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
 // texture is output.
 TEST_P(Texture2DIntegerTestES3, IntegerTextureNonZeroBaseLevel)
 {
-    // Flaky on Windows OpenGL drivers. http://crbug.com/963595
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows());
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     int width     = getWindowWidth();
