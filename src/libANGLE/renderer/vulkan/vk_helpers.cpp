@@ -2150,17 +2150,14 @@ void ImageHelper::stageSubresourceEmulatedClear(const gl::ImageIndex &index,
     stageSubresourceClear(index, format, kEmulatedInitColorValue, kWebGLInitDepthStencilValue);
 }
 
-angle::Result ImageHelper::clearIfEmulatedFormat(Context *context,
-                                                 const gl::ImageIndex &index,
-                                                 const Format &format)
+void ImageHelper::clearIfEmulatedFormat(Context *context,
+                                        const gl::ImageIndex &index,
+                                        const Format &format)
 {
     if (format.hasEmulatedImageChannels())
     {
         stageSubresourceEmulatedClear(index, format.angleFormat());
-        ANGLE_TRY(flushAllStagedUpdates(context));
     }
-
-    return angle::Result::Continue;
 }
 
 void ImageHelper::stageSubresourceClear(const gl::ImageIndex &index,

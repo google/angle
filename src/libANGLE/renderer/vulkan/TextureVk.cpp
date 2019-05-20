@@ -403,7 +403,6 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
                                         destOffset.y + clippedSourceArea.y - sourceArea.y, 0);
 
     RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
-    ANGLE_TRY(colorReadRT->ensureImageInitialized(contextVk));
 
     const vk::Format &srcFormat  = colorReadRT->getImageFormat();
     const vk::Format &destFormat = renderer->getFormat(internalFormat.sizedInternalFormat);
@@ -930,7 +929,7 @@ void TextureVk::setImageHelper(RendererVk *renderer,
     mImage->initStagingBuffer(renderer, format);
 
     mRenderTarget.init(mImage, &mDrawBaseLevelImageView, getNativeImageLevel(0),
-                       getNativeImageLayer(0), this);
+                       getNativeImageLayer(0));
 
     // Force re-creation of cube map render targets next time they are needed
     mCubeMapRenderTargets.clear();
@@ -1215,7 +1214,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
         vk::ImageView *imageView;
         ANGLE_TRY(getLayerLevelDrawImageView(contextVk, cubeMapFaceIndex, 0, &imageView));
         mCubeMapRenderTargets[cubeMapFaceIndex].init(mImage, imageView, getNativeImageLevel(0),
-                                                     getNativeImageLayer(cubeMapFaceIndex), this);
+                                                     getNativeImageLayer(cubeMapFaceIndex));
     }
     return angle::Result::Continue;
 }
@@ -1285,6 +1284,8 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
 
     mImage->stageSubresourceRobustClear(imageIndex, format.angleFormat());
 
+    // Note that we cannot ensure the image is initialized because we might be calling subImage
+    // on a non-complete cube map.
     return angle::Result::Continue;
 }
 

@@ -467,7 +467,9 @@ void Context::initialize()
     mClearDirtyBits.set(State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
     mClearDirtyBits.set(State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
     mClearDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mClearDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+
+    // We sync the draw Framebuffer manually in prepareForClear to allow the clear calls to do
+    // more custom handling for robust resource init.
 
     mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
     mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR);
@@ -3498,17 +3500,21 @@ bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei insta
 
 angle::Result Context::prepareForClear(GLbitfield mask)
 {
-    ANGLE_TRY(syncDirtyObjects(mClearDirtyObjects));
+    // Sync the draw framebuffer manually after the clear attachments.
+    ASSERT(mClearDirtyObjects.none());
     ANGLE_TRY(mState.getDrawFramebuffer()->ensureClearAttachmentsInitialized(this, mask));
+    ANGLE_TRY(mState.syncDirtyObject(this, GL_DRAW_FRAMEBUFFER));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
     return angle::Result::Continue;
 }
 
 angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
 {
-    ANGLE_TRY(syncDirtyObjects(mClearDirtyObjects));
+    // Sync the draw framebuffer manually after the clear attachments.
+    ASSERT(mClearDirtyObjects.none());
     ANGLE_TRY(mState.getDrawFramebuffer()->ensureClearBufferAttachmentsInitialized(this, buffer,
                                                                                    drawbuffer));
+    ANGLE_TRY(mState.syncDirtyObject(this, GL_DRAW_FRAMEBUFFER));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
     return angle::Result::Continue;
 }
@@ -8190,8 +8196,11 @@ void Context::onSubjectStateChange(const Context *context,
         default:
             if (index < kTextureMaxSubjectIndex)
             {
-                mState.onActiveTextureStateChange(this, index);
-                mStateCache.onActiveTextureChange(this);
+                if (message != angle::SubjectMessage::ContentsChanged)
+                {
+                    mState.onActiveTextureStateChange(this, index);
+                    mStateCache.onActiveTextureChange(this);
+                }
             }
             else if (index < kUniformBufferMaxSubjectIndex)
             {

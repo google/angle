@@ -85,10 +85,9 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
                                         &mImageView, 0, 1));
 
         // Clear the renderbuffer if it has emulated channels.
-        ANGLE_TRY(mImage->clearIfEmulatedFormat(vk::GetImpl(context), gl::ImageIndex::Make2D(0),
-                                                vkFormat));
+        mImage->clearIfEmulatedFormat(vk::GetImpl(context), gl::ImageIndex::Make2D(0), vkFormat);
 
-        mRenderTarget.init(mImage, &mImageView, 0, 0, nullptr);
+        mRenderTarget.init(mImage, &mImageView, 0, 0);
     }
 
     return angle::Result::Continue;
@@ -135,8 +134,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
                                          gl::SwizzleState(), &mImageView, imageVk->getImageLevel(),
                                          1, imageVk->getImageLayer(), 1));
 
-    mRenderTarget.init(mImage, &mImageView, imageVk->getImageLevel(), imageVk->getImageLayer(),
-                       nullptr);
+    mRenderTarget.init(mImage, &mImageView, imageVk->getImageLevel(), imageVk->getImageLayer());
 
     return angle::Result::Continue;
 }
@@ -147,6 +145,7 @@ angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *conte
                                                         FramebufferAttachmentRenderTarget **rtOut)
 {
     ASSERT(mImage && mImage->valid());
+    ANGLE_TRY(mRenderTarget.flushStagedUpdates(vk::GetImpl(context)));
     *rtOut = &mRenderTarget;
     return angle::Result::Continue;
 }

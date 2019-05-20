@@ -78,6 +78,9 @@ class FramebufferGL : public FramebufferImpl
                                     size_t index,
                                     GLfloat *xy) const override;
 
+    // The GL back-end requires a full sync state before we call checkStatus.
+    bool shouldSyncStateBeforeCheckStatus() const override;
+
     bool checkStatus(const gl::Context *context) const override;
 
     angle::Result syncState(const gl::Context *context,

@@ -602,6 +602,11 @@ angle::Result FramebufferGL::getSamplePosition(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+bool FramebufferGL::shouldSyncStateBeforeCheckStatus() const
+{
+    return true;
+}
+
 bool FramebufferGL::checkStatus(const gl::Context *context) const
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
@@ -691,16 +696,19 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
                 break;
             default:
             {
-                ASSERT(Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0 &&
-                       dirtyBit < Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
-                size_t index =
-                    static_cast<size_t>(dirtyBit - Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
-                const FramebufferAttachment *newAttachment = mState.getColorAttachment(index);
-                BindFramebufferAttachment(
-                    functions, static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index), newAttachment);
-                if (newAttachment)
+                static_assert(Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0, "FB dirty bits");
+                if (dirtyBit < Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX)
                 {
-                    attachment = newAttachment;
+                    size_t index =
+                        static_cast<size_t>(dirtyBit - Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
+                    const FramebufferAttachment *newAttachment = mState.getColorAttachment(index);
+                    BindFramebufferAttachment(functions,
+                                              static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index),
+                                              newAttachment);
+                    if (newAttachment)
+                    {
+                        attachment = newAttachment;
+                    }
                 }
                 break;
             }

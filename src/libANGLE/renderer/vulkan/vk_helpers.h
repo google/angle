@@ -690,9 +690,7 @@ class ImageHelper final : public CommandGraphResource
 
     // If the image has emulated channels, we clear them once so as not to leave garbage on those
     // channels.
-    angle::Result clearIfEmulatedFormat(Context *context,
-                                        const gl::ImageIndex &index,
-                                        const Format &format);
+    void clearIfEmulatedFormat(Context *context, const gl::ImageIndex &index, const Format &format);
 
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.

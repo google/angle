@@ -46,8 +46,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     void init(vk::ImageHelper *image,
               vk::ImageView *imageView,
               size_t levelIndex,
-              size_t layerIndex,
-              TextureVk *owner);
+              size_t layerIndex);
     void reset();
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
@@ -79,7 +78,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // RenderTargetVk pointer.
     void updateSwapchainImage(vk::ImageHelper *image, vk::ImageView *imageView);
 
-    angle::Result ensureImageInitialized(ContextVk *contextVk);
+    angle::Result flushStagedUpdates(ContextVk *contextVk);
 
   private:
     vk::ImageHelper *mImage;
@@ -88,10 +87,6 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageView *mImageView;
     size_t mLevelIndex;
     size_t mLayerIndex;
-
-    // If owned by the texture, this will be non-nullptr, and is used to ensure texture changes
-    // are flushed.
-    TextureVk *mOwner;
 };
 
 }  // namespace rx

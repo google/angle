@@ -67,6 +67,11 @@ struct SystemInfo;
 #define EXPECT_EGLENUM_EQ(expected, actual) \
     EXPECT_EQ(static_cast<EGLenum>(expected), static_cast<EGLenum>(actual))
 
+#define ASSERT_GL_FRAMEBUFFER_COMPLETE(framebuffer) \
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(framebuffer))
+#define EXPECT_GL_FRAMEBUFFER_COMPLETE(framebuffer) \
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(framebuffer))
+
 namespace angle
 {
 struct GLColorRGB
@@ -74,6 +79,9 @@ struct GLColorRGB
     GLColorRGB();
     GLColorRGB(GLubyte r, GLubyte g, GLubyte b);
     GLColorRGB(const angle::Vector3 &floatColor);
+
+    const GLubyte *data() const { return &R; }
+    GLubyte *data() { return &R; }
 
     GLubyte R, G, B;
 

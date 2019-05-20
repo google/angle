@@ -1267,6 +1267,9 @@ class SimpleStateChangeTest : public ANGLETest
 
     void simpleDrawWithBuffer(GLBuffer *buffer);
     void simpleDrawWithColor(const GLColor &color);
+
+    using UpdateFunc = std::function<void(GLenum, GLTexture *, GLint, GLint, const GLColor &)>;
+    void updateTextureBoundToFramebufferHelper(UpdateFunc updateFunc);
 };
 
 class SimpleStateChangeTestES3 : public SimpleStateChangeTest
@@ -1787,6 +1790,95 @@ TEST_P(SimpleStateChangeTest, UpdateTextureInUse)
     EXPECT_PIXEL_COLOR_EQ(0, h, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::red);
     ASSERT_GL_NO_ERROR();
+}
+
+void SimpleStateChangeTest::updateTextureBoundToFramebufferHelper(UpdateFunc updateFunc)
+{
+    std::vector<GLColor> red(4, GLColor::red);
+    std::vector<GLColor> green(4, GLColor::green);
+
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, red.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    glViewport(0, 0, 2, 2);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, red.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Draw once to flush dirty state bits.
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Update the (0, 1) pixel to be blue
+    updateFunc(GL_TEXTURE_2D, &renderTarget, 0, 1, GLColor::blue);
+
+    // Draw green to the right half of the Framebuffer.
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, green.data());
+    glViewport(1, 0, 1, 2);
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+
+    // Update the (1, 1) pixel to be yellow
+    updateFunc(GL_TEXTURE_2D, &renderTarget, 1, 1, GLColor::yellow);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify we have a quad with the right colors in the FBO.
+    std::vector<GLColor> expected = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    std::vector<GLColor> actual(4);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glReadPixels(0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, actual.data());
+    EXPECT_EQ(expected, actual);
+}
+
+// Tests that TexSubImage updates are flushed before rendering.
+TEST_P(SimpleStateChangeTest, TexSubImageOnTextureBoundToFrambuffer)
+{
+    auto updateFunc = [](GLenum textureBinding, GLTexture *tex, GLint x, GLint y,
+                         const GLColor &color) {
+        glBindTexture(textureBinding, *tex);
+        glTexSubImage2D(textureBinding, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color.data());
+    };
+
+    updateTextureBoundToFramebufferHelper(updateFunc);
+}
+
+// Tests that CopyTexSubImage updates are flushed before rendering.
+TEST_P(SimpleStateChangeTest, CopyTexSubImageOnTextureBoundToFrambuffer)
+{
+    GLTexture copySource;
+    glBindTexture(GL_TEXTURE_2D, copySource);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer copyFBO;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, copyFBO);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copySource, 0);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+    auto updateFunc = [&copySource](GLenum textureBinding, GLTexture *tex, GLint x, GLint y,
+                                    const GLColor &color) {
+        glBindTexture(GL_TEXTURE_2D, copySource);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color.data());
+
+        glBindTexture(textureBinding, *tex);
+        glCopyTexSubImage2D(textureBinding, 0, x, y, 0, 0, 1, 1);
+    };
+
+    updateTextureBoundToFramebufferHelper(updateFunc);
 }
 
 // Tests deleting a Framebuffer that is in use.

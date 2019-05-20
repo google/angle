@@ -968,11 +968,16 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
 
     if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
     {
-        angle::Result err = syncState(context);
-        if (err != angle::Result::Continue)
+        // We can skip syncState on several back-ends.
+        if (mImpl->shouldSyncStateBeforeCheckStatus())
         {
-            return 0;
+            angle::Result err = syncState(context);
+            if (err != angle::Result::Continue)
+            {
+                return 0;
+            }
         }
+
         if (!mImpl->checkStatus(context))
         {
             mCachedStatus = GL_FRAMEBUFFER_UNSUPPORTED;
@@ -1848,6 +1853,14 @@ void Framebuffer::onSubjectStateChange(const Context *context,
 {
     if (message != angle::SubjectMessage::SubjectChanged)
     {
+        // This can be triggered by SubImage calls for Textures.
+        if (message == angle::SubjectMessage::ContentsChanged)
+        {
+            mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 + index);
+            onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
+            return;
+        }
+
         // This can be triggered by the GL back-end TextureGL class.
         ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
         return;

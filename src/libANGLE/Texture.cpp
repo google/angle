@@ -1058,6 +1058,8 @@ angle::Result Texture::setSubImage(Context *context,
 
     ANGLE_TRY(handleMipmapGenerationHint(context, level));
 
+    onStateChange(context, angle::SubjectMessage::ContentsChanged);
+
     return angle::Result::Continue;
 }
 
@@ -1103,8 +1105,12 @@ angle::Result Texture::setCompressedSubImage(const Context *context,
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level);
 
-    return mTexture->setCompressedSubImage(context, index, area, format, unpackState, imageSize,
-                                           pixels);
+    ANGLE_TRY(mTexture->setCompressedSubImage(context, index, area, format, unpackState, imageSize,
+                                              pixels));
+
+    onStateChange(context, angle::SubjectMessage::ContentsChanged);
+
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::copyImage(Context *context,
@@ -1157,6 +1163,8 @@ angle::Result Texture::copySubImage(Context *context,
 
     ANGLE_TRY(mTexture->copySubImage(context, index, destOffset, sourceArea, source));
     ANGLE_TRY(handleMipmapGenerationHint(context, index.getLevelIndex()));
+
+    onStateChange(context, angle::SubjectMessage::ContentsChanged);
 
     return angle::Result::Continue;
 }
@@ -1222,8 +1230,13 @@ angle::Result Texture::copySubTexture(const Context *context,
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level);
 
-    return mTexture->copySubTexture(context, index, destOffset, sourceLevel, sourceBox, unpackFlipY,
-                                    unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
+    ANGLE_TRY(mTexture->copySubTexture(context, index, destOffset, sourceLevel, sourceBox,
+                                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
+                                       source));
+
+    onStateChange(context, angle::SubjectMessage::ContentsChanged);
+
+    return angle::Result::Continue;
 }
 
 angle::Result Texture::copyCompressedTexture(Context *context, const Texture *source)
