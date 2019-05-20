@@ -56,29 +56,11 @@ std::string DrawElementsToGoogleTestName(const std::string &dEQPName)
     return gTestName;
 }
 
-// We look for a GLES Khronos master list first. We keep the Android CTS so we can locate a version
-// of egl-master.txt that has the full list of tests.
-#define ANDROID_DEQP_DIR "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src"
-#define ANGLE_DEQP_DIR "/../../third_party/deqp/src"
-#define CHROME_DEQP_DIR "/../../third_party/angle/third_party/deqp/src"
-#define OPENGL_CTS_DIR "/external/openglcts/data/mustpass/gles"
-
 const char *gCaseListSearchPaths[] = {
-    ANDROID_DEQP_DIR "/android/cts/master/",
-    ANDROID_DEQP_DIR OPENGL_CTS_DIR "/aosp_mustpass/master/",
-    ANDROID_DEQP_DIR OPENGL_CTS_DIR "/khronos_mustpass/master/",
-    ANGLE_DEQP_DIR "/android/cts/master/",
-    ANGLE_DEQP_DIR OPENGL_CTS_DIR "/aosp_mustpass/master/",
-    ANGLE_DEQP_DIR OPENGL_CTS_DIR "/khronos_mustpass/master/",
-    CHROME_DEQP_DIR "/android/cts/master/",
-    CHROME_DEQP_DIR OPENGL_CTS_DIR "/aosp_mustpass/master/",
-    CHROME_DEQP_DIR OPENGL_CTS_DIR "/khronos_mustpass/master/",
+    "/../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src",
+    "/../../third_party/deqp/src",
+    "/../../third_party/angle/third_party/deqp/src",
 };
-
-#undef ANDROID_DEQP_DIR
-#undef ANGLE_DEQP_DIR
-#undef CHROME_DEQP_DIR
-#undef OPENGL_CTS_DIR
 
 const char *gTestExpectationsSearchPaths[] = {
     "/../../src/tests/deqp_support/",
@@ -87,8 +69,16 @@ const char *gTestExpectationsSearchPaths[] = {
     "/../../sdcard/chromium_tests_root/third_party/angle/src/tests/deqp_support/",
 };
 
-const char *gCaseListFiles[] = {"gles2-master.txt", "gles3-master.txt",     "gles31-master.txt",
-                                "egl-master.txt",   "gles2-khr-master.txt", "gles3-khr-master.txt"};
+#define OPENGL_CTS_DIR(PATH) "/external/openglcts/data/mustpass/gles/" PATH
+
+const char *gCaseListFiles[] = {OPENGL_CTS_DIR("aosp_mustpass/master/gles2-master.txt"),
+                                OPENGL_CTS_DIR("aosp_mustpass/master/gles3-master.txt"),
+                                OPENGL_CTS_DIR("aosp_mustpass/master/gles31-master.txt"),
+                                "/android/cts/master/egl-master.txt",
+                                OPENGL_CTS_DIR("khronos_mustpass/master/gles2-khr-master.txt"),
+                                OPENGL_CTS_DIR("khronos_mustpass/master/gles3-khr-master.txt")};
+
+#undef OPENGL_CTS_DIR
 
 const char *gTestExpectationsFiles[] = {
     "deqp_gles2_test_expectations.txt",     "deqp_gles3_test_expectations.txt",
@@ -170,10 +160,10 @@ Optional<std::string> FindFileFromPaths(const char *paths[],
     for (size_t pathIndex = 0; pathIndex < numPaths; ++pathIndex)
     {
         const char *testPath = paths[pathIndex];
-        std::stringstream testExpectationsPathStr;
-        testExpectationsPathStr << exeDir << testPath << searchFile;
+        std::stringstream pathStringStream;
+        pathStringStream << exeDir << testPath << searchFile;
 
-        std::string path = testExpectationsPathStr.str();
+        std::string path = pathStringStream.str();
         std::ifstream inFile(path.c_str());
         if (!inFile.fail())
         {

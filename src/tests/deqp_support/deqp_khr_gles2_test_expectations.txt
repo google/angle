@@ -37,3 +37,6 @@
 3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f = FAIL
 3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f_linear = FAIL
 3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f_linear = FAIL
+
+// Depth/stencil related failures.
+3457 VULKAN : KHR-GLES2.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth_stencil = FAIL
