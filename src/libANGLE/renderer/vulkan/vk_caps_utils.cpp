@@ -53,6 +53,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.textureBorderClamp     = false;  // not implemented yet
     mNativeExtensions.translatedShaderSource = true;
 
+    // Enable EXT_blend_minmax
+    mNativeExtensions.blendMinMax = true;
+
     mNativeExtensions.eglImage         = true;
     mNativeExtensions.eglImageExternal = true;
     // TODO(geofflang): Support GL_OES_EGL_image_external_essl3. http://anglebug.com/2668

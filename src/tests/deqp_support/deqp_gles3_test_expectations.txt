@@ -587,28 +587,6 @@
 2905 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_component_type = SKIP
 2905 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_x_size_texture = SKIP
 
-// Min/Max blending:
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.equation_src_func_dst_func.min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.equation_src_func_dst_func.max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.add_min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.add_max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.subtract_min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.subtract_max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.reverse_subtract_min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.reverse_subtract_max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.min* = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.default_framebuffer.rgb_equation_alpha_equation.max* = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.equation_src_func_dst_func.min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.equation_src_func_dst_func.max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.add_min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.add_max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.subtract_min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.subtract_max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.reverse_subtract_min = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.reverse_subtract_max = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.min* = SKIP
-2897 VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_equation_alpha_equation.max* = SKIP
-
 // Blit:
 3200 VULKAN : dEQP-GLES3.functional.fbo.blit.* = SKIP
 3200 VULKAN : dEQP-GLES3.functional.fragment_ops.scissor.framebuffer_blit_center = FAIL

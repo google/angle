@@ -39,6 +39,10 @@ uint8_t PackGLBlendOp(GLenum blendOp)
             return static_cast<uint8_t>(VK_BLEND_OP_SUBTRACT);
         case GL_FUNC_REVERSE_SUBTRACT:
             return static_cast<uint8_t>(VK_BLEND_OP_REVERSE_SUBTRACT);
+        case GL_MIN:
+            return static_cast<uint8_t>(VK_BLEND_OP_MIN);
+        case GL_MAX:
+            return static_cast<uint8_t>(VK_BLEND_OP_MAX);
         default:
             UNREACHABLE();
             return 0;
