@@ -2293,7 +2293,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TIntermSequence *arguments = node->getSequence();
 
-            bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
+            bool lod0 = (mInsideDiscontinuousLoop || mOutputLod0Function) &&
+                        mShaderType == GL_FRAGMENT_SHADER;
             if (node->getOp() == EOpCallFunctionInAST)
             {
                 if (node->isArray())
