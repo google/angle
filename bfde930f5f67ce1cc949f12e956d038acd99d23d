@@ -70,6 +70,30 @@
       "revId": "bfde930f5f67ce1cc949f12e956d038acd99d23d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8adef9c2_86492e39",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-21T16:50:26Z",
+      "side": 1,
+      "message": "ANGLE\u0027s deqp integration always creates an R8G8B8A8 surface with DEPTH24_STENCIL8 depth/stencil without multisampling. You can override that like this:\n\n    ./angle_deqp_gles3_tests --use-angle\u003dvulkan --deqp-gl-config-name\u003drgba8888d24s8ms4\n\nThe parameter passed to `--deqp-gl-config-name` is parsed by deqp as the configuration to create the display with. Without that, ANGLE defaults to `rgba8888d24s8` (note the missing ms4).",
+      "parentUuid": "fbd0c46e_07cf2c67",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 0
+      },
+      "revId": "bfde930f5f67ce1cc949f12e956d038acd99d23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
