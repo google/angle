@@ -46,6 +46,30 @@
       "revId": "bfde930f5f67ce1cc949f12e956d038acd99d23d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbd0c46e_07cf2c67",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-05-21T16:15:05Z",
+      "side": 1,
+      "message": "Yeah, I\u0027m getting \"Not Supported\" when trying to run any of the dEQP-GLES2.functional.multisample* tests on a Pixel 3, even with the previous commit for anglebug.com/3204.\n\nHow are your forcing these tests to run so you can tell that they fail?",
+      "parentUuid": "b7b35286_9d083935",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 0
+      },
+      "revId": "bfde930f5f67ce1cc949f12e956d038acd99d23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
