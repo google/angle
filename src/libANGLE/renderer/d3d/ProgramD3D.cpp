@@ -531,6 +531,8 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
 
     void popError(d3d::Context *context)
     {
+        ASSERT(mStoredFile);
+        ASSERT(mStoredFunction);
         context->handleResult(mStoredHR, mStoredMessage.c_str(), mStoredFile, mStoredFunction,
                               mStoredLine);
     }
@@ -865,7 +867,7 @@ class ProgramD3D::LoadBinaryTask : public ProgramD3D::GetExecutableTask
         if (!mDataCopySucceeded)
         {
             mInfoLog << "Failed to copy program binary data to local buffer.";
-            return angle::Result::Stop;
+            return angle::Result::Incomplete;
         }
 
         gl::BinaryInputStream stream(mStreamData.data(), mStreamData.size());
