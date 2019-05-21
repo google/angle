@@ -46,6 +46,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.drawBuffers            = true;
     mNativeExtensions.fragDepth              = true;
     mNativeExtensions.framebufferBlit        = true;
+    mNativeExtensions.framebufferMultisample = true;
     mNativeExtensions.copyTexture            = true;
     mNativeExtensions.copyCompressedTexture  = true;
     mNativeExtensions.debugMarker            = true;
@@ -228,6 +229,13 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxVaryingVectors =
         (mPhysicalDeviceProperties.limits.maxVertexOutputComponents / 4) - kReservedVaryingCount;
     mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxVaryingVectors * 4;
+
+    const VkPhysicalDeviceLimits &limits = mPhysicalDeviceProperties.limits;
+    const uint32_t sampleCounts          = limits.framebufferColorSampleCounts &
+                                  limits.framebufferDepthSampleCounts &
+                                  limits.framebufferStencilSampleCounts;
+
+    mNativeCaps.maxSamples = vk_gl::GetMaxSampleCount(sampleCounts);
 
     mNativeCaps.subPixelBits = mPhysicalDeviceProperties.limits.subPixelPrecisionBits;
 }

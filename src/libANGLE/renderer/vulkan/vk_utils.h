@@ -303,6 +303,8 @@ angle::Result InitShaderAndSerial(Context *context,
                                   const uint32_t *shaderCode,
                                   size_t shaderCodeSize);
 
+gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples);
+
 enum class RecordingMode
 {
     Start,
@@ -553,6 +555,10 @@ namespace vk_gl
 {
 // Find set bits in sampleCounts and add the corresponding sample count to the set.
 void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *outSet);
+// Return the maximum sample count with a bit set in |sampleCounts|.
+GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts);
+// Return a supported sample count that's at least as large as the requested one.
+GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount);
 }  // namespace vk_gl
 
 }  // namespace rx

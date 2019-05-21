@@ -698,6 +698,14 @@ TEST_P(ReadPixelsErrorTest, ReadBufferIsNone)
 ANGLE_INSTANTIATE_TEST(ReadPixelsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(ReadPixelsPBOTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ReadPixelsPBODrawTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
-ANGLE_INSTANTIATE_TEST(ReadPixelsMultisampleTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsMultisampleTest,
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(ReadPixelsTextureTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
-ANGLE_INSTANTIATE_TEST(ReadPixelsErrorTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ReadPixelsErrorTest,
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES3_VULKAN());

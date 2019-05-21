@@ -116,6 +116,12 @@ namespace fs
 // A shader that fills with 100% opaque red.
 ANGLE_UTIL_EXPORT const char *Red();
 
+// A shader that fills with 100% opaque green.
+ANGLE_UTIL_EXPORT const char *Green();
+
+// A shader that fills with 100% opaque blue.
+ANGLE_UTIL_EXPORT const char *Blue();
+
 }  // namespace fs
 }  // namespace essl3_shaders
 

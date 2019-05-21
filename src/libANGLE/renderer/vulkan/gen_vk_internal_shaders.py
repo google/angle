@@ -636,9 +636,9 @@ def main():
             # a number where each bit says whether a flag is active or not,
             # with values in [0, 2^len(flags))
             for flags_active in range(1 << len(flags)):
-                compile_variation(glslang_path, compile_queue, shader_file, output_name, flags,
-                                  enums, flags_active, enum_indices, flags_bits, enum_bits,
-                                  output_shaders)
+                compile_variation(glslang_path if do_compile else None, compile_queue, shader_file,
+                                  output_name, flags, enums, flags_active, enum_indices,
+                                  flags_bits, enum_bits, output_shaders)
 
             if not next_enum_variation(enums, enum_indices):
                 break

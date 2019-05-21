@@ -405,4 +405,5 @@ ANGLE_INSTANTIATE_TEST(MultisampleCompatibilityTest,
                        ES3_D3D11(),
                        ES3_OPENGL(),
                        ES3_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());

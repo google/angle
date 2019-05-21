@@ -111,6 +111,38 @@ enum DestFormat
 };
 }  // namespace ImageCopy_frag
 
+namespace ResolveColor_frag
+{
+enum flags
+{
+    kSrcIsArray = 0x00000001,
+    kFlagsMask  = 0x00000001,
+};
+enum Format
+{
+    kIsFloat    = 0x00000000,
+    kIsInt      = 0x00000002,
+    kIsUint     = 0x00000004,
+    kFormatMask = 0x00000006,
+};
+}  // namespace ResolveColor_frag
+
+namespace ResolveDepthStencil_frag
+{
+enum flags
+{
+    kSrcIsArray = 0x00000001,
+    kFlagsMask  = 0x00000001,
+};
+enum Resolve
+{
+    kResolveDepth        = 0x00000000,
+    kResolveStencil      = 0x00000002,
+    kResolveDepthStencil = 0x00000004,
+    kResolveMask         = 0x00000006,
+};
+}  // namespace ResolveDepthStencil_frag
+
 }  // namespace InternalShader
 
 class ShaderLibrary final : angle::NonCopyable
@@ -136,6 +168,12 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getImageCopy_frag(Context *context,
                                     uint32_t shaderFlags,
                                     RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getResolveColor_frag(Context *context,
+                                       uint32_t shaderFlags,
+                                       RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getResolveDepthStencil_frag(Context *context,
+                                              uint32_t shaderFlags,
+                                              RefCounted<ShaderAndSerial> **shaderOut);
 
   private:
     RefCounted<ShaderAndSerial>
@@ -153,6 +191,12 @@ class ShaderLibrary final : angle::NonCopyable
         mImageCopy_frag_shaders[InternalShader::ImageCopy_frag::kFlagsMask |
                                 InternalShader::ImageCopy_frag::kSrcFormatMask |
                                 InternalShader::ImageCopy_frag::kDestFormatMask];
+    RefCounted<ShaderAndSerial>
+        mResolveColor_frag_shaders[InternalShader::ResolveColor_frag::kFlagsMask |
+                                   InternalShader::ResolveColor_frag::kFormatMask];
+    RefCounted<ShaderAndSerial>
+        mResolveDepthStencil_frag_shaders[InternalShader::ResolveDepthStencil_frag::kFlagsMask |
+                                          InternalShader::ResolveDepthStencil_frag::kResolveMask];
 };
 }  // namespace vk
 }  // namespace rx

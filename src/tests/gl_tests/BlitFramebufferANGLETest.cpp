@@ -1164,16 +1164,6 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "out mediump vec4 red;\n"
-        "void main() {\n"
-        "   red = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "   gl_FragDepth = 0.5;\n"
-        "}";
-
-    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), kFS);
-
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
@@ -1210,11 +1200,83 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-    // Draw with 0.5f test and the test should pass.
+    // Make sure resulting depth is near 0.5f.
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(false);
+    glDepthFunc(GL_LESS);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), -0.01f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(255, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 255, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(255, 255, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(127, 127, GLColor::red);
+
+    ANGLE_GL_PROGRAM(drawBlue, essl3_shaders::vs::Simple(), essl3_shaders::fs::Blue());
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(false);
+    glDepthFunc(GL_GREATER);
+    drawQuad(drawBlue.get(), essl3_shaders::PositionAttrib(), 0.01f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(255, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 255, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(255, 255, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(127, 127, GLColor::blue);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests clearing a multisampled depth buffer.
+TEST_P(BlitFramebufferTest, MultisampleDepthClear)
+{
+    GLRenderbuffer depthMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthMS.get());
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
+
+    GLRenderbuffer colorMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorMS.get());
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_RGBA8, 256, 256);
+
+    GLRenderbuffer colorResolved;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorResolved.get());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 256, 256);
+
+    GLFramebuffer framebufferMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMS.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorMS.get());
+
+    // Clear depth buffer to 0.5 and color to green.
+    glClearDepthf(0.5f);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+    glFlush();
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_EQUAL);
-    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.0f);
+
+    // Resolve the color buffer to make sure the above draw worked correctly, which in turn implies
+    // that the multisampled depth clear worked.
+    GLFramebuffer framebufferResolved;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferResolved.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              colorResolved.get());
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferMS.get());
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferResolved.get());
+
+    ASSERT_GL_NO_ERROR();
+
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(255, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 255, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(255, 255, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(127, 127, GLColor::red);
 
     ASSERT_GL_NO_ERROR();
 }
@@ -1224,6 +1286,10 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 {
     // Incorrect rendering results seen on AMD Windows OpenGL. http://anglebug.com/2486
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && IsWindows());
+
+    // TODO(syoussefi): Multisampled stencil resolve requires workaround where
+    // VK_EXT_shader_stencil_export is not supported.  http://anglebug.com/3200
+    ANGLE_SKIP_TEST_IF(IsVulkan() && !IsAMD());
 
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
@@ -1282,6 +1348,9 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 // Blit an SRGB framebuffer and scale it.
 TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
 {
+    // TODO(syoussefi): Vulkan does not implement stretching yet.  http://anglebug.com/3200
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr const GLsizei kWidth  = 256;
     constexpr const GLsizei kHeight = 256;
 
@@ -1393,6 +1462,9 @@ TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
 // clipped out).
 TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedSourceArea)
 {
+    // TODO(syoussefi): Vulkan does not implement stretching yet.  http://anglebug.com/3200
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr const GLsizei kWidth  = 256;
     constexpr const GLsizei kHeight = 256;
 
@@ -1497,6 +1569,7 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES2_D3D11_PRESENT_PATH_FAST(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(BlitFramebufferTest, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(BlitFramebufferTest, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());

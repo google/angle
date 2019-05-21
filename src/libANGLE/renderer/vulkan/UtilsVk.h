@@ -14,7 +14,11 @@
 //      * Used by VertexArrayVk::convertVertexBuffer() to convert vertex attributes from unsupported
 //        formats to their fallbacks.
 //    - Image clear: Used by FramebufferVk::clearWithDraw().
-//    - Image copy: Not yet implemented
+//    - Image copy: Used by TextureVk::copySubImageImplWithDraw().
+//    - Color resolve: Used by FramebufferVk::resolve() to implement multisample resolve on color
+//      images.
+//    - Depth/Stencil resolve: Used by FramebufferVk::resolve() to implement multisample resolve on
+//      depth/stencil images.
 //    - Mipmap generation: Not yet implemented
 //
 
@@ -65,8 +69,6 @@ class UtilsVk : angle::NonCopyable
         // safer way.
         ClearFramebufferParameters();
 
-        const vk::RenderPassDesc *renderPassDesc;
-        GLint renderAreaHeight;
         gl::Rectangle clearArea;
 
         // Note that depth clear is never needed to be done with a draw call.
@@ -80,6 +82,20 @@ class UtilsVk : angle::NonCopyable
 
         VkClearColorValue colorClearValue;
         uint8_t stencilClearValue;
+    };
+
+    struct ResolveParameters
+    {
+        // |srcOffset| and |dstOffset| define the transformation from source to destination.
+        int srcOffset[2];
+        int destOffset[2];
+        // |srcExtents| is used to avoid fetching outside the source image.
+        int srcExtents[2];
+        // |resolveArea| defines the actual scissored region that will participate in resolve.
+        gl::Rectangle resolveArea;
+        int srcLayer;
+        bool flipX;
+        bool flipY;
     };
 
     struct CopyImageParameters
@@ -111,6 +127,17 @@ class UtilsVk : angle::NonCopyable
     angle::Result clearFramebuffer(ContextVk *contextVk,
                                    FramebufferVk *framebuffer,
                                    const ClearFramebufferParameters &params);
+    angle::Result colorResolve(ContextVk *contextVk,
+                               FramebufferVk *framebuffer,
+                               vk::ImageHelper *src,
+                               const vk::ImageView *srcView,
+                               const ResolveParameters &params);
+    angle::Result depthStencilResolve(ContextVk *contextVk,
+                                      FramebufferVk *framebuffer,
+                                      vk::ImageHelper *src,
+                                      const vk::ImageView *srcDepthView,
+                                      const vk::ImageView *srcStencilView,
+                                      const ResolveParameters &params);
 
     angle::Result copyImage(ContextVk *contextVk,
                             vk::ImageHelper *dest,
@@ -172,21 +199,48 @@ class UtilsVk : angle::NonCopyable
         uint32_t destDefaultChannelsMask = 0;
     };
 
+    struct ResolveColorShaderParams
+    {
+        // Structure matching PushConstants in ResolveColor.frag
+        int32_t srcExtent[2]  = {};
+        int32_t srcOffset[2]  = {};
+        int32_t destOffset[2] = {};
+        int32_t srcLayer      = 0;
+        int32_t samples       = 0;
+        float invSamples      = 0;
+        uint32_t outputMask   = 0;
+        uint32_t flipX        = 0;
+        uint32_t flipY        = 0;
+    };
+
+    struct ResolveDepthStencilShaderParams
+    {
+        // Structure matching PushConstants in ResolvedDepthStencil.frag
+        int32_t srcExtent[2]  = {};
+        int32_t srcOffset[2]  = {};
+        int32_t destOffset[2] = {};
+        int32_t srcLayer      = 0;
+        uint32_t flipX        = 0;
+        uint32_t flipY        = 0;
+    };
+
     // Functions implemented by the class:
     enum class Function
     {
         // Functions implemented in graphics
-        ImageClear = 0,
-        ImageCopy  = 1,
+        ImageClear          = 0,
+        ImageCopy           = 1,
+        ResolveColor        = 2,
+        ResolveDepthStencil = 3,
 
         // Functions implemented in compute
-        ComputeStartIndex   = 2,  // Special value to separate draw and dispatch functions.
-        BufferClear         = 2,
-        BufferCopy          = 3,
-        ConvertVertexBuffer = 4,
+        ComputeStartIndex   = 4,  // Special value to separate draw and dispatch functions.
+        BufferClear         = 4,
+        BufferCopy          = 5,
+        ConvertVertexBuffer = 6,
 
-        InvalidEnum = 5,
-        EnumCount   = 5,
+        InvalidEnum = 7,
+        EnumCount   = 7,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -223,6 +277,8 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *context);
     angle::Result ensureImageClearResourcesInitialized(ContextVk *context);
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);
+    angle::Result ensureResolveColorResourcesInitialized(ContextVk *context);
+    angle::Result ensureResolveDepthStencilResourcesInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
                                   vk::ImageHelper *image,
@@ -249,6 +305,12 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kFlagsMask |
                                                vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
                                                vk::InternalShader::ImageCopy_frag::kDestFormatMask];
+    vk::ShaderProgramHelper
+        mResolveColorPrograms[vk::InternalShader::ResolveColor_frag::kFlagsMask |
+                              vk::InternalShader::ResolveColor_frag::kFormatMask];
+    vk::ShaderProgramHelper
+        mResolveDepthStencilPrograms[vk::InternalShader::ResolveDepthStencil_frag::kFlagsMask |
+                                     vk::InternalShader::ResolveDepthStencil_frag::kResolveMask];
 };
 
 }  // namespace rx

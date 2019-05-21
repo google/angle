@@ -450,6 +450,30 @@ void main()
 })";
 }
 
+// A shader that fills with 100% opaque green.
+const char *Green()
+{
+    return R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+}
+
+// A shader that fills with 100% opaque blue.
+const char *Blue()
+{
+    return R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+}
+
 }  // namespace fs
 }  // namespace essl3_shaders
 

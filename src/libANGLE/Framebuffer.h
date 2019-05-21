@@ -254,7 +254,7 @@ class Framebuffer final : public angle::ObserverInterface,
     }
 
     // For when we don't want to check completeness in getSamples().
-    int getCachedSamples(const Context *context);
+    int getCachedSamples(const Context *context) const;
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
     ANGLE_INLINE bool isComplete(const Context *context)

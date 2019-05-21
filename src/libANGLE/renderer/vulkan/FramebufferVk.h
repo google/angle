@@ -14,6 +14,7 @@
 #include "libANGLE/renderer/RenderTargetCache.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
+#include "libANGLE/renderer/vulkan/UtilsVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace rx
@@ -187,6 +188,20 @@ class FramebufferVk : public FramebufferImpl
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context, size_t colorIndex);
+
+  private:
+    // Resolve from the read framebuffer into the draw framebuffer.  This is a specialized usage of
+    // glBlitFramebuffer() for multisampled images where scaling is not performed.
+    angle::Result resolve(ContextVk *contextVk,
+                          const gl::Rectangle &area,
+                          bool resolveColorBuffer,
+                          bool resolveDepthBuffer,
+                          bool resolveStencilBuffer);
+
+    // Resolve color with vkCmdResolveImage
+    angle::Result resolveColorWithCommand(ContextVk *contextVk,
+                                          const UtilsVk::ResolveParameters &params,
+                                          vk::ImageHelper *srcImage);
 
     WindowSurfaceVk *mBackbuffer;
 

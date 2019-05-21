@@ -51,6 +51,12 @@ class RenderbufferVk : public RenderbufferImpl
     void releaseAndDeleteImage(ContextVk *contextVk);
     void releaseImage(ContextVk *contextVk);
 
+    angle::Result setStorageImpl(const gl::Context *context,
+                                 size_t samples,
+                                 GLenum internalformat,
+                                 size_t width,
+                                 size_t height);
+
     bool mOwnsImage;
     vk::ImageHelper *mImage;
     vk::ImageView mImageView;

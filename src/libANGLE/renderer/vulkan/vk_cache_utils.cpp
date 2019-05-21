@@ -1356,8 +1356,8 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
         binding.binding                      = bindingIndex;
         binding.descriptorCount              = packedBinding.count;
         binding.descriptorType               = static_cast<VkDescriptorType>(packedBinding.type);
-        binding.stageFlags = static_cast<VkShaderStageFlags>(packedBinding.stages);
-        binding.pImmutableSamplers           = nullptr;
+        binding.stageFlags         = static_cast<VkShaderStageFlags>(packedBinding.stages);
+        binding.pImmutableSamplers = nullptr;
 
         bindings->push_back(binding);
     }
@@ -1454,7 +1454,9 @@ angle::Result RenderPassCache::addRenderPass(vk::Context *context,
                                              const vk::RenderPassDesc &desc,
                                              vk::RenderPass **renderPassOut)
 {
-    // Insert some dummy attachment ops.
+    // Insert some dummy attachment ops.  Note that render passes with different ops are still
+    // compatible.
+    //
     // It would be nice to pre-populate the cache in the Renderer so we rarely miss here.
     vk::AttachmentOpsArray ops;
 

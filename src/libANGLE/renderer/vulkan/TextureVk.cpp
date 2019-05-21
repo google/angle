@@ -65,32 +65,6 @@ bool ForceCpuPathForCopy(RendererVk *renderer, vk::ImageHelper *image)
 {
     return image->getLayerCount() > 1 && renderer->getFeatures().forceCpuPathForCubeMapCopy.enabled;
 }
-
-gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples)
-{
-    if (layerCount > 1)
-    {
-        if (samples > 1)
-        {
-            return gl::TextureType::_2DMultisampleArray;
-        }
-        else
-        {
-            return gl::TextureType::_2DArray;
-        }
-    }
-    else
-    {
-        if (samples > 1)
-        {
-            return gl::TextureType::_2DMultisample;
-        }
-        else
-        {
-            return gl::TextureType::_2D;
-        }
-    }
-}
 }  // anonymous namespace
 
 angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
@@ -676,7 +650,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         std::unique_ptr<vk::ImageHelper> stagingImage;
 
         GLint samples                      = srcImage->getSamples();
-        gl::TextureType stagingTextureType = Get2DTextureType(layerCount, samples);
+        gl::TextureType stagingTextureType = vk::Get2DTextureType(layerCount, samples);
 
         // Create a temporary image to stage the copy
         stagingImage = std::make_unique<vk::ImageHelper>();
@@ -1182,7 +1156,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
         // need create a fetch view for each layer as well.
         gl::SwizzleState mappedSwizzle;
         MapSwizzleState(mImage->getFormat(), mState.getSwizzleState(), &mappedSwizzle);
-        gl::TextureType arrayType = Get2DTextureType(gl::kCubeFaceCount, mImage->getSamples());
+        gl::TextureType arrayType = vk::Get2DTextureType(gl::kCubeFaceCount, mImage->getSamples());
         ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, mImage->getAspectFlags(),
                                              mappedSwizzle, &mLayerFetchImageView[cubeMapFaceIndex],
                                              getNativeImageLevel(0), 1,
@@ -1421,7 +1395,7 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
                                          layerCount));
     if (mState.getType() == gl::TextureType::CubeMap)
     {
-        gl::TextureType arrayType = Get2DTextureType(layerCount, mImage->getSamples());
+        gl::TextureType arrayType = vk::Get2DTextureType(layerCount, mImage->getSamples());
 
         ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, aspectFlags, mappedSwizzle,
                                              &mFetchMipmapImageView, baseLevel, levelCount,

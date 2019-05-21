@@ -1556,7 +1556,7 @@ int Framebuffer::getSamples(const Context *context)
     return (isComplete(context) ? getCachedSamples(context) : 0);
 }
 
-int Framebuffer::getCachedSamples(const Context *context)
+int Framebuffer::getCachedSamples(const Context *context) const
 {
     ASSERT(mCachedStatus.valid() && mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE);
 

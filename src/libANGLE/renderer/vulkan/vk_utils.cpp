@@ -415,6 +415,32 @@ angle::Result InitShaderAndSerial(Context *context,
     return angle::Result::Continue;
 }
 
+gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples)
+{
+    if (layerCount > 1)
+    {
+        if (samples > 1)
+        {
+            return gl::TextureType::_2DMultisampleArray;
+        }
+        else
+        {
+            return gl::TextureType::_2DArray;
+        }
+    }
+    else
+    {
+        if (samples > 1)
+        {
+            return gl::TextureType::_2DMultisample;
+        }
+        else
+        {
+            return gl::TextureType::_2D;
+        }
+    }
+}
+
 GarbageObjectBase::GarbageObjectBase() : mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
 {}
 
@@ -844,6 +870,31 @@ void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *se
     {
         setOut->insert(1 << bit);
     }
+}
+
+GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts)
+{
+    GLuint maxCount = 0;
+    for (unsigned long bit : angle::BitSet32<32>(sampleCounts))
+    {
+        maxCount = 1 << bit;
+    }
+    return maxCount;
+}
+
+GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount)
+{
+    for (unsigned long bit : angle::BitSet32<32>(supportedCounts))
+    {
+        GLuint sampleCount = 1 << bit;
+        if (sampleCount >= requestedCount)
+        {
+            return sampleCount;
+        }
+    }
+
+    UNREACHABLE();
+    return 0;
 }
 }  // namespace vk_gl
 }  // namespace rx
