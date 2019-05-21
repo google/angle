@@ -22,6 +22,30 @@
       "revId": "bfde930f5f67ce1cc949f12e956d038acd99d23d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7b35286_9d083935",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-21T15:20:02Z",
+      "side": 1,
+      "message": "With non-multisampled configs, `dEQP-GLES2.functional.multisample.*` is skipped. That would make sense. We should also try to get coverage for multisampled configs on the bots, as otherwise they are never tested.",
+      "parentUuid": "d88d79ea_96a92818",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 0
+      },
+      "revId": "bfde930f5f67ce1cc949f12e956d038acd99d23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
