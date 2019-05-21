@@ -29,9 +29,9 @@ class MultisampleTest : public ANGLETest
 
         ASSERT_TRUE(eglInitialize(mDisplay, nullptr, nullptr) == EGL_TRUE);
 
-        // Nexus 5X fails to eglMakeCurrent with a config it advertises it supports.
+        // Nexus 5X and 6P fail to eglMakeCurrent with a config they advertise they support.
         // http://anglebug.com/3464
-        ANGLE_SKIP_TEST_IF(IsNexus5X());
+        ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
 
         // Find a config that uses RGBA8 and allows 4x multisampling.
         const EGLint configAttributes[] = {
@@ -129,6 +129,8 @@ class MultisampleTest : public ANGLETest
 TEST_P(MultisampleTest, Point)
 {
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
+    // http://anglebug.com/3470
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsNVIDIAShield() && IsOpenGLES());
 
     constexpr char kPointsVS[] = R"(precision highp float;
 attribute vec4 a_position;
@@ -227,6 +229,8 @@ TEST_P(MultisampleTest, Line)
 TEST_P(MultisampleTest, Triangle)
 {
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
+    // http://anglebug.com/3470
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsNVIDIAShield() && IsOpenGLES());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
