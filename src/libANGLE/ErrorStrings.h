@@ -220,6 +220,7 @@ MSG kInvalidFramebufferTarget = "Invalid framebuffer target.";
 MSG kInvalidFramebufferTextureLevel = "Mipmap level must be 0 when attaching a texture.";
 MSG kInvalidHandleType = "Invalid handle type.";
 MSG kInvalidImageAccess = "access is not one of the supported tokens.";
+MSG kInvalidImageLayout = "Invalid image layout.";
 MSG kInvalidImageFormat = "format is not one of supported image unit formats.";
 MSG kInvalidIndentifier = "Invalid identifier.";
 MSG kInvalidIndirectOffset = "indirect must be a multiple of the size of uint in basic machine units.";

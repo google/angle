@@ -1124,6 +1124,27 @@ bool ValidDstBlendFunc(const Context *context, GLenum val)
 
     return false;
 }
+
+bool IsValidImageLayout(ImageLayout layout)
+{
+    switch (layout)
+    {
+        case ImageLayout::General:
+        case ImageLayout::ColorAttachment:
+        case ImageLayout::DepthStencilAttachment:
+        case ImageLayout::DepthStencilReadOnlyAttachment:
+        case ImageLayout::ShaderReadOnly:
+        case ImageLayout::TransferSrc:
+        case ImageLayout::TransferDst:
+        case ImageLayout::DepthReadOnlyStencilAttachment:
+        case ImageLayout::DepthAttachmentStencilReadOnly:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context,
@@ -3341,8 +3362,16 @@ bool ValidateSignalSemaphoreEXT(Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    for (GLuint i = 0; i < numTextureBarriers; ++i)
+    {
+        if (!IsValidImageLayout(FromGLenum<ImageLayout>(dstLayouts[i])))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidImageLayout);
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool ValidateWaitSemaphoreEXT(Context *context,
@@ -3359,8 +3388,16 @@ bool ValidateWaitSemaphoreEXT(Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    for (GLuint i = 0; i < numTextureBarriers; ++i)
+    {
+        if (!IsValidImageLayout(FromGLenum<ImageLayout>(srcLayouts[i])))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidImageLayout);
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool ValidateImportSemaphoreFdEXT(Context *context,

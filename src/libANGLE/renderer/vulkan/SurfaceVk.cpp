@@ -893,7 +893,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     }
     image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, swapCommands);
 
-    ANGLE_TRY(contextVk->flushImpl());
+    ANGLE_TRY(contextVk->flushImpl(nullptr));
 
     // The semaphore chain must at least have the semaphore returned by vkAquireImage in it. It will
     // likely have more based on how much work was flushed this frame.
