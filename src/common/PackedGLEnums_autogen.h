@@ -187,6 +187,26 @@ template <>
 HintSetting FromGLenum<HintSetting>(GLenum from);
 GLenum ToGLenum(HintSetting from);
 
+enum class ImageLayout : uint8_t
+{
+    General                        = 0,
+    ColorAttachment                = 1,
+    DepthStencilAttachment         = 2,
+    DepthStencilReadOnlyAttachment = 3,
+    ShaderReadOnly                 = 4,
+    TransferSrc                    = 5,
+    TransferDst                    = 6,
+    DepthReadOnlyStencilAttachment = 7,
+    DepthAttachmentStencilReadOnly = 8,
+
+    InvalidEnum = 9,
+    EnumCount   = 9,
+};
+
+template <>
+ImageLayout FromGLenum<ImageLayout>(GLenum from);
+GLenum ToGLenum(ImageLayout from);
+
 enum class LightParameter : uint8_t
 {
     Ambient              = 0,

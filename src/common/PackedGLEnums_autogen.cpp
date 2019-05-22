@@ -428,6 +428,62 @@ GLenum ToGLenum(HintSetting from)
 }
 
 template <>
+ImageLayout FromGLenum<ImageLayout>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_LAYOUT_GENERAL_EXT:
+            return ImageLayout::General;
+        case GL_LAYOUT_COLOR_ATTACHMENT_EXT:
+            return ImageLayout::ColorAttachment;
+        case GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT:
+            return ImageLayout::DepthStencilAttachment;
+        case GL_LAYOUT_DEPTH_STENCIL_READ_ONLY_EXT:
+            return ImageLayout::DepthStencilReadOnlyAttachment;
+        case GL_LAYOUT_SHADER_READ_ONLY_EXT:
+            return ImageLayout::ShaderReadOnly;
+        case GL_LAYOUT_TRANSFER_SRC_EXT:
+            return ImageLayout::TransferSrc;
+        case GL_LAYOUT_TRANSFER_DST_EXT:
+            return ImageLayout::TransferDst;
+        case GL_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_EXT:
+            return ImageLayout::DepthReadOnlyStencilAttachment;
+        case GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT:
+            return ImageLayout::DepthAttachmentStencilReadOnly;
+        default:
+            return ImageLayout::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(ImageLayout from)
+{
+    switch (from)
+    {
+        case ImageLayout::General:
+            return GL_LAYOUT_GENERAL_EXT;
+        case ImageLayout::ColorAttachment:
+            return GL_LAYOUT_COLOR_ATTACHMENT_EXT;
+        case ImageLayout::DepthStencilAttachment:
+            return GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT;
+        case ImageLayout::DepthStencilReadOnlyAttachment:
+            return GL_LAYOUT_DEPTH_STENCIL_READ_ONLY_EXT;
+        case ImageLayout::ShaderReadOnly:
+            return GL_LAYOUT_SHADER_READ_ONLY_EXT;
+        case ImageLayout::TransferSrc:
+            return GL_LAYOUT_TRANSFER_SRC_EXT;
+        case ImageLayout::TransferDst:
+            return GL_LAYOUT_TRANSFER_DST_EXT;
+        case ImageLayout::DepthReadOnlyStencilAttachment:
+            return GL_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_EXT;
+        case ImageLayout::DepthAttachmentStencilReadOnly:
+            return GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 LightParameter FromGLenum<LightParameter>(GLenum from)
 {
     switch (from)
