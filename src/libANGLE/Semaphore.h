@@ -11,7 +11,9 @@
 #include <memory>
 
 #include "angle_gl.h"
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
+#include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
 
 namespace rx
@@ -33,6 +35,8 @@ class Semaphore final : public RefCountObject
     void onDestroy(const Context *context) override;
 
     rx::SemaphoreImpl *getImplementation() const { return mImplementation.get(); }
+
+    angle::Result importFd(Context *context, HandleType handleType, GLint fd);
 
   private:
     std::unique_ptr<rx::SemaphoreImpl> mImplementation;

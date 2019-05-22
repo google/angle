@@ -101,6 +101,11 @@ class GLSampler : public GLWrapper
   public:
     GLSampler() : GLWrapper(&glGenSamplers, &glDeleteSamplers) {}
 };
+class GLSemaphore : public GLWrapper
+{
+  public:
+    GLSemaphore() : GLWrapper(&glGenSemaphoresEXT, &glDeleteSemaphoresEXT) {}
+};
 class GLTransformFeedback : public GLWrapper
 {
   public:

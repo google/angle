@@ -7265,7 +7265,9 @@ void Context::signalSemaphore(GLuint semaphore,
 
 void Context::importSemaphoreFd(GLuint semaphore, HandleType handleType, GLint fd)
 {
-    UNIMPLEMENTED();
+    Semaphore *semaphoreObject = getSemaphore(semaphore);
+    ASSERT(semaphoreObject != nullptr);
+    ANGLE_CONTEXT_TRY(semaphoreObject->importFd(this, handleType, fd));
 }
 
 void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)

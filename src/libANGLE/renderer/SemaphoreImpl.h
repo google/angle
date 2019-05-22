@@ -28,6 +28,8 @@ class SemaphoreImpl : angle::NonCopyable
     virtual ~SemaphoreImpl() {}
 
     virtual void onDestroy(const gl::Context *context) = 0;
+
+    virtual angle::Result importFd(gl::Context *context, gl::HandleType handleType, GLint fd) = 0;
 };
 
 }  // namespace rx

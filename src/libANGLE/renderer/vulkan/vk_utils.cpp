@@ -522,6 +522,9 @@ PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
 // VK_KHR_get_physical_device_properties2
 PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR = nullptr;
 
+// VK_KHR_external_semaphore_fd
+PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR = nullptr;
+
 #if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface
 PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA = nullptr;
@@ -571,6 +574,11 @@ void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance)
     GET_FUNC(vkGetMemoryAndroidHardwareBufferANDROID);
 }
 #endif
+
+void InitExternalSemaphoreFdFunctions(VkInstance instance)
+{
+    GET_FUNC(vkImportSemaphoreFdKHR);
+}
 
 #undef GET_FUNC
 

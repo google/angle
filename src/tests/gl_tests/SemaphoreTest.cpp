@@ -48,6 +48,21 @@ TEST_P(SemaphoreTest, SemaphoreShouldBeSemaphore)
     EXPECT_GL_NO_ERROR();
 }
 
+// glImportSemaphoreFdEXT must fail for handle types that are not file descriptors.
+TEST_P(SemaphoreTest, ShouldFailValidationOnImportFdUnsupportedHandleType)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+
+    {
+        GLSemaphore semaphore;
+        int fd = -1;
+        glImportSemaphoreFdEXT(semaphore, GL_HANDLE_TYPE_OPAQUE_WIN32_EXT, fd);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(SemaphoreTest,

@@ -25,4 +25,9 @@ void Semaphore::onDestroy(const Context *context)
     mImplementation->onDestroy(context);
 }
 
+angle::Result Semaphore::importFd(Context *context, HandleType handleType, GLint fd)
+{
+    return mImplementation->importFd(context, handleType, fd);
+}
+
 }  // namespace gl

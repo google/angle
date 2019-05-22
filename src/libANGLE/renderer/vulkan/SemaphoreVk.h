@@ -22,6 +22,13 @@ class SemaphoreVk : public SemaphoreImpl
     ~SemaphoreVk() override;
 
     void onDestroy(const gl::Context *context) override;
+
+    angle::Result importFd(gl::Context *context, gl::HandleType handleType, GLint fd) override;
+
+  private:
+    angle::Result importOpaqueFd(gl::Context *context, GLint fd);
+
+    vk::Semaphore mSemaphore;
 };
 
 }  // namespace rx

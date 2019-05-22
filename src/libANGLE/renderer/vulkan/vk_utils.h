@@ -494,6 +494,9 @@ extern PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
 // VK_KHR_get_physical_device_properties2
 extern PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
 
+// VK_KHR_external_semaphore_fd
+extern PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
+
 // Lazily load entry points for each extension as necessary.
 void InitDebugUtilsEXTFunctions(VkInstance instance);
 void InitDebugReportEXTFunctions(VkInstance instance);
@@ -511,6 +514,8 @@ extern PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBuffe
 extern PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID;
 void InitExternalMemoryHardwareBufferANDROIDFunctions(VkInstance instance);
 #endif
+
+void InitExternalSemaphoreFdFunctions(VkInstance instance);
 
 namespace gl_vk
 {

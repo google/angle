@@ -3374,8 +3374,16 @@ bool ValidateImportSemaphoreFdEXT(Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    switch (handleType)
+    {
+        case HandleType::OpaqueFd:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
+    }
+
+    return true;
 }
 
 bool ValidateMapBufferBase(Context *context, BufferBinding target)
