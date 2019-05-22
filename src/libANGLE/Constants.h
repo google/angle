@@ -64,6 +64,9 @@ enum
 
     // Maximum number of slots allocated for atomic counter buffers.
     IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS = 8,
+
+    // Implementation upper limits, real maximums depend on the hardware.
+    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINIDNGS = 64
 };
 }  // namespace gl
 

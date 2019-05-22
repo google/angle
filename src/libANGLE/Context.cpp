@@ -3299,6 +3299,13 @@ void Context::initCaps()
     LimitCap(&mState.mCaps.maxCombinedAtomicCounterBuffers,
              IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
 
+    LimitCap(&mState.mCaps.maxShaderStorageBlocks[ShaderType::Compute],
+             IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINIDNGS);
+    LimitCap(&mState.mCaps.maxShaderStorageBufferBindings,
+             IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINIDNGS);
+    LimitCap(&mState.mCaps.maxCombinedShaderStorageBlocks,
+             IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINIDNGS);
+
     mState.mCaps.maxSampleMaskWords =
         std::min<GLuint>(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 
