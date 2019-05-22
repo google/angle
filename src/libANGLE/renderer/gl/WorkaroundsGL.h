@@ -44,7 +44,7 @@ struct WorkaroundsGL : angle::FeatureSetBase
     angle::Feature doesSRGBClearsOnLinearFramebufferAttachments = {
         "does_srgb_clears_on_linear_framebuffer_attachments",
         angle::FeatureCategory::OpenGLWorkarounds,
-        "Issue clearing framebuffers with linear attachments on Indel or AMD "
+        "Issue clearing framebuffers with linear attachments on Intel or AMD "
         "drivers when GL_FRAMEBUFFER_SRGB is enabled",
         &members};
 
@@ -57,7 +57,7 @@ struct WorkaroundsGL : angle::FeatureSetBase
     // Work around this by rewriting the do-while to use another GLSL construct (block + while)
     angle::Feature doWhileGLSLCausesGPUHang = {
         "do_while_glsl_causes_gpu_hang", angle::FeatureCategory::OpenGLWorkarounds,
-        "On Mac some GLSL constructs involving do-while loops cause GPU hangs", &members};
+        "On Mac, some GLSL constructs involving do-while loops cause GPU hangs", &members};
 
     // Calling glFinish doesn't cause all queries to report that the result is available on some
     // (NVIDIA) drivers.  It was found that enabling GL_DEBUG_OUTPUT_SYNCHRONOUS before the finish
@@ -98,7 +98,7 @@ struct WorkaroundsGL : angle::FeatureSetBase
     // Emulate abs(i) with i * sign(i).
     angle::Feature emulateAbsIntFunction = {
         "emulate_abs_int_function", angle::FeatureCategory::OpenGLWorkarounds,
-        "On Intel mac, abs(i) where i is an integer returns unexpected result", &members};
+        "On Intel Mac, abs(i) where i is an integer returns unexpected result", &members};
 
     // On Intel Mac, calculation of loop conditions in for and while loop has bug.
     // Add "&& true" to the end of the condition expression to work around the bug.
@@ -144,7 +144,7 @@ struct WorkaroundsGL : angle::FeatureSetBase
     angle::Feature useUnusedBlocksWithStandardOrSharedLayout = {
         "use_unused_blocks_with_standard_or_shared_layout",
         angle::FeatureCategory::OpenGLWorkarounds,
-        "On Mac with OpenGL version 4.1, unused std140 or shared uniform blocks "
+        "On Mac with OpenGL version 4.1 and Linux AMD, unused std140 or shared uniform blocks "
         "will be treated as inactive",
         &members};
 
@@ -264,7 +264,7 @@ struct WorkaroundsGL : angle::FeatureSetBase
     // platforms.
     // http://anglebug.com/3045
     angle::Feature dontRelinkProgramsInParallel = {
-        "query_counter_bits_generates_errors", angle::FeatureCategory::OpenGLWorkarounds,
+        "dont_relink_programs_in_parallel", angle::FeatureCategory::OpenGLWorkarounds,
         "On some Intel Windows OpenGL drivers and Android, relinking a program "
         "in parallel is buggy",
         &members, "http://anglebug.com/3045"};
