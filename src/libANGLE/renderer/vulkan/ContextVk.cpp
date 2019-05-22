@@ -76,30 +76,20 @@ constexpr bool kEnableCommandGraphDiagnostics = false;
 
 void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
                           const vk::PrimaryCommandBuffer &commandBuffer,
-                          const vk::Semaphore *waitSemaphore,
+                          const std::vector<VkSemaphore> &waitSemaphores,
                           VkPipelineStageFlags *waitStageMask,
-                          const vk::Semaphore *signalSemaphore)
+                          const SignalSemaphoreVector &signalSemaphores)
 {
-    // Verify that the submitInfo has been zero'd out.
-    ASSERT(submitInfo->waitSemaphoreCount == 0);
-    ASSERT(submitInfo->signalSemaphoreCount == 0);
-
     submitInfo->sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo->commandBufferCount = 1;
     submitInfo->pCommandBuffers    = commandBuffer.ptr();
 
-    if (waitSemaphore)
-    {
-        submitInfo->waitSemaphoreCount = 1;
-        submitInfo->pWaitSemaphores    = waitSemaphore->ptr();
-        submitInfo->pWaitDstStageMask  = waitStageMask;
-    }
+    submitInfo->waitSemaphoreCount = waitSemaphores.size();
+    submitInfo->pWaitSemaphores    = waitSemaphores.data();
+    submitInfo->pWaitDstStageMask  = waitStageMask;
 
-    if (signalSemaphore)
-    {
-        submitInfo->signalSemaphoreCount = 1;
-        submitInfo->pSignalSemaphores    = signalSemaphore->ptr();
-    }
+    submitInfo->signalSemaphoreCount = signalSemaphores.size();
+    submitInfo->pSignalSemaphores    = signalSemaphores.data();
 }
 
 }  // anonymous namespace
@@ -310,7 +300,7 @@ angle::Result ContextVk::initialize()
         // Calculate the difference between CPU and GPU clocks for GPU event reporting.
         ANGLE_TRY(mGpuEventQueryPool.init(this, VK_QUERY_TYPE_TIMESTAMP,
                                           vk::kDefaultTimestampQueryPoolSize));
-        ANGLE_TRY(synchronizeCpuGpuTime(nullptr, nullptr));
+        ANGLE_TRY(synchronizeCpuGpuTime());
     }
 
     return angle::Result::Continue;
@@ -679,8 +669,7 @@ angle::Result ContextVk::flushCommandGraph(vk::PrimaryCommandBuffer *commandBatc
                                         commandBatch);
 }
 
-angle::Result ContextVk::synchronizeCpuGpuTime(const vk::Semaphore *waitSemaphore,
-                                               const vk::Semaphore *signalSemaphore)
+angle::Result ContextVk::synchronizeCpuGpuTime()
 {
     ASSERT(mGpuEventsEnabled);
 
@@ -822,8 +811,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime(const vk::Semaphore *waitSemaphor
         // Submit the command buffer
         VkSubmitInfo submitInfo       = {};
         VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-        InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
-                             signalSemaphore);
+        InitializeSubmitInfo(&submitInfo, commandBatch.get(), {}, &waitMask,
+                             {});
 
         ANGLE_TRY(submitFrame(submitInfo, std::move(commandBuffer)));
 
@@ -1991,20 +1980,17 @@ angle::Result ContextVk::flushImpl()
     vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
     ANGLE_TRY(flushCommandGraph(&commandBatch.get()));
 
-    const vk::Semaphore *waitSemaphore   = nullptr;
-    const vk::Semaphore *signalSemaphore = nullptr;
-    if (mCurrentWindowSurface)
-    {
-        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
-                                                                    &signalSemaphore));
-    }
+    SignalSemaphoreVector signalSemaphores;
+    ANGLE_TRY(generateSurfaceSemaphores(&signalSemaphores));
 
     VkSubmitInfo submitInfo       = {};
     VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-    InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
-                         signalSemaphore);
+    InitializeSubmitInfo(&submitInfo, commandBatch.get(), mWaitSemaphores, &waitMask,
+                         signalSemaphores);
 
     ANGLE_TRY(submitFrame(submitInfo, commandBatch.release()));
+
+    mWaitSemaphores.clear();
 
     return angle::Result::Continue;
 }
@@ -2030,7 +2016,7 @@ angle::Result ContextVk::finishImpl()
         // multiple times towards the end of the application).
         if (mGpuEvents.size() > 0)
         {
-            ANGLE_TRY(synchronizeCpuGpuTime(nullptr, nullptr));
+            ANGLE_TRY(synchronizeCpuGpuTime());
         }
     }
 
@@ -2322,6 +2308,23 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 
     mVertexArray->updateDefaultAttrib(this, attribIndex, bufferHandle,
                                       static_cast<uint32_t>(offset));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::generateSurfaceSemaphores(SignalSemaphoreVector *signalSemaphores)
+{
+    if (mCurrentWindowSurface && !mCommandGraph.empty())
+    {
+        const vk::Semaphore *waitSemaphore   = nullptr;
+        const vk::Semaphore *signalSemaphore = nullptr;
+        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
+                                                                    &signalSemaphore));
+        mWaitSemaphores.push_back(waitSemaphore->getHandle());
+
+        ASSERT(signalSemaphores->empty());
+        signalSemaphores->push_back(signalSemaphore->getHandle());
+    }
+
     return angle::Result::Continue;
 }
 

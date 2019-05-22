@@ -41,6 +41,10 @@ namespace vk
 struct Format;
 }
 
+// Supports one semaphore from current surface, and one semaphore passed to
+// glSignalSemaphoreEXT.
+using SignalSemaphoreVector = angle::FixedVector<VkSemaphore, 2>;
+
 class RendererVk : angle::NonCopyable
 {
   public:
