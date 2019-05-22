@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6af184db_35e3630f",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2019-05-22T20:46:21Z",
+      "side": 1,
+      "message": "I can move it. It doesn\u0027t apply at all for the HLSL backend, so I picked one of ESSL or GLSL to put it in.",
+      "parentUuid": "3a9b5a05_093e9181",
+      "range": {
+        "startLine": 246,
+        "startChar": 5,
+        "endLine": 246,
+        "endChar": 22
+      },
+      "revId": "ddd61cba6bebf3c061cff76af589ac851581254d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffd1e27f_5d49c3c5",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 11
@@ -45,6 +69,30 @@
       "revId": "ddd61cba6bebf3c061cff76af589ac851581254d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcd587bc_e63fc483",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2019-05-22T20:46:21Z",
+      "side": 1,
+      "message": "Yeah, I used to have multiple invocations, but now there\u0027s just one, so I can inline this.",
+      "parentUuid": "ffd1e27f_5d49c3c5",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 258,
+        "endChar": 6
+      },
+      "revId": "ddd61cba6bebf3c061cff76af589ac851581254d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a14da30d_06a1d5ff",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1723,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2019-05-22T20:46:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfaa6b32_eb0274c3",
+      "range": {
+        "startLine": 1723,
+        "startChar": 4,
+        "endLine": 1723,
+        "endChar": 61
+      },
+      "revId": "ddd61cba6bebf3c061cff76af589ac851581254d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47e4e914_b8bb7b63",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 11
@@ -91,6 +163,30 @@
       "revId": "ddd61cba6bebf3c061cff76af589ac851581254d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2643d0a_945610a5",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1724,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2019-05-22T20:46:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47e4e914_b8bb7b63",
+      "range": {
+        "startLine": 1724,
+        "startChar": 23,
+        "endLine": 1724,
+        "endChar": 30
+      },
+      "revId": "ddd61cba6bebf3c061cff76af589ac851581254d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
