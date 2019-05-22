@@ -2011,28 +2011,9 @@ angle::Result ContextVk::flushImpl()
 
 angle::Result ContextVk::finishImpl()
 {
-    if (!mCommandGraph.empty())
-    {
-        TRACE_EVENT0("gpu.angle", "ContextVk::finish");
+    TRACE_EVENT0("gpu.angle", "ContextVk::finish");
 
-        vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
-        ANGLE_TRY(flushCommandGraph(&commandBatch.get()));
-
-        const vk::Semaphore *waitSemaphore   = nullptr;
-        const vk::Semaphore *signalSemaphore = nullptr;
-        if (mCurrentWindowSurface)
-        {
-            ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
-                                                                        &signalSemaphore));
-        }
-
-        VkSubmitInfo submitInfo       = {};
-        VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-        InitializeSubmitInfo(&submitInfo, commandBatch.get(), waitSemaphore, &waitMask,
-                             signalSemaphore);
-
-        ANGLE_TRY(submitFrame(submitInfo, std::move(commandBatch.get())));
-    }
+    ANGLE_TRY(flushImpl());
 
     ANGLE_TRY(finishToSerial(mLastSubmittedQueueSerial));
     freeAllInFlightResources();
