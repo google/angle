@@ -198,6 +198,10 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetFrameTimestampsANDROID(EGLDisplay dpy
                                                                   const EGLint *timestamps,
                                                                   EGLnsecsANDROID *values);
 
+ANGLE_EXPORT const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy,
+                                                           EGLint name,
+                                                           EGLint index);
+
 }  // extern "C"
 
 #endif  // LIBGLESV2_ENTRYPOINTSEGLEXT_H_

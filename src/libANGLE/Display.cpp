@@ -543,6 +543,9 @@ Error Display::initialize()
         config.second.renderableType |= EGL_OPENGL_ES_BIT;
     }
 
+    mFeatures.clear();
+    mImplementation->populateFeatureList(&mFeatures);
+
     initDisplayExtensions();
     initVendorString();
 
@@ -1244,6 +1247,9 @@ void Display::initDisplayExtensions()
     // that ANativeWindow is not recordable.
     mDisplayExtensions.recordable = true;
 
+    // EGL_ANGLE_workaround_control is implemented on all backends.
+    mDisplayExtensions.workaroundControlANGLE = true;
+
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 
@@ -1435,6 +1441,40 @@ EGLint Display::programCacheResize(EGLint limit, EGLenum mode)
             UNREACHABLE();
             return 0;
     }
+}
+
+const char *Display::queryStringi(const EGLint name, const EGLint index)
+{
+    const char *result = nullptr;
+    switch (name)
+    {
+        case EGL_WORKAROUND_NAME_ANGLE:
+            result = mFeatures[index]->name;
+            break;
+        case EGL_WORKAROUND_CATEGORY_ANGLE:
+            result = angle::FeatureCategoryToString(mFeatures[index]->category);
+            break;
+        case EGL_WORKAROUND_DESCRIPTION_ANGLE:
+            result = mFeatures[index]->description;
+            break;
+        case EGL_WORKAROUND_BUG_ANGLE:
+            result = mFeatures[index]->bug;
+            break;
+        case EGL_WORKAROUND_ENABLED_ANGLE:
+            if (mFeatures[index]->enabled)
+            {
+                result = "true";
+            }
+            else
+            {
+                result = "false";
+            }
+            break;
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
+    return result;
 }
 
 }  // namespace egl

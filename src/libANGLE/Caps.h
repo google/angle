@@ -883,6 +883,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_power_preference
     bool powerPreference;
+
+    // EGL_ANGLE_workaround_control
+    bool workaroundControlANGLE;
 };
 
 struct DeviceExtensions

@@ -678,4 +678,10 @@ EGLBoolean EGLAPIENTRY eglGetFrameTimestampsANDROID(EGLDisplay dpy,
     EnsureEGLLoaded();
     return EGL_GetFrameTimestampsANDROID(dpy, surface, frameId, numTimestamps, timestamps, values);
 }
+
+const char *EGLAPIENTRY eglQueryStringiANGLE(EGLDisplay dpy, EGLint name, EGLint index)
+{
+    EnsureEGLLoaded();
+    return EGL_QueryStringiANGLE(dpy, name, index);
+}
 }  // extern "C"

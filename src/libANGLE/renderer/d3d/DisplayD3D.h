@@ -83,6 +83,8 @@ class DisplayD3D : public DisplayImpl, public d3d::Context
 
     const std::string &getStoredErrorString() const { return mStoredErrorString; }
 
+    void populateFeatureList(angle::FeatureList *features) override;
+
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;

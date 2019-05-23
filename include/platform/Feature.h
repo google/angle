@@ -138,11 +138,11 @@ struct FeatureSetBase
         }
     }
 
-    void getFeatures(FeatureList &features) const
+    void populateFeatureList(FeatureList *features) const
     {
         for (FeatureMap::const_iterator it = members.begin(); it != members.end(); it++)
         {
-            features.push_back(it->second);
+            features->push_back(it->second);
         }
     }
 };

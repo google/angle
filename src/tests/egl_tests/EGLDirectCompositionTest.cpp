@@ -20,7 +20,6 @@
 #include <memory>
 
 #include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
-#include "test_utils/ANGLETest.h"
 #include "util/OSWindow.h"
 #include "util/com_utils.h"
 

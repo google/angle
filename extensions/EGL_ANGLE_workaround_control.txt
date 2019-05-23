@@ -1,0 +1,117 @@
+Name
+
+    ANGLE_workaround_control
+
+Name Strings
+
+    EGL_ANGLE_workaround_control
+
+Contributors
+
+    Jonah Ryan-Davis  (jonahr 'at' google.com)
+
+Contact
+
+    Jonah Ryan-Davis  (jonahr 'at' google.com)
+
+Status
+
+    Draft
+
+Version
+
+    Version 1, May 23, 2019
+
+Number
+
+    EGL Extension #XXX
+
+Extension Type
+
+    EGL device extension
+
+Dependencies
+
+    This extension is written against the wording of the EGL 1.4
+    Specification.
+
+Overview
+
+    This extension defines a method to query a string describing
+    properties of the EGL client or of an EGL display connection
+    which are looked up via the property name and index.
+
+IP Status
+
+    No known claims.
+
+New Types
+
+    None.
+
+New Procedures and Functions
+
+    const char *eglQueryStringiANGLE(
+        EGLDisplay dpy,
+        EGLint name,
+        EGLint index);
+
+New Tokens
+
+    Accepted as a queried <name> in eglQueryStringiANGLE:
+
+        EGL_WORKAROUND_NAME_ANGLE          0x3460
+        EGL_WORKAROUND_CATEGORY_ANGLE      0x3461
+        EGL_WORKAROUND_DESCRIPTION_ANGLE   0x3462
+        EGL_WORKAROUND_BUG_ANGLE           0x3463
+        EGL_WORKAROUND_ENABLED_ANGLE       0x3464
+
+Additions to the EGL 1.5 Specification
+
+    Add the following to the end of section 3.3 "EGL Queries":
+
+        const char *eglQueryStringiANGLE(EGLDisplay dpy,
+            EGLint name, EGLint index);
+
+    eGLQueryStringiANGLE returns a pointer to a static, zero-
+    terminated string describing some aspect of the EGL
+    implementation running on the specified display, from an array of
+    strings. name may be one of EGL_WORKAROUND_NAME_ANGLE,
+    EGL_WORKAROUND_CATEGORY_ANGLE, EGL_WORKAROUND_DESCRIPTION_ANGLE,
+    EGL_WORKAROUND_BUG_ANGLE, or EGL_WORKAROUND_ENABLED_ANGLE. Index
+    must be a valid index to access into the array of strings.
+        The EGL_WORKAROUND_NAME_ANGLE array contains strings that
+    describe the name of each workaround available in the display.
+        The EGL_WORKAROUND_CATEGORY_ANGLE array contains strings
+    with corresponding indices to the array of names. Each string
+    describes the category of the workaround at the specified index.
+        The EGL_WORKAROUND_DESCRIPTION_ANGLE array contains strings
+    with corresponding indices to the array of names. Each string
+    describes the workaround at the specified index.
+        The EGL_WORKAROUND_BUG_ANGLE array contains strings
+    with corresponding indices to the array of names. Each string
+    describes the bug related to the workaround at the specified
+    index.
+        The EGL_WORKAROUND_ENABLED_ANGLE array contains strings
+    with corresponding indices to the array of names. Each string has
+    the value "true" if the workaround is currently enabled, or
+    "false" if the workaround is currently disabled.
+
+    Errors
+
+    On failure, NULL is returned.
+    An EGL_BAD_DISPLAY error is generated if dpy is not a valid
+    display.
+    An EGL_BAD_PARAMETER error is generated if name is not one of the
+    values described above.
+    An EGL_BAD_PARAMETER error is generated if index is not within
+    the valid range of indices for the array.
+
+Issues
+
+    None
+
+Revision History
+
+    Version 1, May 23, 2019 (Jonah Ryan-Davis)
+        - Initial Draft

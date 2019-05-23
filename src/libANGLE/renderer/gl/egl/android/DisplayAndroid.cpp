@@ -690,4 +690,9 @@ WorkerContext *DisplayAndroid::createWorkerContext(std::string *infoLog,
     return new WorkerContextAndroid(context, mEGL, mDummyPbuffer);
 }
 
+void DisplayAndroid::populateFeatureList(angle::FeatureList *features)
+{
+    mRenderer->getWorkarounds().populateFeatureList(features);
+}
+
 }  // namespace rx

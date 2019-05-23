@@ -1000,5 +1000,8 @@
 
     "GL_CHROMIUM_lose_context": [
         "glLoseContextCHROMIUM"
+    ],
+    "EGL_ANGLE_workaround_control": [
+        "eglQueryStringiANGLE"
     ]
 }

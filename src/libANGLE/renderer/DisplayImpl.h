@@ -16,6 +16,7 @@
 #include "libANGLE/Stream.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
+#include "platform/Feature.h"
 
 #include <set>
 #include <vector>
@@ -88,6 +89,8 @@ class DisplayImpl : public EGLImplFactory
 
     void setBlobCache(egl::BlobCache *blobCache) { mBlobCache = blobCache; }
     egl::BlobCache *getBlobCache() const { return mBlobCache; }
+
+    virtual void populateFeatureList(angle::FeatureList *features) = 0;
 
   protected:
     const egl::DisplayState &mState;

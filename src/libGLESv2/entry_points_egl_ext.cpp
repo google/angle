@@ -943,7 +943,7 @@ ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
                          "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
 
     gl::Context *currentContext = thread->getContext();
-    EGLint syncStatus = EGL_FALSE;
+    EGLint syncStatus           = EGL_FALSE;
     ANGLE_EGL_TRY_RETURN(
         thread, syncObject->clientWait(display, currentContext, flags, timeout, &syncStatus),
         "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
@@ -1313,6 +1313,8 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetCompositorTimingSupportedANDROID(EGLD
     ANGLE_EGL_TRY_RETURN(
         thread, ValidateGetCompositorTimingSupportedANDROID(display, eglSurface, nameInternal),
         "eglQueryTimestampSupportedANDROID", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
+
+    thread->setSuccess();
     return eglSurface->getSupportedCompositorTimings().test(nameInternal);
 }
 
@@ -1340,6 +1342,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetCompositorTimingANDROID(EGLDisplay dp
                          "eglGetCompositorTimingANDROIDD", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
 
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -1362,6 +1365,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetNextFrameIdANDROID(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->getNextFrameId(frameId), "eglGetNextFrameIdANDROID",
                          GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -1383,6 +1387,8 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetFrameTimestampSupportedANDROID(EGLDis
     ANGLE_EGL_TRY_RETURN(
         thread, ValidateGetFrameTimestampSupportedANDROID(display, eglSurface, timestampInternal),
         "eglQueryTimestampSupportedANDROID", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
+
+    thread->setSuccess();
     return eglSurface->getSupportedTimestamps().test(timestampInternal);
 }
 
@@ -1413,7 +1419,26 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetFrameTimestampsANDROID(EGLDisplay dpy
         thread, eglSurface->getFrameTimestamps(frameId, numTimestamps, timestamps, values),
         "eglGetFrameTimestampsANDROID", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
+    thread->setSuccess();
     return EGL_TRUE;
+}
+
+ANGLE_EXPORT const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy,
+                                                           EGLint name,
+                                                           EGLint index)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLint name = %d, EGLint index = %d)",
+          (uintptr_t)dpy, name, index);
+
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    Thread *thread        = egl::GetCurrentThread();
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateQueryStringiANGLE(display, name, index),
+                         "eglQueryStringiANGLE", GetDisplayIfValid(display), nullptr);
+
+    thread->setSuccess();
+    return display->queryStringi(name, index);
 }
 
 }  // extern "C"

@@ -991,4 +991,9 @@ WorkerContext *DisplayGLX::createWorkerContext(std::string *infoLog)
     return new WorkerContextGLX(context, &mGLX, workerPbuffer);
 }
 
+void DisplayGLX::populateFeatureList(angle::FeatureList *features)
+{
+    mRenderer->getWorkarounds().populateFeatureList(features);
+}
+
 }  // namespace rx

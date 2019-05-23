@@ -3747,8 +3747,8 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
 }
 angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    const auto &glState          = context->getState();
-    const gl::Program *program   = glState.getProgram();
+    const auto &glState        = context->getState();
+    const gl::Program *program = glState.getProgram();
     if (program->getActiveShaderStorageBlockCount() > 0 ||
         program->getActiveAtomicCounterBufferCount() > 0)
     {

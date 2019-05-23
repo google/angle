@@ -92,6 +92,8 @@ class DisplayVk : public DisplayImpl, public vk::Context
     // TODO(jmadill): Remove this once refactor is done. http://anglebug.com/3041
     egl::Error getEGLError(EGLint errorCode);
 
+    void populateFeatureList(angle::FeatureList *features) override;
+
   private:
     virtual SurfaceImpl *createWindowSurfaceVk(const egl::SurfaceState &state,
                                                EGLNativeWindowType window,

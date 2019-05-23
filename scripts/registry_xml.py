@@ -85,6 +85,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_stream_producer_d3d_texture",
     "EGL_ANGLE_surface_d3d_texture_2d_share_handle",
     "EGL_ANGLE_window_fixed_size",
+    "EGL_ANGLE_workaround_control",
     "EGL_CHROMIUM_get_sync_values",
     "EGL_EXT_create_context_robustness",
     "EGL_EXT_device_query",

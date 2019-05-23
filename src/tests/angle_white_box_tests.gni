@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 angle_white_box_tests_sources = [
+  "egl_tests/EGLQueryStringIndexedTest.cpp",
   "util_tests/PrintSystemInfoTest.cpp",
   "test_utils/angle_test_configs.cpp",
   "test_utils/angle_test_configs.h",
@@ -19,4 +20,8 @@ angle_white_box_tests_win_sources = [
   "gl_tests/D3D11InputLayoutCacheTest.cpp",
   "gl_tests/D3DTextureTest.cpp",
   "gl_tests/ErrorMessages.cpp",
+]
+angle_white_box_tests_vulkan_sources = [
+  "gl_tests/VulkanFormatTablesTest.cpp",
+  "gl_tests/VulkanUniformUpdatesTest.cpp",
 ]

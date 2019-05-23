@@ -3728,4 +3728,38 @@ Error ValidateGetFrameTimestampsANDROID(const Display *display,
     return NoError();
 }
 
+Error ValidateQueryStringiANGLE(const Display *display, EGLint name, EGLint index)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().workaroundControlANGLE)
+    {
+        return EglBadDisplay() << "EGL_ANGLE_workaround_control extension is not available.";
+    }
+
+    if (index < 0)
+    {
+        return EglBadParameter() << "index is negative.";
+    }
+
+    switch (name)
+    {
+        case EGL_WORKAROUND_NAME_ANGLE:
+        case EGL_WORKAROUND_CATEGORY_ANGLE:
+        case EGL_WORKAROUND_DESCRIPTION_ANGLE:
+        case EGL_WORKAROUND_BUG_ANGLE:
+        case EGL_WORKAROUND_ENABLED_ANGLE:
+            break;
+        default:
+            return EglBadParameter() << "name is not valid.";
+    }
+
+    if (static_cast<size_t>(index) >= display->getFeatures().size())
+    {
+        return EglBadParameter() << "index is too big.";
+    }
+
+    return NoError();
+}
+
 }  // namespace egl
