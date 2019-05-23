@@ -4551,6 +4551,9 @@ TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
 // texture is output.
 TEST_P(Texture2DIntegerTestES3, IntegerTextureNonZeroBaseLevel)
 {
+    // http://anglebug.com/3478
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     int width     = getWindowWidth();
