@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c65388f0_7e45a2b1",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3580,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-23T03:08:46Z",
+      "side": 1,
+      "message": "Like we saw, this actually ends up setting the dirty bit for front face. I believe the test fails because `updateFlipViewportDrawFramebuffer()` is not yet called when the front face dirty bit is handled, so the front face is actually always set to the opposite of what it should be here (both in the case of user to default change and back). That is:\n\n    Set User FBO -\u003e flip \u003d false\n    \u003cclear\u003e\n    Handle Dirty Face -\u003e use false flip\n    Handle Dirty FBO (Default) -\u003e flip \u003d true\n    \u003cdraw\u003e\n    Handle Dirty Face -\u003e use flip \u003d true\n    Handle Dirty FBO (User) -\u003e flip \u003d false\n\nThis breaks because \"Handle Dirty Face\" is using the previous framebuffer\u0027s cached flip flag.\n\nAnd the reason why the test passes if you move this call to before the first draw call (without the fix in ContextVk.cpp) is that then what you get is:\n\n    Set User FBO -\u003e flip \u003d false\n    \u003cclear\u003e\n    Handle Dirty Face -\u003e use false flip\n    Handle Dirty FBO (Default) -\u003e flip \u003d true\n    \u003cdraw\u003e\n    Handle Dirty FBO (User) -\u003e flip \u003d false\n\nNote that the last time front face was set, it was using false flip and it\u0027s not updated since.\n\nI believe you could have caught this error if you didn\u0027t disable culling for the first draw call, but just made sure the winding of the vertices used for the draw are opposite the winding that\u0027s being culled.\n\nAlternatively, you could set `glCullFace` to `GL_FRONT` or `GL_BACK` based on whether the front face is `GL_CCW` or `GL_CW`, knowing the winding of the vertices drawQuad uses, so that the first draw call is never culled. Does that make sense?",
+      "range": {
+        "startLine": 3580,
+        "startChar": 4,
+        "endLine": 3580,
+        "endChar": 27
+      },
+      "revId": "877c2adc7e91d0bf6206f9f7c30baf8300679101",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1611a131_93127cf1",
+        "filename": "util/shader_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-23T03:08:46Z",
+      "side": 1,
+      "message": "The shader no longer swizzles.",
+      "range": {
+        "startLine": 92,
+        "startChar": 3,
+        "endLine": 92,
+        "endChar": 65
+      },
+      "revId": "877c2adc7e91d0bf6206f9f7c30baf8300679101",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
