@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "5ece6e1c_a38a052c",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3580,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-05-23T20:04:13Z",
+      "side": 1,
+      "message": "I think the tests are already doing what\u0027s described in (1), so I don\u0027t understand what changes to make here.\n\n\nFor (2), I think you\u0027re describing replacing:\n    glDisable(GL_CULL_FACE);\nwith:\n    glEnable(GL_CULL_FACE);\n    glCullFace(GL_BACK);\n    glFrontFace(GL_CCW);\nso the quad is not culled.   And then for the second draw, always use GL_CCW to make sure it draws again.   Is that correct?",
+      "parentUuid": "bf0d99ba_4ee4bba7",
+      "range": {
+        "startLine": 3580,
+        "startChar": 4,
+        "endLine": 3580,
+        "endChar": 27
+      },
+      "revId": "877c2adc7e91d0bf6206f9f7c30baf8300679101",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1611a131_93127cf1",
         "filename": "util/shader_utils.h",
         "patchSetId": 16
