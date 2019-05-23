@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bf0d99ba_4ee4bba7",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3580,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-23T17:45:19Z",
+      "side": 1,
+      "message": "Could you add a flag to this function to either:\n\n1. Disable culling on first draw + glFrontFace on second draw\n2. glFrontFace on first draw, appropriate winding on first draw so its never culled. Fixed winding on the second draw.\n\nThen add four TEST_P instances below instead of 2 for all combinations.\n\nThe test you already have is a good test and catches one bug, but it doesn\u0027t catch a second bug (where not having glFrontFace dirty in the second draw should also fail).",
+      "parentUuid": "5067d884_e5140e91",
+      "range": {
+        "startLine": 3580,
+        "startChar": 4,
+        "endLine": 3580,
+        "endChar": 27
+      },
+      "revId": "877c2adc7e91d0bf6206f9f7c30baf8300679101",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1611a131_93127cf1",
         "filename": "util/shader_utils.h",
         "patchSetId": 16
