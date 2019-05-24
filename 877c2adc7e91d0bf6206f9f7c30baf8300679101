@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "771ff9b1_8b2f881c",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3580,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-24T12:54:43Z",
+      "side": 1,
+      "message": "Something along these lines:\n\n     void SimpleStateChangeTest::drawToFboWithCulling(const GLenum frontFace, bool earlyFrontFace)\n\t...\n\n        glBindFramebuffer(GL_FRAMEBUFFER, fbo1);\n\tif (earlyFrontFace)\n        {\n\t    glEnable(GL_CULL_FACE);\n            // TODO: the order of GL_BACK and GL_FRONT may be wrong here\n            glCullFace(frontFace \u003d\u003d GL_CW ? GL_BACK : GL_FRONT);\n            glFrontFace(frontFace);\n        }\n        else\n        {\n\t    glDisable(GL_CULL_FACE);\n        }\n        glUseProgram(greenProgram);\n        drawQuad(greenProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);\n        ASSERT_GL_NO_ERROR();\n        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);\n\n        // Draw into FBO 0 using FBO 1\u0027s texture to determine if culling is working or not\n        glBindFramebuffer(GL_FRAMEBUFFER, 0);\n        glBindTexture(GL_TEXTURE_2D, texture1);\n        // Set the culling we want to test\n\tglCullFace(GL_BACK);\n\tif (!earlyFrontFace)\n        {\n\t    glEnable(GL_CULL_FACE);\n            glFrontFace(frontFace);\n        }\n\nNote that the first `glCullFace` is dependent on `frontFace`, so that no matter which face is front, the first draw is not culled. The second `glCullFace` is always `GL_BACK`.",
+      "parentUuid": "5ece6e1c_a38a052c",
+      "range": {
+        "startLine": 3580,
+        "startChar": 4,
+        "endLine": 3580,
+        "endChar": 27
+      },
+      "revId": "877c2adc7e91d0bf6206f9f7c30baf8300679101",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1611a131_93127cf1",
         "filename": "util/shader_utils.h",
         "patchSetId": 16
