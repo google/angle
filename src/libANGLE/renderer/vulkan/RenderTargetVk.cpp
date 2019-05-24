@@ -18,7 +18,11 @@
 namespace rx
 {
 RenderTargetVk::RenderTargetVk()
-    : mImage(nullptr), mImageView(nullptr), mLevelIndex(0), mLayerIndex(0)
+    : mImage(nullptr),
+      mImageView(nullptr),
+      mCubeImageFetchView(nullptr),
+      mLevelIndex(0),
+      mLayerIndex(0)
 {}
 
 RenderTargetVk::~RenderTargetVk() {}
@@ -26,17 +30,20 @@ RenderTargetVk::~RenderTargetVk() {}
 RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
     : mImage(other.mImage),
       mImageView(other.mImageView),
+      mCubeImageFetchView(other.mCubeImageFetchView),
       mLevelIndex(other.mLevelIndex),
       mLayerIndex(other.mLayerIndex)
 {}
 
 void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageView *imageView,
+                          vk::ImageView *cubeImageFetchView,
                           size_t levelIndex,
                           size_t layerIndex)
 {
     mImage      = image;
     mImageView  = imageView;
+    mCubeImageFetchView = cubeImageFetchView;
     mLevelIndex = levelIndex;
     mLayerIndex = layerIndex;
 }
@@ -45,6 +52,7 @@ void RenderTargetVk::reset()
 {
     mImage      = nullptr;
     mImageView  = nullptr;
+    mCubeImageFetchView = nullptr;
     mLevelIndex = 0;
     mLayerIndex = 0;
 }
@@ -108,6 +116,12 @@ vk::ImageView *RenderTargetVk::getReadImageView() const
     return getDrawImageView();
 }
 
+vk::ImageView *RenderTargetVk::getFetchImageView() const
+{
+    return mCubeImageFetchView && mCubeImageFetchView->valid() ? mCubeImageFetchView
+                                                               : getReadImageView();
+}
+
 const vk::Format &RenderTargetVk::getImageFormat() const
 {
     ASSERT(mImage && mImage->valid());
@@ -125,6 +139,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
     ASSERT(image && image->valid() && imageView && imageView->valid());
     mImage     = image;
     mImageView = imageView;
+    mCubeImageFetchView = nullptr;
 }
 
 vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readingResource,

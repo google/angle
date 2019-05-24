@@ -153,6 +153,8 @@ class TextureVk : public TextureImpl
     void releaseOwnershipOfImage(const gl::Context *context);
 
     const vk::ImageView &getReadImageView() const;
+    // A special view for cube maps as a 2D array, used with shaders that do texelFetch().
+    const vk::ImageView &getFetchImageView() const;
     angle::Result getLayerLevelDrawImageView(vk::Context *context,
                                              size_t layer,
                                              size_t level,
@@ -249,7 +251,6 @@ class TextureVk : public TextureImpl
                                            const gl::Offset &destOffset,
                                            const vk::Format &destFormat,
                                            size_t sourceLevel,
-                                           size_t sourceLayer,
                                            const gl::Rectangle &sourceArea,
                                            bool isSrcFlipY,
                                            bool unpackFlipY,
@@ -293,10 +294,13 @@ class TextureVk : public TextureImpl
     vk::ImageView mDrawBaseLevelImageView;
     vk::ImageView mReadBaseLevelImageView;
     vk::ImageView mReadMipmapImageView;
+    vk::ImageView mFetchBaseLevelImageView;
+    vk::ImageView mFetchMipmapImageView;
     std::vector<std::vector<vk::ImageView>> mLayerLevelDrawImageViews;
     vk::Sampler mSampler;
 
     RenderTargetVk mRenderTarget;
+    std::vector<vk::ImageView> mLayerFetchImageView;
     std::vector<RenderTargetVk> mCubeMapRenderTargets;
 };
 
