@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "adff24c1_23c355d9",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3580,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-27T13:45:02Z",
+      "side": 1,
+      "message": "Thank you for the added tests!\n\nSomething that eventually might need to happen is reordering the dirty bits so that FBO-dirty is handled before face-dirty, as otherwise we are setting the face value twice with different values (resulting in more pipeline-hash dirtiness). Doing that would make two of these four tests pass (the Late variants). That\u0027s why I insisted on having all four tests :)\n\n\nNot asking you to do that, though.\n\n---\n\nGetting black in the Early variants is definitely a problem. Probably `frontFace \u003d\u003d GL_CW ? GL_BACK : GL_FRONT` is wrong and should be the opposite `frontFace \u003d\u003d GL_CW ? GL_FRONT : GL_BACK`?",
+      "parentUuid": "68a6c076_cec5bba1",
+      "range": {
+        "startLine": 3580,
+        "startChar": 4,
+        "endLine": 3580,
+        "endChar": 27
+      },
+      "revId": "877c2adc7e91d0bf6206f9f7c30baf8300679101",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1611a131_93127cf1",
         "filename": "util/shader_utils.h",
         "patchSetId": 16
