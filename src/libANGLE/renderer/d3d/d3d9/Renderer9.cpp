@@ -850,20 +850,20 @@ void Renderer9::freeEventQuery(IDirect3DQuery9 *query)
     }
 }
 
-angle::Result Renderer9::createVertexShader(Context9 *context9,
+angle::Result Renderer9::createVertexShader(d3d::Context *context,
                                             const DWORD *function,
                                             size_t length,
                                             IDirect3DVertexShader9 **outShader)
 {
-    return mVertexShaderCache.create(context9, function, length, outShader);
+    return mVertexShaderCache.create(context, function, length, outShader);
 }
 
-angle::Result Renderer9::createPixelShader(Context9 *context9,
+angle::Result Renderer9::createPixelShader(d3d::Context *context,
                                            const DWORD *function,
                                            size_t length,
                                            IDirect3DPixelShader9 **outShader)
 {
-    return mPixelShaderCache.create(context9, function, length, outShader);
+    return mPixelShaderCache.create(context, function, length, outShader);
 }
 
 HRESULT Renderer9::createVertexBuffer(UINT Length,
@@ -2586,21 +2586,19 @@ angle::Result Renderer9::loadExecutable(d3d::Context *context,
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(streamOutVaryings.empty());
 
-    Context9 *context9 = static_cast<Context9 *>(context);
-
     switch (type)
     {
         case gl::ShaderType::Vertex:
         {
             IDirect3DVertexShader9 *vshader = nullptr;
-            ANGLE_TRY(createVertexShader(context9, (DWORD *)function, length, &vshader));
+            ANGLE_TRY(createVertexShader(context, (DWORD *)function, length, &vshader));
             *outExecutable = new ShaderExecutable9(function, length, vshader);
         }
         break;
         case gl::ShaderType::Fragment:
         {
             IDirect3DPixelShader9 *pshader = nullptr;
-            ANGLE_TRY(createPixelShader(context9, (DWORD *)function, length, &pshader));
+            ANGLE_TRY(createPixelShader(context, (DWORD *)function, length, &pshader));
             *outExecutable = new ShaderExecutable9(function, length, pshader);
         }
         break;

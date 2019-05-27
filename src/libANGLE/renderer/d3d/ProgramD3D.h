@@ -479,7 +479,7 @@ class ProgramD3D : public ProgramImpl
     std::unique_ptr<LinkEvent> compileComputeExecutable(const gl::Context *context,
                                                         gl::InfoLog &infoLog);
 
-    angle::Result loadBinaryShaderExecutables(const gl::Context *context,
+    angle::Result loadBinaryShaderExecutables(d3d::Context *contextD3D,
                                               gl::BinaryInputStream *stream,
                                               gl::InfoLog &infoLog);
 

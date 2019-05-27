@@ -120,7 +120,7 @@ template <class D3DShaderType>
 angle::Result Blit9::setShader(Context9 *context9,
                                ShaderId source,
                                const char *profile,
-                               angle::Result (Renderer9::*createShader)(Context9 *,
+                               angle::Result (Renderer9::*createShader)(d3d::Context *,
                                                                         const DWORD *,
                                                                         size_t length,
                                                                         D3DShaderType **outShader),
