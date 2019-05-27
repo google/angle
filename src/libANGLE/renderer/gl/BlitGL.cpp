@@ -516,7 +516,8 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
                                      bool unpackUnmultiplyAlpha,
                                      bool *copySucceededOut)
 {
-    ASSERT(source->getType() == gl::TextureType::_2D);
+    ASSERT(source->getType() == gl::TextureType::_2D ||
+           source->getType() == gl::TextureType::External);
     ANGLE_TRY(initializeResources());
 
     // Make sure the destination texture can be rendered to before setting anything else up.  Some
@@ -531,8 +532,9 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    BlitProgramType blitProgramType = getBlitProgramType(sourceComponentType, destComponentType);
-    BlitProgram *blitProgram        = nullptr;
+    BlitProgramType blitProgramType =
+        getBlitProgramType(source->getType(), sourceComponentType, destComponentType);
+    BlitProgram *blitProgram = nullptr;
     ANGLE_TRY(getBlitProgram(context, blitProgramType, &blitProgram));
 
     // Setup the source texture
@@ -568,7 +570,7 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
     scopedState.willUseTextureUnit(context, 0);
 
     mStateManager->activeTexture(0);
-    mStateManager->bindTexture(gl::TextureType::_2D, source->getTextureID());
+    mStateManager->bindTexture(source->getType(), source->getTextureID());
 
     Vector2 scale(sourceArea.width / static_cast<float>(sourceSize.width),
                   sourceArea.height / static_cast<float>(sourceSize.height));
@@ -703,8 +705,9 @@ angle::Result BlitGL::copyTexSubImage(TextureGL *source,
 
     // Make sure the source texture can create a complete framebuffer before continuing.
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                                     source->getTextureID(), static_cast<GLint>(sourceLevel));
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                     ToGLenum(source->getType()), source->getTextureID(),
+                                     static_cast<GLint>(sourceLevel));
     GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -942,7 +945,8 @@ void BlitGL::setScratchTextureParameter(GLenum param, GLenum value)
     }
 }
 
-BlitGL::BlitProgramType BlitGL::getBlitProgramType(GLenum sourceComponentType,
+BlitGL::BlitProgramType BlitGL::getBlitProgramType(gl::TextureType sourceTextureType,
+                                                   GLenum sourceComponentType,
                                                    GLenum destComponentType)
 {
     if (sourceComponentType == GL_UNSIGNED_INT)
@@ -956,12 +960,16 @@ BlitGL::BlitProgramType BlitGL::getBlitProgramType(GLenum sourceComponentType,
         ASSERT(sourceComponentType != GL_INT);
         if (destComponentType == GL_UNSIGNED_INT)
         {
-            return BlitProgramType::FLOAT_TO_UINT;
+            return sourceTextureType == gl::TextureType::External
+                       ? BlitProgramType::FLOAT_TO_UINT_EXTERNAL
+                       : BlitProgramType::FLOAT_TO_UINT;
         }
         else
         {
             // Dest is a float type
-            return BlitProgramType::FLOAT_TO_FLOAT;
+            return sourceTextureType == gl::TextureType::External
+                       ? BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL
+                       : BlitProgramType::FLOAT_TO_FLOAT;
         }
     }
 }
@@ -985,7 +993,8 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
         std::string fsInputVariableQualifier;
         std::string fsOutputVariableQualifier;
         std::string sampleFunction;
-        if (type == BlitProgramType::FLOAT_TO_FLOAT)
+        if (type == BlitProgramType::FLOAT_TO_FLOAT ||
+            type == BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL)
         {
             version                   = "100";
             vsInputVariableQualifier  = "attribute";
@@ -1044,12 +1053,20 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
             // Sampling texture uniform changes depending on source texture type.
             std::string samplerType;
             std::string samplerResultType;
+            std::string extensionRequirements;
             switch (type)
             {
                 case BlitProgramType::FLOAT_TO_FLOAT:
                 case BlitProgramType::FLOAT_TO_UINT:
                     samplerType       = "sampler2D";
                     samplerResultType = "vec4";
+                    break;
+
+                case BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL:
+                case BlitProgramType::FLOAT_TO_UINT_EXTERNAL:
+                    samplerType           = "samplerExternalOES";
+                    samplerResultType     = "vec4";
+                    extensionRequirements = "#extension GL_OES_EGL_image_external : require";
                     break;
 
                 case BlitProgramType::UINT_TO_UINT:
@@ -1069,12 +1086,15 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
             switch (type)
             {
                 case BlitProgramType::FLOAT_TO_FLOAT:
+                case BlitProgramType::FLOAT_TO_FLOAT_EXTERNAL:
+                    ASSERT(version == "100");
                     outputType         = "";
                     outputVariableName = "gl_FragColor";
                     outputMultiplier   = "1.0";
                     break;
 
                 case BlitProgramType::FLOAT_TO_UINT:
+                case BlitProgramType::FLOAT_TO_UINT_EXTERNAL:
                 case BlitProgramType::UINT_TO_UINT:
                     outputType         = "uvec4";
                     outputVariableName = "outputUint";
@@ -1089,6 +1109,7 @@ angle::Result BlitGL::getBlitProgram(const gl::Context *context,
             // Compile the fragment shader
             std::ostringstream fsSourceStream;
             fsSourceStream << "#version " << version << "\n";
+            fsSourceStream << extensionRequirements << "\n";
             fsSourceStream << "precision highp float;\n";
             fsSourceStream << "uniform " << samplerType << " u_source_texture;\n";
 
