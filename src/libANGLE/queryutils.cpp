@@ -306,6 +306,9 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
         case GL_TEXTURE_BORDER_COLOR:
             ConvertFromColor<isPureInteger>(texture->getBorderColor(), params);
             break;
+        case GL_TEXTURE_NATIVE_ID_ANGLE:
+            *params = CastFromStateValue<ParamType>(pname, texture->getNativeID());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -2752,6 +2755,7 @@ unsigned int GetTexParameterCount(GLenum pname)
         case GL_TEXTURE_COMPARE_FUNC:
         case GL_TEXTURE_SRGB_DECODE_EXT:
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
+        case GL_TEXTURE_NATIVE_ID_ANGLE:
             return 1;
         default:
             return 0;

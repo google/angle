@@ -550,6 +550,18 @@ bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
                                             GLsizei *length,
                                             GLuint64 *params);
 
+// GL_ANGLE_texture_external_update
+bool ValidateTexImage2DExternalANGLE(Context *context,
+                                     TextureTarget targetPacked,
+                                     GLint level,
+                                     GLint internalformat,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLint border,
+                                     GLenum format,
+                                     GLenum type);
+bool ValidateInvalidateTextureANGLE(Context *context, TextureType targetPacked);
+
 // GL_ANGLE_texture_multisample
 bool ValidateTexStorage2DMultisampleANGLE(Context *context,
                                           TextureType targetPacked,

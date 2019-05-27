@@ -476,6 +476,17 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
                                                              GLsizei *length,
                                                              GLuint64 *params);
 
+// GL_ANGLE_texture_external_update
+ANGLE_EXPORT void GL_APIENTRY TexImage2DExternalANGLE(GLenum target,
+                                                      GLint level,
+                                                      GLint internalformat,
+                                                      GLsizei width,
+                                                      GLsizei height,
+                                                      GLint border,
+                                                      GLenum format,
+                                                      GLenum type);
+ANGLE_EXPORT void GL_APIENTRY InvalidateTextureANGLE(GLenum target);
+
 // GL_ANGLE_texture_multisample
 ANGLE_EXPORT void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
                                                            GLsizei samples,
@@ -3728,6 +3739,16 @@ ANGLE_EXPORT void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx,
 ANGLE_EXPORT void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx,
                                                               GLenum current,
                                                               GLenum other);
+ANGLE_EXPORT void GL_APIENTRY TexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLenum target,
+                                                                  GLint level,
+                                                                  GLint internalformat,
+                                                                  GLsizei width,
+                                                                  GLsizei height,
+                                                                  GLint border,
+                                                                  GLenum format,
+                                                                  GLenum type);
+ANGLE_EXPORT void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

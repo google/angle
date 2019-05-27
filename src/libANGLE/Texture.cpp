@@ -1287,6 +1287,34 @@ angle::Result Texture::setStorage(Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result Texture::setImageExternal(Context *context,
+                                        TextureTarget target,
+                                        GLint level,
+                                        GLenum internalFormat,
+                                        const Extents &size,
+                                        GLenum format,
+                                        GLenum type)
+{
+    ASSERT(TextureTargetToType(target) == mState.mType);
+
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
+
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+
+    ANGLE_TRY(mTexture->setImageExternal(context, index, internalFormat, size, format, type));
+
+    InitState initState = InitState::Initialized;
+    mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat, type), initState));
+
+    ANGLE_TRY(handleMipmapGenerationHint(context, level));
+
+    signalDirtyStorage(initState);
+
+    return angle::Result::Continue;
+}
+
 angle::Result Texture::setStorageMultisample(Context *context,
                                              TextureType type,
                                              GLsizei samples,
@@ -1647,6 +1675,11 @@ void Texture::onDetach(const Context *context)
 GLuint Texture::getId() const
 {
     return id();
+}
+
+GLuint Texture::getNativeID() const
+{
+    return mTexture->getNativeID();
 }
 
 angle::Result Texture::syncState(const Context *context)

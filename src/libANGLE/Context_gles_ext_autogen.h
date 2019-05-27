@@ -197,6 +197,11 @@
                                   GLint64 *params);                                                \
     void getQueryObjectui64vRobust(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length,      \
                                    GLuint64 *params);                                              \
+    /* GL_ANGLE_texture_external_update */                                                         \
+    void texImage2DExternal(TextureTarget targetPacked, GLint level, GLint internalformat,         \
+                            GLsizei width, GLsizei height, GLint border, GLenum format,            \
+                            GLenum type);                                                          \
+    void invalidateTexture(TextureType targetPacked);                                              \
     /* GL_CHROMIUM_bind_uniform_location */                                                        \
     void bindUniformLocation(GLuint program, GLint location, const GLchar *name);                  \
     /* GL_CHROMIUM_copy_compressed_texture */                                                      \

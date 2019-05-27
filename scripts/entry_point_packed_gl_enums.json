@@ -271,6 +271,9 @@
     "glImportSemaphoreFdEXT": {
         "handleType": "HandleType"
     },
+    "glInvalidateTextureANGLE": {
+        "target": "TextureType"
+    },
     "glLightf" : {
         "pname" : "LightParameter"
     },
@@ -386,6 +389,9 @@
         "pname": "TextureEnvParameter"
     },
     "glTexImage2D": {
+        "target": "TextureTarget"
+    },
+    "glTexImage2DExternalANGLE": {
         "target": "TextureTarget"
     },
     "glTexImage2DRobustANGLE": {

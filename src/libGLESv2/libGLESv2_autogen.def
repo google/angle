@@ -508,6 +508,10 @@ EXPORTS
     glTexSubImage2DRobustANGLE
     glTexSubImage3DRobustANGLE
 
+    ; GL_ANGLE_texture_external_update
+    glInvalidateTextureANGLE
+    glTexImage2DExternalANGLE
+
     ; GL_ANGLE_texture_multisample
     glGetMultisamplefvANGLE
     glGetTexLevelParameterfvANGLE
@@ -1109,6 +1113,7 @@ EXPORTS
     glInsertEventMarkerEXTContextANGLE
     glInvalidateFramebufferContextANGLE
     glInvalidateSubFramebufferContextANGLE
+    glInvalidateTextureANGLEContextANGLE
     glIsBufferContextANGLE
     glIsEnabledContextANGLE
     glIsFenceNVContextANGLE
@@ -1304,6 +1309,7 @@ EXPORTS
     glTexGenxOESContextANGLE
     glTexGenxvOESContextANGLE
     glTexImage2DContextANGLE
+    glTexImage2DExternalANGLEContextANGLE
     glTexImage2DRobustANGLEContextANGLE
     glTexImage3DContextANGLE
     glTexImage3DRobustANGLEContextANGLE

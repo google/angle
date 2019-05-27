@@ -239,6 +239,8 @@ class ContextGL : public ContextImpl
 
     void setMaxShaderCompilerThreads(GLuint count) override;
 
+    void invalidateTexture(gl::TextureType target) override;
+
   private:
     angle::Result setDrawArraysState(const gl::Context *context,
                                      GLint first,

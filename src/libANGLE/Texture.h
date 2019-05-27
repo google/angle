@@ -398,6 +398,14 @@ class Texture final : public RefCountObject,
                                            MemoryObject *memoryObject,
                                            GLuint64 offset);
 
+    angle::Result setImageExternal(Context *context,
+                                   TextureTarget target,
+                                   GLint level,
+                                   GLenum internalFormat,
+                                   const Extents &size,
+                                   GLenum format,
+                                   GLenum type);
+
     angle::Result setEGLImageTarget(Context *context, TextureType type, egl::Image *imageTarget);
 
     angle::Result generateMipmap(Context *context);
@@ -433,6 +441,7 @@ class Texture final : public RefCountObject,
     void onAttach(const Context *context) override;
     void onDetach(const Context *context) override;
     GLuint getId() const override;
+    GLuint getNativeID() const;
 
     // Needed for robust resource init.
     angle::Result ensureInitialized(const Context *context);

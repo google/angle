@@ -22,8 +22,8 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
-#include "libANGLE/validationES2_autogen.h"
-#include "libANGLE/validationES3_autogen.h"
+#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES3.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -548,6 +548,12 @@ bool ValidTextureExternalTarget(const Context *context, TextureType target)
     return (target == TextureType::External) &&
            (context->getExtensions().eglImageExternal ||
             context->getExtensions().eglStreamConsumerExternal);
+}
+
+bool ValidTextureExternalTarget(const Context *context, TextureTarget target)
+{
+    return (target == TextureTarget::External) &&
+           ValidTextureExternalTarget(context, TextureType::External);
 }
 
 // This function differs from ValidTextureTarget in that the target must be
@@ -5257,6 +5263,14 @@ bool ValidateGetTexParameterBase(Context *context,
             }
             break;
 
+        case GL_TEXTURE_NATIVE_ID_ANGLE:
+            if (!context->getExtensions().textureExternalUpdateANGLE)
+            {
+                context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -6498,6 +6512,69 @@ bool ValidateLoseContextCHROMIUM(Context *context,
 
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidResetStatus);
+    }
+
+    return true;
+}
+
+// GL_ANGLE_texture_storage_external
+bool ValidateTexImage2DExternalANGLE(Context *context,
+                                     TextureTarget target,
+                                     GLint level,
+                                     GLint internalformat,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLint border,
+                                     GLenum format,
+                                     GLenum type)
+{
+    if (!context->getExtensions().textureExternalUpdateANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (!ValidTexture2DDestinationTarget(context, target) &&
+        !ValidTextureExternalTarget(context, target))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
+        return false;
+    }
+
+    if (context->getClientMajorVersion() <= 2)
+    {
+        if (!ValidateES2TexImageParametersBase(context, target, level, internalformat, false, false,
+                                               0, 0, width, height, border, format, type, -1,
+                                               nullptr))
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if (!ValidateES3TexImageParametersBase(context, target, level, internalformat, false, false,
+                                               0, 0, 0, width, height, 1, border, format, type, -1,
+                                               nullptr))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateInvalidateTextureANGLE(Context *context, TextureType target)
+{
+    if (!context->getExtensions().textureExternalUpdateANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
+        return false;
     }
 
     return true;

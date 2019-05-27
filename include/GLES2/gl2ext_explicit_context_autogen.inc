@@ -358,6 +358,8 @@ typedef void (GL_APIENTRYP PFNGLGETMULTISAMPLEFVANGLECONTEXTANGLEPROC)(GLeglCont
 typedef void (GL_APIENTRYP PFNGLSAMPLEMASKIANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint maskNumber, GLbitfield mask);
 typedef void (GL_APIENTRYP PFNGLPROVOKINGVERTEXANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum mode);
 typedef void (GL_APIENTRYP PFNGLLOSECONTEXTCHROMIUMCONTEXTANGLEPROC)(GLeglContext ctx, GLenum current, GLenum other);
+typedef void (GL_APIENTRYP PFNGLTEXIMAGE2DEXTERNALANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type);
+typedef void (GL_APIENTRYP PFNGLINVALIDATETEXTUREANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glActiveTextureContextANGLE(GLeglContext ctx, GLenum texture);
 GL_APICALL void GL_APIENTRY glAttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader);
@@ -709,4 +711,6 @@ GL_APICALL void GL_APIENTRY glGetMultisamplefvANGLEContextANGLE(GLeglContext ctx
 GL_APICALL void GL_APIENTRY glSampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask);
 GL_APICALL void GL_APIENTRY glProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode);
 GL_APICALL void GL_APIENTRY glLoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other);
+GL_APICALL void GL_APIENTRY glTexImage2DExternalANGLEContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type);
+GL_APICALL void GL_APIENTRY glInvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target);
 #endif

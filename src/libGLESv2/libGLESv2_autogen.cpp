@@ -3197,6 +3197,25 @@ void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id,
     return gl::GetQueryObjectui64vRobustANGLE(id, pname, bufSize, length, params);
 }
 
+// GL_ANGLE_texture_external_update
+void GL_APIENTRY glTexImage2DExternalANGLE(GLenum target,
+                                           GLint level,
+                                           GLint internalformat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLint border,
+                                           GLenum format,
+                                           GLenum type)
+{
+    return gl::TexImage2DExternalANGLE(target, level, internalformat, width, height, border, format,
+                                       type);
+}
+
+void GL_APIENTRY glInvalidateTextureANGLE(GLenum target)
+{
+    return gl::InvalidateTextureANGLE(target);
+}
+
 // GL_ANGLE_texture_multisample
 void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
                                                 GLsizei samples,
@@ -9554,6 +9573,25 @@ void GL_APIENTRY glProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mod
 void GL_APIENTRY glLoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other)
 {
     return gl::LoseContextCHROMIUMContextANGLE(ctx, current, other);
+}
+
+void GL_APIENTRY glTexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLint level,
+                                                       GLint internalformat,
+                                                       GLsizei width,
+                                                       GLsizei height,
+                                                       GLint border,
+                                                       GLenum format,
+                                                       GLenum type)
+{
+    return gl::TexImage2DExternalANGLEContextANGLE(ctx, target, level, internalformat, width,
+                                                   height, border, format, type);
+}
+
+void GL_APIENTRY glInvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target)
+{
+    return gl::InvalidateTextureANGLEContextANGLE(ctx, target);
 }
 
 }  // extern "C"

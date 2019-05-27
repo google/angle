@@ -1385,6 +1385,8 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->provokingVertex = functions->hasGLExtension("GL_ARB_provoking_vertex") ||
                                   functions->hasGLExtension("GL_EXT_provoking_vertex") ||
                                   functions->isAtLeastGL(gl::Version(3, 2));
+
+    extensions->textureExternalUpdateANGLE = true;
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)
@@ -1545,6 +1547,33 @@ bool UseTexImage3D(gl::TextureType textureType)
     return textureType == gl::TextureType::_2DArray || textureType == gl::TextureType::_3D ||
            textureType == gl::TextureType::_2DMultisampleArray;
 }
+
+GLenum GetTextureBindingQuery(gl::TextureType textureType)
+{
+    switch (textureType)
+    {
+        case gl::TextureType::_2D:
+            return GL_TEXTURE_BINDING_2D;
+        case gl::TextureType::_2DArray:
+            return GL_TEXTURE_BINDING_2D_ARRAY;
+        case gl::TextureType::_2DMultisample:
+            return GL_TEXTURE_BINDING_2D_MULTISAMPLE;
+        case gl::TextureType::_2DMultisampleArray:
+            return GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
+        case gl::TextureType::_3D:
+            return GL_TEXTURE_BINDING_3D;
+        case gl::TextureType::External:
+            return GL_TEXTURE_BINDING_EXTERNAL_OES;
+        case gl::TextureType::Rectangle:
+            return GL_TEXTURE_BINDING_RECTANGLE;
+        case gl::TextureType::CubeMap:
+            return GL_TEXTURE_BINDING_CUBE_MAP;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // namespace nativegl
 
 const FunctionsGL *GetFunctionsGL(const gl::Context *context)

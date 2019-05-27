@@ -215,8 +215,8 @@ void TextureGL::setImageHelper(const gl::Context *context,
 {
     ASSERT(TextureTargetToType(target) == getType());
 
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexImageFormat texImageFormat =
@@ -267,8 +267,8 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
 {
     ASSERT(TextureTargetToType(index.getTarget()) == getType());
 
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexSubImageFormat texSubImageFormat =
@@ -482,8 +482,8 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
                                             size_t imageSize,
                                             const uint8_t *pixels)
 {
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
@@ -524,8 +524,8 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
                                                size_t imageSize,
                                                const uint8_t *pixels)
 {
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
@@ -564,9 +564,9 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
                                    GLenum internalFormat,
                                    gl::Framebuffer *source)
 {
-    ContextGL *contextGL             = GetImplAs<ContextGL>(context);
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
@@ -842,9 +842,9 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                                     GLenum internalFormat,
                                     const gl::Extents &size)
 {
-    ContextGL *contextGL             = GetImplAs<ContextGL>(context);
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexStorageFormat texStorageFormat =
@@ -1000,6 +1000,26 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureGL::setImageExternal(const gl::Context *context,
+                                          const gl::ImageIndex &index,
+                                          GLenum internalFormat,
+                                          const gl::Extents &size,
+                                          GLenum format,
+                                          GLenum type)
+{
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+
+    gl::TextureTarget target = index.getTarget();
+    size_t level             = static_cast<size_t>(index.getLevelIndex());
+    nativegl::TexImageFormat texImageFormat =
+        nativegl::GetTexImageFormat(functions, features, internalFormat, format, type);
+
+    setLevelInfo(context, target, level, 1,
+                 GetLevelInfo(internalFormat, texImageFormat.internalFormat));
+    return angle::Result::Continue;
+}
+
 angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
                                                gl::TextureType type,
                                                GLsizei samples,
@@ -1007,8 +1027,8 @@ angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
                                                const gl::Extents &size,
                                                bool fixedSampleLocations)
 {
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexStorageFormat texStorageFormat =
@@ -1128,6 +1148,11 @@ angle::Result TextureGL::setEGLImageTarget(const gl::Context *context,
                  GetLevelInfo(image->getFormat().info->internalFormat, imageNativeInternalFormat));
 
     return angle::Result::Continue;
+}
+
+GLint TextureGL::getNativeID() const
+{
+    return mTextureID;
 }
 
 angle::Result TextureGL::syncState(const gl::Context *context,
@@ -1554,9 +1579,9 @@ gl::TextureType TextureGL::getType() const
 angle::Result TextureGL::initializeContents(const gl::Context *context,
                                             const gl::ImageIndex &imageIndex)
 {
-    ContextGL *contextGL             = GetImplAs<ContextGL>(context);
-    const FunctionsGL *functions     = GetFunctionsGL(context);
-    StateManagerGL *stateManager     = GetStateManagerGL(context);
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     GLenum nativeInternalFormat =

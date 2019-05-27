@@ -1145,8 +1145,6 @@ bool IsValidImageLayout(ImageLayout layout)
     }
 }
 
-}  // anonymous namespace
-
 bool ValidateES2TexImageParameters(Context *context,
                                    TextureTarget target,
                                    GLint level,
@@ -1168,6 +1166,30 @@ bool ValidateES2TexImageParameters(Context *context,
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
         return false;
     }
+
+    return ValidateES2TexImageParametersBase(context, target, level, internalformat, isCompressed,
+                                             isSubImage, xoffset, yoffset, width, height, border,
+                                             format, type, imageSize, pixels);
+}
+
+}  // anonymous namespace
+
+bool ValidateES2TexImageParametersBase(Context *context,
+                                       TextureTarget target,
+                                       GLint level,
+                                       GLenum internalformat,
+                                       bool isCompressed,
+                                       bool isSubImage,
+                                       GLint xoffset,
+                                       GLint yoffset,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLint border,
+                                       GLenum format,
+                                       GLenum type,
+                                       GLsizei imageSize,
+                                       const void *pixels)
+{
 
     TextureType texType = TextureTargetToType(target);
     if (!ValidImageSizeParameters(context, texType, level, width, height, 1, isSubImage))
@@ -1194,6 +1216,7 @@ bool ValidateES2TexImageParameters(Context *context,
     switch (texType)
     {
         case TextureType::_2D:
+        case TextureType::External:
             if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
                 static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
             {

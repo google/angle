@@ -160,6 +160,9 @@ class ContextImpl : public GLImplFactory
     // KHR_parallel_shader_compile
     virtual void setMaxShaderCompilerThreads(GLuint count) {}
 
+    // GL_ANGLE_texture_storage_external
+    virtual void invalidateTexture(gl::TextureType target);
+
     // State sync with dirty bits.
     virtual angle::Result syncState(const gl::Context *context,
                                     const gl::State::DirtyBits &dirtyBits,

@@ -1191,6 +1191,11 @@ void State::initializeZeroTextures(const Context *context, const TextureMap &zer
     }
 }
 
+void State::invalidateTexture(TextureType type)
+{
+    mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
+}
+
 void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler)
 {
     mSamplers[textureUnit].set(context, sampler);

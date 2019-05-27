@@ -79,6 +79,7 @@ bool SupportsNativeRendering(const FunctionsGL *functions,
                              GLenum internalFormat);
 bool UseTexImage2D(gl::TextureType textureType);
 bool UseTexImage3D(gl::TextureType textureType);
+GLenum GetTextureBindingQuery(gl::TextureType textureType);
 }  // namespace nativegl
 
 bool CanMapBufferForRead(const FunctionsGL *functions);
