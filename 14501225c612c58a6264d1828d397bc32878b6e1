@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb46cdb3_eaa56bdb",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1302,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-05-27T20:13:31Z",
+      "side": 1,
+      "message": "nit: !gl::IsMipmapFiltered(mState.getSamplerState())",
+      "range": {
+        "startLine": 1301,
+        "startChar": 4,
+        "endLine": 1302,
+        "endChar": 58
+      },
+      "revId": "14501225c612c58a6264d1828d397bc32878b6e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
