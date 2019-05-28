@@ -167,7 +167,7 @@ class WindowSurfaceVk : public SurfaceVk
                                              bool presentOutOfDate);
     void releaseSwapchainImages(ContextVk *contextVk);
     void destroySwapChainImages(DisplayVk *displayVk);
-    angle::Result nextSwapchainImage(vk::Context *context);
+    VkResult nextSwapchainImage(vk::Context *context);
     angle::Result present(ContextVk *contextVk,
                           EGLint *rects,
                           EGLint n_rects,
