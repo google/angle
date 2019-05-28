@@ -399,24 +399,39 @@ def format_sheet_name(bot_name, step_name):
     new_step_name = ''
     # Put the frontend first
     if '_egl_' in step_name:
+        step_name = step_name.replace('_egl_', '_')
         new_step_name += ' EGL'
     if '_gles2_' in step_name:
+        step_name = step_name.replace('_gles2_', '_')
         new_step_name += ' GLES 2.0 '
     if '_gles3_' in step_name:
+        step_name = step_name.replace('_gles3_', '_')
         new_step_name += ' GLES 3.0 '
     if '_gles31_' in step_name:
+        step_name = step_name.replace('_gles31_', '_')
         new_step_name += ' GLES 3.1 '
     # Put the backend second
     if '_d3d9_' in step_name:
+        step_name = step_name.replace('_d3d9_', '_')
         new_step_name += ' D3D9 '
     if '_d3d11' in step_name:
+        step_name = step_name.replace('_d3d11_', '_')
         new_step_name += ' D3D11 '
     if '_gl_' in step_name:
+        step_name = step_name.replace('_gl_', '_')
         new_step_name += ' Desktop OpenGL '
     if '_gles_' in step_name:
+        step_name = step_name.replace('_gles_', '_')
         new_step_name += ' OpenGLES '
     if '_vulkan_' in step_name:
+        step_name = step_name.replace('_vulkan_', '_')
         new_step_name += ' Vulkan '
+    # Add any remaining keywords from the step name into the formatted name (formatted nicely)
+    step_name = step_name.replace('angle_', '_')
+    step_name = step_name.replace('_deqp_', '_')
+    step_name = step_name.replace('_tests', '_')
+    step_name = step_name.replace('_', ' ').strip()
+    new_step_name += ' ' + step_name
     new_step_name = ' '.join(new_step_name.strip().split())  # Remove extra spaces
     return new_step_name + ' ' + bot_name
 

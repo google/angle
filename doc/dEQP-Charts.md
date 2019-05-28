@@ -28,6 +28,12 @@ These charts are generated nightly from the [chrome GPU waterfall bots](https://
 
 <iframe id="EGL Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=332822006&format=interactive"></iframe>
 
+### KHR
+
+<iframe id="GLES 2.0 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1663999106&format=interactive"></iframe>
+
+<iframe id="GLES 3.0 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1654001661&format=interactive"></iframe>
+
 ## Win D3D11 Charts
 
 [https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1992689006](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1992689006)
@@ -84,22 +90,27 @@ These charts are generated nightly from the [chrome GPU waterfall bots](https://
 
 <iframe id="EGL Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2071210384&format=interactive"></iframe>
 
+### KHR
+
+<iframe id="GLES 2.0 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=150384909&format=interactive"></iframe>
+
+<iframe id="GLES 3.0 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=580191095&format=interactive"></iframe>
+
 ## Android Vulkan Charts
 
 [https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1077550384](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1077550384)
 
 <iframe id="GLES 2.0 Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1604064925&format=interactive"></iframe>
 
-<iframe id="GLES 2.0 Vulkan Android 32 Pixel XL" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1003110339&format=interactive"></iframe>
-
 <iframe id="GLES 3.0 Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=893390360&format=interactive"></iframe>
-
-<iframe id="GLES 3.0 Vulkan Android 32 Pixel XL" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1554851346&format=interactive"></iframe>
 
 <iframe id="EGL Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1349204511&format=interactive"></iframe>
 
-<iframe id="EGL Vulkan Android 32 Pixel XL" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=355976390&format=interactive"></iframe>
+### KHR
 
+<iframe id="GLES 2.0 Vulkan khr Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2054991104&format=interactive"></iframe>
+
+<iframe id="GLES 3.0 Vulkan khr Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=184736858&format=interactive"></iframe>
 
 ## Unexpected Passes/Failures
 
