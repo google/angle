@@ -615,19 +615,20 @@ class BufferHelper final : public CommandGraphResource
 // are the same, they may occasionally be BOTTOM_OF_PIPE and TOP_OF_PIPE respectively.
 enum class ImageLayout
 {
-    Undefined              = 0,
-    ExternalPreInitialized = 1,
-    TransferSrc            = 2,
-    TransferDst            = 3,
-    ComputeShaderReadOnly  = 4,
-    ComputeShaderWrite     = 5,
-    FragmentShaderReadOnly = 6,
-    ColorAttachment        = 7,
-    DepthStencilAttachment = 8,
-    Present                = 9,
+    Undefined                  = 0,
+    ExternalPreInitialized     = 1,
+    TransferSrc                = 2,
+    TransferDst                = 3,
+    ComputeShaderReadOnly      = 4,
+    ComputeShaderWrite         = 5,
+    FragmentShaderReadOnly     = 6,
+    ColorAttachment            = 7,
+    DepthStencilAttachment     = 8,
+    AllGraphicsShadersReadOnly = 9,
+    Present                    = 10,
 
-    InvalidEnum = 10,
-    EnumCount   = 10,
+    InvalidEnum = 11,
+    EnumCount   = 11,
 };
 
 class ImageHelper final : public CommandGraphResource
