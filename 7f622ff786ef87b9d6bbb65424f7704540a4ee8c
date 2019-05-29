@@ -285,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "fda1c982_d41330e5",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-05-29T15:36:45Z",
+      "side": 1,
+      "message": "ASSERT should guarantee the code is referenced in any configuration. Was it issuing a warning? We might want to fix that.",
+      "parentUuid": "078e6948_cf0bc8c4",
+      "range": {
+        "startLine": 374,
+        "startChar": 0,
+        "endLine": 381,
+        "endChar": 36
+      },
+      "revId": "7f622ff786ef87b9d6bbb65424f7704540a4ee8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62f38c35_7d44c5cb",
         "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
         "patchSetId": 15
