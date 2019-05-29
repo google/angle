@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a101958d_414683d7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2323,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-05-29T13:47:15Z",
+      "side": 1,
+      "message": "Can you `ASSERT(signalSemaphores.empty())` before this? The code looks like it\u0027s accumulating signal semaphores, but it\u0027s really only expecting to set index 0.",
+      "revId": "3472ef0cbb79165cae40e9b9f369c1cafa80bef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
