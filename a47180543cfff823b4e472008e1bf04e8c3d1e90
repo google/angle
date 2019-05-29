@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5567135c_2cd83d74",
+        "filename": "extensions/EGL_ANGLE_workaround_control.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-05-29T17:13:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72fb70fd_90e2477f",
+      "range": {
+        "startLine": 61,
+        "startChar": 36,
+        "endLine": 61,
+        "endChar": 54
+      },
+      "revId": "a47180543cfff823b4e472008e1bf04e8c3d1e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ff18acf_fc1e2a27",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.h",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "cd214b4b_c2077354",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-05-29T17:13:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ff18acf_fc1e2a27",
+      "range": {
+        "startLine": 77,
+        "startChar": 29,
+        "endLine": 77,
+        "endChar": 58
+      },
+      "revId": "a47180543cfff823b4e472008e1bf04e8c3d1e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef7c4aba_3af83581",
         "filename": "src/tests/egl_tests/EGLQueryStringIndexedTest.cpp",
         "patchSetId": 7
@@ -62,6 +110,24 @@
       "revId": "a47180543cfff823b4e472008e1bf04e8c3d1e90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f2d4a64_1c1bdfec",
+        "filename": "src/tests/egl_tests/EGLQueryStringIndexedTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-05-29T17:13:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef7c4aba_3af83581",
+      "revId": "a47180543cfff823b4e472008e1bf04e8c3d1e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
