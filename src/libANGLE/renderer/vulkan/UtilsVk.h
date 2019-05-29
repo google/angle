@@ -204,9 +204,9 @@ class UtilsVk : angle::NonCopyable
         uint32_t destDefaultChannelsMask = 0;
     };
 
-    struct ResolveColorShaderParams
+    struct ResolveShaderParams
     {
-        // Structure matching PushConstants in ResolveColor.frag
+        // Structure matching PushConstants in Resolve.frag
         int32_t srcExtent[2]  = {};
         int32_t srcOffset[2]  = {};
         int32_t destOffset[2] = {};
@@ -214,17 +214,6 @@ class UtilsVk : angle::NonCopyable
         int32_t samples       = 0;
         float invSamples      = 0;
         uint32_t outputMask   = 0;
-        uint32_t flipX        = 0;
-        uint32_t flipY        = 0;
-    };
-
-    struct ResolveDepthStencilShaderParams
-    {
-        // Structure matching PushConstants in ResolveDepthStencil.frag
-        int32_t srcExtent[2]  = {};
-        int32_t srcOffset[2]  = {};
-        int32_t destOffset[2] = {};
-        int32_t srcLayer      = 0;
         uint32_t flipX        = 0;
         uint32_t flipY        = 0;
     };
@@ -245,20 +234,19 @@ class UtilsVk : angle::NonCopyable
     enum class Function
     {
         // Functions implemented in graphics
-        ImageClear          = 0,
-        ImageCopy           = 1,
-        ResolveColor        = 2,
-        ResolveDepthStencil = 3,
+        ImageClear = 0,
+        ImageCopy  = 1,
+        Resolve    = 2,
 
         // Functions implemented in compute
-        ComputeStartIndex      = 4,  // Special value to separate draw and dispatch functions.
-        BufferClear            = 4,
-        BufferCopy             = 5,
-        ConvertVertexBuffer    = 6,
-        ResolveStencilNoExport = 7,
+        ComputeStartIndex      = 3,  // Special value to separate draw and dispatch functions.
+        BufferClear            = 3,
+        BufferCopy             = 4,
+        ConvertVertexBuffer    = 5,
+        ResolveStencilNoExport = 6,
 
-        InvalidEnum = 8,
-        EnumCount   = 8,
+        InvalidEnum = 7,
+        EnumCount   = 7,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -295,8 +283,7 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *context);
     angle::Result ensureImageClearResourcesInitialized(ContextVk *context);
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);
-    angle::Result ensureResolveColorResourcesInitialized(ContextVk *context);
-    angle::Result ensureResolveDepthStencilResourcesInitialized(ContextVk *context);
+    angle::Result ensureResolveResourcesInitialized(ContextVk *context);
     angle::Result ensureResolveStencilNoExportResourcesInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
@@ -305,6 +292,15 @@ class UtilsVk : angle::NonCopyable
                                   const vk::RenderPassDesc &renderPassDesc,
                                   const gl::Rectangle &renderArea,
                                   vk::CommandBuffer **commandBufferOut);
+
+    // Resolves either color or depth/stencil, based on which view is given.
+    angle::Result resolveImpl(ContextVk *contextVk,
+                              FramebufferVk *framebuffer,
+                              vk::ImageHelper *src,
+                              const vk::ImageView *srcColorView,
+                              const vk::ImageView *srcDepthView,
+                              const vk::ImageView *srcStencilView,
+                              const ResolveParameters &params);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
@@ -324,12 +320,8 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kFlagsMask |
                                                vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
                                                vk::InternalShader::ImageCopy_frag::kDestFormatMask];
-    vk::ShaderProgramHelper
-        mResolveColorPrograms[vk::InternalShader::ResolveColor_frag::kFlagsMask |
-                              vk::InternalShader::ResolveColor_frag::kFormatMask];
-    vk::ShaderProgramHelper
-        mResolveDepthStencilPrograms[vk::InternalShader::ResolveDepthStencil_frag::kFlagsMask |
-                                     vk::InternalShader::ResolveDepthStencil_frag::kResolveMask];
+    vk::ShaderProgramHelper mResolvePrograms[vk::InternalShader::Resolve_frag::kFlagsMask |
+                                             vk::InternalShader::Resolve_frag::kResolveMask];
     vk::ShaderProgramHelper mResolveStencilNoExportPrograms
         [vk::InternalShader::ResolveStencilNoExport_comp::kFlagsMask];
 };

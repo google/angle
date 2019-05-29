@@ -111,23 +111,7 @@ enum DestFormat
 };
 }  // namespace ImageCopy_frag
 
-namespace ResolveColor_frag
-{
-enum flags
-{
-    kSrcIsArray = 0x00000001,
-    kFlagsMask  = 0x00000001,
-};
-enum Format
-{
-    kIsFloat    = 0x00000000,
-    kIsInt      = 0x00000002,
-    kIsUint     = 0x00000004,
-    kFormatMask = 0x00000006,
-};
-}  // namespace ResolveColor_frag
-
-namespace ResolveDepthStencil_frag
+namespace Resolve_frag
 {
 enum flags
 {
@@ -136,12 +120,15 @@ enum flags
 };
 enum Resolve
 {
-    kResolveDepth        = 0x00000000,
-    kResolveStencil      = 0x00000002,
-    kResolveDepthStencil = 0x00000004,
-    kResolveMask         = 0x00000006,
+    kResolveColorFloat   = 0x00000000,
+    kResolveColorInt     = 0x00000002,
+    kResolveColorUint    = 0x00000004,
+    kResolveDepth        = 0x00000006,
+    kResolveStencil      = 0x00000008,
+    kResolveDepthStencil = 0x0000000A,
+    kResolveMask         = 0x0000000E,
 };
-}  // namespace ResolveDepthStencil_frag
+}  // namespace Resolve_frag
 
 namespace ResolveStencilNoExport_comp
 {
@@ -177,12 +164,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getImageCopy_frag(Context *context,
                                     uint32_t shaderFlags,
                                     RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getResolveColor_frag(Context *context,
-                                       uint32_t shaderFlags,
-                                       RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getResolveDepthStencil_frag(Context *context,
-                                              uint32_t shaderFlags,
-                                              RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getResolve_frag(Context *context,
+                                  uint32_t shaderFlags,
+                                  RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getResolveStencilNoExport_comp(Context *context,
                                                  uint32_t shaderFlags,
                                                  RefCounted<ShaderAndSerial> **shaderOut);
@@ -203,12 +187,8 @@ class ShaderLibrary final : angle::NonCopyable
         mImageCopy_frag_shaders[InternalShader::ImageCopy_frag::kFlagsMask |
                                 InternalShader::ImageCopy_frag::kSrcFormatMask |
                                 InternalShader::ImageCopy_frag::kDestFormatMask];
-    RefCounted<ShaderAndSerial>
-        mResolveColor_frag_shaders[InternalShader::ResolveColor_frag::kFlagsMask |
-                                   InternalShader::ResolveColor_frag::kFormatMask];
-    RefCounted<ShaderAndSerial>
-        mResolveDepthStencil_frag_shaders[InternalShader::ResolveDepthStencil_frag::kFlagsMask |
-                                          InternalShader::ResolveDepthStencil_frag::kResolveMask];
+    RefCounted<ShaderAndSerial> mResolve_frag_shaders[InternalShader::Resolve_frag::kFlagsMask |
+                                                      InternalShader::Resolve_frag::kResolveMask];
     RefCounted<ShaderAndSerial> mResolveStencilNoExport_comp_shaders
         [InternalShader::ResolveStencilNoExport_comp::kFlagsMask];
 };

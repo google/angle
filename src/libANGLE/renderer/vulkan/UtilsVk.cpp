@@ -21,8 +21,7 @@ namespace BufferUtils_comp            = vk::InternalShader::BufferUtils_comp;
 namespace ConvertVertex_comp          = vk::InternalShader::ConvertVertex_comp;
 namespace ImageClear_frag             = vk::InternalShader::ImageClear_frag;
 namespace ImageCopy_frag              = vk::InternalShader::ImageCopy_frag;
-namespace ResolveColor_frag           = vk::InternalShader::ResolveColor_frag;
-namespace ResolveDepthStencil_frag    = vk::InternalShader::ResolveDepthStencil_frag;
+namespace Resolve_frag                = vk::InternalShader::Resolve_frag;
 namespace ResolveStencilNoExport_comp = vk::InternalShader::ResolveStencilNoExport_comp;
 
 namespace
@@ -36,9 +35,8 @@ constexpr uint32_t kBufferCopySourceBinding           = 1;
 constexpr uint32_t kConvertVertexDestinationBinding   = 0;
 constexpr uint32_t kConvertVertexSourceBinding        = 1;
 constexpr uint32_t kImageCopySourceBinding            = 0;
-constexpr uint32_t kResolveColorSourceBinding         = 0;
-constexpr uint32_t kResolveDepthStencilDepthBinding   = 0;
-constexpr uint32_t kResolveDepthStencilStencilBinding = 1;
+constexpr uint32_t kResolveColorOrDepthBinding        = 0;
+constexpr uint32_t kResolveStencilBinding             = 1;
 constexpr uint32_t kResolveStencilNoExportDestBinding = 0;
 constexpr uint32_t kResolveStencilNoExportSrcBinding  = 1;
 
@@ -178,36 +176,33 @@ uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &destFo
     return flags;
 }
 
-uint32_t GetResolveColorFlags(const vk::Format &format)
+uint32_t GetResolveFlags(bool resolveColor,
+                         bool resolveDepth,
+                         bool resolveStencil,
+                         const vk::Format &format)
 {
-    const angle::Format &angleFormat = format.angleFormat();
+    if (resolveColor)
+    {
+        const angle::Format &angleFormat = format.angleFormat();
 
-    uint32_t flags = 0;
-
-    flags |= GetFormatFlags(angleFormat, ResolveColor_frag::kIsInt, ResolveColor_frag::kIsUint,
-                            ResolveColor_frag::kIsFloat);
-
-    return flags;
-}
-
-uint32_t GetResolveDepthStencilFlags(bool resolveDepth, bool resolveStencil)
-{
-    ASSERT(resolveDepth || resolveStencil);
+        return GetFormatFlags(angleFormat, Resolve_frag::kResolveColorInt,
+                              Resolve_frag::kResolveColorUint, Resolve_frag::kResolveColorFloat);
+    }
 
     if (resolveDepth)
     {
         if (resolveStencil)
         {
-            return ResolveDepthStencil_frag::kResolveDepthStencil;
+            return Resolve_frag::kResolveDepthStencil;
         }
         else
         {
-            return ResolveDepthStencil_frag::kResolveDepth;
+            return Resolve_frag::kResolveDepth;
         }
     }
     else
     {
-        return ResolveDepthStencil_frag::kResolveStencil;
+        return Resolve_frag::kResolveStencil;
     }
 }
 
@@ -266,11 +261,7 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
-    for (vk::ShaderProgramHelper &program : mResolveColorPrograms)
-    {
-        program.destroy(device);
-    }
-    for (vk::ShaderProgramHelper &program : mResolveDepthStencilPrograms)
+    for (vk::ShaderProgramHelper &program : mResolvePrograms)
     {
         program.destroy(device);
     }
@@ -398,24 +389,9 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitialized(ContextVk *context)
                                       sizeof(ImageCopyShaderParams));
 }
 
-angle::Result UtilsVk::ensureResolveColorResourcesInitialized(ContextVk *context)
+angle::Result UtilsVk::ensureResolveResourcesInitialized(ContextVk *context)
 {
-    if (mPipelineLayouts[Function::ResolveColor].valid())
-    {
-        return angle::Result::Continue;
-    }
-
-    VkDescriptorPoolSize setSizes[1] = {
-        {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
-    };
-
-    return ensureResourcesInitialized(context, Function::ResolveColor, setSizes,
-                                      ArraySize(setSizes), sizeof(ResolveColorShaderParams));
-}
-
-angle::Result UtilsVk::ensureResolveDepthStencilResourcesInitialized(ContextVk *context)
-{
-    if (mPipelineLayouts[Function::ResolveDepthStencil].valid())
+    if (mPipelineLayouts[Function::Resolve].valid())
     {
         return angle::Result::Continue;
     }
@@ -425,8 +401,8 @@ angle::Result UtilsVk::ensureResolveDepthStencilResourcesInitialized(ContextVk *
         {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
     };
 
-    return ensureResourcesInitialized(context, Function::ResolveDepthStencil, setSizes,
-                                      ArraySize(setSizes), sizeof(ResolveDepthStencilShaderParams));
+    return ensureResourcesInitialized(context, Function::Resolve, setSizes, ArraySize(setSizes),
+                                      sizeof(ResolveShaderParams));
 }
 
 angle::Result UtilsVk::ensureResolveStencilNoExportResourcesInitialized(ContextVk *context)
@@ -833,6 +809,27 @@ angle::Result UtilsVk::colorResolve(ContextVk *contextVk,
                                     const vk::ImageView *srcView,
                                     const ResolveParameters &params)
 {
+    return resolveImpl(contextVk, framebuffer, src, srcView, nullptr, nullptr, params);
+}
+
+angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
+                                           FramebufferVk *framebuffer,
+                                           vk::ImageHelper *src,
+                                           const vk::ImageView *srcDepthView,
+                                           const vk::ImageView *srcStencilView,
+                                           const ResolveParameters &params)
+{
+    return resolveImpl(contextVk, framebuffer, src, nullptr, srcDepthView, srcStencilView, params);
+}
+
+angle::Result UtilsVk::resolveImpl(ContextVk *contextVk,
+                                   FramebufferVk *framebuffer,
+                                   vk::ImageHelper *src,
+                                   const vk::ImageView *srcColorView,
+                                   const vk::ImageView *srcDepthView,
+                                   const vk::ImageView *srcStencilView,
+                                   const ResolveParameters &params)
+{
     // Possible ways to resolve color are:
     //
     // - vkCmdResolveImage: This is by far the easiest method, but lacks the ability to flip
@@ -846,11 +843,19 @@ angle::Result UtilsVk::colorResolve(ContextVk *contextVk,
     // still wouldn't be able to handle flipping.  The second method is implemented in this function
     // for complete control.
 
-    ANGLE_TRY(ensureResolveColorResourcesInitialized(contextVk));
+    // Possible ways to resolve depth/stencil are:
+    //
+    // - Manual resolve: A shader can read a samples from input and choose that for output.
+    // - Using subpass resolve attachment through VkSubpassDescriptionDepthStencilResolveKHR: This
+    //   requires an extension that's not very well supported.
+    //
+    // The first method is implemented in this function.
+
+    ANGLE_TRY(ensureResolveResourcesInitialized(contextVk));
 
     ASSERT(src->getSamples() > 1);
 
-    ResolveColorShaderParams shaderParams;
+    ResolveShaderParams shaderParams;
     shaderParams.srcExtent[0]  = params.srcExtents[0];
     shaderParams.srcExtent[1]  = params.srcExtents[1];
     shaderParams.srcOffset[0]  = params.srcOffset[0];
@@ -865,121 +870,25 @@ angle::Result UtilsVk::colorResolve(ContextVk *contextVk,
     shaderParams.flipX = params.flipX;
     shaderParams.flipY = params.flipY;
 
-    uint32_t flags = GetResolveColorFlags(src->getFormat());
-    flags |= src->getLayerCount() > 1 ? ResolveColor_frag::kSrcIsArray : 0;
+    bool resolveColor   = srcColorView != nullptr;
+    bool resolveDepth   = srcDepthView != nullptr;
+    bool resolveStencil = srcStencilView != nullptr;
+
+    // Either color is resolved or depth/stencil, but not both.
+    ASSERT(resolveColor != (resolveDepth || resolveStencil));
+
+    uint32_t flags = GetResolveFlags(resolveColor, resolveDepth, resolveStencil, src->getFormat());
+    flags |= src->getLayerCount() > 1 ? Resolve_frag::kSrcIsArray : 0;
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-    ANGLE_TRY(mDescriptorPools[Function::ResolveColor].allocateSets(
-        contextVk, mDescriptorSetLayouts[Function::ResolveColor][kSetIndex].get().ptr(), 1,
+    ANGLE_TRY(mDescriptorPools[Function::Resolve].allocateSets(
+        contextVk, mDescriptorSetLayouts[Function::Resolve][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
     descriptorPoolBinding.get().updateSerial(contextVk->getCurrentQueueSerial());
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
-    pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
-    // Note: Work around an Intel bug on windows.  http://anglebug.com/3348
-    pipelineDesc.setDepthWriteEnabled(false);
-
-    VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getCompleteRenderArea();
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, completeRenderArea.height, &viewport);
-    pipelineDesc.setViewport(viewport);
-
-    pipelineDesc.setScissor(gl_vk::GetRect(params.resolveArea));
-
-    // Change source layout outside render pass
-    if (src->isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
-    {
-        vk::CommandBuffer *srcLayoutChange;
-        ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
-        src->changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::FragmentShaderReadOnly,
-                          srcLayoutChange);
-    }
-
-    vk::CommandBuffer *commandBuffer;
-    if (!framebuffer->appendToStartedRenderPass(contextVk->getCurrentQueueSerial(),
-                                                params.resolveArea, &commandBuffer))
-    {
-        ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.resolveArea, &commandBuffer));
-    }
-
-    // Source's layout change should happen before rendering
-    src->addReadDependency(framebuffer->getFramebuffer());
-
-    VkDescriptorImageInfo imageInfo = {};
-    imageInfo.imageView             = srcView->getHandle();
-    imageInfo.imageLayout           = src->getCurrentLayout();
-
-    VkWriteDescriptorSet writeInfo = {};
-    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo.dstSet               = descriptorSet;
-    writeInfo.dstBinding           = kResolveColorSourceBinding;
-    writeInfo.descriptorCount      = 1;
-    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-    writeInfo.pImageInfo           = &imageInfo;
-
-    vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
-
-    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
-    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getResolveColor_frag(contextVk, flags, &fragmentShader));
-
-    ANGLE_TRY(setupProgram(contextVk, Function::ResolveColor, fragmentShader, vertexShader,
-                           &mResolveColorPrograms[flags], &pipelineDesc, descriptorSet,
-                           &shaderParams, sizeof(shaderParams), commandBuffer));
-    commandBuffer->draw(6, 0);
-    descriptorPoolBinding.reset();
-
-    return angle::Result::Continue;
-}
-
-angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
-                                           FramebufferVk *framebuffer,
-                                           vk::ImageHelper *src,
-                                           const vk::ImageView *srcDepthView,
-                                           const vk::ImageView *srcStencilView,
-                                           const ResolveParameters &params)
-{
-    // Possible ways to resolve depth/stencil are:
-    //
-    // - Manual resolve: A shader can read a samples from input and choose that for output.
-    // - Using subpass resolve attachment through VkSubpassDescriptionDepthStencilResolveKHR: This
-    //   requires an extension that's not very well supported.
-    //
-    // The first method is implemented in this function.
-
-    ANGLE_TRY(ensureResolveDepthStencilResourcesInitialized(contextVk));
-
-    ResolveDepthStencilShaderParams shaderParams;
-    shaderParams.srcExtent[0]  = params.srcExtents[0];
-    shaderParams.srcExtent[1]  = params.srcExtents[1];
-    shaderParams.srcOffset[0]  = params.srcOffset[0];
-    shaderParams.srcOffset[1]  = params.srcOffset[1];
-    shaderParams.destOffset[0] = params.destOffset[0];
-    shaderParams.destOffset[1] = params.destOffset[1];
-    shaderParams.srcLayer      = params.srcLayer;
-    shaderParams.flipX         = params.flipX;
-    shaderParams.flipY         = params.flipY;
-
-    bool resolveDepth   = srcDepthView->valid();
-    bool resolveStencil = srcStencilView->valid();
-
-    uint32_t flags = GetResolveDepthStencilFlags(resolveDepth, resolveStencil);
-    flags |= src->getLayerCount() > 1 ? ResolveDepthStencil_frag::kSrcIsArray : 0;
-
-    VkDescriptorSet descriptorSet;
-    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-    ANGLE_TRY(mDescriptorPools[Function::ResolveDepthStencil].allocateSets(
-        contextVk, mDescriptorSetLayouts[Function::ResolveDepthStencil][kSetIndex].get().ptr(), 1,
-        &descriptorPoolBinding, &descriptorSet));
-    descriptorPoolBinding.get().updateSerial(contextVk->getCurrentQueueSerial());
-
-    vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults();
-    pipelineDesc.setColorWriteMask(0, gl::DrawBufferMask());
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
     pipelineDesc.setDepthTestEnabled(resolveDepth);
     pipelineDesc.setDepthWriteEnabled(resolveDepth);
@@ -987,6 +896,8 @@ angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
 
     if (resolveStencil)
     {
+        ASSERT(contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled);
+
         const uint8_t completeMask    = 0xFF;
         const uint8_t unusedReference = 0x00;
 
@@ -1028,25 +939,42 @@ angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
     src->addReadDependency(framebuffer->getFramebuffer());
 
     VkDescriptorImageInfo imageInfos[2] = {};
-    imageInfos[0].imageView             = srcDepthView->getHandle();
-    imageInfos[0].imageLayout           = src->getCurrentLayout();
-    imageInfos[1].imageView             = srcStencilView->getHandle();
-    imageInfos[1].imageLayout           = src->getCurrentLayout();
+
+    if (resolveColor)
+    {
+        imageInfos[0].imageView   = srcColorView->getHandle();
+        imageInfos[0].imageLayout = src->getCurrentLayout();
+    }
+    if (resolveDepth)
+    {
+        imageInfos[0].imageView   = srcDepthView->getHandle();
+        imageInfos[0].imageLayout = src->getCurrentLayout();
+    }
+    if (resolveStencil)
+    {
+        imageInfos[1].imageView   = srcStencilView->getHandle();
+        imageInfos[1].imageLayout = src->getCurrentLayout();
+    }
 
     VkWriteDescriptorSet writeInfos[2] = {};
     writeInfos[0].sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeInfos[0].dstSet               = descriptorSet;
-    writeInfos[0].dstBinding           = kResolveDepthStencilDepthBinding;
+    writeInfos[0].dstBinding           = kResolveColorOrDepthBinding;
     writeInfos[0].descriptorCount      = 1;
     writeInfos[0].descriptorType       = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
     writeInfos[0].pImageInfo           = &imageInfos[0];
 
     writeInfos[1]            = writeInfos[0];
-    writeInfos[1].dstBinding = kResolveDepthStencilStencilBinding;
+    writeInfos[1].dstBinding = kResolveStencilBinding;
     writeInfos[1].pImageInfo = &imageInfos[1];
 
-    uint32_t writeInfoOffset = resolveDepth ? 0 : 1;
-    uint32_t writeInfoCount  = resolveDepth + resolveStencil;
+    // If resolving color, there's one write info; index 0
+    // If resolving depth, write info index 0 must be written
+    // If resolving stencil, write info index 1 must also be written
+    //
+    // Note again that resolving color and depth/stencil are mutually exclusive here.
+    uint32_t writeInfoOffset = resolveDepth || resolveColor ? 0 : 1;
+    uint32_t writeInfoCount  = resolveColor + resolveDepth + resolveStencil;
 
     vkUpdateDescriptorSets(contextVk->getDevice(), writeInfoCount, writeInfos + writeInfoOffset, 0,
                            nullptr);
@@ -1055,11 +983,11 @@ angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getResolveDepthStencil_frag(contextVk, flags, &fragmentShader));
+    ANGLE_TRY(shaderLibrary.getResolve_frag(contextVk, flags, &fragmentShader));
 
-    ANGLE_TRY(setupProgram(contextVk, Function::ResolveDepthStencil, fragmentShader, vertexShader,
-                           &mResolveDepthStencilPrograms[flags], &pipelineDesc, descriptorSet,
-                           &shaderParams, sizeof(shaderParams), commandBuffer));
+    ANGLE_TRY(setupProgram(contextVk, Function::Resolve, fragmentShader, vertexShader,
+                           &mResolvePrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
+                           sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
     descriptorPoolBinding.reset();
 

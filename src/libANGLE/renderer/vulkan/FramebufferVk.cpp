@@ -960,14 +960,15 @@ angle::Result FramebufferVk::resolve(ContextVk *contextVk,
         bool hasShaderStencilExport =
             contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled;
 
-        vk::ImageView noStencilView;
-
         // Resolve depth. If shader stencil export is present, resolve stencil as well.
         if (resolveDepthBuffer || (resolveStencilBuffer && hasShaderStencilExport))
         {
-            ANGLE_TRY(utilsVk.depthStencilResolve(
-                contextVk, this, depthStencilImage, &depthView.get(),
-                hasShaderStencilExport ? &stencilView.get() : &noStencilView, params));
+            vk::ImageView *depth = resolveDepthBuffer ? &depthView.get() : nullptr;
+            vk::ImageView *stencil =
+                resolveStencilBuffer && hasShaderStencilExport ? &stencilView.get() : nullptr;
+
+            ANGLE_TRY(utilsVk.depthStencilResolve(contextVk, this, depthStencilImage, depth,
+                                                  stencil, params));
         }
 
         // If shader stencil export is not present, resolve stencil through a different path.

@@ -87,18 +87,18 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000013.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000014.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000015.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveColor.frag.00000000.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveColor.frag.00000001.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveColor.frag.00000002.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveColor.frag.00000003.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveColor.frag.00000004.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveColor.frag.00000005.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000000.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000001.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000002.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000003.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000004.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000005.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000001.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000002.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000003.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000004.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000005.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000006.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000007.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000008.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.00000009.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.0000000A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/Resolve.frag.0000000B.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ResolveStencilNoExport.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ResolveStencilNoExport.comp.00000001.inc"
 
@@ -194,21 +194,19 @@ constexpr ShaderBlob kImageCopy_frag_shaders[] = {
     {kImageCopy_frag_00000014, sizeof(kImageCopy_frag_00000014)},
     {kImageCopy_frag_00000015, sizeof(kImageCopy_frag_00000015)},
 };
-constexpr ShaderBlob kResolveColor_frag_shaders[] = {
-    {kResolveColor_frag_00000000, sizeof(kResolveColor_frag_00000000)},
-    {kResolveColor_frag_00000001, sizeof(kResolveColor_frag_00000001)},
-    {kResolveColor_frag_00000002, sizeof(kResolveColor_frag_00000002)},
-    {kResolveColor_frag_00000003, sizeof(kResolveColor_frag_00000003)},
-    {kResolveColor_frag_00000004, sizeof(kResolveColor_frag_00000004)},
-    {kResolveColor_frag_00000005, sizeof(kResolveColor_frag_00000005)},
-};
-constexpr ShaderBlob kResolveDepthStencil_frag_shaders[] = {
-    {kResolveDepthStencil_frag_00000000, sizeof(kResolveDepthStencil_frag_00000000)},
-    {kResolveDepthStencil_frag_00000001, sizeof(kResolveDepthStencil_frag_00000001)},
-    {kResolveDepthStencil_frag_00000002, sizeof(kResolveDepthStencil_frag_00000002)},
-    {kResolveDepthStencil_frag_00000003, sizeof(kResolveDepthStencil_frag_00000003)},
-    {kResolveDepthStencil_frag_00000004, sizeof(kResolveDepthStencil_frag_00000004)},
-    {kResolveDepthStencil_frag_00000005, sizeof(kResolveDepthStencil_frag_00000005)},
+constexpr ShaderBlob kResolve_frag_shaders[] = {
+    {kResolve_frag_00000000, sizeof(kResolve_frag_00000000)},
+    {kResolve_frag_00000001, sizeof(kResolve_frag_00000001)},
+    {kResolve_frag_00000002, sizeof(kResolve_frag_00000002)},
+    {kResolve_frag_00000003, sizeof(kResolve_frag_00000003)},
+    {kResolve_frag_00000004, sizeof(kResolve_frag_00000004)},
+    {kResolve_frag_00000005, sizeof(kResolve_frag_00000005)},
+    {kResolve_frag_00000006, sizeof(kResolve_frag_00000006)},
+    {kResolve_frag_00000007, sizeof(kResolve_frag_00000007)},
+    {kResolve_frag_00000008, sizeof(kResolve_frag_00000008)},
+    {kResolve_frag_00000009, sizeof(kResolve_frag_00000009)},
+    {kResolve_frag_0000000A, sizeof(kResolve_frag_0000000A)},
+    {kResolve_frag_0000000B, sizeof(kResolve_frag_0000000B)},
 };
 constexpr ShaderBlob kResolveStencilNoExport_comp_shaders[] = {
     {kResolveStencilNoExport_comp_00000000, sizeof(kResolveStencilNoExport_comp_00000000)},
@@ -265,11 +263,7 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
-    for (RefCounted<ShaderAndSerial> &shader : mResolveColor_frag_shaders)
-    {
-        shader.get().destroy(device);
-    }
-    for (RefCounted<ShaderAndSerial> &shader : mResolveDepthStencil_frag_shaders)
+    for (RefCounted<ShaderAndSerial> &shader : mResolve_frag_shaders)
     {
         shader.get().destroy(device);
     }
@@ -319,20 +313,12 @@ angle::Result ShaderLibrary::getImageCopy_frag(Context *context,
                      ArraySize(kImageCopy_frag_shaders), shaderFlags, shaderOut);
 }
 
-angle::Result ShaderLibrary::getResolveColor_frag(Context *context,
-                                                  uint32_t shaderFlags,
-                                                  RefCounted<ShaderAndSerial> **shaderOut)
+angle::Result ShaderLibrary::getResolve_frag(Context *context,
+                                             uint32_t shaderFlags,
+                                             RefCounted<ShaderAndSerial> **shaderOut)
 {
-    return GetShader(context, mResolveColor_frag_shaders, kResolveColor_frag_shaders,
-                     ArraySize(kResolveColor_frag_shaders), shaderFlags, shaderOut);
-}
-
-angle::Result ShaderLibrary::getResolveDepthStencil_frag(Context *context,
-                                                         uint32_t shaderFlags,
-                                                         RefCounted<ShaderAndSerial> **shaderOut)
-{
-    return GetShader(context, mResolveDepthStencil_frag_shaders, kResolveDepthStencil_frag_shaders,
-                     ArraySize(kResolveDepthStencil_frag_shaders), shaderFlags, shaderOut);
+    return GetShader(context, mResolve_frag_shaders, kResolve_frag_shaders,
+                     ArraySize(kResolve_frag_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getResolveStencilNoExport_comp(Context *context,
