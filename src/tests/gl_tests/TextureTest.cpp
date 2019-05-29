@@ -4754,7 +4754,7 @@ TEST_P(TextureCubeIntegerEdgeTestES3, IntegerCubeTextureCorner)
 TEST_P(Texture2DIntegerProjectiveOffsetTestES3, NonZeroBaseLevel)
 {
     // Fails on AMD: http://crbug.com/967796
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsD3D11());
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
