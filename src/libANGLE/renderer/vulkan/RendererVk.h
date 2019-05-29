@@ -192,8 +192,8 @@ class RendererVk : angle::NonCopyable
     uint32_t mCurrentQueueFamilyIndex;
     uint32_t mMaxVertexAttribDivisor;
     VkDevice mDevice;
-    AtomicSerialFactory mQueueSerialFactory;
-    AtomicSerialFactory mShaderSerialFactory;
+    SerialFactory mQueueSerialFactory;
+    SerialFactory mShaderSerialFactory;
     Serial mCurrentQueueSerial;
 
     bool mDeviceLost;

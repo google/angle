@@ -12,7 +12,6 @@
 
 #include <cstdint>
 
-#include <atomic>
 #include <limits>
 #include <map>
 
@@ -62,6 +61,8 @@ class ResourceSerial
     uintptr_t mValue;
 };
 
+class SerialFactory;
+
 class Serial final
 {
   public:
@@ -92,31 +93,26 @@ class Serial final
     constexpr uint64_t getValue() const { return mValue; }
 
   private:
-    template <typename T>
-    friend class SerialFactoryBase;
+    friend class SerialFactory;
     constexpr explicit Serial(uint64_t value) : mValue(value) {}
     uint64_t mValue;
     static constexpr uint64_t kInvalid = 0;
 };
 
-template <typename SerialBaseType>
-class SerialFactoryBase final : angle::NonCopyable
+class SerialFactory final : angle::NonCopyable
 {
   public:
-    SerialFactoryBase() : mSerial(1) {}
+    SerialFactory() : mSerial(1) {}
 
     Serial generate()
     {
-        ASSERT(mSerial + 1 > mSerial);
+        ASSERT(mSerial != std::numeric_limits<uint64_t>::max());
         return Serial(mSerial++);
     }
 
   private:
-    SerialBaseType mSerial;
+    uint64_t mSerial;
 };
-
-using SerialFactory       = SerialFactoryBase<uint64_t>;
-using AtomicSerialFactory = SerialFactoryBase<std::atomic<uint64_t>>;
 
 using MipGenerationFunction = void (*)(size_t sourceWidth,
                                        size_t sourceHeight,
