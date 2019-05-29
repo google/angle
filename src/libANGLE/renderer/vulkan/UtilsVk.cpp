@@ -11,17 +11,19 @@
 
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
 {
 
-namespace BufferUtils_comp         = vk::InternalShader::BufferUtils_comp;
-namespace ConvertVertex_comp       = vk::InternalShader::ConvertVertex_comp;
-namespace ImageClear_frag          = vk::InternalShader::ImageClear_frag;
-namespace ImageCopy_frag           = vk::InternalShader::ImageCopy_frag;
-namespace ResolveColor_frag        = vk::InternalShader::ResolveColor_frag;
-namespace ResolveDepthStencil_frag = vk::InternalShader::ResolveDepthStencil_frag;
+namespace BufferUtils_comp            = vk::InternalShader::BufferUtils_comp;
+namespace ConvertVertex_comp          = vk::InternalShader::ConvertVertex_comp;
+namespace ImageClear_frag             = vk::InternalShader::ImageClear_frag;
+namespace ImageCopy_frag              = vk::InternalShader::ImageCopy_frag;
+namespace ResolveColor_frag           = vk::InternalShader::ResolveColor_frag;
+namespace ResolveDepthStencil_frag    = vk::InternalShader::ResolveDepthStencil_frag;
+namespace ResolveStencilNoExport_comp = vk::InternalShader::ResolveStencilNoExport_comp;
 
 namespace
 {
@@ -37,6 +39,8 @@ constexpr uint32_t kImageCopySourceBinding            = 0;
 constexpr uint32_t kResolveColorSourceBinding         = 0;
 constexpr uint32_t kResolveDepthStencilDepthBinding   = 0;
 constexpr uint32_t kResolveDepthStencilStencilBinding = 1;
+constexpr uint32_t kResolveStencilNoExportDestBinding = 0;
+constexpr uint32_t kResolveStencilNoExportSrcBinding  = 1;
 
 uint32_t GetBufferUtilsFlags(size_t dispatchSize, const vk::Format &format)
 {
@@ -270,6 +274,10 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
+    for (vk::ShaderProgramHelper &program : mResolveStencilNoExportPrograms)
+    {
+        program.destroy(device);
+    }
 }
 
 angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *context,
@@ -419,6 +427,23 @@ angle::Result UtilsVk::ensureResolveDepthStencilResourcesInitialized(ContextVk *
 
     return ensureResourcesInitialized(context, Function::ResolveDepthStencil, setSizes,
                                       ArraySize(setSizes), sizeof(ResolveDepthStencilShaderParams));
+}
+
+angle::Result UtilsVk::ensureResolveStencilNoExportResourcesInitialized(ContextVk *context)
+{
+    if (mPipelineLayouts[Function::ResolveStencilNoExport].valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    VkDescriptorPoolSize setSizes[2] = {
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},
+        {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
+    };
+
+    return ensureResourcesInitialized(context, Function::ResolveStencilNoExport, setSizes,
+                                      ArraySize(setSizes),
+                                      sizeof(ResolveStencilNoExportShaderParams));
 }
 
 angle::Result UtilsVk::setupProgram(ContextVk *context,
@@ -962,9 +987,6 @@ angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
 
     if (resolveStencil)
     {
-        // TODO(syoussefi): This needs VK_EXT_shader_stencil_export which is apparently only
-        // supported in Mesa and AMD's windows driver.
-        // http://anglebug.com/3200
         const uint8_t completeMask    = 0xFF;
         const uint8_t unusedReference = 0x00;
 
@@ -1040,6 +1062,153 @@ angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
                            &shaderParams, sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
     descriptorPoolBinding.reset();
+
+    return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::stencilResolveNoShaderExport(ContextVk *contextVk,
+                                                    FramebufferVk *framebuffer,
+                                                    vk::ImageHelper *src,
+                                                    const vk::ImageView *srcStencilView,
+                                                    const ResolveParameters &params)
+{
+    // When VK_EXT_shader_stencil_export is not available, stencil is resolved into a temporary
+    // buffer which is then copied into the stencil aspect of the image.
+
+    ANGLE_TRY(ensureResolveStencilNoExportResourcesInitialized(contextVk));
+
+    VkDescriptorSet descriptorSet;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
+    ANGLE_TRY(mDescriptorPools[Function::ResolveStencilNoExport].allocateSets(
+        contextVk, mDescriptorSetLayouts[Function::ResolveStencilNoExport][kSetIndex].get().ptr(),
+        1, &descriptorPoolBinding, &descriptorSet));
+    descriptorPoolBinding.get().updateSerial(contextVk->getCurrentQueueSerial());
+
+    // Create a temporary buffer to resolve stencil into.
+    vk::Scoped<vk::BufferHelper> resolveBuffer(contextVk->getDevice());
+
+    uint32_t bufferRowLengthInUints =
+        UnsignedCeilDivide(params.resolveArea.width, sizeof(uint32_t));
+    VkDeviceSize bufferSize = bufferRowLengthInUints * sizeof(uint32_t) * params.resolveArea.height;
+
+    VkBufferCreateInfo resolveBufferInfo = {};
+    resolveBufferInfo.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    resolveBufferInfo.flags              = 0;
+    resolveBufferInfo.size               = bufferSize;
+    resolveBufferInfo.usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    resolveBufferInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    resolveBufferInfo.queueFamilyIndexCount = 0;
+    resolveBufferInfo.pQueueFamilyIndices   = nullptr;
+
+    ANGLE_TRY(resolveBuffer.get().init(contextVk, resolveBufferInfo,
+                                       VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+    resolveBuffer.get().updateQueueSerial(contextVk->getCurrentQueueSerial());
+
+    ResolveStencilNoExportShaderParams shaderParams;
+    shaderParams.srcExtent[0]  = params.srcExtents[0];
+    shaderParams.srcExtent[1]  = params.srcExtents[1];
+    shaderParams.srcOffset[0]  = params.srcOffset[0];
+    shaderParams.srcOffset[1]  = params.srcOffset[1];
+    shaderParams.destPitch     = bufferRowLengthInUints;
+    shaderParams.destExtent[0] = params.resolveArea.width;
+    shaderParams.destExtent[1] = params.resolveArea.height;
+    shaderParams.srcLayer      = params.srcLayer;
+    shaderParams.flipX         = params.flipX;
+    shaderParams.flipY         = params.flipY;
+
+    uint32_t flags = src->getLayerCount() > 1 ? ResolveStencilNoExport_comp::kSrcIsArray : 0;
+
+    // Change source layout prior to computation.
+    if (src->isLayoutChangeNecessary(vk::ImageLayout::ComputeShaderReadOnly))
+    {
+        vk::CommandBuffer *srcLayoutChange;
+        ANGLE_TRY(src->recordCommands(contextVk, &srcLayoutChange));
+        src->changeLayout(src->getAspectFlags(), vk::ImageLayout::ComputeShaderReadOnly,
+                          srcLayoutChange);
+    }
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(framebuffer->getFramebuffer()->recordCommands(contextVk, &commandBuffer));
+
+    src->addReadDependency(framebuffer->getFramebuffer());
+
+    // Resolve stencil into the buffer.
+    VkDescriptorImageInfo imageInfo = {};
+    imageInfo.imageView             = srcStencilView->getHandle();
+    imageInfo.imageLayout           = src->getCurrentLayout();
+
+    VkDescriptorBufferInfo bufferInfo = {};
+    bufferInfo.buffer                 = resolveBuffer.get().getBuffer().getHandle();
+    bufferInfo.offset                 = 0;
+    bufferInfo.range                  = VK_WHOLE_SIZE;
+
+    VkWriteDescriptorSet writeInfos[2] = {};
+    writeInfos[0].sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfos[0].dstSet               = descriptorSet;
+    writeInfos[0].dstBinding           = kResolveStencilNoExportDestBinding;
+    writeInfos[0].descriptorCount      = 1;
+    writeInfos[0].descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writeInfos[0].pBufferInfo          = &bufferInfo;
+
+    writeInfos[1].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfos[1].dstSet          = descriptorSet;
+    writeInfos[1].dstBinding      = kResolveStencilNoExportSrcBinding;
+    writeInfos[1].descriptorCount = 1;
+    writeInfos[1].descriptorType  = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+    writeInfos[1].pImageInfo      = &imageInfo;
+
+    vkUpdateDescriptorSets(contextVk->getDevice(), 2, writeInfos, 0, nullptr);
+
+    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    ANGLE_TRY(
+        contextVk->getShaderLibrary().getResolveStencilNoExport_comp(contextVk, flags, &shader));
+
+    ANGLE_TRY(setupProgram(contextVk, Function::ResolveStencilNoExport, shader, nullptr,
+                           &mResolveStencilNoExportPrograms[flags], nullptr, descriptorSet,
+                           &shaderParams, sizeof(shaderParams), commandBuffer));
+    commandBuffer->dispatch(UnsignedCeilDivide(bufferRowLengthInUints, 8),
+                            UnsignedCeilDivide(params.resolveArea.height, 8), 1);
+    descriptorPoolBinding.reset();
+
+    // Add a barrier prior to copy.
+    VkMemoryBarrier memoryBarrier = {};
+    memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    memoryBarrier.srcAccessMask   = VK_ACCESS_SHADER_WRITE_BIT;
+    memoryBarrier.dstAccessMask   = VK_ACCESS_TRANSFER_READ_BIT;
+
+    // Use the all pipe stage to keep the state management simple.
+    commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                   VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 1, &memoryBarrier, 0, nullptr,
+                                   0, nullptr);
+
+    // Copy the resolved buffer into dest.
+    RenderTargetVk *depthStencilRenderTarget = framebuffer->getDepthStencilRenderTarget();
+    ASSERT(depthStencilRenderTarget != nullptr);
+    vk::ImageHelper *depthStencilImage = &depthStencilRenderTarget->getImage();
+
+    depthStencilImage->changeLayout(depthStencilImage->getAspectFlags(),
+                                    vk::ImageLayout::TransferDst, commandBuffer);
+
+    VkBufferImageCopy region               = {};
+    region.bufferOffset                    = 0;
+    region.bufferRowLength                 = bufferRowLengthInUints * sizeof(uint32_t);
+    region.bufferImageHeight               = params.resolveArea.height;
+    region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
+    region.imageSubresource.mipLevel       = depthStencilRenderTarget->getLevelIndex();
+    region.imageSubresource.baseArrayLayer = depthStencilRenderTarget->getLayerIndex();
+    region.imageSubresource.layerCount     = 1;
+    region.imageOffset.x                   = params.resolveArea.x;
+    region.imageOffset.y                   = params.resolveArea.y;
+    region.imageOffset.z                   = 0;
+    region.imageExtent.width               = params.resolveArea.width;
+    region.imageExtent.height              = params.resolveArea.height;
+    region.imageExtent.depth               = 1;
+
+    commandBuffer->copyBufferToImage(resolveBuffer.get().getBuffer().getHandle(),
+                                     depthStencilImage->getImage(),
+                                     depthStencilImage->getCurrentLayout(), 1, &region);
+
+    resolveBuffer.get().release(contextVk);
 
     return angle::Result::Continue;
 }

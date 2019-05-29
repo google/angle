@@ -545,15 +545,6 @@
 3189 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.* = SKIP
 
 // Multisampling:
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.2_samples.depth32f_stencil8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.2_samples.depth24_stencil8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.2_samples.stencil_index8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.4_samples.depth32f_stencil8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.4_samples.depth24_stencil8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.4_samples.stencil_index8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.8_samples.depth32f_stencil8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.8_samples.depth24_stencil8 = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fbo.msaa.8_samples.stencil_index8 = FAIL
 3204 VULKAN : dEQP-GLES3.functional.multisample.default_framebuffer.sample_coverage_invert = FAIL
 3204 VULKAN : dEQP-GLES3.functional.multisample.default_framebuffer.proportionality_sample_coverage = FAIL
 3204 VULKAN : dEQP-GLES3.functional.multisample.default_framebuffer.proportionality_sample_coverage_inverted = FAIL

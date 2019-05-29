@@ -92,4 +92,6 @@ angle_vulkan_internal_shaders = [
   "shaders/gen/ResolveDepthStencil.frag.00000003.inc",
   "shaders/gen/ResolveDepthStencil.frag.00000004.inc",
   "shaders/gen/ResolveDepthStencil.frag.00000005.inc",
+  "shaders/gen/ResolveStencilNoExport.comp.00000000.inc",
+  "shaders/gen/ResolveStencilNoExport.comp.00000001.inc",
 ]

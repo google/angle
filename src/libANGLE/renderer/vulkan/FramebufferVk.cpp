@@ -956,8 +956,26 @@ angle::Result FramebufferVk::resolve(ContextVk *contextVk,
                 &stencilView.get(), levelIndex, 1, layerIndex, 1));
         }
 
-        ANGLE_TRY(utilsVk.depthStencilResolve(contextVk, this, depthStencilImage, &depthView.get(),
-                                              &stencilView.get(), params));
+        // If shader stencil export is not possible, defer stencil resolve to another pass.
+        bool hasShaderStencilExport =
+            contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled;
+
+        vk::ImageView noStencilView;
+
+        // Resolve depth. If shader stencil export is present, resolve stencil as well.
+        if (resolveDepthBuffer || (resolveStencilBuffer && hasShaderStencilExport))
+        {
+            ANGLE_TRY(utilsVk.depthStencilResolve(
+                contextVk, this, depthStencilImage, &depthView.get(),
+                hasShaderStencilExport ? &stencilView.get() : &noStencilView, params));
+        }
+
+        // If shader stencil export is not present, resolve stencil through a different path.
+        if (resolveStencilBuffer && !hasShaderStencilExport)
+        {
+            ANGLE_TRY(utilsVk.stencilResolveNoShaderExport(contextVk, this, depthStencilImage,
+                                                           &stencilView.get(), params));
+        }
 
         vk::ImageView depthViewObject   = depthView.release();
         vk::ImageView stencilViewObject = stencilView.release();

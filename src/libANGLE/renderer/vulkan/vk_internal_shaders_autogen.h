@@ -143,6 +143,15 @@ enum Resolve
 };
 }  // namespace ResolveDepthStencil_frag
 
+namespace ResolveStencilNoExport_comp
+{
+enum flags
+{
+    kSrcIsArray = 0x00000001,
+    kFlagsMask  = 0x00000001,
+};
+}  // namespace ResolveStencilNoExport_comp
+
 }  // namespace InternalShader
 
 class ShaderLibrary final : angle::NonCopyable
@@ -174,6 +183,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getResolveDepthStencil_frag(Context *context,
                                               uint32_t shaderFlags,
                                               RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getResolveStencilNoExport_comp(Context *context,
+                                                 uint32_t shaderFlags,
+                                                 RefCounted<ShaderAndSerial> **shaderOut);
 
   private:
     RefCounted<ShaderAndSerial>
@@ -197,6 +209,8 @@ class ShaderLibrary final : angle::NonCopyable
     RefCounted<ShaderAndSerial>
         mResolveDepthStencil_frag_shaders[InternalShader::ResolveDepthStencil_frag::kFlagsMask |
                                           InternalShader::ResolveDepthStencil_frag::kResolveMask];
+    RefCounted<ShaderAndSerial> mResolveStencilNoExport_comp_shaders
+        [InternalShader::ResolveStencilNoExport_comp::kFlagsMask];
 };
 }  // namespace vk
 }  // namespace rx

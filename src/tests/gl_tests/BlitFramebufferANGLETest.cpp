@@ -1287,10 +1287,6 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
     // Incorrect rendering results seen on AMD Windows OpenGL. http://anglebug.com/2486
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && IsWindows());
 
-    // TODO(syoussefi): Multisampled stencil resolve requires workaround where
-    // VK_EXT_shader_stencil_export is not supported.  http://anglebug.com/3200
-    ANGLE_SKIP_TEST_IF(IsVulkan() && !IsAMD());
-
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_STENCIL_INDEX8, 256, 256);

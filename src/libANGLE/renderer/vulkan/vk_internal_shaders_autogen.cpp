@@ -99,6 +99,8 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000003.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000004.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ResolveDepthStencil.frag.00000005.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ResolveStencilNoExport.comp.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ResolveStencilNoExport.comp.00000001.inc"
 
 // This is SPIR-V binary blob and the size.
 struct ShaderBlob
@@ -208,6 +210,10 @@ constexpr ShaderBlob kResolveDepthStencil_frag_shaders[] = {
     {kResolveDepthStencil_frag_00000004, sizeof(kResolveDepthStencil_frag_00000004)},
     {kResolveDepthStencil_frag_00000005, sizeof(kResolveDepthStencil_frag_00000005)},
 };
+constexpr ShaderBlob kResolveStencilNoExport_comp_shaders[] = {
+    {kResolveStencilNoExport_comp_00000000, sizeof(kResolveStencilNoExport_comp_00000000)},
+    {kResolveStencilNoExport_comp_00000001, sizeof(kResolveStencilNoExport_comp_00000001)},
+};
 
 angle::Result GetShader(Context *context,
                         RefCounted<ShaderAndSerial> *shaders,
@@ -267,6 +273,10 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
+    for (RefCounted<ShaderAndSerial> &shader : mResolveStencilNoExport_comp_shaders)
+    {
+        shader.get().destroy(device);
+    }
 }
 
 angle::Result ShaderLibrary::getBufferUtils_comp(Context *context,
@@ -323,6 +333,15 @@ angle::Result ShaderLibrary::getResolveDepthStencil_frag(Context *context,
 {
     return GetShader(context, mResolveDepthStencil_frag_shaders, kResolveDepthStencil_frag_shaders,
                      ArraySize(kResolveDepthStencil_frag_shaders), shaderFlags, shaderOut);
+}
+
+angle::Result ShaderLibrary::getResolveStencilNoExport_comp(Context *context,
+                                                            uint32_t shaderFlags,
+                                                            RefCounted<ShaderAndSerial> **shaderOut)
+{
+    return GetShader(context, mResolveStencilNoExport_comp_shaders,
+                     kResolveStencilNoExport_comp_shaders,
+                     ArraySize(kResolveStencilNoExport_comp_shaders), shaderFlags, shaderOut);
 }
 
 }  // namespace vk

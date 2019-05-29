@@ -138,6 +138,11 @@ class UtilsVk : angle::NonCopyable
                                       const vk::ImageView *srcDepthView,
                                       const vk::ImageView *srcStencilView,
                                       const ResolveParameters &params);
+    angle::Result stencilResolveNoShaderExport(ContextVk *contextVk,
+                                               FramebufferVk *framebuffer,
+                                               vk::ImageHelper *src,
+                                               const vk::ImageView *srcStencilView,
+                                               const ResolveParameters &params);
 
     angle::Result copyImage(ContextVk *contextVk,
                             vk::ImageHelper *dest,
@@ -215,11 +220,23 @@ class UtilsVk : angle::NonCopyable
 
     struct ResolveDepthStencilShaderParams
     {
-        // Structure matching PushConstants in ResolvedDepthStencil.frag
+        // Structure matching PushConstants in ResolveDepthStencil.frag
         int32_t srcExtent[2]  = {};
         int32_t srcOffset[2]  = {};
         int32_t destOffset[2] = {};
         int32_t srcLayer      = 0;
+        uint32_t flipX        = 0;
+        uint32_t flipY        = 0;
+    };
+
+    struct ResolveStencilNoExportShaderParams
+    {
+        // Structure matching PushConstants in ResolveStencilNoExport.comp
+        int32_t srcExtent[2]  = {};
+        int32_t srcOffset[2]  = {};
+        int32_t srcLayer      = 0;
+        int32_t destPitch     = 0;
+        int32_t destExtent[2] = {};
         uint32_t flipX        = 0;
         uint32_t flipY        = 0;
     };
@@ -234,13 +251,14 @@ class UtilsVk : angle::NonCopyable
         ResolveDepthStencil = 3,
 
         // Functions implemented in compute
-        ComputeStartIndex   = 4,  // Special value to separate draw and dispatch functions.
-        BufferClear         = 4,
-        BufferCopy          = 5,
-        ConvertVertexBuffer = 6,
+        ComputeStartIndex      = 4,  // Special value to separate draw and dispatch functions.
+        BufferClear            = 4,
+        BufferCopy             = 5,
+        ConvertVertexBuffer    = 6,
+        ResolveStencilNoExport = 7,
 
-        InvalidEnum = 7,
-        EnumCount   = 7,
+        InvalidEnum = 8,
+        EnumCount   = 8,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -279,6 +297,7 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);
     angle::Result ensureResolveColorResourcesInitialized(ContextVk *context);
     angle::Result ensureResolveDepthStencilResourcesInitialized(ContextVk *context);
+    angle::Result ensureResolveStencilNoExportResourcesInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
                                   vk::ImageHelper *image,
@@ -311,6 +330,8 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper
         mResolveDepthStencilPrograms[vk::InternalShader::ResolveDepthStencil_frag::kFlagsMask |
                                      vk::InternalShader::ResolveDepthStencil_frag::kResolveMask];
+    vk::ShaderProgramHelper mResolveStencilNoExportPrograms
+        [vk::InternalShader::ResolveStencilNoExport_comp::kFlagsMask];
 };
 
 }  // namespace rx

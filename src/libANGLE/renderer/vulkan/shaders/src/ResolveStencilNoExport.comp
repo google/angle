@@ -1,0 +1,101 @@
+//
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+// ResolveStencilNoExport.comp: Resolve multisampled stencil images into a buffer.  This is used
+// where VK_EXT_shader_stencil_export is not available, to output the resolved stencil into a
+// temporary buffer, which is then copied into the stencil aspect of the final image.
+
+#version 450 core
+
+#extension GL_EXT_samplerless_texture_functions : require
+
+#define MAKE_SRC_RESOURCE(prefix, type) prefix ## type
+
+#define STENCIL_SRC_RESOURCE(type) MAKE_SRC_RESOURCE(u, type)
+
+#if SrcIsArray
+#define SRC_RESOURCE_NAME texture2DMSArray
+#else
+#define SRC_RESOURCE_NAME texture2DMS
+#endif
+
+layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+
+layout (set = 0, binding = 0) buffer dest
+{
+    // Note: every invocation handles 4 stencil value and output one value here.
+    uint destData[];
+};
+
+layout(push_constant) uniform PushConstants {
+    // Robust access.
+    ivec2 srcExtent;
+    // Translation from source to destination coordinates.
+    ivec2 srcOffset;
+    int srcLayer;
+    // Output.
+    int destPitch;
+    ivec2 destExtent;
+    // Flip control.
+    bool flipX;
+    bool flipY;
+} params;
+
+layout(set = 0, binding = 1) uniform STENCIL_SRC_RESOURCE(SRC_RESOURCE_NAME) stencil;
+
+void main()
+{
+    ivec2 destSubImageCoords = ivec2(gl_GlobalInvocationID.x * 4, gl_GlobalInvocationID.y);
+
+    if (any(lessThanEqual(params.destExtent, destSubImageCoords)))
+    {
+        return;
+    }
+
+    ivec2 srcSubImageCoords = destSubImageCoords;
+
+    // If flipping, srcOffset would contain the opposite coordinates, so we can
+    // simply reverse the direction in which x/y grows.
+    if (params.flipX)
+        srcSubImageCoords.x = -srcSubImageCoords.x;
+    if (params.flipY)
+        srcSubImageCoords.y = -srcSubImageCoords.y;
+
+    ivec2 srcImageCoords = params.srcOffset + srcSubImageCoords;
+
+    int xDir = params.flipX ? -1 : 1;
+
+    uint outStencils = 0;
+
+    // Bounds check on Y:
+    if (srcImageCoords.y >= 0 && srcImageCoords.y < params.srcExtent.y)
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            // Bounds check on X:
+            uint stencilValue = 0;
+            if (srcImageCoords.x >= 0 && srcImageCoords.x < params.srcExtent.x)
+            {
+                // Note: always resolve using sample 0.  GLES3 gives us freedom in choosing how to resolve
+                // depth/stencil images.
+#if SrcIsArray
+                stencilValue = texelFetch(stencil, ivec3(srcImageCoords, params.srcLayer), 0).x;
+#else
+                stencilValue = texelFetch(stencil, srcImageCoords, 0).x;
+#endif
+
+#if IsBigEndian
+                outStencils |= (stencilValue & 0xFF) << ((3 - i) * 8);
+#else
+                outStencils |= (stencilValue & 0xFF) << (i * 8);
+#endif
+            }
+
+            srcImageCoords.x += xDir;
+        }
+    }
+
+    destData[gl_GlobalInvocationID.y * params.destPitch + gl_GlobalInvocationID.x] = outStencils;
+}
