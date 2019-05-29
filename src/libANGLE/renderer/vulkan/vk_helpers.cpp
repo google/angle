@@ -1186,10 +1186,10 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *context,
         commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                        VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 1, &memoryBarrier, 0,
                                        nullptr, 0, nullptr);
-
-        mCurrentWriteAccess = VK_ACCESS_TRANSFER_WRITE_BIT;
-        mCurrentReadAccess  = 0;
     }
+
+    mCurrentWriteAccess = VK_ACCESS_TRANSFER_WRITE_BIT;
+    mCurrentReadAccess  = 0;
 
     commandBuffer->copyBuffer(buffer, mBuffer, 1, &copyRegion);
 
