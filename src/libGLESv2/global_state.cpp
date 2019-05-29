@@ -35,6 +35,11 @@ namespace
 {
 static TLSIndex threadTLS = TLS_INVALID_INDEX;
 Debug *g_Debug            = nullptr;
+std::atomic<std::mutex *> g_Mutex;
+static_assert(std::is_trivially_constructible<decltype(g_Mutex)>::value,
+              "global mutex is not trivially constructible");
+static_assert(std::is_trivially_destructible<decltype(g_Mutex)>::value,
+              "global mutex is not trivially destructible");
 
 Thread *AllocateCurrentThread()
 {
@@ -56,14 +61,33 @@ Thread *AllocateCurrentThread()
 
 void AllocateDebug()
 {
-    // TODO(geofflang): Lock around global allocation. http://anglebug.com/2464
+    // All EGL calls use a global lock, this is thread safe
     if (g_Debug == nullptr)
     {
         g_Debug = new Debug();
     }
 }
 
+void AllocateMutex()
+{
+    if (g_Mutex == nullptr)
+    {
+        std::unique_ptr<std::mutex> newMutex(new std::mutex());
+        std::mutex *expected = nullptr;
+        if (g_Mutex.compare_exchange_strong(expected, newMutex.get()))
+        {
+            newMutex.release();
+        }
+    }
+}
+
 }  // anonymous namespace
+
+std::mutex &GetGlobalMutex()
+{
+    AllocateMutex();
+    return *g_Mutex;
+}
 
 Thread *GetCurrentThread()
 {
@@ -109,21 +133,6 @@ void SetContextCurrent(Thread *thread, gl::Context *context)
 }
 }  // namespace egl
 
-#if ANGLE_FORCE_THREAD_SAFETY == ANGLE_ENABLED
-namespace angle
-{
-namespace
-{
-std::mutex g_Mutex;
-}  // anonymous namespace
-
-std::mutex &GetGlobalMutex()
-{
-    return g_Mutex;
-}
-}  // namespace angle
-#endif
-
 #ifdef ANGLE_PLATFORM_WINDOWS
 namespace egl
 {
@@ -143,10 +152,18 @@ void DealocateDebug()
     SafeDelete(g_Debug);
 }
 
+void DealocateMutex()
+{
+    std::mutex *mutex = g_Mutex.exchange(nullptr);
+    SafeDelete(mutex);
+}
+
 bool InitializeProcess()
 {
     ASSERT(g_Debug == nullptr);
     AllocateDebug();
+
+    AllocateMutex();
 
     threadTLS = CreateTLSIndex();
     if (threadTLS == TLS_INVALID_INDEX)
@@ -160,6 +177,8 @@ bool InitializeProcess()
 bool TerminateProcess()
 {
     DealocateDebug();
+
+    DealocateMutex();
 
     if (!DeallocateCurrentThread())
     {
