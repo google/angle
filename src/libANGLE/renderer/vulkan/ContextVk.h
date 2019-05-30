@@ -469,7 +469,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     gl::AttributesMask mDirtyDefaultAttribsMask;
     gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
 
+    // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::CommandPool mCommandPool;
+    std::vector<vk::CommandPool> mCommandPoolFreeList;
+
     Serial mLastCompletedQueueSerial;
     Serial mLastSubmittedQueueSerial;
     Serial mCurrentQueueSerial;

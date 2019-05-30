@@ -220,10 +220,11 @@ void ContextVk::onDestroy(const gl::Context *context)
     mSubmitFence.reset(device);
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
+    mCommandPool.destroy(device);
 
-    if (mCommandPool.valid())
+    for (vk::CommandPool &pool : mCommandPoolFreeList)
     {
-        mCommandPool.destroy(device);
+        pool.destroy(device);
     }
 }
 
@@ -240,13 +241,13 @@ angle::Result ContextVk::initialize()
 {
     TRACE_EVENT0("gpu.angle", "ContextVk::initialize");
     // Note that this may reserve more sets than strictly necessary for a particular layout.
-    VkDescriptorPoolSize uniformSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+    VkDescriptorPoolSize uniformSetSize      = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
                                            GetUniformBufferDescriptorCount()};
     VkDescriptorPoolSize uniformBlockSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                                 mRenderer->getMaxUniformBlocks()};
-    VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+    VkDescriptorPoolSize textureSetSize      = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                            mRenderer->getMaxActiveTextures()};
-    VkDescriptorPoolSize driverSetSize  = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1};
+    VkDescriptorPoolSize driverSetSize       = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1};
     ANGLE_TRY(mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(this, &uniformSetSize, 1));
     ANGLE_TRY(mDynamicDescriptorPools[kUniformBlockDescriptorSetIndex].init(
         this, &uniformBlockSetSize, 1));
@@ -681,7 +682,16 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     poolInfo.queueFamilyIndex        = getRenderer()->getQueueFamilyIndex();
 
-    ANGLE_VK_TRY(this, mCommandPool.init(device, poolInfo));
+    if (mCommandPoolFreeList.empty())
+    {
+        ANGLE_VK_TRY(this, mCommandPool.init(device, poolInfo));
+    }
+    else
+    {
+        mCommandPool = std::move(mCommandPoolFreeList.back());
+        mCommandPoolFreeList.pop_back();
+    }
+
     return angle::Result::Continue;
 }
 
@@ -698,7 +708,10 @@ void ContextVk::freeAllInFlightResources()
             // If wait times out, it is probably not possible to recover from lost device
             ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
         }
-        batch.commandPool.destroy(device);
+
+        batch.commandPool.reset(device, 0);
+        mCommandPoolFreeList.emplace_back(std::move(batch.commandPool));
+
         batch.fence.reset(device);
     }
     mInFlightCommands.clear();
@@ -860,8 +873,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // Submit the command buffer
         VkSubmitInfo submitInfo       = {};
         VkPipelineStageFlags waitMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-        InitializeSubmitInfo(&submitInfo, commandBatch.get(), {}, &waitMask,
-                             {});
+        InitializeSubmitInfo(&submitInfo, commandBatch.get(), {}, &waitMask, {});
 
         ANGLE_TRY(submitFrame(submitInfo, std::move(commandBuffer)));
 
