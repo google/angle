@@ -1490,6 +1490,7 @@ EXPORTS
     EGL_StreamPostD3DTextureANGLE
 
     ; EGL_ANGLE_workaround_control
+    EGL_QueryDisplayAttribANGLE
     EGL_QueryStringiANGLE
 
     ; EGL_CHROMIUM_get_sync_values

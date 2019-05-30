@@ -355,37 +355,35 @@ EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribut
     EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR
           ", EGLint attribute = %d, EGLAttrib *value = 0x%016" PRIxPTR ")",
           (uintptr_t)dpy, attribute, (uintptr_t)value);
-    Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
+    Thread *thread        = egl::GetCurrentThread();
 
-    Error error = ValidateDisplay(display);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglQueryDisplayAttribEXT", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateQueryDisplayAttribEXT(display, attribute),
+                         "eglQueryDisplayAttribEXT", GetDisplayIfValid(display), EGL_FALSE);
 
-    if (!display->getExtensions().deviceQuery)
-    {
-        thread->setError(EglBadAccess(), GetDebug(), "eglQueryDisplayAttribEXT",
-                         GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    *value = display->queryAttrib(attribute);
+    thread->setSuccess();
+    return EGL_TRUE;
+}
 
-    // validate the attribute parameter
-    switch (attribute)
-    {
-        case EGL_DEVICE_EXT:
-            *value = reinterpret_cast<EGLAttrib>(display->getDevice());
-            break;
+// EGL_ANGLE_workaround_control
+EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribANGLE(EGLDisplay dpy,
+                                                   EGLint attribute,
+                                                   EGLAttrib *value)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR
+          ", EGLint attribute = %d, EGLAttrib *value = 0x%016" PRIxPTR ")",
+          (uintptr_t)dpy, attribute, (uintptr_t)value);
 
-        default:
-            thread->setError(EglBadAttribute(), GetDebug(), "eglQueryDisplayAttribEXT",
-                             GetDisplayIfValid(display));
-            return EGL_FALSE;
-    }
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    Thread *thread        = egl::GetCurrentThread();
 
+    ANGLE_EGL_TRY_RETURN(thread, ValidateQueryDisplayAttribANGLE(display, attribute),
+                         "eglQueryDisplayAttribANGLE", GetDisplayIfValid(display), EGL_FALSE);
+
+    *value = display->queryAttrib(attribute);
     thread->setSuccess();
     return EGL_TRUE;
 }

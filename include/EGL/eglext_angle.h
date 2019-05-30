@@ -216,9 +216,12 @@ EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
 #define EGL_WORKAROUND_DESCRIPTION_ANGLE 0x3462
 #define EGL_WORKAROUND_BUG_ANGLE 0x3463
 #define EGL_WORKAROUND_ENABLED_ANGLE 0x3464
+#define EGL_WORKAROUND_COUNT_ANGLE 0x3465
 typedef const char *(EGLAPIENTRYP PFNEGLQUERYSTRINGIANGLEPROC) (EGLDisplay dpy, EGLint name, EGLint index);
+typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYDISPLAYATTRIBANGLEPROC) (EGLDisplay dpy, EGLint attribute, EGLAttrib *value);
 #ifdef EGL_EGLEXT_PROTOTYPES
 EGLAPI const char *EGLAPIENTRY eglQueryStringiANGLE(EGLDisplay dpy, EGLint name, EGLint index);
+EGLAPI EGLBoolean EGLAPIENTRY eglQueryDisplayAttribANGLE(EGLDisplay dpy, EGLint attribute, EGLAttrib *value);
 #endif
 #endif /* EGL_ANGLE_workaround_control */
 

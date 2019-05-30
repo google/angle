@@ -35,11 +35,15 @@ Dependencies
     This extension is written against the wording of the EGL 1.4
     Specification.
 
+    EGL_EXT_device_query affects the definition of this extension.
+
 Overview
 
-    This extension defines a method to query a string describing
-    properties of the EGL client or of an EGL display connection
-    which are looked up via the property name and index.
+    This extension adds two methods to query arrays holding
+    information about the available workarounds for a given device.
+    One method is used to query the total count of available
+    workarounds. Another method is used to query a string property
+    of an individual workaround given the workaround index.
 
 IP Status
 
@@ -56,6 +60,11 @@ New Procedures and Functions
         EGLint name,
         EGLint index);
 
+    EGLBoolean eglQueryDisplayAttribANGLE(
+        EGLDisplay dpy,
+        EGLint attribute,
+        EGLAttrib *value);
+
 New Tokens
 
     Accepted as a queried <name> in eglQueryStringiANGLE:
@@ -66,9 +75,11 @@ New Tokens
         EGL_WORKAROUND_BUG_ANGLE           0x3463
         EGL_WORKAROUND_ENABLED_ANGLE       0x3464
 
-Additions to the EGL 1.5 Specification
+    Accepted as a queried <attribute> in eglQueryDisplayAttribANGLE
 
-    Add the following to the end of section 3.3 "EGL Queries":
+        EGL_WORKAROUND_COUNT_ANGLE         0x3465
+
+Add the following to the end of section 3.3 "EGL Queries":
 
         const char *eglQueryStringiANGLE(EGLDisplay dpy,
             EGLint name, EGLint index);
@@ -106,6 +117,24 @@ Additions to the EGL 1.5 Specification
     values described above.
     An EGL_BAD_PARAMETER error is generated if index is not within
     the valid range of indices for the array.
+
+Add a section "3.4 Display Attributes" after "3.3 EGL Versioning"
+
+    To query attributes of an initialized display, use:
+
+        EGLBoolean eglQueryDisplayAttribANGLE(EGLDisplay dpy,
+                                            EGLint attribute,
+                                            EGLAttrib *value);
+
+    On success, EGL_TRUE is returned.
+    If <attribute> is EGL_WORKAROUND_COUNT_ANGLE, the total count of
+    available workarounds is returned in <value>.
+
+    On failure, EGL_FALSE is returned.
+    An EGL_BAD_DISPLAY error is generated if dpy is not a valid
+    display.
+    An EGL_BAD_ATTRIBUTE error is generated if <attribute> is not a
+    valid value.
 
 Issues
 

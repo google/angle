@@ -75,6 +75,12 @@
             <param><ptype>EGLint</ptype> <name>name</name></param>
             <param><ptype>EGLint</ptype> <name>index</name></param>
         </command>
+        <command>
+            <proto><ptype>EGLBoolean</ptype> <name>eglDisplayAttribANGLE</name></proto>
+            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+            <param><ptype>EGLint</ptype> <name>attribute</name></param>
+            <param><ptype>EGLAttrib *</ptype> <name>value</name></param>
+        </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -106,6 +112,7 @@
         <extension name="EGL_ANGLE_workaround_control" supported="egl">
             <require>
                 <command name="eglQueryStringiANGLE"/>
+                <command name="eglQueryDisplayAttribANGLE"/>
             </require>
         </extension>
     </extensions>

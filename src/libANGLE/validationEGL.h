@@ -317,6 +317,9 @@ Error ValidateGetFrameTimestampsANDROID(const Display *display,
 
 Error ValidateQueryStringiANGLE(const Display *display, EGLint name, EGLint index);
 
+Error ValidateQueryDisplayAttribEXT(const Display *display, const EGLint attribute);
+Error ValidateQueryDisplayAttribANGLE(const Display *display, const EGLint attribute);
+
 }  // namespace egl
 
 #define ANGLE_EGL_TRY(THREAD, EXPR, FUNCNAME, LABELOBJECT)                               \

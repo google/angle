@@ -1477,4 +1477,23 @@ const char *Display::queryStringi(const EGLint name, const EGLint index)
     return result;
 }
 
+EGLAttrib Display::queryAttrib(const EGLint attribute)
+{
+    EGLAttrib value = 0;
+    switch (attribute)
+    {
+        case EGL_DEVICE_EXT:
+            value = reinterpret_cast<EGLAttrib>(mDevice);
+            break;
+
+        case EGL_WORKAROUND_COUNT_ANGLE:
+            value = mFeatures.size();
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+    return value;
+}
+
 }  // namespace egl

@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Tests the eglQueryStringiANGLE function exposed by the extension
-// EGL_ANGLE_workaround_control.
+// Tests the eglQueryStringiANGLE and eglQueryDisplayAttribANGLE functions exposed by the
+// extension EGL_ANGLE_workaround_control.
 
 #include <gtest/gtest.h>
 
@@ -13,7 +13,7 @@
 
 using namespace angle;
 
-class EGLQueryStringIndexedTest : public ANGLETest
+class EGLWorkaroundControlTest : public ANGLETest
 {
   public:
     void testSetUp() override
@@ -26,14 +26,14 @@ class EGLQueryStringIndexedTest : public ANGLETest
 };
 
 // Ensure eglQueryStringiANGLE generates EGL_BAD_DISPLAY if the display passed in is invalid.
-TEST_P(EGLQueryStringIndexedTest, InvalidDisplay)
+TEST_P(EGLWorkaroundControlTest, InvalidDisplay)
 {
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(EGL_NO_DISPLAY, EGL_WORKAROUND_NAME_ANGLE, 0));
     EXPECT_EGL_ERROR(EGL_BAD_DISPLAY);
 }
 
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the index is negative.
-TEST_P(EGLQueryStringIndexedTest, NegativeIndex)
+TEST_P(EGLWorkaroundControlTest, NegativeIndex)
 {
     EXPECT_EQ(nullptr,
               eglQueryStringiANGLE(getEGLWindow()->getDisplay(), EGL_WORKAROUND_NAME_ANGLE, -1));
@@ -41,7 +41,7 @@ TEST_P(EGLQueryStringIndexedTest, NegativeIndex)
 }
 
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the index is out of bounds.
-TEST_P(EGLQueryStringIndexedTest, IndexOutOfBounds)
+TEST_P(EGLWorkaroundControlTest, IndexOutOfBounds)
 {
     EGLDisplay dpy        = getEGLWindow()->getDisplay();
     egl::Display *display = static_cast<egl::Display *>(dpy);
@@ -52,7 +52,7 @@ TEST_P(EGLQueryStringIndexedTest, IndexOutOfBounds)
 
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the name is not one of the valid
 // options specified in the workaround.
-TEST_P(EGLQueryStringIndexedTest, InvalidName)
+TEST_P(EGLWorkaroundControlTest, InvalidName)
 {
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(getEGLWindow()->getDisplay(), 100, 0));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
@@ -61,7 +61,7 @@ TEST_P(EGLQueryStringIndexedTest, InvalidName)
 // For each valid name and index in the workaround description arrays, query the values and ensure
 // that no error is generated, and that the values match the correct values frim ANGLE's display's
 // FeatureList.
-TEST_P(EGLQueryStringIndexedTest, QueryAll)
+TEST_P(EGLWorkaroundControlTest, QueryAll)
 {
     EGLDisplay dpy              = getEGLWindow()->getDisplay();
     egl::Display *display       = static_cast<egl::Display *>(dpy);
@@ -86,7 +86,20 @@ TEST_P(EGLQueryStringIndexedTest, QueryAll)
     }
 }
 
-ANGLE_INSTANTIATE_TEST(EGLQueryStringIndexedTest,
+// Ensure eglQueryDisplayAttribANGLE returns the correct number of workarounds when queried with
+// attribute EGL_WORKAROUND_COUNT_ANGLE
+TEST_P(EGLWorkaroundControlTest, WorkaroundCount)
+{
+    EGLDisplay dpy        = getEGLWindow()->getDisplay();
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    EGLAttrib value       = -1;
+    EXPECT_EQ(static_cast<EGLBoolean>(EGL_TRUE),
+              eglQueryDisplayAttribANGLE(dpy, EGL_WORKAROUND_COUNT_ANGLE, &value));
+    EXPECT_EQ(display->getFeatures().size(), static_cast<size_t>(value));
+    ASSERT_EGL_SUCCESS();
+}
+
+ANGLE_INSTANTIATE_TEST(EGLWorkaroundControlTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_OPENGL(),

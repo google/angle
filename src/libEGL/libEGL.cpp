@@ -415,6 +415,14 @@ EGLBoolean EGLAPIENTRY eglQueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute
     return EGL_QueryDisplayAttribEXT(dpy, attribute, value);
 }
 
+EGLBoolean EGLAPIENTRY eglQueryDisplayAttribANGLE(EGLDisplay dpy,
+                                                  EGLint attribute,
+                                                  EGLAttrib *value)
+{
+    EnsureEGLLoaded();
+    return EGL_QueryDisplayAttribANGLE(dpy, attribute, value);
+}
+
 EGLBoolean EGLAPIENTRY eglQueryDeviceAttribEXT(EGLDeviceEXT device,
                                                EGLint attribute,
                                                EGLAttrib *value)

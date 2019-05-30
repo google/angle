@@ -195,6 +195,8 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     const char *queryStringi(const EGLint name, const EGLint index);
 
+    EGLAttrib queryAttrib(const EGLint attribute);
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 

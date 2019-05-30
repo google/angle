@@ -89,6 +89,7 @@ ProcEntry g_procTable[] = {
     {"eglQueryDebugKHR", P(EGL_QueryDebugKHR)},
     {"eglQueryDeviceAttribEXT", P(EGL_QueryDeviceAttribEXT)},
     {"eglQueryDeviceStringEXT", P(EGL_QueryDeviceStringEXT)},
+    {"eglQueryDisplayAttribANGLE", P(EGL_QueryDisplayAttribANGLE)},
     {"eglQueryDisplayAttribEXT", P(EGL_QueryDisplayAttribEXT)},
     {"eglQueryStreamKHR", P(EGL_QueryStreamKHR)},
     {"eglQueryStreamu64KHR", P(EGL_QueryStreamu64KHR)},
@@ -1419,5 +1420,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1333;
+size_t g_numProcs = 1334;
 }  // namespace egl
