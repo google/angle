@@ -8,11 +8,11 @@
 //    buffer clear and copy, image clear and copy, texture mip map generation, etc.
 //
 //    - Buffer clear: Implemented, but no current users
-//    - Buffer copy:
-//      * Used by VertexArrayVk::updateIndexTranslation() to convert a ubyte index array to ushort
-//    - Convert vertex attribute:
-//      * Used by VertexArrayVk::convertVertexBuffer() to convert vertex attributes from unsupported
-//        formats to their fallbacks.
+//    - Convert index buffer:
+//      * Used by VertexArrayVk::convertIndexBufferGPU() to convert a ubyte element array to ushort
+//    - Convert vertex buffer:
+//      * Used by VertexArrayVk::convertVertexBufferGPU() to convert vertex attributes from
+//        unsupported formats to their fallbacks.
 //    - Image clear: Used by FramebufferVk::clearWithDraw().
 //    - Image copy: Used by TextureVk::copySubImageImplWithDraw().
 //    - Color resolve: Used by FramebufferVk::resolve() to implement multisample resolve on color
@@ -46,7 +46,7 @@ class UtilsVk : angle::NonCopyable
         size_t size;
     };
 
-    struct CopyParameters
+    struct ConvertIndexParameters
     {
         size_t destOffset;
         size_t srcOffset;
@@ -115,10 +115,10 @@ class UtilsVk : angle::NonCopyable
     angle::Result clearBuffer(ContextVk *context,
                               vk::BufferHelper *dest,
                               const ClearParameters &params);
-    angle::Result copyBuffer(ContextVk *context,
-                             vk::BufferHelper *dest,
-                             vk::BufferHelper *src,
-                             const CopyParameters &params);
+    angle::Result convertIndexBuffer(ContextVk *context,
+                                     vk::BufferHelper *dest,
+                                     vk::BufferHelper *src,
+                                     const ConvertIndexParameters &params);
     angle::Result convertVertexBuffer(ContextVk *context,
                                       vk::BufferHelper *dest,
                                       vk::BufferHelper *src,
@@ -241,7 +241,7 @@ class UtilsVk : angle::NonCopyable
         // Functions implemented in compute
         ComputeStartIndex      = 3,  // Special value to separate draw and dispatch functions.
         BufferClear            = 3,
-        BufferCopy             = 4,
+        ConvertIndexBuffer     = 4,
         ConvertVertexBuffer    = 5,
         ResolveStencilNoExport = 6,
 
@@ -279,7 +279,7 @@ class UtilsVk : angle::NonCopyable
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.
     angle::Result ensureBufferClearResourcesInitialized(ContextVk *context);
-    angle::Result ensureBufferCopyResourcesInitialized(ContextVk *context);
+    angle::Result ensureConvertIndexResourcesInitialized(ContextVk *context);
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *context);
     angle::Result ensureImageClearResourcesInitialized(ContextVk *context);
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);

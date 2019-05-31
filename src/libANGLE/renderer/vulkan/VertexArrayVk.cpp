@@ -167,11 +167,46 @@ void VertexArrayVk::destroy(const gl::Context *context)
     mLineLoopHelper.release(contextVk);
 }
 
-angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
-                                             gl::DrawElementsType indexType,
-                                             size_t indexCount,
-                                             const void *sourcePointer,
-                                             vk::DynamicBuffer *dynamicBuffer)
+angle::Result VertexArrayVk::convertIndexBufferGPU(ContextVk *contextVk,
+                                                   BufferVk *bufferVk,
+                                                   const void *indices)
+{
+    RendererVk *renderer = contextVk->getRenderer();
+
+    intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(indices);
+    size_t srcDataSize         = static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData;
+
+    mTranslatedByteIndexData.releaseRetainedBuffers(contextVk);
+
+    ANGLE_TRY(mTranslatedByteIndexData.allocate(contextVk, sizeof(GLushort) * srcDataSize, nullptr,
+                                                nullptr, &mCurrentElementArrayBufferOffset,
+                                                nullptr));
+    mCurrentElementArrayBuffer = mTranslatedByteIndexData.getCurrentBuffer();
+
+    vk::BufferHelper *dest = mTranslatedByteIndexData.getCurrentBuffer();
+    vk::BufferHelper *src  = &bufferVk->getBuffer();
+
+    ANGLE_TRY(src->initBufferView(contextVk, renderer->getFormat(angle::FormatID::R8_UINT)));
+    ANGLE_TRY(dest->initBufferView(contextVk, renderer->getFormat(angle::FormatID::R16_UINT)));
+
+    // Copy relevant section of the source into destination at allocated offset.  Note that the
+    // offset returned by allocate() above is in bytes, while our allocated array is of
+    // GLushorts.
+    UtilsVk::ConvertIndexParameters params = {};
+    params.destOffset = static_cast<size_t>(mCurrentElementArrayBufferOffset) / sizeof(GLushort);
+    params.srcOffset  = offsetIntoSrcData;
+    params.size       = srcDataSize;
+
+    // Note: Once support for primitive restart is added, a specialized shader is needed to
+    // convert 0xFF -> 0xFFFF. http://anglebug.com/3215
+    return contextVk->getUtils().convertIndexBuffer(contextVk, dest, src, params);
+}
+
+angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
+                                                   gl::DrawElementsType indexType,
+                                                   size_t indexCount,
+                                                   const void *sourcePointer,
+                                                   vk::DynamicBuffer *dynamicBuffer)
 {
     ASSERT(!mState.getElementArrayBuffer() || indexType == gl::DrawElementsType::UnsignedByte);
 
@@ -206,7 +241,7 @@ angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
 // and/or align it as we copy it to a DynamicBuffer. The assumption could be wrong
 // but the alternative of copying it piecemeal on each draw would have a lot more
 // overhead.
-angle::Result VertexArrayVk::convertVertexBufferGpu(ContextVk *contextVk,
+angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
                                                     BufferVk *srcBuffer,
                                                     const gl::VertexBinding &binding,
                                                     size_t attribIndex,
@@ -254,7 +289,7 @@ angle::Result VertexArrayVk::convertVertexBufferGpu(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result VertexArrayVk::convertVertexBufferCpu(ContextVk *contextVk,
+angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
                                                     BufferVk *srcBuffer,
                                                     const gl::VertexBinding &binding,
                                                     size_t attribIndex,
@@ -443,13 +478,13 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
 
                 if (bindingIsAligned)
                 {
-                    ANGLE_TRY(convertVertexBufferGpu(contextVk, bufferVk, binding, attribIndex,
+                    ANGLE_TRY(convertVertexBufferGPU(contextVk, bufferVk, binding, attribIndex,
                                                      vertexFormat));
                     anyVertexBufferConvertedOnGpu = true;
                 }
                 else
                 {
-                    ANGLE_TRY(convertVertexBufferCpu(contextVk, bufferVk, binding, attribIndex,
+                    ANGLE_TRY(convertVertexBufferCPU(contextVk, bufferVk, binding, attribIndex,
                                                      vertexFormat));
                 }
             }
@@ -648,43 +683,15 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
 
     if (!glBuffer)
     {
-        ANGLE_TRY(streamIndexData(contextVk, type, indexCount, indices, &mDynamicIndexData));
+        return convertIndexBufferCPU(contextVk, type, indexCount, indices, &mDynamicIndexData);
     }
-    else if (renderer->getFormat(angle::FormatID::R16_UINT).vkSupportsStorageBuffer)
+
+    BufferVk *bufferVk = vk::GetImpl(glBuffer);
+
+    if (renderer->getFormat(angle::FormatID::R16_UINT).vkSupportsStorageBuffer)
     {
-        BufferVk *bufferVk = vk::GetImpl(glBuffer);
-
         ASSERT(type == gl::DrawElementsType::UnsignedByte);
-
-        intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(indices);
-        size_t srcDataSize         = static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData;
-
-        mTranslatedByteIndexData.releaseRetainedBuffers(contextVk);
-
-        ANGLE_TRY(mTranslatedByteIndexData.allocate(contextVk, sizeof(GLushort) * srcDataSize,
-                                                    nullptr, nullptr,
-                                                    &mCurrentElementArrayBufferOffset, nullptr));
-        mCurrentElementArrayBuffer = mTranslatedByteIndexData.getCurrentBuffer();
-
-        vk::BufferHelper *dest = mTranslatedByteIndexData.getCurrentBuffer();
-        vk::BufferHelper *src  = &bufferVk->getBuffer();
-
-        ANGLE_TRY(src->initBufferView(contextVk, renderer->getFormat(angle::FormatID::R8_UINT)));
-        ANGLE_TRY(dest->initBufferView(contextVk, renderer->getFormat(angle::FormatID::R16_UINT)));
-
-        // Copy relevant section of the source into destination at allocated offset.  Note that the
-        // offset returned by allocate() above is in bytes, while our allocated array is of
-        // GLushorts.
-        UtilsVk::CopyParameters params = {};
-        params.destOffset =
-            static_cast<size_t>(mCurrentElementArrayBufferOffset) / sizeof(GLushort);
-        params.srcOffset = offsetIntoSrcData;
-        params.size      = srcDataSize;
-
-        // Note: this is a copy, which implicitly converts between formats.  Once support for
-        // primitive restart is added, a specialized shader is likely needed to special case 0xFF ->
-        // 0xFFFF.
-        ANGLE_TRY(contextVk->getUtils().copyBuffer(contextVk, dest, src, params));
+        ANGLE_TRY(convertIndexBufferGPU(contextVk, bufferVk, indices));
     }
     else
     {
@@ -702,7 +709,6 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
         ASSERT(type == gl::DrawElementsType::UnsignedByte);
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
         // memory to a GLushort.
-        BufferVk *bufferVk   = vk::GetImpl(glBuffer);
         void *srcDataMapping = nullptr;
         ASSERT(!glBuffer->isMapped());
         ANGLE_TRY(bufferVk->mapImpl(contextVk, &srcDataMapping));
@@ -710,9 +716,9 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
         intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(indices);
         srcData += offsetIntoSrcData;
 
-        ANGLE_TRY(streamIndexData(contextVk, type,
-                                  static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData,
-                                  srcData, &mTranslatedByteIndexData));
+        ANGLE_TRY(convertIndexBufferCPU(
+            contextVk, type, static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData, srcData,
+            &mTranslatedByteIndexData));
 
         ANGLE_TRY(bufferVk->unmapImpl(contextVk));
     }

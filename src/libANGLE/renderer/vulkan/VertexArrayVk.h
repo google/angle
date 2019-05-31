@@ -84,17 +84,21 @@ class VertexArrayVk : public VertexArrayImpl
   private:
     void setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex);
 
-    angle::Result streamIndexData(ContextVk *contextVk,
-                                  gl::DrawElementsType indexType,
-                                  size_t indexCount,
-                                  const void *sourcePointer,
-                                  vk::DynamicBuffer *dynamicBuffer);
-    angle::Result convertVertexBufferGpu(ContextVk *contextVk,
+    angle::Result convertIndexBufferGPU(ContextVk *contextVk,
+                                        BufferVk *bufferVk,
+                                        const void *indices);
+
+    angle::Result convertIndexBufferCPU(ContextVk *contextVk,
+                                        gl::DrawElementsType indexType,
+                                        size_t indexCount,
+                                        const void *sourcePointer,
+                                        vk::DynamicBuffer *dynamicBuffer);
+    angle::Result convertVertexBufferGPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
                                          const vk::Format &vertexFormat);
-    angle::Result convertVertexBufferCpu(ContextVk *contextVk,
+    angle::Result convertVertexBufferCPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,

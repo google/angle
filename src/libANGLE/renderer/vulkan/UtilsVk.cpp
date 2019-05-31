@@ -330,9 +330,9 @@ angle::Result UtilsVk::ensureBufferClearResourcesInitialized(ContextVk *context)
                                       sizeof(BufferUtilsShaderParams));
 }
 
-angle::Result UtilsVk::ensureBufferCopyResourcesInitialized(ContextVk *context)
+angle::Result UtilsVk::ensureConvertIndexResourcesInitialized(ContextVk *context)
 {
-    if (mPipelineLayouts[Function::BufferCopy].valid())
+    if (mPipelineLayouts[Function::ConvertIndexBuffer].valid())
     {
         return angle::Result::Continue;
     }
@@ -342,8 +342,8 @@ angle::Result UtilsVk::ensureBufferCopyResourcesInitialized(ContextVk *context)
         {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1},
     };
 
-    return ensureResourcesInitialized(context, Function::BufferCopy, setSizes, ArraySize(setSizes),
-                                      sizeof(BufferUtilsShaderParams));
+    return ensureResourcesInitialized(context, Function::ConvertIndexBuffer, setSizes,
+                                      ArraySize(setSizes), sizeof(BufferUtilsShaderParams));
 }
 
 angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(ContextVk *context)
@@ -542,12 +542,12 @@ angle::Result UtilsVk::clearBuffer(ContextVk *context,
     return angle::Result::Continue;
 }
 
-angle::Result UtilsVk::copyBuffer(ContextVk *context,
-                                  vk::BufferHelper *dest,
-                                  vk::BufferHelper *src,
-                                  const CopyParameters &params)
+angle::Result UtilsVk::convertIndexBuffer(ContextVk *context,
+                                          vk::BufferHelper *dest,
+                                          vk::BufferHelper *src,
+                                          const ConvertIndexParameters &params)
 {
-    ANGLE_TRY(ensureBufferCopyResourcesInitialized(context));
+    ANGLE_TRY(ensureConvertIndexResourcesInitialized(context));
 
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(dest->recordCommands(context, &commandBuffer));
@@ -572,8 +572,8 @@ angle::Result UtilsVk::copyBuffer(ContextVk *context,
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-    ANGLE_TRY(mDescriptorPools[Function::BufferCopy].allocateSets(
-        context, mDescriptorSetLayouts[Function::BufferCopy][kSetIndex].get().ptr(), 1,
+    ANGLE_TRY(mDescriptorPools[Function::ConvertIndexBuffer].allocateSets(
+        context, mDescriptorSetLayouts[Function::ConvertIndexBuffer][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
     descriptorPoolBinding.get().updateSerial(context->getCurrentQueueSerial());
 
@@ -598,7 +598,7 @@ angle::Result UtilsVk::copyBuffer(ContextVk *context,
     vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
     ANGLE_TRY(context->getShaderLibrary().getBufferUtils_comp(context, flags, &shader));
 
-    ANGLE_TRY(setupProgram(context, Function::BufferCopy, shader, nullptr,
+    ANGLE_TRY(setupProgram(context, Function::ConvertIndexBuffer, shader, nullptr,
                            &mBufferUtilsPrograms[flags], nullptr, descriptorSet, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
 
