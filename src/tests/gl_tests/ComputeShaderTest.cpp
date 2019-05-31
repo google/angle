@@ -2790,9 +2790,6 @@ void main()
 //   2. DrawArrays.
 TEST_P(ComputeShaderTest, DispatchDraw)
 {
-    // TODO(xinghua.cao@intel.com): http://anglebug.com/3152
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -2860,9 +2857,6 @@ void main(void) {
 //   4. DrawArrays.
 TEST_P(ComputeShaderTest, DrawDispachDispatchDraw)
 {
-    // TODO(xinghua.cao@intel.com): http://anglebug.com/3152
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -2939,9 +2933,6 @@ void main(void) {
 //   4. DispatchCompute.
 TEST_P(ComputeShaderTest, DispatchDrawDrawDispatch)
 {
-    // TODO(xinghua.cao@intel.com): http://anglebug.com/3152
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;

@@ -101,6 +101,47 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
     return false;
 }
 
+bool ImageIndexConflictsWithUAV(const gl::ImageIndex &index, D3D11_UNORDERED_ACCESS_VIEW_DESC desc)
+{
+    unsigned mipLevel           = index.getLevelIndex();
+    gl::TextureType textureType = index.getType();
+
+    switch (desc.ViewDimension)
+    {
+        case D3D11_UAV_DIMENSION_TEXTURE2D:
+        {
+            return textureType == gl::TextureType::_2D && mipLevel == desc.Texture2D.MipSlice;
+        }
+
+        case D3D11_UAV_DIMENSION_TEXTURE2DARRAY:
+        {
+            GLint layerIndex         = index.getLayerIndex();
+            unsigned mipSlice        = desc.Texture2DArray.MipSlice;
+            unsigned firstArraySlice = desc.Texture2DArray.FirstArraySlice;
+            unsigned lastArraySlice  = firstArraySlice + desc.Texture2DArray.ArraySize;
+
+            return (textureType == gl::TextureType::_2DArray ||
+                    textureType == gl::TextureType::CubeMap) &&
+                   (mipLevel == mipSlice && gl::RangeUI(firstArraySlice, lastArraySlice)
+                                                .contains(static_cast<UINT>(layerIndex)));
+        }
+
+        case D3D11_UAV_DIMENSION_TEXTURE3D:
+        {
+            GLint layerIndex     = index.getLayerIndex();
+            unsigned mipSlice    = desc.Texture3D.MipSlice;
+            unsigned firstWSlice = desc.Texture3D.FirstWSlice;
+            unsigned lastWSlice  = firstWSlice + desc.Texture3D.WSize;
+
+            return textureType == gl::TextureType::_3D &&
+                   (mipLevel == mipSlice &&
+                    gl::RangeUI(firstWSlice, lastWSlice).contains(static_cast<UINT>(layerIndex)));
+        }
+        default:
+            return false;
+    }
+}
+
 // Does *not* increment the resource ref count!!
 ID3D11Resource *GetViewResource(ID3D11View *view)
 {
@@ -690,9 +731,14 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurRasterState.pointDrawMode       = false;
     mCurRasterState.multiSample         = false;
 
-    // Start with all internal dirty bits set.
+    // Start with all internal dirty bits set except DIRTY_BIT_COMPUTE_SRVUAV_STATE and
+    // DIRTY_BIT_GRAPHICS_SRVUAV_STATE.
     mInternalDirtyBits.set();
+    mInternalDirtyBits.reset(DIRTY_BIT_GRAPHICS_SRVUAV_STATE);
+    mInternalDirtyBits.reset(DIRTY_BIT_COMPUTE_SRVUAV_STATE);
 
+    mGraphicsDirtyBitsMask.set();
+    mGraphicsDirtyBitsMask.reset(DIRTY_BIT_COMPUTE_SRVUAV_STATE);
     mComputeDirtyBitsMask.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
     mComputeDirtyBitsMask.set(DIRTY_BIT_PROGRAM_UNIFORMS);
     mComputeDirtyBitsMask.set(DIRTY_BIT_DRIVER_UNIFORMS);
@@ -700,6 +746,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mComputeDirtyBitsMask.set(DIRTY_BIT_PROGRAM_ATOMIC_COUNTER_BUFFERS);
     mComputeDirtyBitsMask.set(DIRTY_BIT_PROGRAM_SHADER_STORAGE_BUFFERS);
     mComputeDirtyBitsMask.set(DIRTY_BIT_SHADERS);
+    mComputeDirtyBitsMask.set(DIRTY_BIT_COMPUTE_SRVUAV_STATE);
 
     // Initially all current value attributes must be updated on first use.
     mDirtyCurrentValueAttribs.set();
@@ -727,9 +774,21 @@ void StateManager11::setShaderResourceInternal(gl::ShaderType shaderType,
         switch (shaderType)
         {
             case gl::ShaderType::Vertex:
+                if (srvPtr)
+                {
+                    uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(srvPtr));
+                    unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline,
+                                         gl::ShaderType::Compute, resource, nullptr);
+                }
                 deviceContext->VSSetShaderResources(resourceSlot, 1, &srvPtr);
                 break;
             case gl::ShaderType::Fragment:
+                if (srvPtr)
+                {
+                    uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(srvPtr));
+                    unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline,
+                                         gl::ShaderType::Compute, resource, nullptr);
+                }
                 deviceContext->PSSetShaderResources(resourceSlot, 1, &srvPtr);
                 break;
             case gl::ShaderType::Compute:
@@ -758,9 +817,13 @@ void StateManager11::setUnorderedAccessViewInternal(gl::ShaderType shaderType,
         ID3D11UnorderedAccessView *uavPtr  = uav ? uav->get() : nullptr;
         // We need to make sure that resource being set to UnorderedAccessView slot |resourceSlot|
         // is not bound on SRV.
-        if (uavPtr && unsetConflictingView(uavPtr))
+        if (uavPtr)
         {
-            mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+            uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(uavPtr));
+            unsetConflictingSRVs(gl::PipelineType::ComputePipeline, gl::ShaderType::Vertex,
+                                 resource, nullptr, false);
+            unsetConflictingSRVs(gl::PipelineType::ComputePipeline, gl::ShaderType::Fragment,
+                                 resource, nullptr, false);
         }
         deviceContext->CSSetUnorderedAccessViews(resourceSlot, 1, &uavPtr, nullptr);
 
@@ -831,10 +894,16 @@ angle::Result StateManager11::updateStateForCompute(const gl::Context *context,
 
     auto dirtyBitsCopy = mInternalDirtyBits & mComputeDirtyBitsMask;
     mInternalDirtyBits &= ~mComputeDirtyBitsMask;
-    for (auto dirtyBit : dirtyBitsCopy)
+
+    for (auto iter = dirtyBitsCopy.begin(), end = dirtyBitsCopy.end(); iter != end; ++iter)
     {
-        switch (dirtyBit)
+        switch (*iter)
         {
+            case DIRTY_BIT_COMPUTE_SRVUAV_STATE:
+                // Avoid to call syncTexturesForCompute function two times.
+                iter.resetLaterBit(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+                ANGLE_TRY(syncTexturesForCompute(context));
+                break;
             case DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE:
                 ANGLE_TRY(syncTexturesForCompute(context));
                 break;
@@ -1638,9 +1707,14 @@ void StateManager11::invalidateIndexBuffer()
 
 void StateManager11::setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv)
 {
-    if ((rtv && unsetConflictingView(rtv)) || (dsv && unsetConflictingView(dsv)))
+    if (rtv)
     {
-        mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+        unsetConflictingView(gl::PipelineType::GraphicsPipeline, rtv, true);
+    }
+
+    if (dsv)
+    {
+        unsetConflictingView(gl::PipelineType::GraphicsPipeline, dsv, true);
     }
 
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &rtv, dsv);
@@ -1651,21 +1725,14 @@ void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
                                       UINT numRTVs,
                                       ID3D11DepthStencilView *dsv)
 {
-    bool anyDirty = false;
-
     for (UINT rtvIndex = 0; rtvIndex < numRTVs; ++rtvIndex)
     {
-        anyDirty = anyDirty || unsetConflictingView(rtvs[rtvIndex]);
+        unsetConflictingView(gl::PipelineType::GraphicsPipeline, rtvs[rtvIndex], true);
     }
 
     if (dsv)
     {
-        anyDirty = anyDirty || unsetConflictingView(dsv);
-    }
-
-    if (anyDirty)
-    {
-        mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+        unsetConflictingView(gl::PipelineType::GraphicsPipeline, dsv, true);
     }
 
     mRenderer->getDeviceContext()->OMSetRenderTargets(numRTVs, (numRTVs > 0) ? rtvs : nullptr, dsv);
@@ -1791,20 +1858,26 @@ angle::Result StateManager11::clearUAVs(gl::ShaderType shaderType,
     return angle::Result::Continue;
 }
 
-bool StateManager11::unsetConflictingView(ID3D11View *view)
+void StateManager11::unsetConflictingView(gl::PipelineType pipeline,
+                                          ID3D11View *view,
+                                          bool isRenderTarget)
 {
     uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(view));
-    return unsetConflictingSRVs(gl::ShaderType::Vertex, resource, nullptr) ||
-           unsetConflictingSRVs(gl::ShaderType::Fragment, resource, nullptr) ||
-           unsetConflictingSRVs(gl::ShaderType::Compute, resource, nullptr);
+
+    unsetConflictingSRVs(pipeline, gl::ShaderType::Vertex, resource, nullptr, isRenderTarget);
+    unsetConflictingSRVs(pipeline, gl::ShaderType::Fragment, resource, nullptr, isRenderTarget);
+    unsetConflictingSRVs(pipeline, gl::ShaderType::Compute, resource, nullptr, isRenderTarget);
+    unsetConflictingUAVs(pipeline, gl::ShaderType::Compute, resource, nullptr);
 }
 
-bool StateManager11::unsetConflictingSRVs(gl::ShaderType shaderType,
+void StateManager11::unsetConflictingSRVs(gl::PipelineType pipeline,
+                                          gl::ShaderType shaderType,
                                           uintptr_t resource,
-                                          const gl::ImageIndex *index)
+                                          const gl::ImageIndex *index,
+                                          bool isRenderTarget)
 {
     auto *currentSRVs = getSRVCache(shaderType);
-
+    gl::PipelineType conflictPipeline = gl::GetPipelineType(shaderType);
     bool foundOne = false;
 
     for (size_t resourceIndex = 0; resourceIndex < currentSRVs->size(); ++resourceIndex)
@@ -1820,7 +1893,48 @@ bool StateManager11::unsetConflictingSRVs(gl::ShaderType shaderType,
         }
     }
 
-    return foundOne;
+    if (foundOne && (pipeline != conflictPipeline || isRenderTarget))
+    {
+        switch (conflictPipeline)
+        {
+            case gl::PipelineType::GraphicsPipeline:
+                mInternalDirtyBits.set(DIRTY_BIT_GRAPHICS_SRVUAV_STATE);
+                break;
+            case gl::PipelineType::ComputePipeline:
+                mInternalDirtyBits.set(DIRTY_BIT_COMPUTE_SRVUAV_STATE);
+                break;
+            default:
+                UNREACHABLE();
+        }
+    }
+}
+
+void StateManager11::unsetConflictingUAVs(gl::PipelineType pipeline,
+                                          gl::ShaderType shaderType,
+                                          uintptr_t resource,
+                                          const gl::ImageIndex *index)
+{
+    ASSERT(shaderType == gl::ShaderType::Compute);
+    bool foundOne = false;
+
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    for (size_t resourceIndex = 0; resourceIndex < mCurComputeUAVs.size(); ++resourceIndex)
+    {
+        auto &record = mCurComputeUAVs[resourceIndex];
+
+        if (record.view && record.resource == resource &&
+            (!index || ImageIndexConflictsWithUAV(*index, record.desc)))
+        {
+            deviceContext->CSSetUnorderedAccessViews(resourceIndex, 1, &mNullUAVs[0], nullptr);
+            mCurComputeUAVs.update(resourceIndex, nullptr);
+            foundOne = true;
+        }
+    }
+
+    if (foundOne && pipeline == gl::PipelineType::GraphicsPipeline)
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_COMPUTE_SRVUAV_STATE);
+    }
 }
 
 void StateManager11::unsetConflictingAttachmentResources(
@@ -1834,14 +1948,26 @@ void StateManager11::unsetConflictingAttachmentResources(
         const gl::ImageIndex &index = attachment.getTextureImageIndex();
         // The index doesn't need to be corrected for the small compressed texture workaround
         // because a rendertarget is never compressed.
-        unsetConflictingSRVs(gl::ShaderType::Vertex, resourcePtr, &index);
-        unsetConflictingSRVs(gl::ShaderType::Fragment, resourcePtr, &index);
+        unsetConflictingSRVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Vertex,
+                             resourcePtr, &index, false);
+        unsetConflictingSRVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Fragment,
+                             resourcePtr, &index, false);
+        unsetConflictingSRVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Compute,
+                             resourcePtr, &index, false);
+        unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Compute,
+                             resourcePtr, &index);
     }
     else if (attachment.type() == GL_FRAMEBUFFER_DEFAULT)
     {
         uintptr_t resourcePtr = reinterpret_cast<uintptr_t>(resource);
-        unsetConflictingSRVs(gl::ShaderType::Vertex, resourcePtr, nullptr);
-        unsetConflictingSRVs(gl::ShaderType::Fragment, resourcePtr, nullptr);
+        unsetConflictingSRVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Vertex,
+                             resourcePtr, nullptr, false);
+        unsetConflictingSRVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Fragment,
+                             resourcePtr, nullptr, false);
+        unsetConflictingSRVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Compute,
+                             resourcePtr, nullptr, false);
+        unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Compute,
+                             resourcePtr, nullptr);
     }
 }
 
@@ -2188,12 +2314,12 @@ angle::Result StateManager11::updateState(const gl::Context *context,
         }
     }
 
-    auto dirtyBitsCopy = mInternalDirtyBits;
-    mInternalDirtyBits.reset();
+    auto dirtyBitsCopy = mInternalDirtyBits & mGraphicsDirtyBitsMask;
+    mInternalDirtyBits &= ~mGraphicsDirtyBitsMask;
 
-    for (auto dirtyBit : dirtyBitsCopy)
+    for (auto iter = dirtyBitsCopy.begin(), end = dirtyBitsCopy.end(); iter != end; ++iter)
     {
-        switch (dirtyBit)
+        switch (*iter)
         {
             case DIRTY_BIT_RENDER_TARGET:
                 ANGLE_TRY(syncFramebuffer(context));
@@ -2213,6 +2339,10 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 break;
             case DIRTY_BIT_DEPTH_STENCIL_STATE:
                 ANGLE_TRY(syncDepthStencilState(context));
+                break;
+            case DIRTY_BIT_GRAPHICS_SRVUAV_STATE:
+                iter.resetLaterBit(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+                ANGLE_TRY(syncTextures(context));
                 break;
             case DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE:
                 // TODO(jmadill): More fine-grained update.
@@ -2257,8 +2387,9 @@ angle::Result StateManager11::updateState(const gl::Context *context,
         }
     }
 
-    // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
-    ASSERT(mInternalDirtyBits.none());
+    // Check that we haven't set any dirty bits in the flushing of the dirty bits loop, except
+    // DIRTY_BIT_COMPUTE_SRVUAV_STATE dirty bit.
+    ASSERT((mInternalDirtyBits & mGraphicsDirtyBitsMask).none());
 
     return angle::Result::Continue;
 }
@@ -3621,9 +3752,9 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
 
         // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
         // is not bound on SRV.
-        if (uavPtr && unsetConflictingView(uavPtr->get()))
+        if (uavPtr)
         {
-            mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+            unsetConflictingView(gl::GetPipelineType(shaderType), uavPtr->get(), false);
         }
 
         const unsigned int registerIndex = mProgramD3D->getShaderStorageBufferRegisterIndex(
@@ -3718,9 +3849,9 @@ angle::Result StateManager11::syncAtomicCounterBuffersForShader(const gl::Contex
 
         // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
         // is not bound on SRV.
-        if (uavPtr && unsetConflictingView(uavPtr->get()))
+        if (uavPtr)
         {
-            mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+            unsetConflictingView(gl::GetPipelineType(shaderType), uavPtr->get(), false);
         }
 
         const unsigned int registerIndex =

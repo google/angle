@@ -202,6 +202,14 @@ T GetClampedVertexCount(size_t vertexCount)
     static constexpr size_t kMax = static_cast<size_t>(std::numeric_limits<T>::max());
     return static_cast<T>(vertexCount > kMax ? kMax : vertexCount);
 }
+
+enum class PipelineType
+{
+    GraphicsPipeline = 0,
+    ComputePipeline  = 1,
+};
+
+PipelineType GetPipelineType(ShaderType shaderType);
 }  // namespace gl
 
 namespace egl
