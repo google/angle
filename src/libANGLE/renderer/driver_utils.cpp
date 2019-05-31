@@ -127,6 +127,8 @@ const char *GetVendorString(uint32_t vendorId)
             return "Intel";
         case VENDOR_ID_QUALCOMM:
             return "Qualcomm";
+        case VENDOR_ID_ARM:
+            return "ARM";
         default:
             // TODO(jmadill): More vendor IDs.
             ASSERT(vendorId == 0xba5eba11);  // Mock vendor ID used for tests.
