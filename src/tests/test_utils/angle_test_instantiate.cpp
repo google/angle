@@ -237,7 +237,7 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                 }
             case GLESDriverType::SystemWGL:
                 // AMD does not support the ES compatibility extensions.
-                return IsAMD(vendorID);
+                return !IsAMD(vendorID);
             default:
                 return false;
         }
