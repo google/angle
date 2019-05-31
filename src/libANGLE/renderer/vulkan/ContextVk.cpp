@@ -2383,7 +2383,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 
 angle::Result ContextVk::generateSurfaceSemaphores(SignalSemaphoreVector *signalSemaphores)
 {
-    if (mCurrentWindowSurface && !mCommandGraph.empty())
+    if (mCurrentWindowSurface)
     {
         const vk::Semaphore *waitSemaphore   = nullptr;
         const vk::Semaphore *signalSemaphore = nullptr;
