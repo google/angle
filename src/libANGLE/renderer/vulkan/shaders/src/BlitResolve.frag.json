@@ -7,7 +7,8 @@
         "BlitResolve.frag.json: Build parameters for BlitResolve.frag."
     ],
     "Flags": [
-        "SrcIsArray"
+        "SrcIsArray",
+        "IsResolve"
     ],
     "Blit": [
         "BlitColorFloat",

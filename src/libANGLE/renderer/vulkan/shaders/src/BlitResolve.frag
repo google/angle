@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// BlitResolve.frag: Resolve multisampled color or depth/stencil images.
+// BlitResolve.frag: Blit color or depth/stencil images, or resolve multisampled ones.
 
 #version 450 core
 
@@ -47,10 +47,12 @@
 #endif
 
 #if IsBlitColor && (IsBlitDepth || IsBlitStencil)
-#error "The shader doesn't resolve color and depth/stencil at the same time."
+#error "The shader doesn't blit color and depth/stencil at the same time."
 #endif
 
+#if IsResolve
 #extension GL_EXT_samplerless_texture_functions : require
+#endif
 #if IsBlitStencil
 #extension GL_ARB_shader_stencil_export : require
 #endif
@@ -60,6 +62,9 @@
 #define DEPTH_SRC_RESOURCE(type) type
 #define STENCIL_SRC_RESOURCE(type) MAKE_SRC_RESOURCE(u, type)
 
+#if IsResolve
+
+#define CoordType ivec2
 #if SrcIsArray
 #define SRC_RESOURCE_NAME texture2DMSArray
 #define TEXEL_FETCH(src, coord, sample) texelFetch(src, ivec3(coord, params.srcLayer), sample)
@@ -68,12 +73,34 @@
 #define TEXEL_FETCH(src, coord, sample) texelFetch(src, coord, sample)
 #endif
 
+#define COLOR_TEXEL_FETCH(src, coord, sample) TEXEL_FETCH(src, coord, sample)
+#define DEPTH_TEXEL_FETCH(src, coord, sample) TEXEL_FETCH(src, coord, sample)
+#define STENCIL_TEXEL_FETCH(src, coord, sample) TEXEL_FETCH(src, coord, sample)
+
+#else
+
+#define CoordType vec2
+#if SrcIsArray
+#define SRC_RESOURCE_NAME texture2DArray
+#define SRC_SAMPLER_NAME sampler2DArray
+#define TEXEL_FETCH(src, coord, sample) texture(src, vec3(coord * params.invSrcExtent, params.srcLayer))
+#else
+#define SRC_RESOURCE_NAME texture2D
+#define SRC_SAMPLER_NAME sampler2D
+#define TEXEL_FETCH(src, coord, sample) texture(src, coord * params.invSrcExtent)
+#endif
+
+#define COLOR_TEXEL_FETCH(src, coord, sample) TEXEL_FETCH(COLOR_SRC_RESOURCE(SRC_SAMPLER_NAME)(src, blitSampler), coord, sample)
+#define DEPTH_TEXEL_FETCH(src, coord, sample) TEXEL_FETCH(DEPTH_SRC_RESOURCE(SRC_SAMPLER_NAME)(src, blitSampler), coord, sample)
+#define STENCIL_TEXEL_FETCH(src, coord, sample) TEXEL_FETCH(STENCIL_SRC_RESOURCE(SRC_SAMPLER_NAME)(src, blitSampler), coord, sample)
+
+#endif  // IsResolve
+
 layout(push_constant) uniform PushConstants {
-    // Robust access.
-    ivec2 srcExtent;
     // Translation from source to destination coordinates.
-    ivec2 srcOffset;
-    ivec2 destOffset;
+    CoordType offset;
+    vec2 stretch;
+    vec2 invSrcExtent;
     int srcLayer;
     int samples;
     float invSamples;
@@ -103,38 +130,74 @@ layout(set = 0, binding = 0) uniform DEPTH_SRC_RESOURCE(SRC_RESOURCE_NAME) depth
 layout(set = 0, binding = 1) uniform STENCIL_SRC_RESOURCE(SRC_RESOURCE_NAME) stencil;
 #endif
 
+#if !IsResolve
+layout(set = 0, binding = 2) uniform sampler blitSampler;
+#endif
+
 void main()
 {
-    ivec2 destSubImageCoords = ivec2(gl_FragCoord.xy) - params.destOffset;
+    // Assume only one direction; x.  We are blitting from source to destination either flipped or
+    // not, with a stretch factor of T.  If resolving, T == 1.  Note that T here is:
+    //
+    //     T = SrcWidth / DstWidth
+    //
+    // Assume the blit offset in source is S and in destination D.  If flipping, S has the
+    // coordinates of the opposite size of the rectangle.  In this shader, we have the fragment
+    // coordinates, X, which is a point in the destination buffer.  We need to map this to the
+    // source buffer to know where to sample from.
+    //
+    // If there's no flipping:
+    //
+    //     S Y             D    X
+    //     +-x----+   ->   +----x-----------+
+    //
+    //        Y = S + (X - D) * T
+    //     => Y = TX - (DT - S)
+    //
+    // If there's flipping:
+    //
+    //          Y S        D    X
+    //     +----x-+   ->   +----x-----------+
+    //
+    //        Y = S - (X - D) * T
+    //     => Y = -(TX - (DT + S))
+    //
+    // The above can be implemented as:
+    //
+    //     !Flip: Y = TX - O      where O = DT-S
+    //      Flip: Y = -(TX - O)   where O = DT+S
+    //
+    // Note that T is params.stretch and O is params.offset.
 
-    ivec2 srcSubImageCoords = destSubImageCoords;
+    // X
+    CoordType srcImageCoords = CoordType(gl_FragCoord.xy);  // X
+#if !IsResolve
+    srcImageCoords *= params.stretch;                       // TX
+#endif
+    srcImageCoords -= params.offset;                        // TX - O
 
-    // If flipping, srcOffset would contain the opposite coordinates, so we can
-    // simply reverse the direction in which x/y grows.
+    // If flipping, negate the coordinates.
     if (params.flipX)
-        srcSubImageCoords.x = -srcSubImageCoords.x;
+        srcImageCoords.x = -srcImageCoords.x;
     if (params.flipY)
-        srcSubImageCoords.y = -srcSubImageCoords.y;
-
-    ivec2 srcImageCoords = params.srcOffset + srcSubImageCoords;
-
-    bool isWithinSrcBounds = any(lessThanEqual(ivec2(0), srcImageCoords)) &&
-                             any(lessThan(srcImageCoords, params.srcExtent));
+        srcImageCoords.y = -srcImageCoords.y;
 
 #if IsBlitColor
+#if IsResolve
     ColorType colorValue = ColorType(0, 0, 0, 1);
-    if (isWithinSrcBounds)
+    for (int i = 0; i < params.samples; ++i)
     {
-        for (int i = 0; i < params.samples; ++i)
-        {
-            colorValue += TEXEL_FETCH(color, srcImageCoords, i);
-        }
-#if IsFloat
-        colorValue *= params.invSamples;
-#else
-        colorValue = ColorType(round(colorValue * params.invSamples));
-#endif
+        colorValue += COLOR_TEXEL_FETCH(color, srcImageCoords, i);
     }
+#if IsFloat
+    colorValue *= params.invSamples;
+#else
+    colorValue = ColorType(round(colorValue * params.invSamples));
+#endif
+
+#else
+    ColorType colorValue = COLOR_TEXEL_FETCH(color, srcImageCoords, 0);
+#endif
 
     // Note: not exporting to render targets that are not present optimizes the number of export
     // instructions, which would have otherwise been a likely bottleneck.
@@ -176,23 +239,10 @@ void main()
     // to resolve depth/stencil images.
 
 #if IsBlitDepth
-    float depthValue = 0;
-    if (isWithinSrcBounds)
-    {
-        depthValue = TEXEL_FETCH(depth, srcImageCoords, 0).x;
-    }
-
-    gl_FragDepth = depthValue;
+    gl_FragDepth = DEPTH_TEXEL_FETCH(depth, srcImageCoords, 0).x;
 #endif  // IsBlitDepth
 
 #if IsBlitStencil
-    uint stencilValue = 0;
-    if (isWithinSrcBounds)
-    {
-
-        stencilValue = TEXEL_FETCH(stencil, srcImageCoords, 0).x;
-    }
-
-    gl_FragStencilRefARB = int(stencilValue);
+    gl_FragStencilRefARB = int(STENCIL_TEXEL_FETCH(stencil, srcImageCoords, 0).x);
 #endif  // IsBlitStencil
 }

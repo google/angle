@@ -1225,6 +1225,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     {
         mFeatures.forceD16TexFilter.enabled = true;
     }
+
+    if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.disableFlippingBlitWithCommand.enabled = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()

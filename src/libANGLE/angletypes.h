@@ -45,6 +45,9 @@ struct Rectangle
     bool isReversedX() const { return width < 0; }
     bool isReversedY() const { return height < 0; }
 
+    // Returns a rectangle with the same area but flipped in X, Y, neither or both.
+    Rectangle flip(bool flipX, bool flipY) const;
+
     // Returns a rectangle with the same area but with height and width guaranteed to be positive.
     Rectangle removeReversal() const;
 

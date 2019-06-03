@@ -160,6 +160,13 @@ struct FeaturesVk : FeatureSetBase
                                  "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, "
                                  "which prevents OES_depth_texture from being supported.",
                                  &members, "http://anglebug.com/3452"};
+
+    // On some android devices, vkCmdBlitImage with flipped coordinates blits incorrectly.  This
+    // workaround makes sure this path is avoided.  http://anglebug.com/3498
+    Feature disableFlippingBlitWithCommand = {
+        "disable_flipping_blit_with_command", FeatureCategory::VulkanWorkarounds,
+        "On some android devices, vkCmdBlitImage with flipped coordinates blits incorrectly.",
+        &members, "http://anglebug.com/3498"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

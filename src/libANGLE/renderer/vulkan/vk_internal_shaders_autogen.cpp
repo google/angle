@@ -28,8 +28,22 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000009.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000A.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000B.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000C.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000D.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000E.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000F.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000010.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000011.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000012.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000013.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000014.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000015.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000016.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000017.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BlitResolveStencilNoExport.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BlitResolveStencilNoExport.comp.00000001.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolveStencilNoExport.comp.00000002.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/BlitResolveStencilNoExport.comp.00000003.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.00000002.inc"
@@ -123,10 +137,24 @@ constexpr ShaderBlob kBlitResolve_frag_shaders[] = {
     {kBlitResolve_frag_00000009, sizeof(kBlitResolve_frag_00000009)},
     {kBlitResolve_frag_0000000A, sizeof(kBlitResolve_frag_0000000A)},
     {kBlitResolve_frag_0000000B, sizeof(kBlitResolve_frag_0000000B)},
+    {kBlitResolve_frag_0000000C, sizeof(kBlitResolve_frag_0000000C)},
+    {kBlitResolve_frag_0000000D, sizeof(kBlitResolve_frag_0000000D)},
+    {kBlitResolve_frag_0000000E, sizeof(kBlitResolve_frag_0000000E)},
+    {kBlitResolve_frag_0000000F, sizeof(kBlitResolve_frag_0000000F)},
+    {kBlitResolve_frag_00000010, sizeof(kBlitResolve_frag_00000010)},
+    {kBlitResolve_frag_00000011, sizeof(kBlitResolve_frag_00000011)},
+    {kBlitResolve_frag_00000012, sizeof(kBlitResolve_frag_00000012)},
+    {kBlitResolve_frag_00000013, sizeof(kBlitResolve_frag_00000013)},
+    {kBlitResolve_frag_00000014, sizeof(kBlitResolve_frag_00000014)},
+    {kBlitResolve_frag_00000015, sizeof(kBlitResolve_frag_00000015)},
+    {kBlitResolve_frag_00000016, sizeof(kBlitResolve_frag_00000016)},
+    {kBlitResolve_frag_00000017, sizeof(kBlitResolve_frag_00000017)},
 };
 constexpr ShaderBlob kBlitResolveStencilNoExport_comp_shaders[] = {
     {kBlitResolveStencilNoExport_comp_00000000, sizeof(kBlitResolveStencilNoExport_comp_00000000)},
     {kBlitResolveStencilNoExport_comp_00000001, sizeof(kBlitResolveStencilNoExport_comp_00000001)},
+    {kBlitResolveStencilNoExport_comp_00000002, sizeof(kBlitResolveStencilNoExport_comp_00000002)},
+    {kBlitResolveStencilNoExport_comp_00000003, sizeof(kBlitResolveStencilNoExport_comp_00000003)},
 };
 constexpr ShaderBlob kBufferUtils_comp_shaders[] = {
     {kBufferUtils_comp_00000000, sizeof(kBufferUtils_comp_00000000)},

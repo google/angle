@@ -24,17 +24,18 @@ namespace BlitResolve_frag
 enum flags
 {
     kSrcIsArray = 0x00000001,
-    kFlagsMask  = 0x00000001,
+    kIsResolve  = 0x00000002,
+    kFlagsMask  = 0x00000003,
 };
 enum Blit
 {
     kBlitColorFloat   = 0x00000000,
-    kBlitColorInt     = 0x00000002,
-    kBlitColorUint    = 0x00000004,
-    kBlitDepth        = 0x00000006,
-    kBlitStencil      = 0x00000008,
-    kBlitDepthStencil = 0x0000000A,
-    kBlitMask         = 0x0000000E,
+    kBlitColorInt     = 0x00000004,
+    kBlitColorUint    = 0x00000008,
+    kBlitDepth        = 0x0000000C,
+    kBlitStencil      = 0x00000010,
+    kBlitDepthStencil = 0x00000014,
+    kBlitMask         = 0x0000001C,
 };
 }  // namespace BlitResolve_frag
 
@@ -43,7 +44,8 @@ namespace BlitResolveStencilNoExport_comp
 enum flags
 {
     kSrcIsArray = 0x00000001,
-    kFlagsMask  = 0x00000001,
+    kIsResolve  = 0x00000002,
+    kFlagsMask  = 0x00000003,
 };
 }  // namespace BlitResolveStencilNoExport_comp
 

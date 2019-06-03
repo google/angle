@@ -137,30 +137,21 @@ class FramebufferVk : public FramebufferImpl
 
     // The 'in' rectangles must be clipped to the scissor and FBO. The clipping is done in 'blit'.
     angle::Result blitWithCommand(ContextVk *contextVk,
-                                  const gl::Rectangle &readRectIn,
-                                  const gl::Rectangle &drawRectIn,
+                                  const gl::Rectangle &sourceArea,
+                                  const gl::Rectangle &destArea,
                                   RenderTargetVk *readRenderTarget,
                                   RenderTargetVk *drawRenderTarget,
                                   GLenum filter,
                                   bool colorBlit,
                                   bool depthBlit,
                                   bool stencilBlit,
-                                  bool flipSource,
-                                  bool flipDest);
+                                  bool flipX,
+                                  bool flipY);
 
-    // Note that 'copyArea' must be clipped to the scissor and FBO. The clipping is done in 'blit'.
-    angle::Result blitWithCopy(ContextVk *contextVk,
-                               const gl::Rectangle &copyArea,
-                               RenderTargetVk *readRenderTarget,
-                               RenderTargetVk *drawRenderTarget,
-                               bool blitDepthBuffer,
-                               bool blitStencilBuffer);
-
-    angle::Result blitWithReadback(ContextVk *contextVk,
-                                   const gl::Rectangle &copyArea,
-                                   VkImageAspectFlagBits aspect,
-                                   RenderTargetVk *readRenderTarget,
-                                   RenderTargetVk *drawRenderTarget);
+    // Resolve color with vkCmdResolveImage
+    angle::Result resolveColorWithCommand(ContextVk *contextVk,
+                                          const UtilsVk::BlitResolveParameters &params,
+                                          vk::ImageHelper *srcImage);
 
     angle::Result getFramebuffer(ContextVk *contextVk, vk::Framebuffer **framebufferOut);
 
@@ -188,20 +179,6 @@ class FramebufferVk : public FramebufferImpl
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context, size_t colorIndex);
-
-  private:
-    // Resolve from the read framebuffer into the draw framebuffer.  This is a specialized usage of
-    // glBlitFramebuffer() for multisampled images where scaling is not performed.
-    angle::Result resolve(ContextVk *contextVk,
-                          const gl::Rectangle &area,
-                          bool resolveColorBuffer,
-                          bool resolveDepthBuffer,
-                          bool resolveStencilBuffer);
-
-    // Resolve color with vkCmdResolveImage
-    angle::Result resolveColorWithCommand(ContextVk *contextVk,
-                                          const UtilsVk::BlitResolveParameters &params,
-                                          vk::ImageHelper *srcImage);
 
     WindowSurfaceVk *mBackbuffer;
 

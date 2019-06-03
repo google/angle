@@ -588,11 +588,6 @@
 2905 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_component_type = SKIP
 2905 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_x_size_texture = SKIP
 
-// Blit:
-3200 VULKAN : dEQP-GLES3.functional.fbo.blit.* = SKIP
-3200 VULKAN : dEQP-GLES3.functional.fragment_ops.scissor.framebuffer_blit_center = FAIL
-3200 VULKAN : dEQP-GLES3.functional.fragment_ops.scissor.framebuffer_blit_corner = FAIL
-
 // Buffer copy:
 3194 VULKAN : dEQP-GLES3.functional.buffer.copy.* = SKIP
 
@@ -620,6 +615,7 @@
 
 // Vertex ID, Index ID
 3221 VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.vertex_id = FAIL
+3221 VULKAN : dEQP-GLES3.functional.instanced.* = SKIP
 
 // Polygon offset:
 2950 VULKAN : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
@@ -648,11 +644,19 @@
 3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
 3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
-// Flat shading
+// Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.basic_types.u* = FAIL
 3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.u* = FAIL
 3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
+
+// Sampler objects:
+3208 VULKAN : dEQP-GLES3.functional.samplers.* = SKIP
+
+// Instanced rendering:
+2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
+2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
+2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
 
 // Misc unimplemented:
 
@@ -679,15 +683,10 @@
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_vertices_getfloat = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_program_texel_offset_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_samples_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.min_program_texel_offset_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_fragment_uniform_components_get* = FAIL
 
 // Misc failures:
-2950 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_elements_incomplete_primitive = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_color_encoding = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.rbo.renderbuffer_internal_format = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.rbo.renderbuffer_component_size_color = FAIL
 2950 VULKAN : dEQP-GLES3.functional.lifetime.* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.clipping.line.line_clip_viewport_center = FAIL
 2950 VULKAN : dEQP-GLES3.functional.clipping.line.line_clip_viewport_corner = FAIL
@@ -695,22 +694,13 @@
 2950 VULKAN : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 2950 VULKAN : dEQP-GLES3.functional.clipping.point.point_clip_viewport_center = FAIL
 2950 VULKAN : dEQP-GLES3.functional.clipping.point.point_clip_viewport_corner = FAIL
-2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
-2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP
-2672 VULKAN : dEQP-GLES3.functional.draw.random.* = SKIP
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).  Passes on 418.12 on Linux.
 2976 VULKAN NVIDIA : dEQP-GLES3.functional.shaders.invariance.* = FAIL
 
 // To be triaged:
-2950 VULKAN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = SKIP
-2950 VULKAN : dEQP-GLES3.functional.fragment_ops.random.* = SKIP
-2950 VULKAN : dEQP-GLES3.functional.samplers.* = SKIP
-2950 VULKAN : dEQP-GLES3.functional.instanced.* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.rasterizer_discard.* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_element* = SKIP
-2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_active_unifor* = SKIP
-2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_active_attrib = SKIP
 
 // Android Vulkan failures
 2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
