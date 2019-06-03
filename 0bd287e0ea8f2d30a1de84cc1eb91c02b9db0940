@@ -410,6 +410,24 @@
       "revId": "0bd287e0ea8f2d30a1de84cc1eb91c02b9db0940",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c098a3b_d587f70b",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-03T19:26:28Z",
+      "side": 1,
+      "message": "Yeah, I tried ES3_VULKAN and was seeing failures. I think it\u0027s a separate item from this CL.",
+      "parentUuid": "b07133b5_6f5a1fd9",
+      "revId": "0bd287e0ea8f2d30a1de84cc1eb91c02b9db0940",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
