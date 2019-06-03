@@ -144,15 +144,15 @@
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
     "cc91aa6b14979dc7b3a0b7fee024e59e",
   "GL/EGL/WGL loader:scripts/generate_loader.py":
-    "b8c0dc876c8122bdc2447de982bcfad6",
+    "5a7cd014230fe04664d9613e65399d42",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
     "79d48343cb33f2f534720f84dcba1b4f",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
-    "07e4ac072bd111f32d0798131e5e2926",
+    "494b0076622c9d7f70b74eeb00fd348c",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.h":
-    "5faf638e5f4b23e268193e2cf4a03aae",
+    "8fd78216d48373e776f2f579a58f84c8",
   "GL/EGL/WGL loader:util/egl_loader_autogen.cpp":
     "310b388513c03d205c33e84454851ed7",
   "GL/EGL/WGL loader:util/egl_loader_autogen.h":

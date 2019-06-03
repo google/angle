@@ -50,11 +50,14 @@ util_winrt_sources = [
   "util/windows/WindowsTimer.h",
 ]
 
-util_linux_sources = [
+util_posix_sources = [
   "util/posix/PosixTimer.cpp",
   "util/posix/PosixTimer.h",
+  "util/posix/Posix_crash_handler.cpp",
   "util/posix/Posix_system_utils.cpp",
 ]
+
+util_linux_sources = util_posix_sources
 
 util_x11_sources = [
   "util/x11/X11Pixmap.cpp",
@@ -63,13 +66,10 @@ util_x11_sources = [
   "util/x11/X11Window.h",
 ]
 
-util_fuchsia_sources = [
-  "util/posix/PosixTimer.cpp",
-  "util/posix/PosixTimer.h",
-  "util/posix/Posix_system_utils.cpp",
-  "util/fuchsia/ScenicWindow.cpp",
-  "util/fuchsia/ScenicWindow.h",
-]
+util_fuchsia_sources = util_posix_sources + [
+                         "util/fuchsia/ScenicWindow.cpp",
+                         "util/fuchsia/ScenicWindow.h",
+                       ]
 
 util_ozone_sources = [
   "util/ozone/OzonePixmap.cpp",
@@ -84,13 +84,14 @@ util_osx_sources = [
   "util/osx/OSXPixmap.h",
   "util/osx/OSXWindow.mm",
   "util/osx/OSXWindow.h",
+  "util/posix/Posix_crash_handler.cpp",
   "util/posix/Posix_system_utils.cpp",
 ]
 
-util_android_sources = [
-  "util/android/AndroidPixmap.cpp",
-  "util/android/AndroidWindow.cpp",
-  "util/android/AndroidWindow.h",
-  "util/android/third_party/android_native_app_glue.c",
-  "util/android/third_party/android_native_app_glue.h",
-]
+util_android_sources = util_posix_sources + [
+                         "util/android/AndroidPixmap.cpp",
+                         "util/android/AndroidWindow.cpp",
+                         "util/android/AndroidWindow.h",
+                         "util/android/third_party/android_native_app_glue.c",
+                         "util/android/third_party/android_native_app_glue.h",
+                       ]

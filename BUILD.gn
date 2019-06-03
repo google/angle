@@ -3,7 +3,6 @@
 # found in the LICENSE file.
 
 # import the use_x11 variable
-import("//build/config/dcheck_always_on.gni")
 import("//build/config/linux/pkg_config.gni")
 import("//build/config/ui.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
@@ -145,6 +144,13 @@ config("build_id_config") {
   ldflags = [ "-Wl,--build-id" ]
 }
 
+# Useful for more informative stack traces.
+config("better_linux_stack_traces") {
+  if (angle_better_stack_traces) {
+    ldflags = [ "-Wl,--export-dynamic" ]
+  }
+}
+
 # Windows ARM64 is available since 10.0.16299 so no need to copy
 # d3dcompiler_47.dll because this file is available as inbox.
 if (is_win && target_cpu != "arm64") {
@@ -207,6 +213,25 @@ config("angle_common_config") {
   include_dirs = [ "src/common/third_party/base" ]
   if (is_android) {
     libs = [ "log" ]
+  }
+}
+
+if (is_win) {
+  angle_source_set("angle_stack_walker") {
+    sources = [
+      "util/windows/third_party/StackWalker/src/StackWalker.cpp",
+      "util/windows/third_party/StackWalker/src/StackWalker.h",
+    ]
+
+    if (is_clang) {
+      cflags_cc = [
+        "-Wno-c++98-compat-extra-semi",
+        "-Wno-missing-declarations",
+        "-Wno-switch",
+      ]
+    } else {
+      cflags_cc = [ "/wd4740" ]
+    }
   }
 }
 
@@ -921,12 +946,18 @@ foreach(is_shared_library,
 
   target(library_type, library_name) {
     sources = util_sources
+    deps = [
+      ":angle_common",
+      ":angle_util_loader_headers",
+    ]
+    public_deps = []
+    libs = []
 
     if (is_win) {
       sources += util_win_sources
+      deps += [ ":angle_stack_walker" ]
     }
 
-    libs = []
     if (is_linux) {
       sources += util_linux_sources
       libs += [
@@ -950,7 +981,6 @@ foreach(is_shared_library,
     if (is_android) {
       # To prevent linux sources filtering on android
       set_sources_assignment_filter([])
-      sources += util_linux_sources
       sources += util_android_sources
       libs += [
         "android",
@@ -962,12 +992,6 @@ foreach(is_shared_library,
 
     public_configs += [ ":angle_util_config" ]
 
-    deps = [
-      ":angle_common",
-      ":angle_util_loader_headers",
-    ]
-
-    public_deps = []
     if (is_fuchsia) {
       sources += util_fuchsia_sources
       public_deps += [

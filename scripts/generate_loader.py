@@ -43,7 +43,8 @@ def write_header(data_source_name,
             api_lower=api,
             preamble=preamble,
             export=export,
-            lib=lib.upper())
+            lib=lib.upper(),
+            load_fn_name="Load%s%s" % (prefix if prefix else "", api.upper()))
 
         out.write(loader_header)
         out.close()
@@ -71,7 +72,8 @@ def write_source(data_source_name, all_cmds, api, path, ns="", prefix=None, expo
             function_pointers="\n".join(var_defs),
             set_pointers="\n".join(setters),
             api_upper=api.upper(),
-            api_lower=api)
+            api_lower=api,
+            load_fn_name="Load%s%s" % (prefix if prefix else "", api.upper()))
 
         out.write(loader_source)
         out.close()
@@ -266,9 +268,9 @@ namespace angle
 {{
 using GenericProc = void (*)();
 using LoadProc = GenericProc (KHRONOS_APIENTRY *)(const char *);
-{export}void Load{api_upper}(LoadProc loadProc);
+{export}void {load_fn_name}(LoadProc loadProc);
 }}  // namespace angle
-    
+
 #endif  // {lib}_{api_upper}_LOADER_AUTOGEN_H_
 """
 
@@ -288,7 +290,7 @@ template_loader_cpp = """// GENERATED FILE - DO NOT EDIT.
 
 namespace angle
 {{
-void Load{api_upper}(LoadProc loadProc)
+void {load_fn_name}(LoadProc loadProc)
 {{
 {set_pointers}
 }}

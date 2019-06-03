@@ -109,7 +109,7 @@ namespace angle
 {
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
-void LoadEGL(LoadProc loadProc);
+void LoadEGL_EGL(LoadProc loadProc);
 }  // namespace angle
 
 #endif  // LIBEGL_EGL_LOADER_AUTOGEN_H_

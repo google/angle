@@ -34,7 +34,7 @@ void EnsureEGLLoaded()
         return;
 
     gEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME));
-    angle::LoadEGL(GlobalLoad);
+    angle::LoadEGL_EGL(GlobalLoad);
     if (!EGL_GetPlatformDisplay)
     {
         fprintf(stderr, "Error loading EGL entry points.\n");

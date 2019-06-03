@@ -102,7 +102,7 @@ PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC EGL_StreamConsumerGLTextureEx
 
 namespace angle
 {
-void LoadEGL(LoadProc loadProc)
+void LoadEGL_EGL(LoadProc loadProc)
 {
     EGL_ChooseConfig  = reinterpret_cast<PFNEGLCHOOSECONFIGPROC>(loadProc("EGL_ChooseConfig"));
     EGL_CopyBuffers   = reinterpret_cast<PFNEGLCOPYBUFFERSPROC>(loadProc("EGL_CopyBuffers"));
