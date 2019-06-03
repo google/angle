@@ -3425,7 +3425,7 @@ TEST_P(GLSLTest_ES3, VaryingStructNotInitializedInVertexShader)
     // > Input of fragment shader 'varStruct' not written by vertex shader
     //
     // http://anglebug.com/3413
-    ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() && (IsOSX() || IsWindows()));
+    ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() && (IsOSX() || (IsWindows() && !IsNVIDIA())));
 
     constexpr char kVS[] =
         "#version 300 es\n"
