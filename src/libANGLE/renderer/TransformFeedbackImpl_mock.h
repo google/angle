@@ -29,8 +29,6 @@ class MockTransformFeedbackImpl : public TransformFeedbackImpl
     MOCK_METHOD1(pause, angle::Result(const gl::Context *));
     MOCK_METHOD1(resume, angle::Result(const gl::Context *));
 
-    MOCK_METHOD2(bindGenericBuffer,
-                 angle::Result(const gl::Context *, const gl::BindingPointer<gl::Buffer> &));
     MOCK_METHOD3(bindIndexedBuffer,
                  angle::Result(const gl::Context *,
                                size_t,

@@ -45,13 +45,6 @@ angle::Result TransformFeedbackVk::resume(const gl::Context *context)
     return angle::Result::Stop;
 }
 
-angle::Result TransformFeedbackVk::bindGenericBuffer(const gl::Context *context,
-                                                     const gl::BindingPointer<gl::Buffer> &binding)
-{
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
-}
-
 angle::Result TransformFeedbackVk::bindIndexedBuffer(
     const gl::Context *context,
     size_t index,
