@@ -484,6 +484,11 @@ class State : angle::NonCopyable
 
     enum DirtyBitType
     {
+        // Note: process draw framebuffer binding first, so that other dirty bits whose effect
+        // depend on the current draw framebuffer are not processed while the old framebuffer is
+        // still bound.
+        DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING,
+        DIRTY_BIT_READ_FRAMEBUFFER_BINDING,
         DIRTY_BIT_SCISSOR_TEST_ENABLED,
         DIRTY_BIT_SCISSOR,
         DIRTY_BIT_VIEWPORT,
@@ -526,8 +531,6 @@ class State : angle::NonCopyable
         DIRTY_BIT_DITHER_ENABLED,
         DIRTY_BIT_GENERATE_MIPMAP_HINT,
         DIRTY_BIT_SHADER_DERIVATIVE_HINT,
-        DIRTY_BIT_READ_FRAMEBUFFER_BINDING,
-        DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING,
         DIRTY_BIT_RENDERBUFFER_BINDING,
         DIRTY_BIT_VERTEX_ARRAY_BINDING,
         DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING,
