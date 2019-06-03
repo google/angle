@@ -3288,8 +3288,8 @@ angle::Result TextureD3D_2DArray::copyTexture(const gl::Context *context,
             ANGLE_TRY(getImageAndSyncFromStorage(context, currentDestDepthIndex, &destImage));
             ANGLE_TRY(sourceD3D->getImageAndSyncFromStorage(context, currentSourceDepthIndex,
                                                             &sourceImage));
-
-            ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
+            gl::Box imageBox(sourceBox.x, sourceBox.y, 0, sourceBox.width, sourceBox.height, 1);
+            ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, imageBox, destOffset,
                                            unpackFlipY, unpackPremultiplyAlpha,
                                            unpackUnmultiplyAlpha));
         }
