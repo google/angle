@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "60a35d5e_9a4258b2",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-03T21:33:01Z",
+      "side": 1,
+      "message": "For consistency it may be better to do destArea.x0()/.y0() to match the .x1()/.y1() that follows and match the names of the x0Shift/y0Shift that\u0027s being added.",
+      "range": {
+        "startLine": 679,
+        "startChar": 31,
+        "endLine": 679,
+        "endChar": 41
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbb5971e_a9a80976",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-03T21:33:01Z",
+      "side": 1,
+      "message": "Why don\u0027t you check isReversedX() here?",
+      "range": {
+        "startLine": 713,
+        "startChar": 33,
+        "endLine": 713,
+        "endChar": 38
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2cd0626d_0008775c",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag",
         "patchSetId": 13
