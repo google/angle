@@ -392,6 +392,24 @@
       "revId": "0bd287e0ea8f2d30a1de84cc1eb91c02b9db0940",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b07133b5_6f5a1fd9",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-03T19:22:49Z",
+      "side": 1,
+      "message": "@Tim, maybe after a bit more of ES3 is done, but you can always start adding them as you find passing ones!",
+      "parentUuid": "4734e062_e61f7504",
+      "revId": "0bd287e0ea8f2d30a1de84cc1eb91c02b9db0940",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
