@@ -3301,6 +3301,13 @@ void Context::initCaps()
     LimitCap(&mState.mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
     LimitCap(&mState.mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
+    LimitCap(&mState.mCaps.maxTransformFeedbackInterleavedComponents,
+             IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS);
+    LimitCap(&mState.mCaps.maxTransformFeedbackSeparateAttributes,
+             IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS);
+    LimitCap(&mState.mCaps.maxTransformFeedbackSeparateComponents,
+             IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS);
+
     // Limit textures as well, so we can use fast bitsets with texture bindings.
     LimitCap(&mState.mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
     LimitCap(&mState.mCaps.maxShaderTextureImageUnits[ShaderType::Vertex],

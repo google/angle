@@ -225,13 +225,20 @@ void RendererVk::ensureCapsInitialized() const
     // The gles2.0 section 2.10 states that "gl_Position is not a varying variable and does
     // not count against this limit.", but the Vulkan spec has no such mention in its Built-in
     // vars section. It is implicit that we need to actually reserve it for Vulkan in that case.
-    // TODO(lucferron): AMD has a weird behavior when we edge toward the maximum number of varyings
-    // and can often crash. Reserving an additional varying just for them bringing the total to 2.
-    // http://anglebug.com/2483
+    //
+    // Note: AMD has a weird behavior when we edge toward the maximum number of varyings and can
+    // often crash. Reserving an additional varying just for them bringing the total to 2.
     constexpr GLint kReservedVaryingCount = 2;
     mNativeCaps.maxVaryingVectors =
         (mPhysicalDeviceProperties.limits.maxVertexOutputComponents / 4) - kReservedVaryingCount;
     mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxVaryingVectors * 4;
+
+    mNativeCaps.maxTransformFeedbackInterleavedComponents =
+        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS;
+    mNativeCaps.maxTransformFeedbackSeparateAttributes =
+        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS;
+    mNativeCaps.maxTransformFeedbackSeparateComponents =
+        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS;
 
     const VkPhysicalDeviceLimits &limits = mPhysicalDeviceProperties.limits;
     const uint32_t sampleCounts          = limits.framebufferColorSampleCounts &

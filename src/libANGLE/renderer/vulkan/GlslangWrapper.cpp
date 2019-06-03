@@ -236,12 +236,12 @@ IntermediateShaderSource::IntermediateShaderSource(const std::string &source)
         else if (source.compare(cur, ConstStrLen(kXfbDeclMarkerBegin), kXfbDeclMarkerBegin) == 0)
         {
             cur += ConstStrLen(kXfbDeclMarkerBegin);
-            addTransformFeedbackOutputBlock();
+            addTransformFeedbackDeclarationBlock();
         }
         else if (source.compare(cur, ConstStrLen(kXfbOutMarkerBegin), kXfbOutMarkerBegin) == 0)
         {
             cur += ConstStrLen(kXfbOutMarkerBegin);
-            addTransformFeedbackDeclarationBlock();
+            addTransformFeedbackOutputBlock();
         }
         else
         {
@@ -365,6 +365,103 @@ uint32_t CountExplicitOutputs(OutputIter outputsBegin,
     };
 
     return std::accumulate(outputsBegin, outputsEnd, 0, reduce);
+}
+
+std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVarying &varying,
+                                                   const gl::UniformTypeInfo &info,
+                                                   size_t strideBytes,
+                                                   size_t offset,
+                                                   const std::string &bufferIndex)
+{
+    std::ostringstream result;
+
+    ASSERT(strideBytes % 4 == 0);
+    size_t stride = strideBytes / 4;
+
+    const size_t arrayIndexStart = varying.arrayIndex == GL_INVALID_INDEX ? 0 : varying.arrayIndex;
+    const size_t arrayIndexEnd   = arrayIndexStart + varying.size();
+
+    for (size_t arrayIndex = arrayIndexStart; arrayIndex < arrayIndexEnd; ++arrayIndex)
+    {
+        for (int col = 0; col < info.columnCount; ++col)
+        {
+            for (int row = 0; row < info.rowCount; ++row)
+            {
+                result << "xfbOut" << bufferIndex << "[ANGLEUniforms.xfbBufferOffsets["
+                       << bufferIndex << "] + gl_VertexIndex * " << stride << " + " << offset
+                       << "] = " << info.glslAsFloat << "(" << varying.mappedName;
+
+                if (varying.isArray())
+                {
+                    result << "[" << arrayIndex << "]";
+                }
+
+                if (info.columnCount > 1)
+                {
+                    result << "[" << col << "]";
+                }
+
+                if (info.rowCount > 1)
+                {
+                    result << "[" << row << "]";
+                }
+
+                result << ");\n";
+                ++offset;
+            }
+        }
+    }
+
+    return result.str();
+}
+
+void GenerateTransformFeedbackOutputs(const gl::ProgramState &programState,
+                                      IntermediateShaderSource *vertexShader)
+{
+    const std::vector<gl::TransformFeedbackVarying> &varyings =
+        programState.getLinkedTransformFeedbackVaryings();
+    const std::vector<GLsizei> &bufferStrides = programState.getTransformFeedbackStrides();
+    const bool isInterleaved =
+        programState.getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS;
+    const size_t bufferCount = isInterleaved ? 1 : varyings.size();
+
+    const std::string xfbSet = Str(kUniformsAndXfbDescriptorSetIndex);
+    std::vector<std::string> xfbIndices(bufferCount);
+
+    std::string xfbDecl;
+
+    for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
+    {
+        const std::string xfbBinding = Str(kXfbBindingIndexStart + bufferIndex);
+        xfbIndices[bufferIndex]      = Str(bufferIndex);
+
+        xfbDecl += "layout(set = " + xfbSet + ", binding = " + xfbBinding + ") buffer xfbBuffer" +
+                   xfbIndices[bufferIndex] + " { float xfbOut" + xfbIndices[bufferIndex] +
+                   "[]; };\n";
+    }
+
+    std::string xfbOut  = "if (ANGLEUniforms.xfbActiveUnpaused != 0)\n{\n";
+    size_t outputOffset = 0;
+    for (size_t varyingIndex = 0; varyingIndex < varyings.size(); ++varyingIndex)
+    {
+        const size_t bufferIndex                    = isInterleaved ? 0 : varyingIndex;
+        const gl::TransformFeedbackVarying &varying = varyings[varyingIndex];
+
+        // For every varying, output to the respective buffer packed.  If interleaved, the output is
+        // always to the same buffer, but at different offsets.
+        const gl::UniformTypeInfo &info = gl::GetUniformTypeInfo(varying.type);
+        xfbOut += GenerateTransformFeedbackVaryingOutput(varying, info, bufferStrides[bufferIndex],
+                                                         outputOffset, xfbIndices[bufferIndex]);
+
+        if (isInterleaved)
+        {
+            outputOffset += info.columnCount * info.rowCount * varying.size();
+        }
+    }
+    xfbOut += "}\n";
+
+    vertexShader->insertTransformFeedbackDeclaration(std::move(xfbDecl));
+    vertexShader->insertTransformFeedbackOutput(std::move(xfbOut));
 }
 }  // anonymous namespace
 
@@ -525,7 +622,7 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
     // See corresponding code in OutputVulkanGLSL.cpp.
     const std::string driverUniformsDescriptorSet =
         "set = " + Str(kDriverUniformsDescriptorSetIndex);
-    const std::string uniformsDescriptorSet      = "set = " + Str(kUniformsDescriptorSetIndex);
+    const std::string uniformsDescriptorSet = "set = " + Str(kUniformsAndXfbDescriptorSetIndex);
     const std::string uniformBlocksDescriptorSet = "set = " + Str(kUniformBlockDescriptorSetIndex);
     const std::string texturesDescriptorSet      = "set = " + Str(kTextureDescriptorSetIndex);
 
@@ -643,10 +740,15 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
     fragmentSource.insertLayoutSpecifier(kVaryingName, layout);
 
     // Write transform feedback output code.
-    // TODO(syoussefi): support transform feedback.  http://anglebug.com/3205
-    ASSERT(programState.getLinkedTransformFeedbackVaryings().size() == 0);
-    vertexSource.insertTransformFeedbackDeclaration("");
-    vertexSource.insertTransformFeedbackOutput("");
+    if (programState.getLinkedTransformFeedbackVaryings().empty())
+    {
+        vertexSource.insertTransformFeedbackDeclaration("");
+        vertexSource.insertTransformFeedbackOutput("");
+    }
+    else
+    {
+        GenerateTransformFeedbackOutputs(programState, &vertexSource);
+    }
 
     vertexSource.insertQualifierSpecifier(kVaryingName, "out");
     fragmentSource.insertQualifierSpecifier(kVaryingName, "in");

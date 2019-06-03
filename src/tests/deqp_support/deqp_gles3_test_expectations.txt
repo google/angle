@@ -537,7 +537,6 @@
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_input_components = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_program_texel_offset = SKIP
 2950 VULKAN : dEQP-GLES3.functional.implementation_limits.min_program_texel_offset = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_transform_feedback_* = SKIP
 
 // 3D texture (anglebug.com/3188), 2D array (anglebug.com/3189):
 3189 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2darrayshadow_vertex = SKIP
@@ -679,22 +678,6 @@
 // Uniform API:
 3198 VULKAN : dEQP-GLES3.functional.uniform_api.value.* = SKIP
 3198 VULKAN : dEQP-GLES3.functional.uniform_api.random.* = SKIP
-
-// Transform feedback:
-3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.uniform_block_binding = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.bind_transform_feedback = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.begin_transform_feedback = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.pause_transform_feedback = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.resume_transform_feedback = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.shader.end_transform_feedback = FAIL
-3205 VULKAN : dEQP-GLES3.functional.transform_feedback.* = FAIL
-3205 VULKAN : dEQP-GLES3.functional.state_query.boolean.transform_feedback_* = FAIL
-3205 VULKAN : dEQP-GLES3.functional.state_query.integers.max_transform_feedback_* = FAIL
-3205 VULKAN : dEQP-GLES3.functional.state_query.integers.transform_feedback_* = FAIL
-3205 VULKAN : dEQP-GLES3.functional.state_query.indexed.transform_feedback_* = FAIL
-3205 VULKAN : dEQP-GLES3.functional.state_query.shader.transform_feedback = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
-3205 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL

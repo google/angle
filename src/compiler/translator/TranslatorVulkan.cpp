@@ -157,12 +157,14 @@ constexpr const char kViewport[]             = "viewport";
 constexpr const char kHalfRenderAreaHeight[] = "halfRenderAreaHeight";
 constexpr const char kViewportYScale[]       = "viewportYScale";
 constexpr const char kNegViewportYScale[]    = "negViewportYScale";
+constexpr const char kXfbActiveUnpaused[]    = "xfbActiveUnpaused";
+constexpr const char kXfbBufferOffsets[]     = "xfbBufferOffsets";
 constexpr const char kDepthRange[]           = "depthRange";
 
-constexpr size_t kNumDriverUniforms                                        = 6;
+constexpr size_t kNumDriverUniforms                                        = 7;
 constexpr std::array<const char *, kNumDriverUniforms> kDriverUniformNames = {
-    {kViewport, kHalfRenderAreaHeight, kViewportYScale, kNegViewportYScale, "padding",
-     kDepthRange}};
+    {kViewport, kHalfRenderAreaHeight, kViewportYScale, kNegViewportYScale, kXfbActiveUnpaused,
+     kXfbBufferOffsets, kDepthRange}};
 
 template <TBasicType BasicType = EbtFloat, unsigned char PrimarySize = 1>
 TIntermConstantUnion *CreateBasicConstant(float value)
@@ -359,7 +361,8 @@ const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *sym
         new TType(EbtFloat),
         new TType(EbtFloat),
         new TType(EbtFloat),
-        new TType(EbtFloat),
+        new TType(EbtUInt),
+        new TType(EbtInt, 4),
         emulatedDepthRangeType,
     }};
 

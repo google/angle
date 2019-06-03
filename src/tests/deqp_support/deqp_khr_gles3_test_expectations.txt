@@ -49,8 +49,8 @@
 3457 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.depth* = SKIP
 3457 VULKAN : KHR-GLES3.packed_depth_stencil.* = SKIP
 
-// CopyTexImage conversion bugs.
-3458 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.* = FAIL
+// CopyTexImage conversion missing 2D Array and 3D texture support.
+3458 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.* = SKIP
 
 // Require 3D textures.
 3188 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.* = SKIP

@@ -94,7 +94,7 @@ const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType)
 }}  // namespace gl
 """
 
-type_info_data_template = """{{{type}, {component_type}, {texture_type}, {transposed_type}, {bool_type}, {sampler_format}, {rows}, {columns}, {components}, {component_size}, {internal_size}, {external_size}, {is_sampler}, {is_matrix}, {is_image} }}"""
+type_info_data_template = """{{{type}, {component_type}, {texture_type}, {transposed_type}, {bool_type}, {sampler_format}, {rows}, {columns}, {components}, {component_size}, {internal_size}, {external_size}, {is_sampler}, {is_matrix}, {is_image}, {glsl_asfloat} }}"""
 type_index_case_template = """case {enum_value}: return {index_value};"""
 
 
@@ -183,15 +183,15 @@ def get_components(uniform_type):
 
 def get_component_size(uniform_type):
     component_type = get_component_type(uniform_type)
-    if (component_type) == "GL_BOOL":
+    if component_type == "GL_BOOL":
         return "sizeof(GLint)"
-    elif (component_type) == "GL_FLOAT":
+    elif component_type == "GL_FLOAT":
         return "sizeof(GLfloat)"
-    elif (component_type) == "GL_INT":
+    elif component_type == "GL_INT":
         return "sizeof(GLint)"
-    elif (component_type) == "GL_UNSIGNED_INT":
+    elif component_type == "GL_UNSIGNED_INT":
         return "sizeof(GLuint)"
-    elif (component_type) == "GL_NONE":
+    elif component_type == "GL_NONE":
         return "0"
     else:
         raise "Invalid component type: " + component_type
@@ -217,6 +217,22 @@ def get_is_image(uniform_type):
     return cpp_bool("_IMAGE_" in uniform_type)
 
 
+def get_glsl_asfloat(uniform_type):
+    component_type = get_component_type(uniform_type)
+    if component_type == "GL_BOOL":
+        return '""'
+    elif component_type == "GL_FLOAT":
+        return '""'
+    elif component_type == "GL_INT":
+        return '"intBitsToFloat"'
+    elif component_type == "GL_UNSIGNED_INT":
+        return '"uintBitsToFloat"'
+    elif component_type == "GL_NONE":
+        return '""'
+    else:
+        raise "Invalid component type: " + component_type
+
+
 def gen_type_info(uniform_type):
     return type_info_data_template.format(
         type=uniform_type,
@@ -233,7 +249,8 @@ def gen_type_info(uniform_type):
         external_size=get_external_size(uniform_type),
         is_sampler=get_is_sampler(uniform_type),
         is_matrix=get_is_matrix(uniform_type),
-        is_image=get_is_image(uniform_type))
+        is_image=get_is_image(uniform_type),
+        glsl_asfloat=get_glsl_asfloat(uniform_type))
 
 
 def gen_type_index_case(index, uniform_type):

@@ -44,6 +44,7 @@ class BufferState final : angle::NonCopyable
     GLint64 getMapOffset() const { return mMapOffset; }
     GLint64 getMapLength() const { return mMapLength; }
     GLint64 getSize() const { return mSize; }
+    bool isBoundForTransformFeedback() const { return mTransformFeedbackIndexedBindingCount != 0; }
 
   private:
     friend class Buffer;

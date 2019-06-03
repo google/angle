@@ -9,25 +9,34 @@
 
 #include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/TransformFeedback.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
 
 #include "common/debug.h"
 
 namespace rx
 {
 
-QueryVk::QueryVk(gl::QueryType type) : QueryImpl(type), mCachedResult(0), mCachedResultValid(false)
+QueryVk::QueryVk(gl::QueryType type)
+    : QueryImpl(type),
+      mTransformFeedbackPrimitivesDrawn(0),
+      mCachedResult(0),
+      mCachedResultValid(false)
 {}
 
 QueryVk::~QueryVk() = default;
 
 void QueryVk::onDestroy(const gl::Context *context)
 {
-    ContextVk *contextVk            = vk::GetImpl(context);
-    vk::DynamicQueryPool *queryPool = contextVk->getQueryPool(getType());
-    queryPool->freeQuery(contextVk, &mQueryHelper);
-    queryPool->freeQuery(contextVk, &mQueryHelperTimeElapsedBegin);
+    ContextVk *contextVk = vk::GetImpl(context);
+    if (getType() != gl::QueryType::TransformFeedbackPrimitivesWritten)
+    {
+        vk::DynamicQueryPool *queryPool = contextVk->getQueryPool(getType());
+        queryPool->freeQuery(contextVk, &mQueryHelper);
+        queryPool->freeQuery(contextVk, &mQueryHelperTimeElapsedBegin);
+    }
 }
 
 angle::Result QueryVk::begin(const gl::Context *context)
@@ -35,6 +44,14 @@ angle::Result QueryVk::begin(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
 
     mCachedResultValid = false;
+
+    // Transform feedback query is a handled by a CPU-calculated value when emulated.
+    if (getType() == gl::QueryType::TransformFeedbackPrimitivesWritten)
+    {
+        mTransformFeedbackPrimitivesDrawn = 0;
+        contextVk->getCommandGraph()->beginTransformFeedbackEmulatedQuery();
+        return angle::Result::Continue;
+    }
 
     if (!mQueryHelper.getQueryPool())
     {
@@ -64,7 +81,22 @@ angle::Result QueryVk::end(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    if (getType() == gl::QueryType::TimeElapsed)
+    if (getType() == gl::QueryType::TransformFeedbackPrimitivesWritten)
+    {
+        mCachedResult = mTransformFeedbackPrimitivesDrawn;
+
+        // There could be transform feedback in progress, so add the primitives drawn so far from
+        // the current transform feedback object.
+        gl::TransformFeedback *transformFeedback =
+            context->getState().getCurrentTransformFeedback();
+        if (transformFeedback)
+        {
+            mCachedResult += transformFeedback->getPrimitivesDrawn();
+        }
+        mCachedResultValid = true;
+        contextVk->getCommandGraph()->endTransformFeedbackEmulatedQuery();
+    }
+    else if (getType() == gl::QueryType::TimeElapsed)
     {
         mQueryHelper.writeTimestamp(contextVk);
     }
@@ -215,6 +247,14 @@ angle::Result QueryVk::isResultAvailable(const gl::Context *context, bool *avail
     *available = mCachedResultValid;
 
     return angle::Result::Continue;
+}
+
+void QueryVk::onTransformFeedbackEnd(const gl::Context *context)
+{
+    gl::TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
+    ASSERT(transformFeedback);
+
+    mTransformFeedbackPrimitivesDrawn += transformFeedback->getPrimitivesDrawn();
 }
 
 }  // namespace rx

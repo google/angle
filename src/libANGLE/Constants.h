@@ -41,7 +41,11 @@ enum
     // GL_EXT_geometry_shader increases the minimum value of GL_MAX_UNIFORM_BUFFER_BINDINGS to 48.
     IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS = 48,
 
-    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS = 4,
+    // Transform feedback limits set to the minimum required by the spec.
+    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS = 64,
+    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS       = 4,
+    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS    = 4,
+    IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS                = 4,
 
     // Maximum number of views which are supported by the implementation of ANGLE_multiview.
     IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS = 4,

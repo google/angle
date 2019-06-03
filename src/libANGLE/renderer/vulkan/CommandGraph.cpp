@@ -88,6 +88,17 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
                     UNREACHABLE();
                     return "Query";
             }
+        case CommandGraphResourceType::EmulatedQuery:
+            switch (function)
+            {
+                case CommandGraphNodeFunction::BeginTransformFeedbackQuery:
+                    return "BeginTransformFeedbackQuery";
+                case CommandGraphNodeFunction::EndTransformFeedbackQuery:
+                    return "EndTransformFeedbackQuery";
+                default:
+                    UNREACHABLE();
+                    return "EmulatedQuery";
+            }
         case CommandGraphResourceType::FenceSync:
             switch (function)
             {
@@ -442,7 +453,9 @@ void CommandGraphNode::setQueryPool(const QueryPool *queryPool, uint32_t queryIn
 {
     ASSERT(mFunction == CommandGraphNodeFunction::BeginQuery ||
            mFunction == CommandGraphNodeFunction::EndQuery ||
-           mFunction == CommandGraphNodeFunction::WriteTimestamp);
+           mFunction == CommandGraphNodeFunction::WriteTimestamp ||
+           mFunction == CommandGraphNodeFunction::BeginTransformFeedbackQuery ||
+           mFunction == CommandGraphNodeFunction::EndTransformFeedbackQuery);
     mQueryPool  = queryPool->getHandle();
     mQueryIndex = queryIndex;
 }
@@ -583,6 +596,15 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
             primaryCommandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, mQueryPool,
                                                  mQueryIndex);
 
+            break;
+
+        case CommandGraphNodeFunction::BeginTransformFeedbackQuery:
+            // Unless using VK_EXT_transform_feedback (not implemented currently), there's nothing
+            // to do.
+            break;
+
+        case CommandGraphNodeFunction::EndTransformFeedbackQuery:
+            // Same as BeginTransformFeedbackQuery.
             break;
 
         case CommandGraphNodeFunction::SetFenceSync:
@@ -911,6 +933,18 @@ void CommandGraph::writeTimestamp(const QueryPool *queryPool, uint32_t queryInde
     newNode->setQueryPool(queryPool, queryIndex);
 }
 
+void CommandGraph::beginTransformFeedbackEmulatedQuery()
+{
+    allocateBarrierNode(CommandGraphNodeFunction::BeginTransformFeedbackQuery,
+                        CommandGraphResourceType::EmulatedQuery, 0);
+}
+
+void CommandGraph::endTransformFeedbackEmulatedQuery()
+{
+    allocateBarrierNode(CommandGraphNodeFunction::EndTransformFeedbackQuery,
+                        CommandGraphResourceType::EmulatedQuery, 0);
+}
+
 void CommandGraph::setFenceSync(const vk::Event &event)
 {
     CommandGraphNode *newNode = allocateBarrierNode(CommandGraphNodeFunction::SetFenceSync,
@@ -973,6 +1007,7 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
     int imageIDCounter       = 1;
     int queryIDCounter       = 1;
     int fenceIDCounter       = 1;
+    int xfbIDCounter         = 1;
 
     out << "digraph {" << std::endl;
 
@@ -1048,6 +1083,9 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
                         break;
                     case CommandGraphResourceType::FenceSync:
                         id = fenceIDCounter++;
+                        break;
+                    case CommandGraphResourceType::EmulatedQuery:
+                        id = xfbIDCounter++;
                         break;
                     default:
                         UNREACHABLE();

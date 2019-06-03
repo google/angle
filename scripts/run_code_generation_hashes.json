@@ -466,7 +466,7 @@
   "proc table:src/libGLESv2/proc_table_autogen.cpp":
     "e82a9970d6059a7c8b562726e3f219a4",
   "uniform type:src/common/gen_uniform_type_table.py":
-    "9dd389f2b5793ba635169d61cef2dde9",
+    "a741cc301b1617ab0e4d29b35f1d3b96",
   "uniform type:src/common/uniform_type_info_autogen.cpp":
-    "b31d181bc49ad1c3540401a5c874e692"
+    "d1cea53e456de010445790b8de94a50e"
 }

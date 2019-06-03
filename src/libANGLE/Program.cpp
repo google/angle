@@ -1423,15 +1423,16 @@ angle::Result Program::link(const Context *context)
         }
 
         gatherTransformFeedbackVaryings(mergedVaryings);
+        mState.updateTransformFeedbackStrides();
     }
 
     mLinkingState.reset(new LinkingState());
-    mLinkingState->context     = context;
+    mLinkingState->context           = context;
     mLinkingState->linkingFromBinary = false;
-    mLinkingState->programHash = programHash;
-    mLinkingState->linkEvent   = mProgram->link(context, *resources, mInfoLog);
-    mLinkingState->resources   = std::move(resources);
-    mLinkResolved              = false;
+    mLinkingState->programHash       = programHash;
+    mLinkingState->linkEvent         = mProgram->link(context, *resources, mInfoLog);
+    mLinkingState->resources         = std::move(resources);
+    mLinkResolved                    = false;
 
     return angle::Result::Continue;
 }
@@ -1447,8 +1448,8 @@ void Program::resolveLinkImpl(const Context *context)
 
     angle::Result result = mLinkingState->linkEvent->wait(context);
 
-    mLinked           = result == angle::Result::Continue;
-    mLinkResolved     = true;
+    mLinked                                    = result == angle::Result::Continue;
+    mLinkResolved                              = true;
     std::unique_ptr<LinkingState> linkingState = std::move(mLinkingState);
     if (!mLinked)
     {
@@ -4016,7 +4017,7 @@ bool Program::linkOutputVariables(const Caps &caps,
 
         // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
         // structures, so we may use getBasicTypeElementCount().
-        unsigned int elementCount          = outputVariable.getBasicTypeElementCount();
+        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
         if (FindUsedOutputLocation(outputLocations, baseLocation, elementCount, reservedLocations,
                                    outputVariableIndex))
         {
@@ -4785,6 +4786,11 @@ angle::Result Program::deserialize(const Context *context,
                   "Too many shader types");
     mState.mLinkedShaderStages = ShaderBitSet(stream.readInt<uint8_t>());
 
+    if (!mState.mAttachedShaders[ShaderType::Compute])
+    {
+        mState.updateTransformFeedbackStrides();
+    }
+
     postResolveLink(context);
 
     return angle::Result::Continue;
@@ -4792,11 +4798,6 @@ angle::Result Program::deserialize(const Context *context,
 
 void Program::postResolveLink(const gl::Context *context)
 {
-    if (!mState.mAttachedShaders[ShaderType::Compute])
-    {
-        mState.updateTransformFeedbackStrides();
-    }
-
     mState.updateActiveSamplers();
     mState.updateActiveImages();
 
