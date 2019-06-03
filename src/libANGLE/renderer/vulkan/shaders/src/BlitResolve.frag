@@ -3,42 +3,42 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Resolve.frag: Resolve multisampled color or depth/stencil images.
+// BlitResolve.frag: Resolve multisampled color or depth/stencil images.
 
 #version 450 core
 
 #define MAKE_SRC_RESOURCE(prefix, type) prefix ## type
 
-#if ResolveColorFloat
+#if BlitColorFloat
 
-#define IsResolveColor 1
+#define IsBlitColor 1
 #define COLOR_SRC_RESOURCE(type) type
 #define ColorType vec4
 
-#elif ResolveColorInt
+#elif BlitColorInt
 
-#define IsResolveColor 1
+#define IsBlitColor 1
 #define COLOR_SRC_RESOURCE(type) MAKE_SRC_RESOURCE(i, type)
 #define ColorType ivec4
 
-#elif ResolveColorUint
+#elif BlitColorUint
 
-#define IsResolveColor 1
+#define IsBlitColor 1
 #define COLOR_SRC_RESOURCE(type) MAKE_SRC_RESOURCE(u, type)
 #define ColorType uvec4
 
-#elif ResolveDepth
+#elif BlitDepth
 
-#define IsResolveDepth 1
+#define IsBlitDepth 1
 
-#elif ResolveStencil
+#elif BlitStencil
 
-#define IsResolveStencil 1
+#define IsBlitStencil 1
 
-#elif ResolveDepthStencil
+#elif BlitDepthStencil
 
-#define IsResolveDepth 1
-#define IsResolveStencil 1
+#define IsBlitDepth 1
+#define IsBlitStencil 1
 
 #else
 
@@ -46,12 +46,12 @@
 
 #endif
 
-#if IsResolveColor && (IsResolveDepth || IsResolveStencil)
+#if IsBlitColor && (IsBlitDepth || IsBlitStencil)
 #error "The shader doesn't resolve color and depth/stencil at the same time."
 #endif
 
 #extension GL_EXT_samplerless_texture_functions : require
-#if IsResolveStencil
+#if IsBlitStencil
 #extension GL_ARB_shader_stencil_export : require
 #endif
 
@@ -84,7 +84,7 @@ layout(push_constant) uniform PushConstants {
     bool flipY;
 } params;
 
-#if IsResolveColor
+#if IsBlitColor
 layout(set = 0, binding = 0) uniform COLOR_SRC_RESOURCE(SRC_RESOURCE_NAME) color;
 
 layout(location = 0) out ColorType colorOut0;
@@ -96,10 +96,10 @@ layout(location = 5) out ColorType colorOut5;
 layout(location = 6) out ColorType colorOut6;
 layout(location = 7) out ColorType colorOut7;
 #endif
-#if IsResolveDepth
+#if IsBlitDepth
 layout(set = 0, binding = 0) uniform DEPTH_SRC_RESOURCE(SRC_RESOURCE_NAME) depth;
 #endif
-#if IsResolveStencil
+#if IsBlitStencil
 layout(set = 0, binding = 1) uniform STENCIL_SRC_RESOURCE(SRC_RESOURCE_NAME) stencil;
 #endif
 
@@ -121,7 +121,7 @@ void main()
     bool isWithinSrcBounds = any(lessThanEqual(ivec2(0), srcImageCoords)) &&
                              any(lessThan(srcImageCoords, params.srcExtent));
 
-#if IsResolveColor
+#if IsBlitColor
     ColorType colorValue = ColorType(0, 0, 0, 1);
     if (isWithinSrcBounds)
     {
@@ -170,12 +170,12 @@ void main()
     {
         colorOut7 = colorValue;
     }
-#endif  // IsResolveColor
+#endif  // IsBlitColor
 
     // Note: always resolve depth/stencil using sample 0.  GLES3 gives us freedom in choosing how
     // to resolve depth/stencil images.
 
-#if IsResolveDepth
+#if IsBlitDepth
     float depthValue = 0;
     if (isWithinSrcBounds)
     {
@@ -183,9 +183,9 @@ void main()
     }
 
     gl_FragDepth = depthValue;
-#endif  // IsResolveDepth
+#endif  // IsBlitDepth
 
-#if IsResolveStencil
+#if IsBlitStencil
     uint stencilValue = 0;
     if (isWithinSrcBounds)
     {
@@ -194,5 +194,5 @@ void main()
     }
 
     gl_FragStencilRefARB = int(stencilValue);
-#endif  // IsResolveStencil
+#endif  // IsBlitStencil
 }

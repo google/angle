@@ -4,7 +4,7 @@
         "Use of this source code is governed by a BSD-style license that can be",
         "found in the LICENSE file.",
         "",
-        "ResolveStencilNoExport.frag.comp: Build parameters for ResolveStencilNoExport.comp."
+        "BlitResolveStencilNoExport.frag.comp: Build parameters for BlitResolveStencilNoExport.comp."
     ],
     "Flags": [
         "SrcIsArray"

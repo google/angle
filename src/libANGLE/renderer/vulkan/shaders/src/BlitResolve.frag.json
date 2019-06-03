@@ -4,17 +4,17 @@
         "Use of this source code is governed by a BSD-style license that can be",
         "found in the LICENSE file.",
         "",
-        "Resolve.frag.json: Build parameters for Resolve.frag."
+        "BlitResolve.frag.json: Build parameters for BlitResolve.frag."
     ],
     "Flags": [
         "SrcIsArray"
     ],
-    "Resolve": [
-        "ResolveColorFloat",
-        "ResolveColorInt",
-        "ResolveColorUint",
-        "ResolveDepth",
-        "ResolveStencil",
-        "ResolveDepthStencil"
+    "Blit": [
+        "BlitColorFloat",
+        "BlitColorInt",
+        "BlitColorUint",
+        "BlitDepth",
+        "BlitStencil",
+        "BlitDepthStencil"
     ]
 }

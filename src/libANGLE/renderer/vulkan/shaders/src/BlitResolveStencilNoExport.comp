@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ResolveStencilNoExport.comp: Resolve multisampled stencil images into a buffer.  This is used
+// BlitResolveStencilNoExport.comp: Resolve multisampled stencil images into a buffer.  This is used
 // where VK_EXT_shader_stencil_export is not available, to output the resolved stencil into a
 // temporary buffer, which is then copied into the stencil aspect of the final image.
 

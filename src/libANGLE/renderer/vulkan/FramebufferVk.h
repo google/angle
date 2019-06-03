@@ -200,7 +200,7 @@ class FramebufferVk : public FramebufferImpl
 
     // Resolve color with vkCmdResolveImage
     angle::Result resolveColorWithCommand(ContextVk *contextVk,
-                                          const UtilsVk::ResolveParameters &params,
+                                          const UtilsVk::BlitResolveParameters &params,
                                           vk::ImageHelper *srcImage);
 
     WindowSurfaceVk *mBackbuffer;

@@ -17,27 +17,27 @@
 namespace rx
 {
 
-namespace BufferUtils_comp            = vk::InternalShader::BufferUtils_comp;
-namespace ConvertVertex_comp          = vk::InternalShader::ConvertVertex_comp;
-namespace ImageClear_frag             = vk::InternalShader::ImageClear_frag;
-namespace ImageCopy_frag              = vk::InternalShader::ImageCopy_frag;
-namespace Resolve_frag                = vk::InternalShader::Resolve_frag;
-namespace ResolveStencilNoExport_comp = vk::InternalShader::ResolveStencilNoExport_comp;
+namespace BufferUtils_comp                = vk::InternalShader::BufferUtils_comp;
+namespace ConvertVertex_comp              = vk::InternalShader::ConvertVertex_comp;
+namespace ImageClear_frag                 = vk::InternalShader::ImageClear_frag;
+namespace ImageCopy_frag                  = vk::InternalShader::ImageCopy_frag;
+namespace BlitResolve_frag                = vk::InternalShader::BlitResolve_frag;
+namespace BlitResolveStencilNoExport_comp = vk::InternalShader::BlitResolveStencilNoExport_comp;
 
 namespace
 {
 // All internal shaders assume there is only one descriptor set, indexed at 0
 constexpr uint32_t kSetIndex = 0;
 
-constexpr uint32_t kBufferClearOutputBinding          = 0;
-constexpr uint32_t kConvertIndexDestinationBinding    = 0;
-constexpr uint32_t kConvertVertexDestinationBinding   = 0;
-constexpr uint32_t kConvertVertexSourceBinding        = 1;
-constexpr uint32_t kImageCopySourceBinding            = 0;
-constexpr uint32_t kResolveColorOrDepthBinding        = 0;
-constexpr uint32_t kResolveStencilBinding             = 1;
-constexpr uint32_t kResolveStencilNoExportDestBinding = 0;
-constexpr uint32_t kResolveStencilNoExportSrcBinding  = 1;
+constexpr uint32_t kBufferClearOutputBinding              = 0;
+constexpr uint32_t kConvertIndexDestinationBinding        = 0;
+constexpr uint32_t kConvertVertexDestinationBinding       = 0;
+constexpr uint32_t kConvertVertexSourceBinding            = 1;
+constexpr uint32_t kImageCopySourceBinding                = 0;
+constexpr uint32_t kBlitResolveColorOrDepthBinding        = 0;
+constexpr uint32_t kBlitResolveStencilBinding             = 1;
+constexpr uint32_t kBlitResolveStencilNoExportDestBinding = 0;
+constexpr uint32_t kBlitResolveStencilNoExportSrcBinding  = 1;
 
 uint32_t GetBufferUtilsFlags(size_t dispatchSize, const vk::Format &format)
 {
@@ -175,33 +175,33 @@ uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &destFo
     return flags;
 }
 
-uint32_t GetResolveFlags(bool resolveColor,
-                         bool resolveDepth,
-                         bool resolveStencil,
-                         const vk::Format &format)
+uint32_t GetBlitResolveFlags(bool resolveColor,
+                             bool resolveDepth,
+                             bool resolveStencil,
+                             const vk::Format &format)
 {
     if (resolveColor)
     {
         const angle::Format &angleFormat = format.angleFormat();
 
-        return GetFormatFlags(angleFormat, Resolve_frag::kResolveColorInt,
-                              Resolve_frag::kResolveColorUint, Resolve_frag::kResolveColorFloat);
+        return GetFormatFlags(angleFormat, BlitResolve_frag::kBlitColorInt,
+                              BlitResolve_frag::kBlitColorUint, BlitResolve_frag::kBlitColorFloat);
     }
 
     if (resolveDepth)
     {
         if (resolveStencil)
         {
-            return Resolve_frag::kResolveDepthStencil;
+            return BlitResolve_frag::kBlitDepthStencil;
         }
         else
         {
-            return Resolve_frag::kResolveDepth;
+            return BlitResolve_frag::kBlitDepth;
         }
     }
     else
     {
-        return Resolve_frag::kResolveStencil;
+        return BlitResolve_frag::kBlitStencil;
     }
 }
 
@@ -261,11 +261,11 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
-    for (vk::ShaderProgramHelper &program : mResolvePrograms)
+    for (vk::ShaderProgramHelper &program : mBlitResolvePrograms)
     {
         program.destroy(device);
     }
-    for (vk::ShaderProgramHelper &program : mResolveStencilNoExportPrograms)
+    for (vk::ShaderProgramHelper &program : mBlitResolveStencilNoExportPrograms)
     {
         program.destroy(device);
     }
@@ -389,9 +389,9 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitialized(ContextVk *context)
                                       sizeof(ImageCopyShaderParams));
 }
 
-angle::Result UtilsVk::ensureResolveResourcesInitialized(ContextVk *context)
+angle::Result UtilsVk::ensureBlitResolveResourcesInitialized(ContextVk *context)
 {
-    if (mPipelineLayouts[Function::Resolve].valid())
+    if (mPipelineLayouts[Function::BlitResolve].valid())
     {
         return angle::Result::Continue;
     }
@@ -401,13 +401,13 @@ angle::Result UtilsVk::ensureResolveResourcesInitialized(ContextVk *context)
         {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
     };
 
-    return ensureResourcesInitialized(context, Function::Resolve, setSizes, ArraySize(setSizes),
-                                      sizeof(ResolveShaderParams));
+    return ensureResourcesInitialized(context, Function::BlitResolve, setSizes, ArraySize(setSizes),
+                                      sizeof(BlitResolveShaderParams));
 }
 
-angle::Result UtilsVk::ensureResolveStencilNoExportResourcesInitialized(ContextVk *context)
+angle::Result UtilsVk::ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *context)
 {
-    if (mPipelineLayouts[Function::ResolveStencilNoExport].valid())
+    if (mPipelineLayouts[Function::BlitResolveStencilNoExport].valid())
     {
         return angle::Result::Continue;
     }
@@ -417,9 +417,9 @@ angle::Result UtilsVk::ensureResolveStencilNoExportResourcesInitialized(ContextV
         {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
     };
 
-    return ensureResourcesInitialized(context, Function::ResolveStencilNoExport, setSizes,
+    return ensureResourcesInitialized(context, Function::BlitResolveStencilNoExport, setSizes,
                                       ArraySize(setSizes),
-                                      sizeof(ResolveStencilNoExportShaderParams));
+                                      sizeof(BlitResolveStencilNoExportShaderParams));
 }
 
 angle::Result UtilsVk::setupProgram(ContextVk *context,
@@ -795,32 +795,33 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result UtilsVk::colorResolve(ContextVk *contextVk,
-                                    FramebufferVk *framebuffer,
-                                    vk::ImageHelper *src,
-                                    const vk::ImageView *srcView,
-                                    const ResolveParameters &params)
+angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
+                                        FramebufferVk *framebuffer,
+                                        vk::ImageHelper *src,
+                                        const vk::ImageView *srcView,
+                                        const BlitResolveParameters &params)
 {
-    return resolveImpl(contextVk, framebuffer, src, srcView, nullptr, nullptr, params);
+    return blitResolveImpl(contextVk, framebuffer, src, srcView, nullptr, nullptr, params);
 }
 
-angle::Result UtilsVk::depthStencilResolve(ContextVk *contextVk,
-                                           FramebufferVk *framebuffer,
-                                           vk::ImageHelper *src,
-                                           const vk::ImageView *srcDepthView,
-                                           const vk::ImageView *srcStencilView,
-                                           const ResolveParameters &params)
+angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
+                                               FramebufferVk *framebuffer,
+                                               vk::ImageHelper *src,
+                                               const vk::ImageView *srcDepthView,
+                                               const vk::ImageView *srcStencilView,
+                                               const BlitResolveParameters &params)
 {
-    return resolveImpl(contextVk, framebuffer, src, nullptr, srcDepthView, srcStencilView, params);
+    return blitResolveImpl(contextVk, framebuffer, src, nullptr, srcDepthView, srcStencilView,
+                           params);
 }
 
-angle::Result UtilsVk::resolveImpl(ContextVk *contextVk,
-                                   FramebufferVk *framebuffer,
-                                   vk::ImageHelper *src,
-                                   const vk::ImageView *srcColorView,
-                                   const vk::ImageView *srcDepthView,
-                                   const vk::ImageView *srcStencilView,
-                                   const ResolveParameters &params)
+angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
+                                       FramebufferVk *framebuffer,
+                                       vk::ImageHelper *src,
+                                       const vk::ImageView *srcColorView,
+                                       const vk::ImageView *srcDepthView,
+                                       const vk::ImageView *srcStencilView,
+                                       const BlitResolveParameters &params)
 {
     // Possible ways to resolve color are:
     //
@@ -843,11 +844,11 @@ angle::Result UtilsVk::resolveImpl(ContextVk *contextVk,
     //
     // The first method is implemented in this function.
 
-    ANGLE_TRY(ensureResolveResourcesInitialized(contextVk));
+    ANGLE_TRY(ensureBlitResolveResourcesInitialized(contextVk));
 
     ASSERT(src->getSamples() > 1);
 
-    ResolveShaderParams shaderParams;
+    BlitResolveShaderParams shaderParams;
     shaderParams.srcExtent[0]  = params.srcExtents[0];
     shaderParams.srcExtent[1]  = params.srcExtents[1];
     shaderParams.srcOffset[0]  = params.srcOffset[0];
@@ -869,13 +870,14 @@ angle::Result UtilsVk::resolveImpl(ContextVk *contextVk,
     // Either color is resolved or depth/stencil, but not both.
     ASSERT(resolveColor != (resolveDepth || resolveStencil));
 
-    uint32_t flags = GetResolveFlags(resolveColor, resolveDepth, resolveStencil, src->getFormat());
-    flags |= src->getLayerCount() > 1 ? Resolve_frag::kSrcIsArray : 0;
+    uint32_t flags =
+        GetBlitResolveFlags(resolveColor, resolveDepth, resolveStencil, src->getFormat());
+    flags |= src->getLayerCount() > 1 ? BlitResolve_frag::kSrcIsArray : 0;
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-    ANGLE_TRY(mDescriptorPools[Function::Resolve].allocateSets(
-        contextVk, mDescriptorSetLayouts[Function::Resolve][kSetIndex].get().ptr(), 1,
+    ANGLE_TRY(mDescriptorPools[Function::BlitResolve].allocateSets(
+        contextVk, mDescriptorSetLayouts[Function::BlitResolve][kSetIndex].get().ptr(), 1,
         &descriptorPoolBinding, &descriptorSet));
     descriptorPoolBinding.get().updateSerial(contextVk->getCurrentQueueSerial());
 
@@ -951,13 +953,13 @@ angle::Result UtilsVk::resolveImpl(ContextVk *contextVk,
     VkWriteDescriptorSet writeInfos[2] = {};
     writeInfos[0].sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeInfos[0].dstSet               = descriptorSet;
-    writeInfos[0].dstBinding           = kResolveColorOrDepthBinding;
+    writeInfos[0].dstBinding           = kBlitResolveColorOrDepthBinding;
     writeInfos[0].descriptorCount      = 1;
     writeInfos[0].descriptorType       = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
     writeInfos[0].pImageInfo           = &imageInfos[0];
 
     writeInfos[1]            = writeInfos[0];
-    writeInfos[1].dstBinding = kResolveStencilBinding;
+    writeInfos[1].dstBinding = kBlitResolveStencilBinding;
     writeInfos[1].pImageInfo = &imageInfos[1];
 
     // If resolving color, there's one write info; index 0
@@ -975,33 +977,34 @@ angle::Result UtilsVk::resolveImpl(ContextVk *contextVk,
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getResolve_frag(contextVk, flags, &fragmentShader));
+    ANGLE_TRY(shaderLibrary.getBlitResolve_frag(contextVk, flags, &fragmentShader));
 
-    ANGLE_TRY(setupProgram(contextVk, Function::Resolve, fragmentShader, vertexShader,
-                           &mResolvePrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+    ANGLE_TRY(setupProgram(contextVk, Function::BlitResolve, fragmentShader, vertexShader,
+                           &mBlitResolvePrograms[flags], &pipelineDesc, descriptorSet,
+                           &shaderParams, sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
     descriptorPoolBinding.reset();
 
     return angle::Result::Continue;
 }
 
-angle::Result UtilsVk::stencilResolveNoShaderExport(ContextVk *contextVk,
-                                                    FramebufferVk *framebuffer,
-                                                    vk::ImageHelper *src,
-                                                    const vk::ImageView *srcStencilView,
-                                                    const ResolveParameters &params)
+angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
+                                                        FramebufferVk *framebuffer,
+                                                        vk::ImageHelper *src,
+                                                        const vk::ImageView *srcStencilView,
+                                                        const BlitResolveParameters &params)
 {
     // When VK_EXT_shader_stencil_export is not available, stencil is resolved into a temporary
     // buffer which is then copied into the stencil aspect of the image.
 
-    ANGLE_TRY(ensureResolveStencilNoExportResourcesInitialized(contextVk));
+    ANGLE_TRY(ensureBlitResolveStencilNoExportResourcesInitialized(contextVk));
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-    ANGLE_TRY(mDescriptorPools[Function::ResolveStencilNoExport].allocateSets(
-        contextVk, mDescriptorSetLayouts[Function::ResolveStencilNoExport][kSetIndex].get().ptr(),
-        1, &descriptorPoolBinding, &descriptorSet));
+    ANGLE_TRY(mDescriptorPools[Function::BlitResolveStencilNoExport].allocateSets(
+        contextVk,
+        mDescriptorSetLayouts[Function::BlitResolveStencilNoExport][kSetIndex].get().ptr(), 1,
+        &descriptorPoolBinding, &descriptorSet));
     descriptorPoolBinding.get().updateSerial(contextVk->getCurrentQueueSerial());
 
     // Create a temporary buffer to resolve stencil into.
@@ -1024,7 +1027,7 @@ angle::Result UtilsVk::stencilResolveNoShaderExport(ContextVk *contextVk,
                                        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     resolveBuffer.get().updateQueueSerial(contextVk->getCurrentQueueSerial());
 
-    ResolveStencilNoExportShaderParams shaderParams;
+    BlitResolveStencilNoExportShaderParams shaderParams;
     shaderParams.srcExtent[0]  = params.srcExtents[0];
     shaderParams.srcExtent[1]  = params.srcExtents[1];
     shaderParams.srcOffset[0]  = params.srcOffset[0];
@@ -1036,7 +1039,7 @@ angle::Result UtilsVk::stencilResolveNoShaderExport(ContextVk *contextVk,
     shaderParams.flipX         = params.flipX;
     shaderParams.flipY         = params.flipY;
 
-    uint32_t flags = src->getLayerCount() > 1 ? ResolveStencilNoExport_comp::kSrcIsArray : 0;
+    uint32_t flags = src->getLayerCount() > 1 ? BlitResolveStencilNoExport_comp::kSrcIsArray : 0;
 
     // Change source layout prior to computation.
     if (src->isLayoutChangeNecessary(vk::ImageLayout::ComputeShaderReadOnly))
@@ -1065,14 +1068,14 @@ angle::Result UtilsVk::stencilResolveNoShaderExport(ContextVk *contextVk,
     VkWriteDescriptorSet writeInfos[2] = {};
     writeInfos[0].sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeInfos[0].dstSet               = descriptorSet;
-    writeInfos[0].dstBinding           = kResolveStencilNoExportDestBinding;
+    writeInfos[0].dstBinding           = kBlitResolveStencilNoExportDestBinding;
     writeInfos[0].descriptorCount      = 1;
     writeInfos[0].descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     writeInfos[0].pBufferInfo          = &bufferInfo;
 
     writeInfos[1].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeInfos[1].dstSet          = descriptorSet;
-    writeInfos[1].dstBinding      = kResolveStencilNoExportSrcBinding;
+    writeInfos[1].dstBinding      = kBlitResolveStencilNoExportSrcBinding;
     writeInfos[1].descriptorCount = 1;
     writeInfos[1].descriptorType  = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
     writeInfos[1].pImageInfo      = &imageInfo;
@@ -1080,11 +1083,11 @@ angle::Result UtilsVk::stencilResolveNoShaderExport(ContextVk *contextVk,
     vkUpdateDescriptorSets(contextVk->getDevice(), 2, writeInfos, 0, nullptr);
 
     vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
-    ANGLE_TRY(
-        contextVk->getShaderLibrary().getResolveStencilNoExport_comp(contextVk, flags, &shader));
+    ANGLE_TRY(contextVk->getShaderLibrary().getBlitResolveStencilNoExport_comp(contextVk, flags,
+                                                                               &shader));
 
-    ANGLE_TRY(setupProgram(contextVk, Function::ResolveStencilNoExport, shader, nullptr,
-                           &mResolveStencilNoExportPrograms[flags], nullptr, descriptorSet,
+    ANGLE_TRY(setupProgram(contextVk, Function::BlitResolveStencilNoExport, shader, nullptr,
+                           &mBlitResolveStencilNoExportPrograms[flags], nullptr, descriptorSet,
                            &shaderParams, sizeof(shaderParams), commandBuffer));
     commandBuffer->dispatch(UnsignedCeilDivide(bufferRowLengthInUints, 8),
                             UnsignedCeilDivide(params.resolveArea.height, 8), 1);

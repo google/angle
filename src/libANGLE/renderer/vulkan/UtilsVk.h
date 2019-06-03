@@ -84,7 +84,7 @@ class UtilsVk : angle::NonCopyable
         uint8_t stencilClearValue;
     };
 
-    struct ResolveParameters
+    struct BlitResolveParameters
     {
         // |srcOffset| and |dstOffset| define the transformation from source to destination.
         int srcOffset[2];
@@ -127,22 +127,22 @@ class UtilsVk : angle::NonCopyable
     angle::Result clearFramebuffer(ContextVk *contextVk,
                                    FramebufferVk *framebuffer,
                                    const ClearFramebufferParameters &params);
-    angle::Result colorResolve(ContextVk *contextVk,
-                               FramebufferVk *framebuffer,
-                               vk::ImageHelper *src,
-                               const vk::ImageView *srcView,
-                               const ResolveParameters &params);
-    angle::Result depthStencilResolve(ContextVk *contextVk,
-                                      FramebufferVk *framebuffer,
-                                      vk::ImageHelper *src,
-                                      const vk::ImageView *srcDepthView,
-                                      const vk::ImageView *srcStencilView,
-                                      const ResolveParameters &params);
-    angle::Result stencilResolveNoShaderExport(ContextVk *contextVk,
-                                               FramebufferVk *framebuffer,
-                                               vk::ImageHelper *src,
-                                               const vk::ImageView *srcStencilView,
-                                               const ResolveParameters &params);
+    angle::Result colorBlitResolve(ContextVk *contextVk,
+                                   FramebufferVk *framebuffer,
+                                   vk::ImageHelper *src,
+                                   const vk::ImageView *srcView,
+                                   const BlitResolveParameters &params);
+    angle::Result depthStencilBlitResolve(ContextVk *contextVk,
+                                          FramebufferVk *framebuffer,
+                                          vk::ImageHelper *src,
+                                          const vk::ImageView *srcDepthView,
+                                          const vk::ImageView *srcStencilView,
+                                          const BlitResolveParameters &params);
+    angle::Result stencilBlitResolveNoShaderExport(ContextVk *contextVk,
+                                                   FramebufferVk *framebuffer,
+                                                   vk::ImageHelper *src,
+                                                   const vk::ImageView *srcStencilView,
+                                                   const BlitResolveParameters &params);
 
     angle::Result copyImage(ContextVk *contextVk,
                             vk::ImageHelper *dest,
@@ -212,9 +212,9 @@ class UtilsVk : angle::NonCopyable
         uint32_t destDefaultChannelsMask = 0;
     };
 
-    struct ResolveShaderParams
+    struct BlitResolveShaderParams
     {
-        // Structure matching PushConstants in Resolve.frag
+        // Structure matching PushConstants in BlitResolve.frag
         int32_t srcExtent[2]  = {};
         int32_t srcOffset[2]  = {};
         int32_t destOffset[2] = {};
@@ -226,9 +226,9 @@ class UtilsVk : angle::NonCopyable
         uint32_t flipY        = 0;
     };
 
-    struct ResolveStencilNoExportShaderParams
+    struct BlitResolveStencilNoExportShaderParams
     {
-        // Structure matching PushConstants in ResolveStencilNoExport.comp
+        // Structure matching PushConstants in BlitResolveStencilNoExport.comp
         int32_t srcExtent[2]  = {};
         int32_t srcOffset[2]  = {};
         int32_t srcLayer      = 0;
@@ -242,16 +242,16 @@ class UtilsVk : angle::NonCopyable
     enum class Function
     {
         // Functions implemented in graphics
-        ImageClear = 0,
-        ImageCopy  = 1,
-        Resolve    = 2,
+        ImageClear  = 0,
+        ImageCopy   = 1,
+        BlitResolve = 2,
 
         // Functions implemented in compute
-        ComputeStartIndex      = 3,  // Special value to separate draw and dispatch functions.
-        BufferClear            = 3,
-        ConvertIndexBuffer     = 4,
-        ConvertVertexBuffer    = 5,
-        ResolveStencilNoExport = 6,
+        ComputeStartIndex          = 3,  // Special value to separate draw and dispatch functions.
+        BufferClear                = 3,
+        ConvertIndexBuffer         = 4,
+        ConvertVertexBuffer        = 5,
+        BlitResolveStencilNoExport = 6,
 
         InvalidEnum = 7,
         EnumCount   = 7,
@@ -291,8 +291,8 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *context);
     angle::Result ensureImageClearResourcesInitialized(ContextVk *context);
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);
-    angle::Result ensureResolveResourcesInitialized(ContextVk *context);
-    angle::Result ensureResolveStencilNoExportResourcesInitialized(ContextVk *context);
+    angle::Result ensureBlitResolveResourcesInitialized(ContextVk *context);
+    angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
                                   vk::ImageHelper *image,
@@ -301,14 +301,14 @@ class UtilsVk : angle::NonCopyable
                                   const gl::Rectangle &renderArea,
                                   vk::CommandBuffer **commandBufferOut);
 
-    // Resolves either color or depth/stencil, based on which view is given.
-    angle::Result resolveImpl(ContextVk *contextVk,
-                              FramebufferVk *framebuffer,
-                              vk::ImageHelper *src,
-                              const vk::ImageView *srcColorView,
-                              const vk::ImageView *srcDepthView,
-                              const vk::ImageView *srcStencilView,
-                              const ResolveParameters &params);
+    // Blit/resolves either color or depth/stencil, based on which view is given.
+    angle::Result blitResolveImpl(ContextVk *contextVk,
+                                  FramebufferVk *framebuffer,
+                                  vk::ImageHelper *src,
+                                  const vk::ImageView *srcColorView,
+                                  const vk::ImageView *srcDepthView,
+                                  const vk::ImageView *srcStencilView,
+                                  const BlitResolveParameters &params);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
@@ -332,10 +332,10 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kFlagsMask |
                                                vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
                                                vk::InternalShader::ImageCopy_frag::kDestFormatMask];
-    vk::ShaderProgramHelper mResolvePrograms[vk::InternalShader::Resolve_frag::kFlagsMask |
-                                             vk::InternalShader::Resolve_frag::kResolveMask];
-    vk::ShaderProgramHelper mResolveStencilNoExportPrograms
-        [vk::InternalShader::ResolveStencilNoExport_comp::kFlagsMask];
+    vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kFlagsMask |
+                                                 vk::InternalShader::BlitResolve_frag::kBlitMask];
+    vk::ShaderProgramHelper mBlitResolveStencilNoExportPrograms
+        [vk::InternalShader::BlitResolveStencilNoExport_comp::kFlagsMask];
 };
 
 }  // namespace rx

@@ -893,7 +893,7 @@ angle::Result FramebufferVk::resolve(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    UtilsVk::ResolveParameters params;
+    UtilsVk::BlitResolveParameters params;
     params.srcOffset[0]  = srcOffset[0];
     params.srcOffset[1]  = srcOffset[1];
     params.srcExtents[0] = srcFramebufferDimensions.width;
@@ -919,8 +919,8 @@ angle::Result FramebufferVk::resolve(ContextVk *contextVk,
         }
         else
         {
-            ANGLE_TRY(utilsVk.colorResolve(contextVk, this, &readRenderTarget->getImage(),
-                                           readRenderTarget->getFetchImageView(), params));
+            ANGLE_TRY(utilsVk.colorBlitResolve(contextVk, this, &readRenderTarget->getImage(),
+                                               readRenderTarget->getFetchImageView(), params));
         }
     }
 
@@ -967,15 +967,15 @@ angle::Result FramebufferVk::resolve(ContextVk *contextVk,
             vk::ImageView *stencil =
                 resolveStencilBuffer && hasShaderStencilExport ? &stencilView.get() : nullptr;
 
-            ANGLE_TRY(utilsVk.depthStencilResolve(contextVk, this, depthStencilImage, depth,
-                                                  stencil, params));
+            ANGLE_TRY(utilsVk.depthStencilBlitResolve(contextVk, this, depthStencilImage, depth,
+                                                      stencil, params));
         }
 
         // If shader stencil export is not present, resolve stencil through a different path.
         if (resolveStencilBuffer && !hasShaderStencilExport)
         {
-            ANGLE_TRY(utilsVk.stencilResolveNoShaderExport(contextVk, this, depthStencilImage,
-                                                           &stencilView.get(), params));
+            ANGLE_TRY(utilsVk.stencilBlitResolveNoShaderExport(contextVk, this, depthStencilImage,
+                                                               &stencilView.get(), params));
         }
 
         vk::ImageView depthViewObject   = depthView.release();
@@ -989,7 +989,7 @@ angle::Result FramebufferVk::resolve(ContextVk *contextVk,
 }
 
 angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
-                                                     const UtilsVk::ResolveParameters &params,
+                                                     const UtilsVk::BlitResolveParameters &params,
                                                      vk::ImageHelper *srcImage)
 {
     if (srcImage->isLayoutChangeNecessary(vk::ImageLayout::TransferSrc))
