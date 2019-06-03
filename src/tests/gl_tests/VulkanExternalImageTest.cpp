@@ -175,6 +175,59 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdRGBA8)
     vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
 }
 
+// Test creating and clearing a simple RGBA8 texture in a zircon vmo.
+TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoRGBA8)
+{
+    // http://anglebug.com/4229
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
+
+    VulkanExternalHelper helper;
+    helper.initialize();
+
+    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+    ANGLE_SKIP_TEST_IF(
+        !helper.canCreateImageZirconVmo(format, VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL));
+
+    VkImage image                 = VK_NULL_HANDLE;
+    VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+    VkDeviceSize deviceMemorySize = 0;
+
+    VkExtent3D extent = {1, 1, 1};
+    VkResult result =
+        helper.createImage2DZirconVmo(format, extent, &image, &deviceMemory, &deviceMemorySize);
+    EXPECT_EQ(result, VK_SUCCESS);
+
+    zx_handle_t vmo = ZX_HANDLE_INVALID;
+    result          = helper.exportMemoryZirconVmo(deviceMemory, &vmo);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(vmo, ZX_HANDLE_INVALID);
+
+    {
+        GLMemoryObject memoryObject;
+        glImportMemoryZirconHandleANGLE(memoryObject, deviceMemorySize,
+                                        GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE, vmo);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+        glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        EXPECT_PIXEL_NEAR(0, 0, 128, 128, 128, 128, 1.0);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    vkDestroyImage(helper.getDevice(), image, nullptr);
+    vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VulkanExternalImageTest);

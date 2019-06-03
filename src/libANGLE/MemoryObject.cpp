@@ -33,4 +33,12 @@ angle::Result MemoryObject::importFd(Context *context,
     return mImplementation->importFd(context, size, handleType, fd);
 }
 
+angle::Result MemoryObject::importZirconHandle(Context *context,
+                                               GLuint64 size,
+                                               HandleType handleType,
+                                               GLuint handle)
+{
+    return mImplementation->importZirconHandle(context, size, handleType, handle);
+}
+
 }  // namespace gl

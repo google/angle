@@ -94,9 +94,13 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.memoryObject   = true;
     mNativeExtensions.memoryObjectFd = getFeatures().supportsExternalMemoryFd.enabled;
+    mNativeExtensions.memoryObjectFuchsiaANGLE =
+        getFeatures().supportsExternalMemoryFuchsia.enabled;
 
     mNativeExtensions.semaphore   = true;
     mNativeExtensions.semaphoreFd = getFeatures().supportsExternalSemaphoreFd.enabled;
+    mNativeExtensions.semaphoreFuchsiaANGLE =
+        getFeatures().supportsExternalSemaphoreFuchsia.enabled;
 
     mNativeExtensions.vertexHalfFloatOES = true;
 

@@ -26,6 +26,11 @@ class MemoryObjectGL : public MemoryObjectImpl
                            gl::HandleType handleType,
                            GLint fd) override;
 
+    angle::Result importZirconHandle(gl::Context *context,
+                                     GLuint64 size,
+                                     gl::HandleType handleType,
+                                     GLuint handle) override;
+
     GLuint getMemoryObjectID() const;
 
   private:

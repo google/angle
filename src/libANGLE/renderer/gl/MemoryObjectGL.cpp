@@ -39,6 +39,15 @@ angle::Result MemoryObjectGL::importFd(gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result MemoryObjectGL::importZirconHandle(gl::Context *context,
+                                                 GLuint64 size,
+                                                 gl::HandleType handleType,
+                                                 GLuint handle)
+{
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
+
 GLuint MemoryObjectGL::getMemoryObjectID() const
 {
     return mMemoryObject;

@@ -78,6 +78,23 @@ angle::Result SemaphoreVk::importFd(gl::Context *context, gl::HandleType handleT
     }
 }
 
+angle::Result SemaphoreVk::importZirconHandle(gl::Context *context,
+                                              gl::HandleType handleType,
+                                              GLuint handle)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    switch (handleType)
+    {
+        case gl::HandleType::ZirconEvent:
+            return importZirconEvent(contextVk, handle);
+
+        default:
+            ANGLE_VK_UNREACHABLE(contextVk);
+            return angle::Result::Stop;
+    }
+}
+
 angle::Result SemaphoreVk::wait(gl::Context *context,
                                 const gl::BufferBarrierVector &bufferBarriers,
                                 const gl::TextureBarrierVector &textureBarriers)
@@ -212,6 +229,37 @@ angle::Result SemaphoreVk::importOpaqueFd(ContextVk *contextVk, GLint fd)
     importSemaphoreFdInfo.fd         = fd;
 
     ANGLE_VK_TRY(contextVk, vkImportSemaphoreFdKHR(renderer->getDevice(), &importSemaphoreFdInfo));
+
+    return angle::Result::Continue;
+}
+
+angle::Result SemaphoreVk::importZirconEvent(ContextVk *contextVk, GLuint handle)
+{
+    RendererVk *renderer = contextVk->getRenderer();
+
+    if (!mSemaphore.valid())
+    {
+        mSemaphore.init(renderer->getDevice());
+    }
+
+    ASSERT(mSemaphore.valid());
+
+    VkImportSemaphoreZirconHandleInfoFUCHSIA importSemaphoreZirconHandleInfo = {};
+    importSemaphoreZirconHandleInfo.sType =
+        VK_STRUCTURE_TYPE_TEMP_IMPORT_SEMAPHORE_ZIRCON_HANDLE_INFO_FUCHSIA;
+    importSemaphoreZirconHandleInfo.semaphore = mSemaphore.getHandle();
+    importSemaphoreZirconHandleInfo.flags     = 0;
+    importSemaphoreZirconHandleInfo.handleType =
+        VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TEMP_ZIRCON_EVENT_BIT_FUCHSIA;
+    importSemaphoreZirconHandleInfo.handle = handle;
+
+    // TODO(spang): Add vkImportSemaphoreZirconHandleFUCHSIA to volk.
+    static PFN_vkImportSemaphoreZirconHandleFUCHSIA vkImportSemaphoreZirconHandleFUCHSIA =
+        reinterpret_cast<PFN_vkImportSemaphoreZirconHandleFUCHSIA>(
+            vkGetInstanceProcAddr(renderer->getInstance(), "vkImportSemaphoreZirconHandleFUCHSIA"));
+
+    ANGLE_VK_TRY(contextVk, vkImportSemaphoreZirconHandleFUCHSIA(renderer->getDevice(),
+                                                                 &importSemaphoreZirconHandleInfo));
 
     return angle::Result::Continue;
 }

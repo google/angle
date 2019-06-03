@@ -3589,8 +3589,16 @@ bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    switch (handleType)
+    {
+        case HandleType::ZirconVmo:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
+    }
+
+    return true;
 }
 
 bool ValidateDeleteSemaphoresEXT(const Context *context, GLsizei n, const SemaphoreID *semaphores)
@@ -3733,7 +3741,7 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
 
 bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
                                               SemaphoreID semaphore,
-                                              HandleType handleTypePacked,
+                                              HandleType handleType,
                                               GLuint handle)
 {
     if (!context->getExtensions().semaphoreFuchsiaANGLE)
@@ -3742,8 +3750,16 @@ bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    switch (handleType)
+    {
+        case HandleType::ZirconEvent:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
+    }
+
+    return true;
 }
 
 bool ValidateMapBufferBase(const Context *context, BufferBinding target)

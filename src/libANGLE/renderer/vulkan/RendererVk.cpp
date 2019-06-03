@@ -1128,12 +1128,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         enabledDeviceExtensions.push_back(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME);
     }
 
-    if (getFeatures().supportsAndroidHardwareBuffer.enabled ||
-        getFeatures().supportsExternalMemoryFd.enabled)
-    {
-        enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME);
-    }
-
 #if defined(ANGLE_PLATFORM_ANDROID)
     if (getFeatures().supportsAndroidHardwareBuffer.enabled)
     {
@@ -1145,12 +1139,25 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ASSERT(!getFeatures().supportsAndroidHardwareBuffer.enabled);
 #endif
 
+    if (getFeatures().supportsAndroidHardwareBuffer.enabled ||
+        getFeatures().supportsExternalMemoryFd.enabled ||
+        getFeatures().supportsExternalMemoryFuchsia.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME);
+    }
+
     if (getFeatures().supportsExternalMemoryFd.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME);
     }
 
-    if (getFeatures().supportsExternalSemaphoreFd.enabled)
+    if (getFeatures().supportsExternalMemoryFuchsia.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_FUCHSIA_EXTERNAL_MEMORY_EXTENSION_NAME);
+    }
+
+    if (getFeatures().supportsExternalSemaphoreFd.enabled ||
+        getFeatures().supportsExternalSemaphoreFuchsia.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME);
     }
@@ -1158,6 +1165,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (getFeatures().supportsExternalSemaphoreFd.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME);
+    }
+
+    if (getFeatures().supportsExternalSemaphoreFuchsia.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_FUCHSIA_EXTERNAL_SEMAPHORE_EXTENSION_NAME);
     }
 
     if (getFeatures().supportsShaderStencilExport.enabled)
@@ -1573,8 +1585,16 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
         ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
+        (&mFeatures), supportsExternalMemoryFuchsia,
+        ExtensionFound(VK_FUCHSIA_EXTERNAL_MEMORY_EXTENSION_NAME, deviceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsExternalSemaphoreFd,
         ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(
+        (&mFeatures), supportsExternalSemaphoreFuchsia,
+        ExtensionFound(VK_FUCHSIA_EXTERNAL_SEMAPHORE_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
         (&mFeatures), supportsShaderStencilExport,

@@ -114,11 +114,23 @@ struct FeaturesVk : FeatureSetBase
         "supports_external_memory_fd", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_KHR_external_memory_fd extension", &members};
 
+    // Whether the VkDevice supports the VK_FUCHSIA_external_memory
+    // extension, on which the GL_ANGLE_memory_object_fuchsia extension can be layered.
+    angle::Feature supportsExternalMemoryFuchsia = {
+        "supports_external_memory_fuchsia", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_FUCHSIA_external_memory extension", &members};
+
     // Whether the VkDevice supports the VK_KHR_external_semaphore_fd extension, on which the
     // GL_EXT_semaphore_fd extension can be layered.
     Feature supportsExternalSemaphoreFd = {
         "supports_external_semaphore_fd", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_KHR_external_semaphore_fd extension", &members};
+
+    // Whether the VkDevice supports the VK_FUCHSIA_external_semaphore
+    // extension, on which the GL_ANGLE_semaphore_fuchsia extension can be layered.
+    angle::Feature supportsExternalSemaphoreFuchsia = {
+        "supports_external_semaphore_fuchsia", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_FUCHSIA_external_semaphore extension", &members};
 
     // Whether the VkDevice supports the VK_EXT_shader_stencil_export extension, which is used to
     // perform multisampled resolve of stencil buffer.  A multi-step workaround is used instead if

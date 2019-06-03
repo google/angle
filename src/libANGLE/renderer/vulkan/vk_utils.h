@@ -23,6 +23,7 @@
 #include "libANGLE/renderer/serial_utils.h"
 #include "libANGLE/renderer/vulkan/SecondaryCommandBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
+#include "vulkan/vulkan_fuchsia_ext.h"
 
 #define ANGLE_GL_OBJECTS_X(PROC) \
     PROC(Buffer)                 \
