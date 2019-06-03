@@ -709,8 +709,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     multisampleState.sampleShadingEnable =
         static_cast<VkBool32>(rasterAndMS.bits.sampleShadingEnable);
     multisampleState.minSampleShading = rasterAndMS.minSampleShading;
-    // TODO(jmadill): sample masks
-    multisampleState.pSampleMask = nullptr;
+    multisampleState.pSampleMask      = rasterAndMS.sampleMask;
     multisampleState.alphaToCoverageEnable =
         static_cast<VkBool32>(rasterAndMS.bits.alphaToCoverageEnable);
     multisampleState.alphaToOneEnable = static_cast<VkBool32>(rasterAndMS.bits.alphaToOneEnable);
