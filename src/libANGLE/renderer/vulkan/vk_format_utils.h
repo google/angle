@@ -97,7 +97,6 @@ struct Format final : private angle::NonCopyable
 
     bool vertexLoadRequiresConversion;
     bool vkBufferFormatIsPacked;
-    bool vkSupportsStorageBuffer;
     bool vkFormatIsInt;
     bool vkFormatIsUnsigned;
 };

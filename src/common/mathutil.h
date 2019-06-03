@@ -1244,7 +1244,7 @@ angle::CheckedNumeric<T> CheckedRoundUp(const T value, const T alignment)
     return roundUp(checkedValue, checkedAlignment);
 }
 
-inline unsigned int UnsignedCeilDivide(unsigned int value, unsigned int divisor)
+inline constexpr unsigned int UnsignedCeilDivide(unsigned int value, unsigned int divisor)
 {
     unsigned int divided = value / divisor;
     return (divided + ((value % divisor == 0) ? 0 : 1));

@@ -41,6 +41,9 @@ enum Format
 };
 }  // namespace BufferUtils_comp
 
+namespace ConvertIndex_comp
+{}  // namespace ConvertIndex_comp
+
 namespace ConvertVertex_comp
 {
 enum flags
@@ -152,6 +155,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getBufferUtils_comp(Context *context,
                                       uint32_t shaderFlags,
                                       RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getConvertIndex_comp(Context *context,
+                                       uint32_t shaderFlags,
+                                       RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getConvertVertex_comp(Context *context,
                                         uint32_t shaderFlags,
                                         RefCounted<ShaderAndSerial> **shaderOut);
@@ -176,6 +182,7 @@ class ShaderLibrary final : angle::NonCopyable
         mBufferUtils_comp_shaders[InternalShader::BufferUtils_comp::kFlagsMask |
                                   InternalShader::BufferUtils_comp::kFunctionMask |
                                   InternalShader::BufferUtils_comp::kFormatMask];
+    RefCounted<ShaderAndSerial> mConvertIndex_comp_shaders[1];
     RefCounted<ShaderAndSerial>
         mConvertVertex_comp_shaders[InternalShader::ConvertVertex_comp::kFlagsMask |
                                     InternalShader::ConvertVertex_comp::kConversionMask];

@@ -217,6 +217,8 @@
     "41a4c1f28284dd9396bca79d9967704d",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/BufferUtils.comp.0000000B.inc":
     "065aaa20cdad29b5f5d2916eb3d096fc",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000000.inc":
+    "449ed947f0a7923a26b9fe1fa9c02a47",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000000.inc":
     "d4e48d64aa66fcf3c09330c4234ba349",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000001.inc":
@@ -365,6 +367,8 @@
     "5f9bbc046387b04be58dbd71988abfc2",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/BufferUtils.comp":
     "0c8c050841543da0d7faca2559212aa8",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ConvertIndex.comp":
+    "f7675f4b3c966022e5bd222823b5a094",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp":
     "93649f61036c2fa4739988ad71f413df",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
@@ -378,9 +382,9 @@
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/ResolveStencilNoExport.comp":
     "645d157257fd8b5315ed56cc12bc94b9",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "f41ce1c729f1fb8adc179d7767cda072",
+    "bb91c9011878e1603c26e4e915cabcd0",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "d903e4852d80ccb8b7f817728f8fb887",
+    "1e4e242530c906e74a6f288d98298780",
   "Vulkan internal shader programs:tools/glslang/glslang_validator.exe.sha1":
     "9f1f0fc61116a657e065c40f9296e5ab",
   "Vulkan internal shader programs:tools/glslang/glslang_validator.sha1":

@@ -158,19 +158,17 @@ void main()
 
             if (i < firstIndex)
             {
-                EXPECT_PIXEL_EQ(x, y, 0, 0, 0, 255);
+                EXPECT_PIXEL_COLOR_EQ(x, y, GLColor::black);
             }
             else
             {
                 if (useVertexBufferWithColor)
                 {
-                    // Pixel data is assumed to be GREEN
-                    EXPECT_PIXEL_EQ(x, y, 0, 255, 0, 255);
+                    EXPECT_PIXEL_COLOR_EQ(x, y, GLColor::green);
                 }
                 else
                 {
-                    // Pixel data is assumed to be RED
-                    EXPECT_PIXEL_EQ(x, y, 255, 0, 0, 255);
+                    EXPECT_PIXEL_COLOR_EQ(x, y, GLColor::red);
                 }
             }
         }

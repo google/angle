@@ -30,8 +30,7 @@ namespace
 constexpr uint32_t kSetIndex = 0;
 
 constexpr uint32_t kBufferClearOutputBinding          = 0;
-constexpr uint32_t kBufferCopyDestinationBinding      = 0;
-constexpr uint32_t kBufferCopySourceBinding           = 1;
+constexpr uint32_t kConvertIndexDestinationBinding    = 0;
 constexpr uint32_t kConvertVertexDestinationBinding   = 0;
 constexpr uint32_t kConvertVertexSourceBinding        = 1;
 constexpr uint32_t kImageCopySourceBinding            = 0;
@@ -248,6 +247,7 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
+    mConvertIndexProgram.destroy(device);
     for (vk::ShaderProgramHelper &program : mConvertVertexPrograms)
     {
         program.destroy(device);
@@ -338,12 +338,12 @@ angle::Result UtilsVk::ensureConvertIndexResourcesInitialized(ContextVk *context
     }
 
     VkDescriptorPoolSize setSizes[2] = {
-        {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1},
-        {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1},
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},
     };
 
     return ensureResourcesInitialized(context, Function::ConvertIndexBuffer, setSizes,
-                                      ArraySize(setSizes), sizeof(BufferUtilsShaderParams));
+                                      ArraySize(setSizes), sizeof(ConvertIndexShaderParams));
 }
 
 angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(ContextVk *context)
@@ -557,19 +557,6 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *context,
     // Tell dest it's being written to.
     dest->onWrite(VK_ACCESS_SHADER_WRITE_BIT);
 
-    const vk::Format &destFormat = dest->getViewFormat();
-    const vk::Format &srcFormat  = src->getViewFormat();
-
-    ASSERT(destFormat.vkFormatIsInt == srcFormat.vkFormatIsInt);
-    ASSERT(destFormat.vkFormatIsUnsigned == srcFormat.vkFormatIsUnsigned);
-
-    uint32_t flags = BufferUtils_comp::kIsCopy | GetBufferUtilsFlags(params.size, destFormat);
-
-    BufferUtilsShaderParams shaderParams;
-    shaderParams.destOffset = params.destOffset;
-    shaderParams.size       = params.size;
-    shaderParams.srcOffset  = params.srcOffset;
-
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(mDescriptorPools[Function::ConvertIndexBuffer].allocateSets(
@@ -577,32 +564,37 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *context,
         &descriptorPoolBinding, &descriptorSet));
     descriptorPoolBinding.get().updateSerial(context->getCurrentQueueSerial());
 
-    VkWriteDescriptorSet writeInfo[2] = {};
+    std::array<VkDescriptorBufferInfo, 2> buffers = {{
+        {dest->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+        {src->getBuffer().getHandle(), 0, VK_WHOLE_SIZE},
+    }};
 
-    writeInfo[0].sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo[0].dstSet           = descriptorSet;
-    writeInfo[0].dstBinding       = kBufferCopyDestinationBinding;
-    writeInfo[0].descriptorCount  = 1;
-    writeInfo[0].descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
-    writeInfo[0].pTexelBufferView = dest->getBufferView().ptr();
+    VkWriteDescriptorSet writeInfo = {};
+    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo.dstSet               = descriptorSet;
+    writeInfo.dstBinding           = kConvertIndexDestinationBinding;
+    writeInfo.descriptorCount      = 2;
+    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writeInfo.pBufferInfo          = buffers.data();
 
-    writeInfo[1].sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo[1].dstSet           = descriptorSet;
-    writeInfo[1].dstBinding       = kBufferCopySourceBinding;
-    writeInfo[1].descriptorCount  = 1;
-    writeInfo[1].descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
-    writeInfo[1].pTexelBufferView = src->getBufferView().ptr();
+    vkUpdateDescriptorSets(context->getDevice(), 1, &writeInfo, 0, nullptr);
 
-    vkUpdateDescriptorSets(context->getDevice(), 2, writeInfo, 0, nullptr);
+    ConvertIndexShaderParams shaderParams = {params.srcOffset, params.dstOffset >> 2,
+                                             params.maxIndex, 0};
 
     vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
-    ANGLE_TRY(context->getShaderLibrary().getBufferUtils_comp(context, flags, &shader));
+    ANGLE_TRY(context->getShaderLibrary().getConvertIndex_comp(context, 0, &shader));
 
     ANGLE_TRY(setupProgram(context, Function::ConvertIndexBuffer, shader, nullptr,
-                           &mBufferUtilsPrograms[flags], nullptr, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
+                           &mConvertIndexProgram, nullptr, descriptorSet, &shaderParams,
+                           sizeof(ConvertIndexShaderParams), commandBuffer));
 
-    commandBuffer->dispatch(UnsignedCeilDivide(params.size, 64), 1, 1);
+    constexpr uint32_t kInvocationsPerGroup = 64;
+    constexpr uint32_t kInvocationsPerIndex = 2;
+    const uint32_t kIndexCount              = params.maxIndex - params.srcOffset;
+    const uint32_t kGroupCount =
+        UnsignedCeilDivide(kIndexCount * kInvocationsPerIndex, kInvocationsPerGroup);
+    commandBuffer->dispatch(kGroupCount, 1, 1);
 
     descriptorPoolBinding.reset();
 
