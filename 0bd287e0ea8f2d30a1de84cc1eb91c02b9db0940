@@ -374,6 +374,24 @@
       "revId": "0bd287e0ea8f2d30a1de84cc1eb91c02b9db0940",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4734e062_e61f7504",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-03T19:00:18Z",
+      "side": 1,
+      "message": "Sounds like it should be ES3_VULKAN() instead, along with WebGLDrawElementsTest below?   I think we enable 3.0 contexts for unofficial test builds, so presumably that would exercise this code.\n\nUnrelated, but do we need to audit all of the uses of ES2_VULKAN() and start adding ES3_VULKAN() also?",
+      "parentUuid": "a3d63654_8bf0a818",
+      "revId": "0bd287e0ea8f2d30a1de84cc1eb91c02b9db0940",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
