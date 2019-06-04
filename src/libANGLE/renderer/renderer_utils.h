@@ -21,6 +21,7 @@
 
 namespace angle
 {
+struct FeatureSetBase;
 struct Format;
 enum class FormatID;
 }  // namespace angle
@@ -35,6 +36,7 @@ class State;
 namespace egl
 {
 class AttributeMap;
+struct DisplayState;
 }  // namespace egl
 
 namespace rx
@@ -301,6 +303,10 @@ angle::Result GetVertexRangeInfo(const gl::Context *context,
                                  size_t *vertexCountOut);
 
 gl::Rectangle ClipRectToScissor(const gl::State &glState, const gl::Rectangle &rect, bool invertY);
+
+// Helper method to intialize a FeatureSet with overrides from the DisplayState
+void OverrideFeaturesWithDisplayState(angle::FeatureSetBase *features,
+                                      const egl::DisplayState &state);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_RENDERER_UTILS_H_

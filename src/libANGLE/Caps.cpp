@@ -1409,8 +1409,7 @@ DisplayExtensions::DisplayExtensions()
       imageNativeBuffer(false),
       getFrameTimestamps(false),
       recordable(false),
-      powerPreference(false),
-      featureControlANGLE(false)
+      powerPreference(false)
 {}
 
 std::vector<std::string> DisplayExtensions::getStrings() const
@@ -1465,7 +1464,6 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANDROID_get_frame_timestamps",                    getFrameTimestamps,                 &extensionStrings);
     InsertExtensionString("EGL_ANDROID_recordable",                              recordable,                         &extensionStrings);
     InsertExtensionString("EGL_ANGLE_power_preference",                          powerPreference,                    &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_feature_control",                           featureControlANGLE,                &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on
@@ -1502,7 +1500,8 @@ ClientExtensions::ClientExtensions()
       experimentalPresentPath(false),
       clientGetAllProcAddresses(false),
       debug(false),
-      explicitContext(false)
+      explicitContext(false),
+      featureControlANGLE(false)
 {}
 
 ClientExtensions::ClientExtensions(const ClientExtensions &other) = default;
@@ -1529,6 +1528,7 @@ std::vector<std::string> ClientExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_client_get_all_proc_addresses",           clientGetAllProcAddresses,          &extensionStrings);
     InsertExtensionString("EGL_KHR_debug",                                   debug,                              &extensionStrings);
     InsertExtensionString("EGL_ANGLE_explicit_context",                      explicitContext,                    &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_feature_control",                       featureControlANGLE,                &extensionStrings);
     // clang-format on
 
     return extensionStrings;

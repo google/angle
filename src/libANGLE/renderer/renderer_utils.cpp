@@ -14,9 +14,12 @@
 
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/Format.h"
+
+#include "platform/Feature.h"
 
 #include <string.h>
 #include "common/utilities.h"
@@ -649,5 +652,12 @@ gl::Rectangle ClipRectToScissor(const gl::State &glState, const gl::Rectangle &r
     // with different sizes.  If such usage is observed in an application, we should investigate
     // possible optimizations.
     return rect;
+}
+
+void OverrideFeaturesWithDisplayState(angle::FeatureSetBase *features,
+                                      const egl::DisplayState &state)
+{
+    features->overrideFeatures(state.featureOverridesEnabled, true);
+    features->overrideFeatures(state.featureOverridesDisabled, false);
 }
 }  // namespace rx

@@ -92,6 +92,8 @@ class DisplayImpl : public EGLImplFactory
 
     virtual void populateFeatureList(angle::FeatureList *features) = 0;
 
+    const egl::DisplayState &getState() const { return mState; }
+
   protected:
     const egl::DisplayState &mState;
 

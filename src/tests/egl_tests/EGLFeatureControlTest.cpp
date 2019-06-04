@@ -18,16 +18,42 @@ class EGLFeatureControlTest : public ANGLETest
   public:
     void testSetUp() override
     {
-        ASSERT_TRUE(IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
-                                                 "EGL_ANGLE_feature_control"));
+        
     }
 
-    void testTearDown() override {}
+    void testTearDown() override
+    {
+        if (mDisplay != EGL_NO_DISPLAY)
+        {
+            eglTerminate(mDisplay);
+        }
+    }
+
+  protected:
+    EGLDisplay mDisplay;
+
+    bool initTest()
+    {
+        EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+        mDisplay              = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                         reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+        if (mDisplay == EGL_NO_DISPLAY)
+            return false;
+
+        if (eglInitialize(mDisplay, nullptr, nullptr) != EGL_TRUE)
+            return false;
+
+        if (!IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"))
+            return false;
+
+        return true;
+    }
 };
 
 // Ensure eglQueryStringiANGLE generates EGL_BAD_DISPLAY if the display passed in is invalid.
 TEST_P(EGLFeatureControlTest, InvalidDisplay)
 {
+    ASSERT_TRUE(initTest());
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(EGL_NO_DISPLAY, EGL_FEATURE_NAME_ANGLE, 0));
     EXPECT_EGL_ERROR(EGL_BAD_DISPLAY);
 }
@@ -35,18 +61,18 @@ TEST_P(EGLFeatureControlTest, InvalidDisplay)
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the index is negative.
 TEST_P(EGLFeatureControlTest, NegativeIndex)
 {
-    EXPECT_EQ(nullptr,
-              eglQueryStringiANGLE(getEGLWindow()->getDisplay(), EGL_FEATURE_NAME_ANGLE, -1));
+    ASSERT_TRUE(initTest());
+    EXPECT_EQ(nullptr, eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE, -1));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 }
 
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the index is out of bounds.
 TEST_P(EGLFeatureControlTest, IndexOutOfBounds)
 {
-    EGLDisplay dpy        = getEGLWindow()->getDisplay();
-    egl::Display *display = static_cast<egl::Display *>(dpy);
-    EXPECT_EQ(nullptr,
-              eglQueryStringiANGLE(dpy, EGL_FEATURE_NAME_ANGLE, display->getFeatures().size()));
+    ASSERT_TRUE(initTest());
+    egl::Display *display = static_cast<egl::Display *>(mDisplay);
+    EXPECT_EQ(nullptr, eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE,
+                                            display->getFeatures().size()));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 }
 
@@ -54,7 +80,8 @@ TEST_P(EGLFeatureControlTest, IndexOutOfBounds)
 // options specified in EGL_ANGLE_feature_control.
 TEST_P(EGLFeatureControlTest, InvalidName)
 {
-    EXPECT_EQ(nullptr, eglQueryStringiANGLE(getEGLWindow()->getDisplay(), 100, 0));
+    ASSERT_TRUE(initTest());
+    EXPECT_EQ(nullptr, eglQueryStringiANGLE(mDisplay, 100, 0));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 }
 
@@ -63,19 +90,19 @@ TEST_P(EGLFeatureControlTest, InvalidName)
 // FeatureList.
 TEST_P(EGLFeatureControlTest, QueryAll)
 {
-    EGLDisplay dpy              = getEGLWindow()->getDisplay();
-    egl::Display *display       = static_cast<egl::Display *>(dpy);
+    ASSERT_TRUE(initTest());
+    egl::Display *display       = static_cast<egl::Display *>(mDisplay);
     angle::FeatureList features = display->getFeatures();
     for (size_t i = 0; i < features.size(); i++)
     {
-        EXPECT_STREQ(features[i]->name, eglQueryStringiANGLE(dpy, EGL_FEATURE_NAME_ANGLE, i));
+        EXPECT_STREQ(features[i]->name, eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE, i));
         EXPECT_STREQ(FeatureCategoryToString(features[i]->category),
-                     eglQueryStringiANGLE(dpy, EGL_FEATURE_CATEGORY_ANGLE, i));
+                     eglQueryStringiANGLE(mDisplay, EGL_FEATURE_CATEGORY_ANGLE, i));
         EXPECT_STREQ(features[i]->description,
-                     eglQueryStringiANGLE(dpy, EGL_FEATURE_DESCRIPTION_ANGLE, i));
-        EXPECT_STREQ(features[i]->bug, eglQueryStringiANGLE(dpy, EGL_FEATURE_BUG_ANGLE, i));
+                     eglQueryStringiANGLE(mDisplay, EGL_FEATURE_DESCRIPTION_ANGLE, i));
+        EXPECT_STREQ(features[i]->bug, eglQueryStringiANGLE(mDisplay, EGL_FEATURE_BUG_ANGLE, i));
         EXPECT_STREQ(FeatureStatusToString(features[i]->enabled),
-                     eglQueryStringiANGLE(dpy, EGL_FEATURE_STATUS_ANGLE, i));
+                     eglQueryStringiANGLE(mDisplay, EGL_FEATURE_STATUS_ANGLE, i));
         ASSERT_EGL_SUCCESS();
     }
 }
@@ -84,19 +111,84 @@ TEST_P(EGLFeatureControlTest, QueryAll)
 // attribute EGL_FEATURE_COUNT_ANGLE
 TEST_P(EGLFeatureControlTest, FeatureCount)
 {
-    EGLDisplay dpy        = getEGLWindow()->getDisplay();
-    egl::Display *display = static_cast<egl::Display *>(dpy);
+    ASSERT_TRUE(initTest());
+    egl::Display *display = static_cast<egl::Display *>(mDisplay);
     EGLAttrib value       = -1;
     EXPECT_EQ(static_cast<EGLBoolean>(EGL_TRUE),
-              eglQueryDisplayAttribANGLE(dpy, EGL_FEATURE_COUNT_ANGLE, &value));
+              eglQueryDisplayAttribANGLE(mDisplay, EGL_FEATURE_COUNT_ANGLE, &value));
     EXPECT_EQ(display->getFeatures().size(), static_cast<size_t>(value));
     ASSERT_EGL_SUCCESS();
 }
 
+// Submit a list of features to override when creating the display with eglGetPlatformDisplay, and
+// ensure that the features are correctly overridden.
+TEST_P(EGLFeatureControlTest, OverrideFeatures)
+{
+    ASSERT_TRUE(initTest());
+    egl::Display *display       = static_cast<egl::Display *>(mDisplay);
+    angle::FeatureList features = display->getFeatures();
+
+    // Build lists of features to enable/disabled. Toggle features we know are ok to toggle based
+    // from this list.
+    std::vector<const char *> enabled       = std::vector<const char *>();
+    std::vector<const char *> disabled      = std::vector<const char *>();
+    std::vector<bool> shouldBe              = std::vector<bool>();
+    std::vector<std::string> testedFeatures = {
+        "add_and_true_to_loop_condition",  // Safe to toggle GL
+        "clamp_frag_depth",                // Safe to toggle GL
+        "clamp_point_size",                // Safe to toggle GL and Vulkan
+        "flip_viewport_y",                 // Safe to toggle on Vulkan
+        "zero_max_lod",                    // Safe to toggle on D3D
+        "expand_integer_pow_expressions",  // Safe to toggle on D3D
+        "rewrite_unary_minus_operator",    // Safe to toggle on D3D
+    };
+    for (size_t i = 0; i < features.size(); i++)
+    {
+        bool toggle = std::find(testedFeatures.begin(), testedFeatures.end(),
+                                std::string(features[i]->name)) != testedFeatures.end();
+        if (features[i]->enabled ^ toggle)
+        {
+            enabled.push_back(features[i]->name);
+        }
+        else
+        {
+            disabled.push_back(features[i]->name);
+        }
+        // Save what we expect the feature status will be when checking later.
+        shouldBe.push_back(features[i]->enabled ^ toggle);
+    }
+    disabled.push_back(0);
+    enabled.push_back(0);
+
+    // Terminate the old display (we just used it to collect features)
+    eglTerminate(mDisplay);
+
+    // Create a new display with these overridden features.
+    EGLAttrib dispattrs[]   = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                             GetParam().getRenderer(),
+                             EGL_FEATURE_OVERRIDES_ENABLED_ANGLE,
+                             reinterpret_cast<EGLAttrib>(enabled.data()),
+                             EGL_FEATURE_OVERRIDES_DISABLED_ANGLE,
+                             reinterpret_cast<EGLAttrib>(disabled.data()),
+                             EGL_NONE};
+    EGLDisplay dpy_override = eglGetPlatformDisplay(
+        EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_TRUE(dpy_override != EGL_NO_DISPLAY);
+    ASSERT_TRUE(eglInitialize(dpy_override, nullptr, nullptr) == EGL_TRUE);
+
+    // Check that all features have the correct status (even the ones we toggled).
+    for (size_t i = 0; i < features.size(); i++)
+    {
+        EXPECT_STREQ(FeatureStatusToString(shouldBe[i]),
+                     eglQueryStringiANGLE(dpy_override, EGL_FEATURE_STATUS_ANGLE, i));
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(EGLFeatureControlTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_OPENGL(),
-                       ES2_VULKAN(),
-                       ES3_D3D11(),
-                       ES3_OPENGL());
+                       WithNoFixture(ES2_D3D9()),
+                       WithNoFixture(ES2_D3D11()),
+                       WithNoFixture(ES2_OPENGL()),
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_D3D11()),
+                       WithNoFixture(ES3_OPENGL()));

@@ -171,8 +171,8 @@ class MultiviewBenchmark : public ANGLERenderTest,
 
     void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
     {
-        workarounds->forceFeatureEnabled(
-            "select_view_in_geometry_shader",
+        workarounds->overrideFeatures(
+            {"select_view_in_geometry_shader"},
             GetParam().multiviewOption == MultiviewOption::InstancedMultiviewGeometryShader);
     }
 

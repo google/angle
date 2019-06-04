@@ -42,6 +42,7 @@ namespace rx
 class BlitGL;
 class ClearMultiviewGL;
 class ContextImpl;
+class DisplayGL;
 class FunctionsGL;
 class RendererGL;
 class StateManagerGL;
@@ -73,7 +74,9 @@ class ScopedWorkerContextGL
 class RendererGL : angle::NonCopyable
 {
   public:
-    RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::AttributeMap &attribMap);
+    RendererGL(std::unique_ptr<FunctionsGL> functions,
+               const egl::AttributeMap &attribMap,
+               DisplayGL *display);
     virtual ~RendererGL();
 
     angle::Result flush();
@@ -205,8 +208,6 @@ class RendererGL : angle::NonCopyable
     BlitGL *mBlitter;
     ClearMultiviewGL *mMultiviewClearer;
 
-    WorkaroundsGL mWorkarounds;
-
     bool mUseDebugOutput;
 
     mutable bool mCapsInitialized;
@@ -224,6 +225,8 @@ class RendererGL : angle::NonCopyable
     std::mutex mWorkerMutex;
 
     bool mNativeParallelCompileEnabled;
+
+    WorkaroundsGL mWorkarounds;
 };
 
 }  // namespace rx

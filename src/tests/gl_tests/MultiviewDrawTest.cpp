@@ -287,8 +287,8 @@ class MultiviewRenderTest : public MultiviewFramebufferTestBase
 
     void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
     {
-        workarounds->forceFeatureEnabled("select_view_in_geometry_shader",
-                                         GetParam().mForceUseGeometryShaderOnD3D);
+        workarounds->overrideFeatures({"select_view_in_geometry_shader"},
+                                      GetParam().mForceUseGeometryShaderOnD3D);
     }
 
     virtual void testSetUp() {}
@@ -529,8 +529,8 @@ class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase
     void TearDown() final { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
     void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) final
     {
-        workarounds->forceFeatureEnabled("select_view_in_geometry_shader",
-                                         GetParam().mForceUseGeometryShaderOnD3D);
+        workarounds->overrideFeatures({"select_view_in_geometry_shader"},
+                                      GetParam().mForceUseGeometryShaderOnD3D);
     }
 };
 

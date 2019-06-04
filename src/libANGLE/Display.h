@@ -54,6 +54,8 @@ struct DisplayState final : private angle::NonCopyable
 
     EGLLabelKHR label;
     SurfaceSet surfaceSet;
+    std::vector<std::string> featureOverridesEnabled;
+    std::vector<std::string> featureOverridesDisabled;
 };
 
 // Constant coded here as a sanity limit.

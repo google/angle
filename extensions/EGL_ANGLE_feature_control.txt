@@ -28,11 +28,11 @@ Number
 
 Extension Type
 
-    EGL device extension
+    EGL client extension
 
 Dependencies
 
-    This extension is written against the wording of the EGL 1.4
+    This extension is written against the wording of the EGL 1.5
     Specification.
 
     EGL_EXT_device_query affects the definition of this extension.
@@ -73,11 +73,29 @@ New Tokens
         EGL_FEATURE_CATEGORY_ANGLE      0x3461
         EGL_FEATURE_DESCRIPTION_ANGLE   0x3462
         EGL_FEATURE_BUG_ANGLE           0x3463
-        EGL_FEATURE_STATUS_ANGLE       0x3464
+        EGL_FEATURE_STATUS_ANGLE        0x3464
 
     Accepted as a queried <attribute> in eglQueryDisplayAttribANGLE
 
         EGL_FEATURE_COUNT_ANGLE         0x3465
+
+    Accepted as an attribute name in the <attrib_list> argument of
+    eglGetPlatformDisplay
+
+        EGL_FEATURE_OVERRIDES_ENABLED_ANGLE   0x3466
+        EGL_FEATURE_OVERRIDES_DISABLED_ANGLE  0x3467
+
+New Behavior
+
+    The attribute following EGL_FEATURE_OVERRIDES_ENABLED_ANGLE or
+    EGL_FEATURE_OVERRIDES_DISABLED_ANGLE should be of type char**,
+    which should contain an array of strings naming the features to
+    be enabled or disabled upon display creation. Any features
+    unspecified by these arrays will be initialized with an internal
+    heuristic. Any features specified in one of the arrays will be
+    initialized to "enabled" or "disabled" dependent on in which
+    array it can be found. Any features specified in both arrays
+    will be initialized with undefined behavior.
 
 Add the following to the end of section 3.3 "EGL Queries":
 

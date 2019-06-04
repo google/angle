@@ -599,6 +599,31 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
         UNREACHABLE();
     }
 
+    if (attribMap.contains(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE))
+    {
+        if (!clientExtensions.featureControlANGLE)
+        {
+            return EglBadAttribute() << "EGL_ANGLE_feature_control is not supported";
+        }
+        else if (attribMap.get(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE, 0) == 0)
+        {
+            return EglBadAttribute()
+                   << "EGL_FEATURE_OVERRIDES_ENABLED_ANGLE must be a valid pointer";
+        }
+    }
+    if (attribMap.contains(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE))
+    {
+        if (!clientExtensions.featureControlANGLE)
+        {
+            return EglBadAttribute() << "EGL_ANGLE_feature_control is not supported";
+        }
+        else if (attribMap.get(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE, 0) == 0)
+        {
+            return EglBadAttribute()
+                   << "EGL_FEATURE_OVERRIDES_DISABLED_ANGLE must be a valid pointer";
+        }
+    }
+
     return NoError();
 }
 
@@ -3732,7 +3757,7 @@ Error ValidateQueryStringiANGLE(const Display *display, EGLint name, EGLint inde
 {
     ANGLE_TRY(ValidateDisplay(display));
 
-    if (!display->getExtensions().featureControlANGLE)
+    if (!Display::GetClientExtensions().featureControlANGLE)
     {
         return EglBadDisplay() << "EGL_ANGLE_feature_control extension is not available.";
     }
@@ -3776,7 +3801,7 @@ Error ValidateQueryDisplayAttribBase(const Display *display, const EGLint attrib
             break;
 
         case EGL_FEATURE_COUNT_ANGLE:
-            if (!display->getExtensions().featureControlANGLE)
+            if (!Display::GetClientExtensions().featureControlANGLE)
             {
                 return EglBadDisplay() << "EGL_ANGLE_feature_control extension is not available.";
             }

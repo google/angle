@@ -2172,17 +2172,6 @@ std::string Renderer11::getShaderModelSuffix() const
     }
 }
 
-const angle::WorkaroundsD3D &RendererD3D::getWorkarounds() const
-{
-    if (!mWorkaroundsInitialized)
-    {
-        generateWorkarounds(&mWorkarounds);
-        mWorkaroundsInitialized = true;
-    }
-
-    return mWorkarounds;
-}
-
 angle::Result Renderer11::copyImageInternal(const gl::Context *context,
                                             const gl::Framebuffer *framebuffer,
                                             const gl::Rectangle &sourceRect,
@@ -3692,6 +3681,7 @@ void Renderer11::generateCaps(gl::Caps *outCaps,
 void Renderer11::generateWorkarounds(angle::WorkaroundsD3D *workarounds) const
 {
     d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription, workarounds);
+    OverrideFeaturesWithDisplayState(workarounds, mDisplay->getState());
 }
 
 DeviceImpl *Renderer11::createEGLDevice()

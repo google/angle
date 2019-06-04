@@ -13,6 +13,7 @@
 #include "common/debug.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
@@ -21,6 +22,7 @@
 #include "libANGLE/renderer/gl/ClearMultiviewGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
+#include "libANGLE/renderer/gl/DisplayGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -180,7 +182,9 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
 namespace rx
 {
 
-RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::AttributeMap &attribMap)
+RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions,
+                       const egl::AttributeMap &attribMap,
+                       DisplayGL *display)
     : mMaxSupportedESVersion(0, 0),
       mFunctions(std::move(functions)),
       mStateManager(nullptr),
@@ -193,8 +197,9 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::Attrib
 {
     ASSERT(mFunctions);
     nativegl_gl::GenerateWorkarounds(mFunctions.get(), &mWorkarounds);
+    OverrideFeaturesWithDisplayState(&mWorkarounds, display->getState());
     mStateManager = new StateManagerGL(mFunctions.get(), getNativeCaps(), getNativeExtensions());
-    mBlitter      = new BlitGL(mFunctions.get(), mWorkarounds, mStateManager);
+    mBlitter          = new BlitGL(mFunctions.get(), mWorkarounds, mStateManager);
     mMultiviewClearer = new ClearMultiviewGL(mFunctions.get(), mStateManager);
 
     bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||

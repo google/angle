@@ -889,6 +889,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
     initFeatures(deviceExtensionNames);
+    OverrideFeaturesWithDisplayState(&mFeatures, displayVk->getState());
     mFeaturesInitialized = true;
 
     // Selectively enable KHR_MAINTENANCE1 to support viewport flipping.

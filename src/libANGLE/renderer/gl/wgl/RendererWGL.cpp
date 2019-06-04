@@ -17,7 +17,7 @@ RendererWGL::RendererWGL(std::unique_ptr<FunctionsGL> functionsGL,
                          HGLRC context,
                          HGLRC sharedContext,
                          const std::vector<int> workerContextAttribs)
-    : RendererGL(std::move(functionsGL), attribMap),
+    : RendererGL(std::move(functionsGL), attribMap, display),
       mDisplay(display),
       mContext(context),
       mSharedContext(sharedContext),

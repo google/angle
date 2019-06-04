@@ -143,11 +143,14 @@ struct FeatureSetBase
     FeatureMap members = FeatureMap();
 
   public:
-    void forceFeatureEnabled(const std::string &name, const bool enabled)
+    void overrideFeatures(const std::vector<std::string> &feature_names, const bool enabled)
     {
-        if (members.find(name) != members.end())
+        for (const std::string &name : feature_names)
         {
-            members[name]->enabled = enabled;
+            if (members.find(name) != members.end())
+            {
+                members[name]->enabled = enabled;
+            }
         }
     }
 
