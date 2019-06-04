@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "727f26b8_f362f868",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "60a35d5e_9a4258b2",
+      "range": {
+        "startLine": 679,
+        "startChar": 31,
+        "endLine": 679,
+        "endChar": 41
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbb5971e_a9a80976",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 13
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "37c215a8_085f4894",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Any reversal is removed from `destArea` prior to most of these transformations. It\u0027s only the final Y flip that messes it up and needs fixing. I added an ASSERT to clarify this.",
+      "parentUuid": "fbb5971e_a9a80976",
+      "range": {
+        "startLine": 713,
+        "startChar": 33,
+        "endLine": 713,
+        "endChar": 38
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2cd0626d_0008775c",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag",
         "patchSetId": 13
@@ -62,6 +110,24 @@
       "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dccf5153_3281b99e",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2cd0626d_0008775c",
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -88,6 +154,54 @@
     },
     {
       "key": {
+        "uuid": "f442c397_27f7a1d9",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag.json",
+        "patchSetId": 13
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29cacf2a_ebbc8cf5",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c91f5f17_95f29a6c",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag.json",
+        "patchSetId": 13
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29cacf2a_ebbc8cf5",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "58f17827_e2a64df9",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolveStencilNoExport.comp.json",
         "patchSetId": 13
@@ -111,6 +225,30 @@
     },
     {
       "key": {
+        "uuid": "c8d29922_0c639d28",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/BlitResolveStencilNoExport.comp.json",
+        "patchSetId": 13
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58f17827_e2a64df9",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07045e2d_21d32ef4",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 13
@@ -122,6 +260,30 @@
       "writtenOn": "2019-06-03T19:18:57Z",
       "side": 1,
       "message": "unrelated fix? something you noticed?",
+      "range": {
+        "startLine": 174,
+        "startChar": 12,
+        "endLine": 174,
+        "endChar": 54
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21376c0e_900bf9e0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Noticed while debugging failure on Android. This stage is where loadOp\u003dLoad happens, so any write to depth/stencil through compute/transfer (for example as done in the stencil blit/multisample path) should have this stage in their destination barriers for the following draw call to pick it up.",
+      "parentUuid": "07045e2d_21d32ef4",
       "range": {
         "startLine": 174,
         "startChar": 12,
@@ -154,6 +316,30 @@
       "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e288a950_4f22c066",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "99f7e54d_a48d21fe",
+      "range": {
+        "startLine": 1494,
+        "startChar": 28,
+        "endLine": 1494,
+        "endChar": 54
+      },
+      "revId": "db2f2e798ee9c02a16bc805176c7c6e9b11c820f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

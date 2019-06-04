@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a296f965_5c9dfa6b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done.\n\nWe have to avoid `vkCmdBlitImage` if emulating channels. Say source is RGBA and destination is RGB (emulated as RGBA). If we use `vkCmdBlitImage`, the A channel of destination will be filled with content from source, which is something we don\u0027t want (it shows for example in readback).\n\nThis function allows using `vkCmdBlitImage` from emulated RGB to emulated RGB (because the A channel in source is necessarily all 1s). That\u0027s not achievable with `hasEmulatedImageChannels`.",
+      "parentUuid": "468b7f58_f5b99e2c",
+      "range": {
+        "startLine": 66,
+        "startChar": 5,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d859c314_c5517f59",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 14
@@ -45,6 +69,30 @@
       "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ce03608_d06498ae",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d859c314_c5517f59",
+      "range": {
+        "startLine": 84,
+        "startChar": 5,
+        "endLine": 84,
+        "endChar": 48
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5224d6f8_6b793557",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Yes, it can be worked out with integer math, although that would incur multiple instructions in the shader, including an expensive div. This basically offloads some of the math to the CPU. See BlitResolve.frag for how and why these are derived.",
+      "parentUuid": "472a0758_51524bc0",
+      "range": {
+        "startLine": 631,
+        "startChar": 10,
+        "endLine": 631,
+        "endChar": 16
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fd48582_098fce72",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 14
@@ -91,6 +163,30 @@
       "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b94541c_2b76bb59",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-04T14:06:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fd48582_098fce72",
+      "range": {
+        "startLine": 915,
+        "startChar": 0,
+        "endLine": 916,
+        "endChar": 99
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
