@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "468b7f58_f5b99e2c",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-04T11:51:28Z",
+      "side": 1,
+      "message": "nit: \u0027AreSrcAndDestColorChannelsBlitCompatible\u0027\n\nalso not sure why you\u0027re talking about emulation necessarily. could you call hasEmulatedImageChannels?",
+      "range": {
+        "startLine": 66,
+        "startChar": 5,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d859c314_c5517f59",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-04T11:51:28Z",
+      "side": 1,
+      "message": "nit: Are",
+      "range": {
+        "startLine": 84,
+        "startChar": 5,
+        "endLine": 84,
+        "endChar": 48
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472a0758_51524bc0",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-04T11:51:28Z",
+      "side": 1,
+      "message": "I\u0027m surprised you need float math. Usually blit bounds can be worked out with integer math. Is this a particularity of Vulkan?",
+      "range": {
+        "startLine": 631,
+        "startChar": 10,
+        "endLine": 631,
+        "endChar": 16
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fd48582_098fce72",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-04T11:51:28Z",
+      "side": 1,
+      "message": "nit: break into two statements for clarity",
+      "range": {
+        "startLine": 915,
+        "startChar": 0,
+        "endLine": 916,
+        "endChar": 99
+      },
+      "revId": "1948b4733de5179cfda183221ed74d0ead3a5010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
