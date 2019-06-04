@@ -367,7 +367,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribut
     return EGL_TRUE;
 }
 
-// EGL_ANGLE_workaround_control
+// EGL_ANGLE_feature_control
 EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribANGLE(EGLDisplay dpy,
                                                    EGLint attribute,
                                                    EGLAttrib *value)
@@ -1421,6 +1421,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetFrameTimestampsANDROID(EGLDisplay dpy
     return EGL_TRUE;
 }
 
+// EGL_ANGLE_feature_control
 ANGLE_EXPORT const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy,
                                                            EGLint name,
                                                            EGLint index)

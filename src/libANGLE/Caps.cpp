@@ -1410,7 +1410,7 @@ DisplayExtensions::DisplayExtensions()
       getFrameTimestamps(false),
       recordable(false),
       powerPreference(false),
-      workaroundControlANGLE(false)
+      featureControlANGLE(false)
 {}
 
 std::vector<std::string> DisplayExtensions::getStrings() const
@@ -1465,7 +1465,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANDROID_get_frame_timestamps",                    getFrameTimestamps,                 &extensionStrings);
     InsertExtensionString("EGL_ANDROID_recordable",                              recordable,                         &extensionStrings);
     InsertExtensionString("EGL_ANGLE_power_preference",                          powerPreference,                    &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_workaround_control",                        workaroundControlANGLE,             &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_feature_control",                           featureControlANGLE,                &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on

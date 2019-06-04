@@ -90,6 +90,12 @@
                 <command name="eglReleaseDeviceANGLE"/>
             </require>
         </extension>
+        <extension name="EGL_ANGLE_feature_control" supported="egl">
+            <require>
+                <command name="eglQueryStringiANGLE"/>
+                <command name="eglQueryDisplayAttribANGLE"/>
+            </require>
+        </extension>
         <extension name="EGL_ANGLE_stream_producer_d3d_texture" supported="egl">
             <require>
                 <command name="eglCreateStreamProducerD3DTextureANGLE"/>
@@ -107,12 +113,6 @@
                 <command name="eglProgramCacheQueryANGLE"/>
                 <command name="eglProgramCachePopulateANGLE"/>
                 <command name="eglProgramCacheResizeANGLE"/>
-            </require>
-        </extension>
-        <extension name="EGL_ANGLE_workaround_control" supported="egl">
-            <require>
-                <command name="eglQueryStringiANGLE"/>
-                <command name="eglQueryDisplayAttribANGLE"/>
             </require>
         </extension>
     </extensions>

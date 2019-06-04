@@ -1247,8 +1247,8 @@ void Display::initDisplayExtensions()
     // that ANativeWindow is not recordable.
     mDisplayExtensions.recordable = true;
 
-    // EGL_ANGLE_workaround_control is implemented on all backends.
-    mDisplayExtensions.workaroundControlANGLE = true;
+    // EGL_ANGLE_feature_control is implemented on all backends.
+    mDisplayExtensions.featureControlANGLE = true;
 
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
@@ -1448,27 +1448,20 @@ const char *Display::queryStringi(const EGLint name, const EGLint index)
     const char *result = nullptr;
     switch (name)
     {
-        case EGL_WORKAROUND_NAME_ANGLE:
+        case EGL_FEATURE_NAME_ANGLE:
             result = mFeatures[index]->name;
             break;
-        case EGL_WORKAROUND_CATEGORY_ANGLE:
+        case EGL_FEATURE_CATEGORY_ANGLE:
             result = angle::FeatureCategoryToString(mFeatures[index]->category);
             break;
-        case EGL_WORKAROUND_DESCRIPTION_ANGLE:
+        case EGL_FEATURE_DESCRIPTION_ANGLE:
             result = mFeatures[index]->description;
             break;
-        case EGL_WORKAROUND_BUG_ANGLE:
+        case EGL_FEATURE_BUG_ANGLE:
             result = mFeatures[index]->bug;
             break;
-        case EGL_WORKAROUND_ENABLED_ANGLE:
-            if (mFeatures[index]->enabled)
-            {
-                result = "true";
-            }
-            else
-            {
-                result = "false";
-            }
+        case EGL_FEATURE_STATUS_ANGLE:
+            result = angle::FeatureStatusToString(mFeatures[index]->enabled);
             break;
         default:
             UNREACHABLE();
@@ -1486,7 +1479,7 @@ EGLAttrib Display::queryAttrib(const EGLint attribute)
             value = reinterpret_cast<EGLAttrib>(mDevice);
             break;
 
-        case EGL_WORKAROUND_COUNT_ANGLE:
+        case EGL_FEATURE_COUNT_ANGLE:
             value = mFeatures.size();
             break;
 

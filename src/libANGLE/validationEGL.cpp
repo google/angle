@@ -3732,9 +3732,9 @@ Error ValidateQueryStringiANGLE(const Display *display, EGLint name, EGLint inde
 {
     ANGLE_TRY(ValidateDisplay(display));
 
-    if (!display->getExtensions().workaroundControlANGLE)
+    if (!display->getExtensions().featureControlANGLE)
     {
-        return EglBadDisplay() << "EGL_ANGLE_workaround_control extension is not available.";
+        return EglBadDisplay() << "EGL_ANGLE_feature_control extension is not available.";
     }
 
     if (index < 0)
@@ -3744,11 +3744,11 @@ Error ValidateQueryStringiANGLE(const Display *display, EGLint name, EGLint inde
 
     switch (name)
     {
-        case EGL_WORKAROUND_NAME_ANGLE:
-        case EGL_WORKAROUND_CATEGORY_ANGLE:
-        case EGL_WORKAROUND_DESCRIPTION_ANGLE:
-        case EGL_WORKAROUND_BUG_ANGLE:
-        case EGL_WORKAROUND_ENABLED_ANGLE:
+        case EGL_FEATURE_NAME_ANGLE:
+        case EGL_FEATURE_CATEGORY_ANGLE:
+        case EGL_FEATURE_DESCRIPTION_ANGLE:
+        case EGL_FEATURE_BUG_ANGLE:
+        case EGL_FEATURE_STATUS_ANGLE:
             break;
         default:
             return EglBadParameter() << "name is not valid.";
@@ -3775,11 +3775,10 @@ Error ValidateQueryDisplayAttribBase(const Display *display, const EGLint attrib
             }
             break;
 
-        case EGL_WORKAROUND_COUNT_ANGLE:
-            if (!display->getExtensions().workaroundControlANGLE)
+        case EGL_FEATURE_COUNT_ANGLE:
+            if (!display->getExtensions().featureControlANGLE)
             {
-                return EglBadDisplay()
-                       << "EGL_ANGLE_workaround_control extension is not available.";
+                return EglBadDisplay() << "EGL_ANGLE_feature_control extension is not available.";
             }
             break;
 

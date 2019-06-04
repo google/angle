@@ -209,21 +209,21 @@ EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
 #define EGL_HIGH_POWER_ANGLE 0x0002
 #endif /* EGL_ANGLE_power_preference */
 
-#ifndef EGL_ANGLE_workaround_control
-#define EGL_ANGLE_workaround_control 1
-#define EGL_WORKAROUND_NAME_ANGLE 0x3460
-#define EGL_WORKAROUND_CATEGORY_ANGLE 0x3461
-#define EGL_WORKAROUND_DESCRIPTION_ANGLE 0x3462
-#define EGL_WORKAROUND_BUG_ANGLE 0x3463
-#define EGL_WORKAROUND_ENABLED_ANGLE 0x3464
-#define EGL_WORKAROUND_COUNT_ANGLE 0x3465
+#ifndef EGL_ANGLE_feature_control
+#define EGL_ANGLE_feature_control 1
+#define EGL_FEATURE_NAME_ANGLE 0x3460
+#define EGL_FEATURE_CATEGORY_ANGLE 0x3461
+#define EGL_FEATURE_DESCRIPTION_ANGLE 0x3462
+#define EGL_FEATURE_BUG_ANGLE 0x3463
+#define EGL_FEATURE_STATUS_ANGLE 0x3464
+#define EGL_FEATURE_COUNT_ANGLE 0x3465
 typedef const char *(EGLAPIENTRYP PFNEGLQUERYSTRINGIANGLEPROC) (EGLDisplay dpy, EGLint name, EGLint index);
 typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYDISPLAYATTRIBANGLEPROC) (EGLDisplay dpy, EGLint attribute, EGLAttrib *value);
 #ifdef EGL_EGLEXT_PROTOTYPES
 EGLAPI const char *EGLAPIENTRY eglQueryStringiANGLE(EGLDisplay dpy, EGLint name, EGLint index);
 EGLAPI EGLBoolean EGLAPIENTRY eglQueryDisplayAttribANGLE(EGLDisplay dpy, EGLint attribute, EGLAttrib *value);
 #endif
-#endif /* EGL_ANGLE_workaround_control */
+#endif /* EGL_ANGLE_feature_control */
 
 // clang-format on
 

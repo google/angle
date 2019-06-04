@@ -32,6 +32,7 @@ constexpr char kFeatureCategoryD3DWorkarounds[]         = "D3D workarounds";
 constexpr char kFeatureCategoryD3DCompilerWorkarounds[] = "D3D compiler workarounds";
 constexpr char kFeatureCategoryVulkanWorkarounds[]      = "Vulkan workarounds";
 constexpr char kFeatureCategoryVulkanFeatures[]         = "Vulkan features";
+constexpr char kFeatureCategoryUnknown[]                = "Unknown";
 
 inline const char *FeatureCategoryToString(const FeatureCategory &fc)
 {
@@ -62,9 +63,21 @@ inline const char *FeatureCategoryToString(const FeatureCategory &fc)
             break;
 
         default:
-            return "Unknown";
+            return kFeatureCategoryUnknown;
             break;
     }
+}
+
+constexpr char kFeatureStatusEnabled[]  = "enabled";
+constexpr char kFeatureStatusDisabled[] = "disabled";
+
+inline const char *FeatureStatusToString(const bool &status)
+{
+    if (status)
+    {
+        return kFeatureStatusEnabled;
+    }
+    return kFeatureStatusDisabled;
 }
 
 struct Feature;

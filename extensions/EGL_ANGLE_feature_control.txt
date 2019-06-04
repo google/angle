@@ -1,10 +1,10 @@
 Name
 
-    ANGLE_workaround_control
+    EGL_ANGLE_feature_control
 
 Name Strings
 
-    EGL_ANGLE_workaround_control
+    EGL_ANGLE_feature_control
 
 Contributors
 
@@ -40,10 +40,10 @@ Dependencies
 Overview
 
     This extension adds two methods to query arrays holding
-    information about the available workarounds for a given device.
+    information about the available features for a given device.
     One method is used to query the total count of available
-    workarounds. Another method is used to query a string property
-    of an individual workaround given the workaround index.
+    features. Another method is used to query a string property
+    of an individual feature given the feature's index.
 
 IP Status
 
@@ -69,15 +69,15 @@ New Tokens
 
     Accepted as a queried <name> in eglQueryStringiANGLE:
 
-        EGL_WORKAROUND_NAME_ANGLE          0x3460
-        EGL_WORKAROUND_CATEGORY_ANGLE      0x3461
-        EGL_WORKAROUND_DESCRIPTION_ANGLE   0x3462
-        EGL_WORKAROUND_BUG_ANGLE           0x3463
-        EGL_WORKAROUND_ENABLED_ANGLE       0x3464
+        EGL_FEATURE_NAME_ANGLE          0x3460
+        EGL_FEATURE_CATEGORY_ANGLE      0x3461
+        EGL_FEATURE_DESCRIPTION_ANGLE   0x3462
+        EGL_FEATURE_BUG_ANGLE           0x3463
+        EGL_FEATURE_STATUS_ANGLE       0x3464
 
     Accepted as a queried <attribute> in eglQueryDisplayAttribANGLE
 
-        EGL_WORKAROUND_COUNT_ANGLE         0x3465
+        EGL_FEATURE_COUNT_ANGLE         0x3465
 
 Add the following to the end of section 3.3 "EGL Queries":
 
@@ -87,26 +87,26 @@ Add the following to the end of section 3.3 "EGL Queries":
     eGLQueryStringiANGLE returns a pointer to a static, zero-
     terminated string describing some aspect of the EGL
     implementation running on the specified display, from an array of
-    strings. name may be one of EGL_WORKAROUND_NAME_ANGLE,
-    EGL_WORKAROUND_CATEGORY_ANGLE, EGL_WORKAROUND_DESCRIPTION_ANGLE,
-    EGL_WORKAROUND_BUG_ANGLE, or EGL_WORKAROUND_ENABLED_ANGLE. Index
+    strings. name may be one of EGL_FEATURE_NAME_ANGLE,
+    EGL_FEATURE_CATEGORY_ANGLE, EGL_FEATURE_DESCRIPTION_ANGLE,
+    EGL_FEATURE_BUG_ANGLE, or EGL_FEATURE_STATUS_ANGLE. Index
     must be a valid index to access into the array of strings.
-        The EGL_WORKAROUND_NAME_ANGLE array contains strings that
-    describe the name of each workaround available in the display.
-        The EGL_WORKAROUND_CATEGORY_ANGLE array contains strings
+        The EGL_FEATURE_NAME_ANGLE array contains strings that
+    describe the name of each feature available in the display.
+        The EGL_FEATURE_CATEGORY_ANGLE array contains strings
     with corresponding indices to the array of names. Each string
-    describes the category of the workaround at the specified index.
-        The EGL_WORKAROUND_DESCRIPTION_ANGLE array contains strings
+    describes the category of the feature at the specified index.
+        The EGL_FEATURE_DESCRIPTION_ANGLE array contains strings
     with corresponding indices to the array of names. Each string
-    describes the workaround at the specified index.
-        The EGL_WORKAROUND_BUG_ANGLE array contains strings
+    describes the feature at the specified index.
+        The EGL_FEATURE_BUG_ANGLE array contains strings
     with corresponding indices to the array of names. Each string
-    describes the bug related to the workaround at the specified
+    describes the bug related to the feature at the specified
     index.
-        The EGL_WORKAROUND_ENABLED_ANGLE array contains strings
+        The EGL_FEATURE_STATUS_ANGLE array contains strings
     with corresponding indices to the array of names. Each string has
-    the value "true" if the workaround is currently enabled, or
-    "false" if the workaround is currently disabled.
+    the value "enabled" if the feature is currently enabled, or
+    "disabled" if the feature is currently disabled.
 
     Errors
 
@@ -127,8 +127,8 @@ Add a section "3.4 Display Attributes" after "3.3 EGL Versioning"
                                             EGLAttrib *value);
 
     On success, EGL_TRUE is returned.
-    If <attribute> is EGL_WORKAROUND_COUNT_ANGLE, the total count of
-    available workarounds is returned in <value>.
+    If <attribute> is EGL_FEATURE_COUNT_ANGLE, the total count of
+    available features is returned in <value>.
 
     On failure, EGL_FALSE is returned.
     An EGL_BAD_DISPLAY error is generated if dpy is not a valid
