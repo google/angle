@@ -17,6 +17,7 @@
 namespace rx
 {
 class BufferVk;
+struct ConversionBuffer;
 
 class VertexArrayVk : public VertexArrayImpl
 {
@@ -97,13 +98,14 @@ class VertexArrayVk : public VertexArrayImpl
                                          BufferVk *srcBuffer,
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
-                                         const vk::Format &vertexFormat);
+                                         const vk::Format &vertexFormat,
+                                         ConversionBuffer *conversion);
     angle::Result convertVertexBufferCPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
-                                         const vk::Format &vertexFormat);
-    void ensureConversionReleased(ContextVk *contextVk, size_t attribIndex);
+                                         const vk::Format &vertexFormat,
+                                         ConversionBuffer *conversion);
 
     angle::Result syncDirtyAttrib(ContextVk *contextVk,
                                   const gl::VertexAttribute &attrib,
@@ -113,8 +115,6 @@ class VertexArrayVk : public VertexArrayImpl
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
     gl::AttribArray<vk::BufferHelper *> mCurrentArrayBuffers;
-    gl::AttribArray<vk::DynamicBuffer> mCurrentArrayBufferConversion;
-    gl::AttribArray<bool> mCurrentArrayBufferConversionCanRelease;
     VkDeviceSize mCurrentElementArrayBufferOffset;
     vk::BufferHelper *mCurrentElementArrayBuffer;
 

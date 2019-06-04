@@ -26,8 +26,44 @@ namespace
 // On some hardware, reading 4 bytes from address 4k returns 0, making it impossible to read the
 // last n bytes.  By rounding up the buffer sizes to a multiple of 4, the problem is alleviated.
 constexpr size_t kBufferSizeGranularity = 4;
+
+// Start with a fairly small buffer size. We can increase this dynamically as we convert more data.
+constexpr size_t kConvertedArrayBufferInitialSize = 1024 * 8;
 }  // namespace
 
+// ConversionBuffer implementation.
+ConversionBuffer::ConversionBuffer(RendererVk *renderer,
+                                   VkBufferUsageFlags usageFlags,
+                                   size_t initialSize,
+                                   size_t alignment)
+    : dirty(true), lastAllocationOffset(0), data(usageFlags, initialSize, true)
+{
+    data.init(alignment, renderer);
+}
+
+ConversionBuffer::~ConversionBuffer() = default;
+
+ConversionBuffer::ConversionBuffer(ConversionBuffer &&other) = default;
+
+// BufferVk::VertexConversionBuffer implementation.
+BufferVk::VertexConversionBuffer::VertexConversionBuffer(RendererVk *renderer,
+                                                         angle::FormatID formatIDIn,
+                                                         GLuint strideIn,
+                                                         size_t offsetIn)
+    : ConversionBuffer(renderer,
+                       vk::kVertexBufferUsageFlags,
+                       kConvertedArrayBufferInitialSize,
+                       vk::kVertexBufferAlignment),
+      formatID(formatIDIn),
+      stride(strideIn),
+      offset(offsetIn)
+{}
+
+BufferVk::VertexConversionBuffer::VertexConversionBuffer(VertexConversionBuffer &&other) = default;
+
+BufferVk::VertexConversionBuffer::~VertexConversionBuffer() = default;
+
+// BufferVk implementation.
 BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state), mDataWriteAccessFlags(0) {}
 
 BufferVk::~BufferVk() {}
@@ -42,6 +78,11 @@ void BufferVk::destroy(const gl::Context *context)
 void BufferVk::release(ContextVk *contextVk)
 {
     mBuffer.release(contextVk);
+
+    for (ConversionBuffer &buffer : mVertexConversionBuffers)
+    {
+        buffer.data.release(contextVk);
+    }
 }
 
 angle::Result BufferVk::setData(const gl::Context *context,
@@ -156,6 +197,8 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
     mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
     mDataWriteAccessFlags = VK_ACCESS_HOST_WRITE_BIT;
 
+    markConversionBuffersDirty();
+
     return angle::Result::Continue;
 }
 
@@ -222,7 +265,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                     size_t size,
                                     size_t offset)
 {
-    VkDevice device      = contextVk->getDevice();
+    VkDevice device = contextVk->getDevice();
 
     // Use map when available.
     if (mBuffer.isResourceInUse(contextVk))
@@ -260,6 +303,9 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         mDataWriteAccessFlags = VK_ACCESS_HOST_WRITE_BIT;
     }
 
+    // Update conversions
+    markConversionBuffersDirty();
+
     return angle::Result::Continue;
 }
 
@@ -276,6 +322,31 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
     destBuffer->onWrite(VK_ACCESS_TRANSFER_WRITE_BIT);
 
     return angle::Result::Continue;
+}
+
+ConversionBuffer *BufferVk::getVertexConversionBuffer(RendererVk *renderer,
+                                                      angle::FormatID formatID,
+                                                      GLuint stride,
+                                                      size_t offset)
+{
+    for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
+    {
+        if (buffer.formatID == formatID && buffer.stride == stride && buffer.offset == offset)
+        {
+            return &buffer;
+        }
+    }
+
+    mVertexConversionBuffers.emplace_back(renderer, formatID, stride, offset);
+    return &mVertexConversionBuffers.back();
+}
+
+void BufferVk::markConversionBuffersDirty()
+{
+    for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
+    {
+        buffer.dirty = true;
+    }
 }
 
 }  // namespace rx
