@@ -37,6 +37,8 @@ namespace
 constexpr char kMarkerStart[]          = "@@ ";
 constexpr char kQualifierMarkerBegin[] = "@@ QUALIFIER-";
 constexpr char kLayoutMarkerBegin[]    = "@@ LAYOUT-";
+constexpr char kXfbDeclMarkerBegin[]   = "@@ XFB-DECL";
+constexpr char kXfbOutMarkerBegin[]    = "@@ XFB-OUT";
 constexpr char kMarkerEnd[]            = " @@";
 constexpr char kLayoutParamsBegin      = '(';
 constexpr char kLayoutParamsEnd        = ')';
@@ -108,8 +110,11 @@ class IntermediateShaderSource final : angle::NonCopyable
     // Find @@ QUALIFIER-name @@ and replace it with |specifier|.
     void insertQualifierSpecifier(const std::string &name, const std::string &specifier);
 
-    // Replace @@ DEFAULT-UNIFORMS-SET-BINDING @@ with |specifier|.
-    void insertDefaultUniformsSpecifier(std::string &&specifier);
+    // Replace @@ XFB-DECL @@ with |decl|.
+    void insertTransformFeedbackDeclaration(const std::string &&decl);
+
+    // Replace @@ XFB-OUT @@ with |output| code block.
+    void insertTransformFeedbackOutput(const std::string &&output);
 
     // Remove @@ LAYOUT-name(*) @@ and @@ QUALIFIER-name @@ altogether, optionally replacing them
     // with something to make sure the shader still compiles.
@@ -127,6 +132,10 @@ class IntermediateShaderSource final : angle::NonCopyable
         Qualifier,
         // Block corresponding to @@ LAYOUT-abc(extra, args) @@
         Layout,
+        // Block corresponding to @@ XFB-DECL @@
+        TransformFeedbackDeclaration,
+        // Block corresponding to @@ XFB-OUT @@
+        TransformFeedbackOutput,
     };
 
     struct Token
@@ -142,6 +151,10 @@ class IntermediateShaderSource final : angle::NonCopyable
     void addTextBlock(std::string &&text);
     void addLayoutBlock(std::string &&name, std::string &&args);
     void addQualifierBlock(std::string &&name);
+    void addTransformFeedbackDeclarationBlock();
+    void addTransformFeedbackOutputBlock();
+
+    void replaceSingleMacro(TokenType type, const std::string &&text);
 
     std::vector<Token> mTokens;
 };
@@ -166,6 +179,18 @@ void IntermediateShaderSource::addQualifierBlock(std::string &&name)
 {
     ASSERT(!name.empty());
     Token token = {TokenType::Qualifier, std::move(name), ""};
+    mTokens.emplace_back(std::move(token));
+}
+
+void IntermediateShaderSource::addTransformFeedbackDeclarationBlock()
+{
+    Token token = {TokenType::TransformFeedbackDeclaration, "", ""};
+    mTokens.emplace_back(std::move(token));
+}
+
+void IntermediateShaderSource::addTransformFeedbackOutputBlock()
+{
+    Token token = {TokenType::TransformFeedbackOutput, "", ""};
     mTokens.emplace_back(std::move(token));
 }
 
@@ -207,6 +232,16 @@ IntermediateShaderSource::IntermediateShaderSource(const std::string &source)
             std::string args = angle::GetPrefix(source, cur, kLayoutParamsEnd);
             cur += args.length() + 1;
             addLayoutBlock(std::move(name), std::move(args));
+        }
+        else if (source.compare(cur, ConstStrLen(kXfbDeclMarkerBegin), kXfbDeclMarkerBegin) == 0)
+        {
+            cur += ConstStrLen(kXfbDeclMarkerBegin);
+            addTransformFeedbackOutputBlock();
+        }
+        else if (source.compare(cur, ConstStrLen(kXfbOutMarkerBegin), kXfbOutMarkerBegin) == 0)
+        {
+            cur += ConstStrLen(kXfbOutMarkerBegin);
+            addTransformFeedbackDeclarationBlock();
         }
         else
         {
@@ -251,6 +286,29 @@ void IntermediateShaderSource::insertQualifierSpecifier(const std::string &name,
             break;
         }
     }
+}
+
+void IntermediateShaderSource::replaceSingleMacro(TokenType type, const std::string &&text)
+{
+    for (Token &block : mTokens)
+    {
+        if (block.type == type)
+        {
+            block.type = TokenType::Text;
+            block.text = std::move(text);
+            break;
+        }
+    }
+}
+
+void IntermediateShaderSource::insertTransformFeedbackDeclaration(const std::string &&decl)
+{
+    replaceSingleMacro(TokenType::TransformFeedbackDeclaration, std::move(decl));
+}
+
+void IntermediateShaderSource::insertTransformFeedbackOutput(const std::string &&output)
+{
+    replaceSingleMacro(TokenType::TransformFeedbackOutput, std::move(output));
 }
 
 void IntermediateShaderSource::eraseLayoutAndQualifierSpecifiers(const std::string &name,
@@ -583,6 +641,12 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
     const std::string layout = layoutStream.str();
     vertexSource.insertLayoutSpecifier(kVaryingName, layout);
     fragmentSource.insertLayoutSpecifier(kVaryingName, layout);
+
+    // Write transform feedback output code.
+    // TODO(syoussefi): support transform feedback.  http://anglebug.com/3205
+    ASSERT(programState.getLinkedTransformFeedbackVaryings().size() == 0);
+    vertexSource.insertTransformFeedbackDeclaration("");
+    vertexSource.insertTransformFeedbackOutput("");
 
     vertexSource.insertQualifierSpecifier(kVaryingName, "out");
     fragmentSource.insertQualifierSpecifier(kVaryingName, "in");

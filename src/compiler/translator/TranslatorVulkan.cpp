@@ -312,6 +312,15 @@ void AppendVertexShaderDepthCorrectionToMain(TIntermBlock *root, TSymbolTable *s
     RunAtTheEndOfShader(root, assignment, symbolTable);
 }
 
+void AppendVertexShaderTransformFeedbackOutputToMain(TIntermBlock *root, TSymbolTable *symbolTable)
+{
+    TVariable *xfbPlaceholder = new TVariable(symbolTable, ImmutableString("@@ XFB-OUT @@"),
+                                              new TType(), SymbolType::AngleInternal);
+
+    // Append the assignment as a statement at the end of the shader.
+    RunAtTheEndOfShader(root, new TIntermSymbol(xfbPlaceholder), symbolTable);
+}
+
 // The AddDriverUniformsToShader operation adds an internal uniform block to a shader. The driver
 // block is used to implement Vulkan-specific features and workarounds. Returns the driver uniforms
 // variable.
@@ -760,6 +769,12 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         ASSERT(getShaderType() == GL_VERTEX_SHADER);
 
         AddANGLEPositionVarying(root, &getSymbolTable());
+
+        // Add a macro to declare transform feedback buffers.
+        sink << "@@ XFB-DECL @@\n\n";
+
+        // Append a macro for transform feedback substitution prior to modifying depth.
+        AppendVertexShaderTransformFeedbackOutputToMain(root, &getSymbolTable());
 
         // Append depth range translation to main.
         AppendVertexShaderDepthCorrectionToMain(root, &getSymbolTable());
