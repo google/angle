@@ -690,7 +690,7 @@ bool WindowSurfaceVk::isMultiSampled() const
 
 angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
                                                           uint32_t swapHistoryIndex,
-                                                          bool presentOutOfDate)
+                                                          bool swapchainOutOfDate)
 {
     bool swapIntervalChanged = mSwapchainPresentMode != mDesiredSwapchainPresentMode;
 
@@ -721,7 +721,7 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
     }
 
     // If anything has changed, recreate the swapchain.
-    if (presentOutOfDate || swapIntervalChanged || currentExtents != swapchainExtents)
+    if (swapchainOutOfDate || swapIntervalChanged || currentExtents != swapchainExtents)
     {
         ANGLE_TRY(recreateSwapchain(contextVk, currentExtents, swapHistoryIndex));
     }
@@ -950,10 +950,14 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     VkResult result = contextVk->getRenderer()->queuePresent(presentInfo);
 
-    // If SUBOPTIMAL/OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
+    // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.
-    swapchainOutOfDate = result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR;
-    if (!swapchainOutOfDate)
+    // If VK_SUBOPTIMAL_KHR is returned we it's because the device orientation changed and we should
+    // recreate the swapchain with a new window orientation. We aren't quite ready for that so just
+    // ignore for now.
+    // TODO: Check for preRotation: http://anglebug.com/3502
+    swapchainOutOfDate = result == VK_ERROR_OUT_OF_DATE_KHR;
+    if (!swapchainOutOfDate && result != VK_SUBOPTIMAL_KHR)
     {
         ANGLE_VK_TRY(contextVk, result);
     }
@@ -966,7 +970,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context, EGLint *rect
     ContextVk *contextVk = vk::GetImpl(context);
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
-    bool swapchainOutOfDate;
+    bool swapchainOutOfDate = false;
     // Save this now, since present() will increment the value.
     size_t currentSwapHistoryIndex = mCurrentSwapHistoryIndex;
 
