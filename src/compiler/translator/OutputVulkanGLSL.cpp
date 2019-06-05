@@ -179,4 +179,36 @@ void TOutputVulkanGLSL::writeStructType(const TStructure *structure)
         objSink() << ";\n";
     }
 }
+
+void TOutputVulkanGLSL::visitSymbol(TIntermSymbol *node)
+{
+    TInfoSinkBase &out = objSink();
+
+    // All the special cases are built-ins, so if it's not a built-in we can return early.
+    if (node->variable().symbolType() != SymbolType::BuiltIn)
+    {
+        TOutputGLSL::visitSymbol(node);
+        return;
+    }
+
+    // Some built-ins get a special translation.
+    const ImmutableString &name = node->getName();
+    if (name == "gl_VertexID")
+    {
+        // gl_VertexIndex in Vulkan GLSL has the same semantics as gl_VertexID.
+        out << "gl_VertexIndex";
+    }
+    else if (name == "gl_InstanceID")
+    {
+        // gl_InstanceIndex in Vulkan GLSL is equal to
+        // gl_InstanceID + baseInstance, but in OpenGL ES,
+        // baseInstance is always zero.
+        // (OpenGL ES 3.2 spec page 278 footnote 3)
+        out << "gl_InstanceIndex";
+    }
+    else
+    {
+        TOutputGLSL::visitSymbol(node);
+    }
+}
 }  // namespace sh

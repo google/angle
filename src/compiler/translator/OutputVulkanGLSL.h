@@ -33,6 +33,7 @@ class TOutputVulkanGLSL : public TOutputGLSL
     void writeLayoutQualifier(TIntermTyped *variable) override;
     void writeQualifier(TQualifier qualifier, const TType &type, const TSymbol *symbol) override;
     void writeVariableType(const TType &type, const TSymbol *symbol) override;
+    void visitSymbol(TIntermSymbol *node) override;
 };
 
 }  // namespace sh

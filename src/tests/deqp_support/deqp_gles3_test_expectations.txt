@@ -599,8 +599,6 @@
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.offset.int2_10_10_10* = SKIP
 3193 VULKAN : dEQP-GLES3.functional.vertex_array_objects.all_attributes = SKIP
 
-// Vertex ID, Index ID
-3221 VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.vertex_id = FAIL
 3221 VULKAN : dEQP-GLES3.functional.instanced.* = SKIP
 
 // Polygon offset:
