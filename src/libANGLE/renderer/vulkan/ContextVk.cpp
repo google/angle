@@ -1495,6 +1495,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                            glState.getRasterizerState());
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
+                mGraphicsPipelineDesc->updateRasterizerDiscardEnabled(
+                    &mGraphicsPipelineTransition, glState.isRasterizerDiscardEnabled());
                 break;
             case gl::State::DIRTY_BIT_LINE_WIDTH:
                 mGraphicsPipelineDesc->updateLineWidth(&mGraphicsPipelineTransition,

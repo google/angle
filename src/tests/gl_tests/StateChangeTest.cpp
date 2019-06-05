@@ -2385,6 +2385,9 @@ TEST_P(SimpleStateChangeTest, ReleaseShaderInUseThatReadsFromUniforms)
 // Tests that sampler sync isn't masked by program textures.
 TEST_P(SimpleStateChangeTestES3, SamplerSyncNotTiedToProgram)
 {
+    // glBindSampler is available only if the GLES version is 3.0 or higher - anglebug.com/3208
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Create a sampler with NEAREST filtering.
     GLSampler sampler;
     glBindSampler(0, sampler);
@@ -3726,6 +3729,39 @@ TEST_P(SimpleStateChangeTest, FboLateCullFaceBackCWState)
 {
     drawToFboWithCulling(GL_CW, false);
 }
+
+// Validates GL_RASTERIZER_DISCARD state is tracked correctly
+TEST_P(SimpleStateChangeTestES3, RasterizerDiscardState)
+{
+    glClearColor(GLColor::red.R, GLColor::red.G, GLColor::red.B, GLColor::red.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    // The drawQuad() should have no effect with GL_RASTERIZER_DISCARD enabled
+    glEnable(GL_RASTERIZER_DISCARD);
+    glUseProgram(greenProgram);
+    drawQuad(greenProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // The drawQuad() should draw something with GL_RASTERIZER_DISCARD disabled
+    glDisable(GL_RASTERIZER_DISCARD);
+    glUseProgram(greenProgram);
+    drawQuad(greenProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // The drawQuad() should have no effect with GL_RASTERIZER_DISCARD enabled
+    glEnable(GL_RASTERIZER_DISCARD);
+    glUseProgram(blueProgram);
+    drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
@@ -3737,7 +3773,7 @@ ANGLE_INSTANTIATE_TEST(LineLoopStateChangeTest,
 ANGLE_INSTANTIATE_TEST(StateChangeRenderTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_D3D11(), ES2_VULKAN(), ES2_OPENGL());
-ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES3, ES3_OPENGL(), ES3_D3D11());
+ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES3, ES3_OPENGL(), ES3_D3D11(), ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES31, ES31_OPENGL(), ES31_D3D11());
 ANGLE_INSTANTIATE_TEST(ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(WebGL2ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());

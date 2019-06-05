@@ -383,6 +383,8 @@ class GraphicsPipelineDesc final
                          const gl::RasterizerState &rasterState,
                          bool invertFrontFace);
     void updateLineWidth(GraphicsPipelineTransitionBits *transition, float lineWidth);
+    void updateRasterizerDiscardEnabled(GraphicsPipelineTransitionBits *transition,
+                                        bool rasterizerDiscardEnabled);
 
     // Multisample states
     void setRasterizationSamples(uint32_t rasterizationSamples);
