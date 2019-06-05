@@ -112,14 +112,14 @@ class UtilsVk : angle::NonCopyable
         bool destFlipY;
     };
 
-    angle::Result clearBuffer(ContextVk *context,
+    angle::Result clearBuffer(ContextVk *contextVk,
                               vk::BufferHelper *dest,
                               const ClearParameters &params);
-    angle::Result convertIndexBuffer(ContextVk *context,
+    angle::Result convertIndexBuffer(ContextVk *contextVk,
                                      vk::BufferHelper *dest,
                                      vk::BufferHelper *src,
                                      const ConvertIndexParameters &params);
-    angle::Result convertVertexBuffer(ContextVk *context,
+    angle::Result convertVertexBuffer(ContextVk *contextVk,
                                       vk::BufferHelper *dest,
                                       vk::BufferHelper *src,
                                       const ConvertVertexParameters &params);
@@ -262,7 +262,7 @@ class UtilsVk : angle::NonCopyable
     // compute shader, vsShader and pipelineDesc should be nullptr, and this will set up a dispatch
     // call. Otherwise fsCsShader is expected to be a fragment shader and this will set up a draw
     // call.
-    angle::Result setupProgram(ContextVk *context,
+    angle::Result setupProgram(ContextVk *contextVk,
                                Function function,
                                vk::RefCounted<vk::ShaderAndSerial> *fsCsShader,
                                vk::RefCounted<vk::ShaderAndSerial> *vsShader,
@@ -278,7 +278,7 @@ class UtilsVk : angle::NonCopyable
     // this array has two entries {STORAGE_TEXEL_BUFFER, 1} and {UNIFORM_TEXEL_BUFFER, 3}, then the
     // created set layout would be binding 0 for storage texel buffer and bindings 1 through 3 for
     // uniform texel buffer.  All resources are put in set 0.
-    angle::Result ensureResourcesInitialized(ContextVk *context,
+    angle::Result ensureResourcesInitialized(ContextVk *contextVk,
                                              Function function,
                                              VkDescriptorPoolSize *setSizes,
                                              size_t setSizesCount,
@@ -286,13 +286,13 @@ class UtilsVk : angle::NonCopyable
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.
-    angle::Result ensureBufferClearResourcesInitialized(ContextVk *context);
-    angle::Result ensureConvertIndexResourcesInitialized(ContextVk *context);
-    angle::Result ensureConvertVertexResourcesInitialized(ContextVk *context);
-    angle::Result ensureImageClearResourcesInitialized(ContextVk *context);
-    angle::Result ensureImageCopyResourcesInitialized(ContextVk *context);
-    angle::Result ensureBlitResolveResourcesInitialized(ContextVk *context);
-    angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *context);
+    angle::Result ensureBufferClearResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureConvertIndexResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureConvertVertexResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureImageClearResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureImageCopyResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureBlitResolveResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk);
 
     angle::Result startRenderPass(ContextVk *contextVk,
                                   vk::ImageHelper *image,
@@ -309,6 +309,12 @@ class UtilsVk : angle::NonCopyable
                                   const vk::ImageView *srcDepthView,
                                   const vk::ImageView *srcStencilView,
                                   const BlitResolveParameters &params);
+
+    // Allocates a single descriptor set.
+    angle::Result allocateDescriptorSet(ContextVk *contextVk,
+                                        Function function,
+                                        vk::RefCountedDescriptorPoolBinding *bindingOut,
+                                        VkDescriptorSet *descriptorSetOut);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
