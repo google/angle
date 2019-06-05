@@ -1422,7 +1422,8 @@ DisplayExtensions::DisplayExtensions()
       imageNativeBuffer(false),
       getFrameTimestamps(false),
       recordable(false),
-      powerPreference(false)
+      powerPreference(false),
+      imageD3D11Texture(false)
 {}
 
 std::vector<std::string> DisplayExtensions::getStrings() const
@@ -1477,6 +1478,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANDROID_get_frame_timestamps",                    getFrameTimestamps,                 &extensionStrings);
     InsertExtensionString("EGL_ANDROID_recordable",                              recordable,                         &extensionStrings);
     InsertExtensionString("EGL_ANGLE_power_preference",                          powerPreference,                    &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_image_d3d11_texture",                       imageD3D11Texture,                  &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on

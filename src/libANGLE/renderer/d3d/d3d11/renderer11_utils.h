@@ -392,6 +392,7 @@ class TextureHelper11 : public Resource11Base<ID3D11Resource, std::shared_ptr, G
     void set(ResourceT *object, const d3d11::Format &format)
     {
         ASSERT(!valid());
+
         mFormatSet     = &format;
         mData->object  = object;
         mData->manager = nullptr;

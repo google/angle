@@ -713,10 +713,11 @@ SwapChainD3D *Renderer9::createSwapChain(NativeWindowD3D *nativeWindow,
                           backBufferFormat, depthBufferFormat, orientation);
 }
 
-egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
+egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
                                         IUnknown *d3dTexture,
                                         EGLint *width,
                                         EGLint *height,
+                                        EGLint *samples,
                                         const angle::Format **angleFormat) const
 {
     IDirect3DTexture9 *texture = nullptr;
@@ -745,6 +746,17 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
     if (height)
     {
         *height = static_cast<EGLint>(desc.Height);
+    }
+
+    // GetSamplesCount() returns 0 when multisampling isn't used.
+    GLsizei sampleCount = d3d9_gl::GetSamplesCount(desc.MultiSampleType);
+    if ((configuration && configuration->samples > 1) || sampleCount != 0)
+    {
+        return egl::EglBadParameter() << "Multisampling not supported for client buffer texture";
+    }
+    if (samples)
+    {
+        *samples = static_cast<EGLint>(sampleCount);
     }
 
     // From table egl.restrictions in EGL_ANGLE_d3d_texture_client_buffer.
@@ -2778,6 +2790,15 @@ RendererClass Renderer9::getRendererClass() const
 ImageD3D *Renderer9::createImage()
 {
     return new Image9(this);
+}
+
+ExternalImageSiblingImpl *Renderer9::createExternalImageSibling(const gl::Context *context,
+                                                                EGLenum target,
+                                                                EGLClientBuffer buffer,
+                                                                const egl::AttributeMap &attribs)
+{
+    UNREACHABLE();
+    return nullptr;
 }
 
 angle::Result Renderer9::generateMipmap(const gl::Context *context, ImageD3D *dest, ImageD3D *src)
