@@ -119,6 +119,7 @@ class DescriptorPoolHelper
                        const std::vector<VkDescriptorPoolSize> &poolSizes,
                        uint32_t maxSets);
     void destroy(VkDevice device);
+    void release(ContextVk *contextVk);
 
     angle::Result allocateSets(ContextVk *context,
                                const VkDescriptorSetLayout *descriptorSetLayout,
@@ -151,6 +152,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
                        const VkDescriptorPoolSize *setSizes,
                        uint32_t setSizeCount);
     void destroy(VkDevice device);
+    void release(ContextVk *contextVk);
 
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.

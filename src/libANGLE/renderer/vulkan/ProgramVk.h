@@ -139,6 +139,12 @@ class ProgramVk : public ProgramImpl
             descPtrOut, pipelineOut);
     }
 
+    // Used in testing only.
+    vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t poolIndex)
+    {
+        return &mDynamicDescriptorPools[poolIndex];
+    }
+
   private:
     template <int cols, int rows>
     void setUniformMatrixfv(GLint location,
@@ -257,6 +263,11 @@ class ProgramVk : public ProgramImpl
     // We keep the translated linked shader sources to use with shader draw call patching.
     std::string mVertexSource;
     std::string mFragmentSource;
+
+    // Store descriptor pools here. We store the descriptors in the Program to facilitate descriptor
+    // cache management. It can also allow fewer descriptors for shaders which use fewer
+    // textures/buffers.
+    vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
 };
 
 }  // namespace rx

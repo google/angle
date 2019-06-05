@@ -867,14 +867,14 @@ class PipelineLayoutCache final : angle::NonCopyable
 // - Set 2 contains all textures.
 // - Set 3 contains all uniform blocks.
 
-// ANGLE driver uniforms set index (binding is always 0):
-constexpr uint32_t kDriverUniformsDescriptorSetIndex = 0;
 // Uniforms set index:
-constexpr uint32_t kUniformsDescriptorSetIndex = 1;
+constexpr uint32_t kUniformsDescriptorSetIndex = 0;
 // Textures set index:
-constexpr uint32_t kTextureDescriptorSetIndex = 2;
+constexpr uint32_t kTextureDescriptorSetIndex = 1;
 // Uniform blocks set index:
-constexpr uint32_t kUniformBlockDescriptorSetIndex = 3;
+constexpr uint32_t kUniformBlockDescriptorSetIndex = 2;
+// ANGLE driver uniforms set index (binding is always 3):
+constexpr uint32_t kDriverUniformsDescriptorSetIndex = 3;
 
 // Only 1 driver uniform binding is used.
 constexpr uint32_t kReservedDriverUniformBindingCount = 1;

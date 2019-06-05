@@ -512,6 +512,11 @@ void DescriptorPoolHelper::destroy(VkDevice device)
     mDescriptorPool.destroy(device);
 }
 
+void DescriptorPoolHelper::release(ContextVk *contextVk)
+{
+    contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mDescriptorPool);
+}
+
 angle::Result DescriptorPoolHelper::allocateSets(ContextVk *context,
                                                  const VkDescriptorSetLayout *descriptorSetLayout,
                                                  uint32_t descriptorSetCount,
@@ -562,6 +567,18 @@ void DynamicDescriptorPool::destroy(VkDevice device)
     {
         ASSERT(!pool->isReferenced());
         pool->get().destroy(device);
+        delete pool;
+    }
+
+    mDescriptorPools.clear();
+}
+
+void DynamicDescriptorPool::release(ContextVk *contextVk)
+{
+    for (RefCountedDescriptorPoolHelper *pool : mDescriptorPools)
+    {
+        ASSERT(!pool->isReferenced());
+        pool->get().release(contextVk);
         delete pool;
     }
 

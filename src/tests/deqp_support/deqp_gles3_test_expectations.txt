@@ -731,3 +731,6 @@
 3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.unsigned_byte.components* = FAIL
 3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.short.components* = FAIL
 3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.unsigned_short.components* = FAIL
+
+// Fixed in later driver versions.
+2727 VULKAN ANDROID : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL

@@ -46,20 +46,21 @@ class VulkanUniformUpdatesTest : public ANGLETest
 
     static constexpr uint32_t kMaxSetsForTesting = 32;
 
-    void limitMaxSets()
+    void limitMaxSets(GLuint program)
     {
         rx::ContextVk *contextVk = hackANGLE();
+        rx::ProgramVk *programVk = hackProgram(program);
 
         // Force a small limit on the max sets per pool to more easily trigger a new allocation.
         rx::vk::DynamicDescriptorPool *uniformPool =
-            contextVk->getDynamicDescriptorPool(rx::kUniformsDescriptorSetIndex);
+            programVk->getDynamicDescriptorPool(rx::kUniformsDescriptorSetIndex);
         uniformPool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
         VkDescriptorPoolSize uniformSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
                                                rx::GetUniformBufferDescriptorCount()};
         (void)uniformPool->init(contextVk, &uniformSetSize, 1);
 
         rx::vk::DynamicDescriptorPool *texturePool =
-            contextVk->getDynamicDescriptorPool(rx::kTextureDescriptorSetIndex);
+            programVk->getDynamicDescriptorPool(rx::kTextureDescriptorSetIndex);
         texturePool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
         VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                                contextVk->getRenderer()->getMaxActiveTextures()};
@@ -72,8 +73,6 @@ class VulkanUniformUpdatesTest : public ANGLETest
 TEST_P(VulkanUniformUpdatesTest, UpdateUntilNewBufferIsAllocated)
 {
     ASSERT_TRUE(IsVulkan());
-
-    limitMaxSets();
 
     constexpr char kPositionUniformVertexShader[] = R"(attribute vec2 position;
 uniform vec2 uniPosModifier;
@@ -91,6 +90,8 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kPositionUniformVertexShader, kColorUniformFragmentShader);
     glUseProgram(program);
+
+    limitMaxSets(program);
 
     rx::ProgramVk *programVk = hackProgram(program);
 
@@ -128,13 +129,13 @@ TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUpdates)
 {
     ASSERT_TRUE(IsVulkan());
 
-    // Force a small limit on the max sets per pool to more easily trigger a new allocation.
-    limitMaxSets();
-
     // Initialize texture program.
     GLuint program = get2DTexturedQuadProgram();
     ASSERT_NE(0u, program);
     glUseProgram(program);
+
+    // Force a small limit on the max sets per pool to more easily trigger a new allocation.
+    limitMaxSets(program);
 
     GLint texLoc = glGetUniformLocation(program, "tex");
     ASSERT_NE(-1, texLoc);
@@ -163,8 +164,6 @@ TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUniformAndTextureUpdates)
 {
     ASSERT_TRUE(IsVulkan());
 
-    limitMaxSets();
-
     // Initialize texture program.
     constexpr char kVS[] = R"(attribute vec2 position;
 varying mediump vec2 texCoord;
@@ -184,6 +183,8 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
+
+    limitMaxSets(program);
 
     // Get uniform locations.
     GLint texLoc = glGetUniformLocation(program, "tex");
@@ -239,9 +240,6 @@ TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUniformAndTextureUpdatesTwoShader
 {
     ASSERT_TRUE(IsVulkan());
 
-    // Force a small limit on the max sets per pool to more easily trigger a new allocation.
-    limitMaxSets();
-
     // Initialize program.
     constexpr char kVS[] = R"(attribute vec2 position;
 varying mediump vec2 texCoord;
@@ -261,6 +259,10 @@ void main()
     ANGLE_GL_PROGRAM(program1, kVS, kFS);
     ANGLE_GL_PROGRAM(program2, kVS, kFS);
     glUseProgram(program1);
+
+    // Force a small limit on the max sets per pool to more easily trigger a new allocation.
+    limitMaxSets(program1);
+    limitMaxSets(program2);
 
     rx::ProgramVk *program1Vk = hackProgram(program1);
     rx::ProgramVk *program2Vk = hackProgram(program2);
