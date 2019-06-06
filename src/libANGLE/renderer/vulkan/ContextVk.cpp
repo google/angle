@@ -2120,7 +2120,8 @@ angle::Result ContextVk::checkCompletedCommands()
 
         batch.fence.reset(device);
         TRACE_EVENT0("gpu.angle", "commandPool.destroy");
-        batch.commandPool.destroy(device);
+        batch.commandPool.reset(device, 0);
+        mCommandPoolFreeList.emplace_back(std::move(batch.commandPool));
         ++finishedCount;
     }
 
