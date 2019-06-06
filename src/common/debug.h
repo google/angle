@@ -44,10 +44,11 @@ using LogSeverity = int;
 // Note: the log severities are used to index into the array of names,
 // see g_logSeverityNames.
 constexpr LogSeverity LOG_EVENT          = 0;
-constexpr LogSeverity LOG_WARN           = 1;
-constexpr LogSeverity LOG_ERR            = 2;
-constexpr LogSeverity LOG_FATAL          = 3;
-constexpr LogSeverity LOG_NUM_SEVERITIES = 4;
+constexpr LogSeverity LOG_INFO           = 1;
+constexpr LogSeverity LOG_WARN           = 2;
+constexpr LogSeverity LOG_ERR            = 3;
+constexpr LogSeverity LOG_FATAL          = 4;
+constexpr LogSeverity LOG_NUM_SEVERITIES = 5;
 
 void Trace(LogSeverity severity, const char *message);
 
@@ -188,6 +189,8 @@ std::ostream &FmtHex(std::ostream &os, T value)
 // better to have compact code for these operations.
 #define COMPACT_ANGLE_LOG_EX_EVENT(ClassName, ...) \
     ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_EVENT, ##__VA_ARGS__)
+#define COMPACT_ANGLE_LOG_EX_INFO(ClassName, ...) \
+    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_INFO, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_WARN(ClassName, ...) \
     ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_WARN, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_ERR(ClassName, ...) \
@@ -196,6 +199,7 @@ std::ostream &FmtHex(std::ostream &os, T value)
     ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_FATAL, ##__VA_ARGS__)
 
 #define COMPACT_ANGLE_LOG_EVENT COMPACT_ANGLE_LOG_EX_EVENT(LogMessage)
+#define COMPACT_ANGLE_LOG_INFO COMPACT_ANGLE_LOG_EX_INFO(LogMessage)
 #define COMPACT_ANGLE_LOG_WARN COMPACT_ANGLE_LOG_EX_WARN(LogMessage)
 #define COMPACT_ANGLE_LOG_ERR COMPACT_ANGLE_LOG_EX_ERR(LogMessage)
 #define COMPACT_ANGLE_LOG_FATAL COMPACT_ANGLE_LOG_EX_FATAL(LogMessage)
@@ -229,6 +233,7 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define ANGLE_ENABLE_ASSERTS
 #endif
 
+#define INFO() ANGLE_LOG(INFO)
 #define WARN() ANGLE_LOG(WARN)
 #define ERR() ANGLE_LOG(ERR)
 #define FATAL() ANGLE_LOG(FATAL)

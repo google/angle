@@ -306,7 +306,7 @@ void Display_logWarning(angle::PlatformMethods *platform, const char *warningMes
 void Display_logInfo(angle::PlatformMethods *platform, const char *infoMessage)
 {
     // Uncomment to get info spam
-    // gl::Trace(gl::LOG_WARN, infoMessage);
+    gl::Trace(gl::LOG_INFO, infoMessage);
 }
 
 void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)

@@ -36,7 +36,7 @@ DebugAnnotator *g_debugAnnotator = nullptr;
 std::mutex *g_debugMutex = nullptr;
 
 constexpr std::array<const char *, LOG_NUM_SEVERITIES> g_logSeverityNames = {
-    {"EVENT", "WARN", "ERR", "FATAL"}};
+    {"EVENT", "INFO", "WARN", "ERR", "FATAL"}};
 
 constexpr const char *LogSeverityName(int severity)
 {
@@ -158,7 +158,7 @@ LogMessage::~LogMessage()
         lock = std::unique_lock<std::mutex>(*g_debugMutex);
     }
 
-    if (DebugAnnotationsInitialized() && (mSeverity >= LOG_WARN))
+    if (DebugAnnotationsInitialized() && (mSeverity >= LOG_INFO))
     {
         g_debugAnnotator->logMessage(*this);
     }
@@ -203,12 +203,16 @@ void Trace(LogSeverity severity, const char *message)
         }
     }
 
-    if (severity == LOG_FATAL || severity == LOG_ERR || severity == LOG_WARN)
+    if (severity == LOG_FATAL || severity == LOG_ERR || severity == LOG_WARN ||
+        severity == LOG_INFO)
     {
 #if defined(ANGLE_PLATFORM_ANDROID)
         android_LogPriority android_priority = ANDROID_LOG_ERROR;
         switch (severity)
         {
+            case LOG_INFO:
+                android_priority = ANDROID_LOG_INFO;
+                break;
             case LOG_WARN:
                 android_priority = ANDROID_LOG_WARN;
                 break;
@@ -242,7 +246,7 @@ void Trace(LogSeverity severity, const char *message)
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #    if defined(NDEBUG)
-    if (severity == LOG_EVENT || severity == LOG_WARN)
+    if (severity == LOG_EVENT || severity == LOG_WARN || severity == LOG_INFO)
     {
         return;
     }

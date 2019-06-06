@@ -48,6 +48,9 @@ void LoggingAnnotator::logMessage(const gl::LogMessage &msg) const
             case gl::LOG_WARN:
                 plat->logWarning(plat, msg.getMessage().c_str());
                 break;
+            case gl::LOG_INFO:
+                plat->logInfo(plat, msg.getMessage().c_str());
+                break;
             default:
                 UNREACHABLE();
         }
