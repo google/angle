@@ -169,7 +169,15 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
 
     dynamicBuffer->releaseRetainedBuffers(contextVk);
 
-    const size_t amount = sizeof(GLushort) * indexCount;
+    size_t elementSize = gl::GetDrawElementsTypeSize(indexType);
+    if (indexType == gl::DrawElementsType::UnsignedByte)
+    {
+        // 8-bit indices are not supported by Vulkan, so they are promoted to
+        // 16-bit indices below
+        elementSize = sizeof(GLushort);
+    }
+
+    const size_t amount = elementSize * indexCount;
     GLubyte *dst        = nullptr;
 
     ANGLE_TRY(dynamicBuffer->allocate(contextVk, amount, &dst, nullptr,

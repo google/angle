@@ -711,10 +711,6 @@
 2950 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_element* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_active_unifor* = SKIP
 2950 VULKAN : dEQP-GLES3.functional.negative_api.state.get_active_attrib = SKIP
-2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.user_ptr.index_int = FAIL
-2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements.indices.unaligned_user_ptr.index_int = FAIL
-2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.user_ptr.index_int = FAIL
-2950 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.unaligned_user_ptr.index_int = FAIL
 
 // Android Vulkan failures
 2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
