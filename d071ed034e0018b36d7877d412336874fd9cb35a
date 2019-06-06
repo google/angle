@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "49f12a5f_85a16460",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-06T20:26:50Z",
+      "side": 1,
+      "message": "nit: This substring could be removed from the string description.",
+      "range": {
+        "startLine": 168,
+        "startChar": 92,
+        "endLine": 169,
+        "endChar": 52
+      },
+      "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
