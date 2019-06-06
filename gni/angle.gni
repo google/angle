@@ -102,7 +102,8 @@ angle_common_configs = [
 ]
 
 angle_remove_configs = [ "//build/config/compiler:default_include_dirs" ]
-angle_better_stack_traces = (is_debug || dcheck_always_on) && is_linux
+angle_better_stack_traces =
+    (is_debug || dcheck_always_on) && is_linux && !is_asan
 
 if (is_clang) {
   angle_remove_configs += [ "//build/config/clang:find_bad_constructs" ]
