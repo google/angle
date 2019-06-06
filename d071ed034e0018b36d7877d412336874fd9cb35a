@@ -22,6 +22,40 @@
       "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a20e1b5f_25685f3a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-06T22:39:10Z",
+      "side": 1,
+      "message": "It looks like this \"*Bits \u003e 0\" pattern is used quite a bit (here and throughout ANGLE) to determine if a channel is present or not.\n\nWould a HAS_CHANNEL(dstFormat.redBits) type of macro be helpful for readability?",
+      "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f14c38c_1ec20d28",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-06T22:39:10Z",
+      "side": 1,
+      "message": "Would it be easier to treat resolve the same way you do with flipping, so these can be combined into a single function?\n\nvoid CalculateBlitOffset(const UtilsVk::BlitResolveParameters \u0026params, float offset[2], bool isResolve)\n{\n    int srcOffsetFactorX \u003d params.flipX ? -1 : 1;\n    int srcOffsetFactorY \u003d params.flipY ? -1 : 1;\n    float stretch \u003d isResolve ? params.stretch[0] : 1.0f;\n\n    offset[0] \u003d params.destOffset[0] * stretch - params.srcOffset[0] * srcOffsetFactorX;\n    offset[1] \u003d params.destOffset[1] * stretch - params.srcOffset[1] * srcOffsetFactorY;\n}",
+      "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
