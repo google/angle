@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "12654395_c1e89c33",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-07T03:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49f12a5f_85a16460",
+      "range": {
+        "startLine": 168,
+        "startChar": 92,
+        "endLine": 169,
+        "endChar": 52
+      },
+      "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a20e1b5f_25685f3a",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 17
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "6f464dc0_5d14df16",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-07T03:41:48Z",
+      "side": 1,
+      "message": "`angle::Format` could have inline `hasRed()` etc functions, sure, that could be a nice cleanup. Let\u0027s keep that as a separate change that cleans up everything at once.",
+      "parentUuid": "a20e1b5f_25685f3a",
+      "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f14c38c_1ec20d28",
         "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
         "patchSetId": 17
@@ -56,6 +98,24 @@
       "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98ae5454_954e8b36",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-07T03:41:48Z",
+      "side": 1,
+      "message": "Unfortunately, the type of `offset` is not the same in the two cases. Resolve works with integer offsets.",
+      "parentUuid": "1f14c38c_1ec20d28",
+      "revId": "d071ed034e0018b36d7877d412336874fd9cb35a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
