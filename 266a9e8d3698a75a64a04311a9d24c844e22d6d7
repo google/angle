@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2575ccbe_d78b5ace",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-07T11:45:38Z",
+      "side": 1,
+      "message": "Will fix in a follow up CL.",
+      "parentUuid": "e3f7b158_e689909e",
+      "range": {
+        "startLine": 862,
+        "startChar": 5,
+        "endLine": 868,
+        "endChar": 39
+      },
+      "revId": "266a9e8d3698a75a64a04311a9d24c844e22d6d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64eb165a_6552affc",
         "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
         "patchSetId": 8
@@ -36,6 +60,24 @@
       "writtenOn": "2019-06-07T03:21:42Z",
       "side": 1,
       "message": "This started failing with this change?",
+      "revId": "266a9e8d3698a75a64a04311a9d24c844e22d6d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e65658b_05b11769",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 736,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-07T11:45:38Z",
+      "side": 1,
+      "message": "Yep. Because of descriptor set gaps. It\u0027s fixed in Q drivers. So we can remove the suppression when we switch our testing. See http://anglebug.com/2727",
+      "parentUuid": "64eb165a_6552affc",
       "revId": "266a9e8d3698a75a64a04311a9d24c844e22d6d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
