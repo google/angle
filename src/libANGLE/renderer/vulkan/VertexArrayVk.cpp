@@ -189,13 +189,37 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
         // memory to a GLushort.
         const GLubyte *in     = static_cast<const GLubyte *>(sourcePointer);
         GLushort *expandedDst = reinterpret_cast<GLushort *>(dst);
-        for (size_t index = 0; index < indexCount; index++)
+        bool primitiveRestart = contextVk->getState().isPrimitiveRestartEnabled();
+
+        constexpr GLubyte kUnsignedByteRestartValue   = 0xFF;
+        constexpr GLushort kUnsignedShortRestartValue = 0xFFFF;
+
+        if (primitiveRestart)
         {
-            expandedDst[index] = static_cast<GLushort>(in[index]);
+            for (size_t index = 0; index < indexCount; index++)
+            {
+                GLushort value = static_cast<GLushort>(in[index]);
+                if (in[index] == kUnsignedByteRestartValue)
+                {
+                    // Convert from 8-bit restart value to 16-bit restart value
+                    value = kUnsignedShortRestartValue;
+                }
+                expandedDst[index] = value;
+            }
+        }
+        else
+        {
+            // Fast path for common case.
+            for (size_t index = 0; index < indexCount; index++)
+            {
+                expandedDst[index] = static_cast<GLushort>(in[index]);
+            }
         }
     }
     else
     {
+        // The primitive restart value is the same for OpenGL and Vulkan,
+        // so there's no need to perform any conversion.
         memcpy(dst, sourcePointer, amount);
     }
     ANGLE_TRY(dynamicBuffer->flush(contextVk));

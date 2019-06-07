@@ -647,11 +647,17 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
     ConvertIndexShaderParams shaderParams = {params.srcOffset, params.dstOffset >> 2,
                                              params.maxIndex, 0};
 
+    uint32_t flags = 0;
+    if (contextVk->getState().isPrimitiveRestartEnabled())
+    {
+        flags |= vk::InternalShader::ConvertIndex_comp::kIsPrimitiveRestartEnabled;
+    }
+
     vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
-    ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndex_comp(contextVk, 0, &shader));
+    ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndex_comp(contextVk, flags, &shader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::ConvertIndexBuffer, shader, nullptr,
-                           &mConvertIndexPrograms[0], nullptr, descriptorSet, &shaderParams,
+                           &mConvertIndexPrograms[flags], nullptr, descriptorSet, &shaderParams,
                            sizeof(ConvertIndexShaderParams), commandBuffer));
 
     constexpr uint32_t kInvocationsPerGroup = 64;

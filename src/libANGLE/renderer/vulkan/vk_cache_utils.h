@@ -375,6 +375,8 @@ class GraphicsPipelineDesc final
 
     // Input assembly info
     void updateTopology(GraphicsPipelineTransitionBits *transition, gl::PrimitiveMode drawMode);
+    void updatePrimitiveRestartEnabled(GraphicsPipelineTransitionBits *transition,
+                                       bool primitiveRestartEnabled);
 
     // Raster states
     void updateCullMode(GraphicsPipelineTransitionBits *transition,

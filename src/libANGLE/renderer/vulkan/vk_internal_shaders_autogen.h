@@ -70,7 +70,11 @@ constexpr size_t kArrayLen = 0x0000000C;
 
 namespace ConvertIndex_comp
 {
-constexpr size_t kArrayLen = 0x00000001;
+enum flags
+{
+    kIsPrimitiveRestartEnabled = 0x00000001,
+};
+constexpr size_t kArrayLen = 0x00000002;
 }  // namespace ConvertIndex_comp
 
 namespace ConvertVertex_comp

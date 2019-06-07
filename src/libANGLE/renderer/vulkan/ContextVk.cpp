@@ -1504,6 +1504,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                        glState.getLineWidth());
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
+                mGraphicsPipelineDesc->updatePrimitiveRestartEnabled(
+                    &mGraphicsPipelineTransition, glState.isPrimitiveRestartEnabled());
                 break;
             case gl::State::DIRTY_BIT_CLEAR_COLOR:
                 mClearColorValue.color.float32[0] = glState.getColorClearValue().red;

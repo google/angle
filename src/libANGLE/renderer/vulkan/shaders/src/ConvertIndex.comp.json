@@ -5,5 +5,8 @@
         "found in the LICENSE file.",
         "",
         "ConvertIndex.comp.json: Build parameters for ConvertIndex.comp."
+    ],
+    "Flags": [
+        "IsPrimitiveRestartEnabled"
     ]
 }

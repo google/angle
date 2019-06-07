@@ -7,7 +7,9 @@
 //
 // The following defines tweak the functionality, and a different shader is built based on these.
 //
-//  (Currently no parameters)
+//  - Flags:
+//    * IsPrimitiveRestartEnabled: enables conversion from 0xFF to 0xFFFF,
+//                                 the restart indices for 8-bit and 16-bit indices.
 //
 
 #version 450 core
@@ -34,7 +36,7 @@ layout (push_constant) uniform PushConstants
     uint dstOffsetDiv4;
     // Maximum size of the read buffer. The highest index value we will convert.
     uint maxIndex;
-    // Not used in the shader. Kept to pad "PushContants" to the size of a vec4.
+    // Not used in the shader. Kept to pad "PushConstants" to the size of a vec4.
     uint _padding;
 };
 
@@ -44,7 +46,14 @@ uint PullIndex(uint index)
     uint srcBlock = srcData[srcIndex >> 2];
     uint srcComponent = (srcIndex & 3);
 
-    return (srcBlock >> (srcComponent << 3)) & 0xFF;
+    uint value = (srcBlock >> (srcComponent << 3)) & 0xFF;
+#if IsPrimitiveRestartEnabled
+    // convert 0xFF (restart value for 8-bit indices)
+    // to 0xFFFF (restart value for 16-bit indices).
+    if (value == 0xFF)
+        value = 0xFFFF;
+#endif
+    return value;
 }
 
 void PackIndexValue(uint srcValue, uint indexIndex, inout uint dstValue)
@@ -52,9 +61,6 @@ void PackIndexValue(uint srcValue, uint indexIndex, inout uint dstValue)
     // Pack 16-byte index into the 32-byte destination.
     dstValue |= srcValue << (indexIndex << 4);
 }
-
-// Note: Once support for primitive restart is added, the shader needs to
-// convert 0xFF -> 0xFFFF. http://anglebug.com/3215
 
 void main()
 {

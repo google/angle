@@ -657,8 +657,15 @@
 // - FramebufferVk::invalidate*:
 2950 VULKAN : dEQP-GLES3.functional.fbo.invalidate.* = SKIP
 
-// - Primitive restart:
-2950 VULKAN : dEQP-GLES3.functional.primitive_restart.* = SKIP
+// - Primitive restart with line loops:
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.basic.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.duplicate_restarts.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart_duplicate_restarts.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_duplicate_restarts.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart.line_loop.* = SKIP
+3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart_duplicate_restarts.line_loop.* = SKIP
 
 // - BufferVk::copySubData:
 2950 VULKAN : dEQP-GLES3.functional.negative_api.buffer.copy_buffer_sub_data = SKIP
