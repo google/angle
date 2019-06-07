@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cec3bda_d960fff5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-07T03:12:06Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 955,
+        "startChar": 40,
+        "endLine": 955,
+        "endChar": 42
+      },
+      "revId": "3f17f929079a102937908b97e72697a2b9444c15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
