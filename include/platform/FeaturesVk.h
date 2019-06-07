@@ -184,6 +184,16 @@ struct FeaturesVk : FeatureSetBase
         "On platform with Intel or AMD gpu, vulkan swapchain is not returning VK_ERROR_OUT_OF_DATE"
         "when window resizing",
         &members, "http://anglebug.com/3623, http://anglebug.com/3624, http://anglebug.com/3625"};
+
+    // On Pixel1XL and Pixel2, reset a vkCommandBuffer seems to have side effects on binding
+    // descriptor sets to it afterwards, Work-around by keep using transient vkCommandBuffer on
+    // those devices.
+    // http://b/135763283
+    Feature transientCommandBuffer = {
+        "transient_command_buffer", FeatureCategory::VulkanWorkarounds,
+        "On Pixel2, keep using transient vkCommandBuffer to work around driver issue in reseting"
+        "vkCommandBuffer",
+        &members, "http://b/135763283"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

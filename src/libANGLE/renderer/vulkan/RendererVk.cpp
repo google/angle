@@ -1273,6 +1273,12 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
     {
         mFeatures.disableFlippingBlitWithCommand.enabled = true;
     }
+
+    if (IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) ||
+        IsPixel1XL(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID))
+    {
+        mFeatures.transientCommandBuffer.enabled = true;
+    }
 }
 
 void RendererVk::initPipelineCacheVkKey()

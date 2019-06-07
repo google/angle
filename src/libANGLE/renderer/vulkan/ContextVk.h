@@ -14,6 +14,7 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/vulkan/PersistentCommandPool.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
@@ -456,7 +457,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
-    void freeAllInFlightResources();
     angle::Result flushCommandGraph(vk::PrimaryCommandBuffer *commandBatch);
 
     angle::Result synchronizeCpuGpuTime();
@@ -561,6 +561,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     vk::CommandPool mCommandPool;
     std::vector<vk::CommandPool> mCommandPoolFreeList;
 
+    // We use a Persistent CommandPool with pre-allocated buffers for primary CommandBuffer
+    vk::PersistentCommandPool mPrimaryCommandPool;
+
     Serial mLastCompletedQueueSerial;
     Serial mLastSubmittedQueueSerial;
     Serial mCurrentQueueSerial;
@@ -574,10 +577,16 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
         void destroy(VkDevice device);
 
+        vk::PrimaryCommandBuffer primaryCommands;
+        // commandPool is for secondary CommandBuffer allocation
         vk::CommandPool commandPool;
         vk::Shared<vk::Fence> fence;
         Serial serial;
     };
+
+    angle::Result releaseToCommandBatch(vk::PrimaryCommandBuffer &&commandBuffer,
+                                        CommandBatch *batch);
+    angle::Result recycleCommandBatch(CommandBatch *batch);
 
     std::vector<CommandBatch> mInFlightCommands;
     std::vector<vk::GarbageObject> mGarbage;
