@@ -72,10 +72,18 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
         }
     }
 
+    if (immediateAvailable)
+    {
+        return VK_PRESENT_MODE_IMMEDIATE_KHR;
+    }
+
+    if (mailboxAvailable)
+    {
+        return VK_PRESENT_MODE_MAILBOX_KHR;
+    }
+
     // Note again that VK_PRESENT_MODE_FIFO_KHR is guaranteed to be available.
-    return mailboxAvailable
-               ? VK_PRESENT_MODE_MAILBOX_KHR
-               : immediateAvailable ? VK_PRESENT_MODE_IMMEDIATE_KHR : VK_PRESENT_MODE_FIFO_KHR;
+    return VK_PRESENT_MODE_FIFO_KHR;
 }
 
 constexpr VkImageUsageFlags kSurfaceVKImageUsageFlags =
