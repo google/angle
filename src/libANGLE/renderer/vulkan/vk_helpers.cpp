@@ -10,6 +10,7 @@
 
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
@@ -210,6 +211,27 @@ VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
     else
     {
         return 0;
+    }
+}
+
+void HandlePrimitiveRestart(gl::DrawElementsType glIndexType,
+                            GLsizei indexCount,
+                            const uint8_t *srcPtr,
+                            uint8_t *outPtr)
+{
+    switch (glIndexType)
+    {
+        case gl::DrawElementsType::UnsignedByte:
+            CopyLineLoopIndicesWithRestart<uint8_t, uint16_t>(indexCount, srcPtr, outPtr);
+            break;
+        case gl::DrawElementsType::UnsignedShort:
+            CopyLineLoopIndicesWithRestart<uint16_t, uint16_t>(indexCount, srcPtr, outPtr);
+            break;
+        case gl::DrawElementsType::UnsignedInt:
+            CopyLineLoopIndicesWithRestart<uint32_t, uint32_t>(indexCount, srcPtr, outPtr);
+            break;
+        default:
+            UNREACHABLE();
     }
 }
 }  // anonymous namespace
@@ -1017,9 +1039,11 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
                                                                   int indexCount,
                                                                   intptr_t elementArrayOffset,
                                                                   vk::BufferHelper **bufferOut,
-                                                                  VkDeviceSize *bufferOffsetOut)
+                                                                  VkDeviceSize *bufferOffsetOut,
+                                                                  size_t *indexCountOut)
 {
-    if (glIndexType == gl::DrawElementsType::UnsignedByte)
+    if (glIndexType == gl::DrawElementsType::UnsignedByte ||
+        contextVk->getState().isPrimitiveRestartEnabled())
     {
         TRACE_EVENT0("gpu.angle", "LineLoopHelper::getIndexBufferForElementArrayBuffer");
         // Needed before reading buffer or we could get stale data.
@@ -1029,10 +1053,12 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
         ANGLE_TRY(elementArrayBufferVk->mapImpl(contextVk, &srcDataMapping));
         ANGLE_TRY(streamIndices(contextVk, glIndexType, indexCount,
                                 static_cast<const uint8_t *>(srcDataMapping) + elementArrayOffset,
-                                bufferOut, bufferOffsetOut));
+                                bufferOut, bufferOffsetOut, indexCountOut));
         ANGLE_TRY(elementArrayBufferVk->unmapImpl(contextVk));
         return angle::Result::Continue;
     }
+
+    *indexCountOut = indexCount + 1;
 
     VkIndexType indexType = gl_vk::kIndexTypeMap[glIndexType];
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
@@ -1067,35 +1093,49 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
                                             GLsizei indexCount,
                                             const uint8_t *srcPtr,
                                             vk::BufferHelper **bufferOut,
-                                            VkDeviceSize *bufferOffsetOut)
+                                            VkDeviceSize *bufferOffsetOut,
+                                            size_t *indexCountOut)
 {
     VkIndexType indexType = gl_vk::kIndexTypeMap[glIndexType];
 
     uint8_t *indices = nullptr;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
-    size_t allocateBytes = unitSize * (indexCount + 1);
+    size_t numOutIndices = static_cast<size_t>(indexCount) + 1;
+    if (contextVk->getState().isPrimitiveRestartEnabled())
+    {
+        numOutIndices = GetLineLoopWithRestartIndexCount(glIndexType, indexCount, srcPtr);
+    }
+    *indexCountOut       = numOutIndices;
+    size_t allocateBytes = unitSize * numOutIndices;
     ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), nullptr,
                                            bufferOffsetOut, nullptr));
     *bufferOut = mDynamicIndexBuffer.getCurrentBuffer();
 
-    if (glIndexType == gl::DrawElementsType::UnsignedByte)
+    if (contextVk->getState().isPrimitiveRestartEnabled())
     {
-        // Vulkan doesn't support uint8 index types, so we need to emulate it.
-        ASSERT(indexType == VK_INDEX_TYPE_UINT16);
-        uint16_t *indicesDst = reinterpret_cast<uint16_t *>(indices);
-        for (int i = 0; i < indexCount; i++)
-        {
-            indicesDst[i] = srcPtr[i];
-        }
-
-        indicesDst[indexCount] = srcPtr[0];
+        HandlePrimitiveRestart(glIndexType, indexCount, srcPtr, indices);
     }
     else
     {
-        memcpy(indices, srcPtr, unitSize * indexCount);
-        memcpy(indices + unitSize * indexCount, srcPtr, unitSize);
+        if (glIndexType == gl::DrawElementsType::UnsignedByte)
+        {
+            // Vulkan doesn't support uint8 index types, so we need to emulate it.
+            ASSERT(indexType == VK_INDEX_TYPE_UINT16);
+            uint16_t *indicesDst = reinterpret_cast<uint16_t *>(indices);
+            for (int i = 0; i < indexCount; i++)
+            {
+                indicesDst[i] = srcPtr[i];
+            }
+
+            indicesDst[indexCount] = srcPtr[0];
+        }
+        else
+        {
+            memcpy(indices, srcPtr, unitSize * indexCount);
+            memcpy(indices + unitSize * indexCount, srcPtr, unitSize);
+        }
     }
 
     ANGLE_TRY(mDynamicIndexBuffer.flush(contextVk));
@@ -1116,8 +1156,7 @@ void LineLoopHelper::destroy(VkDevice device)
 void LineLoopHelper::Draw(uint32_t count, vk::CommandBuffer *commandBuffer)
 {
     // Our first index is always 0 because that's how we set it up in createIndexBuffer*.
-    // Note: this could theoretically overflow and wrap to zero.
-    commandBuffer->drawIndexed(count + 1);
+    commandBuffer->drawIndexed(count);
 }
 
 // BufferHelper implementation.

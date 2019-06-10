@@ -75,6 +75,20 @@ IndexRange ComputeIndexRange(DrawElementsType indexType,
 // Get the primitive restart index value for the given index type.
 GLuint GetPrimitiveRestartIndex(DrawElementsType indexType);
 
+// Get the primitive restart index value with the given C++ type.
+template <typename T>
+constexpr T GetPrimitiveRestartIndexFromType()
+{
+    return std::numeric_limits<T>::max();
+}
+
+static_assert(GetPrimitiveRestartIndexFromType<uint8_t>() == 0xFF,
+              "verify restart index for uint8_t values");
+static_assert(GetPrimitiveRestartIndexFromType<uint16_t>() == 0xFFFF,
+              "verify restart index for uint8_t values");
+static_assert(GetPrimitiveRestartIndexFromType<uint32_t>() == 0xFFFFFFFF,
+              "verify restart index for uint8_t values");
+
 bool IsTriangleMode(PrimitiveMode drawMode);
 
 namespace priv

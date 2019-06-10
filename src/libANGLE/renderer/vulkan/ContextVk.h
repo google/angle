@@ -352,7 +352,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                                     GLsizei vertexOrIndexCount,
                                     gl::DrawElementsType indexTypeOrInvalid,
                                     const void *indices,
-                                    vk::CommandBuffer **commandBufferOut);
+                                    vk::CommandBuffer **commandBufferOut,
+                                    size_t *numIndicesOut);
 
     void updateViewport(FramebufferVk *framebufferVk,
                         const gl::Rectangle &viewport,

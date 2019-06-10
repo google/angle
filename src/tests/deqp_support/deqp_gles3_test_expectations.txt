@@ -662,14 +662,30 @@
 2950 VULKAN : dEQP-GLES3.functional.fbo.invalidate.* = SKIP
 
 // - Primitive restart with line loops:
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.basic.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.duplicate_restarts.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart_duplicate_restarts.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_duplicate_restarts.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart.line_loop.* = SKIP
-3215 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart_duplicate_restarts.line_loop.* = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.basic.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.basic.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.basic.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.duplicate_restarts.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.duplicate_restarts.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.duplicate_restarts.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart_duplicate_restarts.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart_duplicate_restarts.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.end_restart_duplicate_restarts.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_duplicate_restarts.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_duplicate_restarts.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_duplicate_restarts.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart.line_loop.unsigned_int.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart_duplicate_restarts.line_loop.unsigned_byte.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart_duplicate_restarts.line_loop.unsigned_short.draw_elements_instanced = SKIP
+2672 VULKAN : dEQP-GLES3.functional.primitive_restart.begin_restart_end_restart_duplicate_restarts.line_loop.unsigned_int.draw_elements_instanced = SKIP
 
 // - BufferVk::copySubData:
 2950 VULKAN : dEQP-GLES3.functional.negative_api.buffer.copy_buffer_sub_data = SKIP

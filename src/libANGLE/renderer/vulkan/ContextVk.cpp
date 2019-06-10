@@ -509,10 +509,11 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
                                            GLsizei vertexOrIndexCount,
                                            gl::DrawElementsType indexTypeOrInvalid,
                                            const void *indices,
-                                           vk::CommandBuffer **commandBufferOut)
+                                           vk::CommandBuffer **commandBufferOut,
+                                           size_t *numIndicesOut)
 {
     ANGLE_TRY(mVertexArray->handleLineLoop(this, firstVertex, vertexOrIndexCount,
-                                           indexTypeOrInvalid, indices));
+                                           indexTypeOrInvalid, indices, numIndicesOut));
     mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     mCurrentDrawElementsType = indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum
                                    ? indexTypeOrInvalid
@@ -1114,9 +1115,10 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
 
     if (mode == gl::PrimitiveMode::LineLoop)
     {
+        size_t numIndices;
         ANGLE_TRY(setupLineLoopDraw(context, mode, first, count, gl::DrawElementsType::InvalidEnum,
-                                    nullptr, &commandBuffer));
-        vk::LineLoopHelper::Draw(clampedVertexCount, commandBuffer);
+                                    nullptr, &commandBuffer, &numIndices));
+        vk::LineLoopHelper::Draw(numIndices, commandBuffer);
     }
     else
     {
@@ -1157,8 +1159,10 @@ angle::Result ContextVk::drawElements(const gl::Context *context,
     vk::CommandBuffer *commandBuffer = nullptr;
     if (mode == gl::PrimitiveMode::LineLoop)
     {
-        ANGLE_TRY(setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer));
-        vk::LineLoopHelper::Draw(count, commandBuffer);
+        size_t indexCount;
+        ANGLE_TRY(
+            setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer, &indexCount));
+        vk::LineLoopHelper::Draw(indexCount, commandBuffer);
     }
     else
     {

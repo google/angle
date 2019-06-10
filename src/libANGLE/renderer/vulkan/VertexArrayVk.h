@@ -48,7 +48,8 @@ class VertexArrayVk : public VertexArrayImpl
                                  GLint firstVertex,
                                  GLsizei vertexOrIndexCount,
                                  gl::DrawElementsType indexTypeOrInvalid,
-                                 const void *indices);
+                                 const void *indices,
+                                 size_t *indexCountOut);
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const
     {

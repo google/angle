@@ -145,48 +145,6 @@ void SetTriangleFanIndices(GLuint *destPtr, size_t numTris)
     }
 }
 
-template <typename T>
-void CopyLineLoopIndicesWithRestart(const void *indices,
-                                    size_t count,
-                                    gl::DrawElementsType indexType,
-                                    std::vector<GLuint> *bufferOut)
-{
-    GLuint restartIndex    = gl::GetPrimitiveRestartIndex(indexType);
-    GLuint d3dRestartIndex = static_cast<GLuint>(d3d11::GetPrimitiveRestartIndex());
-    const T *srcPtr        = static_cast<const T *>(indices);
-    Optional<GLuint> currentLoopStart;
-
-    bufferOut->clear();
-
-    for (size_t indexIdx = 0; indexIdx < count; ++indexIdx)
-    {
-        GLuint value = static_cast<GLuint>(srcPtr[indexIdx]);
-
-        if (value == restartIndex)
-        {
-            if (currentLoopStart.valid())
-            {
-                bufferOut->push_back(currentLoopStart.value());
-                bufferOut->push_back(d3dRestartIndex);
-                currentLoopStart.reset();
-            }
-        }
-        else
-        {
-            bufferOut->push_back(value);
-            if (!currentLoopStart.valid())
-            {
-                currentLoopStart = value;
-            }
-        }
-    }
-
-    if (currentLoopStart.valid())
-    {
-        bufferOut->push_back(currentLoopStart.value());
-    }
-}
-
 void GetLineLoopIndices(const void *indices,
                         gl::DrawElementsType indexType,
                         GLuint count,
@@ -195,16 +153,25 @@ void GetLineLoopIndices(const void *indices,
 {
     if (indexType != gl::DrawElementsType::InvalidEnum && usePrimitiveRestartFixedIndex)
     {
+        size_t indexCount = GetLineLoopWithRestartIndexCount(indexType, count,
+                                                             static_cast<const uint8_t *>(indices));
+        bufferOut->resize(indexCount);
         switch (indexType)
         {
             case gl::DrawElementsType::UnsignedByte:
-                CopyLineLoopIndicesWithRestart<GLubyte>(indices, count, indexType, bufferOut);
+                CopyLineLoopIndicesWithRestart<GLubyte, GLuint>(
+                    count, static_cast<const uint8_t *>(indices),
+                    reinterpret_cast<uint8_t *>(bufferOut->data()));
                 break;
             case gl::DrawElementsType::UnsignedShort:
-                CopyLineLoopIndicesWithRestart<GLushort>(indices, count, indexType, bufferOut);
+                CopyLineLoopIndicesWithRestart<GLushort, GLuint>(
+                    count, static_cast<const uint8_t *>(indices),
+                    reinterpret_cast<uint8_t *>(bufferOut->data()));
                 break;
             case gl::DrawElementsType::UnsignedInt:
-                CopyLineLoopIndicesWithRestart<GLuint>(indices, count, indexType, bufferOut);
+                CopyLineLoopIndicesWithRestart<GLuint, GLuint>(
+                    count, static_cast<const uint8_t *>(indices),
+                    reinterpret_cast<uint8_t *>(bufferOut->data()));
                 break;
             default:
                 UNREACHABLE();
