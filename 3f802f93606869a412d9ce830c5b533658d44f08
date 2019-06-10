@@ -22,6 +22,30 @@
       "revId": "3f802f93606869a412d9ce830c5b533658d44f08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6464236d_853be46c",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2019-06-10T18:33:52Z",
+      "side": 1,
+      "message": "I wrote about this in commit message.\nIf the queue is not cleared, the same failures are reported for subsequent otherwise passing tests.",
+      "parentUuid": "143c5b4d_8c122406",
+      "range": {
+        "startLine": 1052,
+        "startChar": 12,
+        "endLine": 1052,
+        "endChar": 45
+      },
+      "revId": "3f802f93606869a412d9ce830c5b533658d44f08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
