@@ -143,14 +143,39 @@ TEST_F(ShCompileTest, DecimalSepLocale)
 {
     // Locale names are platform dependent, add platform-specific names of locales to be tested here
     const std::string availableLocales[] = {
-        "de_DE", "de-DE", "de_DE.UTF-8", "de_DE.ISO8859-1", "de_DE.ISO8859-15", "de_DE@euro",
-        "de_DE.88591", "de_DE.88591.en", "de_DE.iso88591", "de_DE.ISO-8859-1", "de_DE.ISO_8859-1",
-        "de_DE.iso885915", "de_DE.ISO-8859-15", "de_DE.ISO_8859-15", "de_DE.8859-15",
-        "de_DE.8859-15@euro", "de_DE.ISO-8859-15@euro", "de_DE.UTF-8@euro", "de_DE.utf8",
-        "German_germany", "German_Germany", "German_Germany.1252", "German_Germany.UTF-8", "German",
+        "de_DE",
+        "de-DE",
+        "de_DE.UTF-8",
+        "de_DE.ISO8859-1",
+        "de_DE.ISO8859-15",
+        "de_DE@euro",
+        "de_DE.88591",
+        "de_DE.88591.en",
+        "de_DE.iso88591",
+        "de_DE.ISO-8859-1",
+        "de_DE.ISO_8859-1",
+        "de_DE.iso885915",
+        "de_DE.ISO-8859-15",
+        "de_DE.ISO_8859-15",
+        "de_DE.8859-15",
+        "de_DE.8859-15@euro",
+#if !defined(_WIN32)
+        // TODO(https://crbug.com/972372): Add this test back on Windows once the
+        // CRT no longer throws on code page sections ('ISO-8859-15@euro') that
+        // are >= 16 characters long.
+        "de_DE.ISO-8859-15@euro",
+#endif
+        "de_DE.UTF-8@euro",
+        "de_DE.utf8",
+        "German_germany",
+        "German_Germany",
+        "German_Germany.1252",
+        "German_Germany.UTF-8",
+        "German",
         // One ubuntu tester doesn't have a german locale, but da_DK.utf8 has similar float
         // representation
-        "da_DK.utf8"};
+        "da_DK.utf8"
+    };
 
     const auto localeExists = [](const std::string name) {
         return bool(setlocale(LC_ALL, name.c_str()));
