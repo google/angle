@@ -531,6 +531,7 @@ VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState);
 VkFrontFace GetFrontFace(GLenum frontFace, bool invertCullFace);
 VkSampleCountFlagBits GetSamples(GLint sampleCount);
 VkComponentSwizzle GetSwizzle(const GLenum swizzle);
+VkCompareOp GetCompareOp(const GLenum compareFunc);
 
 constexpr angle::PackedEnumMap<gl::DrawElementsType, VkIndexType> kIndexTypeMap = {
     {gl::DrawElementsType::UnsignedByte, VK_INDEX_TYPE_UINT16},

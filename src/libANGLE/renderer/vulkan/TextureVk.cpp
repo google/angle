@@ -1203,8 +1203,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     samplerInfo.mipLodBias              = 0.0f;
     samplerInfo.anisotropyEnable        = anisotropyEnable;
     samplerInfo.maxAnisotropy           = maxAnisotropy;
-    samplerInfo.compareEnable           = VK_FALSE;
-    samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
+    samplerInfo.compareEnable = samplerState.getCompareMode() == GL_COMPARE_REF_TO_TEXTURE;
+    samplerInfo.compareOp     = gl_vk::GetCompareOp(samplerState.getCompareFunc());
     samplerInfo.minLod                  = samplerState.getMinLod();
     samplerInfo.maxLod                  = samplerState.getMaxLod();
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;

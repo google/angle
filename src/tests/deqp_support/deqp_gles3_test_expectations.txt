@@ -541,7 +541,17 @@
 3188 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.3d* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.fbo.color.tex2darray.* = SKIP
 3188 VULKAN : dEQP-GLES3.functional.fbo.color.tex3d.* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.format.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.size.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.wrap.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.filtering.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.mipmap.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.swizzle.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.shadow.2d_array.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.vertex.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.units.* = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.compressed.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.* = SKIP
 
 // Formats:

@@ -776,6 +776,32 @@ VkComponentSwizzle GetSwizzle(const GLenum swizzle)
     }
 }
 
+VkCompareOp GetCompareOp(const GLenum compareFunc)
+{
+    switch (compareFunc)
+    {
+        case GL_NEVER:
+            return VK_COMPARE_OP_NEVER;
+        case GL_LESS:
+            return VK_COMPARE_OP_LESS;
+        case GL_EQUAL:
+            return VK_COMPARE_OP_EQUAL;
+        case GL_LEQUAL:
+            return VK_COMPARE_OP_LESS_OR_EQUAL;
+        case GL_GREATER:
+            return VK_COMPARE_OP_GREATER;
+        case GL_NOTEQUAL:
+            return VK_COMPARE_OP_NOT_EQUAL;
+        case GL_GEQUAL:
+            return VK_COMPARE_OP_GREATER_OR_EQUAL;
+        case GL_ALWAYS:
+            return VK_COMPARE_OP_ALWAYS;
+        default:
+            UNREACHABLE();
+            return VK_COMPARE_OP_ALWAYS;
+    }
+}
+
 void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset)
 {
     vkOffset->x = glOffset.x;
