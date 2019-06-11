@@ -933,12 +933,28 @@ EGLImage EGLAPIENTRY EGL_CreateImage(EGLDisplay dpy,
           ", const EGLAttrib *attrib_list = 0x%016" PRIxPTR ")",
           (uintptr_t)dpy, (uintptr_t)ctx, target, (uintptr_t)buffer, (uintptr_t)attrib_list);
     Thread *thread        = egl::GetCurrentThread();
-    egl::Display *display = static_cast<egl::Display *>(dpy);
 
-    UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglCreateImage unimplemented.", GetDebug(),
-                     "eglCreateImage", GetDisplayIfValid(display));
-    return EGL_NO_IMAGE;
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    gl::Context *context    = static_cast<gl::Context *>(ctx);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray((const EGLint *)attrib_list);
+
+    Error error = ValidateCreateImage(display, context, target, buffer, attributes);
+    if (error.isError())
+    {
+        thread->setError(error, GetDebug(), "eglCreateImage", GetDisplayIfValid(display));
+        return EGL_NO_IMAGE;
+    }
+
+    Image *image = nullptr;
+    error        = display->createImage(context, target, buffer, attributes, &image);
+    if (error.isError())
+    {
+        thread->setError(error, GetDebug(), "eglCreateImage", GetDisplayIfValid(display));
+        return EGL_NO_IMAGE;
+    }
+
+    thread->setSuccess();
+    return static_cast<EGLImage>(image);
 }
 
 EGLBoolean EGLAPIENTRY EGL_DestroyImage(EGLDisplay dpy, EGLImage image)
@@ -948,12 +964,19 @@ EGLBoolean EGLAPIENTRY EGL_DestroyImage(EGLDisplay dpy, EGLImage image)
           (uintptr_t)dpy, (uintptr_t)image);
     Thread *thread        = egl::GetCurrentThread();
     egl::Display *display = static_cast<egl::Display *>(dpy);
-    Image *eglImage       = static_cast<Image *>(image);
+    Image *img            = static_cast<Image *>(image);
 
-    UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglDestroyImage unimplemented.", GetDebug(),
-                     "eglDestroyImage", GetImageIfValid(display, eglImage));
-    return EGL_FALSE;
+    Error error = ValidateDestroyImage(display, img);
+    if (error.isError())
+    {
+        thread->setError(error, GetDebug(), "eglDestroyImage", GetImageIfValid(display, img));
+        return EGL_FALSE;
+    }
+
+    display->destroyImage(img);
+
+    thread->setSuccess();
+    return EGL_TRUE;
 }
 
 EGLDisplay EGLAPIENTRY EGL_GetPlatformDisplay(EGLenum platform,

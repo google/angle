@@ -132,11 +132,11 @@ Error ValidateStreamAttribute(const EGLAttrib attribute,
     return NoError();
 }
 
-Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
-                                           const gl::Texture *texture,
-                                           EGLAttrib level)
+Error ValidateCreateImageMipLevelCommon(gl::Context *context,
+                                        const gl::Texture *texture,
+                                        EGLAttrib level)
 {
-    // Note that the spec EGL_KHR_create_image spec does not explicitly specify an error
+    // Note that the spec EGL_create_image spec does not explicitly specify an error
     // when the level is outside the base/max level range, but it does mention that the
     // level "must be a part of the complete texture object <buffer>". It can be argued
     // that out-of-range levels are not a part of the complete texture.
@@ -1819,24 +1819,16 @@ Error ValidateCompatibleConfigs(const Display *display,
     return NoError();
 }
 
-Error ValidateCreateImageKHR(const Display *display,
-                             gl::Context *context,
-                             EGLenum target,
-                             EGLClientBuffer buffer,
-                             const AttributeMap &attributes)
+Error ValidateCreateImage(const Display *display,
+                          gl::Context *context,
+                          EGLenum target,
+                          EGLClientBuffer buffer,
+                          const AttributeMap &attributes)
 {
 
     ANGLE_TRY(ValidateDisplay(display));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
-
-    if (!displayExtensions.imageBase && !displayExtensions.image)
-    {
-        // It is out of spec what happens when calling an extension function when the extension is
-        // not available.
-        // EGL_BAD_DISPLAY seems like a reasonable error.
-        return EglBadDisplay() << "EGL_KHR_image not supported.";
-    }
 
     // TODO(geofflang): Complete validation from EGL_KHR_image_base:
     // If the resource specified by <dpy>, <ctx>, <target>, <buffer> and <attrib_list> is itself an
@@ -1850,7 +1842,7 @@ Error ValidateCreateImageKHR(const Display *display,
 
         switch (attribute)
         {
-            case EGL_IMAGE_PRESERVED_KHR:
+            case EGL_IMAGE_PRESERVED:
                 switch (value)
                 {
                     case EGL_TRUE:
@@ -1859,28 +1851,28 @@ Error ValidateCreateImageKHR(const Display *display,
 
                     default:
                         return EglBadParameter()
-                               << "EGL_IMAGE_PRESERVED_KHR must be EGL_TRUE or EGL_FALSE.";
+                               << "EGL_IMAGE_PRESERVED must be EGL_TRUE or EGL_FALSE.";
                 }
                 break;
 
-            case EGL_GL_TEXTURE_LEVEL_KHR:
+            case EGL_GL_TEXTURE_LEVEL:
                 if (!displayExtensions.glTexture2DImage &&
                     !displayExtensions.glTextureCubemapImage && !displayExtensions.glTexture3DImage)
                 {
-                    return EglBadParameter() << "EGL_GL_TEXTURE_LEVEL_KHR cannot be used "
+                    return EglBadParameter() << "EGL_GL_TEXTURE_LEVEL cannot be used "
                                                 "without KHR_gl_texture_*_image support.";
                 }
 
                 if (value < 0)
                 {
-                    return EglBadParameter() << "EGL_GL_TEXTURE_LEVEL_KHR cannot be negative.";
+                    return EglBadParameter() << "EGL_GL_TEXTURE_LEVEL cannot be negative.";
                 }
                 break;
 
-            case EGL_GL_TEXTURE_ZOFFSET_KHR:
+            case EGL_GL_TEXTURE_ZOFFSET:
                 if (!displayExtensions.glTexture3DImage)
                 {
-                    return EglBadParameter() << "EGL_GL_TEXTURE_ZOFFSET_KHR cannot be used "
+                    return EglBadParameter() << "EGL_GL_TEXTURE_ZOFFSET cannot be used "
                                                 "without KHR_gl_texture_3D_image support.";
                 }
                 break;
@@ -1893,7 +1885,7 @@ Error ValidateCreateImageKHR(const Display *display,
 
     switch (target)
     {
-        case EGL_GL_TEXTURE_2D_KHR:
+        case EGL_GL_TEXTURE_2D:
         {
             if (!displayExtensions.glTexture2DImage)
             {
@@ -1918,7 +1910,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return EglBadAccess() << "texture has a surface bound to it.";
             }
 
-            EGLAttrib level = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
+            EGLAttrib level = attributes.get(EGL_GL_TEXTURE_LEVEL, 0);
             if (texture->getWidth(gl::TextureTarget::_2D, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(gl::TextureTarget::_2D, static_cast<size_t>(level)) == 0)
             {
@@ -1926,16 +1918,16 @@ Error ValidateCreateImageKHR(const Display *display,
                        << "target 2D texture does not have a valid size at specified level.";
             }
 
-            ANGLE_TRY(ValidateCreateImageKHRMipLevelCommon(context, texture, level));
+            ANGLE_TRY(ValidateCreateImageMipLevelCommon(context, texture, level));
         }
         break;
 
-        case EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR:
-        case EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_X_KHR:
-        case EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_Y_KHR:
-        case EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_KHR:
-        case EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_Z_KHR:
-        case EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_KHR:
+        case EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+        case EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+        case EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+        case EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+        case EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+        case EGL_GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
         {
             if (!displayExtensions.glTextureCubemapImage)
             {
@@ -1961,7 +1953,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return EglBadAccess() << "texture has a surface bound to it.";
             }
 
-            EGLAttrib level               = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
+            EGLAttrib level               = attributes.get(EGL_GL_TEXTURE_LEVEL, 0);
             gl::TextureTarget cubeMapFace = egl_gl::EGLCubeMapTargetToCubeMapTarget(target);
             if (texture->getWidth(cubeMapFace, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(cubeMapFace, static_cast<size_t>(level)) == 0)
@@ -1970,7 +1962,7 @@ Error ValidateCreateImageKHR(const Display *display,
                                             "size at specified level and face.";
             }
 
-            ANGLE_TRY(ValidateCreateImageKHRMipLevelCommon(context, texture, level));
+            ANGLE_TRY(ValidateCreateImageMipLevelCommon(context, texture, level));
 
             if (level == 0 && !texture->isMipmapComplete() &&
                 CubeTextureHasUnspecifiedLevel0Face(texture))
@@ -1982,7 +1974,7 @@ Error ValidateCreateImageKHR(const Display *display,
         }
         break;
 
-        case EGL_GL_TEXTURE_3D_KHR:
+        case EGL_GL_TEXTURE_3D:
         {
             if (!displayExtensions.glTexture3DImage)
             {
@@ -2007,8 +1999,8 @@ Error ValidateCreateImageKHR(const Display *display,
                 return EglBadAccess() << "texture has a surface bound to it.";
             }
 
-            EGLAttrib level   = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
-            EGLAttrib zOffset = attributes.get(EGL_GL_TEXTURE_ZOFFSET_KHR, 0);
+            EGLAttrib level   = attributes.get(EGL_GL_TEXTURE_LEVEL, 0);
+            EGLAttrib zOffset = attributes.get(EGL_GL_TEXTURE_ZOFFSET, 0);
             if (texture->getWidth(gl::TextureTarget::_3D, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(gl::TextureTarget::_3D, static_cast<size_t>(level)) == 0 ||
                 texture->getDepth(gl::TextureTarget::_3D, static_cast<size_t>(level)) == 0)
@@ -2025,20 +2017,20 @@ Error ValidateCreateImageKHR(const Display *display,
                                             "level.";
             }
 
-            ANGLE_TRY(ValidateCreateImageKHRMipLevelCommon(context, texture, level));
+            ANGLE_TRY(ValidateCreateImageMipLevelCommon(context, texture, level));
         }
         break;
 
-        case EGL_GL_RENDERBUFFER_KHR:
+        case EGL_GL_RENDERBUFFER:
         {
             if (!displayExtensions.glRenderbufferImage)
             {
                 return EglBadParameter() << "KHR_gl_renderbuffer_image not supported.";
             }
 
-            if (attributes.contains(EGL_GL_TEXTURE_LEVEL_KHR))
+            if (attributes.contains(EGL_GL_TEXTURE_LEVEL))
             {
-                return EglBadParameter() << "EGL_GL_TEXTURE_LEVEL_KHR cannot be used in "
+                return EglBadParameter() << "EGL_GL_TEXTURE_LEVEL cannot be used in "
                                             "conjunction with a renderbuffer target.";
             }
 
@@ -2084,13 +2076,38 @@ Error ValidateCreateImageKHR(const Display *display,
                    << "invalid target: 0x" << std::hex << std::uppercase << target;
     }
 
-    if (attributes.contains(EGL_GL_TEXTURE_ZOFFSET_KHR) && target != EGL_GL_TEXTURE_3D_KHR)
+    if (attributes.contains(EGL_GL_TEXTURE_ZOFFSET) && target != EGL_GL_TEXTURE_3D)
     {
-        return EglBadParameter()
-               << "EGL_GL_TEXTURE_ZOFFSET_KHR must be used with a 3D texture target.";
+        return EglBadParameter() << "EGL_GL_TEXTURE_ZOFFSET must be used with a 3D texture target.";
     }
 
     return NoError();
+}
+
+Error ValidateDestroyImage(const Display *display, const Image *image)
+{
+    ANGLE_TRY(ValidateImage(display, image));
+
+    return NoError();
+}
+
+Error ValidateCreateImageKHR(const Display *display,
+                             gl::Context *context,
+                             EGLenum target,
+                             EGLClientBuffer buffer,
+                             const AttributeMap &attributes)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().imageBase && !display->getExtensions().image)
+    {
+        // It is out of spec what happens when calling an extension function when the extension is
+        // not available.
+        // EGL_BAD_DISPLAY seems like a reasonable error.
+        return EglBadDisplay() << "EGL_KHR_image not supported.";
+    }
+
+    return ValidateCreateImage(display, context, target, buffer, attributes);
 }
 
 Error ValidateDestroyImageKHR(const Display *display, const Image *image)

@@ -85,6 +85,12 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display,
 
 Error ValidateMakeCurrent(Display *display, Surface *draw, Surface *read, gl::Context *context);
 
+Error ValidateCreateImage(const Display *display,
+                          gl::Context *context,
+                          EGLenum target,
+                          EGLClientBuffer buffer,
+                          const AttributeMap &attributes);
+Error ValidateDestroyImage(const Display *display, const Image *image);
 Error ValidateCreateImageKHR(const Display *display,
                              gl::Context *context,
                              EGLenum target,
