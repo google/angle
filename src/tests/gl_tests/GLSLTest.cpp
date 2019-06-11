@@ -719,11 +719,11 @@ void main() {
     EXPECT_GL_NO_ERROR();
 
     // Clear the texture to 42 to ensure the first test case doesn't accidentally pass
-    GLint val = 42;
-    glClearBufferiv(GL_COLOR, 0, &val);
+    GLint val[4] = {42};
+    glClearBufferiv(GL_COLOR, 0, val);
     int pixel[4];
     glReadPixels(0, 0, 1, 1, GL_RGBA_INTEGER, GL_INT, pixel);
-    EXPECT_EQ(pixel[0], val);
+    EXPECT_EQ(pixel[0], val[0]);
 
     GLVertexIDIntegerTextureDrawArrays_helper(0, 1, GL_NO_ERROR);
     GLVertexIDIntegerTextureDrawArrays_helper(1, 1, GL_NO_ERROR);
