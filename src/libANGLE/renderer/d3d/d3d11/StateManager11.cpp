@@ -1142,24 +1142,30 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
-                mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                 invalidateShaders();
-                invalidateVertexBuffer();
-                invalidateRenderTarget();
                 invalidateTexturesAndSamplers();
                 invalidateProgramUniforms();
                 invalidateProgramUniformBuffers();
                 invalidateProgramAtomicCounterBuffers();
                 invalidateProgramShaderStorageBuffers();
                 invalidateDriverUniforms();
-                // If OVR_multiview2 is enabled, the attribute divisor has to be updated for each
-                // binding. When using compute, there could be no vertex array.
-                if (mIsMultiviewEnabled && mVertexArray11)
+                const gl::Program *program = state.getProgram();
+                if (!program || !program->hasLinkedShaderStage(gl::ShaderType::Compute))
                 {
-                    ASSERT(mProgramD3D);
-                    const gl::ProgramState &programState = mProgramD3D->getState();
-                    int numViews = programState.usesMultiview() ? programState.getNumViews() : 1;
-                    mVertexArray11->markAllAttributeDivisorsForAdjustment(numViews);
+                    mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
+                    invalidateVertexBuffer();
+                    invalidateRenderTarget();
+                    // If OVR_multiview2 is enabled, the attribute divisor has to be updated for
+                    // each binding. When using compute, there could be no vertex array.
+                    if (mIsMultiviewEnabled && mVertexArray11)
+                    {
+                        ASSERT(mProgramD3D);
+                        ASSERT(mVertexArray11 == GetImplAs<VertexArray11>(state.getVertexArray()));
+                        const gl::ProgramState &programState = mProgramD3D->getState();
+                        int numViews =
+                            programState.usesMultiview() ? programState.getNumViews() : 1;
+                        mVertexArray11->markAllAttributeDivisorsForAdjustment(numViews);
+                    }
                 }
                 break;
             }

@@ -390,6 +390,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator>>=(std::size_t po
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set()
 {
+    ASSERT(mBits == (mBits & Mask(N)));
     mBits = Mask(N);
     return *this;
 }
@@ -397,6 +398,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set()
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set(ParamT pos, bool value)
 {
+    ASSERT(mBits == (mBits & Mask(N)));
     if (value)
     {
         mBits |= Bit(pos) & Mask(N);
@@ -411,6 +413,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set(ParamT pos, bool value
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::reset()
 {
+    ASSERT(mBits == (mBits & Mask(N)));
     mBits = 0;
     return *this;
 }
@@ -418,6 +421,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::reset()
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::reset(ParamT pos)
 {
+    ASSERT(mBits == (mBits & Mask(N)));
     mBits &= ~Bit(pos);
     return *this;
 }
@@ -425,6 +429,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::reset(ParamT pos)
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip()
 {
+    ASSERT(mBits == (mBits & Mask(N)));
     mBits ^= Mask(N);
     return *this;
 }
@@ -432,6 +437,7 @@ BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip()
 template <size_t N, typename BitsT, typename ParamT>
 BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip(ParamT pos)
 {
+    ASSERT(mBits == (mBits & Mask(N)));
     mBits ^= Bit(pos) & Mask(N);
     return *this;
 }
