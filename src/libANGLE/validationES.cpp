@@ -3065,7 +3065,7 @@ bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
         return false;
     }
 
-    if (!programObject || !programObject->isLinked())
+    if (!programObject->isLinked())
     {
         context->validationError(GL_INVALID_OPERATION, kProgramNotLinked);
         return false;
