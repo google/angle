@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d3495ae0_60986328",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-06-12T01:41:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9c2fbdb_67f9edc5",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 8
+      },
+      "revId": "625d536c67e4fa928987dc168c7d87d819479343",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "507c441b_52b08295",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-11T11:57:17Z",
       "side": 1,
       "message": "are these asserts necessary? did they catch anything?",
+      "range": {
+        "startLine": 393,
+        "startChar": 4,
+        "endLine": 393,
+        "endChar": 39
+      },
+      "revId": "625d536c67e4fa928987dc168c7d87d819479343",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bbabf3a_0525c109",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2019-06-12T01:41:32Z",
+      "side": 1,
+      "message": "I spent a lots of efforts to find the crash reason - an invalid pointer. The crash stack only showed that the member of LinkedUniform was incorrectly written. And the crash point was random. So I added many print sentences to narrow down the searching scope. Finally, I found that executing \u0027mAttribsToTranslate.set()\u0027 could cause the member of LinkedUniform rewritten. However, it\u0027s still weird for me that ::set can cause it. So I added the ASSERT and found that mBits was already an invalid value. And this ASSERT made the cash 100% reproducible. And that\u0027s why I found mVertexArray11 was invalid to compute shader. So I think it\u0027s very useful to add these ASSERTs.",
+      "parentUuid": "507c441b_52b08295",
       "range": {
         "startLine": 393,
         "startChar": 4,
