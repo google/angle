@@ -270,7 +270,10 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
-    mConvertIndexProgram.destroy(device);
+    for (vk::ShaderProgramHelper &program : mConvertIndexPrograms)
+    {
+        program.destroy(device);
+    }
     for (vk::ShaderProgramHelper &program : mConvertVertexPrograms)
     {
         program.destroy(device);
@@ -648,7 +651,7 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
     ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndex_comp(contextVk, 0, &shader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::ConvertIndexBuffer, shader, nullptr,
-                           &mConvertIndexProgram, nullptr, descriptorSet, &shaderParams,
+                           &mConvertIndexPrograms[0], nullptr, descriptorSet, &shaderParams,
                            sizeof(ConvertIndexShaderParams), commandBuffer));
 
     constexpr uint32_t kInvocationsPerGroup = 64;

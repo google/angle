@@ -435,6 +435,14 @@ class ShaderAndVariations:
         (self.flags, self.enums) = get_shader_variations(shader_file)
         get_variation_bits(self.flags, self.enums)
         (self.flags_bits, self.enum_bits) = get_variation_bits(self.flags, self.enums)
+        # Maximum index value has all flags set and all enums at max value.
+        max_index = (1 << self.flags_bits) - 1
+        current_bit_start = self.flags_bits
+        for (name, values), bits in zip(self.enums, self.enum_bits):
+            max_index |= (len(values) - 1) << current_bit_start
+            current_bit_start += bits
+        # Minimum array size is one more than the maximum value.
+        self.array_len = max_index + 1
 
 
 def get_variation_definition(shader_and_variation):
@@ -443,6 +451,7 @@ def get_variation_definition(shader_and_variation):
     enums = shader_and_variation.enums
     flags_bits = shader_and_variation.flags_bits
     enum_bits = shader_and_variation.enum_bits
+    array_len = shader_and_variation.array_len
 
     namespace_name = get_namespace_name(shader_file)
 
@@ -450,7 +459,6 @@ def get_variation_definition(shader_and_variation):
     if len(flags) > 0:
         definition += 'enum flags\n{\n'
         definition += ''.join(['k%s = 0x%08X,\n' % (flags[f], 1 << f) for f in range(len(flags))])
-        definition += 'kFlagsMask = 0x%08X,\n' % ((1 << flags_bits) - 1)
         definition += '};\n'
 
     current_bit_start = flags_bits
@@ -462,10 +470,10 @@ def get_variation_definition(shader_and_variation):
         definition += ''.join([
             'k%s = 0x%08X,\n' % (enum[1][v], v << current_bit_start) for v in range(len(enum[1]))
         ])
-        definition += 'k%sMask = 0x%08X,\n' % (enum_name,
-                                               ((1 << enum_bits[e]) - 1) << current_bit_start)
         definition += '};\n'
         current_bit_start += enum_bits[e]
+
+    definition += 'constexpr size_t kArrayLen = 0x%08X;\n' % array_len
 
     definition += '}  // namespace %s\n' % namespace_name
     return definition
@@ -482,21 +490,7 @@ def get_shader_table_h(shader_and_variation):
 
     namespace_name = "InternalShader::" + get_namespace_name(shader_file)
 
-    first_or = True
-    if len(flags) > 0:
-        table += '%s::kFlagsMask' % namespace_name
-        first_or = False
-
-    for e in range(len(enums)):
-        enum = enums[e]
-        enum_name = enums[e][0]
-        if not first_or:
-            table += ' | '
-        table += '%s::k%sMask' % (namespace_name, enum_name)
-        first_or = False
-
-    if first_or:
-        table += '1'
+    table += '%s::kArrayLen' % namespace_name
 
     table += '];'
     return table
@@ -507,6 +501,7 @@ def get_shader_table_cpp(shader_and_variation):
     enums = shader_and_variation.enums
     flags_bits = shader_and_variation.flags_bits
     enum_bits = shader_and_variation.enum_bits
+    array_len = shader_and_variation.array_len
 
     # Cache max and mask value of each enum to quickly know when a possible variation is invalid
     enum_maxes = []
@@ -524,10 +519,7 @@ def get_shader_table_cpp(shader_and_variation):
 
     table = 'constexpr ShaderBlob %s[] = {\n' % table_name
 
-    # The last possible variation is every flag enabled and every enum at max
-    last_variation = ((1 << flags_bits) - 1) | reduce(lambda x, y: x | y, enum_maxes, 0)
-
-    for variation in range(last_variation + 1):
+    for variation in range(array_len):
         # if any variation is invalid, output an empty entry
         if any([(variation & enum_masks[e]) > enum_maxes[e] for e in range(len(enums))]):
             table += '{nullptr, 0}, // 0x%08X\n' % variation

@@ -341,28 +341,16 @@ class UtilsVk : angle::NonCopyable
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
     angle::PackedEnumMap<Function, vk::DynamicDescriptorPool> mDescriptorPools;
 
+    vk::ShaderProgramHelper mBufferUtilsPrograms[vk::InternalShader::BufferUtils_comp::kArrayLen];
+    vk::ShaderProgramHelper mConvertIndexPrograms[vk::InternalShader::ConvertIndex_comp::kArrayLen];
     vk::ShaderProgramHelper
-        mBufferUtilsPrograms[vk::InternalShader::BufferUtils_comp::kFlagsMask |
-                             vk::InternalShader::BufferUtils_comp::kFunctionMask |
-                             vk::InternalShader::BufferUtils_comp::kFormatMask];
-
-    // Currently does not use parameters.
-    vk::ShaderProgramHelper mConvertIndexProgram;
-
-    vk::ShaderProgramHelper
-        mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kFlagsMask |
-                               vk::InternalShader::ConvertVertex_comp::kConversionMask];
+        mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kArrayLen];
     vk::ShaderProgramHelper mImageClearProgramVSOnly;
-    vk::ShaderProgramHelper
-        mImageClearProgram[vk::InternalShader::ImageClear_frag::kAttachmentIndexMask |
-                           vk::InternalShader::ImageClear_frag::kFormatMask];
-    vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kFlagsMask |
-                                               vk::InternalShader::ImageCopy_frag::kSrcFormatMask |
-                                               vk::InternalShader::ImageCopy_frag::kDestFormatMask];
-    vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kFlagsMask |
-                                                 vk::InternalShader::BlitResolve_frag::kBlitMask];
+    vk::ShaderProgramHelper mImageClearProgram[vk::InternalShader::ImageClear_frag::kArrayLen];
+    vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kArrayLen];
+    vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kArrayLen];
     vk::ShaderProgramHelper mBlitResolveStencilNoExportPrograms
-        [vk::InternalShader::BlitResolveStencilNoExport_comp::kFlagsMask];
+        [vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];
 
     vk::Sampler mPointSampler;
     vk::Sampler mLinearSampler;
