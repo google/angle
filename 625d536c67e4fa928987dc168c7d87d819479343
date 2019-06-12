@@ -93,6 +93,30 @@
       "revId": "625d536c67e4fa928987dc168c7d87d819479343",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f66d84de_fe023ea2",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-12T11:47:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6bbabf3a_0525c109",
+      "range": {
+        "startLine": 393,
+        "startChar": 4,
+        "endLine": 393,
+        "endChar": 39
+      },
+      "revId": "625d536c67e4fa928987dc168c7d87d819479343",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
