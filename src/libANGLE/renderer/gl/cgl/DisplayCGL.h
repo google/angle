@@ -74,6 +74,8 @@ class DisplayCGL : public DisplayGL
 
     WorkerContext *createWorkerContext(std::string *infoLog);
 
+    void initializeFrontendFeatures(gl::FrontendFeatures *features) const override;
+
     void populateFeatureList(angle::FeatureList *features) override;
 
     // Support for dual-GPU MacBook Pros. If the context was created

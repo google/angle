@@ -16,7 +16,7 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/Workarounds.h"
+#include "libANGLE/FrontendFeatures.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
@@ -1477,13 +1477,12 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
         (IsWindows() && (IsIntel(vendor) || IsAMD(vendor))) || (IsLinux() && IsNvidia(vendor));
 }
 
-void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)
+void InitializeFrontendFeatures(const FunctionsGL *functions, gl::FrontendFeatures *features)
 {
     VendorID vendor = GetVendorID(functions);
 
-    workarounds->disableProgramCachingForTransformFeedback.enabled =
-        IsAndroid() && IsQualcomm(vendor);
-    workarounds->syncFramebufferBindingsOnTexImage.enabled = IsWindows() && IsIntel(vendor);
+    features->disableProgramCachingForTransformFeedback.enabled = IsAndroid() && IsQualcomm(vendor);
+    features->syncFramebufferBindingsOnTexImage.enabled         = IsWindows() && IsIntel(vendor);
 }
 
 }  // namespace nativegl_gl

@@ -557,10 +557,10 @@ MultiviewImplementationTypeGL RendererGL::getMultiviewImplementationType() const
     return mMultiviewImplementationType;
 }
 
-void RendererGL::applyNativeWorkarounds(gl::Workarounds *workarounds) const
+void RendererGL::initializeFrontendFeatures(gl::FrontendFeatures *features) const
 {
     ensureCapsInitialized();
-    nativegl_gl::ApplyWorkarounds(mFunctions.get(), workarounds);
+    nativegl_gl::InitializeFrontendFeatures(mFunctions.get(), features);
 }
 
 angle::Result RendererGL::dispatchCompute(const gl::Context *context,

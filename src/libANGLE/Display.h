@@ -20,6 +20,7 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/FrontendFeatures.h"
 #include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/Version.h"
@@ -193,6 +194,8 @@ class Display final : public LabeledObject, angle::NonCopyable
     typedef std::set<gl::Context *> ContextSet;
     const ContextSet &getContextSet() { return mContextSet; }
 
+    const gl::FrontendFeatures &getFrontendFeatures() { return mFrontendFeatures; }
+
     const angle::FeatureList &getFeatures() const { return mFeatures; }
 
     const char *queryStringi(const EGLint name, const EGLint index);
@@ -208,6 +211,7 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     void initDisplayExtensions();
     void initVendorString();
+    void initializeFrontendFeatures();
 
     DisplayState mState;
     rx::DisplayImpl *mImplementation;
@@ -246,6 +250,8 @@ class Display final : public LabeledObject, angle::NonCopyable
     BlobCache mBlobCache;
     gl::MemoryProgramCache mMemoryProgramCache;
     size_t mGlobalTextureShareGroupUsers;
+
+    gl::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;
 };

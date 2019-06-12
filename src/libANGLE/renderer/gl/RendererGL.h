@@ -24,7 +24,7 @@ namespace gl
 struct IndexRange;
 class Path;
 class State;
-struct Workarounds;
+struct FrontendFeatures;
 }  // namespace gl
 
 namespace egl
@@ -170,7 +170,7 @@ class RendererGL : angle::NonCopyable
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
-    void applyNativeWorkarounds(gl::Workarounds *workarounds) const;
+    void initializeFrontendFeatures(gl::FrontendFeatures *features) const;
 
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,

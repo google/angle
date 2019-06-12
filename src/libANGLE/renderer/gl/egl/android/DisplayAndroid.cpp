@@ -690,6 +690,11 @@ WorkerContext *DisplayAndroid::createWorkerContext(std::string *infoLog,
     return new WorkerContextAndroid(context, mEGL, mDummyPbuffer);
 }
 
+void DisplayAndroid::initializeFrontendFeatures(gl::FrontendFeatures *features) const
+{
+    mRenderer->initializeFrontendFeatures(features);
+}
+
 void DisplayAndroid::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getWorkarounds().populateFeatureList(features);

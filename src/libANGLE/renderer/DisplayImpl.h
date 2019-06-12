@@ -36,6 +36,7 @@ class Thread;
 namespace gl
 {
 class Context;
+struct FrontendFeatures;
 }
 
 namespace rx
@@ -89,6 +90,8 @@ class DisplayImpl : public EGLImplFactory
 
     void setBlobCache(egl::BlobCache *blobCache) { mBlobCache = blobCache; }
     egl::BlobCache *getBlobCache() const { return mBlobCache; }
+
+    virtual void initializeFrontendFeatures(gl::FrontendFeatures *features) const {}
 
     virtual void populateFeatureList(angle::FeatureList *features) = 0;
 

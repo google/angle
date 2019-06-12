@@ -39,7 +39,6 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
-#include "libANGLE/Workarounds.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
@@ -337,7 +336,12 @@ void Context::initialize()
     mImplementation->setMemoryProgramCache(mMemoryProgramCache);
 
     initCaps();
-    initWorkarounds();
+
+    if (mDisplay->getFrontendFeatures().syncFramebufferBindingsOnTexImage.enabled)
+    {
+        mTexImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+        mTexImageDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    }
 
     mState.initialize(this);
 
@@ -3475,24 +3479,6 @@ void Context::updateCaps()
     mStateCache.initialize(this);
 }
 
-void Context::initWorkarounds()
-{
-    // Apply back-end workarounds.
-    mImplementation->applyNativeWorkarounds(&mWorkarounds);
-
-    // Lose the context upon out of memory error if the application is
-    // expecting to watch for those events.
-    mWorkarounds.loseContextOnOutOfMemory.enabled =
-        (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
-
-    if (mWorkarounds.syncFramebufferBindingsOnTexImage.enabled)
-    {
-        // Update the Framebuffer bindings on TexImage to work around an Intel bug.
-        mTexImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-        mTexImageDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    }
-}
-
 bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount)
 {
     return (instanceCount == 0) || noopDraw(mode, count);
@@ -5062,11 +5048,6 @@ void Context::attachShader(GLuint program, GLuint shader)
     Shader *shaderObject   = mState.mShaderProgramManager->getShader(shader);
     ASSERT(programObject && shaderObject);
     programObject->attachShader(shaderObject);
-}
-
-const Workarounds &Context::getWorkarounds() const
-{
-    return mWorkarounds;
 }
 
 void Context::copyBufferSubData(BufferBinding readTarget,
@@ -8126,6 +8107,11 @@ Shader *Context::getShader(GLuint handle) const
     return mState.mShaderProgramManager->getShader(handle);
 }
 
+const FrontendFeatures &Context::getFrontendFeatures() const
+{
+    return mDisplay->getFrontendFeatures();
+}
+
 bool Context::isRenderbufferGenerated(GLuint renderbuffer) const
 {
     return mState.mRenderbufferManager->isHandleGenerated(renderbuffer);
@@ -8333,7 +8319,8 @@ void ErrorSet::handleError(GLenum errorCode,
                            unsigned int line)
 {
     if (errorCode == GL_OUT_OF_MEMORY &&
-        mContext->getWorkarounds().loseContextOnOutOfMemory.enabled)
+        mContext->getGraphicsResetStrategy() == GL_LOSE_CONTEXT_ON_RESET_EXT &&
+        mContext->getDisplay()->getFrontendFeatures().loseContextOnOutOfMemory.enabled)
     {
         mContext->markContextLost(GraphicsResetStatus::UnknownContextReset);
     }

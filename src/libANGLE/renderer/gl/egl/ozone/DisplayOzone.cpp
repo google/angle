@@ -1073,6 +1073,11 @@ WorkerContext *DisplayOzone::createWorkerContext(std::string *infoLog,
     return new WorkerContextOzone(context, mEGL);
 }
 
+void DisplayOzone::initializeFrontendFeatures(gl::FrontendFeatures *features) const
+{
+    mRenderer->initializeFrontendFeatures(features);
+}
+
 void DisplayOzone::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getWorkarounds().populateFeatureList(features);

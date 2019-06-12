@@ -216,8 +216,6 @@ class ContextGL : public ContextImpl
     const gl::Extensions &getNativeExtensions() const override;
     const gl::Limitations &getNativeLimitations() const override;
 
-    void applyNativeWorkarounds(gl::Workarounds *workarounds) const override;
-
     // Handle helpers
     ANGLE_INLINE const FunctionsGL *getFunctions() const { return mRenderer->getFunctions(); }
 

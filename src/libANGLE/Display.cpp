@@ -564,7 +564,10 @@ Error Display::initialize()
         config.second.renderableType |= EGL_OPENGL_ES_BIT;
     }
 
+    initializeFrontendFeatures();
+
     mFeatures.clear();
+    mFrontendFeatures.populateFeatureList(&mFeatures);
     mImplementation->populateFeatureList(&mFeatures);
 
     initDisplayExtensions();
@@ -1339,6 +1342,16 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display)
 void Display::initVendorString()
 {
     mVendorString = mImplementation->getVendorString();
+}
+
+void Display::initializeFrontendFeatures()
+{
+    // Enable on all Impls
+    mFrontendFeatures.loseContextOnOutOfMemory.enabled = true;
+
+    mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
+
+    rx::OverrideFeaturesWithDisplayState(&mFrontendFeatures, mState);
 }
 
 const DisplayExtensions &Display::getExtensions() const

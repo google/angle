@@ -100,6 +100,8 @@ class DisplayGLX : public DisplayGL
 
     WorkerContext *createWorkerContext(std::string *infoLog);
 
+    void initializeFrontendFeatures(gl::FrontendFeatures *features) const override;
+
     void populateFeatureList(angle::FeatureList *features) override;
 
   private:

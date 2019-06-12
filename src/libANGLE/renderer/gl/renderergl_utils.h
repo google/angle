@@ -25,7 +25,7 @@ struct Caps;
 class TextureCapsMap;
 struct Extensions;
 struct Version;
-struct Workarounds;
+struct FrontendFeatures;
 }  // namespace gl
 
 namespace rx
@@ -63,7 +63,7 @@ void GenerateCaps(const FunctionsGL *functions,
                   MultiviewImplementationTypeGL *multiviewImplementationType);
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds);
-void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds);
+void InitializeFrontendFeatures(const FunctionsGL *functions, gl::FrontendFeatures *features);
 }  // namespace nativegl_gl
 
 namespace nativegl

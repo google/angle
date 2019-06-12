@@ -179,8 +179,6 @@ class ContextImpl : public GLImplFactory
     virtual const gl::Extensions &getNativeExtensions() const      = 0;
     virtual const gl::Limitations &getNativeLimitations() const    = 0;
 
-    virtual void applyNativeWorkarounds(gl::Workarounds *workarounds) const {}
-
     virtual angle::Result dispatchCompute(const gl::Context *context,
                                           GLuint numGroupsX,
                                           GLuint numGroupsY,

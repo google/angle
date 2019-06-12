@@ -15,10 +15,10 @@
 namespace gl
 {
 
-struct Workarounds : angle::FeatureSetBase
+struct FrontendFeatures : angle::FeatureSetBase
 {
-    Workarounds();
-    ~Workarounds();
+    FrontendFeatures();
+    ~FrontendFeatures();
 
     // Force the context to be lost (via KHR_robustness) if a GL_OUT_OF_MEMORY error occurs. The
     // driver may be in an inconsistent state if this happens, and some users of ANGLE rely on this
@@ -46,8 +46,8 @@ struct Workarounds : angle::FeatureSetBase
         &members};
 };
 
-inline Workarounds::Workarounds()  = default;
-inline Workarounds::~Workarounds() = default;
+inline FrontendFeatures::FrontendFeatures()  = default;
+inline FrontendFeatures::~FrontendFeatures() = default;
 
 }  // namespace gl
 

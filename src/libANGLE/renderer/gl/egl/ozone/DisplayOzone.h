@@ -160,6 +160,8 @@ class DisplayOzone final : public DisplayEGL
                                        EGLContext sharedContext,
                                        const native_egl::AttributeVector workerAttribs) override;
 
+    void initializeFrontendFeatures(gl::FrontendFeatures *features) const override;
+
     void populateFeatureList(angle::FeatureList *features) override;
 
   private:
