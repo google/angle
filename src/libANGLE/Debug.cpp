@@ -168,7 +168,24 @@ void Debug::insertMessage(GLenum source,
         const char *severityString    = GLSeverityToString(severity);
         std::ostringstream messageStream;
         messageStream << "GL " << messageTypeString << ": " << severityString << ": " << message;
-        gl::Trace(logSeverity, messageStream.str().c_str());
+        switch (logSeverity)
+        {
+            case gl::LOG_FATAL:
+                FATAL() << messageStream.str();
+                break;
+            case gl::LOG_ERR:
+                ERR() << messageStream.str();
+                break;
+            case gl::LOG_WARN:
+                WARN() << messageStream.str();
+                break;
+            case gl::LOG_INFO:
+                INFO() << messageStream.str();
+                break;
+            case gl::LOG_EVENT:
+                ANGLE_LOG(EVENT) << messageStream.str();
+                break;
+        }
     }
 
     if (!isMessageEnabled(source, type, id, severity))
@@ -442,7 +459,7 @@ void Debug::insertMessage(EGLenum error,
         const char *messageTypeString = EGLMessageTypeToString(messageType);
         std::ostringstream messageStream;
         messageStream << "EGL " << messageTypeString << ": " << command << ": " << message;
-        gl::Trace(gl::LOG_INFO, messageStream.str().c_str());
+        INFO() << messageStream.str();
     }
 
     // TODO(geofflang): Lock before checking the callback. http://anglebug.com/2464
