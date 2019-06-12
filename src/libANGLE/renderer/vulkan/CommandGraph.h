@@ -327,7 +327,8 @@ class CommandGraphResource : angle::NonCopyable
     bool renderPassStartedButEmpty() const
     {
         return hasStartedRenderPass() &&
-               mCurrentWritingNode->getInsideRenderPassCommands()->empty();
+               (!vk::CommandBuffer::CanKnowIfEmpty() ||
+                mCurrentWritingNode->getInsideRenderPassCommands()->empty());
     }
 
     void clearRenderPassColorAttachment(size_t attachmentIndex, const VkClearColorValue &clearValue)

@@ -510,6 +510,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // The SecondaryCommandBuffer is valid if it's been initialized
     bool valid() const { return mAllocator != nullptr; }
 
+    static bool CanKnowIfEmpty() { return true; }
     bool empty() const { return mCommands.size() == 0 || mCommands[0]->id == CommandID::Invalid; }
 
   private:

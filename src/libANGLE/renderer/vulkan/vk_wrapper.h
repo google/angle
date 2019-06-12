@@ -182,6 +182,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     VkResult init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
 
     // There is no way to know if the command buffer contains any commands.
+    static bool CanKnowIfEmpty() { return false; }
     bool empty() const { return false; }
 
     using WrappedObject::operator=;
@@ -839,6 +840,18 @@ ANGLE_INLINE void CommandBuffer::resetQueryPool(VkQueryPool queryPool,
 {
     ASSERT(valid());
     vkCmdResetQueryPool(mHandle, queryPool, firstQuery, queryCount);
+}
+
+ANGLE_INLINE void CommandBuffer::resolveImage(const Image &srcImage,
+                                              VkImageLayout srcImageLayout,
+                                              const Image &dstImage,
+                                              VkImageLayout dstImageLayout,
+                                              uint32_t regionCount,
+                                              const VkImageResolve *regions)
+{
+    ASSERT(valid() && srcImage.valid() && dstImage.valid());
+    vkCmdResolveImage(mHandle, srcImage.getHandle(), srcImageLayout, dstImage.getHandle(),
+                      dstImageLayout, regionCount, regions);
 }
 
 ANGLE_INLINE void CommandBuffer::beginQuery(VkQueryPool queryPool,
