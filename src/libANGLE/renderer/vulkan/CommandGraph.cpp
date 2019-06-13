@@ -118,6 +118,19 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
     }
 }
 
+const char *GetLoadOpShorthand(uint32_t loadOp)
+{
+    switch (loadOp)
+    {
+        case VK_ATTACHMENT_LOAD_OP_CLEAR:
+            return "C";
+        case VK_ATTACHMENT_LOAD_OP_LOAD:
+            return "L";
+        default:
+            return "D";
+    }
+}
+
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)
 {
     static constexpr angle::ColorF kLabelColors[6] = {
@@ -648,6 +661,32 @@ std::string CommandGraphNode::dumpCommandsForDiagnostics(const char *separator) 
     {
         result += separator;
         result += "Inside RP:";
+
+        size_t attachmentCount             = mRenderPassDesc.attachmentCount();
+        size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment();
+        size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
+
+        if (colorAttachmentCount > 0)
+        {
+            result += " Color: ";
+
+            for (size_t i = 0; i < colorAttachmentCount; ++i)
+            {
+                result += GetLoadOpShorthand(mRenderPassAttachmentOps[i].loadOp);
+            }
+        }
+
+        if (depthStencilAttachmentCount > 0)
+        {
+            ASSERT(depthStencilAttachmentCount == 1);
+
+            result += " Depth/Stencil: ";
+            size_t dsIndex = colorAttachmentCount;
+
+            result += GetLoadOpShorthand(mRenderPassAttachmentOps[dsIndex].loadOp);
+            result += GetLoadOpShorthand(mRenderPassAttachmentOps[dsIndex].stencilLoadOp);
+        }
+
         result += DumpCommands(mInsideRenderPassCommands, separator);
     }
     return result;
