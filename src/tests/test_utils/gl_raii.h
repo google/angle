@@ -30,11 +30,17 @@ class GLWrapper : angle::NonCopyable
 
     // The move-constructor and move-assignment operators are necessary so that the data within a
     // GLWrapper object can be relocated.
-    GLWrapper(GLWrapper &&rht) : mHandle(rht.mHandle) { rht.mHandle = 0u; }
+    GLWrapper(GLWrapper &&rht)
+        : mGenFunc(rht.mGenFunc), mDeleteFunc(rht.mDeleteFunc), mHandle(rht.mHandle)
+    {
+        rht.mHandle = 0u;
+    }
     GLWrapper &operator=(GLWrapper &&rht)
     {
         if (this != &rht)
         {
+            mGenFunc    = rht.mGenFunc;
+            mDeleteFunc = rht.mDeleteFunc;
             std::swap(mHandle, rht.mHandle);
         }
         return *this;

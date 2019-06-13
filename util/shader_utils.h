@@ -52,6 +52,7 @@ namespace essl1_shaders
 
 ANGLE_UTIL_EXPORT const char *PositionAttrib();
 ANGLE_UTIL_EXPORT const char *ColorUniform();
+ANGLE_UTIL_EXPORT const char *Texture2DUniform();
 
 namespace vs
 {
@@ -66,7 +67,9 @@ ANGLE_UTIL_EXPORT const char *Simple();
 // v_position.
 ANGLE_UTIL_EXPORT const char *Passthrough();
 
-ANGLE_UTIL_EXPORT const char *Texture();
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// texcoord.
+ANGLE_UTIL_EXPORT const char *Texture2D();
 
 }  // namespace vs
 
@@ -90,7 +93,7 @@ ANGLE_UTIL_EXPORT const char *Green();
 ANGLE_UTIL_EXPORT const char *Blue();
 
 // A shader that samples the texture
-ANGLE_UTIL_EXPORT const char *Texture();
+ANGLE_UTIL_EXPORT const char *Texture2D();
 
 }  // namespace fs
 }  // namespace essl1_shaders

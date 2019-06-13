@@ -3646,7 +3646,8 @@ void SimpleStateChangeTest::drawToFboWithCulling(const GLenum frontFace, bool ea
     GLTexture texture1;
 
     ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
-    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture(), essl1_shaders::fs::Texture());
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
 
     bindTextureToFbo(fbo1, texture1);
 

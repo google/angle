@@ -301,6 +301,13 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc() const;
 
+    // We use texture serials to optimize texture binding updates. Each permutation of a
+    // {VkImage/VkSampler} generates a unique serial. These serials are combined to form a unique
+    // signature for each descriptor set. This allows us to keep a cache of descriptor sets and
+    // avoid calling vkAllocateDesctiporSets each texture update.
+    Serial generateTextureSerial() { return mTextureSerialFactory.generate(); }
+    const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -464,6 +471,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     // This cache should also probably include the texture index (shader location) and array
     // index (also in the shader). This info is used in the descriptor update step.
     gl::ActiveTextureArray<TextureVk *> mActiveTextures;
+    vk::TextureDescriptorDesc mActiveTexturesDesc;
 
     // "Current Value" aka default vertex attribute state.
     gl::AttributesMask mDirtyDefaultAttribsMask;
@@ -568,6 +576,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     // have a value close to zero, to avoid losing 12 bits when converting these 64 bit values to
     // double.
     uint64_t mGpuEventTimestampOrigin;
+
+    // Generator for texure serials.
+    SerialFactory mTextureSerialFactory;
 };
 }  // namespace rx
 

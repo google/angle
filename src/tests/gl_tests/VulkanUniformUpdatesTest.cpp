@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
+#include "util/shader_utils.h"
 
 using namespace angle;
 
@@ -165,23 +166,15 @@ TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUniformAndTextureUpdates)
     ASSERT_TRUE(IsVulkan());
 
     // Initialize texture program.
-    constexpr char kVS[] = R"(attribute vec2 position;
-varying mediump vec2 texCoord;
-void main()
-{
-    gl_Position = vec4(position, 0, 1);
-    texCoord = position * 0.5 + vec2(0.5);
-})";
-
-    constexpr char kFS[] = R"(varying mediump vec2 texCoord;
+    constexpr char kFS[] = R"(varying mediump vec2 v_texCoord;
 uniform sampler2D tex;
 uniform mediump vec4 colorMask;
 void main()
 {
-    gl_FragColor = texture2D(tex, texCoord) * colorMask;
+    gl_FragColor = texture2D(tex, v_texCoord) * colorMask;
 })";
 
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), kFS);
     glUseProgram(program);
 
     limitMaxSets(program);
@@ -215,23 +208,103 @@ void main()
         // Draw with white.
         glUniform1i(texLoc, 0);
         glUniform4f(colorMaskLoc, 1.0f, 1.0f, 1.0f, 1.0f);
-        drawQuad(program, "position", 0.5f, 1.0f, true);
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
 
         // Draw with white masking out red.
         glUniform4f(colorMaskLoc, 0.0f, 1.0f, 1.0f, 1.0f);
-        drawQuad(program, "position", 0.5f, 1.0f, true);
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
 
         // Draw with magenta.
         glUniform1i(texLoc, 1);
         glUniform4f(colorMaskLoc, 1.0f, 1.0f, 1.0f, 1.0f);
-        drawQuad(program, "position", 0.5f, 1.0f, true);
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
 
         // Draw with magenta masking out red.
         glUniform4f(colorMaskLoc, 0.0f, 1.0f, 1.0f, 1.0f);
-        drawQuad(program, "position", 0.5f, 1.0f, true);
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
 
         swapBuffers();
         ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Uniform updates along with Texture regeneration.
+TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUniformAndTextureRegeneration)
+{
+    ASSERT_TRUE(IsVulkan());
+
+    // Initialize texture program.
+    constexpr char kFS[] = R"(varying mediump vec2 v_texCoord;
+uniform sampler2D tex;
+uniform mediump vec4 colorMask;
+void main()
+{
+    gl_FragColor = texture2D(tex, v_texCoord) * colorMask;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), kFS);
+    glUseProgram(program);
+
+    limitMaxSets(program);
+
+    // Initialize large arrays of textures.
+    std::vector<GLTexture> whiteTextures;
+    std::vector<GLTexture> magentaTextures;
+
+    for (uint32_t iteration = 0; iteration < kMaxSetsForTesting * 2; ++iteration)
+    {
+        // Initialize white texture.
+        GLTexture whiteTexture;
+        InitTexture(GLColor::white, &whiteTexture);
+        ASSERT_GL_NO_ERROR();
+        whiteTextures.emplace_back(std::move(whiteTexture));
+
+        // Initialize magenta texture.
+        GLTexture magentaTexture;
+        InitTexture(GLColor::magenta, &magentaTexture);
+        ASSERT_GL_NO_ERROR();
+        magentaTextures.emplace_back(std::move(magentaTexture));
+    }
+
+    // Get uniform locations.
+    GLint texLoc = glGetUniformLocation(program, "tex");
+    ASSERT_NE(-1, texLoc);
+
+    GLint colorMaskLoc = glGetUniformLocation(program, "colorMask");
+    ASSERT_NE(-1, colorMaskLoc);
+
+    // Draw multiple times, each iteration will create a new descriptor set.
+    for (int outerIteration = 0; outerIteration < 2; ++outerIteration)
+    {
+        for (uint32_t iteration = 0; iteration < kMaxSetsForTesting * 2; ++iteration)
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, whiteTextures[iteration]);
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, magentaTextures[iteration]);
+
+            // Draw with white.
+            glUniform1i(texLoc, 0);
+            glUniform4f(colorMaskLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+            drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+            // Draw with white masking out red.
+            glUniform4f(colorMaskLoc, 0.0f, 1.0f, 1.0f, 1.0f);
+            drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+            // Draw with magenta.
+            glUniform1i(texLoc, 1);
+            glUniform4f(colorMaskLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+            drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+            // Draw with magenta masking out red.
+            glUniform4f(colorMaskLoc, 0.0f, 1.0f, 1.0f, 1.0f);
+            drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+            swapBuffers();
+            ASSERT_GL_NO_ERROR();
+        }
     }
 }
 

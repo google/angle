@@ -277,6 +277,11 @@ const char *ColorUniform()
     return "u_color";
 }
 
+const char *Texture2DUniform()
+{
+    return "u_tex2D";
+}
+
 namespace vs
 {
 
@@ -318,16 +323,16 @@ void main()
 
 // A shader that simply passes through attribute a_position, setting it to gl_Position and varying
 // texcoord.
-const char *Texture()
+const char *Texture2D()
 {
     return R"(precision highp float;
 attribute vec4 a_position;
-varying vec2 texcoord;
+varying vec2 v_texCoord;
 
 void main()
 {
     gl_Position = vec4(a_position.xy, 0.0, 1.0);
-    texcoord = a_position.xy;
+    v_texCoord = a_position.xy * 0.5 + vec2(0.5);
 })";
 }
 
@@ -400,15 +405,15 @@ void main()
 }
 
 // A shader that samples the texture.
-const char *Texture()
+const char *Texture2D()
 {
-    return R"(precision highp float;
-uniform sampler2D tex;
-varying vec2 texcoord;
+    return R"(precision mediump float;
+uniform sampler2D u_tex;
+varying vec2 v_texCoord;
 
 void main()
 {
-    gl_FragColor = vec4(texture2D(tex, texcoord).rgb, 1.0);
+    gl_FragColor = texture2D(u_tex, v_texCoord);
 })";
 }
 

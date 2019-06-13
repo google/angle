@@ -211,6 +211,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] = &ContextVk::handleDirtyDescriptorSets;
 
     mDirtyBits = mNewCommandBufferDirtyBits;
+    mActiveTextures.fill(nullptr);
 }
 
 #undef INIT
@@ -1999,7 +2000,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
     const gl::State &glState   = mState;
     const gl::Program *program = glState.getProgram();
 
-    mActiveTextures.fill(nullptr);
+    uint32_t prevMaxIndex = mActiveTexturesDesc.getMaxIndex();
+    memset(mActiveTextures.data(), 0, sizeof(mActiveTextures[0]) * prevMaxIndex);
+    mActiveTexturesDesc.reset();
 
     const gl::ActiveTexturePointerArray &textures  = glState.getActiveTexturesCache();
     const gl::ActiveTextureMask &activeTextures    = program->getActiveSamplersMask();
@@ -2016,7 +2019,29 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             ANGLE_TRY(getIncompleteTexture(context, textureType, &texture));
         }
 
-        mActiveTextures[textureUnit] = vk::GetImpl(texture);
+        TextureVk *textureVk = vk::GetImpl(texture);
+
+        // Ensure any writes to the textures are flushed before we read from them.
+        ANGLE_TRY(textureVk->ensureImageInitialized(this));
+
+        vk::ImageHelper &image = textureVk->getImage();
+
+        // Ensure the image is in read-only layout
+        if (image.isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
+        {
+            vk::CommandBuffer *srcLayoutChange;
+            ANGLE_TRY(image.recordCommands(this, &srcLayoutChange));
+
+            VkImageAspectFlags aspectFlags = image.getAspectFlags();
+            ASSERT(aspectFlags != 0);
+            image.changeLayout(aspectFlags, vk::ImageLayout::FragmentShaderReadOnly,
+                               srcLayoutChange);
+        }
+
+        image.addReadDependency(mDrawFramebuffer->getFramebuffer());
+
+        mActiveTextures[textureUnit] = textureVk;
+        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial());
     }
 
     return angle::Result::Continue;

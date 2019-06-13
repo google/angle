@@ -1436,6 +1436,52 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
 {
     mTransitions.emplace_back(bits, desc, pipeline);
 }
+
+TextureDescriptorDesc::TextureDescriptorDesc() : mMaxIndex(0)
+{
+    mSerials.fill(0);
+}
+
+TextureDescriptorDesc::~TextureDescriptorDesc()                                  = default;
+TextureDescriptorDesc::TextureDescriptorDesc(const TextureDescriptorDesc &other) = default;
+TextureDescriptorDesc &TextureDescriptorDesc::operator=(const TextureDescriptorDesc &other) =
+    default;
+
+void TextureDescriptorDesc::update(size_t index, Serial serial)
+{
+    if (index >= mMaxIndex)
+    {
+        mMaxIndex = index + 1;
+    }
+
+    // If the serial number overflows we should defragment and regenerate all serials.
+    // There should never be more than UINT_MAX textures alive at a time.
+    ASSERT(serial.getValue() < std::numeric_limits<uint32_t>::max());
+    mSerials[index] = static_cast<uint32_t>(serial.getValue());
+}
+
+size_t TextureDescriptorDesc::hash() const
+{
+    return angle::ComputeGenericHash(&mSerials, sizeof(uint32_t) * mMaxIndex);
+}
+
+void TextureDescriptorDesc::reset()
+{
+    memset(mSerials.data(), 0, sizeof(mSerials[0]) * mMaxIndex);
+    mMaxIndex = 0;
+}
+
+bool TextureDescriptorDesc::operator==(const TextureDescriptorDesc &other) const
+{
+    if (mMaxIndex != other.mMaxIndex)
+        return false;
+
+    if (mMaxIndex == 0)
+        return true;
+
+    return memcmp(mSerials.data(), other.mSerials.data(), sizeof(uint32_t) * mMaxIndex) == 0;
+}
+
 }  // namespace vk
 
 // RenderPassCache implementation.

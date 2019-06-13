@@ -836,21 +836,21 @@ void TextureVk::releaseAndDeleteImage(ContextVk *context)
     }
 }
 
-angle::Result TextureVk::ensureImageAllocated(ContextVk *context, const vk::Format &format)
+angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Format &format)
 {
     if (mImage == nullptr)
     {
-        setImageHelper(context, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
+        setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
     }
     else
     {
-        updateImageHelper(context, format);
+        updateImageHelper(contextVk, format);
     }
 
     return angle::Result::Continue;
 }
 
-void TextureVk::setImageHelper(ContextVk *context,
+void TextureVk::setImageHelper(ContextVk *contextVk,
                                vk::ImageHelper *imageHelper,
                                gl::TextureType imageType,
                                const vk::Format &format,
@@ -865,19 +865,21 @@ void TextureVk::setImageHelper(ContextVk *context,
     mImageLevelOffset = imageLevelOffset;
     mImageLayerOffset = imageLayerOffset;
     mImage            = imageHelper;
-    mImage->initStagingBuffer(context->getRenderer(), format);
+    mImage->initStagingBuffer(contextVk->getRenderer(), format);
 
     mRenderTarget.init(mImage, &mDrawBaseLevelImageView, &mFetchBaseLevelImageView,
                        getNativeImageLevel(0), getNativeImageLayer(0));
 
     // Force re-creation of cube map render targets next time they are needed
     mCubeMapRenderTargets.clear();
+
+    mSerial = contextVk->generateTextureSerial();
 }
 
-void TextureVk::updateImageHelper(ContextVk *context, const vk::Format &format)
+void TextureVk::updateImageHelper(ContextVk *contextVk, const vk::Format &format)
 {
     ASSERT(mImage != nullptr);
-    mImage->initStagingBuffer(context->getRenderer(), format);
+    mImage->initStagingBuffer(contextVk->getRenderer(), format);
 }
 
 angle::Result TextureVk::redefineImage(const gl::Context *context,
@@ -1191,26 +1193,30 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     bool anisotropyEnable = extensions.textureFilterAnisotropic && maxAnisotropy > 1.0f;
 
     // Create a simple sampler. Force basic parameter settings.
-    VkSamplerCreateInfo samplerInfo     = {};
-    samplerInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    samplerInfo.flags                   = 0;
-    samplerInfo.magFilter               = gl_vk::GetFilter(samplerState.getMagFilter());
-    samplerInfo.minFilter               = gl_vk::GetFilter(samplerState.getMinFilter());
-    samplerInfo.mipmapMode              = gl_vk::GetSamplerMipmapMode(samplerState.getMinFilter());
-    samplerInfo.addressModeU            = gl_vk::GetSamplerAddressMode(samplerState.getWrapS());
-    samplerInfo.addressModeV            = gl_vk::GetSamplerAddressMode(samplerState.getWrapT());
-    samplerInfo.addressModeW            = gl_vk::GetSamplerAddressMode(samplerState.getWrapR());
-    samplerInfo.mipLodBias              = 0.0f;
-    samplerInfo.anisotropyEnable        = anisotropyEnable;
-    samplerInfo.maxAnisotropy           = maxAnisotropy;
-    samplerInfo.compareEnable = samplerState.getCompareMode() == GL_COMPARE_REF_TO_TEXTURE;
-    samplerInfo.compareOp     = gl_vk::GetCompareOp(samplerState.getCompareFunc());
-    samplerInfo.minLod                  = samplerState.getMinLod();
-    samplerInfo.maxLod                  = samplerState.getMaxLod();
-    samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+    VkSamplerCreateInfo samplerInfo = {};
+    samplerInfo.sType               = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    samplerInfo.flags               = 0;
+    samplerInfo.magFilter           = gl_vk::GetFilter(samplerState.getMagFilter());
+    samplerInfo.minFilter           = gl_vk::GetFilter(samplerState.getMinFilter());
+    samplerInfo.mipmapMode          = gl_vk::GetSamplerMipmapMode(samplerState.getMinFilter());
+    samplerInfo.addressModeU        = gl_vk::GetSamplerAddressMode(samplerState.getWrapS());
+    samplerInfo.addressModeV        = gl_vk::GetSamplerAddressMode(samplerState.getWrapT());
+    samplerInfo.addressModeW        = gl_vk::GetSamplerAddressMode(samplerState.getWrapR());
+    samplerInfo.mipLodBias          = 0.0f;
+    samplerInfo.anisotropyEnable    = anisotropyEnable;
+    samplerInfo.maxAnisotropy       = maxAnisotropy;
+    samplerInfo.compareEnable       = samplerState.getCompareMode() == GL_COMPARE_REF_TO_TEXTURE;
+    samplerInfo.compareOp           = gl_vk::GetCompareOp(samplerState.getCompareFunc());
+    samplerInfo.minLod              = samplerState.getMinLod();
+    samplerInfo.maxLod              = samplerState.getMaxLod();
+    samplerInfo.borderColor         = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
     ANGLE_VK_TRY(contextVk, mSampler.init(contextVk->getDevice(), samplerInfo));
+
+    // Regenerate the serial on a sampler change.
+    mSerial = contextVk->generateTextureSerial();
+
     return angle::Result::Continue;
 }
 
@@ -1363,6 +1369,8 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         }
     }
 
+    mSerial = contextVk->generateTextureSerial();
+
     return angle::Result::Continue;
 }
 
@@ -1414,13 +1422,13 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-void TextureVk::releaseImage(ContextVk *context)
+void TextureVk::releaseImage(ContextVk *contextVk)
 {
     if (mImage)
     {
         if (mOwnsImage)
         {
-            mImage->releaseImage(context);
+            mImage->releaseImage(contextVk);
         }
         else
         {
@@ -1428,25 +1436,25 @@ void TextureVk::releaseImage(ContextVk *context)
         }
     }
 
-    Serial currentSerial = context->getCurrentQueueSerial();
+    Serial currentSerial = contextVk->getCurrentQueueSerial();
 
-    context->releaseObject(currentSerial, &mDrawBaseLevelImageView);
-    context->releaseObject(currentSerial, &mReadBaseLevelImageView);
-    context->releaseObject(currentSerial, &mReadMipmapImageView);
-    context->releaseObject(currentSerial, &mFetchBaseLevelImageView);
-    context->releaseObject(currentSerial, &mFetchMipmapImageView);
+    contextVk->releaseObject(currentSerial, &mDrawBaseLevelImageView);
+    contextVk->releaseObject(currentSerial, &mReadBaseLevelImageView);
+    contextVk->releaseObject(currentSerial, &mReadMipmapImageView);
+    contextVk->releaseObject(currentSerial, &mFetchBaseLevelImageView);
+    contextVk->releaseObject(currentSerial, &mFetchMipmapImageView);
 
     for (auto &layerViews : mLayerLevelDrawImageViews)
     {
         for (vk::ImageView &imageView : layerViews)
         {
-            context->releaseObject(currentSerial, &imageView);
+            contextVk->releaseObject(currentSerial, &imageView);
         }
     }
     mLayerLevelDrawImageViews.clear();
     for (vk::ImageView &imageView : mLayerFetchImageView)
     {
-        context->releaseObject(currentSerial, &imageView);
+        contextVk->releaseObject(currentSerial, &imageView);
     }
     mLayerFetchImageView.clear();
     mCubeMapRenderTargets.clear();

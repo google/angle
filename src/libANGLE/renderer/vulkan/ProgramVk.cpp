@@ -261,6 +261,8 @@ void ProgramVk::reset(ContextVk *contextVk)
     {
         descriptorPool.release(contextVk);
     }
+
+    mTextureDescriptorsCache.clear();
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
@@ -779,6 +781,14 @@ void ProgramVk::setPathFragmentInputGen(const std::string &inputName,
 
 angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex)
 {
+    bool ignoreNewPoolAllocated;
+    return allocateDescriptorSetAndGetInfo(contextVk, descriptorSetIndex, &ignoreNewPoolAllocated);
+}
+
+angle::Result ProgramVk::allocateDescriptorSetAndGetInfo(ContextVk *contextVk,
+                                                         uint32_t descriptorSetIndex,
+                                                         bool *newPoolAllocatedOut)
+{
     vk::DynamicDescriptorPool &dynamicDescriptorPool = mDynamicDescriptorPools[descriptorSetIndex];
 
     uint32_t potentialNewCount = descriptorSetIndex + 1;
@@ -789,9 +799,9 @@ angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t de
 
     const vk::DescriptorSetLayout &descriptorSetLayout =
         mDescriptorSetLayouts[descriptorSetIndex].get();
-    ANGLE_TRY(dynamicDescriptorPool.allocateSets(contextVk, descriptorSetLayout.ptr(), 1,
-                                                 &mDescriptorPoolBindings[descriptorSetIndex],
-                                                 &mDescriptorSets[descriptorSetIndex]));
+    ANGLE_TRY(dynamicDescriptorPool.allocateSetsAndGetInfo(
+        contextVk, descriptorSetLayout.ptr(), 1, &mDescriptorPoolBindings[descriptorSetIndex],
+        &mDescriptorSets[descriptorSetIndex], newPoolAllocatedOut));
     mEmptyDescriptorSets[descriptorSetIndex] = VK_NULL_HANDLE;
 
     return angle::Result::Continue;
@@ -982,8 +992,25 @@ angle::Result ProgramVk::updateUniformBuffersDescriptorSet(ContextVk *contextVk,
 angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
                                                      vk::FramebufferHelper *framebuffer)
 {
+    const vk::TextureDescriptorDesc &texturesDesc = contextVk->getActiveTexturesDesc();
+
+    auto iter = mTextureDescriptorsCache.find(texturesDesc);
+    if (iter != mTextureDescriptorsCache.end())
+    {
+        mDescriptorSets[kTextureDescriptorSetIndex] = iter->second;
+        return angle::Result::Continue;
+    }
+
     ASSERT(hasTextures());
-    ANGLE_TRY(allocateDescriptorSet(contextVk, kTextureDescriptorSetIndex));
+    bool newPoolAllocated;
+    ANGLE_TRY(
+        allocateDescriptorSetAndGetInfo(contextVk, kTextureDescriptorSetIndex, &newPoolAllocated));
+
+    // Clear descriptor set cache. It may no longer be valid.
+    if (newPoolAllocated)
+    {
+        mTextureDescriptorsCache.clear();
+    }
 
     VkDescriptorSet descriptorSet = mDescriptorSets[kTextureDescriptorSetIndex];
 
@@ -1006,23 +1033,7 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
             GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
             TextureVk *textureVk = activeTextures[textureUnit];
 
-            // Ensure any writes to the textures are flushed before we read from them.
-            ANGLE_TRY(textureVk->ensureImageInitialized(contextVk));
             vk::ImageHelper &image = textureVk->getImage();
-
-            // Ensure the image is in read-only layout
-            if (image.isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))
-            {
-                vk::CommandBuffer *srcLayoutChange;
-                ANGLE_TRY(image.recordCommands(contextVk, &srcLayoutChange));
-
-                VkImageAspectFlags aspectFlags = image.getAspectFlags();
-                ASSERT(aspectFlags != 0);
-                image.changeLayout(aspectFlags, vk::ImageLayout::FragmentShaderReadOnly,
-                                   srcLayoutChange);
-            }
-
-            image.addReadDependency(framebuffer);
 
             VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
 
@@ -1051,6 +1062,8 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
 
     ASSERT(writeCount > 0);
     vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
+
+    mTextureDescriptorsCache.emplace(texturesDesc, descriptorSet);
 
     return angle::Result::Continue;
 }

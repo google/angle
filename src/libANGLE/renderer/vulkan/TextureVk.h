@@ -163,6 +163,8 @@ class TextureVk : public TextureImpl
 
     angle::Result ensureImageInitialized(ContextVk *contextVk);
 
+    Serial getSerial() const { return mSerial; }
+
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
@@ -170,9 +172,9 @@ class TextureVk : public TextureImpl
     uint32_t getNativeImageLevel(uint32_t frontendLevel) const;
     uint32_t getNativeImageLayer(uint32_t frontendLayer) const;
 
-    void releaseAndDeleteImage(ContextVk *context);
-    angle::Result ensureImageAllocated(ContextVk *context, const vk::Format &format);
-    void setImageHelper(ContextVk *context,
+    void releaseAndDeleteImage(ContextVk *contextVk);
+    angle::Result ensureImageAllocated(ContextVk *contextVk, const vk::Format &format);
+    void setImageHelper(ContextVk *contextVk,
                         vk::ImageHelper *imageHelper,
                         gl::TextureType imageType,
                         const vk::Format &format,
@@ -302,6 +304,9 @@ class TextureVk : public TextureImpl
     RenderTargetVk mRenderTarget;
     std::vector<vk::ImageView> mLayerFetchImageView;
     std::vector<RenderTargetVk> mCubeMapRenderTargets;
+
+    // The serial is used for cache indexing.
+    Serial mSerial;
 };
 
 }  // namespace rx
