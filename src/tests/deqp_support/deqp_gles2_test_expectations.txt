@@ -239,6 +239,11 @@
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.vertex.2d.filtering.linear_nearest_* = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_nearest_* = FAIL
 
+3531 MAC OPENGL INTEL : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb = FAIL
+3531 MAC OPENGL INTEL : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_depth_component16 = FAIL
+3531 MAC OPENGL INTEL : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_stencil_index8 = FAIL
+3531 MAC OPENGL INTEL : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_stencil_index8 = FAIL
+
 // Mac AMD OpenGL specific
 2137 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
 3317 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL

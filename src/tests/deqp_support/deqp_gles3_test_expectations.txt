@@ -452,6 +452,10 @@
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.vertex.3d.filtering.linear_nearest_* = FAIL
 3317 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.vertex.cube.filtering.linear_nearest_* = FAIL
 
+3531 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.invalidate.format.rgb8 = FAIL
+3531 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgb16f = FAIL
+3531 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgb8 = FAIL
+
 // Android only failures
 1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.red_half_float_oes = FAIL
 1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rg_half_float_oes = FAIL
