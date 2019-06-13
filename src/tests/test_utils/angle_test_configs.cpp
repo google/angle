@@ -365,12 +365,21 @@ EGLPlatformParameters OPENGLES_NULL()
                                  EGL_DONT_CARE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
 }
 
-EGLPlatformParameters OPENGL_OR_GLES(bool useNullDevice)
+EGLPlatformParameters OPENGL_OR_GLES()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)
-    return useNullDevice ? OPENGLES_NULL() : OPENGLES();
+    return OPENGLES();
 #else
-    return useNullDevice ? OPENGL_NULL() : OPENGL();
+    return OPENGL();
+#endif
+}
+
+EGLPlatformParameters OPENGL_OR_GLES_NULL()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return OPENGLES_NULL();
+#else
+    return OPENGL_NULL();
 #endif
 }
 

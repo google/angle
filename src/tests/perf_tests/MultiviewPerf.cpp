@@ -572,17 +572,17 @@ TEST_P(MultiviewCPUBoundBenchmark, Run)
 
 ANGLE_INSTANTIATE_TEST(
     MultiviewCPUBoundBenchmark,
-    NoAcceleration(egl_platform::OPENGL_OR_GLES(false), SmallWorkload(), ExtensionName::multiview),
+    NoAcceleration(egl_platform::OPENGL_OR_GLES(), SmallWorkload(), ExtensionName::multiview),
     NoAcceleration(egl_platform::D3D11(), SmallWorkload(), ExtensionName::multiview),
     SelectViewInGeometryShader(SmallWorkload(), ExtensionName::multiview),
-    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(false),
+    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(),
                              SmallWorkload(),
                              ExtensionName::multiview),
     SelectViewInVertexShader(egl_platform::D3D11(), SmallWorkload(), ExtensionName::multiview),
-    NoAcceleration(egl_platform::OPENGL_OR_GLES(false), SmallWorkload(), ExtensionName::multiview2),
+    NoAcceleration(egl_platform::OPENGL_OR_GLES(), SmallWorkload(), ExtensionName::multiview2),
     NoAcceleration(egl_platform::D3D11(), SmallWorkload(), ExtensionName::multiview2),
     SelectViewInGeometryShader(SmallWorkload(), ExtensionName::multiview2),
-    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(false),
+    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(),
                              SmallWorkload(),
                              ExtensionName::multiview2),
     SelectViewInVertexShader(egl_platform::D3D11(), SmallWorkload(), ExtensionName::multiview2));
@@ -594,17 +594,17 @@ TEST_P(MultiviewGPUBoundBenchmark, Run)
 
 ANGLE_INSTANTIATE_TEST(
     MultiviewGPUBoundBenchmark,
-    NoAcceleration(egl_platform::OPENGL_OR_GLES(false), BigWorkload(), ExtensionName::multiview),
+    NoAcceleration(egl_platform::OPENGL_OR_GLES(), BigWorkload(), ExtensionName::multiview),
     NoAcceleration(egl_platform::D3D11(), BigWorkload(), ExtensionName::multiview),
     SelectViewInGeometryShader(BigWorkload(), ExtensionName::multiview),
-    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(false),
+    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(),
                              BigWorkload(),
                              ExtensionName::multiview),
     SelectViewInVertexShader(egl_platform::D3D11(), BigWorkload(), ExtensionName::multiview),
-    NoAcceleration(egl_platform::OPENGL_OR_GLES(false), BigWorkload(), ExtensionName::multiview2),
+    NoAcceleration(egl_platform::OPENGL_OR_GLES(), BigWorkload(), ExtensionName::multiview2),
     NoAcceleration(egl_platform::D3D11(), BigWorkload(), ExtensionName::multiview2),
     SelectViewInGeometryShader(BigWorkload(), ExtensionName::multiview2),
-    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(false),
+    SelectViewInVertexShader(egl_platform::OPENGL_OR_GLES(),
                              BigWorkload(),
                              ExtensionName::multiview2),
     SelectViewInVertexShader(egl_platform::D3D11(), BigWorkload(), ExtensionName::multiview2));

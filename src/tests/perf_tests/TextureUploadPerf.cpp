@@ -244,7 +244,7 @@ TextureUploadParams D3D11Params(bool webglCompat)
 TextureUploadParams OpenGLOrGLESParams(bool webglCompat)
 {
     TextureUploadParams params;
-    params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters = egl_platform::OPENGL_OR_GLES();
     params.webgl         = webglCompat;
     return params;
 }

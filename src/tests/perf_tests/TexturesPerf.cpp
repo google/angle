@@ -292,7 +292,7 @@ TexturesParams D3D9Params(bool webglCompat)
 TexturesParams OpenGLOrGLESParams(bool webglCompat)
 {
     TexturesParams params;
-    params.eglParameters = egl_platform::OPENGL_OR_GLES(true);
+    params.eglParameters = egl_platform::OPENGL_OR_GLES_NULL();
     params.webgl         = webglCompat;
     return params;
 }

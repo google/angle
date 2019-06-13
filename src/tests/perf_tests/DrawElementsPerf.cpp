@@ -148,7 +148,7 @@ void DrawElementsPerfBenchmark::initializeBenchmark()
     // Set the viewport
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
-    if (params.useFBO)
+    if (params.offscreen)
     {
         CreateColorFBO(getWindow()->getWidth(), getWindow()->getHeight(), &mTexture, &mFBO);
     }
@@ -237,7 +237,8 @@ DrawElementsPerfParams DrawElementsPerfOpenGLOrGLESParams(bool indexBufferChange
                                                           GLenum indexType)
 {
     DrawElementsPerfParams params;
-    params.eglParameters      = angle::egl_platform::OPENGL_OR_GLES(useNullDevice);
+    params.eglParameters = useNullDevice ? angle::egl_platform::OPENGL_OR_GLES_NULL()
+                                         : angle::egl_platform::OPENGL_OR_GLES();
     params.indexBufferChanged = indexBufferChanged;
     params.type               = indexType;
 

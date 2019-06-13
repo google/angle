@@ -179,7 +179,7 @@ ClearParams D3D11Params()
 ClearParams OpenGLOrGLESParams()
 {
     ClearParams params;
-    params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters = egl_platform::OPENGL_OR_GLES();
     return params;
 }
 

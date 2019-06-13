@@ -211,7 +211,7 @@ PointSpritesParams D3D9Params()
 PointSpritesParams OpenGLOrGLESParams()
 {
     PointSpritesParams params;
-    params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters = egl_platform::OPENGL_OR_GLES();
     return params;
 }
 

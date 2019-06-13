@@ -363,7 +363,7 @@ BufferSubDataParams BufferUpdateD3D9Params()
 BufferSubDataParams BufferUpdateOpenGLOrGLESParams()
 {
     BufferSubDataParams params;
-    params.eglParameters        = egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters        = egl_platform::OPENGL_OR_GLES();
     params.vertexType           = GL_FLOAT;
     params.vertexComponentCount = 4;
     params.vertexNormalized     = GL_FALSE;

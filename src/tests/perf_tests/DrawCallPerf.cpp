@@ -180,7 +180,7 @@ void main()
     // Set the viewport
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
-    if (params.useFBO)
+    if (params.offscreen)
     {
         CreateColorFBO(getWindow()->getWidth(), getWindow()->getHeight(), &mFBOTexture, &mFBO);
     }
@@ -310,37 +310,38 @@ DrawArraysPerfParams DrawArrays(const DrawCallPerfParams &base, StateChange stat
     return params;
 }
 
-ANGLE_INSTANTIATE_TEST(
-    DrawCallPerfBenchmark,
-    DrawArrays(DrawCallPerfD3D9Params(false, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfD3D9Params(true, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfD3D11Params(false, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfD3D11Params(true, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfD3D11Params(true, true), StateChange::NoChange),
-    DrawArrays(DrawCallPerfD3D11Params(false, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfD3D11Params(true, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfD3D11Params(false, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfD3D11Params(true, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, true), StateChange::NoChange),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::ManyVertexBuffers),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::ManyVertexBuffers),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfValidationOnly(), StateChange::NoChange),
-    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::ManyVertexBuffers),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::ManyVertexBuffers),
-    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::Texture),
-    DrawArrays(DrawCallPerfWGLParams(false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfWGLParams(false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfWGLParams(false), StateChange::Texture));
+using namespace params;
+
+ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
+                       DrawArrays(DrawCallD3D9(), StateChange::NoChange),
+                       DrawArrays(NullDevice(DrawCallD3D9()), StateChange::NoChange),
+                       DrawArrays(DrawCallD3D11(), StateChange::NoChange),
+                       DrawArrays(NullDevice(DrawCallD3D11()), StateChange::NoChange),
+                       DrawArrays(NullDevice(Offscreen(DrawCallD3D11())), StateChange::NoChange),
+                       DrawArrays(DrawCallD3D11(), StateChange::VertexBuffer),
+                       DrawArrays(NullDevice(DrawCallD3D11()), StateChange::VertexBuffer),
+                       DrawArrays(DrawCallD3D11(), StateChange::Texture),
+                       DrawArrays(NullDevice(DrawCallD3D11()), StateChange::Texture),
+                       DrawArrays(DrawCallOpenGL(), StateChange::NoChange),
+                       DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::NoChange),
+                       DrawArrays(NullDevice(Offscreen(DrawCallOpenGL())), StateChange::NoChange),
+                       DrawArrays(DrawCallOpenGL(), StateChange::VertexBuffer),
+                       DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::VertexBuffer),
+                       DrawArrays(DrawCallOpenGL(), StateChange::ManyVertexBuffers),
+                       DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::ManyVertexBuffers),
+                       DrawArrays(DrawCallOpenGL(), StateChange::Texture),
+                       DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::Texture),
+                       DrawArrays(DrawCallValidation(), StateChange::NoChange),
+                       DrawArrays(DrawCallVulkan(), StateChange::NoChange),
+                       DrawArrays(NullDevice(DrawCallVulkan()), StateChange::NoChange),
+                       DrawArrays(DrawCallVulkan(), StateChange::VertexBuffer),
+                       DrawArrays(NullDevice(DrawCallVulkan()), StateChange::VertexBuffer),
+                       DrawArrays(DrawCallVulkan(), StateChange::ManyVertexBuffers),
+                       DrawArrays(NullDevice(DrawCallVulkan()), StateChange::ManyVertexBuffers),
+                       DrawArrays(DrawCallVulkan(), StateChange::Texture),
+                       DrawArrays(NullDevice(DrawCallVulkan()), StateChange::Texture),
+                       DrawArrays(DrawCallWGL(), StateChange::NoChange),
+                       DrawArrays(DrawCallWGL(), StateChange::VertexBuffer),
+                       DrawArrays(DrawCallWGL(), StateChange::Texture));
 
 }  // anonymous namespace

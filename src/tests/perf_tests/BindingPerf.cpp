@@ -196,7 +196,7 @@ BindingsParams D3D9Params(AllocationStyle allocationStyle)
 BindingsParams OpenGLOrGLESParams(AllocationStyle allocationStyle)
 {
     BindingsParams params;
-    params.eglParameters   = egl_platform::OPENGL_OR_GLES(true);
+    params.eglParameters   = egl_platform::OPENGL_OR_GLES_NULL();
     params.allocationStyle = allocationStyle;
     return params;
 }

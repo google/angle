@@ -275,7 +275,7 @@ TextureSamplingParams D3D9Params()
 TextureSamplingParams OpenGLOrGLESParams()
 {
     TextureSamplingParams params;
-    params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters = egl_platform::OPENGL_OR_GLES();
     return params;
 }
 

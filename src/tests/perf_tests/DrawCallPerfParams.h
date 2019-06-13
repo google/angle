@@ -24,14 +24,21 @@ struct DrawCallPerfParams : public RenderTestParams
 
     double runTimeSeconds;
     int numTris;
-    bool useFBO;
+    bool offscreen;
 };
 
-DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice, bool renderToTexture);
-DrawCallPerfParams DrawCallPerfD3D9Params(bool useNullDevice, bool renderToTexture);
-DrawCallPerfParams DrawCallPerfOpenGLOrGLESParams(bool useNullDevice, bool renderToTexture);
-DrawCallPerfParams DrawCallPerfValidationOnly();
-DrawCallPerfParams DrawCallPerfVulkanParams(bool useNullDevice, bool renderToTexture);
-DrawCallPerfParams DrawCallPerfWGLParams(bool renderToTexture);
+namespace params
+{
+DrawCallPerfParams DrawCallD3D11();
+DrawCallPerfParams DrawCallD3D9();
+DrawCallPerfParams DrawCallOpenGL();
+DrawCallPerfParams DrawCallValidation();
+DrawCallPerfParams DrawCallVulkan();
+DrawCallPerfParams DrawCallWGL();
+
+// Mixins.
+DrawCallPerfParams Offscreen(const DrawCallPerfParams &input);
+DrawCallPerfParams NullDevice(const DrawCallPerfParams &input);
+}  // namespace params
 
 #endif  // TESTS_PERF_TESTS_DRAW_CALL_PERF_PARAMS_H_

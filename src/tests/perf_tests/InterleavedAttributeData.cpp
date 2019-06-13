@@ -229,7 +229,7 @@ InterleavedAttributeDataParams D3D9Params()
 InterleavedAttributeDataParams OpenGLOrGLESParams()
 {
     InterleavedAttributeDataParams params;
-    params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
+    params.eglParameters = egl_platform::OPENGL_OR_GLES();
     return params;
 }
 

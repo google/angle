@@ -158,7 +158,8 @@ void DispatchComputePerfBenchmark::drawBenchmark()
 DispatchComputePerfParams DispatchComputePerfOpenGLOrGLESParams(bool useNullDevice)
 {
     DispatchComputePerfParams params;
-    params.eglParameters = angle::egl_platform::OPENGL_OR_GLES(useNullDevice);
+    params.eglParameters = useNullDevice ? angle::egl_platform::OPENGL_OR_GLES_NULL()
+                                         : angle::egl_platform::OPENGL_OR_GLES();
     return params;
 }
 

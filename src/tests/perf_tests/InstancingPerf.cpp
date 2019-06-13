@@ -340,7 +340,7 @@ InstancingPerfParams InstancingPerfD3D9Params()
 InstancingPerfParams InstancingPerfOpenGLOrGLESParams()
 {
     InstancingPerfParams params;
-    params.eglParameters = OPENGL_OR_GLES(false);
+    params.eglParameters = OPENGL_OR_GLES();
     return params;
 }
 

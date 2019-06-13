@@ -191,7 +191,7 @@ LinkProgramParams LinkProgramD3D9Params(TaskOption taskOption, ThreadOption thre
 LinkProgramParams LinkProgramOpenGLOrGLESParams(TaskOption taskOption, ThreadOption threadOption)
 {
     LinkProgramParams params(taskOption, threadOption);
-    params.eglParameters = OPENGL_OR_GLES(false);
+    params.eglParameters = OPENGL_OR_GLES();
     return params;
 }
 
