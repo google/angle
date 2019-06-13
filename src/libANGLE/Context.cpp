@@ -787,7 +787,7 @@ void Context::deletePaths(GLuint first, GLsizei range)
     mState.mPathManager->deletePaths(first, range);
 }
 
-bool Context::isPath(GLuint path) const
+GLboolean Context::isPath(GLuint path)
 {
     const auto *pathObj = mState.mPathManager->getPath(path);
     if (pathObj == nullptr)
@@ -1015,7 +1015,7 @@ void Context::getObjectLabel(GLenum identifier,
                              GLuint name,
                              GLsizei bufSize,
                              GLsizei *length,
-                             GLchar *label) const
+                             GLchar *label)
 {
     gl::LabeledObject *object = getLabeledObject(identifier, name);
     ASSERT(object != nullptr);
@@ -1024,10 +1024,7 @@ void Context::getObjectLabel(GLenum identifier,
     GetObjectLabelBase(objectLabel, bufSize, length, label);
 }
 
-void Context::getObjectPtrLabel(const void *ptr,
-                                GLsizei bufSize,
-                                GLsizei *length,
-                                GLchar *label) const
+void Context::getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label)
 {
     gl::LabeledObject *object = getLabeledObjectFromPtr(ptr);
     ASSERT(object != nullptr);
@@ -1036,7 +1033,7 @@ void Context::getObjectPtrLabel(const void *ptr,
     GetObjectLabelBase(objectLabel, bufSize, length, label);
 }
 
-bool Context::isSampler(GLuint samplerName) const
+GLboolean Context::isSampler(GLuint samplerName)
 {
     return mState.mSamplerManager->isSampler(samplerName);
 }
@@ -3015,6 +3012,16 @@ void Context::initExtensionStrings()
         }
     }
     mRequestableExtensionString = mergeExtensionStrings(mRequestableExtensionStrings);
+}
+
+const GLubyte *Context::getString(GLenum name)
+{
+    return static_cast<const Context *>(this)->getString(name);
+}
+
+const GLubyte *Context::getStringi(GLenum name, GLuint index)
+{
+    return static_cast<const Context *>(this)->getStringi(name, index);
 }
 
 const GLubyte *Context::getString(GLenum name) const
@@ -6331,7 +6338,7 @@ void Context::genVertexArrays(GLsizei n, GLuint *arrays)
     }
 }
 
-bool Context::isVertexArray(GLuint array)
+GLboolean Context::isVertexArray(GLuint array)
 {
     if (array == 0)
     {
@@ -6406,7 +6413,7 @@ void Context::genTransformFeedbacks(GLsizei n, GLuint *ids)
     }
 }
 
-bool Context::isTransformFeedback(GLuint id)
+GLboolean Context::isTransformFeedback(GLuint id)
 {
     if (id == 0)
     {

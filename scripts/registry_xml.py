@@ -36,7 +36,7 @@ gles1_extensions = [
     "GL_OES_texture_cube_map",
 ]
 
-supported_extensions = sorted(angle_extensions + gles1_extensions + [
+gles_extensions = [
     # ES2+
     "GL_ANGLE_framebuffer_blit",
     "GL_ANGLE_framebuffer_multisample",
@@ -71,7 +71,9 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_OVR_multiview2",
     "GL_KHR_parallel_shader_compile",
     "GL_ANGLE_multi_draw",
-])
+]
+
+supported_extensions = sorted(angle_extensions + gles1_extensions + gles_extensions)
 
 supported_egl_extensions = [
     "EGL_ANDROID_blob_cache",

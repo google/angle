@@ -142,7 +142,7 @@ context_gles_header = """// GENERATED FILE - DO NOT EDIT.
 #ifndef ANGLE_CONTEXT_GLES_{annotation_upper}_AUTOGEN_H_
 #define ANGLE_CONTEXT_GLES_{annotation_upper}_AUTOGEN_H_
 
-#define ANGLE_GLES1_CONTEXT_API \\
+#define ANGLE_GLES_{annotation_upper}_CONTEXT_API \\
 {interface}
 
 #endif // ANGLE_CONTEXT_API_{annotation_upper}_AUTOGEN_H_
@@ -495,7 +495,7 @@ def get_entry_points(all_commands, gles_commands, is_explicit_context):
     return decls, defs, export_defs, validation_protos
 
 
-def get_gles1_decls(all_commands, gles_commands):
+def get_gles_decls(all_commands, gles_commands, already_included, overloaded):
     decls = []
     for command in all_commands:
         proto = command.find('proto')
@@ -504,7 +504,16 @@ def get_gles1_decls(all_commands, gles_commands):
         if cmd_name not in gles_commands:
             continue
 
-        if cmd_name in gles1_overloaded:
+        if cmd_name in overloaded:
+            continue
+
+        # Remove extension suffixes from cmd_names
+        name_no_suffix = cmd_name
+        for suffix in strip_suffixes:
+            if name_no_suffix.endswith(suffix):
+                name_no_suffix = name_no_suffix[0:-len(suffix)]
+
+        if name_no_suffix in already_included:
             continue
 
         param_text = ["".join(param.itertext()) for param in command.findall('param')]
@@ -587,25 +596,46 @@ def write_export_files(entry_points, includes):
         out.close()
 
 
-def write_context_api_decls(annotation, template, decls):
+def write_context_api_decls(template, decls):
+    for ver in decls['core'].keys():
+        interface_lines = []
+
+        for i in decls['core'][ver]:
+            interface_lines.append(i)
+
+        annotation = '{}_{}'.format(ver[0], ver[1])
+
+        content = template.format(
+            annotation_lower=annotation.lower(),
+            annotation_upper=annotation.upper(),
+            script_name=os.path.basename(sys.argv[0]),
+            data_source_name="gl.xml",
+            year=date.today().year,
+            interface="\n".join(interface_lines))
+
+        path = path_to("libANGLE", "Context_gles_%s_autogen.h" % annotation.lower())
+
+        with open(path, "w") as out:
+            out.write(content)
+            out.close()
+
     interface_lines = []
+    for annotation in decls['exts'].keys():
+        interface_lines.append("\\\n    /* " + annotation + " */ \\\n\\")
 
-    for i in decls['core']:
-        interface_lines.append(i)
-
-    for extname in sorted(decls['exts'].keys()):
-        interface_lines.append("    /* " + extname + " */ \\")
-        interface_lines.extend(decls['exts'][extname])
+        for extname in sorted(decls['exts'][annotation].keys()):
+            interface_lines.append("    /* " + extname + " */ \\")
+            interface_lines.extend(decls['exts'][annotation][extname])
 
     content = template.format(
-        annotation_lower=annotation.lower(),
-        annotation_upper=annotation.upper(),
+        annotation_lower='ext',
+        annotation_upper='EXT',
         script_name=os.path.basename(sys.argv[0]),
         data_source_name="gl.xml",
         year=date.today().year,
         interface="\n".join(interface_lines))
 
-    path = path_to("libANGLE", "Context_gles_%s_autogen.h" % annotation.lower())
+    path = path_to("libANGLE", "Context_gles_ext_autogen.h")
 
     with open(path, "w") as out:
         out.write(content)
@@ -722,6 +752,10 @@ def main():
         ]
         outputs = [
             '../src/libANGLE/Context_gles_1_0_autogen.h',
+            '../src/libANGLE/Context_gles_2_0_autogen.h',
+            '../src/libANGLE/Context_gles_3_0_autogen.h',
+            '../src/libANGLE/Context_gles_3_1_autogen.h',
+            '../src/libANGLE/Context_gles_ext_autogen.h',
             '../src/libANGLE/validationES1_autogen.h',
             '../src/libANGLE/validationES2_autogen.h',
             '../src/libANGLE/validationES31_autogen.h',
@@ -751,15 +785,21 @@ def main():
             return 1
         return 0
 
-    gles1decls = {}
-
-    gles1decls['core'] = []
-    gles1decls['exts'] = {}
+    glesdecls = {}
+    glesdecls['core'] = {}
+    glesdecls['exts'] = {}
+    for ver in [(1, 0), (2, 0), (3, 0), (3, 1)]:
+        glesdecls['core'][ver] = []
+    for ver in ['GLES1 Extensions', 'GLES2+ Extensions', 'ANGLE Extensions']:
+        glesdecls['exts'][ver] = {}
 
     libgles_ep_defs = []
     libgles_ep_exports = []
 
     xml = registry_xml.RegistryXML('gl.xml', 'gl_angle_ext.xml')
+
+    #stores all core commands
+    all_gles_commands = []
 
     # First run through the main GLES entry points.  Since ES2+ is the primary use
     # case, we go through those first and then add ES1-only APIs at the end.
@@ -778,6 +818,7 @@ def main():
 
         gles_commands = xml.commands[annotation]
         all_commands = xml.all_commands
+        all_gles_commands.extend(xml.commands[annotation])
 
         decls, defs, libgles_defs, validation_protos = get_entry_points(
             all_commands, gles_commands, False)
@@ -806,8 +847,10 @@ def main():
                    header_includes, "gl.xml")
         write_file(annotation, comment, template_entry_point_source, "\n".join(defs), "cpp",
                    source_includes, "gl.xml")
-        if is_gles1:
-            gles1decls['core'] = get_gles1_decls(all_commands, gles_commands)
+
+        gles_overloaded = gles1_overloaded if is_gles1 else []
+        glesdecls['core'][(major_version, minor_version)] = get_gles_decls(
+            all_commands, gles_commands, [], gles_overloaded)
 
         validation_annotation = "%s%s" % (major_version, minor_if_not_zero)
         write_validation_header(validation_annotation, comment, validation_protos)
@@ -820,7 +863,11 @@ def main():
     ext_validation_protos = []
 
     for gles1ext in registry_xml.gles1_extensions:
-        gles1decls['exts'][gles1ext] = []
+        glesdecls['exts']['GLES1 Extensions'][gles1ext] = []
+    for glesext in registry_xml.gles_extensions:
+        glesdecls['exts']['GLES2+ Extensions'][glesext] = []
+    for angle_ext in registry_xml.angle_extensions:
+        glesdecls['exts']['ANGLE Extensions'][angle_ext] = []
 
     xml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
 
@@ -850,9 +897,16 @@ def main():
         libgles_ep_defs += libgles_defs
         libgles_ep_exports += get_exports(ext_cmd_names)
 
-        if extension_name in registry_xml.gles1_extensions:
-            if extension_name not in gles1_no_context_decl_extensions:
-                gles1decls['exts'][extension_name] = get_gles1_decls(all_commands, ext_cmd_names)
+        if (extension_name in registry_xml.gles1_extensions and
+                extension_name not in gles1_no_context_decl_extensions):
+            glesdecls['exts']['GLES1 Extensions'][extension_name] = get_gles_decls(
+                all_commands, ext_cmd_names, all_gles_commands, gles1_overloaded)
+        if extension_name in registry_xml.gles_extensions:
+            glesdecls['exts']['GLES2+ Extensions'][extension_name] = get_gles_decls(
+                all_commands, ext_cmd_names, all_gles_commands, [])
+        if extension_name in registry_xml.angle_extensions:
+            glesdecls['exts']['ANGLE Extensions'][extension_name] = get_gles_decls(
+                all_commands, ext_cmd_names, all_gles_commands, [])
 
     # Special handling for EGL_ANGLE_explicit_context extension
     if registry_xml.support_EGL_ANGLE_explicit_context:
@@ -926,7 +980,7 @@ def main():
 
     write_validation_header("EXT", "extension", ext_validation_protos)
 
-    write_context_api_decls("1_0", context_gles_header, gles1decls)
+    write_context_api_decls(context_gles_header, glesdecls)
 
     sorted_cmd_names = ["Invalid"
                        ] + [cmd[2:] for cmd in sorted(xml.all_cmd_names.get_all_commands())]
