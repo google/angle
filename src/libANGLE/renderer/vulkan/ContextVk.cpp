@@ -175,6 +175,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mFlipYForCurrentSurface(false),
       mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16, true),
       mDriverUniformsDescriptorSet(VK_NULL_HANDLE),
+      mDriverUniformsDynamicOffset(0),
       mDefaultAttribBuffers{{INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT,
                              INIT, INIT, INIT, INIT}},
       mLastCompletedQueueSerial(renderer->nextSerial()),
@@ -273,7 +274,7 @@ angle::Result ContextVk::initialize()
 {
     TRACE_EVENT0("gpu.angle", "ContextVk::initialize");
 
-    VkDescriptorPoolSize driverSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1};
+    VkDescriptorPoolSize driverSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1};
     ANGLE_TRY(mDriverUniformsDescriptorPool.init(this, &driverSetSize, 1));
 
     ANGLE_TRY(mQueryPools[gl::QueryType::AnySamples].init(this, VK_QUERY_TYPE_OCCLUSION,
@@ -643,9 +644,9 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
     ANGLE_TRY(mProgram->updateDescriptorSets(this, commandBuffer));
 
     // Bind the graphics descriptor sets.
-    commandBuffer->bindGraphicsDescriptorSets(mProgram->getPipelineLayout(),
-                                              kDriverUniformsDescriptorSetIndex, 1,
-                                              &mDriverUniformsDescriptorSet, 0, nullptr);
+    commandBuffer->bindGraphicsDescriptorSets(
+        mProgram->getPipelineLayout(), kDriverUniformsDescriptorSetIndex, 1,
+        &mDriverUniformsDescriptorSet, 1, &mDriverUniformsDynamicOffset);
     return angle::Result::Continue;
 }
 
@@ -1925,12 +1926,15 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
 
     // Allocate a new region in the dynamic buffer.
-    uint8_t *ptr        = nullptr;
-    VkBuffer buffer     = VK_NULL_HANDLE;
-    VkDeviceSize offset = 0;
+    uint8_t *ptr;
+    VkBuffer buffer;
+    VkDeviceSize offset;
+    bool newBuffer;
     ANGLE_TRY(mDriverUniformsBuffer.allocate(this, sizeof(DriverUniforms), &ptr, &buffer, &offset,
-                                             nullptr));
+                                             &newBuffer));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
+
+    mDriverUniformsDynamicOffset = static_cast<uint32_t>(offset);
 
     float depthRangeNear = mState.getNearPlane();
     float depthRangeFar  = mState.getFarPlane();
@@ -1949,29 +1953,32 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
 
     ANGLE_TRY(mDriverUniformsBuffer.flush(this));
 
-    // Allocate a new descriptor set.
-    ANGLE_TRY(mDriverUniformsDescriptorPool.allocateSets(this, mDriverUniformsSetLayout.get().ptr(),
-                                                         1, &mDriverUniformsDescriptorPoolBinding,
-                                                         &mDriverUniformsDescriptorSet));
+    if (newBuffer)
+    {
+        // Allocate a new descriptor set.
+        ANGLE_TRY(mDriverUniformsDescriptorPool.allocateSets(
+            this, mDriverUniformsSetLayout.get().ptr(), 1, &mDriverUniformsDescriptorPoolBinding,
+            &mDriverUniformsDescriptorSet));
 
-    // Update the driver uniform descriptor set.
-    VkDescriptorBufferInfo bufferInfo = {};
-    bufferInfo.buffer                 = buffer;
-    bufferInfo.offset                 = offset;
-    bufferInfo.range                  = sizeof(DriverUniforms);
+        // Update the driver uniform descriptor set.
+        VkDescriptorBufferInfo bufferInfo = {};
+        bufferInfo.buffer                 = buffer;
+        bufferInfo.offset                 = 0;
+        bufferInfo.range                  = sizeof(DriverUniforms);
 
-    VkWriteDescriptorSet writeInfo = {};
-    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo.dstSet               = mDriverUniformsDescriptorSet;
-    writeInfo.dstBinding           = 0;
-    writeInfo.dstArrayElement      = 0;
-    writeInfo.descriptorCount      = 1;
-    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    writeInfo.pImageInfo           = nullptr;
-    writeInfo.pTexelBufferView     = nullptr;
-    writeInfo.pBufferInfo          = &bufferInfo;
+        VkWriteDescriptorSet writeInfo = {};
+        writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeInfo.dstSet               = mDriverUniformsDescriptorSet;
+        writeInfo.dstBinding           = 0;
+        writeInfo.dstArrayElement      = 0;
+        writeInfo.descriptorCount      = 1;
+        writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        writeInfo.pImageInfo           = nullptr;
+        writeInfo.pTexelBufferView     = nullptr;
+        writeInfo.pBufferInfo          = &bufferInfo;
 
-    vkUpdateDescriptorSets(getDevice(), 1, &writeInfo, 0, nullptr);
+        vkUpdateDescriptorSets(getDevice(), 1, &writeInfo, 0, nullptr);
+    }
 
     return angle::Result::Continue;
 }
@@ -2426,7 +2433,7 @@ angle::Result ContextVk::generateSurfaceSemaphores(SignalSemaphoreVector *signal
 vk::DescriptorSetLayoutDesc ContextVk::getDriverUniformsDescriptorSetDesc() const
 {
     vk::DescriptorSetLayoutDesc desc;
-    desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_ALL_GRAPHICS);
+    desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1, VK_SHADER_STAGE_ALL_GRAPHICS);
     return desc;
 }
 }  // namespace rx

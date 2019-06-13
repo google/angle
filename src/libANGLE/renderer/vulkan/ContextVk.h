@@ -465,6 +465,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     vk::DynamicBuffer mDriverUniformsBuffer;
     VkDescriptorSet mDriverUniformsDescriptorSet;
+    uint32_t mDriverUniformsDynamicOffset;
     vk::BindingPointer<vk::DescriptorSetLayout> mDriverUniformsSetLayout;
     vk::RefCountedDescriptorPoolBinding mDriverUniformsDescriptorPoolBinding;
 
