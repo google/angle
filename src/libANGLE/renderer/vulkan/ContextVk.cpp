@@ -66,6 +66,7 @@ constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_
 constexpr size_t kDefaultValueSize              = sizeof(gl::VertexAttribCurrentValueData::Values);
 constexpr size_t kDefaultBufferSize             = kDefaultValueSize * 16;
 constexpr size_t kDefaultPoolAllocatorPageSize  = 16 * 1024;
+constexpr size_t kDriverUniformsBufferSize      = 64;
 
 // Wait a maximum of 10s.  If that times out, we declare it a failure.
 constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
@@ -290,7 +291,7 @@ angle::Result ContextVk::initialize()
     size_t minAlignment = static_cast<size_t>(
         mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
     mDriverUniformsBuffer.init(mRenderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
-                               sizeof(DriverUniforms) * 16, true);
+                               sizeof(DriverUniforms) * kDriverUniformsBufferSize, true);
 
     // Get the descriptor set layout.
     vk::DescriptorSetLayoutDesc desc = getDriverUniformsDescriptorSetDesc();
