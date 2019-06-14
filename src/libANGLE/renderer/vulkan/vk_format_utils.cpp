@@ -269,64 +269,86 @@ size_t GetVertexInputAlignment(const vk::Format &format)
     return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount());
 }
 
+GLenum GetSwizzleStateComponent(const gl::SwizzleState &swizzleState, GLenum component)
+{
+    switch (component)
+    {
+        case GL_RED:
+            return swizzleState.swizzleRed;
+        case GL_GREEN:
+            return swizzleState.swizzleGreen;
+        case GL_BLUE:
+            return swizzleState.swizzleBlue;
+        case GL_ALPHA:
+            return swizzleState.swizzleAlpha;
+        default:
+            return component;
+    }
+}
+
+// Places the swizzle obtained by applying second after first into out.
+void ComposeSwizzleState(const gl::SwizzleState &first,
+                         const gl::SwizzleState &second,
+                         gl::SwizzleState *out)
+{
+    out->swizzleRed   = GetSwizzleStateComponent(first, second.swizzleRed);
+    out->swizzleGreen = GetSwizzleStateComponent(first, second.swizzleGreen);
+    out->swizzleBlue  = GetSwizzleStateComponent(first, second.swizzleBlue);
+    out->swizzleAlpha = GetSwizzleStateComponent(first, second.swizzleAlpha);
+}
+
 void MapSwizzleState(const vk::Format &format,
                      const gl::SwizzleState &swizzleState,
                      gl::SwizzleState *swizzleStateOut)
 {
     const angle::Format &angleFormat = format.angleFormat();
 
-    if (angleFormat.isBlock)
-    {
-        // No need to override swizzles for compressed images, as they are not emulated.
-        // Either way, angleFormat.xBits (with x in {red, green, blue, alpha}) is zero for blocked
-        // formats so the following code would incorrectly turn its swizzle to (0, 0, 0, 1).
-        return;
-    }
+    gl::SwizzleState internalSwizzle;
 
     switch (format.internalFormat)
     {
         case GL_LUMINANCE8_OES:
-            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleGreen = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleBlue  = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleAlpha = GL_ONE;
+            internalSwizzle.swizzleRed   = GL_RED;
+            internalSwizzle.swizzleGreen = GL_RED;
+            internalSwizzle.swizzleBlue  = GL_RED;
+            internalSwizzle.swizzleAlpha = GL_ONE;
             break;
         case GL_LUMINANCE8_ALPHA8_OES:
-            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleGreen = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleBlue  = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleAlpha = swizzleState.swizzleGreen;
+            internalSwizzle.swizzleRed   = GL_RED;
+            internalSwizzle.swizzleGreen = GL_RED;
+            internalSwizzle.swizzleBlue  = GL_RED;
+            internalSwizzle.swizzleAlpha = GL_GREEN;
             break;
         case GL_ALPHA8_OES:
-            swizzleStateOut->swizzleRed   = GL_ZERO;
-            swizzleStateOut->swizzleGreen = GL_ZERO;
-            swizzleStateOut->swizzleBlue  = GL_ZERO;
-            swizzleStateOut->swizzleAlpha = swizzleState.swizzleRed;
+            internalSwizzle.swizzleRed   = GL_ZERO;
+            internalSwizzle.swizzleGreen = GL_ZERO;
+            internalSwizzle.swizzleBlue  = GL_ZERO;
+            internalSwizzle.swizzleAlpha = GL_RED;
             break;
         default:
             if (angleFormat.hasDepthOrStencilBits())
             {
-                swizzleStateOut->swizzleRed =
-                    angleFormat.depthBits > 0 ? swizzleState.swizzleRed : GL_ZERO;
-                swizzleStateOut->swizzleGreen =
-                    angleFormat.depthBits > 0 ? swizzleState.swizzleRed : GL_ZERO;
-                swizzleStateOut->swizzleBlue =
-                    angleFormat.depthBits > 0 ? swizzleState.swizzleRed : GL_ZERO;
-                swizzleStateOut->swizzleAlpha = GL_ONE;
+                internalSwizzle.swizzleRed   = angleFormat.depthBits > 0 ? GL_RED : GL_ZERO;
+                internalSwizzle.swizzleGreen = angleFormat.depthBits > 0 ? GL_RED : GL_ZERO;
+                internalSwizzle.swizzleBlue  = angleFormat.depthBits > 0 ? GL_RED : GL_ZERO;
+                internalSwizzle.swizzleAlpha = GL_ONE;
             }
             else
             {
+                if (angleFormat.isBlock)
+                {
+                    // Color bits are all zero for blocked formats, so the
+                    // below will erroneously set swizzle to (0, 0, 0, 1).
+                    break;
+                }
                 // Set any missing channel to default in case the emulated format has that channel.
-                swizzleStateOut->swizzleRed =
-                    angleFormat.redBits > 0 ? swizzleState.swizzleRed : GL_ZERO;
-                swizzleStateOut->swizzleGreen =
-                    angleFormat.greenBits > 0 ? swizzleState.swizzleGreen : GL_ZERO;
-                swizzleStateOut->swizzleBlue =
-                    angleFormat.blueBits > 0 ? swizzleState.swizzleBlue : GL_ZERO;
-                swizzleStateOut->swizzleAlpha =
-                    angleFormat.alphaBits > 0 ? swizzleState.swizzleAlpha : GL_ONE;
+                internalSwizzle.swizzleRed   = angleFormat.redBits > 0 ? GL_RED : GL_ZERO;
+                internalSwizzle.swizzleGreen = angleFormat.greenBits > 0 ? GL_GREEN : GL_ZERO;
+                internalSwizzle.swizzleBlue  = angleFormat.blueBits > 0 ? GL_BLUE : GL_ZERO;
+                internalSwizzle.swizzleAlpha = angleFormat.alphaBits > 0 ? GL_ALPHA : GL_ONE;
             }
             break;
     }
+    ComposeSwizzleState(internalSwizzle, swizzleState, swizzleStateOut);
 }
 }  // namespace rx

@@ -1186,6 +1186,18 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         contextVk->releaseObject(contextVk->getCurrentQueueSerial(), &mSampler);
     }
 
+    if (dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
+        dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN) ||
+        dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE) ||
+        dirtyBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA))
+    {
+        if (mImage && mImage->valid())
+        {
+            releaseImageViews(contextVk);
+            ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(), mImage->getLevelCount()));
+        }
+    }
+
     const gl::Extensions &extensions     = renderer->getNativeExtensions();
     const gl::SamplerState &samplerState = mState.getSamplerState();
 
@@ -1436,6 +1448,13 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         }
     }
 
+    releaseImageViews(contextVk);
+
+    mCubeMapRenderTargets.clear();
+}
+
+void TextureVk::releaseImageViews(ContextVk *contextVk)
+{
     Serial currentSerial = contextVk->getCurrentQueueSerial();
 
     contextVk->releaseObject(currentSerial, &mDrawBaseLevelImageView);
@@ -1457,7 +1476,6 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         contextVk->releaseObject(currentSerial, &imageView);
     }
     mLayerFetchImageView.clear();
-    mCubeMapRenderTargets.clear();
 }
 
 void TextureVk::releaseStagingBuffer(ContextVk *context)

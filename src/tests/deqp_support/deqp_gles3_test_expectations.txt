@@ -550,7 +550,6 @@
 3189 VULKAN : dEQP-GLES3.functional.texture.wrap.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.filtering.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.mipmap.* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.swizzle.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.shadow.2d_array.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.specification.* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.vertex.* = SKIP
