@@ -535,10 +535,7 @@ class ANGLETestEnvironment : public testing::Environment
 };
 
 // Driver vendors
-bool IsIntel();
 bool IsAdreno();
-bool IsAMD();
-bool IsNVIDIA();
 
 // Renderer back-ends
 // Note: FL9_3 is explicitly *not* considered D3D11.

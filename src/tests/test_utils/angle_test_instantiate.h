@@ -32,6 +32,11 @@ bool IsPixelXL();
 bool IsPixel2();
 bool IsNVIDIAShield();
 
+// Desktop devices.
+bool IsIntel();
+bool IsAMD();
+bool IsNVIDIA();
+
 bool IsPlatformAvailable(const PlatformParameters &param);
 
 // This functions is used to filter which tests should be registered,

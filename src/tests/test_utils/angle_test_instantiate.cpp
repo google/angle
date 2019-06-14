@@ -69,6 +69,31 @@ bool IsNativeConfigSupported(const PlatformParameters &param, OSWindow *osWindow
 }
 
 std::map<PlatformParameters, bool> gParamAvailabilityCache;
+
+bool IsAndroidDevice(const std::string &deviceName)
+{
+    if (!IsAndroid())
+    {
+        return false;
+    }
+    SystemInfo *systemInfo = GetTestSystemInfo();
+    if (systemInfo->machineModelName == deviceName)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool HasSystemVendorID(VendorID vendorID)
+{
+    SystemInfo *systemInfo = GetTestSystemInfo();
+    // Unfortunately sometimes GPU info collection can fail.
+    if (systemInfo->activeGPUIndex < 0 || systemInfo->gpus.empty())
+    {
+        return false;
+    }
+    return systemInfo->gpus[systemInfo->activeGPUIndex].vendorId == vendorID;
+}
 }  // namespace
 
 std::string gSelectedConfig;
@@ -150,20 +175,6 @@ bool IsFuchsia()
 #endif
 }
 
-bool IsAndroidDevice(const std::string &deviceName)
-{
-    if (!IsAndroid())
-    {
-        return false;
-    }
-    SystemInfo *systemInfo = GetTestSystemInfo();
-    if (systemInfo->machineModelName == deviceName)
-    {
-        return true;
-    }
-    return false;
-}
-
 bool IsNexus5X()
 {
     return IsAndroidDevice("Nexus 5X");
@@ -187,6 +198,21 @@ bool IsPixel2()
 bool IsNVIDIAShield()
 {
     return IsAndroidDevice("SHIELD Android TV");
+}
+
+bool IsIntel()
+{
+    return HasSystemVendorID(kVendorID_Intel);
+}
+
+bool IsAMD()
+{
+    return HasSystemVendorID(kVendorID_AMD);
+}
+
+bool IsNVIDIA()
+{
+    return HasSystemVendorID(kVendorID_NVIDIA);
 }
 
 bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param)

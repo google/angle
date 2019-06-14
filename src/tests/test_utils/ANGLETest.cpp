@@ -1224,30 +1224,10 @@ void ANGLETestBase::setWindowVisible(bool isVisible)
     mFixture->osWindow->setVisible(isVisible);
 }
 
-bool IsIntel()
-{
-    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-    return (rendererString.find("Intel") != std::string::npos);
-}
-
 bool IsAdreno()
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("Adreno") != std::string::npos);
-}
-
-bool IsAMD()
-{
-    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-    return (rendererString.find("AMD") != std::string::npos) ||
-           (rendererString.find("ATI") != std::string::npos) ||
-           (rendererString.find("Radeon") != std::string::npos);
-}
-
-bool IsNVIDIA()
-{
-    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-    return (rendererString.find("NVIDIA") != std::string::npos);
 }
 
 bool IsD3D11()
