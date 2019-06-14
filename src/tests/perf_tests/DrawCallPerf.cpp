@@ -333,15 +333,22 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::Texture),
                        DrawArrays(DrawCallValidation(), StateChange::NoChange),
                        DrawArrays(DrawCallVulkan(), StateChange::NoChange),
+                       DrawArrays(Offscreen(DrawCallVulkan()), StateChange::NoChange),
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::NoChange),
                        DrawArrays(DrawCallVulkan(), StateChange::VertexBuffer),
+                       DrawArrays(Offscreen(DrawCallVulkan()), StateChange::VertexBuffer),
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::VertexBuffer),
                        DrawArrays(DrawCallVulkan(), StateChange::ManyVertexBuffers),
+                       DrawArrays(Offscreen(DrawCallVulkan()), StateChange::ManyVertexBuffers),
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::ManyVertexBuffers),
                        DrawArrays(DrawCallVulkan(), StateChange::Texture),
+                       DrawArrays(Offscreen(DrawCallVulkan()), StateChange::Texture),
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::Texture),
                        DrawArrays(DrawCallWGL(), StateChange::NoChange),
+                       DrawArrays(Offscreen(DrawCallWGL()), StateChange::NoChange),
                        DrawArrays(DrawCallWGL(), StateChange::VertexBuffer),
-                       DrawArrays(DrawCallWGL(), StateChange::Texture));
+                       DrawArrays(Offscreen(DrawCallWGL()), StateChange::VertexBuffer),
+                       DrawArrays(DrawCallWGL(), StateChange::Texture),
+                       DrawArrays(Offscreen(DrawCallWGL()), StateChange::Texture));
 
 }  // anonymous namespace
