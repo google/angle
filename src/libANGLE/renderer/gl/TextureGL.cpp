@@ -23,9 +23,9 @@
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ImageGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "platform/FeaturesGL.h"
 
 using angle::CheckedNumeric;
 
@@ -150,7 +150,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
                                   const gl::PixelUnpackState &unpack,
                                   const uint8_t *pixels)
 {
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     const gl::Buffer *unpackBuffer =
         context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
@@ -158,7 +158,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());
 
-    if (workarounds.unpackOverlappingRowsSeparatelyUnpackBuffer.enabled && unpackBuffer &&
+    if (features.unpackOverlappingRowsSeparatelyUnpackBuffer.enabled && unpackBuffer &&
         unpack.rowLength != 0 && unpack.rowLength < size.width)
     {
         // The rows overlap in unpack memory. Upload the texture row by row to work around
@@ -175,7 +175,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
                                              unpackBuffer, pixels);
     }
 
-    if (workarounds.unpackLastRowSeparatelyForPaddingInclusion.enabled)
+    if (features.unpackLastRowSeparatelyForPaddingInclusion.enabled)
     {
         bool apply = false;
         ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(
@@ -217,10 +217,10 @@ void TextureGL::setImageHelper(const gl::Context *context,
 
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexImageFormat texImageFormat =
-        nativegl::GetTexImageFormat(functions, workarounds, internalFormat, format, type);
+        nativegl::GetTexImageFormat(functions, features, internalFormat, format, type);
 
     stateManager->bindTexture(getType(), mTextureID);
 
@@ -269,10 +269,10 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
 
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexSubImageFormat texSubImageFormat =
-        nativegl::GetTexSubImageFormat(functions, workarounds, format, type);
+        nativegl::GetTexSubImageFormat(functions, features, format, type);
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());
@@ -281,14 +281,14 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
            GetLevelInfo(format, texSubImageFormat.format).lumaWorkaround.enabled);
 
     stateManager->bindTexture(getType(), mTextureID);
-    if (workarounds.unpackOverlappingRowsSeparatelyUnpackBuffer.enabled && unpackBuffer &&
+    if (features.unpackOverlappingRowsSeparatelyUnpackBuffer.enabled && unpackBuffer &&
         unpack.rowLength != 0 && unpack.rowLength < area.width)
     {
         return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
                                              unpackBuffer, pixels);
     }
 
-    if (workarounds.unpackLastRowSeparatelyForPaddingInclusion.enabled)
+    if (features.unpackLastRowSeparatelyForPaddingInclusion.enabled)
     {
         gl::Extents size(area.width, area.height, area.depth);
 
@@ -484,14 +484,14 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
 {
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());
     ASSERT(TextureTargetToType(target) == getType());
 
     nativegl::CompressedTexImageFormat compressedTexImageFormat =
-        nativegl::GetCompressedTexImageFormat(functions, workarounds, internalFormat);
+        nativegl::GetCompressedTexImageFormat(functions, features, internalFormat);
 
     stateManager->bindTexture(getType(), mTextureID);
     if (nativegl::UseTexImage2D(getType()))
@@ -526,14 +526,14 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
 {
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());
     ASSERT(TextureTargetToType(target) == getType());
 
     nativegl::CompressedTexSubImageFormat compressedTexSubImageFormat =
-        nativegl::GetCompressedSubTexImageFormat(functions, workarounds, format);
+        nativegl::GetCompressedSubTexImageFormat(functions, features, format);
 
     stateManager->bindTexture(getType(), mTextureID);
     if (nativegl::UseTexImage2D(getType()))
@@ -567,14 +567,14 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
     ContextGL *contextGL             = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
     size_t level             = static_cast<size_t>(index.getLevelIndex());
     GLenum type              = GL_NONE;
     ANGLE_TRY(source->getImplementationColorReadType(context, &type));
     nativegl::CopyTexImageImageFormat copyTexImageFormat =
-        nativegl::GetCopyTexImageImageFormat(functions, workarounds, internalFormat, type);
+        nativegl::GetCopyTexImageImageFormat(functions, features, internalFormat, type);
 
     stateManager->bindTexture(getType(), mTextureID);
 
@@ -845,10 +845,10 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
     ContextGL *contextGL             = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexStorageFormat texStorageFormat =
-        nativegl::GetTexStorageFormat(functions, workarounds, internalFormat);
+        nativegl::GetTexStorageFormat(functions, features, internalFormat);
 
     stateManager->bindTexture(getType(), mTextureID);
     if (nativegl::UseTexImage2D(getType()))
@@ -880,7 +880,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                     if (internalFormatInfo.compressed)
                     {
                         nativegl::CompressedTexSubImageFormat compressedTexImageFormat =
-                            nativegl::GetCompressedSubTexImageFormat(functions, workarounds,
+                            nativegl::GetCompressedSubTexImageFormat(functions, features,
                                                                      internalFormat);
 
                         GLuint dataSize = 0;
@@ -895,7 +895,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                     else
                     {
                         nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
-                            functions, workarounds, internalFormat, internalFormatInfo.format,
+                            functions, features, internalFormat, internalFormatInfo.format,
                             internalFormatInfo.type);
 
                         functions->texImage2D(ToGLenum(type), static_cast<GLint>(level),
@@ -912,7 +912,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                         if (internalFormatInfo.compressed)
                         {
                             nativegl::CompressedTexSubImageFormat compressedTexImageFormat =
-                                nativegl::GetCompressedSubTexImageFormat(functions, workarounds,
+                                nativegl::GetCompressedSubTexImageFormat(functions, features,
                                                                          internalFormat);
 
                             GLuint dataSize = 0;
@@ -927,7 +927,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                         else
                         {
                             nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
-                                functions, workarounds, internalFormat, internalFormatInfo.format,
+                                functions, features, internalFormat, internalFormatInfo.format,
                                 internalFormatInfo.type);
 
                             functions->texImage2D(ToGLenum(face), static_cast<GLint>(level),
@@ -969,7 +969,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                 if (internalFormatInfo.compressed)
                 {
                     nativegl::CompressedTexSubImageFormat compressedTexImageFormat =
-                        nativegl::GetCompressedSubTexImageFormat(functions, workarounds,
+                        nativegl::GetCompressedSubTexImageFormat(functions, features,
                                                                  internalFormat);
 
                     GLuint dataSize = 0;
@@ -983,7 +983,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                 else
                 {
                     nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
-                        functions, workarounds, internalFormat, internalFormatInfo.format,
+                        functions, features, internalFormat, internalFormatInfo.format,
                         internalFormatInfo.type);
 
                     functions->texImage3D(ToGLenum(type), i, texImageFormat.internalFormat,
@@ -1009,10 +1009,10 @@ angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
 {
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     nativegl::TexStorageFormat texStorageFormat =
-        nativegl::GetTexStorageFormat(functions, workarounds, internalformat);
+        nativegl::GetTexStorageFormat(functions, features, internalformat);
 
     stateManager->bindTexture(getType(), mTextureID);
 
@@ -1557,7 +1557,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     ContextGL *contextGL             = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     GLenum nativeInternalFormat =
         getLevelInfo(imageIndex.getTarget(), imageIndex.getLevelIndex()).nativeInternalFormat;
@@ -1588,7 +1588,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     if (internalFormatInfo.compressed)
     {
         nativegl::CompressedTexSubImageFormat nativeSubImageFormat =
-            nativegl::GetCompressedSubTexImageFormat(functions, workarounds,
+            nativegl::GetCompressedSubTexImageFormat(functions, features,
                                                      internalFormatInfo.internalFormat);
 
         GLuint imageSize = 0;
@@ -1618,7 +1618,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     else
     {
         nativegl::TexSubImageFormat nativeSubImageFormat = nativegl::GetTexSubImageFormat(
-            functions, workarounds, internalFormatInfo.format, internalFormatInfo.type);
+            functions, features, internalFormatInfo.format, internalFormatInfo.type);
 
         GLuint imageSize = 0;
         ANGLE_CHECK_GL_MATH(contextGL, internalFormatInfo.computePackUnpackEndByte(

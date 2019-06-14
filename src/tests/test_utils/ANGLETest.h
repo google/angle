@@ -287,8 +287,8 @@ class ANGLETestBase
   public:
     void setWindowVisible(bool isVisible);
 
-    virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
-    virtual void overrideFeaturesVk(angle::FeaturesVk *workaroundsVulkan) {}
+    virtual void overrideFeaturesD3D(angle::FeaturesD3D *featuresD3D) {}
+    virtual void overrideFeaturesVk(angle::FeaturesVk *featuresVulkan) {}
 
   protected:
     void ANGLETestSetUp();

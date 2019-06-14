@@ -19,7 +19,6 @@
 #include "common/version.h"
 #include "compiler/translator/blocklayout.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/FrontendFeatures.h"
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/ResourceManager.h"
@@ -31,6 +30,7 @@
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "platform/FrontendFeatures.h"
 #include "platform/Platform.h"
 
 namespace gl

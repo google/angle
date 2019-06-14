@@ -23,9 +23,9 @@
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "platform/FeaturesGL.h"
 #include "platform/Platform.h"
 
 using namespace gl;
@@ -428,7 +428,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
     ContextGL *contextGL             = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions     = GetFunctionsGL(context);
     StateManagerGL *stateManager     = GetStateManagerGL(context);
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     // Clip read area to framebuffer.
     const gl::Extents fbSize = getState().getReadAttachment()->getSize();
@@ -445,15 +445,15 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
     nativegl::ReadPixelsFormat readPixelsFormat =
-        nativegl::GetReadPixelsFormat(functions, workarounds, format, type);
+        nativegl::GetReadPixelsFormat(functions, features, format, type);
     GLenum readFormat = readPixelsFormat.format;
     GLenum readType   = readPixelsFormat.type;
 
     stateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
 
-    bool useOverlappingRowsWorkaround =
-        workarounds.packOverlappingRowsSeparatelyPackBuffer.enabled && packBuffer &&
-        packState.rowLength != 0 && packState.rowLength < clippedArea.width;
+    bool useOverlappingRowsWorkaround = features.packOverlappingRowsSeparatelyPackBuffer.enabled &&
+                                        packBuffer && packState.rowLength != 0 &&
+                                        packState.rowLength < clippedArea.width;
 
     GLubyte *outPtr = static_cast<GLubyte *>(pixels);
     int leftClip    = clippedArea.x - area.x;
@@ -487,7 +487,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
     }
 
     bool useLastRowPaddingWorkaround = false;
-    if (workarounds.packLastRowSeparatelyForPaddingInclusion.enabled)
+    if (features.packLastRowSeparatelyForPaddingInclusion.enabled)
     {
         ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(
             contextGL, gl::Extents(clippedArea.width, clippedArea.height, 1), packState, packBuffer,
@@ -741,9 +741,9 @@ void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
     if (functions->standard == STANDARD_GL_DESKTOP)
     {
         StateManagerGL *stateManager     = GetStateManagerGL(context);
-        const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+        const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-        if (workarounds.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
+        if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
             (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
         {
             bool hasSRGBAttachment = false;
@@ -774,10 +774,10 @@ void FramebufferGL::syncClearBufferState(const gl::Context *context,
     if (functions->standard == STANDARD_GL_DESKTOP)
     {
         StateManagerGL *stateManager     = GetStateManagerGL(context);
-        const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+        const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-        if (workarounds.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
-            buffer == GL_COLOR && !mIsDefault)
+        if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled && buffer == GL_COLOR &&
+            !mIsDefault)
         {
             // If doing a clear on a color buffer, set SRGB blend enabled only if the color buffer
             // is an SRGB format.

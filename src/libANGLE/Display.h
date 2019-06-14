@@ -20,11 +20,11 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/FrontendFeatures.h"
 #include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
+#include "platform/FrontendFeatures.h"
 
 namespace gl
 {
@@ -194,7 +194,7 @@ class Display final : public LabeledObject, angle::NonCopyable
     typedef std::set<gl::Context *> ContextSet;
     const ContextSet &getContextSet() { return mContextSet; }
 
-    const gl::FrontendFeatures &getFrontendFeatures() { return mFrontendFeatures; }
+    const angle::FrontendFeatures &getFrontendFeatures() { return mFrontendFeatures; }
 
     const angle::FeatureList &getFeatures() const { return mFeatures; }
 
@@ -251,7 +251,7 @@ class Display final : public LabeledObject, angle::NonCopyable
     gl::MemoryProgramCache mMemoryProgramCache;
     size_t mGlobalTextureShareGroupUsers;
 
-    gl::FrontendFeatures mFrontendFeatures;
+    angle::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;
 };

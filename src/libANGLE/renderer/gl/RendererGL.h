@@ -16,26 +16,30 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "platform/FeaturesGL.h"
+
+namespace angle
+{
+struct FrontendFeatures;
+}  // namespace angle
 
 namespace gl
 {
 struct IndexRange;
 class Path;
 class State;
-struct FrontendFeatures;
 }  // namespace gl
 
 namespace egl
 {
 class AttributeMap;
-}
+}  // namespace egl
 
 namespace sh
 {
 struct BlockMemberInfo;
-}
+}  // namespace sh
 
 namespace rx
 {
@@ -161,7 +165,7 @@ class RendererGL : angle::NonCopyable
     const gl::Version &getMaxSupportedESVersion() const;
     const FunctionsGL *getFunctions() const { return mFunctions.get(); }
     StateManagerGL *getStateManager() const { return mStateManager; }
-    const WorkaroundsGL &getWorkarounds() const { return mWorkarounds; }
+    const angle::FeaturesGL &getFeatures() const { return mFeatures; }
     BlitGL *getBlitter() const { return mBlitter; }
     ClearMultiviewGL *getMultiviewClearer() const { return mMultiviewClearer; }
 
@@ -170,7 +174,7 @@ class RendererGL : angle::NonCopyable
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
-    void initializeFrontendFeatures(gl::FrontendFeatures *features) const;
+    void initializeFrontendFeatures(angle::FrontendFeatures *features) const;
 
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
@@ -226,7 +230,7 @@ class RendererGL : angle::NonCopyable
 
     bool mNativeParallelCompileEnabled;
 
-    WorkaroundsGL mWorkarounds;
+    angle::FeaturesGL mFeatures;
 };
 
 }  // namespace rx

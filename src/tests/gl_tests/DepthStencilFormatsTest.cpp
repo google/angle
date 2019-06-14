@@ -8,7 +8,7 @@
 #include "test_utils/gl_raii.h"
 
 #include "common/mathutil.h"
-#include "platform/WorkaroundsD3D.h"
+#include "platform/FeaturesD3D.h"
 
 using namespace angle;
 
@@ -581,10 +581,10 @@ class TinyDepthStencilWorkaroundTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    // Override the workarounds to enable "tiny" depth/stencil textures.
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
+    // Override the features to enable "tiny" depth/stencil textures.
+    void overrideFeaturesD3D(FeaturesD3D *features) override
     {
-        workarounds->overrideFeatures({"emulate_tiny_stencil_textures"}, true);
+        features->overrideFeatures({"emulate_tiny_stencil_textures"}, true);
     }
 };
 

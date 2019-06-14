@@ -22,10 +22,10 @@
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
+#include "platform/FeaturesGL.h"
 
 using angle::Vector2;
 
@@ -212,10 +212,10 @@ void UnbindAttachments(const FunctionsGL *functions,
 }  // anonymous namespace
 
 BlitGL::BlitGL(const FunctionsGL *functions,
-               const WorkaroundsGL &workarounds,
+               const angle::FeaturesGL &features,
                StateManagerGL *stateManager)
     : mFunctions(functions),
-      mWorkarounds(workarounds),
+      mFeatures(features),
       mStateManager(stateManager),
       mScratchFBO(0),
       mVAO(0),
@@ -315,7 +315,7 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
     ANGLE_TRY(source->getImplementationColorReadType(context, &readType));
 
     nativegl::CopyTexImageImageFormat copyTexImageFormat =
-        nativegl::GetCopyTexImageImageFormat(mFunctions, mWorkarounds, readFormat, readType);
+        nativegl::GetCopyTexImageImageFormat(mFunctions, mFeatures, readFormat, readType);
 
     mStateManager->bindTexture(gl::TextureType::_2D, mScratchTextures[0]);
     mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.x,
@@ -682,7 +682,7 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     mStateManager->setPixelPackBuffer(nullptr);
 
     nativegl::TexSubImageFormat texSubImageFormat =
-        nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, destFormat, destType);
+        nativegl::GetTexSubImageFormat(mFunctions, mFeatures, destFormat, destType);
 
     mStateManager->bindTexture(dest->getType(), dest->getTextureID());
     mFunctions->texSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,

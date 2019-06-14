@@ -74,7 +74,7 @@ gl::Version GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel);
 void GenerateCaps(ID3D11Device *device,
                   ID3D11DeviceContext *deviceContext,
                   const Renderer11DeviceCaps &renderer11DeviceCaps,
-                  const angle::WorkaroundsD3D &workarounds,
+                  const angle::FeaturesD3D &features,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
@@ -305,9 +305,9 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
     }
 }
 
-void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                         const DXGI_ADAPTER_DESC &adapterDesc,
-                         angle::WorkaroundsD3D *workarounds);
+void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
+                        const DXGI_ADAPTER_DESC &adapterDesc,
+                        angle::FeaturesD3D *features);
 
 enum ReservedConstantBufferSlot
 {

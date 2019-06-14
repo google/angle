@@ -74,7 +74,7 @@ class DisplayCGL : public DisplayGL
 
     WorkerContext *createWorkerContext(std::string *infoLog);
 
-    void initializeFrontendFeatures(gl::FrontendFeatures *features) const override;
+    void initializeFrontendFeatures(angle::FrontendFeatures *features) const override;
 
     void populateFeatureList(angle::FeatureList *features) override;
 

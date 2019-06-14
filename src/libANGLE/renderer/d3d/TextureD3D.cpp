@@ -198,7 +198,7 @@ angle::Result TextureD3D::setStorageExternalMemory(const gl::Context *context,
 
 bool TextureD3D::shouldUseSetData(const ImageD3D *image) const
 {
-    if (!mRenderer->getWorkarounds().setDataFasterThanImageUpload.enabled)
+    if (!mRenderer->getFeatures().setDataFasterThanImageUpload.enabled)
     {
         return false;
     }
@@ -438,7 +438,7 @@ angle::Result TextureD3D::generateMipmap(const gl::Context *context)
     const GLuint maxLevel  = mState.getMipmapMaxLevel();
     ASSERT(maxLevel > baseLevel);  // Should be checked before calling this.
 
-    if (mTexStorage && mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+    if (mTexStorage && mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         // Switch to using the mipmapped texture.
         TextureStorage *textureStorage = nullptr;
@@ -474,7 +474,7 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
     // When making mipmaps with the setData workaround enabled, the texture storage has
     // the image data already. For non-render-target storage, we have to pull it out into
     // an image layer.
-    if (mRenderer->getWorkarounds().setDataFasterThanImageUpload.enabled && mTexStorage)
+    if (mRenderer->getFeatures().setDataFasterThanImageUpload.enabled && mTexStorage)
     {
         if (!mTexStorage->isRenderTarget())
         {
@@ -501,7 +501,7 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
     // Blit9::boxFilter). Feature Level 9_3 could do something similar, or it could continue to use
     // CPU-side mipmap generation, or something else.
     bool renderableStorage = (mTexStorage && mTexStorage->isRenderTarget() &&
-                              !(mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled));
+                              !(mRenderer->getFeatures().zeroMaxLodWorkaround.enabled));
 
     for (GLint layer = 0; layer < layerCount; ++layer)
     {
@@ -733,7 +733,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
     // We don't use the fast path with the zero max lod workaround because it would introduce a race
     // between the rendertarget and the staging images.
     if (canCreateRenderTargetForImage(index) &&
-        !mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+        !mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         ANGLE_TRY(ensureRenderTarget(context));
         ASSERT(mTexStorage);
@@ -1008,7 +1008,7 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
     // If the zero max LOD workaround is active, then we can't sample from individual layers of the
     // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) ||
-        mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+        mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         ANGLE_TRY(mImageArray[index.getLevelIndex()]->copyFromFramebuffer(context, destOffset,
                                                                           clippedArea, source));
@@ -1054,7 +1054,7 @@ angle::Result TextureD3D_2D::copySubImage(const gl::Context *context,
     // If the zero max LOD workaround is active, then we can't sample from individual layers of the
     // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) ||
-        mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+        mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         ANGLE_TRY(mImageArray[index.getLevelIndex()]->copyFromFramebuffer(context, clippedOffset,
                                                                           clippedArea, source));
@@ -1434,7 +1434,7 @@ angle::Result TextureD3D_2D::createCompleteStorage(bool renderTarget,
     GLint levels = (mTexStorage ? mTexStorage->getLevelCount() : creationLevels(width, height, 1));
 
     bool hintLevelZeroOnly = false;
-    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+    if (mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         // If any of the CPU images (levels >= 1) are dirty, then the textureStorage2D should use
         // the mipped texture to begin with. Otherwise, it should use the level-zero-only texture.
@@ -1758,7 +1758,7 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
     // If the zero max LOD workaround is active, then we can't sample from individual layers of the
     // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) ||
-        mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+        mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         ANGLE_TRY(mImageArray[faceIndex][index.getLevelIndex()]->copyFromFramebuffer(
             context, destOffset, clippedArea, source));
@@ -1802,7 +1802,7 @@ angle::Result TextureD3D_Cube::copySubImage(const gl::Context *context,
     // If the zero max LOD workaround is active, then we can't sample from individual layers of the
     // framebuffer in shaders, so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) ||
-        mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+        mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         ANGLE_TRY(mImageArray[faceIndex][index.getLevelIndex()]->copyFromFramebuffer(
             context, clippedOffset, clippedArea, source));
@@ -2090,7 +2090,7 @@ angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
     GLint levels = (mTexStorage ? mTexStorage->getLevelCount() : creationLevels(size, size, 1));
 
     bool hintLevelZeroOnly = false;
-    if (mRenderer->getWorkarounds().zeroMaxLodWorkaround.enabled)
+    if (mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         // If any of the CPU images (levels >= 1) are dirty, then the textureStorage should use the
         // mipped texture to begin with. Otherwise, it should use the level-zero-only texture.

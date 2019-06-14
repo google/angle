@@ -12,7 +12,7 @@
 
 #include "ANGLEPerfTest.h"
 #include "common/vector_utils.h"
-#include "platform/WorkaroundsD3D.h"
+#include "platform/FeaturesD3D.h"
 #include "test_utils/MultiviewTest.h"
 #include "test_utils/gl_raii.h"
 #include "util/shader_utils.h"
@@ -169,9 +169,9 @@ class MultiviewBenchmark : public ANGLERenderTest,
     void initializeBenchmark() override;
     void drawBenchmark() final;
 
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
+    void overrideFeaturesD3D(FeaturesD3D *features) override
     {
-        workarounds->overrideFeatures(
+        features->overrideFeatures(
             {"select_view_in_geometry_shader"},
             GetParam().multiviewOption == MultiviewOption::InstancedMultiviewGeometryShader);
     }

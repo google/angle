@@ -19,13 +19,18 @@
 #include <string>
 #include <vector>
 
+namespace angle
+{
+struct FeaturesGL;
+struct FrontendFeatures;
+}  // namespace angle
+
 namespace gl
 {
 struct Caps;
 class TextureCapsMap;
 struct Extensions;
 struct Version;
-struct FrontendFeatures;
 }  // namespace gl
 
 namespace rx
@@ -35,7 +40,6 @@ class ClearMultiviewGL;
 class ContextGL;
 class FunctionsGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 enum class MultiviewImplementationTypeGL
 {
     NV_VIEWPORT_ARRAY2,
@@ -49,21 +53,21 @@ const FunctionsGL *GetFunctionsGL(const gl::Context *context);
 StateManagerGL *GetStateManagerGL(const gl::Context *context);
 BlitGL *GetBlitGL(const gl::Context *context);
 ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context);
-const WorkaroundsGL &GetWorkaroundsGL(const gl::Context *context);
+const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context);
 
 namespace nativegl_gl
 {
 
 void GenerateCaps(const FunctionsGL *functions,
-                  const WorkaroundsGL &workarounds,
+                  const angle::FeaturesGL &features,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
                   gl::Version *maxSupportedESVersion,
                   MultiviewImplementationTypeGL *multiviewImplementationType);
 
-void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds);
-void InitializeFrontendFeatures(const FunctionsGL *functions, gl::FrontendFeatures *features);
+void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features);
+void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features);
 }  // namespace nativegl_gl
 
 namespace nativegl

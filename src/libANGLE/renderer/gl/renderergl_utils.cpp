@@ -16,15 +16,15 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/FrontendFeatures.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
+#include "platform/FeaturesGL.h"
+#include "platform/FrontendFeatures.h"
 
 #include <EGL/eglext.h>
 #include <algorithm>
@@ -132,7 +132,7 @@ static bool MeetsRequirements(const FunctionsGL *functions,
 }
 
 static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *functions,
-                                                         const WorkaroundsGL &workarounds,
+                                                         const angle::FeaturesGL &features,
                                                          GLenum internalFormat)
 {
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
@@ -151,7 +151,7 @@ static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *func
     functions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
-        functions, workarounds, formatInfo.internalFormat, formatInfo.format, formatInfo.type);
+        functions, features, formatInfo.internalFormat, formatInfo.format, formatInfo.type);
     constexpr GLsizei kTextureSize = 16;
     functions->texImage2D(GL_TEXTURE_2D, 0, texImageFormat.internalFormat, kTextureSize,
                           kTextureSize, 0, texImageFormat.format, texImageFormat.type, nullptr);
@@ -181,7 +181,7 @@ static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *func
 }
 
 static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *functions,
-                                                         const WorkaroundsGL &workarounds,
+                                                         const angle::FeaturesGL &features,
                                                          GLenum internalFormat)
 {
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
@@ -197,7 +197,7 @@ static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *func
     functions->bindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
 
     nativegl::RenderbufferFormat renderbufferFormat =
-        nativegl::GetRenderbufferFormat(functions, workarounds, formatInfo.internalFormat);
+        nativegl::GetRenderbufferFormat(functions, features, formatInfo.internalFormat);
     constexpr GLsizei kRenderbufferSize = 16;
     functions->renderbufferStorage(GL_RENDERBUFFER, renderbufferFormat.internalFormat,
                                    kRenderbufferSize, kRenderbufferSize);
@@ -227,7 +227,7 @@ static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *func
 }
 
 static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
-                                                 const WorkaroundsGL &workarounds,
+                                                 const angle::FeaturesGL &features,
                                                  GLenum internalFormat)
 {
     ASSERT(functions->getError() == GL_NO_ERROR);
@@ -249,13 +249,13 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
     {
         if (textureCaps.textureAttachment)
         {
-            textureCaps.textureAttachment = CheckSizedInternalFormatTextureRenderability(
-                functions, workarounds, internalFormat);
+            textureCaps.textureAttachment =
+                CheckSizedInternalFormatTextureRenderability(functions, features, internalFormat);
         }
         if (textureCaps.renderbuffer)
         {
-            textureCaps.renderbuffer = CheckInternalFormatRenderbufferRenderability(
-                functions, workarounds, internalFormat);
+            textureCaps.renderbuffer =
+                CheckInternalFormatRenderbufferRenderability(functions, features, internalFormat);
         }
     }
 
@@ -416,7 +416,7 @@ void CapCombinedLimitToESShaders(GLuint *combinedLimit, gl::ShaderMap<GLuint> &p
 }
 
 void GenerateCaps(const FunctionsGL *functions,
-                  const WorkaroundsGL &workarounds,
+                  const angle::FeaturesGL &features,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
@@ -428,7 +428,7 @@ void GenerateCaps(const FunctionsGL *functions,
     for (GLenum internalFormat : allFormats)
     {
         gl::TextureCaps textureCaps =
-            GenerateTextureFormatCaps(functions, workarounds, internalFormat);
+            GenerateTextureFormatCaps(functions, features, internalFormat);
         textureCapsMap->insert(internalFormat, textureCaps);
 
         if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
@@ -893,7 +893,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
         // OpenGL 4.3 has no limit on maximum value of stride.
         // [OpenGL 4.3 (Core Profile) - February 14, 2013] Chapter 10.3.1 Page 298
-        if (workarounds.emulateMaxVertexAttribStride.enabled ||
+        if (features.emulateMaxVertexAttribStride.enabled ||
             (functions->standard == STANDARD_GL_DESKTOP && functions->version == gl::Version(4, 3)))
         {
             caps->maxVertexAttribStride = 2048;
@@ -1166,7 +1166,7 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->disjointTimerQuery = true;
 
         // If we can't query the counter bits, leave them at 0.
-        if (!workarounds.queryCounterBitsGeneratesErrors.enabled)
+        if (!features.queryCounterBitsGeneratesErrors.enabled)
         {
             extensions->queryCounterBitsTimeElapsed =
                 QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
@@ -1352,7 +1352,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // EXT_blend_func_extended.
     // Note that this could be implemented also on top of native EXT_blend_func_extended, but it's
     // currently not fully implemented.
-    extensions->blendFuncExtended = !workarounds.disableBlendFuncExtended.enabled &&
+    extensions->blendFuncExtended = !features.disableBlendFuncExtended.enabled &&
                                     functions->standard == STANDARD_GL_DESKTOP &&
                                     functions->hasGLExtension("GL_ARB_blend_func_extended");
     if (extensions->blendFuncExtended)
@@ -1376,7 +1376,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // To work around broken unsized sRGB textures, sized sRGB textures are used. Disable EXT_sRGB
     // if those formats are not available.
-    if (workarounds.unsizedsRGBReadPixelsDoesntTransform.enabled &&
+    if (features.unsizedsRGBReadPixelsDoesntTransform.enabled &&
         !functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         extensions->sRGB = false;
@@ -1387,97 +1387,97 @@ void GenerateCaps(const FunctionsGL *functions,
                                   functions->isAtLeastGL(gl::Version(3, 2));
 }
 
-void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)
+void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)
 {
     VendorID vendor = GetVendorID(functions);
     uint32_t device = GetDeviceID(functions);
 
     // Don't use 1-bit alpha formats on desktop GL with AMD or Intel drivers.
-    workarounds->avoid1BitAlphaTextureFormats.enabled =
+    features->avoid1BitAlphaTextureFormats.enabled =
         functions->standard == STANDARD_GL_DESKTOP && (IsAMD(vendor));
 
-    workarounds->rgba4IsNotSupportedForColorRendering.enabled =
+    features->rgba4IsNotSupportedForColorRendering.enabled =
         functions->standard == STANDARD_GL_DESKTOP && IsIntel(vendor);
 
-    workarounds->emulateAbsIntFunction.enabled = IsIntel(vendor);
+    features->emulateAbsIntFunction.enabled = IsIntel(vendor);
 
-    workarounds->addAndTrueToLoopCondition.enabled = IsIntel(vendor);
+    features->addAndTrueToLoopCondition.enabled = IsIntel(vendor);
 
-    workarounds->emulateIsnanFloat.enabled = IsIntel(vendor);
+    features->emulateIsnanFloat.enabled = IsIntel(vendor);
 
-    workarounds->doesSRGBClearsOnLinearFramebufferAttachments.enabled =
+    features->doesSRGBClearsOnLinearFramebufferAttachments.enabled =
         functions->standard == STANDARD_GL_DESKTOP && (IsIntel(vendor) || IsAMD(vendor));
 
-    workarounds->emulateMaxVertexAttribStride.enabled =
+    features->emulateMaxVertexAttribStride.enabled =
         IsLinux() && functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor);
-    workarounds->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsLinux() && IsAMD(vendor);
+    features->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsLinux() && IsAMD(vendor);
 
-    workarounds->doWhileGLSLCausesGPUHang.enabled                  = IsApple();
-    workarounds->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsApple();
-    workarounds->rewriteFloatUnaryMinusOperator.enabled            = IsApple() && IsIntel(vendor);
+    features->doWhileGLSLCausesGPUHang.enabled                  = IsApple();
+    features->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsApple();
+    features->rewriteFloatUnaryMinusOperator.enabled            = IsApple() && IsIntel(vendor);
 
     // Triggers a bug on Marshmallow Adreno (4xx?) driver.
     // http://anglebug.com/2046
-    workarounds->dontInitializeUninitializedLocals.enabled = IsAndroid() && IsQualcomm(vendor);
+    features->dontInitializeUninitializedLocals.enabled = IsAndroid() && IsQualcomm(vendor);
 
-    workarounds->finishDoesNotCauseQueriesToBeAvailable.enabled =
+    features->finishDoesNotCauseQueriesToBeAvailable.enabled =
         functions->standard == STANDARD_GL_DESKTOP && IsNvidia(vendor);
 
     // TODO(cwallez): Disable this workaround for MacOSX versions 10.9 or later.
-    workarounds->alwaysCallUseProgramAfterLink.enabled = true;
+    features->alwaysCallUseProgramAfterLink.enabled = true;
 
-    workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer.enabled = IsNvidia(vendor);
-    workarounds->packOverlappingRowsSeparatelyPackBuffer.enabled     = IsNvidia(vendor);
+    features->unpackOverlappingRowsSeparatelyUnpackBuffer.enabled = IsNvidia(vendor);
+    features->packOverlappingRowsSeparatelyPackBuffer.enabled     = IsNvidia(vendor);
 
-    workarounds->initializeCurrentVertexAttributes.enabled = IsNvidia(vendor);
+    features->initializeCurrentVertexAttributes.enabled = IsNvidia(vendor);
 
-    workarounds->unpackLastRowSeparatelyForPaddingInclusion.enabled = IsApple() || IsNvidia(vendor);
-    workarounds->packLastRowSeparatelyForPaddingInclusion.enabled   = IsApple() || IsNvidia(vendor);
+    features->unpackLastRowSeparatelyForPaddingInclusion.enabled = IsApple() || IsNvidia(vendor);
+    features->packLastRowSeparatelyForPaddingInclusion.enabled   = IsApple() || IsNvidia(vendor);
 
-    workarounds->removeInvariantAndCentroidForESSL3.enabled =
+    features->removeInvariantAndCentroidForESSL3.enabled =
         functions->isAtMostGL(gl::Version(4, 1)) ||
         (functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor));
 
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions that came after
     // 364 are known to be affected, at least up to 375.
-    workarounds->emulateAtan2Float.enabled = IsNvidia(vendor);
+    features->emulateAtan2Float.enabled = IsNvidia(vendor);
 
-    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram.enabled = IsAMD(vendor);
+    features->reapplyUBOBindingsAfterUsingBinaryProgram.enabled = IsAMD(vendor);
 
-    workarounds->rewriteVectorScalarArithmetic.enabled = IsNvidia(vendor);
+    features->rewriteVectorScalarArithmetic.enabled = IsNvidia(vendor);
 
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions at least up to
     // 390 are known to be affected. Versions after that are expected not to be affected.
-    workarounds->clampFragDepth.enabled = IsNvidia(vendor);
+    features->clampFragDepth.enabled = IsNvidia(vendor);
 
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions since 397.31 are
     // not affected.
-    workarounds->rewriteRepeatedAssignToSwizzled.enabled = IsNvidia(vendor);
+    features->rewriteRepeatedAssignToSwizzled.enabled = IsNvidia(vendor);
 
     // TODO(jmadill): Narrow workaround range for specific devices.
-    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram.enabled = IsAndroid();
+    features->reapplyUBOBindingsAfterUsingBinaryProgram.enabled = IsAndroid();
 
-    workarounds->clampPointSize.enabled = IsAndroid() || IsNvidia(vendor);
+    features->clampPointSize.enabled = IsAndroid() || IsNvidia(vendor);
 
-    workarounds->dontUseLoopsToInitializeVariables.enabled = IsAndroid() && !IsNvidia(vendor);
+    features->dontUseLoopsToInitializeVariables.enabled = IsAndroid() && !IsNvidia(vendor);
 
-    workarounds->disableBlendFuncExtended.enabled = IsAMD(vendor) || IsIntel(vendor);
+    features->disableBlendFuncExtended.enabled = IsAMD(vendor) || IsIntel(vendor);
 
-    workarounds->unsizedsRGBReadPixelsDoesntTransform.enabled = IsAndroid() && IsQualcomm(vendor);
+    features->unsizedsRGBReadPixelsDoesntTransform.enabled = IsAndroid() && IsQualcomm(vendor);
 
-    workarounds->queryCounterBitsGeneratesErrors.enabled = IsNexus5X(vendor, device);
+    features->queryCounterBitsGeneratesErrors.enabled = IsNexus5X(vendor, device);
 
-    workarounds->dontRelinkProgramsInParallel.enabled =
+    features->dontRelinkProgramsInParallel.enabled =
         IsAndroid() || (IsWindows() && IsIntel(vendor));
 
     // TODO(jie.a.chen@intel.com): Clean up the bugs.
     // anglebug.com/3031
     // crbug.com/922936
-    workarounds->disableWorkerContexts.enabled =
+    features->disableWorkerContexts.enabled =
         (IsWindows() && (IsIntel(vendor) || IsAMD(vendor))) || (IsLinux() && IsNvidia(vendor));
 }
 
-void InitializeFrontendFeatures(const FunctionsGL *functions, gl::FrontendFeatures *features)
+void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
 {
     VendorID vendor = GetVendorID(functions);
 
@@ -1567,9 +1567,9 @@ ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context)
     return GetImplAs<ContextGL>(context)->getMultiviewClearer();
 }
 
-const WorkaroundsGL &GetWorkaroundsGL(const gl::Context *context)
+const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context)
 {
-    return GetImplAs<ContextGL>(context)->getWorkaroundsGL();
+    return GetImplAs<ContextGL>(context)->getFeaturesGL();
 }
 
 bool CanMapBufferForRead(const FunctionsGL *functions)

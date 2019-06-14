@@ -1058,14 +1058,14 @@ WorkerContext *DisplayWGL::createWorkerContext(std::string *infoLog,
     return new WorkerContextWGL(mFunctionsWGL, workerPbuffer, workerDeviceContext, workerContext);
 }
 
-void DisplayWGL::initializeFrontendFeatures(gl::FrontendFeatures *features) const
+void DisplayWGL::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
     mRenderer->initializeFrontendFeatures(features);
 }
 
 void DisplayWGL::populateFeatureList(angle::FeatureList *features)
 {
-    mRenderer->getWorkarounds().populateFeatureList(features);
+    mRenderer->getFeatures().populateFeatureList(features);
 }
 
 }  // namespace rx

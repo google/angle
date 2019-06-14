@@ -18,7 +18,6 @@ namespace rx
 class FunctionsGL;
 class RendererGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 class PbufferSurfaceCGL : public SurfaceGL
 {

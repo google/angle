@@ -21,6 +21,11 @@
 #include <set>
 #include <vector>
 
+namespace angle
+{
+struct FrontendFeatures;
+}  // namespace angle
+
 namespace egl
 {
 class AttributeMap;
@@ -36,8 +41,7 @@ class Thread;
 namespace gl
 {
 class Context;
-struct FrontendFeatures;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -91,7 +95,7 @@ class DisplayImpl : public EGLImplFactory
     void setBlobCache(egl::BlobCache *blobCache) { mBlobCache = blobCache; }
     egl::BlobCache *getBlobCache() const { return mBlobCache; }
 
-    virtual void initializeFrontendFeatures(gl::FrontendFeatures *features) const {}
+    virtual void initializeFrontendFeatures(angle::FrontendFeatures *features) const {}
 
     virtual void populateFeatureList(angle::FeatureList *features) = 0;
 

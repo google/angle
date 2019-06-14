@@ -86,40 +86,40 @@ class WaitableCompileEventD3D final : public WaitableCompileEvent
 };
 
 ShaderD3D::ShaderD3D(const gl::ShaderState &data,
-                     const angle::WorkaroundsD3D &workarounds,
+                     const angle::FeaturesD3D &features,
                      const gl::Extensions &extensions)
     : ShaderImpl(data), mAdditionalOptions(0)
 {
     uncompile();
 
-    if (workarounds.expandIntegerPowExpressions.enabled)
+    if (features.expandIntegerPowExpressions.enabled)
     {
         mAdditionalOptions |= SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS;
     }
 
-    if (workarounds.getDimensionsIgnoresBaseLevel.enabled)
+    if (features.getDimensionsIgnoresBaseLevel.enabled)
     {
         mAdditionalOptions |= SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL;
     }
 
-    if (workarounds.preAddTexelFetchOffsets.enabled)
+    if (features.preAddTexelFetchOffsets.enabled)
     {
         mAdditionalOptions |= SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH;
     }
-    if (workarounds.rewriteUnaryMinusOperator.enabled)
+    if (features.rewriteUnaryMinusOperator.enabled)
     {
         mAdditionalOptions |= SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR;
     }
-    if (workarounds.emulateIsnanFloat.enabled)
+    if (features.emulateIsnanFloat.enabled)
     {
         mAdditionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
     }
-    if (workarounds.skipVSConstantRegisterZero.enabled &&
+    if (features.skipVSConstantRegisterZero.enabled &&
         mData.getShaderType() == gl::ShaderType::Vertex)
     {
         mAdditionalOptions |= SH_SKIP_D3D_CONSTANT_REGISTER_ZERO;
     }
-    if (workarounds.forceAtomicValueResolution.enabled)
+    if (features.forceAtomicValueResolution.enabled)
     {
         mAdditionalOptions |= SH_FORCE_ATOMIC_VALUE_RESOLUTION;
     }

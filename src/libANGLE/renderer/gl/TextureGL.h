@@ -19,7 +19,6 @@ namespace rx
 class BlitGL;
 class FunctionsGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 struct LUMAWorkaroundGL
 {

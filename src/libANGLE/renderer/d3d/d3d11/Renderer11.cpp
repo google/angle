@@ -885,7 +885,7 @@ void Renderer11::populateRenderer11DeviceCaps()
     mRenderer11DeviceCaps.supportsMultisampledDepthStencilSRVs =
         mRenderer11DeviceCaps.featureLevel > D3D_FEATURE_LEVEL_10_0;
 
-    if (getWorkarounds().disableB5G6R5Support.enabled)
+    if (getFeatures().disableB5G6R5Support.enabled)
     {
         mRenderer11DeviceCaps.B5G6R5support    = 0;
         mRenderer11DeviceCaps.B5G6R5maxSamples = 0;
@@ -1463,7 +1463,7 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
             return drawTriangleFan(context, clampedVertexCount, gl::DrawElementsType::InvalidEnum,
                                    nullptr, 0, adjustedInstanceCount);
         case gl::PrimitiveMode::Points:
-            if (getWorkarounds().useInstancedPointSpriteEmulation.enabled)
+            if (getFeatures().useInstancedPointSpriteEmulation.enabled)
             {
                 // This code should not be reachable by multi-view programs.
                 ASSERT(programD3D->getState().usesMultiview() == false);
@@ -3641,14 +3641,14 @@ void Renderer11::generateCaps(gl::Caps *outCaps,
                               gl::Extensions *outExtensions,
                               gl::Limitations *outLimitations) const
 {
-    d3d11_gl::GenerateCaps(mDevice, mDeviceContext, mRenderer11DeviceCaps, getWorkarounds(),
-                           outCaps, outTextureCaps, outExtensions, outLimitations);
+    d3d11_gl::GenerateCaps(mDevice, mDeviceContext, mRenderer11DeviceCaps, getFeatures(), outCaps,
+                           outTextureCaps, outExtensions, outLimitations);
 }
 
-void Renderer11::generateWorkarounds(angle::WorkaroundsD3D *workarounds) const
+void Renderer11::initializeFeatures(angle::FeaturesD3D *features) const
 {
-    d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription, workarounds);
-    OverrideFeaturesWithDisplayState(workarounds, mDisplay->getState());
+    d3d11::InitializeFeatures(mRenderer11DeviceCaps, mAdapterDescription, features);
+    OverrideFeaturesWithDisplayState(features, mDisplay->getState());
 }
 
 DeviceImpl *Renderer11::createEGLDevice()
@@ -3879,7 +3879,7 @@ angle::Result Renderer11::clearRenderTarget(const gl::Context *context,
 
 bool Renderer11::canSelectViewInVertexShader() const
 {
-    return !getWorkarounds().selectViewInGeometryShader.enabled &&
+    return !getFeatures().selectViewInGeometryShader.enabled &&
            getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
 }
 

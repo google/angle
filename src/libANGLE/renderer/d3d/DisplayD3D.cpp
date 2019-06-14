@@ -375,7 +375,7 @@ void DisplayD3D::handleResult(HRESULT hr,
 
 void DisplayD3D::populateFeatureList(angle::FeatureList *features)
 {
-    mRenderer->getWorkarounds().populateFeatureList(features);
+    mRenderer->getFeatures().populateFeatureList(features);
 }
 
 }  // namespace rx

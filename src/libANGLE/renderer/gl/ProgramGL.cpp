@@ -23,7 +23,7 @@
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
+#include "platform/FeaturesGL.h"
 #include "platform/Platform.h"
 
 namespace rx
@@ -31,13 +31,13 @@ namespace rx
 
 ProgramGL::ProgramGL(const gl::ProgramState &data,
                      const FunctionsGL *functions,
-                     const WorkaroundsGL &workarounds,
+                     const angle::FeaturesGL &features,
                      StateManagerGL *stateManager,
                      bool enablePathRendering,
                      const std::shared_ptr<RendererGL> &renderer)
     : ProgramImpl(data),
       mFunctions(functions),
-      mWorkarounds(workarounds),
+      mFeatures(features),
       mStateManager(stateManager),
       mEnablePathRendering(enablePathRendering),
       mMultiviewBaseViewLayerIndexUniformLocation(-1),
@@ -104,8 +104,8 @@ void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 void ProgramGL::reapplyUBOBindingsIfNeeded(const gl::Context *context)
 {
     // Re-apply UBO bindings to work around driver bugs.
-    const WorkaroundsGL &workaroundsGL = GetImplAs<ContextGL>(context)->getWorkaroundsGL();
-    if (workaroundsGL.reapplyUBOBindingsAfterUsingBinaryProgram.enabled)
+    const angle::FeaturesGL &features = GetImplAs<ContextGL>(context)->getFeaturesGL();
+    if (features.reapplyUBOBindingsAfterUsingBinaryProgram.enabled)
     {
         const auto &blocks = mState.getUniformBlocks();
         for (size_t blockIndex : mState.getActiveUniformBlockBindingsMask())
@@ -453,7 +453,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
             return angle::Result::Incomplete;
         }
 
-        if (mWorkarounds.alwaysCallUseProgramAfterLink.enabled)
+        if (mFeatures.alwaysCallUseProgramAfterLink.enabled)
         {
             mStateManager->forceUseProgram(mProgramID);
         }
@@ -470,7 +470,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         return std::make_unique<LinkEventNativeParallel>(postLinkImplTask, mFunctions, mProgramID);
     }
     else if (workerPool->isAsync() &&
-             (!mWorkarounds.dontRelinkProgramsInParallel.enabled || !mLinkedInParallel))
+             (!mFeatures.dontRelinkProgramsInParallel.enabled || !mLinkedInParallel))
     {
         mLinkedInParallel = true;
         return std::make_unique<LinkEventGL>(workerPool, linkTask, postLinkImplTask);

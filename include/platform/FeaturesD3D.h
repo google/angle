@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// WorkaroundsD3D.h: Workarounds for D3D driver bugs and other issues.
+// FeaturesD3D.h: Features and workarounds for D3D driver bugs and other issues.
 
-#ifndef ANGLE_PLATFORM_WORKAROUNDSD3D_H_
-#define ANGLE_PLATFORM_WORKAROUNDSD3D_H_
+#ifndef ANGLE_PLATFORM_FEATURESD3D_H_
+#define ANGLE_PLATFORM_FEATURESD3D_H_
 
 #include "platform/Feature.h"
 
@@ -26,10 +26,10 @@ struct CompilerWorkaroundsD3D
     bool enableIEEEStrictness = false;
 };
 
-struct WorkaroundsD3D : FeatureSetBase
+struct FeaturesD3D : FeatureSetBase
 {
-    WorkaroundsD3D();
-    ~WorkaroundsD3D();
+    FeaturesD3D();
+    ~FeaturesD3D();
 
     // On some systems, having extra rendertargets than necessary slows down the shader.
     // We can fix this by optimizing those out of the shader. At the same time, we can
@@ -206,9 +206,9 @@ struct WorkaroundsD3D : FeatureSetBase
         &members, "http://anglebug.com/3246"};
 };
 
-inline WorkaroundsD3D::WorkaroundsD3D()                            = default;
-inline WorkaroundsD3D::~WorkaroundsD3D()                           = default;
+inline FeaturesD3D::FeaturesD3D()  = default;
+inline FeaturesD3D::~FeaturesD3D() = default;
 
 }  // namespace angle
 
-#endif  // ANGLE_PLATFORM_WORKAROUNDSD3D_H_
+#endif  // ANGLE_PLATFORM_FEATURESD3D_H_

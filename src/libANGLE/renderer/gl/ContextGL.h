@@ -13,10 +13,15 @@
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 
+namespace angle
+{
+struct FeaturesGL;
+}  // namespace angle
+
 namespace sh
 {
 struct BlockMemberInfo;
-}
+}  // namespace sh
 
 namespace rx
 {
@@ -25,7 +30,6 @@ class ClearMultiviewGL;
 class FunctionsGL;
 class RendererGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 class ContextGL : public ContextImpl
 {
@@ -220,7 +224,7 @@ class ContextGL : public ContextImpl
     ANGLE_INLINE const FunctionsGL *getFunctions() const { return mRenderer->getFunctions(); }
 
     StateManagerGL *getStateManager();
-    const WorkaroundsGL &getWorkaroundsGL() const;
+    const angle::FeaturesGL &getFeaturesGL() const;
     BlitGL *getBlitter() const;
     ClearMultiviewGL *getMultiviewClearer() const;
 

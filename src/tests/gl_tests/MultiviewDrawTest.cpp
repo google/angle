@@ -7,7 +7,7 @@
 // Test issuing multiview Draw* commands.
 //
 
-#include "platform/WorkaroundsD3D.h"
+#include "platform/FeaturesD3D.h"
 #include "test_utils/MultiviewTest.h"
 #include "test_utils/gl_raii.h"
 
@@ -285,10 +285,10 @@ class MultiviewRenderTest : public MultiviewFramebufferTestBase
   protected:
     MultiviewRenderTest() : MultiviewFramebufferTestBase(GetParam(), GetParam().mSamples) {}
 
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
+    void overrideFeaturesD3D(FeaturesD3D *features) override
     {
-        workarounds->overrideFeatures({"select_view_in_geometry_shader"},
-                                      GetParam().mForceUseGeometryShaderOnD3D);
+        features->overrideFeatures({"select_view_in_geometry_shader"},
+                                   GetParam().mForceUseGeometryShaderOnD3D);
     }
 
     virtual void testSetUp() {}
@@ -527,10 +527,10 @@ class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase
     MultiviewLayeredRenderTest() : MultiviewFramebufferTestBase(GetParam(), 0) {}
     void SetUp() final { MultiviewFramebufferTestBase::FramebufferTestSetUp(); }
     void TearDown() final { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) final
+    void overrideFeaturesD3D(FeaturesD3D *features) final
     {
-        workarounds->overrideFeatures({"select_view_in_geometry_shader"},
-                                      GetParam().mForceUseGeometryShaderOnD3D);
+        features->overrideFeatures({"select_view_in_geometry_shader"},
+                                   GetParam().mForceUseGeometryShaderOnD3D);
     }
 };
 

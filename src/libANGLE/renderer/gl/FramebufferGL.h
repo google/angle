@@ -19,7 +19,6 @@ class BlitGL;
 class ClearMultiviewGL;
 class FunctionsGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 class FramebufferGL : public FramebufferImpl
 {

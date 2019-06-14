@@ -21,7 +21,6 @@ class FunctionsGL;
 class FunctionsWGL;
 class DisplayWGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 class DXGISwapChainWindowSurfaceWGL : public SurfaceWGL
 {

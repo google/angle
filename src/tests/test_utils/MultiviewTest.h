@@ -117,7 +117,7 @@ class MultiviewTest : public MultiviewTestBase,
   protected:
     MultiviewTest() : MultiviewTestBase(GetParam()) {}
 
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) final;
+    void overrideFeaturesD3D(FeaturesD3D *features) final;
 
     virtual void testSetUp() {}
     virtual void testTearDown() {}

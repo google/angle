@@ -13,6 +13,7 @@
 
 #include "common/string_utils.h"
 #include "libANGLE/formatutils.h"
+#include "platform/FeaturesGL.h"
 
 namespace rx
 {
@@ -343,7 +344,7 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL st
 }
 
 static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
-                                      const WorkaroundsGL &workarounds,
+                                      const angle::FeaturesGL &features,
                                       const gl::InternalFormat &internalFormat)
 {
     GLenum result = internalFormat.internalFormat;
@@ -355,13 +356,13 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
         // even if the provided type is GL_FLOAT.
         result = internalFormat.sizedInternalFormat;
 
-        if (workarounds.avoid1BitAlphaTextureFormats.enabled && internalFormat.alphaBits == 1)
+        if (features.avoid1BitAlphaTextureFormats.enabled && internalFormat.alphaBits == 1)
         {
             // Use an 8-bit format instead
             result = GL_RGBA8;
         }
 
-        if (workarounds.rgba4IsNotSupportedForColorRendering.enabled &&
+        if (features.rgba4IsNotSupportedForColorRendering.enabled &&
             internalFormat.sizedInternalFormat == GL_RGBA4)
         {
             // Use an 8-bit format instead
@@ -413,7 +414,7 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             // Workaround Adreno driver not supporting unsized EXT_texture_rg formats
             result = internalFormat.sizedInternalFormat;
         }
-        else if (workarounds.unsizedsRGBReadPixelsDoesntTransform.enabled &&
+        else if (features.unsizedsRGBReadPixelsDoesntTransform.enabled &&
                  internalFormat.colorEncoding == GL_SRGB)
         {
             // Work around some Adreno driver bugs that don't read back SRGB data correctly when
@@ -426,7 +427,7 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
 }
 
 static GLenum GetNativeFormat(const FunctionsGL *functions,
-                              const WorkaroundsGL &workarounds,
+                              const angle::FeaturesGL &features,
                               GLenum format)
 {
     GLenum result = format;
@@ -462,7 +463,7 @@ static GLenum GetNativeFormat(const FunctionsGL *functions,
     }
     else if (functions->isAtLeastGLES(gl::Version(3, 0)))
     {
-        if (workarounds.unsizedsRGBReadPixelsDoesntTransform.enabled)
+        if (features.unsizedsRGBReadPixelsDoesntTransform.enabled)
         {
             if (format == GL_SRGB)
             {
@@ -480,7 +481,7 @@ static GLenum GetNativeFormat(const FunctionsGL *functions,
 }
 
 static GLenum GetNativeCompressedFormat(const FunctionsGL *functions,
-                                        const WorkaroundsGL &workarounds,
+                                        const angle::FeaturesGL &features,
                                         GLenum format)
 {
     GLenum result = format;
@@ -509,7 +510,7 @@ static GLenum GetNativeCompressedFormat(const FunctionsGL *functions,
 }
 
 static GLenum GetNativeType(const FunctionsGL *functions,
-                            const WorkaroundsGL &workarounds,
+                            const angle::FeaturesGL &features,
                             GLenum format,
                             GLenum type)
 {
@@ -558,7 +559,7 @@ static GLenum GetNativeType(const FunctionsGL *functions,
 }
 
 static GLenum GetNativeReadType(const FunctionsGL *functions,
-                                const WorkaroundsGL &workarounds,
+                                const angle::FeaturesGL &features,
                                 GLenum type)
 {
     GLenum result = type;
@@ -576,7 +577,7 @@ static GLenum GetNativeReadType(const FunctionsGL *functions,
 }
 
 static GLenum GetNativeReadFormat(const FunctionsGL *functions,
-                                  const WorkaroundsGL &workarounds,
+                                  const angle::FeaturesGL &features,
                                   GLenum format)
 {
     GLenum result = format;
@@ -584,86 +585,86 @@ static GLenum GetNativeReadFormat(const FunctionsGL *functions,
 }
 
 TexImageFormat GetTexImageFormat(const FunctionsGL *functions,
-                                 const WorkaroundsGL &workarounds,
+                                 const angle::FeaturesGL &features,
                                  GLenum internalFormat,
                                  GLenum format,
                                  GLenum type)
 {
     TexImageFormat result;
     result.internalFormat = GetNativeInternalFormat(
-        functions, workarounds, gl::GetInternalFormatInfo(internalFormat, type));
-    result.format = GetNativeFormat(functions, workarounds, format);
-    result.type   = GetNativeType(functions, workarounds, format, type);
+        functions, features, gl::GetInternalFormatInfo(internalFormat, type));
+    result.format = GetNativeFormat(functions, features, format);
+    result.type   = GetNativeType(functions, features, format, type);
     return result;
 }
 
 TexSubImageFormat GetTexSubImageFormat(const FunctionsGL *functions,
-                                       const WorkaroundsGL &workarounds,
+                                       const angle::FeaturesGL &features,
                                        GLenum format,
                                        GLenum type)
 {
     TexSubImageFormat result;
-    result.format = GetNativeFormat(functions, workarounds, format);
-    result.type   = GetNativeType(functions, workarounds, format, type);
+    result.format = GetNativeFormat(functions, features, format);
+    result.type   = GetNativeType(functions, features, format, type);
     return result;
 }
 
 CompressedTexImageFormat GetCompressedTexImageFormat(const FunctionsGL *functions,
-                                                     const WorkaroundsGL &workarounds,
+                                                     const angle::FeaturesGL &features,
                                                      GLenum internalFormat)
 {
     CompressedTexImageFormat result;
-    result.internalFormat = GetNativeCompressedFormat(functions, workarounds, internalFormat);
+    result.internalFormat = GetNativeCompressedFormat(functions, features, internalFormat);
     return result;
 }
 
 CompressedTexSubImageFormat GetCompressedSubTexImageFormat(const FunctionsGL *functions,
-                                                           const WorkaroundsGL &workarounds,
+                                                           const angle::FeaturesGL &features,
                                                            GLenum format)
 {
     CompressedTexSubImageFormat result;
-    result.format = GetNativeCompressedFormat(functions, workarounds, format);
+    result.format = GetNativeCompressedFormat(functions, features, format);
     return result;
 }
 
 CopyTexImageImageFormat GetCopyTexImageImageFormat(const FunctionsGL *functions,
-                                                   const WorkaroundsGL &workarounds,
+                                                   const angle::FeaturesGL &features,
                                                    GLenum internalFormat,
                                                    GLenum framebufferType)
 {
     CopyTexImageImageFormat result;
     result.internalFormat = GetNativeInternalFormat(
-        functions, workarounds, gl::GetInternalFormatInfo(internalFormat, framebufferType));
+        functions, features, gl::GetInternalFormatInfo(internalFormat, framebufferType));
     return result;
 }
 
 TexStorageFormat GetTexStorageFormat(const FunctionsGL *functions,
-                                     const WorkaroundsGL &workarounds,
+                                     const angle::FeaturesGL &features,
                                      GLenum internalFormat)
 {
     TexStorageFormat result;
-    result.internalFormat = GetNativeInternalFormat(functions, workarounds,
+    result.internalFormat = GetNativeInternalFormat(functions, features,
                                                     gl::GetSizedInternalFormatInfo(internalFormat));
     return result;
 }
 
 RenderbufferFormat GetRenderbufferFormat(const FunctionsGL *functions,
-                                         const WorkaroundsGL &workarounds,
+                                         const angle::FeaturesGL &features,
                                          GLenum internalFormat)
 {
     RenderbufferFormat result;
-    result.internalFormat = GetNativeInternalFormat(functions, workarounds,
+    result.internalFormat = GetNativeInternalFormat(functions, features,
                                                     gl::GetSizedInternalFormatInfo(internalFormat));
     return result;
 }
 ReadPixelsFormat GetReadPixelsFormat(const FunctionsGL *functions,
-                                     const WorkaroundsGL &workarounds,
+                                     const angle::FeaturesGL &features,
                                      GLenum format,
                                      GLenum type)
 {
     ReadPixelsFormat result;
-    result.format = GetNativeReadFormat(functions, workarounds, format);
-    result.type   = GetNativeReadType(functions, workarounds, type);
+    result.format = GetNativeReadFormat(functions, features, format);
+    result.type   = GetNativeReadType(functions, features, type);
     return result;
 }
 }  // namespace nativegl

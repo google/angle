@@ -16,6 +16,11 @@
 
 #include <map>
 
+namespace angle
+{
+struct FeaturesGL;
+}  // namespace angle
+
 namespace gl
 {
 class Framebuffer;
@@ -30,13 +35,12 @@ class FunctionsGL;
 class RenderbufferGL;
 class StateManagerGL;
 class TextureGL;
-struct WorkaroundsGL;
 
 class BlitGL : angle::NonCopyable
 {
   public:
     BlitGL(const FunctionsGL *functions,
-           const WorkaroundsGL &workarounds,
+           const angle::FeaturesGL &features,
            StateManagerGL *stateManager);
     ~BlitGL();
 
@@ -126,7 +130,7 @@ class BlitGL : angle::NonCopyable
     void setScratchTextureParameter(GLenum param, GLenum value);
 
     const FunctionsGL *mFunctions;
-    const WorkaroundsGL &mWorkarounds;
+    const angle::FeaturesGL &mFeatures;
     StateManagerGL *mStateManager;
 
     struct BlitProgram

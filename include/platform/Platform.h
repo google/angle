@@ -35,7 +35,7 @@
 
 namespace angle
 {
-struct WorkaroundsD3D;
+struct FeaturesD3D;
 struct FeaturesVk;
 using TraceEventHandle = uint64_t;
 using EGLDisplayType   = void *;
@@ -214,16 +214,14 @@ using HistogramBooleanFunc = void (*)(PlatformMethods *platform, const char *nam
 inline void DefaultHistogramBoolean(PlatformMethods *platform, const char *name, bool sample) {}
 
 // Allows us to programatically override ANGLE's default workarounds for testing purposes.
-using OverrideWorkaroundsD3DFunc = void (*)(PlatformMethods *platform,
-                                            angle::WorkaroundsD3D *workaroundsD3D);
-inline void DefaultOverrideWorkaroundsD3D(PlatformMethods *platform,
-                                          angle::WorkaroundsD3D *workaroundsD3D)
+using OverrideFeaturesD3DFunc = void (*)(PlatformMethods *platform,
+                                         angle::FeaturesD3D *featuresD3D);
+inline void DefaultOverrideFeaturesD3D(PlatformMethods *platform, angle::FeaturesD3D *featuresD3D)
 {}
 
 using OverrideFeaturesVkFunc = void (*)(PlatformMethods *platform,
-                                        angle::FeaturesVk *workaroundsVulkan);
-inline void DefaultOverrideFeaturesVk(PlatformMethods *platform,
-                                      angle::FeaturesVk *workaroundsVulkan)
+                                        angle::FeaturesVk *featuresVulkan);
+inline void DefaultOverrideFeaturesVk(PlatformMethods *platform, angle::FeaturesVk *featuresVulkan)
 {}
 
 // Callback on a successful program link with the program binary. Can be used to store
@@ -253,7 +251,7 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
     OP(histogramEnumeration, HistogramEnumeration)               \
     OP(histogramSparse, HistogramSparse)                         \
     OP(histogramBoolean, HistogramBoolean)                       \
-    OP(overrideWorkaroundsD3D, OverrideWorkaroundsD3D)           \
+    OP(overrideFeaturesD3D, OverrideFeaturesD3D)                 \
     OP(overrideFeaturesVk, OverrideFeaturesVk)                   \
     OP(cacheProgram, CacheProgram)
 

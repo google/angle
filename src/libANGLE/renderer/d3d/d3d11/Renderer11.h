@@ -505,7 +505,7 @@ class Renderer11 : public RendererD3D
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const override;
 
-    void generateWorkarounds(angle::WorkaroundsD3D *workarounds) const override;
+    void initializeFeatures(angle::FeaturesD3D *features) const override;
 
     angle::Result drawLineLoop(const gl::Context *context,
                                GLuint count,

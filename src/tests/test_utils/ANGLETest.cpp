@@ -87,21 +87,21 @@ void TestPlatform_logInfo(PlatformMethods *platform, const char *infoMessage)
     WriteDebugMessage("%s\n", infoMessage);
 }
 
-void TestPlatform_overrideWorkaroundsD3D(PlatformMethods *platform, WorkaroundsD3D *workaroundsD3D)
+void TestPlatform_overrideFeaturesD3D(PlatformMethods *platform, FeaturesD3D *featuresD3D)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->currentTest)
     {
-        testPlatformContext->currentTest->overrideWorkaroundsD3D(workaroundsD3D);
+        testPlatformContext->currentTest->overrideFeaturesD3D(featuresD3D);
     }
 }
 
-void TestPlatform_overrideFeaturesVk(PlatformMethods *platform, FeaturesVk *workaroundsVulkan)
+void TestPlatform_overrideFeaturesVk(PlatformMethods *platform, FeaturesVk *featuresVulkan)
 {
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     if (testPlatformContext->currentTest)
     {
-        testPlatformContext->currentTest->overrideFeaturesVk(workaroundsVulkan);
+        testPlatformContext->currentTest->overrideFeaturesVk(featuresVulkan);
     }
 }
 
@@ -497,7 +497,7 @@ void ANGLETestBase::ANGLETestSetUp()
 
     InitCrashHandler();
 
-    gDefaultPlatformMethods.overrideWorkaroundsD3D = TestPlatform_overrideWorkaroundsD3D;
+    gDefaultPlatformMethods.overrideFeaturesD3D    = TestPlatform_overrideFeaturesD3D;
     gDefaultPlatformMethods.overrideFeaturesVk     = TestPlatform_overrideFeaturesVk;
     gDefaultPlatformMethods.logError               = TestPlatform_logError;
     gDefaultPlatformMethods.logWarning             = TestPlatform_logWarning;

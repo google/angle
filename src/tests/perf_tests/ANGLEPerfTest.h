@@ -136,7 +136,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     std::vector<TraceEvent> &getTraceEventBuffer();
 
-    virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
+    virtual void overrideFeaturesD3D(angle::FeaturesD3D *featuresD3D) {}
 
   protected:
     const RenderTestParams &mTestParams;

@@ -196,10 +196,10 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions,
       mNativeParallelCompileEnabled(false)
 {
     ASSERT(mFunctions);
-    nativegl_gl::GenerateWorkarounds(mFunctions.get(), &mWorkarounds);
-    OverrideFeaturesWithDisplayState(&mWorkarounds, display->getState());
+    nativegl_gl::InitializeFeatures(mFunctions.get(), &mFeatures);
+    OverrideFeaturesWithDisplayState(&mFeatures, display->getState());
     mStateManager = new StateManagerGL(mFunctions.get(), getNativeCaps(), getNativeExtensions());
-    mBlitter          = new BlitGL(mFunctions.get(), mWorkarounds, mStateManager);
+    mBlitter          = new BlitGL(mFunctions.get(), mFeatures, mStateManager);
     mMultiviewClearer = new ClearMultiviewGL(mFunctions.get(), mStateManager);
 
     bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
@@ -224,7 +224,7 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions,
         mFunctions->debugMessageCallback(&LogGLDebugMessage, nullptr);
     }
 
-    if (mWorkarounds.initializeCurrentVertexAttributes.enabled)
+    if (mFeatures.initializeCurrentVertexAttributes.enabled)
     {
         GLint maxVertexAttribs = 0;
         mFunctions->getIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
@@ -262,14 +262,14 @@ angle::Result RendererGL::flush()
 
 angle::Result RendererGL::finish()
 {
-    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable.enabled && mUseDebugOutput)
+    if (mFeatures.finishDoesNotCauseQueriesToBeAvailable.enabled && mUseDebugOutput)
     {
         mFunctions->enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     }
 
     mFunctions->finish();
 
-    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable.enabled && mUseDebugOutput)
+    if (mFeatures.finishDoesNotCauseQueriesToBeAvailable.enabled && mUseDebugOutput)
     {
         mFunctions->disable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     }
@@ -500,9 +500,8 @@ void RendererGL::generateCaps(gl::Caps *outCaps,
                               gl::Extensions *outExtensions,
                               gl::Limitations * /* outLimitations */) const
 {
-    nativegl_gl::GenerateCaps(mFunctions.get(), mWorkarounds, outCaps, outTextureCaps,
-                              outExtensions, &mMaxSupportedESVersion,
-                              &mMultiviewImplementationType);
+    nativegl_gl::GenerateCaps(mFunctions.get(), mFeatures, outCaps, outTextureCaps, outExtensions,
+                              &mMaxSupportedESVersion, &mMultiviewImplementationType);
 }
 
 GLint RendererGL::getGPUDisjoint()
@@ -557,7 +556,7 @@ MultiviewImplementationTypeGL RendererGL::getMultiviewImplementationType() const
     return mMultiviewImplementationType;
 }
 
-void RendererGL::initializeFrontendFeatures(gl::FrontendFeatures *features) const
+void RendererGL::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
     ensureCapsInitialized();
     nativegl_gl::InitializeFrontendFeatures(mFunctions.get(), features);
@@ -591,7 +590,7 @@ angle::Result RendererGL::memoryBarrierByRegion(GLbitfield barriers)
 
 bool RendererGL::bindWorkerContext(std::string *infoLog)
 {
-    if (mWorkarounds.disableWorkerContexts.enabled)
+    if (mFeatures.disableWorkerContexts.enabled)
     {
         return false;
     }

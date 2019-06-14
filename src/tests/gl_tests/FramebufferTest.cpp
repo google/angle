@@ -7,7 +7,7 @@
 //   Various tests related for Frambuffers.
 //
 
-#include "platform/WorkaroundsD3D.h"
+#include "platform/FeaturesD3D.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -924,9 +924,9 @@ class AddDummyTextureNoRenderTargetTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
+    void overrideFeaturesD3D(FeaturesD3D *features) override
     {
-        workarounds->overrideFeatures({"add_dummy_texture_no_render_target"}, true);
+        features->overrideFeatures({"add_dummy_texture_no_render_target"}, true);
     }
 };
 

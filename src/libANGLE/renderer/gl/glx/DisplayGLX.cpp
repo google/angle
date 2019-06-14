@@ -991,14 +991,14 @@ WorkerContext *DisplayGLX::createWorkerContext(std::string *infoLog)
     return new WorkerContextGLX(context, &mGLX, workerPbuffer);
 }
 
-void DisplayGLX::initializeFrontendFeatures(gl::FrontendFeatures *features) const
+void DisplayGLX::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
     mRenderer->initializeFrontendFeatures(features);
 }
 
 void DisplayGLX::populateFeatureList(angle::FeatureList *features)
 {
-    mRenderer->getWorkarounds().populateFeatureList(features);
+    mRenderer->getFeatures().populateFeatureList(features);
 }
 
 }  // namespace rx

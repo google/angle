@@ -34,6 +34,11 @@
 #include "libANGLE/WorkerThread.h"
 #include "libANGLE/angletypes.h"
 
+namespace angle
+{
+struct FrontendFeatures;
+}  // namespace angle
+
 namespace rx
 {
 class ContextImpl;
@@ -54,7 +59,6 @@ class Buffer;
 class Compiler;
 class FenceNV;
 class Framebuffer;
-struct FrontendFeatures;
 class GLES1Renderer;
 class MemoryProgramCache;
 class MemoryObject;
@@ -503,7 +507,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     bool isBufferAccessValidationEnabled() const { return mBufferAccessValidationEnabled; }
 
-    const FrontendFeatures &getFrontendFeatures() const;
+    const angle::FrontendFeatures &getFrontendFeatures() const;
 
   private:
     void initialize();

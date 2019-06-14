@@ -153,9 +153,11 @@ libangle_includes = [
   "include/KHR/khrplatform.h",
   "include/WGL/wgl.h",
   "include/platform/Feature.h",
+  "include/platform/FeaturesD3D.h",
+  "include/platform/FeaturesGL.h",
   "include/platform/FeaturesVk.h",
+  "include/platform/FrontendFeatures.h",
   "include/platform/Platform.h",
-  "include/platform/WorkaroundsD3D.h",
 ]
 
 libangle_sources = [
@@ -202,7 +204,6 @@ libangle_sources = [
   "src/libANGLE/Framebuffer.h",
   "src/libANGLE/FramebufferAttachment.cpp",
   "src/libANGLE/FramebufferAttachment.h",
-  "src/libANGLE/FrontendFeatures.h",
   "src/libANGLE/GLES1Renderer.cpp",
   "src/libANGLE/GLES1Renderer.h",
   "src/libANGLE/GLES1Shaders.inc",
@@ -658,7 +659,6 @@ libangle_gl_sources = [
   "src/libANGLE/renderer/gl/TransformFeedbackGL.h",
   "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
   "src/libANGLE/renderer/gl/VertexArrayGL.h",
-  "src/libANGLE/renderer/gl/WorkaroundsGL.h",
   "src/libANGLE/renderer/gl/formatutilsgl.cpp",
   "src/libANGLE/renderer/gl/formatutilsgl.h",
   "src/libANGLE/renderer/gl/functionsgl_enums.h",

@@ -2974,10 +2974,10 @@ void Renderer9::generateCaps(gl::Caps *outCaps,
                           outExtensions, outLimitations);
 }
 
-void Renderer9::generateWorkarounds(angle::WorkaroundsD3D *workarounds) const
+void Renderer9::initializeFeatures(angle::FeaturesD3D *features) const
 {
-    d3d9::GenerateWorkarounds(workarounds);
-    OverrideFeaturesWithDisplayState(workarounds, mDisplay->getState());
+    d3d9::InitializeFeatures(features);
+    OverrideFeaturesWithDisplayState(features, mDisplay->getState());
 }
 
 DeviceImpl *Renderer9::createEGLDevice()

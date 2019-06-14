@@ -22,7 +22,7 @@
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/renderer_utils.h"
-#include "platform/WorkaroundsD3D.h"
+#include "platform/FeaturesD3D.h"
 
 namespace egl
 {
@@ -189,7 +189,7 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual int getMajorShaderModel() const = 0;
 
-    const angle::WorkaroundsD3D &getWorkarounds() const;
+    const angle::FeaturesD3D &getFeatures() const;
 
     // Pixel operations
     virtual angle::Result copyImage2D(const gl::Context *context,
@@ -408,7 +408,7 @@ class RendererD3D : public BufferFactoryD3D
   private:
     void ensureCapsInitialized() const;
 
-    virtual void generateWorkarounds(angle::WorkaroundsD3D *workarounds) const = 0;
+    virtual void initializeFeatures(angle::FeaturesD3D *features) const = 0;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -416,8 +416,8 @@ class RendererD3D : public BufferFactoryD3D
     mutable gl::Extensions mNativeExtensions;
     mutable gl::Limitations mNativeLimitations;
 
-    mutable bool mWorkaroundsInitialized;
-    mutable angle::WorkaroundsD3D mWorkarounds;
+    mutable bool mFeaturesInitialized;
+    mutable angle::FeaturesD3D mFeatures;
 
     bool mDisjoint;
     bool mDeviceLost;

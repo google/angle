@@ -28,8 +28,8 @@
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "libANGLE/renderer/driver_utils.h"
+#include "platform/FeaturesD3D.h"
 #include "platform/Platform.h"
-#include "platform/WorkaroundsD3D.h"
 
 namespace rx
 {
@@ -1386,7 +1386,7 @@ unsigned int GetMaxSampleMaskWords(D3D_FEATURE_LEVEL featureLevel)
 void GenerateCaps(ID3D11Device *device,
                   ID3D11DeviceContext *deviceContext,
                   const Renderer11DeviceCaps &renderer11DeviceCaps,
-                  const angle::WorkaroundsD3D &workarounds,
+                  const angle::FeaturesD3D &features,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
@@ -1467,7 +1467,7 @@ void GenerateCaps(ID3D11Device *device,
     caps->maxVertexAttributes = static_cast<GLuint>(GetMaximumVertexInputSlots(featureLevel));
     caps->maxVertexUniformVectors =
         static_cast<GLuint>(GetMaximumVertexUniformVectors(featureLevel));
-    if (workarounds.skipVSConstantRegisterZero.enabled)
+    if (features.skipVSConstantRegisterZero.enabled)
     {
         caps->maxVertexUniformVectors -= 1;
     }
@@ -2371,16 +2371,16 @@ angle::Result LazyBlendState::resolve(d3d::Context *context, Renderer11 *rendere
     return resolveImpl(context, renderer, mDesc, nullptr, mDebugName);
 }
 
-void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                         const DXGI_ADAPTER_DESC &adapterDesc,
-                         angle::WorkaroundsD3D *workarounds)
+void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
+                        const DXGI_ADAPTER_DESC &adapterDesc,
+                        angle::FeaturesD3D *features)
 {
     bool is9_3 = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
 
-    workarounds->mrtPerfWorkaround.enabled                = true;
-    workarounds->setDataFasterThanImageUpload.enabled     = true;
-    workarounds->zeroMaxLodWorkaround.enabled             = is9_3;
-    workarounds->useInstancedPointSpriteEmulation.enabled = is9_3;
+    features->mrtPerfWorkaround.enabled                = true;
+    features->setDataFasterThanImageUpload.enabled     = true;
+    features->zeroMaxLodWorkaround.enabled             = is9_3;
+    features->useInstancedPointSpriteEmulation.enabled = is9_3;
 
     // TODO(jmadill): Narrow problematic driver range.
     if (IsNvidia(adapterDesc.VendorId))
@@ -2391,48 +2391,48 @@ void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
             WORD part2 = LOWORD(deviceCaps.driverVersion.value().LowPart);
 
             // Disable the workaround to fix a second driver bug on newer NVIDIA.
-            workarounds->depthStencilBlitExtraCopy.enabled = (part1 <= 13u && part2 < 6881);
+            features->depthStencilBlitExtraCopy.enabled = (part1 <= 13u && part2 < 6881);
         }
         else
         {
-            workarounds->depthStencilBlitExtraCopy.enabled = true;
+            features->depthStencilBlitExtraCopy.enabled = true;
         }
     }
 
     // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
-    workarounds->expandIntegerPowExpressions.enabled = true;
+    features->expandIntegerPowExpressions.enabled = true;
 
-    workarounds->flushAfterEndingTransformFeedback.enabled = IsNvidia(adapterDesc.VendorId);
-    workarounds->getDimensionsIgnoresBaseLevel.enabled     = IsNvidia(adapterDesc.VendorId);
-    workarounds->skipVSConstantRegisterZero.enabled        = IsNvidia(adapterDesc.VendorId);
-    workarounds->forceAtomicValueResolution.enabled        = IsNvidia(adapterDesc.VendorId);
+    features->flushAfterEndingTransformFeedback.enabled = IsNvidia(adapterDesc.VendorId);
+    features->getDimensionsIgnoresBaseLevel.enabled     = IsNvidia(adapterDesc.VendorId);
+    features->skipVSConstantRegisterZero.enabled        = IsNvidia(adapterDesc.VendorId);
+    features->forceAtomicValueResolution.enabled        = IsNvidia(adapterDesc.VendorId);
 
     if (IsIntel(adapterDesc.VendorId))
     {
         IntelDriverVersion capsVersion = d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion);
 
-        workarounds->preAddTexelFetchOffsets.enabled           = true;
-        workarounds->useSystemMemoryForConstantBuffers.enabled = true;
-        workarounds->disableB5G6R5Support.enabled          = capsVersion < IntelDriverVersion(4539);
-        workarounds->addDummyTextureNoRenderTarget.enabled = capsVersion < IntelDriverVersion(4815);
+        features->preAddTexelFetchOffsets.enabled           = true;
+        features->useSystemMemoryForConstantBuffers.enabled = true;
+        features->disableB5G6R5Support.enabled          = capsVersion < IntelDriverVersion(4539);
+        features->addDummyTextureNoRenderTarget.enabled = capsVersion < IntelDriverVersion(4815);
         if (IsSkylake(adapterDesc.DeviceId))
         {
-            workarounds->callClearTwice.enabled    = capsVersion < IntelDriverVersion(4771);
-            workarounds->emulateIsnanFloat.enabled = capsVersion < IntelDriverVersion(4542);
+            features->callClearTwice.enabled    = capsVersion < IntelDriverVersion(4771);
+            features->emulateIsnanFloat.enabled = capsVersion < IntelDriverVersion(4542);
         }
         else if (IsBroadwell(adapterDesc.DeviceId) || IsHaswell(adapterDesc.DeviceId))
         {
-            workarounds->rewriteUnaryMinusOperator.enabled = capsVersion < IntelDriverVersion(4624);
+            features->rewriteUnaryMinusOperator.enabled = capsVersion < IntelDriverVersion(4624);
         }
     }
 
     if (IsAMD(adapterDesc.VendorId))
     {
-        workarounds->disableB5G6R5Support.enabled = true;
+        features->disableB5G6R5Support.enabled = true;
     }
 
     // TODO(jmadill): Disable when we have a fixed driver version.
-    workarounds->emulateTinyStencilTextures.enabled = IsAMD(adapterDesc.VendorId);
+    features->emulateTinyStencilTextures.enabled = IsAMD(adapterDesc.VendorId);
 
     // The tiny stencil texture workaround involves using CopySubresource or UpdateSubresource on a
     // depth stencil texture.  This is not allowed until feature level 10.1 but since it is not
@@ -2440,17 +2440,17 @@ void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     // (anglebug.com/1572).
     if (deviceCaps.featureLevel < D3D_FEATURE_LEVEL_10_1)
     {
-        workarounds->emulateTinyStencilTextures.enabled = false;
+        features->emulateTinyStencilTextures.enabled = false;
     }
 
     // If the VPAndRTArrayIndexFromAnyShaderFeedingRasterizer feature is not available, we have to
     // select the viewport / RT array index in the geometry shader.
-    workarounds->selectViewInGeometryShader.enabled =
+    features->selectViewInGeometryShader.enabled =
         (deviceCaps.supportsVpRtIndexWriteFromVertexShader == false);
 
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
-    platform->overrideWorkaroundsD3D(platform, workarounds);
+    platform->overrideFeaturesD3D(platform, features);
 }
 
 void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth)

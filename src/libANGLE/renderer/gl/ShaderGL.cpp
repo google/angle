@@ -13,7 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
-#include "libANGLE/renderer/gl/WorkaroundsGL.h"
+#include "platform/FeaturesGL.h"
 
 #include <iostream>
 
@@ -250,74 +250,74 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         additionalOptions |= SH_INIT_OUTPUT_VARIABLES;
     }
 
-    const WorkaroundsGL &workarounds = GetWorkaroundsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    if (workarounds.doWhileGLSLCausesGPUHang.enabled)
+    if (features.doWhileGLSLCausesGPUHang.enabled)
     {
         additionalOptions |= SH_REWRITE_DO_WHILE_LOOPS;
     }
 
-    if (workarounds.emulateAbsIntFunction.enabled)
+    if (features.emulateAbsIntFunction.enabled)
     {
         additionalOptions |= SH_EMULATE_ABS_INT_FUNCTION;
     }
 
-    if (workarounds.addAndTrueToLoopCondition.enabled)
+    if (features.addAndTrueToLoopCondition.enabled)
     {
         additionalOptions |= SH_ADD_AND_TRUE_TO_LOOP_CONDITION;
     }
 
-    if (workarounds.emulateIsnanFloat.enabled)
+    if (features.emulateIsnanFloat.enabled)
     {
         additionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
     }
 
-    if (workarounds.emulateAtan2Float.enabled)
+    if (features.emulateAtan2Float.enabled)
     {
         additionalOptions |= SH_EMULATE_ATAN2_FLOAT_FUNCTION;
     }
 
-    if (workarounds.useUnusedBlocksWithStandardOrSharedLayout.enabled)
+    if (features.useUnusedBlocksWithStandardOrSharedLayout.enabled)
     {
         additionalOptions |= SH_USE_UNUSED_STANDARD_SHARED_BLOCKS;
     }
 
-    if (workarounds.removeInvariantAndCentroidForESSL3.enabled)
+    if (features.removeInvariantAndCentroidForESSL3.enabled)
     {
         additionalOptions |= SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3;
     }
 
-    if (workarounds.rewriteFloatUnaryMinusOperator.enabled)
+    if (features.rewriteFloatUnaryMinusOperator.enabled)
     {
         additionalOptions |= SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR;
     }
 
-    if (!workarounds.dontInitializeUninitializedLocals.enabled)
+    if (!features.dontInitializeUninitializedLocals.enabled)
     {
         additionalOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
     }
 
-    if (workarounds.clampPointSize.enabled)
+    if (features.clampPointSize.enabled)
     {
         additionalOptions |= SH_CLAMP_POINT_SIZE;
     }
 
-    if (workarounds.rewriteVectorScalarArithmetic.enabled)
+    if (features.rewriteVectorScalarArithmetic.enabled)
     {
         additionalOptions |= SH_REWRITE_VECTOR_SCALAR_ARITHMETIC;
     }
 
-    if (workarounds.dontUseLoopsToInitializeVariables.enabled)
+    if (features.dontUseLoopsToInitializeVariables.enabled)
     {
         additionalOptions |= SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES;
     }
 
-    if (workarounds.clampFragDepth.enabled)
+    if (features.clampFragDepth.enabled)
     {
         additionalOptions |= SH_CLAMP_FRAG_DEPTH;
     }
 
-    if (workarounds.rewriteRepeatedAssignToSwizzled.enabled)
+    if (features.rewriteRepeatedAssignToSwizzled.enabled)
     {
         additionalOptions |= SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED;
     }

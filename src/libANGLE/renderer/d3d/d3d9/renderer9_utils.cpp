@@ -16,8 +16,8 @@
 #include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/driver_utils.h"
+#include "platform/FeaturesD3D.h"
 #include "platform/Platform.h"
-#include "platform/WorkaroundsD3D.h"
 
 #include "third_party/systeminfo/SystemInfo.h"
 
@@ -803,18 +803,18 @@ void MakeValidSize(bool isImage,
     *levelOffset = upsampleCount;
 }
 
-void GenerateWorkarounds(angle::WorkaroundsD3D *workarounds)
+void InitializeFeatures(angle::FeaturesD3D *features)
 {
-    workarounds->mrtPerfWorkaround.enabled                = true;
-    workarounds->setDataFasterThanImageUpload.enabled     = false;
-    workarounds->useInstancedPointSpriteEmulation.enabled = false;
+    features->mrtPerfWorkaround.enabled                = true;
+    features->setDataFasterThanImageUpload.enabled     = false;
+    features->useInstancedPointSpriteEmulation.enabled = false;
 
     // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
-    workarounds->expandIntegerPowExpressions.enabled = true;
+    features->expandIntegerPowExpressions.enabled = true;
 
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
-    platform->overrideWorkaroundsD3D(platform, workarounds);
+    platform->overrideFeaturesD3D(platform, features);
 }
 
 }  // namespace d3d9

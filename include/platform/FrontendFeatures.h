@@ -4,15 +4,15 @@
 // found in the LICENSE file.
 //
 
-// Workarounds.h: Workarounds for driver bugs and other behaviors seen
+// FrontendFeatures.h: Features/workarounds for driver bugs and other behaviors seen
 // on all platforms.
 
-#ifndef LIBANGLE_WORKAROUNDS_H_
-#define LIBANGLE_WORKAROUNDS_H_
+#ifndef ANGLE_PLATFORM_FRONTENDFEATURES_H_
+#define ANGLE_PLATFORM_FRONTENDFEATURES_H_
 
 #include "platform/Feature.h"
 
-namespace gl
+namespace angle
 {
 
 struct FrontendFeatures : angle::FeatureSetBase
@@ -49,6 +49,6 @@ struct FrontendFeatures : angle::FeatureSetBase
 inline FrontendFeatures::FrontendFeatures()  = default;
 inline FrontendFeatures::~FrontendFeatures() = default;
 
-}  // namespace gl
+}  // namespace angle
 
-#endif  // LIBANGLE_WORKAROUNDS_H_
+#endif  // ANGLE_PLATFORM_FRONTENDFEATURES_H_

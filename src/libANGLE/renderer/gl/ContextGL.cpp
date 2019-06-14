@@ -60,7 +60,7 @@ ShaderImpl *ContextGL::createShader(const gl::ShaderState &data)
 
 ProgramImpl *ContextGL::createProgram(const gl::ProgramState &data)
 {
-    return new ProgramGL(data, getFunctions(), getWorkaroundsGL(), getStateManager(),
+    return new ProgramGL(data, getFunctions(), getFeaturesGL(), getStateManager(),
                          getExtensions().pathRendering, mRenderer);
 }
 
@@ -88,7 +88,7 @@ TextureImpl *ContextGL::createTexture(const gl::TextureState &state)
 
 RenderbufferImpl *ContextGL::createRenderbuffer(const gl::RenderbufferState &state)
 {
-    return new RenderbufferGL(state, getFunctions(), getWorkaroundsGL(), getStateManager(),
+    return new RenderbufferGL(state, getFunctions(), getFeaturesGL(), getStateManager(),
                               mRenderer->getBlitter(), getNativeTextureCaps());
 }
 
@@ -576,9 +576,9 @@ StateManagerGL *ContextGL::getStateManager()
     return mRenderer->getStateManager();
 }
 
-const WorkaroundsGL &ContextGL::getWorkaroundsGL() const
+const angle::FeaturesGL &ContextGL::getFeaturesGL() const
 {
-    return mRenderer->getWorkarounds();
+    return mRenderer->getFeatures();
 }
 
 BlitGL *ContextGL::getBlitter() const

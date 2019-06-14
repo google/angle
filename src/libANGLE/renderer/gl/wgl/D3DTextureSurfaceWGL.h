@@ -20,7 +20,6 @@ class FunctionsGL;
 class FunctionsWGL;
 class DisplayWGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 class D3DTextureSurfaceWGL : public SurfaceWGL
 {

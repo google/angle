@@ -27,7 +27,6 @@ class FramebufferGL;
 class FunctionsGL;
 class RendererGL;
 class StateManagerGL;
-struct WorkaroundsGL;
 
 struct SharedSwapState
 {

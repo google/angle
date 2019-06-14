@@ -8,7 +8,7 @@
 //
 
 #include "test_utils/MultiviewTest.h"
-#include "platform/WorkaroundsD3D.h"
+#include "platform/FeaturesD3D.h"
 #include "test_utils/gl_raii.h"
 
 namespace angle
@@ -263,10 +263,10 @@ MultiviewImplementationParams GeomShaderD3D11(GLint majorVersion,
                                          multiviewExtension);
 }
 
-void MultiviewTest::overrideWorkaroundsD3D(WorkaroundsD3D *workarounds)
+void MultiviewTest::overrideFeaturesD3D(FeaturesD3D *features)
 {
-    workarounds->overrideFeatures({"select_view_in_geometry_shader"},
-                                  GetParam().mForceUseGeometryShaderOnD3D);
+    features->overrideFeatures({"select_view_in_geometry_shader"},
+                               GetParam().mForceUseGeometryShaderOnD3D);
 }
 
 }  // namespace angle
