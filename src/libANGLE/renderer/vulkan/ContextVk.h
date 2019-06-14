@@ -590,6 +590,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     // Generator for texure serials.
     SerialFactory mTextureSerialFactory;
+
+    gl::State::DirtyBits mPipelineDirtyBitsMask;
 };
 }  // namespace rx
 

@@ -222,6 +222,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
 
     mDirtyBits = mNewCommandBufferDirtyBits;
     mActiveTextures.fill(nullptr);
+
+    mPipelineDirtyBitsMask.set();
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
 }
 
 #undef INIT
@@ -1390,7 +1393,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                    const gl::State::DirtyBits &dirtyBits,
                                    const gl::State::DirtyBits &bitMask)
 {
-    if (dirtyBits.any())
+    if ((dirtyBits & mPipelineDirtyBitsMask).any())
     {
         invalidateVertexAndIndexBuffers();
     }
