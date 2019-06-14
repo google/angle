@@ -11,8 +11,9 @@
 
 import sys
 from datetime import date
+sys.path.append('../../scripts')
+import registry_xml
 
-data_source_name = "proc_table_data.json"
 out_file_name = "proc_table_autogen.cpp"
 
 # The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
@@ -61,9 +62,8 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = [data_source_name]
+        inputs = ['../../scripts/' + source for source in registry_xml.xml_inputs]
         outputs = [out_file_name]
-
         if sys.argv[1] == 'inputs':
             print ','.join(inputs)
         elif sys.argv[1] == 'outputs':
@@ -73,22 +73,49 @@ def main():
             return 1
         return 0
 
-    json_data = angle_format.load_json(data_source_name)
+    glxml = registry_xml.RegistryXML('../../scripts/gl.xml', '../../scripts/gl_angle_ext.xml')
+
+    for annotation in ["2_0", "3_0", "3_1", "1_0"]:
+
+        name_prefix = "GL_ES_VERSION_"
+        if annotation[0] == '1':
+            name_prefix = "GL_VERSION_ES_CM_"
+        feature_name = "{}{}".format(name_prefix, annotation)
+
+        glxml.AddCommands(feature_name, annotation)
+
+    glxml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
+
+    data = glxml.all_cmd_names.get_all_commands()
+
+    eglxml = registry_xml.RegistryXML('../../scripts/egl.xml', '../../scripts/egl_angle_ext.xml')
+
+    for annotation in ["1_0", "1_1", "1_2", "1_3", "1_4", "1_5"]:
+
+        name_prefix = "EGL_VERSION_"
+        feature_name = "{}{}".format(name_prefix, annotation)
+
+        eglxml.AddCommands(feature_name, annotation)
+
+    eglxml.AddExtensionCommands(registry_xml.supported_egl_extensions, ['gles2', 'gles1'])
+
+    data.extend(eglxml.all_cmd_names.get_all_commands())
+
+    data.append("ANGLEGetDisplayPlatform")
+    data.append("ANGLEResetDisplayPlatform")
 
     all_functions = {}
 
-    for description, functions in json_data.iteritems():
-        for function in functions:
-            if function.startswith("gl"):
-                all_functions[function] = "gl::" + function[2:]
-                # Special handling for EGL_ANGLE_explicit_context extension
-                if support_egl_ANGLE_explicit_context:
-                    all_functions[function +
-                                  "ContextANGLE"] = "gl::" + function[2:] + "ContextANGLE"
-            elif function.startswith("egl"):
-                all_functions[function] = "EGL_" + function[3:]
-            else:
-                all_functions[function] = function
+    for function in data:
+        if function.startswith("gl"):
+            all_functions[function] = "gl::" + function[2:]
+            # Special handling for EGL_ANGLE_explicit_context extension
+            if support_egl_ANGLE_explicit_context:
+                all_functions[function + "ContextANGLE"] = "gl::" + function[2:] + "ContextANGLE"
+        elif function.startswith("egl"):
+            all_functions[function] = "EGL_" + function[3:]
+        else:
+            all_functions[function] = function
 
     proc_data = [('    {"%s", P(%s)}' % (func, angle_func))
                  for func, angle_func in sorted(all_functions.iteritems())]
@@ -96,7 +123,7 @@ def main():
     with open(out_file_name, 'w') as out_file:
         output_cpp = template_cpp.format(
             script_name=sys.argv[0],
-            data_source_name=data_source_name,
+            data_source_name="gl.xml, gl_angle_ext.xml, egl.xml, egl_angle_ext.xml",
             copyright_year=date.today().year,
             proc_data=",\n".join(proc_data),
             num_procs=len(proc_data))

@@ -94,13 +94,13 @@
   "GL/EGL entry points:scripts/entry_point_packed_gl_enums.json":
     "28238b0f52826c3794eaa1aa940238bf",
   "GL/EGL entry points:scripts/generate_entry_points.py":
-    "1bd848cc592db50a4d3a5cea26a7b077",
+    "df89665814d74ffd16c70f017f0ef4d7",
   "GL/EGL entry points:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "GL/EGL entry points:scripts/gl_angle_ext.xml":
     "11e1eb2cbe51ae6e7b8705d3506846d5",
   "GL/EGL entry points:scripts/registry_xml.py":
-    "be904202ce40755daac33faf4123b9b9",
+    "ea05778a62045f5413031611566a4db2",
   "GL/EGL entry points:src/libANGLE/Context_gles_1_0_autogen.h":
     "f30ed90e4ec23f886bda9344d82dd529",
   "GL/EGL entry points:src/libANGLE/Context_gles_2_0_autogen.h":
@@ -154,7 +154,7 @@
   "GL/EGL/WGL loader:scripts/generate_loader.py":
     "5a7cd014230fe04664d9613e65399d42",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
-    "be904202ce40755daac33faf4123b9b9",
+    "ea05778a62045f5413031611566a4db2",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
@@ -451,12 +451,20 @@
     "5f591d220ee53b6e54a27d1523a3ab79",
   "packed enum:src/common/packed_gl_enums.json":
     "3f730faeebe986cd3017432ad56cf203",
+  "proc table:scripts/egl.xml":
+    "842e24514c4cfe09fba703c17a0fd292",
+  "proc table:scripts/egl_angle_ext.xml":
+    "fc2e249239fb1365f6d145cdf1a3cfcf",
+  "proc table:scripts/gl.xml":
+    "b470cb06b06cbbe7adb2c8129ec85708",
+  "proc table:scripts/gl_angle_ext.xml":
+    "11e1eb2cbe51ae6e7b8705d3506846d5",
+  "proc table:scripts/registry_xml.py":
+    "ea05778a62045f5413031611566a4db2",
   "proc table:src/libGLESv2/gen_proc_table.py":
-    "3be3e8ed7fad58e8cc6fcf348da7b17d",
+    "c3e4abfa19077cea098cb19bbfed4471",
   "proc table:src/libGLESv2/proc_table_autogen.cpp":
-    "7cf8dbd79fddffd89d2348d1210ba4ca",
-  "proc table:src/libGLESv2/proc_table_data.json":
-    "4dfc7f64b7a44b93c83504d1c5332814",
+    "11da3d411200208212c36f1d401beb72",
   "uniform type:src/common/gen_uniform_type_table.py":
     "9dd389f2b5793ba635169d61cef2dde9",
   "uniform type:src/common/uniform_type_info_autogen.cpp":
