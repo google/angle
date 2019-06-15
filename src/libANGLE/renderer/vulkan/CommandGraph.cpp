@@ -112,6 +112,15 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
                     UNREACHABLE();
                     return "DebugMarker";
             }
+        case CommandGraphResourceType::HostAvailabilityOperation:
+            switch (function)
+            {
+                case CommandGraphNodeFunction::HostAvailabilityOperation:
+                    return "HostAvailabilityOperation";
+                default:
+                    UNREACHABLE();
+                    return "HostAvailabilityOperation";
+            }
         default:
             UNREACHABLE();
             return "";
@@ -509,9 +518,9 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
                 memoryBarrier.dstAccessMask   = mGlobalMemoryBarrierDstAccess;
 
                 // Use the all pipe stage to keep the state management simple.
-                primaryCommandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                                      VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 1,
-                                                      &memoryBarrier, 0, nullptr, 0, nullptr);
+                primaryCommandBuffer->memoryBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                                    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                                    &memoryBarrier);
             }
 
             if (mOutsideRenderPassCommands.valid())
@@ -625,6 +634,21 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
             if (vkCmdEndDebugUtilsLabelEXT)
             {
                 vkCmdEndDebugUtilsLabelEXT(primaryCommandBuffer->getHandle());
+            }
+            break;
+
+        case CommandGraphNodeFunction::HostAvailabilityOperation:
+            // Make sure all writes to host-visible buffers are flushed.  We have no way of knowing
+            // whether any buffer will be mapped for readback in the future, and we can't afford to
+            // flush and wait on a one-pipeline-barrier command buffer on every map().
+            {
+                VkMemoryBarrier memoryBarrier = {};
+                memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+                memoryBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
+                memoryBarrier.dstAccessMask   = VK_ACCESS_HOST_READ_BIT;
+
+                primaryCommandBuffer->memoryBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                                    VK_PIPELINE_STAGE_HOST_BIT, &memoryBarrier);
             }
             break;
 
@@ -914,6 +938,12 @@ void CommandGraph::popDebugMarker()
                         CommandGraphResourceType::DebugMarker, 0);
 }
 
+void CommandGraph::makeHostVisibleBufferWriteAvailable()
+{
+    allocateBarrierNode(CommandGraphNodeFunction::HostAvailabilityOperation,
+                        CommandGraphResourceType::HostAvailabilityOperation, 0);
+}
+
 // Dumps the command graph into a dot file that works with graphviz.
 void CommandGraph::dumpGraphDotFile(std::ostream &out) const
 {
@@ -974,6 +1004,11 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
                 queryIDMap[queryID] = id;
                 strstr << id;
             }
+        }
+        else if (node->getResourceTypeForDiagnostics() ==
+                 CommandGraphResourceType::HostAvailabilityOperation)
+        {
+            // Nothing to append for this special node.  The name is sufficient.
         }
         else
         {

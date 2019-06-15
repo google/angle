@@ -173,6 +173,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mCurrentDrawElementsType(gl::DrawElementsType::InvalidEnum),
       mClearColorMask(kAllColorChannelsMask),
       mFlipYForCurrentSurface(false),
+      mIsAnyHostVisibleBufferWritten(false),
       mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16, true),
       mDriverUniformsDescriptorSet(VK_NULL_HANDLE),
       mDriverUniformsDynamicOffset(0),
@@ -755,6 +756,12 @@ void ContextVk::freeAllInFlightResources()
 
 angle::Result ContextVk::flushCommandGraph(vk::PrimaryCommandBuffer *commandBatch)
 {
+    if (mIsAnyHostVisibleBufferWritten)
+    {
+        mCommandGraph.makeHostVisibleBufferWriteAvailable();
+    }
+    mIsAnyHostVisibleBufferWritten = false;
+
     return mCommandGraph.submitCommands(this, mCurrentQueueSerial, &mRenderPassCache, &mCommandPool,
                                         commandBatch);
 }

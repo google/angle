@@ -158,16 +158,7 @@ angle::Result BufferVk::map(const gl::Context *context, GLenum access, void **ma
 {
     ASSERT(mBuffer.valid());
 
-    ContextVk *contextVk = vk::GetImpl(context);
-    return mapImpl(contextVk, mapPtr);
-}
-
-angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
-{
-    ANGLE_VK_TRY(contextVk,
-                 mBuffer.getDeviceMemory().map(contextVk->getDevice(), 0, mState.getSize(), 0,
-                                               reinterpret_cast<uint8_t **>(mapPtr)));
-    return angle::Result::Continue;
+    return mapImpl(vk::GetImpl(context), mapPtr);
 }
 
 angle::Result BufferVk::mapRange(const gl::Context *context,
@@ -176,9 +167,32 @@ angle::Result BufferVk::mapRange(const gl::Context *context,
                                  GLbitfield access,
                                  void **mapPtr)
 {
+    return mapRangeImpl(vk::GetImpl(context), offset, length, access, mapPtr);
+}
+
+angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
+{
+    return mapRangeImpl(contextVk, 0, mState.getSize(), 0, mapPtr);
+}
+
+angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
+                                     VkDeviceSize offset,
+                                     VkDeviceSize length,
+                                     GLbitfield access,
+                                     void **mapPtr)
+{
     ASSERT(mBuffer.valid());
 
-    ContextVk *contextVk = vk::GetImpl(context);
+    if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
+    {
+        // If there are pending commands for the buffer, flush them.
+        if (mBuffer.isResourceInUse(contextVk))
+        {
+            ANGLE_TRY(contextVk->flushImpl(nullptr));
+        }
+        // Make sure the GPU is done with the buffer.
+        ANGLE_TRY(contextVk->finishToSerial(mBuffer.getStoredQueueSerial()));
+    }
 
     ANGLE_VK_TRY(contextVk, mBuffer.getDeviceMemory().map(contextVk->getDevice(), offset, length, 0,
                                                           reinterpret_cast<uint8_t **>(mapPtr)));
@@ -213,7 +227,7 @@ angle::Result BufferVk::onRead(ContextVk *contextVk,
         vk::CommandBuffer *commandBuffer;
         ANGLE_TRY(mBuffer.recordCommands(contextVk, &commandBuffer));
 
-        mBuffer.onWrite(mDataWriteAccessFlags);
+        mBuffer.onWrite(contextVk, mDataWriteAccessFlags);
         mDataWriteAccessFlags = 0;
     }
 
@@ -319,7 +333,7 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
     commandBuffer->copyBuffer(mBuffer.getBuffer(), destBuffer->getBuffer(), copyCount, copies);
 
     mBuffer.onRead(destBuffer, VK_ACCESS_TRANSFER_READ_BIT);
-    destBuffer->onWrite(VK_ACCESS_TRANSFER_WRITE_BIT);
+    destBuffer->onWrite(contextVk, VK_ACCESS_TRANSFER_WRITE_BIT);
 
     return angle::Result::Continue;
 }

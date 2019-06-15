@@ -213,6 +213,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
     void onFramebufferChange(const vk::RenderPassDesc &renderPassDesc);
+    void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
 
     vk::DynamicQueryPool *getQueryPool(gl::QueryType queryType);
 
@@ -449,6 +450,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     bool mFlipYForCurrentSurface;
     bool mFlipViewportForDrawFramebuffer;
     bool mFlipViewportForReadFramebuffer;
+
+    // If any host-visible buffer is written by the GPU since last submission, a barrier is inserted
+    // at the end of the command buffer to make that write available to the host.
+    bool mIsAnyHostVisibleBufferWritten;
 
     // For shader uniforms such as gl_DepthRange and the viewport size.
     struct DriverUniforms

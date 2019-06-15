@@ -92,6 +92,11 @@ class BufferVk : public BufferImpl
     }
 
     angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
+    angle::Result mapRangeImpl(ContextVk *contextVk,
+                               VkDeviceSize offset,
+                               VkDeviceSize length,
+                               GLbitfield access,
+                               void **mapPtr);
     angle::Result unmapImpl(ContextVk *contextVk);
 
     angle::Result onRead(ContextVk *contextVk,

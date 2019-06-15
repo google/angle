@@ -1215,7 +1215,7 @@ void BufferHelper::release(DisplayVk *display, std::vector<GarbageObjectBase> *g
     mDeviceMemory.dumpResources(garbageQueue);
 }
 
-void BufferHelper::onWrite(VkAccessFlags writeAccessType)
+void BufferHelper::onWrite(ContextVk *contextVk, VkAccessFlags writeAccessType)
 {
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
     {
@@ -1224,6 +1224,12 @@ void BufferHelper::onWrite(VkAccessFlags writeAccessType)
 
     mCurrentWriteAccess = writeAccessType;
     mCurrentReadAccess  = 0;
+
+    bool hostVisible = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    if (hostVisible && writeAccessType != VK_ACCESS_HOST_WRITE_BIT)
+    {
+        contextVk->onHostVisibleBufferWrite();
+    }
 }
 
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,

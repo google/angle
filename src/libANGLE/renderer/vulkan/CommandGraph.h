@@ -34,6 +34,7 @@ enum class CommandGraphResourceType
     Query,
     FenceSync,
     DebugMarker,
+    HostAvailabilityOperation,
 };
 
 // Certain functionality cannot be put in secondary command buffers, so they are special-cased in
@@ -49,6 +50,7 @@ enum class CommandGraphNodeFunction
     InsertDebugMarker,
     PushDebugMarker,
     PopDebugMarker,
+    HostAvailabilityOperation,
 };
 
 // Receives notifications when a command buffer is no longer able to record. Can be used with
@@ -451,6 +453,8 @@ class CommandGraph final : angle::NonCopyable
     void insertDebugMarker(GLenum source, std::string &&marker);
     void pushDebugMarker(GLenum source, std::string &&marker);
     void popDebugMarker();
+    // Host-visible buffer write availability operation:
+    void makeHostVisibleBufferWriteAvailable();
 
   private:
     CommandGraphNode *allocateBarrierNode(CommandGraphNodeFunction function,

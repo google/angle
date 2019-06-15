@@ -568,7 +568,7 @@ angle::Result UtilsVk::clearBuffer(ContextVk *contextVk,
     ANGLE_TRY(dest->recordCommands(contextVk, &commandBuffer));
 
     // Tell dest it's being written to.
-    dest->onWrite(VK_ACCESS_SHADER_WRITE_BIT);
+    dest->onWrite(contextVk, VK_ACCESS_SHADER_WRITE_BIT);
 
     const vk::Format &destFormat = dest->getViewFormat();
 
@@ -622,7 +622,7 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
     // Tell src we are going to read from it.
     src->onRead(dest, VK_ACCESS_SHADER_READ_BIT);
     // Tell dest it's being written to.
-    dest->onWrite(VK_ACCESS_SHADER_WRITE_BIT);
+    dest->onWrite(contextVk, VK_ACCESS_SHADER_WRITE_BIT);
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
@@ -685,7 +685,7 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     // Tell src we are going to read from it.
     src->onRead(dest, VK_ACCESS_SHADER_READ_BIT);
     // Tell dest it's being written to.
-    dest->onWrite(VK_ACCESS_SHADER_WRITE_BIT);
+    dest->onWrite(contextVk, VK_ACCESS_SHADER_WRITE_BIT);
 
     ConvertVertexShaderParams shaderParams;
     shaderParams.Ns = params.srcFormat->channelCount();
