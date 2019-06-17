@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "d660728c_efacfdf5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-17T19:06:01Z",
+      "side": 1,
+      "message": "(That\u0027s my feeling anyway - definitely feel free to disagree :)",
+      "parentUuid": "65f1c04a_3f8b5f57",
+      "range": {
+        "startLine": 833,
+        "startChar": 8,
+        "endLine": 833,
+        "endChar": 38
+      },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c391122_808df634",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 2
