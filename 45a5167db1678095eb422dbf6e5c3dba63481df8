@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "176649e3_2c2801af",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2788,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-17T18:34:58Z",
+      "side": 1,
+      "message": "I think we should be calling setShaderResourceInternal with a null SRV (same for UAV case below/setUnorderedAccessViewInternal).\n\nWhen we do bind them directly here, our tracking of what is bound becomes broken.",
+      "range": {
+        "startLine": 2788,
+        "startChar": 12,
+        "endLine": 2788,
+        "endChar": 100
+      },
+      "revId": "45a5167db1678095eb422dbf6e5c3dba63481df8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
