@@ -1240,6 +1240,12 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         mFeatures.forceNonZeroScissor.enabled = true;
     }
 
+    if (IsIntel(mPhysicalDeviceProperties.vendorID) ||
+        (IsWindows() && IsAMD(mPhysicalDeviceProperties.vendorID)))
+    {
+        mFeatures.perFrameWindowSizeQuery.enabled = true;
+    }
+
     if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))
     {
         mFeatures.forceD16TexFilter.enabled = true;

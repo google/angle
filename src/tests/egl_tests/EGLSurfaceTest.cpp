@@ -302,6 +302,9 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
     // TODO(syoussefi): http://anglebug.com/3123
     ANGLE_SKIP_TEST_IF(IsAndroid());
 
+    // Necessary for a window resizing test
+    mOSWindow->setVisible(true);
+
     GLenum platform               = GetParam().getRenderer();
     bool platformSupportsZeroSize = platform == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
                                     platform == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;

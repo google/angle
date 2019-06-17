@@ -171,7 +171,7 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result present(ContextVk *contextVk,
                           EGLint *rects,
                           EGLint n_rects,
-                          bool &swapchainOutOfDate);
+                          bool *presentOutOfDate);
 
     angle::Result swapImpl(const gl::Context *context, EGLint *rects, EGLint n_rects);
 
