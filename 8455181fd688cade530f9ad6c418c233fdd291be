@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "224677ba_2a0b9f79",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-17T18:48:19Z",
+      "side": 1,
+      "message": "I thought so too at first, but we have a user outside this class (VertexArrayVk IIRC)",
+      "parentUuid": "4c543f4c_fff9e7d9",
+      "range": {
+        "startLine": 161,
+        "startChar": 11,
+        "endLine": 161,
+        "endChar": 18
+      },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "77558223_531e6700",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 2
@@ -130,6 +154,24 @@
       "writtenOn": "2019-06-17T18:12:00Z",
       "side": 1,
       "message": "Maybe this is just reiterating Jamie\u0027s comment, but looking at the various bits and their meanings:\n\n\u003e VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT bit specifies that memory allocated with this type can be mapped for host access using vkMapMemory.\n\n- The memory can be mapped, but this doesn\u0027t necessarily mean that it is mapped so we may be adding unnecessary barriers to keep memory coherent that no one is looking at.   Are we doing too many barriers by only looking at VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT and not whether the memory is actually mapped also (assumign we know that)?\n\n\u003e VK_MEMORY_PROPERTY_HOST_COHERENT_BIT bit specifies that the host cache management commands vkFlushMappedMemoryRanges and vkInvalidateMappedMemoryRanges are not needed to flush host writes to the device or make device writes visible to the host, respectively.\n\n- Based on this code, this is how OpenGL expects to behave by default and the caller should use additional flags to override that behavior.   Should we set this flag by default or would that kill performance too much and the extra work to do it only when necessary is worth the effort?\n\n\u003e VK_MEMORY_PROPERTY_HOST_CACHED_BIT bit specifies that memory allocated with this type is cached on the host. Host memory accesses to uncached memory are slower than to cached memory, however uncached memory is always host coherent.\n\n- Presumably the Vulkan driver is doing the work to keep the uncached memory coherent, so there\u0027s no work needed for us.",
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a73a0fc_e2b8f670",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1189,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-17T18:48:19Z",
+      "side": 1,
+      "message": "\u003e Are we doing too many barriers by only looking at VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT and not whether the memory is actually mapped also (assumign we know that)?\n\nThe problem is exactly that we _don\u0027t_ know that. The memory map is most definitely not done in the same frame the buffer is written to in any real application. So for example, we have something like this:\n\n- Frame 1, write to buffer 1\n- Frame 2, write to buffer 2\n- Frame 3, Map buffer 1, write to buffer 3\n- Frame 4, Map buffer 2, write to buffer 1\n- Frame 5, Map buffer 3, write to buffer 2\n- ...\n\nIf we don\u0027t put the barrier for buffer 1 right at the end of frame 1, we would need to make a submit/finish in frame 3 to read it back, which is unacceptable.\n\n---\n\nRegarding coherent, it\u0027s very subtle, and I might be incorrect, but there are two operations to make device writes visible to host:\n\n- An availability operation is required to make device writes even accessible by the host (effectively, this means GPU cache flush to host-visible memory)\n- A visibility operation is required to make *available* memory visible to host (effectively, this means CPU cache invalidation so the most up-to-date data can be read).\n\n`VK_MEMORY_PROPERTY_HOST_COHERENT_BIT` ensures the second part is done automatically. Your quote says:\n\n\u003e not needed to ... make device writes **visible** to the host\n\nIt doesn\u0027t include availability. The spec has another part that\u0027s even clearer:\n\n\u003e vkInvalidateMappedMemoryRanges guarantees that device writes to the memory ranges described by pMemoryRanges, which have been made available to the host memory domain using the VK_ACCESS_HOST_WRITE_BIT and VK_ACCESS_HOST_READ_BIT access types, are made visible to the host.\n\nIt says vkInvalidate* makes writes that are already available visible. It also says that VK_ACCESS_HOST_* must be used (by a pipeline barrier) to make them available. `VK_MEMORY_PROPERTY_HOST_COHERENT_BIT` makes this function unnecessary (visibility operation) and says nothing about availability. The spec says:\n\n\u003e If the memory object does have the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT property flag ...  writes made available to the host domain are automatically made visible to the host.\n\nSo writes that are made available are automatically visible. How are they made available? A pipeline barrier.\n\n---\n\nWe don\u0027t use `VK_MEMORY_PROPERTY_HOST_CACHED_BIT`, and I haven\u0027t looked into it much. I\u0027m sure it\u0027s related to CPU caching though, which shouldn\u0027t affect GPU caches.",
+      "parentUuid": "8c391122_808df634",
       "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
