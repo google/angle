@@ -371,13 +371,191 @@ layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
 void main()
 {
     uvec3 temp = gl_NumWorkGroups;
-    imageStore(imageOut, ivec2(0), uvec4(temp, 0u));
+    imageStore(imageOut, ivec2(gl_GlobalInvocationID.xy), uvec4(temp, 0u));
 })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
 
     glUseProgram(program.get());
     glDispatchCompute(8, 4, 2);
+    EXPECT_GL_NO_ERROR();
+}
+
+// That that bind UAV with type buffer to slot 0, then bind UAV with type image to slot 0, then
+// buffer again. The test runs well.
+TEST_P(ComputeShaderTest, BufferImageBuffer)
+{
+    // See http://anglebug.com/3536
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    constexpr char kCS0[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
+void main()
+{
+    atomicCounterIncrement(ac[0]);
+    atomicCounterDecrement(ac[1]);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program0, kCS0);
+    glUseProgram(program0);
+
+    unsigned int bufferData[3] = {11u, 4u, 4u};
+    GLBuffer atomicCounterBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
+    void *mappedBuffer =
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+    memcpy(bufferData, mappedBuffer, sizeof(bufferData));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    EXPECT_EQ(11u, bufferData[0]);
+    EXPECT_EQ(5u, bufferData[1]);
+    EXPECT_EQ(3u, bufferData[2]);
+
+    constexpr char kCS1[] = R"(#version 310 es
+layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
+layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+void main()
+{
+    uvec3 temp = gl_NumWorkGroups;
+    imageStore(imageOut, ivec2(gl_GlobalInvocationID.xy), uvec4(temp, 0u));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program1, kCS1);
+
+    glUseProgram(program1);
+    glDispatchCompute(8, 4, 2);
+
+    glUseProgram(program0);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
+    mappedBuffer =
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+    memcpy(bufferData, mappedBuffer, sizeof(bufferData));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    EXPECT_EQ(11u, bufferData[0]);
+    EXPECT_EQ(6u, bufferData[1]);
+    EXPECT_EQ(2u, bufferData[2]);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// That that bind UAV with type image to slot 0, then bind UAV with type buffer to slot 0. The test
+// runs well.
+TEST_P(ComputeShaderTest, ImageAtomicCounterBuffer)
+{
+    constexpr char kCS0[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) writeonly uniform highp uimage2D uImage[2];
+void main()
+{
+    imageStore(uImage[0], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0,
+0, 0));
+    imageStore(uImage[1], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0,
+0, 0));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program0, kCS0);
+    glUseProgram(program0);
+    int width = 1, height = 1;
+    GLuint inputValues[] = {200};
+    GLTexture mTexture[2];
+    glBindTexture(GL_TEXTURE_2D, mTexture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, width, height);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+
+    glBindTexture(GL_TEXTURE_2D, mTexture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, width, height);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+
+    glBindImageTexture(0, mTexture[0], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    glBindImageTexture(1, mTexture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kCS1[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
+void main()
+{
+    atomicCounterIncrement(ac[0]);
+    atomicCounterDecrement(ac[1]);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program1, kCS1);
+
+    glUseProgram(program1);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+}
+
+// That that bind UAV with type image to slot 0, then bind UAV with type buffer to slot 0. The test
+// runs well.
+TEST_P(ComputeShaderTest, ImageShaderStorageBuffer)
+{
+    constexpr char kCS0[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) writeonly uniform highp uimage2D uImage[2];
+void main()
+{
+    imageStore(uImage[0], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0,
+0, 0));
+    imageStore(uImage[1], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0,
+0, 0));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program0, kCS0);
+    glUseProgram(program0);
+    int width = 1, height = 1;
+    GLuint inputValues[] = {200};
+    GLTexture mTexture[2];
+    glBindTexture(GL_TEXTURE_2D, mTexture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, width, height);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+
+    glBindTexture(GL_TEXTURE_2D, mTexture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, width, height);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+
+    glBindImageTexture(0, mTexture[0], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    glBindImageTexture(1, mTexture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kCS1[] =
+        R"(#version 310 es
+ layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+ layout(std140, binding = 0) buffer blockOut {
+     uvec2 data;
+ } instanceOut;
+ layout(std140, binding = 1) buffer blockIn {
+     uvec2 data;
+ } instanceIn;
+ void main()
+ {
+     instanceOut.data = instanceIn.data;
+ }
+ )";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program1, kCS1);
+
+    glUseProgram(program1);
+    glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
 }
 

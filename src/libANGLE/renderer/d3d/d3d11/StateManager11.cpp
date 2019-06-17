@@ -771,24 +771,19 @@ void StateManager11::setShaderResourceInternal(gl::ShaderType shaderType,
     {
         ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
         ID3D11ShaderResourceView *srvPtr   = srv ? srv->get() : nullptr;
+        if (srvPtr)
+        {
+            uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(srvPtr));
+            unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline, gl::ShaderType::Compute,
+                                 resource, nullptr);
+        }
+
         switch (shaderType)
         {
             case gl::ShaderType::Vertex:
-                if (srvPtr)
-                {
-                    uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(srvPtr));
-                    unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline,
-                                         gl::ShaderType::Compute, resource, nullptr);
-                }
                 deviceContext->VSSetShaderResources(resourceSlot, 1, &srvPtr);
                 break;
             case gl::ShaderType::Fragment:
-                if (srvPtr)
-                {
-                    uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(srvPtr));
-                    unsetConflictingUAVs(gl::PipelineType::GraphicsPipeline,
-                                         gl::ShaderType::Compute, resource, nullptr);
-                }
                 deviceContext->PSSetShaderResources(resourceSlot, 1, &srvPtr);
                 break;
             case gl::ShaderType::Compute:
@@ -823,6 +818,8 @@ void StateManager11::setUnorderedAccessViewInternal(gl::ShaderType shaderType,
             unsetConflictingSRVs(gl::PipelineType::ComputePipeline, gl::ShaderType::Vertex,
                                  resource, nullptr, false);
             unsetConflictingSRVs(gl::PipelineType::ComputePipeline, gl::ShaderType::Fragment,
+                                 resource, nullptr, false);
+            unsetConflictingSRVs(gl::PipelineType::ComputePipeline, gl::ShaderType::Compute,
                                  resource, nullptr, false);
         }
         deviceContext->CSSetUnorderedAccessViews(resourceSlot, 1, &uavPtr, nullptr);
@@ -1778,82 +1775,6 @@ angle::Result StateManager11::onMakeCurrent(const gl::Context *context)
     mProgramD3D    = nullptr;
     mVertexArray11 = nullptr;
     mFramebuffer11 = nullptr;
-
-    return angle::Result::Continue;
-}
-
-angle::Result StateManager11::clearSRVs(gl::ShaderType shaderType,
-                                        size_t rangeStart,
-                                        size_t rangeEnd)
-{
-    if (rangeStart == rangeEnd)
-    {
-        return angle::Result::Continue;
-    }
-
-    auto *currentSRVs = getSRVCache(shaderType);
-    gl::Range<size_t> clearRange(rangeStart, std::min(rangeEnd, currentSRVs->highestUsed()));
-    if (clearRange.empty())
-    {
-        return angle::Result::Continue;
-    }
-
-    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-    switch (shaderType)
-    {
-        case gl::ShaderType::Vertex:
-            deviceContext->VSSetShaderResources(static_cast<unsigned int>(clearRange.low()),
-                                                static_cast<unsigned int>(clearRange.length()),
-                                                &mNullSRVs[0]);
-            break;
-        case gl::ShaderType::Fragment:
-            deviceContext->PSSetShaderResources(static_cast<unsigned int>(clearRange.low()),
-                                                static_cast<unsigned int>(clearRange.length()),
-                                                &mNullSRVs[0]);
-            break;
-        case gl::ShaderType::Compute:
-            deviceContext->CSSetShaderResources(static_cast<unsigned int>(clearRange.low()),
-                                                static_cast<unsigned int>(clearRange.length()),
-                                                &mNullSRVs[0]);
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
-
-    for (size_t samplerIndex : clearRange)
-    {
-        currentSRVs->update(samplerIndex, nullptr);
-    }
-
-    return angle::Result::Continue;
-}
-
-angle::Result StateManager11::clearUAVs(gl::ShaderType shaderType,
-                                        size_t rangeStart,
-                                        size_t rangeEnd)
-{
-    ASSERT(shaderType == gl::ShaderType::Compute);
-    if (rangeStart == rangeEnd)
-    {
-        return angle::Result::Continue;
-    }
-
-    gl::Range<size_t> clearRange(rangeStart, std::min(rangeEnd, mCurComputeUAVs.highestUsed()));
-    if (clearRange.empty())
-    {
-        return angle::Result::Continue;
-    }
-
-    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-    deviceContext->CSSetUnorderedAccessViews(static_cast<unsigned int>(clearRange.low()),
-                                             static_cast<unsigned int>(clearRange.length()),
-                                             &mNullUAVs[0], nullptr);
-
-    for (size_t index : clearRange)
-    {
-        mCurComputeUAVs.update(index, nullptr);
-    }
 
     return angle::Result::Continue;
 }
@@ -2848,15 +2769,6 @@ angle::Result StateManager11::applyTexturesForSRVs(const gl::Context *context,
         ANGLE_TRY(setTextureForImage(context, shaderType, readonlyImageIndex, true, imageUnit));
     }
 
-    size_t samplerCount = caps.maxShaderTextureImageUnits[shaderType];
-    size_t readonlyImageCount =
-        context->getClientVersion() >= gl::Version(3, 1) ? caps.maxImageUnits : 0;
-
-    // Samplers and readonly images share the SRVs here, their range is
-    // [0, max(samplerRange.high(), readonlyImageRange.high()).
-    ANGLE_TRY(clearSRVs(shaderType, std::max(samplerRange.high(), readonlyImageRange.high()),
-                        samplerCount + readonlyImageCount));
-
     return angle::Result::Continue;
 }
 
@@ -2882,18 +2794,11 @@ angle::Result StateManager11::applyTexturesForUAVs(const gl::Context *context,
         ANGLE_TRY(setTextureForImage(context, shaderType, imageIndex, false, imageUnit));
     }
 
-    size_t imageCount = caps.maxImageUnits;
-    ANGLE_TRY(clearUAVs(shaderType, imageRange.high(), imageCount));
-
     return angle::Result::Continue;
 }
 
 angle::Result StateManager11::syncTexturesForCompute(const gl::Context *context)
 {
-    // applyTexturesForUAVs must be earlier than applyTexturesForSRVs since we need to do clearUVAs
-    // before set resources to SRVs. Otherwise, it will report the following error:
-    // ID3D11DeviceContext::CSSetShaderResources: Resource being set to CS shader resource slot 0 is
-    // still bound on output! Forcing to NULL.
     ANGLE_TRY(applyTexturesForUAVs(context, gl::ShaderType::Compute));
     ANGLE_TRY(applyTexturesForSRVs(context, gl::ShaderType::Compute));
     return angle::Result::Continue;
@@ -2908,6 +2813,21 @@ angle::Result StateManager11::setTextureForImage(const gl::Context *context,
     TextureD3D *textureImpl = nullptr;
     if (!imageUnit.texture.get())
     {
+        // The texture is used in shader. However, there is no resource binding to it. We
+        // should clear the corresponding UAV/SRV in case the previous view type is a buffer not a
+        // texture. Otherwise, below error will be reported. The Unordered Access View dimension
+        // declared in the shader code (TEXTURE2D) does not match the view type bound to slot 0
+        // of the Compute Shader unit (BUFFER).
+        if (readonly)
+        {
+            setShaderResourceInternal<d3d11::ShaderResourceView>(type, static_cast<UINT>(index),
+                                                                 nullptr);
+        }
+        else
+        {
+            setUnorderedAccessViewInternal<d3d11::UnorderedAccessView>(
+                type, static_cast<UINT>(index), nullptr);
+        }
         return angle::Result::Continue;
     }
 
@@ -3718,9 +3638,20 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
          blockIndex++)
     {
         GLuint binding = program->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
+        const unsigned int registerIndex = mProgramD3D->getShaderStorageBufferRegisterIndex(
+            static_cast<GLuint>(blockIndex), shaderType);
+        // It means this block is active but not statically used.
+        if (registerIndex == GL_INVALID_INDEX)
+        {
+            continue;
+        }
         const auto &shaderStorageBuffer = glState.getIndexedShaderStorageBuffer(binding);
         if (shaderStorageBuffer.get() == nullptr)
         {
+            // We didn't see a driver error like atomic buffer did. But theoretically, the same
+            // thing should be done.
+            setUnorderedAccessViewInternal<d3d11::UnorderedAccessView>(shaderType, registerIndex,
+                                                                       nullptr);
             continue;
         }
 
@@ -3750,29 +3681,11 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
         ANGLE_TRY(bufferStorage->getRawUAVRange(context, shaderStorageBuffer.getOffset(), viewSize,
                                                 &uavPtr));
 
-        // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
-        // is not bound on SRV.
-        if (uavPtr)
-        {
-            unsetConflictingView(gl::GetPipelineType(shaderType), uavPtr->get(), false);
-        }
-
-        const unsigned int registerIndex = mProgramD3D->getShaderStorageBufferRegisterIndex(
-            static_cast<GLuint>(blockIndex), shaderType);
-
-        // It means this block is active but not statically used.
-        if (registerIndex == GL_INVALID_INDEX)
-        {
-            continue;
-        }
-
         switch (shaderType)
         {
             case gl::ShaderType::Compute:
             {
-                ID3D11UnorderedAccessView *uav     = uavPtr->get();
-                ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-                deviceContext->CSSetUnorderedAccessViews(registerIndex, 1, &uav, nullptr);
+                setUnorderedAccessViewInternal(shaderType, registerIndex, uavPtr);
                 break;
             }
 
@@ -3831,9 +3744,18 @@ angle::Result StateManager11::syncAtomicCounterBuffersForShader(const gl::Contex
     {
         GLuint binding     = atomicCounterBuffer.binding;
         const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
-
+        const unsigned int registerIndex =
+            mProgramD3D->getAtomicCounterBufferRegisterIndex(binding, shaderType);
+        ASSERT(registerIndex != GL_INVALID_INDEX);
         if (buffer.get() == nullptr)
         {
+            // The atomic counter is used in shader. However, there is no buffer binding to it. We
+            // should clear the corresponding UAV in case the previous view type is a texture not a
+            // buffer. Otherwise, below error will be reported. The Unordered Access View dimension
+            // declared in the shader code (BUFFER) does not match the view type bound to slot 0
+            // of the Compute Shader unit (TEXTURE2D).
+            setUnorderedAccessViewInternal<d3d11::UnorderedAccessView>(shaderType, registerIndex,
+                                                                       nullptr);
             continue;
         }
 
@@ -3847,21 +3769,9 @@ angle::Result StateManager11::syncAtomicCounterBuffersForShader(const gl::Contex
         d3d11::UnorderedAccessView *uavPtr = nullptr;
         ANGLE_TRY(bufferStorage->getRawUAVRange(context, buffer.getOffset(), viewSize, &uavPtr));
 
-        // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
-        // is not bound on SRV.
-        if (uavPtr)
-        {
-            unsetConflictingView(gl::GetPipelineType(shaderType), uavPtr->get(), false);
-        }
-
-        const unsigned int registerIndex =
-            mProgramD3D->getAtomicCounterBufferRegisterIndex(binding, shaderType);
-
         if (shaderType == gl::ShaderType::Compute)
         {
-            ID3D11UnorderedAccessView *uav     = uavPtr->get();
-            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-            deviceContext->CSSetUnorderedAccessViews(registerIndex, 1, &uav, nullptr);
+            setUnorderedAccessViewInternal(shaderType, registerIndex, uavPtr);
         }
         else
         {

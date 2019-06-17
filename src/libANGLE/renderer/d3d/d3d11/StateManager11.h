@@ -354,9 +354,6 @@ class StateManager11 final : angle::NonCopyable
                                      bool readonly,
                                      const gl::ImageUnit &imageUnit);
 
-    // Faster than calling setTexture a jillion times
-    angle::Result clearSRVs(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
-    angle::Result clearUAVs(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
     angle::Result syncCurrentValueAttribs(
