@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b2ecdc70_c2a5227e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-17T14:59:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "77698514_6dcdb307",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 34
+      },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77558223_531e6700",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-17T14:47:52Z",
       "side": 1,
       "message": "this looks like it doesn\u0027t belong in submitcommands. I would rather see this inserted in the locations where buffers are adding barriers. How feasible is it to do that?",
+      "range": {
+        "startLine": 833,
+        "startChar": 8,
+        "endLine": 833,
+        "endChar": 38
+      },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9365b509_f6421ee4",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-17T14:59:58Z",
+      "side": 1,
+      "message": "It would be inefficient to do so. You wouldn\u0027t want to add such a barrier after every buffer write (which would effectively flush it from the GPU caches) because you may write to it later or need to read from it.\n\nThis makes sure there is only a single flush for all writes to host-visible-buffers. It\u0027s analogous to the memory barriers inserted in `visitAndExecute()`, which is also called from `submitCommands`.\n\nAn alternative could be to add a special node to execute this and insert it before calling `submitCommands`, though that would be the same thing with extra overhead.",
+      "parentUuid": "77558223_531e6700",
       "range": {
         "startLine": 833,
         "startChar": 8,
