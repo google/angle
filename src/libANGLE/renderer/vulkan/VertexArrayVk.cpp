@@ -162,12 +162,11 @@ angle::Result VertexArrayVk::convertIndexBufferGPU(ContextVk *contextVk,
 angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
                                                    gl::DrawElementsType indexType,
                                                    size_t indexCount,
-                                                   const void *sourcePointer,
-                                                   vk::DynamicBuffer *dynamicBuffer)
+                                                   const void *sourcePointer)
 {
     ASSERT(!mState.getElementArrayBuffer() || indexType == gl::DrawElementsType::UnsignedByte);
 
-    dynamicBuffer->releaseRetainedBuffers(contextVk);
+    mDynamicIndexData.releaseRetainedBuffers(contextVk);
 
     size_t elementSize = gl::GetDrawElementsTypeSize(indexType);
     if (indexType == gl::DrawElementsType::UnsignedByte)
@@ -180,9 +179,9 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
     const size_t amount = elementSize * indexCount;
     GLubyte *dst        = nullptr;
 
-    ANGLE_TRY(dynamicBuffer->allocate(contextVk, amount, &dst, nullptr,
-                                      &mCurrentElementArrayBufferOffset, nullptr));
-    mCurrentElementArrayBuffer = dynamicBuffer->getCurrentBuffer();
+    ANGLE_TRY(mDynamicIndexData.allocate(contextVk, amount, &dst, nullptr,
+                                         &mCurrentElementArrayBufferOffset, nullptr));
+    mCurrentElementArrayBuffer = mDynamicIndexData.getCurrentBuffer();
     if (indexType == gl::DrawElementsType::UnsignedByte)
     {
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
@@ -222,8 +221,7 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
         // so there's no need to perform any conversion.
         memcpy(dst, sourcePointer, amount);
     }
-    ANGLE_TRY(dynamicBuffer->flush(contextVk));
-    return angle::Result::Continue;
+    return mDynamicIndexData.flush(contextVk);
 }
 
 // We assume the buffer is completely full of the same kind of data and convert
@@ -655,26 +653,6 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
     *indexCountOut = vertexOrIndexCount + 1;
 
     return angle::Result::Continue;
-}
-
-angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
-                                                    GLsizei indexCount,
-                                                    gl::DrawElementsType type,
-                                                    const void *indices)
-{
-    ASSERT(type != gl::DrawElementsType::InvalidEnum);
-
-    gl::Buffer *glBuffer = mState.getElementArrayBuffer();
-
-    if (!glBuffer)
-    {
-        return convertIndexBufferCPU(contextVk, type, indexCount, indices, &mDynamicIndexData);
-    }
-
-    ASSERT(type == gl::DrawElementsType::UnsignedByte);
-
-    BufferVk *bufferVk = vk::GetImpl(glBuffer);
-    return convertIndexBufferGPU(contextVk, bufferVk, indices);
 }
 
 void VertexArrayVk::updateDefaultAttrib(ContextVk *contextVk,

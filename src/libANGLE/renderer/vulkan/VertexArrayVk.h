@@ -78,14 +78,6 @@ class VertexArrayVk : public VertexArrayImpl
 
     vk::BufferHelper *getCurrentElementArrayBuffer() const { return mCurrentElementArrayBuffer; }
 
-    angle::Result updateIndexTranslation(ContextVk *contextVk,
-                                         GLsizei indexCount,
-                                         gl::DrawElementsType type,
-                                         const void *indices);
-
-  private:
-    void setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex);
-
     angle::Result convertIndexBufferGPU(ContextVk *contextVk,
                                         BufferVk *bufferVk,
                                         const void *indices);
@@ -93,8 +85,11 @@ class VertexArrayVk : public VertexArrayImpl
     angle::Result convertIndexBufferCPU(ContextVk *contextVk,
                                         gl::DrawElementsType indexType,
                                         size_t indexCount,
-                                        const void *sourcePointer,
-                                        vk::DynamicBuffer *dynamicBuffer);
+                                        const void *sourcePointer);
+
+  private:
+    void setDefaultPackedInput(ContextVk *contextVk, size_t attribIndex);
+
     angle::Result convertVertexBufferGPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,
                                          const gl::VertexBinding &binding,
