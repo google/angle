@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "de2ee3a6_b0fc94f0",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-06-17T19:31:14Z",
+      "side": 1,
+      "message": "Spoke offline. Adding a single global barrier before a submit is probably the optimal path. Although thinking about your proposal for a ContextVk node a second time I would mildly prefer if you added a the extra node before a flush. Just to keep the responsibilities of the graph simpler. Does that sound reasonable?",
+      "parentUuid": "d660728c_efacfdf5",
+      "range": {
+        "startLine": 833,
+        "startChar": 8,
+        "endLine": 833,
+        "endChar": 38
+      },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c391122_808df634",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 2
