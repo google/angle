@@ -515,10 +515,6 @@ TEST_P(ClearTest, DepthRangefIsClamped)
 // Test scissored clears on Depth16
 TEST_P(ClearTest, Depth16Scissored)
 {
-    // Crashes on NVIDIA and Android in FramebufferVk::clearWithClearAttachments.
-    // http://anglebug.com/3081
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() || IsAndroid() || IsFuchsia());
-
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
     constexpr int kRenderbufferSize = 64;
@@ -547,10 +543,6 @@ TEST_P(ClearTest, Depth16Scissored)
 // Test scissored clears on Stencil8
 TEST_P(ClearTest, Stencil8Scissored)
 {
-    // Crashes on NVIDIA and Android in FramebufferVk::clearWithClearAttachments.
-    // http://anglebug.com/3081
-    ANGLE_SKIP_TEST_IF(IsNVIDIA() || IsAndroid() || IsFuchsia());
-
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
     constexpr int kRenderbufferSize = 64;
