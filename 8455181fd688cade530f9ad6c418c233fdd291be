@@ -49,6 +49,29 @@
     },
     {
       "key": {
+        "uuid": "4c543f4c_fff9e7d9",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-17T18:12:00Z",
+      "side": 1,
+      "message": "Is mapImpl() necessary anymore?   It looks like you can just call directly to mapRangeImpl() from here without really losing any readability.",
+      "range": {
+        "startLine": 161,
+        "startChar": 11,
+        "endLine": 161,
+        "endChar": 18
+      },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "77558223_531e6700",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 2
@@ -90,6 +113,23 @@
         "endLine": 833,
         "endChar": 38
       },
+      "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c391122_808df634",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1189,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-06-17T18:12:00Z",
+      "side": 1,
+      "message": "Maybe this is just reiterating Jamie\u0027s comment, but looking at the various bits and their meanings:\n\n\u003e VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT bit specifies that memory allocated with this type can be mapped for host access using vkMapMemory.\n\n- The memory can be mapped, but this doesn\u0027t necessarily mean that it is mapped so we may be adding unnecessary barriers to keep memory coherent that no one is looking at.   Are we doing too many barriers by only looking at VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT and not whether the memory is actually mapped also (assumign we know that)?\n\n\u003e VK_MEMORY_PROPERTY_HOST_COHERENT_BIT bit specifies that the host cache management commands vkFlushMappedMemoryRanges and vkInvalidateMappedMemoryRanges are not needed to flush host writes to the device or make device writes visible to the host, respectively.\n\n- Based on this code, this is how OpenGL expects to behave by default and the caller should use additional flags to override that behavior.   Should we set this flag by default or would that kill performance too much and the extra work to do it only when necessary is worth the effort?\n\n\u003e VK_MEMORY_PROPERTY_HOST_CACHED_BIT bit specifies that memory allocated with this type is cached on the host. Host memory accesses to uncached memory are slower than to cached memory, however uncached memory is always host coherent.\n\n- Presumably the Vulkan driver is doing the work to keep the uncached memory coherent, so there\u0027s no work needed for us.",
       "revId": "8455181fd688cade530f9ad6c418c233fdd291be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
