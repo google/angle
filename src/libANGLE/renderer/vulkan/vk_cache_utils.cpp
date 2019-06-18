@@ -677,10 +677,22 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     // Set initial viewport and scissor state.
 
+    // 0-sized viewports are invalid in Vulkan.  We always use a scissor that at least matches the
+    // requested viewport, so it's safe to adjust the viewport size here.
+    VkViewport viewport = mViewport;
+    if (viewport.width == 0)
+    {
+        viewport.width = 1;
+    }
+    if (viewport.height == 0)
+    {
+        viewport.height = 1;
+    }
+
     viewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     viewportState.flags         = 0;
     viewportState.viewportCount = 1;
-    viewportState.pViewports    = &mViewport;
+    viewportState.pViewports    = &viewport;
     viewportState.scissorCount  = 1;
     viewportState.pScissors     = &mScissor;
 
