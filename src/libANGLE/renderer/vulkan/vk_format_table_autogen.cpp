@@ -1063,10 +1063,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_FLOAT:
-            internalFormat               = GL_RGB16F;
-            imageFormatID                = angle::FormatID::R16G16B16_FLOAT;
-            vkImageFormat                = VK_FORMAT_R16G16B16_SFLOAT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB16F;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R16G16B16_FLOAT, VK_FORMAT_R16G16B16_SFLOAT, nullptr},
+                    {angle::FormatID::R16G16B16A16_FLOAT, VK_FORMAT_R16G16B16A16_SFLOAT,
+                     Initialize4ComponentData<GLhalf, 0x0000, 0x0000, 0x0000, gl::Float16One>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R16G16B16_FLOAT;
             vkBufferFormat               = VK_FORMAT_R16G16B16_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1075,10 +1079,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_SINT:
-            internalFormat               = GL_RGB16I;
-            imageFormatID                = angle::FormatID::R16G16B16_SINT;
-            vkImageFormat                = VK_FORMAT_R16G16B16_SINT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB16I;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R16G16B16_SINT, VK_FORMAT_R16G16B16_SINT, nullptr},
+                    {angle::FormatID::R16G16B16A16_SINT, VK_FORMAT_R16G16B16A16_SINT,
+                     Initialize4ComponentData<GLshort, 0x0000, 0x0000, 0x0000, 0x0001>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R16G16B16_SINT;
             vkBufferFormat               = VK_FORMAT_R16G16B16_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1117,10 +1125,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_UINT:
-            internalFormat               = GL_RGB16UI;
-            imageFormatID                = angle::FormatID::R16G16B16_UINT;
-            vkImageFormat                = VK_FORMAT_R16G16B16_UINT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB16UI;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R16G16B16_UINT, VK_FORMAT_R16G16B16_UINT, nullptr},
+                    {angle::FormatID::R16G16B16A16_UINT, VK_FORMAT_R16G16B16A16_UINT,
+                     Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0x0001>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R16G16B16_UINT;
             vkBufferFormat               = VK_FORMAT_R16G16B16_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1423,10 +1435,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R32G32B32_FLOAT:
-            internalFormat               = GL_RGB32F;
-            imageFormatID                = angle::FormatID::R32G32B32_FLOAT;
-            vkImageFormat                = VK_FORMAT_R32G32B32_SFLOAT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB32F;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R32G32B32_FLOAT, VK_FORMAT_R32G32B32_SFLOAT, nullptr},
+                    {angle::FormatID::R32G32B32A32_FLOAT, VK_FORMAT_R32G32B32A32_SFLOAT,
+                     Initialize4ComponentData<GLfloat, 0x00000000, 0x00000000, 0x00000000,
+                                              gl::Float32One>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R32G32B32_FLOAT;
             vkBufferFormat               = VK_FORMAT_R32G32B32_SFLOAT;
             vkBufferFormatIsPacked       = false;
@@ -1435,10 +1452,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R32G32B32_SINT:
-            internalFormat               = GL_RGB32I;
-            imageFormatID                = angle::FormatID::R32G32B32_SINT;
-            vkImageFormat                = VK_FORMAT_R32G32B32_SINT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB32I;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R32G32B32_SINT, VK_FORMAT_R32G32B32_SINT, nullptr},
+                    {angle::FormatID::R32G32B32A32_SINT, VK_FORMAT_R32G32B32A32_SINT,
+                     Initialize4ComponentData<GLint, 0x00000000, 0x00000000, 0x00000000,
+                                              0x00000001>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R32G32B32_SINT;
             vkBufferFormat               = VK_FORMAT_R32G32B32_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1455,10 +1477,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R32G32B32_UINT:
-            internalFormat               = GL_RGB32UI;
-            imageFormatID                = angle::FormatID::R32G32B32_UINT;
-            vkImageFormat                = VK_FORMAT_R32G32B32_UINT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB32UI;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R32G32B32_UINT, VK_FORMAT_R32G32B32_UINT, nullptr},
+                    {angle::FormatID::R32G32B32A32_UINT, VK_FORMAT_R32G32B32A32_UINT,
+                     Initialize4ComponentData<GLuint, 0x00000000, 0x00000000, 0x00000000,
+                                              0x00000001>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R32G32B32_UINT;
             vkBufferFormat               = VK_FORMAT_R32G32B32_UINT;
             vkBufferFormatIsPacked       = false;
@@ -1739,10 +1766,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_SINT:
-            internalFormat               = GL_RGB8I;
-            imageFormatID                = angle::FormatID::R8G8B8_SINT;
-            vkImageFormat                = VK_FORMAT_R8G8B8_SINT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB8I;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R8G8B8_SINT, VK_FORMAT_R8G8B8_SINT, nullptr},
+                    {angle::FormatID::R8G8B8A8_SINT, VK_FORMAT_R8G8B8A8_SINT,
+                     Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x01>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R8G8B8_SINT;
             vkBufferFormat               = VK_FORMAT_R8G8B8_SINT;
             vkBufferFormatIsPacked       = false;
@@ -1751,10 +1782,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_SNORM:
-            internalFormat           = GL_RGB8_SNORM;
-            imageFormatID            = angle::FormatID::R8G8B8_SNORM;
-            vkImageFormat            = VK_FORMAT_R8G8B8_SNORM;
-            imageInitializerFunction = nullptr;
+            internalFormat = GL_RGB8_SNORM;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R8G8B8_SNORM, VK_FORMAT_R8G8B8_SNORM, nullptr},
+                    {angle::FormatID::R8G8B8A8_SNORM, VK_FORMAT_R8G8B8A8_SNORM,
+                     Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x7F>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             {
                 static constexpr BufferFormatInitInfo kInfo[] = {
                     {angle::FormatID::R8G8B8_SNORM, VK_FORMAT_R8G8B8_SNORM, false,
@@ -1781,10 +1816,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_UINT:
-            internalFormat               = GL_RGB8UI;
-            imageFormatID                = angle::FormatID::R8G8B8_UINT;
-            vkImageFormat                = VK_FORMAT_R8G8B8_UINT;
-            imageInitializerFunction     = nullptr;
+            internalFormat = GL_RGB8UI;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R8G8B8_UINT, VK_FORMAT_R8G8B8_UINT, nullptr},
+                    {angle::FormatID::R8G8B8A8_UINT, VK_FORMAT_R8G8B8A8_UINT,
+                     Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0x01>}};
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::R8G8B8_UINT;
             vkBufferFormat               = VK_FORMAT_R8G8B8_UINT;
             vkBufferFormatIsPacked       = false;

@@ -264,6 +264,7 @@
             "buffer": "R32G32B32_FLOAT"
         },
         "R8G8B8_SNORM": {
+            "image": "R8G8B8A8_SNORM",
             "buffer": "R32G32B32_FLOAT"
         },
         "R8G8B8_USCALED": {
@@ -332,6 +333,30 @@
         },
         "R16G16B16A16_SSCALED": {
             "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R32G32B32_UINT": {
+            "image": "R32G32B32A32_UINT"
+        },
+        "R32G32B32_SINT": {
+            "image": "R32G32B32A32_SINT"
+        },
+        "R16G16B16_UINT": {
+            "image": "R16G16B16A16_UINT"
+        },
+        "R16G16B16_SINT": {
+            "image": "R16G16B16A16_SINT"
+        },
+        "R8G8B8_UINT": {
+            "image": "R8G8B8A8_UINT"
+        },
+        "R8G8B8_SINT": {
+            "image": "R8G8B8A8_SINT"
+        },
+        "R16G16B16_FLOAT": {
+            "image": "R16G16B16A16_FLOAT"
+        },
+        "R32G32B32_FLOAT": {
+            "image": "R32G32B32A32_FLOAT"
         }
     }
 }
