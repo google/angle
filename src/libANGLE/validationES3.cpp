@@ -1662,9 +1662,7 @@ static bool ValidateBindBufferCommon(Context *context,
                 return false;
             }
 
-            TransformFeedback *curTransformFeedback =
-                context->getState().getCurrentTransformFeedback();
-            if (curTransformFeedback && curTransformFeedback->isActive())
+            if (context->getState().isTransformFeedbackActive())
             {
                 context->validationError(GL_INVALID_OPERATION, kTransformFeedbackTargetActive);
                 return false;
@@ -3462,10 +3460,7 @@ bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id)
         {
             // Cannot bind a transform feedback object if the current one is started and not
             // paused (3.0.2 pg 85 section 2.14.1)
-            TransformFeedback *curTransformFeedback =
-                context->getState().getCurrentTransformFeedback();
-            if (curTransformFeedback && curTransformFeedback->isActive() &&
-                !curTransformFeedback->isPaused())
+            if (context->getState().isTransformFeedbackActiveUnpaused())
             {
                 context->validationError(GL_INVALID_OPERATION, kTransformFeedbackNotPaused);
                 return false;

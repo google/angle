@@ -3453,9 +3453,9 @@ bool ValidateMapBufferBase(Context *context, BufferBinding target)
     ASSERT(buffer != nullptr);
 
     // Check if this buffer is currently being used as a transform feedback output buffer
-    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
-    if (transformFeedback != nullptr && transformFeedback->isActive())
+    if (context->getState().isTransformFeedbackActive())
     {
+        TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
         for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
         {
             const auto &transformFeedbackBuffer = transformFeedback->getIndexedBuffer(i);

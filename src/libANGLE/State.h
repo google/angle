@@ -298,6 +298,11 @@ class State : angle::NonCopyable
     void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);
     TransformFeedback *getCurrentTransformFeedback() const { return mTransformFeedback.get(); }
 
+    ANGLE_INLINE bool isTransformFeedbackActive() const
+    {
+        TransformFeedback *curTransformFeedback = mTransformFeedback.get();
+        return curTransformFeedback && curTransformFeedback->isActive();
+    }
     ANGLE_INLINE bool isTransformFeedbackActiveUnpaused() const
     {
         TransformFeedback *curTransformFeedback = mTransformFeedback.get();
