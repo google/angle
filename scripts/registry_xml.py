@@ -18,6 +18,7 @@ xml_inputs = [
     'gl_angle_ext.xml',
     'egl.xml',
     'egl_angle_ext.xml',
+    'wgl.xml',
     'registry_xml.py',
 ]
 

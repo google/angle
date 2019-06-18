@@ -271,7 +271,13 @@
     "glGetTexParameterIuivRobustANGLE": {
         "target": "TextureType"
     },
+    "glGetTexParameterIiv": {
+        "target": "TextureType"
+    },
     "glGetTexParameterIivOES": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIuiv": {
         "target": "TextureType"
     },
     "glGetTexParameterIuivOES": {
@@ -335,11 +341,18 @@
     "glMatrixMode": {
         "mode": "MatrixType"
     },
+    "glMultiDrawArrays": {
+        "mode": "PrimitiveMode"
+    },
     "glMultiDrawArraysANGLE": {
         "mode": "PrimitiveMode"
     },
     "glMultiDrawArraysInstancedANGLE": {
         "mode": "PrimitiveMode"
+    },
+    "glMultiDrawElements": {
+        "mode": "PrimitiveMode",
+        "type": "DrawElementsType"
     },
     "glMultiDrawElementsANGLE": {
         "mode": "PrimitiveMode",
@@ -445,7 +458,13 @@
     "glTexParameterIuivRobustANGLE": {
         "target": "TextureType"
     },
+    "glTexParameterIiv": {
+        "target": "TextureType"
+    },
     "glTexParameterIivOES": {
+        "target": "TextureType"
+    },
+    "glTexParameterIuiv": {
         "target": "TextureType"
     },
     "glTexParameterIuivOES": {

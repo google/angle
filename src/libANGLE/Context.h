@@ -19,6 +19,16 @@
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/Context_gl_1_0_autogen.h"
+#include "libANGLE/Context_gl_1_1_autogen.h"
+#include "libANGLE/Context_gl_1_2_autogen.h"
+#include "libANGLE/Context_gl_1_3_autogen.h"
+#include "libANGLE/Context_gl_1_4_autogen.h"
+#include "libANGLE/Context_gl_1_5_autogen.h"
+#include "libANGLE/Context_gl_2_0_autogen.h"
+#include "libANGLE/Context_gl_2_1_autogen.h"
+#include "libANGLE/Context_gl_3_0_autogen.h"
+#include "libANGLE/Context_gl_3_1_autogen.h"
 #include "libANGLE/Context_gles_1_0_autogen.h"
 #include "libANGLE/Context_gles_2_0_autogen.h"
 #include "libANGLE/Context_gles_3_0_autogen.h"
@@ -375,6 +385,18 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void deleteFramebuffer(GLuint framebuffer);
 
     bool hasActiveTransformFeedback(GLuint program) const;
+
+    // GL emulation: Interface to entry points
+    ANGLE_GL_1_0_CONTEXT_API
+    ANGLE_GL_1_1_CONTEXT_API
+    ANGLE_GL_1_2_CONTEXT_API
+    ANGLE_GL_1_3_CONTEXT_API
+    ANGLE_GL_1_4_CONTEXT_API
+    ANGLE_GL_1_5_CONTEXT_API
+    ANGLE_GL_2_0_CONTEXT_API
+    ANGLE_GL_2_1_CONTEXT_API
+    ANGLE_GL_3_0_CONTEXT_API
+    ANGLE_GL_3_1_CONTEXT_API
 
     // GLES emulation: Interface to entry points
     ANGLE_GLES_1_0_CONTEXT_API

@@ -20,7 +20,7 @@
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
 #include "libGLESv2/global_state.h"
-#include "libGLESv2/proc_table.h"
+#include "libGLESv2/proc_table_egl.h"
 
 using namespace egl;
 
@@ -830,8 +830,8 @@ EGLSync EGLAPIENTRY EGL_CreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib
           ", EGLenum type = 0x%X, const EGLint* attrib_list = 0x%016" PRIxPTR ")",
           (uintptr_t)dpy, type, (uintptr_t)attrib_list);
 
-    Thread *thread        = egl::GetCurrentThread();
-    egl::Display *display = static_cast<egl::Display *>(dpy);
+    Thread *thread          = egl::GetCurrentThread();
+    egl::Display *display   = static_cast<egl::Display *>(dpy);
     AttributeMap attributes = AttributeMap::CreateFromAttribArray(attrib_list);
 
     gl::Context *currentContext  = thread->getContext();
@@ -884,7 +884,7 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
                          "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
 
     gl::Context *currentContext = thread->getContext();
-    EGLint syncStatus = EGL_FALSE;
+    EGLint syncStatus           = EGL_FALSE;
     ANGLE_EGL_TRY_RETURN(
         thread, syncObject->clientWait(display, currentContext, flags, timeout, &syncStatus),
         "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
@@ -932,9 +932,9 @@ EGLImage EGLAPIENTRY EGL_CreateImage(EGLDisplay dpy,
           "EGLClientBuffer buffer = 0x%016" PRIxPTR
           ", const EGLAttrib *attrib_list = 0x%016" PRIxPTR ")",
           (uintptr_t)dpy, (uintptr_t)ctx, target, (uintptr_t)buffer, (uintptr_t)attrib_list);
-    Thread *thread        = egl::GetCurrentThread();
+    Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *display = static_cast<egl::Display *>(dpy);
+    egl::Display *display   = static_cast<egl::Display *>(dpy);
     gl::Context *context    = static_cast<gl::Context *>(ctx);
     AttributeMap attributes = AttributeMap::CreateFromIntArray((const EGLint *)attrib_list);
 

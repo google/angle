@@ -765,6 +765,30 @@ angle_shared_library("libGLESv2") {
   ]
 }
 
+if (is_win) {
+  angle_shared_library("openGL32") {
+    sources = opengl32_sources
+    output_name = "openGL32${angle_libs_suffix}"
+
+    configs += [
+      ":angle_gl_visibility_config",
+      ":debug_annotations_config",
+      ":gl_prototypes",
+    ]
+
+    defines = [ "OPENGL32_IMPLEMENTATION" ]
+
+    deps = [
+      ":includes",
+      ":libANGLE",
+    ]
+
+    public_deps = [
+      ":angle_version",
+    ]
+  }
+}
+
 angle_static_library("libGLESv2_static") {
   sources = libglesv2_sources
   configs += [ ":debug_annotations_config" ]
