@@ -499,9 +499,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const StateCache &getStateCache() const { return mStateCache; }
     StateCache &getStateCache() { return mStateCache; }
 
-    void onSubjectStateChange(const Context *context,
-                              angle::SubjectIndex index,
-                              angle::SubjectMessage message) override;
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     void onSamplerUniformChange(size_t textureUnitIndex);
 

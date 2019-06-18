@@ -408,7 +408,7 @@ class Texture final : public RefCountObject,
     GLint getMemorySize() const;
     GLint getLevelMemorySize(TextureTarget target, GLint level) const;
 
-    void signalDirtyStorage(const Context *context, InitState initState);
+    void signalDirtyStorage(InitState initState);
 
     bool isSamplerComplete(const Context *context, const Sampler *optionalSampler);
 
@@ -478,9 +478,7 @@ class Texture final : public RefCountObject,
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     // ObserverInterface implementation.
-    void onSubjectStateChange(const gl::Context *context,
-                              angle::SubjectIndex index,
-                              angle::SubjectMessage message) override;
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
   private:
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
@@ -508,7 +506,7 @@ class Texture final : public RefCountObject,
 
     angle::Result handleMipmapGenerationHint(Context *context, int level);
 
-    void signalDirtyState(const Context *context, size_t dirtyBit);
+    void signalDirtyState(size_t dirtyBit);
 
     TextureState mState;
     DirtyBits mDirtyBits;

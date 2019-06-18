@@ -2685,6 +2685,7 @@ VertexArray *Context::checkVertexArrayAllocation(GLuint vertexArrayHandle)
         vertexArray =
             new VertexArray(mImplementation.get(), vertexArrayHandle,
                             mState.mCaps.maxVertexAttributes, mState.mCaps.maxVertexAttribBindings);
+        vertexArray->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
 
         mVertexArrayMap.assign(vertexArrayHandle, vertexArray);
     }
@@ -3105,16 +3106,16 @@ void Context::requestExtension(const char *name)
 
     // Invalidate all textures and framebuffer. Some extensions make new formats renderable or
     // sampleable.
-    mState.mTextureManager->signalAllTexturesDirty(this);
+    mState.mTextureManager->signalAllTexturesDirty();
     for (auto &zeroTexture : mZeroTextures)
     {
         if (zeroTexture.get() != nullptr)
         {
-            zeroTexture->signalDirtyStorage(this, InitState::Initialized);
+            zeroTexture->signalDirtyStorage(InitState::Initialized);
         }
     }
 
-    mState.mFramebufferManager->invalidateFramebufferComplenessCache(this);
+    mState.mFramebufferManager->invalidateFramebufferComplenessCache();
 }
 
 size_t Context::getRequestableExtensionStringCount() const
@@ -3477,9 +3478,14 @@ void Context::updateCaps()
 
     // We need to validate buffer bounds if we are in a WebGL or robust access context and the
     // back-end does not support robust buffer access behaviour.
-    if (!mSupportedExtensions.robustBufferAccessBehavior && (mState.isWebGL() || mRobustAccess))
+    mBufferAccessValidationEnabled =
+        (!mSupportedExtensions.robustBufferAccessBehavior && (mState.isWebGL() || mRobustAccess));
+
+    // Cache this in the VertexArrays. They need to check it in state change notifications.
+    for (auto vaoIter : mVertexArrayMap)
     {
-        mBufferAccessValidationEnabled = true;
+        VertexArray *vao = vaoIter.second;
+        vao->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
     }
 
     // Reinitialize state cache after extension changes.
@@ -8165,9 +8171,7 @@ bool Context::isGLES1() const
     return mState.getClientVersion() < Version(2, 0);
 }
 
-void Context::onSubjectStateChange(const Context *context,
-                                   angle::SubjectIndex index,
-                                   angle::SubjectMessage message)
+void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (index)
     {

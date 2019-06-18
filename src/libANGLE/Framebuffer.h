@@ -238,7 +238,7 @@ class Framebuffer final : public angle::ObserverInterface,
     void setDefaultFixedSampleLocations(const Context *context, bool defaultFixedSampleLocations);
     void setDefaultLayers(GLint defaultLayers);
 
-    void invalidateCompletenessCache(const Context *context);
+    void invalidateCompletenessCache();
 
     ANGLE_INLINE GLenum checkStatus(const Context *context)
     {
@@ -343,9 +343,7 @@ class Framebuffer final : public angle::ObserverInterface,
     angle::Result syncState(const Context *context);
 
     // Observer implementation
-    void onSubjectStateChange(const Context *context,
-                              angle::SubjectIndex index,
-                              angle::SubjectMessage message) override;
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     bool formsRenderingFeedbackLoopWith(const Context *context) const;
     bool formsCopyingFeedbackLoopWith(GLuint copyTextureID,

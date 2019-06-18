@@ -237,7 +237,7 @@ GLuint TextureManager::createTexture()
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-void TextureManager::signalAllTexturesDirty(const Context *context) const
+void TextureManager::signalAllTexturesDirty() const
 {
     for (const auto &texture : mObjectMap)
     {
@@ -245,7 +245,7 @@ void TextureManager::signalAllTexturesDirty(const Context *context) const
         {
             // We don't know if the Texture needs init, but that's ok, since it will only force
             // a re-check, and will not initialize the pixels if it's not needed.
-            texture.second->signalDirtyStorage(context, InitState::MayNeedInit);
+            texture.second->signalDirtyStorage(InitState::MayNeedInit);
         }
     }
 }
@@ -440,13 +440,13 @@ void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
     mObjectMap.assign(0, framebuffer);
 }
 
-void FramebufferManager::invalidateFramebufferComplenessCache(const Context *context) const
+void FramebufferManager::invalidateFramebufferComplenessCache() const
 {
     for (const auto &framebuffer : mObjectMap)
     {
         if (framebuffer.second)
         {
-            framebuffer.second->invalidateCompletenessCache(context);
+            framebuffer.second->invalidateCompletenessCache();
         }
     }
 }
@@ -498,7 +498,7 @@ void MemoryObjectManager::reset(const Context *context)
 
 GLuint MemoryObjectManager::createMemoryObject(rx::GLImplFactory *factory)
 {
-    GLuint handle = mHandleAllocator.allocate();
+    GLuint handle              = mHandleAllocator.allocate();
     MemoryObject *memoryObject = new MemoryObject(factory, handle);
     memoryObject->addRef();
     mMemoryObjects.assign(handle, memoryObject);

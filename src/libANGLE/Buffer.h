@@ -99,8 +99,8 @@ class Buffer final : public RefCountObject,
     angle::Result unmap(const Context *context, GLboolean *result);
 
     // These are called when another operation changes Buffer data.
-    void onTransformFeedback(const Context *context);
-    void onPixelPack(const Context *context);
+    void onTransformFeedback();
+    void onPixelPack();
 
     angle::Result getIndexRange(const gl::Context *context,
                                 DrawElementsType type,
@@ -139,9 +139,7 @@ class Buffer final : public RefCountObject,
     void onNonTFBindingChanged(int incr) { mState.mBindingCount += incr; }
 
     // angle::ObserverInterface implementation.
-    void onSubjectStateChange(const gl::Context *context,
-                              angle::SubjectIndex index,
-                              angle::SubjectMessage message) override;
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
   private:
     BufferState mState;

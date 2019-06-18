@@ -127,7 +127,8 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
                          size_t maxAttribBindings)
     : mId(id),
       mState(this, maxAttribs, maxAttribBindings),
-      mVertexArray(factory->createVertexArray(mState))
+      mVertexArray(factory->createVertexArray(mState)),
+      mBufferAccessValidationEnabled(false)
 {
     for (size_t attribIndex = 0; attribIndex < maxAttribBindings; ++attribIndex)
     {
@@ -248,10 +249,9 @@ ANGLE_INLINE void VertexArray::setDirtyBindingBit(size_t bindingIndex,
     mDirtyBindingBits[bindingIndex].set(dirtyBindingBit);
 }
 
-ANGLE_INLINE void VertexArray::updateCachedBufferBindingSize(const Context *context,
-                                                             VertexBinding *binding)
+ANGLE_INLINE void VertexArray::updateCachedBufferBindingSize(VertexBinding *binding)
 {
-    if (!context->isBufferAccessValidationEnabled())
+    if (!mBufferAccessValidationEnabled)
         return;
 
     for (size_t boundAttribute : binding->getBoundAttributesMask())
@@ -317,7 +317,7 @@ void VertexArray::bindVertexBufferImpl(const Context *context,
     binding->assignBuffer(boundBuffer);
     binding->setOffset(offset);
     binding->setStride(stride);
-    updateCachedBufferBindingSize(context, binding);
+    updateCachedBufferBindingSize(binding);
 
     // Update client memory attribute pointers. Affects all bound attributes.
     if (boundBuffer)
@@ -552,22 +552,20 @@ VertexArray::DirtyBitType VertexArray::getDirtyBitFromIndex(bool contentsChanged
     }
 }
 
-void VertexArray::onSubjectStateChange(const gl::Context *context,
-                                       angle::SubjectIndex index,
-                                       angle::SubjectMessage message)
+void VertexArray::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (message)
     {
         case angle::SubjectMessage::ContentsChanged:
-            setDependentDirtyBit(context, true, index);
+            setDependentDirtyBit(true, index);
             break;
 
         case angle::SubjectMessage::SubjectChanged:
             if (!IsElementArrayBufferSubjectIndex(index))
             {
-                updateCachedBufferBindingSize(context, &mState.mVertexBindings[index]);
+                updateCachedBufferBindingSize(&mState.mVertexBindings[index]);
             }
-            setDependentDirtyBit(context, false, index);
+            setDependentDirtyBit(false, index);
             break;
 
         case angle::SubjectMessage::BindingChanged:
@@ -583,17 +581,17 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
             {
                 updateCachedMappedArrayBuffersBinding(mState.mVertexBindings[index]);
             }
-            onStateChange(context, angle::SubjectMessage::SubjectMapped);
+            onStateChange(angle::SubjectMessage::SubjectMapped);
             break;
 
         case angle::SubjectMessage::SubjectUnmapped:
-            setDependentDirtyBit(context, true, index);
+            setDependentDirtyBit(true, index);
 
             if (!IsElementArrayBufferSubjectIndex(index))
             {
                 updateCachedMappedArrayBuffersBinding(mState.mVertexBindings[index]);
             }
-            onStateChange(context, angle::SubjectMessage::SubjectUnmapped);
+            onStateChange(angle::SubjectMessage::SubjectUnmapped);
             break;
 
         default:
@@ -602,14 +600,12 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
     }
 }
 
-void VertexArray::setDependentDirtyBit(const gl::Context *context,
-                                       bool contentsChanged,
-                                       angle::SubjectIndex index)
+void VertexArray::setDependentDirtyBit(bool contentsChanged, angle::SubjectIndex index)
 {
     DirtyBitType dirtyBit = getDirtyBitFromIndex(contentsChanged, index);
     ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(dirtyBit));
     mDirtyBits.set(dirtyBit);
-    onStateChange(context, angle::SubjectMessage::ContentsChanged);
+    onStateChange(angle::SubjectMessage::ContentsChanged);
 }
 
 bool VertexArray::hasTransformFeedbackBindingConflict(const gl::Context *context) const

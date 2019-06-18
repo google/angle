@@ -175,7 +175,7 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
         return mObjectMap.query(handle);
     }
 
-    void signalAllTexturesDirty(const Context *context) const;
+    void signalAllTexturesDirty() const;
 
     ANGLE_INLINE Texture *checkTextureAllocation(rx::GLImplFactory *factory,
                                                  GLuint handle,
@@ -269,7 +269,7 @@ class FramebufferManager
     Framebuffer *getFramebuffer(GLuint handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
 
-    void invalidateFramebufferComplenessCache(const Context *context) const;
+    void invalidateFramebufferComplenessCache() const;
 
     Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
                                             const Caps &caps,

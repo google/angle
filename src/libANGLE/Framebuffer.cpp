@@ -953,13 +953,13 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-void Framebuffer::invalidateCompletenessCache(const Context *context)
+void Framebuffer::invalidateCompletenessCache()
 {
     if (mState.mId != 0)
     {
         mCachedStatus.reset();
     }
-    onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
+    onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
 }
 
 GLenum Framebuffer::checkStatusImpl(const Context *context)
@@ -1507,7 +1507,7 @@ angle::Result Framebuffer::readPixels(const Context *context,
     Buffer *unpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (unpackBuffer)
     {
-        unpackBuffer->onPixelPack(context);
+        unpackBuffer->onPixelPack();
     }
 
     return angle::Result::Continue;
@@ -1830,7 +1830,7 @@ void Framebuffer::updateAttachment(const Context *context,
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
     onDirtyBinding->bind(resource);
 
-    invalidateCompletenessCache(context);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::resetAttachment(const Context *context, GLenum binding)
@@ -1850,9 +1850,7 @@ angle::Result Framebuffer::syncState(const Context *context)
     return angle::Result::Continue;
 }
 
-void Framebuffer::onSubjectStateChange(const Context *context,
-                                       angle::SubjectIndex index,
-                                       angle::SubjectMessage message)
+void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     if (message != angle::SubjectMessage::SubjectChanged)
     {
@@ -1860,7 +1858,7 @@ void Framebuffer::onSubjectStateChange(const Context *context,
         if (message == angle::SubjectMessage::ContentsChanged)
         {
             mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 + index);
-            onStateChange(context, angle::SubjectMessage::DirtyBitsFlagged);
+            onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
             return;
         }
 
@@ -1872,7 +1870,7 @@ void Framebuffer::onSubjectStateChange(const Context *context,
     ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
     mDirtyBits.set(index);
 
-    invalidateCompletenessCache(context);
+    invalidateCompletenessCache();
 
     FramebufferAttachment *attachment = getAttachmentFromSubjectIndex(index);
 
@@ -2025,21 +2023,21 @@ void Framebuffer::setDefaultWidth(const Context *context, GLint defaultWidth)
 {
     mState.mDefaultWidth = defaultWidth;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_WIDTH);
-    invalidateCompletenessCache(context);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultHeight(const Context *context, GLint defaultHeight)
 {
     mState.mDefaultHeight = defaultHeight;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_HEIGHT);
-    invalidateCompletenessCache(context);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultSamples(const Context *context, GLint defaultSamples)
 {
     mState.mDefaultSamples = defaultSamples;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_SAMPLES);
-    invalidateCompletenessCache(context);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultFixedSampleLocations(const Context *context,
@@ -2047,7 +2045,7 @@ void Framebuffer::setDefaultFixedSampleLocations(const Context *context,
 {
     mState.mDefaultFixedSampleLocations = defaultFixedSampleLocations;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS);
-    invalidateCompletenessCache(context);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultLayers(GLint defaultLayers)

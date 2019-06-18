@@ -18,9 +18,7 @@ namespace
 
 struct ObserverClass : public ObserverInterface
 {
-    void onSubjectStateChange(const gl::Context *context,
-                              SubjectIndex index,
-                              SubjectMessage message) override
+    void onSubjectStateChange(SubjectIndex index, SubjectMessage message) override
     {
         wasNotified = true;
     }
@@ -36,7 +34,7 @@ TEST(ObserverTest, BasicUsage)
 
     binding.bind(&subject);
     ASSERT_FALSE(observer.wasNotified);
-    subject.onStateChange(nullptr, SubjectMessage::SubjectChanged);
+    subject.onStateChange(SubjectMessage::SubjectChanged);
     ASSERT_TRUE(observer.wasNotified);
 }
 
