@@ -189,18 +189,19 @@ GLenum ToGLenum(HintSetting from);
 
 enum class ImageLayout : uint8_t
 {
-    General                        = 0,
-    ColorAttachment                = 1,
-    DepthStencilAttachment         = 2,
-    DepthStencilReadOnlyAttachment = 3,
-    ShaderReadOnly                 = 4,
-    TransferSrc                    = 5,
-    TransferDst                    = 6,
-    DepthReadOnlyStencilAttachment = 7,
-    DepthAttachmentStencilReadOnly = 8,
+    Undefined                      = 0,
+    General                        = 1,
+    ColorAttachment                = 2,
+    DepthStencilAttachment         = 3,
+    DepthStencilReadOnlyAttachment = 4,
+    ShaderReadOnly                 = 5,
+    TransferSrc                    = 6,
+    TransferDst                    = 7,
+    DepthReadOnlyStencilAttachment = 8,
+    DepthAttachmentStencilReadOnly = 9,
 
-    InvalidEnum = 9,
-    EnumCount   = 9,
+    InvalidEnum = 10,
+    EnumCount   = 10,
 };
 
 template <>

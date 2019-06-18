@@ -269,6 +269,7 @@
     },
     "ImageLayout":
     {
+        "Undefined": "GL_NONE",
         "General": "GL_LAYOUT_GENERAL_EXT",
         "ColorAttachment": "GL_LAYOUT_COLOR_ATTACHMENT_EXT",
         "DepthStencilAttachment": "GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT",

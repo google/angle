@@ -1129,6 +1129,7 @@ bool IsValidImageLayout(ImageLayout layout)
 {
     switch (layout)
     {
+        case ImageLayout::Undefined:
         case ImageLayout::General:
         case ImageLayout::ColorAttachment:
         case ImageLayout::DepthStencilAttachment:

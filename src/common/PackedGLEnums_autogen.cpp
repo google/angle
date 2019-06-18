@@ -432,6 +432,8 @@ ImageLayout FromGLenum<ImageLayout>(GLenum from)
 {
     switch (from)
     {
+        case GL_NONE:
+            return ImageLayout::Undefined;
         case GL_LAYOUT_GENERAL_EXT:
             return ImageLayout::General;
         case GL_LAYOUT_COLOR_ATTACHMENT_EXT:
@@ -459,6 +461,8 @@ GLenum ToGLenum(ImageLayout from)
 {
     switch (from)
     {
+        case ImageLayout::Undefined:
+            return GL_NONE;
         case ImageLayout::General:
             return GL_LAYOUT_GENERAL_EXT;
         case ImageLayout::ColorAttachment:
