@@ -659,7 +659,7 @@ class TinyDepthStencilWorkaroundTest : public ANGLETest
     }
 
     // Override the features to enable "tiny" depth/stencil textures.
-    void overrideFeaturesD3D(FeaturesD3D *features) override
+    void overrideWorkaroundsD3D(FeaturesD3D *features) override
     {
         features->overrideFeatures({"emulate_tiny_stencil_textures"}, true);
     }

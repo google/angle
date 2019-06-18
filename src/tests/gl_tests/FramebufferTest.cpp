@@ -924,7 +924,7 @@ class AddDummyTextureNoRenderTargetTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void overrideFeaturesD3D(FeaturesD3D *features) override
+    void overrideWorkaroundsD3D(FeaturesD3D *features) override
     {
         features->overrideFeatures({"add_dummy_texture_no_render_target"}, true);
     }

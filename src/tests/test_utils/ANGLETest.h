@@ -287,7 +287,7 @@ class ANGLETestBase
   public:
     void setWindowVisible(bool isVisible);
 
-    virtual void overrideFeaturesD3D(angle::FeaturesD3D *featuresD3D) {}
+    virtual void overrideWorkaroundsD3D(angle::FeaturesD3D *featuresD3D) {}
     virtual void overrideFeaturesVk(angle::FeaturesVk *featuresVulkan) {}
 
   protected:

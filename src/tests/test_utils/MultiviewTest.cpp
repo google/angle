@@ -263,7 +263,7 @@ MultiviewImplementationParams GeomShaderD3D11(GLint majorVersion,
                                          multiviewExtension);
 }
 
-void MultiviewTest::overrideFeaturesD3D(FeaturesD3D *features)
+void MultiviewTest::overrideWorkaroundsD3D(FeaturesD3D *features)
 {
     features->overrideFeatures({"select_view_in_geometry_shader"},
                                GetParam().mForceUseGeometryShaderOnD3D);

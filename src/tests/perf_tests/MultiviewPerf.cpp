@@ -169,7 +169,7 @@ class MultiviewBenchmark : public ANGLERenderTest,
     void initializeBenchmark() override;
     void drawBenchmark() final;
 
-    void overrideFeaturesD3D(FeaturesD3D *features) override
+    void overrideWorkaroundsD3D(FeaturesD3D *features) override
     {
         features->overrideFeatures(
             {"select_view_in_geometry_shader"},

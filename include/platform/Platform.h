@@ -214,9 +214,10 @@ using HistogramBooleanFunc = void (*)(PlatformMethods *platform, const char *nam
 inline void DefaultHistogramBoolean(PlatformMethods *platform, const char *name, bool sample) {}
 
 // Allows us to programatically override ANGLE's default workarounds for testing purposes.
-using OverrideFeaturesD3DFunc = void (*)(PlatformMethods *platform,
-                                         angle::FeaturesD3D *featuresD3D);
-inline void DefaultOverrideFeaturesD3D(PlatformMethods *platform, angle::FeaturesD3D *featuresD3D)
+using OverrideWorkaroundsD3DFunc = void (*)(PlatformMethods *platform,
+                                            angle::FeaturesD3D *featuresD3D);
+inline void DefaultOverrideWorkaroundsD3D(PlatformMethods *platform,
+                                          angle::FeaturesD3D *featuresD3D)
 {}
 
 using OverrideFeaturesVkFunc = void (*)(PlatformMethods *platform,
@@ -251,7 +252,7 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
     OP(histogramEnumeration, HistogramEnumeration)               \
     OP(histogramSparse, HistogramSparse)                         \
     OP(histogramBoolean, HistogramBoolean)                       \
-    OP(overrideFeaturesD3D, OverrideFeaturesD3D)                 \
+    OP(overrideWorkaroundsD3D, OverrideWorkaroundsD3D)           \
     OP(overrideFeaturesVk, OverrideFeaturesVk)                   \
     OP(cacheProgram, CacheProgram)
 

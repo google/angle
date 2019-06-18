@@ -2450,7 +2450,7 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
 
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
-    platform->overrideFeaturesD3D(platform, features);
+    platform->overrideWorkaroundsD3D(platform, features);
 }
 
 void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth)

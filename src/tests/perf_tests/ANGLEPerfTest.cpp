@@ -51,10 +51,10 @@ constexpr TraceCategory gTraceCategories[2] = {
 
 void EmptyPlatformMethod(angle::PlatformMethods *, const char *) {}
 
-void OverrideFeaturesD3D(angle::PlatformMethods *platform, angle::FeaturesD3D *featuresD3D)
+void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::FeaturesD3D *featuresD3D)
 {
     auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
-    angleRenderTest->overrideFeaturesD3D(featuresD3D);
+    angleRenderTest->overrideWorkaroundsD3D(featuresD3D);
 }
 
 angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
@@ -416,7 +416,7 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    mPlatformMethods.overrideFeaturesD3D         = OverrideFeaturesD3D;
+    mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
     mPlatformMethods.logError                    = EmptyPlatformMethod;
     mPlatformMethods.logWarning                  = EmptyPlatformMethod;
     mPlatformMethods.logInfo                     = EmptyPlatformMethod;

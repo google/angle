@@ -814,7 +814,7 @@ void InitializeFeatures(angle::FeaturesD3D *features)
 
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
-    platform->overrideFeaturesD3D(platform, features);
+    platform->overrideWorkaroundsD3D(platform, features);
 }
 
 }  // namespace d3d9
