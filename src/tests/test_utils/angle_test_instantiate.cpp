@@ -185,6 +185,11 @@ bool IsNexus6P()
     return IsAndroidDevice("Nexus 6P");
 }
 
+bool IsNexus9()
+{
+    return IsAndroidDevice("Nexus 9");
+}
+
 bool IsPixelXL()
 {
     return IsAndroidDevice("Pixel XL");
@@ -212,6 +217,13 @@ bool IsAMD()
 
 bool IsNVIDIA()
 {
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // NVIDIA Shield cannot detect vendor ID (http://anglebug.com/3541)
+    if (IsNVIDIAShield())
+    {
+        return true;
+    }
+#endif
     return HasSystemVendorID(kVendorID_NVIDIA);
 }
 
