@@ -287,6 +287,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void endRenderPass();
     void executeCommands(uint32_t commandBufferCount, const CommandBuffer *commandBuffers);
 
+    void fillBuffer(const Buffer &dstBuffer,
+                    VkDeviceSize dstOffset,
+                    VkDeviceSize size,
+                    uint32_t data);
+
     void imageBarrier(VkPipelineStageFlags srcStageMask,
                       VkPipelineStageFlags dstStageMask,
                       const VkImageMemoryBarrier *imageMemoryBarrier);
@@ -792,6 +797,15 @@ ANGLE_INLINE void CommandBuffer::executeCommands(uint32_t commandBufferCount,
 {
     ASSERT(valid());
     vkCmdExecuteCommands(mHandle, commandBufferCount, commandBuffers[0].ptr());
+}
+
+ANGLE_INLINE void CommandBuffer::fillBuffer(const Buffer &dstBuffer,
+                                            VkDeviceSize dstOffset,
+                                            VkDeviceSize size,
+                                            uint32_t data)
+{
+    ASSERT(valid());
+    vkCmdFillBuffer(mHandle, dstBuffer.getHandle(), dstOffset, size, data);
 }
 
 ANGLE_INLINE void CommandBuffer::pushConstants(const PipelineLayout &layout,

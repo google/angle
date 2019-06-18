@@ -50,6 +50,7 @@ enum class CommandID : uint16_t
     DrawIndexedInstanced,
     DrawInstanced,
     EndQuery,
+    FillBuffer,
     ImageBarrier,
     MemoryBarrier,
     PipelineBarrier,
@@ -219,6 +220,15 @@ struct DispatchParams
     uint32_t groupCountZ;
 };
 VERIFY_4_BYTE_ALIGNMENT(DispatchParams)
+
+struct FillBufferParams
+{
+    VkBuffer dstBuffer;
+    VkDeviceSize dstOffset;
+    VkDeviceSize size;
+    uint32_t data;
+};
+VERIFY_4_BYTE_ALIGNMENT(FillBufferParams)
 
 struct MemoryBarrierParams
 {
@@ -428,6 +438,11 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void drawInstanced(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex);
 
     void endQuery(VkQueryPool queryPool, uint32_t query);
+
+    void fillBuffer(const Buffer &dstBuffer,
+                    VkDeviceSize dstOffset,
+                    VkDeviceSize size,
+                    uint32_t data);
 
     void imageBarrier(VkPipelineStageFlags srcStageMask,
                       VkPipelineStageFlags dstStageMask,
@@ -863,6 +878,18 @@ ANGLE_INLINE void SecondaryCommandBuffer::endQuery(VkQueryPool queryPool, uint32
     EndQueryParams *paramStruct = initCommand<EndQueryParams>(CommandID::EndQuery);
     paramStruct->queryPool      = queryPool;
     paramStruct->query          = query;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::fillBuffer(const Buffer &dstBuffer,
+                                                     VkDeviceSize dstOffset,
+                                                     VkDeviceSize size,
+                                                     uint32_t data)
+{
+    FillBufferParams *paramStruct = initCommand<FillBufferParams>(CommandID::FillBuffer);
+    paramStruct->dstBuffer        = dstBuffer.getHandle();
+    paramStruct->dstOffset        = dstOffset;
+    paramStruct->size             = size;
+    paramStruct->data             = data;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::imageBarrier(

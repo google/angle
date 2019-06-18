@@ -204,6 +204,13 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                     vkCmdEndQuery(cmdBuffer, params->queryPool, params->query);
                     break;
                 }
+                case CommandID::FillBuffer:
+                {
+                    const FillBufferParams *params = getParamPtr<FillBufferParams>(currentCommand);
+                    vkCmdFillBuffer(cmdBuffer, params->dstBuffer, params->dstOffset, params->size,
+                                    params->data);
+                    break;
+                }
                 case CommandID::ImageBarrier:
                 {
                     const ImageBarrierParams *params =
@@ -387,6 +394,9 @@ std::string SecondaryCommandBuffer::dumpCommands(const char *separator) const
                     break;
                 case CommandID::EndQuery:
                     result += "EndQuery";
+                    break;
+                case CommandID::FillBuffer:
+                    result += "FillBuffer";
                     break;
                 case CommandID::ImageBarrier:
                     result += "ImageBarrier";
