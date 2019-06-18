@@ -244,6 +244,10 @@ struct Extensions
     // OES_depth_texture
     bool depthTextureOES;
 
+    // GL_OES_depth24
+    // Allows DEPTH_COMPONENT24_OES as a valid Renderbuffer format.
+    bool depth24OES;
+
     // GL_OES_depth32
     // Allows DEPTH_COMPONENT32_OES as a valid Renderbuffer format.
     bool depth32;

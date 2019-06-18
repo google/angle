@@ -52,8 +52,8 @@ class DepthStencilTest : public ANGLETest
 
         ASSERT_GL_NO_ERROR();
 
-        // Note: GL_DEPTH_COMPONENT24 is not allowed in GLES2.
-        if (getClientMajorVersion() >= 3)
+        // Note: GL_DEPTH_COMPONENT24 is allowed in GLES2 with GL_OES_depth24 extension.
+        if (getClientMajorVersion() >= 3 || IsGLExtensionEnabled("GL_OES_depth24"))
         {
             // Setup Color/Depth FBO with a depth format that's emulated with packed depth/stencil.
             glBindFramebuffer(GL_FRAMEBUFFER, mColorDepthFBO);
@@ -234,7 +234,7 @@ void DepthStencilTest::prepareSingleEmulatedWithPacked()
 // Tests that clearing or rendering into a depth-only format doesn't affect stencil.
 TEST_P(DepthStencilTest, DepthOnlyEmulatedWithPacked)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_depth24"));
 
     bindColorDepthFBO();
     prepareSingleEmulatedWithPacked();
@@ -256,6 +256,7 @@ ANGLE_INSTANTIATE_TEST(DepthStencilTest,
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
 }  // anonymous namespace

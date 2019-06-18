@@ -64,6 +64,62 @@ class DepthStencilFormatsTestBase : public ANGLETest
         return (glGetError() == GL_NO_ERROR);
     }
 
+    void verifyDepthRenderBuffer(GLenum internalFormat)
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        GLRenderbuffer rbDepth;
+        glBindRenderbuffer(GL_RENDERBUFFER, rbDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, 1, 1);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbDepth);
+
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        ASSERT_GL_NO_ERROR();
+
+        ANGLE_GL_PROGRAM(programRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_GEQUAL);
+        glClearDepthf(0.99f);
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Pass Depth Test and draw red
+        float depthValue = 1.0f;
+        drawQuad(programRed.get(), essl1_shaders::PositionAttrib(), depthValue * 2 - 1);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        ASSERT_GL_NO_ERROR();
+
+        ANGLE_GL_PROGRAM(programGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+        // Fail Depth Test and color buffer is unchanged
+        depthValue = 0.98f;
+        drawQuad(programGreen.get(), essl1_shaders::PositionAttrib(), depthValue * 2 - 1);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        ASSERT_GL_NO_ERROR();
+
+        ANGLE_GL_PROGRAM(programBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+        glClearDepthf(0.0f);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        // Pass Depth Test and draw blue
+        depthValue = 0.01f;
+        drawQuad(programBlue.get(), essl1_shaders::PositionAttrib(), depthValue * 2 - 1);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+        glDisable(GL_DEPTH_TEST);
+        ASSERT_GL_NO_ERROR();
+    }
+
     void testSetUp() override
     {
         constexpr char kVS[] = R"(precision highp float;
@@ -467,6 +523,27 @@ void main()
                 EXPECT_GL_NO_ERROR();
             }
         }
+    }
+}
+
+// This test will initialize a frame buffer, attaching a color and 16-bit depth buffer,
+// render to it with depth testing, and verify pixel correctness.
+TEST_P(DepthStencilFormatsTest, DepthBuffer16)
+{
+    verifyDepthRenderBuffer(GL_DEPTH_COMPONENT16);
+}
+
+// This test will initialize a frame buffer, attaching a color and 24-bit depth buffer,
+// render to it with depth testing, and verify pixel correctness.
+TEST_P(DepthStencilFormatsTest, DepthBuffer24)
+{
+    bool shouldHaveRenderbufferSupport = IsGLExtensionEnabled("GL_OES_depth24");
+    EXPECT_EQ(shouldHaveRenderbufferSupport,
+              checkRenderbufferFormatSupport(GL_DEPTH_COMPONENT24_OES));
+
+    if (shouldHaveRenderbufferSupport)
+    {
+        verifyDepthRenderBuffer(GL_DEPTH_COMPONENT24_OES);
     }
 }
 

@@ -176,6 +176,7 @@ Extensions::Extensions()
       sRGB(false),
       depthTextureANGLE(false),
       depthTextureOES(false),
+      depth24OES(false),
       depth32(false),
       textureStorage(false),
       textureNPOT(false),
@@ -678,6 +679,16 @@ static bool DetermineDepthTextureOESSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, true, true);
 }
 
+// Check for GL_OES_depth24
+static bool DetermineDepth24OESSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_DEPTH_COMPONENT24_OES,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, false, false, false, true);
+}
+
 // Check for GL_OES_depth32
 static bool DetermineDepth32Support(const TextureCapsMap &textureCaps)
 {
@@ -799,6 +810,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     sRGB                             = DetermineSRGBTextureSupport(textureCaps);
     depthTextureANGLE                = DetermineDepthTextureANGLESupport(textureCaps);
     depthTextureOES                  = DetermineDepthTextureOESSupport(textureCaps);
+    depth24OES                       = DetermineDepth24OESSupport(textureCaps);
     depth32                          = DetermineDepth32Support(textureCaps);
     colorBufferFloatRGB              = DetermineColorBufferFloatRGBSupport(textureCaps);
     colorBufferFloatRGBA             = DetermineColorBufferFloatRGBASupport(textureCaps);
@@ -862,6 +874,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);
+        map["GL_OES_depth24"] = esOnlyExtension(&Extensions::depth24OES);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);
         map["GL_EXT_texture_storage"] = enableableExtension(&Extensions::textureStorage);
         map["GL_OES_texture_npot"] = enableableExtension(&Extensions::textureNPOT);
