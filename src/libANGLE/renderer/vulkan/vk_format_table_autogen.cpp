@@ -955,7 +955,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R11G11B10_FLOAT:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_R11F_G11F_B10F;
+            imageFormatID                = angle::FormatID::R11G11B10_FLOAT;
+            vkImageFormat                = VK_FORMAT_B10G11R11_UFLOAT_PACK32;
+            imageInitializerFunction     = nullptr;
+            bufferFormatID               = angle::FormatID::R11G11B10_FLOAT;
+            vkBufferFormat               = VK_FORMAT_B10G11R11_UFLOAT_PACK32;
+            vkBufferFormatIsPacked       = true;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::R16G16B16A16_FLOAT:
@@ -1995,7 +2003,15 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R9G9B9E5_SHAREDEXP:
-            // This format is not implemented in Vulkan.
+            internalFormat               = GL_RGB9_E5;
+            imageFormatID                = angle::FormatID::R9G9B9E5_SHAREDEXP;
+            vkImageFormat                = VK_FORMAT_E5B9G9R9_UFLOAT_PACK32;
+            imageInitializerFunction     = nullptr;
+            bufferFormatID               = angle::FormatID::R9G9B9E5_SHAREDEXP;
+            vkBufferFormat               = VK_FORMAT_E5B9G9R9_UFLOAT_PACK32;
+            vkBufferFormatIsPacked       = true;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::S8_UINT:
