@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f3e8540_ad6b42bf",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-19T20:56:56Z",
+      "side": 1,
+      "message": "Because there are conflicts between the specs, OES_depth_texture expects the texture to behave as luminance while ES 3.0 says it should be sampled as if it\u0027s a RED texture we\u0027ll probably just break the glmark2 test if we ever give it an ES3 context in the future.\n\nCan we try always treating these textures as luminance and run it through the a CQ dry run to see what dEQP thinks?",
+      "range": {
+        "startLine": 1488,
+        "startChar": 0,
+        "endLine": 1494,
+        "endChar": 21
+      },
+      "revId": "0e26cc5cff1a3d76fa76bd519b361f2d234eb66c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
