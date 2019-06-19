@@ -22,6 +22,30 @@
       "revId": "0e26cc5cff1a3d76fa76bd519b361f2d234eb66c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "106e9fc6_5004dbfd",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1350412
+      },
+      "writtenOn": "2019-06-19T21:44:56Z",
+      "side": 1,
+      "message": "dEQP-GLES3.functional.texture.format.sized.*.depth_component* fails when this is unconditionally enabled.\nSince glmark2 requests an ES 2.0 context, I think we should leave the check in.",
+      "parentUuid": "3f3e8540_ad6b42bf",
+      "range": {
+        "startLine": 1488,
+        "startChar": 0,
+        "endLine": 1494,
+        "endChar": 21
+      },
+      "revId": "0e26cc5cff1a3d76fa76bd519b361f2d234eb66c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
