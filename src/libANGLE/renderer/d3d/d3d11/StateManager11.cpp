@@ -1800,8 +1800,8 @@ void StateManager11::unsetConflictingSRVs(gl::PipelineType pipeline,
     auto *currentSRVs = getSRVCache(shaderType);
     gl::PipelineType conflictPipeline = gl::GetPipelineType(shaderType);
     bool foundOne = false;
-
-    for (size_t resourceIndex = 0; resourceIndex < currentSRVs->size(); ++resourceIndex)
+    size_t count                      = std::min(currentSRVs->size(), currentSRVs->highestUsed());
+    for (size_t resourceIndex = 0; resourceIndex < count; ++resourceIndex)
     {
         auto &record = (*currentSRVs)[resourceIndex];
 
@@ -1839,7 +1839,8 @@ void StateManager11::unsetConflictingUAVs(gl::PipelineType pipeline,
     bool foundOne = false;
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-    for (size_t resourceIndex = 0; resourceIndex < mCurComputeUAVs.size(); ++resourceIndex)
+    size_t count = std::min(mCurComputeUAVs.size(), mCurComputeUAVs.highestUsed());
+    for (size_t resourceIndex = 0; resourceIndex < count; ++resourceIndex)
     {
         auto &record = mCurComputeUAVs[resourceIndex];
 
