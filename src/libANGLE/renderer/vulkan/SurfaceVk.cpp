@@ -866,6 +866,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                        EGLint n_rects,
                                        bool &swapchainOutOfDate)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
+
     // Throttle the submissions to avoid getting too far ahead of the GPU.
     SwapHistory &swap = mSwapHistory[mCurrentSwapHistoryIndex];
     {
@@ -982,6 +984,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
 angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::swapImpl");
+
     ContextVk *contextVk = vk::GetImpl(context);
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 

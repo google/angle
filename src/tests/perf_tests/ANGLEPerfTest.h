@@ -147,6 +147,9 @@ class ANGLERenderTest : public ANGLEPerfTest
     void startGpuTimer();
     void stopGpuTimer();
 
+    void beginInternalTraceEvent(const char *name);
+    void endInternalTraceEvent(const char *name);
+
   private:
     void SetUp() override;
     void TearDown() override;

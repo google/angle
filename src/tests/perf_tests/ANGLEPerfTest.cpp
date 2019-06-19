@@ -12,6 +12,7 @@
 #include "ANGLEPerfTestArgs.h"
 #include "common/platform.h"
 #include "third_party/perf/perf_test.h"
+#include "third_party/trace_event/trace_event.h"
 #include "util/shader_utils.h"
 #include "util/system_utils.h"
 
@@ -57,17 +58,17 @@ void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::FeaturesD3D
     angleRenderTest->overrideWorkaroundsD3D(featuresD3D);
 }
 
-angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
-                                      char phase,
-                                      const unsigned char *categoryEnabledFlag,
-                                      const char *name,
-                                      unsigned long long id,
-                                      double timestamp,
-                                      int numArgs,
-                                      const char **argNames,
-                                      const unsigned char *argTypes,
-                                      const unsigned long long *argValues,
-                                      unsigned char flags)
+angle::TraceEventHandle AddPerfTraceEvent(angle::PlatformMethods *platform,
+                                          char phase,
+                                          const unsigned char *categoryEnabledFlag,
+                                          const char *name,
+                                          unsigned long long id,
+                                          double timestamp,
+                                          int numArgs,
+                                          const char **argNames,
+                                          const unsigned char *argTypes,
+                                          const unsigned long long *argValues,
+                                          unsigned char flags)
 {
     if (!gEnableTrace)
         return 0;
@@ -84,7 +85,7 @@ angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
     return buffer.size();
 }
 
-const unsigned char *GetTraceCategoryEnabledFlag(angle::PlatformMethods *platform,
+const unsigned char *GetPerfTraceCategoryEnabled(angle::PlatformMethods *platform,
                                                  const char *categoryName)
 {
     if (gEnableTrace)
@@ -420,8 +421,8 @@ void ANGLERenderTest::SetUp()
     mPlatformMethods.logError                    = EmptyPlatformMethod;
     mPlatformMethods.logWarning                  = EmptyPlatformMethod;
     mPlatformMethods.logInfo                     = EmptyPlatformMethod;
-    mPlatformMethods.addTraceEvent               = AddTraceEvent;
-    mPlatformMethods.getTraceCategoryEnabledFlag = GetTraceCategoryEnabledFlag;
+    mPlatformMethods.addTraceEvent               = AddPerfTraceEvent;
+    mPlatformMethods.getTraceCategoryEnabledFlag = GetPerfTraceCategoryEnabled;
     mPlatformMethods.updateTraceEventDuration    = UpdateTraceEventDuration;
     mPlatformMethods.monotonicallyIncreasingTime = MonotonicallyIncreasingTime;
     mPlatformMethods.context                     = this;
@@ -500,8 +501,28 @@ void ANGLERenderTest::TearDown()
     ANGLEPerfTest::TearDown();
 }
 
+void ANGLERenderTest::beginInternalTraceEvent(const char *name)
+{
+    if (gEnableTrace)
+    {
+        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_BEGIN, gTraceCategories[0].name, name,
+                                       MonotonicallyIncreasingTime(&mPlatformMethods));
+    }
+}
+
+void ANGLERenderTest::endInternalTraceEvent(const char *name)
+{
+    if (gEnableTrace)
+    {
+        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_END, gTraceCategories[0].name, name,
+                                       MonotonicallyIncreasingTime(&mPlatformMethods));
+    }
+}
+
 void ANGLERenderTest::step()
 {
+    beginInternalTraceEvent("step");
+
     // Clear events that the application did not process from this frame
     Event event;
     bool closed = false;
@@ -528,6 +549,8 @@ void ANGLERenderTest::step()
         mGLWindow->swap();
         mOSWindow->messageLoop();
     }
+
+    endInternalTraceEvent("step");
 }
 
 void ANGLERenderTest::startGpuTimer()
