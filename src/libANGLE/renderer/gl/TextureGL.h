@@ -40,6 +40,8 @@ struct LevelInfoGL
     GLenum nativeInternalFormat;
 
     // If this mip level requires sampler-state re-writing so that only a red channel is exposed.
+    // In GLES 2.0, depth textures are treated as luminance, so we check the
+    // context's major version when applying the depth swizzle.
     bool depthStencilWorkaround;
 
     // Information about luminance alpha texture workarounds in the core profile.
@@ -234,7 +236,8 @@ class TextureGL : public TextureImpl
                                                const gl::Buffer *unpackBuffer,
                                                const uint8_t *pixels);
 
-    void syncTextureStateSwizzle(const FunctionsGL *functions,
+    void syncTextureStateSwizzle(const gl::Context *context,
+                                 const FunctionsGL *functions,
                                  GLenum name,
                                  GLenum value,
                                  GLenum *outValue);

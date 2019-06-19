@@ -1261,22 +1261,22 @@ angle::Result TextureGL::syncState(const gl::Context *context,
 
             // Texture state
             case gl::Texture::DIRTY_BIT_SWIZZLE_RED:
-                syncTextureStateSwizzle(functions, GL_TEXTURE_SWIZZLE_R,
+                syncTextureStateSwizzle(context, functions, GL_TEXTURE_SWIZZLE_R,
                                         mState.getSwizzleState().swizzleRed,
                                         &mAppliedSwizzle.swizzleRed);
                 break;
             case gl::Texture::DIRTY_BIT_SWIZZLE_GREEN:
-                syncTextureStateSwizzle(functions, GL_TEXTURE_SWIZZLE_G,
+                syncTextureStateSwizzle(context, functions, GL_TEXTURE_SWIZZLE_G,
                                         mState.getSwizzleState().swizzleGreen,
                                         &mAppliedSwizzle.swizzleGreen);
                 break;
             case gl::Texture::DIRTY_BIT_SWIZZLE_BLUE:
-                syncTextureStateSwizzle(functions, GL_TEXTURE_SWIZZLE_B,
+                syncTextureStateSwizzle(context, functions, GL_TEXTURE_SWIZZLE_B,
                                         mState.getSwizzleState().swizzleBlue,
                                         &mAppliedSwizzle.swizzleBlue);
                 break;
             case gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA:
-                syncTextureStateSwizzle(functions, GL_TEXTURE_SWIZZLE_A,
+                syncTextureStateSwizzle(context, functions, GL_TEXTURE_SWIZZLE_A,
                                         mState.getSwizzleState().swizzleAlpha,
                                         &mAppliedSwizzle.swizzleAlpha);
                 break;
@@ -1404,7 +1404,8 @@ GLenum TextureGL::getNativeInternalFormat(const gl::ImageIndex &index) const
     return getLevelInfo(index.getTarget(), index.getLevelIndex()).nativeInternalFormat;
 }
 
-void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,
+void TextureGL::syncTextureStateSwizzle(const gl::Context *context,
+                                        const FunctionsGL *functions,
                                         GLenum name,
                                         GLenum value,
                                         GLenum *outValue)
@@ -1483,8 +1484,18 @@ void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,
 
                 case GL_GREEN:
                 case GL_BLUE:
-                    // Depth textures should sample 0 from the green and blue channels.
-                    resultSwizzle = GL_ZERO;
+                    if (context->getClientMajorVersion() <= 2)
+                    {
+                        // In OES_depth_texture/ARB_depth_texture, depth
+                        // textures are treated as luminance.
+                        resultSwizzle = GL_RED;
+                    }
+                    else
+                    {
+                        // In GLES 3.0, depth textures are treated as RED
+                        // textures, so green and blue should be 0.
+                        resultSwizzle = GL_ZERO;
+                    }
                     break;
 
                 case GL_ALPHA:

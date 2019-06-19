@@ -28,6 +28,7 @@ class TextureCapsMap;
 namespace rx
 {
 class RendererVk;
+class ContextVk;
 
 namespace vk
 {
@@ -148,7 +149,8 @@ bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat);
 // calculation is listed in the Vulkan spec at the end of the section 'Vertex Input Description'.
 size_t GetVertexInputAlignment(const vk::Format &format);
 
-void MapSwizzleState(const vk::Format &format,
+void MapSwizzleState(const ContextVk *contextVk,
+                     const vk::Format &format,
                      const gl::SwizzleState &swizzleState,
                      gl::SwizzleState *swizzleStateOut);
 }  // namespace rx
