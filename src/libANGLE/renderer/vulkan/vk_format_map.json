@@ -220,6 +220,54 @@
         },
         "R32G32B32A32_FIXED": {
             "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R32_UNORM": {
+            "buffer": "R32_FLOAT"
+        },
+        "R32G32_UNORM": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R32G32B32_UNORM": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R32G32B32A32_UNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R32_SNORM": {
+            "buffer": "R32_FLOAT"
+        },
+        "R32G32_SNORM": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R32G32B32_SNORM": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R32G32B32A32_SNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R32_USCALED": {
+            "buffer": "R32_FLOAT"
+        },
+        "R32G32_USCALED": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R32G32B32_USCALED": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R32G32B32A32_USCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R32_SSCALED": {
+            "buffer": "R32_FLOAT"
+        },
+        "R32G32_SSCALED": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R32G32B32_SSCALED": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R32G32B32A32_SSCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
         }
     },
     "fallbacks": {
@@ -341,19 +389,24 @@
             "image": "R32G32B32A32_SINT"
         },
         "R16G16B16_UINT": {
-            "image": "R16G16B16A16_UINT"
+            "image": "R16G16B16A16_UINT",
+            "buffer": "R16G16B16A16_UINT"
         },
         "R16G16B16_SINT": {
-            "image": "R16G16B16A16_SINT"
+            "image": "R16G16B16A16_SINT",
+            "buffer": "R16G16B16A16_SINT"
         },
         "R8G8B8_UINT": {
-            "image": "R8G8B8A8_UINT"
+            "image": "R8G8B8A8_UINT",
+            "buffer": "R8G8B8A8_UINT"
         },
         "R8G8B8_SINT": {
-            "image": "R8G8B8A8_SINT"
+            "image": "R8G8B8A8_SINT",
+            "buffer": "R8G8B8A8_SINT"
         },
         "R16G16B16_FLOAT": {
-            "image": "R16G16B16A16_FLOAT"
+            "image": "R16G16B16A16_FLOAT",
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R32G32B32_FLOAT": {
             "image": "R32G32B32A32_FLOAT"

@@ -558,10 +558,6 @@ class VertexAttributeTestES3 : public VertexAttributeTest
 
 TEST_P(VertexAttributeTestES3, IntUnnormalized)
 {
-    // Conversion of int data isn't supported yet.
-    // anglebug.com/3193
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLint lo                                  = std::numeric_limits<GLint>::min();
     GLint hi                                  = std::numeric_limits<GLint>::max();
     std::array<GLint, kVertexCount> inputData = {
@@ -578,10 +574,6 @@ TEST_P(VertexAttributeTestES3, IntUnnormalized)
 
 TEST_P(VertexAttributeTestES3, IntNormalized)
 {
-    // Conversion of int data isn't supported yet.
-    // anglebug.com/3193
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLint lo                                  = std::numeric_limits<GLint>::min();
     GLint hi                                  = std::numeric_limits<GLint>::max();
     std::array<GLint, kVertexCount> inputData = {
@@ -598,10 +590,6 @@ TEST_P(VertexAttributeTestES3, IntNormalized)
 
 TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 {
-    // Conversion of int data isn't supported yet.
-    // anglebug.com/3193
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLuint mid                                 = std::numeric_limits<GLuint>::max() >> 1;
     GLuint hi                                  = std::numeric_limits<GLuint>::max();
     std::array<GLuint, kVertexCount> inputData = {
@@ -618,10 +606,6 @@ TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 
 TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
 {
-    // Conversion of int data isn't supported yet.
-    // anglebug.com/3193
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLuint mid                                 = std::numeric_limits<GLuint>::max() >> 1;
     GLuint hi                                  = std::numeric_limits<GLuint>::max();
     std::array<GLuint, kVertexCount> inputData = {
@@ -1712,9 +1696,6 @@ void VertexAttributeCachingTest::testSetUp()
 TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
-    // Conversion of int data isn't supported yet.
-    // anglebug.com/3193
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     initBasicProgram();
 
@@ -1749,9 +1730,6 @@ TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 TEST_P(VertexAttributeCachingTest, BufferMulticachingWithOneUnchangedAttrib)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
-    // Conversion of int data isn't supported yet.
-    // anglebug.com/3193
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     initDoubleAttribProgram();
 

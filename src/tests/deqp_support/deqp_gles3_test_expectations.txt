@@ -642,13 +642,9 @@
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.18 = FAIL
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.24 = FAIL
 
-// New vertex attribute formats:
-3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.int2_10_10_10.* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.unsigned_int.components* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.int.components* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.half.components* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.usigned_int2_10_10_10.components* = SKIP
-3193 VULKAN : dEQP-GLES3.functional.vertex_array_objects.all_attributes = SKIP
+// vertex_type_2_10_10_10_rev:
+3193 VULKAN PIXEL2 : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.int2_10_10_10.* = SKIP
+3193 VULKAN PIXEL2 : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.usigned_int2_10_10_10.* = SKIP
 
 3221 VULKAN : dEQP-GLES3.functional.instanced.* = SKIP
 
@@ -712,10 +708,6 @@
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.fbo.texture_2d.primitives.lines = FAIL
 2830 ANDROID VULKAN : dEQP-GLES3.functional.rasterization.primitives.line* = FAIL
 2808 ANDROID VULKAN : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_w = FAIL
-3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.byte.components* = FAIL
-3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.unsigned_byte.components* = FAIL
-3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.short.components* = FAIL
-3193 ANDROID VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.output_types.unsigned_short.components* = FAIL
 3544 ANDROID VULKAN : dEQP-GLES3.functional.buffer.copy.basic.* = SKIP
 3544 ANDROID VULKAN : dEQP-GLES3.functional.buffer.copy.subrange.* = SKIP
 
