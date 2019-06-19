@@ -345,7 +345,6 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
                     mCurrentElementArrayBuffer = nullptr;
                 }
 
-                mCurrentElementArrayBufferOffset = 0;
                 mLineLoopBufferFirstIndex.reset();
                 mLineLoopBufferLastIndex.reset();
                 contextVk->setIndexBufferDirty();
@@ -356,6 +355,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
                 mLineLoopBufferFirstIndex.reset();
                 mLineLoopBufferLastIndex.reset();
+                contextVk->setIndexBufferDirty();
                 mDirtyLineLoopTranslation = true;
                 break;
 

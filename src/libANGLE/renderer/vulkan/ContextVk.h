@@ -232,7 +232,11 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
                      unsigned int line) override;
     const gl::ActiveTextureArray<TextureVk *> &getActiveTextures() const;
 
-    void setIndexBufferDirty() { mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER); }
+    void setIndexBufferDirty()
+    {
+        mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+        mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
+    }
 
     angle::Result flushImpl(const gl::Semaphore *semaphore);
     angle::Result finishImpl();
