@@ -267,6 +267,20 @@ struct FeaturesGL : FeatureSetBase
     Feature disableWorkerContexts = {"disable_worker_contexts", FeatureCategory::OpenGLWorkarounds,
                                      "Some tests have been seen to fail using worker contexts",
                                      &members, "http://crbug.com/849576"};
+
+    // Most Android devices fail to allocate a texture that is larger than 4096. Limit the caps
+    // instead of generating GL_OUT_OF_MEMORY errors.
+    Feature limitMaxTextureSizeTo4096 = {
+        "max_texture_size_limit_4096", FeatureCategory::OpenGLWorkarounds,
+        "Limit max texture size to 4096 to avoid frequent out-of-memory errors on Android",
+        &members};
+
+    // Prevent excessive MSAA allocations on Android devices, various rendering bugs have been
+    // observed and they tend to be high DPI anyways. http://crbug.com/797243
+    Feature limitMaxMSAASamplesTo4 = {
+        "max_msaa_sample_count_4", FeatureCategory::OpenGLWorkarounds,
+        "Various rendering bugs have been observed when using higher MSAA counts on Android",
+        &members, "http://crbug.com/797243"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

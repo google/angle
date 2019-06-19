@@ -294,6 +294,11 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
             }
             for (size_t sampleIndex = 0; sampleIndex < samples.size(); sampleIndex++)
             {
+                if (features.limitMaxMSAASamplesTo4.enabled && samples[sampleIndex] > 4)
+                {
+                    continue;
+                }
+
                 // Some NVIDIA drivers expose multisampling modes implemented as a combination of
                 // multisampling and supersampling. These are non-conformant and should not be
                 // exposed through ANGLE. Query which formats are conformant from the driver if
@@ -459,10 +464,17 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxElementIndex = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
     }
 
+    GLint textureSizeLimit = std::numeric_limits<GLint>::max();
+    if (features.limitMaxTextureSizeTo4096.enabled)
+    {
+        textureSizeLimit = 4096;
+    }
+
     if (functions->isAtLeastGL(gl::Version(1, 2)) || functions->isAtLeastGLES(gl::Version(3, 0)) ||
         functions->hasGLESExtension("GL_OES_texture_3D"))
     {
-        caps->max3DTextureSize = QuerySingleGLInt(functions, GL_MAX_3D_TEXTURE_SIZE);
+        caps->max3DTextureSize =
+            std::min(QuerySingleGLInt(functions, GL_MAX_3D_TEXTURE_SIZE), textureSizeLimit);
     }
     else
     {
@@ -470,15 +482,18 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
-    caps->max2DTextureSize = QuerySingleGLInt(functions, GL_MAX_TEXTURE_SIZE);  // GL 1.0 / ES 2.0
+    caps->max2DTextureSize = std::min(QuerySingleGLInt(functions, GL_MAX_TEXTURE_SIZE),
+                                      textureSizeLimit);  // GL 1.0 / ES 2.0
     caps->maxCubeMapTextureSize =
-        QuerySingleGLInt(functions, GL_MAX_CUBE_MAP_TEXTURE_SIZE);  // GL 1.3 / ES 2.0
+        std::min(QuerySingleGLInt(functions, GL_MAX_CUBE_MAP_TEXTURE_SIZE),
+                 textureSizeLimit);  // GL 1.3 / ES 2.0
 
     if (functions->isAtLeastGL(gl::Version(3, 0)) ||
         functions->hasGLExtension("GL_EXT_texture_array") ||
         functions->isAtLeastGLES(gl::Version(3, 0)))
     {
-        caps->maxArrayTextureLayers = QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS);
+        caps->maxArrayTextureLayers =
+            std::min(QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS), textureSizeLimit);
     }
     else
     {
@@ -795,13 +810,19 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
+    GLint sampleCountLimit = std::numeric_limits<GLint>::max();
+    if (features.limitMaxMSAASamplesTo4.enabled)
+    {
+        sampleCountLimit = 4;
+    }
+
     // Table 6.35, Framebuffer Dependent Values
     if (functions->isAtLeastGL(gl::Version(3, 0)) ||
         functions->hasGLExtension("GL_EXT_framebuffer_multisample") ||
         functions->isAtLeastGLES(gl::Version(3, 0)) ||
         functions->hasGLESExtension("GL_EXT_multisampled_render_to_texture"))
     {
-        caps->maxSamples = QuerySingleGLInt(functions, GL_MAX_SAMPLES);
+        caps->maxSamples = std::min(QuerySingleGLInt(functions, GL_MAX_SAMPLES), sampleCountLimit);
     }
     else
     {
@@ -864,7 +885,8 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         caps->maxFramebufferWidth   = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_WIDTH);
         caps->maxFramebufferHeight  = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_HEIGHT);
-        caps->maxFramebufferSamples = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_SAMPLES);
+        caps->maxFramebufferSamples =
+            std::min(QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_SAMPLES), sampleCountLimit);
     }
     else
     {
@@ -875,9 +897,12 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLExtension("GL_ARB_texture_multisample"))
     {
         caps->maxSampleMaskWords     = QuerySingleGLInt(functions, GL_MAX_SAMPLE_MASK_WORDS);
-        caps->maxColorTextureSamples = QuerySingleGLInt(functions, GL_MAX_COLOR_TEXTURE_SAMPLES);
-        caps->maxDepthTextureSamples = QuerySingleGLInt(functions, GL_MAX_DEPTH_TEXTURE_SAMPLES);
-        caps->maxIntegerSamples      = QuerySingleGLInt(functions, GL_MAX_INTEGER_SAMPLES);
+        caps->maxColorTextureSamples =
+            std::min(QuerySingleGLInt(functions, GL_MAX_COLOR_TEXTURE_SAMPLES), sampleCountLimit);
+        caps->maxDepthTextureSamples =
+            std::min(QuerySingleGLInt(functions, GL_MAX_DEPTH_TEXTURE_SAMPLES), sampleCountLimit);
+        caps->maxIntegerSamples =
+            std::min(QuerySingleGLInt(functions, GL_MAX_INTEGER_SAMPLES), sampleCountLimit);
     }
     else
     {
@@ -1268,8 +1293,8 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLExtension("GL_ARB_texture_rectangle"))
     {
         extensions->textureRectangle = true;
-        caps->maxRectangleTextureSize =
-            QuerySingleGLInt(functions, GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE);
+        caps->maxRectangleTextureSize = std::min(
+            QuerySingleGLInt(functions, GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE), textureSizeLimit);
     }
 
     // OpenGL 4.3 (and above) can support all features and constants defined in
@@ -1477,6 +1502,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // crbug.com/922936
     features->disableWorkerContexts.enabled =
         (IsWindows() && (IsIntel(vendor) || IsAMD(vendor))) || (IsLinux() && IsNvidia(vendor));
+
+    features->limitMaxTextureSizeTo4096.enabled = IsAndroid();
+    features->limitMaxMSAASamplesTo4.enabled    = IsAndroid();
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
