@@ -704,7 +704,33 @@
                         }
                     }
                 }
-
+            },
+            "ANGLEBaseVertexBaseInstance":{
+                "condition": "mResources.ANGLE_base_vertex_base_instance",
+                "subgroups":{
+                  "ESSL3":{
+                        "variables":{
+                            "gl_BaseVertex":{
+                                "level":"ESSL3_BUILTINS",
+                                "extension":"ANGLE_base_vertex_base_instance",
+                                "type":{
+                                    "basic":"Int",
+                                    "precision":"High",
+                                    "qualifier":"BaseVertex"
+                                }
+                            },
+                            "gl_BaseInstance":{
+                                "level":"ESSL3_BUILTINS",
+                                "extension":"ANGLE_base_vertex_base_instance",
+                                "type":{
+                                    "basic":"Int",
+                                    "precision":"High",
+                                    "qualifier":"BaseInstance"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },

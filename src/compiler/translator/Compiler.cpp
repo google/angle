@@ -26,8 +26,8 @@
 #include "compiler/translator/tree_ops/ClampPointSize.h"
 #include "compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
-#include "compiler/translator/tree_ops/EmulateGLDrawID.h"
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
+#include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 #include "compiler/translator/tree_ops/EmulatePrecision.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
@@ -356,6 +356,17 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         }
     }
 
+    const bool glBaseVertexBaseInstanceSupported =
+        (compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u;
+    if (!glBaseVertexBaseInstanceSupported)
+    {
+        auto it = mExtensionBehavior.find(TExtension::ANGLE_base_vertex_base_instance);
+        if (it != mExtensionBehavior.end())
+        {
+            mExtensionBehavior.erase(it);
+        }
+    }
+
     // First string is path of source file if flag is set. The actual source follows.
     size_t firstSource = 0;
     if (compileOptions & SH_SOURCE_PATH)
@@ -631,10 +642,26 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (mShaderType == GL_VERTEX_SHADER &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
     {
-        if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0)
+        if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u)
         {
             EmulateGLDrawID(root, &mSymbolTable, &mUniforms,
                             shouldCollectVariables(compileOptions));
+            if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+            {
+                return false;
+            }
+        }
+    }
+
+    if (mShaderType == GL_VERTEX_SHADER &&
+        IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_base_vertex_base_instance))
+    {
+        if ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u)
+        {
+            EmulateGLBaseVertex(root, &mSymbolTable, &mUniforms,
+                                shouldCollectVariables(compileOptions));
+            EmulateGLBaseInstance(root, &mSymbolTable, &mUniforms,
+                                  shouldCollectVariables(compileOptions));
             if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
             {
                 return false;
@@ -904,17 +931,35 @@ bool TCompiler::compile(const char *const shaderStrings[],
             translate(root, compileOptions, &perfDiagnostics);
         }
 
-        if (mShaderType == GL_VERTEX_SHADER &&
-            IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
+        if (mShaderType == GL_VERTEX_SHADER)
         {
-            if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0)
+            bool lookForDrawID =
+                IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw) &&
+                ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u);
+            bool lookForBaseVertexBaseInstance =
+                IsExtensionEnabled(mExtensionBehavior,
+                                   TExtension::ANGLE_base_vertex_base_instance) &&
+                ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u);
+
+            if (lookForDrawID || lookForBaseVertexBaseInstance)
             {
                 for (auto &uniform : mUniforms)
                 {
-                    if (uniform.name == "angle_DrawID" && uniform.mappedName == "angle_DrawID")
+                    if (lookForDrawID && uniform.name == "angle_DrawID" &&
+                        uniform.mappedName == "angle_DrawID")
                     {
                         uniform.name = "gl_DrawID";
-                        break;
+                    }
+                    else if (lookForBaseVertexBaseInstance && uniform.name == "angle_BaseVertex" &&
+                             uniform.mappedName == "angle_BaseVertex")
+                    {
+                        uniform.name = "gl_BaseVertex";
+                    }
+                    else if (lookForBaseVertexBaseInstance &&
+                             uniform.name == "angle_BaseInstance" &&
+                             uniform.mappedName == "angle_BaseInstance")
+                    {
+                        uniform.name = "gl_BaseInstance";
                     }
                 }
             }
@@ -986,6 +1031,7 @@ void TCompiler::setResourceString()
         << ":NV_draw_buffers:" << mResources.NV_draw_buffers
         << ":WEBGL_debug_shader_precision:" << mResources.WEBGL_debug_shader_precision
         << ":ANGLE_multi_draw:" << mResources.ANGLE_multi_draw
+        << ":ANGLE_base_vertex_base_instance:" << mResources.ANGLE_base_vertex_base_instance
         << ":MinProgramTextureGatherOffset:" << mResources.MinProgramTextureGatherOffset
         << ":MaxProgramTextureGatherOffset:" << mResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << mResources.MaxImageUnits

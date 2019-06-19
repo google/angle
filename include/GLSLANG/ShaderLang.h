@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 208
+#define ANGLE_SH_VERSION 209
 
 enum ShShaderSpec
 {
@@ -281,6 +281,9 @@ const ShCompileOptions SH_INIT_SHARED_VARIABLES = UINT64_C(1) << 41;
 // http://anglebug.com/3246
 const ShCompileOptions SH_FORCE_ATOMIC_VALUE_RESOLUTION = UINT64_C(1) << 42;
 
+// Rewrite gl_BaseVertex and gl_BaseInstance as uniform int
+const ShCompileOptions SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE = UINT64_C(1) << 43;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {
@@ -334,6 +337,7 @@ struct ShBuiltInResources
     int OES_texture_3D;
     int ANGLE_texture_multisample;
     int ANGLE_multi_draw;
+    int ANGLE_base_vertex_base_instance;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate

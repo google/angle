@@ -1073,6 +1073,8 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x7e6be47fu, ImmutableString("gl_InstanceID").mangledNameHash());
     ASSERT_EQ(0x7e5f8987u, ImmutableString("gl_VertexID").mangledNameHash());
     ASSERT_EQ(0x7e4c3c42u, ImmutableString("gl_DrawID").mangledNameHash());
+    ASSERT_EQ(0x7e695e00u, ImmutableString("gl_BaseVertex").mangledNameHash());
+    ASSERT_EQ(0x7e785b75u, ImmutableString("gl_BaseInstance").mangledNameHash());
     ASSERT_EQ(0x7e6f6de9u, ImmutableString("gl_ViewID_OVR").mangledNameHash());
     ASSERT_EQ(0x7ea6cdf6u, ImmutableString("gl_MaxVaryingVectors").mangledNameHash());
     ASSERT_EQ(0x7e5a0c08u, ImmutableString("gl_FragData").mangledNameHash());

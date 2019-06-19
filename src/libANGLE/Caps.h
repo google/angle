@@ -515,6 +515,9 @@ struct Extensions
 
     // GL_ANGLE_texture_external_update
     bool textureExternalUpdateANGLE = false;
+
+    // GL_ANGLE_base_vertex_base_instance
+    bool baseVertexBaseInstance = false;
 };
 
 struct ExtensionInfo

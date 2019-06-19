@@ -978,6 +978,8 @@ constexpr const TSymbolUniqueId BuiltInId::gl_ViewportIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_LayerVS;
 constexpr const TSymbolUniqueId BuiltInId::gl_DrawID;
 constexpr const TSymbolUniqueId BuiltInId::gl_DrawIDESSL1;
+constexpr const TSymbolUniqueId BuiltInId::gl_BaseVertex;
+constexpr const TSymbolUniqueId BuiltInId::gl_BaseInstance;
 constexpr const TSymbolUniqueId BuiltInId::gl_NumWorkGroups;
 constexpr const TSymbolUniqueId BuiltInId::gl_WorkGroupSize;
 constexpr const TSymbolUniqueId BuiltInId::gl_WorkGroupID;
@@ -995,7 +997,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionGS;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVRESSL1;
 
-const int TSymbolTable::kLastBuiltInId = 1031;
+const int TSymbolTable::kLastBuiltInId = 1033;
 
 namespace BuiltInName
 {
@@ -1082,6 +1084,8 @@ constexpr const ImmutableString frexp("frexp");
 constexpr const ImmutableString frexp_3B3C("frexp(3B3C");
 constexpr const ImmutableString fwidth("fwidth");
 constexpr const ImmutableString fwidthExt("fwidth");
+constexpr const ImmutableString gl_BaseInstance("gl_BaseInstance");
+constexpr const ImmutableString gl_BaseVertex("gl_BaseVertex");
 constexpr const ImmutableString gl_DepthRange("gl_DepthRange");
 constexpr const ImmutableString gl_DepthRangeParameters("gl_DepthRangeParameters");
 constexpr const ImmutableString gl_DrawID("gl_DrawID");
@@ -1468,6 +1472,18 @@ constexpr const ImmutableString yuv_2_rgb("yuv_2_rgb");
 namespace BuiltInVariable
 {
 
+constexpr const TVariable kVar_gl_BaseInstance(
+    BuiltInId::gl_BaseInstance,
+    BuiltInName::gl_BaseInstance,
+    SymbolType::BuiltIn,
+    TExtension::ANGLE_base_vertex_base_instance,
+    StaticType::Get<EbtInt, EbpHigh, EvqBaseInstance, 1, 1>());
+constexpr const TVariable kVar_gl_BaseVertex(
+    BuiltInId::gl_BaseVertex,
+    BuiltInName::gl_BaseVertex,
+    SymbolType::BuiltIn,
+    TExtension::ANGLE_base_vertex_base_instance,
+    StaticType::Get<EbtInt, EbpHigh, EvqBaseVertex, 1, 1>());
 constexpr const TVariable kVar_gl_DrawID(BuiltInId::gl_DrawID,
                                          BuiltInName::gl_DrawID,
                                          SymbolType::BuiltIn,
@@ -2055,6 +2071,16 @@ constexpr const TVariable kVar_pt_o_3D(BuiltInId::pt_o_3D,
                                        SymbolType::BuiltIn,
                                        TExtension::UNDEFINED,
                                        StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>());
+
+const TVariable *gl_BaseInstance()
+{
+    return &kVar_gl_BaseInstance;
+}
+
+const TVariable *gl_BaseVertex()
+{
+    return &kVar_gl_BaseVertex;
+}
 
 const TVariable *gl_DrawID()
 {
@@ -16868,6 +16894,28 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     if (name == BuiltInName::gl_DrawID)
                     {
                         return &BuiltInVariable::kVar_gl_DrawID;
+                    }
+                    break;
+                }
+            }
+        }
+        if ((mShaderType == GL_VERTEX_SHADER) && (mResources.ANGLE_base_vertex_base_instance))
+        {
+            switch (nameHash)
+            {
+                case 0x7e695e00u:
+                {
+                    if (name == BuiltInName::gl_BaseVertex)
+                    {
+                        return &BuiltInVariable::kVar_gl_BaseVertex;
+                    }
+                    break;
+                }
+                case 0x7e785b75u:
+                {
+                    if (name == BuiltInName::gl_BaseInstance)
+                    {
+                        return &BuiltInVariable::kVar_gl_BaseInstance;
                     }
                     break;
                 }
