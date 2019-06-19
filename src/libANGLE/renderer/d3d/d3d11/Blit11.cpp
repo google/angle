@@ -19,7 +19,7 @@
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 namespace rx
 {
@@ -576,7 +576,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
         return angle::Result::Continue;
     }
 
-    TRACE_EVENT0("gpu.angle", "Blit11::initResources");
+    ANGLE_TRACE_EVENT0("gpu.angle", "Blit11::initResources");
 
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth =

@@ -38,7 +38,7 @@
 #include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 namespace rx
 {
@@ -187,7 +187,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0)
 {
-    TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
 
@@ -273,7 +273,7 @@ angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
 
 angle::Result ContextVk::initialize()
 {
-    TRACE_EVENT0("gpu.angle", "ContextVk::initialize");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::initialize");
 
     VkDescriptorPoolSize driverSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1};
     ANGLE_TRY(mDriverUniformsDescriptorPool.init(this, &driverSetSize, 1));
@@ -656,7 +656,7 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
 angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
                                      vk::PrimaryCommandBuffer &&commandBuffer)
 {
-    TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
+    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::submitFrame");
     VkFenceCreateInfo fenceInfo = {};
     fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fenceInfo.flags             = 0;
@@ -841,7 +841,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     // Make sure nothing is running
     ASSERT(mCommandGraph.empty());
 
-    TRACE_EVENT0("gpu.angle", "RendererVk::synchronizeCpuGpuTime");
+    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::synchronizeCpuGpuTime");
 
     // Create a query used to receive the GPU timestamp
     vk::QueryHelper timestampQuery;
@@ -1096,7 +1096,7 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
         // for.
         static long long eventId = 1;
         static const unsigned char *categoryEnabled =
-            TRACE_EVENT_API_GET_CATEGORY_ENABLED("gpu.angle.gpu");
+            TRACE_EVENT_API_GET_CATEGORY_ENABLED(platform, "gpu.angle.gpu");
         platform->addTraceEvent(platform, event.phase, categoryEnabled, event.name, eventId++,
                                 gpuTimestampS, 0, nullptr, nullptr, nullptr, TRACE_EVENT_FLAG_NONE);
     }
@@ -2080,7 +2080,7 @@ angle::Result ContextVk::flushImpl(const gl::Semaphore *clientSignalSemaphore)
         return angle::Result::Continue;
     }
 
-    TRACE_EVENT0("gpu.angle", "ContextVk::flush");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flush");
 
     vk::Scoped<vk::PrimaryCommandBuffer> commandBatch(getDevice());
     if (!mCommandGraph.empty())
@@ -2110,7 +2110,7 @@ angle::Result ContextVk::flushImpl(const gl::Semaphore *clientSignalSemaphore)
 
 angle::Result ContextVk::finishImpl()
 {
-    TRACE_EVENT0("gpu.angle", "ContextVk::finish");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::finish");
 
     ANGLE_TRY(flushImpl(nullptr));
 
@@ -2165,7 +2165,7 @@ angle::Result ContextVk::checkCompletedCommands()
         mLastCompletedQueueSerial = batch.serial;
 
         batch.fence.reset(device);
-        TRACE_EVENT0("gpu.angle", "commandPool.destroy");
+        ANGLE_TRACE_EVENT0("gpu.angle", "commandPool.destroy");
         batch.commandPool.destroy(device);
         ++finishedCount;
     }

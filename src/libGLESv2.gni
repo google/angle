@@ -26,6 +26,8 @@ libangle_common_sources = [
   "src/common/bitset_utils.h",
   "src/common/debug.cpp",
   "src/common/debug.h",
+  "src/common/event_tracer.cpp",
+  "src/common/event_tracer.h",
   "src/common/hash_utils.h",
   "src/common/mathutil.cpp",
   "src/common/mathutil.h",
@@ -161,8 +163,6 @@ libangle_includes = [
 ]
 
 libangle_sources = [
-  "src/common/event_tracer.cpp",
-  "src/common/event_tracer.h",
   "src/libANGLE/AttributeMap.cpp",
   "src/libANGLE/AttributeMap.h",
   "src/libANGLE/BinaryStream.h",
@@ -289,6 +289,7 @@ libangle_sources = [
   "src/libANGLE/queryconversions.h",
   "src/libANGLE/queryutils.cpp",
   "src/libANGLE/queryutils.h",
+  "src/libANGLE/trace.h",
   "src/libANGLE/renderer/BufferImpl.h",
   "src/libANGLE/renderer/CompilerImpl.h",
   "src/libANGLE/renderer/ContextImpl.cpp",

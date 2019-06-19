@@ -60,7 +60,7 @@
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "libANGLE/renderer/renderer_utils.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 #ifdef ANGLE_ENABLE_WINDOWS_STORE
 #    include "libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
@@ -516,7 +516,7 @@ egl::Error Renderer11::initialize()
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 #    if !ANGLE_SKIP_DXGI_1_2_CHECK
     {
-        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (DXGICheck)");
+        ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initialize (DXGICheck)");
         // In order to create a swap chain for an HWND owned by another process, DXGI 1.2 is
         // required.
         // The easiest way to check is to query for a IDXGIDevice2.
@@ -550,7 +550,7 @@ egl::Error Renderer11::initialize()
 #endif
 
     {
-        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (ComQueries)");
+        ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initialize (ComQueries)");
         // Cast the DeviceContext to a DeviceContext1 and DeviceContext3.
         // This could fail on Windows 7 without the Platform Update.
         // Don't error in this case- just don't use mDeviceContext1 or mDeviceContext3.
@@ -629,7 +629,7 @@ egl::Error Renderer11::initialize()
     // Disable some spurious D3D11 debug warnings to prevent them from flooding the output log
     if (mCreateDebugDevice)
     {
-        TRACE_EVENT0("gpu.angle", "Renderer11::initialize (HideWarnings)");
+        ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initialize (HideWarnings)");
         ID3D11InfoQueue *infoQueue;
         result = mDevice->QueryInterface(__uuidof(ID3D11InfoQueue), (void **)&infoQueue);
 
@@ -678,7 +678,7 @@ egl::Error Renderer11::initializeD3DDevice()
         PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = nullptr;
         {
             SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.Renderer11InitializeDLLsMS");
-            TRACE_EVENT0("gpu.angle", "Renderer11::initialize (Load DLLs)");
+            ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initialize (Load DLLs)");
             mDxgiModule  = LoadLibrary(TEXT("dxgi.dll"));
             mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
             mDCompModule = LoadLibrary(TEXT("dcomp.dll"));
@@ -704,7 +704,7 @@ egl::Error Renderer11::initializeD3DDevice()
 
         if (mCreateDebugDevice)
         {
-            TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
+            ANGLE_TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
             result = callD3D11CreateDevice(D3D11CreateDevice, true);
 
             if (result == E_INVALIDARG && mAvailableFeatureLevels.size() > 1u &&
@@ -726,7 +726,7 @@ egl::Error Renderer11::initializeD3DDevice()
         if (!mDevice || FAILED(result))
         {
             SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3D11CreateDeviceMS");
-            TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
+            ANGLE_TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
 
             result = callD3D11CreateDevice(D3D11CreateDevice, false);
 
@@ -794,7 +794,7 @@ egl::Error Renderer11::initializeD3DDevice()
 egl::Error Renderer11::initializeDevice()
 {
     SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.Renderer11InitializeDeviceMS");
-    TRACE_EVENT0("gpu.angle", "Renderer11::initializeDevice");
+    ANGLE_TRACE_EVENT0("gpu.angle", "Renderer11::initializeDevice");
 
     populateRenderer11DeviceCaps();
 

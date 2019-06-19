@@ -14,7 +14,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 namespace rx
 {
@@ -255,7 +255,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    TRACE_EVENT0("gpu.angle", "BufferVk::getIndexRange");
+    ANGLE_TRACE_EVENT0("gpu.angle", "BufferVk::getIndexRange");
     // Needed before reading buffer or we could get stale data.
     ANGLE_TRY(contextVk->finishImpl());
 

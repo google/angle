@@ -18,7 +18,7 @@
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 namespace rx
 {
@@ -280,7 +280,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
                                                     const vk::Format &vertexFormat,
                                                     ConversionBuffer *conversion)
 {
-    TRACE_EVENT0("gpu.angle", "VertexArrayVk::convertVertexBufferCpu");
+    ANGLE_TRACE_EVENT0("gpu.angle", "VertexArrayVk::convertVertexBufferCpu");
     // Needed before reading buffer or we could get stale data.
     ANGLE_TRY(contextVk->finishImpl());
 

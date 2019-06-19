@@ -51,7 +51,7 @@
 #include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 #    define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
@@ -193,7 +193,7 @@ void Renderer9::release()
 
 egl::Error Renderer9::initialize()
 {
-    TRACE_EVENT0("gpu.angle", "GetModuleHandle_d3d9");
+    ANGLE_TRACE_EVENT0("gpu.angle", "GetModuleHandle_d3d9");
     mD3d9Module = ::LoadLibrary(TEXT("d3d9.dll"));
 
     if (mD3d9Module == nullptr)
@@ -212,14 +212,14 @@ egl::Error Renderer9::initialize()
     if (ANGLE_D3D9EX == ANGLE_ENABLED && Direct3DCreate9ExPtr &&
         SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
     {
-        TRACE_EVENT0("gpu.angle", "D3d9Ex_QueryInterface");
+        ANGLE_TRACE_EVENT0("gpu.angle", "D3d9Ex_QueryInterface");
         ASSERT(mD3d9Ex);
         mD3d9Ex->QueryInterface(__uuidof(IDirect3D9), reinterpret_cast<void **>(&mD3d9));
         ASSERT(mD3d9);
     }
     else
     {
-        TRACE_EVENT0("gpu.angle", "Direct3DCreate9");
+        ANGLE_TRACE_EVENT0("gpu.angle", "Direct3DCreate9");
         mD3d9 = Direct3DCreate9(D3D_SDK_VERSION);
     }
 
@@ -238,7 +238,7 @@ egl::Error Renderer9::initialize()
 
     // Give up on getting device caps after about one second.
     {
-        TRACE_EVENT0("gpu.angle", "GetDeviceCaps");
+        ANGLE_TRACE_EVENT0("gpu.angle", "GetDeviceCaps");
         for (int i = 0; i < 10; ++i)
         {
             result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &mDeviceCaps);
@@ -282,7 +282,7 @@ egl::Error Renderer9::initialize()
     }
 
     {
-        TRACE_EVENT0("gpu.angle", "GetAdapterIdentifier");
+        ANGLE_TRACE_EVENT0("gpu.angle", "GetAdapterIdentifier");
         mD3d9->GetAdapterIdentifier(mAdapter, 0, &mAdapterIdentifier);
     }
 
@@ -290,7 +290,7 @@ egl::Error Renderer9::initialize()
     static const TCHAR className[]  = TEXT("STATIC");
 
     {
-        TRACE_EVENT0("gpu.angle", "CreateWindowEx");
+        ANGLE_TRACE_EVENT0("gpu.angle", "CreateWindowEx");
         mDeviceWindow =
             CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1,
                            1, HWND_MESSAGE, nullptr, GetModuleHandle(nullptr), nullptr);
@@ -301,7 +301,7 @@ egl::Error Renderer9::initialize()
         D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES | D3DCREATE_MULTITHREADED;
 
     {
-        TRACE_EVENT0("gpu.angle", "D3d9_CreateDevice");
+        ANGLE_TRACE_EVENT0("gpu.angle", "D3d9_CreateDevice");
         result = mD3d9->CreateDevice(
             mAdapter, mDeviceType, mDeviceWindow,
             behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
@@ -315,7 +315,7 @@ egl::Error Renderer9::initialize()
 
     if (FAILED(result))
     {
-        TRACE_EVENT0("gpu.angle", "D3d9_CreateDevice2");
+        ANGLE_TRACE_EVENT0("gpu.angle", "D3d9_CreateDevice2");
         result = mD3d9->CreateDevice(mAdapter, mDeviceType, mDeviceWindow,
                                      behaviorFlags | D3DCREATE_SOFTWARE_VERTEXPROCESSING,
                                      &presentParameters, &mDevice);
@@ -331,13 +331,13 @@ egl::Error Renderer9::initialize()
 
     if (mD3d9Ex)
     {
-        TRACE_EVENT0("gpu.angle", "mDevice_QueryInterface");
+        ANGLE_TRACE_EVENT0("gpu.angle", "mDevice_QueryInterface");
         result = mDevice->QueryInterface(__uuidof(IDirect3DDevice9Ex), (void **)&mDeviceEx);
         ASSERT(SUCCEEDED(result));
     }
 
     {
-        TRACE_EVENT0("gpu.angle", "ShaderCache initialize");
+        ANGLE_TRACE_EVENT0("gpu.angle", "ShaderCache initialize");
         mVertexShaderCache.initialize(mDevice);
         mPixelShaderCache.initialize(mDevice);
     }

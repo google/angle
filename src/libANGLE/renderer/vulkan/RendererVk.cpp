@@ -30,8 +30,8 @@
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "libANGLE/trace.h"
 #include "platform/Platform.h"
-#include "third_party/trace_event/trace_event.h"
 
 // Consts
 namespace

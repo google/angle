@@ -37,7 +37,7 @@
 #include "libANGLE/renderer/DeviceImpl.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ImageImpl.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 #    include "libANGLE/renderer/d3d/DisplayD3D.h"
@@ -531,7 +531,7 @@ Error Display::initialize()
     gl::InitializeDebugMutexIfNeeded();
 
     SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.DisplayInitializeMS");
-    TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
+    ANGLE_TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
 
     if (isInitialized())
     {

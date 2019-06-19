@@ -20,7 +20,7 @@
 #include "libANGLE/Thread.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
-#include "third_party/trace_event/trace_event.h"
+#include "libANGLE/trace.h"
 
 namespace egl
 {
@@ -231,7 +231,7 @@ EGLint Surface::getType() const
 
 Error Surface::swap(const gl::Context *context)
 {
-    TRACE_EVENT0("gpu.angle", "egl::Surface::swap");
+    ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swap");
 
     ANGLE_TRY(mImplementation->swap(context));
     postSwap();
