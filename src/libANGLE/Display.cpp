@@ -1350,6 +1350,7 @@ void Display::initializeFrontendFeatures()
 {
     // Enable on all Impls
     mFrontendFeatures.loseContextOnOutOfMemory.enabled = true;
+    mFrontendFeatures.scalarizeVecAndMatConstructorArgs.enabled = true;
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
 

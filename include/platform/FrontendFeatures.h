@@ -44,6 +44,11 @@ struct FrontendFeatures : angle::FeatureSetBase
         "On Windows Intel OpenGL drivers TexImage sometimes seems to interact "
         "with the Framebuffer",
         &members};
+
+    angle::Feature scalarizeVecAndMatConstructorArgs = {
+        "scalarize_vec_and_mat_constructor_args", angle::FeatureCategory::FrontendWorkarounds,
+        "Always rewrite vec/mat constructors to be consistent", &members,
+        "http://crbug.com/398694"};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

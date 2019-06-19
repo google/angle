@@ -22,6 +22,7 @@
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ShaderImpl.h"
+#include "platform/FrontendFeatures.h"
 
 namespace gl
 {
@@ -340,6 +341,11 @@ void Shader::compile(const Context *context)
     if (mRendererLimitations.shadersRequireIndexedLoopValidation)
     {
         options |= SH_VALIDATE_LOOP_INDEXING;
+    }
+
+    if (context->getFrontendFeatures().scalarizeVecAndMatConstructorArgs.enabled)
+    {
+        options |= SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS;
     }
 
     mCurrentMaxComputeWorkGroupInvocations = context->getCaps().maxComputeWorkGroupInvocations;
