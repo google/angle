@@ -306,7 +306,9 @@ void Display_logWarning(angle::PlatformMethods *platform, const char *warningMes
 void Display_logInfo(angle::PlatformMethods *platform, const char *infoMessage)
 {
     // Uncomment to get info spam
+#if defined(ANGLE_ENABLE_DEBUG_TRACE)
     gl::Trace(gl::LOG_INFO, infoMessage);
+#endif
 }
 
 const std::vector<std::string> EGLStringArrayToStringVector(const char **ary)
