@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91b7beda_bf0971a3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-20T12:49:31Z",
+      "side": 1,
+      "message": "Not sure how GL usually deals with this kind of thing, but in the Vulkan backend we add a flag to include/platform/FeaturesVk.h that says what should be done. You can then pass contextVk (as the first argument) to this function where that flag can be retrieved.\n\nRegarding Geoff\u0027s comment that glmark2 will break if given an ES3 context, this may actually help there as well. The code (in RendererVk) that decides what the flag value should be could check the GL version.\n\n---\n\nAlthough the complete solution is not that straightforward as the renderer is shared between contexts, which could be of different ES versions. It may make sense to have FeaturesVk be per-context, though I\u0027m not sure how well that would play with the chrome integration work. Let\u0027s see what the others think.",
+      "revId": "860fb67aa040b528490b8d68a63fe364a52ec98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
