@@ -2,6 +2,92 @@
   "comments": [
     {
       "key": {
+        "uuid": "533c071a_d2068560",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1407,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-20T15:31:20Z",
+      "side": 1,
+      "message": "Also recommend passing the context in here directly.",
+      "revId": "860fb67aa040b528490b8d68a63fe364a52ec98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "936841c5_1d27da2d",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1477,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-20T15:31:20Z",
+      "side": 1,
+      "message": "Please update the documentation in TextureGL.h for this bool to describe this new behaviour.",
+      "range": {
+        "startLine": 1477,
+        "startChar": 29,
+        "endLine": 1477,
+        "endChar": 51
+      },
+      "revId": "860fb67aa040b528490b8d68a63fe364a52ec98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "734a35b3_35b2184a",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1487,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-20T15:31:20Z",
+      "side": 1,
+      "message": "This comment needs an update too.",
+      "range": {
+        "startLine": 1487,
+        "startChar": 23,
+        "endLine": 1487,
+        "endChar": 87
+      },
+      "revId": "860fb67aa040b528490b8d68a63fe364a52ec98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "828095e4_8bb9bc78",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-06-20T15:31:20Z",
+      "side": 1,
+      "message": "Split this into an \n   \n   if (es2) { red } else { zero }",
+      "range": {
+        "startLine": 1488,
+        "startChar": 20,
+        "endLine": 1494,
+        "endChar": 21
+      },
+      "revId": "860fb67aa040b528490b8d68a63fe364a52ec98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "91b7beda_bf0971a3",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
