@@ -2042,10 +2042,11 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 
         TextureVk *textureVk = vk::GetImpl(texture);
 
-        // Ensure any writes to the textures are flushed before we read from them.
-        ANGLE_TRY(textureVk->ensureImageInitialized(this));
-
         vk::ImageHelper &image = textureVk->getImage();
+
+        // The image should be flushed and ready to use at this point. There may still be lingering
+        // staged updates in its staging buffer for unused texture mip levels or layers. Therefore
+        // we can't verify it has no staged updates right here.
 
         // Ensure the image is in read-only layout
         if (image.isLayoutChangeNecessary(vk::ImageLayout::FragmentShaderReadOnly))

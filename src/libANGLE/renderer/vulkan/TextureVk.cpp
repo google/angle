@@ -99,6 +99,7 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
             contextVk, mipAllocationSize,
             gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, layer), mipLevelExtents,
             gl::Offset(), &destData));
+        onStagingBufferChange();
 
         // Generate the mipmap into that new buffer
         sourceFormat.mipGenerationFunction(previousLevelWidth, previousLevelHeight, 1,
@@ -235,9 +236,7 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         ANGLE_TRY(mImage->stageSubresourceUpdate(
             contextVk, getNativeImageIndex(index), gl::Extents(area.width, area.height, area.depth),
             gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels, vkFormat));
-
-        // Create a new graph node to store image initialization commands.
-        mImage->finishCurrentCommands(contextVk);
+        onStagingBufferChange();
     }
 
     return angle::Result::Continue;
@@ -408,8 +407,8 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         context, offsetImageIndex, clippedSourceArea, modifiedDestOffset,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
         framebufferVk));
+    onStagingBufferChange();
 
-    mImage->finishCurrentCommands(contextVk);
     framebufferVk->getFramebuffer()->addReadDependency(mImage);
     return angle::Result::Continue;
 }
@@ -473,6 +472,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
         contextVk, destinationAllocationSize, offsetImageIndex,
         gl::Extents(sourceArea.width, sourceArea.height, 1), destOffset, &destData));
+    onStagingBufferChange();
 
     // Source and dest data is tightly packed
     GLuint sourceDataRowPitch = sourceArea.width * sourceTextureFormat.pixelBytes;
@@ -498,9 +498,6 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                       0, pixelWriteFunction, destFormat.format, destFormat.componentType,
                       sourceArea.width, sourceArea.height, 1, unpackFlipY, unpackPremultiplyAlpha,
                       unpackUnmultiplyAlpha);
-
-    // Create a new graph node to store image initialization commands.
-    mImage->finishCurrentCommands(contextVk);
 
     return angle::Result::Continue;
 }
@@ -588,6 +585,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
         // Stage the copy for when the image storage is actually created.
         mImage->stageSubresourceUpdateFromImage(stagingImage.release(), index, destOffset, extents);
+        onStagingBufferChange();
     }
 
     return angle::Result::Continue;
@@ -684,6 +682,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         mImage->stageSubresourceUpdateFromImage(
             stagingImage.release(), index, destOffset,
             gl::Extents(sourceArea.width, sourceArea.height, 1));
+        onStagingBufferChange();
     }
 
     return angle::Result::Continue;
@@ -1041,9 +1040,6 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         ANGLE_TRY(generateMipmapsWithCPU(context));
     }
 
-    // We're changing this textureVk content, make sure we let the graph know.
-    mImage->finishCurrentCommands(contextVk);
-
     return angle::Result::Continue;
 }
 
@@ -1174,12 +1170,16 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
 angle::Result TextureVk::syncState(const gl::Context *context,
                                    const gl::Texture::DirtyBits &dirtyBits)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    // Initialize the image storage and flush the pixel buffer.
+    ANGLE_TRY(ensureImageInitialized(contextVk));
+
     if (dirtyBits.none() && mSampler.valid())
     {
         return angle::Result::Continue;
     }
 
-    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
     if (mSampler.valid())
     {
@@ -1378,6 +1378,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         {
             gl::ImageIndex index = gl::ImageIndex::Make2DArrayRange(level, 0, layerCount);
             mImage->stageSubresourceEmulatedClear(index, format.angleFormat());
+            onStagingBufferChange();
         }
     }
 
@@ -1451,6 +1452,8 @@ void TextureVk::releaseImage(ContextVk *contextVk)
     releaseImageViews(contextVk);
 
     mCubeMapRenderTargets.clear();
+
+    onStagingBufferChange();
 }
 
 void TextureVk::releaseImageViews(ContextVk *contextVk)

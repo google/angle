@@ -280,6 +280,8 @@ class TextureVk : public TextureImpl
                                              uint32_t levelCount,
                                              const vk::Format &format);
 
+    void onStagingBufferChange() { onStateChange(angle::SubjectMessage::SubjectChanged); }
+
     bool mOwnsImage;
 
     gl::TextureType mImageNativeType;

@@ -211,10 +211,7 @@ class TextureState final : private angle::NonCopyable
 bool operator==(const TextureState &a, const TextureState &b);
 bool operator!=(const TextureState &a, const TextureState &b);
 
-class Texture final : public RefCountObject,
-                      public egl::ImageSibling,
-                      public LabeledObject,
-                      public angle::ObserverInterface
+class Texture final : public RefCountObject, public egl::ImageSibling, public LabeledObject
 {
   public:
     Texture(rx::GLImplFactory *factory, GLuint id, TextureType type);

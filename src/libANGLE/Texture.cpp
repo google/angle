@@ -48,7 +48,6 @@ InitState DetermineInitState(const Context *context, const uint8_t *pixels)
                ? InitState::MayNeedInit
                : InitState::Initialized;
 }
-
 }  // namespace
 
 bool IsMipmapFiltered(const SamplerState &samplerState)
@@ -620,7 +619,7 @@ Texture::Texture(rx::GLImplFactory *factory, GLuint id, TextureType type)
     : RefCountObject(id),
       mState(type),
       mTexture(factory->createTexture(mState)),
-      mImplObserver(this, 0),
+      mImplObserver(this, rx::kTextureImageImplObserverMessageIndex),
       mLabel(),
       mBoundSurface(nullptr),
       mBoundStream(nullptr)
@@ -1842,5 +1841,11 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
     ASSERT(message == angle::SubjectMessage::SubjectChanged);
     mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
     signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
+
+    // Notify siblings that we are dirty.
+    if (index == rx::kTextureImageImplObserverMessageIndex)
+    {
+        notifySiblings(message);
+    }
 }
 }  // namespace gl

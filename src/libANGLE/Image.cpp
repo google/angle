@@ -49,7 +49,6 @@ const Display *DisplayFromContext(const gl::Context *context)
 {
     return (context ? context->getDisplay() : nullptr);
 }
-
 }  // anonymous namespace
 
 ImageSibling::ImageSibling() : FramebufferAttachmentObject(), mSourcesOf(), mTargetOf() {}
@@ -127,6 +126,18 @@ bool ImageSibling::isRenderable(const gl::Context *context,
 {
     ASSERT(isEGLImageTarget());
     return mTargetOf->isRenderable(context);
+}
+
+void ImageSibling::notifySiblings(angle::SubjectMessage message)
+{
+    if (mTargetOf.get())
+    {
+        mTargetOf->notifySiblings(this, message);
+    }
+    for (Image *source : mSourcesOf)
+    {
+        source->notifySiblings(this, message);
+    }
 }
 
 ExternalImageSibling::ExternalImageSibling(rx::EGLImplFactory *factory,
@@ -410,6 +421,22 @@ void Image::setInitState(gl::InitState initState)
     }
 
     return mState.source->setInitState(mState.imageIndex, initState);
+}
+
+void Image::notifySiblings(const ImageSibling *notifier, angle::SubjectMessage message)
+{
+    if (mState.source && mState.source != notifier)
+    {
+        mState.source->onSubjectStateChange(rx::kTextureImageSiblingMessageIndex, message);
+    }
+
+    for (ImageSibling *target : mState.targets)
+    {
+        if (target != notifier)
+        {
+            target->onSubjectStateChange(rx::kTextureImageSiblingMessageIndex, message);
+        }
+    }
 }
 
 }  // namespace egl
