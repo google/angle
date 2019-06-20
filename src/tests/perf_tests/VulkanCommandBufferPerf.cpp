@@ -6,7 +6,7 @@
 //   Performance benchmark for Vulkan Primary/Secondary Command Buffer implementations.
 //  Can run just these tests by adding "--gtest_filter=VulkanCommandBufferPerfTest*"
 //   option to angle_white_box_perftests.
-//  When running on Android, use logcat to view output.
+//  When running on Android with run_angle_white_box_perftests, use "-v" option.
 
 #include "ANGLEPerfTest.h"
 #include "common/platform.h"
