@@ -46,6 +46,30 @@
       "revId": "0e26cc5cff1a3d76fa76bd519b361f2d234eb66c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94b9f05c_29c7d38d",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1494,
+      "author": {
+        "id": 1350412
+      },
+      "writtenOn": "2019-06-20T15:41:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "106e9fc6_5004dbfd",
+      "range": {
+        "startLine": 1488,
+        "startChar": 0,
+        "endLine": 1494,
+        "endChar": 21
+      },
+      "revId": "0e26cc5cff1a3d76fa76bd519b361f2d234eb66c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
