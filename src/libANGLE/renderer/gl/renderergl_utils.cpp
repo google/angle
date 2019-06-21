@@ -1505,6 +1505,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     features->limitMaxTextureSizeTo4096.enabled = IsAndroid();
     features->limitMaxMSAASamplesTo4.enabled    = IsAndroid();
+
+    features->allowClearForRobustResourceInit.enabled = IsApple();
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
@@ -1559,6 +1561,20 @@ bool SupportsNativeRendering(const FunctionsGL *functions,
         const nativegl::InternalFormat &nativeInfo =
             nativegl::GetInternalFormatInfo(internalFormat, functions->standard);
         return nativegl_gl::MeetsRequirements(functions, nativeInfo.textureAttachment);
+    }
+}
+
+bool SupportsTexImage(gl::TextureType type)
+{
+    switch (type)
+    {
+            // Multi-sample texture types only support TexStorage data upload
+        case gl::TextureType::_2DMultisample:
+        case gl::TextureType::_2DMultisampleArray:
+            return false;
+
+        default:
+            return true;
     }
 }
 

@@ -281,6 +281,17 @@ struct FeaturesGL : FeatureSetBase
         "max_msaa_sample_count_4", FeatureCategory::OpenGLWorkarounds,
         "Various rendering bugs have been observed when using higher MSAA counts on Android",
         &members, "http://crbug.com/797243"};
+
+    // Prefer to do the robust resource init clear using a glClear. Calls to TexSubImage2D on large
+    // textures can take hundreds of milliseconds because of slow uploads on macOS. Do this only on
+    // macOS because clears are buggy on other drivers.
+    // https://crbug.com/848952 (slow uploads on macOS)
+    // https://crbug.com/883276 (buggy clears on Android)
+    Feature allowClearForRobustResourceInit = {
+        "allow_clear_for_robust_resource_init", FeatureCategory::OpenGLWorkarounds,
+        "Using glClear for robust resource initialization is buggy on some drivers and leads to "
+        "texture corruption. Default to data uploads except on MacOS where it is very slow.",
+        &members, "http://crbug.com/883276"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

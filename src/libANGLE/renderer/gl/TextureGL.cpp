@@ -1595,9 +1595,11 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
+    bool shouldUseClear = !nativegl::SupportsTexImage(getType());
     GLenum nativeInternalFormat =
         getLevelInfo(imageIndex.getTarget(), imageIndex.getLevelIndex()).nativeInternalFormat;
-    if (nativegl::SupportsNativeRendering(functions, mState.getType(), nativeInternalFormat))
+    if ((features.allowClearForRobustResourceInit.enabled || shouldUseClear) &&
+        nativegl::SupportsNativeRendering(functions, mState.getType(), nativeInternalFormat))
     {
         BlitGL *blitter = GetBlitGL(context);
 
@@ -1614,6 +1616,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
 
     // Either the texture is not renderable or was incomplete when clearing, fall back to a data
     // upload
+    ASSERT(nativegl::SupportsTexImage(getType()));
     const gl::ImageDesc &desc                    = mState.getImageDesc(imageIndex);
     const gl::InternalFormat &internalFormatInfo = *desc.format.info;
 
@@ -1621,6 +1624,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     unpackState.alignment = 1;
     stateManager->setPixelUnpackState(unpackState);
 
+    stateManager->bindTexture(getType(), mTextureID);
     if (internalFormatInfo.compressed)
     {
         nativegl::CompressedTexSubImageFormat nativeSubImageFormat =
