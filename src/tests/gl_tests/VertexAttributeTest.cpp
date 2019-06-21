@@ -558,6 +558,10 @@ class VertexAttributeTestES3 : public VertexAttributeTest
 
 TEST_P(VertexAttributeTestES3, IntUnnormalized)
 {
+    // Conversion of int data isn't supported yet.
+    // anglebug.com/3193
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint lo                                  = std::numeric_limits<GLint>::min();
     GLint hi                                  = std::numeric_limits<GLint>::max();
     std::array<GLint, kVertexCount> inputData = {
@@ -574,6 +578,10 @@ TEST_P(VertexAttributeTestES3, IntUnnormalized)
 
 TEST_P(VertexAttributeTestES3, IntNormalized)
 {
+    // Conversion of int data isn't supported yet.
+    // anglebug.com/3193
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint lo                                  = std::numeric_limits<GLint>::min();
     GLint hi                                  = std::numeric_limits<GLint>::max();
     std::array<GLint, kVertexCount> inputData = {
@@ -590,6 +598,10 @@ TEST_P(VertexAttributeTestES3, IntNormalized)
 
 TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 {
+    // Conversion of int data isn't supported yet.
+    // anglebug.com/3193
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLuint mid                                 = std::numeric_limits<GLuint>::max() >> 1;
     GLuint hi                                  = std::numeric_limits<GLuint>::max();
     std::array<GLuint, kVertexCount> inputData = {
@@ -606,6 +618,10 @@ TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 
 TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
 {
+    // Conversion of int data isn't supported yet.
+    // anglebug.com/3193
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLuint mid                                 = std::numeric_limits<GLuint>::max() >> 1;
     GLuint hi                                  = std::numeric_limits<GLuint>::max();
     std::array<GLuint, kVertexCount> inputData = {
@@ -663,7 +679,7 @@ TEST_P(VertexAttributeTestES3, VertexArrayObjectRendering)
 
     const auto &quadVertices = GetQuadVertices();
 
-    glBindVertexArrayOES(vaos[0]);
+    glBindVertexArray(vaos[0]);
     glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
     glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(Vector3), quadVertices.data(),
                  GL_STATIC_DRAW);
@@ -671,7 +687,7 @@ TEST_P(VertexAttributeTestES3, VertexArrayObjectRendering)
     glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
     SetupColorsForUnitQuad(colorLoc, kFloatRed, GL_STREAM_DRAW, &colorBuffers[0]);
 
-    glBindVertexArrayOES(vaos[1]);
+    glBindVertexArray(vaos[1]);
     glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
     glEnableVertexAttribArray(positionLoc);
     glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -682,11 +698,11 @@ TEST_P(VertexAttributeTestES3, VertexArrayObjectRendering)
 
     for (int ii = 0; ii < 2; ++ii)
     {
-        glBindVertexArrayOES(vaos[0]);
+        glBindVertexArray(vaos[0]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
-        glBindVertexArrayOES(vaos[1]);
+        glBindVertexArray(vaos[1]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     }
@@ -1696,6 +1712,9 @@ void VertexAttributeCachingTest::testSetUp()
 TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
+    // Conversion of int data isn't supported yet.
+    // anglebug.com/3193
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     initBasicProgram();
 
@@ -1730,6 +1749,9 @@ TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 TEST_P(VertexAttributeCachingTest, BufferMulticachingWithOneUnchangedAttrib)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
+    // Conversion of int data isn't supported yet.
+    // anglebug.com/3193
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     initDoubleAttribProgram();
 
@@ -2036,16 +2058,22 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeOORTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3,
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES3_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
@@ -2053,6 +2081,7 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeCachingTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES3_D3D11(),
-                       ES3_OPENGL());
+                       ES3_OPENGL(),
+                       ES3_VULKAN());
 
 }  // anonymous namespace
