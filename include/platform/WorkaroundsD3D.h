@@ -204,6 +204,14 @@ struct WorkaroundsD3D : FeatureSetBase
         "On an NVIDIA D3D driver, the return value from RWByteAddressBuffer.InterlockedAdd does "
         "not resolve when used in the .yzw components of a RWByteAddressBuffer.Store operation",
         &members, "http://anglebug.com/3246"};
+
+    // Match chromium's robust resource init behaviour by always prefering to upload texture data
+    // instead of clearing. Clear calls have been observed to cause texture corruption for some
+    // formats.
+    Feature allowClearForRobustResourceInit = {
+        "allow_clear_for_robust_resource_init", FeatureCategory::D3DWorkarounds,
+        "Some drivers corrupt texture data when clearing for robust resource initialization.",
+        &members, "http://crbug.com/941620"};
 };
 
 inline WorkaroundsD3D::WorkaroundsD3D()                            = default;

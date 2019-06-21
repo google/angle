@@ -73,6 +73,7 @@ bool SupportsOcclusionQueries(const FunctionsGL *functions);
 bool SupportsNativeRendering(const FunctionsGL *functions,
                              gl::TextureType type,
                              GLenum internalFormat);
+bool SupportsTexImage(gl::TextureType type);
 bool UseTexImage2D(gl::TextureType textureType);
 bool UseTexImage3D(gl::TextureType textureType);
 }  // namespace nativegl

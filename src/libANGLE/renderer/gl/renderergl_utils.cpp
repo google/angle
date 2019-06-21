@@ -1475,6 +1475,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     // crbug.com/922936
     workarounds->disableWorkerContexts.enabled =
         (IsWindows() && (IsIntel(vendor) || IsAMD(vendor))) || (IsLinux() && IsNvidia(vendor));
+
+    workarounds->allowClearForRobustResourceInit.enabled = IsApple();
 }
 
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)
@@ -1530,6 +1532,20 @@ bool SupportsNativeRendering(const FunctionsGL *functions,
         const nativegl::InternalFormat &nativeInfo =
             nativegl::GetInternalFormatInfo(internalFormat, functions->standard);
         return nativegl_gl::MeetsRequirements(functions, nativeInfo.textureAttachment);
+    }
+}
+
+bool SupportsTexImage(gl::TextureType type)
+{
+    switch (type)
+    {
+            // Multi-sample texture types only support TexStorage data upload
+        case gl::TextureType::_2DMultisample:
+        case gl::TextureType::_2DMultisampleArray:
+            return false;
+
+        default:
+            return true;
     }
 }
 

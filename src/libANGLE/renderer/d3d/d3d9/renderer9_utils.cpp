@@ -808,6 +808,9 @@ void GenerateWorkarounds(angle::WorkaroundsD3D *workarounds)
     // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
     workarounds->expandIntegerPowExpressions.enabled = true;
 
+    // Never clear for robust resource init.  This matches Chrome's texture clearning behaviour.
+    workarounds->allowClearForRobustResourceInit.enabled = false;
+
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
     platform->overrideWorkaroundsD3D(platform, workarounds);

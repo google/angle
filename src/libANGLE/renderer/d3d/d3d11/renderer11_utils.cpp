@@ -2448,6 +2448,9 @@ void GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     workarounds->selectViewInGeometryShader.enabled =
         (deviceCaps.supportsVpRtIndexWriteFromVertexShader == false);
 
+    // Never clear for robust resource init.  This matches Chrome's texture clearning behaviour.
+    workarounds->allowClearForRobustResourceInit.enabled = false;
+
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();
     platform->overrideWorkaroundsD3D(platform, workarounds);
