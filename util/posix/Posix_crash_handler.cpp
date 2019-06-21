@@ -107,7 +107,10 @@ void PrintStackBacktrace()
         Dl_info info;
         if (dladdr(stack[i], &info) && info.dli_sname)
         {
-            char demangled[256];
+            // Make sure this is large enough to hold the fully demangled names, otherwise we could
+            // segault/hang here. For example, Vulkan validation layer errors can be deep enough
+            // into the stack that very large symbol names are generated.
+            char demangled[4096];
             size_t len = ArraySize(demangled);
             int ok;
 
