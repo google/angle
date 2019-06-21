@@ -1237,6 +1237,21 @@ void BufferHelper::onWrite(ContextVk *contextVk, VkAccessFlags writeAccessType)
     }
 }
 
+void BufferHelper::onSelfReadWrite(ContextVk *contextVk,
+                                   VkAccessFlags readAccessType,
+                                   VkAccessFlags writeAccessType)
+{
+    if (mCurrentReadAccess || mCurrentWriteAccess)
+    {
+        finishCurrentCommands(contextVk);
+        addGlobalMemoryBarrier(mCurrentReadAccess | mCurrentWriteAccess,
+                               readAccessType | writeAccessType);
+    }
+
+    mCurrentReadAccess  = readAccessType;
+    mCurrentWriteAccess = writeAccessType;
+}
+
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
                                            const Buffer &buffer,
                                            VkAccessFlags bufferAccessType,

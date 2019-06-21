@@ -446,6 +446,9 @@ class BufferHelper final : public CommandGraphResource
     }
 
     void onWrite(ContextVk *contextVk, VkAccessFlags writeAccessType);
+    void onSelfReadWrite(ContextVk *contextVk,
+                         VkAccessFlags readAccessType,
+                         VkAccessFlags writeAccessType);
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,

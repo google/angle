@@ -275,7 +275,7 @@ void CommandGraphResource::addReadDependency(CommandGraphResource *readingResour
     CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
     ASSERT(readingNode);
 
-    if (mCurrentWritingNode && (mCurrentWritingNode != readingNode))
+    if (mCurrentWritingNode)
     {
         // Ensure 'readingNode' happens after the current writing node.
         CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, readingNode);
