@@ -64,6 +64,8 @@ class MatchOutputCodeTest : public testing::Test
         return foundInCode(SH_GLSL_COMPATIBILITY_OUTPUT, stringToFind);
     }
 
+    bool foundInCodeRegex(ShShaderOutput output, const char *regexToFind) const;
+
     bool foundInCode(ShShaderOutput output, const char *stringToFind) const;
 
     // Test that the strings are found in the specified output in the specified order.

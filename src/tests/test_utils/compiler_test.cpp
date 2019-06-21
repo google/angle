@@ -7,6 +7,7 @@
 //     utilities for compiler unit tests.
 
 #include "tests/test_utils/compiler_test.h"
+#include <regex>
 
 #include "angle_gl.h"
 #include "compiler/translator/Compiler.h"
@@ -154,6 +155,20 @@ bool MatchOutputCodeTest::compileWithSettings(ShShaderOutput output,
 {
     return compileTestShader(mShaderType, SH_GLES3_1_SPEC, output, shaderString, &mResources,
                              compileOptions, translatedCode, infoLog);
+}
+
+bool MatchOutputCodeTest::foundInCodeRegex(ShShaderOutput output, const char *regexToFind) const
+{
+    const auto code = mOutputCode.find(output);
+    EXPECT_NE(mOutputCode.end(), code);
+    if (code == mOutputCode.end())
+    {
+        return std::string::npos;
+    }
+
+    std::regex r(regexToFind);
+
+    return std::regex_search(code->second, r);
 }
 
 bool MatchOutputCodeTest::foundInCode(ShShaderOutput output, const char *stringToFind) const
