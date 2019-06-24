@@ -547,7 +547,7 @@ TEST_P(DepthStencilFormatsTest, DepthBuffer24)
     }
 }
 
-TEST_P(DepthStencilFormatsTestES3, DrawWithDepthStencil)
+TEST_P(DepthStencilFormatsTestES3, DrawWithDepth16)
 {
     GLushort data[16];
     for (unsigned int i = 0; i < 16; i++)
@@ -633,6 +633,106 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
         ASSERT_GL_NO_ERROR();
     }
+}
+
+// Verify that stencil component of depth texture is uploaded
+TEST_P(DepthStencilFormatsTest, VerifyDepthStencilUploadData)
+{
+    // http://anglebug.com/3683
+    // When bug is resolved we can remove this skip.
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
+    // http://anglebug.com/3689
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan() && IsAMD());
+
+    bool shouldHaveTextureSupport = (IsGLExtensionEnabled("GL_OES_packed_depth_stencil") &&
+                                     IsGLExtensionEnabled("GL_OES_depth_texture")) ||
+                                    (getClientMajorVersion() >= 3);
+
+    ANGLE_SKIP_TEST_IF(!shouldHaveTextureSupport ||
+                       !checkTexImageFormatSupport(GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES));
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    glEnable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glClearColor(0, 0, 0, 1);
+
+    // Create offscreen fbo and its color attachment and depth stencil attachment.
+    GLTexture framebufferColorTexture;
+    glBindTexture(GL_TEXTURE_2D, framebufferColorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // drawQuad's depth range is -1.0 to 1.0, so a depth value of 0.5 (0x7fffff) matches a drawQuad
+    // depth of 0.0.
+    std::vector<GLuint> depthStencilData(getWindowWidth() * getWindowHeight(), 0x7fffffA9);
+    GLTexture framebufferStencilTexture;
+    glBindTexture(GL_TEXTURE_2D, framebufferStencilTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_STENCIL, getWindowWidth(), getWindowHeight(), 0,
+                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8_OES, depthStencilData.data());
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           framebufferColorTexture, 0);
+
+    if (getClientMajorVersion() >= 3)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                               framebufferStencilTexture, 0);
+        ASSERT_GL_NO_ERROR();
+    }
+    else
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                               framebufferStencilTexture, 0);
+        ASSERT_GL_NO_ERROR();
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                               framebufferStencilTexture, 0);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLint kStencilRef = 0xA9;
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilFunc(GL_EQUAL, kStencilRef, 0xFF);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fb);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Check Z values
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_STENCIL_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), -0.1f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.1f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::black);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

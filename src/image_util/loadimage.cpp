@@ -1266,6 +1266,32 @@ void LoadD32FS8X24ToD24S8(size_t width,
     }
 }
 
+void LoadX24S8ToS8(size_t width,
+                   size_t height,
+                   size_t depth,
+                   const uint8_t *input,
+                   size_t inputRowPitch,
+                   size_t inputDepthPitch,
+                   uint8_t *output,
+                   size_t outputRowPitch,
+                   size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const uint32_t *source = reinterpret_cast<const uint32_t *>(
+                input + (y * inputRowPitch) + (z * inputDepthPitch));
+            uint8_t *destStencil =
+                reinterpret_cast<uint8_t *>(output + (y * outputRowPitch) + (z * outputDepthPitch));
+            for (size_t x = 0; x < width; x++)
+            {
+                destStencil[x] = (source[x] & 0xFF);
+            }
+        }
+    }
+}
+
 void LoadD32FS8X24ToD32FS8X24(size_t width,
                               size_t height,
                               size_t depth,
