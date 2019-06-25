@@ -487,7 +487,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
         "EGL_EXT_image_dma_buf_import",
         "EGL_KHR_surfaceless_context",
     };
-    for (auto &ext : necessaryExtensions)
+    for (const char *ext : necessaryExtensions)
     {
         if (!mEGL->hasExtension(ext))
         {
