@@ -592,7 +592,8 @@ void ResourcesHLSL::imageMetadataUniforms(TInfoSinkBase &out, unsigned int regIn
         out << "    struct ImageMetadata\n"
                "    {\n"
                "        int layer;\n"
-               "        int3 padding;\n"
+               "        uint level;\n"
+               "        int2 padding;\n"
                "    };\n";
 
         if (mReadonlyImageCount > 0)

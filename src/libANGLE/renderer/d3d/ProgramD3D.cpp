@@ -677,6 +677,11 @@ bool ProgramD3D::usesGeometryShaderForPointSpriteEmulation() const
     return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
 }
 
+bool ProgramD3D::usesGetDimensionsIgnoresBaseLevel() const
+{
+    return mRenderer->getFeatures().getDimensionsIgnoresBaseLevel.enabled;
+}
+
 bool ProgramD3D::usesGeometryShader(const gl::State &state, const gl::PrimitiveMode drawMode) const
 {
     if (mHasANGLEMultiviewEnabled && !mRenderer->canSelectViewInVertexShader())

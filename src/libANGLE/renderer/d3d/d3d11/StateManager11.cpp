@@ -447,9 +447,16 @@ bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data,
 bool ShaderConstants11::updateImageMetadata(ImageMetadata *data, const gl::ImageUnit &imageUnit)
 {
     bool dirty = false;
+
     if (data->layer != static_cast<int>(imageUnit.layer))
     {
         data->layer = static_cast<int>(imageUnit.layer);
+        dirty       = true;
+    }
+
+    if (data->level != static_cast<unsigned int>(imageUnit.level))
+    {
+        data->level = static_cast<unsigned int>(imageUnit.level);
         dirty       = true;
     }
 

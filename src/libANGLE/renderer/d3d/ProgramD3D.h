@@ -183,6 +183,7 @@ class ProgramD3D : public ProgramImpl
     bool usesPointSpriteEmulation() const;
     bool usesGeometryShader(const gl::State &state, gl::PrimitiveMode drawMode) const;
     bool usesGeometryShaderForPointSpriteEmulation() const;
+    bool usesGetDimensionsIgnoresBaseLevel() const;
     bool usesInstancedPointSpriteEmulation() const;
 
     std::unique_ptr<LinkEvent> load(const gl::Context *context,
