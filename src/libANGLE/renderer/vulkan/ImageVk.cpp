@@ -112,7 +112,8 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         }
 
         // Make sure a staging buffer is ready to use to upload data
-        mImage->initStagingBuffer(renderer, mImage->getFormat());
+        mImage->initStagingBuffer(renderer, mImage->getFormat(), vk::kStagingBufferFlags,
+                                  vk::kStagingBufferSize);
 
         mOwnsImage = false;
 

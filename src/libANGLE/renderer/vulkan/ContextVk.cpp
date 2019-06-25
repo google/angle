@@ -909,7 +909,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         ANGLE_VK_TRY(this, commandBuffer.end());
 
         // Submit the command buffer
-        VkSubmitInfo submitInfo       = {};
+        VkSubmitInfo submitInfo = {};
         InitializeSubmitInfo(&submitInfo, commandBatch.get(), {}, {});
 
         ANGLE_TRY(submitFrame(submitInfo, std::move(commandBuffer)));
@@ -1933,7 +1933,7 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
                                                    vk::CommandBuffer *commandBuffer)
 {
     // Release any previously retained buffers.
-    mDriverUniformsBuffer.releaseRetainedBuffers(this);
+    mDriverUniformsBuffer.releaseInFlightBuffers(this);
 
     const gl::Rectangle &glViewport = mState.getViewport();
     float halfRenderAreaHeight =
@@ -2099,7 +2099,7 @@ angle::Result ContextVk::flushImpl(const gl::Semaphore *clientSignalSemaphore)
         signalSemaphores.push_back(vk::GetImpl(clientSignalSemaphore)->getHandle());
     }
 
-    VkSubmitInfo submitInfo       = {};
+    VkSubmitInfo submitInfo = {};
     InitializeSubmitInfo(&submitInfo, commandBatch.get(), mWaitSemaphores, signalSemaphores);
 
     ANGLE_TRY(submitFrame(submitInfo, commandBatch.release()));
@@ -2405,7 +2405,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 {
     vk::DynamicBuffer &defaultBuffer = mDefaultAttribBuffers[attribIndex];
 
-    defaultBuffer.releaseRetainedBuffers(this);
+    defaultBuffer.releaseInFlightBuffers(this);
 
     uint8_t *ptr;
     VkBuffer bufferHandle = VK_NULL_HANDLE;

@@ -262,7 +262,7 @@ DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
       mLastFlushOrInvalidateOffset(other.mLastFlushOrInvalidateOffset),
       mSize(other.mSize),
       mAlignment(other.mAlignment),
-      mRetainedBuffers(std::move(other.mRetainedBuffers))
+      mInFlightBuffers(std::move(other.mInFlightBuffers))
 {
     other.mBuffer = nullptr;
 }
@@ -274,14 +274,20 @@ void DynamicBuffer::init(RendererVk *renderer,
                          bool hostVisible)
 {
     mUsage       = usage;
-    mInitialSize = initialSize;
     mHostVisible = hostVisible;
+
+    // Check that we haven't overriden the initial size of the buffer in setMinimumSizeForTesting.
+    if (mInitialSize == 0)
+    {
+        mInitialSize = initialSize;
+        mSize        = 0;
+    }
 
     // Workaround for the mock ICD not supporting allocations greater than 0x1000.
     // Could be removed if https://github.com/KhronosGroup/Vulkan-Tools/issues/84 is fixed.
     if (renderer->isMockICDEnabled())
     {
-        mInitialSize = std::min<size_t>(mInitialSize, 0x1000);
+        mSize = std::min<size_t>(mSize, 0x1000);
     }
 
     updateAlignment(renderer, alignment);
@@ -290,6 +296,29 @@ void DynamicBuffer::init(RendererVk *renderer,
 DynamicBuffer::~DynamicBuffer()
 {
     ASSERT(mBuffer == nullptr);
+}
+
+angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
+{
+    std::unique_ptr<BufferHelper> buffer = std::make_unique<BufferHelper>();
+
+    VkBufferCreateInfo createInfo    = {};
+    createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    createInfo.flags                 = 0;
+    createInfo.size                  = mSize;
+    createInfo.usage                 = mUsage;
+    createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 0;
+    createInfo.pQueueFamilyIndices   = nullptr;
+
+    const VkMemoryPropertyFlags memoryProperty =
+        mHostVisible ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    ANGLE_TRY(buffer->init(contextVk, createInfo, memoryProperty));
+
+    ASSERT(!mBuffer);
+    mBuffer = buffer.release();
+
+    return angle::Result::Continue;
 }
 
 angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
@@ -310,29 +339,37 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
         {
             ANGLE_TRY(flush(contextVk));
             mBuffer->unmap(contextVk->getDevice());
+            mBuffer->updateQueueSerial(contextVk->getCurrentQueueSerial());
 
-            mRetainedBuffers.push_back(mBuffer);
+            mInFlightBuffers.push_back(mBuffer);
             mBuffer = nullptr;
         }
 
-        mSize = std::max(sizeToAllocate, mInitialSize);
+        if (sizeToAllocate > mSize)
+        {
+            mSize = std::max(mInitialSize, sizeToAllocate);
 
-        std::unique_ptr<BufferHelper> buffer = std::make_unique<BufferHelper>();
+            // Clear the free list since the free buffers are now too small.
+            for (BufferHelper *toFree : mBufferFreeList)
+            {
+                toFree->release(contextVk);
+            }
+            mBufferFreeList.clear();
+        }
 
-        VkBufferCreateInfo createInfo    = {};
-        createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.flags                 = 0;
-        createInfo.size                  = mSize;
-        createInfo.usage                 = mUsage;
-        createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
-        createInfo.queueFamilyIndexCount = 0;
-        createInfo.pQueueFamilyIndices   = nullptr;
+        // The front of the free list should be the oldest. Thus if it is in use the rest of the
+        // free list should be in use as well.
+        if (mBufferFreeList.empty() || mBufferFreeList.front()->isResourceInUse(contextVk))
+        {
+            ANGLE_TRY(allocateNewBuffer(contextVk));
+        }
+        else
+        {
+            mBuffer = mBufferFreeList.front();
+            mBufferFreeList.erase(mBufferFreeList.begin());
+        }
 
-        const VkMemoryPropertyFlags memoryProperty = mHostVisible
-                                                         ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-                                                         : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        ANGLE_TRY(buffer->init(contextVk, createInfo, memoryProperty));
-        mBuffer = buffer.release();
+        ASSERT(mBuffer->getSize() == mSize);
 
         mNextAllocationOffset        = 0;
         mLastFlushOrInvalidateOffset = 0;
@@ -392,10 +429,48 @@ angle::Result DynamicBuffer::invalidate(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
+void DynamicBuffer::releaseBufferListToContext(ContextVk *contextVk,
+                                               std::vector<BufferHelper *> *buffers)
+{
+    for (BufferHelper *toFree : *buffers)
+    {
+        toFree->release(contextVk);
+        delete toFree;
+    }
+
+    buffers->clear();
+}
+
+void DynamicBuffer::releaseBufferListToDisplay(DisplayVk *display,
+                                               std::vector<GarbageObjectBase> *garbageQueue,
+                                               std::vector<BufferHelper *> *buffers)
+{
+    for (BufferHelper *toFree : *buffers)
+    {
+        toFree->release(display, garbageQueue);
+        delete toFree;
+    }
+
+    buffers->clear();
+}
+
+void DynamicBuffer::destroyBufferList(VkDevice device, std::vector<BufferHelper *> *buffers)
+{
+    for (BufferHelper *toFree : *buffers)
+    {
+        toFree->destroy(device);
+        delete toFree;
+    }
+
+    buffers->clear();
+}
+
 void DynamicBuffer::release(ContextVk *contextVk)
 {
     reset();
-    releaseRetainedBuffers(contextVk);
+
+    releaseBufferListToContext(contextVk, &mInFlightBuffers);
+    releaseBufferListToContext(contextVk, &mBufferFreeList);
 
     if (mBuffer)
     {
@@ -414,7 +489,9 @@ void DynamicBuffer::release(ContextVk *contextVk)
 void DynamicBuffer::release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue)
 {
     reset();
-    releaseRetainedBuffers(display, garbageQueue);
+
+    releaseBufferListToDisplay(display, garbageQueue, &mInFlightBuffers);
+    releaseBufferListToDisplay(display, garbageQueue, &mBufferFreeList);
 
     if (mBuffer)
     {
@@ -426,42 +503,30 @@ void DynamicBuffer::release(DisplayVk *display, std::vector<GarbageObjectBase> *
     }
 }
 
-void DynamicBuffer::releaseRetainedBuffers(ContextVk *contextVk)
+void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
 {
-    for (BufferHelper *toFree : mRetainedBuffers)
+    for (BufferHelper *toRelease : mInFlightBuffers)
     {
-        // See note in release().
-        toFree->updateQueueSerial(contextVk->getCurrentQueueSerial());
-        toFree->release(contextVk);
-        delete toFree;
+        // If the dynamic buffer was resized we cannot reuse the retained buffer.
+        if (toRelease->getSize() < mSize)
+        {
+            toRelease->release(contextVk);
+        }
+        else
+        {
+            mBufferFreeList.push_back(toRelease);
+        }
     }
 
-    mRetainedBuffers.clear();
-}
-
-void DynamicBuffer::releaseRetainedBuffers(DisplayVk *display,
-                                           std::vector<GarbageObjectBase> *garbageQueue)
-{
-    for (BufferHelper *toFree : mRetainedBuffers)
-    {
-        toFree->release(display, garbageQueue);
-        delete toFree;
-    }
-
-    mRetainedBuffers.clear();
+    mInFlightBuffers.clear();
 }
 
 void DynamicBuffer::destroy(VkDevice device)
 {
     reset();
 
-    for (BufferHelper *toFree : mRetainedBuffers)
-    {
-        toFree->destroy(device);
-        delete toFree;
-    }
-
-    mRetainedBuffers.clear();
+    destroyBufferList(device, &mInFlightBuffers);
+    destroyBufferList(device, &mBufferFreeList);
 
     if (mBuffer)
     {
@@ -1023,7 +1088,7 @@ angle::Result LineLoopHelper::getIndexBufferForDrawArrays(ContextVk *contextVk,
     uint32_t *indices    = nullptr;
     size_t allocateBytes = sizeof(uint32_t) * (static_cast<size_t>(clampedVertexCount) + 1);
 
-    mDynamicIndexBuffer.releaseRetainedBuffers(contextVk);
+    mDynamicIndexBuffer.releaseInFlightBuffers(contextVk);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), nullptr,
                                            offsetOut, nullptr));
@@ -1080,7 +1145,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1) + 1;
 
-    mDynamicIndexBuffer.releaseRetainedBuffers(contextVk);
+    mDynamicIndexBuffer.releaseInFlightBuffers(contextVk);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), nullptr,
                                            bufferOffsetOut, nullptr));
@@ -1361,14 +1426,6 @@ angle::Result BufferHelper::invalidate(ContextVk *contextVk, size_t offset, size
     return angle::Result::Continue;
 }
 
-namespace
-{
-constexpr VkBufferUsageFlags kStagingBufferFlags =
-    VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-constexpr size_t kStagingBufferSize = 1024 * 16;
-
-}  // anonymous namespace
-
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
     : CommandGraphResource(CommandGraphResourceType::Image),
@@ -1405,10 +1462,13 @@ ImageHelper::~ImageHelper()
     ASSERT(!valid());
 }
 
-void ImageHelper::initStagingBuffer(RendererVk *renderer, const vk::Format &format)
+void ImageHelper::initStagingBuffer(RendererVk *renderer,
+                                    const vk::Format &format,
+                                    VkBufferUsageFlags usageFlags,
+                                    size_t initialSize)
 {
-    mStagingBuffer.init(renderer, kStagingBufferFlags, format.getImageCopyBufferAlignment(),
-                        kStagingBufferSize, true);
+    mStagingBuffer.init(renderer, usageFlags, format.getImageCopyBufferAlignment(), initialSize,
+                        true);
 }
 
 angle::Result ImageHelper::init(Context *context,
@@ -2397,7 +2457,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
     if (mSubresourceUpdates.empty())
     {
-        mStagingBuffer.releaseRetainedBuffers(contextVk);
+        mStagingBuffer.releaseInFlightBuffers(contextVk);
     }
 
     return angle::Result::Continue;

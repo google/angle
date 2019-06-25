@@ -18,6 +18,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
+#include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
 #include "util/shader_utils.h"
@@ -45,6 +46,14 @@ class VulkanUniformUpdatesTest : public ANGLETest
         return rx::vk::GetImpl(program);
     }
 
+    rx::TextureVk *hackTexture(GLuint handle) const
+    {
+        // Hack the angle!
+        const gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
+        const gl::Texture *texture = context->getTexture(handle);
+        return rx::vk::GetImpl(texture);
+    }
+
     static constexpr uint32_t kMaxSetsForTesting = 32;
 
     void limitMaxSets(GLuint program)
@@ -66,6 +75,14 @@ class VulkanUniformUpdatesTest : public ANGLETest
         VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                                contextVk->getRenderer()->getMaxActiveTextures()};
         (void)texturePool->init(contextVk, &textureSetSize, 1);
+    }
+
+    static constexpr size_t kTextureStagingBufferSizeForTesting = 128;
+
+    void limitTextureStagingBufferSize(GLuint texture)
+    {
+        rx::TextureVk *textureVk = hackTexture(texture);
+        textureVk->overrideStagingBufferSizeForTesting(kTextureStagingBufferSizeForTesting);
     }
 };
 
@@ -386,6 +403,67 @@ void main()
     drawQuad(program1, "position", 0.5f, 1.0f, true);
     swapBuffers();
     ASSERT_GL_NO_ERROR();
+}
+
+// Verify that overflowing a Texture's staging buffer doesn't overwrite current data.
+TEST_P(VulkanUniformUpdatesTest, TextureStagingBufferRecycling)
+{
+    ASSERT_TRUE(IsVulkan());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    limitTextureStagingBufferSize(tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    const GLColor kColors[4] = {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow};
+
+    // Repeatedly update the staging buffer to trigger multiple recyclings.
+    const GLsizei kHalfX      = getWindowWidth() / 2;
+    const GLsizei kHalfY      = getWindowHeight() / 2;
+    constexpr int kIterations = 4;
+    for (int x = 0; x < 2; ++x)
+    {
+        for (int y = 0; y < 2; ++y)
+        {
+            const int kColorIndex = x + y * 2;
+            const GLColor kColor  = kColors[kColorIndex];
+
+            for (int iteration = 0; iteration < kIterations; ++iteration)
+            {
+                for (int subX = 0; subX < kHalfX; ++subX)
+                {
+                    for (int subY = 0; subY < kHalfY; ++subY)
+                    {
+                        const GLsizei xoffset = x * kHalfX + subX;
+                        const GLsizei yoffset = y * kHalfY + subY;
+
+                        // Update a single pixel.
+                        glTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, yoffset, 1, 1, GL_RGBA,
+                                        GL_UNSIGNED_BYTE, kColor.data());
+                    }
+                }
+            }
+        }
+    }
+
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify pixels.
+    for (int x = 0; x < 2; ++x)
+    {
+        for (int y = 0; y < 2; ++y)
+        {
+            const GLsizei xoffset = x * kHalfX;
+            const GLsizei yoffset = y * kHalfY;
+            const int kColorIndex = x + y * 2;
+            const GLColor kColor  = kColors[kColorIndex];
+            EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, kColor);
+        }
+    }
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanUniformUpdatesTest, ES2_VULKAN(), ES3_VULKAN());

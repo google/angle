@@ -28,6 +28,10 @@ constexpr VkBufferUsageFlags kIndexBufferUsageFlags =
 constexpr size_t kVertexBufferAlignment = 4;
 constexpr size_t kIndexBufferAlignment  = 4;
 
+constexpr VkBufferUsageFlags kStagingBufferFlags =
+    VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+constexpr size_t kStagingBufferSize = 1024 * 16;
+
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
 // you will always write to a previously unused portion. After a series of writes, you must flush
 // the buffer data to the device. Buffer lifetime currently assumes that each new allocation will
@@ -35,6 +39,10 @@ constexpr size_t kIndexBufferAlignment  = 4;
 //
 // Dynamic buffers are used to implement a variety of data streaming operations in Vulkan, such
 // as for immediate vertex array and element array data, uniform updates, and other dynamic data.
+//
+// Internally dynamic buffers keep a collection of VkBuffers. When we write past the end of a
+// currently active VkBuffer we keep it until it is no longer in use. We then mark it available
+// for future allocations in a free list.
 class BufferHelper;
 class DynamicBuffer : angle::NonCopyable
 {
@@ -72,8 +80,7 @@ class DynamicBuffer : angle::NonCopyable
     void release(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
 
     // This releases all the buffers that have been allocated since this was last called.
-    void releaseRetainedBuffers(ContextVk *contextVk);
-    void releaseRetainedBuffers(DisplayVk *display, std::vector<GarbageObjectBase> *garbageQueue);
+    void releaseInFlightBuffers(ContextVk *contextVk);
 
     // This frees resources immediately.
     void destroy(VkDevice device);
@@ -88,6 +95,12 @@ class DynamicBuffer : angle::NonCopyable
 
   private:
     void reset();
+    angle::Result allocateNewBuffer(ContextVk *contextVk);
+    void releaseBufferListToContext(ContextVk *contextVk, std::vector<BufferHelper *> *buffers);
+    void releaseBufferListToDisplay(DisplayVk *display,
+                                    std::vector<GarbageObjectBase> *garbageQueue,
+                                    std::vector<BufferHelper *> *buffers);
+    void destroyBufferList(VkDevice device, std::vector<BufferHelper *> *buffers);
 
     VkBufferUsageFlags mUsage;
     bool mHostVisible;
@@ -98,7 +111,8 @@ class DynamicBuffer : angle::NonCopyable
     size_t mSize;
     size_t mAlignment;
 
-    std::vector<BufferHelper *> mRetainedBuffers;
+    std::vector<BufferHelper *> mInFlightBuffers;
+    std::vector<BufferHelper *> mBufferFreeList;
 };
 
 // Uses DescriptorPool to allocate descriptor sets as needed. If a descriptor pool becomes full, we
@@ -566,7 +580,10 @@ class ImageHelper final : public CommandGraphResource
     ImageHelper(ImageHelper &&other);
     ~ImageHelper() override;
 
-    void initStagingBuffer(RendererVk *renderer, const vk::Format &format);
+    void initStagingBuffer(RendererVk *renderer,
+                           const vk::Format &format,
+                           VkBufferUsageFlags usageFlags,
+                           size_t initialSize);
 
     angle::Result init(Context *context,
                        gl::TextureType textureType,

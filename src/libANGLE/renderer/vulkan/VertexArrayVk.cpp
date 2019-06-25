@@ -139,7 +139,7 @@ angle::Result VertexArrayVk::convertIndexBufferGPU(ContextVk *contextVk,
     intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(indices);
     size_t srcDataSize         = static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData;
 
-    mTranslatedByteIndexData.releaseRetainedBuffers(contextVk);
+    mTranslatedByteIndexData.releaseInFlightBuffers(contextVk);
 
     ANGLE_TRY(mTranslatedByteIndexData.allocate(contextVk, sizeof(GLushort) * srcDataSize, nullptr,
                                                 nullptr, &mCurrentElementArrayBufferOffset,
@@ -166,7 +166,7 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
 {
     ASSERT(!mState.getElementArrayBuffer() || indexType == gl::DrawElementsType::UnsignedByte);
 
-    mDynamicIndexData.releaseRetainedBuffers(contextVk);
+    mDynamicIndexData.releaseInFlightBuffers(contextVk);
 
     size_t elementSize = gl::GetDrawElementsTypeSize(indexType);
     if (indexType == gl::DrawElementsType::UnsignedByte)
@@ -252,7 +252,7 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
     ASSERT(GetVertexInputAlignment(vertexFormat) <= vk::kVertexBufferAlignment);
 
     // Allocate buffer for results
-    conversion->data.releaseRetainedBuffers(contextVk);
+    conversion->data.releaseInFlightBuffers(contextVk);
     ANGLE_TRY(conversion->data.allocate(contextVk, numVertices * destFormatSize, nullptr, nullptr,
                                         &conversion->lastAllocationOffset, nullptr));
 
@@ -287,7 +287,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
     unsigned srcFormatSize = vertexFormat.angleFormat().pixelBytes;
     unsigned dstFormatSize = vertexFormat.bufferFormat().pixelBytes;
 
-    conversion->data.releaseRetainedBuffers(contextVk);
+    conversion->data.releaseInFlightBuffers(contextVk);
 
     size_t numVertices = GetVertexCount(srcBuffer, binding, srcFormatSize);
     if (numVertices == 0)
@@ -543,7 +543,7 @@ angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
                                  indices, 0, &startVertex, &vertexCount));
 
     RendererVk *renderer = contextVk->getRenderer();
-    mDynamicVertexData.releaseRetainedBuffers(contextVk);
+    mDynamicVertexData.releaseInFlightBuffers(contextVk);
 
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();

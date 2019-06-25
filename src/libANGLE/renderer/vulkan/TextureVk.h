@@ -165,6 +165,11 @@ class TextureVk : public TextureImpl
 
     Serial getSerial() const { return mSerial; }
 
+    void overrideStagingBufferSizeForTesting(size_t initialSizeForTesting)
+    {
+        mStagingBufferInitialSize = initialSizeForTesting;
+    }
+
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
@@ -310,6 +315,9 @@ class TextureVk : public TextureImpl
 
     // The serial is used for cache indexing.
     Serial mSerial;
+
+    // Overridden in some tests.
+    size_t mStagingBufferInitialSize;
 };
 
 }  // namespace rx
