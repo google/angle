@@ -189,7 +189,9 @@ bool ValidReadPixelsFormatType(Context *context,
 }
 
 template <typename ParamType>
-bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool restrictedWrapModes)
+bool ValidateTextureWrapModeValue(Context *context,
+                                  const ParamType *params,
+                                  bool restrictedWrapModes)
 {
     switch (ConvertToGLenum(params[0]))
     {
@@ -223,7 +225,9 @@ bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool rest
 }
 
 template <typename ParamType>
-bool ValidateTextureMinFilterValue(Context *context, ParamType *params, bool restrictedMinFilter)
+bool ValidateTextureMinFilterValue(Context *context,
+                                   const ParamType *params,
+                                   bool restrictedMinFilter)
 {
     switch (ConvertToGLenum(params[0]))
     {
@@ -252,7 +256,7 @@ bool ValidateTextureMinFilterValue(Context *context, ParamType *params, bool res
 }
 
 template <typename ParamType>
-bool ValidateTextureMagFilterValue(Context *context, ParamType *params)
+bool ValidateTextureMagFilterValue(Context *context, const ParamType *params)
 {
     switch (ConvertToGLenum(params[0]))
     {
@@ -269,7 +273,7 @@ bool ValidateTextureMagFilterValue(Context *context, ParamType *params)
 }
 
 template <typename ParamType>
-bool ValidateTextureCompareModeValue(Context *context, ParamType *params)
+bool ValidateTextureCompareModeValue(Context *context, const ParamType *params)
 {
     // Acceptable mode parameters from GLES 3.0.2 spec, table 3.17
     switch (ConvertToGLenum(params[0]))
@@ -287,7 +291,7 @@ bool ValidateTextureCompareModeValue(Context *context, ParamType *params)
 }
 
 template <typename ParamType>
-bool ValidateTextureCompareFuncValue(Context *context, ParamType *params)
+bool ValidateTextureCompareFuncValue(Context *context, const ParamType *params)
 {
     // Acceptable function parameters from GLES 3.0.2 spec, table 3.17
     switch (ConvertToGLenum(params[0]))
@@ -311,7 +315,7 @@ bool ValidateTextureCompareFuncValue(Context *context, ParamType *params)
 }
 
 template <typename ParamType>
-bool ValidateTextureSRGBDecodeValue(Context *context, ParamType *params)
+bool ValidateTextureSRGBDecodeValue(Context *context, const ParamType *params)
 {
     if (!context->getExtensions().textureSRGBDecode)
     {
@@ -5996,7 +6000,7 @@ bool ValidateSamplerParameterBase(Context *context,
                                   GLenum pname,
                                   GLsizei bufSize,
                                   bool vectorParams,
-                                  ParamType *params)
+                                  const ParamType *params)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -6099,8 +6103,13 @@ bool ValidateSamplerParameterBase(Context *context,
     return true;
 }
 
-template bool ValidateSamplerParameterBase(Context *, GLuint, GLenum, GLsizei, bool, GLfloat *);
-template bool ValidateSamplerParameterBase(Context *, GLuint, GLenum, GLsizei, bool, GLint *);
+template bool ValidateSamplerParameterBase(Context *,
+                                           GLuint,
+                                           GLenum,
+                                           GLsizei,
+                                           bool,
+                                           const GLfloat *);
+template bool ValidateSamplerParameterBase(Context *, GLuint, GLenum, GLsizei, bool, const GLint *);
 template bool ValidateSamplerParameterBase(Context *,
                                            GLuint,
                                            GLenum,

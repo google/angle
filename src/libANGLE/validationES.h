@@ -584,7 +584,7 @@ bool ValidateSamplerParameterBase(Context *context,
                                   GLenum pname,
                                   GLsizei bufSize,
                                   bool vectorParams,
-                                  ParamType *params);
+                                  const ParamType *params);
 
 bool ValidateGetInternalFormativBase(Context *context,
                                      GLenum target,
