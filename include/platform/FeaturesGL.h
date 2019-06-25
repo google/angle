@@ -58,6 +58,14 @@ struct FeaturesGL : FeatureSetBase
         "do_while_glsl_causes_gpu_hang", FeatureCategory::OpenGLWorkarounds,
         "On Mac, some GLSL constructs involving do-while loops cause GPU hangs", &members};
 
+    // On Mac AMD GPU gl_VertexID in GLSL vertex shader doesn't include base vertex value,
+    // Work aronud this by replace gl_VertexID with (gl_VertexID - angle_BaseVertex) when
+    // angle_BaseVertex is present.
+    Feature addBaseVertexToVertexID = {
+        "vertex_id_does_not_include_base_vertex", FeatureCategory::OpenGLWorkarounds,
+        "On Mac AMD GPU gl_VertexID in GLSL vertex shader doesn't include base vertex value",
+        &members};
+
     // Calling glFinish doesn't cause all queries to report that the result is available on some
     // (NVIDIA) drivers.  It was found that enabling GL_DEBUG_OUTPUT_SYNCHRONOUS before the finish
     // causes it to fully finish.

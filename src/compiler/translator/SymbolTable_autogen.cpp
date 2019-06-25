@@ -2211,12 +2211,16 @@ constexpr const TSymbolUniqueId BuiltInId::gl_Layer;
 constexpr const TSymbolUniqueId BuiltInId::gl_Position;
 constexpr const TSymbolUniqueId BuiltInId::gl_PointSize;
 constexpr const TSymbolUniqueId BuiltInId::gl_InstanceID;
+constexpr const TSymbolUniqueId BuiltInId::gl_InstanceIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_VertexID;
+constexpr const TSymbolUniqueId BuiltInId::gl_VertexIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewportIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_LayerVS;
 constexpr const TSymbolUniqueId BuiltInId::gl_DrawID;
 constexpr const TSymbolUniqueId BuiltInId::gl_BaseVertex;
 constexpr const TSymbolUniqueId BuiltInId::gl_BaseInstance;
+constexpr const TSymbolUniqueId BuiltInId::angle_BaseVertex;
+constexpr const TSymbolUniqueId BuiltInId::angle_BaseInstance;
 constexpr const TSymbolUniqueId BuiltInId::gl_NumWorkGroups;
 constexpr const TSymbolUniqueId BuiltInId::gl_WorkGroupSize;
 constexpr const TSymbolUniqueId BuiltInId::gl_WorkGroupID;
@@ -2233,7 +2237,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PerVertexOutBlock;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionGS;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 
-const int TSymbolTable::kLastBuiltInId = 2294;
+const int TSymbolTable::kLastBuiltInId = 2298;
 
 namespace BuiltInName
 {
@@ -2249,6 +2253,8 @@ constexpr const ImmutableString acosh("acosh");
 constexpr const ImmutableString all("all");
 constexpr const ImmutableString allInvocations("allInvocations");
 constexpr const ImmutableString allInvocationsEqual("allInvocationsEqual");
+constexpr const ImmutableString angle_BaseInstance("angle_BaseInstance");
+constexpr const ImmutableString angle_BaseVertex("angle_BaseVertex");
 constexpr const ImmutableString any("any");
 constexpr const ImmutableString anyInvocation("anyInvocation");
 constexpr const ImmutableString asin("asin");
@@ -2329,6 +2335,7 @@ constexpr const ImmutableString gl_FragDepthEXT("gl_FragDepthEXT");
 constexpr const ImmutableString gl_FrontFacing("gl_FrontFacing");
 constexpr const ImmutableString gl_GlobalInvocationID("gl_GlobalInvocationID");
 constexpr const ImmutableString gl_InstanceID("gl_InstanceID");
+constexpr const ImmutableString gl_InstanceIndex("gl_InstanceIndex");
 constexpr const ImmutableString gl_InvocationID("gl_InvocationID");
 constexpr const ImmutableString gl_LastFragColor("gl_LastFragColor");
 constexpr const ImmutableString gl_LastFragColorARM("gl_LastFragColorARM");
@@ -2395,6 +2402,7 @@ constexpr const ImmutableString gl_PrimitiveIDIn("gl_PrimitiveIDIn");
 constexpr const ImmutableString gl_SecondaryFragColorEXT("gl_SecondaryFragColorEXT");
 constexpr const ImmutableString gl_SecondaryFragDataEXT("gl_SecondaryFragDataEXT");
 constexpr const ImmutableString gl_VertexID("gl_VertexID");
+constexpr const ImmutableString gl_VertexIndex("gl_VertexIndex");
 constexpr const ImmutableString gl_ViewID_OVR("gl_ViewID_OVR");
 constexpr const ImmutableString gl_ViewportIndex("gl_ViewportIndex");
 constexpr const ImmutableString gl_WorkGroupID("gl_WorkGroupID");
@@ -2547,6 +2555,18 @@ constexpr const ImmutableString yuv_2_rgb("yuv_2_rgb");
 namespace BuiltInVariable
 {
 
+constexpr const TVariable kVar_angle_BaseInstance(
+    BuiltInId::angle_BaseInstance,
+    BuiltInName::angle_BaseInstance,
+    SymbolType::BuiltIn,
+    TExtension::ANGLE_base_vertex_base_instance,
+    StaticType::Get<EbtInt, EbpHigh, EvqBaseInstance, 1, 1>());
+constexpr const TVariable kVar_angle_BaseVertex(
+    BuiltInId::angle_BaseVertex,
+    BuiltInName::angle_BaseVertex,
+    SymbolType::BuiltIn,
+    TExtension::ANGLE_base_vertex_base_instance,
+    StaticType::Get<EbtInt, EbpHigh, EvqBaseVertex, 1, 1>());
 constexpr const TVariable kVar_gl_BaseInstance(
     BuiltInId::gl_BaseInstance,
     BuiltInName::gl_BaseInstance,
@@ -2597,6 +2617,12 @@ constexpr const TVariable kVar_gl_GlobalInvocationID(
 constexpr const TVariable kVar_gl_InstanceID(
     BuiltInId::gl_InstanceID,
     BuiltInName::gl_InstanceID,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtInt, EbpHigh, EvqInstanceID, 1, 1>());
+constexpr const TVariable kVar_gl_InstanceIndex(
+    BuiltInId::gl_InstanceIndex,
+    BuiltInName::gl_InstanceIndex,
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtInt, EbpHigh, EvqInstanceID, 1, 1>());
@@ -2697,6 +2723,12 @@ constexpr const TVariable kVar_gl_VertexID(BuiltInId::gl_VertexID,
                                            SymbolType::BuiltIn,
                                            TExtension::UNDEFINED,
                                            StaticType::Get<EbtInt, EbpHigh, EvqVertexID, 1, 1>());
+constexpr const TVariable kVar_gl_VertexIndex(
+    BuiltInId::gl_VertexIndex,
+    BuiltInName::gl_VertexIndex,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtInt, EbpHigh, EvqVertexID, 1, 1>());
 constexpr const TVariable kVar_gl_ViewID_OVR(
     BuiltInId::gl_ViewID_OVR,
     BuiltInName::gl_ViewID_OVR,
@@ -3469,6 +3501,16 @@ constexpr const TVariable kVar_pt_o_30E(BuiltInId::pt_o_30E,
                                         TExtension::UNDEFINED,
                                         StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>());
 
+const TVariable *angle_BaseInstance()
+{
+    return &kVar_angle_BaseInstance;
+}
+
+const TVariable *angle_BaseVertex()
+{
+    return &kVar_angle_BaseVertex;
+}
+
 const TVariable *gl_BaseInstance()
 {
     return &kVar_gl_BaseInstance;
@@ -3512,6 +3554,11 @@ const TVariable *gl_GlobalInvocationID()
 const TVariable *gl_InstanceID()
 {
     return &kVar_gl_InstanceID;
+}
+
+const TVariable *gl_InstanceIndex()
+{
+    return &kVar_gl_InstanceIndex;
 }
 
 const TVariable *gl_InvocationID()
@@ -3597,6 +3644,11 @@ const TVariable *gl_SecondaryFragColorEXT()
 const TVariable *gl_VertexID()
 {
     return &kVar_gl_VertexID;
+}
+
+const TVariable *gl_VertexIndex()
+{
+    return &kVar_gl_VertexIndex;
 }
 
 const TVariable *gl_ViewID_OVR()
@@ -29474,11 +29526,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("mix(20B20B20B"),
-                &BuiltInFunction::function_mix_20B20B20B,
+    SymbolEntry(ImmutableString("textureProjOffset(00X20B10D"),
+                &BuiltInFunction::function_textureProjOffset_00X20B10D,
                 nullptr,
-                0,
-                0,
+                300,
+                130,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -31138,11 +31190,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("textureOffset(00n20B10D"),
-                &BuiltInFunction::function_textureOffset_00n20B10D,
+    SymbolEntry(ImmutableString("bitCount(30E"),
+                &BuiltInFunction::function_bitCount_30E,
                 nullptr,
-                -1,
-                140,
+                310,
+                400,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -36050,12 +36102,12 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("textureProjOffset(00q20B10D"),
-                &BuiltInFunction::function_textureProjOffset_00q20B10D,
+    SymbolEntry(ImmutableString("fwidthFine(00B"),
+                &BuiltInFunction::function_fwidthFine_00B,
                 nullptr,
                 -1,
-                140,
-                Shader::ALL,
+                450,
+                Shader::FRAGMENT,
                 nullptr,
                 nullptr,
                 -1,
@@ -37106,12 +37158,12 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("fwidthFine(00B"),
-                &BuiltInFunction::function_fwidthFine_00B,
+    SymbolEntry(ImmutableString("textureProjOffset(00q20B10D"),
+                &BuiltInFunction::function_textureProjOffset_00q20B10D,
                 nullptr,
                 -1,
-                450,
-                Shader::FRAGMENT,
+                140,
+                Shader::ALL,
                 nullptr,
                 nullptr,
                 -1,
@@ -38866,11 +38918,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("imageSize(01A"),
-                &BuiltInFunction::function_imageSize_01A,
+    SymbolEntry(ImmutableString("texelFetch(00r00D"),
+                &BuiltInFunction::function_texelFetch_00r00D,
                 nullptr,
-                310,
-                430,
+                -1,
+                140,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -39597,6 +39649,22 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr,
+                nullptr,
+                nullptr,
+                -1,
+                Shader::ALL,
+                nullptr),
+    SymbolEntry(ImmutableString("angle_BaseInstance"),
+                nullptr,
+                nullptr,
+                -1,
+                -1,
+                Shader::ALL,
+                &BuiltInVariable::kVar_angle_BaseInstance,
+                nullptr,
+                0,
+                Shader::VERTEX,
+                &ShBuiltInResources::ANGLE_base_vertex_base_instance,
                 nullptr,
                 nullptr,
                 -1,
@@ -41730,6 +41798,22 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
+    SymbolEntry(ImmutableString("angle_BaseVertex"),
+                nullptr,
+                nullptr,
+                -1,
+                -1,
+                Shader::ALL,
+                &BuiltInVariable::kVar_angle_BaseVertex,
+                nullptr,
+                0,
+                Shader::VERTEX,
+                &ShBuiltInResources::ANGLE_base_vertex_base_instance,
+                nullptr,
+                nullptr,
+                -1,
+                Shader::ALL,
+                nullptr),
     SymbolEntry(ImmutableString("bitfieldReverse(20D"),
                 &BuiltInFunction::function_bitfieldReverse_20D,
                 nullptr,
@@ -42082,11 +42166,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("bitCount(30E"),
-                &BuiltInFunction::function_bitCount_30E,
+    SymbolEntry(ImmutableString("textureOffset(00n20B10D"),
+                &BuiltInFunction::function_textureOffset_00n20B10D,
                 nullptr,
-                310,
-                400,
+                -1,
+                140,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -42898,11 +42982,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("textureGatherOffsets(00n10B00B70D"),
-                &BuiltInFunction::function_textureGatherOffsets_00n10B00B70D,
+    SymbolEntry(ImmutableString("textureProj(00q20B"),
+                &BuiltInFunction::function_textureProj_00q20B,
                 nullptr,
                 -1,
-                400,
+                140,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -44466,11 +44550,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("textureProj(00q20B"),
-                &BuiltInFunction::function_textureProj_00q20B,
+    SymbolEntry(ImmutableString("textureGatherOffsets(00n10B00B70D"),
+                &BuiltInFunction::function_textureGatherOffsets_00n10B00B70D,
                 nullptr,
                 -1,
-                140,
+                400,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -47186,11 +47270,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("texelFetch(00r00D"),
-                &BuiltInFunction::function_texelFetch_00r00D,
+    SymbolEntry(ImmutableString("imageSize(01A"),
+                &BuiltInFunction::function_imageSize_01A,
                 nullptr,
-                -1,
-                140,
+                310,
+                430,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -56321,6 +56405,22 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
+    SymbolEntry(ImmutableString(""),
+                nullptr,
+                nullptr,
+                -1,
+                -1,
+                Shader::ALL,
+                nullptr,
+                nullptr,
+                -1,
+                Shader::ALL,
+                nullptr,
+                nullptr,
+                nullptr,
+                -1,
+                Shader::ALL,
+                nullptr),
     SymbolEntry(ImmutableString("imageLoad(01E20D"),
                 &BuiltInFunction::function_imageLoad_01E20D,
                 nullptr,
@@ -56566,6 +56666,22 @@ constexpr SymbolEntry mangled[] = {
                 &TSymbolTableBase::mVar_gl_MaxVertexAttribs,
                 0,
                 0,
+                Shader::ALL,
+                nullptr,
+                nullptr,
+                -1,
+                Shader::ALL,
+                nullptr,
+                nullptr,
+                nullptr,
+                -1,
+                Shader::ALL,
+                nullptr),
+    SymbolEntry(ImmutableString(""),
+                nullptr,
+                nullptr,
+                -1,
+                -1,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -57441,11 +57557,11 @@ constexpr SymbolEntry mangled[] = {
                 -1,
                 Shader::ALL,
                 nullptr),
-    SymbolEntry(ImmutableString("textureProjOffset(00X20B10D"),
-                &BuiltInFunction::function_textureProjOffset_00X20B10D,
+    SymbolEntry(ImmutableString("mix(20B20B20B"),
+                &BuiltInFunction::function_mix_20B20B20B,
                 nullptr,
-                300,
-                130,
+                0,
+                0,
                 Shader::ALL,
                 nullptr,
                 nullptr,
@@ -58383,6 +58499,12 @@ constexpr UnmangledEntry unmangled[] = {
                    0,
                    0,
                    Shader::ALL),
+    UnmangledEntry(ImmutableString("atomicExchange"),
+                   &UnmangledBuiltIns::UNDEFINED,
+                   &UnmangledBuiltIns::UNDEFINED,
+                   310,
+                   430,
+                   Shader::ALL),
     UnmangledEntry(ImmutableString("texture2DProjLod"),
                    &UnmangledBuiltIns::UNDEFINED,
                    &UnmangledBuiltIns::UNDEFINED,
@@ -58821,12 +58943,6 @@ constexpr UnmangledEntry unmangled[] = {
                    -1,
                    0,
                    Shader::VERTEX),
-    UnmangledEntry(ImmutableString("atomicExchange"),
-                   &UnmangledBuiltIns::UNDEFINED,
-                   &UnmangledBuiltIns::UNDEFINED,
-                   310,
-                   430,
-                   Shader::ALL),
     UnmangledEntry(ImmutableString("imageAtomicMin"),
                    &UnmangledBuiltIns::UNDEFINED,
                    &UnmangledBuiltIns::UNDEFINED,
@@ -59622,7 +59738,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         return nullptr;
 
     uint32_t nameHash = name.mangledNameHash();
-    if (nameHash >= 2131)
+    if (nameHash >= 2135)
         return nullptr;
     return getSymbol(BuiltInArray::mangled[nameHash], name, shaderVersion);
 }

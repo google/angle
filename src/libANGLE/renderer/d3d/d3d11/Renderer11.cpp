@@ -1524,7 +1524,9 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
                                        GLsizei indexCount,
                                        gl::DrawElementsType indexType,
                                        const void *indices,
-                                       GLsizei instanceCount)
+                                       GLsizei instanceCount,
+                                       GLint baseVertex,
+                                       GLuint baseInstance)
 {
     if (mStateManager.getCullEverything())
     {
@@ -1537,21 +1539,20 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     // If this draw call is coming from an indirect call, offset by the indirect call's base vertex.
-    // No base vertex parameter exists for a normal drawElements, so params.baseVertex will be zero.
-    int baseVertex = -startVertex;
+    GLint baseVertexAdjusted = baseVertex - startVertex;
 
     const ProgramD3D *programD3D  = mStateManager.getProgramD3D();
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(programD3D, instanceCount);
 
     if (mode == gl::PrimitiveMode::LineLoop)
     {
-        return drawLineLoop(context, indexCount, indexType, indices, baseVertex,
+        return drawLineLoop(context, indexCount, indexType, indices, baseVertexAdjusted,
                             adjustedInstanceCount);
     }
 
     if (mode == gl::PrimitiveMode::TriangleFan)
     {
-        return drawTriangleFan(context, indexCount, indexType, indices, baseVertex,
+        return drawTriangleFan(context, indexCount, indexType, indices, baseVertexAdjusted,
                                adjustedInstanceCount);
     }
 
@@ -1559,12 +1560,12 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
     {
         if (adjustedInstanceCount == 0)
         {
-            mDeviceContext->DrawIndexed(indexCount, 0, baseVertex);
+            mDeviceContext->DrawIndexed(indexCount, 0, baseVertexAdjusted);
         }
         else
         {
-            mDeviceContext->DrawIndexedInstanced(indexCount, adjustedInstanceCount, 0, baseVertex,
-                                                 0);
+            mDeviceContext->DrawIndexedInstanced(indexCount, adjustedInstanceCount, 0,
+                                                 baseVertexAdjusted, baseInstance);
         }
         return angle::Result::Continue;
     }
@@ -1584,7 +1585,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
     // that do not support geometry shaders.
     if (instanceCount == 0)
     {
-        mDeviceContext->DrawIndexedInstanced(6, indexCount, 0, 0, 0);
+        mDeviceContext->DrawIndexedInstanced(6, indexCount, 0, baseVertexAdjusted, baseInstance);
         return angle::Result::Continue;
     }
 
@@ -1603,7 +1604,8 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
     {
         ANGLE_TRY(
             mStateManager.updateVertexOffsetsForPointSpritesEmulation(context, startVertex, i));
-        mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
+        mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, baseVertexAdjusted,
+                                             baseInstance);
     }
     mStateManager.invalidateVertexBuffer();
     return angle::Result::Continue;

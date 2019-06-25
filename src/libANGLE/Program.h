@@ -493,6 +493,10 @@ class ProgramState final : angle::NonCopyable
     // GL_ANGLE_base_vertex_base_instance
     int mBaseVertexLocation;
     int mBaseInstanceLocation;
+    // Cached value of base vertex and base instance
+    // need to reset them to zero if using non base vertex or base instance draw calls.
+    GLint mCachedBaseVertex;
+    GLuint mCachedBaseInstance;
 
     // The size of the data written to each transform feedback buffer per vertex.
     std::vector<GLsizei> mTransformFeedbackStrides;

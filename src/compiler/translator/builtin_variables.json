@@ -639,12 +639,30 @@
                     "qualifier":"InstanceID"
                 }
             },
+            "gl_InstanceIndex":{
+                "essl_level":"GLSL_BUILTINS",
+                "type":{
+                    "basic":"Int",
+                    "precision":"High",
+                    "qualifier":"InstanceID",
+                    "comment": "In GLSL 450 used by Vulkan"
+                }
+            },
             "gl_VertexID":{
                 "essl_level":"ESSL3_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
                     "qualifier":"VertexID"
+                }
+            },
+            "gl_VertexIndex":{
+                "essl_level":"GLSL_BUILTINS",
+                "type":{
+                    "basic":"Int",
+                    "precision":"High",
+                    "qualifier":"VertexID",
+                    "comment": "In GLSL 450 used by Vulkan"
                 }
             },
             "gl_ViewportIndex":{
@@ -700,6 +718,24 @@
                             },
                             "gl_BaseInstance":{
                                 "essl_level":"ESSL3_BUILTINS",
+                                "essl_extension":"ANGLE_base_vertex_base_instance",
+                                "type":{
+                                    "basic":"Int",
+                                    "precision":"High",
+                                    "qualifier":"BaseInstance"
+                                }
+                            },
+                            "angle_BaseVertex":{
+                                "essl_level":"COMMON_BUILTINS",
+                                "essl_extension":"ANGLE_base_vertex_base_instance",
+                                "type":{
+                                    "basic":"Int",
+                                    "precision":"High",
+                                    "qualifier":"BaseVertex"
+                                }
+                            },
+                            "angle_BaseInstance":{
+                                "essl_level":"COMMON_BUILTINS",
                                 "essl_extension":"ANGLE_base_vertex_base_instance",
                                 "type":{
                                     "basic":"Int",

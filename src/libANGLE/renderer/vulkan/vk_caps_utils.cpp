@@ -63,6 +63,9 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_texture_type_2_10_10_10_REV
     mNativeExtensions.textureFormat2101010REV = true;
 
+    // Enable ANGLE_base_vertex_base_instance
+    mNativeExtensions.baseVertexBaseInstance = true;
+
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;
 

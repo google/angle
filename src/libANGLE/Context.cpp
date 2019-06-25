@@ -5626,6 +5626,46 @@ void Context::multiDrawElementsInstanced(PrimitiveMode mode,
     }
 }
 
+namespace
+{
+
+// RAII object making sure reset uniforms is called no matter whether there's an error in draw calls
+class ResetBaseVertexBaseInstance : angle::NonCopyable
+{
+  public:
+    ResetBaseVertexBaseInstance(Program *programObject,
+                                bool resetBaseVertex,
+                                bool resetBaseInstance)
+        : mProgramObject(programObject),
+          mResetBaseVertex(resetBaseVertex),
+          mResetBaseInstance(resetBaseInstance)
+    {}
+
+    ~ResetBaseVertexBaseInstance()
+    {
+        if (mProgramObject)
+        {
+            // Reset emulated uniforms to zero to avoid affecting other draw calls
+            if (mResetBaseVertex)
+            {
+                mProgramObject->setBaseVertexUniform(0);
+            }
+
+            if (mResetBaseInstance)
+            {
+                mProgramObject->setBaseInstanceUniform(0);
+            }
+        }
+    }
+
+  private:
+    Program *mProgramObject;
+    bool mResetBaseVertex;
+    bool mResetBaseInstance;
+};
+
+}  // anonymous namespace
+
 void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
                                               GLint first,
                                               GLsizei count,
@@ -5645,6 +5685,8 @@ void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
     {
         programObject->setBaseInstanceUniform(baseInstance);
     }
+
+    ResetBaseVertexBaseInstance resetUniforms(programObject, false, hasBaseInstance);
 
     // The input gl_InstanceID does not follow the baseinstance. gl_InstanceID always falls on
     // the half-open range [0, instancecount​). No need to set other stuff. Except for Vulkan.
@@ -5681,6 +5723,8 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
     {
         programObject->setBaseInstanceUniform(baseInstance);
     }
+
+    ResetBaseVertexBaseInstance resetUniforms(programObject, hasBaseVertex, hasBaseInstance);
 
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstancedBaseVertexBaseInstance(
         this, mode, count, type, indices, instanceCounts, baseVertex, baseInstance));
@@ -5744,6 +5788,8 @@ void Context::multiDrawArraysInstancedBaseInstance(PrimitiveMode mode,
     const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
     const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
 
+    ResetBaseVertexBaseInstance resetUniforms(programObject, false, hasBaseInstance);
+
     if (hasDrawID && hasBaseInstance)
     {
         MULTI_DRAW_ARRAYS_BLOCK(1, 1)
@@ -5776,6 +5822,8 @@ void Context::multiDrawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mod
     const bool hasBaseVertex   = programObject && programObject->hasBaseVertexUniform();
     const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
     const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+
+    ResetBaseVertexBaseInstance resetUniforms(programObject, hasBaseVertex, hasBaseInstance);
 
     if (hasDrawID)
     {

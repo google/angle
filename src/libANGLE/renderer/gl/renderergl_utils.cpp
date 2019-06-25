@@ -1403,6 +1403,12 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->floatBlend = functions->standard == STANDARD_GL_DESKTOP ||
                              functions->hasGLESExtension("GL_EXT_float_blend");
 
+    // ANGLE_base_vertex_base_instance
+    extensions->baseVertexBaseInstance =
+        functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+        functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
+        functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex");
+
     // GL_CHROMIUM_compressed_texture_etc
     // Expose this extension only when we support the formats or we're running on top of a native
     // ES driver.
@@ -1464,6 +1470,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     features->doWhileGLSLCausesGPUHang.enabled                  = IsApple();
     features->useUnusedBlocksWithStandardOrSharedLayout.enabled = IsApple();
     features->rewriteFloatUnaryMinusOperator.enabled            = IsApple() && IsIntel(vendor);
+
+    features->addBaseVertexToVertexID.enabled = IsApple() && IsAMD(vendor);
 
     // Triggers a bug on Marshmallow Adreno (4xx?) driver.
     // http://anglebug.com/2046

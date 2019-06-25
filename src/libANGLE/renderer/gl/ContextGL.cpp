@@ -294,8 +294,7 @@ angle::Result ContextGL::drawArraysInstancedBaseInstance(const gl::Context *cont
                                                          GLsizei instanceCount,
                                                          GLuint baseInstance)
 {
-    UNIMPLEMENTED();
-    return angle::Result::Continue;
+    return drawArraysInstanced(context, mode, first, count, instanceCount);
 }
 
 angle::Result ContextGL::drawElements(const gl::Context *context,
@@ -354,7 +353,24 @@ angle::Result ContextGL::drawElementsInstancedBaseVertexBaseInstance(const gl::C
                                                                      GLint baseVertex,
                                                                      GLuint baseInstance)
 {
-    UNIMPLEMENTED();
+    GLsizei adjustedInstanceCount = instances;
+    const gl::Program *program    = context->getState().getProgram();
+    if (program->usesMultiview())
+    {
+        adjustedInstanceCount *= program->getNumViews();
+    }
+    const void *drawIndexPointer = nullptr;
+
+    ANGLE_TRY(setDrawElementsState(context, count, type, indices, adjustedInstanceCount,
+                                   &drawIndexPointer));
+
+    const FunctionsGL *functions = getFunctions();
+
+    // GLES 3.2+ or GL 3.2+
+    // or GL_OES_draw_elements_base_vertex / GL_EXT_draw_elements_base_vertex
+    functions->drawElementsInstancedBaseVertex(ToGLenum(mode), count, ToGLenum(type),
+                                               drawIndexPointer, adjustedInstanceCount, baseVertex);
+
     return angle::Result::Continue;
 }
 

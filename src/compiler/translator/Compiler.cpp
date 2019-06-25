@@ -672,13 +672,9 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         if ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u)
         {
-            if (!EmulateGLBaseVertex(this, root, &mSymbolTable, &mUniforms,
-                                     shouldCollectVariables(compileOptions)))
-            {
-                return false;
-            }
-            if (!EmulateGLBaseInstance(this, root, &mSymbolTable, &mUniforms,
-                                       shouldCollectVariables(compileOptions)))
+            if (!EmulateGLBaseVertexBaseInstance(this, root, &mSymbolTable, &mUniforms,
+                                                 shouldCollectVariables(compileOptions),
+                                                 compileOptions & SH_ADD_BASE_VERTEX_TO_VERTEX_ID))
             {
                 return false;
             }

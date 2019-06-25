@@ -164,6 +164,24 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
         mUniformRegisterMap[uniform->name] = registerIndex;
     }
 
+    if (uniform->name == "angle_BaseVertex" && uniform->mappedName == "angle_BaseVertex")
+    {
+        mUniformRegisterMap["gl_BaseVertex"] = registerIndex;
+    }
+    else
+    {
+        mUniformRegisterMap[uniform->name] = registerIndex;
+    }
+
+    if (uniform->name == "angle_BaseInstance" && uniform->mappedName == "angle_BaseInstance")
+    {
+        mUniformRegisterMap["gl_BaseInstance"] = registerIndex;
+    }
+    else
+    {
+        mUniformRegisterMap[uniform->name] = registerIndex;
+    }
+
     unsigned int registerCount = HLSLVariableRegisterCount(*uniform, mOutputType);
 
     if (IsSampler(type.getBasicType()) ||

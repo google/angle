@@ -6,8 +6,8 @@
 // EmulateGLDrawID is an AST traverser to convert the gl_DrawID builtin
 // to a uniform int
 //
-// EmulateGLBaseVertex is an AST traverser to convert the gl_BaseVertex builtin
-// to a uniform int
+// EmulateGLBaseVertexBaseInstance is an AST traverser to convert the gl_BaseVertex and
+// gl_BaseInstance builtin to uniform ints
 //
 // EmulateGLBaseInstance is an AST traverser to convert the gl_BaseInstance builtin
 // to a uniform int
@@ -35,17 +35,12 @@ ANGLE_NO_DISCARD bool EmulateGLDrawID(TCompiler *compiler,
                                       std::vector<sh::Uniform> *uniforms,
                                       bool shouldCollect);
 
-ANGLE_NO_DISCARD bool EmulateGLBaseVertex(TCompiler *compiler,
-                                          TIntermBlock *root,
-                                          TSymbolTable *symbolTable,
-                                          std::vector<sh::Uniform> *uniforms,
-                                          bool shouldCollect);
-
-ANGLE_NO_DISCARD bool EmulateGLBaseInstance(TCompiler *compiler,
-                                            TIntermBlock *root,
-                                            TSymbolTable *symbolTable,
-                                            std::vector<sh::Uniform> *uniforms,
-                                            bool shouldCollect);
+ANGLE_NO_DISCARD bool EmulateGLBaseVertexBaseInstance(TCompiler *compiler,
+                                                      TIntermBlock *root,
+                                                      TSymbolTable *symbolTable,
+                                                      std::vector<sh::Uniform> *uniforms,
+                                                      bool shouldCollect,
+                                                      bool addBaseVertexToVertexID);
 
 }  // namespace sh
 

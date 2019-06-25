@@ -29,7 +29,7 @@ class EmulateGLBaseVertexBaseInstanceTest : public MatchOutputCodeTest
     {
         std::string translatedCode;
         std::string infoLog;
-        bool success = compileTestShader(GL_VERTEX_SHADER, SH_GLES2_SPEC,
+        bool success = compileTestShader(GL_VERTEX_SHADER, SH_GLES3_SPEC,
                                          SH_GLSL_COMPATIBILITY_OUTPUT, shaderString, getResources(),
                                          SH_VARIABLES, &translatedCode, &infoLog);
         EXPECT_FALSE(success);
