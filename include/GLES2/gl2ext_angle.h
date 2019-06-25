@@ -652,6 +652,20 @@ GL_APICALL void GL_APIENTRY glMultiDrawElementsInstancedANGLE (GLenum mode, cons
 #endif
 #endif /* GL_ANGLE_multi_draw */
 
+#ifndef GL_ANGLE_base_vertex_base_instance
+#define GL_ANGLE_base_vertex_base_instance 1
+typedef void (GL_APIENTRYP PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLEPROC) (GLenum mode, GLint first, GLsizei count, GLsizei instanceCount, GLuint baseInstance);
+typedef void (GL_APIENTRYP PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLEPROC) (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instanceCount, GLint baseVertex, GLuint baseInstance);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSINSTANCEDBASEINSTANCEANGLEPROC) (GLenum mode, GLsizei drawCount, const GLsizei *counts, const GLsizei *instanceCounts, const GLsizei *firsts, const GLuint *baseInstances);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLEPROC) (GLenum mode, GLenum type, GLsizei drawCount, const GLsizei *counts, const GLsizei *instanceCounts, const GLvoid* const *indices, const GLint *baseVertices, const GLuint *baseInstances);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glDrawArraysInstancedBaseInstanceANGLE (GLenum mode, GLint first, GLsizei count, GLsizei instanceCount, GLuint baseInstance);
+GL_APICALL void GL_APIENTRY glDrawElementsInstancedBaseVertexBaseInstanceANGLE (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instanceCount, GLint baseVertex, GLuint baseInstance);
+GL_APICALL void GL_APIENTRY glMultiDrawArraysInstancedBaseInstanceANGLE (GLenum mode, GLsizei drawCount, const GLsizei *counts, const GLsizei *instanceCounts, const GLsizei *firsts, const GLuint *baseInstances);
+GL_APICALL void GL_APIENTRY glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE (GLenum mode, GLenum type, GLsizei drawCount, const GLsizei *counts, const GLsizei *instanceCounts, const GLvoid* const *indices, const GLint *baseVertices, const GLuint *baseInstances);
+#endif
+#endif
+
 #ifndef GL_CHROMIUM_bind_uniform_location
 #define GL_CHROMIUM_bind_uniform_location 1
 typedef void (GL_APIENTRYP PFNGLBINDUNIFORMLOCATIONCHROMIUMPROC)(GLuint program, GLint location, const GLchar *name);

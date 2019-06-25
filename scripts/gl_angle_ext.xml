@@ -886,6 +886,44 @@
                 <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
             </command>
             <command>
+            <proto>void <name>glDrawArraysInstancedBaseInstanceANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param><ptype>GLint</ptype> <name>first</name></param>
+                <param><ptype>GLsizei</ptype> <name>count</name></param>
+                <param><ptype>GLsizei</ptype> <name>instanceCount</name></param>
+                <param><ptype>GLuint</ptype> <name>baseInstance</name></param>
+            </command>
+            <command>
+            <proto>void <name>glDrawElementsInstancedBaseVertexBaseInstanceANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param><ptype>GLsizei</ptype> <name>count</name></param>
+                <param group="DrawElementsType"><ptype>GLenum</ptype> <name>type</name></param>
+                <param>const <ptype>GLvoid</ptype> *<name>indices</name></param>
+                <param><ptype>GLsizei</ptype> <name>instanceCounts</name></param>
+                <param><ptype>GLint</ptype> <name>baseVertex</name></param>
+                <param><ptype>GLuint</ptype> <name>baseInstance</name></param>
+            </command>
+            <command>
+            <proto>void <name>glMultiDrawArraysInstancedBaseInstanceANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>instanceCounts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLint</ptype> *<name>firsts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLuint</ptype> *<name>baseInstances</name></param>
+            </command>
+            <command>
+            <proto>void <name>glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param group="DrawElementsType"><ptype>GLenum</ptype> <name>type</name></param>
+                <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>instanceCounts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLvoid</ptype> *const*<name>indices</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLint</ptype> *<name>baseVertices</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLuint</ptype> *<name>baseInstances</name></param>
+            </command>
+            <command>
             <proto>void <name>glGetMultisamplefvANGLE</name></proto>
                 <param><ptype>GLenum</ptype> <name>pname</name></param>
                 <param><ptype>GLuint</ptype> <name>index</name></param>
@@ -1067,6 +1105,14 @@
                 <command name="glMultiDrawArraysInstancedANGLE"/>
                 <command name="glMultiDrawElementsANGLE"/>
                 <command name="glMultiDrawElementsInstancedANGLE"/>
+            </require>
+        </extension>
+        <extension name="GL_ANGLE_base_vertex_base_instance" supported='gles2'>
+            <require>
+                <command name="glDrawArraysInstancedBaseInstanceANGLE"/>
+                <command name="glDrawElementsInstancedBaseVertexBaseInstanceANGLE"/>
+                <command name="glMultiDrawArraysInstancedBaseInstanceANGLE"/>
+                <command name="glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE"/>
             </require>
         </extension>
         <extension name="GL_ANGLE_provoking_vertex" supported='gles2'>

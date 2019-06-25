@@ -8,13 +8,13 @@
   "scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "scripts/gl_angle_ext.xml":
-    "bed6b56a38621721e689ebc19601a556",
+    "7f7a2cc5dd58c0f4ca04d932f89b08c6",
   "scripts/registry_xml.py":
-    "a801192d7b3fc697cf813a57a41031e0",
+    "a7e47030109f0275cd58909c088f2816",
   "scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "src/libGL/proc_table_wgl_autogen.cpp":
     "6844abf06aa6fb7a26878acb0d69df07",
   "src/libGLESv2/proc_table_egl_autogen.cpp":
-    "73e54da783ff8d5058e9dadcc6e90322"
+    "325839c5ed25113739c634ab57e6fa6a"
 }

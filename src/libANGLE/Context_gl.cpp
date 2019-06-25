@@ -2746,32 +2746,12 @@ void Context::viewportIndexedfv(GLuint index, const GLfloat *v)
     UNIMPLEMENTED();
 }
 
-void Context::drawArraysInstancedBaseInstance(GLenum mode,
-                                              GLint first,
-                                              GLsizei count,
-                                              GLsizei instancecount,
-                                              GLuint baseinstance)
-{
-    UNIMPLEMENTED();
-}
-
 void Context::drawElementsInstancedBaseInstance(GLenum mode,
                                                 GLsizei count,
                                                 GLenum type,
                                                 const void *indices,
                                                 GLsizei instancecount,
                                                 GLuint baseinstance)
-{
-    UNIMPLEMENTED();
-}
-
-void Context::drawElementsInstancedBaseVertexBaseInstance(GLenum mode,
-                                                          GLsizei count,
-                                                          GLenum type,
-                                                          const void *indices,
-                                                          GLsizei instancecount,
-                                                          GLint basevertex,
-                                                          GLuint baseinstance)
 {
     UNIMPLEMENTED();
 }

@@ -17,6 +17,38 @@ namespace gl
 {
 class Context;
 
+// GL_ANGLE_base_vertex_base_instance
+bool ValidateDrawArraysInstancedBaseInstanceANGLE(Context *context,
+                                                  PrimitiveMode modePacked,
+                                                  GLint first,
+                                                  GLsizei count,
+                                                  GLsizei instanceCount,
+                                                  GLuint baseInstance);
+bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
+                                                              PrimitiveMode modePacked,
+                                                              GLsizei count,
+                                                              DrawElementsType typePacked,
+                                                              const GLvoid *indices,
+                                                              GLsizei instanceCounts,
+                                                              GLint baseVertex,
+                                                              GLuint baseInstance);
+bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(Context *context,
+                                                       PrimitiveMode modePacked,
+                                                       GLsizei drawcount,
+                                                       const GLsizei *counts,
+                                                       const GLsizei *instanceCounts,
+                                                       const GLint *firsts,
+                                                       const GLuint *baseInstances);
+bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(Context *context,
+                                                                   PrimitiveMode modePacked,
+                                                                   DrawElementsType typePacked,
+                                                                   GLsizei drawcount,
+                                                                   const GLsizei *counts,
+                                                                   const GLsizei *instanceCounts,
+                                                                   const GLvoid *const *indices,
+                                                                   const GLint *baseVertices,
+                                                                   const GLuint *baseInstances);
+
 // GL_ANGLE_copy_texture_3d
 bool ValidateCopyTexture3DANGLE(Context *context,
                                 TextureID sourceIdPacked,

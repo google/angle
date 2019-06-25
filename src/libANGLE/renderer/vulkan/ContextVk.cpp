@@ -1354,6 +1354,17 @@ angle::Result ContextVk::drawArraysInstanced(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::drawArraysInstancedBaseInstance(const gl::Context *context,
+                                                         gl::PrimitiveMode mode,
+                                                         GLint first,
+                                                         GLsizei count,
+                                                         GLsizei instances,
+                                                         GLuint baseInstance)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
+}
+
 angle::Result ContextVk::drawElements(const gl::Context *context,
                                       gl::PrimitiveMode mode,
                                       GLsizei count,
@@ -1394,6 +1405,19 @@ angle::Result ContextVk::drawElementsInstanced(const gl::Context *context,
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(setupIndexedDraw(context, mode, count, instances, type, indices, &commandBuffer));
     commandBuffer->drawIndexedInstanced(count, instances);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
+                                                                     gl::PrimitiveMode mode,
+                                                                     GLsizei count,
+                                                                     gl::DrawElementsType type,
+                                                                     const void *indices,
+                                                                     GLsizei instances,
+                                                                     GLint baseVertex,
+                                                                     GLuint baseInstance)
+{
+    UNIMPLEMENTED();
     return angle::Result::Continue;
 }
 

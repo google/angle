@@ -5626,6 +5626,209 @@ void Context::multiDrawElementsInstanced(PrimitiveMode mode,
     }
 }
 
+void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
+                                              GLint first,
+                                              GLsizei count,
+                                              GLsizei instanceCount,
+                                              GLuint baseInstance)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mState.getLinkedProgram(this);
+
+    if (noopDraw(mode, count))
+    {
+        return;
+    }
+
+    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    if (hasBaseInstance)
+    {
+        programObject->setBaseInstanceUniform(baseInstance);
+    }
+
+    // The input gl_InstanceID does not follow the baseinstance. gl_InstanceID always falls on
+    // the half-open range [0, instancecount​). No need to set other stuff. Except for Vulkan.
+
+    ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstancedBaseInstance(
+        this, mode, first, count, instanceCount, baseInstance));
+    MarkTransformFeedbackBufferUsage(this, count, 1);
+}
+
+void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
+                                                          GLsizei count,
+                                                          DrawElementsType type,
+                                                          const GLvoid *indices,
+                                                          GLsizei instanceCounts,
+                                                          GLint baseVertex,
+                                                          GLuint baseInstance)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mState.getLinkedProgram(this);
+
+    if (noopDraw(mode, count))
+    {
+        return;
+    }
+
+    const bool hasBaseVertex = programObject && programObject->hasBaseVertexUniform();
+    if (hasBaseVertex)
+    {
+        programObject->setBaseVertexUniform(baseVertex);
+    }
+
+    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    if (hasBaseInstance)
+    {
+        programObject->setBaseInstanceUniform(baseInstance);
+    }
+
+    ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstancedBaseVertexBaseInstance(
+        this, mode, count, type, indices, instanceCounts, baseVertex, baseInstance));
+}
+
+#define SET_DRAW_ID_UNIFORM_0(drawID) \
+    {}
+#define SET_DRAW_ID_UNIFORM_1(drawID) programObject->setDrawIDUniform(drawID);
+#define SET_DRAW_ID_UNIFORM(cond) SET_DRAW_ID_UNIFORM_##cond
+
+#define SET_BASE_VERTEX_UNIFORM_0(baseVertex) \
+    {}
+#define SET_BASE_VERTEX_UNIFORM_1(baseVertex) programObject->setBaseVertexUniform(baseVertex);
+#define SET_BASE_VERTEX_UNIFORM(cond) SET_BASE_VERTEX_UNIFORM_##cond
+
+#define SET_BASE_INSTANCE_UNIFORM_0(baseInstance) \
+    {}
+#define SET_BASE_INSTANCE_UNIFORM_1(baseInstance) \
+    programObject->setBaseInstanceUniform(baseInstance);
+#define SET_BASE_INSTANCE_UNIFORM(cond) SET_BASE_INSTANCE_UNIFORM_##cond
+
+#define MULTI_DRAW_ARRAYS_BLOCK(hasDrawID, hasBaseInstance)                             \
+    for (GLsizei drawID = 0; drawID < drawcount; ++drawID)                              \
+    {                                                                                   \
+        if (noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID]))            \
+        {                                                                               \
+            continue;                                                                   \
+        }                                                                               \
+        SET_DRAW_ID_UNIFORM(hasDrawID)(drawID);                                         \
+        SET_BASE_INSTANCE_UNIFORM(hasBaseInstance)(baseInstances[drawID]);              \
+        ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstancedBaseInstance(             \
+            this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID],         \
+            baseInstances[drawID]));                                                    \
+        MarkTransformFeedbackBufferUsage(this, counts[drawID], instanceCounts[drawID]); \
+    }
+
+#define MULTI_DRAW_ELEMENTS_BLOCK(hasDrawID, hasBaseVertex, hasBaseInstance)            \
+    for (GLsizei drawID = 0; drawID < drawcount; ++drawID)                              \
+    {                                                                                   \
+        if (noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID]))            \
+        {                                                                               \
+            continue;                                                                   \
+        }                                                                               \
+        SET_DRAW_ID_UNIFORM(hasDrawID)(drawID);                                         \
+        SET_BASE_VERTEX_UNIFORM(hasBaseVertex)(baseVertices[drawID]);                   \
+        SET_BASE_INSTANCE_UNIFORM(hasBaseInstance)(baseInstances[drawID]);              \
+        ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstancedBaseVertexBaseInstance( \
+            this, mode, counts[drawID], type, indices[drawID], instanceCounts[drawID],  \
+            baseVertices[drawID], baseInstances[drawID]));                              \
+    }
+
+void Context::multiDrawArraysInstancedBaseInstance(PrimitiveMode mode,
+                                                   GLsizei drawcount,
+                                                   const GLsizei *counts,
+                                                   const GLsizei *instanceCounts,
+                                                   const GLint *firsts,
+                                                   const GLuint *baseInstances)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject     = mState.getLinkedProgram(this);
+    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+
+    if (hasDrawID && hasBaseInstance)
+    {
+        MULTI_DRAW_ARRAYS_BLOCK(1, 1)
+    }
+    else if (hasDrawID)
+    {
+        MULTI_DRAW_ARRAYS_BLOCK(1, 0)
+    }
+    else if (hasBaseInstance)
+    {
+        MULTI_DRAW_ARRAYS_BLOCK(0, 1)
+    }
+    else
+    {
+        MULTI_DRAW_ARRAYS_BLOCK(0, 0)
+    }
+}
+
+void Context::multiDrawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
+                                                               DrawElementsType type,
+                                                               GLsizei drawcount,
+                                                               const GLsizei *counts,
+                                                               const GLsizei *instanceCounts,
+                                                               const GLvoid *const *indices,
+                                                               const GLint *baseVertices,
+                                                               const GLuint *baseInstances)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject     = mState.getLinkedProgram(this);
+    const bool hasBaseVertex   = programObject && programObject->hasBaseVertexUniform();
+    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+
+    if (hasDrawID)
+    {
+        if (hasBaseVertex)
+        {
+            if (hasBaseInstance)
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(1, 1, 1)
+            }
+            else
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(1, 1, 0)
+            }
+        }
+        else
+        {
+            if (hasBaseInstance)
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(1, 0, 1)
+            }
+            else
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(1, 0, 0)
+            }
+        }
+    }
+    else
+    {
+        if (hasBaseVertex)
+        {
+            if (hasBaseInstance)
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(0, 1, 1)
+            }
+            else
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(0, 1, 0)
+            }
+        }
+        else
+        {
+            if (hasBaseInstance)
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(0, 0, 1)
+            }
+            else
+            {
+                MULTI_DRAW_ELEMENTS_BLOCK(0, 0, 0)
+            }
+        }
+    }
+}
+
 void Context::provokingVertex(ProvokingVertexConvention provokeMode)
 {
     mState.setProvokingVertex(provokeMode);

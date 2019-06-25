@@ -716,7 +716,7 @@ void main() {
 precision highp float;
 out vec4 outColor;
 void main() {
-    outColor = vec4(255.0, 0.0, 0.0, 1.0);
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
 })";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
@@ -836,7 +836,7 @@ void main() {
 precision highp float;
 out vec4 outColor;
 void main() {
-    outColor = vec4(255.0, 0.0, 0.0, 1.0);
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
 })";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);

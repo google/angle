@@ -20,6 +20,44 @@ class Context;
 
 // Method Captures
 
+// GL_ANGLE_base_vertex_base_instance
+angle::CallCapture CaptureDrawArraysInstancedBaseInstanceANGLE(const Context *context,
+                                                               bool isCallValid,
+                                                               PrimitiveMode modePacked,
+                                                               GLint first,
+                                                               GLsizei count,
+                                                               GLsizei instanceCount,
+                                                               GLuint baseInstance);
+angle::CallCapture CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    GLsizei count,
+    DrawElementsType typePacked,
+    const GLvoid *indices,
+    GLsizei instanceCounts,
+    GLint baseVertex,
+    GLuint baseInstance);
+angle::CallCapture CaptureMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
+                                                                    bool isCallValid,
+                                                                    PrimitiveMode modePacked,
+                                                                    GLsizei drawcount,
+                                                                    const GLsizei *counts,
+                                                                    const GLsizei *instanceCounts,
+                                                                    const GLint *firsts,
+                                                                    const GLuint *baseInstances);
+angle::CallCapture CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    DrawElementsType typePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLvoid *const *indices,
+    const GLint *baseVertices,
+    const GLuint *baseInstances);
+
 // GL_ANGLE_copy_texture_3d
 angle::CallCapture CaptureCopyTexture3DANGLE(const Context *context,
                                              bool isCallValid,
@@ -1713,6 +1751,115 @@ angle::CallCapture CaptureFramebufferTextureMultiviewOVR(const Context *context,
 
 // Parameter Captures
 
+void CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    GLsizei count,
+    DrawElementsType typePacked,
+    const GLvoid *indices,
+    GLsizei instanceCounts,
+    GLint baseVertex,
+    GLuint baseInstance,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_counts(const Context *context,
+                                                             bool isCallValid,
+                                                             PrimitiveMode modePacked,
+                                                             GLsizei drawcount,
+                                                             const GLsizei *counts,
+                                                             const GLsizei *instanceCounts,
+                                                             const GLint *firsts,
+                                                             const GLuint *baseInstances,
+                                                             angle::ParamCapture *paramCapture);
+void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_instanceCounts(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLint *firsts,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_firsts(const Context *context,
+                                                             bool isCallValid,
+                                                             PrimitiveMode modePacked,
+                                                             GLsizei drawcount,
+                                                             const GLsizei *counts,
+                                                             const GLsizei *instanceCounts,
+                                                             const GLint *firsts,
+                                                             const GLuint *baseInstances,
+                                                             angle::ParamCapture *paramCapture);
+void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_baseInstances(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLint *firsts,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_counts(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    DrawElementsType typePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLvoid *const *indices,
+    const GLint *baseVertices,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_instanceCounts(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    DrawElementsType typePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLvoid *const *indices,
+    const GLint *baseVertices,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    DrawElementsType typePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLvoid *const *indices,
+    const GLint *baseVertices,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseVertices(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    DrawElementsType typePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLvoid *const *indices,
+    const GLint *baseVertices,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
+void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
+    const Context *context,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    DrawElementsType typePacked,
+    GLsizei drawcount,
+    const GLsizei *counts,
+    const GLsizei *instanceCounts,
+    const GLvoid *const *indices,
+    const GLint *baseVertices,
+    const GLuint *baseInstances,
+    angle::ParamCapture *paramCapture);
 void CaptureDrawElementsInstancedANGLE_indices(const Context *context,
                                                bool isCallValid,
                                                PrimitiveMode modePacked,

@@ -287,6 +287,17 @@ angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result ContextGL::drawArraysInstancedBaseInstance(const gl::Context *context,
+                                                         gl::PrimitiveMode mode,
+                                                         GLint first,
+                                                         GLsizei count,
+                                                         GLsizei instanceCount,
+                                                         GLuint baseInstance)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
+}
+
 angle::Result ContextGL::drawElements(const gl::Context *context,
                                       gl::PrimitiveMode mode,
                                       GLsizei count,
@@ -331,6 +342,19 @@ angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
                                    &drawIndexPointer));
     getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type), drawIndexPointer,
                                           adjustedInstanceCount);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextGL::drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
+                                                                     gl::PrimitiveMode mode,
+                                                                     GLsizei count,
+                                                                     gl::DrawElementsType type,
+                                                                     const void *indices,
+                                                                     GLsizei instances,
+                                                                     GLint baseVertex,
+                                                                     GLuint baseInstance)
+{
+    UNIMPLEMENTED();
     return angle::Result::Continue;
 }
 

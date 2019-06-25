@@ -494,6 +494,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDrawArraysInstancedANGLE";
         case EntryPoint::DrawArraysInstancedBaseInstance:
             return "glDrawArraysInstancedBaseInstance";
+        case EntryPoint::DrawArraysInstancedBaseInstanceANGLE:
+            return "glDrawArraysInstancedBaseInstanceANGLE";
         case EntryPoint::DrawArraysInstancedEXT:
             return "glDrawArraysInstancedEXT";
         case EntryPoint::DrawBuffer:
@@ -518,6 +520,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDrawElementsInstancedBaseVertex";
         case EntryPoint::DrawElementsInstancedBaseVertexBaseInstance:
             return "glDrawElementsInstancedBaseVertexBaseInstance";
+        case EntryPoint::DrawElementsInstancedBaseVertexBaseInstanceANGLE:
+            return "glDrawElementsInstancedBaseVertexBaseInstanceANGLE";
         case EntryPoint::DrawElementsInstancedEXT:
             return "glDrawElementsInstancedEXT";
         case EntryPoint::DrawPixels:
@@ -1444,6 +1448,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiDrawArraysIndirectCount";
         case EntryPoint::MultiDrawArraysInstancedANGLE:
             return "glMultiDrawArraysInstancedANGLE";
+        case EntryPoint::MultiDrawArraysInstancedBaseInstanceANGLE:
+            return "glMultiDrawArraysInstancedBaseInstanceANGLE";
         case EntryPoint::MultiDrawElements:
             return "glMultiDrawElements";
         case EntryPoint::MultiDrawElementsANGLE:
@@ -1456,6 +1462,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiDrawElementsIndirectCount";
         case EntryPoint::MultiDrawElementsInstancedANGLE:
             return "glMultiDrawElementsInstancedANGLE";
+        case EntryPoint::MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE:
+            return "glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE";
         case EntryPoint::MultiTexCoord1d:
             return "glMultiTexCoord1d";
         case EntryPoint::MultiTexCoord1dv:

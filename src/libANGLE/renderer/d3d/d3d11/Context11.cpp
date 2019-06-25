@@ -276,6 +276,17 @@ angle::Result Context11::drawArraysInstanced(const gl::Context *context,
     return mRenderer->drawArrays(context, mode, first, count, instanceCount);
 }
 
+angle::Result Context11::drawArraysInstancedBaseInstance(const gl::Context *context,
+                                                         gl::PrimitiveMode mode,
+                                                         GLint first,
+                                                         GLsizei count,
+                                                         GLsizei instanceCount,
+                                                         GLuint baseInstance)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
+}
+
 ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *context,
                                                        gl::PrimitiveMode mode,
                                                        GLsizei indexCount,
@@ -322,6 +333,19 @@ angle::Result Context11::drawElementsInstanced(const gl::Context *context,
                                                GLsizei instances)
 {
     return drawElementsImpl(context, mode, count, type, indices, instances);
+}
+
+angle::Result Context11::drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
+                                                                     gl::PrimitiveMode mode,
+                                                                     GLsizei count,
+                                                                     gl::DrawElementsType type,
+                                                                     const void *indices,
+                                                                     GLsizei instances,
+                                                                     GLint baseVertex,
+                                                                     GLuint baseInstance)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
 }
 
 angle::Result Context11::drawRangeElements(const gl::Context *context,

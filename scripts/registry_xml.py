@@ -83,6 +83,7 @@ gles_extensions = [
     "GL_OVR_multiview2",
     "GL_KHR_parallel_shader_compile",
     "GL_ANGLE_multi_draw",
+    "GL_ANGLE_base_vertex_base_instance",
 ]
 
 supported_extensions = sorted(angle_extensions + gles1_extensions + gles_extensions)

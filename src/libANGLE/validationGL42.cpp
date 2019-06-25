@@ -12,7 +12,7 @@ namespace gl
 {
 
 bool ValidateDrawArraysInstancedBaseInstance(Context *context,
-                                             GLenum mode,
+                                             PrimitiveMode mode,
                                              GLint first,
                                              GLsizei count,
                                              GLsizei instancecount,
@@ -33,9 +33,9 @@ bool ValidateDrawElementsInstancedBaseInstance(Context *context,
 }
 
 bool ValidateDrawElementsInstancedBaseVertexBaseInstance(Context *context,
-                                                         GLenum mode,
+                                                         PrimitiveMode mode,
                                                          GLsizei count,
-                                                         GLenum type,
+                                                         DrawElementsType type,
                                                          const void *indices,
                                                          GLsizei instancecount,
                                                          GLint basevertex,

@@ -20,6 +20,37 @@
 namespace gl
 {
 
+// GL_ANGLE_base_vertex_base_instance
+ANGLE_EXPORT void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
+                                                                   GLint first,
+                                                                   GLsizei count,
+                                                                   GLsizei instanceCount,
+                                                                   GLuint baseInstance);
+ANGLE_EXPORT void GL_APIENTRY
+DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
+                                                 GLsizei count,
+                                                 GLenum type,
+                                                 const GLvoid *indices,
+                                                 GLsizei instanceCounts,
+                                                 GLint baseVertex,
+                                                 GLuint baseInstance);
+ANGLE_EXPORT void GL_APIENTRY
+MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
+                                          GLsizei drawcount,
+                                          const GLsizei *counts,
+                                          const GLsizei *instanceCounts,
+                                          const GLint *firsts,
+                                          const GLuint *baseInstances);
+ANGLE_EXPORT void GL_APIENTRY
+MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
+                                                      GLenum type,
+                                                      GLsizei drawcount,
+                                                      const GLsizei *counts,
+                                                      const GLsizei *instanceCounts,
+                                                      const GLvoid *const *indices,
+                                                      const GLint *baseVertices,
+                                                      const GLuint *baseInstances);
+
 // GL_ANGLE_copy_texture_3d
 ANGLE_EXPORT void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
                                                  GLint sourceLevel,
@@ -3848,6 +3879,40 @@ MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
                                             const GLvoid *const *indices,
                                             const GLsizei *instanceCounts,
                                             GLsizei drawcount);
+ANGLE_EXPORT void GL_APIENTRY
+DrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                 GLenum mode,
+                                                 GLint first,
+                                                 GLsizei count,
+                                                 GLsizei instanceCount,
+                                                 GLuint baseInstance);
+ANGLE_EXPORT void GL_APIENTRY
+DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                             GLenum mode,
+                                                             GLsizei count,
+                                                             GLenum type,
+                                                             const GLvoid *indices,
+                                                             GLsizei instanceCounts,
+                                                             GLint baseVertex,
+                                                             GLuint baseInstance);
+ANGLE_EXPORT void GL_APIENTRY
+MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                      GLenum mode,
+                                                      GLsizei drawcount,
+                                                      const GLsizei *counts,
+                                                      const GLsizei *instanceCounts,
+                                                      const GLint *firsts,
+                                                      const GLuint *baseInstances);
+ANGLE_EXPORT void GL_APIENTRY
+MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLenum mode,
+                                                                  GLenum type,
+                                                                  GLsizei drawcount,
+                                                                  const GLsizei *counts,
+                                                                  const GLsizei *instanceCounts,
+                                                                  const GLvoid *const *indices,
+                                                                  const GLint *baseVertices,
+                                                                  const GLuint *baseInstances);
 ANGLE_EXPORT void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
                                                                 GLenum pname,
                                                                 GLuint index,

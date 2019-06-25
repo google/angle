@@ -73,17 +73,18 @@ void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                              = (context->skipValidation() ||
-                            ValidateDrawArraysInstancedBaseInstance(context, mode, first, count,
-                                                                    instancecount, baseinstance));
+                            ValidateDrawArraysInstancedBaseInstance(
+                                context, modePacked, first, count, instancecount, baseinstance));
         if (isCallValid)
         {
-            context->drawArraysInstancedBaseInstance(mode, first, count, instancecount,
+            context->drawArraysInstancedBaseInstance(modePacked, first, count, instancecount,
                                                      baseinstance);
         }
-        ANGLE_CAPTURE(DrawArraysInstancedBaseInstance, isCallValid, context, mode, first, count,
-                      instancecount, baseinstance);
+        ANGLE_CAPTURE(DrawArraysInstancedBaseInstance, isCallValid, context, modePacked, first,
+                      count, instancecount, baseinstance);
     }
 }
 
@@ -137,18 +138,20 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        PrimitiveMode modePacked                      = FromGL<PrimitiveMode>(mode);
+        DrawElementsType typePacked                   = FromGL<DrawElementsType>(type);
         std::unique_lock<std::mutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawElementsInstancedBaseVertexBaseInstance(
-                 context, mode, count, type, indices, instancecount, basevertex, baseinstance));
+            (context->skipValidation() || ValidateDrawElementsInstancedBaseVertexBaseInstance(
+                                              context, modePacked, count, typePacked, indices,
+                                              instancecount, basevertex, baseinstance));
         if (isCallValid)
         {
             context->drawElementsInstancedBaseVertexBaseInstance(
-                mode, count, type, indices, instancecount, basevertex, baseinstance);
+                modePacked, count, typePacked, indices, instancecount, basevertex, baseinstance);
         }
-        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstance, isCallValid, context, mode,
-                      count, type, indices, instancecount, basevertex, baseinstance);
+        ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstance, isCallValid, context, modePacked,
+                      count, typePacked, indices, instancecount, basevertex, baseinstance);
     }
 }
 

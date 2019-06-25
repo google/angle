@@ -10,19 +10,14 @@
 #ifndef ANGLE_CONTEXT_GL_4_2_AUTOGEN_H_
 #define ANGLE_CONTEXT_GL_4_2_AUTOGEN_H_
 
-#define ANGLE_GL_4_2_CONTEXT_API                                                                 \
-    void drawArraysInstancedBaseInstance(GLenum mode, GLint first, GLsizei count,                \
-                                         GLsizei instancecount, GLuint baseinstance);            \
-    void drawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,              \
-                                           const void *indices, GLsizei instancecount,           \
-                                           GLuint baseinstance);                                 \
-    void drawElementsInstancedBaseVertexBaseInstance(GLenum mode, GLsizei count, GLenum type,    \
-                                                     const void *indices, GLsizei instancecount, \
-                                                     GLint basevertex, GLuint baseinstance);     \
-    void drawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount);          \
-    void drawTransformFeedbackStreamInstanced(GLenum mode, GLuint id, GLuint stream,             \
-                                              GLsizei instancecount);                            \
-    void getActiveAtomicCounterBufferiv(GLuint program, GLuint bufferIndex, GLenum pname,        \
+#define ANGLE_GL_4_2_CONTEXT_API                                                          \
+    void drawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,       \
+                                           const void *indices, GLsizei instancecount,    \
+                                           GLuint baseinstance);                          \
+    void drawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount);   \
+    void drawTransformFeedbackStreamInstanced(GLenum mode, GLuint id, GLuint stream,      \
+                                              GLsizei instancecount);                     \
+    void getActiveAtomicCounterBufferiv(GLuint program, GLuint bufferIndex, GLenum pname, \
                                         GLint *params);
 
 #endif  // ANGLE_CONTEXT_API_4_2_AUTOGEN_H_

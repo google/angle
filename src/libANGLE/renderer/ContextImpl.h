@@ -51,25 +51,40 @@ class ContextImpl : public GLImplFactory
                                               GLint first,
                                               GLsizei count,
                                               GLsizei instanceCount) = 0;
+    // Necessary for Vulkan since gl_InstanceIndex includes baseInstance
+    virtual angle::Result drawArraysInstancedBaseInstance(const gl::Context *context,
+                                                          gl::PrimitiveMode mode,
+                                                          GLint first,
+                                                          GLsizei count,
+                                                          GLsizei instanceCount,
+                                                          GLuint baseInstance) = 0;
 
     virtual angle::Result drawElements(const gl::Context *context,
                                        gl::PrimitiveMode mode,
                                        GLsizei count,
                                        gl::DrawElementsType type,
-                                       const void *indices)        = 0;
+                                       const void *indices)                                = 0;
     virtual angle::Result drawElementsInstanced(const gl::Context *context,
                                                 gl::PrimitiveMode mode,
                                                 GLsizei count,
                                                 gl::DrawElementsType type,
                                                 const void *indices,
-                                                GLsizei instances) = 0;
+                                                GLsizei instances)                         = 0;
+    virtual angle::Result drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
+                                                                      gl::PrimitiveMode mode,
+                                                                      GLsizei count,
+                                                                      gl::DrawElementsType type,
+                                                                      const void *indices,
+                                                                      GLsizei instances,
+                                                                      GLint baseVertex,
+                                                                      GLuint baseInstance) = 0;
     virtual angle::Result drawRangeElements(const gl::Context *context,
                                             gl::PrimitiveMode mode,
                                             GLuint start,
                                             GLuint end,
                                             GLsizei count,
                                             gl::DrawElementsType type,
-                                            const void *indices)   = 0;
+                                            const void *indices)                           = 0;
 
     virtual angle::Result drawArraysIndirect(const gl::Context *context,
                                              gl::PrimitiveMode mode,

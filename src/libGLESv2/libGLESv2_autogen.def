@@ -415,6 +415,12 @@ EXPORTS
     glTranslatex
     glVertexPointer
 
+    ; GL_ANGLE_base_vertex_base_instance
+    glDrawArraysInstancedBaseInstanceANGLE
+    glDrawElementsInstancedBaseVertexBaseInstanceANGLE
+    glMultiDrawArraysInstancedBaseInstanceANGLE
+    glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE
+
     ; GL_ANGLE_copy_texture_3d
     glCopySubTexture3DANGLE
     glCopyTexture3DANGLE
@@ -899,6 +905,7 @@ EXPORTS
     glDrawArraysIndirectContextANGLE
     glDrawArraysInstancedContextANGLE
     glDrawArraysInstancedANGLEContextANGLE
+    glDrawArraysInstancedBaseInstanceANGLEContextANGLE
     glDrawArraysInstancedEXTContextANGLE
     glDrawBuffersContextANGLE
     glDrawBuffersEXTContextANGLE
@@ -906,6 +913,7 @@ EXPORTS
     glDrawElementsIndirectContextANGLE
     glDrawElementsInstancedContextANGLE
     glDrawElementsInstancedANGLEContextANGLE
+    glDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
     glDrawElementsInstancedEXTContextANGLE
     glDrawRangeElementsContextANGLE
     glDrawTexfOESContextANGLE
@@ -1183,8 +1191,10 @@ EXPORTS
     glMultMatrixxContextANGLE
     glMultiDrawArraysANGLEContextANGLE
     glMultiDrawArraysInstancedANGLEContextANGLE
+    glMultiDrawArraysInstancedBaseInstanceANGLEContextANGLE
     glMultiDrawElementsANGLEContextANGLE
     glMultiDrawElementsInstancedANGLEContextANGLE
+    glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
     glMultiTexCoord4fContextANGLE
     glMultiTexCoord4xContextANGLE
     glNormal3fContextANGLE

@@ -172,6 +172,17 @@ angle::Result Context9::drawArraysInstanced(const gl::Context *context,
     return mRenderer->genericDrawArrays(context, mode, first, count, instanceCount);
 }
 
+angle::Result Context9::drawArraysInstancedBaseInstance(const gl::Context *context,
+                                                        gl::PrimitiveMode mode,
+                                                        GLint first,
+                                                        GLsizei count,
+                                                        GLsizei instanceCount,
+                                                        GLuint baseInstance)
+{
+    ANGLE_HR_UNREACHABLE(this);
+    return angle::Result::Continue;
+}
+
 angle::Result Context9::drawElements(const gl::Context *context,
                                      gl::PrimitiveMode mode,
                                      GLsizei count,
@@ -189,6 +200,19 @@ angle::Result Context9::drawElementsInstanced(const gl::Context *context,
                                               GLsizei instances)
 {
     return mRenderer->genericDrawElements(context, mode, count, type, indices, instances);
+}
+
+angle::Result Context9::drawElementsInstancedBaseVertexBaseInstance(const gl::Context *context,
+                                                                    gl::PrimitiveMode mode,
+                                                                    GLsizei count,
+                                                                    gl::DrawElementsType type,
+                                                                    const void *indices,
+                                                                    GLsizei instances,
+                                                                    GLint baseVertex,
+                                                                    GLuint baseInstance)
+{
+    ANGLE_HR_UNREACHABLE(this);
+    return angle::Result::Continue;
 }
 
 angle::Result Context9::drawRangeElements(const gl::Context *context,
