@@ -739,8 +739,9 @@ config("angle_static") {
   ]
 }
 
-angle_shared_library("libGLESv2${angle_libs_suffix}") {
+angle_shared_library("libGLESv2") {
   sources = libglesv2_sources
+  output_name = "libGLESv2${angle_libs_suffix}"
 
   if (is_win) {
     sources += [ "src/libGLESv2/libGLESv2_autogen.def" ]
@@ -776,8 +777,9 @@ angle_static_library("libGLESv2_static") {
   ]
 }
 
-angle_shared_library("libGLESv1_CM${angle_libs_suffix}") {
+angle_shared_library("libGLESv1_CM") {
   sources = libglesv1_cm_sources
+  output_name = "libGLESv1_CM${angle_libs_suffix}"
 
   configs += [
     ":angle_gl_visibility_config",
@@ -789,7 +791,7 @@ angle_shared_library("libGLESv1_CM${angle_libs_suffix}") {
 
   deps = [
     ":includes",
-    ":libGLESv2${angle_libs_suffix}",
+    ":libGLESv2",
   ]
 }
 
@@ -823,8 +825,9 @@ angle_source_set("libEGL_egl_loader") {
   ]
 }
 
-angle_shared_library("libEGL${angle_libs_suffix}") {
+angle_shared_library("libEGL") {
   sources = libegl_sources
+  output_name = "libEGL${angle_libs_suffix}"
 
   configs += [
     ":debug_annotations_config",
@@ -853,7 +856,7 @@ angle_shared_library("libEGL${angle_libs_suffix}") {
   ]
 
   data_deps = [
-    ":libGLESv2${angle_libs_suffix}",
+    ":libGLESv2",
   ]
 }
 
@@ -1054,7 +1057,9 @@ config("angle_feature_support_config") {
   }
 }
 
-angle_shared_library("libfeature_support${angle_libs_suffix}") {
+angle_shared_library("libfeature_support") {
+  output_name = "libfeature_support${angle_libs_suffix}"
+
   if (is_android) {
     libs = [ "log" ]
   }
