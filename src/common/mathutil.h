@@ -187,9 +187,13 @@ inline unsigned short float32ToFloat16(float fp32)
     unsigned int sign  = (fp32i & 0x80000000) >> 16;
     unsigned int abs   = fp32i & 0x7FFFFFFF;
 
-    if (abs > 0x47FFEFFF)  // Infinity
-    {
-        return static_cast<unsigned short>(sign | 0x7FFF);
+    if (abs > 0x7F800000)
+    {  // NaN
+        return 0x7FFF;
+    }
+    else if (abs > 0x47FFEFFF)
+    {  // Infinity
+        return static_cast<uint16_t>(sign | 0x7C00);
     }
     else if (abs < 0x38800000)  // Denormal
     {
