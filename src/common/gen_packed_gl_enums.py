@@ -77,6 +77,7 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 #include <EGL/eglext.h>
 
 #include <cstdint>
+#include <ostream>
 
 namespace {namespace}
 {{
@@ -101,6 +102,7 @@ enum class {enum_name} : uint8_t
 template <>
 {enum_name} From{api_enum_name}<{enum_name}>({api_enum_name} from);
 {api_enum_name} To{api_enum_name}({enum_name} from);
+std::ostream &operator<<(std::ostream &os, {enum_name} value);
 """
 
 
@@ -175,6 +177,18 @@ template <>
             return 0;
     }}
 }}
+
+std::ostream &operator<<(std::ostream &os, {enum_name} value)
+{{
+    switch (value)
+    {{
+{ostream_cases}
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }}
+    return os;
+}}
 """
 
 
@@ -184,12 +198,15 @@ def write_cpp(enums, path_prefix, file_name, data_source_name, namespace, api_en
     for enum in enums:
         from_glenum_cases = []
         to_glenum_cases = []
+        ostream_cases = []
         for value in enum.values:
             qualified_name = enum.name + '::' + value.name
             from_glenum_cases.append('        case ' + value.gl_name + ':\n            return ' +
                                      qualified_name + ';')
             to_glenum_cases.append('        case ' + qualified_name + ':\n            return ' +
                                    value.gl_name + ';')
+            ostream_cases.append('        case ' + qualified_name + ':\n            os << "' +
+                                 value.gl_name + '";\n            break;')
 
         content.append(
             enum_implementation_template.format(
@@ -197,7 +214,8 @@ def write_cpp(enums, path_prefix, file_name, data_source_name, namespace, api_en
                 from_glenum_cases='\n'.join(from_glenum_cases),
                 max_value=str(enum.max_value),
                 to_glenum_cases='\n'.join(to_glenum_cases),
-                api_enum_name=api_enum_name))
+                api_enum_name=api_enum_name,
+                ostream_cases='\n'.join(ostream_cases)))
 
     cpp = cpp_template.format(
         content=''.join(content),
