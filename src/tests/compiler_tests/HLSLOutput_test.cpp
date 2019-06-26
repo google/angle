@@ -7,6 +7,7 @@
 //   Tests for HLSL output.
 //
 
+#include <regex>
 #include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "gtest/gtest.h"
@@ -197,9 +198,7 @@ TEST_F(HLSLOutputTest, Array)
             }
         })";
     compile(shaderString);
-    // The unique id of arr is 1030, which is given to the symbol when parsed and inserted to the
-    // symbol table
-    EXPECT_TRUE(foundInCode("_arr1030[2]"));
+    EXPECT_TRUE(foundInCodeRegex(std::regex("_arr(\\d)*\\[2\\]")));
 }
 
 // Test that initializing array with previously declared array will not be overwritten
@@ -219,10 +218,14 @@ TEST_F(HLSLOutputTest, SameNameArray)
           }
         })";
     compile(shaderString);
-    // The unique id of the original array, arr, is 1029
-    EXPECT_TRUE(foundInCode("_arr1029[2]"));
-    // The unique id of the new array, arr, is 1030
-    EXPECT_TRUE(foundInCode("_arr1030[2]"));
+    // There should be two different arr defined, e.g. _arr1000 and _arr1001
+    // Use Workaround for now.
+    // Once the build team fixes libc++ we could use the following one line solution instead.
+    // EXPECT_TRUE(foundInCodeRegex(std::regex("_arr(\\d*)\\[2\\](.|\\r|\\n)*_arr(?!\\1)\\d*\\[2\\]")));
+    std::smatch m;
+    EXPECT_TRUE(foundInCodeRegex(std::regex("_arr(\\d)*\\[2\\]"), &m));
+    EXPECT_TRUE(m.size() == 2);
+    EXPECT_TRUE(m[0].str() != m[1].str());
 }
 
 // Test that passing a non-struct member of a std140 structure to a function won't trigger the

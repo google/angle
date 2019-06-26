@@ -44,7 +44,7 @@ class DebugShaderPrecisionTest : public MatchOutputCodeTest
     bool foundInHLSLCodeRegex(const char *regexToFind) const
     {
 #if defined(ANGLE_ENABLE_HLSL)
-        return foundInCodeRegex(SH_HLSL_4_1_OUTPUT, regexToFind);
+        return foundInCodeRegex(SH_HLSL_4_1_OUTPUT, std::regex(regexToFind));
 #else
         return true;
 #endif

@@ -7,7 +7,6 @@
 //     utilities for compiler unit tests.
 
 #include "tests/test_utils/compiler_test.h"
-#include <regex>
 
 #include "angle_gl.h"
 #include "compiler/translator/Compiler.h"
@@ -157,7 +156,9 @@ bool MatchOutputCodeTest::compileWithSettings(ShShaderOutput output,
                              compileOptions, translatedCode, infoLog);
 }
 
-bool MatchOutputCodeTest::foundInCodeRegex(ShShaderOutput output, const char *regexToFind) const
+bool MatchOutputCodeTest::foundInCodeRegex(ShShaderOutput output,
+                                           const std::regex &regexToFind,
+                                           std::smatch *match) const
 {
     const auto code = mOutputCode.find(output);
     EXPECT_NE(mOutputCode.end(), code);
@@ -166,9 +167,14 @@ bool MatchOutputCodeTest::foundInCodeRegex(ShShaderOutput output, const char *re
         return std::string::npos;
     }
 
-    std::regex r(regexToFind);
-
-    return std::regex_search(code->second, r);
+    if (match)
+    {
+        return std::regex_search(code->second, *match, regexToFind);
+    }
+    else
+    {
+        return std::regex_search(code->second, regexToFind);
+    }
 }
 
 bool MatchOutputCodeTest::foundInCode(ShShaderOutput output, const char *stringToFind) const
@@ -240,6 +246,18 @@ bool MatchOutputCodeTest::foundInCode(const char *stringToFind) const
     for (auto &code : mOutputCode)
     {
         if (!foundInCode(code.first, stringToFind))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool MatchOutputCodeTest::foundInCodeRegex(const std::regex &regexToFind, std::smatch *match) const
+{
+    for (auto &code : mOutputCode)
+    {
+        if (!foundInCodeRegex(code.first, regexToFind, match))
         {
             return false;
         }
