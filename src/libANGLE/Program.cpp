@@ -10,6 +10,7 @@
 #include "libANGLE/Program.h"
 
 #include <algorithm>
+#include <utility>
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
@@ -433,7 +434,9 @@ const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
         case LinkMismatchError::LOCATION_MISMATCH:
             return "Location layout qualifier";
         case LinkMismatchError::OFFSET_MISMATCH:
-            return "Offset layout qualilfier";
+            return "Offset layout qualifier";
+        case LinkMismatchError::INSTANCE_NAME_MISMATCH:
+            return "Instance name qualifier";
 
         case LinkMismatchError::LAYOUT_QUALIFIER_MISMATCH:
             return "Layout qualifier";
@@ -491,6 +494,10 @@ LinkMismatchError AreMatchingInterfaceBlocks(const sh::InterfaceBlock &interface
         interfaceBlock1.binding != interfaceBlock2.binding)
     {
         return LinkMismatchError::LAYOUT_QUALIFIER_MISMATCH;
+    }
+    if (interfaceBlock1.instanceName.empty() != interfaceBlock2.instanceName.empty())
+    {
+        return LinkMismatchError::INSTANCE_NAME_MISMATCH;
     }
     const unsigned int numBlockMembers = static_cast<unsigned int>(interfaceBlock1.fields.size());
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
@@ -3666,26 +3673,106 @@ bool Program::linkValidateGlobalNames(InfoLog &infoLog) const
 {
     const std::vector<sh::Attribute> &attributes =
         mState.mAttachedShaders[ShaderType::Vertex]->getActiveAttributes();
+    std::unordered_map<std::string, const sh::Uniform *> uniformMap;
+    using BlockAndFieldPair =
+        std::pair<const sh::InterfaceBlock *, const sh::InterfaceBlockField *>;
+    std::unordered_map<std::string, std::vector<BlockAndFieldPair>> uniformBlockFieldMap;
 
-    for (const auto &attrib : attributes)
+    for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        for (ShaderType shaderType : kAllGraphicsShaderTypes)
+        Shader *shader = mState.mAttachedShaders[shaderType];
+        if (!shader)
         {
-            Shader *shader = mState.mAttachedShaders[shaderType];
-            if (!shader)
+            continue;
+        }
+
+        // Build a map of Uniforms
+        const std::vector<sh::Uniform> uniforms = shader->getUniforms();
+        for (const auto &uniform : uniforms)
+        {
+            uniformMap[uniform.name] = &uniform;
+        }
+
+        // Build a map of Uniform Blocks
+        // This will also detect any field name conflicts between Uniform Blocks without instance
+        // names
+        const std::vector<sh::InterfaceBlock> &uniformBlocks = shader->getUniformBlocks();
+        for (const auto &uniformBlock : uniformBlocks)
+        {
+            // Only uniform blocks without an instance name can create a conflict with their field
+            // names
+            if (!uniformBlock.instanceName.empty())
             {
                 continue;
             }
 
-            const std::vector<sh::Uniform> &uniforms = shader->getUniforms();
-            for (const auto &uniform : uniforms)
+            for (const auto &field : uniformBlock.fields)
             {
-                if (uniform.name == attrib.name)
+                if (!uniformBlockFieldMap.count(field.name))
                 {
-                    infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
-                    return false;
+                    // First time we've seen this uniform block field name, so add the
+                    // (Uniform Block, Field) pair immediately since there can't be a conflict yet
+                    BlockAndFieldPair blockAndFieldPair(&uniformBlock, &field);
+                    std::vector<BlockAndFieldPair> newUniformBlockList;
+                    newUniformBlockList.push_back(blockAndFieldPair);
+                    uniformBlockFieldMap[field.name] = newUniformBlockList;
+                    continue;
                 }
+
+                // We've seen this name before.
+                // We need to check each of the uniform blocks that contain a field with this name
+                // to see if there's a conflict or not.
+                std::vector<BlockAndFieldPair> prevBlockFieldPairs =
+                    uniformBlockFieldMap[field.name];
+                for (const auto prevBlockFieldPair : prevBlockFieldPairs)
+                {
+                    const sh::InterfaceBlock *prevUniformBlock = prevBlockFieldPair.first;
+                    const sh::InterfaceBlockField *prevUniformBlockField =
+                        prevBlockFieldPair.second;
+
+                    if (uniformBlock.isSameInterfaceBlockAtLinkTime(*prevUniformBlock))
+                    {
+                        // The same uniform block should, by definition, contain the same field name
+                        continue;
+                    }
+
+                    // The uniform blocks don't match, so check if the necessary field properties
+                    // also match
+                    if ((field.name == prevUniformBlockField->name) &&
+                        (field.type == prevUniformBlockField->type) &&
+                        (field.precision == prevUniformBlockField->precision))
+                    {
+                        infoLog << "Name conflicts between uniform block field names: "
+                                << field.name;
+                        return false;
+                    }
+                }
+
+                // No conflict, so record this pair
+                BlockAndFieldPair blockAndFieldPair(&uniformBlock, &field);
+                uniformBlockFieldMap[field.name].push_back(blockAndFieldPair);
             }
+        }
+    }
+
+    // Validate no uniform names conflict with attribute names
+    for (const auto &attrib : attributes)
+    {
+        if (uniformMap.count(attrib.name))
+        {
+            infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
+            return false;
+        }
+    }
+
+    // Validate no Uniform Block fields conflict with other Uniforms
+    for (const auto &uniformBlockField : uniformBlockFieldMap)
+    {
+        const std::string &fieldName = uniformBlockField.first;
+        if (uniformMap.count(fieldName))
+        {
+            infoLog << "Name conflicts between a uniform and a uniform block field: " << fieldName;
+            return false;
         }
     }
 

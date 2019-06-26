@@ -52,6 +52,3 @@
 
 // Require 3D textures.
 3188 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.* = SKIP
-
-// Shader related failure. Not Vulkan-specific.
-3459 : KHR-GLES3.shaders.uniform_block.common.name_matching = FAIL

@@ -75,6 +75,7 @@ enum class LinkMismatchError
     BINDING_MISMATCH,
     LOCATION_MISMATCH,
     OFFSET_MISMATCH,
+    INSTANCE_NAME_MISMATCH,
 
     // Interface block specific
     LAYOUT_QUALIFIER_MISMATCH,
