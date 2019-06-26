@@ -660,7 +660,6 @@
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.10 = FAIL
-3487 VULKAN : dEQP-GLES3.functional.shaders.derivate.dfdy.* = FAIL
 
 // New vertex attribute formats:
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.int2_10_10_10.* = SKIP

@@ -17,8 +17,10 @@
 #include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/NameEmbeddedUniformStructs.h"
+#include "compiler/translator/tree_ops/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/FindFunction.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
@@ -388,12 +390,13 @@ const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *sym
     TIntermSymbol *driverUniformsDeclarator = new TIntermSymbol(driverUniformsVar);
     driverUniformsDecl->appendDeclarator(driverUniformsDeclarator);
 
-    // Insert the declarations before Main.
+    // Insert the declarations before first function, since functions before main() may refer to
+    // these values.
     TIntermSequence *insertSequence = new TIntermSequence;
     insertSequence->push_back(driverUniformsDecl);
 
-    size_t mainIndex = FindMainIndex(root);
-    root->insertChildNodes(mainIndex, *insertSequence);
+    size_t firstFunctionIndex = FindFirstFunctionDefinitionIndex(root);
+    root->insertChildNodes(firstFunctionIndex, *insertSequence);
 
     return driverUniformsVar;
 }
@@ -765,6 +768,11 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         {
             InsertFragCoordCorrection(root, GetMainSequence(root), &getSymbolTable(),
                                       driverUniforms);
+        }
+
+        {
+            TIntermBinary *viewportYScale = CreateDriverUniformRef(driverUniforms, kViewportYScale);
+            RewriteDfdy(root, getSymbolTable(), getShaderVersion(), viewportYScale);
         }
     }
     else
