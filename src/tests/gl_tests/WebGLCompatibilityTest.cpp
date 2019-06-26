@@ -2846,8 +2846,6 @@ TEST_P(WebGLCompatibilityTest, RGB32FTextures)
     // TODO(syoussefi): Missing format support.  http://anglebug.com/2898
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel());
-
     constexpr float data[] = {1000.0f, -500.0f, 10.0f, 1.0f};
 
     for (auto extension : FloatingPointTextureExtensions)
