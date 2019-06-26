@@ -1107,10 +1107,10 @@ std::string RendererVk::getRendererDescription() const
 gl::Version RendererVk::getMaxSupportedESVersion() const
 {
     // Current highest supported version
-    gl::Version maxVersion = gl::Version(3, 0);
+    gl::Version maxVersion = gl::Version(3, 1);
 
 #if ANGLE_VULKAN_CONFORMANT_CONFIGS_ONLY
-    // TODO: Disallow ES 3.0 until supported. http://crbug.com/angleproject/2950
+    // TODO: Disallow ES 3.0+ until supported. http://crbug.com/angleproject/2950
     maxVersion = gl::Version(2, 0);
 #endif
 
@@ -1133,8 +1133,8 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
 
 void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
 {
-// Use OpenGL line rasterization rules by default.
-// TODO(jmadill): Fix Android support. http://anglebug.com/2830
+    // Use OpenGL line rasterization rules by default.
+    // TODO(jmadill): Fix Android support. http://anglebug.com/2830
 #if defined(ANGLE_PLATFORM_ANDROID)
     mFeatures.basicGLLineRasterization.enabled = false;
 #else

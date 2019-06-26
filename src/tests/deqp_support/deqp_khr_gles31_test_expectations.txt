@@ -1,0 +1,66 @@
+// Copyright 2019 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// This file contains a list of defective dEQP conformance tests. The expected
+// format is:
+//  {BUG#} {MODIFIERS} : {TEST_NAME} = {PASS,FAIL,FLAKY,TIMEOUT,SKIP}
+//
+// MODIFIERS can be a combination of the below list, combined with a logical AND:
+//  WIN XP VISTA WIN7 WIN8 WIN10
+//  MAC LEOPARD SNOWLEOPARD LION MOUNTAINLION MAVERICKS YOSEMITE ELCAPITAN SIERRA HIGHSIERRA MOJAVE
+//  LINUX CHROMEOS ANDROID
+//  NVIDIA AMD INTEL
+//  DEBUG RELEASE
+//  D3D9 D3D11 OPENGL GLES VULKAN
+//  NEXUS5X PIXEL2
+//  QUADROP400
+//
+//
+// TEST_NAME can be a specific test name, or have a '*' in the end, which
+// indicates a prefix matching.
+//
+// Examples:
+// fails on both windows and mac (crash)
+//  91530 WIN : context_lost_restored = SKIP
+//  91530 MAC : context_lost_restored = SKIP
+// fails on windows using NVIDIA GPUs
+//  91533 WIN NVIDIA : gl_min_uniforms = FAIL
+// fails on Nexus5X with GLES backend (hangs)
+//  91531 NEXUS5X GLES : conformance_more_* = SKIP
+
+// For now we only log Vulkan test expectations. More back-ends can follow as we need them.
+
+// Limits:
+3520 VULKAN : KHR-GLES31.core.texture_gather* = FAIL
+3520 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_* = FAIL
+3520 VULKAN : KHR-GLES31.core.layout_binding.block_* = FAIL
+
+// Compute shaders
+3562 VULKAN : KHR-GLES31.core.constant_expressions.basic_radians_float_* = FAIL
+
+// Multisampled textures:
+3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP
+
+// 2D array textures:
+3189 VULKAN : KHR-GLES31.core.texture_gather*2darray = SKIP
+3189 VULKAN : KHR-GLES31.core.layout_binding.sampler2DArray_* = SKIP
+
+// 3D textures:
+3188 VULKAN : KHR-GLES31.core.layout_binding.sampler3D_* = SKIP
+
+// Base texture level:
+3184 VULKAN : KHR-GLES31.core.texture*base-level* = SKIP
+
+// Atomic counters:
+3566 VULKAN : KHR-GLES31.core.shader_atomic_counters* = FAIL
+
+// RGBA32F:
+3520 VULKAN : KHR-GLES31.core.texture_gather.*-gather-float-2d-rgb = SKIP
+
+// Separate shader objects:
+3570 VULKAN : KHR-GLES31.core.sepshaderobjs* = FAIL
+
+// Shader support:
+3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation* = FAIL
+3569 VULKAN : KHR-GLES31.core.shader_integer_mix.* = FAIL

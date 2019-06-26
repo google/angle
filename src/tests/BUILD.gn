@@ -1035,4 +1035,9 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     defines = [ "ANGLE_DEQP_KHR_GLES3_TESTS" ]
     mustpass_name = "gles3-khr-master.txt"
   }
+
+  angle_deqp_khr_gtest("khr_gles31") {
+    defines = [ "ANGLE_DEQP_KHR_GLES31_TESTS" ]
+    mustpass_name = "gles31-khr-master.txt"
+  }
 }
