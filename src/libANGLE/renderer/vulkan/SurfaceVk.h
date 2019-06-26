@@ -212,7 +212,7 @@ class WindowSurfaceVk : public SurfaceVk
         SwapHistory &operator=(SwapHistory &&other) = delete;
         ~SwapHistory();
 
-        void destroy(VkDevice device);
+        void destroy(RendererVk *renderer);
 
         angle::Result waitFence(ContextVk *contextVk);
 

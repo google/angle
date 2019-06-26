@@ -334,16 +334,16 @@ WindowSurfaceVk::SwapHistory::SwapHistory() = default;
 
 WindowSurfaceVk::SwapHistory::~SwapHistory() = default;
 
-void WindowSurfaceVk::SwapHistory::destroy(VkDevice device)
+void WindowSurfaceVk::SwapHistory::destroy(RendererVk *renderer)
 {
     if (swapchain != VK_NULL_HANDLE)
     {
-        vkDestroySwapchainKHR(device, swapchain, nullptr);
+        vkDestroySwapchainKHR(renderer->getDevice(), swapchain, nullptr);
         swapchain = VK_NULL_HANDLE;
     }
 
-    sharedFence.reset(device);
-    presentImageSemaphore.destroy(device);
+    renderer->resetSharedFence(&sharedFence);
+    presentImageSemaphore.destroy(renderer->getDevice());
 }
 
 angle::Result WindowSurfaceVk::SwapHistory::waitFence(ContextVk *contextVk)
@@ -399,7 +399,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
 
     for (SwapHistory &swap : mSwapHistory)
     {
-        swap.destroy(device);
+        swap.destroy(renderer);
     }
 
     if (mSwapchain)
@@ -859,7 +859,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
         ANGLE_TRY(swap.waitFence(contextVk));
-        swap.destroy(contextVk->getDevice());
+        swap.destroy(contextVk->getRenderer());
     }
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];

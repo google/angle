@@ -667,7 +667,7 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     mInFlightCommands.emplace_back(scopedBatch.release());
 
     // Make sure a new fence is created for the next submission.
-    mSubmitFence.reset(device);
+    mRenderer->resetSharedFence(&mSubmitFence);
 
     // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done on
     // swap() though, and there could be multiple submissions in between (through glFlush() calls),
@@ -2272,17 +2272,12 @@ angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
 
 angle::Result ContextVk::getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut)
 {
-    VkDevice device = getDevice();
     if (!mSubmitFence.isReferenced())
     {
-        vk::Fence fence;
-        VkFenceCreateInfo fenceCreateInfo = {};
-        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        fenceCreateInfo.flags             = 0;
-        ANGLE_VK_TRY(this, fence.init(device, fenceCreateInfo));
-        mSubmitFence.assign(device, std::move(fence));
+        ANGLE_TRY(getRenderer()->newSharedFence(this, &mSubmitFence));
     }
-    sharedFenceOut->copy(device, mSubmitFence);
+    getRenderer()->resetSharedFence(sharedFenceOut);
+    sharedFenceOut->copy(getDevice(), mSubmitFence);
     return angle::Result::Continue;
 }
 

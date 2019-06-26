@@ -473,7 +473,7 @@ angle::Result WaitFences(vk::Context *context,
         }
         ANGLE_VK_TRY(context, result);
 
-        fences->back().reset(context->getDevice());
+        context->getRenderer()->resetSharedFence(&fences->back());
         fences->pop_back();
     }
 
@@ -512,6 +512,8 @@ RendererVk::~RendererVk()
 void RendererVk::onDestroy(vk::Context *context)
 {
     (void)cleanupGarbage(context, true);
+
+    mFenceRecycler.destroy(mDevice);
 
     mPipelineLayoutCache.destroy(mDevice);
     mDescriptorSetLayoutCache.destroy(mDevice);
@@ -1475,6 +1477,26 @@ VkResult RendererVk::queuePresent(const VkPresentInfoKHR &presentInfo)
 Serial RendererVk::nextSerial()
 {
     return mQueueSerialFactory.generate();
+}
+
+angle::Result RendererVk::newSharedFence(vk::Context *context,
+                                         vk::Shared<vk::Fence> *sharedFenceOut)
+{
+    vk::Fence fence;
+    if (mFenceRecycler.empty())
+    {
+        VkFenceCreateInfo fenceCreateInfo = {};
+        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceCreateInfo.flags             = 0;
+        ANGLE_VK_TRY(context, fence.init(mDevice, fenceCreateInfo));
+    }
+    else
+    {
+        mFenceRecycler.fetch(mDevice, &fence);
+        ANGLE_VK_TRY(context, fence.reset(mDevice));
+    }
+    sharedFenceOut->assign(mDevice, std::move(fence));
+    return angle::Result::Continue;
 }
 
 void RendererVk::addGarbage(vk::Shared<vk::Fence> &&fence,

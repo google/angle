@@ -356,6 +356,7 @@ TEST_P(EGLSurfaceTest, SwapInterval)
     // Flaky hang on Nexus 5X and 6P. http://anglebug.com/3364
     ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && isGLESRenderer());
     // Flaky hang on Ubuntu 19.04 NVIDIA Vulkan. http://anglebug.com/3618
+    // Maybe hang due to bug in NVIDIA Linux Vulkan driver. http://anglebug.com/3450
     ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && isVulkanRenderer());
 
     initializeDisplay();
