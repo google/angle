@@ -213,11 +213,7 @@ void ProgramVk::ShaderInfo::release(ContextVk *contextVk)
 }
 
 // ProgramVk implementation.
-ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
-    : storage(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-              kUniformBlockDynamicBufferMinSize,
-              true)
-{}
+ProgramVk::DefaultUniformBlock::DefaultUniformBlock() {}
 
 ProgramVk::DefaultUniformBlock::~DefaultUniformBlock() = default;
 
@@ -470,7 +466,9 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
             size_t minAlignment = static_cast<size_t>(
                 renderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
 
-            mDefaultUniformBlocks[shaderType].storage.init(minAlignment, renderer);
+            mDefaultUniformBlocks[shaderType].storage.init(
+                renderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                minAlignment, kUniformBlockDynamicBufferMinSize, true);
 
             // Initialize uniform buffer memory to zero by default.
             mDefaultUniformBlocks[shaderType].uniformData.fill(0);

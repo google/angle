@@ -36,9 +36,9 @@ ConversionBuffer::ConversionBuffer(RendererVk *renderer,
                                    VkBufferUsageFlags usageFlags,
                                    size_t initialSize,
                                    size_t alignment)
-    : dirty(true), lastAllocationOffset(0), data(usageFlags, initialSize, true)
+    : dirty(true), lastAllocationOffset(0)
 {
-    data.init(alignment, renderer);
+    data.init(renderer, usageFlags, alignment, initialSize, true);
 }
 
 ConversionBuffer::~ConversionBuffer() = default;

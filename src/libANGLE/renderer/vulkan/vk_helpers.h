@@ -39,12 +39,16 @@ class BufferHelper;
 class DynamicBuffer : angle::NonCopyable
 {
   public:
-    DynamicBuffer(VkBufferUsageFlags usage, size_t minSize, bool hostVisible);
+    DynamicBuffer();
     DynamicBuffer(DynamicBuffer &&other);
     ~DynamicBuffer();
 
     // Init is called after the buffer creation so that the alignment can be specified later.
-    void init(size_t alignment, RendererVk *renderer);
+    void init(RendererVk *renderer,
+              VkBufferUsageFlags usage,
+              size_t alignment,
+              size_t initialSize,
+              bool hostVisible);
 
     // This call will allocate a new region at the end of the buffer. It internally may trigger
     // a new buffer to be created (which is returned in the optional parameter
@@ -87,7 +91,7 @@ class DynamicBuffer : angle::NonCopyable
 
     VkBufferUsageFlags mUsage;
     bool mHostVisible;
-    size_t mMinSize;
+    size_t mInitialSize;
     BufferHelper *mBuffer;
     uint32_t mNextAllocationOffset;
     uint32_t mLastFlushOrInvalidateOffset;

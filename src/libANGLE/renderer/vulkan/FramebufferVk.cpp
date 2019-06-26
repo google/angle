@@ -162,14 +162,10 @@ FramebufferVk *FramebufferVk::CreateDefaultFBO(RendererVk *renderer,
 FramebufferVk::FramebufferVk(RendererVk *renderer,
                              const gl::FramebufferState &state,
                              WindowSurfaceVk *backbuffer)
-    : FramebufferImpl(state),
-      mBackbuffer(backbuffer),
-      mActiveColorComponents(0),
-      mReadPixelBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize, true),
-      mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize, true)
+    : FramebufferImpl(state), mBackbuffer(backbuffer), mActiveColorComponents(0)
 {
-    mBlitPixelBuffer.init(1, renderer);
-    mReadPixelBuffer.init(4, renderer);
+    mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, 4, kMinReadPixelsBufferSize,
+                          true);
 }
 
 FramebufferVk::~FramebufferVk() = default;
@@ -180,7 +176,6 @@ void FramebufferVk::destroy(const gl::Context *context)
     mFramebuffer.release(contextVk);
 
     mReadPixelBuffer.release(contextVk);
-    mBlitPixelBuffer.release(contextVk);
 }
 
 angle::Result FramebufferVk::discard(const gl::Context *context,

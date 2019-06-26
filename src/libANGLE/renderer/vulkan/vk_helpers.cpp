@@ -36,7 +36,7 @@ constexpr VkClearDepthStencilValue kWebGLInitDepthStencilValue = {1.0f, 0};
 constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage =
     VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
     VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
-constexpr int kLineLoopDynamicBufferMinSize = 1024 * 1024;
+constexpr int kLineLoopDynamicBufferInitialSize = 1024 * 1024;
 
 // This is an arbitrary max. We can change this later if necessary.
 constexpr uint32_t kDefaultDescriptorPoolMaxSets = 128;
@@ -242,10 +242,10 @@ void HandlePrimitiveRestart(gl::DrawElementsType glIndexType,
 }  // anonymous namespace
 
 // DynamicBuffer implementation.
-DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize, bool hostVisible)
-    : mUsage(usage),
-      mHostVisible(hostVisible),
-      mMinSize(minSize),
+DynamicBuffer::DynamicBuffer()
+    : mUsage(0),
+      mHostVisible(false),
+      mInitialSize(0),
       mBuffer(nullptr),
       mNextAllocationOffset(0),
       mLastFlushOrInvalidateOffset(0),
@@ -256,7 +256,7 @@ DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize, bool host
 DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
     : mUsage(other.mUsage),
       mHostVisible(other.mHostVisible),
-      mMinSize(other.mMinSize),
+      mInitialSize(other.mInitialSize),
       mBuffer(other.mBuffer),
       mNextAllocationOffset(other.mNextAllocationOffset),
       mLastFlushOrInvalidateOffset(other.mLastFlushOrInvalidateOffset),
@@ -267,13 +267,21 @@ DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
     other.mBuffer = nullptr;
 }
 
-void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
+void DynamicBuffer::init(RendererVk *renderer,
+                         VkBufferUsageFlags usage,
+                         size_t alignment,
+                         size_t initialSize,
+                         bool hostVisible)
 {
+    mUsage       = usage;
+    mInitialSize = initialSize;
+    mHostVisible = hostVisible;
+
     // Workaround for the mock ICD not supporting allocations greater than 0x1000.
     // Could be removed if https://github.com/KhronosGroup/Vulkan-Tools/issues/84 is fixed.
     if (renderer->isMockICDEnabled())
     {
-        mMinSize = std::min<size_t>(mMinSize, 0x1000);
+        mInitialSize = std::min<size_t>(mInitialSize, 0x1000);
     }
 
     updateAlignment(renderer, alignment);
@@ -307,7 +315,7 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
             mBuffer = nullptr;
         }
 
-        mSize = std::max(sizeToAllocate, mMinSize);
+        mSize = std::max(sizeToAllocate, mInitialSize);
 
         std::unique_ptr<BufferHelper> buffer = std::make_unique<BufferHelper>();
 
@@ -488,7 +496,7 @@ void DynamicBuffer::updateAlignment(RendererVk *renderer, size_t alignment)
 void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
 {
     // This will really only have an effect next time we call allocate.
-    mMinSize = minSize;
+    mInitialSize = minSize;
 
     // Forces a new allocation on the next allocate.
     mSize = 0;
@@ -994,14 +1002,14 @@ void SemaphoreHelper::deinit()
 
 // LineLoopHelper implementation.
 LineLoopHelper::LineLoopHelper(RendererVk *renderer)
-    : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize, true)
 {
     // We need to use an alignment of the maximum size we're going to allocate, which is
     // VK_INDEX_TYPE_UINT32. When we switch from a drawElement to a drawArray call, the allocations
     // can vary in size. According to the Vulkan spec, when calling vkCmdBindIndexBuffer: 'The
     // sum of offset and the address of the range of VkDeviceMemory object that is backing buffer,
     // must be a multiple of the type indicated by indexType'.
-    mDynamicIndexBuffer.init(sizeof(uint32_t), renderer);
+    mDynamicIndexBuffer.init(renderer, kLineLoopDynamicBufferUsage, sizeof(uint32_t),
+                             kLineLoopDynamicBufferInitialSize, true);
 }
 
 LineLoopHelper::~LineLoopHelper() = default;
@@ -1369,8 +1377,7 @@ ImageHelper::ImageHelper()
       mCurrentLayout(ImageLayout::Undefined),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mLayerCount(0),
-      mLevelCount(0),
-      mStagingBuffer(kStagingBufferFlags, kStagingBufferSize, true)
+      mLevelCount(0)
 {}
 
 ImageHelper::ImageHelper(ImageHelper &&other)
@@ -1400,7 +1407,8 @@ ImageHelper::~ImageHelper()
 
 void ImageHelper::initStagingBuffer(RendererVk *renderer, const vk::Format &format)
 {
-    mStagingBuffer.updateAlignment(renderer, format.getImageCopyBufferAlignment());
+    mStagingBuffer.init(renderer, kStagingBufferFlags, format.getImageCopyBufferAlignment(),
+                        kStagingBufferSize, true);
 }
 
 angle::Result ImageHelper::init(Context *context,

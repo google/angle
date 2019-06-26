@@ -78,7 +78,14 @@ void main()
     GLint mAttribLocation;
 };
 
-TEST_P(BufferDataTest, NULLData)
+// Disabled in debug because it's way too slow.
+#if !defined(NDEBUG)
+#    define MAYBE_NULLData DISABLED_NULLData
+#else
+#    define MAYBE_NULLData NULLData
+#endif  // !defined(NDEBUG)
+
+TEST_P(BufferDataTest, MAYBE_NULLData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     EXPECT_GL_NO_ERROR();

@@ -92,9 +92,6 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &s
       mCurrentArrayBuffers{},
       mCurrentElementArrayBufferOffset(0),
       mCurrentElementArrayBuffer(nullptr),
-      mDynamicVertexData(vk::kVertexBufferUsageFlags, kDynamicVertexDataSize, true),
-      mDynamicIndexData(vk::kIndexBufferUsageFlags, kDynamicIndexDataSize, true),
-      mTranslatedByteIndexData(vk::kIndexBufferUsageFlags, kDynamicIndexDataSize, true),
       mLineLoopHelper(contextVk->getRenderer()),
       mDirtyLineLoopTranslation(true)
 {
@@ -110,12 +107,15 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &s
     mCurrentArrayBufferOffsets.fill(0);
     mCurrentArrayBuffers.fill(&mTheNullBuffer);
 
-    mDynamicVertexData.init(vk::kVertexBufferAlignment, renderer);
+    mDynamicVertexData.init(renderer, vk::kVertexBufferUsageFlags, vk::kVertexBufferAlignment,
+                            kDynamicVertexDataSize, true);
 
     // We use an alignment of four for index data. This ensures that compute shaders can read index
     // elements from "uint" aligned addresses.
-    mDynamicIndexData.init(vk::kIndexBufferAlignment, renderer);
-    mTranslatedByteIndexData.init(vk::kIndexBufferAlignment, renderer);
+    mDynamicIndexData.init(renderer, vk::kIndexBufferUsageFlags, vk::kIndexBufferAlignment,
+                           kDynamicIndexDataSize, true);
+    mTranslatedByteIndexData.init(renderer, vk::kIndexBufferUsageFlags, vk::kIndexBufferAlignment,
+                                  kDynamicIndexDataSize, true);
 }
 
 VertexArrayVk::~VertexArrayVk() {}
