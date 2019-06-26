@@ -2986,9 +2986,6 @@ TEST_P(SimpleStateChangeTestES31, UpdateImageTextureInUse)
 // Test that we can alternate between image textures between different dispatchs.
 TEST_P(SimpleStateChangeTestES31, DispatchImageTextureAThenTextureBThenTextureA)
 {
-    // TODO(syoussefi): Flaky, needs investigation. http://anglebug.com/3044
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsDesktopOpenGL());
-
     std::array<GLColor, 4> colorsTexA = {
         {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
 
@@ -3009,12 +3006,15 @@ TEST_P(SimpleStateChangeTestES31, DispatchImageTextureAThenTextureBThenTextureA)
     glBindImageTexture(0, texA, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
     glDispatchCompute(1, 1, 1);
 
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     glBindImageTexture(0, texB, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
     glDispatchCompute(1, 1, 1);
 
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     glBindImageTexture(0, texA, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
     glDispatchCompute(1, 1, 1);
 
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
     EXPECT_PIXEL_RECT_EQ(0, 0, 2, 2, GLColor::cyan);
     ASSERT_GL_NO_ERROR();
 }
