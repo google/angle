@@ -1507,6 +1507,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     features->limitMaxMSAASamplesTo4.enabled    = IsAndroid();
 
     features->allowClearForRobustResourceInit.enabled = IsApple();
+
+    // The WebGL conformance/uniforms/out-of-bounds-uniform-array-access test has been seen to fail
+    // on AMD and Android devices.
+    features->clampArrayAccess.enabled = IsAndroid() || IsAMD(vendor);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

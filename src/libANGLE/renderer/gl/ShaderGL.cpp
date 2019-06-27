@@ -328,6 +328,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         additionalOptions |= SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER;
     }
 
+    if (features.clampArrayAccess.enabled)
+    {
+        additionalOptions |= SH_CLAMP_INDIRECT_ARRAY_BOUNDS;
+    }
+
     options |= additionalOptions;
 
     auto workerThreadPool = context->getWorkerThreadPool();

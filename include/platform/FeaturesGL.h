@@ -292,6 +292,12 @@ struct FeaturesGL : FeatureSetBase
         "Using glClear for robust resource initialization is buggy on some drivers and leads to "
         "texture corruption. Default to data uploads except on MacOS where it is very slow.",
         &members, "http://crbug.com/883276"};
+
+    // Some drivers automatically handle out-of-bounds uniform array access but others need manual
+    // clamping to satisfy the WebGL requirements.
+    Feature clampArrayAccess = {"clamp_array_access", FeatureCategory::OpenGLWorkarounds,
+                                "Clamp uniform array access to avoid reading invalid memory.",
+                                &members, "http://anglebug.com/2978"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
