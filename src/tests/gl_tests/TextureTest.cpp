@@ -13,6 +13,8 @@ using namespace angle;
 namespace
 {
 
+constexpr unsigned int kPixelTolerance = 1u;
+
 // Take a pixel, and reset the components not covered by the format to default
 // values. In particular, the default value for the alpha component is 255
 // (1.0 as unsigned normalized fixed point value).
@@ -4008,6 +4010,154 @@ TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
     testNorm16Render(GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT);
 }
 
+class Texture2DRGTest : public Texture2DTest
+{
+  protected:
+    Texture2DRGTest()
+        : Texture2DTest(), mRenderableTexture(0), mTestTexture(0), mFBO(0), mRenderbuffer(0)
+    {}
+
+    void testSetUp() override
+    {
+        Texture2DTest::testSetUp();
+
+        glActiveTexture(GL_TEXTURE0);
+        glGenTextures(1, &mRenderableTexture);
+        glGenTextures(1, &mTestTexture);
+        glGenFramebuffers(1, &mFBO);
+        glGenRenderbuffers(1, &mRenderbuffer);
+
+        glBindTexture(GL_TEXTURE_2D, mRenderableTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D, mTestTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        setUpProgram();
+        glUseProgram(mProgram);
+        glUniform1i(mTexture2DUniformLocation, 0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void testTearDown() override
+    {
+        glDeleteTextures(1, &mRenderableTexture);
+        glDeleteTextures(1, &mTestTexture);
+        glDeleteFramebuffers(1, &mFBO);
+        glDeleteRenderbuffers(1, &mRenderbuffer);
+
+        Texture2DTest::testTearDown();
+    }
+
+    void setupFormatTextures(GLenum internalformat, GLenum format, GLenum type, GLvoid *imageData)
+    {
+        glBindTexture(GL_TEXTURE_2D, mRenderableTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               mRenderableTexture, 0);
+
+        glBindTexture(GL_TEXTURE_2D, mTestTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, imageData);
+
+        EXPECT_GL_NO_ERROR();
+    }
+
+    void testRGTexture(GLColor expectedColor)
+    {
+        drawQuad(mProgram, "position", 0.5f);
+
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedColor, kPixelTolerance);
+    }
+
+    void testRGRender(GLenum internalformat, GLenum format)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, internalformat, 1, 1);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  mRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        EXPECT_GL_NO_ERROR();
+
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, SliceFormatColor(format, GLColor(255u, 255u, 255u, 255u)));
+    }
+
+    GLuint mRenderableTexture;
+    GLuint mTestTexture;
+    GLuint mFBO;
+    GLuint mRenderbuffer;
+};
+
+// Test unorm texture formats enabled by the GL_EXT_texture_rg extension.
+TEST_P(Texture2DRGTest, TextureRGUNormTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_rg"));
+
+    GLubyte pixelValue  = 0xab;
+    GLubyte imageData[] = {pixelValue, pixelValue};
+
+    setupFormatTextures(GL_RED_EXT, GL_RED_EXT, GL_UNSIGNED_BYTE, imageData);
+    testRGTexture(
+        SliceFormatColor(GL_RED_EXT, GLColor(pixelValue, pixelValue, pixelValue, pixelValue)));
+    testRGRender(GL_R8_EXT, GL_RED_EXT);
+
+    setupFormatTextures(GL_RG_EXT, GL_RG_EXT, GL_UNSIGNED_BYTE, imageData);
+    testRGTexture(
+        SliceFormatColor(GL_RG_EXT, GLColor(pixelValue, pixelValue, pixelValue, pixelValue)));
+    testRGRender(GL_RG8_EXT, GL_RG_EXT);
+}
+
+// Test float texture formats enabled by the GL_EXT_texture_rg extension.
+TEST_P(Texture2DRGTest, TextureRGFloatTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_rg"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float"));
+
+    GLfloat pixelValue  = 0.54321;
+    GLfloat imageData[] = {pixelValue, pixelValue};
+
+    GLubyte expectedValue = static_cast<GLubyte>(pixelValue * 255.0f);
+    GLColor expectedColor = GLColor(expectedValue, expectedValue, expectedValue, expectedValue);
+
+    setupFormatTextures(GL_RED_EXT, GL_RED_EXT, GL_FLOAT, imageData);
+    testRGTexture(SliceFormatColor(GL_RED_EXT, expectedColor));
+
+    setupFormatTextures(GL_RG_EXT, GL_RG_EXT, GL_FLOAT, imageData);
+    testRGTexture(SliceFormatColor(GL_RG_EXT, expectedColor));
+}
+
+// Test half-float texture formats enabled by the GL_EXT_texture_rg extension.
+TEST_P(Texture2DRGTest, TextureRGFHalfFloatTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_rg"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_half_float"));
+
+    GLfloat pixelValueFloat = 0.543f;
+    GLhalf pixelValue       = 0x3858;
+    GLhalf imageData[]      = {pixelValue, pixelValue};
+
+    GLubyte expectedValue = static_cast<GLubyte>(pixelValueFloat * 255.0f);
+    GLColor expectedColor = GLColor(expectedValue, expectedValue, expectedValue, expectedValue);
+
+    setupFormatTextures(GL_RED_EXT, GL_RED_EXT, GL_HALF_FLOAT_OES, imageData);
+    testRGTexture(SliceFormatColor(GL_RED_EXT, expectedColor));
+
+    setupFormatTextures(GL_RG_EXT, GL_RG_EXT, GL_HALF_FLOAT_OES, imageData);
+    testRGTexture(SliceFormatColor(GL_RG_EXT, expectedColor));
+}
+
 // Test that UNPACK_SKIP_IMAGES doesn't have an effect on 2D texture uploads.
 // GLES 3.0.4 section 3.8.3.
 TEST_P(Texture2DTestES3, UnpackSkipImages2D)
@@ -4930,6 +5080,15 @@ ANGLE_INSTANTIATE_TEST(TextureBorderClampTestES3, ES3_D3D11(), ES3_OPENGL(), ES3
 ANGLE_INSTANTIATE_TEST(TextureBorderClampIntegerTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(Texture2DRGTest,
+                       ES2_D3D11(),
+                       ES3_D3D11(),
+                       ES2_OPENGL(),
+                       ES3_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES3_OPENGLES(),
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(TextureCubeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(TextureCubeIntegerTestES3, ES3_D3D11(), ES3_OPENGL());
