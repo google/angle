@@ -3920,6 +3920,7 @@ bool ValidateStencilFillPathCHROMIUM(Context *context, GLuint path, GLenum fillM
 
     switch (fillMode)
     {
+        case GL_INVERT:
         case GL_COUNT_UP_CHROMIUM:
         case GL_COUNT_DOWN_CHROMIUM:
             break;
@@ -4090,6 +4091,7 @@ bool ValidateStencilFillPathInstancedCHROMIUM(Context *context,
 
     switch (fillMode)
     {
+        case GL_INVERT:
         case GL_COUNT_UP_CHROMIUM:
         case GL_COUNT_DOWN_CHROMIUM:
             break;
@@ -4152,6 +4154,7 @@ bool ValidateStencilThenCoverFillPathInstancedCHROMIUM(Context *context,
 
     switch (fillMode)
     {
+        case GL_INVERT:
         case GL_COUNT_UP_CHROMIUM:
         case GL_COUNT_DOWN_CHROMIUM:
             break;
