@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf6f6958_e3ef62b3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2014,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-06-27T17:20:36Z",
+      "side": 1,
+      "message": "This ASSERT (or the identical one below) is failing on the bots. That\u0027s odd, but also you need to support more depth/stencil formats.",
+      "revId": "e1699eca8af90fb82d1efcb5f84e8d5c1cf4fa4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
