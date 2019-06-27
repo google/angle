@@ -31,6 +31,16 @@
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
+// Android Vulkan expectations
+
+// Compute shaders
+3562 VULKAN ANDROID : KHR-GLES31.core.constant_expressions.basic_radians_vec2_* = FAIL
+3562 VULKAN ANDROID : KHR-GLES31.core.constant_expressions.basic_degrees_float_* = FAIL
+3562 VULKAN ANDROID : KHR-GLES31.core.constant_expressions.array_degrees_float_* = FAIL
+3562 VULKAN ANDROID : KHR-GLES31.core.constant_expressions.array_degrees_vec2_tess_eval = FAIL
+
+// General Vulkan expectations
+
 // Limits:
 3520 VULKAN : KHR-GLES31.core.texture_gather* = FAIL
 3520 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_* = FAIL
@@ -38,6 +48,7 @@
 
 // Compute shaders
 3562 VULKAN : KHR-GLES31.core.constant_expressions.basic_radians_float_* = FAIL
+3562 VULKAN : KHR-GLES31.core.constant_expressions.basic_radians_vec2_tess_eval = FAIL
 
 // Multisampled textures:
 3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP

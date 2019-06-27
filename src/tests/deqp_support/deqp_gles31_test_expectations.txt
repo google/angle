@@ -545,7 +545,7 @@
 // An NVIDIA bug seems to occur when sending GL commands in a certain order to the driver
 2432 NVIDIA OPENGL : dEQP-GLES31.functional.vertex_attribute_binding.usage.mixed_usage.mixed_api_change_binding_point = SKIP
 
-// OpenGL and D3D11 Failing Tests
+// OpenGL/D3D11/Vulkan Failing Tests
 1442 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 1442 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 1442 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
@@ -611,6 +611,12 @@
 // This case is skipped since it uses atomic counter builtin functions which haven't been implemented.
 1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP
 
+// Vulkan Android failures
+
+// Debug:
+3520 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterf = FAIL
+3520 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterfv = FAIL
+
 // General Vulkan failures
 
 // Limits:
@@ -621,7 +627,7 @@
 3520 VULKAN : dEQP-GLES31.functional.vertex_attribute_binding.usage.* = FAIL
 3520 VULKAN : dEQP-GLES31.functional.program_uniform.* = FAIL
 3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_combined_shader_output_resources* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.* = FAIL
+3520 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.* = SKIP
 3520 VULKAN : dEQP-GLES31.functional.layout_binding.sampler.* = FAIL
 3520 VULKAN : dEQP-GLES31.functional.layout_binding.ubo.* = FAIL
 // MAX_FRAMEBUFFER_SAMPLES is 0
@@ -653,6 +659,7 @@
 3569 VULKAN : dEQP-GLES31.functional.shaders.arrays* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.linkage*uniform* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_constants.core.max_* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_constants.core.min_program_texel_offset = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.uniform_block.es31.valid.* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.referenced_by_shader.*float_struct = FAIL
 
@@ -696,6 +703,7 @@
 3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*.state.get_*uniform* = FAIL
 3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.* = FAIL
 3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.* = FAIL
+3590 VULKAN : dEQP-GLES31.functional.debug.error_groups.case_14 = SKIP
 
 // Transform feedback:
 3205 VULKAN : dEQP-GLES31.functional.debug.*.begin_query = SKIP
