@@ -791,12 +791,13 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
         sourceGL->getLevelInfo(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
     bool needsLumaWorkaround = sourceLevelInfo.lumaWorkaround.enabled;
 
-    GLenum sourceFormat = sourceImageDesc.format.info->format;
+    const gl::InternalFormat &sourceFormatInfo = *sourceImageDesc.format.info;
+    GLenum sourceFormat                        = sourceFormatInfo.format;
     bool sourceFormatContainSupersetOfDestFormat =
         (sourceFormat == destFormat.format && sourceFormat != GL_BGRA_EXT) ||
         (sourceFormat == GL_RGBA && destFormat.format == GL_RGB);
 
-    GLenum sourceComponentType = sourceImageDesc.format.info->componentType;
+    GLenum sourceComponentType = sourceFormatInfo.componentType;
     GLenum destComponentType   = destFormat.componentType;
     bool destSRGB              = destFormat.colorEncoding == GL_SRGB;
     if (!unpackFlipY && unpackPremultiplyAlpha == unpackUnmultiplyAlpha && !needsLumaWorkaround &&
@@ -819,7 +820,7 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
     {
         bool copySucceeded = false;
         ANGLE_TRY(blitter->copySubTexture(
-            context, sourceGL, sourceLevel, sourceComponentType, this, target, level,
+            context, sourceGL, sourceLevel, sourceComponentType, mTextureID, target, level,
             destComponentType, sourceImageDesc.size, sourceArea, destOffset, needsLumaWorkaround,
             sourceLevelInfo.sourceFormat, unpackFlipY, unpackPremultiplyAlpha,
             unpackUnmultiplyAlpha, &copySucceeded));
@@ -830,10 +831,11 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
     }
 
     // Fall back to CPU-readback
-    return blitter->copySubTextureCPUReadback(context, sourceGL, sourceLevel, sourceComponentType,
-                                              this, target, level, destFormat.format,
-                                              destFormat.type, sourceArea, destOffset, unpackFlipY,
-                                              unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    return blitter->copySubTextureCPUReadback(
+        context, sourceGL, sourceLevel, sourceFormatInfo.sizedInternalFormat, this, target, level,
+        destFormat.format, destFormat.type, sourceImageDesc.size, sourceArea, destOffset,
+        needsLumaWorkaround, sourceLevelInfo.sourceFormat, unpackFlipY, unpackPremultiplyAlpha,
+        unpackUnmultiplyAlpha);
 }
 
 angle::Result TextureGL::setStorage(const gl::Context *context,
