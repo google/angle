@@ -331,7 +331,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
 ###-----------------------------------------------------
 
 if (build_angle_gles1_conform_tests) {
-  gles1_conform_root = "//third_party/gles1_conform"
+  gles1_conform_root = "$angle_root/third_party/gles1_conform"
 
   config("angle_gles1_conform_support") {
     include_dirs = [

@@ -24,6 +24,7 @@
 .cipd
 .gclient
 .gclient_entries
+/angle-internal
 /src/tests/third_party/gles_conformance_tests
 /testing
 /tools/glslang/glslang_validator
@@ -52,7 +53,7 @@
 /third_party/yasm
 /third_party/zlib
 /tools/md_browser
-angle_internal
+angle_debug.txt
 build
 buildtools/
 debug.txt
