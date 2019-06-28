@@ -142,7 +142,7 @@ angle_test("angle_unittests") {
            ":angle_test_expectations",
            "${angle_root}:preprocessor",
            "${angle_root}:translator",
-           "${angle_root}:libfeature_support${angle_libs_suffix}",
+           "${angle_root}:libfeature_support",
            ":angle_unittests_main",
          ]
   if (!is_android && !is_fuchsia) {
@@ -195,9 +195,9 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
     ]
 
     data_deps = [
-      "${angle_root}:libEGL${angle_libs_suffix}",
-      "${angle_root}:libGLESv1_CM${angle_libs_suffix}",
-      "${angle_root}:libGLESv2${angle_libs_suffix}",
+      "${angle_root}:libEGL",
+      "${angle_root}:libGLESv1_CM",
+      "${angle_root}:libGLESv2",
     ]
 
     if (is_android) {
@@ -301,8 +301,8 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     ]
 
     data_deps = [
-      "${angle_root}:libEGL${angle_libs_suffix}",
-      "${angle_root}:libGLESv2${angle_libs_suffix}",
+      "${angle_root}:libEGL",
+      "${angle_root}:libGLESv2",
     ]
 
     configs += [
@@ -816,8 +816,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_glshared",
       "${angle_root}:angle_common",
       "${angle_root}:angle_util",
-      "${angle_root}:libEGL${angle_libs_suffix}",
-      "${angle_root}:libGLESv2${angle_libs_suffix}",
+      "${angle_root}:libEGL",
+      "${angle_root}:libGLESv2",
     ]
 
     configs += [ "${angle_root}:library_name_config" ]

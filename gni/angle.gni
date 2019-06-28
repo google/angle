@@ -46,7 +46,13 @@ declare_args() {
         (angle_64bit_current_cpu && android64_ndk_api_level >= 26)
   }
   angle_shared_libvulkan = false
-  angle_libs_suffix = ""
+
+  # Default to using "_angle" suffix on Android
+  if (is_android) {
+    angle_libs_suffix = "_angle"
+  } else {
+    angle_libs_suffix = ""
+  }
 }
 
 declare_args() {
