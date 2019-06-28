@@ -92,7 +92,7 @@
   "GL/EGL entry points:scripts/egl_angle_ext.xml":
     "fc2e249239fb1365f6d145cdf1a3cfcf",
   "GL/EGL entry points:scripts/entry_point_packed_gl_enums.json":
-    "45513f3dd0e9cf5a93de3172b92636f4",
+    "6e27999e187876d388b365676b2e3cc6",
   "GL/EGL entry points:scripts/generate_entry_points.py":
     "1e493331ee0ab7d5e210a125cb248f0b",
   "GL/EGL entry points:scripts/gl.xml":
@@ -100,7 +100,7 @@
   "GL/EGL entry points:scripts/gl_angle_ext.xml":
     "bed6b56a38621721e689ebc19601a556",
   "GL/EGL entry points:scripts/registry_xml.py":
-    "46adad992f005ee6b7d928029f3a3db9",
+    "044c8cd6601271bef56d257ff401597c",
   "GL/EGL entry points:src/libANGLE/Context_gles_1_0_autogen.h":
     "f30ed90e4ec23f886bda9344d82dd529",
   "GL/EGL entry points:src/libANGLE/Context_gles_2_0_autogen.h":
@@ -110,7 +110,7 @@
   "GL/EGL entry points:src/libANGLE/Context_gles_3_1_autogen.h":
     "5ccae982f020320b1e29cf8eecd8c303",
   "GL/EGL entry points:src/libANGLE/Context_gles_ext_autogen.h":
-    "7f789cbaef14a93ad1e268d073b15435",
+    "a4159480e94e629b7ad5820464eab6ff",
   "GL/EGL entry points:src/libANGLE/validationES1_autogen.h":
     "8d3131d2bf2e6f521f46b44e64a6bff9",
   "GL/EGL entry points:src/libANGLE/validationES2_autogen.h":
@@ -120,9 +120,9 @@
   "GL/EGL entry points:src/libANGLE/validationES3_autogen.h":
     "4617942e5bf67fa5e35675daf66afc5c",
   "GL/EGL entry points:src/libANGLE/validationESEXT_autogen.h":
-    "3042dcbfd5ba465df17668988601205e",
+    "e467045ae1b9f8671ced8aef794f06e0",
   "GL/EGL entry points:src/libGLESv2/entry_points_enum_autogen.h":
-    "8d4af523c6da76ff7c47302c8dc5b30d",
+    "f8340d0bfde6bc581a508a47a54a6678",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_1_0_autogen.cpp":
     "153739031e8ae415fe42ecc9c132ffb2",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_1_0_autogen.h":
@@ -140,13 +140,13 @@
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_3_1_autogen.h":
     "043d09a964c740067bf4279e0b544aed",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_ext_autogen.cpp":
-    "b56592ebcd1bed250682e9a9230543ea",
+    "ea96fd970bb4f814199706c3663c44ab",
   "GL/EGL entry points:src/libGLESv2/entry_points_gles_ext_autogen.h":
-    "ad2d05812814ba9016080ba56e6c4218",
+    "294cc52579b3439e99914c11bb7cd9f6",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.cpp":
-    "218d127d16fc6779b6cb74498ee47989",
+    "229577015686414a6d094533c2210cea",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.def":
-    "2b6c2e26533b1333b559c0dcf71d551d",
+    "5973958936850835cc48a57bba9bd33a",
   "GL/EGL/WGL loader:scripts/egl.xml":
     "842e24514c4cfe09fba703c17a0fd292",
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
@@ -154,7 +154,7 @@
   "GL/EGL/WGL loader:scripts/generate_loader.py":
     "5a7cd014230fe04664d9613e65399d42",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
-    "46adad992f005ee6b7d928029f3a3db9",
+    "044c8cd6601271bef56d257ff401597c",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
@@ -166,9 +166,9 @@
   "GL/EGL/WGL loader:util/egl_loader_autogen.h":
     "a4f0d640554d9c2b4f90f1f2271a1104",
   "GL/EGL/WGL loader:util/gles_loader_autogen.cpp":
-    "be57173aa677109e6a644320d5a4430d",
+    "335463406e64c6dc9bf00502cb25d53c",
   "GL/EGL/WGL loader:util/gles_loader_autogen.h":
-    "164c35a3faf87a9f86b41ed2899ea1a5",
+    "d5217a3555be800443bd673e479d8443",
   "GL/EGL/WGL loader:util/windows/wgl_loader_autogen.cpp":
     "12ffb44e5e743c826e4d84ac65cdba82",
   "GL/EGL/WGL loader:util/windows/wgl_loader_autogen.h":
@@ -460,11 +460,11 @@
   "proc table:scripts/gl_angle_ext.xml":
     "bed6b56a38621721e689ebc19601a556",
   "proc table:scripts/registry_xml.py":
-    "46adad992f005ee6b7d928029f3a3db9",
+    "044c8cd6601271bef56d257ff401597c",
   "proc table:src/libGLESv2/gen_proc_table.py":
     "c3e4abfa19077cea098cb19bbfed4471",
   "proc table:src/libGLESv2/proc_table_autogen.cpp":
-    "e82a9970d6059a7c8b562726e3f219a4",
+    "eaedb2059fc6e499760a2b90da0510cf",
   "uniform type:src/common/gen_uniform_type_table.py":
     "a741cc301b1617ab0e4d29b35f1d3b96",
   "uniform type:src/common/uniform_type_info_autogen.cpp":

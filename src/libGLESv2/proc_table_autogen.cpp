@@ -251,6 +251,8 @@ ProcEntry g_procTable[] = {
      P(gl::CompressedTexImage2DRobustANGLEContextANGLE)},
     {"glCompressedTexImage3D", P(gl::CompressedTexImage3D)},
     {"glCompressedTexImage3DContextANGLE", P(gl::CompressedTexImage3DContextANGLE)},
+    {"glCompressedTexImage3DOES", P(gl::CompressedTexImage3DOES)},
+    {"glCompressedTexImage3DOESContextANGLE", P(gl::CompressedTexImage3DOESContextANGLE)},
     {"glCompressedTexImage3DRobustANGLE", P(gl::CompressedTexImage3DRobustANGLE)},
     {"glCompressedTexImage3DRobustANGLEContextANGLE",
      P(gl::CompressedTexImage3DRobustANGLEContextANGLE)},
@@ -261,6 +263,8 @@ ProcEntry g_procTable[] = {
      P(gl::CompressedTexSubImage2DRobustANGLEContextANGLE)},
     {"glCompressedTexSubImage3D", P(gl::CompressedTexSubImage3D)},
     {"glCompressedTexSubImage3DContextANGLE", P(gl::CompressedTexSubImage3DContextANGLE)},
+    {"glCompressedTexSubImage3DOES", P(gl::CompressedTexSubImage3DOES)},
+    {"glCompressedTexSubImage3DOESContextANGLE", P(gl::CompressedTexSubImage3DOESContextANGLE)},
     {"glCompressedTexSubImage3DRobustANGLE", P(gl::CompressedTexSubImage3DRobustANGLE)},
     {"glCompressedTexSubImage3DRobustANGLEContextANGLE",
      P(gl::CompressedTexSubImage3DRobustANGLEContextANGLE)},
@@ -276,6 +280,8 @@ ProcEntry g_procTable[] = {
     {"glCopyTexSubImage2DContextANGLE", P(gl::CopyTexSubImage2DContextANGLE)},
     {"glCopyTexSubImage3D", P(gl::CopyTexSubImage3D)},
     {"glCopyTexSubImage3DContextANGLE", P(gl::CopyTexSubImage3DContextANGLE)},
+    {"glCopyTexSubImage3DOES", P(gl::CopyTexSubImage3DOES)},
+    {"glCopyTexSubImage3DOESContextANGLE", P(gl::CopyTexSubImage3DOESContextANGLE)},
     {"glCopyTexture3DANGLE", P(gl::CopyTexture3DANGLE)},
     {"glCopyTexture3DANGLEContextANGLE", P(gl::CopyTexture3DANGLEContextANGLE)},
     {"glCopyTextureCHROMIUM", P(gl::CopyTextureCHROMIUM)},
@@ -461,6 +467,8 @@ ProcEntry g_procTable[] = {
     {"glFramebufferTexture2DContextANGLE", P(gl::FramebufferTexture2DContextANGLE)},
     {"glFramebufferTexture2DOES", P(gl::FramebufferTexture2DOES)},
     {"glFramebufferTexture2DOESContextANGLE", P(gl::FramebufferTexture2DOESContextANGLE)},
+    {"glFramebufferTexture3DOES", P(gl::FramebufferTexture3DOES)},
+    {"glFramebufferTexture3DOESContextANGLE", P(gl::FramebufferTexture3DOESContextANGLE)},
     {"glFramebufferTextureEXT", P(gl::FramebufferTextureEXT)},
     {"glFramebufferTextureEXTContextANGLE", P(gl::FramebufferTextureEXTContextANGLE)},
     {"glFramebufferTextureLayer", P(gl::FramebufferTextureLayer)},
@@ -1278,6 +1286,8 @@ ProcEntry g_procTable[] = {
     {"glTexImage2DRobustANGLEContextANGLE", P(gl::TexImage2DRobustANGLEContextANGLE)},
     {"glTexImage3D", P(gl::TexImage3D)},
     {"glTexImage3DContextANGLE", P(gl::TexImage3DContextANGLE)},
+    {"glTexImage3DOES", P(gl::TexImage3DOES)},
+    {"glTexImage3DOESContextANGLE", P(gl::TexImage3DOESContextANGLE)},
     {"glTexImage3DRobustANGLE", P(gl::TexImage3DRobustANGLE)},
     {"glTexImage3DRobustANGLEContextANGLE", P(gl::TexImage3DRobustANGLEContextANGLE)},
     {"glTexParameterIivOES", P(gl::TexParameterIivOES)},
@@ -1336,6 +1346,8 @@ ProcEntry g_procTable[] = {
     {"glTexSubImage2DRobustANGLEContextANGLE", P(gl::TexSubImage2DRobustANGLEContextANGLE)},
     {"glTexSubImage3D", P(gl::TexSubImage3D)},
     {"glTexSubImage3DContextANGLE", P(gl::TexSubImage3DContextANGLE)},
+    {"glTexSubImage3DOES", P(gl::TexSubImage3DOES)},
+    {"glTexSubImage3DOESContextANGLE", P(gl::TexSubImage3DOESContextANGLE)},
     {"glTexSubImage3DRobustANGLE", P(gl::TexSubImage3DRobustANGLE)},
     {"glTexSubImage3DRobustANGLEContextANGLE", P(gl::TexSubImage3DRobustANGLEContextANGLE)},
     {"glTransformFeedbackVaryings", P(gl::TransformFeedbackVaryings)},
@@ -1477,5 +1489,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1388;
+size_t g_numProcs = 1400;
 }  // namespace egl

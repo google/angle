@@ -726,6 +726,14 @@ EXPORTS
     ; GL_OES_query_matrix
     glQueryMatrixxOES
 
+    ; GL_OES_texture_3D
+    glCompressedTexImage3DOES
+    glCompressedTexSubImage3DOES
+    glCopyTexSubImage3DOES
+    glFramebufferTexture3DOES
+    glTexImage3DOES
+    glTexSubImage3DOES
+
     ; GL_OES_texture_border_clamp
     glGetSamplerParameterIivOES
     glGetSamplerParameterIuivOES
@@ -826,10 +834,12 @@ EXPORTS
     glCompressedTexImage2DContextANGLE
     glCompressedTexImage2DRobustANGLEContextANGLE
     glCompressedTexImage3DContextANGLE
+    glCompressedTexImage3DOESContextANGLE
     glCompressedTexImage3DRobustANGLEContextANGLE
     glCompressedTexSubImage2DContextANGLE
     glCompressedTexSubImage2DRobustANGLEContextANGLE
     glCompressedTexSubImage3DContextANGLE
+    glCompressedTexSubImage3DOESContextANGLE
     glCompressedTexSubImage3DRobustANGLEContextANGLE
     glCopyBufferSubDataContextANGLE
     glCopySubTexture3DANGLEContextANGLE
@@ -837,6 +847,7 @@ EXPORTS
     glCopyTexImage2DContextANGLE
     glCopyTexSubImage2DContextANGLE
     glCopyTexSubImage3DContextANGLE
+    glCopyTexSubImage3DOESContextANGLE
     glCopyTexture3DANGLEContextANGLE
     glCopyTextureCHROMIUMContextANGLE
     glCoverFillPathCHROMIUMContextANGLE
@@ -928,6 +939,7 @@ EXPORTS
     glFramebufferRenderbufferOESContextANGLE
     glFramebufferTexture2DContextANGLE
     glFramebufferTexture2DOESContextANGLE
+    glFramebufferTexture3DOESContextANGLE
     glFramebufferTextureEXTContextANGLE
     glFramebufferTextureLayerContextANGLE
     glFramebufferTextureMultiviewOVRContextANGLE
@@ -1312,6 +1324,7 @@ EXPORTS
     glTexImage2DExternalANGLEContextANGLE
     glTexImage2DRobustANGLEContextANGLE
     glTexImage3DContextANGLE
+    glTexImage3DOESContextANGLE
     glTexImage3DRobustANGLEContextANGLE
     glTexParameterIivOESContextANGLE
     glTexParameterIivRobustANGLEContextANGLE
@@ -1340,6 +1353,7 @@ EXPORTS
     glTexSubImage2DContextANGLE
     glTexSubImage2DRobustANGLEContextANGLE
     glTexSubImage3DContextANGLE
+    glTexSubImage3DOESContextANGLE
     glTexSubImage3DRobustANGLEContextANGLE
     glTransformFeedbackVaryingsContextANGLE
     glTranslatefContextANGLE

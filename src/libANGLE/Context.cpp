@@ -3807,6 +3807,16 @@ void Context::framebufferTexture2D(GLenum target,
     mState.setObjectDirty(target);
 }
 
+void Context::framebufferTexture3D(GLenum target,
+                                   GLenum attachment,
+                                   TextureTarget textargetPacked,
+                                   GLuint texture,
+                                   GLint level,
+                                   GLint zoffset)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::framebufferRenderbuffer(GLenum target,
                                       GLenum attachment,
                                       GLenum renderbuffertarget,

@@ -4634,6 +4634,191 @@ GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return GetDefaultReturnValue<EntryPoint::QueryMatrixxOES, GLbitfield>();
 }
 
+// GL_OES_texture_3D
+void GL_APIENTRY CompressedTexImage3DOES(GLenum target,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth,
+                                         GLint border,
+                                         GLsizei imageSize,
+                                         const void *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLsizei imageSize = %d, "
+        "const void *data = 0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, depth, border, imageSize, (uintptr_t)data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateCompressedTexImage3DOES(context, targetPacked, level, internalformat, width,
+                                            height, depth, border, imageSize, data))
+        {
+            context->compressedTexImage3D(targetPacked, level, internalformat, width, height, depth,
+                                          border, imageSize, data);
+        }
+    }
+}
+
+void GL_APIENTRY CompressedTexSubImage3DOES(GLenum target,
+                                            GLint level,
+                                            GLint xoffset,
+                                            GLint yoffset,
+                                            GLint zoffset,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLenum format,
+                                            GLsizei imageSize,
+                                            const void *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
+        "= 0x%X, GLsizei imageSize = %d, const void *data = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
+        (uintptr_t)data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateCompressedTexSubImage3DOES(context, targetPacked, level, xoffset, yoffset,
+                                               zoffset, width, height, depth, format, imageSize,
+                                               data))
+        {
+            context->compressedTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width,
+                                             height, depth, format, imageSize, data);
+        }
+    }
+}
+
+void GL_APIENTRY CopyTexSubImage3DOES(GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLint zoffset,
+                                      GLint x,
+                                      GLint y,
+                                      GLsizei width,
+                                      GLsizei height)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
+        target, level, xoffset, yoffset, zoffset, x, y, width, height);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateCopyTexSubImage3DOES(context, targetPacked, level, xoffset, yoffset, zoffset, x,
+                                         y, width, height))
+        {
+            context->copyTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, x, y, width,
+                                       height);
+        }
+    }
+}
+
+void GL_APIENTRY FramebufferTexture3DOES(GLenum target,
+                                         GLenum attachment,
+                                         GLenum textarget,
+                                         GLuint texture,
+                                         GLint level,
+                                         GLint zoffset)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum textarget = 0x%X, GLuint texture "
+        "= %u, GLint level = %d, GLint zoffset = %d)",
+        target, attachment, textarget, texture, level, zoffset);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget textargetPacked = FromGLenum<TextureTarget>(textarget);
+        if (context->skipValidation() ||
+            ValidateFramebufferTexture3DOES(context, target, attachment, textargetPacked, texture,
+                                            level, zoffset))
+        {
+            context->framebufferTexture3D(target, attachment, textargetPacked, texture, level,
+                                          zoffset);
+        }
+    }
+}
+
+void GL_APIENTRY TexImage3DOES(GLenum target,
+                               GLint level,
+                               GLenum internalformat,
+                               GLsizei width,
+                               GLsizei height,
+                               GLsizei depth,
+                               GLint border,
+                               GLenum format,
+                               GLenum type,
+                               const void *pixels)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLenum format = 0x%X, "
+        "GLenum type = 0x%X, const void *pixels = 0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, depth, border, format, type,
+        (uintptr_t)pixels);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateTexImage3DOES(context, targetPacked, level, internalformat, width, height,
+                                  depth, border, format, type, pixels))
+        {
+            context->texImage3D(targetPacked, level, internalformat, width, height, depth, border,
+                                format, type, pixels);
+        }
+    }
+}
+
+void GL_APIENTRY TexSubImage3DOES(GLenum target,
+                                  GLint level,
+                                  GLint xoffset,
+                                  GLint yoffset,
+                                  GLint zoffset,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLsizei depth,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *pixels)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
+        "= 0x%X, GLenum type = 0x%X, const void *pixels = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, zoffset, width, height, depth, format, type,
+        (uintptr_t)pixels);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateTexSubImage3DOES(context, targetPacked, level, xoffset, yoffset, zoffset, width,
+                                     height, depth, format, type, pixels))
+        {
+            context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height,
+                                   depth, format, type, pixels);
+        }
+    }
+}
+
 // GL_OES_texture_border_clamp
 void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *params)
 {
@@ -6139,6 +6324,38 @@ void GL_APIENTRY CompressedTexImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY CompressedTexImage3DOESContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLint level,
+                                                     GLenum internalformat,
+                                                     GLsizei width,
+                                                     GLsizei height,
+                                                     GLsizei depth,
+                                                     GLint border,
+                                                     GLsizei imageSize,
+                                                     const void *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLsizei imageSize = %d, "
+        "const void *data = 0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, depth, border, imageSize, (uintptr_t)data);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateCompressedTexImage3DOES(context, targetPacked, level, internalformat, width,
+                                            height, depth, border, imageSize, data))
+        {
+            context->compressedTexImage3D(targetPacked, level, internalformat, width, height, depth,
+                                          border, imageSize, data);
+        }
+    }
+}
+
 void GL_APIENTRY CompressedTexSubImage2DContextANGLE(GLeglContext ctx,
                                                      GLenum target,
                                                      GLint level,
@@ -6199,6 +6416,42 @@ void GL_APIENTRY CompressedTexSubImage3DContextANGLE(GLeglContext ctx,
         if (context->skipValidation() ||
             ValidateCompressedTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset,
                                             width, height, depth, format, imageSize, data))
+        {
+            context->compressedTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width,
+                                             height, depth, format, imageSize, data);
+        }
+    }
+}
+
+void GL_APIENTRY CompressedTexSubImage3DOESContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLint level,
+                                                        GLint xoffset,
+                                                        GLint yoffset,
+                                                        GLint zoffset,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLenum format,
+                                                        GLsizei imageSize,
+                                                        const void *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
+        "= 0x%X, GLsizei imageSize = %d, const void *data = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
+        (uintptr_t)data);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateCompressedTexSubImage3DOES(context, targetPacked, level, xoffset, yoffset,
+                                               zoffset, width, height, depth, format, imageSize,
+                                               data))
         {
             context->compressedTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width,
                                              height, depth, format, imageSize, data);
@@ -6318,6 +6571,37 @@ void GL_APIENTRY CopyTexSubImage3DContextANGLE(GLeglContext ctx,
         if (context->skipValidation() ||
             ValidateCopyTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, x, y,
                                       width, height))
+        {
+            context->copyTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, x, y, width,
+                                       height);
+        }
+    }
+}
+
+void GL_APIENTRY CopyTexSubImage3DOESContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLint level,
+                                                  GLint xoffset,
+                                                  GLint yoffset,
+                                                  GLint zoffset,
+                                                  GLint x,
+                                                  GLint y,
+                                                  GLsizei width,
+                                                  GLsizei height)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
+        target, level, xoffset, yoffset, zoffset, x, y, width, height);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateCopyTexSubImage3DOES(context, targetPacked, level, xoffset, yoffset, zoffset, x,
+                                         y, width, height))
         {
             context->copyTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, x, y, width,
                                        height);
@@ -7833,6 +8117,34 @@ void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
                                             level))
         {
             context->framebufferTexture2D(target, attachment, textargetPacked, texture, level);
+        }
+    }
+}
+
+void GL_APIENTRY FramebufferTexture3DOESContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLenum attachment,
+                                                     GLenum textarget,
+                                                     GLuint texture,
+                                                     GLint level,
+                                                     GLint zoffset)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum textarget = 0x%X, GLuint texture "
+        "= %u, GLint level = %d, GLint zoffset = %d)",
+        target, attachment, textarget, texture, level, zoffset);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget textargetPacked = FromGLenum<TextureTarget>(textarget);
+        if (context->skipValidation() ||
+            ValidateFramebufferTexture3DOES(context, target, attachment, textargetPacked, texture,
+                                            level, zoffset))
+        {
+            context->framebufferTexture3D(target, attachment, textargetPacked, texture, level,
+                                          zoffset);
         }
     }
 }
@@ -13694,6 +14006,40 @@ void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY TexImage3DOESContextANGLE(GLeglContext ctx,
+                                           GLenum target,
+                                           GLint level,
+                                           GLenum internalformat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           GLint border,
+                                           GLenum format,
+                                           GLenum type,
+                                           const void *pixels)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLenum format = 0x%X, "
+        "GLenum type = 0x%X, const void *pixels = 0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, depth, border, format, type,
+        (uintptr_t)pixels);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateTexImage3DOES(context, targetPacked, level, internalformat, width, height,
+                                  depth, border, format, type, pixels))
+        {
+            context->texImage3D(targetPacked, level, internalformat, width, height, depth, border,
+                                format, type, pixels);
+        }
+    }
+}
+
 void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
                                                 GLenum target,
                                                 GLenum pname,
@@ -14227,6 +14573,41 @@ void GL_APIENTRY TexSubImage3DContextANGLE(GLeglContext ctx,
         if (context->skipValidation() ||
             ValidateTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, width,
                                   height, depth, format, type, pixels))
+        {
+            context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height,
+                                   depth, format, type, pixels);
+        }
+    }
+}
+
+void GL_APIENTRY TexSubImage3DOESContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLint level,
+                                              GLint xoffset,
+                                              GLint yoffset,
+                                              GLint zoffset,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLenum format,
+                                              GLenum type,
+                                              const void *pixels)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint "
+        "zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLenum format "
+        "= 0x%X, GLenum type = 0x%X, const void *pixels = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, zoffset, width, height, depth, format, type,
+        (uintptr_t)pixels);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (context->skipValidation() ||
+            ValidateTexSubImage3DOES(context, targetPacked, level, xoffset, yoffset, zoffset, width,
+                                     height, depth, format, type, pixels))
         {
             context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height,
                                    depth, format, type, pixels);

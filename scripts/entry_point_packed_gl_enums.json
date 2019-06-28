@@ -45,6 +45,9 @@
     "glCompressedTexImage3D": {
         "target": "TextureTarget"
     },
+    "glCompressedTexImage3DOES": {
+        "target": "TextureTarget"
+    },
     "glCompressedTexImage3DRobustANGLE": {
         "target": "TextureTarget"
     },
@@ -55,6 +58,9 @@
         "target": "TextureTarget"
     },
     "glCompressedTexSubImage3D": {
+        "target": "TextureTarget"
+    },
+    "glCompressedTexSubImage3DOES": {
         "target": "TextureTarget"
     },
     "glCompressedTexSubImage3DRobustANGLE": {
@@ -73,6 +79,9 @@
         "target": "TextureTarget"
     },
     "glCopyTexSubImage3D": {
+        "target": "TextureTarget"
+    },
+    "glCopyTexSubImage3DOES": {
         "target": "TextureTarget"
     },
     "glCopySubTexture3DANGLE": {
@@ -158,6 +167,12 @@
         "textarget": "TextureTarget"
     },
     "glFramebufferTexture2DOES": {
+        "textarget": "TextureTarget"
+    },
+    "glFramebufferTexture3D": {
+        "textarget": "TextureTarget"
+    },
+    "glFramebufferTexture3DOES": {
         "textarget": "TextureTarget"
     },
     "glGenerateMipmap": {
@@ -400,6 +415,9 @@
     "glTexImage3D": {
         "target": "TextureTarget"
     },
+    "glTexImage3DOES": {
+        "target": "TextureTarget"
+    },
     "glTexImage3DRobustANGLE": {
         "target": "TextureTarget"
     },
@@ -482,6 +500,9 @@
         "target": "TextureTarget"
     },
     "glTexSubImage3D": {
+        "target": "TextureTarget"
+    },
+    "glTexSubImage3DOES": {
         "target": "TextureTarget"
     },
     "glTexSubImage3DRobustANGLE": {
