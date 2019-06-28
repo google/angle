@@ -410,6 +410,9 @@ TEST_P(VulkanUniformUpdatesTest, TextureStagingBufferRecycling)
 {
     ASSERT_TRUE(IsVulkan());
 
+    // Fails on older MESA drivers.  http://crbug.com/979349
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsLinux());
+
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
     limitTextureStagingBufferSize(tex);
