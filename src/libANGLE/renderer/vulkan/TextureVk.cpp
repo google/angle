@@ -368,12 +368,6 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     // If negative offsets are given, clippedSourceArea ensures we don't read from those offsets.
     // However, that changes the sourceOffset->destOffset mapping.  Here, destOffset is shifted by
     // the same amount as clipped to correct the error.
-    //
-    // TODO(syoussefi): a bug here is that we need to clip the extents to make sure the copy
-    // region does not overflow the image size.  For example, if an FBO of size 16x16 is used as
-    // source and glCopyTexImage2D(..., -8, -8, 16, 16, ...) is used, then we will be copying to
-    // the region expanding from (8, 8) through (23, 23), while the image is only 16x16.
-    // http://anglebug.com/3355
     const gl::Offset modifiedDestOffset(destOffset.x + clippedSourceArea.x - sourceArea.x,
                                         destOffset.y + clippedSourceArea.y - sourceArea.y, 0);
 

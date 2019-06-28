@@ -162,6 +162,10 @@ class CopyTexImageTest : public ANGLETest
         glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 1, 1, 0, 0, kFboSizes[0], kFboSizes[0]);
         ASSERT_GL_ERROR(GL_INVALID_VALUE);
 
+        // xoffset + width > w and yoffset + height > h, out of bounds
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, -1, -1, 1 + kFboSizes[0], 1 + kFboSizes[0]);
+        ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
         // Copy the second fbo over a portion of the image.
         GLint offset = kFboSizes[0] / 2;
         GLint extent = kFboSizes[0] - offset;
