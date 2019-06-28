@@ -321,6 +321,13 @@ GROUP BEGIN TextureESSL100FS {"condition": "shaderType == GL_FRAGMENT_SHADER"}
     vec4 texture2DProjLodEXT(sampler2D, vec3, float);
     vec4 texture2DProjLodEXT(sampler2D, vec4, float);
     vec4 textureCubeLodEXT(samplerCube, vec3, float);
+  DEFAULT METADATA {"level": "ESSL1_BUILTINS", "op": "CallBuiltInFunction", "extension": "OES_texture_3D"}
+    vec4 texture3D(sampler3D, vec3);
+    vec4 texture3D(sampler3D, vec3, float);
+    vec4 texture3DProj(sampler3D, vec4);
+    vec4 texture3DProj(sampler3D, vec4, float);
+    vec4 texture3DLod(sampler3D, vec3, float);
+    vec4 texture3DProjLod(sampler3D, vec4, float);
 GROUP END TextureESSL100FS
 
 GROUP BEGIN TextureESSL100VS {"condition": "shaderType == GL_VERTEX_SHADER"}

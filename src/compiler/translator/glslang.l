@@ -85,6 +85,7 @@ static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
+static int ES2_extension_ES3_keyword_else_reserved(TParseContext *context, TExtension extension, int token);
 static int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token);
 static int ES2_ident_ES3_reserved_ES3_1_extension_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(TParseContext *context, TExtension extension, int token);
@@ -187,7 +188,7 @@ O           [0-7]
 "sampler2D"            { return SAMPLER2D; }
 "samplerCube"          { return SAMPLERCUBE; }
 "samplerExternalOES"   { return SAMPLER_EXTERNAL_OES; }
-"sampler3D"            { return ES2_reserved_ES3_keyword(context, SAMPLER3D); }
+"sampler3D"            { return ES2_extension_ES3_keyword_else_reserved(context, TExtension::OES_texture_3D, SAMPLER3D); }
 "sampler3DRect"        { return ES2_reserved_ES3_keyword(context, SAMPLER3DRECT); }
 "sampler2DRect"        { return SAMPLER2DRECT; }
 "sampler2DArray"       { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAY); }
@@ -547,6 +548,19 @@ int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
     }
 
     return token;
+}
+
+int ES2_extension_ES3_keyword_else_reserved(TParseContext *context, TExtension extension, int token)
+{
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // Available with extension or ES 3.00 and above, reserved otherwise
+    if (context->isExtensionEnabled(extension) || context->getShaderVersion() >= 300)
+    {
+        return token;
+    }
+
+    return reserved_word(yyscanner);
 }
 
 int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token)

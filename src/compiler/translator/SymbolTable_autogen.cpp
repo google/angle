@@ -524,6 +524,12 @@ constexpr const TSymbolUniqueId BuiltInId::texture2DLodEXT_Sampler2D1_Float2_Flo
 constexpr const TSymbolUniqueId BuiltInId::texture2DProjLodEXT_Sampler2D1_Float3_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProjLodEXT_Sampler2D1_Float4_Float1;
 constexpr const TSymbolUniqueId BuiltInId::textureCubeLodEXT_SamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture3D_Sampler3D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture3D_Sampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture3DProj_Sampler3D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::texture3DProj_Sampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture3DLod_Sampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture3DProjLod_Sampler3D1_Float4_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture2DLod_Sampler2D1_Float2_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProjLod_Sampler2D1_Float3_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProjLod_Sampler2D1_Float4_Float1;
@@ -989,7 +995,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionGS;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVRESSL1;
 
-const int TSymbolTable::kLastBuiltInId = 1025;
+const int TSymbolTable::kLastBuiltInId = 1031;
 
 namespace BuiltInName
 {
@@ -1273,6 +1279,12 @@ constexpr const ImmutableString texture2DProjLod_0H2B0B("texture2DProjLod(0H2B0B
 constexpr const ImmutableString texture2DProj_0H2B0B("texture2DProj(0H2B0B");
 constexpr const ImmutableString texture2DRect("texture2DRect");
 constexpr const ImmutableString texture2DRectProj("texture2DRectProj");
+constexpr const ImmutableString texture3D("texture3D");
+constexpr const ImmutableString texture3DLod("texture3DLod");
+constexpr const ImmutableString texture3DProj("texture3DProj");
+constexpr const ImmutableString texture3DProjLod("texture3DProjLod");
+constexpr const ImmutableString texture3DProj_0I3B0B("texture3DProj(0I3B0B");
+constexpr const ImmutableString texture3D_0I2B0B("texture3D(0I2B0B");
 constexpr const ImmutableString textureCube("textureCube");
 constexpr const ImmutableString textureCubeGradEXT("textureCubeGradEXT");
 constexpr const ImmutableString textureCubeGradEXT_0J2B2B2B("textureCubeGradEXT(0J2B2B2B");
@@ -2720,6 +2732,7 @@ constexpr const UnmangledBuiltIn EXT_YUV_target(TExtension::EXT_YUV_target);
 constexpr const UnmangledBuiltIn EXT_geometry_shader(TExtension::EXT_geometry_shader);
 constexpr const UnmangledBuiltIn EXT_shader_texture_lod(TExtension::EXT_shader_texture_lod);
 constexpr const UnmangledBuiltIn OES_standard_derivatives(TExtension::OES_standard_derivatives);
+constexpr const UnmangledBuiltIn OES_texture_3D(TExtension::OES_texture_3D);
 constexpr const UnmangledBuiltIn UNDEFINED(TExtension::UNDEFINED);
 
 }  // namespace UnmangledBuiltIns
@@ -7235,6 +7248,60 @@ constexpr const TFunction kFunction_textureCubeLodEXT_0J2B0B(
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
     false);
+constexpr const TFunction kFunction_texture3D_0I2B(
+    BuiltInId::texture3D_Sampler3D1_Float3,
+    BuiltInName::texture3D,
+    TExtension::OES_texture_3D,
+    BuiltInParameters::p0I2B0B2C,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpCallBuiltInFunction,
+    false);
+constexpr const TFunction kFunction_texture3D_0I2B0B(
+    BuiltInId::texture3D_Sampler3D1_Float3_Float1,
+    BuiltInName::texture3D,
+    TExtension::OES_texture_3D,
+    BuiltInParameters::p0I2B0B2C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpCallBuiltInFunction,
+    false);
+constexpr const TFunction kFunction_texture3DProj_0I3B(
+    BuiltInId::texture3DProj_Sampler3D1_Float4,
+    BuiltInName::texture3DProj,
+    TExtension::OES_texture_3D,
+    BuiltInParameters::p0I3B2C0B,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpCallBuiltInFunction,
+    false);
+constexpr const TFunction kFunction_texture3DProj_0I3B0B(
+    BuiltInId::texture3DProj_Sampler3D1_Float4_Float1,
+    BuiltInName::texture3DProj,
+    TExtension::OES_texture_3D,
+    BuiltInParameters::p0I3B0B2C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpCallBuiltInFunction,
+    false);
+constexpr const TFunction kFunction_texture3DLod_0I2B0B(
+    BuiltInId::texture3DLod_Sampler3D1_Float3_Float1,
+    BuiltInName::texture3DLod,
+    TExtension::OES_texture_3D,
+    BuiltInParameters::p0I2B0B2C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpCallBuiltInFunction,
+    false);
+constexpr const TFunction kFunction_texture3DProjLod_0I3B0B(
+    BuiltInId::texture3DProjLod_Sampler3D1_Float4_Float1,
+    BuiltInName::texture3DProjLod,
+    TExtension::OES_texture_3D,
+    BuiltInParameters::p0I3B0B2C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpCallBuiltInFunction,
+    false);
 constexpr const TFunction kFunction_texture2DLod_0H1B0B(
     BuiltInId::texture2DLod_Sampler2D1_Float2_Float1,
     BuiltInName::texture2DLod,
@@ -7347,7 +7414,7 @@ constexpr const TFunction kFunction_texture_0Y2B(
     BuiltInId::texture_USamplerCube1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
-    BuiltInParameters::p0Y2B0B,
+    BuiltInParameters::p0Y2B2B2B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9624,7 +9691,7 @@ constexpr const TFunction kFunction_textureGather_0Y2B(
     BuiltInId::textureGather_USamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p0Y2B0B,
+    BuiltInParameters::p0Y2B2B2B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -17098,6 +17165,23 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
+                case 0x12764e24u:
+                {
+                    if (name.beginsWith(BuiltInName::texture3D))
+                    {
+                        ASSERT(name.length() == 14);
+                        return &BuiltInFunction::kFunction_texture3D_0I2B;
+                    }
+                    break;
+                }
+                case 0x12810dc6u:
+                {
+                    if (name == BuiltInName::texture3D_0I2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture3D_0I2B0B;
+                    }
+                    break;
+                }
                 case 0x12846ba6u:
                 {
                     if (name.beginsWith(BuiltInName::texture2D))
@@ -17113,6 +17197,24 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     {
                         ASSERT(name.length() == 18);
                         return &BuiltInFunction::kFunction_textureCube_0J2B0B;
+                    }
+                    break;
+                }
+                case 0x189e8416u:
+                {
+                    if (name.beginsWith(BuiltInName::texture3DLod))
+                    {
+                        ASSERT(name.length() == 19);
+                        return &BuiltInFunction::kFunction_texture3DLod_0I2B0B;
+                    }
+                    break;
+                }
+                case 0x1a93312fu:
+                {
+                    if (name.beginsWith(BuiltInName::texture3DProj))
+                    {
+                        ASSERT(name.length() == 18);
+                        return &BuiltInFunction::kFunction_texture3DProj_0I3B;
                     }
                     break;
                 }
@@ -17133,11 +17235,28 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
+                case 0x1aa7eecdu:
+                {
+                    if (name == BuiltInName::texture3DProj_0I3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture3DProj_0I3B0B;
+                    }
+                    break;
+                }
                 case 0x1eb43b6cu:
                 {
                     if (name == BuiltInName::texture2DLodEXT_0H1B0B)
                     {
                         return &BuiltInFunction::kFunction_texture2DLodEXT_0H1B0B;
+                    }
+                    break;
+                }
+                case 0x20b9ceecu:
+                {
+                    if (name.beginsWith(BuiltInName::texture3DProjLod))
+                    {
+                        ASSERT(name.length() == 23);
+                        return &BuiltInFunction::kFunction_texture3DProjLod_0I3B0B;
                     }
                     break;
                 }
@@ -20334,11 +20453,43 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                     }
                     break;
                 }
+                case 0x7e4db1c8u:
+                {
+                    if (name == BuiltInName::texture3D)
+                    {
+                        return &UnmangledBuiltIns::OES_texture_3D;
+                    }
+                    break;
+                }
+                case 0x7e63c1d1u:
+                {
+                    if (name == BuiltInName::texture3DLod)
+                    {
+                        return &UnmangledBuiltIns::OES_texture_3D;
+                    }
+                    break;
+                }
+                case 0x7e687e40u:
+                {
+                    if (name == BuiltInName::texture3DProj)
+                    {
+                        return &UnmangledBuiltIns::OES_texture_3D;
+                    }
+                    break;
+                }
                 case 0x7e7b843eu:
                 {
                     if (name == BuiltInName::texture2DLodEXT)
                     {
                         return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    }
+                    break;
+                }
+                case 0x7e85692eu:
+                {
+                    if (name == BuiltInName::texture3DProjLod)
+                    {
+                        return &UnmangledBuiltIns::OES_texture_3D;
                     }
                     break;
                 }

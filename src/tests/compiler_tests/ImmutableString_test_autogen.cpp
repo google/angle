@@ -518,6 +518,12 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x26d60d82u, ImmutableString("texture2DProjLodEXT(0H2B0B").mangledNameHash());
     ASSERT_EQ(0x26d1d3beu, ImmutableString("texture2DProjLodEXT(0H3B0B").mangledNameHash());
     ASSERT_EQ(0x22c206a5u, ImmutableString("textureCubeLodEXT(0J2B0B").mangledNameHash());
+    ASSERT_EQ(0x12764e24u, ImmutableString("texture3D(0I2B").mangledNameHash());
+    ASSERT_EQ(0x12810dc6u, ImmutableString("texture3D(0I2B0B").mangledNameHash());
+    ASSERT_EQ(0x1a93312fu, ImmutableString("texture3DProj(0I3B").mangledNameHash());
+    ASSERT_EQ(0x1aa7eecdu, ImmutableString("texture3DProj(0I3B0B").mangledNameHash());
+    ASSERT_EQ(0x189e8416u, ImmutableString("texture3DLod(0I2B0B").mangledNameHash());
+    ASSERT_EQ(0x20b9ceecu, ImmutableString("texture3DProjLod(0I3B0B").mangledNameHash());
     ASSERT_EQ(0x18986fc2u, ImmutableString("texture2DLod(0H1B0B").mangledNameHash());
     ASSERT_EQ(0x20bc6337u, ImmutableString("texture2DProjLod(0H2B0B").mangledNameHash());
     ASSERT_EQ(0x20b8a0c3u, ImmutableString("texture2DProjLod(0H3B0B").mangledNameHash());
@@ -976,6 +982,10 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x7e7b843eu, ImmutableString("texture2DLodEXT").mangledNameHash());
     ASSERT_EQ(0x7e9ddba0u, ImmutableString("texture2DProjLodEXT").mangledNameHash());
     ASSERT_EQ(0x7e8b81cau, ImmutableString("textureCubeLodEXT").mangledNameHash());
+    ASSERT_EQ(0x7e4db1c8u, ImmutableString("texture3D").mangledNameHash());
+    ASSERT_EQ(0x7e687e40u, ImmutableString("texture3DProj").mangledNameHash());
+    ASSERT_EQ(0x7e63c1d1u, ImmutableString("texture3DLod").mangledNameHash());
+    ASSERT_EQ(0x7e85692eu, ImmutableString("texture3DProjLod").mangledNameHash());
     ASSERT_EQ(0x7e67c7ceu, ImmutableString("texture2DLod").mangledNameHash());
     ASSERT_EQ(0x7e819b90u, ImmutableString("texture2DProjLod").mangledNameHash());
     ASSERT_EQ(0x7e758eddu, ImmutableString("textureCubeLod").mangledNameHash());

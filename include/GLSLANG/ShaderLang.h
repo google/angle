@@ -331,6 +331,7 @@ struct ShBuiltInResources
     int EXT_YUV_target;
     int EXT_geometry_shader;
     int OES_texture_storage_multisample_2d_array;
+    int OES_texture_3D;
     int ANGLE_texture_multisample;
     int ANGLE_multi_draw;
 

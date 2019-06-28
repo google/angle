@@ -1224,6 +1224,7 @@ static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
+static int ES2_extension_ES3_keyword_else_reserved(TParseContext *context, TExtension extension, int token);
 static int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token);
 static int ES2_ident_ES3_reserved_ES3_1_extension_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_extension_and_ES3_1_keyword_ES3_reserved_else_ident(TParseContext *context, TExtension extension, int token);
@@ -1954,7 +1955,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-{ return ES2_reserved_ES3_keyword(context, SAMPLER3D); }
+{ return ES2_extension_ES3_keyword_else_reserved(context, TExtension::OES_texture_3D, SAMPLER3D); }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
@@ -3912,6 +3913,19 @@ int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
     }
 
     return token;
+}
+
+int ES2_extension_ES3_keyword_else_reserved(TParseContext *context, TExtension extension, int token)
+{
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // Available with extension or ES 3.00 and above, reserved otherwise
+    if (context->isExtensionEnabled(extension) || context->getShaderVersion() >= 300)
+    {
+        return token;
+    }
+
+    return reserved_word(yyscanner);
 }
 
 int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token)
