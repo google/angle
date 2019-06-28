@@ -715,7 +715,7 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
     if (swapIntervalChanged || presentOutOfDate ||
         contextVk->getRenderer()->getFeatures().perFrameWindowSizeQuery.enabled)
     {
-        gl::Extents swapchainExtents(getWidth(), getHeight(), 0);
+        gl::Extents swapchainExtents(getWidth(), getHeight(), 1);
 
         gl::Extents currentExtents;
         ANGLE_TRY(getCurrentWindowSize(contextVk, &currentExtents));

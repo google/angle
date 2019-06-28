@@ -1518,7 +1518,7 @@ bool ValidateCompressedTexImage3D(Context *context,
                                   GLsizei imageSize,
                                   const void *data)
 {
-    if (context->getClientMajorVersion() < 3)
+    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().texture3DOES)
     {
         context->validationError(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -2004,7 +2004,7 @@ bool ValidateCopyTexSubImage3D(Context *context,
                                GLsizei width,
                                GLsizei height)
 {
-    if (context->getClientMajorVersion() < 3)
+    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().texture3DOES)
     {
         context->validationError(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -2177,9 +2177,9 @@ bool ValidateTexImage3D(Context *context,
                         GLenum type,
                         const void *pixels)
 {
-    if (context->getClientMajorVersion() < 3)
+    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().texture3DOES)
     {
-        context->validationError(GL_INVALID_OPERATION, kES3Required);
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
 
@@ -2230,7 +2230,7 @@ bool ValidateTexSubImage3D(Context *context,
                            GLenum type,
                            const void *pixels)
 {
-    if (context->getClientMajorVersion() < 3)
+    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().texture3DOES)
     {
         context->validationError(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -2284,7 +2284,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
                                      GLsizei imageSize,
                                      const void *data)
 {
-    if (context->getClientMajorVersion() < 3)
+    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().texture3DOES)
     {
         context->validationError(GL_INVALID_OPERATION, kES3Required);
         return false;

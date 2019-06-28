@@ -85,6 +85,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.ARB_texture_rectangle           = extensions.textureRectangle;
     mResources.OES_texture_storage_multisample_2d_array =
         extensions.textureStorageMultisample2DArray;
+    mResources.OES_texture_3D            = extensions.texture3DOES;
     mResources.ANGLE_texture_multisample = extensions.textureMultisample;
     mResources.ANGLE_multi_draw          = extensions.multiDraw;
 

@@ -252,6 +252,9 @@ struct Extensions
     // Allows DEPTH_COMPONENT32_OES as a valid Renderbuffer format.
     bool depth32;
 
+    // GL_OES_texture_3D
+    bool texture3DOES;
+
     // GL_EXT_texture_storage
     bool textureStorage;
 

@@ -883,8 +883,8 @@ void GenerateCaps(const FunctionsGL *functions,
     if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
         functions->hasGLExtension("GL_ARB_framebuffer_no_attachments"))
     {
-        caps->maxFramebufferWidth   = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_WIDTH);
-        caps->maxFramebufferHeight  = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_HEIGHT);
+        caps->maxFramebufferWidth  = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_WIDTH);
+        caps->maxFramebufferHeight = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_HEIGHT);
         caps->maxFramebufferSamples =
             std::min(QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_SAMPLES), sampleCountLimit);
     }
@@ -896,7 +896,7 @@ void GenerateCaps(const FunctionsGL *functions,
     if (functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
         functions->hasGLExtension("GL_ARB_texture_multisample"))
     {
-        caps->maxSampleMaskWords     = QuerySingleGLInt(functions, GL_MAX_SAMPLE_MASK_WORDS);
+        caps->maxSampleMaskWords = QuerySingleGLInt(functions, GL_MAX_SAMPLE_MASK_WORDS);
         caps->maxColorTextureSamples =
             std::min(QuerySingleGLInt(functions, GL_MAX_COLOR_TEXTURE_SAMPLES), sampleCountLimit);
         caps->maxDepthTextureSamples =
@@ -1292,7 +1292,7 @@ void GenerateCaps(const FunctionsGL *functions,
     if (functions->isAtLeastGL(gl::Version(3, 1)) ||
         functions->hasGLExtension("GL_ARB_texture_rectangle"))
     {
-        extensions->textureRectangle = true;
+        extensions->textureRectangle  = true;
         caps->maxRectangleTextureSize = std::min(
             QuerySingleGLInt(functions, GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE), textureSizeLimit);
     }
@@ -1412,6 +1412,9 @@ void GenerateCaps(const FunctionsGL *functions,
                                   functions->isAtLeastGL(gl::Version(3, 2));
 
     extensions->textureExternalUpdateANGLE = true;
+    extensions->texture3DOES               = functions->isAtLeastGL(gl::Version(1, 2)) ||
+                               functions->isAtLeastGLES(gl::Version(3, 0)) ||
+                               functions->hasGLESExtension("GL_OES_texture_3D");
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)

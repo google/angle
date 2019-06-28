@@ -502,6 +502,9 @@ bool ValidTextureTarget(const Context *context, TextureType type)
             return context->getExtensions().textureRectangle;
 
         case TextureType::_3D:
+            return ((context->getClientMajorVersion() >= 3) ||
+                    context->getExtensions().texture3DOES);
+
         case TextureType::_2DArray:
             return (context->getClientMajorVersion() >= 3);
 
@@ -5657,7 +5660,8 @@ bool ValidateTexParameterBase(Context *context,
         case GL_TEXTURE_COMPARE_FUNC:
         case GL_TEXTURE_MIN_LOD:
         case GL_TEXTURE_MAX_LOD:
-            if (context->getClientMajorVersion() < 3)
+            if (context->getClientMajorVersion() < 3 &&
+                !(pname == GL_TEXTURE_WRAP_R && context->getExtensions().texture3DOES))
             {
                 context->validationError(GL_INVALID_ENUM, kES3Required);
                 return false;

@@ -67,6 +67,10 @@ TEST_P(TextureParameterTest, InitialState)
 // Negative test: invalid enum / operation
 TEST_P(TextureParameterTest, NegativeEnum)
 {
+    // The texture3d query below appears to be broken on all configs
+    // anglebug.com/3639
+    ANGLE_SKIP_TEST_IF(true);
+
     // Invalid target (not supported)
     glGetTexParameteriv(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);

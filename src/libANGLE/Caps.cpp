@@ -178,6 +178,7 @@ Extensions::Extensions()
       depthTextureOES(false),
       depth24OES(false),
       depth32(false),
+      texture3DOES(false),
       textureStorage(false),
       textureNPOT(false),
       drawBuffers(false),
@@ -876,6 +877,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);
         map["GL_OES_depth24"] = esOnlyExtension(&Extensions::depth24OES);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);
+        map["GL_OES_texture_3D"] = enableableExtension(&Extensions::texture3DOES);
         map["GL_EXT_texture_storage"] = enableableExtension(&Extensions::textureStorage);
         map["GL_OES_texture_npot"] = enableableExtension(&Extensions::textureNPOT);
         map["GL_EXT_draw_buffers"] = enableableExtension(&Extensions::drawBuffers);

@@ -209,13 +209,16 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
 
 VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
 {
-    if (textureType == gl::TextureType::CubeMap)
+    switch (textureType)
     {
-        return VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
-    }
-    else
-    {
-        return 0;
+        case gl::TextureType::CubeMap:
+            return VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+
+        case gl::TextureType::_3D:
+            return VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT;
+
+        default:
+            return 0;
     }
 }
 
@@ -1517,7 +1520,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.format                = format.vkImageFormat;
     imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
     imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
-    imageInfo.extent.depth          = 1;
+    imageInfo.extent.depth          = static_cast<uint32_t>(extents.depth);
     imageInfo.mipLevels             = mipLevels;
     imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(samples);
@@ -1899,7 +1902,6 @@ void ImageHelper::clear(const VkClearValue &value,
 
 gl::Extents ImageHelper::getSize(const gl::ImageIndex &index) const
 {
-    ASSERT(mExtents.depth == 1);
     GLint mipLevel = index.getLevelIndex();
     // Level 0 should be the size of the extents, after that every time you increase a level
     // you shrink the extents by half.
@@ -2065,8 +2067,6 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     ANGLE_VK_CHECK_MATH(contextVk, formatInfo.computeDepthPitch(extents.height, unpack.imageHeight,
                                                                 inputRowPitch, &inputDepthPitch));
 
-    // Note: skip images for 3D Textures.
-    ASSERT(!index.usesTex3D());
     bool applySkipImages = false;
 
     GLuint inputSkipBytes = 0;

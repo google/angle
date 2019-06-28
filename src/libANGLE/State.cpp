@@ -367,11 +367,13 @@ void State::initialize(Context *context)
 
     mSamplerTextures[TextureType::_2D].resize(caps.maxCombinedTextureImageUnits);
     mSamplerTextures[TextureType::CubeMap].resize(caps.maxCombinedTextureImageUnits);
+    if (clientVersion >= Version(3, 0) || nativeExtensions.texture3DOES)
+    {
+        mSamplerTextures[TextureType::_3D].resize(caps.maxCombinedTextureImageUnits);
+    }
     if (clientVersion >= Version(3, 0))
     {
-        // TODO: These could also be enabled via extension
         mSamplerTextures[TextureType::_2DArray].resize(caps.maxCombinedTextureImageUnits);
-        mSamplerTextures[TextureType::_3D].resize(caps.maxCombinedTextureImageUnits);
     }
     if (clientVersion >= Version(3, 1) || nativeExtensions.textureMultisample)
     {

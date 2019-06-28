@@ -42,7 +42,7 @@ angle::Result WindowSurfaceVkXcb::getCurrentWindowSize(vk::Context *context,
     xcb_get_geometry_cookie_t cookie = xcb_get_geometry(mXcbConnection, mNativeWindowType);
     xcb_get_geometry_reply_t *reply  = xcb_get_geometry_reply(mXcbConnection, cookie, nullptr);
     ASSERT(reply);
-    *extentsOut = gl::Extents(reply->width, reply->height, 0);
+    *extentsOut = gl::Extents(reply->width, reply->height, 1);
     free(reply);
     return angle::Result::Continue;
 }
