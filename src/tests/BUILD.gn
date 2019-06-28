@@ -272,6 +272,7 @@ if (is_win || is_linux || is_android || is_mac) {
     }
 
     configs += [
+      "${angle_jsoncpp_dir}:jsoncpp_config",
       "${angle_root}:libANGLE_config",
       "${angle_root}:library_name_config",
     ]
@@ -306,6 +307,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
     ]
 
     configs += [
+      "${angle_jsoncpp_dir}:jsoncpp_config",
       "${angle_root}:libANGLE_config",
       "${angle_root}:library_name_config",
     ]

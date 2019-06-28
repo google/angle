@@ -132,8 +132,8 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
         std::stringstream phaseName;
         phaseName << traceEvent.phase;
 
-        unsigned long long microseconds =
-            static_cast<unsigned long long>(traceEvent.timestamp * 1000.0 * 1000.0);
+        const auto microseconds =
+            static_cast<Json::LargestInt>(traceEvent.timestamp * 1000.0 * 1000.0);
 
         value["name"] = traceEvent.name;
         value["cat"]  = traceEvent.categoryName;
