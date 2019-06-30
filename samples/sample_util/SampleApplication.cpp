@@ -68,7 +68,7 @@ SampleApplication::SampleApplication(std::string name,
         angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ApplicationDir));
 
     mEGLWindow = EGLWindow::New(glesMajorVersion, glesMinorVersion);
-    mOSWindow = OSWindow::New();
+    mOSWindow  = OSWindow::New();
 }
 
 SampleApplication::~SampleApplication()

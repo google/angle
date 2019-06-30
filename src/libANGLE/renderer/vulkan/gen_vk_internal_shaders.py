@@ -386,6 +386,17 @@ class CompileQueue:
             raise Exception(exception)
 
 
+# If the option is just a string, that's the name.  Otherwise, it could be
+# [ name, arg1, ..., argN ].  In that case, name is option[0] and option[1:] are extra arguments
+# that need to be passed to glslang_validator for this variation.
+def get_variation_name(option):
+    return option if isinstance(option, unicode) else option[0]
+
+
+def get_variation_args(option):
+    return [] if isinstance(option, unicode) else option[1:]
+
+
 def compile_variation(glslang_path, compile_queue, shader_file, shader_basename, flags, enums,
                       flags_active, enum_indices, flags_bits, enum_bits, output_shaders):
 
@@ -398,9 +409,12 @@ def compile_variation(glslang_path, compile_queue, shader_file, shader_basename,
     # takes up as few bits as needed to count that many enum values.
     variation_bits = 0
     variation_string = ''
+    variation_extra_args = []
     for f in range(len(flags)):
         if flags_active & (1 << f):
-            flag_name = flags[f]
+            flag = flags[f]
+            flag_name = get_variation_name(flag)
+            variation_extra_args += get_variation_args(flag)
             glslang_args.append('-D' + flag_name + '=1')
 
             variation_bits |= 1 << f
@@ -409,7 +423,9 @@ def compile_variation(glslang_path, compile_queue, shader_file, shader_basename,
     current_bit_start = flags_bits
 
     for e in range(len(enums)):
-        enum_name = enums[e][1][enum_indices[e]]
+        enum = enums[e][1][enum_indices[e]]
+        enum_name = get_variation_name(enum)
+        variation_extra_args += get_variation_args(enum)
         glslang_args.append('-D' + enum_name + '=1')
 
         variation_bits |= enum_indices[e] << current_bit_start
@@ -423,6 +439,8 @@ def compile_variation(glslang_path, compile_queue, shader_file, shader_basename,
     if glslang_path is not None:
         glslang_preprocessor_output_args = glslang_args + ['-E']
         glslang_preprocessor_output_args.append(shader_file)  # Input GLSL shader
+
+        glslang_args += variation_extra_args
 
         glslang_args += ['-V']  # Output mode is Vulkan
         glslang_args += ['--variable-name', get_var_name(output_name)]  # C-style variable name
@@ -463,7 +481,9 @@ def get_variation_definition(shader_and_variation):
     definition = 'namespace %s\n{\n' % namespace_name
     if len(flags) > 0:
         definition += 'enum flags\n{\n'
-        definition += ''.join(['k%s = 0x%08X,\n' % (flags[f], 1 << f) for f in range(len(flags))])
+        definition += ''.join([
+            'k%s = 0x%08X,\n' % (get_variation_name(flags[f]), 1 << f) for f in range(len(flags))
+        ])
         definition += '};\n'
 
     current_bit_start = flags_bits
@@ -473,7 +493,8 @@ def get_variation_definition(shader_and_variation):
         enum_name = enum[0]
         definition += 'enum %s\n{\n' % enum_name
         definition += ''.join([
-            'k%s = 0x%08X,\n' % (enum[1][v], v << current_bit_start) for v in range(len(enum[1]))
+            'k%s = 0x%08X,\n' % (get_variation_name(enum[1][v]), v << current_bit_start)
+            for v in range(len(enum[1]))
         ])
         definition += '};\n'
         current_bit_start += enum_bits[e]

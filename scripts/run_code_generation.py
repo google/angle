@@ -105,6 +105,10 @@ generators = {
         'src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py',
     'Vulkan internal shader programs':
         'src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py',
+    'overlay fonts':
+        'src/libANGLE/gen_overlay_fonts.py',
+    'overlay widgets':
+        'src/libANGLE/gen_overlay_widgets.py',
     'Emulated HLSL functions':
         'src/compiler/translator/gen_emulated_builtin_function_tables.py',
     'Static builtins':

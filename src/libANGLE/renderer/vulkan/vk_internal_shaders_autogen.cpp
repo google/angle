@@ -127,6 +127,14 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000013.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000014.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000015.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000001.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000002.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000003.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000004.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000005.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000001.inc"
 
 // This is SPIR-V binary blob and the size.
 struct ShaderBlob
@@ -266,6 +274,18 @@ constexpr ShaderBlob kImageCopy_frag_shaders[] = {
     {kImageCopy_frag_00000014, sizeof(kImageCopy_frag_00000014)},
     {kImageCopy_frag_00000015, sizeof(kImageCopy_frag_00000015)},
 };
+constexpr ShaderBlob kOverlayCull_comp_shaders[] = {
+    {kOverlayCull_comp_00000000, sizeof(kOverlayCull_comp_00000000)},
+    {kOverlayCull_comp_00000001, sizeof(kOverlayCull_comp_00000001)},
+    {kOverlayCull_comp_00000002, sizeof(kOverlayCull_comp_00000002)},
+    {kOverlayCull_comp_00000003, sizeof(kOverlayCull_comp_00000003)},
+    {kOverlayCull_comp_00000004, sizeof(kOverlayCull_comp_00000004)},
+    {kOverlayCull_comp_00000005, sizeof(kOverlayCull_comp_00000005)},
+};
+constexpr ShaderBlob kOverlayDraw_comp_shaders[] = {
+    {kOverlayDraw_comp_00000000, sizeof(kOverlayDraw_comp_00000000)},
+    {kOverlayDraw_comp_00000001, sizeof(kOverlayDraw_comp_00000001)},
+};
 
 angle::Result GetShader(Context *context,
                         RefCounted<ShaderAndSerial> *shaders,
@@ -326,6 +346,14 @@ void ShaderLibrary::destroy(VkDevice device)
         shader.get().destroy(device);
     }
     for (RefCounted<ShaderAndSerial> &shader : mImageCopy_frag_shaders)
+    {
+        shader.get().destroy(device);
+    }
+    for (RefCounted<ShaderAndSerial> &shader : mOverlayCull_comp_shaders)
+    {
+        shader.get().destroy(device);
+    }
+    for (RefCounted<ShaderAndSerial> &shader : mOverlayDraw_comp_shaders)
     {
         shader.get().destroy(device);
     }
@@ -395,6 +423,22 @@ angle::Result ShaderLibrary::getImageCopy_frag(Context *context,
 {
     return GetShader(context, mImageCopy_frag_shaders, kImageCopy_frag_shaders,
                      ArraySize(kImageCopy_frag_shaders), shaderFlags, shaderOut);
+}
+
+angle::Result ShaderLibrary::getOverlayCull_comp(Context *context,
+                                                 uint32_t shaderFlags,
+                                                 RefCounted<ShaderAndSerial> **shaderOut)
+{
+    return GetShader(context, mOverlayCull_comp_shaders, kOverlayCull_comp_shaders,
+                     ArraySize(kOverlayCull_comp_shaders), shaderFlags, shaderOut);
+}
+
+angle::Result ShaderLibrary::getOverlayDraw_comp(Context *context,
+                                                 uint32_t shaderFlags,
+                                                 RefCounted<ShaderAndSerial> **shaderOut)
+{
+    return GetShader(context, mOverlayDraw_comp_shaders, kOverlayDraw_comp_shaders,
+                     ArraySize(kOverlayDraw_comp_shaders), shaderFlags, shaderOut);
 }
 
 }  // namespace vk

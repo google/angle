@@ -24,6 +24,7 @@
 #include "libANGLE/renderer/vulkan/FenceNVVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/MemoryObjectVk.h"
+#include "libANGLE/renderer/vulkan/OverlayVk.h"
 #include "libANGLE/renderer/vulkan/ProgramPipelineVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
@@ -2128,6 +2129,11 @@ MemoryObjectImpl *ContextVk::createMemoryObject()
 SemaphoreImpl *ContextVk::createSemaphore()
 {
     return new SemaphoreVk();
+}
+
+OverlayImpl *ContextVk::createOverlay(const gl::OverlayState &state)
+{
+    return new OverlayVk(state);
 }
 
 void ContextVk::invalidateCurrentTextures()

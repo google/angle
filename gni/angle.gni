@@ -88,6 +88,9 @@ declare_args() {
     # Enable custom (cpu-side) secondary command buffers
     angle_enable_custom_vulkan_cmd_buffers = true
   }
+
+  # Disable overlay by default
+  angle_enable_overlay = false
 }
 
 if (is_win) {

@@ -1412,7 +1412,7 @@ void BufferHelper::unmap(VkDevice device)
     }
 }
 
-angle::Result BufferHelper::flush(ContextVk *contextVk, size_t offset, size_t size)
+angle::Result BufferHelper::flush(ContextVk *contextVk, VkDeviceSize offset, VkDeviceSize size)
 {
     bool hostVisible  = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     bool hostCoherent = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -1428,7 +1428,7 @@ angle::Result BufferHelper::flush(ContextVk *contextVk, size_t offset, size_t si
     return angle::Result::Continue;
 }
 
-angle::Result BufferHelper::invalidate(ContextVk *contextVk, size_t offset, size_t size)
+angle::Result BufferHelper::invalidate(ContextVk *contextVk, VkDeviceSize offset, VkDeviceSize size)
 {
     bool hostVisible  = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     bool hostCoherent = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -2401,11 +2401,11 @@ void ImageHelper::stageSubresourceUpdateFromImage(vk::ImageHelper *image,
                                                   const gl::Extents &glExtents,
                                                   const VkImageType imageType)
 {
-    VkImageCopy copyToImage                   = {};
-    copyToImage.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    copyToImage.srcSubresource.layerCount     = index.getLayerCount();
-    copyToImage.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    copyToImage.dstSubresource.mipLevel       = index.getLevelIndex();
+    VkImageCopy copyToImage               = {};
+    copyToImage.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyToImage.srcSubresource.layerCount = index.getLayerCount();
+    copyToImage.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyToImage.dstSubresource.mipLevel   = index.getLevelIndex();
 
     if (imageType == VK_IMAGE_TYPE_3D)
     {

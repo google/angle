@@ -236,6 +236,7 @@ const angle::PackedEnumMap<BufferBinding, State::BufferBindingSetter> State::kBu
 State::State(ContextID contextIn,
              const State *shareContextState,
              TextureManager *shareTextures,
+             const OverlayType *overlay,
              const EGLenum clientType,
              const Version &clientVersion,
              bool debug,
@@ -299,7 +300,8 @@ State::State(ContextID contextIn,
       mFramebufferSRGB(true),
       mRobustResourceInit(robustResourceInit),
       mProgramBinaryCacheEnabled(programBinaryCacheEnabled),
-      mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max())
+      mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
+      mOverlay(overlay)
 {}
 
 State::~State() {}

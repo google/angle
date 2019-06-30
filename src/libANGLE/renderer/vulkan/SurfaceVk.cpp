@@ -12,10 +12,12 @@
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/Overlay.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/OverlayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/trace.h"
@@ -719,7 +721,15 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     VkFormat nativeFormat    = format.vkImageFormat;
 
     // We need transfer src for reading back from the backbuffer.
-    constexpr VkImageUsageFlags kImageUsageFlags = kSurfaceVKColorImageUsageFlags;
+    VkImageUsageFlags imageUsageFlags = kSurfaceVKColorImageUsageFlags;
+
+    // We need storage image for compute writes (debug overlay output).
+    VkFormatFeatureFlags featureBits =
+        renderer->getImageFormatFeatureBits(nativeFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+    if ((featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) != 0)
+    {
+        imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
+    }
 
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -732,7 +742,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     swapchainInfo.imageExtent.width     = std::max(extents.width, 1);
     swapchainInfo.imageExtent.height    = std::max(extents.height, 1);
     swapchainInfo.imageArrayLayers      = 1;
-    swapchainInfo.imageUsage            = kImageUsageFlags;
+    swapchainInfo.imageUsage            = imageUsageFlags;
     swapchainInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
     swapchainInfo.queueFamilyIndexCount = 0;
     swapchainInfo.pQueueFamilyIndices   = nullptr;
@@ -1032,7 +1042,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    vk::CommandBuffer *swapCommands = nullptr;
     if (mColorImageMS.valid())
     {
         // Transition the multisampled image to TRANSFER_SRC for resolve.
@@ -1055,14 +1064,17 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         resolveRegion.dstOffset                     = {};
         resolveRegion.extent                        = image.image.getExtents();
 
-        ANGLE_TRY(image.image.recordCommands(contextVk, &swapCommands));
-        mColorImageMS.resolve(&image.image, resolveRegion, swapCommands);
+        vk::CommandBuffer *resolveCommands = nullptr;
+        ANGLE_TRY(image.image.recordCommands(contextVk, &resolveCommands));
+        mColorImageMS.resolve(&image.image, resolveRegion, resolveCommands);
     }
-    else
-    {
-        ANGLE_TRY(image.image.recordCommands(contextVk, &swapCommands));
-    }
-    image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, swapCommands);
+
+    ANGLE_TRY(updateAndDrawOverlay(contextVk, &image));
+
+    vk::CommandBuffer *transitionCommands = nullptr;
+    ANGLE_TRY(image.image.recordCommands(contextVk, &transitionCommands));
+    image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
+                             transitionCommands);
 
     // Knowing that the kSwapHistorySize'th submission ago has finished, we can know that the
     // (kSwapHistorySize+1)'th present ago of this image is definitely finished and so its wait
@@ -1404,6 +1416,39 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
             gl::ImageIndex::Make2D(0), mDepthStencilImage.getFormat().angleFormat());
         ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
     }
+
+    return angle::Result::Continue;
+}
+
+angle::Result WindowSurfaceVk::updateAndDrawOverlay(ContextVk *contextVk,
+                                                    SwapchainImage *image) const
+{
+    const gl::OverlayType *overlay = contextVk->getOverlay();
+    OverlayVk *overlayVk           = vk::GetImpl(overlay);
+
+    // If overlay is disabled, nothing to do.
+    if (overlayVk == nullptr)
+    {
+        return angle::Result::Continue;
+    }
+
+    RendererVk *rendererVk = contextVk->getRenderer();
+
+    uint32_t validationMessageCount = 0;
+    std::string lastValidationMessage =
+        rendererVk->getAndClearLastValidationMessage(&validationMessageCount);
+    if (validationMessageCount)
+    {
+        overlay->getTextWidget(gl::WidgetId::VulkanLastValidationMessage)
+            ->set(std::move(lastValidationMessage));
+        overlay->getCountWidget(gl::WidgetId::VulkanValidationMessageCount)
+            ->add(validationMessageCount);
+    }
+
+    // Draw overlay
+    ANGLE_TRY(overlayVk->onPresent(contextVk, &image->image, &image->imageView));
+
+    overlay->getRunningGraphWidget(gl::WidgetId::VulkanCommandGraphSize)->next();
 
     return angle::Result::Continue;
 }
