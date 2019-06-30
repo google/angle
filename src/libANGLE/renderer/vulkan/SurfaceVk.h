@@ -244,6 +244,8 @@ class WindowSurfaceVk : public SurfaceVk
                           EGLint n_rects,
                           bool *presentOutOfDate);
 
+    angle::Result updateAndDrawOverlay(ContextVk *contextVk, impl::SwapchainImage *image) const;
+
     angle::Result swapImpl(const gl::Context *context, EGLint *rects, EGLint n_rects);
 
     angle::Result newPresentSemaphore(vk::Context *context, vk::Semaphore *semaphoreOut);

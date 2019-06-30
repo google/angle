@@ -70,6 +70,9 @@ class Context9 : public ContextD3D
     // Semaphore creation.
     SemaphoreImpl *createSemaphore() override;
 
+    // Overlay creation.
+    OverlayImpl *createOverlay(const gl::OverlayState &state) override;
+
     // Flush and finish.
     angle::Result flush(const gl::Context *context) override;
     angle::Result finish(const gl::Context *context) override;

@@ -218,6 +218,9 @@ class ContextNULL : public ContextImpl
     // Semaphore creation.
     SemaphoreImpl *createSemaphore() override;
 
+    // Overlay creation.
+    OverlayImpl *createOverlay(const gl::OverlayState &state) override;
+
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
                                   GLuint numGroupsY,

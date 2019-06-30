@@ -120,4 +120,12 @@ angle_vulkan_internal_shaders = [
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000013.inc",
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000014.inc",
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000015.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000000.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000001.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000002.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000003.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000004.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000005.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000000.inc",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000001.inc",
 ]

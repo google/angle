@@ -19,6 +19,7 @@
 //      on color images.
 //    - Depth/Stencil blit/resolve: Used by FramebufferVk::blit() to implement blit or multisample
 //      resolve on depth/stencil images.
+//    - Overlay Cull/Draw: Used by OverlayVk to efficiently draw a UI for debugging.
 //    - Mipmap generation: Not yet implemented
 //
 
@@ -117,6 +118,18 @@ class UtilsVk : angle::NonCopyable
         bool destFlipY;
     };
 
+    struct OverlayCullParameters
+    {
+        uint32_t subgroupSize[2];
+        bool supportsSubgroupBallot;
+        bool supportsSubgroupArithmetic;
+    };
+
+    struct OverlayDrawParameters
+    {
+        uint32_t subgroupSize[2];
+    };
+
     angle::Result clearBuffer(ContextVk *contextVk,
                               vk::BufferHelper *dest,
                               const ClearParameters &params);
@@ -157,6 +170,24 @@ class UtilsVk : angle::NonCopyable
                             vk::ImageHelper *src,
                             const vk::ImageView *srcView,
                             const CopyImageParameters &params);
+
+    // Overlay utilities.
+    angle::Result cullOverlayWidgets(ContextVk *contextVk,
+                                     vk::BufferHelper *enabledWidgetsBuffer,
+                                     vk::ImageHelper *dest,
+                                     const vk::ImageView *destView,
+                                     const OverlayCullParameters &params);
+
+    angle::Result drawOverlay(ContextVk *contextVk,
+                              vk::BufferHelper *textWidgetsBuffer,
+                              vk::BufferHelper *graphWidgetsBuffer,
+                              vk::ImageHelper *font,
+                              const vk::ImageView *fontView,
+                              vk::ImageHelper *culledWidgets,
+                              const vk::ImageView *culledWidgetsView,
+                              vk::ImageHelper *dest,
+                              const vk::ImageView *destView,
+                              const OverlayDrawParameters &params);
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
@@ -255,6 +286,12 @@ class UtilsVk : angle::NonCopyable
         uint32_t flipY           = 0;
     };
 
+    struct OverlayDrawShaderParams
+    {
+        // Structure matching PushConstants in OverlayDraw.comp
+        uint32_t outputSize[2] = {};
+    };
+
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
     // Functions implemented by the class:
@@ -271,9 +308,11 @@ class UtilsVk : angle::NonCopyable
         ConvertIndexBuffer         = 4,
         ConvertVertexBuffer        = 5,
         BlitResolveStencilNoExport = 6,
+        OverlayCull                = 7,
+        OverlayDraw                = 8,
 
-        InvalidEnum = 7,
-        EnumCount   = 7,
+        InvalidEnum = 9,
+        EnumCount   = 9,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -312,8 +351,10 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureOverlayCullResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureOverlayDrawResourcesInitialized(ContextVk *contextVk);
 
-    angle::Result ensureBlitResolveSamplersInitialized(ContextVk *context);
+    angle::Result ensureSamplersInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
                                   vk::ImageHelper *image,
@@ -351,6 +392,8 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kArrayLen];
     vk::ShaderProgramHelper mBlitResolveStencilNoExportPrograms
         [vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];
+    vk::ShaderProgramHelper mOverlayCullPrograms[vk::InternalShader::OverlayCull_comp::kArrayLen];
+    vk::ShaderProgramHelper mOverlayDrawPrograms[vk::InternalShader::OverlayDraw_comp::kArrayLen];
 
     vk::Sampler mPointSampler;
     vk::Sampler mLinearSampler;

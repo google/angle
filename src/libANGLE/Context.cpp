@@ -315,6 +315,7 @@ Context::Context(egl::Display *display,
     : mState(reinterpret_cast<ContextID>(this),
              shareContext ? &shareContext->mState : nullptr,
              shareTextures,
+             &mOverlay,
              clientType,
              GetClientVersion(display, attribs),
              GetDebug(attribs),
@@ -352,7 +353,8 @@ Context::Context(egl::Display *display,
       mScratchBuffer(1000u),
       mZeroFilledBuffer(1000u),
       mThreadPool(nullptr),
-      mFrameCapture(new angle::FrameCapture)
+      mFrameCapture(new angle::FrameCapture),
+      mOverlay(mImplementation.get())
 {
     for (angle::SubjectIndex uboIndex = kUniformBuffer0SubjectIndex;
          uboIndex < kUniformBufferMaxSubjectIndex; ++uboIndex)
@@ -539,6 +541,9 @@ void Context::initialize()
     mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
     ANGLE_CONTEXT_TRY(mImplementation->initialize());
+
+    // Initialize overlay after implementation is initialized.
+    ANGLE_CONTEXT_TRY(mOverlay.init(this));
 }
 
 egl::Error Context::onDestroy(const egl::Display *display)
@@ -610,6 +615,8 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mThreadPool.reset();
 
     mImplementation->onDestroy(this);
+
+    mOverlay.destroy(this);
 
     return egl::NoError();
 }

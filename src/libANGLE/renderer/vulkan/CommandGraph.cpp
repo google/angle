@@ -11,6 +11,7 @@
 
 #include <iostream>
 
+#include "libANGLE/Overlay.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -215,6 +216,24 @@ ANGLE_MAYBE_UNUSED
 std::string DumpCommands(const priv::CommandBuffer &commandBuffer, const char *separator)
 {
     return "--blob--";
+}
+
+float CalculateSecondaryCommandBufferPoolWaste(const std::vector<CommandGraphNode *> nodes)
+{
+    size_t used      = 0;
+    size_t allocated = 0;
+
+    for (const CommandGraphNode *node : nodes)
+    {
+        size_t nodeUsed;
+        size_t nodeAllocated;
+        node->getMemoryUsageStatsForDiagnostics(&nodeUsed, &nodeAllocated);
+        used += nodeUsed;
+        allocated += nodeAllocated;
+    }
+
+    allocated = std::max<size_t>(allocated, 1);
+    return static_cast<float>(used) / static_cast<float>(allocated);
 }
 
 }  // anonymous namespace
@@ -790,6 +809,19 @@ std::string CommandGraphNode::dumpCommandsForDiagnostics(const char *separator) 
     return result;
 }
 
+void CommandGraphNode::getMemoryUsageStatsForDiagnostics(size_t *usedMemoryOut,
+                                                         size_t *allocatedMemoryOut) const
+{
+    size_t commandBufferUsed;
+    size_t commandBufferAllocated;
+
+    mOutsideRenderPassCommands.getMemoryUsageStats(usedMemoryOut, allocatedMemoryOut);
+    mInsideRenderPassCommands.getMemoryUsageStats(&commandBufferUsed, &commandBufferAllocated);
+
+    *usedMemoryOut += commandBufferUsed;
+    *allocatedMemoryOut += commandBufferAllocated;
+}
+
 // CommandGraph implementation.
 CommandGraph::CommandGraph(bool enableGraphDiagnostics, angle::PoolAllocator *poolAllocator)
     : mEnableGraphDiagnostics(enableGraphDiagnostics),
@@ -851,6 +883,8 @@ angle::Result CommandGraph::submitCommands(ContextVk *context,
     // There is no point in submitting an empty command buffer, so make sure not to call this
     // function if there's nothing to do.
     ASSERT(!mNodes.empty());
+
+    updateOverlay(context);
 
     size_t previousBarrierIndex       = 0;
     CommandGraphNode *previousBarrier = getLastBarrierNode(&previousBarrierIndex);
@@ -1158,6 +1192,17 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
     }
 
     out << "}" << std::endl;
+}
+
+void CommandGraph::updateOverlay(ContextVk *contextVk) const
+{
+    const gl::OverlayType *overlay = contextVk->getOverlay();
+
+    overlay->getRunningGraphWidget(gl::WidgetId::VulkanCommandGraphSize)->add(mNodes.size());
+
+    overlay->getRunningHistogramWidget(gl::WidgetId::VulkanSecondaryCommandBufferPoolWaste)
+        ->set(CalculateSecondaryCommandBufferPoolWaste(mNodes));
+    overlay->getRunningHistogramWidget(gl::WidgetId::VulkanSecondaryCommandBufferPoolWaste)->next();
 }
 
 CommandGraphNode *CommandGraph::getLastBarrierNode(size_t *indexOut)
