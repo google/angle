@@ -1110,10 +1110,10 @@ void Display::notifyDeviceLost()
     mDeviceLost = true;
 }
 
-egl::Error Display::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get)
+void Display::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get)
 {
     mBlobCache.setBlobCacheFuncs(set, get);
-    return mImplementation->setBlobCacheFuncs(set, get);
+    mImplementation->setBlobCacheFuncs(set, get);
 }
 
 Error Display::waitClient(const gl::Context *context)

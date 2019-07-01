@@ -1110,10 +1110,8 @@ ANGLE_EXPORT void EGLAPIENTRY EGL_SetBlobCacheFuncsANDROID(EGLDisplay dpy,
     ANGLE_EGL_TRY(thread, ValidateSetBlobCacheANDROID(display, set, get),
                   "eglSetBlobCacheFuncsANDROID", GetDisplayIfValid(display));
 
-    ANGLE_EGL_TRY(thread, display->setBlobCacheFuncs(set, get), "eglSetBlobCacheFuncsANDROID",
-                  GetDisplayIfValid(display));
-
     thread->setSuccess();
+    display->setBlobCacheFuncs(set, get);
 }
 
 EGLint EGLAPIENTRY EGL_ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib)
