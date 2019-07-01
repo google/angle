@@ -117,7 +117,6 @@
 3467 D3D11 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
 // Windows and Linux failures
-1095 WIN : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
 1095 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
 
 // Windows only failure
@@ -560,7 +559,6 @@
 
 //  New or broken formats in ES 3.0:
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.rgb9* = FAIL
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth_component32* = FAIL
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth_component24* = SKIP
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth_component16* = SKIP
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth24* = SKIP
@@ -612,14 +610,6 @@
 3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texelfetch.* = SKIP
 3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texelfetchoffset.* = SKIP
 3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = SKIP
-
-// ASTC support:
-// HDR not officially supported by Vulkan (see also the discussion in 1185):
-3197 VULKAN : dEQP-GLES3.functional.texture.compressed.*hdr* = FAIL
-// Failures on non-sRGB tests only:
-3594 VULKAN : dEQP-GLES3.functional.texture.compressed.astc.void_extent_ldr.* = FAIL
-3594 VULKAN : dEQP-GLES3.functional.texture.compressed.astc.color_endpoint_modes.* = FAIL
-3594 VULKAN : dEQP-GLES3.functional.texture.compressed.astc.random.* = FAIL
 
 // Formats:
 2950 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.*.color0.rgba32f = FAIL
