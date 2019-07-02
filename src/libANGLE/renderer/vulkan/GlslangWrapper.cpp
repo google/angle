@@ -40,8 +40,8 @@ constexpr char kLayoutMarkerBegin[]    = "@@ LAYOUT-";
 constexpr char kXfbDeclMarkerBegin[]   = "@@ XFB-DECL";
 constexpr char kXfbOutMarkerBegin[]    = "@@ XFB-OUT";
 constexpr char kMarkerEnd[]            = " @@";
-constexpr char kLayoutParamsBegin      = '(';
-constexpr char kLayoutParamsEnd        = ')';
+constexpr char kParamsBegin            = '(';
+constexpr char kParamsEnd              = ')';
 constexpr char kUniformQualifier[]     = "uniform";
 constexpr char kVersionDefine[]        = "#version 450 core\n";
 constexpr char kLineRasterDefine[]     = R"(#version 450 core
@@ -101,13 +101,18 @@ class IntermediateShaderSource final : angle::NonCopyable
     //
     //     layout(specifier, extra, args)
     //
-    // or if specifier is empty,
+    // or if |specifier| is empty:
     //
     //     layout(extra, args)
     //
     void insertLayoutSpecifier(const std::string &name, const std::string &specifier);
 
-    // Find @@ QUALIFIER-name @@ and replace it with |specifier|.
+    // Find @@ QUALIFIER-name(other qualifiers) @@ and replace it with:
+    //
+    //      specifier other qualifiers
+    //
+    // or if |specifier| is empty, with nothing.
+    //
     void insertQualifierSpecifier(const std::string &name, const std::string &specifier);
 
     // Replace @@ XFB-DECL @@ with |decl|.
@@ -116,7 +121,7 @@ class IntermediateShaderSource final : angle::NonCopyable
     // Replace @@ XFB-OUT @@ with |output| code block.
     void insertTransformFeedbackOutput(const std::string &&output);
 
-    // Remove @@ LAYOUT-name(*) @@ and @@ QUALIFIER-name @@ altogether, optionally replacing them
+    // Remove @@ LAYOUT-name(*) @@ and @@ QUALIFIER-name(*) @@ altogether, optionally replacing them
     // with something to make sure the shader still compiles.
     void eraseLayoutAndQualifierSpecifiers(const std::string &name, const std::string &replacement);
 
@@ -128,7 +133,7 @@ class IntermediateShaderSource final : angle::NonCopyable
     {
         // A piece of shader source code.
         Text,
-        // Block corresponding to @@ QUALIFIER-abc @@
+        // Block corresponding to @@ QUALIFIER-abc(other qualifiers) @@
         Qualifier,
         // Block corresponding to @@ LAYOUT-abc(extra, args) @@
         Layout,
@@ -144,13 +149,13 @@ class IntermediateShaderSource final : angle::NonCopyable
         // |text| contains some shader code if Text, or the id of macro ("abc" in examples above)
         // being replaced if Qualifier or Layout.
         std::string text;
-        // If Layout, this contains extra parameters passed in parentheses, if any.
+        // If Qualifier or Layout, this contains extra parameters passed in parentheses, if any.
         std::string args;
     };
 
     void addTextBlock(std::string &&text);
     void addLayoutBlock(std::string &&name, std::string &&args);
-    void addQualifierBlock(std::string &&name);
+    void addQualifierBlock(std::string &&name, std::string &&args);
     void addTransformFeedbackDeclarationBlock();
     void addTransformFeedbackOutputBlock();
 
@@ -175,10 +180,10 @@ void IntermediateShaderSource::addLayoutBlock(std::string &&name, std::string &&
     mTokens.emplace_back(std::move(token));
 }
 
-void IntermediateShaderSource::addQualifierBlock(std::string &&name)
+void IntermediateShaderSource::addQualifierBlock(std::string &&name, std::string &&args)
 {
     ASSERT(!name.empty());
-    Token token = {TokenType::Qualifier, std::move(name), ""};
+    Token token = {TokenType::Qualifier, std::move(name), std::move(args)};
     mTokens.emplace_back(std::move(token));
 }
 
@@ -192,6 +197,21 @@ void IntermediateShaderSource::addTransformFeedbackOutputBlock()
 {
     Token token = {TokenType::TransformFeedbackOutput, "", ""};
     mTokens.emplace_back(std::move(token));
+}
+
+size_t ExtractNameAndArgs(const std::string &source,
+                          size_t cur,
+                          std::string *nameOut,
+                          std::string *argsOut)
+{
+    *nameOut = angle::GetPrefix(source, cur, kParamsBegin);
+
+    // There should always be an extra args list (even if empty, for simplicity).
+    size_t readCount = nameOut->length() + 1;
+    *argsOut         = angle::GetPrefix(source, cur + readCount, kParamsEnd);
+    readCount += argsOut->length() + 1;
+
+    return readCount;
 }
 
 IntermediateShaderSource::IntermediateShaderSource(const std::string &source)
@@ -216,21 +236,18 @@ IntermediateShaderSource::IntermediateShaderSource(const std::string &source)
         {
             cur += ConstStrLen(kQualifierMarkerBegin);
 
-            // Get the id of the macro and add a qualifier block.
-            std::string name = angle::GetPrefix(source, cur, kMarkerEnd);
-            cur += name.length();
-            addQualifierBlock(std::move(name));
+            // Get the id and arguments of the macro and add a qualifier block.
+            std::string name, args;
+            cur += ExtractNameAndArgs(source, cur, &name, &args);
+            addQualifierBlock(std::move(name), std::move(args));
         }
         else if (source.compare(cur, ConstStrLen(kLayoutMarkerBegin), kLayoutMarkerBegin) == 0)
         {
             cur += ConstStrLen(kLayoutMarkerBegin);
 
             // Get the id and arguments of the macro and add a layout block.
-            // There should always be an extra args list (even if empty, for simplicity).
-            std::string name = angle::GetPrefix(source, cur, kLayoutParamsBegin);
-            cur += name.length() + 1;
-            std::string args = angle::GetPrefix(source, cur, kLayoutParamsEnd);
-            cur += args.length() + 1;
+            std::string name, args;
+            cur += ExtractNameAndArgs(source, cur, &name, &args);
             addLayoutBlock(std::move(name), std::move(args));
         }
         else if (source.compare(cur, ConstStrLen(kXfbDeclMarkerBegin), kXfbDeclMarkerBegin) == 0)
@@ -283,6 +300,10 @@ void IntermediateShaderSource::insertQualifierSpecifier(const std::string &name,
         {
             block.type = TokenType::Text;
             block.text = specifier;
+            if (!specifier.empty() && !block.args.empty())
+            {
+                block.text += " " + block.args;
+            }
             break;
         }
     }

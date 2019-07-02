@@ -206,6 +206,45 @@ std::string TOutputGLSLBase::getCommonLayoutQualifiers(TIntermTyped *variable)
     return out.str();
 }
 
+// Outputs what comes after in/out/uniform/buffer storage qualifier.
+std::string TOutputGLSLBase::getMemoryQualifiers(const TType &type)
+{
+    std::ostringstream out;
+
+    const TMemoryQualifier &memoryQualifier = type.getMemoryQualifier();
+    if (memoryQualifier.readonly)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "readonly ";
+    }
+
+    if (memoryQualifier.writeonly)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "writeonly ";
+    }
+
+    if (memoryQualifier.coherent)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "coherent ";
+    }
+
+    if (memoryQualifier.restrictQualifier)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "restrict ";
+    }
+
+    if (memoryQualifier.volatileQualifier)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "volatile ";
+    }
+
+    return out.str();
+}
+
 void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
 {
     const TType &type = variable->getType();
@@ -261,6 +300,8 @@ void TOutputGLSLBase::writeQualifier(TQualifier qualifier, const TType &type, co
     {
         objSink() << result << " ";
     }
+
+    objSink() << getMemoryQualifiers(type);
 }
 
 const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
@@ -310,37 +351,6 @@ void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
         writeQualifier(qualifier, type, symbol);
-    }
-
-    const TMemoryQualifier &memoryQualifier = type.getMemoryQualifier();
-    if (memoryQualifier.readonly)
-    {
-        ASSERT(IsImage(type.getBasicType()));
-        out << "readonly ";
-    }
-
-    if (memoryQualifier.writeonly)
-    {
-        ASSERT(IsImage(type.getBasicType()));
-        out << "writeonly ";
-    }
-
-    if (memoryQualifier.coherent)
-    {
-        ASSERT(IsImage(type.getBasicType()));
-        out << "coherent ";
-    }
-
-    if (memoryQualifier.restrictQualifier)
-    {
-        ASSERT(IsImage(type.getBasicType()));
-        out << "restrict ";
-    }
-
-    if (memoryQualifier.volatileQualifier)
-    {
-        ASSERT(IsImage(type.getBasicType()));
-        out << "volatile ";
     }
 
     // Declare the struct if we have not done so already.
