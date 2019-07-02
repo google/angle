@@ -620,20 +620,12 @@
 // General Vulkan failures
 
 // Limits:
-// MAX_COMBINED_SHADER_OUTPUT_RESOURCES is 0
-3520 VULKAN : dEQP-GLES31.functional.ubo.* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.texture.gather.* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.state_query.shader.sampler_type = FAIL
-3520 VULKAN : dEQP-GLES31.functional.vertex_attribute_binding.usage.* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.program_uniform.* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_combined_shader_output_resources* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.* = SKIP
-3520 VULKAN : dEQP-GLES31.functional.layout_binding.sampler.* = FAIL
-3520 VULKAN : dEQP-GLES31.functional.layout_binding.ubo.* = FAIL
 // MAX_FRAMEBUFFER_SAMPLES is 0
 3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_framebuffer_samples* = FAIL
 // MAX_UNIFORM_LOCATIONS is 0
 3520 VULKAN : dEQP-GLES31.functional.state_query.integer.max_uniform_locations* = FAIL
+// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
+3605 VULKAN : dEQP-GLES31.functional.texture.gather.offset.* = FAIL
 
 // Compute shaders:
 3562 VULKAN : dEQP-GLES31.functional.shaders.builtin_var.compute.* = FAIL
@@ -641,8 +633,8 @@
 3562 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.*compute = FAIL
 3562 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision*compute* = FAIL
 3562 VULKAN : dEQP-GLES31.functional.state_query.*.max_compute_* = FAIL
+3562 VULKAN : dEQP-GLES31.functional.state_query.program.*compute* = SKIP
 3562 VULKAN : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
-3562 VULKAN : dEQP-GLES31.functional.debug.*.compute.* = SKIP
 3562 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_*query = FAIL
 3562 VULKAN : dEQP-GLES31.functional.program_interface_query.program_*.resource_list.compute.empty = FAIL
 
@@ -652,7 +644,7 @@
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.pack_unpack.* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.integer.* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.uniform.* = FAIL
-3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.* = FAIL
+3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.* = SKIP
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.frexp* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.ldexp* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.functions* = FAIL
@@ -667,16 +659,22 @@
 3597 VULKAN : dEQP-GLES31.functional.uniform_location.* = FAIL
 
 // Indirect draw:
-3564 VULKAN : dEQP-GLES31.functional.draw_indirect.* = FAIL
+3564 VULKAN : dEQP-GLES31.functional.draw_indirect.* = SKIP
 
 // Tessellation geometry interaction:
 3572 VULKAN : dEQP-GLES31.functional.tessellation_geometry_interaction.* = FAIL
 
 // SSBO:
-3561 VULKAN : dEQP-GLES31.functional.ssbo.* = FAIL
-3566 VULKAN : dEQP-GLES31.functional.state_query.integer.max_*shader_storage_block* = FAIL
-3566 VULKAN : dEQP-GLES31.functional.state_query.*shader_storage_buffer* = FAIL
-3563 VULKAN : dEQP-GLES31.functional.synchronization.*.ssbo* = FAIL
+3561 VULKAN : dEQP-GLES31.functional.ssbo.* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.state_query.integer.max_*shader_storage_block* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.state_query.*shader_storage_buffer* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.synchronization.*.ssbo* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.shaders.opaque_type_indexing.ssbo.* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.shaders.linkage*shader_storage_block* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_variable.* = SKIP
+3561 VULKAN : dEQP-GLES31.functional.program_interface_query.program_output.* = SKIP
 
 // Atomic counters:
 3566 VULKAN : dEQP-GLES31.functional.atomic_counter.* = FAIL
@@ -691,22 +689,18 @@
 3520 VULKAN : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL
 
 // Framebuffer without attachments:
-3579 VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = FAIL
+3579 VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
 
 // Separate shader objects:
 3570 VULKAN : dEQP-GLES31.functional.program_interface_query.*separable_* = FAIL
 3570 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.* = FAIL
 
 // Debug:
-3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*.shader.uniform*_incompatible_type = FAIL
-3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*.shader.uniform*_invalid_count = FAIL
-3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*.state.get_*uniform* = FAIL
-3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.* = FAIL
-3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.* = FAIL
+3590 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.* = SKIP
 3590 VULKAN : dEQP-GLES31.functional.debug.error_groups.case_14 = SKIP
 
 // Transform feedback:
-3205 VULKAN : dEQP-GLES31.functional.debug.*.begin_query = SKIP
+3205 VULKAN : dEQP-GLES31.functional.debug.*transform_feedback = SKIP
 
 // Stencil textures (some missing support for 3D and 2D array textures):
 3585 VULKAN : dEQP-GLES31.functional.stencil_texturing.* = SKIP
@@ -726,6 +720,17 @@
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_integer = SKIP
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture_2d.compressed_float = SKIP
 
+// Vulkan limits lower than GLES minimum:
+3633 VULKAN : dEQP-GLES31.functional.state_query.integer.max_uniform_buffer_bindings_get* = FAIL
+3633 VULKAN : dEQP-GLES31.functional.state_query.integer.max_combined_uniform_blocks_get* = FAIL
+3633 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.20 = FAIL
+3633 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.31 = FAIL
+
+// column/row_major specified on struct member:
+3443 VULKAN : dEQP-GLES31.functional.ubo.random.all_per_block_buffers.12 = FAIL
+
 // Validation errors:
 // Optimal tiling not supported for format:
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture* = SKIP
+// Invalid vertex attribute alignment:
+3520 VULKAN : dEQP-GLES31.functional.vertex_attribute_binding.usage.single_binding.unaligned_offset_elements_1_aligned_elements = FAIL

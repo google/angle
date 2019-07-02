@@ -191,38 +191,81 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxFragmentUniformVectors                            = maxUniformVectors;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
 
-    // A number of uniform buffers are reserved for internal use.  There's one dynamic uniform
-    // buffer used per stage for default uniforms, and a single uniform buffer object used for
-    // ANGLE internal variables.  ANGLE implements UBOs as uniform buffers, so the maximum number
-    // of uniform blocks is maxDescriptorSetUniformBuffers - 1:
-    const uint32_t maxUniformBuffers =
-        mPhysicalDeviceProperties.limits.maxDescriptorSetUniformBuffers -
-        kReservedDriverUniformBindingCount;
+    // We use the same bindings on each stage, so the texture, UBO and SSBO limitations are the same
+    // as the per-stage limits.
+    const uint32_t maxPerStageUniformBuffers =
+        mPhysicalDeviceProperties.limits.maxPerStageDescriptorUniformBuffers;
+    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Vertex]   = maxPerStageUniformBuffers;
+    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Fragment] = maxPerStageUniformBuffers;
+    mNativeCaps.maxCombinedUniformBlocks                         = maxPerStageUniformBuffers;
 
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Vertex]   = maxUniformBuffers;
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Fragment] = maxUniformBuffers;
-    mNativeCaps.maxCombinedUniformBlocks                         = maxUniformBuffers;
+    // Note that Vulkan currently implements textures as combined image+samplers, so the limit is
+    // the minimum of supported samplers and sampled images.
+    const uint32_t maxPerStageTextures =
+        std::min(mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers,
+                 mPhysicalDeviceProperties.limits.maxPerStageDescriptorSampledImages);
+    mNativeCaps.maxCombinedTextureImageUnits                         = maxPerStageTextures;
+    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] = maxPerStageTextures;
+    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]   = maxPerStageTextures;
 
-    mNativeCaps.maxUniformBufferBindings = maxUniformBuffers;
+    const uint32_t maxPerStageStorageBuffers =
+        mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers;
+    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex]   = maxPerStageStorageBuffers;
+    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Fragment] = maxPerStageStorageBuffers;
+    mNativeCaps.maxCombinedShaderStorageBlocks                   = maxPerStageStorageBuffers;
+
+    // A number of storage buffer slots are used in the vertex shader to emulate transform feedback.
+    // Note that Vulkan requires maxPerStageDescriptorStorageBuffers to be at least 4 (i.e. the same
+    // as gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS).
+    // TODO(syoussefi): This should be conditioned to transform feedback extension not being
+    // present.  http://anglebug.com/3206.
+    // TODO(syoussefi): If geometry shader is supported, emulation will be done at that stage, and
+    // so the reserved storage buffers should be accounted in that stage.  http://anglebug.com/3606
+    static_assert(
+        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS == 4,
+        "Limit to ES2.0 if supported SSBO count < supporting transform feedback buffer count");
+    ASSERT(maxPerStageStorageBuffers >= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
+    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] -=
+        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
+
+    // Fill in additional limits for UBOs and SSBOs.
+    mNativeCaps.maxUniformBufferBindings = maxPerStageUniformBuffers;
     mNativeCaps.maxUniformBlockSize      = mPhysicalDeviceProperties.limits.maxUniformBufferRange;
     mNativeCaps.uniformBufferOffsetAlignment =
         static_cast<GLuint>(mPhysicalDeviceProperties.limits.minUniformBufferOffsetAlignment);
 
+    mNativeCaps.maxShaderStorageBufferBindings = maxPerStageStorageBuffers;
+    mNativeCaps.maxShaderStorageBlockSize = mPhysicalDeviceProperties.limits.maxStorageBufferRange;
+    mNativeCaps.shaderStorageBufferOffsetAlignment =
+        static_cast<GLuint>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment);
+
     // There is no additional limit to the combined number of components.  We can have up to a
     // maximum number of uniform buffers, each having the maximum number of components.
-    const uint32_t maxCombinedUniformComponents = maxUniformBuffers * maxUniformComponents;
+    const uint32_t maxCombinedUniformComponents = maxPerStageUniformBuffers * maxUniformComponents;
     for (gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
     {
         mNativeCaps.maxCombinedShaderUniformComponents[shaderType] = maxCombinedUniformComponents;
     }
 
-    // we use the same bindings on each stage, so the limitation is the same combined or not.
-    mNativeCaps.maxCombinedTextureImageUnits =
-        mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
-    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] =
-        mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
-    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex] =
-        mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
+    // Total number of resources available to the user are as many as Vulkan allows minus everything
+    // that ANGLE uses internally.  That is, one dynamic uniform buffer used per stage for default
+    // uniforms and a single dynamic uniform buffer for driver uniforms.  Additionally, Vulkan uses
+    // up to IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS + 1 buffers for transform feedback (Note:
+    // +1 is for the "counter" buffer of transform feedback, which will be necessary for transform
+    // feedback extension and ES3.2 transform feedback emulation, but is not yet present).
+    constexpr uint32_t kReservedPerStageUniformBufferCount = 1;
+    constexpr uint32_t kReservedPerStageBindingCount =
+        kReservedDriverUniformBindingCount + kReservedPerStageUniformBufferCount +
+        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS + 1;
+
+    // Note: maxPerStageResources is required to be at least the sum of per stage UBOs, SSBOs etc
+    // which total a minimum of 44 resources, so no underflow is possible here.  Limit the total
+    // number of resources reported by Vulkan to 2 billion though to avoid seeing negative numbers
+    // in applications that take the value as signed int (including dEQP).
+    const uint32_t maxPerStageResources = std::min<uint32_t>(
+        std::numeric_limits<int32_t>::max(), mPhysicalDeviceProperties.limits.maxPerStageResources);
+    mNativeCaps.maxCombinedShaderOutputResources =
+        maxPerStageResources - kReservedPerStageBindingCount;
 
     // The max vertex output components should not include gl_Position.
     // The gles2.0 section 2.10 states that "gl_Position is not a varying variable and does

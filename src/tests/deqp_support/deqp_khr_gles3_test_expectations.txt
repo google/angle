@@ -31,6 +31,9 @@
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
+// Vulkan limits lower than GLES minimum:
+3633 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_shared_buffer.1 = FAIL
+
 // Crashes trying to load non-existent texture load function.
 3455 VULKAN : KHR-GLES3.texture_filter_anisotropic.drawing = SKIP
 3455 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.* = SKIP

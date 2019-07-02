@@ -530,12 +530,25 @@
 // General Vulkan failures
 
 // Limits:
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_indices = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_vertices = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_input_components = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_program_texel_offset = SKIP
-2950 VULKAN : dEQP-GLES3.functional.implementation_limits.min_program_texel_offset = SKIP
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_indices = FAIL
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_vertices = FAIL
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_input_components = FAIL
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.max_program_texel_offset = FAIL
+2950 VULKAN : dEQP-GLES3.functional.implementation_limits.min_program_texel_offset = FAIL
+
+// Vulkan limits lower than GLES minimum:
+3633 VULKAN : dEQP-GLES3.functional.implementation_limits.max_uniform_buffer_bindings = FAIL
+3633 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_uniform_blocks = FAIL
+3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_uniform_buffer_bindings_get* = FAIL
+3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_get* = FAIL
+3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
+3633 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_vertex_uniform_components_get* = FAIL
+3633 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_fragment_uniform_components_get* = FAIL
+3633 VULKAN : dEQP-GLES3.functional.ubo.random.all_shared_buffer.7 = FAIL
+3633 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays_instance_arrays.18 = FAIL
+3633 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
+3633 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_get* = FAIL
 
 // 3D texture:
 3188 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.3d* = SKIP
@@ -706,10 +719,8 @@
 // - ES3 State queries:
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_indices_getfloat = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_elements_vertices_getfloat = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.max_program_texel_offset_get* = FAIL
 2950 VULKAN : dEQP-GLES3.functional.state_query.integers.min_program_texel_offset_get* = FAIL
-2950 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_fragment_uniform_components_get* = FAIL
 
 // Misc failures:
 2950 VULKAN : dEQP-GLES3.functional.lifetime.* = SKIP
@@ -727,9 +738,6 @@
 2950 VULKAN : dEQP-GLES3.functional.negative_api.vertex_array.draw_element* = SKIP
 
 // Android Vulkan failures
-2950 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
-2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_getfloat = FAIL
-2950 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_getinteger64 = FAIL
 2950 ANDROID VULKAN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.rgb_func_alpha_func.* = SKIP
 2950 ANDROID VULKAN : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_ops.* = SKIP
 3306 ANDROID VULKAN : dEQP-GLES3.functional.polygon_offset.* = FAIL
