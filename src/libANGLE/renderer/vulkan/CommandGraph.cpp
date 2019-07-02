@@ -151,6 +151,17 @@ const char *GetLoadOpShorthand(uint32_t loadOp)
     }
 }
 
+const char *GetStoreOpShorthand(uint32_t storeOp)
+{
+    switch (storeOp)
+    {
+        case VK_ATTACHMENT_STORE_OP_STORE:
+            return "S";
+        default:
+            return "D";
+    }
+}
+
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)
 {
     static constexpr angle::ColorF kLabelColors[6] = {
@@ -721,13 +732,17 @@ std::string CommandGraphNode::dumpCommandsForDiagnostics(const char *separator) 
         size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment();
         size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
 
+        std::string loadOps, storeOps;
+
         if (colorAttachmentCount > 0)
         {
-            result += " Color: ";
+            loadOps += " Color: ";
+            storeOps += " Color: ";
 
             for (size_t i = 0; i < colorAttachmentCount; ++i)
             {
-                result += GetLoadOpShorthand(mRenderPassAttachmentOps[i].loadOp);
+                loadOps += GetLoadOpShorthand(mRenderPassAttachmentOps[i].loadOp);
+                storeOps += GetStoreOpShorthand(mRenderPassAttachmentOps[i].storeOp);
             }
         }
 
@@ -735,11 +750,22 @@ std::string CommandGraphNode::dumpCommandsForDiagnostics(const char *separator) 
         {
             ASSERT(depthStencilAttachmentCount == 1);
 
-            result += " Depth/Stencil: ";
+            loadOps += " Depth/Stencil: ";
+            storeOps += " Depth/Stencil: ";
             size_t dsIndex = colorAttachmentCount;
 
-            result += GetLoadOpShorthand(mRenderPassAttachmentOps[dsIndex].loadOp);
-            result += GetLoadOpShorthand(mRenderPassAttachmentOps[dsIndex].stencilLoadOp);
+            loadOps += GetLoadOpShorthand(mRenderPassAttachmentOps[dsIndex].loadOp);
+            loadOps += GetLoadOpShorthand(mRenderPassAttachmentOps[dsIndex].stencilLoadOp);
+
+            storeOps += GetStoreOpShorthand(mRenderPassAttachmentOps[dsIndex].storeOp);
+            storeOps += GetStoreOpShorthand(mRenderPassAttachmentOps[dsIndex].stencilStoreOp);
+        }
+
+        if (attachmentCount > 0)
+        {
+            result += " LoadOp: " + loadOps;
+            result += separator;
+            result += "------------ StoreOp: " + storeOps;
         }
 
         result += DumpCommands(mInsideRenderPassCommands, separator);

@@ -53,6 +53,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.robustness             = true;
     mNativeExtensions.textureBorderClamp     = false;  // not implemented yet
     mNativeExtensions.translatedShaderSource = true;
+    mNativeExtensions.discardFramebuffer     = true;
 
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinMax = true;

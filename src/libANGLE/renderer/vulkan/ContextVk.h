@@ -212,7 +212,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
-    void onFramebufferChange(const vk::RenderPassDesc &renderPassDesc);
+    void onDrawFramebufferChange(FramebufferVk *framebufferVk);
     void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
 
     void invalidateCurrentTransformFeedbackBuffers();

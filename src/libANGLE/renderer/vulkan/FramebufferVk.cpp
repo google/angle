@@ -190,8 +190,14 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
                                         size_t count,
                                         const GLenum *attachments)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    mFramebuffer.updateQueueSerial(vk::GetImpl(context)->getCurrentQueueSerial());
+
+    if (mFramebuffer.valid() && mFramebuffer.hasStartedRenderPass())
+    {
+        invalidateImpl(vk::GetImpl(context), count, attachments);
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
@@ -199,8 +205,17 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
                                            const GLenum *attachments,
                                            const gl::Rectangle &area)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    mFramebuffer.updateQueueSerial(vk::GetImpl(context)->getCurrentQueueSerial());
+
+    // RenderPass' storeOp cannot be made conditional to a specific region, so we only apply this
+    // hint if the requested area encompasses the render area.
+    if (mFramebuffer.valid() && mFramebuffer.hasStartedRenderPass() &&
+        area.encloses(mFramebuffer.getRenderPassRenderArea()))
+    {
+        invalidateImpl(vk::GetImpl(context), count, attachments);
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
@@ -963,6 +978,83 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context, s
     return angle::Result::Continue;
 }
 
+void FramebufferVk::invalidateImpl(ContextVk *contextVk, size_t count, const GLenum *attachments)
+{
+    ASSERT(mFramebuffer.hasStartedRenderPass());
+
+    gl::DrawBufferMask invalidateColorBuffers;
+    bool invalidateDepthBuffer   = false;
+    bool invalidateStencilBuffer = false;
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        const GLenum attachment = attachments[i];
+
+        switch (attachment)
+        {
+            case GL_DEPTH:
+            case GL_DEPTH_ATTACHMENT:
+                invalidateDepthBuffer = true;
+                break;
+            case GL_STENCIL:
+            case GL_STENCIL_ATTACHMENT:
+                invalidateStencilBuffer = true;
+                break;
+            case GL_DEPTH_STENCIL_ATTACHMENT:
+                invalidateDepthBuffer   = true;
+                invalidateStencilBuffer = true;
+                break;
+            default:
+                ASSERT(
+                    (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15) ||
+                    (attachment == GL_COLOR));
+
+                invalidateColorBuffers.set(
+                    attachment == GL_COLOR ? 0u : (attachment - GL_COLOR_ATTACHMENT0));
+        }
+    }
+
+    // Set the appropriate storeOp for attachments.
+    size_t attachmentIndexVk = 0;
+    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    {
+        if (invalidateColorBuffers.test(colorIndexGL))
+        {
+            mFramebuffer.invalidateRenderPassColorAttachment(attachmentIndexVk);
+        }
+        ++attachmentIndexVk;
+    }
+
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    if (depthStencilRenderTarget)
+    {
+        if (invalidateDepthBuffer)
+        {
+            mFramebuffer.invalidateRenderPassDepthAttachment(attachmentIndexVk);
+        }
+
+        if (invalidateStencilBuffer)
+        {
+            mFramebuffer.invalidateRenderPassStencilAttachment(attachmentIndexVk);
+        }
+    }
+
+    // NOTE: Possible future optimization is to delay setting the storeOp and only do so if the
+    // render pass is closed by itself before another draw call.  Otherwise, in a situation like
+    // this:
+    //
+    //     draw()
+    //     invalidate()
+    //     draw()
+    //
+    // We would be discarding the attachments only to load them for the next draw (which is less
+    // efficient than keeping the render pass open and not do the discard at all).  While dEQP tests
+    // this pattern, this optimization may not be necessary if no application does this.  It is
+    // expected that an application would invalidate() when it's done with the framebuffer, so the
+    // render pass would have closed either way.
+    mFramebuffer.finishCurrentCommands(contextVk);
+}
+
 angle::Result FramebufferVk::syncState(const gl::Context *context,
                                        const gl::Framebuffer::DirtyBits &dirtyBits)
 {
@@ -1023,7 +1115,12 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     // Notify the ContextVk to update the pipeline desc.
     updateRenderPassDesc();
-    contextVk->onFramebufferChange(mRenderPassDesc);
+
+    FramebufferVk *currentDrawFramebuffer = vk::GetImpl(context->getState().getDrawFramebuffer());
+    if (currentDrawFramebuffer == this)
+    {
+        contextVk->onDrawFramebufferChange(this);
+    }
 
     return angle::Result::Continue;
 }

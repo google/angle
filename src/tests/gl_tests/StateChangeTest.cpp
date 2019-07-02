@@ -2238,6 +2238,62 @@ TEST_P(SimpleStateChangeTest, CopyTexSubImageOnTextureBoundToFrambuffer)
     updateTextureBoundToFramebufferHelper(updateFunc);
 }
 
+// Tests that the read framebuffer doesn't affect what the draw call thinks the attachments are
+// (which is what the draw framebuffer dictates) when a command is issued with the GL_FRAMEBUFFER
+// target.
+TEST_P(SimpleStateChangeTestES3, ReadFramebufferDrawFramebufferDifferentAttachments)
+{
+    GLRenderbuffer drawColorBuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, drawColorBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLRenderbuffer drawDepthBuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, drawDepthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1, 1);
+
+    GLRenderbuffer readColorBuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, readColorBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              drawColorBuffer);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                              drawDepthBuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    GLFramebuffer readFBO;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              readColorBuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    glClearDepthf(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // A handful of non-draw calls can sync framebuffer state, such as discard, invalidate,
+    // invalidateSub and multisamplefv.  The trick here is to give GL_FRAMEBUFFER as target, which
+    // includes both the read and draw framebuffers.  The test is to make sure syncing the read
+    // framebuffer doesn't affect the draw call.
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Tests deleting a Framebuffer that is in use.
 TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
 {

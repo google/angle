@@ -703,9 +703,6 @@
 
 // Misc unimplemented:
 
-// - FramebufferVk::invalidate*:
-2950 VULKAN : dEQP-GLES3.functional.fbo.invalidate.* = SKIP
-
 // - Primitive restart with line loops:
 2672 VULKAN : dEQP-GLES3.functional.primitive_restart.*.line_loop.*instanced = SKIP
 

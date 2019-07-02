@@ -126,6 +126,21 @@ class CommandGraphNode final : angle::NonCopyable
         mRenderPassClearValues[attachmentIndex].depthStencil.stencil = stencil;
     }
 
+    void invalidateRenderPassColorAttachment(size_t attachmentIndex)
+    {
+        mRenderPassAttachmentOps[attachmentIndex].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    }
+
+    void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
+    {
+        mRenderPassAttachmentOps[attachmentIndex].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    }
+
+    void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
+    {
+        mRenderPassAttachmentOps[attachmentIndex].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    }
+
     // Dependency commands order node execution in the command graph.
     // Once a node has commands that must happen after it, recording is stopped and the node is
     // frozen forever.
@@ -354,6 +369,24 @@ class CommandGraphResource : angle::NonCopyable
     {
         ASSERT(renderPassStartedButEmpty());
         mCurrentWritingNode->clearRenderPassStencilAttachment(attachmentIndex, stencil);
+    }
+
+    void invalidateRenderPassColorAttachment(size_t attachmentIndex)
+    {
+        ASSERT(hasStartedRenderPass());
+        mCurrentWritingNode->invalidateRenderPassColorAttachment(attachmentIndex);
+    }
+
+    void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
+    {
+        ASSERT(hasStartedRenderPass());
+        mCurrentWritingNode->invalidateRenderPassDepthAttachment(attachmentIndex);
+    }
+
+    void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
+    {
+        ASSERT(hasStartedRenderPass());
+        mCurrentWritingNode->invalidateRenderPassStencilAttachment(attachmentIndex);
     }
 
     // Accessor for RenderPass RenderArea.
