@@ -17,6 +17,7 @@ namespace
 enum class StateChange
 {
     NoChange,
+    VertexAttrib,
     VertexBuffer,
     ManyVertexBuffers,
     Texture,
@@ -39,6 +40,9 @@ std::string DrawArraysPerfParams::suffix() const
 
     switch (stateChange)
     {
+        case StateChange::VertexAttrib:
+            strstr << "_attrib_change";
+            break;
         case StateChange::VertexBuffer:
             strstr << "_vbo_change";
             break;
@@ -221,6 +225,25 @@ void JustDraw(unsigned int iterations, GLsizei numElements)
 }
 
 template <int kArrayBufferCount>
+void ChangeVertexAttribThenDraw(unsigned int iterations, GLsizei numElements, GLuint buffer)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    for (unsigned int it = 0; it < iterations; it++)
+    {
+        for (int arrayIndex = 0; arrayIndex < kArrayBufferCount; ++arrayIndex)
+        {
+            glVertexAttribPointer(arrayIndex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        }
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+
+        for (int arrayIndex = 0; arrayIndex < kArrayBufferCount; ++arrayIndex)
+        {
+            glVertexAttribPointer(arrayIndex, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, 0);
+        }
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+    }
+}
+template <int kArrayBufferCount>
 void ChangeArrayBuffersThenDraw(unsigned int iterations,
                                 GLsizei numElements,
                                 GLuint buffer1,
@@ -270,6 +293,9 @@ void DrawCallPerfBenchmark::drawBenchmark()
 
     switch (params.stateChange)
     {
+        case StateChange::VertexAttrib:
+            ChangeVertexAttribThenDraw<1>(params.iterationsPerStep, numElements, mBuffer1);
+            break;
         case StateChange::VertexBuffer:
             ChangeArrayBuffersThenDraw<1>(params.iterationsPerStep, numElements, mBuffer1,
                                           mBuffer2);
@@ -318,6 +344,8 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawArrays(DrawCallD3D11(), StateChange::NoChange),
                        DrawArrays(NullDevice(DrawCallD3D11()), StateChange::NoChange),
                        DrawArrays(NullDevice(Offscreen(DrawCallD3D11())), StateChange::NoChange),
+                       DrawArrays(DrawCallD3D11(), StateChange::VertexAttrib),
+                       DrawArrays(NullDevice(DrawCallD3D11()), StateChange::VertexAttrib),
                        DrawArrays(DrawCallD3D11(), StateChange::VertexBuffer),
                        DrawArrays(NullDevice(DrawCallD3D11()), StateChange::VertexBuffer),
                        DrawArrays(DrawCallD3D11(), StateChange::Texture),
@@ -325,6 +353,8 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawArrays(DrawCallOpenGL(), StateChange::NoChange),
                        DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::NoChange),
                        DrawArrays(NullDevice(Offscreen(DrawCallOpenGL())), StateChange::NoChange),
+                       DrawArrays(DrawCallOpenGL(), StateChange::VertexAttrib),
+                       DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::VertexAttrib),
                        DrawArrays(DrawCallOpenGL(), StateChange::VertexBuffer),
                        DrawArrays(NullDevice(DrawCallOpenGL()), StateChange::VertexBuffer),
                        DrawArrays(DrawCallOpenGL(), StateChange::ManyVertexBuffers),
@@ -335,6 +365,9 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawArrays(DrawCallVulkan(), StateChange::NoChange),
                        DrawArrays(Offscreen(DrawCallVulkan()), StateChange::NoChange),
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::NoChange),
+                       DrawArrays(DrawCallVulkan(), StateChange::VertexAttrib),
+                       DrawArrays(Offscreen(DrawCallVulkan()), StateChange::VertexAttrib),
+                       DrawArrays(NullDevice(DrawCallVulkan()), StateChange::VertexAttrib),
                        DrawArrays(DrawCallVulkan(), StateChange::VertexBuffer),
                        DrawArrays(Offscreen(DrawCallVulkan()), StateChange::VertexBuffer),
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::VertexBuffer),
@@ -346,6 +379,8 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawArrays(NullDevice(DrawCallVulkan()), StateChange::Texture),
                        DrawArrays(DrawCallWGL(), StateChange::NoChange),
                        DrawArrays(Offscreen(DrawCallWGL()), StateChange::NoChange),
+                       DrawArrays(DrawCallWGL(), StateChange::VertexAttrib),
+                       DrawArrays(Offscreen(DrawCallWGL()), StateChange::VertexAttrib),
                        DrawArrays(DrawCallWGL(), StateChange::VertexBuffer),
                        DrawArrays(Offscreen(DrawCallWGL()), StateChange::VertexBuffer),
                        DrawArrays(DrawCallWGL(), StateChange::Texture),
