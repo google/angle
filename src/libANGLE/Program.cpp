@@ -4401,6 +4401,8 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
 
     stream.writeInt(mState.mNumViews);
 
+    stream.writeInt(mState.mMaxActiveAttribLocation);
+
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
     stream.writeInt(static_cast<int>(mState.mAttributesTypeMask.to_ulong()));
@@ -4427,6 +4429,12 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
         stream.writeInt(uniform.blockInfo.arrayStride);
         stream.writeInt(uniform.blockInfo.matrixStride);
         stream.writeInt(uniform.blockInfo.isRowMajorMatrix);
+
+        // Active shader info
+        for (ShaderType shaderType : gl::AllShaderTypes())
+        {
+            stream.writeInt(uniform.isActive(shaderType));
+        }
     }
 
     stream.writeInt(mState.getUniformLocations().size());
@@ -4587,6 +4595,8 @@ angle::Result Program::deserialize(const Context *context,
 
     mState.mNumViews = stream.readInt<int>();
 
+    mState.mMaxActiveAttribLocation = stream.readInt<unsigned int>();
+
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
     mState.mAttributesTypeMask = gl::ComponentTypeMask(stream.readInt<uint32_t>());
@@ -4620,6 +4630,12 @@ angle::Result Program::deserialize(const Context *context,
         uniform.blockInfo.isRowMajorMatrix = stream.readBool();
 
         uniform.typeInfo = &GetUniformTypeInfo(uniform.type);
+
+        // Active shader info
+        for (ShaderType shaderType : gl::AllShaderTypes())
+        {
+            uniform.setActive(shaderType, stream.readBool());
+        }
 
         mState.mUniforms.push_back(uniform);
     }
