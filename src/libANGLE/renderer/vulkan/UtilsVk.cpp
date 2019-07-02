@@ -977,8 +977,15 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
-    pipelineDesc.setColorWriteMask(kAllColorComponents,
-                                   framebuffer->getEmulatedAlphaAttachmentMask());
+    if (blitColor)
+    {
+        pipelineDesc.setColorWriteMask(kAllColorComponents,
+                                       framebuffer->getEmulatedAlphaAttachmentMask());
+    }
+    else
+    {
+        pipelineDesc.setColorWriteMask(0, gl::DrawBufferMask());
+    }
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
     pipelineDesc.setDepthTestEnabled(blitDepth);
     pipelineDesc.setDepthWriteEnabled(blitDepth);
