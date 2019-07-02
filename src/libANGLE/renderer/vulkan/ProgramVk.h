@@ -174,40 +174,34 @@ class ProgramVk : public ProgramImpl
 
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
-    angle::Result linkImpl(const gl::Context *glContext,
-                           const gl::ProgramLinkedResources &resources,
-                           gl::InfoLog &infoLog);
+    angle::Result linkImpl(const gl::Context *glContext, gl::InfoLog &infoLog);
     void linkResources(const gl::ProgramLinkedResources &resources);
 
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
                                            gl::PrimitiveMode mode,
                                            vk::ShaderProgramHelper **shaderProgramOut)
     {
-        if (UseLineRaster(contextVk, mode))
-        {
-            if (!mLineRasterShaderInfo.valid())
-            {
-                ANGLE_TRY(mLineRasterShaderInfo.initShaders(contextVk, mVertexSource,
-                                                            mFragmentSource, true));
-            }
+        bool enableLineRasterEmulation = UseLineRaster(contextVk, mode);
 
-            ASSERT(mLineRasterShaderInfo.valid());
-            *shaderProgramOut = &mLineRasterShaderInfo.getShaderProgram();
-        }
-        else
-        {
-            if (!mDefaultShaderInfo.valid())
-            {
-                ANGLE_TRY(mDefaultShaderInfo.initShaders(contextVk, mVertexSource, mFragmentSource,
-                                                         false));
-            }
+        ShaderInfo &shaderInfo =
+            enableLineRasterEmulation ? mLineRasterShaderInfo : mDefaultShaderInfo;
 
-            ASSERT(mDefaultShaderInfo.valid());
-            *shaderProgramOut = &mDefaultShaderInfo.getShaderProgram();
+        if (!shaderInfo.valid())
+        {
+            ANGLE_TRY(shaderInfo.initShaders(contextVk, mShaderSource[gl::ShaderType::Vertex],
+                                             mShaderSource[gl::ShaderType::Fragment],
+                                             enableLineRasterEmulation));
         }
+
+        ASSERT(shaderInfo.valid());
+        *shaderProgramOut = &shaderInfo.getShaderProgram();
 
         return angle::Result::Continue;
     }
+
+    // Save and load implementation for GLES Program Binary support.
+    angle::Result loadShaderSource(ContextVk *contextVk, gl::BinaryInputStream *stream);
+    void saveShaderSource(gl::BinaryOutputStream *stream);
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable
@@ -278,8 +272,7 @@ class ProgramVk : public ProgramImpl
     ShaderInfo mLineRasterShaderInfo;
 
     // We keep the translated linked shader sources to use with shader draw call patching.
-    std::string mVertexSource;
-    std::string mFragmentSource;
+    gl::ShaderMap<std::string> mShaderSource;
 
     // Store descriptor pools here. We store the descriptors in the Program to facilitate descriptor
     // cache management. It can also allow fewer descriptors for shaders which use fewer
