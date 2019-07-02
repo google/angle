@@ -16,10 +16,7 @@ using namespace angle;
 class EGLFeatureControlTest : public ANGLETest
 {
   public:
-    void testSetUp() override
-    {
-        
-    }
+    void testSetUp() override { mDisplay = EGL_NO_DISPLAY; }
 
     void testTearDown() override
     {
@@ -34,17 +31,19 @@ class EGLFeatureControlTest : public ANGLETest
 
     bool initTest()
     {
+        // http://anglebug.com/3629 This test sporadically times out on Win10/Intel/Vulkan
+        bool isVulkan = GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
+        if (isVulkan && IsWindows() && IsIntel())
+            return false;
+
         EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
         mDisplay              = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
                                          reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
-        if (mDisplay == EGL_NO_DISPLAY)
-            return false;
+        EXPECT_NE(mDisplay, EGL_NO_DISPLAY);
 
-        if (eglInitialize(mDisplay, nullptr, nullptr) != EGL_TRUE)
-            return false;
+        EXPECT_EQ(eglInitialize(mDisplay, nullptr, nullptr), static_cast<EGLBoolean>(EGL_TRUE));
 
-        if (!IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"))
-            return false;
+        EXPECT_TRUE(IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"));
 
         return true;
     }
@@ -53,7 +52,7 @@ class EGLFeatureControlTest : public ANGLETest
 // Ensure eglQueryStringiANGLE generates EGL_BAD_DISPLAY if the display passed in is invalid.
 TEST_P(EGLFeatureControlTest, InvalidDisplay)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(EGL_NO_DISPLAY, EGL_FEATURE_NAME_ANGLE, 0));
     EXPECT_EGL_ERROR(EGL_BAD_DISPLAY);
 }
@@ -61,7 +60,7 @@ TEST_P(EGLFeatureControlTest, InvalidDisplay)
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the index is negative.
 TEST_P(EGLFeatureControlTest, NegativeIndex)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE, -1));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 }
@@ -69,7 +68,7 @@ TEST_P(EGLFeatureControlTest, NegativeIndex)
 // Ensure eglQueryStringiANGLE generates EGL_BAD_PARAMETER if the index is out of bounds.
 TEST_P(EGLFeatureControlTest, IndexOutOfBounds)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     egl::Display *display = static_cast<egl::Display *>(mDisplay);
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE,
                                             display->getFeatures().size()));
@@ -80,7 +79,7 @@ TEST_P(EGLFeatureControlTest, IndexOutOfBounds)
 // options specified in EGL_ANGLE_feature_control.
 TEST_P(EGLFeatureControlTest, InvalidName)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(mDisplay, 100, 0));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 }
@@ -90,7 +89,7 @@ TEST_P(EGLFeatureControlTest, InvalidName)
 // FeatureList.
 TEST_P(EGLFeatureControlTest, QueryAll)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     egl::Display *display       = static_cast<egl::Display *>(mDisplay);
     angle::FeatureList features = display->getFeatures();
     for (size_t i = 0; i < features.size(); i++)
@@ -111,7 +110,7 @@ TEST_P(EGLFeatureControlTest, QueryAll)
 // attribute EGL_FEATURE_COUNT_ANGLE
 TEST_P(EGLFeatureControlTest, FeatureCount)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     egl::Display *display = static_cast<egl::Display *>(mDisplay);
     EGLAttrib value       = -1;
     EXPECT_EQ(static_cast<EGLBoolean>(EGL_TRUE),
@@ -124,7 +123,7 @@ TEST_P(EGLFeatureControlTest, FeatureCount)
 // ensure that the features are correctly overridden.
 TEST_P(EGLFeatureControlTest, OverrideFeatures)
 {
-    ASSERT_TRUE(initTest());
+    ANGLE_SKIP_TEST_IF(!initTest());
     egl::Display *display       = static_cast<egl::Display *>(mDisplay);
     angle::FeatureList features = display->getFeatures();
 
