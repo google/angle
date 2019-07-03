@@ -10,6 +10,12 @@
 
 #include "libANGLE/renderer/driver_utils.h"
 
+#include "common/platform.h"
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+#    include <sys/system_properties.h>
+#endif
+
 namespace rx
 {
 // Intel
@@ -134,6 +140,21 @@ const char *GetVendorString(uint32_t vendorId)
             ASSERT(vendorId == 0xba5eba11);  // Mock vendor ID used for tests.
             return "Unknown";
     }
+}
+
+int GetAndroidSDKVersion()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    char apiVersion[PROP_VALUE_MAX];
+    int length = __system_property_get("ro.build.version.sdk", apiVersion);
+    if (length == 0)
+    {
+        return 0;
+    }
+    return atoi(apiVersion);
+#else
+    return 0;
+#endif
 }
 
 }  // namespace rx

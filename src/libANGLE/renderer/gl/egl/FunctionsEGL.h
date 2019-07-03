@@ -97,6 +97,8 @@ class FunctionsEGL
                                          const EGLint *timestamps,
                                          EGLnsecsANDROID *values) const;
 
+    EGLint dupNativeFenceFDANDROID(EGLSync sync) const;
+
   private:
     // So as to isolate from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.

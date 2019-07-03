@@ -55,7 +55,7 @@ angle::Result FenceSyncVk::initialize(ContextVk *contextVk)
 
     ANGLE_TRY(contextVk->getNextSubmitFence(&mFence));
 
-    mEvent        = event.release();
+    mEvent = event.release();
 
     contextVk->getCommandGraph()->setFenceSync(mEvent);
     return angle::Result::Continue;
@@ -283,6 +283,12 @@ egl::Error EGLSyncVk::getStatus(const egl::Display *display, EGLint *outStatus)
 
     *outStatus = signaled ? EGL_SIGNALED_KHR : EGL_UNSIGNALED_KHR;
     return egl::NoError();
+}
+
+egl::Error EGLSyncVk::dupNativeFenceFD(const egl::Display *display, EGLint *result) const
+{
+    UNREACHABLE();
+    return egl::EglBadDisplay();
 }
 
 }  // namespace rx

@@ -214,6 +214,9 @@ ANGLE_EXPORT const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy,
 ANGLE_EXPORT EGLClientBuffer EGLAPIENTRY
 EGL_GetNativeClientBufferANDROID(const struct AHardwareBuffer *buffer);
 
+// EGL_ANDROID_native_fence_sync
+ANGLE_EXPORT EGLint EGLAPIENTRY EGL_DupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync);
+
 }  // extern "C"
 
 #endif  // LIBGLESV2_ENTRYPOINTSEGLEXT_H_

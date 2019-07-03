@@ -20,7 +20,9 @@ namespace egl
 Sync::Sync(rx::EGLImplFactory *factory, EGLenum type, const AttributeMap &attribs)
     : mFence(factory->createSync(attribs)),
       mLabel(nullptr),
-      mType(type)
+      mType(type),
+      mNativeFenceFD(
+          attribs.getAsInt(EGL_SYNC_NATIVE_FENCE_FD_ANDROID, EGL_NO_NATIVE_FENCE_FD_ANDROID))
 {}
 
 void Sync::onDestroy(const Display *display)
@@ -64,6 +66,11 @@ Error Sync::serverWait(const Display *display, const gl::Context *context, EGLin
 Error Sync::getStatus(const Display *display, EGLint *outStatus) const
 {
     return mFence->getStatus(display, outStatus);
+}
+
+Error Sync::dupNativeFenceFD(const Display *display, EGLint *result) const
+{
+    return mFence->dupNativeFenceFD(display, result);
 }
 
 }  // namespace egl

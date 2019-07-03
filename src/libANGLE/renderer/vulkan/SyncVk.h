@@ -94,6 +94,8 @@ class EGLSyncVk final : public EGLSyncImpl
                           EGLint flags) override;
     egl::Error getStatus(const egl::Display *display, EGLint *outStatus) override;
 
+    egl::Error dupNativeFenceFD(const egl::Display *display, EGLint *result) const override;
+
   private:
     FenceSyncVk mFenceSync;
 };

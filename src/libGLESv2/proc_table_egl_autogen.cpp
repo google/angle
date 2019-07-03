@@ -58,6 +58,7 @@ ProcEntry g_procTable[] = {
     {"eglDestroySurface", P(EGL_DestroySurface)},
     {"eglDestroySync", P(EGL_DestroySync)},
     {"eglDestroySyncKHR", P(EGL_DestroySyncKHR)},
+    {"eglDupNativeFenceFDANDROID", P(EGL_DupNativeFenceFDANDROID)},
     {"eglGetCompositorTimingANDROID", P(EGL_GetCompositorTimingANDROID)},
     {"eglGetCompositorTimingSupportedANDROID", P(EGL_GetCompositorTimingSupportedANDROID)},
     {"eglGetConfigAttrib", P(EGL_GetConfigAttrib)},
@@ -1490,5 +1491,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1401;
+size_t g_numProcs = 1402;
 }  // namespace egl

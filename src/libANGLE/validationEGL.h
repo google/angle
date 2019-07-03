@@ -329,6 +329,9 @@ Error ValidateQueryDisplayAttribANGLE(const Display *display, const EGLint attri
 // EGL_ANDROID_get_native_client_buffer
 Error ValidateGetNativeClientBufferANDROID(const struct AHardwareBuffer *buffer);
 
+// EGL_ANDROID_native_fence_sync
+Error ValidateDupNativeFenceFDANDROID(const Display *display, const Sync *sync);
+
 }  // namespace egl
 
 #define ANGLE_EGL_TRY(THREAD, EXPR, FUNCNAME, LABELOBJECT)                               \

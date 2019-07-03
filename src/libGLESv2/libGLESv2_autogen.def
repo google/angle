@@ -1492,6 +1492,9 @@ EXPORTS
     ; EGL_ANDROID_get_native_client_buffer
     EGL_GetNativeClientBufferANDROID
 
+    ; EGL_ANDROID_native_fence_sync
+    EGL_DupNativeFenceFDANDROID
+
     ; EGL_ANDROID_presentation_time
     EGL_PresentationTimeANDROID
 

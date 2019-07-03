@@ -100,7 +100,7 @@
   "GL/EGL entry points:scripts/gl_angle_ext.xml":
     "bed6b56a38621721e689ebc19601a556",
   "GL/EGL entry points:scripts/registry_xml.py":
-    "24fa69f5641ed09c8e8a2f9c64fd0260",
+    "97cca309a0561f3bf54e0e2c1cf0708b",
   "GL/EGL entry points:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL entry points:src/libANGLE/Context_gl_1_0_autogen.h":
@@ -256,9 +256,9 @@
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.cpp":
     "229577015686414a6d094533c2210cea",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.def":
-    "fca8c7d5ec90a68a6ad062fc4edf67e4",
+    "52ef9529c516e83d6a0d9e1a9ec0a493",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_with_capture_autogen.def":
-    "45eecb859db4e21d7591e5819ebd81dd",
+    "25b108d7f235173041f7c92ffab9fb44",
   "GL/EGL/WGL loader:scripts/egl.xml":
     "842e24514c4cfe09fba703c17a0fd292",
   "GL/EGL/WGL loader:scripts/egl_angle_ext.xml":
@@ -266,17 +266,17 @@
   "GL/EGL/WGL loader:scripts/generate_loader.py":
     "5a7cd014230fe04664d9613e65399d42",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
-    "24fa69f5641ed09c8e8a2f9c64fd0260",
+    "97cca309a0561f3bf54e0e2c1cf0708b",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
-    "84c8b518af7051faa89702a5d553e87e",
+    "01d20878ff5644bb9ee9e22ec95c3587",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.h":
-    "a8f0278a7dec5c9d6e1ca0854e9542e9",
+    "fcaa495dbf4ad4841c60f669f5fabfb8",
   "GL/EGL/WGL loader:util/egl_loader_autogen.cpp":
-    "4b23b703a6598a75ea753e9b4aa6ea0f",
+    "b9a444da4142a12a9fe6b7a9d33a4ea8",
   "GL/EGL/WGL loader:util/egl_loader_autogen.h":
-    "7ae6f818846fff1a734bc975c82319b2",
+    "bc2c62ff42604977ac2240591ee8ba6a",
   "GL/EGL/WGL loader:util/gles_loader_autogen.cpp":
     "335463406e64c6dc9bf00502cb25d53c",
   "GL/EGL/WGL loader:util/gles_loader_autogen.h":
@@ -574,13 +574,13 @@
   "proc table:scripts/gl_angle_ext.xml":
     "bed6b56a38621721e689ebc19601a556",
   "proc table:scripts/registry_xml.py":
-    "24fa69f5641ed09c8e8a2f9c64fd0260",
+    "97cca309a0561f3bf54e0e2c1cf0708b",
   "proc table:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "proc table:src/libGL/proc_table_wgl_autogen.cpp":
     "62d8f224776d738d5ee259a5f84528e1",
   "proc table:src/libGLESv2/proc_table_egl_autogen.cpp":
-    "35653e6a70519374b768c7240081fbd1",
+    "73e54da783ff8d5058e9dadcc6e90322",
   "uniform type:src/common/gen_uniform_type_table.py":
     "a741cc301b1617ab0e4d29b35f1d3b96",
   "uniform type:src/common/uniform_type_info_autogen.cpp":

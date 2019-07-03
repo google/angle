@@ -2205,20 +2205,30 @@ Error ValidateCreateSyncBase(const Display *display,
             {
                 return EglBadAttribute() << "Invalid attribute";
             }
+            break;
 
-            if (display != currentDisplay)
+        case EGL_SYNC_NATIVE_FENCE_ANDROID:
+            if (!display->getExtensions().nativeFenceSyncANDROID)
             {
-                return EglBadMatch() << "CreateSync can only be called on the current display";
+                return EglBadDisplay()
+                       << "EGL_ANDROID_native_fence_sync extension is not available.";
             }
 
-            ANGLE_TRY(ValidateContext(currentDisplay, currentContext));
-
-            if (!currentContext->getExtensions().eglSync)
+            for (const auto &attributeIter : attribs)
             {
-                return EglBadMatch() << "EGL_SYNC_FENCE_KHR cannot be used without "
-                                        "GL_OES_EGL_sync support.";
+                EGLAttrib attribute = attributeIter.first;
+
+                switch (attribute)
+                {
+                    case EGL_SYNC_NATIVE_FENCE_FD_ANDROID:
+                        break;
+
+                    default:
+                        return EglBadAttribute() << "Invalid attribute";
+                }
             }
             break;
+
         default:
             if (isExt)
             {
@@ -2228,6 +2238,19 @@ Error ValidateCreateSyncBase(const Display *display,
             {
                 return EglBadParameter() << "Invalid type parameter";
             }
+    }
+
+    if (display != currentDisplay)
+    {
+        return EglBadMatch() << "CreateSync can only be called on the current display";
+    }
+
+    ANGLE_TRY(ValidateContext(currentDisplay, currentContext));
+
+    if (!currentContext->getExtensions().eglSync)
+    {
+        return EglBadMatch() << "EGL_SYNC_FENCE_KHR cannot be used without "
+                                "GL_OES_EGL_sync support.";
     }
 
     return NoError();
@@ -2240,15 +2263,23 @@ Error ValidateGetSyncAttribBase(const Display *display, const Sync *sync, EGLint
     switch (attribute)
     {
         case EGL_SYNC_CONDITION_KHR:
-            if (sync->getType() != EGL_SYNC_FENCE_KHR)
+            switch (sync->getType())
             {
-                return EglBadAttribute() << "EGL_SYNC_CONDITION_KHR is only valid for fence syncs";
+                case EGL_SYNC_FENCE_KHR:
+                case EGL_SYNC_NATIVE_FENCE_ANDROID:
+                    break;
+
+                default:
+                    return EglBadAttribute()
+                           << "EGL_SYNC_CONDITION_KHR is not valid for this sync type.";
             }
             break;
+
         // The following attributes are accepted by all types
         case EGL_SYNC_TYPE_KHR:
         case EGL_SYNC_STATUS_KHR:
             break;
+
         default:
             return EglBadAttribute() << "Invalid attribute";
     }
@@ -3864,6 +3895,26 @@ Error ValidateGetNativeClientBufferANDROID(const AHardwareBuffer *buffer)
     if (buffer == nullptr)
     {
         return EglBadParameter() << "NULL buffer.";
+    }
+
+    return NoError();
+}
+
+Error ValidateDupNativeFenceFDANDROID(const Display *display, const Sync *sync)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().nativeFenceSyncANDROID)
+    {
+        return EglBadDisplay() << "EGL_ANDROID_native_fence_sync extension is not available.";
+    }
+
+    ANGLE_TRY(ValidateSync(display, sync));
+
+    if (sync->getNativeFenceFD() == EGL_NO_NATIVE_FENCE_FD_ANDROID)
+    {
+        return EglBadParameter() << "EGL_NATIVE_FENCE_FD_ANDROID attribute of sync is "
+                                    "EGL_NO_NATIVE_FENCE_FD_ANDROID";
     }
 
     return NoError();

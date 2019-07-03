@@ -1454,4 +1454,27 @@ EGLClientBuffer EGLAPIENTRY EGL_GetNativeClientBufferANDROID(const struct AHardw
     return egl::Display::GetNativeClientBuffer(buffer);
 }
 
+EGLint EGLAPIENTRY EGL_DupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSyncKHR sync = 0x%016" PRIxPTR ")",
+          (uintptr_t)dpy, (uintptr_t)sync);
+
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    Sync *syncObject      = static_cast<Sync *>(sync);
+    Thread *thread        = egl::GetCurrentThread();
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateDupNativeFenceFDANDROID(display, syncObject),
+                         "eglDupNativeFenceFDANDROID", GetSyncIfValid(display, syncObject),
+                         EGL_NO_NATIVE_FENCE_FD_ANDROID);
+
+    EGLint result = EGL_NO_NATIVE_FENCE_FD_ANDROID;
+    ANGLE_EGL_TRY_RETURN(thread, syncObject->dupNativeFenceFD(display, &result),
+                         "eglDupNativeFenceFDANDROID", GetSyncIfValid(display, syncObject),
+                         EGL_NO_NATIVE_FENCE_FD_ANDROID);
+
+    thread->setSuccess();
+    return result;
+}
+
 }  // extern "C"
