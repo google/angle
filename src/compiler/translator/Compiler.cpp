@@ -364,8 +364,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         ++firstSource;
     }
 
-    TParseContext parseContext(mSymbolTable, mExtensionBehavior, mShaderType, mShaderSpec, true,
-                               &mDiagnostics, getResources());
+    TParseContext parseContext(mSymbolTable, mExtensionBehavior, mShaderType, mShaderSpec,
+                               compileOptions, true, &mDiagnostics, getResources());
 
     parseContext.setFragmentPrecisionHighOnESSL1(mResources.FragmentPrecisionHigh == 1);
 
