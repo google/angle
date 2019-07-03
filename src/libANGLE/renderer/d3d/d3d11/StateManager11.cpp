@@ -3640,7 +3640,7 @@ angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Contex
 {
     const gl::State &glState   = context->getState();
     const gl::Program *program = glState.getProgram();
-    angle::FixedVector<Buffer11 *, gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINIDNGS>
+    angle::FixedVector<Buffer11 *, gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS>
         previouslyBound;
     for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
          blockIndex++)

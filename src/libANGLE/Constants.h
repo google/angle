@@ -70,7 +70,7 @@ enum
     IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS = 8,
 
     // Implementation upper limits, real maximums depend on the hardware.
-    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINIDNGS = 64
+    IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 64
 };
 }  // namespace gl
 

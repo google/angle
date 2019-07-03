@@ -108,8 +108,8 @@ class ProgramVk : public ProgramImpl
     angle::Result updateUniforms(ContextVk *contextVk);
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk,
                                               vk::FramebufferHelper *framebuffer);
-    angle::Result updateUniformBuffersDescriptorSet(ContextVk *contextVk,
-                                                    vk::FramebufferHelper *framebuffer);
+    angle::Result updateUniformAndStorageBuffersDescriptorSet(ContextVk *contextVk,
+                                                              vk::FramebufferHelper *framebuffer);
     angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
                                                        vk::FramebufferHelper *framebuffer);
 
@@ -122,6 +122,7 @@ class ProgramVk : public ProgramImpl
 
     bool hasTextures() const { return !mState.getSamplerBindings().empty(); }
     bool hasUniformBuffers() const { return !mState.getUniformBlocks().empty(); }
+    bool hasStorageBuffers() const { return !mState.getShaderStorageBlocks().empty(); }
     bool hasTransformFeedbackOutput() const
     {
         return !mState.getLinkedTransformFeedbackVaryings().empty();
@@ -168,6 +169,10 @@ class ProgramVk : public ProgramImpl
 
     void updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk);
+    void updateBuffersDescriptorSet(ContextVk *contextVk,
+                                    vk::FramebufferHelper *framebufferVk,
+                                    const std::vector<gl::InterfaceBlock> &blocks,
+                                    VkDescriptorType descriptorType);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
@@ -176,6 +181,12 @@ class ProgramVk : public ProgramImpl
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
     angle::Result linkImpl(const gl::Context *glContext, gl::InfoLog &infoLog);
     void linkResources(const gl::ProgramLinkedResources &resources);
+
+    uint32_t getUniformBuffersBindingStart() const { return 0; }
+    uint32_t getStorageBuffersBindingStart() const
+    {
+        return static_cast<uint32_t>(mState.getUniformBlocks().size());
+    }
 
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
                                            gl::PrimitiveMode mode,

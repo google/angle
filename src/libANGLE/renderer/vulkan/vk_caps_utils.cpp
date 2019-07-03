@@ -210,9 +210,11 @@ void RendererVk::ensureCapsInitialized() const
 
     const uint32_t maxPerStageStorageBuffers =
         mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers;
-    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex]   = maxPerStageStorageBuffers;
-    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Fragment] = maxPerStageStorageBuffers;
-    mNativeCaps.maxCombinedShaderStorageBlocks                   = maxPerStageStorageBuffers;
+    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] =
+        mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxPerStageStorageBuffers : 0;
+    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Fragment] =
+        mPhysicalDeviceFeatures.fragmentStoresAndAtomics ? maxPerStageStorageBuffers : 0;
+    mNativeCaps.maxCombinedShaderStorageBlocks = maxPerStageStorageBuffers;
 
     // A number of storage buffer slots are used in the vertex shader to emulate transform feedback.
     // Note that Vulkan requires maxPerStageDescriptorStorageBuffers to be at least 4 (i.e. the same
@@ -224,9 +226,12 @@ void RendererVk::ensureCapsInitialized() const
     static_assert(
         gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS == 4,
         "Limit to ES2.0 if supported SSBO count < supporting transform feedback buffer count");
-    ASSERT(maxPerStageStorageBuffers >= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
-    mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] -=
-        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
+    if (mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics)
+    {
+        ASSERT(maxPerStageStorageBuffers >= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
+        mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] -=
+            gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
+    }
 
     // Fill in additional limits for UBOs and SSBOs.
     mNativeCaps.maxUniformBufferBindings = maxPerStageUniformBuffers;

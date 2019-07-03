@@ -205,7 +205,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_TEXTURES);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-    mNewCommandBufferDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFERS);
+    mNewCommandBufferDirtyBits.set(DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
     mNewCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 
@@ -215,7 +215,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mDirtyBitHandlers[DIRTY_BIT_VERTEX_BUFFERS]  = &ContextVk::handleDirtyVertexBuffers;
     mDirtyBitHandlers[DIRTY_BIT_INDEX_BUFFER]    = &ContextVk::handleDirtyIndexBuffer;
     mDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] = &ContextVk::handleDirtyDriverUniforms;
-    mDirtyBitHandlers[DIRTY_BIT_UNIFORM_BUFFERS] = &ContextVk::handleDirtyUniformBuffers;
+    mDirtyBitHandlers[DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS] =
+        &ContextVk::handleDirtyUniformAndStorageBuffers;
     mDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS] =
         &ContextVk::handleDirtyTransformFeedbackBuffers;
     mDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] = &ContextVk::handleDirtyDescriptorSets;
@@ -649,13 +650,13 @@ angle::Result ContextVk::handleDirtyIndexBuffer(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyUniformBuffers(const gl::Context *context,
-                                                   vk::CommandBuffer *commandBuffer)
+angle::Result ContextVk::handleDirtyUniformAndStorageBuffers(const gl::Context *context,
+                                                             vk::CommandBuffer *commandBuffer)
 {
-    if (mProgram->hasUniformBuffers())
+    if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers())
     {
-        ANGLE_TRY(
-            mProgram->updateUniformBuffersDescriptorSet(this, mDrawFramebuffer->getFramebuffer()));
+        ANGLE_TRY(mProgram->updateUniformAndStorageBuffersDescriptorSet(
+            this, mDrawFramebuffer->getFramebuffer()));
     }
     return angle::Result::Continue;
 }
@@ -1643,7 +1644,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 invalidateCurrentTextures();
-                invalidateCurrentUniformBuffers();
+                invalidateCurrentUniformAndStorageBuffers();
                 // No additional work is needed here. We will update the pipeline desc later.
                 invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
                 bool useVertexBuffer = (mProgram->getState().getMaxActiveAttribLocation());
@@ -1663,9 +1664,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // Nothing to do.
                 break;
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
+                invalidateCurrentUniformAndStorageBuffers();
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                invalidateCurrentUniformBuffers();
+                invalidateCurrentUniformAndStorageBuffers();
                 break;
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 break;
@@ -1885,12 +1887,12 @@ void ContextVk::invalidateCurrentTextures()
     }
 }
 
-void ContextVk::invalidateCurrentUniformBuffers()
+void ContextVk::invalidateCurrentUniformAndStorageBuffers()
 {
     ASSERT(mProgram);
-    if (mProgram->hasUniformBuffers())
+    if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers())
     {
-        mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFERS);
+        mDirtyBits.set(DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS);
         mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
 }

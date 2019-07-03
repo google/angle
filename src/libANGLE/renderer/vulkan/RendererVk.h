@@ -86,6 +86,7 @@ class RendererVk : angle::NonCopyable
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
     uint32_t getMaxUniformBlocks() const;
+    uint32_t getMaxStorageBlocks() const;
     uint32_t getMaxActiveTextures() const;
 
     uint32_t getQueueFamilyIndex() const { return mCurrentQueueFamilyIndex; }

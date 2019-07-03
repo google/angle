@@ -953,6 +953,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     enabledFeatures.features.samplerAnisotropy   = mPhysicalDeviceFeatures.samplerAnisotropy;
     enabledFeatures.features.vertexPipelineStoresAndAtomics =
         mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics;
+    enabledFeatures.features.fragmentStoresAndAtomics =
+        mPhysicalDeviceFeatures.fragmentStoresAndAtomics;
     if (!vk::CommandBuffer::ExecutesInline())
     {
         enabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
@@ -1322,6 +1324,12 @@ uint32_t RendererVk::getMaxUniformBlocks() const
 {
     return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetUniformBuffers,
                               gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
+}
+
+uint32_t RendererVk::getMaxStorageBlocks() const
+{
+    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetStorageBuffers,
+                              gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
 }
 
 uint32_t RendererVk::getMaxActiveTextures() const
