@@ -684,6 +684,60 @@ class UniformTestES3 : public ANGLETest
     GLuint mProgram;
 };
 
+// Test that we can get and set an array of matrices uniform.
+TEST_P(UniformTestES3, MatrixArrayUniformStateQuery)
+{
+    constexpr char kFragShader[] =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform mat3x4 uniMat3x4[5];\n"
+        "out vec4 fragColor;\n"
+        "void main() {\n"
+        "    fragColor = vec4(uniMat3x4[0]);\n"
+        "    fragColor += vec4(uniMat3x4[1]);\n"
+        "    fragColor += vec4(uniMat3x4[2]);\n"
+        "    fragColor += vec4(uniMat3x4[3]);\n"
+        "    fragColor += vec4(uniMat3x4[4]);\n"
+        "}\n";
+    constexpr unsigned int kArrayCount   = 5;
+    constexpr unsigned int kMatrixStride = 3 * 4;
+
+    mProgram = CompileProgram(essl3_shaders::vs::Zero(), kFragShader);
+    ASSERT_NE(mProgram, 0u);
+
+    glUseProgram(mProgram);
+    GLfloat expected[kArrayCount][kMatrixStride] = {
+        {0.6f, -0.4f, 0.6f, 0.9f, -0.6f, 0.3f, -0.3f, -0.1f, -0.4f, -0.3f, 0.7f, 0.1f},
+        {-0.4f, -0.4f, -0.5f, -0.7f, 0.1f, -0.5f, 0.0f, -0.9f, -0.4f, 0.8f, -0.6f, 0.9f},
+        {0.4f, 0.1f, -0.9f, 1.0f, -0.8f, 0.4f, -0.2f, 0.4f, -0.0f, 0.2f, 0.9f, -0.3f},
+        {0.5f, 0.7f, -0.0f, 1.0f, 0.7f, 0.7f, 0.7f, -0.7f, -0.8f, 0.6f, 0.5f, -0.2f},
+        {-1.0f, 0.8f, 1.0f, -0.4f, 0.7f, 0.5f, 0.5f, 0.8f, 0.6f, 0.1f, 0.4f, -0.9f}};
+
+    GLint baseLocation = glGetUniformLocation(mProgram, "uniMat3x4");
+    ASSERT_NE(-1, baseLocation);
+
+    glUniformMatrix3x4fv(baseLocation, kArrayCount, GL_FALSE, &expected[0][0]);
+
+    for (size_t i = 0; i < kArrayCount; i++)
+    {
+        std::stringstream nameStr;
+        nameStr << "uniMat3x4[" << i << "]";
+        std::string name = nameStr.str();
+        GLint location   = glGetUniformLocation(mProgram, name.c_str());
+        ASSERT_GL_NO_ERROR();
+        ASSERT_NE(-1, location);
+
+        std::vector<GLfloat> results(12, 0);
+        glGetUniformfv(mProgram, location, results.data());
+        ASSERT_GL_NO_ERROR();
+
+        for (size_t compIdx = 0; compIdx < kMatrixStride; compIdx++)
+        {
+            EXPECT_EQ(results[compIdx], expected[i][compIdx]);
+        }
+    }
+}
+
 // Test queries for transposed arrays of non-square matrix uniforms.
 TEST_P(UniformTestES3, TransposedMatrixArrayUniformStateQuery)
 {

@@ -2602,9 +2602,9 @@ void ProgramD3D::setUniformMatrixfvInternal(GLint location,
     {
         if (targetUniform->mShaderData[shaderType])
         {
-            if (SetFloatUniformMatrixHLSL<cols, rows>(arrayElementOffset, elementCount, countIn,
-                                                      transpose, value,
-                                                      targetUniform->mShaderData[shaderType]))
+            if (SetFloatUniformMatrixHLSL<cols, rows>::Run(arrayElementOffset, elementCount,
+                                                           countIn, transpose, value,
+                                                           targetUniform->mShaderData[shaderType]))
             {
                 mShaderUniformsDirty.set(shaderType);
             }
