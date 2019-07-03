@@ -31,9 +31,8 @@ class EGLFeatureControlTest : public ANGLETest
 
     bool initTest()
     {
-        // http://anglebug.com/3629 This test sporadically times out on Win10/Intel/Vulkan
-        bool isVulkan = GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
-        if (isVulkan && IsWindows() && IsIntel())
+        // http://anglebug.com/3629 This test sporadically times out on Win10/Intel
+        if (IsWindows() && IsIntel())
             return false;
 
         EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
