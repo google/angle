@@ -1398,6 +1398,9 @@ TEST_P(ImageTest, Source3DTargetExternal)
 
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_texture_3D"));
 
+    // Ozone only supports external target for images created with EGL_EXT_image_dma_buf_import
+    ANGLE_SKIP_TEST_IF(IsOzone());
+
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
         255, 0, 255, 255, 255, 255, 0, 255,
