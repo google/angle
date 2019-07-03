@@ -453,6 +453,9 @@ void main()
 // runs well.
 TEST_P(ComputeShaderTest, ImageAtomicCounterBuffer)
 {
+    // Flaky hang. http://anglebug.com/3636
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsDesktopOpenGL());
+
     constexpr char kCS0[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) writeonly uniform highp uimage2D uImage[2];
