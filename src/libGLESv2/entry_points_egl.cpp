@@ -881,13 +881,13 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
     egl::Sync *syncObject = static_cast<Sync *>(sync);
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateClientWaitSync(display, syncObject, flags, timeout),
-                         "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+                         "eglClientWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
 
     gl::Context *currentContext = thread->getContext();
     EGLint syncStatus           = EGL_FALSE;
     ANGLE_EGL_TRY_RETURN(
         thread, syncObject->clientWait(display, currentContext, flags, timeout, &syncStatus),
-        "eglClientWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+        "eglClientWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
 
     thread->setSuccess();
     return syncStatus;
@@ -909,11 +909,11 @@ EGLBoolean EGLAPIENTRY EGL_GetSyncAttrib(EGLDisplay dpy,
     egl::Sync *syncObject = static_cast<Sync *>(sync);
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateGetSyncAttrib(display, syncObject, attribute, value),
-                         "eglGetSyncAttrib", GetDisplayIfValid(display), EGL_FALSE);
+                         "eglGetSyncAttrib", GetSyncIfValid(display, syncObject), EGL_FALSE);
 
     EGLint valueExt;
     ANGLE_EGL_TRY_RETURN(thread, GetSyncAttrib(display, syncObject, attribute, &valueExt),
-                         "eglGetSyncAttrib", GetDisplayIfValid(display), EGL_FALSE);
+                         "eglGetSyncAttrib", GetSyncIfValid(display, syncObject), EGL_FALSE);
     *value = valueExt;
 
     thread->setSuccess();
@@ -1064,11 +1064,11 @@ EGLBoolean EGLAPIENTRY EGL_WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     egl::Sync *syncObject = static_cast<Sync *>(sync);
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateWaitSync(display, context, syncObject, flags),
-                         "eglWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+                         "eglWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
 
     gl::Context *currentContext = thread->getContext();
     ANGLE_EGL_TRY_RETURN(thread, syncObject->serverWait(display, currentContext, flags),
-                         "eglWaitSync", GetDisplayIfValid(display), EGL_FALSE);
+                         "eglWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

@@ -43,7 +43,7 @@ Error ValidateConfig(const Display *display, const Config *config);
 Error ValidateContext(const Display *display, const gl::Context *context);
 Error ValidateImage(const Display *display, const Image *image);
 Error ValidateDevice(const Device *device);
-Error ValidateSync(const Device *device, const Sync *sync);
+Error ValidateSync(const Display *display, const Sync *sync);
 
 // Return the requested object only if it is valid (otherwise nullptr)
 const Thread *GetThreadIfValid(const Thread *thread);

@@ -18,7 +18,9 @@ namespace egl
 {
 
 Sync::Sync(rx::EGLImplFactory *factory, EGLenum type, const AttributeMap &attribs)
-    : mFence(factory->createSync(attribs)), mType(type)
+    : mFence(factory->createSync(attribs)),
+      mLabel(nullptr),
+      mType(type)
 {}
 
 void Sync::onDestroy(const Display *display)
@@ -33,6 +35,16 @@ Sync::~Sync() {}
 Error Sync::initialize(const Display *display, const gl::Context *context)
 {
     return mFence->initialize(display, context, mType);
+}
+
+void Sync::setLabel(EGLLabelKHR label)
+{
+    mLabel = label;
+}
+
+EGLLabelKHR Sync::getLabel() const
+{
+    return mLabel;
 }
 
 Error Sync::clientWait(const Display *display,

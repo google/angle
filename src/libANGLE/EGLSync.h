@@ -29,11 +29,14 @@ class Context;
 
 namespace egl
 {
-class Sync final : public angle::RefCountObject<Display, angle::Result>
+class Sync final : public angle::RefCountObject<Display, angle::Result>, public LabeledObject
 {
   public:
     Sync(rx::EGLImplFactory *factory, EGLenum type, const AttributeMap &attribs);
     ~Sync() override;
+
+    void setLabel(EGLLabelKHR label) override;
+    EGLLabelKHR getLabel() const override;
 
     void onDestroy(const Display *display) override;
 
@@ -51,6 +54,8 @@ class Sync final : public angle::RefCountObject<Display, angle::Result>
 
   private:
     std::unique_ptr<rx::EGLSyncImpl> mFence;
+
+    EGLLabelKHR mLabel;
 
     EGLenum mType;
     static constexpr EGLint mCondition = EGL_SYNC_PRIOR_COMMANDS_COMPLETE_KHR;

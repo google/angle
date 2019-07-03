@@ -700,11 +700,9 @@ Error ValidateLabeledObject(Thread *thread,
 
         case ObjectType::Sync:
         {
-            ANGLE_TRY(ValidateDisplay(display));
-            // TODO(geofflang): Implement sync objects. http://anglebug.com/2466
-            UNIMPLEMENTED();
-            return EglBadDisplay() << "Sync objects are unimplemented.";
-
+            Sync *sync = static_cast<Sync *>(object);
+            ANGLE_TRY(ValidateSync(display, sync));
+            *outLabeledObject = sync;
             break;
         }
 
