@@ -1296,36 +1296,39 @@ void BufferHelper::release(DisplayVk *display, std::vector<GarbageObjectBase> *g
     mDeviceMemory.dumpResources(garbageQueue);
 }
 
-void BufferHelper::onWrite(ContextVk *contextVk, VkAccessFlags writeAccessType)
+bool BufferHelper::needsOnWriteBarrier(VkAccessFlags readAccessType,
+                                       VkAccessFlags writeAccessType,
+                                       VkAccessFlags *barrierSrcOut,
+                                       VkAccessFlags *barrierDstOut)
 {
-    if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
-    {
-        addGlobalMemoryBarrier(mCurrentReadAccess | mCurrentWriteAccess, writeAccessType);
-    }
+    bool needsBarrier = mCurrentReadAccess != 0 || mCurrentWriteAccess != 0;
+
+    // Note: mCurrentReadAccess is not part of barrier src flags as "anything-after-read" is
+    // satisified by execution barriers alone.
+    *barrierSrcOut = mCurrentWriteAccess;
+    *barrierDstOut = readAccessType | writeAccessType;
 
     mCurrentWriteAccess = writeAccessType;
-    mCurrentReadAccess  = 0;
+    mCurrentReadAccess  = readAccessType;
+
+    return needsBarrier;
+}
+
+void BufferHelper::onWriteAccess(ContextVk *contextVk,
+                                 VkAccessFlags readAccessType,
+                                 VkAccessFlags writeAccessType)
+{
+    VkAccessFlags barrierSrc, barrierDst;
+    if (needsOnWriteBarrier(readAccessType, writeAccessType, &barrierSrc, &barrierDst))
+    {
+        addGlobalMemoryBarrier(barrierSrc, barrierDst);
+    }
 
     bool hostVisible = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     if (hostVisible && writeAccessType != VK_ACCESS_HOST_WRITE_BIT)
     {
         contextVk->onHostVisibleBufferWrite();
     }
-}
-
-void BufferHelper::onSelfReadWrite(ContextVk *contextVk,
-                                   VkAccessFlags readAccessType,
-                                   VkAccessFlags writeAccessType)
-{
-    if (mCurrentReadAccess || mCurrentWriteAccess)
-    {
-        finishCurrentCommands(contextVk);
-        addGlobalMemoryBarrier(mCurrentReadAccess | mCurrentWriteAccess,
-                               readAccessType | writeAccessType);
-    }
-
-    mCurrentReadAccess  = readAccessType;
-    mCurrentWriteAccess = writeAccessType;
 }
 
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,

@@ -64,7 +64,7 @@ BufferVk::VertexConversionBuffer::VertexConversionBuffer(VertexConversionBuffer 
 BufferVk::VertexConversionBuffer::~VertexConversionBuffer() = default;
 
 // BufferVk implementation.
-BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state), mDataWriteAccessFlags(0) {}
+BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state) {}
 
 BufferVk::~BufferVk() {}
 
@@ -169,8 +169,8 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     {
         ANGLE_TRY(mBuffer.recordCommands(contextVk, &commandBuffer));
 
-        sourceBuffer->mBuffer.onRead(&mBuffer, VK_ACCESS_TRANSFER_READ_BIT);
-        mBuffer.onWrite(contextVk, VK_ACCESS_TRANSFER_WRITE_BIT);
+        sourceBuffer->mBuffer.onReadByBuffer(contextVk, &mBuffer, VK_ACCESS_TRANSFER_READ_BIT,
+                                             VK_ACCESS_TRANSFER_WRITE_BIT);
     }
 
     // Enqueue a copy command on the GPU.
@@ -239,29 +239,9 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
     ASSERT(mBuffer.valid());
 
     mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
-    mDataWriteAccessFlags = VK_ACCESS_HOST_WRITE_BIT;
+    mBuffer.onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
 
     markConversionBuffersDirty();
-
-    return angle::Result::Continue;
-}
-
-angle::Result BufferVk::onRead(ContextVk *contextVk,
-                               vk::CommandGraphResource *reader,
-                               VkAccessFlagBits readAccessType)
-{
-    // Now that the buffer helper is being used (and will be part of the command graph), make sure
-    // its data write barrier is executed.
-    if (mDataWriteAccessFlags != 0)
-    {
-        vk::CommandBuffer *commandBuffer;
-        ANGLE_TRY(mBuffer.recordCommands(contextVk, &commandBuffer));
-
-        mBuffer.onWrite(contextVk, mDataWriteAccessFlags);
-        mDataWriteAccessFlags = 0;
-    }
-
-    mBuffer.onRead(reader, readAccessType);
 
     return angle::Result::Continue;
 }
@@ -344,7 +324,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         memcpy(mapPointer, data, size);
 
         mBuffer.getDeviceMemory().unmap(device);
-        mDataWriteAccessFlags = VK_ACCESS_HOST_WRITE_BIT;
+        mBuffer.onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
     }
 
     // Update conversions
@@ -362,8 +342,8 @@ angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
     ANGLE_TRY(destBuffer->recordCommands(contextVk, &commandBuffer));
     commandBuffer->copyBuffer(mBuffer.getBuffer(), destBuffer->getBuffer(), copyCount, copies);
 
-    mBuffer.onRead(destBuffer, VK_ACCESS_TRANSFER_READ_BIT);
-    destBuffer->onWrite(contextVk, VK_ACCESS_TRANSFER_WRITE_BIT);
+    mBuffer.onReadByBuffer(contextVk, destBuffer, VK_ACCESS_TRANSFER_READ_BIT,
+                           VK_ACCESS_TRANSFER_WRITE_BIT);
 
     return angle::Result::Continue;
 }

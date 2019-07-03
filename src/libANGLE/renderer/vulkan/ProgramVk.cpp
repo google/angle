@@ -981,7 +981,7 @@ angle::Result ProgramVk::updateUniformBuffersDescriptorSet(ContextVk *contextVk,
         VkDeviceSize blockSize         = uniformBlock.dataSize;
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-        ANGLE_TRY(bufferVk->onRead(contextVk, framebuffer, VK_ACCESS_UNIFORM_READ_BIT));
+        bufferHelper.onRead(framebuffer, VK_ACCESS_UNIFORM_READ_BIT);
 
         // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
         // backing buffer may be larger than maxUniformBufferRange.  In that case, we use the

@@ -451,22 +451,50 @@ class BufferHelper final : public CommandGraphResource
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
     VkDeviceSize getSize() const { return mSize; }
 
-    // Helpers for setting the graph dependencies *and* setting the appropriate barrier.
-    ANGLE_INLINE void onRead(CommandGraphResource *reader, VkAccessFlags readAccessType)
+    // Helpers for setting the graph dependencies *and* setting the appropriate barrier.  These are
+    // made for dependencies to non-buffer resources, as only one of two resources participating in
+    // the dependency would require a memory barrier.  Note that onWrite takes read access flags
+    // too, as output buffers could be read as well.
+    void onRead(CommandGraphResource *reader, VkAccessFlags readAccessType)
     {
         addReadDependency(reader);
-
-        if (mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) != readAccessType)
-        {
-            reader->addGlobalMemoryBarrier(mCurrentWriteAccess, readAccessType);
-            mCurrentReadAccess |= readAccessType;
-        }
+        onReadAccess(reader, readAccessType);
     }
-
-    void onWrite(ContextVk *contextVk, VkAccessFlags writeAccessType);
+    void onWrite(ContextVk *contextVk,
+                 CommandGraphResource *writer,
+                 VkAccessFlags readAccessType,
+                 VkAccessFlags writeAccessType)
+    {
+        addWriteDependency(writer);
+        onWriteAccess(contextVk, readAccessType, writeAccessType);
+    }
+    // Helper for setting a graph dependency between two buffers.  This is a specialized function as
+    // both buffers may incur a memory barrier.  Using |onRead| followed by |onWrite| between the
+    // buffers is impossible as it would result in a command graph loop.
+    void onReadByBuffer(ContextVk *contextVk,
+                        BufferHelper *reader,
+                        VkAccessFlags readAccessType,
+                        VkAccessFlags writeAccessType)
+    {
+        addReadDependency(reader);
+        onReadAccess(reader, readAccessType);
+        reader->onWriteAccess(contextVk, 0, writeAccessType);
+    }
+    // Helper for setting a barrier when different parts of the same buffer is being read from and
+    // written to.
     void onSelfReadWrite(ContextVk *contextVk,
                          VkAccessFlags readAccessType,
-                         VkAccessFlags writeAccessType);
+                         VkAccessFlags writeAccessType)
+    {
+        if (mCurrentReadAccess || mCurrentWriteAccess)
+        {
+            finishCurrentCommands(contextVk);
+        }
+        onWriteAccess(contextVk, readAccessType, writeAccessType);
+    }
+    // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
+    // graph resource to create a dependency to.
+    void onExternalWrite(VkAccessFlags writeAccessType) { mCurrentWriteAccess |= writeAccessType; }
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
@@ -509,6 +537,34 @@ class BufferHelper final : public CommandGraphResource
 
   private:
     angle::Result mapImpl(ContextVk *contextVk);
+    bool needsOnReadBarrier(VkAccessFlags readAccessType,
+                            VkAccessFlags *barrierSrcOut,
+                            VkAccessFlags *barrierDstOut)
+    {
+        bool needsBarrier =
+            mCurrentWriteAccess != 0 && (mCurrentReadAccess & readAccessType) != readAccessType;
+
+        *barrierSrcOut = mCurrentWriteAccess;
+        *barrierDstOut = readAccessType;
+
+        mCurrentReadAccess |= readAccessType;
+        return needsBarrier;
+    }
+    void onReadAccess(CommandGraphResource *reader, VkAccessFlags readAccessType)
+    {
+        VkAccessFlags barrierSrc, barrierDst;
+        if (needsOnReadBarrier(readAccessType, &barrierSrc, &barrierDst))
+        {
+            reader->addGlobalMemoryBarrier(barrierSrc, barrierDst);
+        }
+    }
+    bool needsOnWriteBarrier(VkAccessFlags readAccessType,
+                             VkAccessFlags writeAccessType,
+                             VkAccessFlags *barrierSrcOut,
+                             VkAccessFlags *barrierDstOut);
+    void onWriteAccess(ContextVk *contextVk,
+                       VkAccessFlags readAccessType,
+                       VkAccessFlags writeAccessType);
 
     // Vulkan objects.
     Buffer mBuffer;
