@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5de2c779_05d92f04",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-03T19:38:08Z",
+      "side": 0,
+      "message": "I very recently identified these as failing. Do you know what fixed these?! IIRC, ASTC is not supported on desktop, so these must have been Android failures. Maybe I was testing on Pixel 2XL and the failure was there only...",
+      "revId": "66b5ff586c9c0d0066be3022f47157ad310638d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
