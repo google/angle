@@ -16,6 +16,24 @@
       "revId": "66b5ff586c9c0d0066be3022f47157ad310638d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b408138_5d13caca",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-03T19:42:46Z",
+      "side": 0,
+      "message": "Unfortunately, I don\u0027t know what fixed these.  I tried seeing what works after a number of CLs landed, and these now pass.\n\nWhat\u0027s your sense?  Should I trust the bots on this, or keep expecting them to fail (at least on Android)?",
+      "parentUuid": "5de2c779_05d92f04",
+      "revId": "66b5ff586c9c0d0066be3022f47157ad310638d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
