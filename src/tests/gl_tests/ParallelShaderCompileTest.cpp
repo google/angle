@@ -320,14 +320,14 @@ void main()
             glBindImageTexture(1, texture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
 
             glDispatchCompute(1, 1, 1);
-            glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+            glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
             EXPECT_GL_NO_ERROR();
 
             glBindImageTexture(0, texture[1], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
             glBindImageTexture(1, texture[2], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
 
             glDispatchCompute(1, 1, 1);
-            glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+            glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
             EXPECT_GL_NO_ERROR();
 
             GLuint outputValue;

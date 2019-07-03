@@ -349,7 +349,7 @@ void main()
 
     glDispatchCompute(1, 1, 1);
 
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
     const void *bufferData =
@@ -362,7 +362,7 @@ void main()
     // Running shader twice to make sure that the buffer gets updated correctly 123->124->125
     glDispatchCompute(1, 1, 1);
 
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT | GL_PIXEL_BUFFER_BARRIER_BIT);
 
     bufferData = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBytesPerComponent, GL_MAP_READ_BIT);
 
@@ -451,7 +451,7 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     glDispatchCompute(1, 1, 1);
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
 
@@ -460,7 +460,7 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     glDispatchCompute(1, 1, 1);
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     // Read back shader storage buffer
     constexpr unsigned int kExpectedValues[2] = {3u, 4u};

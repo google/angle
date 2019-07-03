@@ -150,7 +150,7 @@ void DispatchComputePerfBenchmark::drawBenchmark()
     for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
         glDispatchCompute(mDispatchX, mDispatchY, 1);
-        glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+        glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
     }
     ASSERT_GL_NO_ERROR();
 }
