@@ -127,7 +127,7 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
 {
     mDisplayAttributes = display->getAttributeMap();
 
-    mOpenGLModule = LoadLibraryA("opengl32.dll");
+    mOpenGLModule = LoadLibraryExA("opengl32.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
     if (!mOpenGLModule)
     {
         return egl::EglNotInitialized() << "Failed to load OpenGL library.";
