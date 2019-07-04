@@ -444,6 +444,11 @@ constexpr size_t kCubeFaceCount = 6;
 
 using TextureMap = angle::PackedEnumMap<TextureType, BindingPointer<Texture>>;
 
+// ShaderVector can contain one item per shader.  It differs from ShaderMap in that the values are
+// not indexed by ShaderType.
+template <typename T>
+using ShaderVector = angle::FixedVector<T, static_cast<size_t>(ShaderType::EnumCount)>;
+
 template <typename T>
 using AttachmentArray = std::array<T, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;
 

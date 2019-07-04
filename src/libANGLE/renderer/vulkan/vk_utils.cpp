@@ -864,6 +864,16 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
            (blue ? VK_COLOR_COMPONENT_B_BIT : 0) | (alpha ? VK_COLOR_COMPONENT_A_BIT : 0);
 }
 
+VkShaderStageFlags GetShaderStageFlags(gl::ShaderBitSet activeShaders)
+{
+    VkShaderStageFlags flags = 0;
+    for (const gl::ShaderType shaderType : activeShaders)
+    {
+        flags |= kShaderStageMap[shaderType];
+    }
+    return flags;
+}
+
 void GetViewport(const gl::Rectangle &viewport,
                  float nearPlane,
                  float farPlane,

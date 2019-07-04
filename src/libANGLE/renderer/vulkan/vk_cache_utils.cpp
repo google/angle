@@ -1429,7 +1429,7 @@ void PipelineLayoutDesc::updatePushConstantRange(gl::ShaderType shaderType,
 {
     ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Fragment ||
            shaderType == gl::ShaderType::Compute);
-    PackedPushConstantRange &packed = mPushConstantRanges[static_cast<size_t>(shaderType)];
+    PackedPushConstantRange &packed = mPushConstantRanges[shaderType];
     packed.offset                   = offset;
     packed.size                     = size;
 }
@@ -1770,30 +1770,22 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
         }
     }
 
-    angle::FixedVector<VkPushConstantRange, vk::kMaxPushConstantRanges> pushConstantRanges;
     const vk::PushConstantRangeArray<vk::PackedPushConstantRange> &descPushConstantRanges =
         desc.getPushConstantRanges();
-    for (size_t shaderIndex = 0; shaderIndex < descPushConstantRanges.size(); ++shaderIndex)
+
+    gl::ShaderVector<VkPushConstantRange> pushConstantRanges;
+
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const vk::PackedPushConstantRange &pushConstantDesc = descPushConstantRanges[shaderIndex];
+        const vk::PackedPushConstantRange &pushConstantDesc = descPushConstantRanges[shaderType];
         if (pushConstantDesc.size > 0)
         {
-            static constexpr VkShaderStageFlagBits kShaderStages[vk::kMaxPushConstantRanges] = {
-                VK_SHADER_STAGE_VERTEX_BIT,
-                VK_SHADER_STAGE_FRAGMENT_BIT,
-                VK_SHADER_STAGE_GEOMETRY_BIT,
-                VK_SHADER_STAGE_COMPUTE_BIT,
-            };
-            static_assert(static_cast<uint32_t>(gl::ShaderType::Vertex) == 0, "Fix this table");
-            static_assert(static_cast<uint32_t>(gl::ShaderType::Fragment) == 1, "Fix this table");
-            static_assert(static_cast<uint32_t>(gl::ShaderType::Geometry) == 2, "Fix this table");
-            static_assert(static_cast<uint32_t>(gl::ShaderType::Compute) == 3, "Fix this table");
-            VkPushConstantRange pushConstantRange = {};
-            pushConstantRange.stageFlags          = kShaderStages[shaderIndex];
-            pushConstantRange.offset              = pushConstantDesc.offset;
-            pushConstantRange.size                = pushConstantDesc.size;
+            VkPushConstantRange range;
+            range.stageFlags = gl_vk::kShaderStageMap[shaderType];
+            range.offset     = pushConstantDesc.offset;
+            range.size       = pushConstantDesc.size;
 
-            pushConstantRanges.push_back(pushConstantRange);
+            pushConstantRanges.push_back(range);
         }
     }
 
@@ -1803,7 +1795,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     createInfo.flags                      = 0;
     createInfo.setLayoutCount             = static_cast<uint32_t>(setLayoutHandles.size());
     createInfo.pSetLayouts                = setLayoutHandles.data();
-    createInfo.pushConstantRangeCount     = static_cast<uint32_t>(pushConstantRanges.size());
+    createInfo.pushConstantRangeCount     = pushConstantRanges.size();
     createInfo.pPushConstantRanges        = pushConstantRanges.data();
 
     vk::PipelineLayout newLayout;

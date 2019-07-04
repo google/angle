@@ -182,11 +182,9 @@ class ProgramVk : public ProgramImpl
     angle::Result linkImpl(const gl::Context *glContext, gl::InfoLog &infoLog);
     void linkResources(const gl::ProgramLinkedResources &resources);
 
-    uint32_t getUniformBuffersBindingStart() const { return 0; }
-    uint32_t getStorageBuffersBindingStart() const
-    {
-        return static_cast<uint32_t>(mState.getUniformBlocks().size());
-    }
+    void updateBindingOffsets();
+    uint32_t getUniformBlockBindingsOffset() const { return 0; }
+    uint32_t getStorageBlockBindingsOffset() const { return mStorageBlockBindingsOffset; }
 
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
                                            gl::PrimitiveMode mode,
@@ -233,10 +231,7 @@ class ProgramVk : public ProgramImpl
     gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
 
-    static constexpr uint32_t kShaderTypeMin   = static_cast<uint32_t>(gl::kGLES2ShaderTypeMin);
-    static constexpr uint32_t kShaderTypeMax   = static_cast<uint32_t>(gl::kGLES2ShaderTypeMax);
-    static constexpr uint32_t kShaderTypeCount = kShaderTypeMax - kShaderTypeMin + 1;
-    std::array<uint32_t, kShaderTypeCount> mDynamicBufferOffsets;
+    gl::ShaderVector<uint32_t> mDynamicBufferOffsets;
 
     // This is a special "empty" placeholder buffer for when a shader has no uniforms.
     // It is necessary because we want to keep a compatible pipeline layout in all cases,
@@ -284,6 +279,10 @@ class ProgramVk : public ProgramImpl
 
     // We keep the translated linked shader sources to use with shader draw call patching.
     gl::ShaderMap<std::string> mShaderSource;
+
+    // Storage buffers are placed after uniform buffers in their descriptor set.  This cached value
+    // contains the offset where storage buffer bindings start.
+    uint32_t mStorageBlockBindingsOffset;
 
     // Store descriptor pools here. We store the descriptors in the Program to facilitate descriptor
     // cache management. It can also allow fewer descriptors for shaders which use fewer

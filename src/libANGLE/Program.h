@@ -359,13 +359,19 @@ class ProgramState final : angle::NonCopyable
         return mAtomicCounterBuffers;
     }
 
+    // Count the number of uniform and storage buffer declarations, counting arrays as one.
+    size_t getUniqueUniformBlockCount() const;
+    size_t getUniqueStorageBlockCount() const;
+
     GLuint getUniformIndexFromName(const std::string &name) const;
     GLuint getUniformIndexFromLocation(GLint location) const;
     Optional<GLuint> getSamplerIndex(GLint location) const;
     bool isSamplerUniformIndex(GLuint index) const;
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
+    GLuint getUniformIndexFromSamplerIndex(GLuint samplerIndex) const;
     bool isImageUniformIndex(GLuint index) const;
     GLuint getImageIndexFromUniformIndex(GLuint uniformIndex) const;
+    GLuint getUniformIndexFromImageIndex(GLuint imageIndex) const;
     GLuint getAttributeLocation(const std::string &name) const;
 
     GLuint getBufferVariableIndexFromName(const std::string &name) const;
@@ -374,6 +380,11 @@ class ProgramState final : angle::NonCopyable
     bool usesMultiview() const { return mNumViews != -1; }
 
     const ShaderBitSet &getLinkedShaderStages() const { return mLinkedShaderStages; }
+    bool hasLinkedShaderStage(ShaderType shaderType) const
+    {
+        return mLinkedShaderStages.test(shaderType);
+    }
+    size_t getLinkedShaderStageCount() const { return mLinkedShaderStages.count(); }
 
     bool hasAttachedShader() const;
 

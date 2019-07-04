@@ -34,18 +34,20 @@ namespace rx
 {
 namespace
 {
-constexpr char kMarkerStart[]          = "@@ ";
-constexpr char kQualifierMarkerBegin[] = "@@ QUALIFIER-";
-constexpr char kLayoutMarkerBegin[]    = "@@ LAYOUT-";
-constexpr char kXfbDeclMarkerBegin[]   = "@@ XFB-DECL";
-constexpr char kXfbOutMarkerBegin[]    = "@@ XFB-OUT";
-constexpr char kMarkerEnd[]            = " @@";
-constexpr char kParamsBegin            = '(';
-constexpr char kParamsEnd              = ')';
-constexpr char kUniformQualifier[]     = "uniform";
-constexpr char kSSBOQualifier[]        = "buffer";
-constexpr char kVersionDefine[]        = "#version 450 core\n";
-constexpr char kLineRasterDefine[]     = R"(#version 450 core
+constexpr char kMarkerStart[]               = "@@ ";
+constexpr char kQualifierMarkerBegin[]      = "@@ QUALIFIER-";
+constexpr char kLayoutMarkerBegin[]         = "@@ LAYOUT-";
+constexpr char kXfbDeclMarkerBegin[]        = "@@ XFB-DECL";
+constexpr char kXfbOutMarkerBegin[]         = "@@ XFB-OUT";
+constexpr char kMarkerEnd[]                 = " @@";
+constexpr char kParamsBegin                 = '(';
+constexpr char kParamsEnd                   = ')';
+constexpr char kUniformQualifier[]          = "uniform";
+constexpr char kSSBOQualifier[]             = "buffer";
+constexpr char kUnusedBlockSubstitution[]   = "struct";
+constexpr char kUnusedUniformSubstitution[] = "// ";
+constexpr char kVersionDefine[]             = "#version 450 core\n";
+constexpr char kLineRasterDefine[]          = R"(#version 450 core
 
 #define ANGLE_ENABLE_LINE_SEGMENT_RASTERIZATION
 )";
@@ -489,6 +491,8 @@ void GenerateTransformFeedbackOutputs(const gl::ProgramState &programState,
 void AssignAttributeLocations(const gl::ProgramState &programState,
                               IntermediateShaderSource *vertexSource)
 {
+    ASSERT(vertexSource != nullptr);
+
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
     for (const sh::Attribute &attribute : programState.getAttributes())
@@ -506,6 +510,8 @@ void AssignAttributeLocations(const gl::ProgramState &programState,
 void AssignOutputLocations(const gl::ProgramState &programState,
                            IntermediateShaderSource *fragmentSource)
 {
+    ASSERT(fragmentSource != nullptr);
+
     // Parse output locations and replace them in the fragment shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
     // TODO(syoussefi): Add support for EXT_blend_func_extended.  http://anglebug.com/3385
@@ -540,8 +546,8 @@ void AssignOutputLocations(const gl::ProgramState &programState,
 }
 
 void AssignVaryingLocations(const gl::ProgramLinkedResources &resources,
-                            IntermediateShaderSource *vertexSource,
-                            IntermediateShaderSource *fragmentSource)
+                            IntermediateShaderSource *outStageSource,
+                            IntermediateShaderSource *inStageSource)
 {
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : resources.varyingPacking.getRegisterList())
@@ -579,28 +585,28 @@ void AssignVaryingLocations(const gl::ProgramLinkedResources &resources,
         const std::string &name =
             varying.isStructField() ? varying.parentStructName : varying.varying->name;
 
-        vertexSource->insertLayoutSpecifier(name, locationString);
-        fragmentSource->insertLayoutSpecifier(name, locationString);
+        outStageSource->insertLayoutSpecifier(name, locationString);
+        inStageSource->insertLayoutSpecifier(name, locationString);
 
-        const char *vsQualifier = "out";
-        const char *fsQualifier = "in";
+        const char *outQualifier = "out";
+        const char *inQualifier  = "in";
         switch (varying.interpolation)
         {
             case sh::INTERPOLATION_SMOOTH:
                 break;
             case sh::INTERPOLATION_CENTROID:
-                vsQualifier = "centroid out";
-                fsQualifier = "centroid in";
+                outQualifier = "centroid out";
+                inQualifier  = "centroid in";
                 break;
             case sh::INTERPOLATION_FLAT:
-                vsQualifier = "flat out";
-                fsQualifier = "flat in";
+                outQualifier = "flat out";
+                inQualifier  = "flat in";
                 break;
             default:
                 UNREACHABLE();
         }
-        vertexSource->insertQualifierSpecifier(name, vsQualifier);
-        fragmentSource->insertQualifierSpecifier(name, fsQualifier);
+        outStageSource->insertQualifierSpecifier(name, outQualifier);
+        inStageSource->insertQualifierSpecifier(name, inQualifier);
     }
 
     // Substitute layout and qualifier strings for the position varying. Use the first free
@@ -610,184 +616,205 @@ void AssignVaryingLocations(const gl::ProgramLinkedResources &resources,
     layoutStream << "location = " << (resources.varyingPacking.getMaxSemanticIndex() + 1);
     const std::string layout = layoutStream.str();
 
-    vertexSource->insertLayoutSpecifier(kVaryingName, layout);
-    fragmentSource->insertLayoutSpecifier(kVaryingName, layout);
+    outStageSource->insertLayoutSpecifier(kVaryingName, layout);
+    inStageSource->insertLayoutSpecifier(kVaryingName, layout);
 
-    vertexSource->insertQualifierSpecifier(kVaryingName, "out");
-    fragmentSource->insertQualifierSpecifier(kVaryingName, "in");
+    outStageSource->insertQualifierSpecifier(kVaryingName, "out");
+    inStageSource->insertQualifierSpecifier(kVaryingName, "in");
 }
 
-void AssignUniformLocations(IntermediateShaderSource *vertexSource,
-                            IntermediateShaderSource *fragmentSource)
+void AssignUniformBindings(const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
 {
     // Bind the default uniforms for vertex and fragment shaders.
     // See corresponding code in OutputVulkanGLSL.cpp.
-    const std::string driverUniformsDescriptorSet =
-        "set = " + Str(kDriverUniformsDescriptorSetIndex);
     const std::string uniformsDescriptorSet = "set = " + Str(kUniformsAndXfbDescriptorSetIndex);
 
-    std::string vertexDefaultUniformsBinding =
-        uniformsDescriptorSet + ", binding = " + Str(kVertexUniformsBindingIndex);
-    std::string fragmentDefaultUniformsBinding =
-        uniformsDescriptorSet + ", binding = " + Str(kFragmentUniformsBindingIndex);
-
     constexpr char kDefaultUniformsBlockName[] = "defaultUniforms";
-    vertexSource->insertLayoutSpecifier(kDefaultUniformsBlockName, vertexDefaultUniformsBinding);
-    fragmentSource->insertLayoutSpecifier(kDefaultUniformsBlockName,
-                                          fragmentDefaultUniformsBinding);
+    size_t bindingIndex                        = 0;
+    for (IntermediateShaderSource *shaderSource : shaderSources)
+    {
+        if (shaderSource)
+        {
+            std::string defaultUniformsBinding =
+                uniformsDescriptorSet + ", binding = " + Str(bindingIndex++);
+
+            shaderSource->insertLayoutSpecifier(kDefaultUniformsBlockName, defaultUniformsBinding);
+        }
+    }
+
+    if (shaderSources[gl::ShaderType::Compute] != nullptr)
+    {
+        // Compute doesn't need driver uniforms.
+        return;
+    }
 
     // Substitute layout and qualifier strings for the driver uniforms block.
-    const std::string driverBlockLayoutString = driverUniformsDescriptorSet + ", binding = 0";
-    constexpr char kDriverBlockName[]         = "ANGLEUniformBlock";
-    vertexSource->insertLayoutSpecifier(kDriverBlockName, driverBlockLayoutString);
-    fragmentSource->insertLayoutSpecifier(kDriverBlockName, driverBlockLayoutString);
+    const std::string driverBlockLayoutString =
+        "set = " + Str(kDriverUniformsDescriptorSetIndex) + ", binding = 0";
+    constexpr char kDriverBlockName[] = "ANGLEUniformBlock";
 
-    vertexSource->insertQualifierSpecifier(kDriverBlockName, kUniformQualifier);
-    fragmentSource->insertQualifierSpecifier(kDriverBlockName, kUniformQualifier);
-}
-
-void AssignInterfaceBlockLocations(const std::vector<gl::InterfaceBlock> &blocks,
-                                   uint32_t bindingStart,
-                                   const char *qualifier,
-                                   IntermediateShaderSource *vertexSource,
-                                   IntermediateShaderSource *fragmentSource)
-{
-    const std::string buffersDescriptorSet = "set = " + Str(kBufferDescriptorSetIndex);
-
-    uint32_t uniformBlockBinding = bindingStart;
-    for (const gl::InterfaceBlock &block : blocks)
+    for (IntermediateShaderSource *shaderSource : shaderSources)
     {
-        const std::string setBindingString =
-            buffersDescriptorSet + ", binding = " + Str(uniformBlockBinding);
-
-        vertexSource->insertLayoutSpecifier(block.name, setBindingString);
-        fragmentSource->insertLayoutSpecifier(block.name, setBindingString);
-
-        vertexSource->insertQualifierSpecifier(block.name, qualifier);
-        fragmentSource->insertQualifierSpecifier(block.name, qualifier);
-
-        ++uniformBlockBinding;
+        if (shaderSource)
+        {
+            shaderSource->insertLayoutSpecifier(kDriverBlockName, driverBlockLayoutString);
+            shaderSource->insertQualifierSpecifier(kDriverBlockName, kUniformQualifier);
+        }
     }
 }
 
-void AssignUniformBufferLocations(const gl::ProgramState &programState,
-                                  IntermediateShaderSource *vertexSource,
-                                  IntermediateShaderSource *fragmentSource)
+// Helper to go through shader stages and substitute layout and qualifier macros.
+void AssignResourceBinding(gl::ShaderBitSet activeShaders,
+                           const std::string &name,
+                           const std::string &bindingString,
+                           const char *qualifier,
+                           const char *unusedSubstitution,
+                           const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
 {
-    AssignInterfaceBlockLocations(programState.getUniformBlocks(), 0, kUniformQualifier,
-                                  vertexSource, fragmentSource);
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        IntermediateShaderSource *shaderSource = shaderSources[shaderType];
+        if (shaderSource)
+        {
+            if (activeShaders[shaderType])
+            {
+                shaderSource->insertLayoutSpecifier(name, bindingString);
+                shaderSource->insertQualifierSpecifier(name, qualifier);
+            }
+            else
+            {
+                shaderSource->eraseLayoutAndQualifierSpecifiers(name, unusedSubstitution);
+            }
+        }
+    }
 }
 
-void AssignStorageBufferLocations(const gl::ProgramState &programState,
-                                  IntermediateShaderSource *vertexSource,
-                                  IntermediateShaderSource *fragmentSource)
+uint32_t AssignInterfaceBlockBindings(
+    const std::vector<gl::InterfaceBlock> &blocks,
+    const char *qualifier,
+    uint32_t bindingStart,
+    const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
 {
-    AssignInterfaceBlockLocations(programState.getShaderStorageBlocks(),
-                                  static_cast<uint32_t>(programState.getUniformBlocks().size()),
-                                  kSSBOQualifier, vertexSource, fragmentSource);
+    const std::string buffersDescriptorSet = "set = " + Str(kBufferDescriptorSetIndex);
+
+    uint32_t bindingIndex = bindingStart;
+    for (const gl::InterfaceBlock &block : blocks)
+    {
+        if (!block.isArray || block.arrayElement == 0)
+        {
+            const std::string bindingString =
+                buffersDescriptorSet + ", binding = " + Str(bindingIndex++);
+
+            AssignResourceBinding(block.activeShaders(), block.name, bindingString, qualifier,
+                                  kUnusedBlockSubstitution, shaderSources);
+        }
+    }
+
+    return bindingIndex;
 }
 
-void AssignTextureLocations(const gl::ProgramState &programState,
-                            IntermediateShaderSource *vertexSource,
-                            IntermediateShaderSource *fragmentSource)
+void AssignBufferBindings(const gl::ProgramState &programState,
+                          const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+{
+    uint32_t bindingStart = 0;
+
+    const std::vector<gl::InterfaceBlock> &uniformBlocks = programState.getUniformBlocks();
+    bindingStart =
+        AssignInterfaceBlockBindings(uniformBlocks, kUniformQualifier, bindingStart, shaderSources);
+
+    const std::vector<gl::InterfaceBlock> &storageBlocks = programState.getShaderStorageBlocks();
+    // Note: this pattern of accumulating the bindingStart and assigning the next
+    // resource will be used to append atomic counter buffers and images to this set.
+    bindingStart =
+        AssignInterfaceBlockBindings(storageBlocks, kSSBOQualifier, bindingStart, shaderSources);
+}
+
+void AssignTextureBindings(const gl::ProgramState &programState,
+                           const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
 {
     const std::string texturesDescriptorSet = "set = " + Str(kTextureDescriptorSetIndex);
 
     // Assign textures to a descriptor set and binding.
-    uint32_t textureBinding = 0;
-    const auto &uniforms    = programState.getUniforms();
+    uint32_t bindingIndex                          = 0;
+    const std::vector<gl::LinkedUniform> &uniforms = programState.getUniforms();
+
     for (unsigned int uniformIndex : programState.getSamplerUniformRange())
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
-        const std::string setBindingString =
-            texturesDescriptorSet + ", binding = " + Str(textureBinding);
+        const std::string bindingString =
+            texturesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
         // Samplers in structs are extracted and renamed.
         const std::string samplerName = GetMappedSamplerName(samplerUniform.name);
 
-        ASSERT(samplerUniform.isActive(gl::ShaderType::Vertex) ||
-               samplerUniform.isActive(gl::ShaderType::Fragment));
-        if (samplerUniform.isActive(gl::ShaderType::Vertex))
-        {
-            vertexSource->insertLayoutSpecifier(samplerName, setBindingString);
-        }
-        vertexSource->insertQualifierSpecifier(samplerName, kUniformQualifier);
-
-        if (samplerUniform.isActive(gl::ShaderType::Fragment))
-        {
-            fragmentSource->insertLayoutSpecifier(samplerName, setBindingString);
-        }
-        fragmentSource->insertQualifierSpecifier(samplerName, kUniformQualifier);
-
-        textureBinding++;
+        AssignResourceBinding(samplerUniform.activeShaders(), samplerName, bindingString,
+                              kUniformQualifier, kUnusedUniformSubstitution, shaderSources);
     }
 }
 
 void CleanupUnusedEntities(const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
                            gl::Shader *glVertexShader,
-                           IntermediateShaderSource *vertexSource,
-                           IntermediateShaderSource *fragmentSource)
+                           const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
 {
-    // The attributes in the programState could have been filled with active attributes only
-    // depending on the shader version. If there is inactive attributes left, we have to remove
-    // their @@ QUALIFIER and @@ LAYOUT markers.
-    for (const sh::Attribute &attribute : glVertexShader->getAllAttributes())
+    IntermediateShaderSource *vertexSource = shaderSources[gl::ShaderType::Vertex];
+    if (vertexSource)
     {
-        if (attribute.active)
-        {
-            continue;
-        }
+        ASSERT(glVertexShader != nullptr);
 
-        vertexSource->eraseLayoutAndQualifierSpecifiers(attribute.name, "");
+        // The attributes in the programState could have been filled with active attributes only
+        // depending on the shader version. If there is inactive attributes left, we have to remove
+        // their @@ QUALIFIER and @@ LAYOUT markers.
+        for (const sh::Attribute &attribute : glVertexShader->getAllAttributes())
+        {
+            if (attribute.active)
+            {
+                continue;
+            }
+
+            vertexSource->eraseLayoutAndQualifierSpecifiers(attribute.name, "");
+        }
     }
 
     // Remove all the markers for unused varyings.
     for (const std::string &varyingName : resources.varyingPacking.getInactiveVaryingNames())
     {
-        vertexSource->eraseLayoutAndQualifierSpecifiers(varyingName, "");
-        fragmentSource->eraseLayoutAndQualifierSpecifiers(varyingName, "");
+        for (IntermediateShaderSource *shaderSource : shaderSources)
+        {
+            if (shaderSource)
+            {
+                shaderSource->eraseLayoutAndQualifierSpecifiers(varyingName, "");
+            }
+        }
     }
 
     // Remove all the markers for unused interface blocks, and replace them with |struct|.
     for (const std::string &unusedInterfaceBlock : resources.unusedInterfaceBlocks)
     {
-        vertexSource->eraseLayoutAndQualifierSpecifiers(unusedInterfaceBlock, "struct");
-        fragmentSource->eraseLayoutAndQualifierSpecifiers(unusedInterfaceBlock, "struct");
+        for (IntermediateShaderSource *shaderSource : shaderSources)
+        {
+            if (shaderSource)
+            {
+                shaderSource->eraseLayoutAndQualifierSpecifiers(unusedInterfaceBlock,
+                                                                kUnusedBlockSubstitution);
+            }
+        }
     }
 
-    // Place the unused uniforms in the driver uniforms descriptor set, which has a fixed number of
-    // bindings.  This avoids any possible index collision between uniform bindings set in the
-    // shader and the ones assigned here to the unused ones.
-    constexpr int kBaseUnusedSamplerBinding = kReservedDriverUniformBindingCount;
-    int unusedSamplerBinding                = kBaseUnusedSamplerBinding;
-    const std::string driverUniformsDescriptorSet =
-        "set = " + Str(kDriverUniformsDescriptorSetIndex);
-
+    // Comment out unused uniforms.  This relies on the fact that the shader compiler outputs
+    // uniforms to a single line.
     for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
     {
-        if (unusedUniform.isSampler)
+        std::string uniformName =
+            unusedUniform.isSampler ? GetMappedSamplerName(unusedUniform.name) : unusedUniform.name;
+
+        for (IntermediateShaderSource *shaderSource : shaderSources)
         {
-            // Samplers in structs are extracted and renamed.
-            std::string uniformName = GetMappedSamplerName(unusedUniform.name);
-
-            std::stringstream layoutStringStream;
-
-            layoutStringStream << driverUniformsDescriptorSet + ", binding = "
-                               << unusedSamplerBinding++;
-
-            std::string layoutString = layoutStringStream.str();
-
-            vertexSource->insertLayoutSpecifier(uniformName, layoutString);
-            fragmentSource->insertLayoutSpecifier(uniformName, layoutString);
-
-            vertexSource->insertQualifierSpecifier(uniformName, kUniformQualifier);
-            fragmentSource->insertQualifierSpecifier(uniformName, kUniformQualifier);
-        }
-        else
-        {
-            vertexSource->eraseLayoutAndQualifierSpecifiers(unusedUniform.name, "");
-            fragmentSource->eraseLayoutAndQualifierSpecifiers(unusedUniform.name, "");
+            if (shaderSource)
+            {
+                shaderSource->eraseLayoutAndQualifierSpecifiers(uniformName,
+                                                                kUnusedUniformSubstitution);
+            }
         }
     }
 }
@@ -819,15 +846,20 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
     IntermediateShaderSource vertexSource(glVertexShader->getTranslatedSource());
     IntermediateShaderSource fragmentSource(glFragmentShader->getTranslatedSource());
 
-    AssignAttributeLocations(programState, &vertexSource);
-    AssignOutputLocations(programState, &fragmentSource);
-    AssignVaryingLocations(resources, &vertexSource, &fragmentSource);
-    AssignUniformLocations(&vertexSource, &fragmentSource);
-    AssignUniformBufferLocations(programState, &vertexSource, &fragmentSource);
-    AssignStorageBufferLocations(programState, &vertexSource, &fragmentSource);
-    AssignTextureLocations(programState, &vertexSource, &fragmentSource);
+    gl::ShaderMap<IntermediateShaderSource *> shaderSources{};
 
-    CleanupUnusedEntities(programState, resources, glVertexShader, &vertexSource, &fragmentSource);
+    shaderSources[gl::ShaderType::Vertex]   = &vertexSource;
+    shaderSources[gl::ShaderType::Fragment] = &fragmentSource;
+
+    AssignAttributeLocations(programState, shaderSources[gl::ShaderType::Vertex]);
+    AssignOutputLocations(programState, shaderSources[gl::ShaderType::Fragment]);
+    AssignVaryingLocations(resources, shaderSources[gl::ShaderType::Vertex],
+                           shaderSources[gl::ShaderType::Fragment]);
+    AssignUniformBindings(shaderSources);
+    AssignBufferBindings(programState, shaderSources);
+    AssignTextureBindings(programState, shaderSources);
+
+    CleanupUnusedEntities(programState, resources, glVertexShader, shaderSources);
 
     // Write transform feedback output code.
     if (programState.getLinkedTransformFeedbackVaryings().empty())

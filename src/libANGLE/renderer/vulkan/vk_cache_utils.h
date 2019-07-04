@@ -532,10 +532,9 @@ class DescriptorSetLayoutDesc final
         mPackedDescriptorSetLayout;
 };
 
-// The following are for caching descriptor set layouts. Limited to max four descriptor set layouts
-// and one push constant per shader stage. This can be extended in the future.
+// The following are for caching descriptor set layouts. Limited to max four descriptor set layouts.
+// This can be extended in the future.
 constexpr size_t kMaxDescriptorSetLayouts = 4;
-constexpr size_t kMaxPushConstantRanges   = angle::EnumSize<gl::ShaderType>();
 
 struct PackedPushConstantRange
 {
@@ -548,7 +547,7 @@ using DescriptorSetLayoutArray = std::array<T, kMaxDescriptorSetLayouts>;
 using DescriptorSetLayoutPointerArray =
     DescriptorSetLayoutArray<BindingPointer<DescriptorSetLayout>>;
 template <typename T>
-using PushConstantRangeArray = std::array<T, kMaxPushConstantRanges>;
+using PushConstantRangeArray = gl::ShaderMap<T>;
 
 class PipelineLayoutDesc final
 {
@@ -575,14 +574,14 @@ class PipelineLayoutDesc final
                       (sizeof(DescriptorSetLayoutDesc) * kMaxDescriptorSetLayouts),
                   "Unexpected size");
     static_assert(sizeof(decltype(mPushConstantRanges)) ==
-                      (sizeof(PackedPushConstantRange) * kMaxPushConstantRanges),
+                      (sizeof(PackedPushConstantRange) * angle::EnumSize<gl::ShaderType>()),
                   "Unexpected size");
 };
 
 // Verify the structure is properly packed.
 static_assert(sizeof(PipelineLayoutDesc) ==
                   (sizeof(DescriptorSetLayoutArray<DescriptorSetLayoutDesc>) +
-                   sizeof(std::array<PackedPushConstantRange, kMaxPushConstantRanges>)),
+                   sizeof(gl::ShaderMap<PackedPushConstantRange>)),
               "Unexpected Size");
 
 // Disable warnings about struct padding.
@@ -911,12 +910,12 @@ constexpr uint32_t kDriverUniformsDescriptorSetIndex = 3;
 
 // Only 1 driver uniform binding is used.
 constexpr uint32_t kReservedDriverUniformBindingCount = 1;
-// Binding index for default uniforms in the vertex shader:
-constexpr uint32_t kVertexUniformsBindingIndex = 0;
-// Binding index for default uniforms in the fragment shader:
-constexpr uint32_t kFragmentUniformsBindingIndex = 1;
+// There is 1 default uniform binding used per stage.  Currently, a maxium of two stages are
+// supported.
+constexpr uint32_t kReservedPerStageDefaultUniformBindingCount = 1;
+constexpr uint32_t kReservedDefaultUniformBindingCount         = 2;
 // Binding index start for transform feedback buffers:
-constexpr uint32_t kXfbBindingIndexStart = 2;
+constexpr uint32_t kXfbBindingIndexStart = kReservedDefaultUniformBindingCount;
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_

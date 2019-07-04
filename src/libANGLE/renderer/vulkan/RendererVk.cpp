@@ -47,9 +47,6 @@ namespace rx
 
 namespace
 {
-// We currently only allocate 2 uniform buffer per descriptor set, one for the fragment shader and
-// one for the vertex shader.
-constexpr size_t kUniformBufferDescriptorsPerDescriptorSet = 2;
 // Update the pipeline cache every this many swaps (if 60fps, this means every 10 minutes)
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 10 * 60 * 60;
 // Wait a maximum of 10s.  If that times out, we declare it a failure.
@@ -1322,25 +1319,6 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
-uint32_t RendererVk::getMaxUniformBlocks() const
-{
-    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetUniformBuffers,
-                              gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
-}
-
-uint32_t RendererVk::getMaxStorageBlocks() const
-{
-    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetStorageBuffers,
-                              gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
-}
-
-uint32_t RendererVk::getMaxActiveTextures() const
-{
-    // TODO(lucferron): expose this limitation to GL in Context Caps
-    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxDescriptorSetSamplers,
-                              gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
-}
-
 angle::Result RendererVk::getDescriptorSetLayout(
     vk::Context *context,
     const vk::DescriptorSetLayoutDesc &desc,
@@ -1573,11 +1551,6 @@ angle::Result RendererVk::cleanupGarbage(vk::Context *context, bool block)
     }
 
     return angle::Result::Continue;
-}
-
-uint32_t GetUniformBufferDescriptorCount()
-{
-    return kUniformBufferDescriptorsPerDescriptorSet;
 }
 
 }  // namespace rx

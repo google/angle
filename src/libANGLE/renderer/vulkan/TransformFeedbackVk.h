@@ -47,8 +47,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl
                                   vk::FramebufferHelper *framebuffer) const;
     void updateDescriptorSet(ContextVk *contextVk,
                              const gl::ProgramState &programState,
-                             VkDescriptorSet descSet,
-                             uint32_t bindingOffset) const;
+                             VkDescriptorSet descSet) const;
     void getBufferOffsets(ContextVk *contextVk,
                           const gl::ProgramState &programState,
                           GLint drawCallFirstVertex,

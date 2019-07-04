@@ -232,11 +232,11 @@ class ProgramLinkedResourcesLinker final : angle::NonCopyable
         : mCustomEncoderFactory(customEncoderFactory)
     {}
 
-    void linkResources(const gl::ProgramState &programState,
-                       const gl::ProgramLinkedResources &resources) const;
+    void linkResources(const ProgramState &programState,
+                       const ProgramLinkedResources &resources) const;
 
   private:
-    void getAtomicCounterBufferSizeMap(const gl::ProgramState &programState,
+    void getAtomicCounterBufferSizeMap(const ProgramState &programState,
                                        std::map<int, unsigned int> &sizeMapOut) const;
 
     CustomBlockLayoutEncoderFactory *mCustomEncoderFactory;

@@ -722,6 +722,18 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
     LoadShaderVariableBuffer(stream, block);
 }
 
+size_t CountUniqueBlocks(const std::vector<InterfaceBlock> &blocks)
+{
+    size_t count = 0;
+    for (const InterfaceBlock &block : blocks)
+    {
+        if (!block.isArray || block.arrayElement == 0)
+        {
+            ++count;
+        }
+    }
+    return count;
+}
 }  // anonymous namespace
 
 // Saves the linking context for later use in resolveLink().
@@ -955,7 +967,7 @@ ImageBinding::~ImageBinding() = default;
 // ProgramState implementation.
 ProgramState::ProgramState()
     : mLabel(),
-      mAttachedShaders({}),
+      mAttachedShaders{},
       mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
       mMaxActiveAttribLocation(0),
       mSamplerUniformRange(0, 0),
@@ -989,6 +1001,16 @@ Shader *ProgramState::getAttachedShader(ShaderType shaderType) const
 {
     ASSERT(shaderType != ShaderType::InvalidEnum);
     return mAttachedShaders[shaderType];
+}
+
+size_t ProgramState::getUniqueUniformBlockCount() const
+{
+    return CountUniqueBlocks(mUniformBlocks);
+}
+
+size_t ProgramState::getUniqueStorageBlockCount() const
+{
+    return CountUniqueBlocks(mShaderStorageBlocks);
 }
 
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
@@ -1029,6 +1051,12 @@ GLuint ProgramState::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
     return uniformIndex - mSamplerUniformRange.low();
 }
 
+GLuint ProgramState::getUniformIndexFromSamplerIndex(GLuint samplerIndex) const
+{
+    ASSERT(samplerIndex < mSamplerUniformRange.length());
+    return samplerIndex + mSamplerUniformRange.low();
+}
+
 bool ProgramState::isImageUniformIndex(GLuint index) const
 {
     return mImageUniformRange.contains(index);
@@ -1038,6 +1066,12 @@ GLuint ProgramState::getImageIndexFromUniformIndex(GLuint uniformIndex) const
 {
     ASSERT(isImageUniformIndex(uniformIndex));
     return uniformIndex - mImageUniformRange.low();
+}
+
+GLuint ProgramState::getUniformIndexFromImageIndex(GLuint imageIndex) const
+{
+    ASSERT(imageIndex < mImageUniformRange.length());
+    return imageIndex + mImageUniformRange.low();
 }
 
 GLuint ProgramState::getAttributeLocation(const std::string &name) const
@@ -1433,6 +1467,8 @@ angle::Result Program::link(const Context *context)
         mState.updateTransformFeedbackStrides();
     }
 
+    updateLinkedShaderStages();
+
     mLinkingState.reset(new LinkingState());
     mLinkingState->context           = context;
     mLinkingState->linkingFromBinary = false;
@@ -1474,7 +1510,6 @@ void Program::resolveLinkImpl(const Context *context)
     // According to GLES 3.0/3.1 spec for LinkProgram and UseProgram,
     // Only successfully linked program can replace the executables.
     ASSERT(mLinked);
-    updateLinkedShaderStages();
 
     // Mark implementation-specific unreferenced uniforms as ignored.
     mProgram->markUnusedUniformLocations(&mState.mUniformLocations, &mState.mSamplerBindings,

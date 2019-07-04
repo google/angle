@@ -536,23 +536,8 @@
 3676 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_input_components = FAIL
 3676 VULKAN : dEQP-GLES3.functional.implementation_limits.max_program_texel_offset = FAIL
 3676 VULKAN : dEQP-GLES3.functional.implementation_limits.min_program_texel_offset = FAIL
-
-// Vulkan limits lower than GLES minimum:
-3633 VULKAN : dEQP-GLES3.functional.implementation_limits.max_uniform_buffer_bindings = FAIL
-3633 VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_uniform_blocks = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_uniform_buffer_bindings_getinteger64 = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_uniform_buffer_bindings_getfloat = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_getinteger64 = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_uniform_blocks_getfloat = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_vertex_uniform_components_getinteger = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_vertex_uniform_components_getfloat = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_fragment_uniform_components_getinteger = FAIL
-3633 VULKAN : dEQP-GLES3.functional.state_query.integers64.max_combined_fragment_uniform_components_getfloat = FAIL
-3633 VULKAN : dEQP-GLES3.functional.ubo.random.all_shared_buffer.7 = FAIL
-3633 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays_instance_arrays.18 = FAIL
-3633 ANDROID VULKAN : dEQP-GLES3.functional.implementation_limits.max_combined_texture_image_units = FAIL
-3633 ANDROID VULKAN : dEQP-GLES3.functional.state_query.integers.max_combined_texture_image_units_get* = FAIL
+// MAX_FRAGMENT_INPUT_COMPONENTS is 0
+3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
 // 3D texture:
 3188 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.3d* = SKIP
@@ -667,7 +652,29 @@
 // Shader support:
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
+
+// column/row_major specified on struct member:
 3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.10 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.8 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.17 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.25 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_per_block_buffers.49 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_shared_buffer.11 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.all_shared_buffer.48 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.18 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.20 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.23 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_arrays.8 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.basic_instance_arrays.13 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs.12 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs.17 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs.5 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.2 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.3 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.4 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.12 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.18 = FAIL
+3443 VULKAN : dEQP-GLES3.functional.ubo.random.nested_structs_instance_arrays.24 = FAIL
 
 // New vertex attribute formats:
 3193 VULKAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.*.int2_10_10_10.* = SKIP

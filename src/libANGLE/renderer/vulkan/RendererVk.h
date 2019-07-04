@@ -85,9 +85,6 @@ class RendererVk : angle::NonCopyable
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
-    uint32_t getMaxUniformBlocks() const;
-    uint32_t getMaxStorageBlocks() const;
-    uint32_t getMaxActiveTextures() const;
 
     uint32_t getQueueFamilyIndex() const { return mCurrentQueueFamilyIndex; }
 
@@ -232,8 +229,6 @@ class RendererVk : angle::NonCopyable
     std::mutex mDescriptorSetLayoutCacheMutex;
     DescriptorSetLayoutCache mDescriptorSetLayoutCache;
 };
-
-uint32_t GetUniformBufferDescriptorCount();
 
 }  // namespace rx
 

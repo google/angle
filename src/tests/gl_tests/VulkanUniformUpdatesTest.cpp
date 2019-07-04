@@ -66,14 +66,20 @@ class VulkanUniformUpdatesTest : public ANGLETest
             programVk->getDynamicDescriptorPool(rx::kUniformsAndXfbDescriptorSetIndex);
         uniformPool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
         VkDescriptorPoolSize uniformSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                                               rx::GetUniformBufferDescriptorCount()};
+                                               rx::kReservedDefaultUniformBindingCount};
         (void)uniformPool->init(contextVk, &uniformSetSize, 1);
+
+        uint32_t textureCount =
+            static_cast<uint32_t>(programVk->getState().getSamplerBindings().size());
+
+        // To support the bindEmptyForUnusedDescriptorSets workaround.
+        textureCount = std::max(textureCount, 1u);
 
         rx::vk::DynamicDescriptorPool *texturePool =
             programVk->getDynamicDescriptorPool(rx::kTextureDescriptorSetIndex);
         texturePool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
         VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                                               contextVk->getRenderer()->getMaxActiveTextures()};
+                                               textureCount};
         (void)texturePool->init(contextVk, &textureSetSize, 1);
     }
 

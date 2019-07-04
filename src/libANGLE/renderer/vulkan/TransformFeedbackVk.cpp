@@ -135,8 +135,7 @@ void TransformFeedbackVk::addFramebufferDependency(ContextVk *contextVk,
 
 void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
                                               const gl::ProgramState &programState,
-                                              VkDescriptorSet descSet,
-                                              uint32_t bindingOffset) const
+                                              VkDescriptorSet descSet) const
 {
     const std::vector<gl::OffsetBindingPointer<gl::Buffer>> &xfbBuffers =
         mState.getIndexedBuffers();
@@ -171,7 +170,7 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
     VkWriteDescriptorSet writeDescriptorInfo = {};
     writeDescriptorInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeDescriptorInfo.dstSet               = descSet;
-    writeDescriptorInfo.dstBinding           = bindingOffset;
+    writeDescriptorInfo.dstBinding           = kXfbBindingIndexStart;
     writeDescriptorInfo.dstArrayElement      = 0;
     writeDescriptorInfo.descriptorCount      = xfbBufferCount;
     writeDescriptorInfo.descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;

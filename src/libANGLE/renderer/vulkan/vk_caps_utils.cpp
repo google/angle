@@ -176,12 +176,13 @@ void RendererVk::ensureCapsInitialized() const
     // we'll defer the implementation until we tackle the next version.
     // mNativeCaps.maxServerWaitTimeout
 
-    GLuint maxUniformVectors = mPhysicalDeviceProperties.limits.maxUniformBufferRange /
-                               (sizeof(GLfloat) * kComponentsPerVector);
+    GLuint maxUniformBlockSize = mPhysicalDeviceProperties.limits.maxUniformBufferRange;
 
-    // Clamp the maxUniformVectors to 1024u, on AMD the maxUniformBufferRange is way too high.
-    maxUniformVectors = std::min(1024u, maxUniformVectors);
+    // Clamp the maxUniformBlockSize to 64KB (majority of devices support up to this size
+    // currently), on AMD the maxUniformBufferRange is near uint32_t max.
+    maxUniformBlockSize = std::min(0x10000u, maxUniformBlockSize);
 
+    const GLuint maxUniformVectors = maxUniformBlockSize / (sizeof(GLfloat) * kComponentsPerVector);
     const GLuint maxUniformComponents = maxUniformVectors * kComponentsPerVector;
 
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
@@ -191,30 +192,49 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxFragmentUniformVectors                            = maxUniformVectors;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
 
-    // We use the same bindings on each stage, so the texture, UBO and SSBO limitations are the same
-    // as the per-stage limits.
+    // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
+    // uniforms.
+    constexpr uint32_t kTotalReservedPerStageUniformBuffers =
+        kReservedDriverUniformBindingCount + kReservedPerStageDefaultUniformBindingCount;
+    constexpr uint32_t kTotalReservedUniformBuffers =
+        kReservedDriverUniformBindingCount + kReservedDefaultUniformBindingCount;
+
     const uint32_t maxPerStageUniformBuffers =
-        mPhysicalDeviceProperties.limits.maxPerStageDescriptorUniformBuffers;
+        mPhysicalDeviceProperties.limits.maxPerStageDescriptorUniformBuffers -
+        kTotalReservedPerStageUniformBuffers;
+    const uint32_t maxCombinedUniformBuffers =
+        mPhysicalDeviceProperties.limits.maxDescriptorSetUniformBuffers -
+        kTotalReservedUniformBuffers;
     mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Vertex]   = maxPerStageUniformBuffers;
     mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Fragment] = maxPerStageUniformBuffers;
-    mNativeCaps.maxCombinedUniformBlocks                         = maxPerStageUniformBuffers;
+    mNativeCaps.maxCombinedUniformBlocks                         = maxCombinedUniformBuffers;
+
+    mNativeCaps.maxUniformBufferBindings = maxCombinedUniformBuffers;
+    mNativeCaps.maxUniformBlockSize      = maxUniformBlockSize;
+    mNativeCaps.uniformBufferOffsetAlignment =
+        static_cast<GLuint>(mPhysicalDeviceProperties.limits.minUniformBufferOffsetAlignment);
 
     // Note that Vulkan currently implements textures as combined image+samplers, so the limit is
     // the minimum of supported samplers and sampled images.
     const uint32_t maxPerStageTextures =
         std::min(mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers,
                  mPhysicalDeviceProperties.limits.maxPerStageDescriptorSampledImages);
-    mNativeCaps.maxCombinedTextureImageUnits                         = maxPerStageTextures;
-    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] = maxPerStageTextures;
+    const uint32_t maxCombinedTextures =
+        std::min(mPhysicalDeviceProperties.limits.maxDescriptorSetSamplers,
+                 mPhysicalDeviceProperties.limits.maxDescriptorSetSampledImages);
     mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]   = maxPerStageTextures;
+    mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] = maxPerStageTextures;
+    mNativeCaps.maxCombinedTextureImageUnits                         = maxCombinedTextures;
 
     const uint32_t maxPerStageStorageBuffers =
         mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers;
+    const uint32_t maxCombinedStorageBuffers =
+        mPhysicalDeviceProperties.limits.maxDescriptorSetStorageBuffers;
     mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] =
         mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxPerStageStorageBuffers : 0;
     mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Fragment] =
         mPhysicalDeviceFeatures.fragmentStoresAndAtomics ? maxPerStageStorageBuffers : 0;
-    mNativeCaps.maxCombinedShaderStorageBlocks = maxPerStageStorageBuffers;
+    mNativeCaps.maxCombinedShaderStorageBlocks = maxCombinedStorageBuffers;
 
     // A number of storage buffer slots are used in the vertex shader to emulate transform feedback.
     // Note that Vulkan requires maxPerStageDescriptorStorageBuffers to be at least 4 (i.e. the same
@@ -231,22 +251,21 @@ void RendererVk::ensureCapsInitialized() const
         ASSERT(maxPerStageStorageBuffers >= gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
         mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] -=
             gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
+        mNativeCaps.maxCombinedShaderStorageBlocks -=
+            gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
     }
 
-    // Fill in additional limits for UBOs and SSBOs.
-    mNativeCaps.maxUniformBufferBindings = maxPerStageUniformBuffers;
-    mNativeCaps.maxUniformBlockSize      = mPhysicalDeviceProperties.limits.maxUniformBufferRange;
-    mNativeCaps.uniformBufferOffsetAlignment =
-        static_cast<GLuint>(mPhysicalDeviceProperties.limits.minUniformBufferOffsetAlignment);
-
-    mNativeCaps.maxShaderStorageBufferBindings = maxPerStageStorageBuffers;
+    mNativeCaps.maxShaderStorageBufferBindings = maxCombinedStorageBuffers;
     mNativeCaps.maxShaderStorageBlockSize = mPhysicalDeviceProperties.limits.maxStorageBufferRange;
     mNativeCaps.shaderStorageBufferOffsetAlignment =
         static_cast<GLuint>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment);
 
     // There is no additional limit to the combined number of components.  We can have up to a
-    // maximum number of uniform buffers, each having the maximum number of components.
-    const uint32_t maxCombinedUniformComponents = maxPerStageUniformBuffers * maxUniformComponents;
+    // maximum number of uniform buffers, each having the maximum number of components.  Note that
+    // this limit includes both components in and out of uniform buffers.
+    const uint32_t maxCombinedUniformComponents =
+        (maxPerStageUniformBuffers + kReservedPerStageDefaultUniformBindingCount) *
+        maxUniformComponents;
     for (gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
     {
         mNativeCaps.maxCombinedShaderUniformComponents[shaderType] = maxCombinedUniformComponents;
