@@ -52,6 +52,24 @@
       "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c81c831_b32ad80a",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-04T15:52:25Z",
+      "side": 1,
+      "message": "Ah. As far as placement goes I put the capture outside the validation call because it could be relevant to capture calls with GL errors. The capture could also be placed after the API call instead of before. But I was worried that would modify state or have other side effects. So I figured the safest place was before validation and execution.",
+      "parentUuid": "d48b0975_b2c3a95c",
+      "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
