@@ -16,6 +16,24 @@
       "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eb9f196_c1da6c28",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-04T15:30:52Z",
+      "side": 1,
+      "message": "It\u0027s very low priority to capture applications that don\u0027t have a valid context.\n\nThe capture is in the Context since the Context can own global variables.\n\nDoes that satisfy your worry? Or is there something specific you\u0027re thinking about.",
+      "parentUuid": "8a512264_bc0ee3ea",
+      "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
