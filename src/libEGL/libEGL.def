@@ -70,6 +70,8 @@ EXPORTS
     eglQueryDebugKHR                            @76
     eglLabelObjectKHR                           @77
     eglSetBlobCacheFuncsANDROID                 @78
+    eglQueryDisplayAttribANGLE                  @79
+    eglQueryStringiANGLE                        @80
 
     ; 1.5 entry points
     eglCreateSync                               @38
