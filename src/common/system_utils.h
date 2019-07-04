@@ -51,7 +51,15 @@ class Library : angle::NonCopyable
     }
 };
 
-Library *OpenSharedLibrary(const char *libraryName);
+// Use SYSTEM_DIR to bypass loading ANGLE libraries with the same name as system DLLS
+// (e.g. opengl32.dll)
+enum class SearchType
+{
+    ApplicationDir,
+    SystemDir
+};
+
+Library *OpenSharedLibrary(const char *libraryName, SearchType searchType);
 
 // Returns true if the process is currently being debugged.
 bool IsDebuggerAttached();

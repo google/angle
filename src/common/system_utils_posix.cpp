@@ -248,7 +248,7 @@ class PosixLibrary : public Library
     void *mModule = nullptr;
 };
 
-Library *OpenSharedLibrary(const char *libraryName)
+Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
 {
     return new PosixLibrary(libraryName);
 }

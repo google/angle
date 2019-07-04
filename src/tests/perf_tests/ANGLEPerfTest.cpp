@@ -364,7 +364,8 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
     {
         case angle::GLESDriverType::AngleEGL:
             mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
-            mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
+            mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME,
+                                                           angle::SearchType::ApplicationDir));
             break;
         case angle::GLESDriverType::SystemEGL:
             std::cerr << "Not implemented." << std::endl;
@@ -373,7 +374,8 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
         case angle::GLESDriverType::SystemWGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
             mGLWindow = WGLWindow::New(testParams.majorVersion, testParams.minorVersion);
-            mEntryPointsLib.reset(angle::OpenSharedLibrary("opengl32"));
+            mEntryPointsLib.reset(
+                angle::OpenSharedLibrary("opengl32", angle::SearchType::ApplicationDir));
 #else
             std::cout << "WGL driver not available. Skipping test." << std::endl;
             mSkipTest = true;

@@ -33,7 +33,8 @@ bool IsANGLEConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
     std::unique_ptr<angle::Library> eglLibrary;
 
 #if defined(ANGLE_USE_UTIL_LOADER)
-    eglLibrary.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME));
+    eglLibrary.reset(
+        angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ApplicationDir));
 #endif
 
     EGLWindow *eglWindow = EGLWindow::New(param.majorVersion, param.minorVersion);
@@ -48,7 +49,8 @@ bool IsANGLEConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
 bool IsWGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
 {
 #if defined(ANGLE_PLATFORM_WINDOWS) && defined(ANGLE_USE_UTIL_LOADER)
-    std::unique_ptr<angle::Library> openglLibrary(angle::OpenSharedLibrary("opengl32"));
+    std::unique_ptr<angle::Library> openglLibrary(
+        angle::OpenSharedLibrary("opengl32", angle::SearchType::SystemDir));
 
     WGLWindow *wglWindow = WGLWindow::New(param.majorVersion, param.minorVersion);
     ConfigParameters configParams;
