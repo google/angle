@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4205b4a0_e654e1d2",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-04T15:58:29Z",
+      "side": 1,
+      "message": "annotation1 and annotation2 are passed the same values, can they have the same name?",
+      "range": {
+        "startLine": 334,
+        "startChar": 65,
+        "endLine": 334,
+        "endChar": 76
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "828519f6_0539bb0a",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-04T15:58:29Z",
+      "side": 1,
+      "message": "maybe validation_header_annotation?",
+      "range": {
+        "startLine": 339,
+        "startChar": 30,
+        "endLine": 339,
+        "endChar": 41
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "589d0a01_af4df4d3",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-04T15:58:29Z",
+      "side": 1,
+      "message": "nit: unique_ptr?",
+      "range": {
+        "startLine": 266,
+        "startChar": 24,
+        "endLine": 266,
+        "endChar": 25
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "317a1c2d_54d8ca07",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-04T15:58:29Z",
+      "side": 1,
+      "message": "We may want to consider where this lives in the future.  Given that Android applications will thread the UI work at the same time as application work we may end up with interleaved GL calls from different threads.  Maybe it could live in contexts later.",
+      "range": {
+        "startLine": 266,
+        "startChar": 25,
+        "endLine": 266,
+        "endChar": 38
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
