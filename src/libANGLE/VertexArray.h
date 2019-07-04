@@ -156,6 +156,7 @@ class VertexArray final : public angle::ObserverInterface,
                                    GLint size,
                                    VertexAttribType type,
                                    bool normalized,
+                                   bool pureInteger,
                                    GLuint relativeOffset);
     void bindVertexBufferImpl(const Context *context,
                               size_t bindingIndex,

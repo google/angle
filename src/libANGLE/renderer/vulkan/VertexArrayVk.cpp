@@ -238,7 +238,7 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
     const angle::Format &srcFormat  = vertexFormat.angleFormat();
     const angle::Format &destFormat = vertexFormat.bufferFormat();
 
-    ASSERT(binding.getStride() % (srcFormat.pixelBytes / srcFormat.channelCount()) == 0);
+    ASSERT(binding.getStride() % (srcFormat.pixelBytes / srcFormat.channelCount) == 0);
 
     unsigned srcFormatSize  = srcFormat.pixelBytes;
     unsigned destFormatSize = destFormat.pixelBytes;
@@ -438,14 +438,15 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
     if (attrib.enabled)
     {
         gl::Buffer *bufferGL           = binding.getBuffer().get();
-        const vk::Format &vertexFormat = renderer->getFormat(GetVertexFormatID(attrib));
+        const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
         GLuint stride;
 
         if (bufferGL)
         {
             BufferVk *bufferVk               = vk::GetImpl(bufferGL);
             const angle::Format &angleFormat = vertexFormat.angleFormat();
-            bool bindingIsAligned            = BindingIsAligned(binding, angleFormat, attrib.size);
+            bool bindingIsAligned =
+                BindingIsAligned(binding, angleFormat, angleFormat.channelCount);
 
             if (vertexFormat.vertexLoadRequiresConversion || !bindingIsAligned)
             {
@@ -556,7 +557,7 @@ angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
         const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
         ASSERT(attrib.enabled && binding.getBuffer().get() == nullptr);
 
-        const vk::Format &vertexFormat = renderer->getFormat(GetVertexFormatID(attrib));
+        const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
         GLuint stride                  = vertexFormat.bufferFormat().pixelBytes;
 
         ASSERT(GetVertexInputAlignment(vertexFormat) <= vk::kVertexBufferAlignment);

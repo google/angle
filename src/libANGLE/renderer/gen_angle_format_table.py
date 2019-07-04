@@ -71,7 +71,7 @@ static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
 
 const Format gFormatInfoTable[] = {{
     // clang-format off
-    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false }},
+    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, false, gl::VertexAttribType::InvalidEnum }},
 {angle_format_info_cases}    // clang-format on
 }};
 
@@ -183,7 +183,7 @@ def get_color_write_function(angle_format):
     return 'WriteColor<' + channel_struct + ', ' + write_component_type + '>'
 
 
-format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {L}, {D}, {S}, {pixelBytes}, {componentAlignmentMask}, {isBlock}, {isFixed} }},
+format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {L}, {D}, {S}, {pixelBytes}, {componentAlignmentMask}, {isBlock}, {isFixed}, {isScaled}, {vertexAttribType} }},
 """
 
 
@@ -225,6 +225,39 @@ def get_component_alignment_mask(channels, bits):
     else:
         # Can happen for 4-bit RGBA.
         return "std::numeric_limits<GLuint>::max()"
+
+
+def get_vertex_attrib_type(format_id):
+
+    has_u = "_U" in format_id
+    has_s = "_S" in format_id
+    has_float = "_FLOAT" in format_id
+    has_fixed = "_FIXED" in format_id
+    has_r8 = "R8" in format_id
+    has_r16 = "R16" in format_id
+    has_r32 = "R32" in format_id
+    has_r10 = "R10" in format_id
+
+    if has_fixed:
+        return "Fixed"
+
+    if has_float:
+        return "HalfFloat" if has_r16 else "Float"
+
+    if has_r8:
+        return "Byte" if has_s else "UnsignedByte"
+
+    if has_r10:
+        return "Int2101010" if has_s else "UnsignedInt2101010"
+
+    if has_r16:
+        return "Short" if has_s else "UnsignedShort"
+
+    if has_r32:
+        return "Int" if has_s else "UnsignedInt"
+
+    # Many ANGLE formats don't correspond with vertex formats.
+    return "InvalidEnum"
 
 
 def json_to_table_data(format_id, json, angle_to_gl):
@@ -288,6 +321,9 @@ def json_to_table_data(format_id, json, angle_to_gl):
                                                                     parsed["bits"])
     parsed["isBlock"] = "true" if is_block else "false"
     parsed["isFixed"] = "true" if "FIXED" in format_id else "false"
+    parsed["isScaled"] = "true" if "SCALED" in format_id else "false"
+
+    parsed["vertexAttribType"] = "gl::VertexAttribType::" + get_vertex_attrib_type(format_id)
 
     return format_entry_template.format(**parsed)
 

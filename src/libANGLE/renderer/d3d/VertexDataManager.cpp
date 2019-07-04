@@ -102,7 +102,7 @@ bool DirectStoragePossible(const gl::Context *context,
     // TODO(jmadill): add VertexFormatCaps
     BufferFactoryD3D *factory = bufferD3D->getFactory();
 
-    angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib);
+    angle::FormatID vertexFormatID = attrib.format->id;
 
     // CPU-converted vertex data must be converted (naturally).
     if ((factory->getVertexConversionType(vertexFormatID) & VERTEX_CONVERT_CPU) != 0)
@@ -110,7 +110,7 @@ bool DirectStoragePossible(const gl::Context *context,
         return false;
     }
 
-    if (attrib.type != gl::VertexAttribType::Float)
+    if (attrib.format->vertexAttribType != gl::VertexAttribType::Float)
     {
         unsigned int elementSize = 0;
         angle::Result error =
@@ -207,7 +207,7 @@ VertexDataManager::CurrentValueState::CurrentValueState(BufferFactoryD3D *factor
     data.Values.FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
     data.Values.FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
     data.Values.FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
-    data.Type           = gl::VertexAttribType::Float;
+    data.Type                  = gl::VertexAttribType::Float;
 }
 
 VertexDataManager::CurrentValueState::CurrentValueState(CurrentValueState &&other)

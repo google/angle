@@ -222,12 +222,7 @@ angle::Result StreamingVertexBufferInterface::reserveVertexSpace(const gl::Conte
 
 // StaticVertexBufferInterface Implementation
 StaticVertexBufferInterface::AttributeSignature::AttributeSignature()
-    : type(gl::VertexAttribType::InvalidEnum),
-      size(0),
-      stride(0),
-      normalized(false),
-      pureInteger(false),
-      offset(0)
+    : formatID(angle::FormatID::NONE), stride(0), offset(0)
 {}
 
 bool StaticVertexBufferInterface::AttributeSignature::matchesAttribute(
@@ -236,8 +231,7 @@ bool StaticVertexBufferInterface::AttributeSignature::matchesAttribute(
 {
     size_t attribStride = ComputeVertexAttributeStride(attrib, binding);
 
-    if (type != attrib.type || size != attrib.size || static_cast<GLuint>(stride) != attribStride ||
-        normalized != attrib.normalized || pureInteger != attrib.pureInteger)
+    if (formatID != attrib.format->id || static_cast<GLuint>(stride) != attribStride)
     {
         return false;
     }
@@ -250,10 +244,7 @@ bool StaticVertexBufferInterface::AttributeSignature::matchesAttribute(
 void StaticVertexBufferInterface::AttributeSignature::set(const gl::VertexAttribute &attrib,
                                                           const gl::VertexBinding &binding)
 {
-    type        = attrib.type;
-    size        = attrib.size;
-    normalized  = attrib.normalized;
-    pureInteger = attrib.pureInteger;
+    formatID = attrib.format->id;
     offset = stride = static_cast<GLuint>(ComputeVertexAttributeStride(attrib, binding));
     offset          = static_cast<size_t>(ComputeVertexAttributeOffset(attrib, binding)) %
              ComputeVertexAttributeStride(attrib, binding);

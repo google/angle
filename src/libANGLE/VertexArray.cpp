@@ -389,12 +389,12 @@ ANGLE_INLINE void VertexArray::setVertexAttribFormatImpl(VertexAttribute *attrib
                                                          GLint size,
                                                          VertexAttribType type,
                                                          bool normalized,
+                                                         bool pureInteger,
                                                          GLuint relativeOffset)
 {
-    attrib->size           = size;
-    attrib->type           = type;
-    attrib->normalized     = normalized;
-    attrib->relativeOffset = relativeOffset;
+    angle::FormatID formatID = gl::GetVertexFormatID(type, normalized, size, pureInteger);
+    attrib->format           = &angle::Format::Get(formatID);
+    attrib->relativeOffset   = relativeOffset;
 }
 
 void VertexArray::setVertexAttribFormat(size_t attribIndex,
@@ -405,12 +405,11 @@ void VertexArray::setVertexAttribFormat(size_t attribIndex,
                                         GLuint relativeOffset)
 {
     VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
-    attrib.pureInteger      = pureInteger;
 
     ComponentType componentType = GetVertexAttributeComponentType(pureInteger, type);
     SetComponentTypeMask(componentType, attribIndex, &mState.mVertexAttributesTypeMask);
 
-    setVertexAttribFormatImpl(&attrib, size, type, normalized, relativeOffset);
+    setVertexAttribFormatImpl(&attrib, size, type, normalized, pureInteger, relativeOffset);
     setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_FORMAT);
 
     attrib.updateCachedElementLimit(mState.mVertexBindings[attrib.bindingIndex]);
@@ -461,11 +460,10 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     GLintptr offset = boundBuffer ? reinterpret_cast<GLintptr>(pointer) : 0;
 
     VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
-    attrib.pureInteger      = pureInteger;
 
     SetComponentTypeMask(componentType, attribIndex, &mState.mVertexAttributesTypeMask);
 
-    setVertexAttribFormatImpl(&attrib, size, type, normalized, 0);
+    setVertexAttribFormatImpl(&attrib, size, type, normalized, pureInteger, 0);
     setVertexAttribBinding(context, attribIndex, static_cast<GLuint>(attribIndex));
 
     GLsizei effectiveStride =

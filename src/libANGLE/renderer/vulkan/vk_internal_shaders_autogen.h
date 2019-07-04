@@ -62,7 +62,7 @@ enum Function
 enum Format
 {
     kIsFloat = 0x00000000,
-    kIsInt   = 0x00000004,
+    kIsSint  = 0x00000004,
     kIsUint  = 0x00000008,
 };
 constexpr size_t kArrayLen = 0x0000000C;
@@ -85,9 +85,9 @@ enum flags
 };
 enum Conversion
 {
-    kIntToInt     = 0x00000000,
+    kSintToSint   = 0x00000000,
     kUintToUint   = 0x00000002,
-    kIntToFloat   = 0x00000004,
+    kSintToFloat  = 0x00000004,
     kUintToFloat  = 0x00000006,
     kSnormToFloat = 0x00000008,
     kUnormToFloat = 0x0000000A,
@@ -118,7 +118,7 @@ enum AttachmentIndex
 enum Format
 {
     kIsFloat = 0x00000000,
-    kIsInt   = 0x00000008,
+    kIsSint  = 0x00000008,
     kIsUint  = 0x00000010,
 };
 constexpr size_t kArrayLen = 0x00000018;
@@ -133,13 +133,13 @@ enum flags
 enum SrcFormat
 {
     kSrcIsFloat = 0x00000000,
-    kSrcIsInt   = 0x00000002,
+    kSrcIsSint  = 0x00000002,
     kSrcIsUint  = 0x00000004,
 };
 enum DestFormat
 {
     kDestIsFloat = 0x00000000,
-    kDestIsInt   = 0x00000008,
+    kDestIsSint  = 0x00000008,
     kDestIsUint  = 0x00000010,
 };
 constexpr size_t kArrayLen = 0x00000016;

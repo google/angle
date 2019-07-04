@@ -46,34 +46,43 @@ uint32_t GetBufferUtilsFlags(size_t dispatchSize, const vk::Format &format)
     uint32_t flags                    = dispatchSize % 64 == 0 ? BufferUtils_comp::kIsAligned : 0;
     const angle::Format &bufferFormat = format.bufferFormat();
 
-    flags |= bufferFormat.isInt()
-                 ? BufferUtils_comp::kIsInt
-                 : bufferFormat.isUint() ? BufferUtils_comp::kIsUint : BufferUtils_comp::kIsFloat;
+    if (bufferFormat.isSint())
+    {
+        flags |= BufferUtils_comp::kIsSint;
+    }
+    else if (bufferFormat.isUint())
+    {
+        flags |= BufferUtils_comp::kIsUint;
+    }
+    else
+    {
+        flags |= BufferUtils_comp::kIsFloat;
+    }
 
     return flags;
 }
 
 uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 {
-    bool srcIsInt   = params.srcFormat->isInt();
+    bool srcIsSint  = params.srcFormat->isSint();
     bool srcIsUint  = params.srcFormat->isUint();
     bool srcIsSnorm = params.srcFormat->isSnorm();
     bool srcIsUnorm = params.srcFormat->isUnorm();
     bool srcIsFixed = params.srcFormat->isFixed;
     bool srcIsFloat = params.srcFormat->isFloat();
 
-    bool destIsInt   = params.destFormat->isInt();
+    bool destIsSint  = params.destFormat->isSint();
     bool destIsUint  = params.destFormat->isUint();
     bool destIsFloat = params.destFormat->isFloat();
 
     // Assert on the types to make sure the shader supports its.  These are based on
     // ConvertVertex_comp::Conversion values.
-    ASSERT(!destIsInt || srcIsInt);      // If destination is int, src must be int too
+    ASSERT(!destIsSint || srcIsSint);    // If destination is sint, src must be sint too
     ASSERT(!destIsUint || srcIsUint);    // If destination is uint, src must be uint too
     ASSERT(!srcIsFixed || destIsFloat);  // If source is fixed, dest must be float
     // One of each bool set must be true
-    ASSERT(srcIsInt || srcIsUint || srcIsSnorm || srcIsUnorm || srcIsFixed || srcIsFloat);
-    ASSERT(destIsInt || destIsUint || destIsFloat);
+    ASSERT(srcIsSint || srcIsUint || srcIsSnorm || srcIsUnorm || srcIsFixed || srcIsFloat);
+    ASSERT(destIsSint || destIsUint || destIsFloat);
 
     // We currently don't have any big-endian devices in the list of supported platforms.  The
     // shader is capable of supporting big-endian architectures, but the relevant flag (IsBigEndian)
@@ -86,17 +95,17 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     uint32_t flags = 0;
 
-    if (srcIsInt && destIsInt)
+    if (srcIsSint && destIsSint)
     {
-        flags |= ConvertVertex_comp::kIntToInt;
+        flags |= ConvertVertex_comp::kSintToSint;
     }
     else if (srcIsUint && destIsUint)
     {
         flags |= ConvertVertex_comp::kUintToUint;
     }
-    else if (srcIsInt)
+    else if (srcIsSint)
     {
-        flags |= ConvertVertex_comp::kIntToFloat;
+        flags |= ConvertVertex_comp::kSintToFloat;
     }
     else if (srcIsUint)
     {
@@ -139,9 +148,18 @@ uint32_t GetImageClearFlags(const angle::Format &format, uint32_t attachmentInde
 
     uint32_t flags = ImageClear_frag::kAttachment0 + attachmentIndex * kAttachmentFlagStep;
 
-    flags |= format.isInt()
-                 ? ImageClear_frag::kIsInt
-                 : format.isUint() ? ImageClear_frag::kIsUint : ImageClear_frag::kIsFloat;
+    if (format.isSint())
+    {
+        flags |= ImageClear_frag::kIsSint;
+    }
+    else if (format.isUint())
+    {
+        flags |= ImageClear_frag::kIsUint;
+    }
+    else
+    {
+        flags |= ImageClear_frag::kIsFloat;
+    }
 
     return flags;
 }
@@ -151,7 +169,7 @@ uint32_t GetFormatFlags(const angle::Format &format,
                         uint32_t uintFlag,
                         uint32_t floatFlag)
 {
-    if (format.isInt())
+    if (format.isSint())
     {
         return intFlag;
     }
@@ -169,9 +187,9 @@ uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &destFo
 
     uint32_t flags = 0;
 
-    flags |= GetFormatFlags(srcAngleFormat, ImageCopy_frag::kSrcIsInt, ImageCopy_frag::kSrcIsUint,
+    flags |= GetFormatFlags(srcAngleFormat, ImageCopy_frag::kSrcIsSint, ImageCopy_frag::kSrcIsUint,
                             ImageCopy_frag::kSrcIsFloat);
-    flags |= GetFormatFlags(destAngleFormat, ImageCopy_frag::kDestIsInt,
+    flags |= GetFormatFlags(destAngleFormat, ImageCopy_frag::kDestIsSint,
                             ImageCopy_frag::kDestIsUint, ImageCopy_frag::kDestIsFloat);
 
     return flags;
@@ -688,11 +706,11 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     dest->onWrite(contextVk, VK_ACCESS_SHADER_WRITE_BIT);
 
     ConvertVertexShaderParams shaderParams;
-    shaderParams.Ns = params.srcFormat->channelCount();
-    shaderParams.Bs = params.srcFormat->pixelBytes / params.srcFormat->channelCount();
+    shaderParams.Ns = params.srcFormat->channelCount;
+    shaderParams.Bs = params.srcFormat->pixelBytes / params.srcFormat->channelCount;
     shaderParams.Ss = params.srcStride;
-    shaderParams.Nd = params.destFormat->channelCount();
-    shaderParams.Bd = params.destFormat->pixelBytes / params.destFormat->channelCount();
+    shaderParams.Nd = params.destFormat->channelCount;
+    shaderParams.Bd = params.destFormat->pixelBytes / params.destFormat->channelCount;
     shaderParams.Sd = shaderParams.Nd * shaderParams.Bd;
     // The component size is expected to either be 1, 2 or 4 bytes.
     ASSERT(4 % shaderParams.Bs == 0);

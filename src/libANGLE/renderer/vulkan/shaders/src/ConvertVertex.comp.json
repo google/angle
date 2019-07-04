@@ -10,9 +10,9 @@
         "IsAligned"
     ],
     "Conversion": [
-        "IntToInt",
+        "SintToSint",
         "UintToUint",
-        "IntToFloat",
+        "SintToFloat",
         "UintToFloat",
         "SnormToFloat",
         "UnormToFloat",

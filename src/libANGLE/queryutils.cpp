@@ -520,16 +520,18 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
             *params = CastFromStateValue<ParamType>(pname, static_cast<GLint>(attrib.enabled));
             break;
         case GL_VERTEX_ATTRIB_ARRAY_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, attrib.size);
+            *params = CastFromGLintStateValue<ParamType>(pname, attrib.format->channelCount);
             break;
         case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
             *params = CastFromGLintStateValue<ParamType>(pname, attrib.vertexAttribArrayStride);
             break;
         case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(pname, ToGLenum(attrib.type));
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, gl::ToGLenum(attrib.format->vertexAttribType));
             break;
         case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
-            *params = CastFromStateValue<ParamType>(pname, static_cast<GLint>(attrib.normalized));
+            *params =
+                CastFromStateValue<ParamType>(pname, static_cast<GLint>(attrib.format->isNorm()));
             break;
         case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
             *params = CastFromGLintStateValue<ParamType>(pname, binding.getBuffer().id());
@@ -538,7 +540,7 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
             *params = CastFromStateValue<ParamType>(pname, binding.getDivisor());
             break;
         case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
-            *params = CastFromGLintStateValue<ParamType>(pname, attrib.pureInteger);
+            *params = CastFromGLintStateValue<ParamType>(pname, attrib.format->isPureInt());
             break;
         case GL_VERTEX_ATTRIB_BINDING:
             *params = CastFromGLintStateValue<ParamType>(pname, attrib.bindingIndex);

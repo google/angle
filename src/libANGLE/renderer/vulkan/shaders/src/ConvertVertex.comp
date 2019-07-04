@@ -37,18 +37,18 @@
 //                  need for bound checking.
 //     * IsBigEndian
 //   - Conversion:
-//     * IntToInt: covers byte, short and int types (distinguished by Bs and Bd).
+//     * SintToSint: covers byte, short and int types (distinguished by Bs and Bd).
 //     * UintToUint: covers ubyte, ushort and uint types (distinguished by Bs and Bd).
-//     * IntToFloat: Same types as IntToInt for source (including scaled).  Converts to float.
+//     * SintToFloat: Same types as SintToSint for source (including scaled).  Converts to float.
 //     * UintToFloat: Same types as UintToUint for source (including uscaled).  Converst to float.
 //     * SnormToFloat: Similar to IntToFloat, but normalized.
 //     * UnormToFloat: Similar to UintToFloat, but normalized.
 //     * FixedToFloat: 16.16 signed fixed-point to floating point.
 //     * FloatToFloat: float.
 //
-// IntToInt, UintToUint and FloatToFloat correspond to CopyNativeVertexData() and
+// SintToSint, UintToUint and FloatToFloat correspond to CopyNativeVertexData() and
 // Copy8SintTo16SintVertexData() in renderer/copyvertex.inc, FixedToFloat corresponds to
-// Copy32FixedTo32FVertexData, IntToFloat and UintToFloat correspond to CopyTo32FVertexData with
+// Copy32FixedTo32FVertexData, SintToFloat and UintToFloat correspond to CopyTo32FVertexData with
 // normalized=false and SnormToFloat and UnormToFloat correspond to CopyTo32FVertexData with
 // normalized=true.
 //
@@ -56,7 +56,7 @@
 #version 450 core
 
 // Source type
-#if IntToInt || IntToFloat
+#if SintToSint || SintToFloat
 #define SrcType int
 #elif UintToUint || UintToFloat
 #define SrcType uint
@@ -67,13 +67,13 @@
 #endif
 
 // Destination type
-#if IntToInt
+#if SintToSint
 #define DestType int
 #define IsDestFloat 0
 #elif UintToUint
 #define DestType uint
 #define IsDestFloat 0
-#elif IntToFloat || UintToFloat || SnormToFloat || UnormToFloat || FixedToFloat || FloatToFloat
+#elif SintToFloat || UintToFloat || SnormToFloat || UnormToFloat || FixedToFloat || FloatToFloat
 #define DestType float
 #define IsDestFloat 1
 #else
@@ -206,7 +206,7 @@ SrcType loadSourceComponent(uint cd)
     uint valueAsUint = (block >> shiftBits) & valueMask;
 
     // Convert to SrcType
-#if IntToInt || IntToFloat
+#if SintToSint || SintToFloat
     bool isNegative = (valueAsUint & (1 << (valueBits - 1))) != 0;
     // Sign extend
     SrcType value = SrcType(valueAsUint | (isNegative ? 0xFFFFFFFF << valueBits : 0));
@@ -244,7 +244,7 @@ uint makeDestinationComponent(uint cd, DestType value)
     // Return valueAsUint, shifted to the right spot.  Multiple calls to this function should be |ed
     // and eventually written to the destination.
 
-#if IntToInt || UintToUint
+#if SintToSint || UintToUint
     uint vertex = cd / Nd;
     uint component = cd % Nd;
 

@@ -3648,10 +3648,9 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
 
     ASSERT(elementCount > 0);
 
-    angle::FormatID formatID             = gl::GetVertexFormatID(attrib);
     const D3D_FEATURE_LEVEL featureLevel = mRenderer11DeviceCaps.featureLevel;
     const d3d11::VertexFormat &vertexFormatInfo =
-        d3d11::GetVertexFormatInfo(formatID, featureLevel);
+        d3d11::GetVertexFormatInfo(attrib.format->id, featureLevel);
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(vertexFormatInfo.nativeFormat);
     unsigned int elementSize = dxgiFormatInfo.pixelBytes;

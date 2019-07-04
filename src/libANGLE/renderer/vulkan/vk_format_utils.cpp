@@ -108,7 +108,7 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
     size_t skip                 = renderer->getFeatures().forceFallbackFormat.enabled ? 1 : 0;
     SupportTest testFunction    = HasFullTextureFormatSupport;
     const angle::Format &format = angle::Format::Get(info[0].format);
-    if (format.isInt() || format.isUint() || (format.isFloat() && format.redBits >= 32))
+    if (format.isInt() || (format.isFloat() && format.redBits >= 32))
     {
         // Integer formats don't support filtering in GL, so don't test for it.
         // Filtering of 32-bit float textures is not supported on Android, and
@@ -303,7 +303,7 @@ size_t GetVertexInputAlignment(const vk::Format &format)
 {
     const angle::Format &bufferFormat = format.bufferFormat();
     size_t pixelBytes                 = bufferFormat.pixelBytes;
-    return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount());
+    return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount);
 }
 
 GLenum GetSwizzleStateComponent(const gl::SwizzleState &swizzleState, GLenum component)
