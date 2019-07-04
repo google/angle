@@ -34,6 +34,24 @@
       "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d48b0975_b2c3a95c",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-07-04T15:42:21Z",
+      "side": 1,
+      "message": "I was mostly just curious, trying to understand",
+      "parentUuid": "3eb9f196_c1da6c28",
+      "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
