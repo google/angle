@@ -13,8 +13,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture_gles_ext_autogen.h"
+#include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationESEXT.h"
-#include "libGLESv2/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
 
 #include "libANGLE/capture_gles_1_0_autogen.h"

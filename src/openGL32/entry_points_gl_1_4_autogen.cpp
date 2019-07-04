@@ -12,6 +12,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
+#include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES1.h"
@@ -21,7 +22,6 @@
 #include "libANGLE/validationESEXT.h"
 #include "libANGLE/validationGL14_autogen.h"
 #include "libGLESv2/global_state.h"
-#include "openGL32/entry_points_utils.h"
 
 namespace gl
 {
