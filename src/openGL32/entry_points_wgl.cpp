@@ -103,7 +103,11 @@ BOOL GL_APIENTRY wglSetPixelFormat(HDC hdc, int ipfd, const PIXELFORMATDESCRIPTO
 
 BOOL GL_APIENTRY wglSwapBuffers(HDC hdc)
 {
-    UNIMPLEMENTED();
+    Thread *thread        = egl::GetCurrentThread();
+    egl::Display *display = egl::Display::GetExistingDisplayFromNativeDisplay(hdc);
+
+    ANGLE_EGL_TRY_RETURN(thread, display->getWGLSurface()->swap(thread->getContext()),
+                         "wglSwapBuffers", display->getWGLSurface(), FALSE);
     return TRUE;
 }
 
@@ -117,76 +121,59 @@ HGLRC GL_APIENTRY wglCreateContext(HDC hDc)
 {
     Thread *thread = egl::GetCurrentThread();
 
-    GLenum platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    std::vector<EGLint> displayAttributes;
+    std::vector<EGLAttrib> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+    GLenum platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
     displayAttributes.push_back(platformType);
-    displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
-    displayAttributes.push_back(EGL_DONT_CARE);
-    displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
-    displayAttributes.push_back(EGL_DONT_CARE);
-    displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
-    displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
     displayAttributes.push_back(EGL_NONE);
 
-    const auto &attribMapDisplay =
-        AttributeMap::CreateFromAttribArray((const EGLAttrib *)&displayAttributes[0]);
+    const auto &attribMapDisplay = AttributeMap::CreateFromAttribArray(displayAttributes.data());
 
-    EGLDisplay mDisplay = egl::Display::GetDisplayFromNativeDisplay(hDc, attribMapDisplay);
+    egl::Display *display = egl::Display::GetDisplayFromNativeDisplay(hDc, attribMapDisplay);
 
-    egl::Display *display = static_cast<egl::Display *>(mDisplay);
-    auto error            = display->initialize();
+    ANGLE_EGL_TRY_RETURN(thread, display->initialize(), "wglCreateContext", display, nullptr);
 
-    // Don't have a thread to bind API to, so just use this API
-    // eglBindAPI(EGL_OPENGL_ES_API);
+    thread->setAPI(EGL_OPENGL_API);
 
     // Default config
-    const EGLint configAttributes[] = {EGL_RED_SIZE,
-                                       EGL_DONT_CARE,
-                                       EGL_GREEN_SIZE,
-                                       EGL_DONT_CARE,
-                                       EGL_BLUE_SIZE,
-                                       EGL_DONT_CARE,
-                                       EGL_ALPHA_SIZE,
-                                       EGL_DONT_CARE,
-                                       EGL_DEPTH_SIZE,
-                                       EGL_DONT_CARE,
-                                       EGL_STENCIL_SIZE,
-                                       EGL_DONT_CARE,
-                                       EGL_SAMPLE_BUFFERS,
-                                       0,
-                                       EGL_NONE};
+    const EGLint configAttributes[] = {EGL_NONE};
 
     // Choose config
     EGLint configCount;
-    EGLConfig mConfig;
+    EGLConfig config;
     AttributeMap attribMapConfig = AttributeMap::CreateFromIntArray(configAttributes);
-    ClipConfigs(display->chooseConfig(attribMapConfig), &mConfig, 1, &configCount);
+    ClipConfigs(display->chooseConfig(attribMapConfig), &config, 1, &configCount);
+
+    Config *configuration = static_cast<Config *>(config);
 
     // Initialize surface
     std::vector<EGLint> surfaceAttributes;
     surfaceAttributes.push_back(EGL_NONE);
     surfaceAttributes.push_back(EGL_NONE);
+    AttributeMap surfAttributes = AttributeMap::CreateFromIntArray(&surfaceAttributes[0]);
 
     // Create first window surface
-    // EGLSurface mWindowSurface = eglCreateWindowSurface(mDisplay, mConfig,
-    // (EGLNativeWindowType)hDc, &surfaceAttributes[0]);
+    egl::Surface *surface = nullptr;
+    ANGLE_EGL_TRY_RETURN(
+        thread,
+        display->createWindowSurface(configuration, WindowFromDC(hDc), surfAttributes, &surface),
+        "wglCreateContext", display, nullptr);
 
     // Initialize context
-    EGLint contextAttibutes[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
+    EGLint contextAttibutes[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_CONTEXT_MINOR_VERSION, 3,
+                                 EGL_NONE};
 
-    Config *configuration        = static_cast<Config *>(mConfig);
     gl::Context *sharedGLContext = static_cast<gl::Context *>(nullptr);
-    AttributeMap attributes      = AttributeMap::CreateFromIntArray(contextAttibutes);
+    AttributeMap ctxAttributes   = AttributeMap::CreateFromIntArray(contextAttibutes);
 
     gl::Context *context = nullptr;
-    auto error1          = display->createContext(configuration, sharedGLContext, thread->getAPI(),
-                                         attributes, &context);
 
-    EGLContext mContext = static_cast<EGLContext>(context);
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->createContext(configuration, sharedGLContext, EGL_OPENGL_API,
+                                                ctxAttributes, &context),
+                         "wglCreateContext", display, nullptr);
 
-    return (HGLRC)mContext;
+    return reinterpret_cast<HGLRC>(context);
 }
 
 HGLRC GL_APIENTRY wglCreateLayerContext(HDC hDc, int level)
@@ -251,8 +238,19 @@ PROC GL_APIENTRY wglGetProcAddress(LPCSTR lpszProc)
 
 BOOL GL_APIENTRY wglMakeCurrent(HDC hDc, HGLRC newContext)
 {
-    UNIMPLEMENTED();
-    return FALSE;
+    Thread *thread = egl::GetCurrentThread();
+
+    egl::Display *display = egl::Display::GetExistingDisplayFromNativeDisplay(hDc);
+    gl::Context *context  = reinterpret_cast<gl::Context *>(newContext);
+
+    ANGLE_EGL_TRY_RETURN(
+        thread,
+        display->makeCurrent(thread, display->getWGLSurface(), display->getWGLSurface(), context),
+        "wglMakeCurrent", display, FALSE);
+
+    SetContextCurrent(thread, context);
+
+    return TRUE;
 }
 
 BOOL GL_APIENTRY wglRealizeLayerPalette(HDC hdc, int iLayerPlane, BOOL bRealize)
