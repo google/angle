@@ -544,7 +544,7 @@
   "proc table:scripts/egl_angle_ext.xml":
     "fc2e249239fb1365f6d145cdf1a3cfcf",
   "proc table:scripts/gen_proc_table.py":
-    "445b0784415ea3808ddd276af7a5d775",
+    "b41bdf1c5dacfba6089a66b903ea6d13",
   "proc table:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "proc table:scripts/gl_angle_ext.xml":
@@ -556,7 +556,7 @@
   "proc table:src/libGLESv2/proc_table_egl_autogen.cpp":
     "6ab624dce9ebcdeaea091b27d98ed1ce",
   "proc table:src/openGL32/proc_table_wgl_autogen.cpp":
-    "5e872d3b18d35da12b103bc56dbc121c",
+    "cadecfe9956fc200c643b635b425c15a",
   "uniform type:src/common/gen_uniform_type_table.py":
     "a741cc301b1617ab0e4d29b35f1d3b96",
   "uniform type:src/common/uniform_type_info_autogen.cpp":

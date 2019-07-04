@@ -12,7 +12,7 @@ from datetime import date
 import registry_xml
 
 out_file_name_gles = "../src/libGLESv2/proc_table_egl_autogen.cpp"
-out_file_name_wgl = "../src/openGL32/proc_table_wgl_autogen.cpp"
+out_file_name_gl = "../src/openGL32/proc_table_wgl_autogen.cpp"
 
 # The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
 # Toggle generation here.
@@ -57,7 +57,7 @@ includes_gles = """#include "libGLESv2/proc_table_egl.h"
 #include "platform/Platform.h"
 """
 
-includes_wgl = """#include "openGL32/proc_table_wgl.h"
+includes_gl = """#include "openGL32/proc_table_wgl.h"
 
 #include "openGL32/entry_points_wgl.h"
 #include "openGL32/entry_points_gl_1_0_autogen.h"
@@ -82,7 +82,7 @@ def main():
     # auto_script parameters.
     if len(sys.argv) > 1:
         inputs = [source for source in registry_xml.xml_inputs]
-        outputs = [out_file_name_gles, out_file_name_wgl]
+        outputs = [out_file_name_gles, out_file_name_gl]
         if sys.argv[1] == 'inputs':
             print ','.join(inputs)
         elif sys.argv[1] == 'outputs':
@@ -94,10 +94,6 @@ def main():
 
     glesxml = registry_xml.RegistryXML('gl.xml', 'gl_angle_ext.xml')
 
-    # Track the GLES commands so we don't add them to wgl proc table
-    gles_commands = []
-    gles_commands = []
-
     for annotation in ["2_0", "3_0", "3_1", "1_0"]:
 
         name_prefix = "GL_ES_VERSION_"
@@ -106,11 +102,9 @@ def main():
         feature_name = "{}{}".format(name_prefix, annotation)
         glesxml.AddCommands(feature_name, annotation)
 
-        gles_commands.extend(glesxml.commands[annotation])
-
     glesxml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
 
-    # Also don't add GLES extension commands to wgl proc table
+    # Also don't add GLES extension commands to libGL proc table
     extension_commands = []
     for extension_name, ext_cmd_names in sorted(glesxml.ext_data.iteritems()):
         extension_commands.extend(glesxml.ext_data[extension_name])
@@ -119,7 +113,6 @@ def main():
         for suffix in strip_suffixes:
             if name_no_suffix.endswith(suffix):
                 name_no_suffix = name_no_suffix[0:-len(suffix)]
-        gles_commands.append(name_no_suffix)
 
     gles_data = glesxml.all_cmd_names.get_all_commands()
 
@@ -167,7 +160,7 @@ def main():
         out_file.write(output_cpp)
         out_file.close()
 
-    # WGL proc table
+    # libGL proc table
     glxml = registry_xml.RegistryXML('gl.xml')
 
     for annotation in ["1_0", "1_1", "1_2", "1_3", "1_4", "1_5", "2_0", "2_1", "3_0", "3_1"]:
@@ -176,7 +169,7 @@ def main():
         feature_name = "{}{}".format(name_prefix, annotation)
         glxml.AddCommands(feature_name, annotation)
 
-    wgl_data = [cmd for cmd in glxml.all_cmd_names.get_all_commands() if cmd not in gles_commands]
+    gl_data = [cmd for cmd in glxml.all_cmd_names.get_all_commands()]
 
     wglxml = registry_xml.RegistryXML('wgl.xml')
 
@@ -186,12 +179,12 @@ def main():
         feature_name = "{}{}".format(name_prefix, annotation)
         wglxml.AddCommands(feature_name, annotation)
 
-    wgl_commands = wglxml.all_cmd_names.get_all_commands()
-    wgl_data.extend([cmd if cmd[:3] == 'wgl' else 'wgl' + cmd for cmd in wgl_commands])
+    gl_commands = wglxml.all_cmd_names.get_all_commands()
+    gl_data.extend([cmd if cmd[:3] == 'wgl' else 'wgl' + cmd for cmd in gl_commands])
 
     all_functions = {}
 
-    for function in wgl_data:
+    for function in gl_data:
         if function.startswith("gl"):
             all_functions[function] = "gl::" + function[2:]
         else:
@@ -200,12 +193,12 @@ def main():
     proc_data = [('    {"%s", P(%s)}' % (func, angle_func))
                  for func, angle_func in sorted(all_functions.iteritems())]
 
-    with open(out_file_name_wgl, 'w') as out_file:
+    with open(out_file_name_gl, 'w') as out_file:
         output_cpp = template_cpp.format(
             script_name=sys.argv[0],
             data_source_name="gl.xml, wgl.xml",
             copyright_year=date.today().year,
-            includes=includes_wgl,
+            includes=includes_gl,
             cast="PROC",
             namespace="wgl",
             proc_data=",\n".join(proc_data),
