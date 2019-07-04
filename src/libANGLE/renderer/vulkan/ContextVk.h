@@ -41,22 +41,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     angle::Result flush(const gl::Context *context) override;
     angle::Result finish(const gl::Context *context) override;
 
-    // Semaphore operations.
-    angle::Result waitSemaphore(const gl::Context *context,
-                                const gl::Semaphore *semaphore,
-                                GLuint numBufferBarriers,
-                                const GLuint *buffers,
-                                GLuint numTextureBarriers,
-                                const GLuint *textures,
-                                const GLenum *srcLayouts) override;
-    angle::Result signalSemaphore(const gl::Context *context,
-                                  const gl::Semaphore *semaphore,
-                                  GLuint numBufferBarriers,
-                                  const GLuint *buffers,
-                                  GLuint numTextureBarriers,
-                                  const GLuint *textures,
-                                  const GLenum *dstLayouts) override;
-
     // Drawing methods.
     angle::Result drawArrays(const gl::Context *context,
                              gl::PrimitiveMode mode,
@@ -240,6 +224,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
         mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
         mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
     }
+
+    void insertWaitSemaphore(const vk::Semaphore *waitSemaphore);
 
     angle::Result flushImpl(const vk::Semaphore *semaphore);
     angle::Result finishImpl();

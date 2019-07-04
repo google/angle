@@ -38,6 +38,49 @@ angle::Result SemaphoreVk::importFd(gl::Context *context, gl::HandleType handleT
     }
 }
 
+angle::Result SemaphoreVk::wait(gl::Context *context,
+                                const gl::BufferBarrierVector &bufferBarriers,
+                                const gl::TextureBarrierVector &textureBarriers)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    if (!bufferBarriers.empty())
+    {
+        // Buffers in external memory are not implemented yet.
+        UNIMPLEMENTED();
+    }
+
+    if (!textureBarriers.empty())
+    {
+        // Texture barriers are not implemented yet.
+        UNIMPLEMENTED();
+    }
+
+    contextVk->insertWaitSemaphore(&mSemaphore);
+    return angle::Result::Continue;
+}
+
+angle::Result SemaphoreVk::signal(gl::Context *context,
+                                  const gl::BufferBarrierVector &bufferBarriers,
+                                  const gl::TextureBarrierVector &textureBarriers)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    if (!bufferBarriers.empty())
+    {
+        // Buffers in external memory are not implemented yet.
+        UNIMPLEMENTED();
+    }
+
+    if (!textureBarriers.empty())
+    {
+        // Texture barriers are not implemented yet.
+        UNIMPLEMENTED();
+    }
+
+    return contextVk->flushImpl(&mSemaphore);
+}
+
 angle::Result SemaphoreVk::importOpaqueFd(gl::Context *context, GLint fd)
 {
     ContextVk *contextVk = vk::GetImpl(context);

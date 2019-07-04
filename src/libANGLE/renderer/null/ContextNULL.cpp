@@ -121,30 +121,6 @@ angle::Result ContextNULL::finish(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result ContextNULL::waitSemaphore(const gl::Context *context,
-                                         const gl::Semaphore *semaphore,
-                                         GLuint numBufferBarriers,
-                                         const GLuint *buffers,
-                                         GLuint numTextureBarriers,
-                                         const GLuint *textures,
-                                         const GLenum *srcLayouts
-
-)
-{
-    return angle::Result::Continue;
-}
-
-angle::Result ContextNULL::signalSemaphore(const gl::Context *context,
-                                           const gl::Semaphore *semaphore,
-                                           GLuint numBufferBarriers,
-                                           const GLuint *buffers,
-                                           GLuint numTextureBarriers,
-                                           const GLuint *textures,
-                                           const GLenum *dstLayouts)
-{
-    return angle::Result::Continue;
-}
-
 angle::Result ContextNULL::drawArrays(const gl::Context *context,
                                       gl::PrimitiveMode mode,
                                       GLint first,

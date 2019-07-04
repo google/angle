@@ -356,54 +356,6 @@ angle::Result ContextVk::finish(const gl::Context *context)
     return finishImpl();
 }
 
-angle::Result ContextVk::waitSemaphore(const gl::Context *context,
-                                       const gl::Semaphore *semaphore,
-                                       GLuint numBufferBarriers,
-                                       const GLuint *buffers,
-                                       GLuint numTextureBarriers,
-                                       const GLuint *textures,
-                                       const GLenum *srcLayouts)
-{
-    addWaitSemaphore(vk::GetImpl(semaphore)->getHandle());
-
-    if (numBufferBarriers != 0)
-    {
-        // Buffers in external memory are not implemented yet.
-        UNIMPLEMENTED();
-    }
-
-    if (numTextureBarriers != 0)
-    {
-        // Texture barriers are not implemented yet.
-        UNIMPLEMENTED();
-    }
-
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::signalSemaphore(const gl::Context *context,
-                                         const gl::Semaphore *semaphore,
-                                         GLuint numBufferBarriers,
-                                         const GLuint *buffers,
-                                         GLuint numTextureBarriers,
-                                         const GLuint *textures,
-                                         const GLenum *dstLayouts)
-{
-    if (numBufferBarriers != 0)
-    {
-        // Buffers in external memory are not implemented yet.
-        UNIMPLEMENTED();
-    }
-
-    if (numTextureBarriers != 0)
-    {
-        // Texture barriers are not implemented yet.
-        UNIMPLEMENTED();
-    }
-
-    return flushImpl(vk::GetImpl(semaphore)->ptr());
-}
-
 angle::Result ContextVk::setupDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLint firstVertex,
@@ -2131,6 +2083,12 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 const gl::ActiveTextureArray<TextureVk *> &ContextVk::getActiveTextures() const
 {
     return mActiveTextures;
+}
+
+void ContextVk::insertWaitSemaphore(const vk::Semaphore *waitSemaphore)
+{
+    ASSERT(waitSemaphore);
+    mWaitSemaphores.push_back(waitSemaphore->getHandle());
 }
 
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)

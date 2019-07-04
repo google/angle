@@ -41,22 +41,6 @@ class ContextImpl : public GLImplFactory
     virtual angle::Result flush(const gl::Context *context)  = 0;
     virtual angle::Result finish(const gl::Context *context) = 0;
 
-    // Semaphore operations.
-    virtual angle::Result waitSemaphore(const gl::Context *context,
-                                        const gl::Semaphore *semaphore,
-                                        GLuint numBufferBarriers,
-                                        const GLuint *buffers,
-                                        GLuint numTextureBarriers,
-                                        const GLuint *textures,
-                                        const GLenum *srcLayouts)   = 0;
-    virtual angle::Result signalSemaphore(const gl::Context *context,
-                                          const gl::Semaphore *semaphore,
-                                          GLuint numBufferBarriers,
-                                          const GLuint *buffers,
-                                          GLuint numTextureBarriers,
-                                          const GLuint *textures,
-                                          const GLenum *dstLayouts) = 0;
-
     // Drawing methods.
     virtual angle::Result drawArrays(const gl::Context *context,
                                      gl::PrimitiveMode mode,

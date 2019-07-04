@@ -75,22 +75,6 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     angle::Result flush(const gl::Context *context) override;
     angle::Result finish(const gl::Context *context) override;
 
-    // Semaphore operations.
-    angle::Result waitSemaphore(const gl::Context *context,
-                                const gl::Semaphore *semaphore,
-                                GLuint numBufferBarriers,
-                                const GLuint *buffers,
-                                GLuint numTextureBarriers,
-                                const GLuint *textures,
-                                const GLenum *srcLayouts) override;
-    angle::Result signalSemaphore(const gl::Context *context,
-                                  const gl::Semaphore *semaphore,
-                                  GLuint numBufferBarriers,
-                                  const GLuint *buffers,
-                                  GLuint numTextureBarriers,
-                                  const GLuint *textures,
-                                  const GLenum *dstLayouts) override;
-
     // Drawing methods.
     angle::Result drawArrays(const gl::Context *context,
                              gl::PrimitiveMode mode,

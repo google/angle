@@ -12,6 +12,7 @@
 #include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 
 namespace gl
 {
@@ -30,6 +31,14 @@ class SemaphoreImpl : angle::NonCopyable
     virtual void onDestroy(const gl::Context *context) = 0;
 
     virtual angle::Result importFd(gl::Context *context, gl::HandleType handleType, GLint fd) = 0;
+
+    virtual angle::Result wait(gl::Context *context,
+                               const gl::BufferBarrierVector &bufferBarriers,
+                               const gl::TextureBarrierVector &textureBarriers) = 0;
+
+    virtual angle::Result signal(gl::Context *context,
+                                 const gl::BufferBarrierVector &bufferBarriers,
+                                 const gl::TextureBarrierVector &textureBarriers) = 0;
 };
 
 }  // namespace rx

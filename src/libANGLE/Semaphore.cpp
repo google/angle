@@ -30,4 +30,18 @@ angle::Result Semaphore::importFd(Context *context, HandleType handleType, GLint
     return mImplementation->importFd(context, handleType, fd);
 }
 
+angle::Result Semaphore::wait(Context *context,
+                              const BufferBarrierVector &bufferBarriers,
+                              const TextureBarrierVector &textureBarriers)
+{
+    return mImplementation->wait(context, bufferBarriers, textureBarriers);
+}
+
+angle::Result Semaphore::signal(Context *context,
+                                const BufferBarrierVector &bufferBarriers,
+                                const TextureBarrierVector &textureBarriers)
+{
+    return mImplementation->signal(context, bufferBarriers, textureBarriers);
+}
+
 }  // namespace gl

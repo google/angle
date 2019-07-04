@@ -7319,8 +7319,20 @@ void Context::waitSemaphore(GLuint semaphoreHandle,
     Semaphore *semaphore = getSemaphore(semaphoreHandle);
     ASSERT(semaphore);
 
-    ANGLE_CONTEXT_TRY(mImplementation->waitSemaphore(this, semaphore, numBufferBarriers, buffers,
-                                                     numTextureBarriers, textures, srcLayouts));
+    BufferBarrierVector bufferBarriers(numBufferBarriers);
+    for (GLuint bufferBarrierIdx = 0; bufferBarrierIdx < numBufferBarriers; bufferBarrierIdx++)
+    {
+        bufferBarriers[bufferBarrierIdx] = getBuffer(buffers[bufferBarrierIdx]);
+    }
+
+    TextureBarrierVector textureBarriers(numTextureBarriers);
+    for (GLuint textureBarrierIdx = 0; textureBarrierIdx < numTextureBarriers; textureBarrierIdx++)
+    {
+        textureBarriers[textureBarrierIdx].texture = getTexture(textures[textureBarrierIdx]);
+        textureBarriers[textureBarrierIdx].layout  = srcLayouts[textureBarrierIdx];
+    }
+
+    ANGLE_CONTEXT_TRY(semaphore->wait(this, bufferBarriers, textureBarriers));
 }
 
 void Context::signalSemaphore(GLuint semaphoreHandle,
@@ -7333,8 +7345,20 @@ void Context::signalSemaphore(GLuint semaphoreHandle,
     Semaphore *semaphore = getSemaphore(semaphoreHandle);
     ASSERT(semaphore);
 
-    ANGLE_CONTEXT_TRY(mImplementation->signalSemaphore(this, semaphore, numBufferBarriers, buffers,
-                                                       numTextureBarriers, textures, dstLayouts));
+    BufferBarrierVector bufferBarriers(numBufferBarriers);
+    for (GLuint bufferBarrierIdx = 0; bufferBarrierIdx < numBufferBarriers; bufferBarrierIdx++)
+    {
+        bufferBarriers[bufferBarrierIdx] = getBuffer(buffers[bufferBarrierIdx]);
+    }
+
+    TextureBarrierVector textureBarriers(numTextureBarriers);
+    for (GLuint textureBarrierIdx = 0; textureBarrierIdx < numTextureBarriers; textureBarrierIdx++)
+    {
+        textureBarriers[textureBarrierIdx].texture = getTexture(textures[textureBarrierIdx]);
+        textureBarriers[textureBarrierIdx].layout  = dstLayouts[textureBarrierIdx];
+    }
+
+    ANGLE_CONTEXT_TRY(semaphore->signal(this, bufferBarriers, textureBarriers));
 }
 
 void Context::importSemaphoreFd(GLuint semaphore, HandleType handleType, GLint fd)

@@ -15,6 +15,7 @@
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/angletypes.h"
 
 namespace rx
 {
@@ -37,6 +38,14 @@ class Semaphore final : public RefCountObject
     rx::SemaphoreImpl *getImplementation() const { return mImplementation.get(); }
 
     angle::Result importFd(Context *context, HandleType handleType, GLint fd);
+
+    angle::Result wait(Context *context,
+                       const BufferBarrierVector &bufferBarriers,
+                       const TextureBarrierVector &textureBarriers);
+
+    angle::Result signal(Context *context,
+                         const BufferBarrierVector &bufferBarriers,
+                         const TextureBarrierVector &textureBarriers);
 
   private:
     std::unique_ptr<rx::SemaphoreImpl> mImplementation;

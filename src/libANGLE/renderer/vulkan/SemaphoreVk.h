@@ -25,9 +25,13 @@ class SemaphoreVk : public SemaphoreImpl
 
     angle::Result importFd(gl::Context *context, gl::HandleType handleType, GLint fd) override;
 
-    VkSemaphore getHandle() const { return mSemaphore.getHandle(); }
+    angle::Result wait(gl::Context *context,
+                       const gl::BufferBarrierVector &bufferBarriers,
+                       const gl::TextureBarrierVector &textureBarriers) override;
 
-    const vk::Semaphore *ptr() const { return &mSemaphore; }
+    angle::Result signal(gl::Context *context,
+                         const gl::BufferBarrierVector &bufferBarriers,
+                         const gl::TextureBarrierVector &textureBarriers) override;
 
   private:
     angle::Result importOpaqueFd(gl::Context *context, GLint fd);

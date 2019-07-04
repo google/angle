@@ -190,30 +190,6 @@ angle::Result ContextGL::finish(const gl::Context *context)
     return mRenderer->finish();
 }
 
-angle::Result ContextGL::waitSemaphore(const gl::Context *context,
-                                       const gl::Semaphore *semaphore,
-                                       GLuint numBufferBarriers,
-                                       const GLuint *buffers,
-                                       GLuint numTextureBarriers,
-                                       const GLuint *textures,
-                                       const GLenum *srcLayouts)
-{
-    ANGLE_GL_UNREACHABLE(this);
-    return angle::Result::Stop;
-}
-
-angle::Result ContextGL::signalSemaphore(const gl::Context *context,
-                                         const gl::Semaphore *semaphore,
-                                         GLuint numBufferBarriers,
-                                         const GLuint *buffers,
-                                         GLuint numTextureBarriers,
-                                         const GLuint *textures,
-                                         const GLenum *dstLayouts)
-{
-    ANGLE_GL_UNREACHABLE(this);
-    return angle::Result::Stop;
-}
-
 ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *context,
                                                          GLint first,
                                                          GLsizei count,
