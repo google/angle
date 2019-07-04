@@ -357,11 +357,12 @@ if (build_angle_gles1_conform_tests) {
       # Remove when crbug.com/428099 is resolved.
       cflags += [
         "-Wno-implicit-function-declaration",
+        "-Wno-int-to-pointer-cast",
         "-Wno-self-assign",
         "-Wno-sign-compare",
         "-Wno-unused-const-variable",
+        "-Wno-unused-result",
         "-Wno-unused-variable",
-        "-Wno-int-to-pointer-cast",
 
         # Upstream tests do null pointer arithmetic, so disable those warnings.
         "-Wno-null-pointer-arithmetic",
@@ -373,25 +374,25 @@ if (build_angle_gles1_conform_tests) {
   source_set("angle_gles1_conformance_no_gtest") {
     configs += [
       ":angle_gles1_conform_support",
-      "${angle_root}:internal_config",
+      "$angle_root:internal_config",
     ]
 
     public_configs = [
-      "${angle_root}:angle_util_config",
-      "${angle_root}:gl_prototypes",
-      "${angle_root}:angle_static",
+      "$angle_root:angle_static",
+      "$angle_root:angle_util_config",
+      "$angle_root:gl_prototypes",
     ]
 
     testonly = true
 
-    deps = [
-      "${angle_root}:angle_common",
-      "${angle_root}:angle_util_static",
-      "${angle_root}:libEGL_static",
-      "${angle_root}:libGLESv1_CM_static",
-      "${angle_root}:libGLESv2_static",
-      "${angle_root}:preprocessor",
-      "${angle_root}:translator",
+    public_deps = [
+      "$angle_root:angle_common",
+      "$angle_root:angle_util_static",
+      "$angle_root:libEGL_static",
+      "$angle_root:libGLESv1_CM_static",
+      "$angle_root:libGLESv2_static",
+      "$angle_root:preprocessor",
+      "$angle_root:translator",
     ]
 
     sources = [

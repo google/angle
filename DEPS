@@ -44,7 +44,7 @@ vars = {
 deps = {
 
   '{angle_root}/angle-internal': {
-    'url': 'https://chrome-internal.googlesource.com/angle/angle-internal.git@5d678a322a969284078f27052bc0961da81d30f5',
+    'url': 'https://chrome-internal.googlesource.com/angle/angle-internal.git@05522f9eb159afbbe35a246d5027893c56926a76',
     'condition': 'checkout_src_internal',
   },
 
