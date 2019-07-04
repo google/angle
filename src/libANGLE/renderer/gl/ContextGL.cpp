@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/MemoryObjectGL.h"
 #include "libANGLE/renderer/gl/PathGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/ProgramPipelineGL.h"
@@ -22,6 +23,7 @@
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/SamplerGL.h"
+#include "libANGLE/renderer/gl/SemaphoreGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/SyncGL.h"
@@ -170,14 +172,22 @@ std::vector<PathImpl *> ContextGL::createPaths(GLsizei range)
 
 MemoryObjectImpl *ContextGL::createMemoryObject()
 {
-    UNREACHABLE();
-    return nullptr;
+    const FunctionsGL *functions = getFunctions();
+
+    GLuint memoryObject = 0;
+    functions->createMemoryObjectsEXT(1, &memoryObject);
+
+    return new MemoryObjectGL(memoryObject);
 }
 
 SemaphoreImpl *ContextGL::createSemaphore()
 {
-    UNREACHABLE();
-    return nullptr;
+    const FunctionsGL *functions = getFunctions();
+
+    GLuint semaphore = 0;
+    functions->genSemaphoresEXT(1, &semaphore);
+
+    return new SemaphoreGL(semaphore);
 }
 
 angle::Result ContextGL::flush(const gl::Context *context)

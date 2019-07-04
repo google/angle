@@ -12,6 +12,7 @@
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -22,6 +23,7 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ImageGL.h"
+#include "libANGLE/renderer/gl/MemoryObjectGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
@@ -1109,8 +1111,34 @@ angle::Result TextureGL::setStorageExternalMemory(const gl::Context *context,
                                                   gl::MemoryObject *memoryObject,
                                                   GLuint64 offset)
 {
-    ANGLE_GL_UNREACHABLE(GetImplAs<ContextGL>(context));
-    return angle::Result::Stop;
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+
+    MemoryObjectGL *memoryObjectGL = GetImplAs<MemoryObjectGL>(memoryObject);
+
+    nativegl::TexStorageFormat texStorageFormat =
+        nativegl::GetTexStorageFormat(functions, features, internalFormat);
+
+    stateManager->bindTexture(getType(), mTextureID);
+    if (nativegl::UseTexImage2D(getType()))
+    {
+        functions->texStorageMem2DEXT(ToGLenum(type), levels, texStorageFormat.internalFormat,
+                                      size.width, size.height, memoryObjectGL->getMemoryObjectID(),
+                                      offset);
+    }
+    else
+    {
+        ASSERT(nativegl::UseTexImage3D(getType()));
+        functions->texStorageMem3DEXT(ToGLenum(type), levels, texStorageFormat.internalFormat,
+                                      size.width, size.height, size.depth,
+                                      memoryObjectGL->getMemoryObjectID(), offset);
+    }
+
+    setLevelInfo(context, type, 0, levels,
+                 GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
+
+    return angle::Result::Continue;
 }
 
 angle::Result TextureGL::setImageExternal(const gl::Context *context,

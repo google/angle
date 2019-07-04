@@ -1425,6 +1425,15 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->texture3DOES               = functions->isAtLeastGL(gl::Version(1, 2)) ||
                                functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                functions->hasGLESExtension("GL_OES_texture_3D");
+
+    extensions->memoryObject = functions->hasGLExtension("GL_EXT_memory_object") ||
+                               functions->hasGLESExtension("GL_EXT_memory_object");
+    extensions->semaphore = functions->hasGLExtension("GL_EXT_semaphore") ||
+                            functions->hasGLESExtension("GL_EXT_semaphore");
+    extensions->memoryObjectFd = functions->hasGLExtension("GL_EXT_memory_object_fd") ||
+                                 functions->hasGLESExtension("GL_EXT_memory_object_fd");
+    extensions->semaphoreFd = functions->hasGLExtension("GL_EXT_semaphore_fd") ||
+                              functions->hasGLESExtension("GL_EXT_semaphore_fd");
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)

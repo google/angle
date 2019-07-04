@@ -505,14 +505,18 @@ using TransformFeedbackBuffersArray =
     std::array<T, gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS>;
 
 constexpr size_t kBarrierVectorDefaultSize = 16;
-using BufferBarrierVector                  = angle::FastVector<Buffer *, kBarrierVectorDefaultSize>;
+
+template <typename T>
+using BarrierVector = angle::FastVector<T, kBarrierVectorDefaultSize>;
+
+using BufferBarrierVector = BarrierVector<Buffer *>;
 
 struct TextureAndLayout
 {
     Texture *texture;
     GLenum layout;
 };
-using TextureBarrierVector = angle::FastVector<TextureAndLayout, kBarrierVectorDefaultSize>;
+using TextureBarrierVector = BarrierVector<TextureAndLayout>;
 
 // OffsetBindingPointer.getSize() returns the size specified by the user, which may be larger than
 // the size of the bound buffer. This function reduces the returned size to fit the bound buffer if
