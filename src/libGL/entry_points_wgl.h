@@ -5,8 +5,8 @@
 //
 // entry_points_wgl.h: Declares the exported WGL functions.
 
-#ifndef OPENGL32_WGL_H_
-#define OPENGL32_WGL_H_
+#ifndef LIBGL_WGL_H_
+#define LIBGL_WGL_H_
 
 // Define _GDI32_ so that wingdi.h doesn't declare functions as imports
 #ifndef _GDI32_
@@ -37,4 +37,4 @@ BOOL GL_APIENTRY wglSwapBuffers(HDC hdc);
 
 }  // extern "C"
 
-#endif  // OPENGL32_WGL_H_
+#endif  // LIBGL_WGL_H_

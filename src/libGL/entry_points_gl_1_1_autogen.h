@@ -8,8 +8,8 @@
 // entry_points_gl_1_1_autogen.h:
 //   Defines the GL 1.1 entry points.
 
-#ifndef OPENGL32_ENTRY_POINTS_GL_1_1_AUTOGEN_H_
-#define OPENGL32_ENTRY_POINTS_GL_1_1_AUTOGEN_H_
+#ifndef LIBGL_ENTRY_POINTS_GL_1_1_AUTOGEN_H_
+#define LIBGL_ENTRY_POINTS_GL_1_1_AUTOGEN_H_
 
 #include <export.h>
 #include "angle_gl.h"
@@ -102,4 +102,4 @@ ANGLE_EXPORT void GL_APIENTRY VertexPointer(GLint size,
                                             const void *pointer);
 }  // namespace gl
 
-#endif  // OPENGL32_ENTRY_POINTS_GL_1_1_AUTOGEN_H_
+#endif  // LIBGL_ENTRY_POINTS_GL_1_1_AUTOGEN_H_

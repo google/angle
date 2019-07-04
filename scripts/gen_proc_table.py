@@ -12,7 +12,7 @@ from datetime import date
 import registry_xml
 
 out_file_name_gles = "../src/libGLESv2/proc_table_egl_autogen.cpp"
-out_file_name_gl = "../src/openGL32/proc_table_wgl_autogen.cpp"
+out_file_name_gl = "../src/libGL/proc_table_wgl_autogen.cpp"
 
 # The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
 # Toggle generation here.
@@ -57,19 +57,19 @@ includes_gles = """#include "libGLESv2/proc_table_egl.h"
 #include "platform/Platform.h"
 """
 
-includes_gl = """#include "openGL32/proc_table_wgl.h"
+includes_gl = """#include "libGL/proc_table_wgl.h"
 
-#include "openGL32/entry_points_wgl.h"
-#include "openGL32/entry_points_gl_1_0_autogen.h"
-#include "openGL32/entry_points_gl_1_1_autogen.h"
-#include "openGL32/entry_points_gl_1_2_autogen.h"
-#include "openGL32/entry_points_gl_1_3_autogen.h"
-#include "openGL32/entry_points_gl_1_4_autogen.h"
-#include "openGL32/entry_points_gl_1_5_autogen.h"
-#include "openGL32/entry_points_gl_2_0_autogen.h"
-#include "openGL32/entry_points_gl_2_1_autogen.h"
-#include "openGL32/entry_points_gl_3_0_autogen.h"
-#include "openGL32/entry_points_gl_3_1_autogen.h"
+#include "libGL/entry_points_wgl.h"
+#include "libGL/entry_points_gl_1_0_autogen.h"
+#include "libGL/entry_points_gl_1_1_autogen.h"
+#include "libGL/entry_points_gl_1_2_autogen.h"
+#include "libGL/entry_points_gl_1_3_autogen.h"
+#include "libGL/entry_points_gl_1_4_autogen.h"
+#include "libGL/entry_points_gl_1_5_autogen.h"
+#include "libGL/entry_points_gl_2_0_autogen.h"
+#include "libGL/entry_points_gl_2_1_autogen.h"
+#include "libGL/entry_points_gl_3_0_autogen.h"
+#include "libGL/entry_points_gl_3_1_autogen.h"
 #include "platform/Platform.h"
 """
 

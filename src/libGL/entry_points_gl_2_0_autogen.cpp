@@ -8,7 +8,7 @@
 // entry_points_gl_2_0_autogen.cpp:
 //   Defines the GL 2.0 entry points.
 
-#include "openGL32/entry_points_gl_2_0_autogen.h"
+#include "libGL/entry_points_gl_2_0_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"

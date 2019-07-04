@@ -19,8 +19,8 @@
 #include "libANGLE/Thread.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
+#include "libGL/proc_table_wgl.h"
 #include "libGLESv2/global_state.h"
-#include "openGL32/proc_table_wgl.h"
 
 using namespace wgl;
 using namespace egl;

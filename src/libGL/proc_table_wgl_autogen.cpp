@@ -9,19 +9,19 @@
 //   Mapping from a string entry point name to function address.
 //
 
-#include "openGL32/proc_table_wgl.h"
+#include "libGL/proc_table_wgl.h"
 
-#include "openGL32/entry_points_gl_1_0_autogen.h"
-#include "openGL32/entry_points_gl_1_1_autogen.h"
-#include "openGL32/entry_points_gl_1_2_autogen.h"
-#include "openGL32/entry_points_gl_1_3_autogen.h"
-#include "openGL32/entry_points_gl_1_4_autogen.h"
-#include "openGL32/entry_points_gl_1_5_autogen.h"
-#include "openGL32/entry_points_gl_2_0_autogen.h"
-#include "openGL32/entry_points_gl_2_1_autogen.h"
-#include "openGL32/entry_points_gl_3_0_autogen.h"
-#include "openGL32/entry_points_gl_3_1_autogen.h"
-#include "openGL32/entry_points_wgl.h"
+#include "libGL/entry_points_gl_1_0_autogen.h"
+#include "libGL/entry_points_gl_1_1_autogen.h"
+#include "libGL/entry_points_gl_1_2_autogen.h"
+#include "libGL/entry_points_gl_1_3_autogen.h"
+#include "libGL/entry_points_gl_1_4_autogen.h"
+#include "libGL/entry_points_gl_1_5_autogen.h"
+#include "libGL/entry_points_gl_2_0_autogen.h"
+#include "libGL/entry_points_gl_2_1_autogen.h"
+#include "libGL/entry_points_gl_3_0_autogen.h"
+#include "libGL/entry_points_gl_3_1_autogen.h"
+#include "libGL/entry_points_wgl.h"
 #include "platform/Platform.h"
 
 #define P(FUNC) reinterpret_cast<PROC>(FUNC)

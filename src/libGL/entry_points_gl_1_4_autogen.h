@@ -8,8 +8,8 @@
 // entry_points_gl_1_4_autogen.h:
 //   Defines the GL 1.4 entry points.
 
-#ifndef OPENGL32_ENTRY_POINTS_GL_1_4_AUTOGEN_H_
-#define OPENGL32_ENTRY_POINTS_GL_1_4_AUTOGEN_H_
+#ifndef LIBGL_ENTRY_POINTS_GL_1_4_AUTOGEN_H_
+#define LIBGL_ENTRY_POINTS_GL_1_4_AUTOGEN_H_
 
 #include <export.h>
 #include "angle_gl.h"
@@ -81,4 +81,4 @@ ANGLE_EXPORT void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z);
 ANGLE_EXPORT void GL_APIENTRY WindowPos3sv(const GLshort *v);
 }  // namespace gl
 
-#endif  // OPENGL32_ENTRY_POINTS_GL_1_4_AUTOGEN_H_
+#endif  // LIBGL_ENTRY_POINTS_GL_1_4_AUTOGEN_H_

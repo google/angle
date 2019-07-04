@@ -7,7 +7,7 @@
 LIBRARY openGL32
 EXPORTS
 
-    ; OpenGL32 1.0
+    ; GL 1.0
     glAccum
     glAlphaFunc
     glBegin
@@ -315,7 +315,7 @@ EXPORTS
     glVertex4sv
     glViewport
 
-    ; OpenGL32 1.1
+    ; GL 1.1
     glAreTexturesResident
     glArrayElement
     glBindTexture
@@ -347,13 +347,13 @@ EXPORTS
     glTexSubImage2D
     glVertexPointer
 
-    ; OpenGL32 1.2
+    ; GL 1.2
     glCopyTexSubImage3D
     glDrawRangeElements
     glTexImage3D
     glTexSubImage3D
 
-    ; OpenGL32 1.3
+    ; GL 1.3
     glActiveTexture
     glClientActiveTexture
     glCompressedTexImage1D
@@ -401,7 +401,7 @@ EXPORTS
     glMultiTexCoord4sv
     glSampleCoverage
 
-    ; OpenGL32 1.4
+    ; GL 1.4
     glBlendColor
     glBlendEquation
     glBlendFuncSeparate
@@ -450,7 +450,7 @@ EXPORTS
     glWindowPos3s
     glWindowPos3sv
 
-    ; OpenGL32 1.5
+    ; GL 1.5
     glBeginQuery
     glBindBuffer
     glBufferData
@@ -471,7 +471,7 @@ EXPORTS
     glMapBuffer
     glUnmapBuffer
 
-    ; OpenGL32 2.0
+    ; GL 2.0
     glAttachShader
     glBindAttribLocation
     glBlendEquationSeparate
@@ -566,7 +566,7 @@ EXPORTS
     glVertexAttrib4usv
     glVertexAttribPointer
 
-    ; OpenGL32 2.1
+    ; GL 2.1
     glUniformMatrix2x3fv
     glUniformMatrix2x4fv
     glUniformMatrix3x2fv
@@ -574,7 +574,7 @@ EXPORTS
     glUniformMatrix4x2fv
     glUniformMatrix4x3fv
 
-    ; OpenGL32 3.0
+    ; GL 3.0
     glBeginConditionalRender
     glBeginTransformFeedback
     glBindBufferBase
@@ -660,7 +660,7 @@ EXPORTS
     glVertexAttribI4usv
     glVertexAttribIPointer
 
-    ; OpenGL32 3.1
+    ; GL 3.1
     glCopyBufferSubData
     glDrawArraysInstanced
     glDrawElementsInstanced

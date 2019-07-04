@@ -340,7 +340,7 @@ template_header_includes_gl32 = """#include <export.h>
 #include "windows.h"
 """
 
-template_sources_includes_gl32 = """#include "openGL32/entry_points_{}_autogen.h"
+template_sources_includes_gl32 = """#include "libGL/entry_points_{}_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
@@ -1102,14 +1102,14 @@ def write_capture_helper_source(all_param_types):
         out.close()
 
 
-def write_windows_def_file(data_source_name, lib, folder, exports):
+def write_windows_def_file(data_source_name, lib, lib_export, folder, exports):
 
     content = template_windows_def_file.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=data_source_name,
         exports="\n".join(exports),
         year=date.today().year,
-        lib=lib)
+        lib=lib_export)
 
     path = path_to(folder, "%s_autogen.def" % lib)
 
@@ -1224,28 +1224,28 @@ def main():
             '../src/libGLESv2/libGLESv2_autogen.cpp',
             '../src/libGLESv2/libGLESv2_autogen.def',
             '../src/libGLESv2/libGLESv2_with_capture_autogen.def',
-            '../src/openGL32/entry_points_gl_1_0_autogen.cpp',
-            '../src/openGL32/entry_points_gl_1_0_autogen.h',
-            '../src/openGL32/entry_points_gl_1_1_autogen.cpp',
-            '../src/openGL32/entry_points_gl_1_1_autogen.h',
-            '../src/openGL32/entry_points_gl_1_2_autogen.cpp',
-            '../src/openGL32/entry_points_gl_1_2_autogen.h',
-            '../src/openGL32/entry_points_gl_1_3_autogen.cpp',
-            '../src/openGL32/entry_points_gl_1_3_autogen.h',
-            '../src/openGL32/entry_points_gl_1_4_autogen.cpp',
-            '../src/openGL32/entry_points_gl_1_4_autogen.h',
-            '../src/openGL32/entry_points_gl_1_5_autogen.cpp',
-            '../src/openGL32/entry_points_gl_1_5_autogen.h',
-            '../src/openGL32/entry_points_gl_2_0_autogen.cpp',
-            '../src/openGL32/entry_points_gl_2_0_autogen.h',
-            '../src/openGL32/entry_points_gl_2_1_autogen.cpp',
-            '../src/openGL32/entry_points_gl_2_1_autogen.h',
-            '../src/openGL32/entry_points_gl_3_0_autogen.cpp',
-            '../src/openGL32/entry_points_gl_3_0_autogen.h',
-            '../src/openGL32/entry_points_gl_3_1_autogen.cpp',
-            '../src/openGL32/entry_points_gl_3_1_autogen.h',
-            '../src/openGL32/openGL32_autogen.cpp',
-            '../src/openGL32/openGL32_autogen.def',
+            '../src/libGL/entry_points_gl_1_0_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_0_autogen.h',
+            '../src/libGL/entry_points_gl_1_1_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_1_autogen.h',
+            '../src/libGL/entry_points_gl_1_2_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_2_autogen.h',
+            '../src/libGL/entry_points_gl_1_3_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_3_autogen.h',
+            '../src/libGL/entry_points_gl_1_4_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_4_autogen.h',
+            '../src/libGL/entry_points_gl_1_5_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_5_autogen.h',
+            '../src/libGL/entry_points_gl_2_0_autogen.cpp',
+            '../src/libGL/entry_points_gl_2_0_autogen.h',
+            '../src/libGL/entry_points_gl_2_1_autogen.cpp',
+            '../src/libGL/entry_points_gl_2_1_autogen.h',
+            '../src/libGL/entry_points_gl_3_0_autogen.cpp',
+            '../src/libGL/entry_points_gl_3_0_autogen.h',
+            '../src/libGL/entry_points_gl_3_1_autogen.cpp',
+            '../src/libGL/entry_points_gl_3_1_autogen.h',
+            '../src/libGL/libGL_autogen.cpp',
+            '../src/libGL/libGL_autogen.def',
         ]
 
         if sys.argv[1] == 'inputs':
@@ -1453,14 +1453,13 @@ def main():
                                              "\n".join(glext_protos))
 
     # Now we generate entry points for the desktop implementation
-    # OpenGL32
     gldecls = {}
     gldecls['core'] = {}
     for ver in [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0), (3, 1)]:
         gldecls['core'][ver] = []
 
-    opengl32_ep_defs = []
-    opengl32_ep_exports = []
+    libgl_ep_defs = []
+    libgl_ep_exports = []
 
     glxml = registry_xml.RegistryXML('gl.xml')
 
@@ -1475,27 +1474,27 @@ def main():
 
         glxml.AddCommands(feature_name, version)
 
-        all_opengl32_commands = glxml.commands[version]
-        just_opengl32_commands = [
+        all_libgl_commands = glxml.commands[version]
+        just_libgl_commands = [
             cmd for cmd in glxml.commands[version] if cmd not in all_commands_no_suffix
         ]
-        just_opengl32_commands_suffix = [
+        just_libgl_commands_suffix = [
             cmd for cmd in glxml.commands[version] if cmd not in all_commands_with_suffix
         ]
         all_commands32 = glxml.all_commands
 
         # Validation duplicates handled with suffix
         _, _, _, validation_protos32, _, _, _ = get_entry_points(
-            all_commands32, just_opengl32_commands_suffix, False, False, all_gles_param_types)
-        decls32, defs32, opengl32_defs, _, _, _, _ = get_entry_points(
-            all_commands32, all_opengl32_commands, False, False, all_gles_param_types)
+            all_commands32, just_libgl_commands_suffix, False, False, all_gles_param_types)
+        decls_gl, defs_gl, libgl_defs, _, _, _, _ = get_entry_points(
+            all_commands32, all_libgl_commands, False, False, all_gles_param_types)
 
         # Write the version as a comment before the first EP.
-        opengl32_defs.insert(0, "\n// OpenGL32 %s" % comment)
-        opengl32_ep_exports.append("\n    ; OpenGL32 %s" % comment)
+        libgl_defs.insert(0, "\n// GL %s" % comment)
+        libgl_ep_exports.append("\n    ; GL %s" % comment)
 
-        opengl32_ep_defs += opengl32_defs
-        opengl32_ep_exports += get_exports(all_opengl32_commands)
+        libgl_ep_defs += libgl_defs
+        libgl_ep_exports += get_exports(all_libgl_commands)
 
         minor_if_not_zero = minor_version if minor_version != 0 else ""
 
@@ -1504,14 +1503,13 @@ def main():
                                                                 minor_if_not_zero)
 
         # Entry point files
-        write_file(annotation, "GL " + comment, template_entry_point_header, "\n".join(decls32),
-                   "h", header_includes, "openGL32", "gl.xml")
-        write_file(annotation, "GL " + comment, template_entry_point_source, "\n".join(defs32),
-                   "cpp", source_includes, "openGL32", "gl.xml")
+        write_file(annotation, "GL " + comment, template_entry_point_header, "\n".join(decls_gl),
+                   "h", header_includes, "libGL", "gl.xml")
+        write_file(annotation, "GL " + comment, template_entry_point_source, "\n".join(defs_gl),
+                   "cpp", source_includes, "libGL", "gl.xml")
 
         gldecls['core'][(major_version, minor_version)] = get_decls(
-            context_decl_format, all_commands32, just_opengl32_commands, all_commands_no_suffix,
-            [])
+            context_decl_format, all_commands32, just_libgl_commands, all_commands_no_suffix, [])
 
         # Validation files
         validation_annotation = "GL%s%s" % (major_version, minor_if_not_zero)
@@ -1536,13 +1534,13 @@ def main():
         all_commands32, wgl_commands, False, True, wgl_param_types)
 
     # Write the version as a comment before the first EP.
-    opengl32_ep_exports.append("\n    ; WGL %s" % comment)
+    libgl_ep_exports.append("\n    ; WGL %s" % comment)
 
     # Other versions of these functions are used
     wgl_commands.remove("wglUseFontBitmaps")
     wgl_commands.remove("wglUseFontOutlines")
 
-    opengl32_ep_exports += get_exports(wgl_commands)
+    libgl_ep_exports += get_exports(wgl_commands)
 
     header_includes = template_header_includes.format(major="", minor="")
     header_includes += """
@@ -1615,29 +1613,31 @@ def main():
     source_includes = """
     #include "angle_gl.h"
 
-    #include "openGL32/entry_points_gl_1_0_autogen.h"
-    #include "openGL32/entry_points_gl_1_1_autogen.h"
-    #include "openGL32/entry_points_gl_1_2_autogen.h"
-    #include "openGL32/entry_points_gl_1_3_autogen.h"
-    #include "openGL32/entry_points_gl_1_4_autogen.h"
-    #include "openGL32/entry_points_gl_1_5_autogen.h"
-    #include "openGL32/entry_points_gl_2_0_autogen.h"
-    #include "openGL32/entry_points_gl_2_1_autogen.h"
-    #include "openGL32/entry_points_gl_3_0_autogen.h"
-    #include "openGL32/entry_points_gl_3_1_autogen.h"
+    #include "libGL/entry_points_gl_1_0_autogen.h"
+    #include "libGL/entry_points_gl_1_1_autogen.h"
+    #include "libGL/entry_points_gl_1_2_autogen.h"
+    #include "libGL/entry_points_gl_1_3_autogen.h"
+    #include "libGL/entry_points_gl_1_4_autogen.h"
+    #include "libGL/entry_points_gl_1_5_autogen.h"
+    #include "libGL/entry_points_gl_2_0_autogen.h"
+    #include "libGL/entry_points_gl_2_1_autogen.h"
+    #include "libGL/entry_points_gl_3_0_autogen.h"
+    #include "libGL/entry_points_gl_3_1_autogen.h"
 
     #include "common/event_tracer.h"
     """
 
-    write_export_files("\n".join([item for item in opengl32_ep_defs]), source_includes,
-                       "gl.xml and wgl.xml", "openGL32", "Windows GL")
+    write_export_files("\n".join([item for item in libgl_ep_defs]), source_includes,
+                       "gl.xml and wgl.xml", "libGL", "Windows GL")
 
     libgles_ep_exports += get_egl_exports()
 
     everything = "Khronos and ANGLE XML files"
-    write_windows_def_file(everything, "libGLESv2", "libGLESv2", libgles_ep_exports)
-    write_windows_def_file(everything, "libGLESv2_with_capture", "libGLESv2", libgles_ep_exports)
-    write_windows_def_file(everything, "openGL32", "openGL32", opengl32_ep_exports)
+
+    write_windows_def_file(everything, "libGLESv2", "libGLESv2", "libGLESv2", libgles_ep_exports)
+    write_windows_def_file(everything, "libGLESv2_with_capture", "libGLESv2_with_capture",
+                           "libGLESv2", libgles_ep_exports)
+    write_windows_def_file(everything, "libGL", "openGL32", "libGL", libgl_ep_exports)
 
     all_gles_param_types = sorted(all_gles_param_types)
     write_capture_helper_header(all_gles_param_types)

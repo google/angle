@@ -7,8 +7,8 @@
 //   Mapping from a string entry point name to function address.
 //
 
-#ifndef OPENGL32_PROC_TABLE_H_
-#define OPENGL32_PROC_TABLE_H_
+#ifndef LIBGL_PROC_TABLE_H_
+#define LIBGL_PROC_TABLE_H_
 
 // Define _GDI32_ so that wingdi.h doesn't declare functions as imports
 #ifndef _GDI32_
@@ -29,4 +29,4 @@ extern wgl::ProcEntry g_procTable[];
 extern size_t g_numProcs;
 }  // namespace wgl
 
-#endif  // OPENGL32_PROC_TABLE_H_
+#endif  // LIBGL_PROC_TABLE_H_

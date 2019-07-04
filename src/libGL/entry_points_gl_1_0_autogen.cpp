@@ -8,7 +8,7 @@
 // entry_points_gl_1_0_autogen.cpp:
 //   Defines the GL 1.0 entry points.
 
-#include "openGL32/entry_points_gl_1_0_autogen.h"
+#include "libGL/entry_points_gl_1_0_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"

@@ -5,26 +5,26 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// openGL32.cpp: Implements the exported Windows GL functions.
+// libGL.cpp: Implements the exported Windows GL functions.
 
 #include "angle_gl.h"
 
-#include "openGL32/entry_points_gl_1_0_autogen.h"
-#include "openGL32/entry_points_gl_1_1_autogen.h"
-#include "openGL32/entry_points_gl_1_2_autogen.h"
-#include "openGL32/entry_points_gl_1_3_autogen.h"
-#include "openGL32/entry_points_gl_1_4_autogen.h"
-#include "openGL32/entry_points_gl_1_5_autogen.h"
-#include "openGL32/entry_points_gl_2_0_autogen.h"
-#include "openGL32/entry_points_gl_2_1_autogen.h"
-#include "openGL32/entry_points_gl_3_0_autogen.h"
-#include "openGL32/entry_points_gl_3_1_autogen.h"
+#include "libGL/entry_points_gl_1_0_autogen.h"
+#include "libGL/entry_points_gl_1_1_autogen.h"
+#include "libGL/entry_points_gl_1_2_autogen.h"
+#include "libGL/entry_points_gl_1_3_autogen.h"
+#include "libGL/entry_points_gl_1_4_autogen.h"
+#include "libGL/entry_points_gl_1_5_autogen.h"
+#include "libGL/entry_points_gl_2_0_autogen.h"
+#include "libGL/entry_points_gl_2_1_autogen.h"
+#include "libGL/entry_points_gl_3_0_autogen.h"
+#include "libGL/entry_points_gl_3_1_autogen.h"
 
 #include "common/event_tracer.h"
 
 extern "C" {
 
-// OpenGL32 1.0
+// GL 1.0
 void GL_APIENTRY glAccum(GLenum op, GLfloat value)
 {
     return gl::Accum(op, value);
@@ -1610,7 +1610,7 @@ void GL_APIENTRY glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
     return gl::Viewport(x, y, width, height);
 }
 
-// OpenGL32 1.1
+// GL 1.1
 GLboolean GL_APIENTRY glAreTexturesResident(GLsizei n,
                                             const GLuint *textures,
                                             GLboolean *residences)
@@ -1798,7 +1798,7 @@ void GL_APIENTRY glVertexPointer(GLint size, GLenum type, GLsizei stride, const 
     return gl::VertexPointer(size, type, stride, pointer);
 }
 
-// OpenGL32 1.2
+// GL 1.2
 void GL_APIENTRY glCopyTexSubImage3D(GLenum target,
                                      GLint level,
                                      GLint xoffset,
@@ -1853,7 +1853,7 @@ void GL_APIENTRY glTexSubImage3D(GLenum target,
                              type, pixels);
 }
 
-// OpenGL32 1.3
+// GL 1.3
 void GL_APIENTRY glActiveTexture(GLenum texture)
 {
     return gl::ActiveTexture(texture);
@@ -2133,7 +2133,7 @@ void GL_APIENTRY glSampleCoverage(GLfloat value, GLboolean invert)
     return gl::SampleCoverage(value, invert);
 }
 
-// OpenGL32 1.4
+// GL 1.4
 void GL_APIENTRY glBlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     return gl::BlendColor(red, green, blue, alpha);
@@ -2382,7 +2382,7 @@ void GL_APIENTRY glWindowPos3sv(const GLshort *v)
     return gl::WindowPos3sv(v);
 }
 
-// OpenGL32 1.5
+// GL 1.5
 void GL_APIENTRY glBeginQuery(GLenum target, GLuint id)
 {
     return gl::BeginQuery(target, id);
@@ -2478,7 +2478,7 @@ GLboolean GL_APIENTRY glUnmapBuffer(GLenum target)
     return gl::UnmapBuffer(target);
 }
 
-// OpenGL32 2.0
+// GL 2.0
 void GL_APIENTRY glAttachShader(GLuint program, GLuint shader)
 {
     return gl::AttachShader(program, shader);
@@ -2982,7 +2982,7 @@ void GL_APIENTRY glVertexAttribPointer(GLuint index,
     return gl::VertexAttribPointer(index, size, type, normalized, stride, pointer);
 }
 
-// OpenGL32 2.1
+// GL 2.1
 void GL_APIENTRY glUniformMatrix2x3fv(GLint location,
                                       GLsizei count,
                                       GLboolean transpose,
@@ -3031,7 +3031,7 @@ void GL_APIENTRY glUniformMatrix4x3fv(GLint location,
     return gl::UniformMatrix4x3fv(location, count, transpose, value);
 }
 
-// OpenGL32 3.0
+// GL 3.0
 void GL_APIENTRY glBeginConditionalRender(GLuint id, GLenum mode)
 {
     return gl::BeginConditionalRender(id, mode);
@@ -3506,7 +3506,7 @@ glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, co
     return gl::VertexAttribIPointer(index, size, type, stride, pointer);
 }
 
-// OpenGL32 3.1
+// GL 3.1
 void GL_APIENTRY glCopyBufferSubData(GLenum readTarget,
                                      GLenum writeTarget,
                                      GLintptr readOffset,

@@ -8,8 +8,8 @@
 // entry_points_gl_2_1_autogen.h:
 //   Defines the GL 2.1 entry points.
 
-#ifndef OPENGL32_ENTRY_POINTS_GL_2_1_AUTOGEN_H_
-#define OPENGL32_ENTRY_POINTS_GL_2_1_AUTOGEN_H_
+#ifndef LIBGL_ENTRY_POINTS_GL_2_1_AUTOGEN_H_
+#define LIBGL_ENTRY_POINTS_GL_2_1_AUTOGEN_H_
 
 #include <export.h>
 #include "angle_gl.h"
@@ -45,4 +45,4 @@ ANGLE_EXPORT void GL_APIENTRY UniformMatrix4x3fv(GLint location,
                                                  const GLfloat *value);
 }  // namespace gl
 
-#endif  // OPENGL32_ENTRY_POINTS_GL_2_1_AUTOGEN_H_
+#endif  // LIBGL_ENTRY_POINTS_GL_2_1_AUTOGEN_H_

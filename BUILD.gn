@@ -785,9 +785,9 @@ angle_libGLESv2("libGLESv2_with_capture") {
 }
 
 if (is_win) {
-  angle_shared_library("openGL32") {
-    sources = opengl32_sources
-    output_name = "openGL32${angle_libs_suffix}"
+  angle_shared_library("libGL") {
+    sources = libgl_sources
+    output_name = "openGL32"
 
     configs += [
       ":angle_gl_visibility_config",
@@ -797,7 +797,7 @@ if (is_win) {
 
     defines = [
       "ANGLE_CAPTURE_ENABLED=0",
-      "OPENGL32_IMPLEMENTATION",
+      "LIBGL_IMPLEMENTATION",
     ]
 
     deps = [
