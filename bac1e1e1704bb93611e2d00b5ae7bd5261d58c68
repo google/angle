@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a512264_bc0ee3ea",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-07-04T15:24:16Z",
+      "side": 1,
+      "message": "It seems a bit arbitrary to put the capture after checking the context but before validation. Wouldn\u0027t there be a use-case where you\u0027d want to capture frames when there\u0027s no valid context or does that never happen?\n\nEDIT: I see that\u0027s because the Context owns the FrameCapture object. Why?",
+      "revId": "bac1e1e1704bb93611e2d00b5ae7bd5261d58c68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
