@@ -115,6 +115,7 @@ BOOL GL_APIENTRY wglCopyContext(HGLRC hglrcSrc, HGLRC hglrcDst, UINT mask)
 
 HGLRC GL_APIENTRY wglCreateContext(HDC hDc)
 {
+    Thread *thread = egl::GetCurrentThread();
 
     GLenum platformType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
 
@@ -180,7 +181,8 @@ HGLRC GL_APIENTRY wglCreateContext(HDC hDc)
     AttributeMap attributes      = AttributeMap::CreateFromIntArray(contextAttibutes);
 
     gl::Context *context = nullptr;
-    auto error1 = display->createContext(configuration, sharedGLContext, attributes, &context);
+    auto error1          = display->createContext(configuration, sharedGLContext, thread->getAPI(),
+                                         attributes, &context);
 
     EGLContext mContext = static_cast<EGLContext>(context);
 

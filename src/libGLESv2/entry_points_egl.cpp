@@ -382,9 +382,10 @@ EGLContext EGLAPIENTRY EGL_CreateContext(EGLDisplay dpy,
                          "eglCreateContext", GetDisplayIfValid(display), EGL_NO_CONTEXT);
 
     gl::Context *context = nullptr;
-    ANGLE_EGL_TRY_RETURN(
-        thread, display->createContext(configuration, sharedGLContext, attributes, &context),
-        "eglCreateContext", GetDisplayIfValid(display), EGL_NO_CONTEXT);
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->createContext(configuration, sharedGLContext, thread->getAPI(),
+                                                attributes, &context),
+                         "eglCreateContext", GetDisplayIfValid(display), EGL_NO_CONTEXT);
 
     thread->setSuccess();
     return static_cast<EGLContext>(context);

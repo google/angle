@@ -115,6 +115,7 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     Error createContext(const Config *configuration,
                         const gl::Context *shareContext,
+                        const EGLenum clientType,
                         const AttributeMap &attribs,
                         gl::Context **outContext);
 

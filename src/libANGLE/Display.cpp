@@ -874,6 +874,7 @@ Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
 
 Error Display::createContext(const Config *configuration,
                              const gl::Context *shareContext,
+                             EGLenum clientType,
                              const AttributeMap &attribs,
                              gl::Context **outContext)
 {
@@ -921,7 +922,7 @@ Error Display::createContext(const Config *configuration,
 
     gl::Context *context =
         new gl::Context(mImplementation, configuration, shareContext, shareTextures, cachePointer,
-                        attribs, mDisplayExtensions, GetClientExtensions());
+                        clientType, attribs, mDisplayExtensions, GetClientExtensions());
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);

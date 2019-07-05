@@ -277,6 +277,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  const Context *shareContext,
                  TextureManager *shareTextures,
                  MemoryProgramCache *memoryProgramCache,
+                 const EGLenum clientType,
                  const egl::AttributeMap &attribs,
                  const egl::DisplayExtensions &displayExtensions,
                  const egl::ClientExtensions &clientExtensions)
@@ -296,7 +297,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mLabel(nullptr),
       mCompiler(),
       mConfig(config),
-      mClientType(EGL_OPENGL_ES_API),
+      mClientType(clientType),
       mHasBeenCurrent(false),
       mContextLost(false),
       mResetStatus(GraphicsResetStatus::NoError),
@@ -2975,13 +2976,26 @@ void Context::initVersionStrings()
     const Version &clientVersion = getClientVersion();
 
     std::ostringstream versionString;
-    versionString << "OpenGL ES " << clientVersion.major << "." << clientVersion.minor << " (ANGLE "
+    versionString << "OpenGL ";
+    if (mClientType == EGL_OPENGL_ES_API)
+    {
+        versionString << "ES ";
+    }
+    versionString << clientVersion.major << "." << clientVersion.minor << " (ANGLE "
                   << ANGLE_VERSION_STRING << ")";
     mVersionString = MakeStaticString(versionString.str());
 
     std::ostringstream shadingLanguageVersionString;
-    shadingLanguageVersionString << "OpenGL ES GLSL ES "
-                                 << (clientVersion.major == 2 ? 1 : clientVersion.major) << "."
+    if (mClientType == EGL_OPENGL_ES_API)
+    {
+        shadingLanguageVersionString << "OpenGL ES GLSL ES ";
+    }
+    else
+    {
+        ASSERT(mClientType == EGL_OPENGL_API);
+        shadingLanguageVersionString << "OpenGL GLSL ";
+    }
+    shadingLanguageVersionString << (clientVersion.major == 2 ? 1 : clientVersion.major) << "."
                                  << clientVersion.minor << "0 (ANGLE " << ANGLE_VERSION_STRING
                                  << ")";
     mShadingLanguageString = MakeStaticString(shadingLanguageVersionString.str());
