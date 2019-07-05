@@ -280,7 +280,8 @@ ANGLE_INSTANTIATE_TEST(ProgramBinaryTest,
                        ES3_D3D11(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),
-                       ES2_VULKAN());
+                       ES2_VULKAN(),
+                       ES3_VULKAN());
 
 class ProgramBinaryES3Test : public ANGLETest
 {
@@ -387,7 +388,11 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
     testBinaryAndUBOBlockIndexes(false);
 }
 
-ANGLE_INSTANTIATE_TEST(ProgramBinaryES3Test, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ProgramBinaryES3Test,
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES3_VULKAN());
 
 class ProgramBinaryES31Test : public ANGLETest
 {
@@ -682,7 +687,7 @@ TEST_P(ProgramBinaryTransformFeedbackTest, GetTransformFeedbackVarying)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST(ProgramBinaryTransformFeedbackTest, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(ProgramBinaryTransformFeedbackTest, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());
 
 // For the ProgramBinariesAcrossPlatforms tests, we need two sets of params:
 // - a set to save the program binary
