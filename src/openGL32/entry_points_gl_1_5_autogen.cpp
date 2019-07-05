@@ -33,6 +33,7 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
+        ANGLE_CAPTURE(BeginQuery, context, targetPacked, id);
         if (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id))
         {
             context->beginQuery(targetPacked, id);
@@ -48,6 +49,7 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        ANGLE_CAPTURE(BindBuffer, context, targetPacked, buffer);
         if (context->skipValidation() || ValidateBindBuffer(context, targetPacked, buffer))
         {
             context->bindBuffer(targetPacked, buffer);
@@ -66,6 +68,7 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
         BufferUsage usagePacked    = FromGLenum<BufferUsage>(usage);
+        ANGLE_CAPTURE(BufferData, context, targetPacked, size, data, usagePacked);
         if (context->skipValidation() ||
             ValidateBufferData(context, targetPacked, size, data, usagePacked))
         {
@@ -86,6 +89,7 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        ANGLE_CAPTURE(BufferSubData, context, targetPacked, offset, size, data);
         if (context->skipValidation() ||
             ValidateBufferSubData(context, targetPacked, offset, size, data))
         {
@@ -101,6 +105,7 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(DeleteBuffers, context, n, buffers);
         if (context->skipValidation() || ValidateDeleteBuffers(context, n, buffers))
         {
             context->deleteBuffers(n, buffers);
@@ -115,6 +120,7 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(DeleteQueries, context, n, ids);
         if (context->skipValidation() || ValidateDeleteQueries(context, n, ids))
         {
             context->deleteQueries(n, ids);
@@ -130,6 +136,7 @@ void GL_APIENTRY EndQuery(GLenum target)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
+        ANGLE_CAPTURE(EndQuery, context, targetPacked);
         if (context->skipValidation() || ValidateEndQuery(context, targetPacked))
         {
             context->endQuery(targetPacked);
@@ -144,6 +151,7 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GenBuffers, context, n, buffers);
         if (context->skipValidation() || ValidateGenBuffers(context, n, buffers))
         {
             context->genBuffers(n, buffers);
@@ -158,6 +166,7 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GenQueries, context, n, ids);
         if (context->skipValidation() || ValidateGenQueries(context, n, ids))
         {
             context->genQueries(n, ids);
@@ -174,6 +183,7 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        ANGLE_CAPTURE(GetBufferParameteriv, context, targetPacked, pname, params);
         if (context->skipValidation() ||
             ValidateGetBufferParameteriv(context, targetPacked, pname, params))
         {
@@ -191,6 +201,7 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        ANGLE_CAPTURE(GetBufferPointerv, context, targetPacked, pname, params);
         if (context->skipValidation() ||
             ValidateGetBufferPointerv(context, targetPacked, pname, params))
         {
@@ -210,6 +221,7 @@ void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr siz
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetBufferSubData, context, target, offset, size, data);
         if (context->skipValidation() ||
             ValidateGetBufferSubData(context, target, offset, size, data))
         {
@@ -226,6 +238,7 @@ void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
     Context *context = GetGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetQueryObjectiv, context, id, pname, params);
         if (context->skipValidation() || ValidateGetQueryObjectiv(context, id, pname, params))
         {
             context->getQueryObjectiv(id, pname, params);
@@ -241,6 +254,7 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetQueryObjectuiv, context, id, pname, params);
         if (context->skipValidation() || ValidateGetQueryObjectuiv(context, id, pname, params))
         {
             context->getQueryObjectuiv(id, pname, params);
@@ -257,6 +271,7 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
+        ANGLE_CAPTURE(GetQueryiv, context, targetPacked, pname, params);
         if (context->skipValidation() || ValidateGetQueryiv(context, targetPacked, pname, params))
         {
             context->getQueryiv(targetPacked, pname, params);
@@ -271,6 +286,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(IsBuffer, context, buffer);
         if (context->skipValidation() || ValidateIsBuffer(context, buffer))
         {
             return context->isBuffer(buffer);
@@ -287,6 +303,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(IsQuery, context, id);
         if (context->skipValidation() || ValidateIsQuery(context, id))
         {
             return context->isQuery(id);
@@ -304,6 +321,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        ANGLE_CAPTURE(MapBuffer, context, targetPacked, access);
         if (context->skipValidation() || ValidateMapBuffer(context, targetPacked, access))
         {
             return context->mapBuffer(targetPacked, access);
@@ -321,6 +339,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        ANGLE_CAPTURE(UnmapBuffer, context, targetPacked);
         if (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked))
         {
             return context->unmapBuffer(targetPacked);

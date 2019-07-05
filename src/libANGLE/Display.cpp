@@ -39,6 +39,10 @@
 #include "libANGLE/renderer/ImageImpl.h"
 #include "libANGLE/trace.h"
 
+#if ANGLE_CAPTURE_ENABLED
+#    include "libANGLE/FrameCapture.h"
+#endif  // ANGLE_CAPTURE_ENABLED
+
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 #    include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
@@ -447,8 +451,12 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
       mMemoryProgramCache(mBlobCache),
       mGlobalTextureShareGroupUsers(0),
-      mFeatures()
-{}
+      mFrameCapture(nullptr)
+{
+#if ANGLE_CAPTURE_ENABLED
+    mFrameCapture = new FrameCapture;
+#endif  // ANGLE_CAPTURE_ENABLED
+}
 
 Display::~Display()
 {
@@ -480,6 +488,10 @@ Display::~Display()
 
     SafeDelete(mDevice);
     SafeDelete(mImplementation);
+
+#if ANGLE_CAPTURE_ENABLED
+    SafeDelete(mFrameCapture);
+#endif  // ANGLE_CAPTURE_ENABLED
 }
 
 void Display::setLabel(EGLLabelKHR label)
@@ -1349,7 +1361,7 @@ void Display::initVendorString()
 void Display::initializeFrontendFeatures()
 {
     // Enable on all Impls
-    mFrontendFeatures.loseContextOnOutOfMemory.enabled = true;
+    mFrontendFeatures.loseContextOnOutOfMemory.enabled          = true;
     mFrontendFeatures.scalarizeVecAndMatConstructorArgs.enabled = true;
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
@@ -1524,4 +1536,11 @@ EGLAttrib Display::queryAttrib(const EGLint attribute)
     return value;
 }
 
+void Display::onPostSwap() const
+{
+#if ANGLE_CAPTURE_ENABLED
+    // Dump frame capture if enabled.
+    mFrameCapture->onEndFrame();
+#endif  // ANGLE_CAPTURE_ENABLED
+}
 }  // namespace egl

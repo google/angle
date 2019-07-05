@@ -566,7 +566,7 @@ if (angle_enable_vulkan) {
   }
 }
 
-angle_static_library("libANGLE") {
+angle_source_set("libANGLE") {
   sources = libangle_sources
 
   include_dirs = []
@@ -710,6 +710,13 @@ angle_static_library("libANGLE") {
   }
 }
 
+angle_source_set("libANGLE_with_capture") {
+  public_deps = [
+    ":libANGLE",
+  ]
+  sources = libangle_capture_sources
+}
+
 config("shared_library_public_config") {
   if (is_mac && !is_component_build) {
     # Executable targets that depend on the shared libraries below need to have
@@ -739,30 +746,42 @@ config("angle_static") {
   ]
 }
 
-angle_shared_library("libGLESv2") {
-  sources = libglesv2_sources
-  output_name = "libGLESv2${angle_libs_suffix}"
+template("angle_libGLESv2") {
+  angle_shared_library(target_name) {
+    sources = libglesv2_sources
+    output_name = "${target_name}${angle_libs_suffix}"
 
-  if (is_win) {
-    sources += [ "src/libGLESv2/libGLESv2_autogen.def" ]
+    if (is_win) {
+      sources += [ "src/libGLESv2/${target_name}_autogen.def" ]
+    }
+
+    configs += [
+      ":angle_gl_visibility_config",
+      ":debug_annotations_config",
+      ":gl_prototypes",
+    ]
+
+    defines = [ "LIBGLESV2_IMPLEMENTATION" ] + invoker.defines
+
+    deps = [
+      ":includes",
+      invoker.libANGLE,
+    ]
+
+    public_deps = [
+      ":angle_version",
+    ]
   }
+}
 
-  configs += [
-    ":angle_gl_visibility_config",
-    ":debug_annotations_config",
-    ":gl_prototypes",
-  ]
+angle_libGLESv2("libGLESv2") {
+  libANGLE = ":libANGLE"
+  defines = [ "ANGLE_CAPTURE_ENABLED=0" ]
+}
 
-  defines = [ "LIBGLESV2_IMPLEMENTATION" ]
-
-  deps = [
-    ":includes",
-    ":libANGLE",
-  ]
-
-  public_deps = [
-    ":angle_version",
-  ]
+angle_libGLESv2("libGLESv2_with_capture") {
+  libANGLE = ":libANGLE_with_capture"
+  defines = [ "ANGLE_CAPTURE_ENABLED=1" ]
 }
 
 if (is_win) {
@@ -776,7 +795,10 @@ if (is_win) {
       ":gl_prototypes",
     ]
 
-    defines = [ "OPENGL32_IMPLEMENTATION" ]
+    defines = [
+      "ANGLE_CAPTURE_ENABLED=0",
+      "OPENGL32_IMPLEMENTATION",
+    ]
 
     deps = [
       ":includes",

@@ -131,13 +131,15 @@ Error Surface::destroyImpl(const Display *display)
     return NoError();
 }
 
-void Surface::postSwap()
+void Surface::postSwap(const Display *display)
 {
     if (mRobustResourceInitialization && mSwapBehavior != EGL_BUFFER_PRESERVED)
     {
         mInitState = gl::InitState::MayNeedInit;
         onStateChange(angle::SubjectMessage::SubjectChanged);
     }
+
+    display->onPostSwap();
 }
 
 Error Surface::initialize(const Display *display)
@@ -234,14 +236,14 @@ Error Surface::swap(const gl::Context *context)
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swap");
 
     ANGLE_TRY(mImplementation->swap(context));
-    postSwap();
+    postSwap(context->getDisplay());
     return NoError();
 }
 
 Error Surface::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
     ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
-    postSwap();
+    postSwap(context->getDisplay());
     return NoError();
 }
 

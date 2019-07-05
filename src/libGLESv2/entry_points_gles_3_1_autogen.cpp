@@ -12,6 +12,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
+#include "libANGLE/capture_gles_3_1_autogen.h"
 #include "libANGLE/validationES31.h"
 #include "libGLESv2/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
@@ -25,6 +26,7 @@ void GL_APIENTRY ActiveShaderProgram(GLuint pipeline, GLuint program)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ActiveShaderProgram, context, pipeline, program);
         if (context->skipValidation() || ValidateActiveShaderProgram(context, pipeline, program))
         {
             context->activeShaderProgram(pipeline, program);
@@ -48,6 +50,8 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(BindImageTexture, context, unit, texture, level, layered, layer, access,
+                      format);
         if (context->skipValidation() ||
             ValidateBindImageTexture(context, unit, texture, level, layered, layer, access, format))
         {
@@ -63,6 +67,7 @@ void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(BindProgramPipeline, context, pipeline);
         if (context->skipValidation() || ValidateBindProgramPipeline(context, pipeline))
         {
             context->bindProgramPipeline(pipeline);
@@ -83,6 +88,7 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(BindVertexBuffer, context, bindingindex, buffer, offset, stride);
         if (context->skipValidation() ||
             ValidateBindVertexBuffer(context, bindingindex, buffer, offset, stride))
         {
@@ -101,6 +107,7 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
     if (context)
     {
         ShaderType typePacked = FromGLenum<ShaderType>(type);
+        ANGLE_CAPTURE(CreateShaderProgramv, context, typePacked, count, strings);
         if (context->skipValidation() ||
             ValidateCreateShaderProgramv(context, typePacked, count, strings))
         {
@@ -118,6 +125,7 @@ void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(DeleteProgramPipelines, context, n, pipelines);
         if (context->skipValidation() || ValidateDeleteProgramPipelines(context, n, pipelines))
         {
             context->deleteProgramPipelines(n, pipelines);
@@ -133,6 +141,7 @@ void GL_APIENTRY DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuin
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(DispatchCompute, context, num_groups_x, num_groups_y, num_groups_z);
         if (context->skipValidation() ||
             ValidateDispatchCompute(context, num_groups_x, num_groups_y, num_groups_z))
         {
@@ -148,6 +157,7 @@ void GL_APIENTRY DispatchComputeIndirect(GLintptr indirect)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(DispatchComputeIndirect, context, indirect);
         if (context->skipValidation() || ValidateDispatchComputeIndirect(context, indirect))
         {
             context->dispatchComputeIndirect(indirect);
@@ -164,6 +174,7 @@ void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        ANGLE_CAPTURE(DrawArraysIndirect, context, modePacked, indirect);
         if (context->skipValidation() || ValidateDrawArraysIndirect(context, modePacked, indirect))
         {
             context->drawArraysIndirect(modePacked, indirect);
@@ -181,6 +192,7 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
     {
         PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
         DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        ANGLE_CAPTURE(DrawElementsIndirect, context, modePacked, typePacked, indirect);
         if (context->skipValidation() ||
             ValidateDrawElementsIndirect(context, modePacked, typePacked, indirect))
         {
@@ -196,6 +208,7 @@ void GL_APIENTRY FramebufferParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(FramebufferParameteri, context, target, pname, param);
         if (context->skipValidation() ||
             ValidateFramebufferParameteri(context, target, pname, param))
         {
@@ -211,6 +224,7 @@ void GL_APIENTRY GenProgramPipelines(GLsizei n, GLuint *pipelines)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GenProgramPipelines, context, n, pipelines);
         if (context->skipValidation() || ValidateGenProgramPipelines(context, n, pipelines))
         {
             context->genProgramPipelines(n, pipelines);
@@ -226,6 +240,7 @@ void GL_APIENTRY GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetBooleani_v, context, target, index, data);
         if (context->skipValidation() || ValidateGetBooleani_v(context, target, index, data))
         {
             context->getBooleani_v(target, index, data);
@@ -241,6 +256,7 @@ void GL_APIENTRY GetFramebufferParameteriv(GLenum target, GLenum pname, GLint *p
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetFramebufferParameteriv, context, target, pname, params);
         if (context->skipValidation() ||
             ValidateGetFramebufferParameteriv(context, target, pname, params))
         {
@@ -257,6 +273,7 @@ void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetMultisamplefv, context, pname, index, val);
         if (context->skipValidation() || ValidateGetMultisamplefv(context, pname, index, val))
         {
             context->getMultisamplefv(pname, index, val);
@@ -277,6 +294,7 @@ void GL_APIENTRY GetProgramInterfaceiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramInterfaceiv, context, program, programInterface, pname, params);
         if (context->skipValidation() ||
             ValidateGetProgramInterfaceiv(context, program, programInterface, pname, params))
         {
@@ -297,6 +315,7 @@ void GL_APIENTRY GetProgramPipelineInfoLog(GLuint pipeline,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramPipelineInfoLog, context, pipeline, bufSize, length, infoLog);
         if (context->skipValidation() ||
             ValidateGetProgramPipelineInfoLog(context, pipeline, bufSize, length, infoLog))
         {
@@ -313,6 +332,7 @@ void GL_APIENTRY GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *para
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramPipelineiv, context, pipeline, pname, params);
         if (context->skipValidation() ||
             ValidateGetProgramPipelineiv(context, pipeline, pname, params))
         {
@@ -333,6 +353,7 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramResourceIndex, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceIndex(context, program, programInterface, name))
         {
@@ -355,6 +376,7 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramResourceLocation, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceLocation(context, program, programInterface, name))
         {
@@ -380,6 +402,8 @@ void GL_APIENTRY GetProgramResourceName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramResourceName, context, program, programInterface, index, bufSize,
+                      length, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceName(context, program, programInterface, index, bufSize,
                                            length, name))
@@ -410,6 +434,8 @@ void GL_APIENTRY GetProgramResourceiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetProgramResourceiv, context, program, programInterface, index, propCount,
+                      props, bufSize, length, params);
         if (context->skipValidation() ||
             ValidateGetProgramResourceiv(context, program, programInterface, index, propCount,
                                          props, bufSize, length, params))
@@ -431,6 +457,7 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(GetTexLevelParameterfv, context, targetPacked, level, pname, params);
         if (context->skipValidation() ||
             ValidateGetTexLevelParameterfv(context, targetPacked, level, pname, params))
         {
@@ -450,6 +477,7 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(GetTexLevelParameteriv, context, targetPacked, level, pname, params);
         if (context->skipValidation() ||
             ValidateGetTexLevelParameteriv(context, targetPacked, level, pname, params))
         {
@@ -465,6 +493,7 @@ GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(IsProgramPipeline, context, pipeline);
         if (context->skipValidation() || ValidateIsProgramPipeline(context, pipeline))
         {
             return context->isProgramPipeline(pipeline);
@@ -481,6 +510,7 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(MemoryBarrier, context, barriers);
         if (context->skipValidation() || ValidateMemoryBarrier(context, barriers))
         {
             context->memoryBarrier(barriers);
@@ -495,6 +525,7 @@ void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(MemoryBarrierByRegion, context, barriers);
         if (context->skipValidation() || ValidateMemoryBarrierByRegion(context, barriers))
         {
             context->memoryBarrierByRegion(barriers);
@@ -509,6 +540,7 @@ void GL_APIENTRY ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform1f, context, program, location, v0);
         if (context->skipValidation() || ValidateProgramUniform1f(context, program, location, v0))
         {
             context->programUniform1f(program, location, v0);
@@ -529,6 +561,7 @@ void GL_APIENTRY ProgramUniform1fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform1fv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform1fv(context, program, location, count, value))
         {
@@ -544,6 +577,7 @@ void GL_APIENTRY ProgramUniform1i(GLuint program, GLint location, GLint v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform1i, context, program, location, v0);
         if (context->skipValidation() || ValidateProgramUniform1i(context, program, location, v0))
         {
             context->programUniform1i(program, location, v0);
@@ -564,6 +598,7 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform1iv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform1iv(context, program, location, count, value))
         {
@@ -579,6 +614,7 @@ void GL_APIENTRY ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform1ui, context, program, location, v0);
         if (context->skipValidation() || ValidateProgramUniform1ui(context, program, location, v0))
         {
             context->programUniform1ui(program, location, v0);
@@ -599,6 +635,7 @@ void GL_APIENTRY ProgramUniform1uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform1uiv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform1uiv(context, program, location, count, value))
         {
@@ -615,6 +652,7 @@ void GL_APIENTRY ProgramUniform2f(GLuint program, GLint location, GLfloat v0, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform2f, context, program, location, v0, v1);
         if (context->skipValidation() ||
             ValidateProgramUniform2f(context, program, location, v0, v1))
         {
@@ -636,6 +674,7 @@ void GL_APIENTRY ProgramUniform2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform2fv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform2fv(context, program, location, count, value))
         {
@@ -652,6 +691,7 @@ void GL_APIENTRY ProgramUniform2i(GLuint program, GLint location, GLint v0, GLin
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform2i, context, program, location, v0, v1);
         if (context->skipValidation() ||
             ValidateProgramUniform2i(context, program, location, v0, v1))
         {
@@ -673,6 +713,7 @@ void GL_APIENTRY ProgramUniform2iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform2iv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform2iv(context, program, location, count, value))
         {
@@ -689,6 +730,7 @@ void GL_APIENTRY ProgramUniform2ui(GLuint program, GLint location, GLuint v0, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform2ui, context, program, location, v0, v1);
         if (context->skipValidation() ||
             ValidateProgramUniform2ui(context, program, location, v0, v1))
         {
@@ -710,6 +752,7 @@ void GL_APIENTRY ProgramUniform2uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform2uiv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform2uiv(context, program, location, count, value))
         {
@@ -729,6 +772,7 @@ ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform3f, context, program, location, v0, v1, v2);
         if (context->skipValidation() ||
             ValidateProgramUniform3f(context, program, location, v0, v1, v2))
         {
@@ -750,6 +794,7 @@ void GL_APIENTRY ProgramUniform3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform3fv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform3fv(context, program, location, count, value))
         {
@@ -766,6 +811,7 @@ void GL_APIENTRY ProgramUniform3i(GLuint program, GLint location, GLint v0, GLin
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform3i, context, program, location, v0, v1, v2);
         if (context->skipValidation() ||
             ValidateProgramUniform3i(context, program, location, v0, v1, v2))
         {
@@ -787,6 +833,7 @@ void GL_APIENTRY ProgramUniform3iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform3iv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform3iv(context, program, location, count, value))
         {
@@ -805,6 +852,7 @@ void GL_APIENTRY ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform3ui, context, program, location, v0, v1, v2);
         if (context->skipValidation() ||
             ValidateProgramUniform3ui(context, program, location, v0, v1, v2))
         {
@@ -826,6 +874,7 @@ void GL_APIENTRY ProgramUniform3uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform3uiv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform3uiv(context, program, location, count, value))
         {
@@ -845,6 +894,7 @@ ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform4f, context, program, location, v0, v1, v2, v3);
         if (context->skipValidation() ||
             ValidateProgramUniform4f(context, program, location, v0, v1, v2, v3))
         {
@@ -866,6 +916,7 @@ void GL_APIENTRY ProgramUniform4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform4fv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform4fv(context, program, location, count, value))
         {
@@ -885,6 +936,7 @@ ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform4i, context, program, location, v0, v1, v2, v3);
         if (context->skipValidation() ||
             ValidateProgramUniform4i(context, program, location, v0, v1, v2, v3))
         {
@@ -906,6 +958,7 @@ void GL_APIENTRY ProgramUniform4iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform4iv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform4iv(context, program, location, count, value))
         {
@@ -925,6 +978,7 @@ ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform4ui, context, program, location, v0, v1, v2, v3);
         if (context->skipValidation() ||
             ValidateProgramUniform4ui(context, program, location, v0, v1, v2, v3))
         {
@@ -946,6 +1000,7 @@ void GL_APIENTRY ProgramUniform4uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniform4uiv, context, program, location, count, value);
         if (context->skipValidation() ||
             ValidateProgramUniform4uiv(context, program, location, count, value))
         {
@@ -968,6 +1023,7 @@ void GL_APIENTRY ProgramUniformMatrix2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix2fv, context, program, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix2fv(context, program, location, count, transpose, value))
         {
@@ -990,6 +1046,8 @@ void GL_APIENTRY ProgramUniformMatrix2x3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix2x3fv, context, program, location, count, transpose,
+                      value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix2x3fv(context, program, location, count, transpose, value))
         {
@@ -1012,6 +1070,8 @@ void GL_APIENTRY ProgramUniformMatrix2x4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix2x4fv, context, program, location, count, transpose,
+                      value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix2x4fv(context, program, location, count, transpose, value))
         {
@@ -1034,6 +1094,7 @@ void GL_APIENTRY ProgramUniformMatrix3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix3fv, context, program, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix3fv(context, program, location, count, transpose, value))
         {
@@ -1056,6 +1117,8 @@ void GL_APIENTRY ProgramUniformMatrix3x2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix3x2fv, context, program, location, count, transpose,
+                      value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix3x2fv(context, program, location, count, transpose, value))
         {
@@ -1078,6 +1141,8 @@ void GL_APIENTRY ProgramUniformMatrix3x4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix3x4fv, context, program, location, count, transpose,
+                      value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix3x4fv(context, program, location, count, transpose, value))
         {
@@ -1100,6 +1165,7 @@ void GL_APIENTRY ProgramUniformMatrix4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix4fv, context, program, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix4fv(context, program, location, count, transpose, value))
         {
@@ -1122,6 +1188,8 @@ void GL_APIENTRY ProgramUniformMatrix4x2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix4x2fv, context, program, location, count, transpose,
+                      value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix4x2fv(context, program, location, count, transpose, value))
         {
@@ -1144,6 +1212,8 @@ void GL_APIENTRY ProgramUniformMatrix4x3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ProgramUniformMatrix4x3fv, context, program, location, count, transpose,
+                      value);
         if (context->skipValidation() ||
             ValidateProgramUniformMatrix4x3fv(context, program, location, count, transpose, value))
         {
@@ -1159,6 +1229,7 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(SampleMaski, context, maskNumber, mask);
         if (context->skipValidation() || ValidateSampleMaski(context, maskNumber, mask))
         {
             context->sampleMaski(maskNumber, mask);
@@ -1182,6 +1253,8 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
+        ANGLE_CAPTURE(TexStorage2DMultisample, context, targetPacked, samples, internalformat,
+                      width, height, fixedsamplelocations);
         if (context->skipValidation() ||
             ValidateTexStorage2DMultisample(context, targetPacked, samples, internalformat, width,
                                             height, fixedsamplelocations))
@@ -1200,6 +1273,7 @@ void GL_APIENTRY UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint pro
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UseProgramStages, context, pipeline, stages, program);
         if (context->skipValidation() ||
             ValidateUseProgramStages(context, pipeline, stages, program))
         {
@@ -1215,6 +1289,7 @@ void GL_APIENTRY ValidateProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ValidateProgramPipeline, context, pipeline);
         if (context->skipValidation() || ValidateValidateProgramPipeline(context, pipeline))
         {
             context->validateProgramPipeline(pipeline);
@@ -1229,6 +1304,7 @@ void GL_APIENTRY VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(VertexAttribBinding, context, attribindex, bindingindex);
         if (context->skipValidation() ||
             ValidateVertexAttribBinding(context, attribindex, bindingindex))
         {
@@ -1252,6 +1328,8 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        ANGLE_CAPTURE(VertexAttribFormat, context, attribindex, size, typePacked, normalized,
+                      relativeoffset);
         if (context->skipValidation() ||
             ValidateVertexAttribFormat(context, attribindex, size, typePacked, normalized,
                                        relativeoffset))
@@ -1275,6 +1353,7 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        ANGLE_CAPTURE(VertexAttribIFormat, context, attribindex, size, typePacked, relativeoffset);
         if (context->skipValidation() ||
             ValidateVertexAttribIFormat(context, attribindex, size, typePacked, relativeoffset))
         {
@@ -1290,6 +1369,7 @@ void GL_APIENTRY VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(VertexBindingDivisor, context, bindingindex, divisor);
         if (context->skipValidation() ||
             ValidateVertexBindingDivisor(context, bindingindex, divisor))
         {

@@ -34,6 +34,7 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(AreTexturesResident, context, n, textures, residences);
         if (context->skipValidation() ||
             ValidateAreTexturesResident(context, n, textures, residences))
         {
@@ -51,6 +52,7 @@ void GL_APIENTRY ArrayElement(GLint i)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(ArrayElement, context, i);
         if (context->skipValidation() || ValidateArrayElement(context, i))
         {
             context->arrayElement(i);
@@ -66,6 +68,7 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
+        ANGLE_CAPTURE(BindTexture, context, targetPacked, texture);
         if (context->skipValidation() || ValidateBindTexture(context, targetPacked, texture))
         {
             context->bindTexture(targetPacked, texture);
@@ -84,6 +87,7 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        ANGLE_CAPTURE(ColorPointer, context, size, typePacked, stride, pointer);
         if (context->skipValidation() ||
             ValidateColorPointer(context, size, typePacked, stride, pointer))
         {
@@ -108,6 +112,7 @@ void GL_APIENTRY CopyTexImage1D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(CopyTexImage1D, context, target, level, internalformat, x, y, width, border);
         if (context->skipValidation() ||
             ValidateCopyTexImage1D(context, target, level, internalformat, x, y, width, border))
         {
@@ -134,6 +139,8 @@ void GL_APIENTRY CopyTexImage2D(GLenum target,
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(CopyTexImage2D, context, targetPacked, level, internalformat, x, y, width,
+                      height, border);
         if (context->skipValidation() ||
             ValidateCopyTexImage2D(context, targetPacked, level, internalformat, x, y, width,
                                    height, border))
@@ -155,6 +162,7 @@ CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(CopyTexSubImage1D, context, target, level, xoffset, x, y, width);
         if (context->skipValidation() ||
             ValidateCopyTexSubImage1D(context, target, level, xoffset, x, y, width))
         {
@@ -181,6 +189,8 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(CopyTexSubImage2D, context, targetPacked, level, xoffset, yoffset, x, y,
+                      width, height);
         if (context->skipValidation() ||
             ValidateCopyTexSubImage2D(context, targetPacked, level, xoffset, yoffset, x, y, width,
                                       height))
@@ -197,6 +207,7 @@ void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(DeleteTextures, context, n, textures);
         if (context->skipValidation() || ValidateDeleteTextures(context, n, textures))
         {
             context->deleteTextures(n, textures);
@@ -212,6 +223,7 @@ void GL_APIENTRY DisableClientState(GLenum array)
     if (context)
     {
         ClientVertexArrayType arrayPacked = FromGLenum<ClientVertexArrayType>(array);
+        ANGLE_CAPTURE(DisableClientState, context, arrayPacked);
         if (context->skipValidation() || ValidateDisableClientState(context, arrayPacked))
         {
             context->disableClientState(arrayPacked);
@@ -227,6 +239,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
+        ANGLE_CAPTURE(DrawArrays, context, modePacked, first, count);
         if (context->skipValidation() || ValidateDrawArrays(context, modePacked, first, count))
         {
             context->drawArrays(modePacked, first, count);
@@ -246,6 +259,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
     {
         PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
         DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        ANGLE_CAPTURE(DrawElements, context, modePacked, count, typePacked, indices);
         if (context->skipValidation() ||
             ValidateDrawElements(context, modePacked, count, typePacked, indices))
         {
@@ -262,6 +276,7 @@ void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(EdgeFlagPointer, context, stride, pointer);
         if (context->skipValidation() || ValidateEdgeFlagPointer(context, stride, pointer))
         {
             context->edgeFlagPointer(stride, pointer);
@@ -277,6 +292,7 @@ void GL_APIENTRY EnableClientState(GLenum array)
     if (context)
     {
         ClientVertexArrayType arrayPacked = FromGLenum<ClientVertexArrayType>(array);
+        ANGLE_CAPTURE(EnableClientState, context, arrayPacked);
         if (context->skipValidation() || ValidateEnableClientState(context, arrayPacked))
         {
             context->enableClientState(arrayPacked);
@@ -291,6 +307,7 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GenTextures, context, n, textures);
         if (context->skipValidation() || ValidateGenTextures(context, n, textures))
         {
             context->genTextures(n, textures);
@@ -305,6 +322,7 @@ void GL_APIENTRY GetPointerv(GLenum pname, void **params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(GetPointerv, context, pname, params);
         if (context->skipValidation() || ValidateGetPointerv(context, pname, params))
         {
             context->getPointerv(pname, params);
@@ -320,6 +338,7 @@ void GL_APIENTRY IndexPointer(GLenum type, GLsizei stride, const void *pointer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(IndexPointer, context, type, stride, pointer);
         if (context->skipValidation() || ValidateIndexPointer(context, type, stride, pointer))
         {
             context->indexPointer(type, stride, pointer);
@@ -334,6 +353,7 @@ void GL_APIENTRY Indexub(GLubyte c)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(Indexub, context, c);
         if (context->skipValidation() || ValidateIndexub(context, c))
         {
             context->indexub(c);
@@ -348,6 +368,7 @@ void GL_APIENTRY Indexubv(const GLubyte *c)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(Indexubv, context, c);
         if (context->skipValidation() || ValidateIndexubv(context, c))
         {
             context->indexubv(c);
@@ -363,6 +384,7 @@ void GL_APIENTRY InterleavedArrays(GLenum format, GLsizei stride, const void *po
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(InterleavedArrays, context, format, stride, pointer);
         if (context->skipValidation() ||
             ValidateInterleavedArrays(context, format, stride, pointer))
         {
@@ -378,6 +400,7 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(IsTexture, context, texture);
         if (context->skipValidation() || ValidateIsTexture(context, texture))
         {
             return context->isTexture(texture);
@@ -396,6 +419,7 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        ANGLE_CAPTURE(NormalPointer, context, typePacked, stride, pointer);
         if (context->skipValidation() ||
             ValidateNormalPointer(context, typePacked, stride, pointer))
         {
@@ -411,6 +435,7 @@ void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(PolygonOffset, context, factor, units);
         if (context->skipValidation() || ValidatePolygonOffset(context, factor, units))
         {
             context->polygonOffset(factor, units);
@@ -425,6 +450,7 @@ void GL_APIENTRY PopClientAttrib()
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(PopClientAttrib, context);
         if (context->skipValidation() || ValidatePopClientAttrib(context))
         {
             context->popClientAttrib();
@@ -441,6 +467,7 @@ void GL_APIENTRY PrioritizeTextures(GLsizei n, const GLuint *textures, const GLf
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(PrioritizeTextures, context, n, textures, priorities);
         if (context->skipValidation() ||
             ValidatePrioritizeTextures(context, n, textures, priorities))
         {
@@ -456,6 +483,7 @@ void GL_APIENTRY PushClientAttrib(GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(PushClientAttrib, context, mask);
         if (context->skipValidation() || ValidatePushClientAttrib(context, mask))
         {
             context->pushClientAttrib(mask);
@@ -474,6 +502,7 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        ANGLE_CAPTURE(TexCoordPointer, context, size, typePacked, stride, pointer);
         if (context->skipValidation() ||
             ValidateTexCoordPointer(context, size, typePacked, stride, pointer))
         {
@@ -498,6 +527,7 @@ void GL_APIENTRY TexSubImage1D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(TexSubImage1D, context, target, level, xoffset, width, format, type, pixels);
         if (context->skipValidation() ||
             ValidateTexSubImage1D(context, target, level, xoffset, width, format, type, pixels))
         {
@@ -526,6 +556,8 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(TexSubImage2D, context, targetPacked, level, xoffset, yoffset, width, height,
+                      format, type, pixels);
         if (context->skipValidation() ||
             ValidateTexSubImage2D(context, targetPacked, level, xoffset, yoffset, width, height,
                                   format, type, pixels))
@@ -547,6 +579,7 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
     if (context)
     {
         VertexAttribType typePacked = FromGLenum<VertexAttribType>(type);
+        ANGLE_CAPTURE(VertexPointer, context, size, typePacked, stride, pointer);
         if (context->skipValidation() ||
             ValidateVertexPointer(context, size, typePacked, stride, pointer))
         {

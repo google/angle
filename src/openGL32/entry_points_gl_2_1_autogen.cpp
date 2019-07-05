@@ -38,6 +38,7 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UniformMatrix2x3fv, context, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateUniformMatrix2x3fv(context, location, count, transpose, value))
         {
@@ -59,6 +60,7 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UniformMatrix2x4fv, context, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateUniformMatrix2x4fv(context, location, count, transpose, value))
         {
@@ -80,6 +82,7 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UniformMatrix3x2fv, context, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateUniformMatrix3x2fv(context, location, count, transpose, value))
         {
@@ -101,6 +104,7 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UniformMatrix3x4fv, context, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateUniformMatrix3x4fv(context, location, count, transpose, value))
         {
@@ -122,6 +126,7 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UniformMatrix4x2fv, context, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateUniformMatrix4x2fv(context, location, count, transpose, value))
         {
@@ -143,6 +148,7 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        ANGLE_CAPTURE(UniformMatrix4x3fv, context, location, count, transpose, value);
         if (context->skipValidation() ||
             ValidateUniformMatrix4x3fv(context, location, count, transpose, value))
         {

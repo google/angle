@@ -46,6 +46,7 @@
 
 namespace angle
 {
+class FrameCapture;
 struct FrontendFeatures;
 }  // namespace angle
 
@@ -528,6 +529,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool isBufferAccessValidationEnabled() const { return mBufferAccessValidationEnabled; }
 
     const angle::FrontendFeatures &getFrontendFeatures() const;
+
+    angle::FrameCapture *getFrameCapture();
 
   private:
     void initialize();

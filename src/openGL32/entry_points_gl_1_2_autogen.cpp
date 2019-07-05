@@ -44,6 +44,8 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target,
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(CopyTexSubImage3D, context, targetPacked, level, xoffset, yoffset, zoffset, x,
+                      y, width, height);
         if (context->skipValidation() ||
             ValidateCopyTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, x, y,
                                       width, height))
@@ -71,6 +73,8 @@ void GL_APIENTRY DrawRangeElements(GLenum mode,
     {
         PrimitiveMode modePacked    = FromGLenum<PrimitiveMode>(mode);
         DrawElementsType typePacked = FromGLenum<DrawElementsType>(type);
+        ANGLE_CAPTURE(DrawRangeElements, context, modePacked, start, end, count, typePacked,
+                      indices);
         if (context->skipValidation() ||
             ValidateDrawRangeElements(context, modePacked, start, end, count, typePacked, indices))
         {
@@ -101,6 +105,8 @@ void GL_APIENTRY TexImage3D(GLenum target,
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(TexImage3D, context, targetPacked, level, internalformat, width, height,
+                      depth, border, format, type, pixels);
         if (context->skipValidation() ||
             ValidateTexImage3D(context, targetPacked, level, internalformat, width, height, depth,
                                border, format, type, pixels))
@@ -134,6 +140,8 @@ void GL_APIENTRY TexSubImage3D(GLenum target,
     if (context)
     {
         TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        ANGLE_CAPTURE(TexSubImage3D, context, targetPacked, level, xoffset, yoffset, zoffset, width,
+                      height, depth, format, type, pixels);
         if (context->skipValidation() ||
             ValidateTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, width,
                                   height, depth, format, type, pixels))
