@@ -16,6 +16,23 @@ _IMPLEMENTATION_EXTENSIONS = r'\.(cc|cpp|cxx|mm)$'
 _HEADER_EXTENSIONS = r'\.(h|hpp|hxx)$'
 
 
+def _CheckChangeHasBugField(input_api, output_api):
+    """Requires that the changelist have a Bug: field."""
+    bugs = input_api.change.BugsFromDescription()
+    if not bugs:
+        return [
+            output_api.PresubmitError(
+                'If this change has an associated bug, add Bug: angleproject:[bug number].')
+        ]
+    elif not all([' ' not in bug for bug in bugs]):
+        return [
+            output_api.PresubmitError(
+                'Check bug tag formatting. Ensure there are no spaces after the colon.')
+        ]
+    else:
+        return []
+
+
 def _CheckCodeGeneration(input_api, output_api):
 
     class Msg(output_api.PresubmitError):
@@ -24,10 +41,13 @@ def _CheckCodeGeneration(input_api, output_api):
         def __init__(self, message):
             super(output_api.PresubmitError, self).__init__(
                 message,
-                long_text='Please ensure your ANGLE repositiory is synced to tip-of-tree\n'
-                'and you have an up-to-date checkout of all ANGLE dependencies.\n'
-                'If you are using ANGLE inside Chromium you may need to bootstrap ANGLE \n'
-                'and run gclient sync. See the DevSetup documentation for details.\n')
+                long_text='Please run scripts/run_code_generation.py to refresh generated hashes.\n'
+                '\n'
+                'If that fails, ensure your ANGLE repositiory is synced to tip-of-tree\n'
+                'and all ANGLE DEPS are fully up-to-date by running gclient sync.\n'
+                '\n'
+                'If you are building ANGLE inside Chromium you must bootstrap ANGLE\n'
+                'before gclient sync. See the DevSetup documentation for more details.\n')
 
     code_gen_path = input_api.os_path.join(input_api.PresubmitLocalPath(),
                                            'scripts/run_code_generation.py')
@@ -85,17 +105,21 @@ def _CheckNewHeaderWithoutGnChange(input_api, output_api):
 def CheckChangeOnUpload(input_api, output_api):
     results = []
     results.extend(_CheckCodeGeneration(input_api, output_api))
-    results.extend(input_api.canned_checks.CheckChangeHasBugField(input_api, output_api))
+    results.extend(_CheckChangeHasBugField(input_api, output_api))
     results.extend(input_api.canned_checks.CheckChangeHasDescription(input_api, output_api))
     results.extend(_CheckNewHeaderWithoutGnChange(input_api, output_api))
-    results.extend(input_api.canned_checks.CheckPatchFormatted(input_api, output_api))
+    results.extend(
+        input_api.canned_checks.CheckPatchFormatted(
+            input_api, output_api, result_factory=output_api.PresubmitError))
     return results
 
 
 def CheckChangeOnCommit(input_api, output_api):
     results = []
     results.extend(_CheckCodeGeneration(input_api, output_api))
-    results.extend(input_api.canned_checks.CheckPatchFormatted(input_api, output_api))
-    results.extend(input_api.canned_checks.CheckChangeHasBugField(input_api, output_api))
+    results.extend(
+        input_api.canned_checks.CheckPatchFormatted(
+            input_api, output_api, result_factory=output_api.PresubmitError))
+    results.extend(_CheckChangeHasBugField(input_api, output_api))
     results.extend(input_api.canned_checks.CheckChangeHasDescription(input_api, output_api))
     return results
