@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e1911840_a8b31bab",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-05T14:04:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4205b4a0_e654e1d2",
+      "range": {
+        "startLine": 334,
+        "startChar": 65,
+        "endLine": 334,
+        "endChar": 76
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "828519f6_0539bb0a",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 11
@@ -45,6 +69,30 @@
       "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c933abe_cd71e38b",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-05T14:04:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "828519f6_0539bb0a",
+      "range": {
+        "startLine": 339,
+        "startChar": 30,
+        "endLine": 339,
+        "endChar": 41
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -91,6 +139,54 @@
       "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d6683c9_4e748f01",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-05T14:04:21Z",
+      "side": 1,
+      "message": "I originally was using unique_ptr. But because unique_ptr needs to know about the destructor I would have to unconditionally include FrameCapture.h and a callable destructor. I wanted to keep all logic out of the non-capture DLL so opted for this solution. Left a comment.",
+      "parentUuid": "589d0a01_af4df4d3",
+      "range": {
+        "startLine": 266,
+        "startChar": 24,
+        "endLine": 266,
+        "endChar": 25
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4edf1da2_e6e6d456",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-05T14:04:21Z",
+      "side": 1,
+      "message": "Yep, agreed. Added a comment.",
+      "parentUuid": "317a1c2d_54d8ca07",
+      "range": {
+        "startLine": 266,
+        "startChar": 25,
+        "endLine": 266,
+        "endChar": 38
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
