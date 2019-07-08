@@ -2162,6 +2162,8 @@ LoadImageFunctionInfo RGB5_A1_to_A1R5G5B5_UNORM(GLenum type)
 {
     switch (type)
     {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadRGBA8ToBGR5A1, true);
         case GL_UNSIGNED_SHORT_5_5_5_1:
             return LoadImageFunctionInfo(LoadRGB5A1ToA1RGB5, true);
         default:

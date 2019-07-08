@@ -81,7 +81,6 @@
 
 3520 VULKAN : KHR-GLES31.core.vertex_attrib_binding* = SKIP
 3520 VULKAN : KHR-GLES31.core.internalformat.texture2d.* = FAIL
-3520 VULKAN : KHR-GLES31.core.internalformat.texture2d.*rgb5* = SKIP
 
 // SSBO:
 3561 VULKAN : KHR-GLES31.core.shader_storage_buffer_object.* = SKIP
@@ -102,7 +101,6 @@
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
 
 3520 VULKAN : KHR-GLES31.core.internalformat.copy_tex_image* = FAIL
-3520 VULKAN : KHR-GLES31.core.internalformat.copy_tex_image*rgb5* = SKIP
 3520 VULKAN : KHR-GLES31.core.internalformat.renderbuffer* = FAIL
 
 3520 VULKAN : KHR-GLES31.shaders.aggressive_optimizations* = FAIL

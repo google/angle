@@ -41,10 +41,6 @@
 3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.r* = SKIP
 3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.srgb8_alpha8 = SKIP
 
-// Failures related to RGB5A1 texture formats.
-3456 VULKAN : KHR-GLES3.core.internalformat.texture2d.rgba_unsigned_byte_rgb5_a1 = SKIP
-3456 VULKAN : KHR-GLES3.core.internalformat.copy_tex_image.rgb5_a1 = SKIP
-
 // Depth/stencil related failures.
 3457 VULKAN : KHR-GLES3.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth24_stencil8 = FAIL
 3457 VULKAN : KHR-GLES3.packed_pixels.rectangle.depth* = SKIP
