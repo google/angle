@@ -182,8 +182,7 @@ angle::Result FramebufferVk::discard(const gl::Context *context,
                                      size_t count,
                                      const GLenum *attachments)
 {
-    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
-    return angle::Result::Stop;
+    return invalidate(context, count, attachments);
 }
 
 angle::Result FramebufferVk::invalidate(const gl::Context *context,
