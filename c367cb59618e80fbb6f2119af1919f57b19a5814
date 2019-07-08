@@ -34,6 +34,24 @@
       "revId": "c367cb59618e80fbb6f2119af1919f57b19a5814",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f715196_9433b9a1",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-07-08T19:02:36Z",
+      "side": 1,
+      "message": "Cool.   Sounds good.",
+      "parentUuid": "dd83d97e_269c673c",
+      "revId": "c367cb59618e80fbb6f2119af1919f57b19a5814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
