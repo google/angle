@@ -76,30 +76,34 @@ constexpr size_t kInFlightCommandsLimit = 100u;
 // Initially dumping the command graphs is disabled.
 constexpr bool kEnableCommandGraphDiagnostics = false;
 
-constexpr VkPipelineStageFlags kSubmitInfoWaitDstStageMask[] = {
-    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-};
-
 void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
                           const vk::PrimaryCommandBuffer &commandBuffer,
                           const std::vector<VkSemaphore> &waitSemaphores,
-                          const SignalSemaphoreVector &signalSemaphores)
+                          std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasks,
+                          const vk::Semaphore *signalSemaphore)
 {
+    // Verify that the submitInfo has been zero'd out.
+    ASSERT(submitInfo->signalSemaphoreCount == 0);
+
     submitInfo->sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo->commandBufferCount = commandBuffer.valid() ? 1 : 0;
     submitInfo->pCommandBuffers    = commandBuffer.ptr();
 
-    static_assert(std::extent<decltype(kSubmitInfoWaitDstStageMask)>::value ==
-                      std::decay_t<decltype(signalSemaphores)>::max_size(),
-                  "Wrong size for waitStageMask");
+    if (waitSemaphoreStageMasks->size() < waitSemaphores.size())
+    {
+        waitSemaphoreStageMasks->resize(waitSemaphores.size(),
+                                        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
+    }
 
     submitInfo->waitSemaphoreCount = waitSemaphores.size();
     submitInfo->pWaitSemaphores    = waitSemaphores.data();
-    submitInfo->pWaitDstStageMask  = kSubmitInfoWaitDstStageMask;
+    submitInfo->pWaitDstStageMask  = waitSemaphoreStageMasks->data();
 
-    submitInfo->signalSemaphoreCount = signalSemaphores.size();
-    submitInfo->pSignalSemaphores    = signalSemaphores.data();
+    if (signalSemaphore)
+    {
+        submitInfo->signalSemaphoreCount = 1;
+        submitInfo->pSignalSemaphores    = signalSemaphore->ptr();
+    }
 }
 
 uint32_t GetCoverageSampleCount(const gl::State &glState, FramebufferVk *drawFramebuffer)
@@ -359,7 +363,7 @@ angle::Result ContextVk::waitSemaphore(const gl::Context *context,
                                        const GLuint *textures,
                                        const GLenum *srcLayouts)
 {
-    mWaitSemaphores.push_back(vk::GetImpl(semaphore)->getHandle());
+    addWaitSemaphore(vk::GetImpl(semaphore)->getHandle());
 
     if (numBufferBarriers != 0)
     {
@@ -396,7 +400,7 @@ angle::Result ContextVk::signalSemaphore(const gl::Context *context,
         UNIMPLEMENTED();
     }
 
-    return flushImpl(semaphore);
+    return flushImpl(vk::GetImpl(semaphore)->ptr());
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
@@ -933,7 +937,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
 
         // Submit the command buffer
         VkSubmitInfo submitInfo = {};
-        InitializeSubmitInfo(&submitInfo, commandBatch.get(), {}, {});
+        InitializeSubmitInfo(&submitInfo, commandBatch.get(), {}, &mWaitSemaphoreStageMasks,
+                             nullptr);
 
         ANGLE_TRY(submitFrame(submitInfo, std::move(commandBuffer)));
 
@@ -2126,9 +2131,9 @@ const gl::ActiveTextureArray<TextureVk *> &ContextVk::getActiveTextures() const
     return mActiveTextures;
 }
 
-angle::Result ContextVk::flushImpl(const gl::Semaphore *clientSignalSemaphore)
+angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 {
-    if (mCommandGraph.empty() && !clientSignalSemaphore && mWaitSemaphores.empty())
+    if (mCommandGraph.empty() && !signalSemaphore && mWaitSemaphores.empty())
     {
         return angle::Result::Continue;
     }
@@ -2141,16 +2146,11 @@ angle::Result ContextVk::flushImpl(const gl::Semaphore *clientSignalSemaphore)
         ANGLE_TRY(flushCommandGraph(&commandBatch.get()));
     }
 
-    SignalSemaphoreVector signalSemaphores;
-    ANGLE_TRY(generateSurfaceSemaphores(&signalSemaphores));
-
-    if (clientSignalSemaphore)
-    {
-        signalSemaphores.push_back(vk::GetImpl(clientSignalSemaphore)->getHandle());
-    }
+    waitForSwapchainImageIfNecessary();
 
     VkSubmitInfo submitInfo = {};
-    InitializeSubmitInfo(&submitInfo, commandBatch.get(), mWaitSemaphores, signalSemaphores);
+    InitializeSubmitInfo(&submitInfo, commandBatch.get(), mWaitSemaphores,
+                         &mWaitSemaphoreStageMasks, signalSemaphore);
 
     ANGLE_TRY(submitFrame(submitInfo, commandBatch.release()));
 
@@ -2185,6 +2185,11 @@ angle::Result ContextVk::finishImpl()
     }
 
     return angle::Result::Continue;
+}
+
+void ContextVk::addWaitSemaphore(VkSemaphore semaphore)
+{
+    mWaitSemaphores.push_back(semaphore);
 }
 
 const vk::CommandPool &ContextVk::getCommandPool() const
@@ -2475,21 +2480,17 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::generateSurfaceSemaphores(SignalSemaphoreVector *signalSemaphores)
+void ContextVk::waitForSwapchainImageIfNecessary()
 {
     if (mCurrentWindowSurface)
     {
-        const vk::Semaphore *waitSemaphore   = nullptr;
-        const vk::Semaphore *signalSemaphore = nullptr;
-        ANGLE_TRY(mCurrentWindowSurface->generateSemaphoresForFlush(this, &waitSemaphore,
-                                                                    &signalSemaphore));
-        mWaitSemaphores.push_back(waitSemaphore->getHandle());
-
-        ASSERT(signalSemaphores->empty());
-        signalSemaphores->push_back(signalSemaphore->getHandle());
+        vk::Semaphore waitSemaphore = mCurrentWindowSurface->getAcquireImageSemaphore();
+        if (waitSemaphore.valid())
+        {
+            addWaitSemaphore(waitSemaphore.getHandle());
+            releaseObject(getCurrentQueueSerial(), &waitSemaphore);
+        }
     }
-
-    return angle::Result::Continue;
 }
 
 vk::DescriptorSetLayoutDesc ContextVk::getDriverUniformsDescriptorSetDesc() const

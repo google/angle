@@ -142,9 +142,7 @@ class WindowSurfaceVk : public SurfaceVk
                                         const vk::RenderPass &compatibleRenderPass,
                                         vk::Framebuffer **framebufferOut);
 
-    angle::Result generateSemaphoresForFlush(vk::Context *context,
-                                             const vk::Semaphore **outWaitSemaphore,
-                                             const vk::Semaphore **outSignalSempahore);
+    vk::Semaphore getAcquireImageSemaphore();
 
   protected:
     EGLNativeWindowType mNativeWindowType;
@@ -202,24 +200,7 @@ class WindowSurfaceVk : public SurfaceVk
     };
 
     std::vector<SwapchainImage> mSwapchainImages;
-
-    // Each time vkPresent is called, a wait semaphore is needed to know when the work to render the
-    // frame is done. For ANGLE to know when that is, it needs to add a signal semaphore to each
-    // flush. Conversely, before being able to use a swap chain image, ANGLE needs to wait on the
-    // semaphore returned by vkAcquireNextImage.
-    //
-    // We build a chain of semaphores starting with the semaphore returned by vkAcquireNextImageKHR
-    // and ending with the semaphore provided to vkPresent. Each time generateSemaphoresForFlush is
-    // called, a new semaphore is created and appended to mFlushSemaphoreChain. The second last
-    // semaphore is used as a wait semaphore and the last one is used as a signal semaphore for the
-    // flush.
-    //
-    // The semaphore chain is cleared after every call to present and a new one is started once
-    // vkAquireImage is called.
-    //
-    // We don't need a semaphore chain for offscreen surfaces or surfaceless rendering because the
-    // results cannot affect the images in a swap chain.
-    std::vector<vk::Semaphore> mFlushSemaphoreChain;
+    vk::Semaphore mAcquireImageSemaphore;
 
     // A circular buffer that stores the serial of the renderer on every swap.  The CPU is
     // throttled by waiting for the 2nd previous serial to finish.  Old swapchains are scheduled to
@@ -227,8 +208,8 @@ class WindowSurfaceVk : public SurfaceVk
     struct SwapHistory : angle::NonCopyable
     {
         SwapHistory();
-        SwapHistory(SwapHistory &&other);
-        SwapHistory &operator=(SwapHistory &&other);
+        SwapHistory(SwapHistory &&other) = delete;
+        SwapHistory &operator=(SwapHistory &&other) = delete;
         ~SwapHistory();
 
         void destroy(VkDevice device);
@@ -238,7 +219,8 @@ class WindowSurfaceVk : public SurfaceVk
         // Fence associated with the last submitted work to render to this swapchain image.
         vk::Shared<vk::Fence> sharedFence;
 
-        std::vector<vk::Semaphore> semaphores;
+        vk::Semaphore presentImageSemaphore;
+
         VkSwapchainKHR swapchain = VK_NULL_HANDLE;
     };
     static constexpr size_t kSwapHistorySize = 2;

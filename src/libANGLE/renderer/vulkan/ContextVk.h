@@ -241,8 +241,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
         mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
     }
 
-    angle::Result flushImpl(const gl::Semaphore *semaphore);
+    angle::Result flushImpl(const vk::Semaphore *semaphore);
     angle::Result finishImpl();
+
+    void addWaitSemaphore(VkSemaphore semaphore);
 
     const vk::CommandPool &getCommandPool() const;
 
@@ -414,7 +416,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     void handleDeviceLost();
 
-    angle::Result generateSurfaceSemaphores(SignalSemaphoreVector *signalSemaphores);
+    void waitForSwapchainImageIfNecessary();
 
     vk::PipelineHelper *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -588,6 +590,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
 
     // Semaphores that must be waited on in the next submission.
     std::vector<VkSemaphore> mWaitSemaphores;
+    std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
 
     // Hold information from the last gpu clock sync for future gpu-to-cpu timestamp conversions.
     struct GpuClockSyncInfo

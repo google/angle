@@ -331,18 +331,6 @@ WindowSurfaceVk::SwapchainImage::SwapchainImage(SwapchainImage &&other)
 {}
 
 WindowSurfaceVk::SwapHistory::SwapHistory() = default;
-WindowSurfaceVk::SwapHistory::SwapHistory(SwapHistory &&other)
-{
-    *this = std::move(other);
-}
-
-WindowSurfaceVk::SwapHistory &WindowSurfaceVk::SwapHistory::operator=(SwapHistory &&other)
-{
-    std::swap(sharedFence, other.sharedFence);
-    std::swap(semaphores, other.semaphores);
-    std::swap(swapchain, other.swapchain);
-    return *this;
-}
 
 WindowSurfaceVk::SwapHistory::~SwapHistory() = default;
 
@@ -355,12 +343,7 @@ void WindowSurfaceVk::SwapHistory::destroy(VkDevice device)
     }
 
     sharedFence.reset(device);
-
-    for (vk::Semaphore &semaphore : semaphores)
-    {
-        semaphore.destroy(device);
-    }
-    semaphores.clear();
+    presentImageSemaphore.destroy(device);
 }
 
 angle::Result WindowSurfaceVk::SwapHistory::waitFence(ContextVk *contextVk)
@@ -431,11 +414,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
         mSurface = VK_NULL_HANDLE;
     }
 
-    for (vk::Semaphore &flushSemaphore : mFlushSemaphoreChain)
-    {
-        flushSemaphore.destroy(device);
-    }
-    mFlushSemaphoreChain.clear();
+    mAcquireImageSemaphore.destroy(device);
 }
 
 egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
@@ -917,16 +896,14 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     }
     image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, swapCommands);
 
-    ANGLE_TRY(contextVk->flushImpl(nullptr));
+    ANGLE_VK_TRY(contextVk, swap.presentImageSemaphore.init(contextVk->getDevice()));
 
-    // The semaphore chain must at least have the semaphore returned by vkAquireImage in it. It will
-    // likely have more based on how much work was flushed this frame.
-    ASSERT(!mFlushSemaphoreChain.empty());
+    ANGLE_TRY(contextVk->flushImpl(&swap.presentImageSemaphore));
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores    = mFlushSemaphoreChain.back().ptr();
+    presentInfo.pWaitSemaphores    = swap.presentImageSemaphore.ptr();
     presentInfo.swapchainCount     = 1;
     presentInfo.pSwapchains        = &mSwapchain;
     presentInfo.pImageIndices      = &mCurrentSwapchainImageIndex;
@@ -966,7 +943,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     // Update the swap history for this presentation
     swap.sharedFence = contextVk->getLastSubmittedFence();
-    swap.semaphores  = std::move(mFlushSemaphoreChain);
+    ASSERT(!mAcquireImageSemaphore.valid());
 
     ++mCurrentSwapHistoryIndex;
     mCurrentSwapHistoryIndex =
@@ -1032,25 +1009,23 @@ VkResult WindowSurfaceVk::nextSwapchainImage(vk::Context *context)
 {
     VkDevice device = context->getDevice();
 
-    vk::Scoped<vk::Semaphore> aquireImageSemaphore(device);
-    VkResult result = aquireImageSemaphore.get().init(device);
+    vk::Scoped<vk::Semaphore> acquireImageSemaphore(device);
+    VkResult result = acquireImageSemaphore.get().init(device);
     if (ANGLE_UNLIKELY(result != VK_SUCCESS))
     {
         return result;
     }
 
     result = vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX,
-                                   aquireImageSemaphore.get().getHandle(), VK_NULL_HANDLE,
+                                   acquireImageSemaphore.get().getHandle(), VK_NULL_HANDLE,
                                    &mCurrentSwapchainImageIndex);
     if (ANGLE_UNLIKELY(result != VK_SUCCESS))
     {
         return result;
     }
 
-    // After presenting, the flush semaphore chain is cleared. The semaphore returned by
-    // vkAcquireNextImage will start a new chain.
-    ASSERT(mFlushSemaphoreChain.empty());
-    mFlushSemaphoreChain.push_back(aquireImageSemaphore.release());
+    // The semaphore will be waited on in the next flush.
+    mAcquireImageSemaphore = acquireImageSemaphore.release();
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
@@ -1217,23 +1192,9 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceVk::generateSemaphoresForFlush(vk::Context *context,
-                                                          const vk::Semaphore **outWaitSemaphore,
-                                                          const vk::Semaphore **outSignalSempahore)
+vk::Semaphore WindowSurfaceVk::getAcquireImageSemaphore()
 {
-    // The flush semaphore chain should always start with a semaphore in it, created by the
-    // vkAquireImage call. This semaphore must be waited on before any rendering to the swap chain
-    // image can occur.
-    ASSERT(!mFlushSemaphoreChain.empty());
-
-    vk::Semaphore nextSemaphore;
-    ANGLE_VK_TRY(context, nextSemaphore.init(context->getDevice()));
-    mFlushSemaphoreChain.push_back(std::move(nextSemaphore));
-
-    *outWaitSemaphore   = &mFlushSemaphoreChain[mFlushSemaphoreChain.size() - 2];
-    *outSignalSempahore = &mFlushSemaphoreChain[mFlushSemaphoreChain.size() - 1];
-
-    return angle::Result::Continue;
+    return std::move(mAcquireImageSemaphore);
 }
 
 angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
