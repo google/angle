@@ -203,6 +203,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxUniformComponents;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Compute]  = maxUniformComponents;
+    mNativeCaps.maxUniformLocations                                  = maxUniformVectors;
 
     // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
     // uniforms.
@@ -384,6 +385,7 @@ void RendererVk::ensureCapsInitialized() const
                                   limitsVk.framebufferStencilSampleCounts;
 
     mNativeCaps.maxSamples = vk_gl::GetMaxSampleCount(sampleCounts);
+    mNativeCaps.maxFramebufferSamples = mNativeCaps.maxSamples;
 
     mNativeCaps.subPixelBits = limitsVk.subPixelPrecisionBits;
 

@@ -679,6 +679,9 @@ class FramebufferTest_ES31 : public ANGLETest
 // FRAMEBUFFER_DEFAULT_HEIGHT parameters is zero, the framebuffer is incomplete.
 TEST_P(FramebufferTest_ES31, IncompleteMissingAttachmentDefaultParam)
 {
+    // anglebug.com/3565
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -707,6 +710,9 @@ TEST_P(FramebufferTest_ES31, IncompleteMissingAttachmentDefaultParam)
 // Test that the sample count of a mix of texture and renderbuffer should be same.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountMix)
 {
+    // anglebug.com/3565
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -730,6 +736,9 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountMix)
 // Test that the sample count of texture attachments should be same.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountTex)
 {
+    // anglebug.com/3565
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -752,6 +761,9 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountTex)
 // TEXTURE_FIXED_SAMPLE_LOCATIONS must be TRUE for all attached textures.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsMix)
 {
+    // anglebug.com/3565
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -775,6 +787,9 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsMix)
 // Test that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS is the same for all attached textures.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsTex)
 {
+    // anglebug.com/3565
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -800,6 +815,8 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
 {
     // anglebug.com/2253
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
+    // Occlusion query reports fragments outside the render area are still rendered
+    ANGLE_SKIP_TEST_IF(IsAndroid() || (IsWindows() && (IsIntel() || IsAMD())));
 
     constexpr char kVS1[] = R"(#version 310 es
 in layout(location = 0) highp vec2 a_position;
@@ -909,7 +926,11 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST(FramebufferTest_ES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
+ANGLE_INSTANTIATE_TEST(FramebufferTest_ES31,
+                       ES31_D3D11(),
+                       ES31_OPENGL(),
+                       ES31_OPENGLES(),
+                       ES31_VULKAN());
 
 class AddDummyTextureNoRenderTargetTest : public ANGLETest
 {

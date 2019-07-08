@@ -657,8 +657,8 @@
 // Block name matching failure:
 3459 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
 
-// Explicit uniform locations:
-3597 VULKAN : dEQP-GLES31.functional.uniform_location.* = FAIL
+// Shader support for arrays-of-arrays
+3604 VULKAN : dEQP-GLES31.functional.uniform_location.nested_array.* = SKIP
 
 // Indirect draw:
 3564 VULKAN : dEQP-GLES31.functional.draw_indirect.* = SKIP
@@ -676,11 +676,8 @@
 3563 VULKAN : dEQP-GLES31.functional.synchronization.*.image* = FAIL
 3563 VULKAN : dEQP-GLES31.functional.compute.*image* = FAIL
 
-// Framebuffer parameters (FRAMEBUFFER_DEFAULT_SAMPLES):
-3520 VULKAN : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL
-
 // Framebuffer without attachments:
-3579 VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
+3579 ANDROID VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
 
 // Separate shader objects:
 3570 VULKAN : dEQP-GLES31.functional.program_interface_query.*separable_* = FAIL

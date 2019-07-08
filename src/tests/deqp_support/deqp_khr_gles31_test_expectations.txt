@@ -92,7 +92,8 @@
 3564 VULKAN : KHR-GLES31.core.draw_indirect.* = SKIP
 
 // Explicit uniform locations:
-3597  VULKAN : KHR-GLES31.core.explicit_uniform_location.* = SKIP
+3604 VULKAN : KHR-GLES31.core.explicit_uniform_location.uniform-loc-arrays-of-arrays = SKIP
+3520 VULKAN : KHR-GLES31.core.explicit_uniform_location.* = SKIP
 
 3520 VULKAN : KHR-GLES31.core.program_interface_query.* = SKIP
 

@@ -1414,7 +1414,41 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
                                bool invertViewport)
 {
     VkViewport vkViewport;
-    gl_vk::GetViewport(viewport, nearPlane, farPlane, invertViewport,
+    const gl::Caps &caps                   = getCaps();
+    const VkPhysicalDeviceLimits &limitsVk = mRenderer->getPhysicalDeviceProperties().limits;
+    const int viewportBoundsRangeLow       = static_cast<int>(limitsVk.viewportBoundsRange[0]);
+    const int viewportBoundsRangeHigh      = static_cast<int>(limitsVk.viewportBoundsRange[1]);
+
+    // Clamp the viewport values to what Vulkan specifies
+
+    // width must be greater than 0.0 and less than or equal to
+    // VkPhysicalDeviceLimits::maxViewportDimensions[0]
+    int correctedWidth = std::min<int>(viewport.width, caps.maxViewportWidth);
+    correctedWidth     = std::max<int>(correctedWidth, 0);
+    // height must be greater than 0.0 and less than or equal to
+    // VkPhysicalDeviceLimits::maxViewportDimensions[1]
+    int correctedHeight = std::min<int>(viewport.height, caps.maxViewportHeight);
+    correctedHeight     = std::max<int>(correctedHeight, 0);
+    // x and y must each be between viewportBoundsRange[0] and viewportBoundsRange[1], inclusive
+    int correctedX = std::min<int>(viewport.x, viewportBoundsRangeHigh);
+    correctedX     = std::max<int>(correctedX, viewportBoundsRangeLow);
+    int correctedY = std::min<int>(viewport.y, viewportBoundsRangeHigh);
+    correctedY     = std::max<int>(correctedY, viewportBoundsRangeLow);
+    // x + width must be less than or equal to viewportBoundsRange[1]
+    if ((correctedX + correctedWidth) > viewportBoundsRangeHigh)
+    {
+        correctedWidth = viewportBoundsRangeHigh - correctedX;
+    }
+    // y + height must be less than or equal to viewportBoundsRange[1]
+    if ((correctedY + correctedHeight) > viewportBoundsRangeHigh)
+    {
+        correctedHeight = viewportBoundsRangeHigh - correctedY;
+    }
+
+    gl::Rectangle correctedRect =
+        gl::Rectangle(correctedX, correctedY, correctedWidth, correctedHeight);
+
+    gl_vk::GetViewport(correctedRect, nearPlane, farPlane, invertViewport,
                        framebufferVk->getState().getDimensions().height, &vkViewport);
     mGraphicsPipelineDesc->updateViewport(&mGraphicsPipelineTransition, vkViewport);
     invalidateDriverUniforms();

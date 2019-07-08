@@ -1097,10 +1097,13 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                     ANGLE_TRY(mRenderTargetCache.getColors()[colorIndexGL]->flushStagedUpdates(
                         contextVk));
                 }
-                break;
             }
         }
     }
+
+    // The FBOs new attachment may have changed the renderable area
+    const gl::State &glState = context->getState();
+    contextVk->updateScissor(glState);
 
     mActiveColorComponents = gl_vk::GetColorComponentFlags(
         mActiveColorComponentMasksForClear[0].any(), mActiveColorComponentMasksForClear[1].any(),
@@ -1195,6 +1198,14 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         ASSERT(attachmentsSize.empty() ||
                attachmentsSize == depthStencilRenderTarget->getExtents());
         attachmentsSize = depthStencilRenderTarget->getExtents();
+    }
+
+    if (attachmentsSize.empty())
+    {
+        // No attachments, so use the default values.
+        attachmentsSize.height = mState.getDefaultHeight();
+        attachmentsSize.width  = mState.getDefaultWidth();
+        attachmentsSize.depth  = 0;
     }
 
     VkFramebufferCreateInfo framebufferInfo = {};
@@ -1515,13 +1526,14 @@ gl::Extents FramebufferVk::getReadImageExtents() const
 
 gl::Rectangle FramebufferVk::getCompleteRenderArea() const
 {
-    return gl::Rectangle(0, 0, mState.getDimensions().width, mState.getDimensions().height);
+    const gl::Box &dimensions = mState.getDimensions();
+    return gl::Rectangle(0, 0, dimensions.width, dimensions.height);
 }
 
 gl::Rectangle FramebufferVk::getScissoredRenderArea(ContextVk *contextVk) const
 {
-    const gl::Rectangle renderArea(0, 0, mState.getDimensions().width,
-                                   mState.getDimensions().height);
+    const gl::Box &dimensions = mState.getDimensions();
+    const gl::Rectangle renderArea(0, 0, dimensions.width, dimensions.height);
     bool invertViewport = contextVk->isViewportFlipEnabledForDrawFBO();
 
     return ClipRectToScissor(contextVk->getState(), renderArea, invertViewport);

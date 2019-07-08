@@ -309,6 +309,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     Serial generateTextureSerial() { return mTextureSerialFactory.generate(); }
     const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
 
+    void updateScissor(const gl::State &glState);
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -365,7 +367,6 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                         float farPlane,
                         bool invertViewport);
     void updateDepthRange(float nearPlane, float farPlane);
-    void updateScissor(const gl::State &glState);
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 

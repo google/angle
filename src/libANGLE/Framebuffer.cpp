@@ -609,8 +609,12 @@ Box FramebufferState::getDimensions() const
 Extents FramebufferState::getExtents() const
 {
     ASSERT(attachmentsHaveSameDimensions());
-    ASSERT(getFirstNonNullAttachment() != nullptr);
-    return getFirstNonNullAttachment()->getSize();
+    const FramebufferAttachment *first = getFirstNonNullAttachment();
+    if (first)
+    {
+        return first->getSize();
+    }
+    return Extents(getDefaultWidth(), getDefaultHeight(), 0);
 }
 
 Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
