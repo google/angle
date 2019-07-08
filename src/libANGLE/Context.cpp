@@ -7363,7 +7363,7 @@ void Context::texStorage1D(GLenum target, GLsizei levels, GLenum internalformat,
     UNIMPLEMENTED();
 }
 
-bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
+bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams) const
 {
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
     // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
@@ -8106,7 +8106,9 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
     return false;
 }
 
-bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams)
+bool Context::getIndexedQueryParameterInfo(GLenum target,
+                                           GLenum *type,
+                                           unsigned int *numParams) const
 {
     if (getClientVersion() < Version(3, 0))
     {

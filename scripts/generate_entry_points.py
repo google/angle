@@ -214,11 +214,7 @@ template_capture_header = """// GENERATED FILE - DO NOT EDIT.
 #define LIBANGLE_CAPTURE_GLES_{annotation}_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
-
-namespace angle
-{{
-struct ParamCapture;
-}}  // namespace angle
+#include "libANGLE/FrameCapture.h"
 
 namespace gl
 {{
@@ -255,17 +251,13 @@ namespace gl
 """
 
 template_capture_method = """
-void Capture{short_name}({params_with_type})
+CallCapture Capture{short_name}({params_with_type})
 {{
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = Validate{short_name}({params_just_name});
     ParamBuffer paramBuffer;
+
     {parameter_captures}
 
-    frameCapture->captureCall(context, "{full_name}", std::move(paramBuffer), isCallValid);
+    return CallCapture("gl{short_name}", std::move(paramBuffer));
 }}
 """
 
@@ -274,7 +266,7 @@ template_parameter_capture_value = """paramBuffer.addValueParam("{name}", ParamT
 template_parameter_capture_pointer = """
     ParamCapture {name}Param("{name}", ParamType::T{type});
     InitParamValue(ParamType::T{type}, {name}, &{name}Param.value);
-    {capture_name}({params}, isCallValid, &{name}Param);
+    {capture_name}({params}, &{name}Param);
     paramBuffer.addParam(std::move({name}Param));
 """
 
@@ -368,7 +360,7 @@ template_event_comment = """// Don't run an EVENT() macro on the EXT_debug_marke
     // It can interfere with the debug events being set by the caller.
     // """
 
-template_capture_proto = "void Capture%s(%s);"
+template_capture_proto = "angle::CallCapture Capture%s(%s);"
 
 template_validation_proto = "bool Validate%s(%s);"
 
@@ -658,9 +650,11 @@ def format_capture_method(cmd_name, params, all_param_types, capture_pointer_fun
 
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
 
-    params_with_type = get_internal_params(cmd_name, ["Context *context"] + params)
+    params_with_type = get_internal_params(cmd_name,
+                                           ["const Context *context", "bool isCallValid"] + params)
     params_just_name = ", ".join(
-        ["context"] + [just_the_name_packed(param, packed_gl_enums) for param in params])
+        ["context", "isCallValid"] +
+        [just_the_name_packed(param, packed_gl_enums) for param in params])
 
     parameter_captures = []
     for param in params:
@@ -691,8 +685,7 @@ def format_capture_method(cmd_name, params, all_param_types, capture_pointer_fun
                 name=param_name, type=param_type, capture_name=capture_name, params=params)
 
             capture_pointer_func = template_parameter_capture_pointer_func.format(
-                name=capture_name,
-                params=params_with_type + ", bool isCallValid, angle::ParamCapture *paramCapture")
+                name=capture_name, params=params_with_type + ", angle::ParamCapture *paramCapture")
             capture_pointer_funcs += [capture_pointer_func]
         else:
             capture = template_parameter_capture_value.format(name=param_name, type=param_type)
@@ -752,7 +745,8 @@ def format_validation_proto(cmd_name, params):
 
 
 def format_capture_proto(cmd_name, params):
-    internal_params = get_internal_params(cmd_name, ["Context *context"] + params)
+    internal_params = get_internal_params(cmd_name,
+                                          ["const Context *context", "bool isCallValid"] + params)
     return template_capture_proto % (cmd_name[2:], internal_params)
 
 

@@ -12,11 +12,7 @@
 #define LIBANGLE_CAPTURE_GLES_1_0_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
-
-namespace angle
-{
-struct ParamCapture;
-}  // namespace angle
+#include "libANGLE/FrameCapture.h"
 
 namespace gl
 {
@@ -24,393 +20,583 @@ class Context;
 
 // Method Captures
 
-void CaptureAlphaFunc(Context *context, AlphaTestFunc funcPacked, GLfloat ref);
-void CaptureAlphaFuncx(Context *context, AlphaTestFunc funcPacked, GLfixed ref);
-void CaptureClearColorx(Context *context, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);
-void CaptureClearDepthx(Context *context, GLfixed depth);
-void CaptureClientActiveTexture(Context *context, GLenum texture);
-void CaptureClipPlanef(Context *context, GLenum p, const GLfloat *eqn);
-void CaptureClipPlanex(Context *context, GLenum plane, const GLfixed *equation);
-void CaptureColor4f(Context *context, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
-void CaptureColor4ub(Context *context, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);
-void CaptureColor4x(Context *context, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);
-void CaptureColorPointer(Context *context,
-                         GLint size,
-                         VertexAttribType typePacked,
-                         GLsizei stride,
-                         const void *pointer);
-void CaptureDepthRangex(Context *context, GLfixed n, GLfixed f);
-void CaptureDisableClientState(Context *context, ClientVertexArrayType arrayPacked);
-void CaptureEnableClientState(Context *context, ClientVertexArrayType arrayPacked);
-void CaptureFogf(Context *context, GLenum pname, GLfloat param);
-void CaptureFogfv(Context *context, GLenum pname, const GLfloat *params);
-void CaptureFogx(Context *context, GLenum pname, GLfixed param);
-void CaptureFogxv(Context *context, GLenum pname, const GLfixed *param);
-void CaptureFrustumf(Context *context,
-                     GLfloat l,
-                     GLfloat r,
-                     GLfloat b,
-                     GLfloat t,
-                     GLfloat n,
-                     GLfloat f);
-void CaptureFrustumx(Context *context,
-                     GLfixed l,
-                     GLfixed r,
-                     GLfixed b,
-                     GLfixed t,
-                     GLfixed n,
-                     GLfixed f);
-void CaptureGetClipPlanef(Context *context, GLenum plane, GLfloat *equation);
-void CaptureGetClipPlanex(Context *context, GLenum plane, GLfixed *equation);
-void CaptureGetFixedv(Context *context, GLenum pname, GLfixed *params);
-void CaptureGetLightfv(Context *context, GLenum light, LightParameter pnamePacked, GLfloat *params);
-void CaptureGetLightxv(Context *context, GLenum light, LightParameter pnamePacked, GLfixed *params);
-void CaptureGetMaterialfv(Context *context,
-                          GLenum face,
-                          MaterialParameter pnamePacked,
-                          GLfloat *params);
-void CaptureGetMaterialxv(Context *context,
-                          GLenum face,
-                          MaterialParameter pnamePacked,
-                          GLfixed *params);
-void CaptureGetPointerv(Context *context, GLenum pname, void **params);
-void CaptureGetTexEnvfv(Context *context,
-                        TextureEnvTarget targetPacked,
-                        TextureEnvParameter pnamePacked,
-                        GLfloat *params);
-void CaptureGetTexEnviv(Context *context,
-                        TextureEnvTarget targetPacked,
-                        TextureEnvParameter pnamePacked,
-                        GLint *params);
-void CaptureGetTexEnvxv(Context *context,
-                        TextureEnvTarget targetPacked,
-                        TextureEnvParameter pnamePacked,
-                        GLfixed *params);
-void CaptureGetTexParameterxv(Context *context,
-                              TextureType targetPacked,
-                              GLenum pname,
-                              GLfixed *params);
-void CaptureLightModelf(Context *context, GLenum pname, GLfloat param);
-void CaptureLightModelfv(Context *context, GLenum pname, const GLfloat *params);
-void CaptureLightModelx(Context *context, GLenum pname, GLfixed param);
-void CaptureLightModelxv(Context *context, GLenum pname, const GLfixed *param);
-void CaptureLightf(Context *context, GLenum light, LightParameter pnamePacked, GLfloat param);
-void CaptureLightfv(Context *context,
-                    GLenum light,
-                    LightParameter pnamePacked,
-                    const GLfloat *params);
-void CaptureLightx(Context *context, GLenum light, LightParameter pnamePacked, GLfixed param);
-void CaptureLightxv(Context *context,
-                    GLenum light,
-                    LightParameter pnamePacked,
-                    const GLfixed *params);
-void CaptureLineWidthx(Context *context, GLfixed width);
-void CaptureLoadIdentity(Context *context);
-void CaptureLoadMatrixf(Context *context, const GLfloat *m);
-void CaptureLoadMatrixx(Context *context, const GLfixed *m);
-void CaptureLogicOp(Context *context, LogicalOperation opcodePacked);
-void CaptureMaterialf(Context *context, GLenum face, MaterialParameter pnamePacked, GLfloat param);
-void CaptureMaterialfv(Context *context,
-                       GLenum face,
-                       MaterialParameter pnamePacked,
-                       const GLfloat *params);
-void CaptureMaterialx(Context *context, GLenum face, MaterialParameter pnamePacked, GLfixed param);
-void CaptureMaterialxv(Context *context,
-                       GLenum face,
-                       MaterialParameter pnamePacked,
-                       const GLfixed *param);
-void CaptureMatrixMode(Context *context, MatrixType modePacked);
-void CaptureMultMatrixf(Context *context, const GLfloat *m);
-void CaptureMultMatrixx(Context *context, const GLfixed *m);
-void CaptureMultiTexCoord4f(Context *context,
-                            GLenum target,
-                            GLfloat s,
-                            GLfloat t,
-                            GLfloat r,
-                            GLfloat q);
-void CaptureMultiTexCoord4x(Context *context,
-                            GLenum texture,
-                            GLfixed s,
-                            GLfixed t,
-                            GLfixed r,
-                            GLfixed q);
-void CaptureNormal3f(Context *context, GLfloat nx, GLfloat ny, GLfloat nz);
-void CaptureNormal3x(Context *context, GLfixed nx, GLfixed ny, GLfixed nz);
-void CaptureNormalPointer(Context *context,
-                          VertexAttribType typePacked,
-                          GLsizei stride,
-                          const void *pointer);
-void CaptureOrthof(Context *context,
-                   GLfloat l,
-                   GLfloat r,
-                   GLfloat b,
-                   GLfloat t,
-                   GLfloat n,
-                   GLfloat f);
-void CaptureOrthox(Context *context,
-                   GLfixed l,
-                   GLfixed r,
-                   GLfixed b,
-                   GLfixed t,
-                   GLfixed n,
-                   GLfixed f);
-void CapturePointParameterf(Context *context, PointParameter pnamePacked, GLfloat param);
-void CapturePointParameterfv(Context *context, PointParameter pnamePacked, const GLfloat *params);
-void CapturePointParameterx(Context *context, PointParameter pnamePacked, GLfixed param);
-void CapturePointParameterxv(Context *context, PointParameter pnamePacked, const GLfixed *params);
-void CapturePointSize(Context *context, GLfloat size);
-void CapturePointSizex(Context *context, GLfixed size);
-void CapturePolygonOffsetx(Context *context, GLfixed factor, GLfixed units);
-void CapturePopMatrix(Context *context);
-void CapturePushMatrix(Context *context);
-void CaptureRotatef(Context *context, GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
-void CaptureRotatex(Context *context, GLfixed angle, GLfixed x, GLfixed y, GLfixed z);
-void CaptureSampleCoveragex(Context *context, GLclampx value, GLboolean invert);
-void CaptureScalef(Context *context, GLfloat x, GLfloat y, GLfloat z);
-void CaptureScalex(Context *context, GLfixed x, GLfixed y, GLfixed z);
-void CaptureShadeModel(Context *context, ShadingModel modePacked);
-void CaptureTexCoordPointer(Context *context,
-                            GLint size,
-                            VertexAttribType typePacked,
-                            GLsizei stride,
-                            const void *pointer);
-void CaptureTexEnvf(Context *context,
-                    TextureEnvTarget targetPacked,
-                    TextureEnvParameter pnamePacked,
-                    GLfloat param);
-void CaptureTexEnvfv(Context *context,
-                     TextureEnvTarget targetPacked,
-                     TextureEnvParameter pnamePacked,
-                     const GLfloat *params);
-void CaptureTexEnvi(Context *context,
-                    TextureEnvTarget targetPacked,
-                    TextureEnvParameter pnamePacked,
-                    GLint param);
-void CaptureTexEnviv(Context *context,
-                     TextureEnvTarget targetPacked,
-                     TextureEnvParameter pnamePacked,
-                     const GLint *params);
-void CaptureTexEnvx(Context *context,
-                    TextureEnvTarget targetPacked,
-                    TextureEnvParameter pnamePacked,
-                    GLfixed param);
-void CaptureTexEnvxv(Context *context,
-                     TextureEnvTarget targetPacked,
-                     TextureEnvParameter pnamePacked,
-                     const GLfixed *params);
-void CaptureTexParameterx(Context *context, TextureType targetPacked, GLenum pname, GLfixed param);
-void CaptureTexParameterxv(Context *context,
-                           TextureType targetPacked,
-                           GLenum pname,
-                           const GLfixed *params);
-void CaptureTranslatef(Context *context, GLfloat x, GLfloat y, GLfloat z);
-void CaptureTranslatex(Context *context, GLfixed x, GLfixed y, GLfixed z);
-void CaptureVertexPointer(Context *context,
-                          GLint size,
-                          VertexAttribType typePacked,
-                          GLsizei stride,
-                          const void *pointer);
+angle::CallCapture CaptureAlphaFunc(const Context *context,
+                                    bool isCallValid,
+                                    AlphaTestFunc funcPacked,
+                                    GLfloat ref);
+angle::CallCapture CaptureAlphaFuncx(const Context *context,
+                                     bool isCallValid,
+                                     AlphaTestFunc funcPacked,
+                                     GLfixed ref);
+angle::CallCapture CaptureClearColorx(const Context *context,
+                                      bool isCallValid,
+                                      GLfixed red,
+                                      GLfixed green,
+                                      GLfixed blue,
+                                      GLfixed alpha);
+angle::CallCapture CaptureClearDepthx(const Context *context, bool isCallValid, GLfixed depth);
+angle::CallCapture CaptureClientActiveTexture(const Context *context,
+                                              bool isCallValid,
+                                              GLenum texture);
+angle::CallCapture CaptureClipPlanef(const Context *context,
+                                     bool isCallValid,
+                                     GLenum p,
+                                     const GLfloat *eqn);
+angle::CallCapture CaptureClipPlanex(const Context *context,
+                                     bool isCallValid,
+                                     GLenum plane,
+                                     const GLfixed *equation);
+angle::CallCapture CaptureColor4f(const Context *context,
+                                  bool isCallValid,
+                                  GLfloat red,
+                                  GLfloat green,
+                                  GLfloat blue,
+                                  GLfloat alpha);
+angle::CallCapture CaptureColor4ub(const Context *context,
+                                   bool isCallValid,
+                                   GLubyte red,
+                                   GLubyte green,
+                                   GLubyte blue,
+                                   GLubyte alpha);
+angle::CallCapture CaptureColor4x(const Context *context,
+                                  bool isCallValid,
+                                  GLfixed red,
+                                  GLfixed green,
+                                  GLfixed blue,
+                                  GLfixed alpha);
+angle::CallCapture CaptureColorPointer(const Context *context,
+                                       bool isCallValid,
+                                       GLint size,
+                                       VertexAttribType typePacked,
+                                       GLsizei stride,
+                                       const void *pointer);
+angle::CallCapture CaptureDepthRangex(const Context *context,
+                                      bool isCallValid,
+                                      GLfixed n,
+                                      GLfixed f);
+angle::CallCapture CaptureDisableClientState(const Context *context,
+                                             bool isCallValid,
+                                             ClientVertexArrayType arrayPacked);
+angle::CallCapture CaptureEnableClientState(const Context *context,
+                                            bool isCallValid,
+                                            ClientVertexArrayType arrayPacked);
+angle::CallCapture CaptureFogf(const Context *context,
+                               bool isCallValid,
+                               GLenum pname,
+                               GLfloat param);
+angle::CallCapture CaptureFogfv(const Context *context,
+                                bool isCallValid,
+                                GLenum pname,
+                                const GLfloat *params);
+angle::CallCapture CaptureFogx(const Context *context,
+                               bool isCallValid,
+                               GLenum pname,
+                               GLfixed param);
+angle::CallCapture CaptureFogxv(const Context *context,
+                                bool isCallValid,
+                                GLenum pname,
+                                const GLfixed *param);
+angle::CallCapture CaptureFrustumf(const Context *context,
+                                   bool isCallValid,
+                                   GLfloat l,
+                                   GLfloat r,
+                                   GLfloat b,
+                                   GLfloat t,
+                                   GLfloat n,
+                                   GLfloat f);
+angle::CallCapture CaptureFrustumx(const Context *context,
+                                   bool isCallValid,
+                                   GLfixed l,
+                                   GLfixed r,
+                                   GLfixed b,
+                                   GLfixed t,
+                                   GLfixed n,
+                                   GLfixed f);
+angle::CallCapture CaptureGetClipPlanef(const Context *context,
+                                        bool isCallValid,
+                                        GLenum plane,
+                                        GLfloat *equation);
+angle::CallCapture CaptureGetClipPlanex(const Context *context,
+                                        bool isCallValid,
+                                        GLenum plane,
+                                        GLfixed *equation);
+angle::CallCapture CaptureGetFixedv(const Context *context,
+                                    bool isCallValid,
+                                    GLenum pname,
+                                    GLfixed *params);
+angle::CallCapture CaptureGetLightfv(const Context *context,
+                                     bool isCallValid,
+                                     GLenum light,
+                                     LightParameter pnamePacked,
+                                     GLfloat *params);
+angle::CallCapture CaptureGetLightxv(const Context *context,
+                                     bool isCallValid,
+                                     GLenum light,
+                                     LightParameter pnamePacked,
+                                     GLfixed *params);
+angle::CallCapture CaptureGetMaterialfv(const Context *context,
+                                        bool isCallValid,
+                                        GLenum face,
+                                        MaterialParameter pnamePacked,
+                                        GLfloat *params);
+angle::CallCapture CaptureGetMaterialxv(const Context *context,
+                                        bool isCallValid,
+                                        GLenum face,
+                                        MaterialParameter pnamePacked,
+                                        GLfixed *params);
+angle::CallCapture CaptureGetPointerv(const Context *context,
+                                      bool isCallValid,
+                                      GLenum pname,
+                                      void **params);
+angle::CallCapture CaptureGetTexEnvfv(const Context *context,
+                                      bool isCallValid,
+                                      TextureEnvTarget targetPacked,
+                                      TextureEnvParameter pnamePacked,
+                                      GLfloat *params);
+angle::CallCapture CaptureGetTexEnviv(const Context *context,
+                                      bool isCallValid,
+                                      TextureEnvTarget targetPacked,
+                                      TextureEnvParameter pnamePacked,
+                                      GLint *params);
+angle::CallCapture CaptureGetTexEnvxv(const Context *context,
+                                      bool isCallValid,
+                                      TextureEnvTarget targetPacked,
+                                      TextureEnvParameter pnamePacked,
+                                      GLfixed *params);
+angle::CallCapture CaptureGetTexParameterxv(const Context *context,
+                                            bool isCallValid,
+                                            TextureType targetPacked,
+                                            GLenum pname,
+                                            GLfixed *params);
+angle::CallCapture CaptureLightModelf(const Context *context,
+                                      bool isCallValid,
+                                      GLenum pname,
+                                      GLfloat param);
+angle::CallCapture CaptureLightModelfv(const Context *context,
+                                       bool isCallValid,
+                                       GLenum pname,
+                                       const GLfloat *params);
+angle::CallCapture CaptureLightModelx(const Context *context,
+                                      bool isCallValid,
+                                      GLenum pname,
+                                      GLfixed param);
+angle::CallCapture CaptureLightModelxv(const Context *context,
+                                       bool isCallValid,
+                                       GLenum pname,
+                                       const GLfixed *param);
+angle::CallCapture CaptureLightf(const Context *context,
+                                 bool isCallValid,
+                                 GLenum light,
+                                 LightParameter pnamePacked,
+                                 GLfloat param);
+angle::CallCapture CaptureLightfv(const Context *context,
+                                  bool isCallValid,
+                                  GLenum light,
+                                  LightParameter pnamePacked,
+                                  const GLfloat *params);
+angle::CallCapture CaptureLightx(const Context *context,
+                                 bool isCallValid,
+                                 GLenum light,
+                                 LightParameter pnamePacked,
+                                 GLfixed param);
+angle::CallCapture CaptureLightxv(const Context *context,
+                                  bool isCallValid,
+                                  GLenum light,
+                                  LightParameter pnamePacked,
+                                  const GLfixed *params);
+angle::CallCapture CaptureLineWidthx(const Context *context, bool isCallValid, GLfixed width);
+angle::CallCapture CaptureLoadIdentity(const Context *context, bool isCallValid);
+angle::CallCapture CaptureLoadMatrixf(const Context *context, bool isCallValid, const GLfloat *m);
+angle::CallCapture CaptureLoadMatrixx(const Context *context, bool isCallValid, const GLfixed *m);
+angle::CallCapture CaptureLogicOp(const Context *context,
+                                  bool isCallValid,
+                                  LogicalOperation opcodePacked);
+angle::CallCapture CaptureMaterialf(const Context *context,
+                                    bool isCallValid,
+                                    GLenum face,
+                                    MaterialParameter pnamePacked,
+                                    GLfloat param);
+angle::CallCapture CaptureMaterialfv(const Context *context,
+                                     bool isCallValid,
+                                     GLenum face,
+                                     MaterialParameter pnamePacked,
+                                     const GLfloat *params);
+angle::CallCapture CaptureMaterialx(const Context *context,
+                                    bool isCallValid,
+                                    GLenum face,
+                                    MaterialParameter pnamePacked,
+                                    GLfixed param);
+angle::CallCapture CaptureMaterialxv(const Context *context,
+                                     bool isCallValid,
+                                     GLenum face,
+                                     MaterialParameter pnamePacked,
+                                     const GLfixed *param);
+angle::CallCapture CaptureMatrixMode(const Context *context,
+                                     bool isCallValid,
+                                     MatrixType modePacked);
+angle::CallCapture CaptureMultMatrixf(const Context *context, bool isCallValid, const GLfloat *m);
+angle::CallCapture CaptureMultMatrixx(const Context *context, bool isCallValid, const GLfixed *m);
+angle::CallCapture CaptureMultiTexCoord4f(const Context *context,
+                                          bool isCallValid,
+                                          GLenum target,
+                                          GLfloat s,
+                                          GLfloat t,
+                                          GLfloat r,
+                                          GLfloat q);
+angle::CallCapture CaptureMultiTexCoord4x(const Context *context,
+                                          bool isCallValid,
+                                          GLenum texture,
+                                          GLfixed s,
+                                          GLfixed t,
+                                          GLfixed r,
+                                          GLfixed q);
+angle::CallCapture CaptureNormal3f(const Context *context,
+                                   bool isCallValid,
+                                   GLfloat nx,
+                                   GLfloat ny,
+                                   GLfloat nz);
+angle::CallCapture CaptureNormal3x(const Context *context,
+                                   bool isCallValid,
+                                   GLfixed nx,
+                                   GLfixed ny,
+                                   GLfixed nz);
+angle::CallCapture CaptureNormalPointer(const Context *context,
+                                        bool isCallValid,
+                                        VertexAttribType typePacked,
+                                        GLsizei stride,
+                                        const void *pointer);
+angle::CallCapture CaptureOrthof(const Context *context,
+                                 bool isCallValid,
+                                 GLfloat l,
+                                 GLfloat r,
+                                 GLfloat b,
+                                 GLfloat t,
+                                 GLfloat n,
+                                 GLfloat f);
+angle::CallCapture CaptureOrthox(const Context *context,
+                                 bool isCallValid,
+                                 GLfixed l,
+                                 GLfixed r,
+                                 GLfixed b,
+                                 GLfixed t,
+                                 GLfixed n,
+                                 GLfixed f);
+angle::CallCapture CapturePointParameterf(const Context *context,
+                                          bool isCallValid,
+                                          PointParameter pnamePacked,
+                                          GLfloat param);
+angle::CallCapture CapturePointParameterfv(const Context *context,
+                                           bool isCallValid,
+                                           PointParameter pnamePacked,
+                                           const GLfloat *params);
+angle::CallCapture CapturePointParameterx(const Context *context,
+                                          bool isCallValid,
+                                          PointParameter pnamePacked,
+                                          GLfixed param);
+angle::CallCapture CapturePointParameterxv(const Context *context,
+                                           bool isCallValid,
+                                           PointParameter pnamePacked,
+                                           const GLfixed *params);
+angle::CallCapture CapturePointSize(const Context *context, bool isCallValid, GLfloat size);
+angle::CallCapture CapturePointSizex(const Context *context, bool isCallValid, GLfixed size);
+angle::CallCapture CapturePolygonOffsetx(const Context *context,
+                                         bool isCallValid,
+                                         GLfixed factor,
+                                         GLfixed units);
+angle::CallCapture CapturePopMatrix(const Context *context, bool isCallValid);
+angle::CallCapture CapturePushMatrix(const Context *context, bool isCallValid);
+angle::CallCapture CaptureRotatef(const Context *context,
+                                  bool isCallValid,
+                                  GLfloat angle,
+                                  GLfloat x,
+                                  GLfloat y,
+                                  GLfloat z);
+angle::CallCapture CaptureRotatex(const Context *context,
+                                  bool isCallValid,
+                                  GLfixed angle,
+                                  GLfixed x,
+                                  GLfixed y,
+                                  GLfixed z);
+angle::CallCapture CaptureSampleCoveragex(const Context *context,
+                                          bool isCallValid,
+                                          GLclampx value,
+                                          GLboolean invert);
+angle::CallCapture CaptureScalef(const Context *context,
+                                 bool isCallValid,
+                                 GLfloat x,
+                                 GLfloat y,
+                                 GLfloat z);
+angle::CallCapture CaptureScalex(const Context *context,
+                                 bool isCallValid,
+                                 GLfixed x,
+                                 GLfixed y,
+                                 GLfixed z);
+angle::CallCapture CaptureShadeModel(const Context *context,
+                                     bool isCallValid,
+                                     ShadingModel modePacked);
+angle::CallCapture CaptureTexCoordPointer(const Context *context,
+                                          bool isCallValid,
+                                          GLint size,
+                                          VertexAttribType typePacked,
+                                          GLsizei stride,
+                                          const void *pointer);
+angle::CallCapture CaptureTexEnvf(const Context *context,
+                                  bool isCallValid,
+                                  TextureEnvTarget targetPacked,
+                                  TextureEnvParameter pnamePacked,
+                                  GLfloat param);
+angle::CallCapture CaptureTexEnvfv(const Context *context,
+                                   bool isCallValid,
+                                   TextureEnvTarget targetPacked,
+                                   TextureEnvParameter pnamePacked,
+                                   const GLfloat *params);
+angle::CallCapture CaptureTexEnvi(const Context *context,
+                                  bool isCallValid,
+                                  TextureEnvTarget targetPacked,
+                                  TextureEnvParameter pnamePacked,
+                                  GLint param);
+angle::CallCapture CaptureTexEnviv(const Context *context,
+                                   bool isCallValid,
+                                   TextureEnvTarget targetPacked,
+                                   TextureEnvParameter pnamePacked,
+                                   const GLint *params);
+angle::CallCapture CaptureTexEnvx(const Context *context,
+                                  bool isCallValid,
+                                  TextureEnvTarget targetPacked,
+                                  TextureEnvParameter pnamePacked,
+                                  GLfixed param);
+angle::CallCapture CaptureTexEnvxv(const Context *context,
+                                   bool isCallValid,
+                                   TextureEnvTarget targetPacked,
+                                   TextureEnvParameter pnamePacked,
+                                   const GLfixed *params);
+angle::CallCapture CaptureTexParameterx(const Context *context,
+                                        bool isCallValid,
+                                        TextureType targetPacked,
+                                        GLenum pname,
+                                        GLfixed param);
+angle::CallCapture CaptureTexParameterxv(const Context *context,
+                                         bool isCallValid,
+                                         TextureType targetPacked,
+                                         GLenum pname,
+                                         const GLfixed *params);
+angle::CallCapture CaptureTranslatef(const Context *context,
+                                     bool isCallValid,
+                                     GLfloat x,
+                                     GLfloat y,
+                                     GLfloat z);
+angle::CallCapture CaptureTranslatex(const Context *context,
+                                     bool isCallValid,
+                                     GLfixed x,
+                                     GLfixed y,
+                                     GLfixed z);
+angle::CallCapture CaptureVertexPointer(const Context *context,
+                                        bool isCallValid,
+                                        GLint size,
+                                        VertexAttribType typePacked,
+                                        GLsizei stride,
+                                        const void *pointer);
 
 // Parameter Captures
 
-void CaptureClipPlanef_eqn(Context *context,
+void CaptureClipPlanef_eqn(const Context *context,
+                           bool isCallValid,
                            GLenum p,
                            const GLfloat *eqn,
-                           bool isCallValid,
                            angle::ParamCapture *paramCapture);
-void CaptureClipPlanex_equation(Context *context,
+void CaptureClipPlanex_equation(const Context *context,
+                                bool isCallValid,
                                 GLenum plane,
                                 const GLfixed *equation,
-                                bool isCallValid,
                                 angle::ParamCapture *paramCapture);
-void CaptureColorPointer_pointer(Context *context,
+void CaptureColorPointer_pointer(const Context *context,
+                                 bool isCallValid,
                                  GLint size,
                                  VertexAttribType typePacked,
                                  GLsizei stride,
                                  const void *pointer,
-                                 bool isCallValid,
                                  angle::ParamCapture *paramCapture);
-void CaptureFogfv_params(Context *context,
+void CaptureFogfv_params(const Context *context,
+                         bool isCallValid,
                          GLenum pname,
                          const GLfloat *params,
-                         bool isCallValid,
                          angle::ParamCapture *paramCapture);
-void CaptureFogxv_param(Context *context,
+void CaptureFogxv_param(const Context *context,
+                        bool isCallValid,
                         GLenum pname,
                         const GLfixed *param,
-                        bool isCallValid,
                         angle::ParamCapture *paramCapture);
-void CaptureGetClipPlanef_equation(Context *context,
+void CaptureGetClipPlanef_equation(const Context *context,
+                                   bool isCallValid,
                                    GLenum plane,
                                    GLfloat *equation,
-                                   bool isCallValid,
                                    angle::ParamCapture *paramCapture);
-void CaptureGetClipPlanex_equation(Context *context,
+void CaptureGetClipPlanex_equation(const Context *context,
+                                   bool isCallValid,
                                    GLenum plane,
                                    GLfixed *equation,
-                                   bool isCallValid,
                                    angle::ParamCapture *paramCapture);
-void CaptureGetFixedv_params(Context *context,
+void CaptureGetFixedv_params(const Context *context,
+                             bool isCallValid,
                              GLenum pname,
                              GLfixed *params,
-                             bool isCallValid,
                              angle::ParamCapture *paramCapture);
-void CaptureGetLightfv_params(Context *context,
+void CaptureGetLightfv_params(const Context *context,
+                              bool isCallValid,
                               GLenum light,
                               LightParameter pnamePacked,
                               GLfloat *params,
-                              bool isCallValid,
                               angle::ParamCapture *paramCapture);
-void CaptureGetLightxv_params(Context *context,
+void CaptureGetLightxv_params(const Context *context,
+                              bool isCallValid,
                               GLenum light,
                               LightParameter pnamePacked,
                               GLfixed *params,
-                              bool isCallValid,
                               angle::ParamCapture *paramCapture);
-void CaptureGetMaterialfv_params(Context *context,
+void CaptureGetMaterialfv_params(const Context *context,
+                                 bool isCallValid,
                                  GLenum face,
                                  MaterialParameter pnamePacked,
                                  GLfloat *params,
-                                 bool isCallValid,
                                  angle::ParamCapture *paramCapture);
-void CaptureGetMaterialxv_params(Context *context,
+void CaptureGetMaterialxv_params(const Context *context,
+                                 bool isCallValid,
                                  GLenum face,
                                  MaterialParameter pnamePacked,
                                  GLfixed *params,
-                                 bool isCallValid,
                                  angle::ParamCapture *paramCapture);
-void CaptureGetPointerv_params(Context *context,
+void CaptureGetPointerv_params(const Context *context,
+                               bool isCallValid,
                                GLenum pname,
                                void **params,
-                               bool isCallValid,
                                angle::ParamCapture *paramCapture);
-void CaptureGetTexEnvfv_params(Context *context,
+void CaptureGetTexEnvfv_params(const Context *context,
+                               bool isCallValid,
                                TextureEnvTarget targetPacked,
                                TextureEnvParameter pnamePacked,
                                GLfloat *params,
-                               bool isCallValid,
                                angle::ParamCapture *paramCapture);
-void CaptureGetTexEnviv_params(Context *context,
+void CaptureGetTexEnviv_params(const Context *context,
+                               bool isCallValid,
                                TextureEnvTarget targetPacked,
                                TextureEnvParameter pnamePacked,
                                GLint *params,
-                               bool isCallValid,
                                angle::ParamCapture *paramCapture);
-void CaptureGetTexEnvxv_params(Context *context,
+void CaptureGetTexEnvxv_params(const Context *context,
+                               bool isCallValid,
                                TextureEnvTarget targetPacked,
                                TextureEnvParameter pnamePacked,
                                GLfixed *params,
-                               bool isCallValid,
                                angle::ParamCapture *paramCapture);
-void CaptureGetTexParameterxv_params(Context *context,
+void CaptureGetTexParameterxv_params(const Context *context,
+                                     bool isCallValid,
                                      TextureType targetPacked,
                                      GLenum pname,
                                      GLfixed *params,
-                                     bool isCallValid,
                                      angle::ParamCapture *paramCapture);
-void CaptureLightModelfv_params(Context *context,
+void CaptureLightModelfv_params(const Context *context,
+                                bool isCallValid,
                                 GLenum pname,
                                 const GLfloat *params,
-                                bool isCallValid,
                                 angle::ParamCapture *paramCapture);
-void CaptureLightModelxv_param(Context *context,
+void CaptureLightModelxv_param(const Context *context,
+                               bool isCallValid,
                                GLenum pname,
                                const GLfixed *param,
-                               bool isCallValid,
                                angle::ParamCapture *paramCapture);
-void CaptureLightfv_params(Context *context,
+void CaptureLightfv_params(const Context *context,
+                           bool isCallValid,
                            GLenum light,
                            LightParameter pnamePacked,
                            const GLfloat *params,
-                           bool isCallValid,
                            angle::ParamCapture *paramCapture);
-void CaptureLightxv_params(Context *context,
+void CaptureLightxv_params(const Context *context,
+                           bool isCallValid,
                            GLenum light,
                            LightParameter pnamePacked,
                            const GLfixed *params,
-                           bool isCallValid,
                            angle::ParamCapture *paramCapture);
-void CaptureLoadMatrixf_m(Context *context,
+void CaptureLoadMatrixf_m(const Context *context,
+                          bool isCallValid,
                           const GLfloat *m,
-                          bool isCallValid,
                           angle::ParamCapture *paramCapture);
-void CaptureLoadMatrixx_m(Context *context,
+void CaptureLoadMatrixx_m(const Context *context,
+                          bool isCallValid,
                           const GLfixed *m,
-                          bool isCallValid,
                           angle::ParamCapture *paramCapture);
-void CaptureMaterialfv_params(Context *context,
+void CaptureMaterialfv_params(const Context *context,
+                              bool isCallValid,
                               GLenum face,
                               MaterialParameter pnamePacked,
                               const GLfloat *params,
-                              bool isCallValid,
                               angle::ParamCapture *paramCapture);
-void CaptureMaterialxv_param(Context *context,
+void CaptureMaterialxv_param(const Context *context,
+                             bool isCallValid,
                              GLenum face,
                              MaterialParameter pnamePacked,
                              const GLfixed *param,
-                             bool isCallValid,
                              angle::ParamCapture *paramCapture);
-void CaptureMultMatrixf_m(Context *context,
+void CaptureMultMatrixf_m(const Context *context,
+                          bool isCallValid,
                           const GLfloat *m,
-                          bool isCallValid,
                           angle::ParamCapture *paramCapture);
-void CaptureMultMatrixx_m(Context *context,
+void CaptureMultMatrixx_m(const Context *context,
+                          bool isCallValid,
                           const GLfixed *m,
-                          bool isCallValid,
                           angle::ParamCapture *paramCapture);
-void CaptureNormalPointer_pointer(Context *context,
+void CaptureNormalPointer_pointer(const Context *context,
+                                  bool isCallValid,
                                   VertexAttribType typePacked,
                                   GLsizei stride,
                                   const void *pointer,
-                                  bool isCallValid,
                                   angle::ParamCapture *paramCapture);
-void CapturePointParameterfv_params(Context *context,
+void CapturePointParameterfv_params(const Context *context,
+                                    bool isCallValid,
                                     PointParameter pnamePacked,
                                     const GLfloat *params,
-                                    bool isCallValid,
                                     angle::ParamCapture *paramCapture);
-void CapturePointParameterxv_params(Context *context,
+void CapturePointParameterxv_params(const Context *context,
+                                    bool isCallValid,
                                     PointParameter pnamePacked,
                                     const GLfixed *params,
-                                    bool isCallValid,
                                     angle::ParamCapture *paramCapture);
-void CaptureTexCoordPointer_pointer(Context *context,
+void CaptureTexCoordPointer_pointer(const Context *context,
+                                    bool isCallValid,
                                     GLint size,
                                     VertexAttribType typePacked,
                                     GLsizei stride,
                                     const void *pointer,
-                                    bool isCallValid,
                                     angle::ParamCapture *paramCapture);
-void CaptureTexEnvfv_params(Context *context,
+void CaptureTexEnvfv_params(const Context *context,
+                            bool isCallValid,
                             TextureEnvTarget targetPacked,
                             TextureEnvParameter pnamePacked,
                             const GLfloat *params,
-                            bool isCallValid,
                             angle::ParamCapture *paramCapture);
-void CaptureTexEnviv_params(Context *context,
+void CaptureTexEnviv_params(const Context *context,
+                            bool isCallValid,
                             TextureEnvTarget targetPacked,
                             TextureEnvParameter pnamePacked,
                             const GLint *params,
-                            bool isCallValid,
                             angle::ParamCapture *paramCapture);
-void CaptureTexEnvxv_params(Context *context,
+void CaptureTexEnvxv_params(const Context *context,
+                            bool isCallValid,
                             TextureEnvTarget targetPacked,
                             TextureEnvParameter pnamePacked,
                             const GLfixed *params,
-                            bool isCallValid,
                             angle::ParamCapture *paramCapture);
-void CaptureTexParameterxv_params(Context *context,
+void CaptureTexParameterxv_params(const Context *context,
+                                  bool isCallValid,
                                   TextureType targetPacked,
                                   GLenum pname,
                                   const GLfixed *params,
-                                  bool isCallValid,
                                   angle::ParamCapture *paramCapture);
-void CaptureVertexPointer_pointer(Context *context,
+void CaptureVertexPointer_pointer(const Context *context,
+                                  bool isCallValid,
                                   GLint size,
                                   VertexAttribType typePacked,
                                   GLsizei stride,
                                   const void *pointer,
-                                  bool isCallValid,
                                   angle::ParamCapture *paramCapture);
 }  // namespace gl
 

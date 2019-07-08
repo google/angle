@@ -473,8 +473,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool isGLES1() const;
 
     // Specific methods needed for validation.
-    bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
-    bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
+    bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams) const;
+    bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams) const;
 
     ANGLE_INLINE Program *getProgramResolveLink(GLuint handle) const
     {

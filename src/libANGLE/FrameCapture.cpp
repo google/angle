@@ -141,17 +141,14 @@ FrameCapture::FrameCapture() : mFrameIndex(0), mReadBufferSize(0)
 
 FrameCapture::~FrameCapture() = default;
 
-void FrameCapture::captureCall(const gl::Context *context,
-                               const char *callName,
-                               ParamBuffer &&paramBuffer,
-                               bool isCallValid)
+void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
 {
-    if (strcmp(callName, "glVertexAttribPointer") == 0)
+    if (call.name == "glVertexAttribPointer")
     {
         // Get array location
-        GLuint index = paramBuffer.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
+        GLuint index = call.params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
 
-        if (paramBuffer.hasClientArrayData())
+        if (call.params.hasClientArrayData())
         {
             mClientVertexArrayMap[index] = mCalls.size();
         }
@@ -160,26 +157,26 @@ void FrameCapture::captureCall(const gl::Context *context,
             mClientVertexArrayMap[index] = -1;
         }
     }
-    else if (strcmp(callName, "glDrawArrays") == 0)
+    else if (call.name == "glDrawArrays")
     {
         if (context->getStateCache().hasAnyActiveClientAttrib())
         {
             // Get counts from paramBuffer.
-            GLint startVertex = paramBuffer.getParam("start", ParamType::TGLint, 1).value.GLintVal;
+            GLint startVertex = call.params.getParam("start", ParamType::TGLint, 1).value.GLintVal;
             GLsizei drawCount =
-                paramBuffer.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
+                call.params.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
             captureClientArraySnapshot(context, startVertex + drawCount, 1);
         }
     }
-    else if (strcmp(callName, "glDrawElements") == 0)
+    else if (call.name == "glDrawElements")
     {
         if (context->getStateCache().hasAnyActiveClientAttrib())
         {
-            GLsizei count = paramBuffer.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
+            GLsizei count = call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
             gl::DrawElementsType drawElementsType =
-                paramBuffer.getParam("typePacked", ParamType::TDrawElementsType, 2)
+                call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
                     .value.DrawElementsTypeVal;
-            const void *indices = paramBuffer.getParam("indices", ParamType::TvoidConstPointer, 3)
+            const void *indices = call.params.getParam("indices", ParamType::TvoidConstPointer, 3)
                                       .value.voidConstPointerVal;
 
             gl::IndexRange indexRange;
@@ -203,8 +200,8 @@ void FrameCapture::captureCall(const gl::Context *context,
         }
     }
 
-    mReadBufferSize = std::max(mReadBufferSize, paramBuffer.getReadBufferSize());
-    mCalls.emplace_back(callName, std::move(paramBuffer));
+    mReadBufferSize = std::max(mReadBufferSize, call.params.getReadBufferSize());
+    mCalls.emplace_back(std::move(call));
 }
 
 void FrameCapture::captureClientArraySnapshot(const gl::Context *context,

@@ -19,136 +19,115 @@ using namespace angle;
 namespace gl
 {
 
-void CaptureBeginQuery(Context *context, QueryType targetPacked, GLuint id)
+CallCapture CaptureBeginQuery(const Context *context,
+                              bool isCallValid,
+                              QueryType targetPacked,
+                              GLuint id)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBeginQuery(context, targetPacked, id);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
 
-    frameCapture->captureCall(context, "glBeginQuery", std::move(paramBuffer), isCallValid);
+    return CallCapture("glBeginQuery", std::move(paramBuffer));
 }
 
-void CaptureBeginTransformFeedback(Context *context, PrimitiveMode primitiveModePacked)
+CallCapture CaptureBeginTransformFeedback(const Context *context,
+                                          bool isCallValid,
+                                          PrimitiveMode primitiveModePacked)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBeginTransformFeedback(context, primitiveModePacked);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("primitiveModePacked", ParamType::TPrimitiveMode,
                               primitiveModePacked);
 
-    frameCapture->captureCall(context, "glBeginTransformFeedback", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glBeginTransformFeedback", std::move(paramBuffer));
 }
 
-void CaptureBindBufferBase(Context *context,
-                           BufferBinding targetPacked,
-                           GLuint index,
-                           GLuint buffer)
+CallCapture CaptureBindBufferBase(const Context *context,
+                                  bool isCallValid,
+                                  BufferBinding targetPacked,
+                                  GLuint index,
+                                  GLuint buffer)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBindBufferBase(context, targetPacked, index, buffer);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
 
-    frameCapture->captureCall(context, "glBindBufferBase", std::move(paramBuffer), isCallValid);
+    return CallCapture("glBindBufferBase", std::move(paramBuffer));
 }
 
-void CaptureBindBufferRange(Context *context,
-                            BufferBinding targetPacked,
-                            GLuint index,
-                            GLuint buffer,
-                            GLintptr offset,
-                            GLsizeiptr size)
+CallCapture CaptureBindBufferRange(const Context *context,
+                                   bool isCallValid,
+                                   BufferBinding targetPacked,
+                                   GLuint index,
+                                   GLuint buffer,
+                                   GLintptr offset,
+                                   GLsizeiptr size)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBindBufferRange(context, targetPacked, index, buffer, offset, size);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
     paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
     paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
 
-    frameCapture->captureCall(context, "glBindBufferRange", std::move(paramBuffer), isCallValid);
+    return CallCapture("glBindBufferRange", std::move(paramBuffer));
 }
 
-void CaptureBindSampler(Context *context, GLuint unit, GLuint sampler)
+CallCapture CaptureBindSampler(const Context *context,
+                               bool isCallValid,
+                               GLuint unit,
+                               GLuint sampler)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBindSampler(context, unit, sampler);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("unit", ParamType::TGLuint, unit);
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
 
-    frameCapture->captureCall(context, "glBindSampler", std::move(paramBuffer), isCallValid);
+    return CallCapture("glBindSampler", std::move(paramBuffer));
 }
 
-void CaptureBindTransformFeedback(Context *context, GLenum target, GLuint id)
+CallCapture CaptureBindTransformFeedback(const Context *context,
+                                         bool isCallValid,
+                                         GLenum target,
+                                         GLuint id)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBindTransformFeedback(context, target, id);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
 
-    frameCapture->captureCall(context, "glBindTransformFeedback", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glBindTransformFeedback", std::move(paramBuffer));
 }
 
-void CaptureBindVertexArray(Context *context, GLuint array)
+CallCapture CaptureBindVertexArray(const Context *context, bool isCallValid, GLuint array)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBindVertexArray(context, array);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("array", ParamType::TGLuint, array);
 
-    frameCapture->captureCall(context, "glBindVertexArray", std::move(paramBuffer), isCallValid);
+    return CallCapture("glBindVertexArray", std::move(paramBuffer));
 }
 
-void CaptureBlitFramebuffer(Context *context,
-                            GLint srcX0,
-                            GLint srcY0,
-                            GLint srcX1,
-                            GLint srcY1,
-                            GLint dstX0,
-                            GLint dstY0,
-                            GLint dstX1,
-                            GLint dstY1,
-                            GLbitfield mask,
-                            GLenum filter)
+CallCapture CaptureBlitFramebuffer(const Context *context,
+                                   bool isCallValid,
+                                   GLint srcX0,
+                                   GLint srcY0,
+                                   GLint srcX1,
+                                   GLint srcY1,
+                                   GLint dstX0,
+                                   GLint dstY0,
+                                   GLint dstX1,
+                                   GLint dstY1,
+                                   GLbitfield mask,
+                                   GLenum filter)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateBlitFramebuffer(context, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0,
-                                               dstX1, dstY1, mask, filter);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("srcX0", ParamType::TGLint, srcX0);
     paramBuffer.addValueParam("srcY0", ParamType::TGLint, srcY0);
     paramBuffer.addValueParam("srcX1", ParamType::TGLint, srcX1);
@@ -160,119 +139,112 @@ void CaptureBlitFramebuffer(Context *context,
     paramBuffer.addValueParam("mask", ParamType::TGLbitfield, mask);
     paramBuffer.addValueParam("filter", ParamType::TGLenum, filter);
 
-    frameCapture->captureCall(context, "glBlitFramebuffer", std::move(paramBuffer), isCallValid);
+    return CallCapture("glBlitFramebuffer", std::move(paramBuffer));
 }
 
-void CaptureClearBufferfi(Context *context,
-                          GLenum buffer,
-                          GLint drawbuffer,
-                          GLfloat depth,
-                          GLint stencil)
+CallCapture CaptureClearBufferfi(const Context *context,
+                                 bool isCallValid,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 GLfloat depth,
+                                 GLint stencil)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateClearBufferfi(context, buffer, drawbuffer, depth, stencil);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("buffer", ParamType::TGLenum, buffer);
     paramBuffer.addValueParam("drawbuffer", ParamType::TGLint, drawbuffer);
     paramBuffer.addValueParam("depth", ParamType::TGLfloat, depth);
     paramBuffer.addValueParam("stencil", ParamType::TGLint, stencil);
 
-    frameCapture->captureCall(context, "glClearBufferfi", std::move(paramBuffer), isCallValid);
+    return CallCapture("glClearBufferfi", std::move(paramBuffer));
 }
 
-void CaptureClearBufferfv(Context *context, GLenum buffer, GLint drawbuffer, const GLfloat *value)
+CallCapture CaptureClearBufferfv(const Context *context,
+                                 bool isCallValid,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateClearBufferfv(context, buffer, drawbuffer, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("buffer", ParamType::TGLenum, buffer);
     paramBuffer.addValueParam("drawbuffer", ParamType::TGLint, drawbuffer);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureClearBufferfv_value(context, buffer, drawbuffer, value, isCallValid, &valueParam);
+    CaptureClearBufferfv_value(context, isCallValid, buffer, drawbuffer, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glClearBufferfv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glClearBufferfv", std::move(paramBuffer));
 }
 
-void CaptureClearBufferiv(Context *context, GLenum buffer, GLint drawbuffer, const GLint *value)
+CallCapture CaptureClearBufferiv(const Context *context,
+                                 bool isCallValid,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 const GLint *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateClearBufferiv(context, buffer, drawbuffer, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("buffer", ParamType::TGLenum, buffer);
     paramBuffer.addValueParam("drawbuffer", ParamType::TGLint, drawbuffer);
 
     ParamCapture valueParam("value", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, value, &valueParam.value);
-    CaptureClearBufferiv_value(context, buffer, drawbuffer, value, isCallValid, &valueParam);
+    CaptureClearBufferiv_value(context, isCallValid, buffer, drawbuffer, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glClearBufferiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glClearBufferiv", std::move(paramBuffer));
 }
 
-void CaptureClearBufferuiv(Context *context, GLenum buffer, GLint drawbuffer, const GLuint *value)
+CallCapture CaptureClearBufferuiv(const Context *context,
+                                  bool isCallValid,
+                                  GLenum buffer,
+                                  GLint drawbuffer,
+                                  const GLuint *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateClearBufferuiv(context, buffer, drawbuffer, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("buffer", ParamType::TGLenum, buffer);
     paramBuffer.addValueParam("drawbuffer", ParamType::TGLint, drawbuffer);
 
     ParamCapture valueParam("value", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, value, &valueParam.value);
-    CaptureClearBufferuiv_value(context, buffer, drawbuffer, value, isCallValid, &valueParam);
+    CaptureClearBufferuiv_value(context, isCallValid, buffer, drawbuffer, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glClearBufferuiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glClearBufferuiv", std::move(paramBuffer));
 }
 
-void CaptureClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
+CallCapture CaptureClientWaitSync(const Context *context,
+                                  bool isCallValid,
+                                  GLsync sync,
+                                  GLbitfield flags,
+                                  GLuint64 timeout)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateClientWaitSync(context, sync, flags, timeout);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sync", ParamType::TGLsync, sync);
     paramBuffer.addValueParam("flags", ParamType::TGLbitfield, flags);
     paramBuffer.addValueParam("timeout", ParamType::TGLuint64, timeout);
 
-    frameCapture->captureCall(context, "glClientWaitSync", std::move(paramBuffer), isCallValid);
+    return CallCapture("glClientWaitSync", std::move(paramBuffer));
 }
 
-void CaptureCompressedTexImage3D(Context *context,
-                                 TextureTarget targetPacked,
-                                 GLint level,
-                                 GLenum internalformat,
-                                 GLsizei width,
-                                 GLsizei height,
-                                 GLsizei depth,
-                                 GLint border,
-                                 GLsizei imageSize,
-                                 const void *data)
+CallCapture CaptureCompressedTexImage3D(const Context *context,
+                                        bool isCallValid,
+                                        TextureTarget targetPacked,
+                                        GLint level,
+                                        GLenum internalformat,
+                                        GLsizei width,
+                                        GLsizei height,
+                                        GLsizei depth,
+                                        GLint border,
+                                        GLsizei imageSize,
+                                        const void *data)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateCompressedTexImage3D(context, targetPacked, level, internalformat,
-                                                    width, height, depth, border, imageSize, data);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
@@ -284,35 +256,29 @@ void CaptureCompressedTexImage3D(Context *context,
 
     ParamCapture dataParam("data", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, data, &dataParam.value);
-    CaptureCompressedTexImage3D_data(context, targetPacked, level, internalformat, width, height,
-                                     depth, border, imageSize, data, isCallValid, &dataParam);
+    CaptureCompressedTexImage3D_data(context, isCallValid, targetPacked, level, internalformat,
+                                     width, height, depth, border, imageSize, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    frameCapture->captureCall(context, "glCompressedTexImage3D", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glCompressedTexImage3D", std::move(paramBuffer));
 }
 
-void CaptureCompressedTexSubImage3D(Context *context,
-                                    TextureTarget targetPacked,
-                                    GLint level,
-                                    GLint xoffset,
-                                    GLint yoffset,
-                                    GLint zoffset,
-                                    GLsizei width,
-                                    GLsizei height,
-                                    GLsizei depth,
-                                    GLenum format,
-                                    GLsizei imageSize,
-                                    const void *data)
+CallCapture CaptureCompressedTexSubImage3D(const Context *context,
+                                           bool isCallValid,
+                                           TextureTarget targetPacked,
+                                           GLint level,
+                                           GLint xoffset,
+                                           GLint yoffset,
+                                           GLint zoffset,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           GLenum format,
+                                           GLsizei imageSize,
+                                           const void *data)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateCompressedTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset,
-                                        width, height, depth, format, imageSize, data);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("xoffset", ParamType::TGLint, xoffset);
@@ -326,56 +292,47 @@ void CaptureCompressedTexSubImage3D(Context *context,
 
     ParamCapture dataParam("data", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, data, &dataParam.value);
-    CaptureCompressedTexSubImage3D_data(context, targetPacked, level, xoffset, yoffset, zoffset,
-                                        width, height, depth, format, imageSize, data, isCallValid,
+    CaptureCompressedTexSubImage3D_data(context, isCallValid, targetPacked, level, xoffset, yoffset,
+                                        zoffset, width, height, depth, format, imageSize, data,
                                         &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    frameCapture->captureCall(context, "glCompressedTexSubImage3D", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glCompressedTexSubImage3D", std::move(paramBuffer));
 }
 
-void CaptureCopyBufferSubData(Context *context,
-                              BufferBinding readTargetPacked,
-                              BufferBinding writeTargetPacked,
-                              GLintptr readOffset,
-                              GLintptr writeOffset,
-                              GLsizeiptr size)
+CallCapture CaptureCopyBufferSubData(const Context *context,
+                                     bool isCallValid,
+                                     BufferBinding readTargetPacked,
+                                     BufferBinding writeTargetPacked,
+                                     GLintptr readOffset,
+                                     GLintptr writeOffset,
+                                     GLsizeiptr size)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateCopyBufferSubData(context, readTargetPacked, writeTargetPacked,
-                                                 readOffset, writeOffset, size);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("readTargetPacked", ParamType::TBufferBinding, readTargetPacked);
     paramBuffer.addValueParam("writeTargetPacked", ParamType::TBufferBinding, writeTargetPacked);
     paramBuffer.addValueParam("readOffset", ParamType::TGLintptr, readOffset);
     paramBuffer.addValueParam("writeOffset", ParamType::TGLintptr, writeOffset);
     paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
 
-    frameCapture->captureCall(context, "glCopyBufferSubData", std::move(paramBuffer), isCallValid);
+    return CallCapture("glCopyBufferSubData", std::move(paramBuffer));
 }
 
-void CaptureCopyTexSubImage3D(Context *context,
-                              TextureTarget targetPacked,
-                              GLint level,
-                              GLint xoffset,
-                              GLint yoffset,
-                              GLint zoffset,
-                              GLint x,
-                              GLint y,
-                              GLsizei width,
-                              GLsizei height)
+CallCapture CaptureCopyTexSubImage3D(const Context *context,
+                                     bool isCallValid,
+                                     TextureTarget targetPacked,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLint x,
+                                     GLint y,
+                                     GLsizei width,
+                                     GLsizei height)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateCopyTexSubImage3D(context, targetPacked, level, xoffset, yoffset,
-                                                 zoffset, x, y, width, height);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("xoffset", ParamType::TGLint, xoffset);
@@ -386,180 +343,156 @@ void CaptureCopyTexSubImage3D(Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    frameCapture->captureCall(context, "glCopyTexSubImage3D", std::move(paramBuffer), isCallValid);
+    return CallCapture("glCopyTexSubImage3D", std::move(paramBuffer));
 }
 
-void CaptureDeleteQueries(Context *context, GLsizei n, const GLuint *ids)
+CallCapture CaptureDeleteQueries(const Context *context,
+                                 bool isCallValid,
+                                 GLsizei n,
+                                 const GLuint *ids)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDeleteQueries(context, n, ids);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture idsParam("ids", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, ids, &idsParam.value);
-    CaptureDeleteQueries_ids(context, n, ids, isCallValid, &idsParam);
+    CaptureDeleteQueries_ids(context, isCallValid, n, ids, &idsParam);
     paramBuffer.addParam(std::move(idsParam));
 
-    frameCapture->captureCall(context, "glDeleteQueries", std::move(paramBuffer), isCallValid);
+    return CallCapture("glDeleteQueries", std::move(paramBuffer));
 }
 
-void CaptureDeleteSamplers(Context *context, GLsizei count, const GLuint *samplers)
+CallCapture CaptureDeleteSamplers(const Context *context,
+                                  bool isCallValid,
+                                  GLsizei count,
+                                  const GLuint *samplers)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDeleteSamplers(context, count, samplers);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture samplersParam("samplers", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, samplers, &samplersParam.value);
-    CaptureDeleteSamplers_samplers(context, count, samplers, isCallValid, &samplersParam);
+    CaptureDeleteSamplers_samplers(context, isCallValid, count, samplers, &samplersParam);
     paramBuffer.addParam(std::move(samplersParam));
 
-    frameCapture->captureCall(context, "glDeleteSamplers", std::move(paramBuffer), isCallValid);
+    return CallCapture("glDeleteSamplers", std::move(paramBuffer));
 }
 
-void CaptureDeleteSync(Context *context, GLsync sync)
+CallCapture CaptureDeleteSync(const Context *context, bool isCallValid, GLsync sync)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDeleteSync(context, sync);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sync", ParamType::TGLsync, sync);
 
-    frameCapture->captureCall(context, "glDeleteSync", std::move(paramBuffer), isCallValid);
+    return CallCapture("glDeleteSync", std::move(paramBuffer));
 }
 
-void CaptureDeleteTransformFeedbacks(Context *context, GLsizei n, const GLuint *ids)
+CallCapture CaptureDeleteTransformFeedbacks(const Context *context,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            const GLuint *ids)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDeleteTransformFeedbacks(context, n, ids);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture idsParam("ids", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, ids, &idsParam.value);
-    CaptureDeleteTransformFeedbacks_ids(context, n, ids, isCallValid, &idsParam);
+    CaptureDeleteTransformFeedbacks_ids(context, isCallValid, n, ids, &idsParam);
     paramBuffer.addParam(std::move(idsParam));
 
-    frameCapture->captureCall(context, "glDeleteTransformFeedbacks", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glDeleteTransformFeedbacks", std::move(paramBuffer));
 }
 
-void CaptureDeleteVertexArrays(Context *context, GLsizei n, const GLuint *arrays)
+CallCapture CaptureDeleteVertexArrays(const Context *context,
+                                      bool isCallValid,
+                                      GLsizei n,
+                                      const GLuint *arrays)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDeleteVertexArrays(context, n, arrays);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture arraysParam("arrays", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, arrays, &arraysParam.value);
-    CaptureDeleteVertexArrays_arrays(context, n, arrays, isCallValid, &arraysParam);
+    CaptureDeleteVertexArrays_arrays(context, isCallValid, n, arrays, &arraysParam);
     paramBuffer.addParam(std::move(arraysParam));
 
-    frameCapture->captureCall(context, "glDeleteVertexArrays", std::move(paramBuffer), isCallValid);
+    return CallCapture("glDeleteVertexArrays", std::move(paramBuffer));
 }
 
-void CaptureDrawArraysInstanced(Context *context,
-                                PrimitiveMode modePacked,
-                                GLint first,
-                                GLsizei count,
-                                GLsizei instancecount)
+CallCapture CaptureDrawArraysInstanced(const Context *context,
+                                       bool isCallValid,
+                                       PrimitiveMode modePacked,
+                                       GLint first,
+                                       GLsizei count,
+                                       GLsizei instancecount)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateDrawArraysInstanced(context, modePacked, first, count, instancecount);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("modePacked", ParamType::TPrimitiveMode, modePacked);
     paramBuffer.addValueParam("first", ParamType::TGLint, first);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("instancecount", ParamType::TGLsizei, instancecount);
 
-    frameCapture->captureCall(context, "glDrawArraysInstanced", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glDrawArraysInstanced", std::move(paramBuffer));
 }
 
-void CaptureDrawBuffers(Context *context, GLsizei n, const GLenum *bufs)
+CallCapture CaptureDrawBuffers(const Context *context,
+                               bool isCallValid,
+                               GLsizei n,
+                               const GLenum *bufs)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDrawBuffers(context, n, bufs);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture bufsParam("bufs", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, bufs, &bufsParam.value);
-    CaptureDrawBuffers_bufs(context, n, bufs, isCallValid, &bufsParam);
+    CaptureDrawBuffers_bufs(context, isCallValid, n, bufs, &bufsParam);
     paramBuffer.addParam(std::move(bufsParam));
 
-    frameCapture->captureCall(context, "glDrawBuffers", std::move(paramBuffer), isCallValid);
+    return CallCapture("glDrawBuffers", std::move(paramBuffer));
 }
 
-void CaptureDrawElementsInstanced(Context *context,
-                                  PrimitiveMode modePacked,
-                                  GLsizei count,
-                                  DrawElementsType typePacked,
-                                  const void *indices,
-                                  GLsizei instancecount)
+CallCapture CaptureDrawElementsInstanced(const Context *context,
+                                         bool isCallValid,
+                                         PrimitiveMode modePacked,
+                                         GLsizei count,
+                                         DrawElementsType typePacked,
+                                         const void *indices,
+                                         GLsizei instancecount)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateDrawElementsInstanced(context, modePacked, count, typePacked,
-                                                     indices, instancecount);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("modePacked", ParamType::TPrimitiveMode, modePacked);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("typePacked", ParamType::TDrawElementsType, typePacked);
 
     ParamCapture indicesParam("indices", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, indices, &indicesParam.value);
-    CaptureDrawElementsInstanced_indices(context, modePacked, count, typePacked, indices,
-                                         instancecount, isCallValid, &indicesParam);
+    CaptureDrawElementsInstanced_indices(context, isCallValid, modePacked, count, typePacked,
+                                         indices, instancecount, &indicesParam);
     paramBuffer.addParam(std::move(indicesParam));
 
     paramBuffer.addValueParam("instancecount", ParamType::TGLsizei, instancecount);
 
-    frameCapture->captureCall(context, "glDrawElementsInstanced", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glDrawElementsInstanced", std::move(paramBuffer));
 }
 
-void CaptureDrawRangeElements(Context *context,
-                              PrimitiveMode modePacked,
-                              GLuint start,
-                              GLuint end,
-                              GLsizei count,
-                              DrawElementsType typePacked,
-                              const void *indices)
+CallCapture CaptureDrawRangeElements(const Context *context,
+                                     bool isCallValid,
+                                     PrimitiveMode modePacked,
+                                     GLuint start,
+                                     GLuint end,
+                                     GLsizei count,
+                                     DrawElementsType typePacked,
+                                     const void *indices)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateDrawRangeElements(context, modePacked, start, end, count, typePacked, indices);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("modePacked", ParamType::TPrimitiveMode, modePacked);
     paramBuffer.addValueParam("start", ParamType::TGLuint, start);
     paramBuffer.addValueParam("end", ParamType::TGLuint, end);
@@ -568,402 +501,345 @@ void CaptureDrawRangeElements(Context *context,
 
     ParamCapture indicesParam("indices", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, indices, &indicesParam.value);
-    CaptureDrawRangeElements_indices(context, modePacked, start, end, count, typePacked, indices,
-                                     isCallValid, &indicesParam);
+    CaptureDrawRangeElements_indices(context, isCallValid, modePacked, start, end, count,
+                                     typePacked, indices, &indicesParam);
     paramBuffer.addParam(std::move(indicesParam));
 
-    frameCapture->captureCall(context, "glDrawRangeElements", std::move(paramBuffer), isCallValid);
+    return CallCapture("glDrawRangeElements", std::move(paramBuffer));
 }
 
-void CaptureEndQuery(Context *context, QueryType targetPacked)
+CallCapture CaptureEndQuery(const Context *context, bool isCallValid, QueryType targetPacked)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateEndQuery(context, targetPacked);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
 
-    frameCapture->captureCall(context, "glEndQuery", std::move(paramBuffer), isCallValid);
+    return CallCapture("glEndQuery", std::move(paramBuffer));
 }
 
-void CaptureEndTransformFeedback(Context *context)
+CallCapture CaptureEndTransformFeedback(const Context *context, bool isCallValid)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateEndTransformFeedback(context);
     ParamBuffer paramBuffer;
 
-    frameCapture->captureCall(context, "glEndTransformFeedback", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glEndTransformFeedback", std::move(paramBuffer));
 }
 
-void CaptureFenceSync(Context *context, GLenum condition, GLbitfield flags)
+CallCapture CaptureFenceSync(const Context *context,
+                             bool isCallValid,
+                             GLenum condition,
+                             GLbitfield flags)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateFenceSync(context, condition, flags);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("condition", ParamType::TGLenum, condition);
     paramBuffer.addValueParam("flags", ParamType::TGLbitfield, flags);
 
-    frameCapture->captureCall(context, "glFenceSync", std::move(paramBuffer), isCallValid);
+    return CallCapture("glFenceSync", std::move(paramBuffer));
 }
 
-void CaptureFlushMappedBufferRange(Context *context,
-                                   BufferBinding targetPacked,
-                                   GLintptr offset,
-                                   GLsizeiptr length)
+CallCapture CaptureFlushMappedBufferRange(const Context *context,
+                                          bool isCallValid,
+                                          BufferBinding targetPacked,
+                                          GLintptr offset,
+                                          GLsizeiptr length)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateFlushMappedBufferRange(context, targetPacked, offset, length);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
     paramBuffer.addValueParam("length", ParamType::TGLsizeiptr, length);
 
-    frameCapture->captureCall(context, "glFlushMappedBufferRange", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glFlushMappedBufferRange", std::move(paramBuffer));
 }
 
-void CaptureFramebufferTextureLayer(Context *context,
-                                    GLenum target,
-                                    GLenum attachment,
-                                    GLuint texture,
-                                    GLint level,
-                                    GLint layer)
+CallCapture CaptureFramebufferTextureLayer(const Context *context,
+                                           bool isCallValid,
+                                           GLenum target,
+                                           GLenum attachment,
+                                           GLuint texture,
+                                           GLint level,
+                                           GLint layer)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateFramebufferTextureLayer(context, target, attachment, texture, level, layer);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("attachment", ParamType::TGLenum, attachment);
     paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("layer", ParamType::TGLint, layer);
 
-    frameCapture->captureCall(context, "glFramebufferTextureLayer", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glFramebufferTextureLayer", std::move(paramBuffer));
 }
 
-void CaptureGenQueries(Context *context, GLsizei n, GLuint *ids)
+CallCapture CaptureGenQueries(const Context *context, bool isCallValid, GLsizei n, GLuint *ids)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGenQueries(context, n, ids);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture idsParam("ids", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, ids, &idsParam.value);
-    CaptureGenQueries_ids(context, n, ids, isCallValid, &idsParam);
+    CaptureGenQueries_ids(context, isCallValid, n, ids, &idsParam);
     paramBuffer.addParam(std::move(idsParam));
 
-    frameCapture->captureCall(context, "glGenQueries", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGenQueries", std::move(paramBuffer));
 }
 
-void CaptureGenSamplers(Context *context, GLsizei count, GLuint *samplers)
+CallCapture CaptureGenSamplers(const Context *context,
+                               bool isCallValid,
+                               GLsizei count,
+                               GLuint *samplers)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGenSamplers(context, count, samplers);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture samplersParam("samplers", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, samplers, &samplersParam.value);
-    CaptureGenSamplers_samplers(context, count, samplers, isCallValid, &samplersParam);
+    CaptureGenSamplers_samplers(context, isCallValid, count, samplers, &samplersParam);
     paramBuffer.addParam(std::move(samplersParam));
 
-    frameCapture->captureCall(context, "glGenSamplers", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGenSamplers", std::move(paramBuffer));
 }
 
-void CaptureGenTransformFeedbacks(Context *context, GLsizei n, GLuint *ids)
+CallCapture CaptureGenTransformFeedbacks(const Context *context,
+                                         bool isCallValid,
+                                         GLsizei n,
+                                         GLuint *ids)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGenTransformFeedbacks(context, n, ids);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture idsParam("ids", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, ids, &idsParam.value);
-    CaptureGenTransformFeedbacks_ids(context, n, ids, isCallValid, &idsParam);
+    CaptureGenTransformFeedbacks_ids(context, isCallValid, n, ids, &idsParam);
     paramBuffer.addParam(std::move(idsParam));
 
-    frameCapture->captureCall(context, "glGenTransformFeedbacks", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGenTransformFeedbacks", std::move(paramBuffer));
 }
 
-void CaptureGenVertexArrays(Context *context, GLsizei n, GLuint *arrays)
+CallCapture CaptureGenVertexArrays(const Context *context,
+                                   bool isCallValid,
+                                   GLsizei n,
+                                   GLuint *arrays)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGenVertexArrays(context, n, arrays);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     ParamCapture arraysParam("arrays", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, arrays, &arraysParam.value);
-    CaptureGenVertexArrays_arrays(context, n, arrays, isCallValid, &arraysParam);
+    CaptureGenVertexArrays_arrays(context, isCallValid, n, arrays, &arraysParam);
     paramBuffer.addParam(std::move(arraysParam));
 
-    frameCapture->captureCall(context, "glGenVertexArrays", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGenVertexArrays", std::move(paramBuffer));
 }
 
-void CaptureGetActiveUniformBlockName(Context *context,
-                                      GLuint program,
-                                      GLuint uniformBlockIndex,
-                                      GLsizei bufSize,
-                                      GLsizei *length,
-                                      GLchar *uniformBlockName)
+CallCapture CaptureGetActiveUniformBlockName(const Context *context,
+                                             bool isCallValid,
+                                             GLuint program,
+                                             GLuint uniformBlockIndex,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLchar *uniformBlockName)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetActiveUniformBlockName(context, program, uniformBlockIndex,
-                                                         bufSize, length, uniformBlockName);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetActiveUniformBlockName_length(context, program, uniformBlockIndex, bufSize, length,
-                                            uniformBlockName, isCallValid, &lengthParam);
+    CaptureGetActiveUniformBlockName_length(context, isCallValid, program, uniformBlockIndex,
+                                            bufSize, length, uniformBlockName, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture uniformBlockNameParam("uniformBlockName", ParamType::TGLcharPointer);
     InitParamValue(ParamType::TGLcharPointer, uniformBlockName, &uniformBlockNameParam.value);
-    CaptureGetActiveUniformBlockName_uniformBlockName(context, program, uniformBlockIndex, bufSize,
-                                                      length, uniformBlockName, isCallValid,
-                                                      &uniformBlockNameParam);
+    CaptureGetActiveUniformBlockName_uniformBlockName(context, isCallValid, program,
+                                                      uniformBlockIndex, bufSize, length,
+                                                      uniformBlockName, &uniformBlockNameParam);
     paramBuffer.addParam(std::move(uniformBlockNameParam));
 
-    frameCapture->captureCall(context, "glGetActiveUniformBlockName", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetActiveUniformBlockName", std::move(paramBuffer));
 }
 
-void CaptureGetActiveUniformBlockiv(Context *context,
-                                    GLuint program,
-                                    GLuint uniformBlockIndex,
-                                    GLenum pname,
-                                    GLint *params)
+CallCapture CaptureGetActiveUniformBlockiv(const Context *context,
+                                           bool isCallValid,
+                                           GLuint program,
+                                           GLuint uniformBlockIndex,
+                                           GLenum pname,
+                                           GLint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateGetActiveUniformBlockiv(context, program, uniformBlockIndex, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetActiveUniformBlockiv_params(context, program, uniformBlockIndex, pname, params,
-                                          isCallValid, &paramsParam);
+    CaptureGetActiveUniformBlockiv_params(context, isCallValid, program, uniformBlockIndex, pname,
+                                          params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetActiveUniformBlockiv", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetActiveUniformBlockiv", std::move(paramBuffer));
 }
 
-void CaptureGetActiveUniformsiv(Context *context,
-                                GLuint program,
-                                GLsizei uniformCount,
-                                const GLuint *uniformIndices,
-                                GLenum pname,
-                                GLint *params)
+CallCapture CaptureGetActiveUniformsiv(const Context *context,
+                                       bool isCallValid,
+                                       GLuint program,
+                                       GLsizei uniformCount,
+                                       const GLuint *uniformIndices,
+                                       GLenum pname,
+                                       GLint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateGetActiveUniformsiv(context, program, uniformCount, uniformIndices, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("uniformCount", ParamType::TGLsizei, uniformCount);
 
     ParamCapture uniformIndicesParam("uniformIndices", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, uniformIndices, &uniformIndicesParam.value);
-    CaptureGetActiveUniformsiv_uniformIndices(context, program, uniformCount, uniformIndices, pname,
-                                              params, isCallValid, &uniformIndicesParam);
+    CaptureGetActiveUniformsiv_uniformIndices(context, isCallValid, program, uniformCount,
+                                              uniformIndices, pname, params, &uniformIndicesParam);
     paramBuffer.addParam(std::move(uniformIndicesParam));
 
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetActiveUniformsiv_params(context, program, uniformCount, uniformIndices, pname, params,
-                                      isCallValid, &paramsParam);
+    CaptureGetActiveUniformsiv_params(context, isCallValid, program, uniformCount, uniformIndices,
+                                      pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetActiveUniformsiv", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetActiveUniformsiv", std::move(paramBuffer));
 }
 
-void CaptureGetBufferParameteri64v(Context *context,
-                                   BufferBinding targetPacked,
-                                   GLenum pname,
-                                   GLint64 *params)
+CallCapture CaptureGetBufferParameteri64v(const Context *context,
+                                          bool isCallValid,
+                                          BufferBinding targetPacked,
+                                          GLenum pname,
+                                          GLint64 *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetBufferParameteri64v(context, targetPacked, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLint64Pointer);
     InitParamValue(ParamType::TGLint64Pointer, params, &paramsParam.value);
-    CaptureGetBufferParameteri64v_params(context, targetPacked, pname, params, isCallValid,
+    CaptureGetBufferParameteri64v_params(context, isCallValid, targetPacked, pname, params,
                                          &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetBufferParameteri64v", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetBufferParameteri64v", std::move(paramBuffer));
 }
 
-void CaptureGetBufferPointerv(Context *context,
-                              BufferBinding targetPacked,
-                              GLenum pname,
-                              void **params)
+CallCapture CaptureGetBufferPointerv(const Context *context,
+                                     bool isCallValid,
+                                     BufferBinding targetPacked,
+                                     GLenum pname,
+                                     void **params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetBufferPointerv(context, targetPacked, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TvoidPointerPointer);
     InitParamValue(ParamType::TvoidPointerPointer, params, &paramsParam.value);
-    CaptureGetBufferPointerv_params(context, targetPacked, pname, params, isCallValid,
+    CaptureGetBufferPointerv_params(context, isCallValid, targetPacked, pname, params,
                                     &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetBufferPointerv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetBufferPointerv", std::move(paramBuffer));
 }
 
-void CaptureGetFragDataLocation(Context *context, GLuint program, const GLchar *name)
+CallCapture CaptureGetFragDataLocation(const Context *context,
+                                       bool isCallValid,
+                                       GLuint program,
+                                       const GLchar *name)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetFragDataLocation(context, program, name);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
     ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-    CaptureGetFragDataLocation_name(context, program, name, isCallValid, &nameParam);
+    CaptureGetFragDataLocation_name(context, isCallValid, program, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
-    frameCapture->captureCall(context, "glGetFragDataLocation", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetFragDataLocation", std::move(paramBuffer));
 }
 
-void CaptureGetInteger64i_v(Context *context, GLenum target, GLuint index, GLint64 *data)
+CallCapture CaptureGetInteger64i_v(const Context *context,
+                                   bool isCallValid,
+                                   GLenum target,
+                                   GLuint index,
+                                   GLint64 *data)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetInteger64i_v(context, target, index, data);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
     ParamCapture dataParam("data", ParamType::TGLint64Pointer);
     InitParamValue(ParamType::TGLint64Pointer, data, &dataParam.value);
-    CaptureGetInteger64i_v_data(context, target, index, data, isCallValid, &dataParam);
+    CaptureGetInteger64i_v_data(context, isCallValid, target, index, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    frameCapture->captureCall(context, "glGetInteger64i_v", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetInteger64i_v", std::move(paramBuffer));
 }
 
-void CaptureGetInteger64v(Context *context, GLenum pname, GLint64 *data)
+CallCapture CaptureGetInteger64v(const Context *context,
+                                 bool isCallValid,
+                                 GLenum pname,
+                                 GLint64 *data)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetInteger64v(context, pname, data);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture dataParam("data", ParamType::TGLint64Pointer);
     InitParamValue(ParamType::TGLint64Pointer, data, &dataParam.value);
-    CaptureGetInteger64v_data(context, pname, data, isCallValid, &dataParam);
+    CaptureGetInteger64v_data(context, isCallValid, pname, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    frameCapture->captureCall(context, "glGetInteger64v", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetInteger64v", std::move(paramBuffer));
 }
 
-void CaptureGetIntegeri_v(Context *context, GLenum target, GLuint index, GLint *data)
+CallCapture CaptureGetIntegeri_v(const Context *context,
+                                 bool isCallValid,
+                                 GLenum target,
+                                 GLuint index,
+                                 GLint *data)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetIntegeri_v(context, target, index, data);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
     ParamCapture dataParam("data", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, data, &dataParam.value);
-    CaptureGetIntegeri_v_data(context, target, index, data, isCallValid, &dataParam);
+    CaptureGetIntegeri_v_data(context, isCallValid, target, index, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    frameCapture->captureCall(context, "glGetIntegeri_v", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetIntegeri_v", std::move(paramBuffer));
 }
 
-void CaptureGetInternalformativ(Context *context,
-                                GLenum target,
-                                GLenum internalformat,
-                                GLenum pname,
-                                GLsizei bufSize,
-                                GLint *params)
+CallCapture CaptureGetInternalformativ(const Context *context,
+                                       bool isCallValid,
+                                       GLenum target,
+                                       GLenum internalformat,
+                                       GLenum pname,
+                                       GLsizei bufSize,
+                                       GLint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
@@ -971,380 +847,347 @@ void CaptureGetInternalformativ(Context *context,
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetInternalformativ_params(context, target, internalformat, pname, bufSize, params,
-                                      isCallValid, &paramsParam);
+    CaptureGetInternalformativ_params(context, isCallValid, target, internalformat, pname, bufSize,
+                                      params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetInternalformativ", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetInternalformativ", std::move(paramBuffer));
 }
 
-void CaptureGetProgramBinary(Context *context,
-                             GLuint program,
-                             GLsizei bufSize,
-                             GLsizei *length,
-                             GLenum *binaryFormat,
-                             void *binary)
+CallCapture CaptureGetProgramBinary(const Context *context,
+                                    bool isCallValid,
+                                    GLuint program,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLenum *binaryFormat,
+                                    void *binary)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateGetProgramBinary(context, program, bufSize, length, binaryFormat, binary);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetProgramBinary_length(context, program, bufSize, length, binaryFormat, binary,
-                                   isCallValid, &lengthParam);
+    CaptureGetProgramBinary_length(context, isCallValid, program, bufSize, length, binaryFormat,
+                                   binary, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture binaryFormatParam("binaryFormat", ParamType::TGLenumPointer);
     InitParamValue(ParamType::TGLenumPointer, binaryFormat, &binaryFormatParam.value);
-    CaptureGetProgramBinary_binaryFormat(context, program, bufSize, length, binaryFormat, binary,
-                                         isCallValid, &binaryFormatParam);
+    CaptureGetProgramBinary_binaryFormat(context, isCallValid, program, bufSize, length,
+                                         binaryFormat, binary, &binaryFormatParam);
     paramBuffer.addParam(std::move(binaryFormatParam));
 
     ParamCapture binaryParam("binary", ParamType::TvoidPointer);
     InitParamValue(ParamType::TvoidPointer, binary, &binaryParam.value);
-    CaptureGetProgramBinary_binary(context, program, bufSize, length, binaryFormat, binary,
-                                   isCallValid, &binaryParam);
+    CaptureGetProgramBinary_binary(context, isCallValid, program, bufSize, length, binaryFormat,
+                                   binary, &binaryParam);
     paramBuffer.addParam(std::move(binaryParam));
 
-    frameCapture->captureCall(context, "glGetProgramBinary", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetProgramBinary", std::move(paramBuffer));
 }
 
-void CaptureGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params)
+CallCapture CaptureGetQueryObjectuiv(const Context *context,
+                                     bool isCallValid,
+                                     GLuint id,
+                                     GLenum pname,
+                                     GLuint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetQueryObjectuiv(context, id, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetQueryObjectuiv_params(context, id, pname, params, isCallValid, &paramsParam);
+    CaptureGetQueryObjectuiv_params(context, isCallValid, id, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetQueryObjectuiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetQueryObjectuiv", std::move(paramBuffer));
 }
 
-void CaptureGetQueryiv(Context *context, QueryType targetPacked, GLenum pname, GLint *params)
+CallCapture CaptureGetQueryiv(const Context *context,
+                              bool isCallValid,
+                              QueryType targetPacked,
+                              GLenum pname,
+                              GLint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetQueryiv(context, targetPacked, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetQueryiv_params(context, targetPacked, pname, params, isCallValid, &paramsParam);
+    CaptureGetQueryiv_params(context, isCallValid, targetPacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetQueryiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetQueryiv", std::move(paramBuffer));
 }
 
-void CaptureGetSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, GLfloat *params)
+CallCapture CaptureGetSamplerParameterfv(const Context *context,
+                                         bool isCallValid,
+                                         GLuint sampler,
+                                         GLenum pname,
+                                         GLfloat *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetSamplerParameterfv(context, sampler, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-    CaptureGetSamplerParameterfv_params(context, sampler, pname, params, isCallValid, &paramsParam);
+    CaptureGetSamplerParameterfv_params(context, isCallValid, sampler, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetSamplerParameterfv", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetSamplerParameterfv", std::move(paramBuffer));
 }
 
-void CaptureGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params)
+CallCapture CaptureGetSamplerParameteriv(const Context *context,
+                                         bool isCallValid,
+                                         GLuint sampler,
+                                         GLenum pname,
+                                         GLint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetSamplerParameteriv(context, sampler, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetSamplerParameteriv_params(context, sampler, pname, params, isCallValid, &paramsParam);
+    CaptureGetSamplerParameteriv_params(context, isCallValid, sampler, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetSamplerParameteriv", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetSamplerParameteriv", std::move(paramBuffer));
 }
 
-void CaptureGetStringi(Context *context, GLenum name, GLuint index)
+CallCapture CaptureGetStringi(const Context *context, bool isCallValid, GLenum name, GLuint index)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetStringi(context, name, index);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("name", ParamType::TGLenum, name);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
-    frameCapture->captureCall(context, "glGetStringi", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetStringi", std::move(paramBuffer));
 }
 
-void CaptureGetSynciv(Context *context,
-                      GLsync sync,
-                      GLenum pname,
-                      GLsizei bufSize,
-                      GLsizei *length,
-                      GLint *values)
+CallCapture CaptureGetSynciv(const Context *context,
+                             bool isCallValid,
+                             GLsync sync,
+                             GLenum pname,
+                             GLsizei bufSize,
+                             GLsizei *length,
+                             GLint *values)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetSynciv(context, sync, pname, bufSize, length, values);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sync", ParamType::TGLsync, sync);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetSynciv_length(context, sync, pname, bufSize, length, values, isCallValid,
+    CaptureGetSynciv_length(context, isCallValid, sync, pname, bufSize, length, values,
                             &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture valuesParam("values", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, values, &valuesParam.value);
-    CaptureGetSynciv_values(context, sync, pname, bufSize, length, values, isCallValid,
+    CaptureGetSynciv_values(context, isCallValid, sync, pname, bufSize, length, values,
                             &valuesParam);
     paramBuffer.addParam(std::move(valuesParam));
 
-    frameCapture->captureCall(context, "glGetSynciv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetSynciv", std::move(paramBuffer));
 }
 
-void CaptureGetTransformFeedbackVarying(Context *context,
-                                        GLuint program,
-                                        GLuint index,
-                                        GLsizei bufSize,
-                                        GLsizei *length,
-                                        GLsizei *size,
-                                        GLenum *type,
-                                        GLchar *name)
+CallCapture CaptureGetTransformFeedbackVarying(const Context *context,
+                                               bool isCallValid,
+                                               GLuint program,
+                                               GLuint index,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLsizei *size,
+                                               GLenum *type,
+                                               GLchar *name)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetTransformFeedbackVarying(context, program, index, bufSize, length,
-                                                           size, type, name);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-    CaptureGetTransformFeedbackVarying_length(context, program, index, bufSize, length, size, type,
-                                              name, isCallValid, &lengthParam);
+    CaptureGetTransformFeedbackVarying_length(context, isCallValid, program, index, bufSize, length,
+                                              size, type, name, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
     ParamCapture sizeParam("size", ParamType::TGLsizeiPointer);
     InitParamValue(ParamType::TGLsizeiPointer, size, &sizeParam.value);
-    CaptureGetTransformFeedbackVarying_size(context, program, index, bufSize, length, size, type,
-                                            name, isCallValid, &sizeParam);
+    CaptureGetTransformFeedbackVarying_size(context, isCallValid, program, index, bufSize, length,
+                                            size, type, name, &sizeParam);
     paramBuffer.addParam(std::move(sizeParam));
 
     ParamCapture typeParam("type", ParamType::TGLenumPointer);
     InitParamValue(ParamType::TGLenumPointer, type, &typeParam.value);
-    CaptureGetTransformFeedbackVarying_type(context, program, index, bufSize, length, size, type,
-                                            name, isCallValid, &typeParam);
+    CaptureGetTransformFeedbackVarying_type(context, isCallValid, program, index, bufSize, length,
+                                            size, type, name, &typeParam);
     paramBuffer.addParam(std::move(typeParam));
 
     ParamCapture nameParam("name", ParamType::TGLcharPointer);
     InitParamValue(ParamType::TGLcharPointer, name, &nameParam.value);
-    CaptureGetTransformFeedbackVarying_name(context, program, index, bufSize, length, size, type,
-                                            name, isCallValid, &nameParam);
+    CaptureGetTransformFeedbackVarying_name(context, isCallValid, program, index, bufSize, length,
+                                            size, type, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
-    frameCapture->captureCall(context, "glGetTransformFeedbackVarying", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetTransformFeedbackVarying", std::move(paramBuffer));
 }
 
-void CaptureGetUniformBlockIndex(Context *context, GLuint program, const GLchar *uniformBlockName)
+CallCapture CaptureGetUniformBlockIndex(const Context *context,
+                                        bool isCallValid,
+                                        GLuint program,
+                                        const GLchar *uniformBlockName)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetUniformBlockIndex(context, program, uniformBlockName);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
     ParamCapture uniformBlockNameParam("uniformBlockName", ParamType::TGLcharConstPointer);
     InitParamValue(ParamType::TGLcharConstPointer, uniformBlockName, &uniformBlockNameParam.value);
-    CaptureGetUniformBlockIndex_uniformBlockName(context, program, uniformBlockName, isCallValid,
+    CaptureGetUniformBlockIndex_uniformBlockName(context, isCallValid, program, uniformBlockName,
                                                  &uniformBlockNameParam);
     paramBuffer.addParam(std::move(uniformBlockNameParam));
 
-    frameCapture->captureCall(context, "glGetUniformBlockIndex", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetUniformBlockIndex", std::move(paramBuffer));
 }
 
-void CaptureGetUniformIndices(Context *context,
-                              GLuint program,
-                              GLsizei uniformCount,
-                              const GLchar *const *uniformNames,
-                              GLuint *uniformIndices)
+CallCapture CaptureGetUniformIndices(const Context *context,
+                                     bool isCallValid,
+                                     GLuint program,
+                                     GLsizei uniformCount,
+                                     const GLchar *const *uniformNames,
+                                     GLuint *uniformIndices)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateGetUniformIndices(context, program, uniformCount, uniformNames, uniformIndices);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("uniformCount", ParamType::TGLsizei, uniformCount);
 
     ParamCapture uniformNamesParam("uniformNames", ParamType::TGLcharConstPointerPointer);
     InitParamValue(ParamType::TGLcharConstPointerPointer, uniformNames, &uniformNamesParam.value);
-    CaptureGetUniformIndices_uniformNames(context, program, uniformCount, uniformNames,
-                                          uniformIndices, isCallValid, &uniformNamesParam);
+    CaptureGetUniformIndices_uniformNames(context, isCallValid, program, uniformCount, uniformNames,
+                                          uniformIndices, &uniformNamesParam);
     paramBuffer.addParam(std::move(uniformNamesParam));
 
     ParamCapture uniformIndicesParam("uniformIndices", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, uniformIndices, &uniformIndicesParam.value);
-    CaptureGetUniformIndices_uniformIndices(context, program, uniformCount, uniformNames,
-                                            uniformIndices, isCallValid, &uniformIndicesParam);
+    CaptureGetUniformIndices_uniformIndices(context, isCallValid, program, uniformCount,
+                                            uniformNames, uniformIndices, &uniformIndicesParam);
     paramBuffer.addParam(std::move(uniformIndicesParam));
 
-    frameCapture->captureCall(context, "glGetUniformIndices", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetUniformIndices", std::move(paramBuffer));
 }
 
-void CaptureGetUniformuiv(Context *context, GLuint program, GLint location, GLuint *params)
+CallCapture CaptureGetUniformuiv(const Context *context,
+                                 bool isCallValid,
+                                 GLuint program,
+                                 GLint location,
+                                 GLuint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetUniformuiv(context, program, location, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetUniformuiv_params(context, program, location, params, isCallValid, &paramsParam);
+    CaptureGetUniformuiv_params(context, isCallValid, program, location, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetUniformuiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetUniformuiv", std::move(paramBuffer));
 }
 
-void CaptureGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params)
+CallCapture CaptureGetVertexAttribIiv(const Context *context,
+                                      bool isCallValid,
+                                      GLuint index,
+                                      GLenum pname,
+                                      GLint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetVertexAttribIiv(context, index, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribIiv_params(context, index, pname, params, isCallValid, &paramsParam);
+    CaptureGetVertexAttribIiv_params(context, isCallValid, index, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetVertexAttribIiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glGetVertexAttribIiv", std::move(paramBuffer));
 }
 
-void CaptureGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params)
+CallCapture CaptureGetVertexAttribIuiv(const Context *context,
+                                       bool isCallValid,
+                                       GLuint index,
+                                       GLenum pname,
+                                       GLuint *params)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateGetVertexAttribIuiv(context, index, pname, params);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-    CaptureGetVertexAttribIuiv_params(context, index, pname, params, isCallValid, &paramsParam);
+    CaptureGetVertexAttribIuiv_params(context, isCallValid, index, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    frameCapture->captureCall(context, "glGetVertexAttribIuiv", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glGetVertexAttribIuiv", std::move(paramBuffer));
 }
 
-void CaptureInvalidateFramebuffer(Context *context,
-                                  GLenum target,
-                                  GLsizei numAttachments,
-                                  const GLenum *attachments)
+CallCapture CaptureInvalidateFramebuffer(const Context *context,
+                                         bool isCallValid,
+                                         GLenum target,
+                                         GLsizei numAttachments,
+                                         const GLenum *attachments)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateInvalidateFramebuffer(context, target, numAttachments, attachments);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("numAttachments", ParamType::TGLsizei, numAttachments);
 
     ParamCapture attachmentsParam("attachments", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, attachments, &attachmentsParam.value);
-    CaptureInvalidateFramebuffer_attachments(context, target, numAttachments, attachments,
-                                             isCallValid, &attachmentsParam);
+    CaptureInvalidateFramebuffer_attachments(context, isCallValid, target, numAttachments,
+                                             attachments, &attachmentsParam);
     paramBuffer.addParam(std::move(attachmentsParam));
 
-    frameCapture->captureCall(context, "glInvalidateFramebuffer", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glInvalidateFramebuffer", std::move(paramBuffer));
 }
 
-void CaptureInvalidateSubFramebuffer(Context *context,
-                                     GLenum target,
-                                     GLsizei numAttachments,
-                                     const GLenum *attachments,
-                                     GLint x,
-                                     GLint y,
-                                     GLsizei width,
-                                     GLsizei height)
+CallCapture CaptureInvalidateSubFramebuffer(const Context *context,
+                                            bool isCallValid,
+                                            GLenum target,
+                                            GLsizei numAttachments,
+                                            const GLenum *attachments,
+                                            GLint x,
+                                            GLint y,
+                                            GLsizei width,
+                                            GLsizei height)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateInvalidateSubFramebuffer(context, target, numAttachments,
-                                                        attachments, x, y, width, height);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("numAttachments", ParamType::TGLsizei, numAttachments);
 
     ParamCapture attachmentsParam("attachments", ParamType::TGLenumConstPointer);
     InitParamValue(ParamType::TGLenumConstPointer, attachments, &attachmentsParam.value);
-    CaptureInvalidateSubFramebuffer_attachments(context, target, numAttachments, attachments, x, y,
-                                                width, height, isCallValid, &attachmentsParam);
+    CaptureInvalidateSubFramebuffer_attachments(context, isCallValid, target, numAttachments,
+                                                attachments, x, y, width, height,
+                                                &attachmentsParam);
     paramBuffer.addParam(std::move(attachmentsParam));
 
     paramBuffer.addValueParam("x", ParamType::TGLint, x);
@@ -1352,287 +1195,234 @@ void CaptureInvalidateSubFramebuffer(Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    frameCapture->captureCall(context, "glInvalidateSubFramebuffer", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glInvalidateSubFramebuffer", std::move(paramBuffer));
 }
 
-void CaptureIsQuery(Context *context, GLuint id)
+CallCapture CaptureIsQuery(const Context *context, bool isCallValid, GLuint id)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateIsQuery(context, id);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
 
-    frameCapture->captureCall(context, "glIsQuery", std::move(paramBuffer), isCallValid);
+    return CallCapture("glIsQuery", std::move(paramBuffer));
 }
 
-void CaptureIsSampler(Context *context, GLuint sampler)
+CallCapture CaptureIsSampler(const Context *context, bool isCallValid, GLuint sampler)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateIsSampler(context, sampler);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
 
-    frameCapture->captureCall(context, "glIsSampler", std::move(paramBuffer), isCallValid);
+    return CallCapture("glIsSampler", std::move(paramBuffer));
 }
 
-void CaptureIsSync(Context *context, GLsync sync)
+CallCapture CaptureIsSync(const Context *context, bool isCallValid, GLsync sync)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateIsSync(context, sync);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sync", ParamType::TGLsync, sync);
 
-    frameCapture->captureCall(context, "glIsSync", std::move(paramBuffer), isCallValid);
+    return CallCapture("glIsSync", std::move(paramBuffer));
 }
 
-void CaptureIsTransformFeedback(Context *context, GLuint id)
+CallCapture CaptureIsTransformFeedback(const Context *context, bool isCallValid, GLuint id)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateIsTransformFeedback(context, id);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
 
-    frameCapture->captureCall(context, "glIsTransformFeedback", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glIsTransformFeedback", std::move(paramBuffer));
 }
 
-void CaptureIsVertexArray(Context *context, GLuint array)
+CallCapture CaptureIsVertexArray(const Context *context, bool isCallValid, GLuint array)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateIsVertexArray(context, array);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("array", ParamType::TGLuint, array);
 
-    frameCapture->captureCall(context, "glIsVertexArray", std::move(paramBuffer), isCallValid);
+    return CallCapture("glIsVertexArray", std::move(paramBuffer));
 }
 
-void CaptureMapBufferRange(Context *context,
-                           BufferBinding targetPacked,
-                           GLintptr offset,
-                           GLsizeiptr length,
-                           GLbitfield access)
+CallCapture CaptureMapBufferRange(const Context *context,
+                                  bool isCallValid,
+                                  BufferBinding targetPacked,
+                                  GLintptr offset,
+                                  GLsizeiptr length,
+                                  GLbitfield access)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateMapBufferRange(context, targetPacked, offset, length, access);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
     paramBuffer.addValueParam("length", ParamType::TGLsizeiptr, length);
     paramBuffer.addValueParam("access", ParamType::TGLbitfield, access);
 
-    frameCapture->captureCall(context, "glMapBufferRange", std::move(paramBuffer), isCallValid);
+    return CallCapture("glMapBufferRange", std::move(paramBuffer));
 }
 
-void CapturePauseTransformFeedback(Context *context)
+CallCapture CapturePauseTransformFeedback(const Context *context, bool isCallValid)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidatePauseTransformFeedback(context);
     ParamBuffer paramBuffer;
 
-    frameCapture->captureCall(context, "glPauseTransformFeedback", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glPauseTransformFeedback", std::move(paramBuffer));
 }
 
-void CaptureProgramBinary(Context *context,
-                          GLuint program,
-                          GLenum binaryFormat,
-                          const void *binary,
-                          GLsizei length)
+CallCapture CaptureProgramBinary(const Context *context,
+                                 bool isCallValid,
+                                 GLuint program,
+                                 GLenum binaryFormat,
+                                 const void *binary,
+                                 GLsizei length)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateProgramBinary(context, program, binaryFormat, binary, length);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("binaryFormat", ParamType::TGLenum, binaryFormat);
 
     ParamCapture binaryParam("binary", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, binary, &binaryParam.value);
-    CaptureProgramBinary_binary(context, program, binaryFormat, binary, length, isCallValid,
+    CaptureProgramBinary_binary(context, isCallValid, program, binaryFormat, binary, length,
                                 &binaryParam);
     paramBuffer.addParam(std::move(binaryParam));
 
     paramBuffer.addValueParam("length", ParamType::TGLsizei, length);
 
-    frameCapture->captureCall(context, "glProgramBinary", std::move(paramBuffer), isCallValid);
+    return CallCapture("glProgramBinary", std::move(paramBuffer));
 }
 
-void CaptureProgramParameteri(Context *context, GLuint program, GLenum pname, GLint value)
+CallCapture CaptureProgramParameteri(const Context *context,
+                                     bool isCallValid,
+                                     GLuint program,
+                                     GLenum pname,
+                                     GLint value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateProgramParameteri(context, program, pname, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("value", ParamType::TGLint, value);
 
-    frameCapture->captureCall(context, "glProgramParameteri", std::move(paramBuffer), isCallValid);
+    return CallCapture("glProgramParameteri", std::move(paramBuffer));
 }
 
-void CaptureReadBuffer(Context *context, GLenum src)
+CallCapture CaptureReadBuffer(const Context *context, bool isCallValid, GLenum src)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateReadBuffer(context, src);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("src", ParamType::TGLenum, src);
 
-    frameCapture->captureCall(context, "glReadBuffer", std::move(paramBuffer), isCallValid);
+    return CallCapture("glReadBuffer", std::move(paramBuffer));
 }
 
-void CaptureRenderbufferStorageMultisample(Context *context,
-                                           GLenum target,
-                                           GLsizei samples,
-                                           GLenum internalformat,
-                                           GLsizei width,
-                                           GLsizei height)
+CallCapture CaptureRenderbufferStorageMultisample(const Context *context,
+                                                  bool isCallValid,
+                                                  GLenum target,
+                                                  GLsizei samples,
+                                                  GLenum internalformat,
+                                                  GLsizei width,
+                                                  GLsizei height)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateRenderbufferStorageMultisample(context, target, samples,
-                                                              internalformat, width, height);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
     paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    frameCapture->captureCall(context, "glRenderbufferStorageMultisample", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glRenderbufferStorageMultisample", std::move(paramBuffer));
 }
 
-void CaptureResumeTransformFeedback(Context *context)
+CallCapture CaptureResumeTransformFeedback(const Context *context, bool isCallValid)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateResumeTransformFeedback(context);
     ParamBuffer paramBuffer;
 
-    frameCapture->captureCall(context, "glResumeTransformFeedback", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glResumeTransformFeedback", std::move(paramBuffer));
 }
 
-void CaptureSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param)
+CallCapture CaptureSamplerParameterf(const Context *context,
+                                     bool isCallValid,
+                                     GLuint sampler,
+                                     GLenum pname,
+                                     GLfloat param)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateSamplerParameterf(context, sampler, pname, param);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLfloat, param);
 
-    frameCapture->captureCall(context, "glSamplerParameterf", std::move(paramBuffer), isCallValid);
+    return CallCapture("glSamplerParameterf", std::move(paramBuffer));
 }
 
-void CaptureSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, const GLfloat *param)
+CallCapture CaptureSamplerParameterfv(const Context *context,
+                                      bool isCallValid,
+                                      GLuint sampler,
+                                      GLenum pname,
+                                      const GLfloat *param)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateSamplerParameterfv(context, sampler, pname, param);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramParam("param", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, param, &paramParam.value);
-    CaptureSamplerParameterfv_param(context, sampler, pname, param, isCallValid, &paramParam);
+    CaptureSamplerParameterfv_param(context, isCallValid, sampler, pname, param, &paramParam);
     paramBuffer.addParam(std::move(paramParam));
 
-    frameCapture->captureCall(context, "glSamplerParameterfv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glSamplerParameterfv", std::move(paramBuffer));
 }
 
-void CaptureSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param)
+CallCapture CaptureSamplerParameteri(const Context *context,
+                                     bool isCallValid,
+                                     GLuint sampler,
+                                     GLenum pname,
+                                     GLint param)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateSamplerParameteri(context, sampler, pname, param);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
-    frameCapture->captureCall(context, "glSamplerParameteri", std::move(paramBuffer), isCallValid);
+    return CallCapture("glSamplerParameteri", std::move(paramBuffer));
 }
 
-void CaptureSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, const GLint *param)
+CallCapture CaptureSamplerParameteriv(const Context *context,
+                                      bool isCallValid,
+                                      GLuint sampler,
+                                      GLenum pname,
+                                      const GLint *param)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateSamplerParameteriv(context, sampler, pname, param);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sampler", ParamType::TGLuint, sampler);
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
 
     ParamCapture paramParam("param", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, param, &paramParam.value);
-    CaptureSamplerParameteriv_param(context, sampler, pname, param, isCallValid, &paramParam);
+    CaptureSamplerParameteriv_param(context, isCallValid, sampler, pname, param, &paramParam);
     paramBuffer.addParam(std::move(paramParam));
 
-    frameCapture->captureCall(context, "glSamplerParameteriv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glSamplerParameteriv", std::move(paramBuffer));
 }
 
-void CaptureTexImage3D(Context *context,
-                       TextureTarget targetPacked,
-                       GLint level,
-                       GLint internalformat,
-                       GLsizei width,
-                       GLsizei height,
-                       GLsizei depth,
-                       GLint border,
-                       GLenum format,
-                       GLenum type,
-                       const void *pixels)
+CallCapture CaptureTexImage3D(const Context *context,
+                              bool isCallValid,
+                              TextureTarget targetPacked,
+                              GLint level,
+                              GLint internalformat,
+                              GLsizei width,
+                              GLsizei height,
+                              GLsizei depth,
+                              GLint border,
+                              GLenum format,
+                              GLenum type,
+                              const void *pixels)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateTexImage3D(context, targetPacked, level, internalformat, width,
-                                          height, depth, border, format, type, pixels);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("internalformat", ParamType::TGLint, internalformat);
@@ -1645,51 +1435,43 @@ void CaptureTexImage3D(Context *context,
 
     ParamCapture pixelsParam("pixels", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, pixels, &pixelsParam.value);
-    CaptureTexImage3D_pixels(context, targetPacked, level, internalformat, width, height, depth,
-                             border, format, type, pixels, isCallValid, &pixelsParam);
+    CaptureTexImage3D_pixels(context, isCallValid, targetPacked, level, internalformat, width,
+                             height, depth, border, format, type, pixels, &pixelsParam);
     paramBuffer.addParam(std::move(pixelsParam));
 
-    frameCapture->captureCall(context, "glTexImage3D", std::move(paramBuffer), isCallValid);
+    return CallCapture("glTexImage3D", std::move(paramBuffer));
 }
 
-void CaptureTexStorage2D(Context *context,
-                         TextureType targetPacked,
-                         GLsizei levels,
-                         GLenum internalformat,
-                         GLsizei width,
-                         GLsizei height)
+CallCapture CaptureTexStorage2D(const Context *context,
+                                bool isCallValid,
+                                TextureType targetPacked,
+                                GLsizei levels,
+                                GLenum internalformat,
+                                GLsizei width,
+                                GLsizei height)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
     paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    frameCapture->captureCall(context, "glTexStorage2D", std::move(paramBuffer), isCallValid);
+    return CallCapture("glTexStorage2D", std::move(paramBuffer));
 }
 
-void CaptureTexStorage3D(Context *context,
-                         TextureType targetPacked,
-                         GLsizei levels,
-                         GLenum internalformat,
-                         GLsizei width,
-                         GLsizei height,
-                         GLsizei depth)
+CallCapture CaptureTexStorage3D(const Context *context,
+                                bool isCallValid,
+                                TextureType targetPacked,
+                                GLsizei levels,
+                                GLenum internalformat,
+                                GLsizei width,
+                                GLsizei height,
+                                GLsizei depth)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateTexStorage3D(context, targetPacked, levels, internalformat, width, height, depth);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
     paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
@@ -1697,29 +1479,25 @@ void CaptureTexStorage3D(Context *context,
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
     paramBuffer.addValueParam("depth", ParamType::TGLsizei, depth);
 
-    frameCapture->captureCall(context, "glTexStorage3D", std::move(paramBuffer), isCallValid);
+    return CallCapture("glTexStorage3D", std::move(paramBuffer));
 }
 
-void CaptureTexSubImage3D(Context *context,
-                          TextureTarget targetPacked,
-                          GLint level,
-                          GLint xoffset,
-                          GLint yoffset,
-                          GLint zoffset,
-                          GLsizei width,
-                          GLsizei height,
-                          GLsizei depth,
-                          GLenum format,
-                          GLenum type,
-                          const void *pixels)
+CallCapture CaptureTexSubImage3D(const Context *context,
+                                 bool isCallValid,
+                                 TextureTarget targetPacked,
+                                 GLint level,
+                                 GLint xoffset,
+                                 GLint yoffset,
+                                 GLint zoffset,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLsizei depth,
+                                 GLenum format,
+                                 GLenum type,
+                                 const void *pixels)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateTexSubImage3D(context, targetPacked, level, xoffset, yoffset,
-                                             zoffset, width, height, depth, format, type, pixels);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("xoffset", ParamType::TGLint, xoffset);
@@ -1733,461 +1511,424 @@ void CaptureTexSubImage3D(Context *context,
 
     ParamCapture pixelsParam("pixels", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, pixels, &pixelsParam.value);
-    CaptureTexSubImage3D_pixels(context, targetPacked, level, xoffset, yoffset, zoffset, width,
-                                height, depth, format, type, pixels, isCallValid, &pixelsParam);
+    CaptureTexSubImage3D_pixels(context, isCallValid, targetPacked, level, xoffset, yoffset,
+                                zoffset, width, height, depth, format, type, pixels, &pixelsParam);
     paramBuffer.addParam(std::move(pixelsParam));
 
-    frameCapture->captureCall(context, "glTexSubImage3D", std::move(paramBuffer), isCallValid);
+    return CallCapture("glTexSubImage3D", std::move(paramBuffer));
 }
 
-void CaptureTransformFeedbackVaryings(Context *context,
-                                      GLuint program,
-                                      GLsizei count,
-                                      const GLchar *const *varyings,
-                                      GLenum bufferMode)
+CallCapture CaptureTransformFeedbackVaryings(const Context *context,
+                                             bool isCallValid,
+                                             GLuint program,
+                                             GLsizei count,
+                                             const GLchar *const *varyings,
+                                             GLenum bufferMode)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateTransformFeedbackVaryings(context, program, count, varyings, bufferMode);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture varyingsParam("varyings", ParamType::TGLcharConstPointerPointer);
     InitParamValue(ParamType::TGLcharConstPointerPointer, varyings, &varyingsParam.value);
-    CaptureTransformFeedbackVaryings_varyings(context, program, count, varyings, bufferMode,
-                                              isCallValid, &varyingsParam);
+    CaptureTransformFeedbackVaryings_varyings(context, isCallValid, program, count, varyings,
+                                              bufferMode, &varyingsParam);
     paramBuffer.addParam(std::move(varyingsParam));
 
     paramBuffer.addValueParam("bufferMode", ParamType::TGLenum, bufferMode);
 
-    frameCapture->captureCall(context, "glTransformFeedbackVaryings", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glTransformFeedbackVaryings", std::move(paramBuffer));
 }
 
-void CaptureUniform1ui(Context *context, GLint location, GLuint v0)
+CallCapture CaptureUniform1ui(const Context *context, bool isCallValid, GLint location, GLuint v0)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform1ui(context, location, v0);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("v0", ParamType::TGLuint, v0);
 
-    frameCapture->captureCall(context, "glUniform1ui", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform1ui", std::move(paramBuffer));
 }
 
-void CaptureUniform1uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+CallCapture CaptureUniform1uiv(const Context *context,
+                               bool isCallValid,
+                               GLint location,
+                               GLsizei count,
+                               const GLuint *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform1uiv(context, location, count, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture valueParam("value", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, value, &valueParam.value);
-    CaptureUniform1uiv_value(context, location, count, value, isCallValid, &valueParam);
+    CaptureUniform1uiv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniform1uiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform1uiv", std::move(paramBuffer));
 }
 
-void CaptureUniform2ui(Context *context, GLint location, GLuint v0, GLuint v1)
+CallCapture CaptureUniform2ui(const Context *context,
+                              bool isCallValid,
+                              GLint location,
+                              GLuint v0,
+                              GLuint v1)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform2ui(context, location, v0, v1);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("v0", ParamType::TGLuint, v0);
     paramBuffer.addValueParam("v1", ParamType::TGLuint, v1);
 
-    frameCapture->captureCall(context, "glUniform2ui", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform2ui", std::move(paramBuffer));
 }
 
-void CaptureUniform2uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+CallCapture CaptureUniform2uiv(const Context *context,
+                               bool isCallValid,
+                               GLint location,
+                               GLsizei count,
+                               const GLuint *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform2uiv(context, location, count, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture valueParam("value", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, value, &valueParam.value);
-    CaptureUniform2uiv_value(context, location, count, value, isCallValid, &valueParam);
+    CaptureUniform2uiv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniform2uiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform2uiv", std::move(paramBuffer));
 }
 
-void CaptureUniform3ui(Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2)
+CallCapture CaptureUniform3ui(const Context *context,
+                              bool isCallValid,
+                              GLint location,
+                              GLuint v0,
+                              GLuint v1,
+                              GLuint v2)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform3ui(context, location, v0, v1, v2);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("v0", ParamType::TGLuint, v0);
     paramBuffer.addValueParam("v1", ParamType::TGLuint, v1);
     paramBuffer.addValueParam("v2", ParamType::TGLuint, v2);
 
-    frameCapture->captureCall(context, "glUniform3ui", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform3ui", std::move(paramBuffer));
 }
 
-void CaptureUniform3uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+CallCapture CaptureUniform3uiv(const Context *context,
+                               bool isCallValid,
+                               GLint location,
+                               GLsizei count,
+                               const GLuint *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform3uiv(context, location, count, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture valueParam("value", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, value, &valueParam.value);
-    CaptureUniform3uiv_value(context, location, count, value, isCallValid, &valueParam);
+    CaptureUniform3uiv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniform3uiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform3uiv", std::move(paramBuffer));
 }
 
-void CaptureUniform4ui(Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+CallCapture CaptureUniform4ui(const Context *context,
+                              bool isCallValid,
+                              GLint location,
+                              GLuint v0,
+                              GLuint v1,
+                              GLuint v2,
+                              GLuint v3)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform4ui(context, location, v0, v1, v2, v3);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("v0", ParamType::TGLuint, v0);
     paramBuffer.addValueParam("v1", ParamType::TGLuint, v1);
     paramBuffer.addValueParam("v2", ParamType::TGLuint, v2);
     paramBuffer.addValueParam("v3", ParamType::TGLuint, v3);
 
-    frameCapture->captureCall(context, "glUniform4ui", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform4ui", std::move(paramBuffer));
 }
 
-void CaptureUniform4uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+CallCapture CaptureUniform4uiv(const Context *context,
+                               bool isCallValid,
+                               GLint location,
+                               GLsizei count,
+                               const GLuint *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniform4uiv(context, location, count, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
     ParamCapture valueParam("value", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, value, &valueParam.value);
-    CaptureUniform4uiv_value(context, location, count, value, isCallValid, &valueParam);
+    CaptureUniform4uiv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniform4uiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniform4uiv", std::move(paramBuffer));
 }
 
-void CaptureUniformBlockBinding(Context *context,
-                                GLuint program,
-                                GLuint uniformBlockIndex,
-                                GLuint uniformBlockBinding)
+CallCapture CaptureUniformBlockBinding(const Context *context,
+                                       bool isCallValid,
+                                       GLuint program,
+                                       GLuint uniformBlockIndex,
+                                       GLuint uniformBlockBinding)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateUniformBlockBinding(context, program, uniformBlockIndex, uniformBlockBinding);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
     paramBuffer.addValueParam("uniformBlockBinding", ParamType::TGLuint, uniformBlockBinding);
 
-    frameCapture->captureCall(context, "glUniformBlockBinding", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glUniformBlockBinding", std::move(paramBuffer));
 }
 
-void CaptureUniformMatrix2x3fv(Context *context,
-                               GLint location,
-                               GLsizei count,
-                               GLboolean transpose,
-                               const GLfloat *value)
+CallCapture CaptureUniformMatrix2x3fv(const Context *context,
+                                      bool isCallValid,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniformMatrix2x3fv(context, location, count, transpose, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("transpose", ParamType::TGLboolean, transpose);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureUniformMatrix2x3fv_value(context, location, count, transpose, value, isCallValid,
+    CaptureUniformMatrix2x3fv_value(context, isCallValid, location, count, transpose, value,
                                     &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniformMatrix2x3fv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniformMatrix2x3fv", std::move(paramBuffer));
 }
 
-void CaptureUniformMatrix2x4fv(Context *context,
-                               GLint location,
-                               GLsizei count,
-                               GLboolean transpose,
-                               const GLfloat *value)
+CallCapture CaptureUniformMatrix2x4fv(const Context *context,
+                                      bool isCallValid,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniformMatrix2x4fv(context, location, count, transpose, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("transpose", ParamType::TGLboolean, transpose);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureUniformMatrix2x4fv_value(context, location, count, transpose, value, isCallValid,
+    CaptureUniformMatrix2x4fv_value(context, isCallValid, location, count, transpose, value,
                                     &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniformMatrix2x4fv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniformMatrix2x4fv", std::move(paramBuffer));
 }
 
-void CaptureUniformMatrix3x2fv(Context *context,
-                               GLint location,
-                               GLsizei count,
-                               GLboolean transpose,
-                               const GLfloat *value)
+CallCapture CaptureUniformMatrix3x2fv(const Context *context,
+                                      bool isCallValid,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniformMatrix3x2fv(context, location, count, transpose, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("transpose", ParamType::TGLboolean, transpose);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureUniformMatrix3x2fv_value(context, location, count, transpose, value, isCallValid,
+    CaptureUniformMatrix3x2fv_value(context, isCallValid, location, count, transpose, value,
                                     &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniformMatrix3x2fv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniformMatrix3x2fv", std::move(paramBuffer));
 }
 
-void CaptureUniformMatrix3x4fv(Context *context,
-                               GLint location,
-                               GLsizei count,
-                               GLboolean transpose,
-                               const GLfloat *value)
+CallCapture CaptureUniformMatrix3x4fv(const Context *context,
+                                      bool isCallValid,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniformMatrix3x4fv(context, location, count, transpose, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("transpose", ParamType::TGLboolean, transpose);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureUniformMatrix3x4fv_value(context, location, count, transpose, value, isCallValid,
+    CaptureUniformMatrix3x4fv_value(context, isCallValid, location, count, transpose, value,
                                     &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniformMatrix3x4fv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniformMatrix3x4fv", std::move(paramBuffer));
 }
 
-void CaptureUniformMatrix4x2fv(Context *context,
-                               GLint location,
-                               GLsizei count,
-                               GLboolean transpose,
-                               const GLfloat *value)
+CallCapture CaptureUniformMatrix4x2fv(const Context *context,
+                                      bool isCallValid,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniformMatrix4x2fv(context, location, count, transpose, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("transpose", ParamType::TGLboolean, transpose);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureUniformMatrix4x2fv_value(context, location, count, transpose, value, isCallValid,
+    CaptureUniformMatrix4x2fv_value(context, isCallValid, location, count, transpose, value,
                                     &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniformMatrix4x2fv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniformMatrix4x2fv", std::move(paramBuffer));
 }
 
-void CaptureUniformMatrix4x3fv(Context *context,
-                               GLint location,
-                               GLsizei count,
-                               GLboolean transpose,
-                               const GLfloat *value)
+CallCapture CaptureUniformMatrix4x3fv(const Context *context,
+                                      bool isCallValid,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUniformMatrix4x3fv(context, location, count, transpose, value);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
     paramBuffer.addValueParam("transpose", ParamType::TGLboolean, transpose);
 
     ParamCapture valueParam("value", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, value, &valueParam.value);
-    CaptureUniformMatrix4x3fv_value(context, location, count, transpose, value, isCallValid,
+    CaptureUniformMatrix4x3fv_value(context, isCallValid, location, count, transpose, value,
                                     &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    frameCapture->captureCall(context, "glUniformMatrix4x3fv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUniformMatrix4x3fv", std::move(paramBuffer));
 }
 
-void CaptureUnmapBuffer(Context *context, BufferBinding targetPacked)
+CallCapture CaptureUnmapBuffer(const Context *context, bool isCallValid, BufferBinding targetPacked)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateUnmapBuffer(context, targetPacked);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
 
-    frameCapture->captureCall(context, "glUnmapBuffer", std::move(paramBuffer), isCallValid);
+    return CallCapture("glUnmapBuffer", std::move(paramBuffer));
 }
 
-void CaptureVertexAttribDivisor(Context *context, GLuint index, GLuint divisor)
+CallCapture CaptureVertexAttribDivisor(const Context *context,
+                                       bool isCallValid,
+                                       GLuint index,
+                                       GLuint divisor)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateVertexAttribDivisor(context, index, divisor);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("divisor", ParamType::TGLuint, divisor);
 
-    frameCapture->captureCall(context, "glVertexAttribDivisor", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glVertexAttribDivisor", std::move(paramBuffer));
 }
 
-void CaptureVertexAttribI4i(Context *context, GLuint index, GLint x, GLint y, GLint z, GLint w)
+CallCapture CaptureVertexAttribI4i(const Context *context,
+                                   bool isCallValid,
+                                   GLuint index,
+                                   GLint x,
+                                   GLint y,
+                                   GLint z,
+                                   GLint w)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateVertexAttribI4i(context, index, x, y, z, w);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("x", ParamType::TGLint, x);
     paramBuffer.addValueParam("y", ParamType::TGLint, y);
     paramBuffer.addValueParam("z", ParamType::TGLint, z);
     paramBuffer.addValueParam("w", ParamType::TGLint, w);
 
-    frameCapture->captureCall(context, "glVertexAttribI4i", std::move(paramBuffer), isCallValid);
+    return CallCapture("glVertexAttribI4i", std::move(paramBuffer));
 }
 
-void CaptureVertexAttribI4iv(Context *context, GLuint index, const GLint *v)
+CallCapture CaptureVertexAttribI4iv(const Context *context,
+                                    bool isCallValid,
+                                    GLuint index,
+                                    const GLint *v)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateVertexAttribI4iv(context, index, v);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
     ParamCapture vParam("v", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, v, &vParam.value);
-    CaptureVertexAttribI4iv_v(context, index, v, isCallValid, &vParam);
+    CaptureVertexAttribI4iv_v(context, isCallValid, index, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
-    frameCapture->captureCall(context, "glVertexAttribI4iv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glVertexAttribI4iv", std::move(paramBuffer));
 }
 
-void CaptureVertexAttribI4ui(Context *context, GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+CallCapture CaptureVertexAttribI4ui(const Context *context,
+                                    bool isCallValid,
+                                    GLuint index,
+                                    GLuint x,
+                                    GLuint y,
+                                    GLuint z,
+                                    GLuint w)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateVertexAttribI4ui(context, index, x, y, z, w);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("x", ParamType::TGLuint, x);
     paramBuffer.addValueParam("y", ParamType::TGLuint, y);
     paramBuffer.addValueParam("z", ParamType::TGLuint, z);
     paramBuffer.addValueParam("w", ParamType::TGLuint, w);
 
-    frameCapture->captureCall(context, "glVertexAttribI4ui", std::move(paramBuffer), isCallValid);
+    return CallCapture("glVertexAttribI4ui", std::move(paramBuffer));
 }
 
-void CaptureVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v)
+CallCapture CaptureVertexAttribI4uiv(const Context *context,
+                                     bool isCallValid,
+                                     GLuint index,
+                                     const GLuint *v)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateVertexAttribI4uiv(context, index, v);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
     ParamCapture vParam("v", ParamType::TGLuintConstPointer);
     InitParamValue(ParamType::TGLuintConstPointer, v, &vParam.value);
-    CaptureVertexAttribI4uiv_v(context, index, v, isCallValid, &vParam);
+    CaptureVertexAttribI4uiv_v(context, isCallValid, index, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
-    frameCapture->captureCall(context, "glVertexAttribI4uiv", std::move(paramBuffer), isCallValid);
+    return CallCapture("glVertexAttribI4uiv", std::move(paramBuffer));
 }
 
-void CaptureVertexAttribIPointer(Context *context,
-                                 GLuint index,
-                                 GLint size,
-                                 VertexAttribType typePacked,
-                                 GLsizei stride,
-                                 const void *pointer)
+CallCapture CaptureVertexAttribIPointer(const Context *context,
+                                        bool isCallValid,
+                                        GLuint index,
+                                        GLint size,
+                                        VertexAttribType typePacked,
+                                        GLsizei stride,
+                                        const void *pointer)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid =
-        ValidateVertexAttribIPointer(context, index, size, typePacked, stride, pointer);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("size", ParamType::TGLint, size);
     paramBuffer.addValueParam("typePacked", ParamType::TVertexAttribType, typePacked);
@@ -2195,27 +1936,26 @@ void CaptureVertexAttribIPointer(Context *context,
 
     ParamCapture pointerParam("pointer", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, pointer, &pointerParam.value);
-    CaptureVertexAttribIPointer_pointer(context, index, size, typePacked, stride, pointer,
-                                        isCallValid, &pointerParam);
+    CaptureVertexAttribIPointer_pointer(context, isCallValid, index, size, typePacked, stride,
+                                        pointer, &pointerParam);
     paramBuffer.addParam(std::move(pointerParam));
 
-    frameCapture->captureCall(context, "glVertexAttribIPointer", std::move(paramBuffer),
-                              isCallValid);
+    return CallCapture("glVertexAttribIPointer", std::move(paramBuffer));
 }
 
-void CaptureWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
+CallCapture CaptureWaitSync(const Context *context,
+                            bool isCallValid,
+                            GLsync sync,
+                            GLbitfield flags,
+                            GLuint64 timeout)
 {
-    FrameCapture *frameCapture = context->getFrameCapture();
-    if (!frameCapture->enabled())
-        return;
-
-    bool isCallValid = ValidateWaitSync(context, sync, flags, timeout);
     ParamBuffer paramBuffer;
+
     paramBuffer.addValueParam("sync", ParamType::TGLsync, sync);
     paramBuffer.addValueParam("flags", ParamType::TGLbitfield, flags);
     paramBuffer.addValueParam("timeout", ParamType::TGLuint64, timeout);
 
-    frameCapture->captureCall(context, "glWaitSync", std::move(paramBuffer), isCallValid);
+    return CallCapture("glWaitSync", std::move(paramBuffer));
 }
 
 }  // namespace gl
