@@ -794,8 +794,15 @@ void StateManager11::setShaderResourceInternal(gl::ShaderType shaderType,
                 deviceContext->PSSetShaderResources(resourceSlot, 1, &srvPtr);
                 break;
             case gl::ShaderType::Compute:
+            {
+                if (srvPtr)
+                {
+                    uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(srvPtr));
+                    unsetConflictingRTVs(resource);
+                }
                 deviceContext->CSSetShaderResources(resourceSlot, 1, &srvPtr);
                 break;
+            }
             default:
                 UNREACHABLE();
         }
@@ -1722,6 +1729,8 @@ void StateManager11::setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthSte
     }
 
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &rtv, dsv);
+    mCurRTVs.clear();
+    mCurRTVs.update(0, rtv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
@@ -1740,6 +1749,11 @@ void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
     }
 
     mRenderer->getDeviceContext()->OMSetRenderTargets(numRTVs, (numRTVs > 0) ? rtvs : nullptr, dsv);
+    mCurRTVs.clear();
+    for (UINT i = 0; i < numRTVs; i++)
+    {
+        mCurRTVs.update(i, rtvs[i]);
+    }
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
@@ -1866,6 +1880,24 @@ void StateManager11::unsetConflictingUAVs(gl::PipelineType pipeline,
     }
 }
 
+void StateManager11::unsetConflictingRTVs(uintptr_t resource)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    size_t count                       = std::min(mCurRTVs.size(), mCurRTVs.highestUsed());
+    for (size_t resourceIndex = 0; resourceIndex < count; ++resourceIndex)
+    {
+        auto &record = mCurRTVs[resourceIndex];
+
+        if (record.view && record.resource == resource)
+        {
+            deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+            mCurRTVs.clear();
+            mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
+            return;
+        }
+    }
+}
+
 void StateManager11::unsetConflictingAttachmentResources(
     const gl::FramebufferAttachment &attachment,
     ID3D11Resource *resource)
@@ -1915,7 +1947,7 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
         mForceSetShaderSamplerStates[shaderType].resize(maxShaderTextureImageUnits, true);
         mCurShaderSamplerStates[shaderType].resize(maxShaderTextureImageUnits);
     }
-
+    mCurRTVs.initialize(caps.maxColorAttachments);
     mCurComputeUAVs.initialize(caps.maxImageUnits);
 
     // Initialize cached NULL SRV block
@@ -2026,7 +2058,11 @@ angle::Result StateManager11::syncFramebuffer(const gl::Context *context)
     // Apply the render target and depth stencil
     mRenderer->getDeviceContext()->OMSetRenderTargets(maxExistingRT, framebufferRTVs.data(),
                                                       framebufferDSV);
-
+    mCurRTVs.clear();
+    for (UINT i = 0; i < maxExistingRT; i++)
+    {
+        mCurRTVs.update(i, framebufferRTVs[i]);
+    }
     return angle::Result::Continue;
 }
 

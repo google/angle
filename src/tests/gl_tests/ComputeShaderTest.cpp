@@ -2962,6 +2962,107 @@ void main()
     EXPECT_EQ(expectedValue, outputValues);
 }
 
+// Test that a resource is bound on render pipeline output, and then it's bound as the compute
+// pipeline input. It works well. See http://anglebug.com/3658
+TEST_P(ComputeShaderTest, DrawTexture1DispatchTexture2)
+{
+    const char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+precision highp sampler2D;
+uniform sampler2D tex;
+layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
+void main()
+{
+    vec4 value = texelFetch(tex, ivec2(gl_LocalInvocationID.xy), 0);
+    imageStore(image, ivec2(gl_LocalInvocationID.xy), vec4(value.x - 1.0, 1.0, 0.0, value.w - 1.0));
+})";
+
+    const char kVSSource[] = R"(#version 310 es
+layout (location = 0) in vec2 pos;
+out vec2 texCoord;
+void main(void) {
+    texCoord = 0.5*pos + 0.5;
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    const char kFSSource[] = R"(#version 310 es
+precision highp float;
+uniform sampler2D tex;
+in vec2 texCoord;
+out vec4 fragColor;
+void main(void) {
+    fragColor = texture(tex, texCoord);
+})";
+
+    GLuint aPosLoc = 0;
+    ANGLE_GL_PROGRAM(program, kVSSource, kFSSource);
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glBindAttribLocation(program, aPosLoc, "pos");
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(aPosLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(aPosLoc);
+
+    constexpr GLfloat kInputValues[4] = {1.0, 0.0, 0.0, 1.0};
+    constexpr GLfloat kZero[4]        = {0.0, 0.0, 0.0, 0.0};
+    GLFramebuffer framebuffer;
+    GLTexture texture[3];
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, kInputValues);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, kZero);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, kZero);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glUseProgram(program);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glUniform1i(glGetUniformLocation(program, "tex"), 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture[1], 0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_GL_NO_ERROR();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    GLfloat actual[4];
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_FLOAT, actual);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1.0, actual[0]);
+    EXPECT_EQ(0.0, actual[1]);
+    EXPECT_EQ(0.0, actual[2]);
+    EXPECT_EQ(1.0, actual[3]);
+
+    glUseProgram(csProgram);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glUniform1i(glGetUniformLocation(program, "tex"), 0);
+    glBindImageTexture(0, texture[2], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture[2], 0);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_FLOAT, actual);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(0.0, actual[0]);
+    EXPECT_EQ(1.0, actual[1]);
+    EXPECT_EQ(0.0, actual[2]);
+    EXPECT_EQ(0.0, actual[3]);
+}
+
 // Test that render pipeline and compute pipeline access to the same texture.
 // Steps:
 //   1. DispatchCompute.

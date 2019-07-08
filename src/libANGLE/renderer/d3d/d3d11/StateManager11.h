@@ -307,6 +307,7 @@ class StateManager11 final : angle::NonCopyable
                               gl::ShaderType shaderType,
                               uintptr_t resource,
                               const gl::ImageIndex *index);
+    void unsetConflictingRTVs(uintptr_t resource);
 
     void unsetConflictingAttachmentResources(const gl::FramebufferAttachment &attachment,
                                              ID3D11Resource *resource);
@@ -535,8 +536,11 @@ class StateManager11 final : angle::NonCopyable
 
     using SRVCache = ViewCache<ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC>;
     using UAVCache = ViewCache<ID3D11UnorderedAccessView, D3D11_UNORDERED_ACCESS_VIEW_DESC>;
+    using RTVCache = ViewCache<ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC>;
     gl::ShaderMap<SRVCache> mCurShaderSRVs;
     UAVCache mCurComputeUAVs;
+    RTVCache mCurRTVs;
+
     SRVCache *getSRVCache(gl::ShaderType shaderType);
 
     // A block of NULL pointers, cached so we don't re-allocate every draw call
