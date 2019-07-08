@@ -16,6 +16,24 @@
       "revId": "c367cb59618e80fbb6f2119af1919f57b19a5814",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd83d97e_269c673c",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-08T18:58:06Z",
+      "side": 1,
+      "message": "I investigated this a bit (with the GL backend) and looks like there is an actual bug in the way these qualifiers are handled for SSBO. The code that handles SSBO is setting the qualifier on the \"fields\" of the buffer instead of the buffer itself!\n\nI opened a bug to track this issue and fix it in a separate change if that\u0027s ok.",
+      "parentUuid": "085776e2_42e49b7c",
+      "revId": "c367cb59618e80fbb6f2119af1919f57b19a5814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
