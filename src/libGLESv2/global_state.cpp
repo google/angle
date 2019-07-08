@@ -147,14 +147,18 @@ bool DeallocateCurrentThread()
     return SetTLSValue(threadTLS, nullptr);
 }
 
-void DealocateDebug()
+void DeallocateDebug()
 {
     SafeDelete(g_Debug);
 }
 
-void DealocateMutex()
+void DeallocateMutex()
 {
     std::mutex *mutex = g_Mutex.exchange(nullptr);
+    {
+        // Wait for the mutex to become released by other threads before deleting.
+        std::lock_guard<std::mutex> lock(*mutex);
+    }
     SafeDelete(mutex);
 }
 
@@ -176,9 +180,9 @@ bool InitializeProcess()
 
 bool TerminateProcess()
 {
-    DealocateDebug();
+    DeallocateDebug();
 
-    DealocateMutex();
+    DeallocateMutex();
 
     if (!DeallocateCurrentThread())
     {
