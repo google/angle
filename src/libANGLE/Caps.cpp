@@ -29,13 +29,7 @@ static void InsertExtensionString(const std::string &extension,
 namespace gl
 {
 
-TextureCaps::TextureCaps()
-    : texturable(false),
-      filterable(false),
-      textureAttachment(false),
-      renderbuffer(false),
-      sampleCounts()
-{}
+TextureCaps::TextureCaps() = default;
 
 TextureCaps::TextureCaps(const TextureCaps &other) = default;
 
@@ -138,136 +132,7 @@ void InitMinimumTextureCapsMap(const Version &clientVersion,
     }
 }
 
-Extensions::Extensions()
-    : elementIndexUint(false),
-      packedDepthStencil(false),
-      getProgramBinary(false),
-      rgb8rgba8(false),
-      textureFormatBGRA8888(false),
-      readFormatBGRA(false),
-      pixelBufferObject(false),
-      mapBuffer(false),
-      mapBufferRange(false),
-      colorBufferHalfFloat(false),
-      textureHalfFloat(false),
-      textureHalfFloatLinear(false),
-      textureFloat(false),
-      textureFloatLinear(false),
-      textureRG(false),
-      textureCompressionDXT1(false),
-      textureCompressionDXT3(false),
-      textureCompressionDXT5(false),
-      textureCompressionS3TCsRGB(false),
-      textureCompressionASTCHDR(false),
-      textureCompressionASTCLDR(false),
-      textureCompressionBPTC(false),
-      compressedETC1RGB8Texture(false),
-      compressedETC2RGB8Texture(false),
-      compressedETC2sRGB8Texture(false),
-      compressedETC2PunchthroughARGB8Texture(false),
-      compressedETC2PunchthroughAsRGB8AlphaTexture(false),
-      compressedETC2RGBA8Texture(false),
-      compressedETC2sRGB8Alpha8Texture(false),
-      compressedEACR11UnsignedTexture(false),
-      compressedEACR11SignedTexture(false),
-      compressedEACRG11UnsignedTexture(false),
-      compressedEACRG11SignedTexture(false),
-      compressedTextureETC(false),
-      sRGB(false),
-      depthTextureANGLE(false),
-      depthTextureOES(false),
-      depth24OES(false),
-      depth32(false),
-      texture3DOES(false),
-      textureStorage(false),
-      textureNPOT(false),
-      drawBuffers(false),
-      textureFilterAnisotropic(false),
-      maxTextureAnisotropy(0.0f),
-      occlusionQueryBoolean(false),
-      fence(false),
-      disjointTimerQuery(false),
-      queryCounterBitsTimeElapsed(0),
-      queryCounterBitsTimestamp(0),
-      robustness(false),
-      robustBufferAccessBehavior(false),
-      blendMinMax(false),
-      framebufferBlit(false),
-      framebufferMultisample(false),
-      instancedArraysANGLE(false),
-      instancedArraysEXT(false),
-      packReverseRowOrder(false),
-      standardDerivatives(false),
-      shaderTextureLOD(false),
-      fragDepth(false),
-      multiview(false),
-      maxViews(1u),
-      multiview2(false),
-      textureUsage(false),
-      translatedShaderSource(false),
-      fboRenderMipmap(false),
-      discardFramebuffer(false),
-      debugMarker(false),
-      eglImage(false),
-      eglImageExternal(false),
-      eglImageExternalEssl3(false),
-      eglSync(false),
-      memoryObject(false),
-      memoryObjectFd(false),
-      semaphore(false),
-      semaphoreFd(false),
-      eglStreamConsumerExternal(false),
-      unpackSubimage(false),
-      packSubimage(false),
-      vertexArrayObject(false),
-      debug(false),
-      maxDebugMessageLength(0),
-      maxDebugLoggedMessages(0),
-      maxDebugGroupStackDepth(0),
-      maxLabelLength(0),
-      noError(false),
-      lossyETCDecode(false),
-      bindUniformLocation(false),
-      syncQuery(false),
-      copyTexture(false),
-      copyCompressedTexture(false),
-      copyTexture3d(false),
-      webglCompatibility(false),
-      requestExtension(false),
-      bindGeneratesResource(false),
-      robustClientMemory(false),
-      textureBorderClamp(false),
-      textureSRGBDecode(false),
-      sRGBWriteControl(false),
-      colorBufferFloatRGB(false),
-      colorBufferFloatRGBA(false),
-      colorBufferFloat(false),
-      multisampleCompatibility(false),
-      framebufferMixedSamples(false),
-      textureNorm16(false),
-      pathRendering(false),
-      surfacelessContext(false),
-      clientArrays(false),
-      robustResourceInitialization(false),
-      programCacheControl(false),
-      textureRectangle(false),
-      geometryShader(false),
-      pointSizeArray(false),
-      textureCubeMap(false),
-      pointSprite(false),
-      drawTexture(false),
-      explicitContextGles1(false),
-      explicitContext(false),
-      parallelShaderCompile(false),
-      textureStorageMultisample2DArray(false),
-      multiviewMultisample(false),
-      blendFuncExtended(false),
-      maxDualSourceDrawBuffers(0),
-      floatBlend(false),
-      memorySize(false),
-      textureMultisample(false),
-      multiDraw(false)
-{}
+Extensions::Extensions() = default;
 
 Extensions::Extensions(const Extensions &other) = default;
 
@@ -286,17 +151,7 @@ std::vector<std::string> Extensions::getStrings() const
     return extensionStrings;
 }
 
-Limitations::Limitations()
-    : noFrontFacingSupport(false),
-      noSampleAlphaToCoverageSupport(false),
-      attributeZeroRequiresZeroDivisorInEXT(false),
-      noSeparateStencilRefsAndMasks(false),
-      shadersRequireIndexedLoopValidation(false),
-      noSimultaneousConstantColorAndAlphaBlendFunc(false),
-      noFlexibleVaryingPacking(false),
-      noDoubleBoundTransformFeedbackBuffers(false),
-      noVertexAttributeAliasing(false)
-{}
+Limitations::Limitations() = default;
 
 static bool GetFormatSupportBase(const TextureCapsMap &textureCaps,
                                  const GLenum *requiredFormats,
@@ -971,7 +826,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
     return extensionInfo;
 }
 
-TypePrecision::TypePrecision() : range({{0, 0}}), precision(0) {}
+TypePrecision::TypePrecision() = default;
 
 TypePrecision::TypePrecision(const TypePrecision &other) = default;
 
@@ -1005,136 +860,7 @@ void TypePrecision::get(GLint *returnRange, GLint *returnPrecision) const
     *returnPrecision = precision;
 }
 
-Caps::Caps()
-    : maxElementIndex(0),
-      max3DTextureSize(0),
-      max2DTextureSize(0),
-      maxRectangleTextureSize(0),
-      maxArrayTextureLayers(0),
-      maxLODBias(0),
-      maxCubeMapTextureSize(0),
-      maxRenderbufferSize(0),
-      minAliasedPointSize(1.0f),
-      maxAliasedPointSize(1.0f),
-      minAliasedLineWidth(0),
-      maxAliasedLineWidth(0),
-
-      // Table 20.40
-      maxDrawBuffers(0),
-      maxFramebufferWidth(0),
-      maxFramebufferHeight(0),
-      maxFramebufferSamples(0),
-      maxColorAttachments(0),
-      maxViewportWidth(0),
-      maxViewportHeight(0),
-      maxSampleMaskWords(0),
-      maxColorTextureSamples(0),
-      maxDepthTextureSamples(0),
-      maxIntegerSamples(0),
-      maxServerWaitTimeout(0),
-
-      // Table 20.41
-      maxVertexAttribRelativeOffset(0),
-      maxVertexAttribBindings(0),
-      maxVertexAttribStride(0),
-      maxElementsIndices(0),
-      maxElementsVertices(0),
-
-      // Table 20.43
-      // Table 20.44
-      // Table 20.45
-      // Table 20.43gs (GL_EXT_geometry_shader)
-      // Table 20.46 (GL_EXT_geometry_shader)
-      maxShaderUniformBlocks({}),
-      maxShaderTextureImageUnits({}),
-      maxShaderStorageBlocks({}),
-      maxShaderUniformComponents({}),
-      maxShaderAtomicCounterBuffers({}),
-      maxShaderAtomicCounters({}),
-      maxShaderImageUniforms({}),
-      maxCombinedShaderUniformComponents({}),
-
-      // Table 20.43
-      maxVertexAttributes(0),
-      maxVertexUniformVectors(0),
-      maxVertexOutputComponents(0),
-
-      // Table 20.44
-      maxFragmentUniformVectors(0),
-      maxFragmentInputComponents(0),
-      minProgramTextureGatherOffset(0),
-      maxProgramTextureGatherOffset(0),
-      minProgramTexelOffset(0),
-      maxProgramTexelOffset(0),
-
-      // Table 20.45
-      maxComputeWorkGroupInvocations(0),
-      maxComputeSharedMemorySize(0),
-
-      // Table 20.46
-      maxUniformBufferBindings(0),
-      maxUniformBlockSize(0),
-      uniformBufferOffsetAlignment(0),
-      maxCombinedUniformBlocks(0),
-      maxVaryingComponents(0),
-      maxVaryingVectors(0),
-      maxCombinedTextureImageUnits(0),
-      maxCombinedShaderOutputResources(0),
-
-      // Table 20.47
-      maxUniformLocations(0),
-      maxAtomicCounterBufferBindings(0),
-      maxAtomicCounterBufferSize(0),
-      maxCombinedAtomicCounterBuffers(0),
-      maxCombinedAtomicCounters(0),
-      maxImageUnits(0),
-      maxCombinedImageUniforms(0),
-      maxShaderStorageBufferBindings(0),
-      maxShaderStorageBlockSize(0),
-      maxCombinedShaderStorageBlocks(0),
-      shaderStorageBufferOffsetAlignment(0),
-
-      // Table 20.48
-      maxTransformFeedbackInterleavedComponents(0),
-      maxTransformFeedbackSeparateAttributes(0),
-      maxTransformFeedbackSeparateComponents(0),
-
-      // Table 20.49
-      maxSamples(0),
-
-      // Table 20.40 (cont.) (GL_EXT_geometry_shader)
-      maxFramebufferLayers(0),
-      layerProvokingVertex(0),
-
-      // Table 20.43gs (GL_EXT_geometry_shader)
-      maxGeometryInputComponents(0),
-      maxGeometryOutputComponents(0),
-      maxGeometryOutputVertices(0),
-      maxGeometryTotalOutputComponents(0),
-      maxGeometryShaderInvocations(0),
-
-      subPixelBits(4),
-
-      // GLES1 emulation: Table 6.20 / 6.22 (ES 1.1 spec)
-      maxMultitextureUnits(0),
-      maxClipPlanes(0),
-      maxLights(0),
-      maxModelviewMatrixStackDepth(0),
-      maxProjectionMatrixStackDepth(0),
-      maxTextureMatrixStackDepth(0),
-      minSmoothPointSize(0),
-      maxSmoothPointSize(0),
-      minSmoothLineWidth(0),
-      maxSmoothLineWidth(0)
-
-{
-    for (size_t i = 0; i < 3; ++i)
-    {
-        maxComputeWorkGroupCount[i] = 0;
-        maxComputeWorkGroupSize[i]  = 0;
-    }
-}
-
+Caps::Caps()                  = default;
 Caps::Caps(const Caps &other) = default;
 Caps::~Caps()                 = default;
 
@@ -1376,58 +1102,9 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
 namespace egl
 {
 
-Caps::Caps() : textureNPOT(false) {}
+Caps::Caps() = default;
 
-DisplayExtensions::DisplayExtensions()
-    : createContextRobustness(false),
-      d3dShareHandleClientBuffer(false),
-      d3dTextureClientBuffer(false),
-      surfaceD3DTexture2DShareHandle(false),
-      querySurfacePointer(false),
-      windowFixedSize(false),
-      keyedMutex(false),
-      surfaceOrientation(false),
-      postSubBuffer(false),
-      createContext(false),
-      deviceQuery(false),
-      image(false),
-      imageBase(false),
-      imagePixmap(false),
-      glTexture2DImage(false),
-      glTextureCubemapImage(false),
-      glTexture3DImage(false),
-      glRenderbufferImage(false),
-      getAllProcAddresses(false),
-      flexibleSurfaceCompatibility(false),
-      directComposition(false),
-      windowsUIComposition(false),
-      createContextNoError(false),
-      stream(false),
-      streamConsumerGLTexture(false),
-      streamConsumerGLTextureYUV(false),
-      streamProducerD3DTexture(false),
-      fenceSync(false),
-      waitSync(false),
-      createContextWebGLCompatibility(false),
-      createContextBindGeneratesResource(false),
-      getSyncValues(false),
-      swapBuffersWithDamage(false),
-      pixelFormatFloat(false),
-      surfacelessContext(false),
-      displayTextureShareGroup(false),
-      createContextClientArrays(false),
-      programCacheControl(false),
-      robustResourceInitialization(false),
-      iosurfaceClientBuffer(false),
-      createContextExtensionsEnabled(false),
-      presentationTime(false),
-      blobCache(false),
-      imageNativeBuffer(false),
-      getFrameTimestamps(false),
-      recordable(false),
-      powerPreference(false),
-      imageD3D11Texture(false)
-{}
+DisplayExtensions::DisplayExtensions() = default;
 
 std::vector<std::string> DisplayExtensions::getStrings() const
 {
@@ -1490,7 +1167,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     return extensionStrings;
 }
 
-DeviceExtensions::DeviceExtensions() : deviceD3D(false) {}
+DeviceExtensions::DeviceExtensions() = default;
 
 std::vector<std::string> DeviceExtensions::getStrings() const
 {
@@ -1504,25 +1181,7 @@ std::vector<std::string> DeviceExtensions::getStrings() const
     return extensionStrings;
 }
 
-ClientExtensions::ClientExtensions()
-    : clientExtensions(false),
-      platformBase(false),
-      platformDevice(false),
-      platformANGLE(false),
-      platformANGLED3D(false),
-      platformANGLEOpenGL(false),
-      platformANGLEVulkan(false),
-      platformANGLEContextVirtualization(false),
-      deviceCreation(false),
-      deviceCreationD3D11(false),
-      x11Visual(false),
-      experimentalPresentPath(false),
-      clientGetAllProcAddresses(false),
-      debug(false),
-      explicitContext(false),
-      featureControlANGLE(false)
-{}
-
+ClientExtensions::ClientExtensions()                              = default;
 ClientExtensions::ClientExtensions(const ClientExtensions &other) = default;
 
 std::vector<std::string> ClientExtensions::getStrings() const
