@@ -3601,12 +3601,12 @@ void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *valu
     const FramebufferAttachment *attachment = nullptr;
     if (buffer == GL_DEPTH)
     {
-        attachment = framebufferObject->getDepthbuffer();
+        attachment = framebufferObject->getDepthAttachment();
     }
     if (buffer == GL_COLOR &&
-        static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorBuffers())
+        static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorAttachments())
     {
-        attachment = framebufferObject->getColorbuffer(drawbuffer);
+        attachment = framebufferObject->getColorAttachment(drawbuffer);
     }
     // It's not an error to try to clear a non-existent buffer, but it's a no-op. We early out so
     // that the backend doesn't need to take this case into account.
@@ -3623,9 +3623,9 @@ void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *valu
     Framebuffer *framebufferObject          = mState.getDrawFramebuffer();
     const FramebufferAttachment *attachment = nullptr;
     if (buffer == GL_COLOR &&
-        static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorBuffers())
+        static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorAttachments())
     {
-        attachment = framebufferObject->getColorbuffer(drawbuffer);
+        attachment = framebufferObject->getColorAttachment(drawbuffer);
     }
     // It's not an error to try to clear a non-existent buffer, but it's a no-op. We early out so
     // that the backend doesn't need to take this case into account.
@@ -3643,12 +3643,12 @@ void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values
     const FramebufferAttachment *attachment = nullptr;
     if (buffer == GL_STENCIL)
     {
-        attachment = framebufferObject->getStencilbuffer();
+        attachment = framebufferObject->getStencilAttachment();
     }
     if (buffer == GL_COLOR &&
-        static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorBuffers())
+        static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorAttachments())
     {
-        attachment = framebufferObject->getColorbuffer(drawbuffer);
+        attachment = framebufferObject->getColorAttachment(drawbuffer);
     }
     // It's not an error to try to clear a non-existent buffer, but it's a no-op. We early out so
     // that the backend doesn't need to take this case into account.
@@ -3666,8 +3666,8 @@ void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLin
     ASSERT(framebufferObject);
 
     // If a buffer is not present, the clear has no effect
-    if (framebufferObject->getDepthbuffer() == nullptr &&
-        framebufferObject->getStencilbuffer() == nullptr)
+    if (framebufferObject->getDepthAttachment() == nullptr &&
+        framebufferObject->getStencilAttachment() == nullptr)
     {
         return;
     }

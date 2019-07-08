@@ -766,27 +766,27 @@ bool Framebuffer::detachMatchingAttachment(const Context *context,
     return false;
 }
 
-const FramebufferAttachment *Framebuffer::getColorbuffer(size_t colorAttachment) const
+const FramebufferAttachment *Framebuffer::getColorAttachment(size_t colorAttachment) const
 {
     return mState.getColorAttachment(colorAttachment);
 }
 
-const FramebufferAttachment *Framebuffer::getDepthbuffer() const
+const FramebufferAttachment *Framebuffer::getDepthAttachment() const
 {
     return mState.getDepthAttachment();
 }
 
-const FramebufferAttachment *Framebuffer::getStencilbuffer() const
+const FramebufferAttachment *Framebuffer::getStencilAttachment() const
 {
     return mState.getStencilAttachment();
 }
 
-const FramebufferAttachment *Framebuffer::getDepthStencilBuffer() const
+const FramebufferAttachment *Framebuffer::getDepthStencilAttachment() const
 {
     return mState.getDepthStencilAttachment();
 }
 
-const FramebufferAttachment *Framebuffer::getDepthOrStencilbuffer() const
+const FramebufferAttachment *Framebuffer::getDepthOrStencilAttachment() const
 {
     return mState.getDepthOrStencilAttachment();
 }
@@ -796,18 +796,18 @@ const FramebufferAttachment *Framebuffer::getStencilOrDepthStencilAttachment() c
     return mState.getStencilOrDepthStencilAttachment();
 }
 
-const FramebufferAttachment *Framebuffer::getReadColorbuffer() const
+const FramebufferAttachment *Framebuffer::getReadColorAttachment() const
 {
     return mState.getReadAttachment();
 }
 
-GLenum Framebuffer::getReadColorbufferType() const
+GLenum Framebuffer::getReadColorAttachmentType() const
 {
     const FramebufferAttachment *readAttachment = mState.getReadAttachment();
     return (readAttachment != nullptr ? readAttachment->type() : GL_NONE);
 }
 
-const FramebufferAttachment *Framebuffer::getFirstColorbuffer() const
+const FramebufferAttachment *Framebuffer::getFirstColorAttachment() const
 {
     return mState.getFirstColorAttachment();
 }
@@ -925,7 +925,7 @@ void Framebuffer::setReadBuffer(GLenum buffer)
     mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
 }
 
-size_t Framebuffer::getNumColorBuffers() const
+size_t Framebuffer::getNumColorAttachments() const
 {
     return mState.mColorAttachments.size();
 }
@@ -1913,8 +1913,8 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
         return false;
     }
 
-    const FramebufferAttachment *depth   = getDepthbuffer();
-    const FramebufferAttachment *stencil = getStencilbuffer();
+    const FramebufferAttachment *depth   = getDepthAttachment();
+    const FramebufferAttachment *stencil = getStencilAttachment();
 
     const bool checkDepth = depth && depth->type() == GL_TEXTURE;
     // Skip the feedback loop check for stencil if depth/stencil point to the same resource.
@@ -1978,7 +1978,7 @@ bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID,
         return false;
     }
 
-    const FramebufferAttachment *readAttachment = getReadColorbuffer();
+    const FramebufferAttachment *readAttachment = getReadColorAttachment();
     ASSERT(readAttachment);
 
     if (readAttachment->isTextureWithId(copyTextureID))

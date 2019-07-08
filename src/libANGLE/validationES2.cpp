@@ -492,7 +492,7 @@ bool ValidateES2CopyTexImageParameters(Context *context,
 
     const gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
     GLenum colorbufferFormat =
-        framebuffer->getReadColorbuffer()->getFormat().info->sizedInternalFormat;
+        framebuffer->getReadColorAttachment()->getFormat().info->sizedInternalFormat;
     const auto &formatInfo = *textureFormat.info;
 
     // [OpenGL ES 2.0.24] table 3.9
@@ -2663,8 +2663,10 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        const FramebufferAttachment *readColorAttachment = readFramebuffer->getReadColorbuffer();
-        const FramebufferAttachment *drawColorAttachment = drawFramebuffer->getFirstColorbuffer();
+        const FramebufferAttachment *readColorAttachment =
+            readFramebuffer->getReadColorAttachment();
+        const FramebufferAttachment *drawColorAttachment =
+            drawFramebuffer->getFirstColorAttachment();
 
         if (readColorAttachment && drawColorAttachment)
         {

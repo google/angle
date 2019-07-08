@@ -351,7 +351,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
                                           const gl::InternalFormat &internalFormat,
                                           gl::Framebuffer *source)
 {
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
     gl::Rectangle clippedSourceArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))

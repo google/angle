@@ -186,15 +186,15 @@ class Framebuffer final : public angle::ObserverInterface,
     bool detachTexture(const Context *context, GLuint texture);
     bool detachRenderbuffer(const Context *context, GLuint renderbuffer);
 
-    const FramebufferAttachment *getColorbuffer(size_t colorAttachment) const;
-    const FramebufferAttachment *getDepthbuffer() const;
-    const FramebufferAttachment *getStencilbuffer() const;
-    const FramebufferAttachment *getDepthStencilBuffer() const;
-    const FramebufferAttachment *getDepthOrStencilbuffer() const;
+    const FramebufferAttachment *getColorAttachment(size_t colorAttachment) const;
+    const FramebufferAttachment *getDepthAttachment() const;
+    const FramebufferAttachment *getStencilAttachment() const;
+    const FramebufferAttachment *getDepthStencilAttachment() const;
+    const FramebufferAttachment *getDepthOrStencilAttachment() const;
     const FramebufferAttachment *getStencilOrDepthStencilAttachment() const;
-    const FramebufferAttachment *getReadColorbuffer() const;
-    GLenum getReadColorbufferType() const;
-    const FramebufferAttachment *getFirstColorbuffer() const;
+    const FramebufferAttachment *getReadColorAttachment() const;
+    GLenum getReadColorAttachmentType() const;
+    const FramebufferAttachment *getFirstColorAttachment() const;
     const FramebufferAttachment *getFirstNonNullAttachment() const;
 
     const FramebufferAttachment *getAttachment(const Context *context, GLenum attachment) const;
@@ -216,7 +216,7 @@ class Framebuffer final : public angle::ObserverInterface,
     GLenum getReadBufferState() const;
     void setReadBuffer(GLenum buffer);
 
-    size_t getNumColorBuffers() const;
+    size_t getNumColorAttachments() const;
     bool hasDepth() const;
     bool hasStencil() const;
 

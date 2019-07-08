@@ -984,7 +984,7 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
     ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormatInfo.sizedInternalFormat,
                             sourceExtents, false));
 
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
 
     // Does the read area extend beyond the framebuffer?
     bool outside = sourceArea.x < 0 || sourceArea.y < 0 ||
@@ -1042,7 +1042,7 @@ angle::Result TextureD3D_2D::copySubImage(const gl::Context *context,
 {
     ASSERT(index.getTarget() == gl::TextureTarget::_2D && destOffset.z == 0);
 
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
     gl::Rectangle clippedArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
@@ -1734,7 +1734,7 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
     ANGLE_TRY(redefineImage(context, faceIndex, index.getLevelIndex(),
                             internalFormatInfo.sizedInternalFormat, size, false));
 
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
 
     // Does the read area extend beyond the framebuffer?
     bool outside = sourceArea.x < 0 || sourceArea.y < 0 ||
@@ -1792,7 +1792,7 @@ angle::Result TextureD3D_Cube::copySubImage(const gl::Context *context,
                                             const gl::Rectangle &sourceArea,
                                             gl::Framebuffer *source)
 {
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
     gl::Rectangle clippedArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
@@ -2509,7 +2509,7 @@ angle::Result TextureD3D_3D::copySubImage(const gl::Context *context,
 {
     ASSERT(index.getTarget() == gl::TextureTarget::_3D);
 
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
     gl::Rectangle clippedSourceArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))
@@ -3201,7 +3201,7 @@ angle::Result TextureD3D_2DArray::copySubImage(const gl::Context *context,
 {
     ASSERT(index.getTarget() == gl::TextureTarget::_2DArray);
 
-    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
     gl::Rectangle clippedSourceArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))

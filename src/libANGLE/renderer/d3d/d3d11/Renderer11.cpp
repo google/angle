@@ -2157,7 +2157,7 @@ angle::Result Renderer11::copyImageInternal(const gl::Context *context,
                                             const gl::Offset &destOffset,
                                             RenderTargetD3D *destRenderTarget)
 {
-    const gl::FramebufferAttachment *colorAttachment = framebuffer->getReadColorbuffer();
+    const gl::FramebufferAttachment *colorAttachment = framebuffer->getReadColorAttachment();
     ASSERT(colorAttachment);
 
     RenderTarget11 *sourceRenderTarget = nullptr;

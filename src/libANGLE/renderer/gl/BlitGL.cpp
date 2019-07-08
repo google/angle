@@ -406,7 +406,7 @@ angle::Result BlitGL::blitColorBufferWithShader(const gl::Context *context,
     gl::Rectangle sourceArea = sourceAreaIn.removeReversal();
     gl::Rectangle destArea   = destAreaIn.removeReversal();
 
-    const gl::FramebufferAttachment *readAttachment = source->getReadColorbuffer();
+    const gl::FramebufferAttachment *readAttachment = source->getReadColorAttachment();
     ASSERT(readAttachment->getSamples() <= 1);
 
     // Compute the part of the source that will be sampled.

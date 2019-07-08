@@ -373,7 +373,7 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
                                            const gl::Rectangle &sourceArea,
                                            const gl::Framebuffer *sourceFBO)
 {
-    const gl::FramebufferAttachment *srcAttachment = sourceFBO->getReadColorbuffer();
+    const gl::FramebufferAttachment *srcAttachment = sourceFBO->getReadColorAttachment();
     ASSERT(srcAttachment);
 
     GLenum sourceInternalFormat = srcAttachment->getFormat().info->sizedInternalFormat;

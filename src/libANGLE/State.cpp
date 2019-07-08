@@ -2217,7 +2217,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         case GL_ALPHA_BITS:
         {
             Framebuffer *framebuffer                 = getDrawFramebuffer();
-            const FramebufferAttachment *colorbuffer = framebuffer->getFirstColorbuffer();
+            const FramebufferAttachment *colorbuffer = framebuffer->getFirstColorAttachment();
 
             if (colorbuffer)
             {
@@ -2246,7 +2246,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         case GL_DEPTH_BITS:
         {
             const Framebuffer *framebuffer           = getDrawFramebuffer();
-            const FramebufferAttachment *depthbuffer = framebuffer->getDepthbuffer();
+            const FramebufferAttachment *depthbuffer = framebuffer->getDepthAttachment();
 
             if (depthbuffer)
             {
@@ -2261,7 +2261,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         case GL_STENCIL_BITS:
         {
             const Framebuffer *framebuffer             = getDrawFramebuffer();
-            const FramebufferAttachment *stencilbuffer = framebuffer->getStencilbuffer();
+            const FramebufferAttachment *stencilbuffer = framebuffer->getStencilAttachment();
 
             if (stencilbuffer)
             {

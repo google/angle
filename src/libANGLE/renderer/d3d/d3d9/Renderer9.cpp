@@ -1078,7 +1078,7 @@ angle::Result Renderer9::updateState(const gl::Context *context, gl::PrimitiveMo
     // the sample counts that we set in render target view, here we use renderTarget->getSamples to
     // get the actual samples.
     GLsizei samples                                       = 0;
-    const gl::FramebufferAttachment *firstColorAttachment = framebuffer->getFirstColorbuffer();
+    const gl::FramebufferAttachment *firstColorAttachment = framebuffer->getFirstColorAttachment();
     if (firstColorAttachment)
     {
         ASSERT(firstColorAttachment->isAttached());
@@ -1111,8 +1111,9 @@ angle::Result Renderer9::setBlendDepthRasterStates(const gl::Context *context,
     // Since framebuffer->getSamples will return the original samples which may be different with
     // the sample counts that we set in render target view, here we use renderTarget->getSamples to
     // get the actual samples.
-    GLsizei samples                                       = 0;
-    const gl::FramebufferAttachment *firstColorAttachment = drawFramebuffer->getFirstColorbuffer();
+    GLsizei samples = 0;
+    const gl::FramebufferAttachment *firstColorAttachment =
+        drawFramebuffer->getFirstColorAttachment();
     if (firstColorAttachment)
     {
         ASSERT(firstColorAttachment->isAttached());

@@ -229,7 +229,7 @@ angle::Result Blit9::copy2D(const gl::Context *context,
 
     ANGLE_TRY(initialize(context9));
 
-    const gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
+    const gl::FramebufferAttachment *colorbuffer = framebuffer->getColorAttachment(0);
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget9 = nullptr;
@@ -263,7 +263,7 @@ angle::Result Blit9::copyCube(const gl::Context *context,
 
     ANGLE_TRY(initialize(context9));
 
-    const gl::FramebufferAttachment *colorbuffer = framebuffer->getColorbuffer(0);
+    const gl::FramebufferAttachment *colorbuffer = framebuffer->getColorAttachment(0);
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget9 = nullptr;

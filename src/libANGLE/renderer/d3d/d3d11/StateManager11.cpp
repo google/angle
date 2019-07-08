@@ -851,7 +851,7 @@ void StateManager11::checkPresentPath(const gl::Context *context)
         return;
 
     const auto *framebuffer          = context->getState().getDrawFramebuffer();
-    const auto *firstColorAttachment = framebuffer->getFirstColorbuffer();
+    const auto *firstColorAttachment = framebuffer->getFirstColorAttachment();
     const bool presentPathFastActive = UsePresentPathFast(mRenderer, firstColorAttachment);
 
     const int colorBufferHeight = firstColorAttachment ? firstColorAttachment->getSize().height : 0;
@@ -1804,9 +1804,9 @@ void StateManager11::unsetConflictingSRVs(gl::PipelineType pipeline,
                                           const gl::ImageIndex *index,
                                           bool isRenderTarget)
 {
-    auto *currentSRVs = getSRVCache(shaderType);
+    auto *currentSRVs                 = getSRVCache(shaderType);
     gl::PipelineType conflictPipeline = gl::GetPipelineType(shaderType);
-    bool foundOne = false;
+    bool foundOne                     = false;
     size_t count                      = std::min(currentSRVs->size(), currentSRVs->highestUsed());
     for (size_t resourceIndex = 0; resourceIndex < count; ++resourceIndex)
     {

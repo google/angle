@@ -1329,7 +1329,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        const FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
+        const FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorAttachment();
         const Extensions &extensions                 = context->getExtensions();
 
         if (readColorBuffer)
@@ -2282,7 +2282,7 @@ bool ValidateStateQuery(Context *context, GLenum pname, GLenum *nativeType, unsi
                 return false;
             }
 
-            const FramebufferAttachment *attachment = readFramebuffer->getReadColorbuffer();
+            const FramebufferAttachment *attachment = readFramebuffer->getReadColorAttachment();
             if (!attachment)
             {
                 context->validationError(GL_INVALID_OPERATION, kReadBufferNotAttached);
@@ -2479,7 +2479,7 @@ bool ValidateCopyTexImageParametersBase(Context *context,
     // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
     // attachment and WebGL defines it to be an error. We do the check unconditionally as the
     // situation is an application error that would lead to a crash in ANGLE.
-    const FramebufferAttachment *source = readFramebuffer->getReadColorbuffer();
+    const FramebufferAttachment *source = readFramebuffer->getReadColorAttachment();
     if (source == nullptr)
     {
         context->validationError(GL_INVALID_OPERATION, kMissingReadAttachment);
@@ -5435,7 +5435,7 @@ bool ValidateReadPixelsBase(Context *context,
         return false;
     }
 
-    const FramebufferAttachment *readBuffer = framebuffer->getReadColorbuffer();
+    const FramebufferAttachment *readBuffer = framebuffer->getReadColorAttachment();
     // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
     // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
     // attachment and WebGL defines it to be an error. We do the check unconditionnaly as the

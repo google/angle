@@ -829,7 +829,7 @@ void StateManager9::setColorMask(const gl::Framebuffer *framebuffer,
 {
     // Set the color mask
 
-    const auto *attachment = framebuffer->getFirstColorbuffer();
+    const auto *attachment = framebuffer->getFirstColorAttachment();
     const auto &format     = attachment ? attachment->getFormat() : gl::Format::Invalid();
 
     DWORD colorMask = gl_d3d9::ConvertColorMask(
