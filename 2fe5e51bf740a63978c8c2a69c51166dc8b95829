@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "907b3f86_55a866dd",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-08T15:56:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbdd2aae_1aacc2f9",
+      "range": {
+        "startLine": 1168,
+        "startChar": 4,
+        "endLine": 1168,
+        "endChar": 13
+      },
+      "revId": "2fe5e51bf740a63978c8c2a69c51166dc8b95829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c377d7cc_85ea7e36",
         "filename": "src/openGL32/entry_points_gl_1_0_autogen.cpp",
         "patchSetId": 7
@@ -69,6 +93,30 @@
       "revId": "2fe5e51bf740a63978c8c2a69c51166dc8b95829",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abb5eef2_0bed9322",
+        "filename": "src/openGL32/entry_points_gl_1_0_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-08T15:56:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6707c276_4d08e9de",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 18
+      },
+      "revId": "2fe5e51bf740a63978c8c2a69c51166dc8b95829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
