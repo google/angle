@@ -16,6 +16,24 @@
       "revId": "ea6d05e0cf75c450b92b723ba1b445950f9a2c62",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3297187f_c4c862c4",
+        "filename": "src/libGLESv2/global_state.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-08T17:07:20Z",
+      "side": 1,
+      "message": "Sorry Shabi, is this a blocking issue? I assumed Geoff\u0027s change was non-controversial.",
+      "parentUuid": "8d20f524_4f9568c7",
+      "revId": "ea6d05e0cf75c450b92b723ba1b445950f9a2c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
