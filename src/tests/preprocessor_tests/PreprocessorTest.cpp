@@ -45,8 +45,13 @@ void SimplePreprocessorTest::preprocess(const char *input)
 
 void SimplePreprocessorTest::preprocess(const char *input, const char *expected)
 {
+    preprocess(input, expected, SH_GLES2_SPEC);
+}
+
+void SimplePreprocessorTest::preprocess(const char *input, const char *expected, ShShaderSpec spec)
+{
     pp::Preprocessor preprocessor(&mDiagnostics, &mDirectiveHandler,
-                                  pp::PreprocessorSettings(SH_GLES2_SPEC));
+                                  pp::PreprocessorSettings(spec));
     std::stringstream output;
     preprocess(input, &output, &preprocessor);
 

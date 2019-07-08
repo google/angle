@@ -58,6 +58,7 @@ class State : angle::NonCopyable
     State(ContextID contextIn,
           const State *shareContextState,
           TextureManager *shareTextures,
+          const EGLenum clientType,
           const Version &clientVersion,
           bool debug,
           bool bindGeneratesResource,
@@ -71,6 +72,7 @@ class State : angle::NonCopyable
 
     // Getters
     ContextID getContextID() const { return mContext; }
+    EGLenum getClientType() const { return mClientType; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
     GLint getClientMinorVersion() const { return mClientVersion.minor; }
     const Version &getClientVersion() const { return mClientVersion; }
@@ -722,6 +724,7 @@ class State : angle::NonCopyable
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
 
+    EGLenum mClientType;
     Version mClientVersion;
     ContextID mContext;
 

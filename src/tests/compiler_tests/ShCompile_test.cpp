@@ -226,3 +226,79 @@ TEST_F(ShCompileTest, DecimalSepLocale)
         }
     }
 }
+
+// For testing Desktop GL Shaders
+class ShCompileDesktopGLTest : public ShCompileTest
+{
+  public:
+    ShCompileDesktopGLTest() {}
+
+  protected:
+    void SetUp() override
+    {
+        sh::InitBuiltInResources(&mResources);
+        mCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, SH_GL3_3_SPEC,
+                                          SH_GLSL_330_CORE_OUTPUT, &mResources);
+        ASSERT_TRUE(mCompiler != nullptr) << "Compiler could not be constructed.";
+    }
+};
+
+// Test calling sh::Compile with fragment shader source string
+TEST_F(ShCompileDesktopGLTest, FragmentShaderString)
+{
+    constexpr char kComputeShaderString[] =
+        R"(#version 330
+        void main()
+        {
+        })";
+
+    const char *shaderStrings[] = {kComputeShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}
+
+// Test calling sh::Compile with core version
+TEST_F(ShCompileDesktopGLTest, FragmentShaderCoreVersion)
+{
+    constexpr char kComputeShaderString[] =
+        R"(#version 330 core
+        void main()
+        {
+        })";
+
+    const char *shaderStrings[] = {kComputeShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}
+
+// Test calling sh::Compile with core version
+TEST_F(ShCompileDesktopGLTest, DISABLED_FragmentShaderAdditionConversion)
+{
+    constexpr char kComputeShaderString[] =
+        R"(#version 330 core
+        void main()
+        {
+            float f = 1 + 1.5;
+        })";
+
+    const char *shaderStrings[] = {kComputeShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}
+
+// GL shaders use implicit conversions between types
+// Testing internal implicit conversions
+TEST_F(ShCompileDesktopGLTest, DISABLED_FragmentShaderFunctionConversion)
+{
+    constexpr char kFragmentShaderString[] =
+        R"(#version 330 core
+        void main()
+        {
+            float cosTheta = clamp(0.5,0,1);
+            float exp = pow(0.5,2);
+        })";
+
+    const char *shaderStrings[] = {kFragmentShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}

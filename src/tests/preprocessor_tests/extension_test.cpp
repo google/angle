@@ -90,7 +90,7 @@ TEST_F(ExtensionTest, ExtensionAfterNonPreProcessorTokenESSL3)
 
     using testing::_;
     // Directive successfully parsed.
-    EXPECT_CALL(mDirectiveHandler, handleVersion(pp::SourceLocation(0, 1), 300));
+    EXPECT_CALL(mDirectiveHandler, handleVersion(pp::SourceLocation(0, 1), 300, SH_GLES2_SPEC));
     // Expect an error about extension pragmas after non-preprocessor tokens.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_NON_PP_TOKEN_BEFORE_EXTENSION_ESSL, _, _));
 

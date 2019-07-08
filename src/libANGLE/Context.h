@@ -606,7 +606,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     mutable BindingPointer<Compiler> mCompiler;
 
     const egl::Config *mConfig;
-    EGLenum mClientType;
 
     TextureMap mZeroTextures;
 

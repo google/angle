@@ -234,13 +234,15 @@ const angle::PackedEnumMap<BufferBinding, State::BufferBindingSetter> State::kBu
 State::State(ContextID contextIn,
              const State *shareContextState,
              TextureManager *shareTextures,
+             const EGLenum clientType,
              const Version &clientVersion,
              bool debug,
              bool bindGeneratesResource,
              bool clientArraysEnabled,
              bool robustResourceInit,
              bool programBinaryCacheEnabled)
-    : mClientVersion(clientVersion),
+    : mClientType(clientType),
+      mClientVersion(clientVersion),
       mContext(contextIn),
       mBufferManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mBufferManager)),
       mShaderProgramManager(

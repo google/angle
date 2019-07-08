@@ -284,6 +284,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     : mState(reinterpret_cast<ContextID>(this),
              shareContext ? &shareContext->mState : nullptr,
              shareTextures,
+             clientType,
              GetClientVersion(attribs),
              GetDebug(attribs),
              GetBindGeneratesResource(attribs),
@@ -297,7 +298,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mLabel(nullptr),
       mCompiler(),
       mConfig(config),
-      mClientType(clientType),
       mHasBeenCurrent(false),
       mContextLost(false),
       mResetStatus(GraphicsResetStatus::NoError),
@@ -2662,7 +2662,7 @@ const egl::Config *Context::getConfig() const
 
 EGLenum Context::getClientType() const
 {
-    return mClientType;
+    return mState.getClientType();
 }
 
 EGLenum Context::getRenderBuffer() const
@@ -2976,23 +2976,22 @@ void Context::initVersionStrings()
     const Version &clientVersion = getClientVersion();
 
     std::ostringstream versionString;
-    versionString << "OpenGL ";
-    if (mClientType == EGL_OPENGL_ES_API)
+    if (getClientType() == EGL_OPENGL_ES_API)
     {
-        versionString << "ES ";
+        versionString << "OpenGL ES ";
     }
-    versionString << clientVersion.major << "." << clientVersion.minor << " (ANGLE "
+    versionString << clientVersion.major << "." << clientVersion.minor << ".0 (ANGLE "
                   << ANGLE_VERSION_STRING << ")";
     mVersionString = MakeStaticString(versionString.str());
 
     std::ostringstream shadingLanguageVersionString;
-    if (mClientType == EGL_OPENGL_ES_API)
+    if (getClientType() == EGL_OPENGL_ES_API)
     {
         shadingLanguageVersionString << "OpenGL ES GLSL ES ";
     }
     else
     {
-        ASSERT(mClientType == EGL_OPENGL_API);
+        ASSERT(getClientType() == EGL_OPENGL_API);
         shadingLanguageVersionString << "OpenGL GLSL ";
     }
     shadingLanguageVersionString << (clientVersion.major == 2 ? 1 : clientVersion.major) << "."

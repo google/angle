@@ -393,7 +393,10 @@ Display *Display::GetExistingDisplayFromNativeDisplay(EGLNativeDisplayType nativ
     const auto &iter                  = displays->find(nativeDisplay);
 
     // Check that there is a matching display
-    ASSERT(iter != displays->end());
+    if (iter == displays->end())
+    {
+        return nullptr;
+    }
 
     return iter->second;
 }
