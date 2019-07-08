@@ -187,6 +187,30 @@
       "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41d26013_8b2ea182",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-08T14:40:58Z",
+      "side": 1,
+      "message": "unique_ptr works with forward declared classes.  It\u0027s usually just a matter of making sure a destructor exists, not that an include is added.",
+      "parentUuid": "6d6683c9_4e748f01",
+      "range": {
+        "startLine": 266,
+        "startChar": 24,
+        "endLine": 266,
+        "endChar": 25
+      },
+      "revId": "1c02ddf3a5374da3722a685831d576aab313c638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
