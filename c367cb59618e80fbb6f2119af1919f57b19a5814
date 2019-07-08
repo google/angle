@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "085776e2_42e49b7c",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2019-07-08T18:12:21Z",
+      "side": 1,
+      "message": "Why are you restricting these all to just image variables?\n\nLooking here:\nhttps://www.khronos.org/opengl/wiki/Type_Qualifier_(GLSL)\n\nIt says that these can apply to image and buffer variables, and shader storage blocks.\n\n\nOh, I see, this is just moving the code.   Should these ASSERTs be expanded while you\u0027re in here?",
+      "revId": "c367cb59618e80fbb6f2119af1919f57b19a5814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
