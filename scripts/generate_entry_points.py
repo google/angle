@@ -1637,7 +1637,7 @@ def main():
     everything = "Khronos and ANGLE XML files"
     write_windows_def_file(everything, "libGLESv2", "libGLESv2", libgles_ep_exports)
     write_windows_def_file(everything, "libGLESv2_with_capture", "libGLESv2", libgles_ep_exports)
-    write_windows_def_file(everything, "openGL32", "opengl32", opengl32_ep_exports)
+    write_windows_def_file(everything, "openGL32", "openGL32", opengl32_ep_exports)
 
     all_gles_param_types = sorted(all_gles_param_types)
     write_capture_helper_header(all_gles_param_types)
