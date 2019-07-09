@@ -717,9 +717,9 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
     ASSERT_TRUE(foundInHLSLCodeRegex("v7(\\d)* = angle_frm\\(acos\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex("v8(\\d)* = angle_frm\\(atan\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v9(\\d)* = angle_frm\\(atan_emu\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "v9(\\d)* = angle_frm\\(atan_emu\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v10(\\d)* = angle_frm\\(pow\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "v10(\\d)* = angle_frm\\(pow\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex("v11(\\d)* = angle_frm\\(exp\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex("v12(\\d)* = angle_frm\\(log\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex("v13(\\d)* = angle_frm\\(exp2\\(angle_frm\\(_u1\\)\\)\\)"));
@@ -732,59 +732,59 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
     ASSERT_TRUE(foundInHLSLCodeRegex("v20(\\d)* = angle_frm\\(ceil\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex("v21(\\d)* = angle_frm\\(frac\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v22(\\d)* = angle_frm\\(mod_emu\\(angle_frm\\(_u1), angle_frm\\(_uf\\)\\)\\)"));
+        "v22(\\d)* = angle_frm\\(mod_emu\\(angle_frm\\(_u1\\), angle_frm\\(_uf\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v23(\\d)* = angle_frm\\(mod_emu\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "v23(\\d)* = angle_frm\\(mod_emu\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v24(\\d)* = angle_frm\\(min\\(angle_frm\\(_u1), angle_frm\\(_uf\\)\\)\\)"));
+        "v24(\\d)* = angle_frm\\(min\\(angle_frm\\(_u1\\), angle_frm\\(_uf\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v25(\\d)* = angle_frm\\(min\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "v25(\\d)* = angle_frm\\(min\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v26(\\d)* = angle_frm\\(max\\(angle_frm\\(_u1), angle_frm\\(_uf\\)\\)\\)"));
+        "v26(\\d)* = angle_frm\\(max\\(angle_frm\\(_u1\\), angle_frm\\(_uf\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v27(\\d)* = angle_frm\\(max\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "v27(\\d)* = angle_frm\\(max\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
+    ASSERT_TRUE(foundInHLSLCodeRegex(
+        "v28(\\d)* = angle_frm\\(clamp\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\), "
+        "angle_frm\\(_u3\\)\\)\\)"));
+    ASSERT_TRUE(foundInHLSLCodeRegex(
+        "v29(\\d)* = angle_frm\\(clamp\\(angle_frm\\(_u1\\), angle_frm\\(_uf\\), "
+        "angle_frm\\(_uf2\\)\\)\\)"));
+    ASSERT_TRUE(foundInHLSLCodeRegex(
+        "v30(\\d)* = angle_frm\\(lerp\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\), "
+        "angle_frm\\(_u3\\)\\)\\)"));
+    ASSERT_TRUE(foundInHLSLCodeRegex(
+        "v31(\\d)* = angle_frm\\(lerp\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\), "
+        "angle_frm\\(_uf\\)\\)\\)"));
+    ASSERT_TRUE(foundInHLSLCodeRegex(
+        "v32(\\d)* = angle_frm\\(step\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
+    ASSERT_TRUE(foundInHLSLCodeRegex(
+        "v33(\\d)* = angle_frm\\(step\\(angle_frm\\(_uf\\), angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(
-        foundInHLSLCodeRegex("v28(\\d)* = angle_frm\\(clamp\\(angle_frm\\(_u1), angle_frm\\(_u2), "
-                             "angle_frm\\(_u3\\)\\)\\)"));
+        foundInHLSLCodeRegex("v34(\\d)* = angle_frm\\(smoothstep\\(angle_frm\\(_u1\\), "
+                             "angle_frm\\(_u2\\), angle_frm\\(_u3\\)\\)\\)"));
     ASSERT_TRUE(
-        foundInHLSLCodeRegex("v29(\\d)* = angle_frm\\(clamp\\(angle_frm\\(_u1), angle_frm\\(_uf), "
-                             "angle_frm\\(_uf2\\)\\)\\)"));
-    ASSERT_TRUE(
-        foundInHLSLCodeRegex("v30(\\d)* = angle_frm\\(lerp\\(angle_frm\\(_u1), angle_frm\\(_u2), "
-                             "angle_frm\\(_u3\\)\\)\\)"));
-    ASSERT_TRUE(
-        foundInHLSLCodeRegex("v31(\\d)* = angle_frm\\(lerp\\(angle_frm\\(_u1), angle_frm\\(_u2), "
-                             "angle_frm\\(_uf\\)\\)\\)"));
-    ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v32(\\d)* = angle_frm\\(step\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
-    ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v33(\\d)* = angle_frm\\(step\\(angle_frm\\(_uf), angle_frm\\(_u1\\)\\)\\)"));
-    ASSERT_TRUE(
-        foundInHLSLCodeRegex("v34(\\d)* = angle_frm\\(smoothstep\\(angle_frm\\(_u1), "
-                             "angle_frm\\(_u2), angle_frm\\(_u3\\)\\)\\)"));
-    ASSERT_TRUE(
-        foundInHLSLCodeRegex("v35(\\d)* = angle_frm\\(smoothstep\\(angle_frm\\(_uf), "
-                             "angle_frm\\(_uf2), angle_frm\\(_u1\\)\\)\\)"));
+        foundInHLSLCodeRegex("v35(\\d)* = angle_frm\\(smoothstep\\(angle_frm\\(_uf\\), "
+                             "angle_frm\\(_uf2\\), angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(
         foundInHLSLCodeRegex("v36(\\d)* = angle_frm\\(normalize\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(
-        foundInHLSLCodeRegex("v37(\\d)* = angle_frm\\(faceforward_emu\\(angle_frm\\(_u1), "
-                             "angle_frm\\(_u2), angle_frm\\(_u3\\)\\)\\)"));
+        foundInHLSLCodeRegex("v37(\\d)* = angle_frm\\(faceforward_emu\\(angle_frm\\(_u1\\), "
+                             "angle_frm\\(_u2\\), angle_frm\\(_u3\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "v38(\\d)* = angle_frm\\(reflect\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "v38(\\d)* = angle_frm\\(reflect\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(
-        foundInHLSLCodeRegex("v39(\\d)* = angle_frm\\(refract\\(angle_frm\\(_u1), "
-                             "angle_frm\\(_u2), angle_frm\\(_uf\\)\\)\\)"));
+        foundInHLSLCodeRegex("v39(\\d)* = angle_frm\\(refract\\(angle_frm\\(_u1\\), "
+                             "angle_frm\\(_u2\\), angle_frm\\(_uf\\)\\)\\)"));
 
     ASSERT_TRUE(foundInHLSLCodeRegex("f1(\\d)* = angle_frm\\(length\\(angle_frm\\(_u1\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "f2(\\d)* = angle_frm\\(distance\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "f2(\\d)* = angle_frm\\(distance\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "f3(\\d)* = angle_frm\\(dot\\(angle_frm\\(_u1), angle_frm\\(_u2\\)\\)\\)"));
+        "f3(\\d)* = angle_frm\\(dot\\(angle_frm\\(_u1\\), angle_frm\\(_u2\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "vf31(\\d)* = angle_frm\\(cross\\(angle_frm\\(_uf31), angle_frm\\(_uf32\\)\\)\\)"));
+        "vf31(\\d)* = angle_frm\\(cross\\(angle_frm\\(_uf31\\), angle_frm\\(_uf32\\)\\)\\)"));
     ASSERT_TRUE(foundInHLSLCodeRegex(
-        "m1(\\d)* = angle_frm\\(\\(angle_frm\\(_um1) * angle_frm\\(_um2\\)\\)\\)"));
+        "m1(\\d)* = angle_frm\\(\\(angle_frm\\(_um1\\) \\* angle_frm\\(_um2\\)\\)\\)"));
 }
 
 TEST_F(DebugShaderPrecisionTest, BuiltInRelationalFunctionRounding)
