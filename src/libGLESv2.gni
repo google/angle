@@ -802,6 +802,8 @@ libangle_gl_cgl_sources = [
   "src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h",
 ]
 
+libangle_mac_sources = [ "src/libANGLE/renderer/driver_utils_mac.mm" ]
+
 libangle_vulkan_sources = [
   "src/libANGLE/renderer/vulkan/BufferVk.cpp",
   "src/libANGLE/renderer/vulkan/BufferVk.h",

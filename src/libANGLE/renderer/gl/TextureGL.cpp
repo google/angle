@@ -224,6 +224,12 @@ void TextureGL::setImageHelper(const gl::Context *context,
 
     stateManager->bindTexture(getType(), mTextureID);
 
+    if (features.resetTexImage2DBaseLevel.enabled)
+    {
+        // setBaseLevel doesn't ever generate errors.
+        (void)setBaseLevel(context, 0);
+    }
+
     if (nativegl::UseTexImage2D(getType()))
     {
         ASSERT(size.depth == 1);

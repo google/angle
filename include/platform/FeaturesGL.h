@@ -298,6 +298,14 @@ struct FeaturesGL : FeatureSetBase
     Feature clampArrayAccess = {"clamp_array_access", FeatureCategory::OpenGLWorkarounds,
                                 "Clamp uniform array access to avoid reading invalid memory.",
                                 &members, "http://anglebug.com/2978"};
+
+    // Reset glTexImage2D base level to workaround pixel comparison failure above Mac OS 10.12.4 on
+    // Intel Mac.
+    Feature resetTexImage2DBaseLevel = {"reset_teximage2d_base_level",
+                                        FeatureCategory::OpenGLWorkarounds,
+                                        "Reset texture base level before calling glTexImage2D to "
+                                        "work around pixel comparison failure.",
+                                        &members, "https://crbug.com/705865"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

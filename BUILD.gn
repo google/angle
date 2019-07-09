@@ -691,6 +691,10 @@ angle_source_set("libANGLE") {
     sources += libangle_null_sources
   }
 
+  if (is_mac) {
+    sources += libangle_mac_sources
+  }
+
   if (is_debug) {
     defines += [ "ANGLE_GENERATE_SHADER_DEBUG_INFO" ]
   }

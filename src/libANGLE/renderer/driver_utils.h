@@ -129,6 +129,22 @@ inline bool IsApple()
 #endif
 }
 
+struct OSVersion
+{
+    OSVersion();
+    OSVersion(int major, int minor, int patch);
+
+    int majorVersion = 0;
+    int minorVersion = 0;
+    int patchVersion = 0;
+};
+bool operator==(const OSVersion &a, const OSVersion &b);
+bool operator!=(const OSVersion &a, const OSVersion &b);
+bool operator<(const OSVersion &a, const OSVersion &b);
+bool operator>=(const OSVersion &a, const OSVersion &b);
+
+OSVersion GetMacOSVersion();
+
 inline bool IsAndroid()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)

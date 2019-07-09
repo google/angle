@@ -1514,6 +1514,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // The WebGL conformance/uniforms/out-of-bounds-uniform-array-access test has been seen to fail
     // on AMD and Android devices.
     features->clampArrayAccess.enabled = IsAndroid() || IsAMD(vendor);
+
+    features->resetTexImage2DBaseLevel.enabled =
+        IsApple() && IsIntel(vendor) && GetMacOSVersion() >= OSVersion(10, 12, 4);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
