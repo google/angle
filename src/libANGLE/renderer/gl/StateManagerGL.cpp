@@ -38,8 +38,10 @@ StateManagerGL::IndexedBufferBinding::IndexedBufferBinding() : offset(0), size(0
 
 StateManagerGL::StateManagerGL(const FunctionsGL *functions,
                                const gl::Caps &rendererCaps,
-                               const gl::Extensions &extensions)
+                               const gl::Extensions &extensions,
+                               const angle::FeaturesGL &features)
     : mFunctions(functions),
+      mFeatures(features),
       mProgram(0),
       mVAO(0),
       mVertexAttribCurrentValues(rendererCaps.maxVertexAttributes),
@@ -1475,9 +1477,26 @@ void StateManagerGL::setClearDepth(float clearDepth)
 
 void StateManagerGL::setClearColor(const gl::ColorF &clearColor)
 {
-    if (mClearColor != clearColor)
+    gl::ColorF modifiedClearColor = clearColor;
+    if (mFeatures.clearToZeroOrOneBroken.enabled &&
+        (clearColor.red == 1.0f || clearColor.red == 0.0f) &&
+        (clearColor.green == 1.0f || clearColor.green == 0.0f) &&
+        (clearColor.blue == 1.0f || clearColor.blue == 0.0f) &&
+        (clearColor.alpha == 1.0f || clearColor.alpha == 0.0f))
     {
-        mClearColor = clearColor;
+        if (clearColor.alpha == 1.0f)
+        {
+            modifiedClearColor.alpha = 2.0f;
+        }
+        else
+        {
+            modifiedClearColor.alpha = -1.0f;
+        }
+    }
+
+    if (mClearColor != modifiedClearColor)
+    {
+        mClearColor = modifiedClearColor;
         mFunctions->clearColor(mClearColor.red, mClearColor.green, mClearColor.blue,
                                mClearColor.alpha);
 

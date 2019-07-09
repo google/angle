@@ -1517,6 +1517,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     features->resetTexImage2DBaseLevel.enabled =
         IsApple() && IsIntel(vendor) && GetMacOSVersion() >= OSVersion(10, 12, 4);
+
+    features->clearToZeroOrOneBroken.enabled =
+        IsApple() && IsIntel(vendor) && GetMacOSVersion() < OSVersion(10, 12, 6);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

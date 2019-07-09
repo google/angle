@@ -198,7 +198,8 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions,
     ASSERT(mFunctions);
     nativegl_gl::InitializeFeatures(mFunctions.get(), &mFeatures);
     OverrideFeaturesWithDisplayState(&mFeatures, display->getState());
-    mStateManager = new StateManagerGL(mFunctions.get(), getNativeCaps(), getNativeExtensions());
+    mStateManager =
+        new StateManagerGL(mFunctions.get(), getNativeCaps(), getNativeExtensions(), mFeatures);
     mBlitter          = new BlitGL(mFunctions.get(), mFeatures, mStateManager);
     mMultiviewClearer = new ClearMultiviewGL(mFunctions.get(), mStateManager);
 

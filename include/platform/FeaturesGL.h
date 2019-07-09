@@ -306,6 +306,13 @@ struct FeaturesGL : FeatureSetBase
                                         "Reset texture base level before calling glTexImage2D to "
                                         "work around pixel comparison failure.",
                                         &members, "https://crbug.com/705865"};
+
+    // glClearColor does not always work on Intel 6xxx Mac drivers when the clear color made up of
+    // all zeros and ones.
+    Feature clearToZeroOrOneBroken = {
+        "clear_to_zero_or_one_broken", FeatureCategory::OpenGLWorkarounds,
+        "Clears when the clear color is all zeros or ones do not work.", &members,
+        "https://crbug.com/710443"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
