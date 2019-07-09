@@ -35,7 +35,6 @@
 3633 VULKAN : KHR-GLES3.shaders.uniform_block.random.all_shared_buffer.1 = FAIL
 
 // Crashes trying to load non-existent texture load function.
-3455 VULKAN : KHR-GLES3.texture_filter_anisotropic.drawing = SKIP
 3455 VULKAN : KHR-GLES3.copy_tex_image_conversions.forbidden.* = SKIP
 3455 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.renderbuffer_* = SKIP
 3455 VULKAN : KHR-GLES3.packed_pixels.rectangle.r* = SKIP
@@ -60,6 +59,3 @@
 
 // Shader related failure. Not Vulkan-specific.
 3459 : KHR-GLES3.shaders.uniform_block.common.name_matching = FAIL
-
-// Issues with repeat filtering mode.
-3460 VULKAN : KHR-GLES3.texture_repeat_mode.* = FAIL
