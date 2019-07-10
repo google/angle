@@ -648,9 +648,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
         }
 
+        // Get the corresponding VkFormat for the attrib's format.
+        angle::FormatID angleFormat = static_cast<angle::FormatID>(packedAttrib.format);
+        VkFormat vkFormat           = context->getRenderer()->getFormat(angleFormat).vkBufferFormat;
+
         // The binding index could become more dynamic in ES 3.1.
         attribDesc.binding  = attribIndex;
-        attribDesc.format   = static_cast<VkFormat>(packedAttrib.format);
+        attribDesc.format   = vkFormat;
         attribDesc.location = static_cast<uint32_t>(attribIndex);
         attribDesc.offset   = packedAttrib.offset;
 
@@ -804,7 +808,7 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
                                              uint32_t attribIndex,
                                              GLuint stride,
                                              GLuint divisor,
-                                             VkFormat format,
+                                             angle::FormatID format,
                                              GLuint relativeOffset)
 {
     vk::PackedAttribDesc &packedAttrib = mVertexInputAttribs.attribs[attribIndex];
@@ -816,7 +820,7 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
     SetBitField(packedAttrib.stride, stride);
     SetBitField(packedAttrib.divisor, divisor);
 
-    if (format == VK_FORMAT_UNDEFINED)
+    if (format == angle::FormatID::NONE)
     {
         UNIMPLEMENTED();
     }

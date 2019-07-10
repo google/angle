@@ -185,7 +185,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
     ANGLE_INLINE void onVertexAttributeChange(size_t attribIndex,
                                               GLuint stride,
                                               GLuint divisor,
-                                              VkFormat format,
+                                              angle::FormatID format,
                                               GLuint relativeOffset)
     {
         invalidateVertexAndIndexBuffers();

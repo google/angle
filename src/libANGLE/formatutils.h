@@ -253,6 +253,7 @@ angle::FormatID GetVertexFormatID(VertexAttribType type,
                                   bool pureInteger);
 
 angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, VertexAttribType currentValueType);
+angle::FormatID GetCurrentValueFormatID(VertexAttribType currentValueType);
 const VertexFormat &GetVertexFormatFromID(angle::FormatID vertexFormatID);
 size_t GetVertexFormatSize(angle::FormatID vertexFormatID);
 

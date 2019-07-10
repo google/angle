@@ -370,7 +370,7 @@ class GraphicsPipelineDesc final
                            uint32_t attribIndex,
                            GLuint stride,
                            GLuint divisor,
-                           VkFormat format,
+                           angle::FormatID format,
                            GLuint relativeOffset);
 
     // Input assembly info
