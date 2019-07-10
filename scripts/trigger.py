@@ -21,12 +21,11 @@ def parse_args():
     parser.add_argument('gpu_dim', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
     parser.add_argument('-s', '--shards', default=1, help='number of shards', type=int)
     parser.add_argument('-p', '--pool', default='Chrome-GPU', help='swarming pool')
-    parser.add_argument('extra_args', help='extra test command line arguments', nargs='*')
-    return parser.parse_args()
+    return parser.parse_known_args()
 
 
 def main():
-    args = parse_args()
+    args, unknown = parse_args()
     path = args.gn_path.replace('\\', '/')
     out_gn_path = '//' + path
     out_file_path = os.path.join(*path.split('/'))
@@ -55,8 +54,9 @@ def main():
         '--shards=%d' % args.shards, '-s', sha
     ]
 
-    if args.extra_args:
-        swarmings_args += ['--'] + args.extra_args
+    if unknown:
+        swarmings_args += ["--"] + unknown
+
 
     print(' '.join(swarmings_args))
     subprocess.call(swarmings_args)
