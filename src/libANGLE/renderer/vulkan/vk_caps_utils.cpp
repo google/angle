@@ -154,8 +154,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxVertexAttribStride =
         mPhysicalDeviceProperties.limits.maxVertexInputBindingStride;
 
-    mNativeCaps.maxElementsIndices  = std::numeric_limits<GLuint>::max();
-    mNativeCaps.maxElementsVertices = std::numeric_limits<GLuint>::max();
+    mNativeCaps.maxElementsIndices  = std::numeric_limits<GLint>::max();
+    mNativeCaps.maxElementsVertices = std::numeric_limits<GLint>::max();
 
     // Looks like all floats are IEEE according to the docs here:
     // https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html#spirvenv-precision-operation
@@ -194,6 +194,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxVertexUniformVectors                              = maxUniformVectors;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxUniformComponents;
     mNativeCaps.maxFragmentUniformVectors                            = maxUniformVectors;
+    mNativeCaps.maxFragmentInputComponents                           = maxUniformComponents;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
 
     // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
@@ -316,6 +317,9 @@ void RendererVk::ensureCapsInitialized() const
         gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS;
     mNativeCaps.maxTransformFeedbackSeparateComponents =
         gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS;
+
+    mNativeCaps.minProgramTexelOffset = mPhysicalDeviceProperties.limits.minTexelOffset;
+    mNativeCaps.maxProgramTexelOffset = mPhysicalDeviceProperties.limits.maxTexelOffset;
 
     const VkPhysicalDeviceLimits &limits = mPhysicalDeviceProperties.limits;
     const uint32_t sampleCounts          = limits.framebufferColorSampleCounts &

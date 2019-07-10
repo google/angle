@@ -530,12 +530,8 @@
 // General Vulkan failures
 
 // Limits:
-3676 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_indices = FAIL
-3676 VULKAN : dEQP-GLES3.functional.implementation_limits.max_elements_vertices = FAIL
-3676 VULKAN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
-3676 VULKAN : dEQP-GLES3.functional.implementation_limits.max_fragment_input_components = FAIL
-3676 VULKAN : dEQP-GLES3.functional.implementation_limits.max_program_texel_offset = FAIL
-3676 VULKAN : dEQP-GLES3.functional.implementation_limits.min_program_texel_offset = FAIL
+// Nvidia doesn't support the necessary compressed formats
+3676 NVIDIA VULKAN : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
 // MAX_FRAGMENT_INPUT_COMPONENTS is 0
 3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
