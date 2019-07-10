@@ -244,15 +244,15 @@ class ShCompileDesktopGLTest : public ShCompileTest
 };
 
 // Test calling sh::Compile with fragment shader source string
-TEST_F(ShCompileDesktopGLTest, FragmentShaderString)
+TEST_F(ShCompileDesktopGLTest, DesktopGLString)
 {
-    constexpr char kComputeShaderString[] =
+    constexpr char kFragmentShaderString[] =
         R"(#version 330
         void main()
         {
         })";
 
-    const char *shaderStrings[] = {kComputeShaderString};
+    const char *shaderStrings[] = {kFragmentShaderString};
 
     testCompile(shaderStrings, 1, true);
 }
@@ -260,35 +260,97 @@ TEST_F(ShCompileDesktopGLTest, FragmentShaderString)
 // Test calling sh::Compile with core version
 TEST_F(ShCompileDesktopGLTest, FragmentShaderCoreVersion)
 {
-    constexpr char kComputeShaderString[] =
+    constexpr char kFragmentShaderString[] =
         R"(#version 330 core
         void main()
         {
         })";
 
-    const char *shaderStrings[] = {kComputeShaderString};
+    const char *shaderStrings[] = {kFragmentShaderString};
 
     testCompile(shaderStrings, 1, true);
 }
 
-// Test calling sh::Compile with core version
-TEST_F(ShCompileDesktopGLTest, DISABLED_FragmentShaderAdditionConversion)
+// Implicit conversions in basic operations
+TEST_F(ShCompileDesktopGLTest, ImplicitConversionBasicOperation)
 {
-    constexpr char kComputeShaderString[] =
+    constexpr char kFragmentShaderString[] =
         R"(#version 330 core
         void main()
         {
-            float f = 1 + 1.5;
+            //float a = 1 + 1.5;
+            //float b = 1 - 1.5;
+            //float c = 1 * 1.5;
+            //float d = 1 / 1.5;
+            //float e = 1.5 + 1;
+            //float f = 1.5 - 1;
+            float g = 1.5 * 1;
+            //float h = 1.5 / 1;
         })";
 
-    const char *shaderStrings[] = {kComputeShaderString};
+    const char *shaderStrings[] = {kFragmentShaderString};
 
     testCompile(shaderStrings, 1, true);
+}
+
+// Implicit conversions when assigning
+TEST_F(ShCompileDesktopGLTest, ImplicitConversionAssign)
+{
+    constexpr char kFragmentShaderString[] =
+        R"(#version 330 core
+        void main()
+        {
+            float a = 1;
+            uint b = 2u;
+            a = b;
+            a += b;
+            a -= b;
+            a *= b;
+            a /= b;
+        })";
+
+    const char *shaderStrings[] = {kFragmentShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}
+
+// Implicit conversions for vectors
+TEST_F(ShCompileDesktopGLTest, ImplicitConversionVector)
+{
+    constexpr char kFragmentShaderString[] =
+        R"(#version 330 core
+        void main()
+        {
+            vec3 a;
+            ivec3 b = ivec3(1, 1, 1);
+            a = b;
+        })";
+
+    const char *shaderStrings[] = {kFragmentShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}
+
+// Implicit conversions should not convert between ints and uints
+TEST_F(ShCompileDesktopGLTest, ImplicitConversionAssignFailed)
+{
+    constexpr char kFragmentShaderString[] =
+        R"(#version 330 core
+        void main()
+        {
+            int a = 1;
+            uint b = 2;
+            a = b;
+        })";
+
+    const char *shaderStrings[] = {kFragmentShaderString};
+
+    testCompile(shaderStrings, 1, false);
 }
 
 // GL shaders use implicit conversions between types
 // Testing internal implicit conversions
-TEST_F(ShCompileDesktopGLTest, DISABLED_FragmentShaderFunctionConversion)
+TEST_F(ShCompileDesktopGLTest, ImplicitConversionFunction)
 {
     constexpr char kFragmentShaderString[] =
         R"(#version 330 core
