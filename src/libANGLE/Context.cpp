@@ -3189,6 +3189,9 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.copyTexture3d         = false;
         supportedExtensions.textureMultisample    = false;
 
+        // Requires glCompressedTexImage3D
+        supportedExtensions.textureCompressionASTCOES = false;
+
         // Don't expose GL_EXT_texture_sRGB_decode without sRGB texture support
         if (!supportedExtensions.sRGB)
         {
@@ -3267,6 +3270,22 @@ Extensions Context::generateSupportedExtensions() const
 
     // GL_CHROMIUM_lose_context is implemented in the frontend
     supportedExtensions.loseContextCHROMIUM = true;
+
+    // The ASTC texture extensions have dependency requirements.
+    if (supportedExtensions.textureCompressionASTCHDRKHR)
+    {
+        // GL_KHR_texture_compression_astc_hdr cannot be exposed without also exposing
+        // GL_KHR_texture_compression_astc_ldr
+        ASSERT(supportedExtensions.textureCompressionASTCLDRKHR);
+    }
+
+    if (supportedExtensions.textureCompressionASTCOES)
+    {
+        // GL_OES_texture_compression_astc cannot be exposed without also exposing
+        // GL_KHR_texture_compression_astc_ldr and GL_KHR_texture_compression_astc_hdr
+        ASSERT(supportedExtensions.textureCompressionASTCLDRKHR);
+        ASSERT(supportedExtensions.textureCompressionASTCHDRKHR);
+    }
 
     return supportedExtensions;
 }

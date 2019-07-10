@@ -41,16 +41,36 @@ const Format gFormatInfoTable[] = {
     { FormatID::ASTC_12x10_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_12x10_KHR, GL_COMPRESSED_RGBA_ASTC_12x10_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_12x12_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_12x12_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_12x12_KHR, GL_COMPRESSED_RGBA_ASTC_12x12_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_3x3x3_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_3x3x3_OES, GL_COMPRESSED_RGBA_ASTC_3x3x3_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_3x3x3_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_4x3x3_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_4x3x3_OES, GL_COMPRESSED_RGBA_ASTC_4x3x3_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_4x3x3_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_4x4_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_4x4_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_4x4x3_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_4x4x3_OES, GL_COMPRESSED_RGBA_ASTC_4x4x3_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_4x4x3_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_4x4x4_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_4x4x4_OES, GL_COMPRESSED_RGBA_ASTC_4x4x4_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_4x4x4_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_5x4_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_5x4_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_5x4_KHR, GL_COMPRESSED_RGBA_ASTC_5x4_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_5x4x4_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_5x4x4_OES, GL_COMPRESSED_RGBA_ASTC_5x4x4_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_5x4x4_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_5x5_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_5x5_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_5x5_KHR, GL_COMPRESSED_RGBA_ASTC_5x5_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_5x5x4_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_5x5x4_OES, GL_COMPRESSED_RGBA_ASTC_5x5x4_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_5x5x4_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_5x5x5_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_5x5x5_OES, GL_COMPRESSED_RGBA_ASTC_5x5x5_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_5x5x5_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_6x5_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_6x5_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_6x5_KHR, GL_COMPRESSED_RGBA_ASTC_6x5_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_6x5x5_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_6x5x5_OES, GL_COMPRESSED_RGBA_ASTC_6x5x5_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_6x5x5_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_6x6_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_6x6_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_6x6_KHR, GL_COMPRESSED_RGBA_ASTC_6x6_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_6x6x5_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_6x6x5_OES, GL_COMPRESSED_RGBA_ASTC_6x6x5_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_6x6x5_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_6x6x6_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_6x6x6_OES, GL_COMPRESSED_RGBA_ASTC_6x6x6_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::ASTC_6x6x6_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_8x5_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_8x5_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_8x5_KHR, GL_COMPRESSED_RGBA_ASTC_8x5_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_8x6_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
@@ -255,16 +275,36 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::ASTC_12x10_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_12x12_KHR:
             return FormatID::ASTC_12x12_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_3x3x3_OES:
+            return FormatID::ASTC_3x3x3_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_4x3x3_OES:
+            return FormatID::ASTC_4x3x3_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_4x4_KHR:
             return FormatID::ASTC_4x4_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_4x4x3_OES:
+            return FormatID::ASTC_4x4x3_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_4x4x4_OES:
+            return FormatID::ASTC_4x4x4_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_5x4_KHR:
             return FormatID::ASTC_5x4_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_5x4x4_OES:
+            return FormatID::ASTC_5x4x4_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_5x5_KHR:
             return FormatID::ASTC_5x5_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_5x5x4_OES:
+            return FormatID::ASTC_5x5x4_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_5x5x5_OES:
+            return FormatID::ASTC_5x5x5_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_6x5_KHR:
             return FormatID::ASTC_6x5_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_6x5x5_OES:
+            return FormatID::ASTC_6x5x5_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_6x6_KHR:
             return FormatID::ASTC_6x6_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_6x6x5_OES:
+            return FormatID::ASTC_6x6x5_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_ASTC_6x6x6_OES:
+            return FormatID::ASTC_6x6x6_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_8x5_KHR:
             return FormatID::ASTC_8x5_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_8x6_KHR:
@@ -301,16 +341,36 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::ASTC_12x10_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR:
             return FormatID::ASTC_12x12_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES:
+            return FormatID::ASTC_3x3x3_UNORM_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES:
+            return FormatID::ASTC_4x3x3_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR:
             return FormatID::ASTC_4x4_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES:
+            return FormatID::ASTC_4x4x3_UNORM_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES:
+            return FormatID::ASTC_4x4x4_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR:
             return FormatID::ASTC_5x4_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES:
+            return FormatID::ASTC_5x4x4_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR:
             return FormatID::ASTC_5x5_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES:
+            return FormatID::ASTC_5x5x4_UNORM_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES:
+            return FormatID::ASTC_5x5x5_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR:
             return FormatID::ASTC_6x5_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES:
+            return FormatID::ASTC_6x5x5_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR:
             return FormatID::ASTC_6x6_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES:
+            return FormatID::ASTC_6x6x5_UNORM_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES:
+            return FormatID::ASTC_6x6x6_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR:
             return FormatID::ASTC_8x5_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR:

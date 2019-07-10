@@ -59,15 +59,19 @@ bool ValidCompressedImageSize(const Context *context,
                               GLenum internalFormat,
                               GLint level,
                               GLsizei width,
-                              GLsizei height);
+                              GLsizei height,
+                              GLsizei depth);
 bool ValidCompressedSubImageSize(const Context *context,
                                  GLenum internalFormat,
                                  GLint xoffset,
                                  GLint yoffset,
+                                 GLint zoffset,
                                  GLsizei width,
                                  GLsizei height,
+                                 GLsizei depth,
                                  size_t textureWidth,
-                                 size_t textureHeight);
+                                 size_t textureHeight,
+                                 size_t textureDepth);
 bool ValidImageDataSize(Context *context,
                         TextureType texType,
                         GLsizei width,

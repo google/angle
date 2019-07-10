@@ -836,7 +836,8 @@ bool ValidCompressedImageSize(const Context *context,
                               GLenum internalFormat,
                               GLint level,
                               GLsizei width,
-                              GLsizei height)
+                              GLsizei height,
+                              GLsizei depth)
 {
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
     if (!formatInfo.compressed)
@@ -859,6 +860,8 @@ bool ValidCompressedImageSize(const Context *context,
         if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth,
                                       smallerThanBlockSizeAllowed) ||
             !ValidCompressedDimension(height, formatInfo.compressedBlockHeight,
+                                      smallerThanBlockSizeAllowed) ||
+            !ValidCompressedDimension(depth, formatInfo.compressedBlockDepth,
                                       smallerThanBlockSizeAllowed))
         {
             return false;
@@ -872,10 +875,13 @@ bool ValidCompressedSubImageSize(const Context *context,
                                  GLenum internalFormat,
                                  GLint xoffset,
                                  GLint yoffset,
+                                 GLint zoffset,
                                  GLsizei width,
                                  GLsizei height,
+                                 GLsizei depth,
                                  size_t textureWidth,
-                                 size_t textureHeight)
+                                 size_t textureHeight,
+                                 size_t textureDepth)
 {
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
     if (!formatInfo.compressed)
@@ -883,7 +889,7 @@ bool ValidCompressedSubImageSize(const Context *context,
         return false;
     }
 
-    if (xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
+    if (xoffset < 0 || yoffset < 0 || zoffset < 0 || width < 0 || height < 0 || depth < 0)
     {
         return false;
     }
@@ -891,7 +897,8 @@ bool ValidCompressedSubImageSize(const Context *context,
     if (CompressedSubTextureFormatRequiresExactSize(internalFormat))
     {
         if (xoffset % formatInfo.compressedBlockWidth != 0 ||
-            yoffset % formatInfo.compressedBlockHeight != 0)
+            yoffset % formatInfo.compressedBlockHeight != 0 ||
+            zoffset % formatInfo.compressedBlockDepth != 0)
         {
             return false;
         }
@@ -900,9 +907,11 @@ bool ValidCompressedSubImageSize(const Context *context,
         // size but fills the entire mip
         bool fillsEntireMip = xoffset == 0 && yoffset == 0 &&
                               static_cast<size_t>(width) == textureWidth &&
-                              static_cast<size_t>(height) == textureHeight;
+                              static_cast<size_t>(height) == textureHeight &&
+                              static_cast<size_t>(depth) == textureDepth;
         bool sizeMultipleOfBlockSize = (width % formatInfo.compressedBlockWidth) == 0 &&
-                                       (height % formatInfo.compressedBlockHeight) == 0;
+                                       (height % formatInfo.compressedBlockHeight) == 0 &&
+                                       (depth % formatInfo.compressedBlockDepth) == 0;
         if (!sizeMultipleOfBlockSize && !fillsEntireMip)
         {
             return false;

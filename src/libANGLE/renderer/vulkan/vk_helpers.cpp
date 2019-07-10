@@ -2085,18 +2085,23 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     size_t stencilAllocationSize = 0;
     uint32_t bufferRowLength;
     uint32_t bufferImageHeight;
+    size_t allocationSize;
 
     if (storageFormat.isBlock)
     {
         const gl::InternalFormat &storageFormatInfo = vkFormat.getInternalFormatInfo(type);
         GLuint rowPitch;
         GLuint depthPitch;
+        GLuint totalSize;
 
         ANGLE_VK_CHECK_MATH(contextVk, storageFormatInfo.computeCompressedImageSize(
                                            gl::Extents(extents.width, 1, 1), &rowPitch));
         ANGLE_VK_CHECK_MATH(contextVk,
                             storageFormatInfo.computeCompressedImageSize(
                                 gl::Extents(extents.width, extents.height, 1), &depthPitch));
+
+        ANGLE_VK_CHECK_MATH(contextVk,
+                            storageFormatInfo.computeCompressedImageSize(extents, &totalSize));
 
         outputRowPitch   = rowPitch;
         outputDepthPitch = depthPitch;
@@ -2111,6 +2116,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
 
         bufferRowLength   = checkedRowLength.ValueOrDie();
         bufferImageHeight = checkedImageHeight.ValueOrDie();
+        allocationSize    = totalSize;
     }
     else
     {
@@ -2122,6 +2128,8 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
         bufferRowLength   = extents.width;
         bufferImageHeight = extents.height;
 
+        allocationSize = outputDepthPitch * extents.depth;
+
         // Note: because the LoadImageFunctionInfo functions are limited to copying a single
         // component, we have to special case packed depth/stencil use and send the stencil as a
         // separate chunk.
@@ -2130,6 +2138,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
         {
             // Note: Stencil is always one byte
             stencilAllocationSize = extents.width * extents.height * extents.depth;
+            allocationSize += stencilAllocationSize;
         }
     }
 
@@ -2137,7 +2146,6 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
 
     uint8_t *stagingPointer    = nullptr;
     VkDeviceSize stagingOffset = 0;
-    size_t allocationSize      = outputDepthPitch * extents.depth + stencilAllocationSize;
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
                                       &stagingOffset, nullptr));
 

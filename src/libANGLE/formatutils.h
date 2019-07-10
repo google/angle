@@ -153,6 +153,7 @@ struct InternalFormat
     bool compressed;
     GLuint compressedBlockWidth;
     GLuint compressedBlockHeight;
+    GLuint compressedBlockDepth;
 
     GLenum format;
     GLenum type;

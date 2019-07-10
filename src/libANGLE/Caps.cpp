@@ -363,8 +363,8 @@ static bool DetermineS3TCsRGBTextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
 }
 
-// Check for GL_KHR_texture_compression_astc_hdr and GL_KHR_texture_compression_astc_ldr
-static bool DetermineASTCTextureSupport(const TextureCapsMap &textureCaps)
+// Check for GL_KHR_texture_compression_astc_ldr
+static bool DetermineASTCLDRTextureSupport(const TextureCapsMap &textureCaps)
 {
     constexpr GLenum requiredFormats[] = {
         GL_COMPRESSED_RGBA_ASTC_4x4_KHR,           GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
@@ -381,6 +381,31 @@ static bool DetermineASTCTextureSupport(const TextureCapsMap &textureCaps)
         GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
         GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
         GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
+}
+
+// Check for GL_OES_texture_compression_astc
+static bool DetermineASTCOESTExtureSupport(const TextureCapsMap &textureCaps)
+{
+    if (!DetermineASTCLDRTextureSupport(textureCaps))
+    {
+        return false;
+    }
+
+    // The OES version of the extension also requires the 3D ASTC formats
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RGBA_ASTC_3x3x3_OES,         GL_COMPRESSED_RGBA_ASTC_4x3x3_OES,
+        GL_COMPRESSED_RGBA_ASTC_4x4x3_OES,         GL_COMPRESSED_RGBA_ASTC_4x4x4_OES,
+        GL_COMPRESSED_RGBA_ASTC_5x4x4_OES,         GL_COMPRESSED_RGBA_ASTC_5x5x4_OES,
+        GL_COMPRESSED_RGBA_ASTC_5x5x5_OES,         GL_COMPRESSED_RGBA_ASTC_6x5x5_OES,
+        GL_COMPRESSED_RGBA_ASTC_6x6x5_OES,         GL_COMPRESSED_RGBA_ASTC_6x6x6_OES,
+        GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES,
+        GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES,
+        GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES,
+        GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES,
+        GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES,
     };
 
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
@@ -647,12 +672,12 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);
     textureCompressionDXT3 = DetermineDXT3TextureSupport(textureCaps);
     textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
-    textureCompressionS3TCsRGB = DetermineS3TCsRGBTextureSupport(textureCaps);
-    textureCompressionASTCHDR  = DetermineASTCTextureSupport(textureCaps);
-    textureCompressionASTCLDR  = textureCompressionASTCHDR;
-    compressedETC1RGB8Texture  = DetermineETC1RGB8TextureSupport(textureCaps);
-    compressedETC2RGB8Texture  = DetermineETC2RGB8TextureSupport(textureCaps);
-    compressedETC2sRGB8Texture = DetermineETC2sRGB8TextureSupport(textureCaps);
+    textureCompressionS3TCsRGB   = DetermineS3TCsRGBTextureSupport(textureCaps);
+    textureCompressionASTCLDRKHR = DetermineASTCLDRTextureSupport(textureCaps);
+    textureCompressionASTCOES    = DetermineASTCOESTExtureSupport(textureCaps);
+    compressedETC1RGB8Texture    = DetermineETC1RGB8TextureSupport(textureCaps);
+    compressedETC2RGB8Texture    = DetermineETC2RGB8TextureSupport(textureCaps);
+    compressedETC2sRGB8Texture   = DetermineETC2sRGB8TextureSupport(textureCaps);
     compressedETC2PunchthroughARGB8Texture =
         DetermineETC2PunchthroughARGB8TextureSupport(textureCaps);
     compressedETC2PunchthroughAsRGB8AlphaTexture =
@@ -712,8 +737,9 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_texture_compression_dxt3"] = enableableExtension(&Extensions::textureCompressionDXT3);
         map["GL_ANGLE_texture_compression_dxt5"] = enableableExtension(&Extensions::textureCompressionDXT5);
         map["GL_EXT_texture_compression_s3tc_srgb"] = enableableExtension(&Extensions::textureCompressionS3TCsRGB);
-        map["GL_KHR_texture_compression_astc_hdr"] = enableableExtension(&Extensions::textureCompressionASTCHDR);
-        map["GL_KHR_texture_compression_astc_ldr"] = enableableExtension(&Extensions::textureCompressionASTCLDR);
+        map["GL_KHR_texture_compression_astc_ldr"] = enableableExtension(&Extensions::textureCompressionASTCLDRKHR);
+        map["GL_KHR_texture_compression_astc_hdr"] = enableableExtension(&Extensions::textureCompressionASTCHDRKHR);
+        map["GL_OES_texture_compression_astc"] = enableableExtension(&Extensions::textureCompressionASTCOES);
         map["GL_EXT_texture_compression_bptc"] = enableableExtension(&Extensions::textureCompressionBPTC);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = enableableExtension(&Extensions::compressedETC1RGB8Texture);
         map["OES_compressed_ETC2_RGB8_texture"] = enableableExtension(&Extensions::compressedETC2RGB8Texture);

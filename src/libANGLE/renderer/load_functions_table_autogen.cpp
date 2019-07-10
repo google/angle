@@ -281,7 +281,7 @@ LoadImageFunctionInfo COMPRESSED_R11_EAC_to_EAC_R11_UNORM_BLOCK(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -305,7 +305,7 @@ LoadImageFunctionInfo COMPRESSED_RG11_EAC_to_EAC_R11G11_UNORM_BLOCK(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -329,7 +329,7 @@ LoadImageFunctionInfo COMPRESSED_RGB8_ETC2_to_ETC2_R8G8B8_UNORM_BLOCK(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -366,7 +366,7 @@ LoadImageFunctionInfo COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2_to_ETC2_R8G8B8A1_
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -403,7 +403,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA8_ETC2_EAC_to_ETC2_R8G8B8A8_UNORM_BLOCK(GLe
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -427,7 +427,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_10x10_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 10, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 10, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -439,7 +439,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_10x5_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 5, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -451,7 +451,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_10x6_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 6, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 6, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -463,7 +463,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_10x8_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 8, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 8, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -475,7 +475,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_12x10_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<12, 10, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<12, 10, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -487,7 +487,31 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_12x12_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<12, 12, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<12, 12, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_3x3x3_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<3, 3, 3, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_4x3x3_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 3, 3, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -499,7 +523,31 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_4x4_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_4x4x3_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 3, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_4x4x4_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 4, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -511,7 +559,19 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_5x4_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<5, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 4, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_5x4x4_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 4, 4, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -523,7 +583,31 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_5x5_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_5x5x4_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 4, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_5x5x5_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 5, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -535,7 +619,19 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_6x5_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<6, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 5, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_6x5x5_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 5, 5, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -547,7 +643,31 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_6x6_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_6x6x5_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 5, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_6x6x6_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 6, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -559,7 +679,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_8x5_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<8, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<8, 5, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -571,7 +691,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_8x6_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<8, 6, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<8, 6, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -583,7 +703,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_ASTC_8x8_KHR_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<8, 8, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<8, 8, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -595,7 +715,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_BPTC_UNORM_EXT_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -607,7 +727,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_S3TC_DXT1_EXT_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -619,7 +739,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_S3TC_DXT3_ANGLE_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -631,7 +751,7 @@ LoadImageFunctionInfo COMPRESSED_RGBA_S3TC_DXT5_ANGLE_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -643,7 +763,7 @@ LoadImageFunctionInfo COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -655,7 +775,7 @@ LoadImageFunctionInfo COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT_to_default(GLenum t
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -667,7 +787,7 @@ LoadImageFunctionInfo COMPRESSED_RGB_S3TC_DXT1_EXT_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -679,7 +799,7 @@ LoadImageFunctionInfo COMPRESSED_SIGNED_R11_EAC_to_EAC_R11_SNORM_BLOCK(GLenum ty
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -703,7 +823,7 @@ LoadImageFunctionInfo COMPRESSED_SIGNED_RG11_EAC_to_EAC_R11G11_SNORM_BLOCK(GLenu
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -727,7 +847,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR_to_default(GLenum t
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 10, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 10, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -739,7 +859,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR_to_default(GLenum ty
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 5, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -751,7 +871,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR_to_default(GLenum ty
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 6, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 6, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -763,7 +883,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR_to_default(GLenum ty
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<10, 8, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<10, 8, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -775,7 +895,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR_to_default(GLenum t
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<12, 10, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<12, 10, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -787,7 +907,31 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR_to_default(GLenum t
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<12, 12, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<12, 12, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<3, 3, 3, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 3, 3, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -799,7 +943,31 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 3, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 4, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -811,7 +979,19 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<5, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 4, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 4, 4, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -823,7 +1003,31 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 4, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<5, 5, 5, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -835,7 +1039,19 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<6, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 5, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 5, 5, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -847,7 +1063,31 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 5, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<6, 6, 6, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -859,7 +1099,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<8, 5, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<8, 5, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -871,7 +1111,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<8, 6, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<8, 6, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -883,7 +1123,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<8, 8, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<8, 8, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -895,7 +1135,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ALPHA8_ETC2_EAC_to_ETC2_R8G8B8A8_SRGB_BLO
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -919,7 +1159,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_ETC2_to_ETC2_R8G8B8_SRGB_BLOCK(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -957,7 +1197,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2_to_ETC2_R8G8B8A1
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -995,7 +1235,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT_to_default(GLenum typ
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -1007,7 +1247,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT_to_default(GLenum type
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -1019,7 +1259,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT_to_default(GLenum type
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -1031,7 +1271,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT_to_default(GLenum type
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -1043,7 +1283,7 @@ LoadImageFunctionInfo COMPRESSED_SRGB_S3TC_DXT1_EXT_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -1177,7 +1417,7 @@ LoadImageFunctionInfo ETC1_RGB8_OES_to_ETC1_R8G8B8_UNORM_BLOCK(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -1189,7 +1429,7 @@ LoadImageFunctionInfo ETC1_RGB8_OES_to_ETC2_R8G8B8_UNORM_BLOCK(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 8>, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -2799,16 +3039,36 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             return COMPRESSED_RGBA_ASTC_12x10_KHR_to_default;
         case GL_COMPRESSED_RGBA_ASTC_12x12_KHR:
             return COMPRESSED_RGBA_ASTC_12x12_KHR_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_3x3x3_OES:
+            return COMPRESSED_RGBA_ASTC_3x3x3_OES_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_4x3x3_OES:
+            return COMPRESSED_RGBA_ASTC_4x3x3_OES_to_default;
         case GL_COMPRESSED_RGBA_ASTC_4x4_KHR:
             return COMPRESSED_RGBA_ASTC_4x4_KHR_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_4x4x3_OES:
+            return COMPRESSED_RGBA_ASTC_4x4x3_OES_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_4x4x4_OES:
+            return COMPRESSED_RGBA_ASTC_4x4x4_OES_to_default;
         case GL_COMPRESSED_RGBA_ASTC_5x4_KHR:
             return COMPRESSED_RGBA_ASTC_5x4_KHR_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_5x4x4_OES:
+            return COMPRESSED_RGBA_ASTC_5x4x4_OES_to_default;
         case GL_COMPRESSED_RGBA_ASTC_5x5_KHR:
             return COMPRESSED_RGBA_ASTC_5x5_KHR_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_5x5x4_OES:
+            return COMPRESSED_RGBA_ASTC_5x5x4_OES_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_5x5x5_OES:
+            return COMPRESSED_RGBA_ASTC_5x5x5_OES_to_default;
         case GL_COMPRESSED_RGBA_ASTC_6x5_KHR:
             return COMPRESSED_RGBA_ASTC_6x5_KHR_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_6x5x5_OES:
+            return COMPRESSED_RGBA_ASTC_6x5x5_OES_to_default;
         case GL_COMPRESSED_RGBA_ASTC_6x6_KHR:
             return COMPRESSED_RGBA_ASTC_6x6_KHR_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_6x6x5_OES:
+            return COMPRESSED_RGBA_ASTC_6x6x5_OES_to_default;
+        case GL_COMPRESSED_RGBA_ASTC_6x6x6_OES:
+            return COMPRESSED_RGBA_ASTC_6x6x6_OES_to_default;
         case GL_COMPRESSED_RGBA_ASTC_8x5_KHR:
             return COMPRESSED_RGBA_ASTC_8x5_KHR_to_default;
         case GL_COMPRESSED_RGBA_ASTC_8x6_KHR:
@@ -2867,16 +3127,36 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             return COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES_to_default;
+        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES:
+            return COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR:
             return COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR_to_default;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR:

@@ -488,7 +488,7 @@ void LoadRGB32FToRGB16F(size_t width,
                         size_t outputRowPitch,
                         size_t outputDepthPitch);
 
-template <size_t blockWidth, size_t blockHeight, size_t blockSize>
+template <size_t blockWidth, size_t blockHeight, size_t blockDepth, size_t blockSize>
 inline void LoadCompressedToNative(size_t width,
                                    size_t height,
                                    size_t depth,

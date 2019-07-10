@@ -38,6 +38,10 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
 
+    // Vulkan technically only supports the LDR profile but driver all appear to support the HDR
+    // profile as well. http://anglebug.com/1185#c8
+    mNativeExtensions.textureCompressionASTCHDRKHR = mNativeExtensions.textureCompressionASTCLDRKHR;
+
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
     mNativeExtensions.mapBuffer              = true;

@@ -468,8 +468,9 @@ bool ValidateES3TexImageParametersBase(Context *context,
         if (isSubImage)
         {
             if (!ValidCompressedSubImageSize(
-                    context, actualFormatInfo.internalFormat, xoffset, yoffset, width, height,
-                    texture->getWidth(target, level), texture->getHeight(target, level)))
+                    context, actualFormatInfo.internalFormat, xoffset, yoffset, zoffset, width,
+                    height, depth, texture->getWidth(target, level),
+                    texture->getHeight(target, level), texture->getDepth(target, level)))
             {
                 context->validationError(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
                 return false;
@@ -489,7 +490,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
         else
         {
-            if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height))
+            if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height,
+                                          depth))
             {
                 context->validationError(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
                 return false;
@@ -503,6 +505,13 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
 
         if (texType == TextureType::_3D)
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+            return false;
+        }
+
+        // Disallow 3D-only compressed formats from being set on 2D textures
+        if (actualFormatInfo.compressedBlockDepth > 1 && texType != TextureType::_2DArray)
         {
             context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
             return false;

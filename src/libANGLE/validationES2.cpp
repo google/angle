@@ -1310,9 +1310,10 @@ bool ValidateES2TexImageParametersBase(Context *context,
                 return false;
             }
 
-            if (!ValidCompressedSubImageSize(context, actualInternalFormat, xoffset, yoffset, width,
-                                             height, texture->getWidth(target, level),
-                                             texture->getHeight(target, level)))
+            if (!ValidCompressedSubImageSize(context, actualInternalFormat, xoffset, yoffset, 0,
+                                             width, height, 1, texture->getWidth(target, level),
+                                             texture->getHeight(target, level),
+                                             texture->getDepth(target, level)))
             {
                 context->validationError(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
                 return false;
@@ -1326,7 +1327,7 @@ bool ValidateES2TexImageParametersBase(Context *context,
         }
         else
         {
-            if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height))
+            if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height, 1))
             {
                 context->validationError(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
                 return false;

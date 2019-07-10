@@ -206,6 +206,22 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
+        case angle::FormatID::ASTC_3x3x3_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_3x3x3_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_4x3x3_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_4x3x3_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::FormatID::ASTC_4x4_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
             imageFormatID                = angle::FormatID::ASTC_4x4_SRGB_BLOCK;
@@ -228,6 +244,22 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vkBufferFormatIsPacked       = false;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::ASTC_4x4x3_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_4x4x3_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_4x4x4_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_4x4x4_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
             break;
 
         case angle::FormatID::ASTC_5x4_SRGB_BLOCK:
@@ -254,6 +286,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
+        case angle::FormatID::ASTC_5x4x4_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_5x4x4_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::FormatID::ASTC_5x5_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
             imageFormatID                = angle::FormatID::ASTC_5x5_SRGB_BLOCK;
@@ -276,6 +316,22 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vkBufferFormatIsPacked       = false;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::ASTC_5x5x4_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_5x5x4_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_5x5x5_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_5x5x5_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
             break;
 
         case angle::FormatID::ASTC_6x5_SRGB_BLOCK:
@@ -302,6 +358,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
+        case angle::FormatID::ASTC_6x5x5_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_6x5x5_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::FormatID::ASTC_6x6_SRGB_BLOCK:
             internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
             imageFormatID                = angle::FormatID::ASTC_6x6_SRGB_BLOCK;
@@ -324,6 +388,22 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vkBufferFormatIsPacked       = false;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::ASTC_6x6x5_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_6x6x5_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_6x6x6_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::ASTC_6x6x6_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
             break;
 
         case angle::FormatID::ASTC_8x5_SRGB_BLOCK:

@@ -81,17 +81,18 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.debugMarker            = true;
     mExtensions.translatedShaderSource = true;
 
-    mExtensions.textureStorage             = true;
-    mExtensions.rgb8rgba8                  = true;
-    mExtensions.textureCompressionDXT1     = true;
-    mExtensions.textureCompressionDXT3     = true;
-    mExtensions.textureCompressionDXT5     = true;
-    mExtensions.textureCompressionS3TCsRGB = true;
-    mExtensions.textureCompressionASTCHDR  = true;
-    mExtensions.textureCompressionASTCLDR  = true;
-    mExtensions.compressedETC1RGB8Texture  = true;
-    mExtensions.lossyETCDecode             = true;
-    mExtensions.geometryShader             = true;
+    mExtensions.textureStorage               = true;
+    mExtensions.rgb8rgba8                    = true;
+    mExtensions.textureCompressionDXT1       = true;
+    mExtensions.textureCompressionDXT3       = true;
+    mExtensions.textureCompressionDXT5       = true;
+    mExtensions.textureCompressionS3TCsRGB   = true;
+    mExtensions.textureCompressionASTCHDRKHR = true;
+    mExtensions.textureCompressionASTCLDRKHR = true;
+    mExtensions.textureCompressionASTCOES    = true;
+    mExtensions.compressedETC1RGB8Texture    = true;
+    mExtensions.lossyETCDecode               = true;
+    mExtensions.geometryShader               = true;
 
     mExtensions.eglImage                  = true;
     mExtensions.eglImageExternal          = true;
