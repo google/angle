@@ -16,6 +16,24 @@
       "revId": "e1699eca8af90fb82d1efcb5f84e8d5c1cf4fa4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f52acf85_a3949518",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2014,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-10T21:39:16Z",
+      "side": 1,
+      "message": "Turns out we may use the D24_S8 format even though the application didn\u0027t ask for packed depth stencil. E.g. asking for DEPTH_COMPONENT with type GL_UNSIGNED_INT on linux will cause ANGLE to use the D24_S8 format. So instead of an assert this just need to be part of the condition for determining if we have packed stencil bits to send.\nBTW, there is only one packed depth stencil format for OpenGL ES.",
+      "parentUuid": "cf6f6958_e3ef62b3",
+      "revId": "e1699eca8af90fb82d1efcb5f84e8d5c1cf4fa4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
