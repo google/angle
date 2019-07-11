@@ -2010,14 +2010,36 @@ angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLi
 
 angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
-    ANGLE_VK_UNREACHABLE(this);
-    return angle::Result::Stop;
+    // Note: most of the barriers specified here don't require us to issue a memory barrier, as the
+    // relevant resources already insert the appropriate barriers.  They do however require the
+    // resource writing nodes to finish so future buffer barriers are placed correctly, as well as
+    // resource dependencies not creating a graph loop.  This is done by inserting a command graph
+    // barrier that does nothing!
+
+    VkAccessFlags srcAccess = 0;
+    VkAccessFlags dstAccess = 0;
+
+    if ((barriers & GL_COMMAND_BARRIER_BIT) != 0)
+    {
+        srcAccess |= VK_ACCESS_SHADER_WRITE_BIT;
+        dstAccess |= VK_ACCESS_INDIRECT_COMMAND_READ_BIT;
+    }
+
+    mCommandGraph.memoryBarrier(srcAccess, dstAccess, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
 {
-    ANGLE_VK_UNREACHABLE(this);
-    return angle::Result::Stop;
+    // There aren't any barrier bits here that aren't otherwise automatically handled.  We only
+    // need to make sure writer resources (framebuffers and the dispatcher) start a new node.
+    //
+    // Note: memoryBarrierByRegion is expected to affect only the fragment pipeline.  Specifying
+    // that here is currently unnecessary, but is a reminder of this fact in case we do need to
+    // especially handle some future barrier bit.
+
+    mCommandGraph.memoryBarrier(0, 0, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+    return angle::Result::Continue;
 }
 
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)

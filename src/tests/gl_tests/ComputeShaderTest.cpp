@@ -150,6 +150,9 @@ void main()
 // make sure that uniforms and uniform samplers get recorded
 TEST_P(ComputeShaderTest, LinkComputeProgramWithUniforms)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 precision mediump sampler2D;
 layout(local_size_x=1) in;
@@ -328,6 +331,9 @@ void main() {})";
 // Access all compute shader special variables.
 TEST_P(ComputeShaderTest, AccessAllSpecialVariables)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
 layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
@@ -348,6 +354,9 @@ void main()
 // Access part compute shader special variables.
 TEST_P(ComputeShaderTest, AccessPartSpecialVariables)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
 layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
@@ -365,6 +374,9 @@ void main()
 // Use glDispatchCompute to define work group count.
 TEST_P(ComputeShaderTest, DispatchCompute)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
 layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
@@ -385,6 +397,9 @@ void main()
 // buffer again. The test runs well.
 TEST_P(ComputeShaderTest, BufferImageBuffer)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // See http://anglebug.com/3536
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
@@ -453,6 +468,9 @@ void main()
 // runs well.
 TEST_P(ComputeShaderTest, ImageAtomicCounterBuffer)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Flaky hang. http://anglebug.com/3636
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsDesktopOpenGL());
 
@@ -508,6 +526,9 @@ void main()
 // runs well.
 TEST_P(ComputeShaderTest, ImageShaderStorageBuffer)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS0[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) writeonly uniform highp uimage2D uImage[2];
@@ -565,6 +586,9 @@ void main()
 // Basic test for DispatchComputeIndirect.
 TEST_P(ComputeShaderTest, DispatchComputeIndirect)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Flaky crash on teardown, see http://anglebug.com/3349
     ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel() && IsWindows());
 
@@ -623,6 +647,9 @@ void main()
 // Use image uniform to write texture in compute shader, and verify the content is expected.
 TEST_P(ComputeShaderTest, BindImageTexture)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture mTexture[2];
     GLFramebuffer mFramebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -690,6 +717,9 @@ void main()
 // When declare a image array without a binding qualifier, all elements are bound to unit zero.
 TEST_P(ComputeShaderTest, ImageArrayWithoutBindingQualifier)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     // TODO(xinghua.cao@intel.com): On AMD desktop OpenGL, bind two image variables to unit 0,
@@ -742,6 +772,9 @@ void main()
 // imageLoad functions
 TEST_P(ComputeShaderTest, ImageLoad)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=8) in;
 layout(rgba8) uniform highp readonly image2D mImage2DInput;
@@ -763,6 +796,9 @@ void main()
 // imageStore functions
 TEST_P(ComputeShaderTest, ImageStore)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=8) in;
 layout(rgba16f) uniform highp writeonly imageCube mImageCubeOutput;
@@ -782,6 +818,9 @@ void main()
 // imageSize functions
 TEST_P(ComputeShaderTest, ImageSize)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=8) in;
 layout(rgba8) uniform highp readonly imageCube mImageCubeInput;
@@ -941,6 +980,9 @@ void main()
 // Test mixed use of sampler and image.
 TEST_P(ComputeShaderTest, SamplingAndImageReadWrite)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[3];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1010,6 +1052,9 @@ void main()
 // Use image uniform to read and write Texture2D in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithTexture2D)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1069,6 +1114,9 @@ void main()
 // Use image uniform to read and write Texture2DArray in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithTexture2DArray)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1136,6 +1184,9 @@ void main()
 // Use image uniform to read and write Texture3D in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithTexture3D)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1203,6 +1254,9 @@ void main()
 // Use image uniform to read and write TextureCube in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithTextureCube)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1278,6 +1332,9 @@ void main()
 // contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTexture2DArray)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1345,6 +1402,9 @@ void main()
 // contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTexture3D)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1412,6 +1472,9 @@ void main()
 // contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTextureCube)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -1494,6 +1557,9 @@ void main()
 // level or a single layer or face of the face level.
 TEST_P(ComputeShaderTest, BindImageTextureWithMixTextureTypes)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[4];
     GLFramebuffer framebuffer;
     const char csSource[] =
@@ -1636,6 +1702,9 @@ void main()
 // order of multiple shader invocations in compute shader.
 TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(xinghua.cao@intel.com): Figure out why we get this error message
     // that shader uses features not recognized by this D3D version.
     ANGLE_SKIP_TEST_IF((IsAMD() || IsNVIDIA()) && IsD3D11());
@@ -1706,6 +1775,9 @@ void main()
 // active shader storage blocks in a compute shader exceeds GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
 TEST_P(ComputeShaderTest, ExceedCombinedShaderOutputResourcesInCS)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint maxCombinedShaderOutputResources;
     GLint maxComputeShaderStorageBlocks;
     GLint maxComputeImageUniforms;
@@ -1770,6 +1842,9 @@ TEST_P(ComputeShaderTest, ExceedCombinedShaderOutputResourcesInCS)
 // Test that uniform block with struct member in compute shader is supported.
 TEST_P(ComputeShaderTest, UniformBlockWithStructMember)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=8) in;
 layout(rgba8) uniform highp readonly image2D mImage2DInput;
@@ -1796,6 +1871,9 @@ void main()
 // Verify shared non-array variables can work correctly.
 TEST_P(ComputeShaderTest, NonArraySharedVariable)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -1829,6 +1907,9 @@ void main()
 // Verify shared non-struct array variables can work correctly.
 TEST_P(ComputeShaderTest, NonStructArrayAsSharedVariable)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -1853,6 +1934,9 @@ void main()
 // Verify shared struct array variables work correctly.
 TEST_P(ComputeShaderTest, StructArrayAsSharedVariable)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -1881,6 +1965,9 @@ void main()
 // Verify using atomic functions without return value can work correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(jiawei.shao@intel.com): find out why this shader causes a link error on Android Nexus 5
     // bot.
     ANGLE_SKIP_TEST_IF(IsAndroid());
@@ -1943,6 +2030,9 @@ void main()
 // Verify using atomic functions in a non-initializer single assignment can work correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsInNonInitializerSingleAssignment)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 9, local_size_y = 1, local_size_z = 1) in;
 layout (r32i, binding = 0) readonly uniform highp iimage2D srcImage;
@@ -1989,6 +2079,9 @@ void main()
 // Verify using atomic functions in an initializers and using unsigned int works correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsInitializerWithUnsigned)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCShader[] = R"(#version 310 es
 layout (local_size_x = 9, local_size_y = 1, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2046,6 +2139,9 @@ void main()
 // Verify using atomic functions inside expressions as unsigned int.
 TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithUnsigned)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCShader[] = R"(#version 310 es
 layout (local_size_x = 9, local_size_y = 1, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2093,6 +2189,9 @@ void main()
 // Verify using nested atomic functions in expressions.
 TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithMultipleTypes)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCShader[] = R"(#version 310 es
 layout (local_size_x = 4, local_size_y = 1, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2138,6 +2237,9 @@ void main()
 // Basic uniform buffer functionality.
 TEST_P(ComputeShaderTest, UniformBuffer)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture;
     GLBuffer buffer;
     GLFramebuffer framebuffer;
@@ -2199,6 +2301,9 @@ void main()
 // Test that storing data to image and then loading the same image data works correctly.
 TEST_P(ComputeShaderTest, StoreImageThenLoad)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
@@ -2256,6 +2361,9 @@ void main()
 // Test that loading image data and then storing data to the same image works correctly.
 TEST_P(ComputeShaderTest, LoadImageThenStore)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
@@ -2439,6 +2547,9 @@ void main()
 // Test that shader storage blocks only in assignment right is supported.
 TEST_P(ComputeShaderTest, ShaderStorageBlocksInAssignmentRight)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=8) in;
 layout(std140, binding = 0) buffer blockA {
@@ -2594,6 +2705,9 @@ TEST_P(ComputeShaderTestES3, NotSupported)
 // The contents of shared variables should be cleared to zero at the beginning of shader execution.
 TEST_P(WebGL2ComputeTest, sharedVariablesShouldBeZero)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // http://anglebug.com/3226
     ANGLE_SKIP_TEST_IF(IsD3D11());
     const char kCSShader[] = R"(#version 310 es
@@ -2636,6 +2750,9 @@ void main()
 // Test uniform dirty in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, UniformDirty)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture texture[2];
     GLFramebuffer framebuffer;
     constexpr char kCS[] = R"(#version 310 es
@@ -2789,6 +2906,9 @@ void main()
 // Test imageSize to access mipmap slice.
 TEST_P(ComputeShaderTest, ImageSizeMipmapSlice)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
 
@@ -2847,6 +2967,9 @@ void main()
 // Test imageLoad to access mipmap slice.
 TEST_P(ComputeShaderTest, ImageLoadMipmapSlice)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
 
@@ -2906,6 +3029,9 @@ void main()
 // Test imageStore to access mipmap slice.
 TEST_P(ComputeShaderTest, ImageStoreMipmapSlice)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(xinghua.cao@intel.com): http://anglebug.com/3101
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
 
@@ -2966,6 +3092,9 @@ void main()
 // pipeline input. It works well. See http://anglebug.com/3658
 TEST_P(ComputeShaderTest, DrawTexture1DispatchTexture2)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 precision highp sampler2D;
@@ -3069,6 +3198,9 @@ void main(void) {
 //   2. DrawArrays.
 TEST_P(ComputeShaderTest, DispatchDraw)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -3136,6 +3268,9 @@ void main(void) {
 //   4. DrawArrays.
 TEST_P(ComputeShaderTest, DrawDispachDispatchDraw)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -3212,6 +3347,9 @@ void main(void) {
 //   4. DispatchCompute.
 TEST_P(ComputeShaderTest, DispatchDrawDrawDispatch)
 {
+    // Missing image support in Vulkan.  http://anglebug.com/3563
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -3294,7 +3432,11 @@ TEST_P(ComputeShaderTest, InvalidMemoryBarrier)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
-ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
-ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11());
+ANGLE_INSTANTIATE_TEST(ComputeShaderTest,
+                       ES31_OPENGL(),
+                       ES31_OPENGLES(),
+                       ES31_D3D11(),
+                       ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(WebGL2ComputeTest, ES31_D3D11(), ES31_VULKAN());
 }  // namespace

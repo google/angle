@@ -36,12 +36,11 @@
 // General Vulkan expectations
 
 // Limits:
-// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.  Also crashes on memory barrier support missing.
-3605 VULKAN : KHR-GLES31.core.texture_gather.* = SKIP
+// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
+3605 VULKAN : KHR-GLES31.core.texture_gather.* = FAIL
 
-// Memory barriers
-3574 VULKAN : KHR-GLES31.core.compute_shader* = SKIP
-3574 VULKAN : KHR-GLES31.core.shader_atomic_counters.basic-glsl-built-in = SKIP
+// Dispatch indirect:
+3601 VULKAN : KHR-GLES31.core.compute_shader* = SKIP
 
 // Multisampled textures:
 3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP

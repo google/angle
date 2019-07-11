@@ -37,6 +37,7 @@ enum class CommandGraphResourceType
     // VK_EXT_transform_feedback), but still need to generate a command graph barrier node.
     EmulatedQuery,
     FenceSync,
+    GraphBarrier,
     DebugMarker,
     HostAvailabilityOperation,
 };
@@ -53,6 +54,7 @@ enum class CommandGraphNodeFunction
     EndTransformFeedbackQuery,
     SetFenceSync,
     WaitFenceSync,
+    GraphBarrier,
     InsertDebugMarker,
     PushDebugMarker,
     PopDebugMarker,
@@ -178,6 +180,7 @@ class CommandGraphNode final : angle::NonCopyable
 
     CommandGraphResourceType getResourceTypeForDiagnostics() const { return mResourceType; }
     uintptr_t getResourceIDForDiagnostics() const { return mResourceID; }
+    bool hasDiagnosticID() const;
     std::string dumpCommandsForDiagnostics(const char *separator) const;
 
     const gl::Rectangle &getRenderPassRenderArea() const { return mRenderPassRenderArea; }
@@ -191,10 +194,13 @@ class CommandGraphNode final : angle::NonCopyable
     void setDebugMarker(GLenum source, std::string &&marker);
     const std::string &getDebugMarker() const { return mDebugMarker; }
 
-    ANGLE_INLINE void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
+    ANGLE_INLINE void addGlobalMemoryBarrier(VkFlags srcAccess,
+                                             VkFlags dstAccess,
+                                             VkPipelineStageFlags stages)
     {
         mGlobalMemoryBarrierSrcAccess |= srcAccess;
         mGlobalMemoryBarrierDstAccess |= dstAccess;
+        mGlobalMemoryBarrierStages |= stages;
     }
 
     // This can only be set for RenderPass nodes. Each RenderPass node can have at most one owner.
@@ -257,6 +263,7 @@ class CommandGraphNode final : angle::NonCopyable
     // For global memory barriers.
     VkFlags mGlobalMemoryBarrierSrcAccess;
     VkFlags mGlobalMemoryBarrierDstAccess;
+    VkPipelineStageFlags mGlobalMemoryBarrierStages;
 
     // Render pass command buffer notifications.
     RenderPassOwner *mRenderPassOwner;
@@ -401,10 +408,10 @@ class CommandGraphResource : angle::NonCopyable
     void finishCurrentCommands(ContextVk *contextVk);
 
     // Store a deferred memory barrier. Will be recorded into a primary command buffer at submit.
-    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess)
+    void addGlobalMemoryBarrier(VkFlags srcAccess, VkFlags dstAccess, VkPipelineStageFlags stages)
     {
         ASSERT(mCurrentWritingNode);
-        mCurrentWritingNode->addGlobalMemoryBarrier(srcAccess, dstAccess);
+        mCurrentWritingNode->addGlobalMemoryBarrier(srcAccess, dstAccess, stages);
     }
 
   protected:
@@ -490,6 +497,8 @@ class CommandGraph final : angle::NonCopyable
     // GLsync and EGLSync:
     void setFenceSync(const vk::Event &event);
     void waitFenceSync(const vk::Event &event);
+    // Memory barriers:
+    void memoryBarrier(VkFlags srcAccess, VkFlags dstAccess, VkPipelineStageFlags stages);
     // Debug markers:
     void insertDebugMarker(GLenum source, std::string &&marker);
     void pushDebugMarker(GLenum source, std::string &&marker);

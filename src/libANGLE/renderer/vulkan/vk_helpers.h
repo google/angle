@@ -555,7 +555,8 @@ class BufferHelper final : public CommandGraphResource
         VkAccessFlags barrierSrc, barrierDst;
         if (needsOnReadBarrier(readAccessType, &barrierSrc, &barrierDst))
         {
-            reader->addGlobalMemoryBarrier(barrierSrc, barrierDst);
+            reader->addGlobalMemoryBarrier(barrierSrc, barrierDst,
+                                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
         }
     }
     bool needsOnWriteBarrier(VkAccessFlags readAccessType,

@@ -1322,7 +1322,7 @@ void BufferHelper::onWriteAccess(ContextVk *contextVk,
     VkAccessFlags barrierSrc, barrierDst;
     if (needsOnWriteBarrier(readAccessType, writeAccessType, &barrierSrc, &barrierDst))
     {
-        addGlobalMemoryBarrier(barrierSrc, barrierDst);
+        addGlobalMemoryBarrier(barrierSrc, barrierDst, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
     }
 
     bool hostVisible = mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;

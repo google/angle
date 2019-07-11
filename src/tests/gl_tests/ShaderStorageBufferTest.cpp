@@ -315,7 +315,7 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 // Tests modifying an existing shader storage buffer
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteSame)
 {
-    // Vulkan doesn't support memory barriers yet. http://anglebug.com/3574
+    // Missing PBO support in Vulkan.  http://anglebug.com/3210
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kComputeShaderSource[] =
@@ -413,9 +413,6 @@ void main()
 // Tests reading and writing to a shader storage buffer bound at an offset.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteOffset)
 {
-    // Vulkan doesn't support memory barriers yet. http://anglebug.com/3574
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 
