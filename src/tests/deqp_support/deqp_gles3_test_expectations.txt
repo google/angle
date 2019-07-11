@@ -602,17 +602,6 @@
 3190 VULKAN : dEQP-GLES3.functional.texture.units.all_units.* = SKIP
 3190 VULKAN : dEQP-GLES3.functional.texture.units.8_units.* = SKIP
 
-// New shader builtins for texture sampling:
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturegradoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgradoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texelfetch.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texelfetchoffset.* = SKIP
-3622 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = SKIP
-
 // Formats:
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer.color0.rgba32f = FAIL
 3677 ANDROID VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rgba32f = FAIL
@@ -721,6 +710,7 @@
 3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_cube_map_texture_base_level_gettexparameter* = SKIP
 3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*base_level* = SKIP
 3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*max_level* = SKIP
+3148 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = SKIP
 
 // Misc unimplemented:
 

@@ -260,6 +260,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.shaderStorageBufferOffsetAlignment =
         static_cast<GLuint>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment);
 
+    mNativeCaps.minProgramTexelOffset = mPhysicalDeviceProperties.limits.minTexelOffset;
+    mNativeCaps.maxProgramTexelOffset = mPhysicalDeviceProperties.limits.maxTexelOffset;
+
     // There is no additional limit to the combined number of components.  We can have up to a
     // maximum number of uniform buffers, each having the maximum number of components.  Note that
     // this limit includes both components in and out of uniform buffers.
