@@ -144,7 +144,7 @@ class ProgramVk : public ProgramImpl
         return shaderProgram->getGraphicsPipeline(
             contextVk, &contextVk->getRenderPassCache(), renderer->getPipelineCache(),
             contextVk->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
-            descPtrOut, pipelineOut);
+            mState.getAttributesTypeMask(), descPtrOut, pipelineOut);
     }
 
     // Used in testing only.

@@ -433,6 +433,23 @@ ANGLE_INLINE void SetComponentTypeMask(ComponentType type, size_t index, Compone
     *mask |= kComponentMasks[type] << index;
 }
 
+ANGLE_INLINE ComponentType GetComponentTypeMask(const ComponentTypeMask &mask, size_t index)
+{
+    ASSERT(index <= kMaxComponentTypeMaskIndex);
+    uint32_t mask_bits = static_cast<uint32_t>((mask.to_ulong() >> index) & 0x10001);
+    switch (mask_bits)
+    {
+        case 0x10001:
+            return ComponentType::Float;
+        case 0x00001:
+            return ComponentType::Int;
+        case 0x10000:
+            return ComponentType::UnsignedInt;
+        default:
+            return ComponentType::InvalidEnum;
+    }
+}
+
 bool ValidateComponentTypeMasks(unsigned long outputTypes,
                                 unsigned long inputTypes,
                                 unsigned long outputMask,

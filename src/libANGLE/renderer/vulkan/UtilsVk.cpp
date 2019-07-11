@@ -560,7 +560,8 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
 
         ANGLE_TRY(program->getGraphicsPipeline(
             contextVk, &contextVk->getRenderPassCache(), renderer->getPipelineCache(), serial,
-            pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), &descPtr, &helper));
+            pipelineLayout.get(), *pipelineDesc, gl::AttributesMask(), gl::ComponentTypeMask(),
+            &descPtr, &helper));
         helper->updateSerial(serial);
         commandBuffer->bindGraphicsPipeline(helper->getPipeline());
         if (descriptorSet != VK_NULL_HANDLE)

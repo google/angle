@@ -518,9 +518,9 @@ angle::Result ContextVk::handleDirtyPipeline(const gl::Context *context,
         const vk::GraphicsPipelineDesc *descPtr;
 
         // Draw call shader patching, shader compilation, and pipeline cache query.
-        ANGLE_TRY(mProgram->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
-                                                mProgram->getState().getActiveAttribLocationsMask(),
-                                                &descPtr, &mCurrentPipeline));
+        ANGLE_TRY(mProgram->getGraphicsPipeline(
+            this, mCurrentDrawMode, *mGraphicsPipelineDesc,
+            mProgram->getState().getNonBuiltinAttribLocationsMask(), &descPtr, &mCurrentPipeline));
         mGraphicsPipelineTransition.reset();
     }
     else if (mGraphicsPipelineTransition.any())
@@ -534,7 +534,8 @@ angle::Result ContextVk::handleDirtyPipeline(const gl::Context *context,
 
             ANGLE_TRY(mProgram->getGraphicsPipeline(
                 this, mCurrentDrawMode, *mGraphicsPipelineDesc,
-                mProgram->getState().getActiveAttribLocationsMask(), &descPtr, &mCurrentPipeline));
+                mProgram->getState().getNonBuiltinAttribLocationsMask(), &descPtr,
+                &mCurrentPipeline));
 
             oldPipeline->addTransition(mGraphicsPipelineTransition, descPtr, mCurrentPipeline);
         }

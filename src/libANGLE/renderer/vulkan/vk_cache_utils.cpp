@@ -338,6 +338,12 @@ constexpr size_t kTransitionBitShift = kTransitionByteShift + Log2(kBitsPerByte)
 // the update function.
 #define ANGLE_GET_INDEXED_TRANSITION_BIT(Member, Field, Index, BitWidth) \
     (((BitWidth * Index) >> kTransitionBitShift) + ANGLE_GET_TRANSITION_BIT(Member, Field))
+
+constexpr angle::PackedEnumMap<gl::ComponentType, VkFormat> kMismatchedComponentTypeMap = {{
+    {gl::ComponentType::Float, VK_FORMAT_R32G32B32A32_SFLOAT},
+    {gl::ComponentType::Int, VK_FORMAT_R32G32B32A32_SINT},
+    {gl::ComponentType::UnsignedInt, VK_FORMAT_R32G32B32A32_UINT},
+}};
 }  // anonymous namespace
 
 // RenderPassDesc implementation.
@@ -567,6 +573,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     const RenderPass &compatibleRenderPass,
     const PipelineLayout &pipelineLayout,
     const gl::AttributesMask &activeAttribLocationsMask,
+    const gl::ComponentTypeMask &programAttribsTypeMask,
     const ShaderModule *vertexModule,
     const ShaderModule *fragmentModule,
     Pipeline *pipelineOut) const
@@ -649,8 +656,23 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         }
 
         // Get the corresponding VkFormat for the attrib's format.
-        angle::FormatID angleFormat = static_cast<angle::FormatID>(packedAttrib.format);
-        VkFormat vkFormat           = context->getRenderer()->getFormat(angleFormat).vkBufferFormat;
+        angle::FormatID formatID         = static_cast<angle::FormatID>(packedAttrib.format);
+        const vk::Format &format         = context->getRenderer()->getFormat(formatID);
+        const angle::Format &angleFormat = format.angleFormat();
+        VkFormat vkFormat                = format.vkBufferFormat;
+
+        gl::ComponentType attribType =
+            GetVertexAttributeComponentType(angleFormat.isPureInt(), angleFormat.vertexAttribType);
+        gl::ComponentType programAttribType =
+            gl::GetComponentTypeMask(programAttribsTypeMask, attribIndex);
+
+        if (attribType != programAttribType)
+        {
+            // Override the format with a compatible one.
+            vkFormat = kMismatchedComponentTypeMap[programAttribType];
+
+            bindingDesc.stride = 0;  // Prevent out-of-bounds accesses.
+        }
 
         // The binding index could become more dynamic in ES 3.1.
         attribDesc.binding  = attribIndex;
@@ -1638,6 +1660,7 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
     const gl::AttributesMask &activeAttribLocationsMask,
+    const gl::ComponentTypeMask &programAttribsTypeMask,
     const vk::ShaderModule *vertexModule,
     const vk::ShaderModule *fragmentModule,
     const vk::GraphicsPipelineDesc &desc,
@@ -1650,8 +1673,9 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     if (context != nullptr)
     {
         ANGLE_TRY(desc.initializePipeline(context, pipelineCacheVk, compatibleRenderPass,
-                                          pipelineLayout, activeAttribLocationsMask, vertexModule,
-                                          fragmentModule, &newPipeline));
+                                          pipelineLayout, activeAttribLocationsMask,
+                                          programAttribsTypeMask, vertexModule, fragmentModule,
+                                          &newPipeline));
     }
 
     // The Serial will be updated outside of this query.

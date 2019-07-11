@@ -24,33 +24,6 @@ bool IsElementArrayBufferSubjectIndex(angle::SubjectIndex subjectIndex)
     return (subjectIndex == MAX_VERTEX_ATTRIBS);
 }
 
-ANGLE_INLINE ComponentType GetVertexAttributeComponentType(bool pureInteger, VertexAttribType type)
-{
-    if (pureInteger)
-    {
-        switch (type)
-        {
-            case VertexAttribType::Byte:
-            case VertexAttribType::Short:
-            case VertexAttribType::Int:
-                return ComponentType::Int;
-
-            case VertexAttribType::UnsignedByte:
-            case VertexAttribType::UnsignedShort:
-            case VertexAttribType::UnsignedInt:
-                return ComponentType::UnsignedInt;
-
-            default:
-                UNREACHABLE();
-                return ComponentType::NoType;
-        }
-    }
-    else
-    {
-        return ComponentType::Float;
-    }
-}
-
 constexpr angle::SubjectIndex kElementArrayBufferIndex = MAX_VERTEX_ATTRIBS;
 }  // namespace
 

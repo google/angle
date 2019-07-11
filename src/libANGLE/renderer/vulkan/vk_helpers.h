@@ -1000,6 +1000,7 @@ class ShaderProgramHelper : angle::NonCopyable
         const PipelineLayout &pipelineLayout,
         const GraphicsPipelineDesc &pipelineDesc,
         const gl::AttributesMask &activeAttribLocationsMask,
+        const gl::ComponentTypeMask &programAttribsTypeMask,
         const vk::GraphicsPipelineDesc **descPtrOut,
         PipelineHelper **pipelineOut)
     {
@@ -1015,8 +1016,8 @@ class ShaderProgramHelper : angle::NonCopyable
 
         return mGraphicsPipelines.getPipeline(context, pipelineCache, *compatibleRenderPass,
                                               pipelineLayout, activeAttribLocationsMask,
-                                              vertexShader, fragmentShader, pipelineDesc,
-                                              descPtrOut, pipelineOut);
+                                              programAttribsTypeMask, vertexShader, fragmentShader,
+                                              pipelineDesc, descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(Context *context,
