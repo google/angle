@@ -375,7 +375,7 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
             mGLWindow = WGLWindow::New(testParams.majorVersion, testParams.minorVersion);
             mEntryPointsLib.reset(
-                angle::OpenSharedLibrary("opengl32", angle::SearchType::ApplicationDir));
+                angle::OpenSharedLibrary("opengl32", angle::SearchType::SystemDir));
 #else
             std::cout << "WGL driver not available. Skipping test." << std::endl;
             mSkipTest = true;

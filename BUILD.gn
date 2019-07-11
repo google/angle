@@ -791,7 +791,10 @@ angle_libGLESv2("libGLESv2_with_capture") {
 if (is_win) {
   angle_shared_library("libGL") {
     sources = libgl_sources
-    output_name = "openGL32"
+
+    # Need to rename dll to openGL32.dll when using
+    # On Windows we noticed the NVIDIA driver was internally loading the wrong openGL32.dll
+    output_name = "libGL"
 
     configs += [
       ":angle_gl_visibility_config",

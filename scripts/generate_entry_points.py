@@ -1102,14 +1102,14 @@ def write_capture_helper_source(all_param_types):
         out.close()
 
 
-def write_windows_def_file(data_source_name, lib, lib_export, folder, exports):
+def write_windows_def_file(data_source_name, lib, folder, exports):
 
     content = template_windows_def_file.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=data_source_name,
         exports="\n".join(exports),
         year=date.today().year,
-        lib=lib_export)
+        lib=lib)
 
     path = path_to(folder, "%s_autogen.def" % lib)
 
@@ -1634,10 +1634,9 @@ def main():
 
     everything = "Khronos and ANGLE XML files"
 
-    write_windows_def_file(everything, "libGLESv2", "libGLESv2", "libGLESv2", libgles_ep_exports)
-    write_windows_def_file(everything, "libGLESv2_with_capture", "libGLESv2_with_capture",
-                           "libGLESv2", libgles_ep_exports)
-    write_windows_def_file(everything, "libGL", "openGL32", "libGL", libgl_ep_exports)
+    write_windows_def_file(everything, "libGLESv2", "libGLESv2", libgles_ep_exports)
+    write_windows_def_file(everything, "libGLESv2_with_capture", "libGLESv2", libgles_ep_exports)
+    write_windows_def_file(everything, "libGL", "libGL", libgl_ep_exports)
 
     all_gles_param_types = sorted(all_gles_param_types)
     write_capture_helper_header(all_gles_param_types)
