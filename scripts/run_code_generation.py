@@ -16,6 +16,8 @@ import sys
 script_dir = sys.path[0]
 root_dir = os.path.abspath(os.path.join(script_dir, '..'))
 
+hash_dir = 'code_generation_hashes'
+
 # auto_script is a standard way for scripts to return their inputs and outputs.
 
 
@@ -54,8 +56,6 @@ def auto_script(script):
     os.chdir(root_dir)
     return info
 
-
-hash_fname = "run_code_generation_hashes.json"
 
 generators = {
     'ANGLE format':
@@ -107,27 +107,36 @@ def md5(fname):
     return hash_md5.hexdigest()
 
 
+def get_hash_file_name(name):
+    return name.replace(' ', '_').replace('/', '_') + '.json'
+
+
 def any_hash_dirty(name, filenames, new_hashes, old_hashes):
     found_dirty_hash = False
-    for filename in filenames:
-        key = name + ":" + filename
-        if not os.path.isfile(filename):
-            print('Could not find %s for %s' % (filename, name))
+
+    for fname in filenames:
+        if not os.path.isfile(fname):
+            print('File not found: "%s". Code gen dirty for %s' % (fname, name))
             found_dirty_hash = True
         else:
-            new_hashes[key] = md5(filename)
-            if (not key in old_hashes) or (old_hashes[key] != new_hashes[key]):
+            new_hashes[fname] = md5(fname)
+            if (not fname in old_hashes) or (old_hashes[fname] != new_hashes[fname]):
+                print('Hash for "%s" dirty for %s generator.' % (fname, name))
                 found_dirty_hash = True
     return found_dirty_hash
 
 
-def any_old_hash_missing(new_hashes, old_hashes):
+def any_old_hash_missing(all_new_hashes, all_old_hashes):
     result = False
-    for name, _ in old_hashes.iteritems():
-        if name not in new_hashes:
-            script, file = name.split(':')
-            print('%s missing from generated hashes for %s.' % (file, script))
+    for file, old_hashes in all_old_hashes.iteritems():
+        if file not in all_new_hashes:
+            print('"%s" does not exist. Code gen dirty.' % file)
             result = True
+        else:
+            for name, _ in old_hashes.iteritems():
+                if name not in all_new_hashes[file]:
+                    print('Hash for %s is missing from "%s". Code gen is dirty.' % (name, file))
+                    result = True
     return result
 
 
@@ -136,15 +145,23 @@ def update_output_hashes(script, outputs, new_hashes):
         if not os.path.isfile(output):
             print('Output is missing from %s: %s' % (script, output))
             sys.exit(1)
-        key = script + ":" + output
-        new_hashes[key] = md5(output)
+        new_hashes[output] = md5(output)
+
+
+def load_hashes():
+    hashes = {}
+    for file in os.listdir(hash_dir):
+        hash_fname = os.path.join(hash_dir, file)
+        with open(hash_fname) as hash_file:
+            hashes[file] = json.load(open(hash_fname))
+    return hashes
 
 
 def main():
     os.chdir(script_dir)
 
-    old_hashes = json.load(open(hash_fname))
-    new_hashes = {}
+    all_old_hashes = load_hashes()
+    all_new_hashes = {}
     any_dirty = False
 
     verify_only = False
@@ -153,8 +170,12 @@ def main():
 
     for name, script in sorted(generators.iteritems()):
         info = auto_script(script)
+        fname = get_hash_file_name(name)
         filenames = info['inputs'] + info['outputs'] + [script]
-        if any_hash_dirty(name, filenames, new_hashes, old_hashes):
+        new_hashes = {}
+        if fname not in all_old_hashes:
+            all_old_hashes[fname] = {}
+        if any_hash_dirty(name, filenames, new_hashes, all_old_hashes[fname]):
             any_dirty = True
 
             if not verify_only:
@@ -165,18 +186,17 @@ def main():
                 if subprocess.call(['python', os.path.basename(script)]) != 0:
                     sys.exit(1)
 
-    if any_old_hash_missing(new_hashes, old_hashes):
+        # Update the hash dictionary.
+        all_new_hashes[fname] = new_hashes
+
+    if any_old_hash_missing(all_new_hashes, all_old_hashes):
         any_dirty = True
 
     if verify_only:
         sys.exit(any_dirty)
 
     if any_dirty:
-        args = []
-        if os.name == 'nt':
-            args += ['git.bat']
-        else:
-            args += ['git']
+        args = ['git.bat'] if os.name == 'nt' else ['git']
         # The diff can be so large the arguments to clang-format can break the Windows command
         # line length limits. Work around this by calling git cl format with --full.
         args += ['cl', 'format', '--full']
@@ -186,15 +206,19 @@ def main():
         # Update the output hashes again since they can be formatted.
         for name, script in sorted(generators.iteritems()):
             info = auto_script(script)
-            update_output_hashes(name, info['outputs'], new_hashes)
+            fname = get_hash_file_name(name)
+            update_output_hashes(name, info['outputs'], all_new_hashes[fname])
 
         os.chdir(script_dir)
-        json.dump(
-            new_hashes,
-            open(hash_fname, "w"),
-            indent=2,
-            sort_keys=True,
-            separators=(',', ':\n    '))
+
+        for fname, new_hashes in all_new_hashes.iteritems():
+            hash_fname = os.path.join(hash_dir, fname)
+            json.dump(
+                new_hashes,
+                open(hash_fname, "w"),
+                indent=2,
+                sort_keys=True,
+                separators=(',', ':\n    '))
 
 
 if __name__ == '__main__':
