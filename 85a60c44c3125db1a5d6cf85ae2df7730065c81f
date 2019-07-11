@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "2237ccf6_642866b8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2126,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-11T19:27:25Z",
+      "side": 1,
+      "message": "I guess you actually would need:\n\ndest.depthBits \u003e 0 \u0026\u0026 dest.stencilBits \u003e 0 \u0026\u0026 src.depthBits \u003e 0 \u0026\u0026 src.stencilBits \u003e 0\n\nBasically you only enter the case in packed depth/stencil to packed depth/stencil, right?",
+      "parentUuid": "969cc08f_11be9418",
+      "range": {
+        "startLine": 2125,
+        "startChar": 72,
+        "endLine": 2126,
+        "endChar": 55
+      },
+      "revId": "85a60c44c3125db1a5d6cf85ae2df7730065c81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bbfa62fb_2d054d82",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 11
