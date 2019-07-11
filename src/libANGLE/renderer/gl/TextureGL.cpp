@@ -625,6 +625,27 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
     gl::Rectangle clippedArea;
     if (ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
+        // If fbo's read buffer and the target texture are the same texture but different levels,
+        // and if the read buffer is a non-base texture level, then implementations glTexImage2D
+        // may change the target texture and make the original texture mipmap incomplete, which in
+        // turn makes the fbo incomplete.
+        // To avoid that, we clamp BASE_LEVEL and MAX_LEVEL to the same texture level as the fbo's
+        // read buffer attachment. See http://crbug.com/797235
+        const gl::FramebufferAttachment *readBuffer = source->getReadColorAttachment();
+        if (readBuffer && readBuffer->type() == GL_TEXTURE)
+        {
+            TextureGL *sourceTexture = GetImplAs<TextureGL>(readBuffer->getTexture());
+            if (sourceTexture && sourceTexture->mTextureID == mTextureID)
+            {
+                GLuint attachedTextureLevel = readBuffer->mipLevel();
+                if (attachedTextureLevel != mState.getEffectiveBaseLevel())
+                {
+                    ANGLE_TRY(setBaseLevel(context, attachedTextureLevel));
+                    ANGLE_TRY(setMaxLevel(context, attachedTextureLevel));
+                }
+            }
+        }
+
         LevelInfoGL levelInfo = GetLevelInfo(internalFormat, copyTexImageFormat.internalFormat);
         gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
 
@@ -663,7 +684,6 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
                                           clippedArea.y, clippedArea.width, clippedArea.height, 0);
             }
         }
-
         setLevelInfo(context, target, level, 1, levelInfo);
     }
 
@@ -1348,6 +1368,25 @@ angle::Result TextureGL::setBaseLevel(const gl::Context *context, GLuint baseLev
 
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_BASE_LEVEL, baseLevel);
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result TextureGL::setMaxLevel(const gl::Context *context, GLuint maxLevel)
+{
+    if (maxLevel != mAppliedMaxLevel)
+    {
+        const FunctionsGL *functions = GetFunctionsGL(context);
+        StateManagerGL *stateManager = GetStateManagerGL(context);
+
+        mAppliedMaxLevel = maxLevel;
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAX_LEVEL);
+
+        // Signal to the GL layer that the Impl has dirty bits.
+        onStateChange(angle::SubjectMessage::SubjectChanged);
+
+        stateManager->bindTexture(getType(), mTextureID);
+        functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_MAX_LEVEL, maxLevel);
     }
     return angle::Result::Continue;
 }

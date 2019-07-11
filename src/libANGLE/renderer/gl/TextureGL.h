@@ -188,6 +188,7 @@ class TextureGL : public TextureImpl
     bool hasAnyDirtyBit() const;
 
     angle::Result setBaseLevel(const gl::Context *context, GLuint baseLevel) override;
+    angle::Result setMaxLevel(const gl::Context *context, GLuint maxLevel);
 
     angle::Result initializeContents(const gl::Context *context,
                                      const gl::ImageIndex &imageIndex) override;
