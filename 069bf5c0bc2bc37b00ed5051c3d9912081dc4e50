@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84c01edb_d1037f3b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2197,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-11T19:58:24Z",
+      "side": 1,
+      "message": "nit: use IsMaskFlagSet in angleutils.h.",
+      "range": {
+        "startLine": 2197,
+        "startChar": 22,
+        "endLine": 2197,
+        "endChar": 80
+      },
+      "revId": "069bf5c0bc2bc37b00ed5051c3d9912081dc4e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcb88953_b7aa14ec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2203,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-11T19:58:24Z",
+      "side": 1,
+      "message": "nit: here I\u0027d again use the bitness checks for clarity.",
+      "range": {
+        "startLine": 2203,
+        "startChar": 12,
+        "endLine": 2203,
+        "endChar": 43
+      },
+      "revId": "069bf5c0bc2bc37b00ed5051c3d9912081dc4e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
