@@ -410,6 +410,36 @@
         },
         "R32G32B32_FLOAT": {
             "image": "R32G32B32A32_FLOAT"
+        },
+        "ETC2_R8G8B8_UNORM_BLOCK": {
+            "image": "R8G8B8A8_UNORM"
+        },
+        "ETC2_R8G8B8_SRGB_BLOCK": {
+            "image": "R8G8B8A8_UNORM_SRGB"
+        },
+        "ETC2_R8G8B8A1_UNORM_BLOCK": {
+            "image": "R8G8B8A8_UNORM"
+        },
+        "ETC2_R8G8B8A1_SRGB_BLOCK": {
+            "image": "R8G8B8A8_UNORM_SRGB"
+        },
+        "ETC2_R8G8B8A8_UNORM_BLOCK": {
+            "image": "R8G8B8A8_UNORM"
+        },
+        "ETC2_R8G8B8A8_SRGB_BLOCK": {
+            "image": "R8G8B8A8_UNORM_SRGB"
+        },
+        "EAC_R11_UNORM_BLOCK": {
+            "image": ["R16_UNORM", "R16_FLOAT"]
+        },
+        "EAC_R11_SNORM_BLOCK": {
+            "image": ["R16_SNORM", "R16_FLOAT"]
+        },
+        "EAC_R11G11_UNORM_BLOCK": {
+            "image": ["R16G16_UNORM", "R16G16_FLOAT"]
+        },
+        "EAC_R11G11_SNORM_BLOCK": {
+            "image": ["R16G16_SNORM", "R16G16_FLOAT"]
         }
     }
 }

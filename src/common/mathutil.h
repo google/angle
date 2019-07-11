@@ -181,6 +181,14 @@ destType bitCast(const sourceType &source)
     return output;
 }
 
+// https://stackoverflow.com/a/37581284
+template <typename T>
+static constexpr double normalize(T value)
+{
+    return value < 0 ? -static_cast<double>(value) / std::numeric_limits<T>::min()
+                     : static_cast<double>(value) / std::numeric_limits<T>::max();
+}
+
 inline unsigned short float32ToFloat16(float fp32)
 {
     unsigned int fp32i = bitCast<unsigned int>(fp32);

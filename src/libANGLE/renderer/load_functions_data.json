@@ -75,6 +75,9 @@
     "R16_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadEACR11ToR16"
     },
+    "R16_FLOAT": {
+      "GL_UNSIGNED_BYTE": "LoadEACR11ToR16F"
+    },
     "EAC_R11_UNORM_BLOCK": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 1, 8>"
     }
@@ -209,6 +212,9 @@
   "GL_COMPRESSED_SIGNED_RG11_EAC": {
     "R16G16_SNORM": {
       "GL_UNSIGNED_BYTE": "LoadEACRG11SToRG16"
+    },
+    "R16G16_FLOAT": {
+      "GL_UNSIGNED_BYTE": "LoadEACRG11SToRG16F"
     },
     "EAC_R11G11_SNORM_BLOCK": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 1, 16>"
@@ -505,6 +511,9 @@
     "R16G16_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadEACRG11ToRG16"
     },
+    "R16G16_FLOAT": {
+      "GL_UNSIGNED_BYTE": "LoadEACRG11ToRG16F"
+    },
     "EAC_R11G11_UNORM_BLOCK": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 1, 16>"
     }
@@ -575,6 +584,9 @@
   "GL_COMPRESSED_SIGNED_R11_EAC": {
     "R16_SNORM": {
       "GL_UNSIGNED_BYTE": "LoadEACR11SToR16"
+    },
+    "R16_FLOAT": {
+      "GL_UNSIGNED_BYTE": "LoadEACR11SToR16F"
     },
     "EAC_R11_SNORM_BLOCK": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 1, 8>"

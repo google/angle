@@ -288,6 +288,18 @@ LoadImageFunctionInfo COMPRESSED_R11_EAC_to_EAC_R11_UNORM_BLOCK(GLenum type)
     }
 }
 
+LoadImageFunctionInfo COMPRESSED_R11_EAC_to_R16_FLOAT(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadEACR11ToR16F, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo COMPRESSED_R11_EAC_to_R16_UNORM(GLenum type)
 {
     switch (type)
@@ -306,6 +318,18 @@ LoadImageFunctionInfo COMPRESSED_RG11_EAC_to_EAC_R11G11_UNORM_BLOCK(GLenum type)
     {
         case GL_UNSIGNED_BYTE:
             return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_RG11_EAC_to_R16G16_FLOAT(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadEACRG11ToRG16F, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -806,6 +830,18 @@ LoadImageFunctionInfo COMPRESSED_SIGNED_R11_EAC_to_EAC_R11_SNORM_BLOCK(GLenum ty
     }
 }
 
+LoadImageFunctionInfo COMPRESSED_SIGNED_R11_EAC_to_R16_FLOAT(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadEACR11SToR16F, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo COMPRESSED_SIGNED_R11_EAC_to_R16_SNORM(GLenum type)
 {
     switch (type)
@@ -824,6 +860,18 @@ LoadImageFunctionInfo COMPRESSED_SIGNED_RG11_EAC_to_EAC_R11G11_SNORM_BLOCK(GLenu
     {
         case GL_UNSIGNED_BYTE:
             return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 1, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SIGNED_RG11_EAC_to_R16G16_FLOAT(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadEACRG11SToRG16F, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -2946,6 +2994,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             {
                 case FormatID::EAC_R11_UNORM_BLOCK:
                     return COMPRESSED_R11_EAC_to_EAC_R11_UNORM_BLOCK;
+                case FormatID::R16_FLOAT:
+                    return COMPRESSED_R11_EAC_to_R16_FLOAT;
                 case FormatID::R16_UNORM:
                     return COMPRESSED_R11_EAC_to_R16_UNORM;
                 default:
@@ -2959,6 +3009,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             {
                 case FormatID::EAC_R11G11_UNORM_BLOCK:
                     return COMPRESSED_RG11_EAC_to_EAC_R11G11_UNORM_BLOCK;
+                case FormatID::R16G16_FLOAT:
+                    return COMPRESSED_RG11_EAC_to_R16G16_FLOAT;
                 case FormatID::R16G16_UNORM:
                     return COMPRESSED_RG11_EAC_to_R16G16_UNORM;
                 default:
@@ -3095,6 +3147,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             {
                 case FormatID::EAC_R11_SNORM_BLOCK:
                     return COMPRESSED_SIGNED_R11_EAC_to_EAC_R11_SNORM_BLOCK;
+                case FormatID::R16_FLOAT:
+                    return COMPRESSED_SIGNED_R11_EAC_to_R16_FLOAT;
                 case FormatID::R16_SNORM:
                     return COMPRESSED_SIGNED_R11_EAC_to_R16_SNORM;
                 default:
@@ -3108,6 +3162,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             {
                 case FormatID::EAC_R11G11_SNORM_BLOCK:
                     return COMPRESSED_SIGNED_RG11_EAC_to_EAC_R11G11_SNORM_BLOCK;
+                case FormatID::R16G16_FLOAT:
+                    return COMPRESSED_SIGNED_RG11_EAC_to_R16G16_FLOAT;
                 case FormatID::R16G16_SNORM:
                     return COMPRESSED_SIGNED_RG11_EAC_to_R16G16_SNORM;
                 default:

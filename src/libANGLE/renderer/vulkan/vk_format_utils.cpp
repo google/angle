@@ -116,10 +116,11 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
         // enabled automatically by examining format capabilities.
         testFunction = HasNonFilterableTextureFormatSupport;
     }
-    if (format.isSnorm())
+    if (format.isSnorm() || format.isBlock)
     {
         // Rendering to SNORM textures is not supported on Android, and it's
         // enabled by the extension EXT_render_snorm.
+        // Compressed textures also need to perform this check.
         testFunction = HasNonRenderableTextureFormatSupport;
     }
     int i = FindSupportedFormat(renderer, info + skip, numInfo - skip, testFunction);
