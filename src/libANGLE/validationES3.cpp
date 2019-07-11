@@ -801,11 +801,26 @@ static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureForma
     }
 
     if ((textureFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
-         textureFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
-         textureFormatInfo.componentType == GL_FLOAT) &&
+         textureFormatInfo.componentType == GL_SIGNED_NORMALIZED) &&
         !(framebufferFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
-          framebufferFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
-          framebufferFormatInfo.componentType == GL_FLOAT))
+          framebufferFormatInfo.componentType == GL_SIGNED_NORMALIZED))
+    {
+        return false;
+    }
+
+    // SNORM is not supported (e.g. is not in the tables of "effective internal format" that
+    // correspond to internal formats.
+    if (textureFormatInfo.componentType == GL_SIGNED_NORMALIZED)
+    {
+        return false;
+    }
+
+    // Section 3.8.5 of the GLES 3.0.3 (and section 8.6 of the GLES 3.2) spec has a caveat, that
+    // the KHR dEQP tests enforce:
+    //
+    // Note that the above rules disallow matches where some components sizes are smaller and
+    // others are larger (such as RGB10_A2).
+    if (!textureFormatInfo.sized && (framebufferFormatInfo.internalFormat == GL_RGB10_A2))
     {
         return false;
     }
