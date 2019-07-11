@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "690c2429_89fc3e0c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2126,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-11T17:42:28Z",
+      "side": 1,
+      "message": "I can\u0027t. formatInfo.stencilBits indicates if the destination buffer has stencil bits, what I care about here is if the pixel buffer passed in was packed depth/stencil. As far as I can tell that\u0027s preserved in formatInfo.type.\nIt is possible for an application to give us depth only data yet the destination buffer has stencil bits (deqp test does that on Linux/NVIDIA).",
+      "parentUuid": "746ed7d6_dd054f50",
+      "range": {
+        "startLine": 2125,
+        "startChar": 72,
+        "endLine": 2126,
+        "endChar": 55
+      },
+      "revId": "85a60c44c3125db1a5d6cf85ae2df7730065c81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bbfa62fb_2d054d82",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "70c0191c_3c87af2f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2197,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-11T17:42:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bbfa62fb_2d054d82",
+      "range": {
+        "startLine": 2194,
+        "startChar": 0,
+        "endLine": 2197,
+        "endChar": 51
+      },
+      "revId": "85a60c44c3125db1a5d6cf85ae2df7730065c81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b65c7304_2f3ea666",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2019-07-11T17:31:14Z",
       "side": 1,
       "message": "You could check depth bits here instead I think. Although I don\u0027t quite follow the logic. Haven\u0027t you already cleared the stencil aspect flag bit in the above if (stencilAllocationSize \u003e 0) ?",
+      "range": {
+        "startLine": 2198,
+        "startChar": 62,
+        "endLine": 2198,
+        "endChar": 95
+      },
+      "revId": "85a60c44c3125db1a5d6cf85ae2df7730065c81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83e08987_ac609557",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2198,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-11T17:42:28Z",
+      "side": 1,
+      "message": "I\u0027ll rework the comment, it\u0027s obviously not explaining what\u0027s happening here.\nThe stencil case above is only invoked when the app gives us packed depth stencil.\nIf they were to write to only stencil (e.g. GL_STENCIL_COMPONENT) the above won\u0027t be used and we will do the write below. However, if the destination buffer is packed depth stencil, both the depth and stencil aspect flags will be set here and I need to make sure only one is set.\nAh, there is still a bug here, if writing only to stencil we still may need to clear the depth aspect bit. Ugh, this is messy.",
+      "parentUuid": "b65c7304_2f3ea666",
       "range": {
         "startLine": 2198,
         "startChar": 62,
