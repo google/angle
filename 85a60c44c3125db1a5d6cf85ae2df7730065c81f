@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "93a60a75_b38350e1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2126,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-11T18:57:15Z",
+      "side": 1,
+      "message": "Yes, you are right, formatInfo is the source format.\nHowever, I really only want to be here if I have packed depth/stencil data.\nStencil only data should skip this (thus formatInfo.stencilBits \u003e 0 is not sufficient).\nWe do everything great when there is only a single type of data, I\u0027m just special casing for packed depth stencil.",
+      "parentUuid": "207486ff_bd6c9378",
+      "range": {
+        "startLine": 2125,
+        "startChar": 72,
+        "endLine": 2126,
+        "endChar": 55
+      },
+      "revId": "85a60c44c3125db1a5d6cf85ae2df7730065c81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bbfa62fb_2d054d82",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 11
