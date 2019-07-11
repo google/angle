@@ -1157,6 +1157,12 @@ bool ValidateES3TexStorageParametersBase(Context *context,
         return false;
     }
 
+    if (formatInfo.compressed && target == TextureType::_3D)
+    {
+        context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+        return false;
+    }
+
     return true;
 }
 
