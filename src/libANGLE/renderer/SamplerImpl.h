@@ -11,6 +11,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Sampler.h"
 
 namespace gl
 {
@@ -27,7 +28,11 @@ class SamplerImpl : angle::NonCopyable
     SamplerImpl(const gl::SamplerState &state) : mState(state) {}
     virtual ~SamplerImpl() {}
 
-    virtual angle::Result syncState(const gl::Context *context) = 0;
+    virtual void onDestroy(const gl::Context *context)
+    {
+        // Default implementation: no-op.
+    }
+    virtual angle::Result syncState(const gl::Context *context, const bool dirty) = 0;
 
   protected:
     const gl::SamplerState &mState;

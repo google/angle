@@ -2871,9 +2871,6 @@ TEST_P(SimpleStateChangeTest, ReleaseShaderInUseThatReadsFromUniforms)
 // Tests that sampler sync isn't masked by program textures.
 TEST_P(SimpleStateChangeTestES3, SamplerSyncNotTiedToProgram)
 {
-    // glBindSampler is available only if the GLES version is 3.0 or higher - anglebug.com/3208
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Create a sampler with NEAREST filtering.
     GLSampler sampler;
     glBindSampler(0, sampler);
@@ -2933,6 +2930,104 @@ void main()
     EXPECT_PIXEL_RECT_EQ(kHalfSize, 0, kHalfSize, kHalfSize, GLColor::green);
     EXPECT_PIXEL_RECT_EQ(0, kHalfSize, kHalfSize, kHalfSize, GLColor::blue);
     EXPECT_PIXEL_RECT_EQ(kHalfSize, kHalfSize, kHalfSize, kHalfSize, GLColor::yellow);
+}
+
+// Tests different samplers can be used with same texture obj on different tex units.
+TEST_P(SimpleStateChangeTestES3, MultipleSamplersWithSingleTextureObject)
+{
+    // Test overview - Create two separate sampler objects, initially with the same
+    // sampling args (NEAREST). Bind the same texture object to separate texture units.
+    // FS samples from two samplers and blends result.
+    // Bind separate sampler objects to the same texture units as the texture object.
+    // Render & verify initial results
+    // Next modify sampler0 to have LINEAR filtering instead of NEAREST
+    // Render and save results
+    // Now restore sampler0 to NEAREST filtering and make sampler1 LINEAR
+    // Render and verify results are the same as previous
+
+    // Create 2 samplers with NEAREST filtering.
+    constexpr GLsizei kNumSamplers = 2;
+    // We create/bind an extra sampler w/o bound tex object for testing purposes
+    GLSampler samplers[kNumSamplers + 1];
+    // Set samplers to initially have same state w/ NEAREST filter mode
+    for (uint32_t i = 0; i < kNumSamplers + 1; ++i)
+    {
+        glSamplerParameteri(samplers[i], GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glSamplerParameteri(samplers[i], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glSamplerParameteri(samplers[i], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glSamplerParameteri(samplers[i], GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glSamplerParameteri(samplers[i], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glSamplerParameterf(samplers[i], GL_TEXTURE_MAX_LOD, 1000);
+        glSamplerParameterf(samplers[i], GL_TEXTURE_MIN_LOD, -1000);
+        glBindSampler(i, samplers[i]);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Create a simple texture with four colors
+    constexpr GLsizei kSize       = 2;
+    std::array<GLColor, 4> pixels = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    GLTexture rgbyTex;
+    // Bind same texture object to tex units 0 & 1
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, rgbyTex);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, rgbyTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixels.data());
+
+    // Create a program that uses the texture with 2 separate samplers.
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 v_texCoord;
+uniform sampler2D samp1;
+uniform sampler2D samp2;
+void main()
+{
+    gl_FragColor = mix(texture2D(samp1, v_texCoord), texture2D(samp2, v_texCoord), 0.5);
+})";
+
+    // Create program and bind samplers to tex units 0 & 1
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), kFS);
+    GLint s1loc = glGetUniformLocation(program, "samp1");
+    GLint s2loc = glGetUniformLocation(program, "samp2");
+    glUseProgram(program);
+    glUniform1i(s1loc, 0);
+    glUniform1i(s2loc, 1);
+    // Draw. This first draw is a sanitycheck and not really necessary for the test
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr int kHalfSize = kWindowSize / 2;
+
+    // When rendering w/ NEAREST, colors are all maxed out so should still be solid
+    EXPECT_PIXEL_RECT_EQ(0, 0, kHalfSize, kHalfSize, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kHalfSize, 0, kHalfSize, kHalfSize, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, kHalfSize, kHalfSize, kHalfSize, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(kHalfSize, kHalfSize, kHalfSize, kHalfSize, GLColor::yellow);
+
+    // Make first sampler use linear filtering
+    glSamplerParameteri(samplers[0], GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glSamplerParameteri(samplers[0], GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    // Capture rendered pixel color with s0 linear
+    std::vector<GLColor> s0LinearColors(kWindowSize * kWindowSize);
+    glReadPixels(0, 0, kWindowSize, kWindowSize, GL_RGBA, GL_UNSIGNED_BYTE, s0LinearColors.data());
+
+    // Now restore first sampler & update second sampler
+    glSamplerParameteri(samplers[0], GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glSamplerParameteri(samplers[0], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glSamplerParameteri(samplers[1], GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glSamplerParameteri(samplers[1], GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    // Capture rendered pixel color w/ s1 linear
+    std::vector<GLColor> s1LinearColors(kWindowSize * kWindowSize);
+    glReadPixels(0, 0, kWindowSize, kWindowSize, GL_RGBA, GL_UNSIGNED_BYTE, s1LinearColors.data());
+    // Results should be the same regardless of if s0 or s1 is linear
+    EXPECT_EQ(s0LinearColors, s1LinearColors);
 }
 
 // Tests that deleting an in-flight image texture does not immediately delete the resource.

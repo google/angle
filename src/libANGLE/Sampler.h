@@ -76,10 +76,13 @@ class Sampler final : public RefCountObject, public LabeledObject, public angle:
     rx::SamplerImpl *getImplementation() const;
 
     angle::Result syncState(const Context *context);
+    bool isDirty() const { return mDirty; }
 
   private:
+    void signalDirtyState();
     SamplerState mState;
-    rx::SamplerImpl *mImpl;
+    bool mDirty;
+    rx::SamplerImpl *mSampler;
 
     std::string mLabel;
 };

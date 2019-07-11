@@ -223,7 +223,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                      const char *file,
                      const char *function,
                      unsigned int line) override;
-    const gl::ActiveTextureArray<TextureVk *> &getActiveTextures() const;
+    const gl::ActiveTextureArray<vk::TextureUnit> &getActiveTextures() const;
 
     void setIndexBufferDirty()
     {
@@ -557,7 +557,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     // This cache should also probably include the texture index (shader location) and array
     // index (also in the shader). This info is used in the descriptor update step.
-    gl::ActiveTextureArray<TextureVk *> mActiveTextures;
+    gl::ActiveTextureArray<vk::TextureUnit> mActiveTextures;
     vk::TextureDescriptorDesc mActiveTexturesDesc;
 
     // "Current Value" aka default vertex attribute state.

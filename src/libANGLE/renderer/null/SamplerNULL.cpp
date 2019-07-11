@@ -18,7 +18,7 @@ SamplerNULL::SamplerNULL(const gl::SamplerState &state) : SamplerImpl(state) {}
 
 SamplerNULL::~SamplerNULL() {}
 
-angle::Result SamplerNULL::syncState(const gl::Context *context)
+angle::Result SamplerNULL::syncState(const gl::Context *context, const bool dirty)
 {
     return angle::Result::Continue;
 }

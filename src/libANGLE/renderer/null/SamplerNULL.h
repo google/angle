@@ -21,7 +21,7 @@ class SamplerNULL : public SamplerImpl
     SamplerNULL(const gl::SamplerState &state);
     ~SamplerNULL() override;
 
-    angle::Result syncState(const gl::Context *context) override;
+    angle::Result syncState(const gl::Context *context, const bool dirty) override;
 };
 
 }  // namespace rx

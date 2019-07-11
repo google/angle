@@ -620,14 +620,6 @@
 3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.u* = FAIL
 3430 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.float_uvec2_vec3 = FAIL
 
-// Sampler objects:
-3208 VULKAN : dEQP-GLES3.functional.samplers.single_tex_2d.* = FAIL
-3208 VULKAN : dEQP-GLES3.functional.samplers.multi_tex_2d.* = FAIL
-3208 VULKAN : dEQP-GLES3.functional.samplers.single_tex_3d.* = FAIL
-3208 VULKAN : dEQP-GLES3.functional.samplers.multi_tex_3d.* = FAIL
-3208 VULKAN : dEQP-GLES3.functional.samplers.single_cubemap.* = FAIL
-3208 VULKAN : dEQP-GLES3.functional.samplers.multi_cubemap.* = FAIL
-
 // Instanced rendering:
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_arrays_instanced.line_loop.* = SKIP
 2672 VULKAN : dEQP-GLES3.functional.draw.draw_elements_instanced.line_loop.* = SKIP

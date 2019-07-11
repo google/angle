@@ -28,6 +28,7 @@
     PROC(MemoryObject)           \
     PROC(Query)                  \
     PROC(Program)                \
+    PROC(Sampler)                \
     PROC(Semaphore)              \
     PROC(Texture)                \
     PROC(TransformFeedback)      \

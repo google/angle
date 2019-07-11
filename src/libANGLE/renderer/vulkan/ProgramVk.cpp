@@ -1435,7 +1435,7 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
     gl::ActiveTextureArray<VkWriteDescriptorSet> writeDescriptorInfo;
     uint32_t writeCount = 0;
 
-    const gl::ActiveTextureArray<TextureVk *> &activeTextures = contextVk->getActiveTextures();
+    const gl::ActiveTextureArray<vk::TextureUnit> &activeTextures = contextVk->getActiveTextures();
 
     bool emulateSeamfulCubeMapSampling = contextVk->emulateSeamfulCubeMapSampling();
 
@@ -1450,13 +1450,16 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
              ++arrayElement)
         {
             GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
-            TextureVk *textureVk = activeTextures[textureUnit];
+            TextureVk *textureVk = activeTextures[textureUnit].texture;
+            SamplerVk *samplerVk = activeTextures[textureUnit].sampler;
 
             vk::ImageHelper &image = textureVk->getImage();
 
             VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
 
-            imageInfo.sampler     = textureVk->getSampler().getHandle();
+            // Use bound sampler object if one present, otherwise use texture's sampler
+            imageInfo.sampler = (samplerVk != nullptr) ? samplerVk->getSampler().getHandle()
+                                                       : textureVk->getSampler().getHandle();
             imageInfo.imageView   = textureVk->getReadImageView().getHandle();
             imageInfo.imageLayout = image.getCurrentLayout();
 

@@ -1516,7 +1516,7 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
 
 TextureDescriptorDesc::TextureDescriptorDesc() : mMaxIndex(0)
 {
-    mSerials.fill(0);
+    mSerials.fill({0, 0});
 }
 
 TextureDescriptorDesc::~TextureDescriptorDesc()                                  = default;
@@ -1524,7 +1524,7 @@ TextureDescriptorDesc::TextureDescriptorDesc(const TextureDescriptorDesc &other)
 TextureDescriptorDesc &TextureDescriptorDesc::operator=(const TextureDescriptorDesc &other) =
     default;
 
-void TextureDescriptorDesc::update(size_t index, Serial serial)
+void TextureDescriptorDesc::update(size_t index, Serial textureSerial, Serial samplerSerial)
 {
     if (index >= mMaxIndex)
     {
@@ -1533,13 +1533,15 @@ void TextureDescriptorDesc::update(size_t index, Serial serial)
 
     // If the serial number overflows we should defragment and regenerate all serials.
     // There should never be more than UINT_MAX textures alive at a time.
-    ASSERT(serial.getValue() < std::numeric_limits<uint32_t>::max());
-    mSerials[index] = static_cast<uint32_t>(serial.getValue());
+    ASSERT(textureSerial.getValue() < std::numeric_limits<uint32_t>::max());
+    ASSERT(samplerSerial.getValue() < std::numeric_limits<uint32_t>::max());
+    mSerials[index].texture = static_cast<uint32_t>(textureSerial.getValue());
+    mSerials[index].sampler = static_cast<uint32_t>(samplerSerial.getValue());
 }
 
 size_t TextureDescriptorDesc::hash() const
 {
-    return angle::ComputeGenericHash(&mSerials, sizeof(uint32_t) * mMaxIndex);
+    return angle::ComputeGenericHash(&mSerials, sizeof(TexUnitSerials) * mMaxIndex);
 }
 
 void TextureDescriptorDesc::reset()
@@ -1556,7 +1558,7 @@ bool TextureDescriptorDesc::operator==(const TextureDescriptorDesc &other) const
     if (mMaxIndex == 0)
         return true;
 
-    return memcmp(mSerials.data(), other.mSerials.data(), sizeof(uint32_t) * mMaxIndex) == 0;
+    return memcmp(mSerials.data(), other.mSerials.data(), sizeof(TexUnitSerials) * mMaxIndex) == 0;
 }
 
 }  // namespace vk

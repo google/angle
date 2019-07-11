@@ -105,6 +105,9 @@ constexpr size_t kInFlightCommandsLimit = 100u;
 // Initially dumping the command graphs is disabled.
 constexpr bool kEnableCommandGraphDiagnostics = false;
 
+// Used as fallback serial for null sampler objects
+constexpr Serial kZeroSerial = Serial();
+
 void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
                           const vk::PrimaryCommandBuffer &commandBuffer,
                           const std::vector<VkSemaphore> &waitSemaphores,
@@ -293,7 +296,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBits = mNewGraphicsCommandBufferDirtyBits;
     mComputeDirtyBits  = mNewComputeCommandBufferDirtyBits;
 
-    mActiveTextures.fill(nullptr);
+    mActiveTextures.fill({nullptr, nullptr});
 
     mPipelineDirtyBitsMask.set();
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
@@ -2433,6 +2436,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
+        gl::Sampler *sampler        = mState.getSampler(textureUnit);
         gl::TextureType textureType = textureTypes[textureUnit];
 
         // Null textures represent incomplete textures.
@@ -2442,6 +2446,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
         }
 
         TextureVk *textureVk = vk::GetImpl(texture);
+        SamplerVk *samplerVk = (sampler != nullptr) ? vk::GetImpl(sampler) : nullptr;
 
         vk::ImageHelper &image = textureVk->getImage();
 
@@ -2473,14 +2478,18 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context,
 
         image.addReadDependency(recorder);
 
-        mActiveTextures[textureUnit] = textureVk;
-        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial());
+        mActiveTextures[textureUnit].texture = textureVk;
+        mActiveTextures[textureUnit].sampler = samplerVk;
+        // Cache serials from sampler and texture, but re-use texture if no sampler bound
+        ASSERT(textureVk != nullptr);
+        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial(),
+                                   (samplerVk != nullptr) ? samplerVk->getSerial() : kZeroSerial);
     }
 
     return angle::Result::Continue;
 }
 
-const gl::ActiveTextureArray<TextureVk *> &ContextVk::getActiveTextures() const
+const gl::ActiveTextureArray<vk::TextureUnit> &ContextVk::getActiveTextures() const
 {
     return mActiveTextures;
 }

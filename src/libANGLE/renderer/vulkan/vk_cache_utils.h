@@ -696,7 +696,7 @@ class TextureDescriptorDesc
     TextureDescriptorDesc(const TextureDescriptorDesc &other);
     TextureDescriptorDesc &operator=(const TextureDescriptorDesc &other);
 
-    void update(size_t index, Serial serial);
+    void update(size_t index, Serial textureSerial, Serial samplerSerial);
     size_t hash() const;
     void reset();
 
@@ -707,7 +707,12 @@ class TextureDescriptorDesc
 
   private:
     uint32_t mMaxIndex;
-    gl::ActiveTextureArray<uint32_t> mSerials;
+    struct TexUnitSerials
+    {
+        uint32_t texture;
+        uint32_t sampler;
+    };
+    gl::ActiveTextureArray<TexUnitSerials> mSerials;
 };
 }  // namespace vk
 }  // namespace rx
