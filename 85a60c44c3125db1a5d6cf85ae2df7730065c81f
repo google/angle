@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "969cc08f_11be9418",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2126,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-11T19:25:23Z",
+      "side": 1,
+      "message": "I see. How about:\n\ndest.depthBits \u003e 0 \u0026\u0026 dest.stencilBits \u003e 0 \u0026\u0026 src.depthBits \u003d\u003d 0?\n\nyou could also assert inside that stencilBits \u003e 0.",
+      "parentUuid": "93a60a75_b38350e1",
+      "range": {
+        "startLine": 2125,
+        "startChar": 72,
+        "endLine": 2126,
+        "endChar": 55
+      },
+      "revId": "85a60c44c3125db1a5d6cf85ae2df7730065c81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bbfa62fb_2d054d82",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 11
