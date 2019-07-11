@@ -184,15 +184,19 @@ GLint GetVariableLocation(const std::vector<VarT> &list,
     return -1;
 }
 
-void CopyStringToBuffer(GLchar *buffer, const std::string &string, GLsizei bufSize, GLsizei *length)
+void CopyStringToBuffer(GLchar *buffer,
+                        const std::string &string,
+                        GLsizei bufSize,
+                        GLsizei *lengthOut)
 {
     ASSERT(bufSize > 0);
-    strncpy(buffer, string.c_str(), bufSize);
-    buffer[bufSize - 1] = '\0';
+    size_t length = std::min<size_t>(bufSize - 1, string.length());
+    memcpy(buffer, string.c_str(), length);
+    buffer[length] = '\0';
 
-    if (length)
+    if (lengthOut)
     {
-        *length = static_cast<GLsizei>(strlen(buffer));
+        *lengthOut = length;
     }
 }
 

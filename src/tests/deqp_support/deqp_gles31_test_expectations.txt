@@ -532,7 +532,7 @@
 1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL
 1442 NVIDIA OPENGL : dEQP-GLES31.functional.fbo.no_attachments.maximums.all = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.atomic_counter_buffer.referenced_by* = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.* = FAIL
+1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_query = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_variable.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_input.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_output.* = FAIL
@@ -628,7 +628,7 @@
 3605 VULKAN : dEQP-GLES31.functional.texture.gather.offset.* = FAIL
 
 // Front-end query bugs:
-3520 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_*query = FAIL
+3520 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_query = FAIL
 3520 VULKAN : dEQP-GLES31.functional.program_interface_query.program_*.resource_list.compute.empty = FAIL
 3520 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
 
