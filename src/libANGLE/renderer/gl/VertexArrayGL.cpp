@@ -606,6 +606,7 @@ void VertexArrayGL::syncDirtyAttrib(const gl::Context *context,
                 updateAttribEnabled(attribIndex);
                 break;
 
+            case VertexArray::DIRTY_ATTRIB_POINTER_BUFFER:
             case VertexArray::DIRTY_ATTRIB_POINTER:
                 updateAttribPointer(context, attribIndex);
                 break;

@@ -1723,7 +1723,7 @@ TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 
     ASSERT_GL_NO_ERROR();
 
-    for (const auto &data : mTestData)
+    for (const AttribData &data : mTestData)
     {
         const auto &expected =
             (data.normalized) ? mNormExpectedData[data.type] : mExpectedData[data.type];
@@ -1738,7 +1738,7 @@ TEST_P(VertexAttributeCachingTest, BufferMulticaching)
                               sizeof(GLfloat) * baseStride, expected.data());
         drawQuad(mProgram, "position", 0.5f);
         ASSERT_GL_NO_ERROR();
-        EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 255, 255, 255);
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::white);
     }
 }
 

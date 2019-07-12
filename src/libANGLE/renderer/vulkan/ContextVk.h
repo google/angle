@@ -182,6 +182,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::CommandBuff
         mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     }
 
+    ANGLE_INLINE void invalidateVertexBuffers() { mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS); }
+
     ANGLE_INLINE void onVertexAttributeChange(size_t attribIndex,
                                               GLuint stride,
                                               GLuint divisor,
