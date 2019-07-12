@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ed6cf0c_396f5991",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-12T20:28:07Z",
+      "side": 1,
+      "message": "nit: stray semicolon",
+      "range": {
+        "startLine": 474,
+        "startChar": 4,
+        "endLine": 474,
+        "endChar": 5
+      },
+      "revId": "60730a61c56a5d5f40c60db5d1a58df147a5f0a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
