@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6544d331_ca68fb34",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2217,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-12T19:37:51Z",
+      "side": 1,
+      "message": "You could put this before the `if (stencilAllocationSize \u003e 0)`. That way, the first aspect is copied and staged, then the next aspect is processed. Currently, stencil handling and staging is done in the middle of handling depth.",
+      "range": {
+        "startLine": 2197,
+        "startChar": 0,
+        "endLine": 2217,
+        "endChar": 5
+      },
+      "revId": "df4e52242ba39101d9a663e718eafad3e7f905ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
