@@ -22,6 +22,30 @@
       "revId": "9103a55213caa928073a6329d40a9487b242ca46",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b13c6f9c_1645c5ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2019-07-12T20:51:22Z",
+      "side": 1,
+      "message": "Kernel version: https://bugs.chromium.org/p/chromium/issues/detail?id\u003d927470#c26",
+      "parentUuid": "2fd21fe6_3fb405ec",
+      "range": {
+        "startLine": 9,
+        "startChar": 36,
+        "endLine": 9,
+        "endChar": 46
+      },
+      "revId": "9103a55213caa928073a6329d40a9487b242ca46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
