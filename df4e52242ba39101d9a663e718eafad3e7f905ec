@@ -22,6 +22,30 @@
       "revId": "df4e52242ba39101d9a663e718eafad3e7f905ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83bf2e17_1f198795",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2217,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-12T19:52:05Z",
+      "side": 1,
+      "message": "Not quite. This if only handles the case where we have packed depth/stencil but are only loading one aspect. I\u0027m depending on the prior code to take care of the 2nd aspect prior to dealing with the \"default\" case. That means I\u0027d need to consider the stencilAllocationSize in this if and I figured if I check stencilAllocationSize I might as well send the stencil bit.\nokay?",
+      "parentUuid": "6544d331_ca68fb34",
+      "range": {
+        "startLine": 2197,
+        "startChar": 0,
+        "endLine": 2217,
+        "endChar": 5
+      },
+      "revId": "df4e52242ba39101d9a663e718eafad3e7f905ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
