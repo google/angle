@@ -20,11 +20,6 @@ def _CheckChangeHasBugField(input_api, output_api):
     """Requires that the changelist have a Bug: field."""
     bugs = input_api.change.BugsFromDescription()
     if not bugs:
-        # Autorollers don't always add Bug: tags, especially for external projects that don't use
-        # Monorail. Detect Autoroller CLs using the committer email address.
-        if 'angle-autoroll@' in input_api.change.author_email:
-            return []
-
         return [
             output_api.PresubmitError(
                 'If this change has an associated bug, add Bug: angleproject:[bug number].')
