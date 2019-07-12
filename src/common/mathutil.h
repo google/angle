@@ -1257,7 +1257,15 @@ inline constexpr unsigned int UnsignedCeilDivide(unsigned int value, unsigned in
 #if defined(_MSC_VER)
 
 #    define ANGLE_ROTL(x, y) _rotl(x, y)
+#    define ANGLE_ROTL64(x, y) _rotl64(x, y)
 #    define ANGLE_ROTR16(x, y) _rotr16(x, y)
+
+#elif defined(__clang__) && __has_builtin(__builtin_rotateleft32) && \
+    __has_builtin(__builtin_rotateleft64) && __has_builtin(__builtin_rotateright16)
+
+#    define ANGLE_ROTL(x, y) __builtin_rotateleft32(x, y)
+#    define ANGLE_ROTL64(x, y) __builtin_rotateleft64(x, y)
+#    define ANGLE_ROTR16(x, y) __builtin_rotateright16(x, y)
 
 #else
 
@@ -1266,12 +1274,18 @@ inline uint32_t RotL(uint32_t x, int8_t r)
     return (x << r) | (x >> (32 - r));
 }
 
+inline uint64_t RotL64(uint64_t x, int8_t r)
+{
+    return (x << r) | (x >> (64 - r));
+}
+
 inline uint16_t RotR16(uint16_t x, int8_t r)
 {
     return (x >> r) | (x << (16 - r));
 }
 
 #    define ANGLE_ROTL(x, y) ::rx::RotL(x, y)
+#    define ANGLE_ROTL64(x, y) ::rx::RotL64(x, y)
 #    define ANGLE_ROTR16(x, y) ::rx::RotR16(x, y)
 
 #endif  // namespace rx

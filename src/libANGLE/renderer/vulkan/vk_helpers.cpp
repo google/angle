@@ -1847,7 +1847,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
 {
     ASSERT(valid());
 
-    changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, ImageLayout::TransferDst, commandBuffer);
+    ASSERT(mCurrentLayout == ImageLayout::TransferDst);
 
     VkImageSubresourceRange range = {};
     range.aspectMask              = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1870,7 +1870,7 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
 {
     ASSERT(valid());
 
-    changeLayout(imageAspectFlags, ImageLayout::TransferDst, commandBuffer);
+    ASSERT(mCurrentLayout == ImageLayout::TransferDst);
 
     VkImageSubresourceRange clearRange = {
         /*aspectMask*/ clearAspectFlags,
@@ -2444,6 +2444,16 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     std::vector<SubresourceUpdate> updatesToKeep;
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(mFormat->imageFormat());
 
+    // Upload levels and layers that don't conflict in parallel.  The (level, layer) pair is hashed
+    // to `(level * mLayerCount + layer) % 64` and used to track whether that subresource is
+    // currently in transfer.  If so, a barrier is inserted.  If mLayerCount * mLevelCount > 64,
+    // there will be a few unnecessary barriers.
+    constexpr uint32_t kMaxParallelSubresourceUpload = 64;
+    uint64_t subresourceUploadsInProgress            = 0;
+
+    // Start in TransferDst.
+    changeLayout(aspectFlags, vk::ImageLayout::TransferDst, commandBuffer);
+
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
         ASSERT(update.updateSource == SubresourceUpdate::UpdateSource::Clear ||
@@ -2471,6 +2481,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             updateMipLevel                                 = dstSubresource.mipLevel;
             updateBaseLayer                                = dstSubresource.baseArrayLayer;
             updateLayerCount                               = dstSubresource.layerCount;
+            ASSERT(updateLayerCount != static_cast<uint32_t>(gl::ImageIndex::kEntireLevel));
         }
 
         // If the update level is not within the requested range, skip the update.
@@ -2486,10 +2497,28 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             continue;
         }
 
-        // Conservatively add a barrier between every update.  This is to avoid races when updating
-        // the same subresource.  A possible optimization could be to only issue this barrier when
-        // an overlap in updates is observed.
-        changeLayout(aspectFlags, vk::ImageLayout::TransferDst, commandBuffer);
+        if (updateLayerCount >= kMaxParallelSubresourceUpload)
+        {
+            // If there are more subresources than bits we can track, always insert a barrier.
+            changeLayout(aspectFlags, vk::ImageLayout::TransferDst, commandBuffer);
+            subresourceUploadsInProgress = std::numeric_limits<uint64_t>::max();
+        }
+        else
+        {
+            const uint64_t subresourceHashRange = angle::Bit<uint64_t>(updateLayerCount) - 1;
+            const uint32_t subresourceHashOffset =
+                (updateMipLevel * mLayerCount + updateBaseLayer) % kMaxParallelSubresourceUpload;
+            const uint64_t subresourceHash =
+                ANGLE_ROTL64(subresourceHashRange, subresourceHashOffset);
+
+            if ((subresourceUploadsInProgress & subresourceHash) != 0)
+            {
+                // If there's overlap in subresource upload, issue a barrier.
+                changeLayout(aspectFlags, vk::ImageLayout::TransferDst, commandBuffer);
+                subresourceUploadsInProgress = 0;
+            }
+            subresourceUploadsInProgress |= subresourceHash;
+        }
 
         if (update.updateSource == SubresourceUpdate::UpdateSource::Clear)
         {
