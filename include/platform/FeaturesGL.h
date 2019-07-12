@@ -269,11 +269,13 @@ struct FeaturesGL : FeatureSetBase
                                      &members, "http://crbug.com/849576"};
 
     // Most Android devices fail to allocate a texture that is larger than 4096. Limit the caps
-    // instead of generating GL_OUT_OF_MEMORY errors.
-    Feature limitMaxTextureSizeTo4096 = {
-        "max_texture_size_limit_4096", FeatureCategory::OpenGLWorkarounds,
-        "Limit max texture size to 4096 to avoid frequent out-of-memory errors on Android",
-        &members};
+    // instead of generating GL_OUT_OF_MEMORY errors. Also causes system to hang on some older
+    // intel mesa drivers on Linux.
+    Feature limitMaxTextureSizeTo4096 = {"max_texture_size_limit_4096",
+                                         FeatureCategory::OpenGLWorkarounds,
+                                         "Limit max texture size to 4096 to avoid frequent "
+                                         "out-of-memory errors on Android or Intel Linux",
+                                         &members, "http://crbug.com/927470"};
 
     // Prevent excessive MSAA allocations on Android devices, various rendering bugs have been
     // observed and they tend to be high DPI anyways. http://crbug.com/797243
@@ -313,6 +315,14 @@ struct FeaturesGL : FeatureSetBase
         "clear_to_zero_or_one_broken", FeatureCategory::OpenGLWorkarounds,
         "Clears when the clear color is all zeros or ones do not work.", &members,
         "https://crbug.com/710443"};
+
+    // Some older Linux Intel mesa drivers will hang the system when allocating large textures. Fix
+    // this by capping the max texture size.
+    Feature limitMax3dArrayTextureSizeTo1024 = {
+        "max_3d_array_texture_size_1024", FeatureCategory::OpenGLWorkarounds,
+        "Limit max 3d texture size and max array texture layers to 1024 to avoid system hang on "
+        "older Intel Linux",
+        &members, "http://crbug.com/927470"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
