@@ -23,10 +23,10 @@ vars = {
   'glslang_revision': '1a6e8534cef32ce855f8b97ea84ffa93152242b0',
 
   # Current revision fo the SPIRV-Headers Vulkan support library.
-  'spirv_headers_revision': 'de99d4d834aeb51dd9f099baa285bd44fd04bb3d',
+  'spirv_headers_revision': '123dc278f204f8e833e1a88d31c46d0edf81d4b2',
 
   # Current revision of SPIRV-Tools for Vulkan.
-  'spirv_tools_revision': '0c4feb643b89d1792b02f7cbef315e9d95633bd7',
+  'spirv_tools_revision': '032adc4d7edeb8bb048137dfba6d29e7732fa7cb',
 
   # Current revision of Khronos Vulkan-Headers.
   'vulkan_headers_revision': '982f0f84dccf6f281b48318c77261a9028000126',
