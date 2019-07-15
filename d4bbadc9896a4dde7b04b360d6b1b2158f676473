@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4329bda8_5e21d147",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T15:09:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7f4a183_db8e4d9b",
+      "range": {
+        "startLine": 18,
+        "startChar": 3,
+        "endLine": 19,
+        "endChar": 26
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bfe3e5d_7eb68765",
         "filename": "/COMMIT_MSG",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "1f7a6b6d_b4f0519f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T15:09:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bfe3e5d_7eb68765",
+      "range": {
+        "startLine": 41,
+        "startChar": 26,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3b22416_dcbffa78",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2019-07-15T14:34:29Z",
       "side": 1,
       "message": "Where there tests failing because of this missing validation?  Seems like it would be useful to copy to/from SNORM textures but I agree that it seems to fall into the following validation:\n\n  \"An INVALID_OPERATION error is generated if there are no rows in tables 8.14, 8.15 or 8.16 \n   which match internalformat and the source buffer\n   component types and sizes. In this case, the source buffer does not have an\n   effective internal format.\"",
+      "range": {
+        "startLine": 811,
+        "startChar": 4,
+        "endLine": 816,
+        "endChar": 5
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d96b0194_678e0231",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T15:09:16Z",
+      "side": 1,
+      "message": "Yes, there were failing tests.  I forget exactly how many at this point, but I think it was around 9 or 10.\n\nThat\u0027s the part of the spec that the test seems to be referring to.  Any code/comment edits you suggest?",
+      "parentUuid": "e3b22416_dcbffa78",
       "range": {
         "startLine": 811,
         "startChar": 4,
@@ -91,6 +163,30 @@
       "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f3bacbc_f85b3e90",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T15:09:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5820204a_7ea245d6",
+      "range": {
+        "startLine": 819,
+        "startChar": 26,
+        "endLine": 819,
+        "endChar": 34
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -141,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "f419036c_41c6cf92",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T15:09:16Z",
+      "side": 1,
+      "message": "I actually tried a more-generic check, but it caused the tests for 5551 and 565 to fail.  GL_RGB10_A2 is the only internal format that the test checks for, which explains the failures, but it was late enough Friday night that I didn\u0027t verify that.  Assuming it is, should we push for a test change?",
+      "parentUuid": "3501a519_cdab1e44",
+      "range": {
+        "startLine": 821,
+        "startChar": 0,
+        "endLine": 823,
+        "endChar": 90
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c68b815_3fc742ea",
         "filename": "src/tests/deqp_support/deqp_khr_gles3_test_expectations.txt",
         "patchSetId": 11
@@ -176,6 +296,30 @@
       "side": 1,
       "message": "Sorry, that line used to be the case.  I commented it out as I tried to see what the current status was with the fixes I was making, and forgot to completely remove it.  Lines 34-35 and 41-42 are what left of line 40.  I\u0027ll clean it up and re-push once the bots are finished with this PatchSet.",
       "parentUuid": "5c68b815_3fc742ea",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 67
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ed88bb5_bd3144c9",
+        "filename": "src/tests/deqp_support/deqp_khr_gles3_test_expectations.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T15:09:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78318133_f9dcd3ac",
       "range": {
         "startLine": 39,
         "startChar": 0,
