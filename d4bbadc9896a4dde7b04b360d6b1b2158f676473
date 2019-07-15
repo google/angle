@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "34580871_8f5e48df",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-15T15:30:20Z",
+      "side": 1,
+      "message": "No, this is fine.",
+      "parentUuid": "d96b0194_678e0231",
+      "range": {
+        "startLine": 811,
+        "startChar": 4,
+        "endLine": 816,
+        "endChar": 5
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5820204a_7ea245d6",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 11
@@ -258,6 +282,30 @@
       "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c568659a_06d6cfde",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2019-07-15T15:30:20Z",
+      "side": 1,
+      "message": "This is probably fine.  I wouldn\u0027t bother pushing for test updates on this.",
+      "parentUuid": "f419036c_41c6cf92",
+      "range": {
+        "startLine": 821,
+        "startChar": 0,
+        "endLine": 823,
+        "endChar": 90
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
