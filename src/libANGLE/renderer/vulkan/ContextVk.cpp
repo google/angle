@@ -683,7 +683,8 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     vk::CommandBuffer *commandBuffer,
     vk::CommandGraphResource *recorder)
 {
-    if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers())
+    if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers() ||
+        mProgram->hasAtomicCounterBuffers())
     {
         ANGLE_TRY(mProgram->updateShaderResourcesDescriptorSet(this, recorder));
     }
@@ -1953,7 +1954,8 @@ void ContextVk::invalidateCurrentTextures()
 void ContextVk::invalidateCurrentShaderResources()
 {
     ASSERT(mProgram);
-    if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers())
+    if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers() ||
+        mProgram->hasAtomicCounterBuffers())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);

@@ -693,6 +693,11 @@ inline bool IsQualifierUnspecified(TQualifier qualifier)
     return (qualifier == EvqTemporary || qualifier == EvqGlobal);
 }
 
+inline bool IsStorageBuffer(TQualifier qualifier)
+{
+    return qualifier == EvqBuffer;
+}
+
 enum TLayoutImageInternalFormat
 {
     EiifUnspecified,

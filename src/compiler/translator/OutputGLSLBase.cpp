@@ -214,31 +214,31 @@ std::string TOutputGLSLBase::getMemoryQualifiers(const TType &type)
     const TMemoryQualifier &memoryQualifier = type.getMemoryQualifier();
     if (memoryQualifier.readonly)
     {
-        ASSERT(IsImage(type.getBasicType()));
+        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "readonly ";
     }
 
     if (memoryQualifier.writeonly)
     {
-        ASSERT(IsImage(type.getBasicType()));
+        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "writeonly ";
     }
 
     if (memoryQualifier.coherent)
     {
-        ASSERT(IsImage(type.getBasicType()));
+        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "coherent ";
     }
 
     if (memoryQualifier.restrictQualifier)
     {
-        ASSERT(IsImage(type.getBasicType()));
+        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "restrict ";
     }
 
     if (memoryQualifier.volatileQualifier)
     {
-        ASSERT(IsImage(type.getBasicType()));
+        ASSERT(IsImage(type.getBasicType()) || IsStorageBuffer(type.getQualifier()));
         out << "volatile ";
     }
 

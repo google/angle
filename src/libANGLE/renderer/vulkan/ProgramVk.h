@@ -122,6 +122,7 @@ class ProgramVk : public ProgramImpl
     bool hasTextures() const { return !mState.getSamplerBindings().empty(); }
     bool hasUniformBuffers() const { return !mState.getUniformBlocks().empty(); }
     bool hasStorageBuffers() const { return !mState.getShaderStorageBlocks().empty(); }
+    bool hasAtomicCounterBuffers() const { return !mState.getAtomicCounterBuffers().empty(); }
     bool hasTransformFeedbackOutput() const
     {
         return !mState.getLinkedTransformFeedbackVaryings().empty();
@@ -185,6 +186,8 @@ class ProgramVk : public ProgramImpl
                                     vk::CommandGraphResource *recorder,
                                     const std::vector<gl::InterfaceBlock> &blocks,
                                     VkDescriptorType descriptorType);
+    void updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
+                                                 vk::CommandGraphResource *recorder);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
@@ -197,6 +200,10 @@ class ProgramVk : public ProgramImpl
     void updateBindingOffsets();
     uint32_t getUniformBlockBindingsOffset() const { return 0; }
     uint32_t getStorageBlockBindingsOffset() const { return mStorageBlockBindingsOffset; }
+    uint32_t getAtomicCounterBufferBindingsOffset() const
+    {
+        return mAtomicCounterBufferBindingsOffset;
+    }
 
     class ShaderInfo;
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
@@ -309,9 +316,11 @@ class ProgramVk : public ProgramImpl
     // We keep the translated linked shader sources to use with shader draw call patching.
     gl::ShaderMap<std::string> mShaderSources;
 
-    // Storage buffers are placed after uniform buffers in their descriptor set.  This cached value
-    // contains the offset where storage buffer bindings start.
+    // In their descriptor set, uniform buffers are placed first, then storage buffers, then atomic
+    // counter buffers.  These cached values contain the offsets where storage buffer and atomic
+    // counter buffer bindings start.
     uint32_t mStorageBlockBindingsOffset;
+    uint32_t mAtomicCounterBufferBindingsOffset;
 
     // Store descriptor pools here. We store the descriptors in the Program to facilitate descriptor
     // cache management. It can also allow fewer descriptors for shaders which use fewer

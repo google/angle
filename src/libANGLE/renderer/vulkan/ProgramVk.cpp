@@ -182,6 +182,71 @@ void AddInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &b
     }
 }
 
+void AddAtomicCounterBufferDescriptorSetDesc(
+    const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
+    uint32_t bindingStart,
+    vk::DescriptorSetLayoutDesc *descOut)
+{
+    uint32_t bindingIndex = 0;
+    for (uint32_t bufferIndex = 0; bufferIndex < atomicCounterBuffers.size(); ++bufferIndex)
+    {
+        VkShaderStageFlags activeStages =
+            gl_vk::GetShaderStageFlags(atomicCounterBuffers[bufferIndex].activeShaders());
+
+        descOut->update(bindingStart + bindingIndex, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
+                        activeStages);
+    }
+}
+
+void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+                                     VkDeviceSize maxSize,
+                                     VkDescriptorSet descSet,
+                                     VkDescriptorType descType,
+                                     uint32_t bindingIndex,
+                                     uint32_t arrayElement,
+                                     VkDescriptorBufferInfo *bufferInfoOut,
+                                     VkWriteDescriptorSet *writeInfoOut)
+{
+    gl::Buffer *buffer = bufferBinding.get();
+    ASSERT(buffer != nullptr);
+
+    // Make sure there's no possible under/overflow with binding size.
+    static_assert(sizeof(VkDeviceSize) >= sizeof(bufferBinding.getSize()),
+                  "VkDeviceSize too small");
+    ASSERT(bufferBinding.getSize() >= 0);
+
+    BufferVk *bufferVk             = vk::GetImpl(buffer);
+    GLintptr offset                = bufferBinding.getOffset();
+    VkDeviceSize size              = bufferBinding.getSize();
+    vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
+
+    // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
+    // backing buffer may be larger than max*BufferRange.  In that case, we use the minimum of
+    // the backing buffer size (what's left after offset) and the buffer size as defined by the
+    // shader.  That latter is only valid for UBOs, as SSBOs may have variable length arrays.
+    size = size > 0 ? size : (bufferHelper.getSize() - offset);
+    if (maxSize > 0)
+    {
+        size = std::min(size, maxSize);
+    }
+
+    bufferInfoOut->buffer = bufferHelper.getBuffer().getHandle();
+    bufferInfoOut->offset = offset;
+    bufferInfoOut->range  = size;
+
+    writeInfoOut->sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfoOut->pNext            = nullptr;
+    writeInfoOut->dstSet           = descSet;
+    writeInfoOut->dstBinding       = bindingIndex;
+    writeInfoOut->dstArrayElement  = arrayElement;
+    writeInfoOut->descriptorCount  = 1;
+    writeInfoOut->descriptorType   = descType;
+    writeInfoOut->pImageInfo       = nullptr;
+    writeInfoOut->pBufferInfo      = bufferInfoOut;
+    writeInfoOut->pTexelBufferView = nullptr;
+    ASSERT(writeInfoOut->pBufferInfo[0].buffer != VK_NULL_HANDLE);
+}
+
 class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
 {
   public:
@@ -255,7 +320,10 @@ ProgramVk::DefaultUniformBlock::DefaultUniformBlock() {}
 ProgramVk::DefaultUniformBlock::~DefaultUniformBlock() = default;
 
 ProgramVk::ProgramVk(const gl::ProgramState &state)
-    : ProgramImpl(state), mDynamicBufferOffsets{}, mStorageBlockBindingsOffset(0)
+    : ProgramImpl(state),
+      mDynamicBufferOffsets{},
+      mStorageBlockBindingsOffset(0),
+      mAtomicCounterBufferBindingsOffset(0)
 {}
 
 ProgramVk::~ProgramVk() = default;
@@ -443,6 +511,8 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     AddInterfaceBlockDescriptorSetDesc(mState.getShaderStorageBlocks(),
                                        getStorageBlockBindingsOffset(),
                                        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, &buffersSetDesc);
+    AddAtomicCounterBufferDescriptorSetDesc(
+        mState.getAtomicCounterBuffers(), getAtomicCounterBufferBindingsOffset(), &buffersSetDesc);
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(
         contextVk, buffersSetDesc, &mDescriptorSetLayouts[kShaderResourceDescriptorSetIndex]));
@@ -494,6 +564,8 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
 
     uint32_t uniformBlockCount = static_cast<uint32_t>(mState.getUniformBlocks().size());
     uint32_t storageBlockCount = static_cast<uint32_t>(mState.getShaderStorageBlocks().size());
+    uint32_t atomicCounterBufferCount =
+        static_cast<uint32_t>(mState.getAtomicCounterBuffers().size());
     uint32_t textureCount      = static_cast<uint32_t>(mState.getSamplerBindings().size());
 
     if (renderer->getFeatures().bindEmptyForUnusedDescriptorSets.enabled)
@@ -509,9 +581,10 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     {
         bufferSetSize.push_back({VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBlockCount});
     }
-    if (storageBlockCount > 0)
+    if (storageBlockCount > 0 || atomicCounterBufferCount > 0)
     {
-        bufferSetSize.push_back({VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, storageBlockCount});
+        bufferSetSize.push_back(
+            {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, storageBlockCount + atomicCounterBufferCount});
     }
 
     VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, textureCount};
@@ -537,6 +610,8 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
 void ProgramVk::updateBindingOffsets()
 {
     mStorageBlockBindingsOffset = mState.getUniqueUniformBlockCount();
+    mAtomicCounterBufferBindingsOffset =
+        mStorageBlockBindingsOffset + mState.getUniqueStorageBlockCount();
 }
 
 void ProgramVk::linkResources(const gl::ProgramLinkedResources &resources)
@@ -1130,18 +1205,17 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
             continue;
         }
 
-        gl::Buffer *buffer = bufferBinding.get();
-        ASSERT(buffer != nullptr);
+        uint32_t binding          = bindingStart + currentBinding;
+        uint32_t arrayElement     = block.isArray ? block.arrayElement : 0;
+        VkDeviceSize maxBlockSize = isStorageBuffer ? 0 : block.dataSize;
 
-        // Make sure there's no possible under/overflow with binding size.
-        static_assert(sizeof(VkDeviceSize) >= sizeof(bufferBinding.getSize()),
-                      "VkDeviceSize too small");
-        ASSERT(bufferBinding.getSize() >= 0);
+        VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[writeCount];
+        VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[writeCount];
 
-        BufferVk *bufferVk             = vk::GetImpl(buffer);
-        GLintptr offset                = bufferBinding.getOffset();
-        VkDeviceSize size              = bufferBinding.getSize();
-        VkDeviceSize blockSize         = block.dataSize;
+        WriteBufferDescriptorSetBinding(bufferBinding, maxBlockSize, descriptorSet, descriptorType,
+                                        binding, arrayElement, &bufferInfo, &writeInfo);
+
+        BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
         if (isStorageBuffer)
@@ -1154,35 +1228,55 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
             bufferHelper.onRead(recorder, VK_ACCESS_UNIFORM_READ_BIT);
         }
 
-        // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
-        // backing buffer may be larger than max*BufferRange.  In that case, we use the minimum of
-        // the backing buffer size (what's left after offset) and the buffer size as defined by the
-        // shader.  That latter is only valid for UBOs, as SSBOs may have variable length arrays.
-        size = size > 0 ? size : (bufferHelper.getSize() - offset);
-        if (!isStorageBuffer)
+        ++writeCount;
+    }
+
+    VkDevice device = contextVk->getDevice();
+
+    vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
+}
+
+void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
+                                                        vk::CommandGraphResource *recorder)
+{
+    VkDescriptorSet descriptorSet = mDescriptorSets[kShaderResourceDescriptorSetIndex];
+
+    const uint32_t bindingStart = getAtomicCounterBufferBindingsOffset();
+
+    gl::AtomicCounterBuffersArray<VkDescriptorBufferInfo> descriptorBufferInfo;
+    gl::AtomicCounterBuffersArray<VkWriteDescriptorSet> writeDescriptorInfo;
+    uint32_t writeCount = 0;
+
+    // Write atomic counter buffers.
+    const gl::State &glState = contextVk->getState();
+    const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
+        mState.getAtomicCounterBuffers();
+
+    for (uint32_t bufferIndex = 0; bufferIndex < atomicCounterBuffers.size(); ++bufferIndex)
+    {
+        const gl::AtomicCounterBuffer &atomicCounterBuffer = atomicCounterBuffers[bufferIndex];
+        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
+            glState.getIndexedAtomicCounterBuffer(atomicCounterBuffer.binding);
+
+        if (bufferBinding.get() == nullptr)
         {
-            size = std::min(size, blockSize);
+            continue;
         }
 
+        uint32_t binding = bindingStart + bufferIndex;
+
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[writeCount];
+        VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[writeCount];
 
-        bufferInfo.buffer = bufferHelper.getBuffer().getHandle();
-        bufferInfo.offset = offset;
-        bufferInfo.range  = size;
+        WriteBufferDescriptorSetBinding(bufferBinding, 0, descriptorSet,
+                                        VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, binding, 0, &bufferInfo,
+                                        &writeInfo);
 
-        VkWriteDescriptorSet &writeInfo = writeDescriptorInfo[writeCount];
+        BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
+        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-        writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writeInfo.pNext            = nullptr;
-        writeInfo.dstSet           = descriptorSet;
-        writeInfo.dstBinding       = bindingStart + currentBinding;
-        writeInfo.dstArrayElement  = block.isArray ? block.arrayElement : 0;
-        writeInfo.descriptorCount  = 1;
-        writeInfo.descriptorType   = descriptorType;
-        writeInfo.pImageInfo       = nullptr;
-        writeInfo.pBufferInfo      = &bufferInfo;
-        writeInfo.pTexelBufferView = nullptr;
-        ASSERT(writeInfo.pBufferInfo[0].buffer != VK_NULL_HANDLE);
+        bufferHelper.onWrite(contextVk, recorder, VK_ACCESS_SHADER_READ_BIT,
+                             VK_ACCESS_SHADER_WRITE_BIT);
 
         ++writeCount;
     }
@@ -1201,6 +1295,7 @@ angle::Result ProgramVk::updateShaderResourcesDescriptorSet(ContextVk *contextVk
                                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
     updateBuffersDescriptorSet(contextVk, recorder, mState.getShaderStorageBlocks(),
                                VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
+    updateAtomicCounterBuffersDescriptorSet(contextVk, recorder);
 
     return angle::Result::Continue;
 }

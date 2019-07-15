@@ -123,6 +123,8 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(binding = 0, offset = 8) uniform atomic_uint ac[3];
 
+void atomicCounterInFunction(in atomic_uint counter[3]);
+
 void atomicCounterInFunction(in atomic_uint counter[3])
 {
     atomicCounter(counter[0]);
@@ -272,7 +274,12 @@ ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest,
                        ES3_OPENGLES(),
                        ES31_OPENGL(),
                        ES31_OPENGLES(),
-                       ES31_D3D11());
-ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
+                       ES31_D3D11(),
+                       ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest31,
+                       ES31_OPENGL(),
+                       ES31_OPENGLES(),
+                       ES31_D3D11(),
+                       ES31_VULKAN());
 
 }  // namespace

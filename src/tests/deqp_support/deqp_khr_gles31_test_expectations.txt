@@ -55,9 +55,9 @@
 // Base texture level:
 3184 VULKAN : KHR-GLES31.core.texture*base-level* = SKIP
 
-// Atomic counters:
-3566 VULKAN : KHR-GLES31.core.shader_atomic_counters.* = FAIL
-3566 VULKAN : KHR-GLES31.core.layout_binding.buffer_layout_binding_atomic* = SKIP
+// Program Pipeline Objects:
+3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
+3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-dispatches = FAIL
 
 // RGBA32F:
 3520 VULKAN : KHR-GLES31.core.texture_gather.*-gather-float-2d-rgb = SKIP
@@ -107,6 +107,8 @@
 // Storage image:
 3563 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_ComputeShader = FAIL
 3563 VULKAN : KHR-GLES31.core.layout_binding.block_layout_binding_block_ComputeShader = FAIL
+3563 VULKAN : KHR-GLES31.core.layout_binding.buffer_layout_binding_atomic* = SKIP
+3563 VULKAN : KHR-GLES31.core.layout_binding.atomic_uint_layout_binding_atomic* = FAIL
 
 3520 VULKAN : KHR-GLES31.core.internalformat.copy_tex_image* = FAIL
 3520 VULKAN : KHR-GLES31.core.internalformat.renderbuffer* = FAIL

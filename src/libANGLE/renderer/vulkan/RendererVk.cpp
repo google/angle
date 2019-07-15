@@ -1112,6 +1112,19 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // Current highest supported version
     gl::Version maxVersion = gl::Version(3, 1);
 
+    // Limit to ES3.0 if there are any blockers for 3.1.
+
+    // ES3.1 requires at least one atomic counter buffer and four storage buffers in compute.
+    // Atomic counter buffers are emulated with storage buffers, so if Vulkan doesn't support at
+    // least 5 storage buffers in compute, we cannot support 3.1.
+    if (mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers <
+        gl::limits::kMinimumComputeStorageBuffers + 1)
+    {
+        maxVersion = std::min(maxVersion, gl::Version(3, 0));
+    }
+
+    // Limit to ES2.0 if there are any blockers for 3.0.
+
     // If the command buffer doesn't support queries, we can't support ES3.
     if (!vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
     {

@@ -256,6 +256,31 @@ void RendererVk::ensureCapsInitialized() const
         maxPerStageStorageBuffers = std::min(maxPerStageStorageBuffers, maxCombinedStorageBuffers);
     }
 
+    // Reserve one storage buffer in the fragment and compute stages for atomic counters.  This is
+    // only possible if the number of per-stage storage buffers is greater than 4, which is the
+    // required GLES minimum for compute.  We use the same value for fragment, to avoid giving one
+    // of the precious few storage buffers available to an atomic counter buffer.  The spec allows
+    // there to be zero of either of these resources in the fragment stage.
+    uint32_t maxVertexStageAtomicCounterBuffers = 0;
+    uint32_t maxPerStageAtomicCounterBuffers    = 0;
+    uint32_t maxCombinedAtomicCounterBuffers    = 0;
+
+    if (maxPerStageStorageBuffers > gl::limits::kMinimumComputeStorageBuffers)
+    {
+        --maxPerStageStorageBuffers;
+        --maxCombinedStorageBuffers;
+        maxPerStageAtomicCounterBuffers = 1;
+        maxCombinedAtomicCounterBuffers = 1;
+    }
+
+    // For the vertex stage, similarly reserve one storage buffer for atomic counters, if there are
+    // excess storage buffers.
+    if (maxVertexStageStorageBuffers > gl::limits::kMinimumComputeStorageBuffers)
+    {
+        --maxVertexStageStorageBuffers;
+        maxVertexStageAtomicCounterBuffers = 1;
+    }
+
     mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex] =
         mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxVertexStageStorageBuffers : 0;
     mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Fragment] =
@@ -267,6 +292,31 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxShaderStorageBlockSize      = limitsVk.maxStorageBufferRange;
     mNativeCaps.shaderStorageBufferOffsetAlignment =
         static_cast<GLuint>(limitsVk.minStorageBufferOffsetAlignment);
+
+    mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::Vertex] =
+        mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxVertexStageAtomicCounterBuffers
+                                                               : 0;
+    mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::Fragment] =
+        mPhysicalDeviceFeatures.fragmentStoresAndAtomics ? maxPerStageAtomicCounterBuffers : 0;
+    mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::Compute] =
+        maxPerStageAtomicCounterBuffers;
+    mNativeCaps.maxCombinedAtomicCounterBuffers = maxCombinedAtomicCounterBuffers;
+
+    mNativeCaps.maxAtomicCounterBufferBindings = maxCombinedAtomicCounterBuffers;
+    // Emulated as storage buffers, atomic counter buffers have the same size limit.  However, the
+    // limit is a signed integer and values above int max will end up as a negative size.
+    mNativeCaps.maxAtomicCounterBufferSize =
+        std::min<uint32_t>(std::numeric_limits<int32_t>::max(), limitsVk.maxStorageBufferRange);
+
+    // There is no particular limit to how many atomic counters there can be, other than the size of
+    // a storage buffer.  We nevertheless limit this to something sane (4096 arbitrarily).
+    const uint32_t maxAtomicCounters =
+        std::min<size_t>(4096, limitsVk.maxStorageBufferRange / sizeof(uint32_t));
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mNativeCaps.maxShaderAtomicCounters[shaderType] = maxAtomicCounters;
+    }
+    mNativeCaps.maxCombinedAtomicCounters = maxAtomicCounters;
 
     mNativeCaps.minProgramTexelOffset = mPhysicalDeviceProperties.limits.minTexelOffset;
     mNativeCaps.maxProgramTexelOffset = mPhysicalDeviceProperties.limits.maxTexelOffset;

@@ -735,6 +735,30 @@ uint32_t AssignInterfaceBlockBindings(const std::vector<gl::InterfaceBlock> &blo
     return bindingIndex;
 }
 
+uint32_t AssignAtomicCounterBufferBindings(const std::vector<gl::AtomicCounterBuffer> &buffers,
+                                           const char *qualifier,
+                                           uint32_t bindingStart,
+                                           gl::ShaderMap<IntermediateShaderSource> *shaderSources)
+{
+    const std::string resourcesDescriptorSet = "set = " + Str(kShaderResourceDescriptorSetIndex);
+
+    // Currently, we only support a single atomic counter buffer binding.
+    ASSERT(buffers.size() <= 1);
+
+    uint32_t bindingIndex = bindingStart;
+    for (const gl::AtomicCounterBuffer &buffer : buffers)
+    {
+        const std::string bindingString =
+            resourcesDescriptorSet + ", binding = " + Str(bindingIndex++);
+
+        constexpr char kAtomicCounterBlockName[] = "ANGLEAtomicCounters";
+        AssignResourceBinding(buffer.activeShaders(), kAtomicCounterBlockName, bindingString,
+                              qualifier, kUnusedBlockSubstitution, shaderSources);
+    }
+
+    return bindingIndex;
+}
+
 void AssignBufferBindings(const gl::ProgramState &programState,
                           gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
@@ -745,10 +769,13 @@ void AssignBufferBindings(const gl::ProgramState &programState,
         AssignInterfaceBlockBindings(uniformBlocks, kUniformQualifier, bindingStart, shaderSources);
 
     const std::vector<gl::InterfaceBlock> &storageBlocks = programState.getShaderStorageBlocks();
-    // Note: this pattern of accumulating the bindingStart and assigning the next
-    // resource will be used to append atomic counter buffers and images to this set.
     bindingStart =
         AssignInterfaceBlockBindings(storageBlocks, kSSBOQualifier, bindingStart, shaderSources);
+
+    const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
+        programState.getAtomicCounterBuffers();
+    bindingStart = AssignAtomicCounterBufferBindings(atomicCounterBuffers, kSSBOQualifier,
+                                                     bindingStart, shaderSources);
 }
 
 void AssignTextureBindings(const gl::ProgramState &programState,

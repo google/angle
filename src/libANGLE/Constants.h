@@ -11,6 +11,8 @@
 
 #include "common/platform.h"
 
+#include <stdint.h>
+
 namespace gl
 {
 
@@ -72,6 +74,14 @@ enum
     // Implementation upper limits, real maximums depend on the hardware.
     IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 64
 };
+
+namespace limits
+{
+// Some of the minimums required by GL, used to detect if the backend meets the minimum requirement.
+// Currently, there's no need to separate these values per spec version.
+constexpr uint32_t kMinimumComputeStorageBuffers = 4;
+}  // namespace limits
+
 }  // namespace gl
 
 #endif  // LIBANGLE_CONSTANTS_H_

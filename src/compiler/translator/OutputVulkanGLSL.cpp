@@ -84,7 +84,10 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
             storage = EbsStd140;
         }
 
-        blockStorage = getBlockStorageString(storage);
+        if (interfaceBlock->blockStorage() != EbsUnspecified)
+        {
+            blockStorage = getBlockStorageString(storage);
+        }
     }
 
     // Specify matrix packing if necessary.
