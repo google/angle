@@ -665,9 +665,12 @@ void State::setDepthFunc(GLenum depthFunc)
 
 void State::setDepthRange(float zNear, float zFar)
 {
-    mNearZ = zNear;
-    mFarZ  = zFar;
-    mDirtyBits.set(DIRTY_BIT_DEPTH_RANGE);
+    if (mNearZ != zNear || mFarZ != zFar)
+    {
+        mNearZ = zNear;
+        mFarZ  = zFar;
+        mDirtyBits.set(DIRTY_BIT_DEPTH_RANGE);
+    }
 }
 
 void State::setBlend(bool enabled)

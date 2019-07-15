@@ -1260,8 +1260,10 @@ void GraphicsPipelineDesc::updateDepthRange(GraphicsPipelineTransitionBits *tran
 {
     // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
     // arguments of type clampf.
-    mViewport.minDepth = gl::clamp01(nearPlane);
-    mViewport.maxDepth = gl::clamp01(farPlane);
+    ASSERT(nearPlane >= 0.0f && nearPlane <= 1.0f);
+    ASSERT(farPlane >= 0.0f && farPlane <= 1.0f);
+    mViewport.minDepth = nearPlane;
+    mViewport.maxDepth = farPlane;
     transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, minDepth));
     transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, maxDepth));
 }

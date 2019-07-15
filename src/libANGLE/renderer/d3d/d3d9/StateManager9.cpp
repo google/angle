@@ -358,10 +358,7 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
                 }
                 break;
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
-                if (state.getNearPlane() != mCurNear || state.getFarPlane() != mCurFar)
-                {
-                    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
-                }
+                mDirtyBits.set(DIRTY_BIT_VIEWPORT);
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
                 if (state.getViewport() != mCurViewport)

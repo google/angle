@@ -1018,25 +1018,22 @@ void StateManagerGL::setViewport(const gl::Rectangle &viewport)
 
 void StateManagerGL::setDepthRange(float near, float far)
 {
-    if (mNear != near || mFar != far)
+    mNear = near;
+    mFar  = far;
+
+    // The glDepthRangef function isn't available until OpenGL 4.1.  Prefer it when it is
+    // available because OpenGL ES only works in floats.
+    if (mFunctions->depthRangef)
     {
-        mNear = near;
-        mFar  = far;
-
-        // The glDepthRangef function isn't available until OpenGL 4.1.  Prefer it when it is
-        // available because OpenGL ES only works in floats.
-        if (mFunctions->depthRangef)
-        {
-            mFunctions->depthRangef(mNear, mFar);
-        }
-        else
-        {
-            ASSERT(mFunctions->depthRange);
-            mFunctions->depthRange(mNear, mFar);
-        }
-
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_DEPTH_RANGE);
+        mFunctions->depthRangef(mNear, mFar);
     }
+    else
+    {
+        ASSERT(mFunctions->depthRange);
+        mFunctions->depthRange(mNear, mFar);
+    }
+
+    mLocalDirtyBits.set(gl::State::DIRTY_BIT_DEPTH_RANGE);
 }
 
 void StateManagerGL::setBlendEnabled(bool enabled)
