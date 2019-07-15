@@ -70,6 +70,15 @@ includes_gl = """#include "libGL/proc_table_wgl.h"
 #include "libGL/entry_points_gl_2_1_autogen.h"
 #include "libGL/entry_points_gl_3_0_autogen.h"
 #include "libGL/entry_points_gl_3_1_autogen.h"
+#include "libGL/entry_points_gl_3_2_autogen.h"
+#include "libGL/entry_points_gl_3_3_autogen.h"
+#include "libGL/entry_points_gl_4_0_autogen.h"
+#include "libGL/entry_points_gl_4_1_autogen.h"
+#include "libGL/entry_points_gl_4_2_autogen.h"
+#include "libGL/entry_points_gl_4_3_autogen.h"
+#include "libGL/entry_points_gl_4_4_autogen.h"
+#include "libGL/entry_points_gl_4_5_autogen.h"
+#include "libGL/entry_points_gl_4_6_autogen.h"
 #include "platform/Platform.h"
 """
 
@@ -163,7 +172,10 @@ def main():
     # libGL proc table
     glxml = registry_xml.RegistryXML('gl.xml')
 
-    for annotation in ["1_0", "1_1", "1_2", "1_3", "1_4", "1_5", "2_0", "2_1", "3_0", "3_1"]:
+    for annotation in [
+            "1_0", "1_1", "1_2", "1_3", "1_4", "1_5", "2_0", "2_1", "3_0", "3_1", "3_2", "3_3",
+            "4_0", "4_1", "4_2", "4_3", "4_4", "4_5", "4_6"
+    ]:
 
         name_prefix = "GL_VERSION_"
         feature_name = "{}{}".format(name_prefix, annotation)

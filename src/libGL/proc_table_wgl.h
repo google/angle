@@ -21,6 +21,11 @@
 #include <stddef.h>
 #include <utility>
 
+// So that windows file winnt.h doesn't substitute for MemoryBarrier function
+#ifdef MemoryBarrier
+#    undef MemoryBarrier
+#endif
+
 namespace wgl
 {
 using ProcEntry = std::pair<const char *, PROC>;

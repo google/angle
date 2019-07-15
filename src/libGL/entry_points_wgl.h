@@ -13,7 +13,6 @@
 #    define _GDI32_
 #endif
 
-#include <windows.h>
 #include "angle_gl.h"
 
 #include "WGL/wgl.h"

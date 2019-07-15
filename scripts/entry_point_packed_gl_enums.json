@@ -380,8 +380,14 @@
     "glPointSizePointerOES": {
         "type" : "VertexAttribType"
     },
+    "glProvokingVertex": {
+        "mode": "ProvokingVertexConvention"
+    },
     "glProvokingVertexANGLE": {
         "mode": "ProvokingVertexConvention"
+    },
+    "glQueryCounter": {
+        "target": "QueryType"
     },
     "glQueryCounterEXT": {
         "target": "QueryType"
@@ -486,6 +492,9 @@
         "target": "TextureType"
     },
     "glTexStorage2DMultisampleANGLE": {
+        "target": "TextureType"
+    },
+    "glTexStorage3DMultisample": {
         "target": "TextureType"
     },
     "glTexStorage3DMultisampleOES": {

@@ -553,4 +553,8 @@ void WriteParamValueToStream<ParamType::TvoidConstPointer>(std::ostream &os, con
 template <>
 void WriteParamValueToStream<ParamType::TGLDEBUGPROCKHR>(std::ostream &os, GLDEBUGPROCKHR value)
 {}
+
+template <>
+void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value)
+{}
 }  // namespace angle

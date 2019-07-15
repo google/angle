@@ -2000,4 +2000,1861 @@ void Context::texSubImage1D(GLenum target,
     UNIMPLEMENTED();
 }
 
+void Context::drawElementsBaseVertex(GLenum mode,
+                                     GLsizei count,
+                                     GLenum type,
+                                     const void *indices,
+                                     GLint basevertex)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawElementsInstancedBaseVertex(GLenum mode,
+                                              GLsizei count,
+                                              GLenum type,
+                                              const void *indices,
+                                              GLsizei instancecount,
+                                              GLint basevertex)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawRangeElementsBaseVertex(GLenum mode,
+                                          GLuint start,
+                                          GLuint end,
+                                          GLsizei count,
+                                          GLenum type,
+                                          const void *indices,
+                                          GLint basevertex)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiDrawElementsBaseVertex(GLenum mode,
+                                          const GLsizei *count,
+                                          GLenum type,
+                                          const void *const *indices,
+                                          GLsizei drawcount,
+                                          const GLint *basevertex)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texImage2DMultisample(GLenum target,
+                                    GLsizei samples,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLboolean fixedsamplelocations)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texImage3DMultisample(GLenum target,
+                                    GLsizei samples,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth,
+                                    GLboolean fixedsamplelocations)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::colorP3ui(GLenum type, GLuint color)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::colorP3uiv(GLenum type, const GLuint *color)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::colorP4ui(GLenum type, GLuint color)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::colorP4uiv(GLenum type, const GLuint *color)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP1uiv(GLenum texture, GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP2ui(GLenum texture, GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP2uiv(GLenum texture, GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP3ui(GLenum texture, GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP3uiv(GLenum texture, GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP4ui(GLenum texture, GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiTexCoordP4uiv(GLenum texture, GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::normalP3ui(GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::normalP3uiv(GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::secondaryColorP3ui(GLenum type, GLuint color)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::secondaryColorP3uiv(GLenum type, const GLuint *color)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP1ui(GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP1uiv(GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP2ui(GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP2uiv(GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP3ui(GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP3uiv(GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP4ui(GLenum type, GLuint coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texCoordP4uiv(GLenum type, const GLuint *coords)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP1ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP1uiv(GLuint index,
+                                GLenum type,
+                                GLboolean normalized,
+                                const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP2ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP2uiv(GLuint index,
+                                GLenum type,
+                                GLboolean normalized,
+                                const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP3ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP3uiv(GLuint index,
+                                GLenum type,
+                                GLboolean normalized,
+                                const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP4ui(GLuint index, GLenum type, GLboolean normalized, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribP4uiv(GLuint index,
+                                GLenum type,
+                                GLboolean normalized,
+                                const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexP2ui(GLenum type, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexP2uiv(GLenum type, const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexP3ui(GLenum type, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexP3uiv(GLenum type, const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexP4ui(GLenum type, GLuint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexP4uiv(GLenum type, const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::beginQueryIndexed(GLenum target, GLuint index, GLuint id)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::blendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::blendEquationi(GLuint buf, GLenum mode)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::blendFuncSeparatei(GLuint buf,
+                                 GLenum srcRGB,
+                                 GLenum dstRGB,
+                                 GLenum srcAlpha,
+                                 GLenum dstAlpha)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::blendFunci(GLuint buf, GLenum src, GLenum dst)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawTransformFeedback(GLenum mode, GLuint id)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stream)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::endQueryIndexed(GLenum target, GLuint index)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getActiveSubroutineName(GLuint program,
+                                      GLenum shadertype,
+                                      GLuint index,
+                                      GLsizei bufsize,
+                                      GLsizei *length,
+                                      GLchar *name)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getActiveSubroutineUniformName(GLuint program,
+                                             GLenum shadertype,
+                                             GLuint index,
+                                             GLsizei bufsize,
+                                             GLsizei *length,
+                                             GLchar *name)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getActiveSubroutineUniformiv(GLuint program,
+                                           GLenum shadertype,
+                                           GLuint index,
+                                           GLenum pname,
+                                           GLint *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getProgramStageiv(GLuint program, GLenum shadertype, GLenum pname, GLint *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+GLuint Context::getSubroutineIndex(GLuint program, GLenum shadertype, const GLchar *name)
+{
+    UNIMPLEMENTED();
+    return 0;
+}
+
+GLint Context::getSubroutineUniformLocation(GLuint program, GLenum shadertype, const GLchar *name)
+{
+    UNIMPLEMENTED();
+    return 0;
+}
+
+void Context::getUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getUniformdv(GLuint program, GLint location, GLdouble *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::minSampleShading(GLfloat value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::patchParameterfv(GLenum pname, const GLfloat *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::patchParameteri(GLenum pname, GLint value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform1d(GLint location, GLdouble x)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform1dv(GLint location, GLsizei count, const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform2d(GLint location, GLdouble x, GLdouble y)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform2dv(GLint location, GLsizei count, const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform3dv(GLint location, GLsizei count, const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniform4dv(GLint location, GLsizei count, const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix2dv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix2x3dv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix2x4dv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix3dv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix3x2dv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix3x4dv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix4dv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix4x2dv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformMatrix4x3dv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::uniformSubroutinesuiv(GLenum shadertype, GLsizei count, const GLuint *indices)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::depthRangeArrayv(GLuint first, GLsizei count, const GLdouble *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::depthRangeIndexed(GLuint index, GLdouble n, GLdouble f)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getDoublei_v(GLenum target, GLuint index, GLdouble *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getFloati_v(GLenum target, GLuint index, GLfloat *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getVertexAttribLdv(GLuint index, GLenum pname, GLdouble *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform1d(GLuint program, GLint location, GLdouble v0)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform1dv(GLuint program,
+                                GLint location,
+                                GLsizei count,
+                                const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform2d(GLuint program, GLint location, GLdouble v0, GLdouble v1)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform2dv(GLuint program,
+                                GLint location,
+                                GLsizei count,
+                                const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform3d(GLuint program,
+                               GLint location,
+                               GLdouble v0,
+                               GLdouble v1,
+                               GLdouble v2)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform3dv(GLuint program,
+                                GLint location,
+                                GLsizei count,
+                                const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform4d(GLuint program,
+                               GLint location,
+                               GLdouble v0,
+                               GLdouble v1,
+                               GLdouble v2,
+                               GLdouble v3)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniform4dv(GLuint program,
+                                GLint location,
+                                GLsizei count,
+                                const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix2dv(GLuint program,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix2x3dv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix2x4dv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix3dv(GLuint program,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix3x2dv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix3x4dv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix4dv(GLuint program,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix4x2dv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::programUniformMatrix4x3dv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLdouble *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::scissorArrayv(GLuint first, GLsizei count, const GLint *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::scissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::scissorIndexedv(GLuint index, const GLint *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL1d(GLuint index, GLdouble x)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL1dv(GLuint index, const GLdouble *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL2d(GLuint index, GLdouble x, GLdouble y)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL2dv(GLuint index, const GLdouble *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdouble z)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL3dv(GLuint index, const GLdouble *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribL4dv(GLuint index, const GLdouble *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribLPointer(GLuint index,
+                                   GLint size,
+                                   GLenum type,
+                                   GLsizei stride,
+                                   const void *pointer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::viewportArrayv(GLuint first, GLsizei count, const GLfloat *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::viewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::viewportIndexedfv(GLuint index, const GLfloat *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawArraysInstancedBaseInstance(GLenum mode,
+                                              GLint first,
+                                              GLsizei count,
+                                              GLsizei instancecount,
+                                              GLuint baseinstance)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawElementsInstancedBaseInstance(GLenum mode,
+                                                GLsizei count,
+                                                GLenum type,
+                                                const void *indices,
+                                                GLsizei instancecount,
+                                                GLuint baseinstance)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawElementsInstancedBaseVertexBaseInstance(GLenum mode,
+                                                          GLsizei count,
+                                                          GLenum type,
+                                                          const void *indices,
+                                                          GLsizei instancecount,
+                                                          GLint basevertex,
+                                                          GLuint baseinstance)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::drawTransformFeedbackStreamInstanced(GLenum mode,
+                                                   GLuint id,
+                                                   GLuint stream,
+                                                   GLsizei instancecount)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getActiveAtomicCounterBufferiv(GLuint program,
+                                             GLuint bufferIndex,
+                                             GLenum pname,
+                                             GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearBufferData(GLenum target,
+                              GLenum internalformat,
+                              GLenum format,
+                              GLenum type,
+                              const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearBufferSubData(GLenum target,
+                                 GLenum internalformat,
+                                 GLintptr offset,
+                                 GLsizeiptr size,
+                                 GLenum format,
+                                 GLenum type,
+                                 const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::copyImageSubData(GLuint srcName,
+                               GLenum srcTarget,
+                               GLint srcLevel,
+                               GLint srcX,
+                               GLint srcY,
+                               GLint srcZ,
+                               GLuint dstName,
+                               GLenum dstTarget,
+                               GLint dstLevel,
+                               GLint dstX,
+                               GLint dstY,
+                               GLint dstZ,
+                               GLsizei srcWidth,
+                               GLsizei srcHeight,
+                               GLsizei srcDepth)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getInternalformati64v(GLenum target,
+                                    GLenum internalformat,
+                                    GLenum pname,
+                                    GLsizei bufSize,
+                                    GLint64 *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::invalidateBufferData(GLuint buffer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::invalidateBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr length)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::invalidateTexImage(GLuint texture, GLint level)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::invalidateTexSubImage(GLuint texture,
+                                    GLint level,
+                                    GLint xoffset,
+                                    GLint yoffset,
+                                    GLint zoffset,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiDrawArraysIndirect(GLenum mode,
+                                      const void *indirect,
+                                      GLsizei drawcount,
+                                      GLsizei stride)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiDrawElementsIndirect(GLenum mode,
+                                        GLenum type,
+                                        const void *indirect,
+                                        GLsizei drawcount,
+                                        GLsizei stride)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::shaderStorageBlockBinding(GLuint program,
+                                        GLuint storageBlockIndex,
+                                        GLuint storageBlockBinding)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texBufferRange(GLenum target,
+                             GLenum internalformat,
+                             GLuint buffer,
+                             GLintptr offset,
+                             GLsizeiptr size)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureView(GLuint texture,
+                          GLenum target,
+                          GLuint origtexture,
+                          GLenum internalformat,
+                          GLuint minlevel,
+                          GLuint numlevels,
+                          GLuint minlayer,
+                          GLuint numlayers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexAttribLFormat(GLuint attribindex,
+                                  GLint size,
+                                  GLenum type,
+                                  GLuint relativeoffset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindBuffersRange(GLenum target,
+                               GLuint first,
+                               GLsizei count,
+                               const GLuint *buffers,
+                               const GLintptr *offsets,
+                               const GLsizeiptr *sizes)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindImageTextures(GLuint first, GLsizei count, const GLuint *textures)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindSamplers(GLuint first, GLsizei count, const GLuint *samplers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindTextures(GLuint first, GLsizei count, const GLuint *textures)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindVertexBuffers(GLuint first,
+                                GLsizei count,
+                                const GLuint *buffers,
+                                const GLintptr *offsets,
+                                const GLsizei *strides)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearTexImage(GLuint texture,
+                            GLint level,
+                            GLenum format,
+                            GLenum type,
+                            const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearTexSubImage(GLuint texture,
+                               GLint level,
+                               GLint xoffset,
+                               GLint yoffset,
+                               GLint zoffset,
+                               GLsizei width,
+                               GLsizei height,
+                               GLsizei depth,
+                               GLenum format,
+                               GLenum type,
+                               const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::bindTextureUnit(GLuint unit, GLuint texture)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::blitNamedFramebuffer(GLuint readFramebuffer,
+                                   GLuint drawFramebuffer,
+                                   GLint srcX0,
+                                   GLint srcY0,
+                                   GLint srcX1,
+                                   GLint srcY1,
+                                   GLint dstX0,
+                                   GLint dstY0,
+                                   GLint dstX1,
+                                   GLint dstY1,
+                                   GLbitfield mask,
+                                   GLenum filter)
+{
+    UNIMPLEMENTED();
+}
+
+GLenum Context::checkNamedFramebufferStatus(GLuint framebuffer, GLenum target)
+{
+    UNIMPLEMENTED();
+    return 0;
+}
+
+void Context::clearNamedBufferData(GLuint buffer,
+                                   GLenum internalformat,
+                                   GLenum format,
+                                   GLenum type,
+                                   const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearNamedBufferSubData(GLuint buffer,
+                                      GLenum internalformat,
+                                      GLintptr offset,
+                                      GLsizeiptr size,
+                                      GLenum format,
+                                      GLenum type,
+                                      const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearNamedFramebufferfi(GLuint framebuffer,
+                                      GLenum buffer,
+                                      GLint drawbuffer,
+                                      GLfloat depth,
+                                      GLint stencil)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearNamedFramebufferfv(GLuint framebuffer,
+                                      GLenum buffer,
+                                      GLint drawbuffer,
+                                      const GLfloat *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearNamedFramebufferiv(GLuint framebuffer,
+                                      GLenum buffer,
+                                      GLint drawbuffer,
+                                      const GLint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clearNamedFramebufferuiv(GLuint framebuffer,
+                                       GLenum buffer,
+                                       GLint drawbuffer,
+                                       const GLuint *value)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::clipControl(GLenum origin, GLenum depth)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::compressedTextureSubImage1D(GLuint texture,
+                                          GLint level,
+                                          GLint xoffset,
+                                          GLsizei width,
+                                          GLenum format,
+                                          GLsizei imageSize,
+                                          const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::compressedTextureSubImage2D(GLuint texture,
+                                          GLint level,
+                                          GLint xoffset,
+                                          GLint yoffset,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLenum format,
+                                          GLsizei imageSize,
+                                          const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::compressedTextureSubImage3D(GLuint texture,
+                                          GLint level,
+                                          GLint xoffset,
+                                          GLint yoffset,
+                                          GLint zoffset,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          GLenum format,
+                                          GLsizei imageSize,
+                                          const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::copyNamedBufferSubData(GLuint readBuffer,
+                                     GLuint writeBuffer,
+                                     GLintptr readOffset,
+                                     GLintptr writeOffset,
+                                     GLsizeiptr size)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::copyTextureSubImage1D(GLuint texture,
+                                    GLint level,
+                                    GLint xoffset,
+                                    GLint x,
+                                    GLint y,
+                                    GLsizei width)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::copyTextureSubImage2D(GLuint texture,
+                                    GLint level,
+                                    GLint xoffset,
+                                    GLint yoffset,
+                                    GLint x,
+                                    GLint y,
+                                    GLsizei width,
+                                    GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::copyTextureSubImage3D(GLuint texture,
+                                    GLint level,
+                                    GLint xoffset,
+                                    GLint yoffset,
+                                    GLint zoffset,
+                                    GLint x,
+                                    GLint y,
+                                    GLsizei width,
+                                    GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createBuffers(GLsizei n, GLuint *buffers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createFramebuffers(GLsizei n, GLuint *framebuffers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createProgramPipelines(GLsizei n, GLuint *pipelines)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createQueries(GLenum target, GLsizei n, GLuint *ids)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createRenderbuffers(GLsizei n, GLuint *renderbuffers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createSamplers(GLsizei n, GLuint *samplers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createTextures(GLenum target, GLsizei n, GLuint *textures)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createTransformFeedbacks(GLsizei n, GLuint *ids)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::createVertexArrays(GLsizei n, GLuint *arrays)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::disableVertexArrayAttrib(GLuint vaobj, GLuint index)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::enableVertexArrayAttrib(GLuint vaobj, GLuint index)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::flushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::generateTextureMipmap(GLuint texture)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getCompressedTextureImage(GLuint texture, GLint level, GLsizei bufSize, void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getCompressedTextureSubImage(GLuint texture,
+                                           GLint level,
+                                           GLint xoffset,
+                                           GLint yoffset,
+                                           GLint zoffset,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           GLsizei bufSize,
+                                           void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedBufferPointerv(GLuint buffer, GLenum pname, void **params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
+                                                       GLenum attachment,
+                                                       GLenum pname,
+                                                       GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureImage(GLuint texture,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              GLsizei bufSize,
+                              void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureLevelParameterfv(GLuint texture, GLint level, GLenum pname, GLfloat *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureLevelParameteriv(GLuint texture, GLint level, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureParameterIiv(GLuint texture, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureParameterIuiv(GLuint texture, GLenum pname, GLuint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureParameterfv(GLuint texture, GLenum pname, GLfloat *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureParameteriv(GLuint texture, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTextureSubImage(GLuint texture,
+                                 GLint level,
+                                 GLint xoffset,
+                                 GLint yoffset,
+                                 GLint zoffset,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLsizei depth,
+                                 GLenum format,
+                                 GLenum type,
+                                 GLsizei bufSize,
+                                 void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index, GLint *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pname, GLint64 *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pname, GLint *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getVertexArrayiv(GLuint vaobj, GLenum pname, GLint *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnColorTable(GLenum target,
+                             GLenum format,
+                             GLenum type,
+                             GLsizei bufSize,
+                             void *table)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSize, void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnConvolutionFilter(GLenum target,
+                                    GLenum format,
+                                    GLenum type,
+                                    GLsizei bufSize,
+                                    void *image)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnHistogram(GLenum target,
+                            GLboolean reset,
+                            GLenum format,
+                            GLenum type,
+                            GLsizei bufSize,
+                            void *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnMapdv(GLenum target, GLenum query, GLsizei bufSize, GLdouble *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnMapfv(GLenum target, GLenum query, GLsizei bufSize, GLfloat *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnMapiv(GLenum target, GLenum query, GLsizei bufSize, GLint *v)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnMinmax(GLenum target,
+                         GLboolean reset,
+                         GLenum format,
+                         GLenum type,
+                         GLsizei bufSize,
+                         void *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnPixelMapfv(GLenum map, GLsizei bufSize, GLfloat *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnPixelMapuiv(GLenum map, GLsizei bufSize, GLuint *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnPixelMapusv(GLenum map, GLsizei bufSize, GLushort *values)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnPolygonStipple(GLsizei bufSize, GLubyte *pattern)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnSeparableFilter(GLenum target,
+                                  GLenum format,
+                                  GLenum type,
+                                  GLsizei rowBufSize,
+                                  void *row,
+                                  GLsizei columnBufSize,
+                                  void *column,
+                                  void *span)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnTexImage(GLenum target,
+                           GLint level,
+                           GLenum format,
+                           GLenum type,
+                           GLsizei bufSize,
+                           void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnUniformdv(GLuint program, GLint location, GLsizei bufSize, GLdouble *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::getnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::invalidateNamedFramebufferData(GLuint framebuffer,
+                                             GLsizei numAttachments,
+                                             const GLenum *attachments)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::invalidateNamedFramebufferSubData(GLuint framebuffer,
+                                                GLsizei numAttachments,
+                                                const GLenum *attachments,
+                                                GLint x,
+                                                GLint y,
+                                                GLsizei width,
+                                                GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void *Context::mapNamedBuffer(GLuint buffer, GLenum access)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+void *Context::mapNamedBufferRange(GLuint buffer,
+                                   GLintptr offset,
+                                   GLsizeiptr length,
+                                   GLbitfield access)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+void Context::namedBufferData(GLuint buffer, GLsizeiptr size, const void *data, GLenum usage)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedBufferStorage(GLuint buffer, GLsizeiptr size, const void *data, GLbitfield flags)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void *data)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum *bufs)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferReadBuffer(GLuint framebuffer, GLenum src)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferRenderbuffer(GLuint framebuffer,
+                                           GLenum attachment,
+                                           GLenum renderbuffertarget,
+                                           GLuint renderbuffer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferTexture(GLuint framebuffer,
+                                      GLenum attachment,
+                                      GLuint texture,
+                                      GLint level)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedFramebufferTextureLayer(GLuint framebuffer,
+                                           GLenum attachment,
+                                           GLuint texture,
+                                           GLint level,
+                                           GLint layer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedRenderbufferStorage(GLuint renderbuffer,
+                                       GLenum internalformat,
+                                       GLsizei width,
+                                       GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::namedRenderbufferStorageMultisample(GLuint renderbuffer,
+                                                  GLsizei samples,
+                                                  GLenum internalformat,
+                                                  GLsizei width,
+                                                  GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureBarrier()
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureBuffer(GLuint texture, GLenum internalformat, GLuint buffer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureBufferRange(GLuint texture,
+                                 GLenum internalformat,
+                                 GLuint buffer,
+                                 GLintptr offset,
+                                 GLsizeiptr size)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureParameterIiv(GLuint texture, GLenum pname, const GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureParameterIuiv(GLuint texture, GLenum pname, const GLuint *params)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureParameterf(GLuint texture, GLenum pname, GLfloat param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureParameterfv(GLuint texture, GLenum pname, const GLfloat *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureParameteri(GLuint texture, GLenum pname, GLint param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureParameteriv(GLuint texture, GLenum pname, const GLint *param)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureStorage1D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureStorage2D(GLuint texture,
+                               GLsizei levels,
+                               GLenum internalformat,
+                               GLsizei width,
+                               GLsizei height)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureStorage2DMultisample(GLuint texture,
+                                          GLsizei samples,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLboolean fixedsamplelocations)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureStorage3D(GLuint texture,
+                               GLsizei levels,
+                               GLenum internalformat,
+                               GLsizei width,
+                               GLsizei height,
+                               GLsizei depth)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureStorage3DMultisample(GLuint texture,
+                                          GLsizei samples,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          GLboolean fixedsamplelocations)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureSubImage1D(GLuint texture,
+                                GLint level,
+                                GLint xoffset,
+                                GLsizei width,
+                                GLenum format,
+                                GLenum type,
+                                const void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureSubImage2D(GLuint texture,
+                                GLint level,
+                                GLint xoffset,
+                                GLint yoffset,
+                                GLsizei width,
+                                GLsizei height,
+                                GLenum format,
+                                GLenum type,
+                                const void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::textureSubImage3D(GLuint texture,
+                                GLint level,
+                                GLint xoffset,
+                                GLint yoffset,
+                                GLint zoffset,
+                                GLsizei width,
+                                GLsizei height,
+                                GLsizei depth,
+                                GLenum format,
+                                GLenum type,
+                                const void *pixels)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::transformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint buffer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::transformFeedbackBufferRange(GLuint xfb,
+                                           GLuint index,
+                                           GLuint buffer,
+                                           GLintptr offset,
+                                           GLsizeiptr size)
+{
+    UNIMPLEMENTED();
+}
+
+GLboolean Context::unmapNamedBuffer(GLuint buffer)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+void Context::vertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayAttribFormat(GLuint vaobj,
+                                      GLuint attribindex,
+                                      GLint size,
+                                      GLenum type,
+                                      GLboolean normalized,
+                                      GLuint relativeoffset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayAttribIFormat(GLuint vaobj,
+                                       GLuint attribindex,
+                                       GLint size,
+                                       GLenum type,
+                                       GLuint relativeoffset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayAttribLFormat(GLuint vaobj,
+                                       GLuint attribindex,
+                                       GLint size,
+                                       GLenum type,
+                                       GLuint relativeoffset)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayElementBuffer(GLuint vaobj, GLuint buffer)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayVertexBuffer(GLuint vaobj,
+                                      GLuint bindingindex,
+                                      GLuint buffer,
+                                      GLintptr offset,
+                                      GLsizei stride)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::vertexArrayVertexBuffers(GLuint vaobj,
+                                       GLuint first,
+                                       GLsizei count,
+                                       const GLuint *buffers,
+                                       const GLintptr *offsets,
+                                       const GLsizei *strides)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiDrawArraysIndirectCount(GLenum mode,
+                                           const void *indirect,
+                                           GLintptr drawcount,
+                                           GLsizei maxdrawcount,
+                                           GLsizei stride)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::multiDrawElementsIndirectCount(GLenum mode,
+                                             GLenum type,
+                                             const void *indirect,
+                                             GLintptr drawcount,
+                                             GLsizei maxdrawcount,
+                                             GLsizei stride)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::polygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::specializeShader(GLuint shader,
+                               const GLchar *pEntryPoint,
+                               GLuint numSpecializationConstants,
+                               const GLuint *pConstantIndex,
+                               const GLuint *pConstantValue)
+{
+    UNIMPLEMENTED();
+}
+
 }  // namespace gl

@@ -38,6 +38,9 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             WriteParamValueToStream<ParamType::TDrawElementsType>(os,
                                                                   paramValue.DrawElementsTypeVal);
             break;
+        case ParamType::TGLDEBUGPROC:
+            WriteParamValueToStream<ParamType::TGLDEBUGPROC>(os, paramValue.GLDEBUGPROCVal);
+            break;
         case ParamType::TGLDEBUGPROCKHR:
             WriteParamValueToStream<ParamType::TGLDEBUGPROCKHR>(os, paramValue.GLDEBUGPROCKHRVal);
             break;
@@ -135,6 +138,10 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TGLintptr:
             WriteParamValueToStream<ParamType::TGLintptr>(os, paramValue.GLintptrVal);
             break;
+        case ParamType::TGLintptrConstPointer:
+            WriteParamValueToStream<ParamType::TGLintptrConstPointer>(
+                os, paramValue.GLintptrConstPointerVal);
+            break;
         case ParamType::TGLshort:
             WriteParamValueToStream<ParamType::TGLshort>(os, paramValue.GLshortVal);
             break;
@@ -154,6 +161,10 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
             break;
         case ParamType::TGLsizeiptr:
             WriteParamValueToStream<ParamType::TGLsizeiptr>(os, paramValue.GLsizeiptrVal);
+            break;
+        case ParamType::TGLsizeiptrConstPointer:
+            WriteParamValueToStream<ParamType::TGLsizeiptrConstPointer>(
+                os, paramValue.GLsizeiptrConstPointerVal);
             break;
         case ParamType::TGLsync:
             WriteParamValueToStream<ParamType::TGLsync>(os, paramValue.GLsyncVal);
@@ -301,6 +312,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "gl::CullFaceMode";
         case ParamType::TDrawElementsType:
             return "gl::DrawElementsType";
+        case ParamType::TGLDEBUGPROC:
+            return "GLDEBUGPROC";
         case ParamType::TGLDEBUGPROCKHR:
             return "GLDEBUGPROCKHR";
         case ParamType::TGLbitfield:
@@ -359,6 +372,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLint *";
         case ParamType::TGLintptr:
             return "GLintptr";
+        case ParamType::TGLintptrConstPointer:
+            return "const GLintptr *";
         case ParamType::TGLshort:
             return "GLshort";
         case ParamType::TGLshortConstPointer:
@@ -371,6 +386,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLsizei *";
         case ParamType::TGLsizeiptr:
             return "GLsizeiptr";
+        case ParamType::TGLsizeiptrConstPointer:
+            return "const GLsizeiptr *";
         case ParamType::TGLsync:
             return "GLsync";
         case ParamType::TGLubyte:

@@ -336,8 +336,6 @@ template_sources_includes = """#include "libGLESv2/entry_points_{header_version}
 template_header_includes_gl32 = """#include <export.h>
 #include "angle_gl.h"
 
-#include "WGL/wgl.h"
-#include "windows.h"
 """
 
 template_sources_includes_gl32 = """#include "libGL/entry_points_{}_autogen.h"
@@ -1178,6 +1176,15 @@ def main():
             '../src/libANGLE/Context_gl_2_1_autogen.h',
             '../src/libANGLE/Context_gl_3_0_autogen.h',
             '../src/libANGLE/Context_gl_3_1_autogen.h',
+            '../src/libANGLE/Context_gl_3_2_autogen.h',
+            '../src/libANGLE/Context_gl_3_3_autogen.h',
+            '../src/libANGLE/Context_gl_4_0_autogen.h',
+            '../src/libANGLE/Context_gl_4_1_autogen.h',
+            '../src/libANGLE/Context_gl_4_2_autogen.h',
+            '../src/libANGLE/Context_gl_4_3_autogen.h',
+            '../src/libANGLE/Context_gl_4_4_autogen.h',
+            '../src/libANGLE/Context_gl_4_5_autogen.h',
+            '../src/libANGLE/Context_gl_4_6_autogen.h',
             '../src/libANGLE/Context_gles_1_0_autogen.h',
             '../src/libANGLE/Context_gles_2_0_autogen.h',
             '../src/libANGLE/Context_gles_3_0_autogen.h',
@@ -1204,6 +1211,7 @@ def main():
             '../src/libANGLE/validationGL1_autogen.h',
             '../src/libANGLE/validationGL2_autogen.h',
             '../src/libANGLE/validationGL3_autogen.h',
+            '../src/libANGLE/validationGL4_autogen.h',
             '../src/libANGLE/validationGL11_autogen.h',
             '../src/libANGLE/validationGL12_autogen.h',
             '../src/libANGLE/validationGL13_autogen.h',
@@ -1211,6 +1219,14 @@ def main():
             '../src/libANGLE/validationGL15_autogen.h',
             '../src/libANGLE/validationGL21_autogen.h',
             '../src/libANGLE/validationGL31_autogen.h',
+            '../src/libANGLE/validationGL32_autogen.h',
+            '../src/libANGLE/validationGL33_autogen.h',
+            '../src/libANGLE/validationGL41_autogen.h',
+            '../src/libANGLE/validationGL42_autogen.h',
+            '../src/libANGLE/validationGL43_autogen.h',
+            '../src/libANGLE/validationGL44_autogen.h',
+            '../src/libANGLE/validationGL45_autogen.h',
+            '../src/libANGLE/validationGL46_autogen.h',
             '../src/libGLESv2/entry_points_gles_1_0_autogen.cpp',
             '../src/libGLESv2/entry_points_gles_1_0_autogen.h',
             '../src/libGLESv2/entry_points_gles_2_0_autogen.cpp',
@@ -1244,6 +1260,24 @@ def main():
             '../src/libGL/entry_points_gl_3_0_autogen.h',
             '../src/libGL/entry_points_gl_3_1_autogen.cpp',
             '../src/libGL/entry_points_gl_3_1_autogen.h',
+            '../src/libGL/entry_points_gl_3_2_autogen.cpp',
+            '../src/libGL/entry_points_gl_3_2_autogen.h',
+            '../src/libGL/entry_points_gl_3_3_autogen.cpp',
+            '../src/libGL/entry_points_gl_3_3_autogen.h',
+            '../src/libGL/entry_points_gl_4_0_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_0_autogen.h',
+            '../src/libGL/entry_points_gl_4_1_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_1_autogen.h',
+            '../src/libGL/entry_points_gl_4_2_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_2_autogen.h',
+            '../src/libGL/entry_points_gl_4_3_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_3_autogen.h',
+            '../src/libGL/entry_points_gl_4_4_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_4_autogen.h',
+            '../src/libGL/entry_points_gl_4_5_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_5_autogen.h',
+            '../src/libGL/entry_points_gl_4_6_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_6_autogen.h',
             '../src/libGL/libGL_autogen.cpp',
             '../src/libGL/libGL_autogen.def',
         ]
@@ -1455,7 +1489,8 @@ def main():
     # Now we generate entry points for the desktop implementation
     gldecls = {}
     gldecls['core'] = {}
-    for ver in [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0), (3, 1)]:
+    for ver in [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0), (3, 1),
+                (3, 2), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6)]:
         gldecls['core'][ver] = []
 
     libgl_ep_defs = []
@@ -1464,7 +1499,8 @@ def main():
     glxml = registry_xml.RegistryXML('gl.xml')
 
     for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 0],
-                                         [2, 1], [3, 0], [3, 1]]:
+                                         [2, 1], [3, 0], [3, 1], [3, 2], [3, 3], [4, 0], [4, 1],
+                                         [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]:
         version = "{}_{}".format(major_version, minor_version)
         annotation = "GL_{}".format(version)
         name_prefix = "GL_VERSION_"
@@ -1475,12 +1511,14 @@ def main():
         glxml.AddCommands(feature_name, version)
 
         all_libgl_commands = glxml.commands[version]
+
         just_libgl_commands = [
-            cmd for cmd in glxml.commands[version] if cmd not in all_commands_no_suffix
+            cmd for cmd in all_libgl_commands if cmd not in all_commands_no_suffix
         ]
         just_libgl_commands_suffix = [
-            cmd for cmd in glxml.commands[version] if cmd not in all_commands_with_suffix
+            cmd for cmd in all_libgl_commands if cmd not in all_commands_with_suffix
         ]
+
         all_commands32 = glxml.all_commands
 
         # Validation duplicates handled with suffix
@@ -1623,6 +1661,15 @@ def main():
     #include "libGL/entry_points_gl_2_1_autogen.h"
     #include "libGL/entry_points_gl_3_0_autogen.h"
     #include "libGL/entry_points_gl_3_1_autogen.h"
+    #include "libGL/entry_points_gl_3_2_autogen.h"
+    #include "libGL/entry_points_gl_3_3_autogen.h"
+    #include "libGL/entry_points_gl_4_0_autogen.h"
+    #include "libGL/entry_points_gl_4_1_autogen.h"
+    #include "libGL/entry_points_gl_4_2_autogen.h"
+    #include "libGL/entry_points_gl_4_3_autogen.h"
+    #include "libGL/entry_points_gl_4_4_autogen.h"
+    #include "libGL/entry_points_gl_4_5_autogen.h"
+    #include "libGL/entry_points_gl_4_6_autogen.h"
 
     #include "common/event_tracer.h"
     """

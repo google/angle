@@ -14,9 +14,6 @@
 #include <export.h>
 #include "angle_gl.h"
 
-#include "WGL/wgl.h"
-#include "windows.h"
-
 namespace gl
 {
 ANGLE_EXPORT void GL_APIENTRY UniformMatrix2x3fv(GLint location,
