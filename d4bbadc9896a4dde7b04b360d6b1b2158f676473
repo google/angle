@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "a7f4a183_db8e4d9b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-15T14:09:13Z",
+      "side": 1,
+      "message": "Should have been a comment on gerrit ;)",
+      "range": {
+        "startLine": 18,
+        "startChar": 3,
+        "endLine": 19,
+        "endChar": 26
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4bfe3e5d_7eb68765",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-15T14:09:13Z",
+      "side": 1,
+      "message": "was",
+      "range": {
+        "startLine": 41,
+        "startChar": 26,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5820204a_7ea245d6",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-15T14:09:13Z",
+      "side": 1,
+      "message": "enforce",
+      "range": {
+        "startLine": 819,
+        "startChar": 26,
+        "endLine": 819,
+        "endChar": 34
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbb6541c_80be250d",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-15T14:09:13Z",
+      "side": 1,
+      "message": "Should this then become more generic? Like looking at `redBits`, `greenBits` etc to see if the component sizes match?",
+      "range": {
+        "startLine": 821,
+        "startChar": 0,
+        "endLine": 823,
+        "endChar": 90
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c68b815_3fc742ea",
         "filename": "src/tests/deqp_support/deqp_khr_gles3_test_expectations.txt",
         "patchSetId": 11
