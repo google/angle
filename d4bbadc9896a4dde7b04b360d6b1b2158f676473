@@ -22,6 +22,30 @@
       "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78318133_f9dcd3ac",
+        "filename": "src/tests/deqp_support/deqp_khr_gles3_test_expectations.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2019-07-15T13:22:45Z",
+      "side": 1,
+      "message": "Sorry, that line used to be the case.  I commented it out as I tried to see what the current status was with the fixes I was making, and forgot to completely remove it.  Lines 34-35 and 41-42 are what left of line 40.  I\u0027ll clean it up and re-push once the bots are finished with this PatchSet.",
+      "parentUuid": "5c68b815_3fc742ea",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 67
+      },
+      "revId": "d4bbadc9896a4dde7b04b360d6b1b2158f676473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
