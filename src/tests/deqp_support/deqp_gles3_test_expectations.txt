@@ -536,7 +536,6 @@
 3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
 // 3D texture:
-3188 VULKAN : dEQP-GLES3.functional.fbo.completeness.layer.3d* = SKIP
 3188 VULKAN : dEQP-GLES3.functional.fbo.color.tex3d.* = SKIP
 3188 VULKAN : dEQP-GLES3.functional.texture.units.2_units.only_3d.6 = SKIP
 3188 VULKAN : dEQP-GLES3.functional.texture.units.4_units.only_3d.* = SKIP
@@ -549,39 +548,39 @@
 3189 VULKAN : dEQP-GLES3.functional.texture.format.*2d_array* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.filtering.*2d_array* = SKIP
 3189 VULKAN : dEQP-GLES3.functional.texture.shadow.2d_array.* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage3d.*2d_array* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.*2d_array = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.size.*2d_array* = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_depth*2d_array = SKIP
-3189 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_depth*2d_array = SKIP
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage3d.*2d_array* = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.*2d_array = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.size.2d_array_2x2x2_2_levels = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.size.2d_array_32x64x3_4_levels = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.size.2d_array_57x63x5* = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.size.2d_array_64x32x3_7_levels = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_depth*2d_array = FAIL
+3189 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_depth*2d_array = FAIL
 
 //  New or broken formats in ES 3.0:
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.rgb9* = FAIL
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth_component24* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth_component16* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth24* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth32* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.r11f* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb9* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage2d.r11f_g11f_b10f_* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage2d.rgb9_e5_* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage3d.rgb9* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_texsubimage2d.r11f_g11f_b10f_* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_texsubimage2d.rgb9_e5_* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_texsubimage3d.r11f* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_texsubimage3d.rgb9* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.random_teximage2d.2d_9 = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_pbo.* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_unpack_params.rgb8_skip_images = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage2d_pbo.* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_pbo.* = SKIP
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_unpack_params.rgb8_skip_images = SKIP
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth32* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage2d.rgb9_e5_* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_teximage3d.rgb9* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_texsubimage2d.rgb9_e5_* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.basic_texsubimage3d.rgb9* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.random_teximage2d.2d_9 = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_pbo.* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_pbo.rgb8_* = SKIP
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.rgb8_* = SKIP
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_unpack_params.rgb8_skip_images = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage2d_pbo.* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage2d_pbo.rgb8_* = SKIP
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_pbo.* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_pbo.rgb8_* = SKIP
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_unpack_params.rgb8_skip_images = FAIL
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth.depth32f_stencil8 = FAIL
-3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.* = SKIP
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.* = FAIL
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage2d_depth.depth32f_stencil8 = FAIL
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.teximage3d_unpack_params.r8_* = FAIL
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_unpack_params.r8_* = FAIL
+3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb9* = FAIL
 3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgba16* = FAIL
 3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rgb16* = FAIL
 3190 VULKAN PIXEL2 : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
@@ -605,34 +604,16 @@
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.basic.uint.* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.array.* = SKIP
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.random.* = SKIP
+// Allowing the tests on the following line to run seems to have side-effects that cause other tests to fail:
 3677 VULKAN : dEQP-GLES3.functional.texture.format.sized.*.rgb9* = SKIP
 3677 VULKAN : dEQP-GLES3.functional.texture.filtering.*.rgb9* = SKIP
 
 // Depth/Stencil textures:
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_depth_tex2d_depth_component16 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_depth_tex2d_depth_component24 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_depth_tex2d_depth_component32f = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_depth_stencil_tex2d_depth24_stencil8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.resize.tex2d_rgba8_depth_stencil_tex2d_depth32f_stencil8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.recreate_depth_stencil.* = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.depth24_stencil8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.depth32f_stencil8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component16 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component24 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth24_stencil8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component32f = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth32f_stencil8 = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.completeness.attachment_combinations.* = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.render.shared_depth_stencil.* = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.depth.* = SKIP
-2905 VULKAN : dEQP-GLES3.functional.fbo.stencil.* = SKIP
-2905 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_component_type = SKIP
-2905 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_x_size_texture = SKIP
-2905 VULKAN : dEQP-GLES3.functional.texture.format.sized.*.depth32f_stencil8* = SKIP
+2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
+2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
+2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
+2905 VULKAN : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
+2905 VULKAN : dEQP-GLES3.functional.texture.format.sized.*.depth32f_stencil8* = FAIL
 
 // Shader support:
 3219 VULKAN : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
@@ -679,7 +660,7 @@
 3210 VULKAN : dEQP-GLES3.functional.pbo.* = SKIP
 
 // FBO
-3679 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_texture_layer = SKIP
+3679 VULKAN : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_texture_layer = FAIL
 
 // Uniform API:
 3198 VULKAN : dEQP-GLES3.functional.uniform_api.value.* = SKIP
@@ -705,7 +686,7 @@
 3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_2d_array_texture_base_level_gettexparameter* = SKIP
 3148 VULKAN : dEQP-GLES3.functional.state_query.texture.texture_cube_map_texture_base_level_gettexparameter* = SKIP
 3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*base_level* = SKIP
-3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*max_level* = SKIP
+3148 VULKAN : dEQP-GLES3.functional.texture.mipmap.*max_level* = FAIL
 3148 VULKAN : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = SKIP
 
 // Misc unimplemented:

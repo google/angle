@@ -44,10 +44,9 @@
 3455 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.srgb8_alpha8 = SKIP
 
 // Depth/stencil related failures.
-3457 VULKAN : KHR-GLES3.core.internalformat.texture2d.depth_stencil_unsigned_int_24_8_depth24_stencil8 = FAIL
-3457 VULKAN : KHR-GLES3.packed_pixels.rectangle.depth* = SKIP
-3457 VULKAN : KHR-GLES3.packed_pixels.pbo_rectangle.depth* = SKIP
-3457 VULKAN : KHR-GLES3.packed_depth_stencil.* = SKIP
+3457 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
+3457 VULKAN : KHR-GLES3.packed_depth_stencil.verify_read_pixels.depth32f_stencil8 = FAIL
+3457 VULKAN : KHR-GLES3.packed_depth_stencil.clear_buffer.depth32f_stencil8 = FAIL
 
 // CopyTexImage conversion missing 2D Array and 3D texture support.
 3458 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_texture2d = SKIP
