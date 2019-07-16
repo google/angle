@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3c3e8ef_e28ea6d6",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 10
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-16T20:12:30Z",
+      "side": 1,
+      "message": "Ok nice catch! However, I\u0027d do it a bit differently for more efficiency:\n\nif (valueBits \u003c 32)\n{\n    // appropriate comments\n    bool isNegative \u003d (valueAsUint \u0026 (1 \u003c\u003c (valueBits - 1))) !\u003d 0;\n    valueAsUint |\u003d isNegative ? 0xFFFFFFFF \u003c\u003c valueBits : 0;\n}\nSrcType value \u003d SrcType(valueAsUint);\n\nNumerous vector ALU operations (which this shader is heavy in) will be skipped this way.",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 215,
+        "endChar": 57
+      },
+      "revId": "bda82b97a998423f6fe0e07e8172403ab9a6a36b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
