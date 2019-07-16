@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57680bc7_880a2567",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-16T20:57:11Z",
+      "side": 1,
+      "message": "nit: can you comment before the test?",
+      "range": {
+        "startLine": 538,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 6
+      },
+      "revId": "b16de7583b2cb7737ee6f2517f93ff6a26e4e8b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "749a6ff3_e8f6a1e1",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-16T20:57:11Z",
+      "side": 1,
+      "message": "could you also fill out the logic to do a simple draw with the four colors and verify four RTs?",
+      "range": {
+        "startLine": 561,
+        "startChar": 4,
+        "endLine": 561,
+        "endChar": 20
+      },
+      "revId": "b16de7583b2cb7737ee6f2517f93ff6a26e4e8b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
