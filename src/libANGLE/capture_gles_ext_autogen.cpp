@@ -336,11 +336,11 @@ CallCapture CaptureMultiDrawElementsInstancedANGLE(const Context *context,
 
 CallCapture CaptureProvokingVertexANGLE(const Context *context,
                                         bool isCallValid,
-                                        ProvokingVertex modePacked)
+                                        ProvokingVertexConvention modePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("modePacked", ParamType::TProvokingVertex, modePacked);
+    paramBuffer.addValueParam("modePacked", ParamType::TProvokingVertexConvention, modePacked);
 
     return CallCapture("glProvokingVertexANGLE", std::move(paramBuffer));
 }

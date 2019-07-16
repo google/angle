@@ -280,7 +280,7 @@
                                     DrawElementsType typePacked, const GLvoid *const *indices,     \
                                     const GLsizei *instanceCounts, GLsizei drawcount);             \
     /* GL_ANGLE_provoking_vertex */                                                                \
-    void provokingVertex(ProvokingVertex modePacked);                                              \
+    void provokingVertex(ProvokingVertexConvention modePacked);                                    \
     /* GL_ANGLE_texture_multisample */                                                             \
     /* GL_ANGLE_translated_shader_source */                                                        \
     void getTranslatedShaderSource(GLuint shader, GLsizei bufsize, GLsizei *length,                \

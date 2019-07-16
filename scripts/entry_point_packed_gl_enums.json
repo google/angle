@@ -381,7 +381,7 @@
         "type" : "VertexAttribType"
     },
     "glProvokingVertexANGLE": {
-        "mode": "ProvokingVertex"
+        "mode": "ProvokingVertexConvention"
     },
     "glQueryCounterEXT": {
         "target": "QueryType"

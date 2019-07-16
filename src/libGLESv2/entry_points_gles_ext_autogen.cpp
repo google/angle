@@ -352,7 +352,7 @@ void GL_APIENTRY ProvokingVertexANGLE(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        ProvokingVertex modePacked = FromGLenum<ProvokingVertex>(mode);
+        ProvokingVertexConvention modePacked = FromGLenum<ProvokingVertexConvention>(mode);
         ANGLE_CAPTURE(ProvokingVertexANGLE, context, modePacked);
         if (context->skipValidation() || ValidateProvokingVertexANGLE(context, modePacked))
         {
@@ -19680,7 +19680,7 @@ void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        ProvokingVertex modePacked = FromGLenum<ProvokingVertex>(mode);
+        ProvokingVertexConvention modePacked = FromGLenum<ProvokingVertexConvention>(mode);
         ANGLE_CAPTURE(ProvokingVertexANGLE, context, modePacked);
         if (context->skipValidation() || ValidateProvokingVertexANGLE(context, modePacked))
         {

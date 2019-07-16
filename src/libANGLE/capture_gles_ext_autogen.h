@@ -128,7 +128,7 @@ angle::CallCapture CaptureMultiDrawElementsInstancedANGLE(const Context *context
 // GL_ANGLE_provoking_vertex
 angle::CallCapture CaptureProvokingVertexANGLE(const Context *context,
                                                bool isCallValid,
-                                               ProvokingVertex modePacked);
+                                               ProvokingVertexConvention modePacked);
 
 // GL_ANGLE_request_extension
 angle::CallCapture CaptureRequestExtensionANGLE(const Context *context,

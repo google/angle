@@ -233,8 +233,9 @@ void WriteParamTypeToStream(std::ostream &os, ParamType paramType, const ParamVa
         case ParamType::TPrimitiveMode:
             WriteParamValueToStream<ParamType::TPrimitiveMode>(os, paramValue.PrimitiveModeVal);
             break;
-        case ParamType::TProvokingVertex:
-            WriteParamValueToStream<ParamType::TProvokingVertex>(os, paramValue.ProvokingVertexVal);
+        case ParamType::TProvokingVertexConvention:
+            WriteParamValueToStream<ParamType::TProvokingVertexConvention>(
+                os, paramValue.ProvokingVertexConventionVal);
             break;
         case ParamType::TQueryType:
             WriteParamValueToStream<ParamType::TQueryType>(os, paramValue.QueryTypeVal);
@@ -416,8 +417,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "gl::PointParameter";
         case ParamType::TPrimitiveMode:
             return "gl::PrimitiveMode";
-        case ParamType::TProvokingVertex:
-            return "gl::ProvokingVertex";
+        case ParamType::TProvokingVertexConvention:
+            return "gl::ProvokingVertexConvention";
         case ParamType::TQueryType:
             return "gl::QueryType";
         case ParamType::TShaderType:

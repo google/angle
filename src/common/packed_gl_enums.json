@@ -258,7 +258,7 @@
         "MirroredRepeat": "GL_MIRRORED_REPEAT",
         "Repeat": "GL_REPEAT"
     },
-    "ProvokingVertex":
+    "ProvokingVertexConvention":
     {
         "FirstVertexConvention": "GL_FIRST_VERTEX_CONVENTION",
         "LastVertexConvention": "GL_LAST_VERTEX_CONVENTION"

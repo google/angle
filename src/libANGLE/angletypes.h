@@ -502,12 +502,12 @@ using TransformFeedbackBuffersArray =
 constexpr size_t kBarrierVectorDefaultSize = 16;
 using BufferBarrierVector                  = angle::FastVector<Buffer *, kBarrierVectorDefaultSize>;
 
-struct TextureBarrier
+struct TextureAndLayout
 {
     Texture *texture;
     GLenum layout;
 };
-using TextureBarrierVector = angle::FastVector<TextureBarrier, kBarrierVectorDefaultSize>;
+using TextureBarrierVector = angle::FastVector<TextureAndLayout, kBarrierVectorDefaultSize>;
 
 // OffsetBindingPointer.getSize() returns the size specified by the user, which may be larger than
 // the size of the bound buffer. This function reduces the returned size to fit the bound buffer if

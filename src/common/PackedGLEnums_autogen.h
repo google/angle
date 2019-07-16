@@ -320,7 +320,7 @@ PointParameter FromGLenum<PointParameter>(GLenum from);
 GLenum ToGLenum(PointParameter from);
 std::ostream &operator<<(std::ostream &os, PointParameter value);
 
-enum class ProvokingVertex : uint8_t
+enum class ProvokingVertexConvention : uint8_t
 {
     FirstVertexConvention = 0,
     LastVertexConvention  = 1,
@@ -330,9 +330,9 @@ enum class ProvokingVertex : uint8_t
 };
 
 template <>
-ProvokingVertex FromGLenum<ProvokingVertex>(GLenum from);
-GLenum ToGLenum(ProvokingVertex from);
-std::ostream &operator<<(std::ostream &os, ProvokingVertex value);
+ProvokingVertexConvention FromGLenum<ProvokingVertexConvention>(GLenum from);
+GLenum ToGLenum(ProvokingVertexConvention from);
+std::ostream &operator<<(std::ostream &os, ProvokingVertexConvention value);
 
 enum class QueryType : uint8_t
 {

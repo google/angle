@@ -110,7 +110,7 @@ bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
                                              GLsizei drawcount);
 
 // GL_ANGLE_provoking_vertex
-bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertex modePacked);
+bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertexConvention modePacked);
 
 // GL_ANGLE_request_extension
 bool ValidateRequestExtensionANGLE(Context *context, const GLchar *name);

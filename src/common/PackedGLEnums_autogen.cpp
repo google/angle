@@ -1233,26 +1233,26 @@ std::ostream &operator<<(std::ostream &os, PointParameter value)
 }
 
 template <>
-ProvokingVertex FromGLenum<ProvokingVertex>(GLenum from)
+ProvokingVertexConvention FromGLenum<ProvokingVertexConvention>(GLenum from)
 {
     switch (from)
     {
         case GL_FIRST_VERTEX_CONVENTION:
-            return ProvokingVertex::FirstVertexConvention;
+            return ProvokingVertexConvention::FirstVertexConvention;
         case GL_LAST_VERTEX_CONVENTION:
-            return ProvokingVertex::LastVertexConvention;
+            return ProvokingVertexConvention::LastVertexConvention;
         default:
-            return ProvokingVertex::InvalidEnum;
+            return ProvokingVertexConvention::InvalidEnum;
     }
 }
 
-GLenum ToGLenum(ProvokingVertex from)
+GLenum ToGLenum(ProvokingVertexConvention from)
 {
     switch (from)
     {
-        case ProvokingVertex::FirstVertexConvention:
+        case ProvokingVertexConvention::FirstVertexConvention:
             return GL_FIRST_VERTEX_CONVENTION;
-        case ProvokingVertex::LastVertexConvention:
+        case ProvokingVertexConvention::LastVertexConvention:
             return GL_LAST_VERTEX_CONVENTION;
         default:
             UNREACHABLE();
@@ -1260,14 +1260,14 @@ GLenum ToGLenum(ProvokingVertex from)
     }
 }
 
-std::ostream &operator<<(std::ostream &os, ProvokingVertex value)
+std::ostream &operator<<(std::ostream &os, ProvokingVertexConvention value)
 {
     switch (value)
     {
-        case ProvokingVertex::FirstVertexConvention:
+        case ProvokingVertexConvention::FirstVertexConvention:
             os << "GL_FIRST_VERTEX_CONVENTION";
             break;
-        case ProvokingVertex::LastVertexConvention:
+        case ProvokingVertexConvention::LastVertexConvention:
             os << "GL_LAST_VERTEX_CONVENTION";
             break;
         default:

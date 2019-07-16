@@ -7124,7 +7124,7 @@ bool ValidateMultiDrawElementsANGLE(Context *context,
     return true;
 }
 
-bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertex modePacked)
+bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertexConvention modePacked)
 {
     if (!context->getExtensions().provokingVertex)
     {
@@ -7134,8 +7134,8 @@ bool ValidateProvokingVertexANGLE(Context *context, ProvokingVertex modePacked)
 
     switch (modePacked)
     {
-        case ProvokingVertex::FirstVertexConvention:
-        case ProvokingVertex::LastVertexConvention:
+        case ProvokingVertexConvention::FirstVertexConvention:
+        case ProvokingVertexConvention::LastVertexConvention:
             break;
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidProvokingVertex);

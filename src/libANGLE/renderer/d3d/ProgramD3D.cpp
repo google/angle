@@ -544,9 +544,9 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
     ShaderExecutableD3D *mExecutable = nullptr;
     HRESULT mStoredHR                = S_OK;
     std::string mStoredMessage;
-    const char *mStoredFile          = nullptr;
-    const char *mStoredFunction      = nullptr;
-    unsigned int mStoredLine         = 0;
+    const char *mStoredFile     = nullptr;
+    const char *mStoredFunction = nullptr;
+    unsigned int mStoredLine    = 0;
 };
 
 // ProgramD3D Implementation
@@ -694,7 +694,7 @@ bool ProgramD3D::usesGeometryShader(const gl::State &state, const gl::PrimitiveM
         {
             return false;
         }
-        return state.getProvokingVertex() == gl::ProvokingVertex::LastVertexConvention;
+        return state.getProvokingVertex() == gl::ProvokingVertexConvention::LastVertexConvention;
     }
     return usesGeometryShaderForPointSpriteEmulation();
 }

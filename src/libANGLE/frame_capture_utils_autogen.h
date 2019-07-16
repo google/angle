@@ -81,7 +81,7 @@ enum class ParamType
     TMatrixType,
     TPointParameter,
     TPrimitiveMode,
-    TProvokingVertex,
+    TProvokingVertexConvention,
     TQueryType,
     TShaderType,
     TShadingModel,
@@ -162,7 +162,7 @@ union ParamValue
     gl::MatrixType MatrixTypeVal;
     gl::PointParameter PointParameterVal;
     gl::PrimitiveMode PrimitiveModeVal;
-    gl::ProvokingVertex ProvokingVertexVal;
+    gl::ProvokingVertexConvention ProvokingVertexConventionVal;
     gl::QueryType QueryTypeVal;
     gl::ShaderType ShaderTypeVal;
     gl::ShadingModel ShadingModelVal;
@@ -583,10 +583,11 @@ inline void SetParamVal<ParamType::TPrimitiveMode>(gl::PrimitiveMode valueIn, Pa
 }
 
 template <>
-inline void SetParamVal<ParamType::TProvokingVertex>(gl::ProvokingVertex valueIn,
-                                                     ParamValue *valueOut)
+inline void SetParamVal<ParamType::TProvokingVertexConvention>(
+    gl::ProvokingVertexConvention valueIn,
+    ParamValue *valueOut)
 {
-    valueOut->ProvokingVertexVal = valueIn;
+    valueOut->ProvokingVertexConventionVal = valueIn;
 }
 
 template <>
@@ -868,8 +869,8 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
         case ParamType::TPrimitiveMode:
             SetParamVal<ParamType::TPrimitiveMode>(valueIn, valueOut);
             break;
-        case ParamType::TProvokingVertex:
-            SetParamVal<ParamType::TProvokingVertex>(valueIn, valueOut);
+        case ParamType::TProvokingVertexConvention:
+            SetParamVal<ParamType::TProvokingVertexConvention>(valueIn, valueOut);
             break;
         case ParamType::TQueryType:
             SetParamVal<ParamType::TQueryType>(valueIn, valueOut);
