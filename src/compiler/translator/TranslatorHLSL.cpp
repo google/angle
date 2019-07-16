@@ -137,10 +137,11 @@ void TranslatorHLSL::translate(TIntermBlock *root,
         sh::RewriteAtomicFunctionExpressions(root, &getSymbolTable(), getShaderVersion());
     }
 
-    sh::OutputHLSL outputHLSL(
-        getShaderType(), getShaderVersion(), getExtensionBehavior(), getSourcePath(),
-        getOutputType(), numRenderTargets, maxDualSourceDrawBuffers, getUniforms(), compileOptions,
-        getComputeShaderLocalSize(), &getSymbolTable(), perfDiagnostics, mShaderStorageBlocks);
+    sh::OutputHLSL outputHLSL(getShaderType(), getShaderSpec(), getShaderVersion(),
+                              getExtensionBehavior(), getSourcePath(), getOutputType(),
+                              numRenderTargets, maxDualSourceDrawBuffers, getUniforms(),
+                              compileOptions, getComputeShaderLocalSize(), &getSymbolTable(),
+                              perfDiagnostics, mShaderStorageBlocks);
 
     outputHLSL.output(root, getInfoSink().obj);
 

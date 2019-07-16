@@ -297,6 +297,7 @@ libangle_sources = [
   "src/libANGLE/es3_copy_conversion_table_autogen.cpp",
   "src/libANGLE/features.h",
   "src/libANGLE/format_map_autogen.cpp",
+  "src/libANGLE/format_map_desktop.cpp",
   "src/libANGLE/formatutils.cpp",
   "src/libANGLE/formatutils.h",
   "src/libANGLE/histogram_macros.h",

@@ -38,6 +38,7 @@ class OutputHLSL : public TIntermTraverser
 {
   public:
     OutputHLSL(sh::GLenum shaderType,
+               ShShaderSpec shaderSpec,
                int shaderVersion,
                const TExtensionBehavior &extensionBehavior,
                const char *sourcePath,
@@ -151,6 +152,7 @@ class OutputHLSL : public TIntermTraverser
     const char *generateOutputCall() const;
 
     sh::GLenum mShaderType;
+    ShShaderSpec mShaderSpec;
     int mShaderVersion;
     const TExtensionBehavior &mExtensionBehavior;
     const char *mSourcePath;

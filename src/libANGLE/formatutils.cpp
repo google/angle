@@ -493,6 +493,11 @@ bool InternalFormat::isInt() const
     return componentType == GL_INT || componentType == GL_UNSIGNED_INT;
 }
 
+bool InternalFormat::isDepthOrStencil() const
+{
+    return depthBits != 0 || stencilBits != 0;
+}
+
 Format::Format(GLenum internalFormat) : Format(GetSizedInternalFormatInfo(internalFormat)) {}
 
 Format::Format(const InternalFormat &internalFormat) : info(&internalFormat) {}

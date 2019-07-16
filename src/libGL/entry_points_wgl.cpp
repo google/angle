@@ -76,7 +76,6 @@ int GL_APIENTRY wglDescribePixelFormat(HDC hdc, int ipfd, UINT cjpfd, PIXELFORMA
         ppfd->cAlphaBits   = 8;
         ppfd->cDepthBits   = 24;
         ppfd->cStencilBits = 8;
-        ppfd->nVersion     = 3;
     }
     return 1;
 }

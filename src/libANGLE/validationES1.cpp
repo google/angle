@@ -16,14 +16,14 @@
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationES.h"
 
-#define ANGLE_VALIDATE_IS_GLES1(context)                                \
-    do                                                                  \
-    {                                                                   \
-        if (context->getClientMajorVersion() > 1)                       \
-        {                                                               \
-            context->validationError(GL_INVALID_OPERATION, kGLES1Only); \
-            return false;                                               \
-        }                                                               \
+#define ANGLE_VALIDATE_IS_GLES1(context)                                                        \
+    do                                                                                          \
+    {                                                                                           \
+        if (context->getClientType() != EGL_OPENGL_API && context->getClientMajorVersion() > 1) \
+        {                                                                                       \
+            context->validationError(GL_INVALID_OPERATION, kGLES1Only);                         \
+            return false;                                                                       \
+        }                                                                                       \
     } while (0)
 
 namespace gl

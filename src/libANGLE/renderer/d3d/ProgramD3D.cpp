@@ -382,14 +382,16 @@ D3DVarying::D3DVarying(const std::string &semanticNameIn,
 // ProgramD3DMetadata Implementation
 
 ProgramD3DMetadata::ProgramD3DMetadata(RendererD3D *renderer,
-                                       const gl::ShaderMap<const ShaderD3D *> &attachedShaders)
+                                       const gl::ShaderMap<const ShaderD3D *> &attachedShaders,
+                                       EGLenum clientType)
     : mRendererMajorShaderModel(renderer->getMajorShaderModel()),
       mShaderModelSuffix(renderer->getShaderModelSuffix()),
       mUsesInstancedPointSpriteEmulation(
           renderer->getFeatures().useInstancedPointSpriteEmulation.enabled),
       mUsesViewScale(renderer->presentPathFastEnabled()),
       mCanSelectViewInVertexShader(renderer->canSelectViewInVertexShader()),
-      mAttachedShaders(attachedShaders)
+      mAttachedShaders(attachedShaders),
+      mClientType(clientType)
 {}
 
 ProgramD3DMetadata::~ProgramD3DMetadata() = default;
@@ -492,9 +494,17 @@ bool ProgramD3DMetadata::usesMultipleFragmentOuts() const
     return mAttachedShaders[gl::ShaderType::Fragment]->usesMultipleRenderTargets();
 }
 
-GLint ProgramD3DMetadata::getMajorShaderVersion() const
+bool ProgramD3DMetadata::usesCustomOutVars() const
 {
-    return mAttachedShaders[gl::ShaderType::Vertex]->getData().getShaderVersion();
+    int version = mAttachedShaders[gl::ShaderType::Vertex]->getData().getShaderVersion();
+
+    switch (mClientType)
+    {
+        case EGL_OPENGL_API:
+            return version >= 130;
+        default:
+            return version >= 300;
+    }
 }
 
 const ShaderD3D *ProgramD3DMetadata::getFragmentShader() const
@@ -2006,7 +2016,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
             }
         }
 
-        ProgramD3DMetadata metadata(mRenderer, shadersD3D);
+        ProgramD3DMetadata metadata(mRenderer, shadersD3D, context->getClientType());
         BuiltinVaryingsD3D builtins(metadata, resources.varyingPacking);
 
         mDynamicHLSL->generateShaderLinkHLSL(context->getCaps(), mState, metadata,

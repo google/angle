@@ -264,18 +264,36 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
                                               GLenum format,
                                               GLenum type)
 {
-
-    // The type and format are valid if any supported internal format has that type and format
-    if (!ValidES3Format(format))
+    // Different validation if on desktop api
+    if (context->getClientType() == EGL_OPENGL_API)
     {
-        context->validationError(GL_INVALID_ENUM, kInvalidFormat);
-        return false;
+        // The type and format are valid if any supported internal format has that type and format
+        if (!ValidDesktopFormat(format))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+            return false;
+        }
+
+        if (!ValidDesktopType(type))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidType);
+            return false;
+        }
     }
-
-    if (!ValidES3Type(type))
+    else
     {
-        context->validationError(GL_INVALID_ENUM, kInvalidType);
-        return false;
+        // The type and format are valid if any supported internal format has that type and format
+        if (!ValidES3Format(format))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+            return false;
+        }
+
+        if (!ValidES3Type(type))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidType);
+            return false;
+        }
     }
 
     // For historical reasons, glTexImage2D and glTexImage3D pass in their internal format as a
@@ -299,11 +317,23 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
         return false;
     }
 
-    // Check if this is a valid format combination to load texture data
-    if (!ValidES3FormatCombination(format, type, internalFormat))
+    if (context->getClientType() == EGL_OPENGL_API)
     {
-        context->validationError(GL_INVALID_OPERATION, kInvalidFormatCombination);
-        return false;
+        // Check if this is a valid format combination to load texture data
+        if (!ValidDesktopFormatCombination(format, type, internalFormat))
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidFormatCombination);
+            return false;
+        }
+    }
+    else
+    {
+        // Check if this is a valid format combination to load texture data
+        if (!ValidES3FormatCombination(format, type, internalFormat))
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidFormatCombination);
+            return false;
+        }
     }
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);

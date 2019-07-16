@@ -30,8 +30,7 @@ ShShaderSpec SelectShaderSpec(GLint majorVersion,
     // For Desktop GL
     if (clientType == EGL_OPENGL_API)
     {
-        ASSERT(majorVersion == 3 && minorVersion == 3);
-        return SH_GL3_3_SPEC;
+        return SH_GL_COMPATIBILITY_SPEC;
     }
 
     if (majorVersion >= 3)

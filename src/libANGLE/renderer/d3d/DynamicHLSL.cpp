@@ -1198,7 +1198,7 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::State &data,
     const unsigned int numRenderTargets =
         (broadcast || metadata.usesMultipleFragmentOuts() ? data.getCaps().maxDrawBuffers : 1);
 
-    if (metadata.getMajorShaderVersion() < 300)
+    if (!metadata.usesCustomOutVars())
     {
         for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets;
              renderTargetIndex++)

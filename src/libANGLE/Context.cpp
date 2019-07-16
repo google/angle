@@ -46,6 +46,12 @@
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/validationES.h"
 
+// TODO(http://anglebug.com/3730): Autogenerate these enums from gl.xml
+// HACK: Defines for queries that are not in GLES
+#define GL_CONTEXT_PROFILE_MASK 0x9126
+#define GL_CONTEXT_COMPATIBILITY_PROFILE_BIT 0x00000002
+#define GL_CONTEXT_CORE_PROFILE_BIT 0x00000001
+
 namespace gl
 {
 namespace
@@ -1584,6 +1590,16 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             break;
         case GL_NUM_EXTENSIONS:
             *params = static_cast<GLint>(mExtensionStrings.size());
+            break;
+
+        // Desktop client flags
+        case GL_CONTEXT_FLAGS:
+            ASSERT(getClientType() == EGL_OPENGL_API);
+            *params = 0;
+            break;
+        case GL_CONTEXT_PROFILE_MASK:
+            ASSERT(getClientType() == EGL_OPENGL_API);
+            *params = GL_CONTEXT_COMPATIBILITY_PROFILE_BIT;
             break;
 
         // GL_ANGLE_request_extension
@@ -3326,7 +3342,7 @@ void Context::initCaps()
     mState.mLimitations = mImplementation->getNativeLimitations();
 
     // GLES1 emulation: Initialize caps (Table 6.20 / 6.22 in the ES 1.1 spec)
-    if (getClientVersion() < Version(2, 0))
+    if (getClientType() == EGL_OPENGL_API || getClientVersion() < Version(2, 0))
     {
         mState.mCaps.maxMultitextureUnits          = 4;
         mState.mCaps.maxClipPlanes                 = 6;
@@ -7671,6 +7687,20 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             return true;
     }
 
+    if (getClientType() == EGL_OPENGL_API)
+    {
+        switch (pname)
+        {
+            case GL_CONTEXT_FLAGS:
+            case GL_CONTEXT_PROFILE_MASK:
+            {
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            }
+        }
+    }
+
     if (getExtensions().debug)
     {
         switch (pname)
@@ -8300,10 +8330,16 @@ bool Context::usingDisplayTextureShareGroup() const
 
 GLenum Context::getConvertedRenderbufferFormat(GLenum internalformat) const
 {
-    return mState.mExtensions.webglCompatibility && mState.mClientVersion.major == 2 &&
-                   internalformat == GL_DEPTH_STENCIL
-               ? GL_DEPTH24_STENCIL8
-               : internalformat;
+    if (mState.mExtensions.webglCompatibility && mState.mClientVersion.major == 2 &&
+        internalformat == GL_DEPTH_STENCIL)
+    {
+        return GL_DEPTH24_STENCIL8;
+    }
+    if (getClientType() == EGL_OPENGL_API && internalformat == GL_DEPTH_COMPONENT)
+    {
+        return GL_DEPTH_COMPONENT24;
+    }
+    return internalformat;
 }
 
 void Context::maxShaderCompilerThreads(GLuint count)

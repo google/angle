@@ -432,9 +432,9 @@ void State::initialize(Context *context)
     mPathStencilRef  = 0;
     mPathStencilMask = std::numeric_limits<GLuint>::max();
 
-    // GLES1 emulation: Initialize state for GLES1 if version
-    // applies
-    if (clientVersion < Version(2, 0))
+    // GLES1 emulation: Initialize state for GLES1 if version applies
+    // TODO(http://anglebug.com/3745): When on desktop client only do this in compatibility profile
+    if (clientVersion < Version(2, 0) || mClientType == EGL_OPENGL_API)
     {
         mGLES1State.initialize(context, this);
     }

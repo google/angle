@@ -271,6 +271,7 @@ const TConstantUnion *OutputHLSL::writeConstantUnionArray(TInfoSinkBase &out,
 }
 
 OutputHLSL::OutputHLSL(sh::GLenum shaderType,
+                       ShShaderSpec shaderSpec,
                        int shaderVersion,
                        const TExtensionBehavior &extensionBehavior,
                        const char *sourcePath,
@@ -285,6 +286,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
                        const std::vector<InterfaceBlock> &shaderStorageBlocks)
     : TIntermTraverser(true, true, true, symbolTable),
       mShaderType(shaderType),
+      mShaderSpec(shaderSpec),
       mShaderVersion(shaderVersion),
       mExtensionBehavior(extensionBehavior),
       mSourcePath(sourcePath),
@@ -689,7 +691,8 @@ void OutputHLSL::header(TInfoSinkBase &out,
         writeReferencedVaryings(out);
         out << "\n";
 
-        if (mShaderVersion >= 300)
+        if ((IsDesktopGLSpec(mShaderSpec) && mShaderVersion >= 130) ||
+            (!IsDesktopGLSpec(mShaderSpec) && mShaderVersion >= 300))
         {
             for (const auto &outputVariable : mReferencedOutputVariables)
             {

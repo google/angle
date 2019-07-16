@@ -117,7 +117,8 @@ class ProgramD3DMetadata final : angle::NonCopyable
 {
   public:
     ProgramD3DMetadata(RendererD3D *renderer,
-                       const gl::ShaderMap<const ShaderD3D *> &attachedShaders);
+                       const gl::ShaderMap<const ShaderD3D *> &attachedShaders,
+                       EGLenum clientType);
     ~ProgramD3DMetadata();
 
     int getRendererMajorShaderModel() const;
@@ -137,7 +138,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
     bool usesTransformFeedbackGLPosition() const;
     bool usesSystemValuePointSize() const;
     bool usesMultipleFragmentOuts() const;
-    GLint getMajorShaderVersion() const;
+    bool usesCustomOutVars() const;
     const ShaderD3D *getFragmentShader() const;
 
   private:
@@ -147,6 +148,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
     const bool mUsesViewScale;
     const bool mCanSelectViewInVertexShader;
     const gl::ShaderMap<const ShaderD3D *> mAttachedShaders;
+    const EGLenum mClientType;
 };
 
 using D3DUniformMap = std::map<std::string, D3DUniform *>;

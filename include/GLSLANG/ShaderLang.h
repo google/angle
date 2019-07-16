@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 209
+#define ANGLE_SH_VERSION 210
 
 enum ShShaderSpec
 {
@@ -39,7 +39,8 @@ enum ShShaderSpec
     SH_GLES3_1_SPEC,
     SH_WEBGL3_SPEC,
 
-    SH_GL3_3_SPEC,
+    SH_GL_CORE_SPEC,
+    SH_GL_COMPATIBILITY_SPEC,
 };
 
 enum ShShaderOutput
@@ -678,7 +679,7 @@ inline bool IsWebGLBasedSpec(ShShaderSpec spec)
 //
 inline bool IsDesktopGLSpec(ShShaderSpec spec)
 {
-    return spec == SH_GL3_3_SPEC;
+    return spec == SH_GL_CORE_SPEC || spec == SH_GL_COMPATIBILITY_SPEC;
 }
 }  // namespace sh
 
