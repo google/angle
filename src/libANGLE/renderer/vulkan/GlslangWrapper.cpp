@@ -508,6 +508,13 @@ void AssignAttributeLocations(const gl::ProgramState &programState,
     }
 }
 
+std::string RemoveArrayZeroSubscript(const std::string &expression)
+{
+    ASSERT(expression.size() > 3);
+    ASSERT(expression.substr(expression.size() - 3) == "[0]");
+    return expression.substr(0, expression.size() - 3);
+}
+
 void AssignOutputLocations(const gl::ProgramState &programState,
                            IntermediateShaderSource *fragmentSource)
 {
@@ -526,12 +533,27 @@ void AssignOutputLocations(const gl::ProgramState &programState,
         {
             const sh::OutputVariable &outputVar = outputVariables[outputLocation.index];
 
+            // In the following:
+            //
+            //     out vec4 fragOutput[N];
+            //
+            // The varying name is |fragOutput[0]|.  We need to remove the extra |[0]|.
+            std::string name = outputVar.name;
+            if (outputVar.isArray())
+            {
+                name = RemoveArrayZeroSubscript(name);
+                if (outputVar.isArrayOfArrays())
+                {
+                    name = RemoveArrayZeroSubscript(name);
+                }
+            }
+
             std::string locationString;
             if (outputVar.location != -1)
             {
                 locationString = "location = " + Str(outputVar.location);
             }
-            else if (std::find(implicitOutputs.begin(), implicitOutputs.end(), outputVar.name) ==
+            else if (std::find(implicitOutputs.begin(), implicitOutputs.end(), name) ==
                      implicitOutputs.end())
             {
                 // If there is only one output, it is allowed not to have a location qualifier, in
@@ -541,7 +563,7 @@ void AssignOutputLocations(const gl::ProgramState &programState,
                 locationString = "location = 0";
             }
 
-            fragmentSource->insertLayoutSpecifier(outputVar.name, locationString);
+            fragmentSource->insertLayoutSpecifier(name, locationString);
         }
     }
 }
