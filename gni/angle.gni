@@ -21,7 +21,7 @@ if (build_with_chromium) {
 }
 
 # Subdirectory to place data files (e.g. layer JSON files).
-data_dir = "angledata"
+angle_data_dir = "angledata"
 
 declare_args() {
   if (current_cpu == "arm64" || current_cpu == "x64" ||

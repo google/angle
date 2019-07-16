@@ -1007,7 +1007,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     ]
 
     outputs = [
-      "$root_out_dir/$data_dir/gl_cts/data/gles3/{{source_file_part}}",
+      "$root_out_dir/$angle_data_dir/gl_cts/data/gles3/{{source_file_part}}",
     ]
   }
 
@@ -1019,12 +1019,12 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         ":angle_deqp_khr_data",
       ]
 
-      defines += [ "ANGLE_DEQP_DATA_DIR=\"$data_dir\"" ]
+      defines += [ "ANGLE_DEQP_DATA_DIR=\"$angle_data_dir\"" ]
 
       mustpass_dir = _khronos_mustpass
 
       data = [
-        "$root_out_dir/$data_dir/gl_cts/",
+        "$root_out_dir/$angle_data_dir/gl_cts/",
       ]
     }
   }
