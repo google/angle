@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a47b349f_c5bef9ae",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-16T19:04:21Z",
+      "side": 0,
+      "message": "This is great. Please take a look at deqp_khr_gles3_test_expectations as well as the gles31 test expectations to see if there\u0027s anything that can be enabled with this.",
+      "revId": "a9ec874922bfd18c6ad9cd01736e4d7455f62c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

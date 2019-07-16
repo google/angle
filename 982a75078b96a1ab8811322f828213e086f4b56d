@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84181098_2fd28c0a",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 9
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-16T19:04:21Z",
+      "side": 1,
+      "message": "This doesn\u0027t make sense to me. First of all, it\u0027s not `0xFFFFFFFF \u003c\u003c 32`, it\u0027s `1 \u003c\u003c 31`. Is there something undefined about that?\n\nSecond, the new code basically says if valueBits is 32, then the numbers are never negative, which is incorrect.",
+      "revId": "982a75078b96a1ab8811322f828213e086f4b56d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
