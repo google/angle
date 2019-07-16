@@ -30,9 +30,8 @@ enum class CommandID : uint16_t
     // Invalid cmd used to mark end of sequence of commands
     Invalid = 0,
     BeginQuery,
-    BindComputeDescriptorSets,
     BindComputePipeline,
-    BindGraphicsDescriptorSets,
+    BindDescriptorSets,
     BindGraphicsPipeline,
     BindIndexBuffer,
     BindVertexBuffers,
@@ -77,20 +76,15 @@ struct BindPipelineParams
 };
 VERIFY_4_BYTE_ALIGNMENT(BindPipelineParams)
 
-struct BindGraphicsDescriptorSetParams
+struct BindDescriptorSetParams
 {
     VkPipelineLayout layout;
+    VkPipelineBindPoint pipelineBindPoint;
     uint32_t firstSet;
     uint32_t descriptorSetCount;
     uint32_t dynamicOffsetCount;
 };
-VERIFY_4_BYTE_ALIGNMENT(BindGraphicsDescriptorSetParams)
-
-struct BindComputeDescriptorSetParams
-{
-    VkPipelineLayout layout;
-};
-VERIFY_4_BYTE_ALIGNMENT(BindComputeDescriptorSetParams)
+VERIFY_4_BYTE_ALIGNMENT(BindDescriptorSetParams)
 
 struct BindIndexBufferParams
 {
@@ -364,17 +358,15 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // Add commands
     void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
 
-    void bindComputeDescriptorSets(const PipelineLayout &layout,
-                                   const VkDescriptorSet *descriptorSets);
-
     void bindComputePipeline(const Pipeline &pipeline);
 
-    void bindGraphicsDescriptorSets(const PipelineLayout &layout,
-                                    uint32_t firstSet,
-                                    uint32_t descriptorSetCount,
-                                    const VkDescriptorSet *descriptorSets,
-                                    uint32_t dynamicOffsetCount,
-                                    const uint32_t *dynamicOffsets);
+    void bindDescriptorSets(const PipelineLayout &layout,
+                            VkPipelineBindPoint pipelineBindPoint,
+                            uint32_t firstSet,
+                            uint32_t descriptorSetCount,
+                            const VkDescriptorSet *descriptorSets,
+                            uint32_t dynamicOffsetCount,
+                            const uint32_t *dynamicOffsets);
 
     void bindGraphicsPipeline(const Pipeline &pipeline);
 
@@ -641,40 +633,28 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindComputePipeline(const Pipeline &pi
     paramStruct->pipeline = pipeline.getHandle();
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::bindGraphicsDescriptorSets(
-    const PipelineLayout &layout,
-    uint32_t firstSet,
-    uint32_t descriptorSetCount,
-    const VkDescriptorSet *descriptorSets,
-    uint32_t dynamicOffsetCount,
-    const uint32_t *dynamicOffsets)
+ANGLE_INLINE void SecondaryCommandBuffer::bindDescriptorSets(const PipelineLayout &layout,
+                                                             VkPipelineBindPoint pipelineBindPoint,
+                                                             uint32_t firstSet,
+                                                             uint32_t descriptorSetCount,
+                                                             const VkDescriptorSet *descriptorSets,
+                                                             uint32_t dynamicOffsetCount,
+                                                             const uint32_t *dynamicOffsets)
 {
     size_t descSize   = descriptorSetCount * sizeof(VkDescriptorSet);
     size_t offsetSize = dynamicOffsetCount * sizeof(uint32_t);
     uint8_t *writePtr;
-    BindGraphicsDescriptorSetParams *paramStruct = initCommand<BindGraphicsDescriptorSetParams>(
-        CommandID::BindGraphicsDescriptorSets, descSize + offsetSize, &writePtr);
+    BindDescriptorSetParams *paramStruct = initCommand<BindDescriptorSetParams>(
+        CommandID::BindDescriptorSets, descSize + offsetSize, &writePtr);
     // Copy params into memory
     paramStruct->layout             = layout.getHandle();
+    paramStruct->pipelineBindPoint  = pipelineBindPoint;
     paramStruct->firstSet           = firstSet;
     paramStruct->descriptorSetCount = descriptorSetCount;
     paramStruct->dynamicOffsetCount = dynamicOffsetCount;
     // Copy variable sized data
     writePtr = storePointerParameter(writePtr, descriptorSets, descSize);
     storePointerParameter(writePtr, dynamicOffsets, offsetSize);
-}
-
-ANGLE_INLINE void SecondaryCommandBuffer::bindComputeDescriptorSets(
-    const PipelineLayout &layout,
-    const VkDescriptorSet *descriptorSets)
-{
-    uint8_t *writePtr;
-    BindComputeDescriptorSetParams *paramStruct = initCommand<BindComputeDescriptorSetParams>(
-        CommandID::BindComputeDescriptorSets, sizeof(VkDescriptorSet), &writePtr);
-    // Copy params into memory
-    paramStruct->layout = layout.getHandle();
-    // Copy variable sized data
-    storePointerParameter(writePtr, descriptorSets, sizeof(VkDescriptorSet));
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::bindGraphicsPipeline(const Pipeline &pipeline)

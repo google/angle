@@ -202,15 +202,14 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     void beginRenderPass(const VkRenderPassBeginInfo &beginInfo, VkSubpassContents subpassContents);
 
-    void bindGraphicsDescriptorSets(const PipelineLayout &layout,
-                                    uint32_t firstSet,
-                                    uint32_t descriptorSetCount,
-                                    const VkDescriptorSet *descriptorSets,
-                                    uint32_t dynamicOffsetCount,
-                                    const uint32_t *dynamicOffsets);
+    void bindDescriptorSets(const PipelineLayout &layout,
+                            VkPipelineBindPoint pipelineBindPoint,
+                            uint32_t firstSet,
+                            uint32_t descriptorSetCount,
+                            const VkDescriptorSet *descriptorSets,
+                            uint32_t dynamicOffsetCount,
+                            const uint32_t *dynamicOffsets);
     void bindGraphicsPipeline(const Pipeline &pipeline);
-    void bindComputeDescriptorSets(const PipelineLayout &layout,
-                                   const VkDescriptorSet *descriptorSets);
     void bindComputePipeline(const Pipeline &pipeline);
     void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const Pipeline &pipeline);
 
@@ -781,23 +780,16 @@ ANGLE_INLINE void CommandBuffer::bindIndexBuffer(const Buffer &buffer,
     vkCmdBindIndexBuffer(mHandle, buffer.getHandle(), offset, indexType);
 }
 
-ANGLE_INLINE void CommandBuffer::bindComputeDescriptorSets(const PipelineLayout &layout,
-                                                           const VkDescriptorSet *descriptorSets)
+ANGLE_INLINE void CommandBuffer::bindDescriptorSets(const PipelineLayout &layout,
+                                                    VkPipelineBindPoint pipelineBindPoint,
+                                                    uint32_t firstSet,
+                                                    uint32_t descriptorSetCount,
+                                                    const VkDescriptorSet *descriptorSets,
+                                                    uint32_t dynamicOffsetCount,
+                                                    const uint32_t *dynamicOffsets)
 {
     ASSERT(valid() && layout.valid());
-    vkCmdBindDescriptorSets(mHandle, VK_PIPELINE_BIND_POINT_COMPUTE, layout.getHandle(), 0, 1,
-                            descriptorSets, 0, nullptr);
-}
-
-ANGLE_INLINE void CommandBuffer::bindGraphicsDescriptorSets(const PipelineLayout &layout,
-                                                            uint32_t firstSet,
-                                                            uint32_t descriptorSetCount,
-                                                            const VkDescriptorSet *descriptorSets,
-                                                            uint32_t dynamicOffsetCount,
-                                                            const uint32_t *dynamicOffsets)
-{
-    ASSERT(valid() && layout.valid());
-    vkCmdBindDescriptorSets(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, layout.getHandle(), firstSet,
+    vkCmdBindDescriptorSets(mHandle, pipelineBindPoint, layout.getHandle(), firstSet,
                             descriptorSetCount, descriptorSets, dynamicOffsetCount, dynamicOffsets);
 }
 

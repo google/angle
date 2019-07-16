@@ -631,9 +631,10 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
     ANGLE_TRY(mProgram->updateDescriptorSets(this, commandBuffer));
 
     // Bind the graphics descriptor sets.
-    commandBuffer->bindGraphicsDescriptorSets(
-        mProgram->getPipelineLayout(), kDriverUniformsDescriptorSetIndex, 1,
-        &mDriverUniformsDescriptorSet, 1, &mDriverUniformsDynamicOffset);
+    commandBuffer->bindDescriptorSets(
+        mProgram->getPipelineLayout(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+        kDriverUniformsDescriptorSetIndex, 1, &mDriverUniformsDescriptorSet, 1,
+        &mDriverUniformsDynamicOffset);
     return angle::Result::Continue;
 }
 

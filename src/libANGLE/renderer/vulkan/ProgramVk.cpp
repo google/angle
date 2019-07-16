@@ -1305,9 +1305,9 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
             descriptorSetIndex == kUniformsAndXfbDescriptorSetIndex ? mDynamicBufferOffsets.size()
                                                                     : 0;
 
-        commandBuffer->bindGraphicsDescriptorSets(mPipelineLayout.get(), descriptorSetIndex, 1,
-                                                  &descSet, uniformBlockOffsetCount,
-                                                  mDynamicBufferOffsets.data());
+        commandBuffer->bindDescriptorSets(mPipelineLayout.get(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                          descriptorSetIndex, 1, &descSet, uniformBlockOffsetCount,
+                                          mDynamicBufferOffsets.data());
     }
 
     return angle::Result::Continue;

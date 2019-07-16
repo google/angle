@@ -39,16 +39,6 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                     vkCmdBeginQuery(cmdBuffer, params->queryPool, params->query, params->flags);
                     break;
                 }
-                case CommandID::BindComputeDescriptorSets:
-                {
-                    const BindComputeDescriptorSetParams *params =
-                        getParamPtr<BindComputeDescriptorSetParams>(currentCommand);
-                    const VkDescriptorSet *descriptorSets =
-                        Offset<VkDescriptorSet>(params, sizeof(BindComputeDescriptorSetParams));
-                    vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
-                                            params->layout, 0, 1, descriptorSets, 0, nullptr);
-                    break;
-                }
                 case CommandID::BindComputePipeline:
                 {
                     const BindPipelineParams *params =
@@ -56,18 +46,18 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                     vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, params->pipeline);
                     break;
                 }
-                case CommandID::BindGraphicsDescriptorSets:
+                case CommandID::BindDescriptorSets:
                 {
-                    const BindGraphicsDescriptorSetParams *params =
-                        getParamPtr<BindGraphicsDescriptorSetParams>(currentCommand);
+                    const BindDescriptorSetParams *params =
+                        getParamPtr<BindDescriptorSetParams>(currentCommand);
                     const VkDescriptorSet *descriptorSets =
-                        Offset<VkDescriptorSet>(params, sizeof(BindGraphicsDescriptorSetParams));
+                        Offset<VkDescriptorSet>(params, sizeof(BindDescriptorSetParams));
                     const uint32_t *dynamicOffsets = Offset<uint32_t>(
                         descriptorSets, sizeof(VkDescriptorSet) * params->descriptorSetCount);
-                    vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                            params->layout, params->firstSet,
-                                            params->descriptorSetCount, descriptorSets,
-                                            params->dynamicOffsetCount, dynamicOffsets);
+                    vkCmdBindDescriptorSets(cmdBuffer, params->pipelineBindPoint, params->layout,
+                                            params->firstSet, params->descriptorSetCount,
+                                            descriptorSets, params->dynamicOffsetCount,
+                                            dynamicOffsets);
                     break;
                 }
                 case CommandID::BindGraphicsPipeline:
@@ -343,14 +333,11 @@ std::string SecondaryCommandBuffer::dumpCommands(const char *separator) const
                 case CommandID::BeginQuery:
                     result += "BeginQuery";
                     break;
-                case CommandID::BindComputeDescriptorSets:
-                    result += "BindComputeDescriptorSets";
-                    break;
                 case CommandID::BindComputePipeline:
                     result += "BindComputePipeline";
                     break;
-                case CommandID::BindGraphicsDescriptorSets:
-                    result += "BindGraphicsDescriptorSets";
+                case CommandID::BindDescriptorSets:
+                    result += "BindDescriptorSets";
                     break;
                 case CommandID::BindGraphicsPipeline:
                     result += "BindGraphicsPipeline";
