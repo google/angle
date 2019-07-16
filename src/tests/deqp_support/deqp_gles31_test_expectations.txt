@@ -627,17 +627,17 @@
 // GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
 3605 VULKAN : dEQP-GLES31.functional.texture.gather.offset.* = FAIL
 
-// Compute shaders:
-3562 VULKAN : dEQP-GLES31.functional.shaders.builtin_var.compute.* = FAIL
-3562 VULKAN : dEQP-GLES31.functional.compute.* = FAIL
-3566 VULKAN : dEQP-GLES31.functional.ssbo.* = FAIL
-3561 VULKAN : dEQP-GLES31.functional.synchronization.*.ssbo* = FAIL
-3562 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.*compute = FAIL
-3562 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.precision*compute* = FAIL
-3563 VULKAN : dEQP-GLES31.functional.state_query.*compute* = SKIP
-3562 VULKAN : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
-3562 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_*query = FAIL
-3562 VULKAN : dEQP-GLES31.functional.program_interface_query.program_*.resource_list.compute.empty = FAIL
+// Front-end query bugs:
+3520 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.resource_*query = FAIL
+3520 VULKAN : dEQP-GLES31.functional.program_interface_query.program_*.resource_list.compute.empty = FAIL
+3520 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
+
+// glMemoryBarrier support:
+3574 VULKAN : dEQP-GLES31.functional.compute.*barrier* = SKIP
+3574 VULKAN : dEQP-GLES31.functional.synchronization.*memory_barrier* = SKIP
+
+// Indirect dispatch:
+3601 VULKAN : dEQP-GLES31.functional.compute.*indirect* = SKIP
 
 // Shader support:
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.frexp.* = FAIL
@@ -655,10 +655,14 @@
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_constants.core.min_program_texel_offset = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.uniform_block.es31.valid.* = FAIL
 
+// SSBO and Image qualifiers:
+3602 VULKAN : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
+
 // Array of array and struct default uniforms:
 3604 VULKAN : dEQP-GLES31.functional.program_interface_query.*float_struct = FAIL
+3604 VULKAN : dEQP-GLES31.functional.program_interface_query.*float_struct_struct = FAIL
 3604 VULKAN : dEQP-GLES31.functional.program_interface_query.*random* = FAIL
-3604 VULKAN : dEQP-GLES31.functional.program_interface_query.program_output.* = SKIP
+3604 VULKAN : dEQP-GLES31.functional.program_interface_query.*array*array* = SKIP
 
 // Block name matching failure:
 3459 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
@@ -674,10 +678,12 @@
 
 // Atomic counters:
 3566 VULKAN : dEQP-GLES31.functional.*atomic_counter* = FAIL
+3566 VULKAN : dEQP-GLES31.functional.ssbo.layout.* = FAIL
 
 // Storage image:
 3563 VULKAN : dEQP-GLES31.functional.state_query.*image* = FAIL
 3563 VULKAN : dEQP-GLES31.functional.synchronization.*.image* = FAIL
+3563 VULKAN : dEQP-GLES31.functional.compute.*image* = FAIL
 
 // Framebuffer parameters (FRAMEBUFFER_DEFAULT_SAMPLES):
 3520 VULKAN : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL

@@ -106,10 +106,9 @@ class ProgramVk : public ProgramImpl
     // Also initializes the pipeline layout, descriptor set layouts, and used descriptor ranges.
 
     angle::Result updateUniforms(ContextVk *contextVk);
-    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk,
-                                              vk::FramebufferHelper *framebuffer);
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
     angle::Result updateUniformAndStorageBuffersDescriptorSet(ContextVk *contextVk,
-                                                              vk::FramebufferHelper *framebuffer);
+                                                              vk::CommandGraphResource *recorder);
     angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
                                                        vk::FramebufferHelper *framebuffer);
 
@@ -138,13 +137,21 @@ class ProgramVk : public ProgramImpl
                                       vk::PipelineHelper **pipelineOut)
     {
         vk::ShaderProgramHelper *shaderProgram;
-        ANGLE_TRY(initShaders(contextVk, mode, &shaderProgram));
+        ANGLE_TRY(initGraphicsShaders(contextVk, mode, &shaderProgram));
         ASSERT(shaderProgram->isGraphicsProgram());
         RendererVk *renderer = contextVk->getRenderer();
         return shaderProgram->getGraphicsPipeline(
             contextVk, &contextVk->getRenderPassCache(), renderer->getPipelineCache(),
             contextVk->getCurrentQueueSerial(), mPipelineLayout.get(), desc, activeAttribLocations,
             mState.getAttributesTypeMask(), descPtrOut, pipelineOut);
+    }
+
+    angle::Result getComputePipeline(ContextVk *contextVk, vk::PipelineAndSerial **pipelineOut)
+    {
+        vk::ShaderProgramHelper *shaderProgram;
+        ANGLE_TRY(initComputeShader(contextVk, &shaderProgram));
+        ASSERT(!shaderProgram->isGraphicsProgram());
+        return shaderProgram->getComputePipeline(contextVk, mPipelineLayout.get(), pipelineOut);
     }
 
     // Used in testing only.
@@ -170,7 +177,7 @@ class ProgramVk : public ProgramImpl
     void updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk);
     void updateBuffersDescriptorSet(ContextVk *contextVk,
-                                    vk::FramebufferHelper *framebufferVk,
+                                    vk::CommandGraphResource *recorder,
                                     const std::vector<gl::InterfaceBlock> &blocks,
                                     VkDescriptorType descriptorType);
 
@@ -186,26 +193,40 @@ class ProgramVk : public ProgramImpl
     uint32_t getUniformBlockBindingsOffset() const { return 0; }
     uint32_t getStorageBlockBindingsOffset() const { return mStorageBlockBindingsOffset; }
 
+    class ShaderInfo;
     ANGLE_INLINE angle::Result initShaders(ContextVk *contextVk,
-                                           gl::PrimitiveMode mode,
+                                           bool enableLineRasterEmulation,
+                                           ShaderInfo *shaderInfo,
                                            vk::ShaderProgramHelper **shaderProgramOut)
+    {
+        if (!shaderInfo->valid())
+        {
+            ANGLE_TRY(
+                shaderInfo->initShaders(contextVk, mShaderSources, enableLineRasterEmulation));
+        }
+
+        ASSERT(shaderInfo->valid());
+        *shaderProgramOut = &shaderInfo->getShaderProgram();
+
+        return angle::Result::Continue;
+    }
+
+    ANGLE_INLINE angle::Result initGraphicsShaders(ContextVk *contextVk,
+                                                   gl::PrimitiveMode mode,
+                                                   vk::ShaderProgramHelper **shaderProgramOut)
     {
         bool enableLineRasterEmulation = UseLineRaster(contextVk, mode);
 
         ShaderInfo &shaderInfo =
             enableLineRasterEmulation ? mLineRasterShaderInfo : mDefaultShaderInfo;
 
-        if (!shaderInfo.valid())
-        {
-            ANGLE_TRY(shaderInfo.initShaders(contextVk, mShaderSource[gl::ShaderType::Vertex],
-                                             mShaderSource[gl::ShaderType::Fragment],
-                                             enableLineRasterEmulation));
-        }
+        return initShaders(contextVk, enableLineRasterEmulation, &shaderInfo, shaderProgramOut);
+    }
 
-        ASSERT(shaderInfo.valid());
-        *shaderProgramOut = &shaderInfo.getShaderProgram();
-
-        return angle::Result::Continue;
+    ANGLE_INLINE angle::Result initComputeShader(ContextVk *contextVk,
+                                                 vk::ShaderProgramHelper **shaderProgramOut)
+    {
+        return initShaders(contextVk, false, &mDefaultShaderInfo, shaderProgramOut);
     }
 
     // Save and load implementation for GLES Program Binary support.
@@ -260,12 +281,15 @@ class ProgramVk : public ProgramImpl
         ~ShaderInfo();
 
         angle::Result initShaders(ContextVk *contextVk,
-                                  const std::string &vertexSource,
-                                  const std::string &fragmentSource,
+                                  const gl::ShaderMap<std::string> &shaderSources,
                                   bool enableLineRasterEmulation);
         void release(ContextVk *contextVk);
 
-        ANGLE_INLINE bool valid() const { return mShaders[gl::ShaderType::Vertex].get().valid(); }
+        ANGLE_INLINE bool valid() const
+        {
+            return mShaders[gl::ShaderType::Vertex].get().valid() ||
+                   mShaders[gl::ShaderType::Compute].get().valid();
+        }
 
         vk::ShaderProgramHelper &getShaderProgram() { return mProgramHelper; }
 
@@ -278,7 +302,7 @@ class ProgramVk : public ProgramImpl
     ShaderInfo mLineRasterShaderInfo;
 
     // We keep the translated linked shader sources to use with shader draw call patching.
-    gl::ShaderMap<std::string> mShaderSource;
+    gl::ShaderMap<std::string> mShaderSources;
 
     // Storage buffers are placed after uniform buffers in their descriptor set.  This cached value
     // contains the offset where storage buffer bindings start.

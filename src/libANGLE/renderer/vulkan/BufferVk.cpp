@@ -231,10 +231,16 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
 
 angle::Result BufferVk::unmap(const gl::Context *context, GLboolean *result)
 {
-    return unmapImpl(vk::GetImpl(context));
+    unmapImpl(vk::GetImpl(context));
+
+    // This should be false if the contents have been corrupted through external means.  Vulkan
+    // doesn't provide such information.
+    *result = true;
+
+    return angle::Result::Continue;
 }
 
-angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
+void BufferVk::unmapImpl(ContextVk *contextVk)
 {
     ASSERT(mBuffer.valid());
 
@@ -242,8 +248,6 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
     mBuffer.onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
 
     markConversionBuffersDirty();
-
-    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::getIndexRange(const gl::Context *context,

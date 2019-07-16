@@ -384,9 +384,10 @@ class ProgramState final : angle::NonCopyable
     const ShaderBitSet &getLinkedShaderStages() const { return mLinkedShaderStages; }
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
-        return mLinkedShaderStages.test(shaderType);
+        return mLinkedShaderStages[shaderType];
     }
     size_t getLinkedShaderStageCount() const { return mLinkedShaderStages.count(); }
+    bool isCompute() const { return hasLinkedShaderStage(ShaderType::Compute); }
 
     bool hasAttachedShader() const;
 
@@ -588,8 +589,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
-        return mState.mLinkedShaderStages[shaderType];
+        return mState.hasLinkedShaderStage(shaderType);
     }
+    bool isCompute() const { return mState.isCompute(); }
 
     angle::Result loadBinary(const Context *context,
                              GLenum binaryFormat,

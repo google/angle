@@ -3344,18 +3344,22 @@ void Context::initCaps()
 
     // Limit textures as well, so we can use fast bitsets with texture bindings.
     LimitCap(&mState.mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
-    LimitCap(&mState.mCaps.maxShaderTextureImageUnits[ShaderType::Vertex],
-             IMPLEMENTATION_MAX_ACTIVE_TEXTURES / 2);
-    LimitCap(&mState.mCaps.maxShaderTextureImageUnits[ShaderType::Fragment],
-             IMPLEMENTATION_MAX_ACTIVE_TEXTURES / 2);
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        LimitCap(&mState.mCaps.maxShaderTextureImageUnits[shaderType],
+                 IMPLEMENTATION_MAX_SHADER_TEXTURES);
+    }
 
     LimitCap(&mState.mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
 
     LimitCap(&mState.mCaps.maxCombinedAtomicCounterBuffers,
              IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
 
-    LimitCap(&mState.mCaps.maxShaderStorageBlocks[ShaderType::Compute],
-             IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        LimitCap(&mState.mCaps.maxShaderStorageBlocks[shaderType],
+                 IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+    }
     LimitCap(&mState.mCaps.maxShaderStorageBufferBindings,
              IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
     LimitCap(&mState.mCaps.maxCombinedShaderStorageBlocks,

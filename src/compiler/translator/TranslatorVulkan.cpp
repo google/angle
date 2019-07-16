@@ -692,9 +692,12 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         sink << "};\n";
     }
 
-    const TVariable *driverUniforms = AddDriverUniformsToShader(root, &getSymbolTable());
-
-    ReplaceGLDepthRangeWithDriverUniform(root, driverUniforms, &getSymbolTable());
+    const TVariable *driverUniforms = nullptr;
+    if (getShaderType() != GL_COMPUTE_SHADER)
+    {
+        driverUniforms = AddDriverUniformsToShader(root, &getSymbolTable());
+        ReplaceGLDepthRangeWithDriverUniform(root, driverUniforms, &getSymbolTable());
+    }
 
     // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.
@@ -775,10 +778,8 @@ void TranslatorVulkan::translate(TIntermBlock *root,
             RewriteDfdy(root, getSymbolTable(), getShaderVersion(), viewportYScale);
         }
     }
-    else
+    else if (getShaderType() == GL_VERTEX_SHADER)
     {
-        ASSERT(getShaderType() == GL_VERTEX_SHADER);
-
         AddANGLEPositionVarying(root, &getSymbolTable());
 
         // Add a macro to declare transform feedback buffers.
@@ -789,6 +790,11 @@ void TranslatorVulkan::translate(TIntermBlock *root,
 
         // Append depth range translation to main.
         AppendVertexShaderDepthCorrectionToMain(root, &getSymbolTable());
+    }
+    else
+    {
+        ASSERT(getShaderType() == GL_COMPUTE_SHADER);
+        EmitWorkGroupSizeGLSL(*this, sink);
     }
 
     // Write translated shader.

@@ -32,6 +32,7 @@ enum class CommandGraphResourceType
     Framebuffer,
     Image,
     Query,
+    Dispatcher,
     // Transform feedback queries could be handled entirely on the CPU (if not using
     // VK_EXT_transform_feedback), but still need to generate a command graph barrier node.
     EmulatedQuery,

@@ -97,7 +97,7 @@ class BufferVk : public BufferImpl
                                VkDeviceSize length,
                                GLbitfield access,
                                void **mapPtr);
-    angle::Result unmapImpl(ContextVk *contextVk);
+    void unmapImpl(ContextVk *contextVk);
 
     // Calls copyBuffer internally.
     angle::Result copyToBuffer(ContextVk *contextVk,

@@ -195,25 +195,26 @@ ProgramVk::ShaderInfo::ShaderInfo() {}
 ProgramVk::ShaderInfo::~ShaderInfo() = default;
 
 angle::Result ProgramVk::ShaderInfo::initShaders(ContextVk *contextVk,
-                                                 const std::string &vertexSource,
-                                                 const std::string &fragmentSource,
+                                                 const gl::ShaderMap<std::string> &shaderSources,
                                                  bool enableLineRasterEmulation)
 {
     ASSERT(!valid());
 
-    std::vector<uint32_t> vertexCode;
-    std::vector<uint32_t> fragmentCode;
-    ANGLE_TRY(GlslangWrapper::GetShaderCode(contextVk, contextVk->getCaps(),
-                                            enableLineRasterEmulation, vertexSource, fragmentSource,
-                                            &vertexCode, &fragmentCode));
+    gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
+    ANGLE_TRY(GlslangWrapper::GetShaderCode(
+        contextVk, contextVk->getCaps(), enableLineRasterEmulation, shaderSources, &shaderCodes));
 
-    ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[gl::ShaderType::Vertex].get(),
-                                      vertexCode.data(), vertexCode.size() * sizeof(uint32_t)));
-    ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[gl::ShaderType::Fragment].get(),
-                                      fragmentCode.data(), fragmentCode.size() * sizeof(uint32_t)));
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        if (!shaderSources[shaderType].empty())
+        {
+            ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
+                                              shaderCodes[shaderType].data(),
+                                              shaderCodes[shaderType].size() * sizeof(uint32_t)));
 
-    mProgramHelper.setShader(gl::ShaderType::Vertex, &mShaders[gl::ShaderType::Vertex]);
-    mProgramHelper.setShader(gl::ShaderType::Fragment, &mShaders[gl::ShaderType::Fragment]);
+            mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
+        }
+    }
 
     return angle::Result::Continue;
 }
@@ -223,7 +224,7 @@ angle::Result ProgramVk::loadShaderSource(ContextVk *contextVk, gl::BinaryInputS
     // Read in shader sources for all shader types
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        mShaderSource[shaderType] = stream->readString();
+        mShaderSources[shaderType] = stream->readString();
     }
 
     return angle::Result::Continue;
@@ -234,7 +235,7 @@ void ProgramVk::saveShaderSource(gl::BinaryOutputStream *stream)
     // Write out shader sources for all shader types
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        stream->writeString(mShaderSource[shaderType]);
+        stream->writeString(mShaderSources[shaderType]);
     }
 }
 
@@ -338,8 +339,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // assignment done in that function.
     linkResources(resources);
 
-    GlslangWrapper::GetShaderSource(mState, resources, &mShaderSource[gl::ShaderType::Vertex],
-                                    &mShaderSource[gl::ShaderType::Fragment]);
+    GlslangWrapper::GetShaderSource(mState, resources, &mShaderSources);
 
     // TODO(jie.a.chen@intel.com): Parallelize linking.
     // http://crbug.com/849576
@@ -1013,7 +1013,7 @@ void ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 }
 
 void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
-                                           vk::FramebufferHelper *framebufferVk,
+                                           vk::CommandGraphResource *recorder,
                                            const std::vector<gl::InterfaceBlock> &blocks,
                                            VkDescriptorType descriptorType)
 {
@@ -1074,19 +1074,23 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
 
         if (isStorageBuffer)
         {
-            bufferHelper.onWrite(contextVk, framebufferVk, VK_ACCESS_SHADER_READ_BIT,
+            bufferHelper.onWrite(contextVk, recorder, VK_ACCESS_SHADER_READ_BIT,
                                  VK_ACCESS_SHADER_WRITE_BIT);
         }
         else
         {
-            bufferHelper.onRead(framebufferVk, VK_ACCESS_UNIFORM_READ_BIT);
+            bufferHelper.onRead(recorder, VK_ACCESS_UNIFORM_READ_BIT);
         }
 
         // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
         // backing buffer may be larger than max*BufferRange.  In that case, we use the minimum of
         // the backing buffer size (what's left after offset) and the buffer size as defined by the
-        // shader.
-        size = std::min(size > 0 ? size : (bufferHelper.getSize() - offset), blockSize);
+        // shader.  That latter is only valid for UBOs, as SSBOs may have variable length arrays.
+        size = size > 0 ? size : (bufferHelper.getSize() - offset);
+        if (!isStorageBuffer)
+        {
+            size = std::min(size, blockSize);
+        }
 
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[writeCount];
 
@@ -1118,13 +1122,13 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
 
 angle::Result ProgramVk::updateUniformAndStorageBuffersDescriptorSet(
     ContextVk *contextVk,
-    vk::FramebufferHelper *framebufferVk)
+    vk::CommandGraphResource *recorder)
 {
     ANGLE_TRY(allocateDescriptorSet(contextVk, kBufferDescriptorSetIndex));
 
-    updateBuffersDescriptorSet(contextVk, framebufferVk, mState.getUniformBlocks(),
+    updateBuffersDescriptorSet(contextVk, recorder, mState.getUniformBlocks(),
                                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-    updateBuffersDescriptorSet(contextVk, framebufferVk, mState.getShaderStorageBlocks(),
+    updateBuffersDescriptorSet(contextVk, recorder, mState.getShaderStorageBlocks(),
                                VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
 
     return angle::Result::Continue;
@@ -1163,8 +1167,7 @@ void ProgramVk::updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk)
                                              mDescriptorSets[kUniformsAndXfbDescriptorSetIndex]);
 }
 
-angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk,
-                                                     vk::FramebufferHelper *framebuffer)
+angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 {
     const vk::TextureDescriptorDesc &texturesDesc = contextVk->getActiveTexturesDesc();
 
@@ -1272,6 +1275,9 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
         }
     }
 
+    const VkPipelineBindPoint pipelineBindPoint =
+        mState.isCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
+
     for (size_t descriptorSetIndex = 0; descriptorSetIndex < descriptorSetRange;
          ++descriptorSetIndex)
     {
@@ -1305,7 +1311,7 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
             descriptorSetIndex == kUniformsAndXfbDescriptorSetIndex ? mDynamicBufferOffsets.size()
                                                                     : 0;
 
-        commandBuffer->bindDescriptorSets(mPipelineLayout.get(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+        commandBuffer->bindDescriptorSets(mPipelineLayout.get(), pipelineBindPoint,
                                           descriptorSetIndex, 1, &descSet, uniformBlockOffsetCount,
                                           mDynamicBufferOffsets.data());
     }

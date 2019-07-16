@@ -304,7 +304,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
                                0, numVertices, binding.getStride(), vertexFormat.vertexLoadFunction,
                                &mCurrentArrayBuffers[attribIndex],
                                &conversion->lastAllocationOffset));
-    ANGLE_TRY(srcBuffer->unmapImpl(contextVk));
+    srcBuffer->unmapImpl(contextVk);
 
     ASSERT(conversion->dirty);
     conversion->dirty = false;

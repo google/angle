@@ -315,6 +315,9 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 // Tests modifying an existing shader storage buffer
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteSame)
 {
+    // Vulkan doesn't support memory barriers yet. http://anglebug.com/3574
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kComputeShaderSource[] =
         R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
@@ -410,6 +413,9 @@ void main()
 // Tests reading and writing to a shader storage buffer bound at an offset.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteOffset)
 {
+    // Vulkan doesn't support memory barriers yet. http://anglebug.com/3574
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 
@@ -1593,8 +1599,10 @@ TEST_P(ShaderStorageBufferTest31, LoadAndStoreBooleanValue)
     // http://anglebug.com/1951
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
 
-    // Seems to fail on Windows NVIDIA GL when tests are run without interruption.
+    // Seems to fail on Windows NVIDIA GL when tests are run without interruption.  It also happens
+    // on Vulkan.  http://anglebug.com/3694
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsOpenGL());
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan());
 
     constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=1) in;
@@ -2072,6 +2080,10 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
+ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31,
+                       ES31_OPENGL(),
+                       ES31_OPENGLES(),
+                       ES31_D3D11(),
+                       ES31_VULKAN());
 
 }  // namespace

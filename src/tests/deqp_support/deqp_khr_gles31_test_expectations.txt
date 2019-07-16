@@ -36,12 +36,12 @@
 // General Vulkan expectations
 
 // Limits:
-// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
-3605 VULKAN : KHR-GLES31.core.texture_gather* = FAIL
+// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.  Also crashes on memory barrier support missing.
+3605 VULKAN : KHR-GLES31.core.texture_gather.* = SKIP
 
-// Compute shaders
-3562 VULKAN : KHR-GLES31.core.constant_expressions.* = SKIP
-3520 VULKAN : KHR-GLES31.core.compute_shader* = SKIP
+// Memory barriers
+3574 VULKAN : KHR-GLES31.core.compute_shader* = SKIP
+3574 VULKAN : KHR-GLES31.core.shader_atomic_counters.basic-glsl-built-in = SKIP
 
 // Multisampled textures:
 3565 VULKAN : KHR-GLES31.core.texture_storage_multisample.* = SKIP
@@ -67,14 +67,21 @@
 3570 VULKAN : KHR-GLES31.core.sepshaderobjs* = FAIL
 
 // Shader support:
-3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation* = FAIL
 3569 VULKAN : KHR-GLES31.core.shader_integer_mix.* = FAIL
 3569 VULKAN : KHR-GLES31.core.shader_image* = SKIP
 3569 VULKAN : KHR-GLES31.core.shader_macros* = FAIL
+3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.frexp.* = SKIP
+3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.uaddCarry.* = SKIP
+3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.usubBorrow.* = SKIP
+3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
+3569 VULKAN : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
 /// Crash due to missing unsupported check in dEQP
 3571 VULKAN : KHR-GLES31.core.shader_macros*_geometry = SKIP
 3571 VULKAN : KHR-GLES31.core.shader_macros*_tess_control = SKIP
 3571 VULKAN : KHR-GLES31.core.shader_macros*_tess_eval = SKIP
+3571 VULKAN : KHR-GLES31.core.constant_expressions.*geometry = SKIP
+3571 VULKAN : KHR-GLES31.core.constant_expressions.*tess_control = SKIP
+3571 VULKAN : KHR-GLES31.core.constant_expressions.*tess_eval = SKIP
 
 3520 VULKAN : KHR-GLES31.core.vertex_attrib_binding* = SKIP
 3520 VULKAN : KHR-GLES31.core.internalformat.texture2d.* = FAIL
@@ -85,7 +92,8 @@
 // Draw indirect:
 3564 VULKAN : KHR-GLES31.core.draw_indirect.* = SKIP
 
-3520 VULKAN : KHR-GLES31.core.explicit_uniform_location.* = FAIL
+// Explicit uniform locations:
+3597  VULKAN : KHR-GLES31.core.explicit_uniform_location.* = SKIP
 
 3520 VULKAN : KHR-GLES31.core.program_interface_query.* = SKIP
 
@@ -96,6 +104,10 @@
 
 // Blend equations:
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
+
+// Storage image:
+3563 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_ComputeShader = FAIL
+3563 VULKAN : KHR-GLES31.core.layout_binding.block_layout_binding_block_ComputeShader = FAIL
 
 3520 VULKAN : KHR-GLES31.core.internalformat.copy_tex_image* = FAIL
 3520 VULKAN : KHR-GLES31.core.internalformat.renderbuffer* = FAIL

@@ -88,6 +88,8 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
                     UNREACHABLE();
                     return "Query";
             }
+        case CommandGraphResourceType::Dispatcher:
+            return "Dispatcher";
         case CommandGraphResourceType::EmulatedQuery:
             switch (function)
             {
@@ -1032,6 +1034,7 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
     int framebufferIDCounter = 1;
     int imageIDCounter       = 1;
     int queryIDCounter       = 1;
+    int dispatcherIDCounter  = 1;
     int fenceIDCounter       = 1;
     int xfbIDCounter         = 1;
 
@@ -1106,6 +1109,9 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
                         break;
                     case CommandGraphResourceType::Image:
                         id = imageIDCounter++;
+                        break;
+                    case CommandGraphResourceType::Dispatcher:
+                        id = dispatcherIDCounter++;
                         break;
                     case CommandGraphResourceType::FenceSync:
                         id = fenceIDCounter++;

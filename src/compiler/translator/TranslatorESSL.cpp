@@ -84,11 +84,9 @@ void TranslatorESSL::translate(TIntermBlock *root,
     // Write array bounds clamping emulation if needed.
     getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
 
-    if (getShaderType() == GL_COMPUTE_SHADER && isComputeShaderLocalSizeDeclared())
+    if (getShaderType() == GL_COMPUTE_SHADER)
     {
-        const sh::WorkGroupSize &localSize = getComputeShaderLocalSize();
-        sink << "layout (local_size_x=" << localSize[0] << ", local_size_y=" << localSize[1]
-             << ", local_size_z=" << localSize[2] << ") in;\n";
+        EmitWorkGroupSizeGLSL(*this, sink);
     }
 
     if (getShaderType() == GL_GEOMETRY_SHADER_EXT)

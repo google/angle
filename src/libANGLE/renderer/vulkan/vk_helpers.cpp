@@ -1136,7 +1136,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
         ANGLE_TRY(streamIndices(contextVk, glIndexType, indexCount,
                                 static_cast<const uint8_t *>(srcDataMapping) + elementArrayOffset,
                                 bufferOut, bufferOffsetOut, indexCountOut));
-        ANGLE_TRY(elementArrayBufferVk->unmapImpl(contextVk));
+        elementArrayBufferVk->unmapImpl(contextVk);
         return angle::Result::Continue;
     }
 
@@ -2627,6 +2627,11 @@ void FramebufferHelper::release(ContextVk *contextVk)
 {
     contextVk->releaseObject(getStoredQueueSerial(), &mFramebuffer);
 }
+
+// FramebufferHelper implementation.
+DispatchHelper::DispatchHelper() : CommandGraphResource(CommandGraphResourceType::Dispatcher) {}
+
+DispatchHelper::~DispatchHelper() = default;
 
 // ShaderProgramHelper implementation.
 ShaderProgramHelper::ShaderProgramHelper() = default;

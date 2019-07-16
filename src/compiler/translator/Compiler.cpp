@@ -1429,6 +1429,16 @@ bool TCompiler::isVaryingDefined(const char *varyingName)
     return false;
 }
 
+void EmitWorkGroupSizeGLSL(const TCompiler &compiler, TInfoSinkBase &sink)
+{
+    if (compiler.isComputeShaderLocalSizeDeclared())
+    {
+        const sh::WorkGroupSize &localSize = compiler.getComputeShaderLocalSize();
+        sink << "layout (local_size_x=" << localSize[0] << ", local_size_y=" << localSize[1]
+             << ", local_size_z=" << localSize[2] << ") in;\n";
+    }
+}
+
 void EmitMultiviewGLSL(const TCompiler &compiler,
                        const ShCompileOptions &compileOptions,
                        const TBehavior behavior,

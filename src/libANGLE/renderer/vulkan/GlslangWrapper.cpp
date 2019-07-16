@@ -98,7 +98,8 @@ void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuil
 class IntermediateShaderSource final : angle::NonCopyable
 {
   public:
-    IntermediateShaderSource(const std::string &source);
+    void init(const std::string &source);
+    bool empty() const { return mTokens.empty(); }
 
     // Find @@ LAYOUT-name(extra, args) @@ and replace it with:
     //
@@ -217,7 +218,7 @@ size_t ExtractNameAndArgs(const std::string &source,
     return readCount;
 }
 
-IntermediateShaderSource::IntermediateShaderSource(const std::string &source)
+void IntermediateShaderSource::init(const std::string &source)
 {
     size_t cur = 0;
 
@@ -491,7 +492,7 @@ void GenerateTransformFeedbackOutputs(const gl::ProgramState &programState,
 void AssignAttributeLocations(const gl::ProgramState &programState,
                               IntermediateShaderSource *vertexSource)
 {
-    ASSERT(vertexSource != nullptr);
+    ASSERT(!vertexSource->empty());
 
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
@@ -510,7 +511,7 @@ void AssignAttributeLocations(const gl::ProgramState &programState,
 void AssignOutputLocations(const gl::ProgramState &programState,
                            IntermediateShaderSource *fragmentSource)
 {
-    ASSERT(fragmentSource != nullptr);
+    ASSERT(!fragmentSource->empty());
 
     // Parse output locations and replace them in the fragment shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
@@ -549,6 +550,9 @@ void AssignVaryingLocations(const gl::ProgramLinkedResources &resources,
                             IntermediateShaderSource *outStageSource,
                             IntermediateShaderSource *inStageSource)
 {
+    ASSERT(!outStageSource->empty());
+    ASSERT(!inStageSource->empty());
+
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : resources.varyingPacking.getRegisterList())
     {
@@ -623,7 +627,7 @@ void AssignVaryingLocations(const gl::ProgramLinkedResources &resources,
     inStageSource->insertQualifierSpecifier(kVaryingName, "in");
 }
 
-void AssignUniformBindings(const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+void AssignUniformBindings(gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     // Bind the default uniforms for vertex and fragment shaders.
     // See corresponding code in OutputVulkanGLSL.cpp.
@@ -631,18 +635,18 @@ void AssignUniformBindings(const gl::ShaderMap<IntermediateShaderSource *> &shad
 
     constexpr char kDefaultUniformsBlockName[] = "defaultUniforms";
     size_t bindingIndex                        = 0;
-    for (IntermediateShaderSource *shaderSource : shaderSources)
+    for (IntermediateShaderSource &shaderSource : *shaderSources)
     {
-        if (shaderSource)
+        if (!shaderSource.empty())
         {
             std::string defaultUniformsBinding =
                 uniformsDescriptorSet + ", binding = " + Str(bindingIndex++);
 
-            shaderSource->insertLayoutSpecifier(kDefaultUniformsBlockName, defaultUniformsBinding);
+            shaderSource.insertLayoutSpecifier(kDefaultUniformsBlockName, defaultUniformsBinding);
         }
     }
 
-    if (shaderSources[gl::ShaderType::Compute] != nullptr)
+    if (!(*shaderSources)[gl::ShaderType::Compute].empty())
     {
         // Compute doesn't need driver uniforms.
         return;
@@ -653,13 +657,10 @@ void AssignUniformBindings(const gl::ShaderMap<IntermediateShaderSource *> &shad
         "set = " + Str(kDriverUniformsDescriptorSetIndex) + ", binding = 0";
     constexpr char kDriverBlockName[] = "ANGLEUniformBlock";
 
-    for (IntermediateShaderSource *shaderSource : shaderSources)
+    for (IntermediateShaderSource &shaderSource : *shaderSources)
     {
-        if (shaderSource)
-        {
-            shaderSource->insertLayoutSpecifier(kDriverBlockName, driverBlockLayoutString);
-            shaderSource->insertQualifierSpecifier(kDriverBlockName, kUniformQualifier);
-        }
+        shaderSource.insertLayoutSpecifier(kDriverBlockName, driverBlockLayoutString);
+        shaderSource.insertQualifierSpecifier(kDriverBlockName, kUniformQualifier);
     }
 }
 
@@ -669,31 +670,30 @@ void AssignResourceBinding(gl::ShaderBitSet activeShaders,
                            const std::string &bindingString,
                            const char *qualifier,
                            const char *unusedSubstitution,
-                           const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+                           gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        IntermediateShaderSource *shaderSource = shaderSources[shaderType];
-        if (shaderSource)
+        IntermediateShaderSource &shaderSource = (*shaderSources)[shaderType];
+        if (!shaderSource.empty())
         {
             if (activeShaders[shaderType])
             {
-                shaderSource->insertLayoutSpecifier(name, bindingString);
-                shaderSource->insertQualifierSpecifier(name, qualifier);
+                shaderSource.insertLayoutSpecifier(name, bindingString);
+                shaderSource.insertQualifierSpecifier(name, qualifier);
             }
             else
             {
-                shaderSource->eraseLayoutAndQualifierSpecifiers(name, unusedSubstitution);
+                shaderSource.eraseLayoutAndQualifierSpecifiers(name, unusedSubstitution);
             }
         }
     }
 }
 
-uint32_t AssignInterfaceBlockBindings(
-    const std::vector<gl::InterfaceBlock> &blocks,
-    const char *qualifier,
-    uint32_t bindingStart,
-    const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+uint32_t AssignInterfaceBlockBindings(const std::vector<gl::InterfaceBlock> &blocks,
+                                      const char *qualifier,
+                                      uint32_t bindingStart,
+                                      gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     const std::string buffersDescriptorSet = "set = " + Str(kBufferDescriptorSetIndex);
 
@@ -714,7 +714,7 @@ uint32_t AssignInterfaceBlockBindings(
 }
 
 void AssignBufferBindings(const gl::ProgramState &programState,
-                          const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+                          gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     uint32_t bindingStart = 0;
 
@@ -730,7 +730,7 @@ void AssignBufferBindings(const gl::ProgramState &programState,
 }
 
 void AssignTextureBindings(const gl::ProgramState &programState,
-                           const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+                           gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
     const std::string texturesDescriptorSet = "set = " + Str(kTextureDescriptorSetIndex);
 
@@ -755,10 +755,10 @@ void AssignTextureBindings(const gl::ProgramState &programState,
 void CleanupUnusedEntities(const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
                            gl::Shader *glVertexShader,
-                           const gl::ShaderMap<IntermediateShaderSource *> &shaderSources)
+                           gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
-    IntermediateShaderSource *vertexSource = shaderSources[gl::ShaderType::Vertex];
-    if (vertexSource)
+    IntermediateShaderSource &vertexSource = (*shaderSources)[gl::ShaderType::Vertex];
+    if (!vertexSource.empty())
     {
         ASSERT(glVertexShader != nullptr);
 
@@ -772,32 +772,26 @@ void CleanupUnusedEntities(const gl::ProgramState &programState,
                 continue;
             }
 
-            vertexSource->eraseLayoutAndQualifierSpecifiers(attribute.name, "");
+            vertexSource.eraseLayoutAndQualifierSpecifiers(attribute.name, "");
         }
     }
 
     // Remove all the markers for unused varyings.
     for (const std::string &varyingName : resources.varyingPacking.getInactiveVaryingNames())
     {
-        for (IntermediateShaderSource *shaderSource : shaderSources)
+        for (IntermediateShaderSource &shaderSource : *shaderSources)
         {
-            if (shaderSource)
-            {
-                shaderSource->eraseLayoutAndQualifierSpecifiers(varyingName, "");
-            }
+            shaderSource.eraseLayoutAndQualifierSpecifiers(varyingName, "");
         }
     }
 
     // Remove all the markers for unused interface blocks, and replace them with |struct|.
     for (const std::string &unusedInterfaceBlock : resources.unusedInterfaceBlocks)
     {
-        for (IntermediateShaderSource *shaderSource : shaderSources)
+        for (IntermediateShaderSource &shaderSource : *shaderSources)
         {
-            if (shaderSource)
-            {
-                shaderSource->eraseLayoutAndQualifierSpecifiers(unusedInterfaceBlock,
-                                                                kUnusedBlockSubstitution);
-            }
+            shaderSource.eraseLayoutAndQualifierSpecifiers(unusedInterfaceBlock,
+                                                           kUnusedBlockSubstitution);
         }
     }
 
@@ -808,16 +802,19 @@ void CleanupUnusedEntities(const gl::ProgramState &programState,
         std::string uniformName =
             unusedUniform.isSampler ? GetMappedSamplerName(unusedUniform.name) : unusedUniform.name;
 
-        for (IntermediateShaderSource *shaderSource : shaderSources)
+        for (IntermediateShaderSource &shaderSource : *shaderSources)
         {
-            if (shaderSource)
-            {
-                shaderSource->eraseLayoutAndQualifierSpecifiers(uniformName,
-                                                                kUnusedUniformSubstitution);
-            }
+            shaderSource.eraseLayoutAndQualifierSpecifiers(uniformName, kUnusedUniformSubstitution);
         }
     }
 }
+
+constexpr gl::ShaderMap<EShLanguage> kShLanguageMap = {
+    {gl::ShaderType::Vertex, EShLangVertex},
+    {gl::ShaderType::Geometry, EShLangGeometry},
+    {gl::ShaderType::Fragment, EShLangFragment},
+    {gl::ShaderType::Compute, EShLangCompute},
+};
 }  // anonymous namespace
 
 // static
@@ -837,127 +834,138 @@ void GlslangWrapper::Release()
 // static
 void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
                                      const gl::ProgramLinkedResources &resources,
-                                     std::string *vertexSourceOut,
-                                     std::string *fragmentSourceOut)
+                                     gl::ShaderMap<std::string> *shaderSourcesOut)
 {
-    gl::Shader *glVertexShader   = programState.getAttachedShader(gl::ShaderType::Vertex);
-    gl::Shader *glFragmentShader = programState.getAttachedShader(gl::ShaderType::Fragment);
+    gl::ShaderMap<IntermediateShaderSource> intermediateSources;
 
-    IntermediateShaderSource vertexSource(glVertexShader->getTranslatedSource());
-    IntermediateShaderSource fragmentSource(glFragmentShader->getTranslatedSource());
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        gl::Shader *glShader = programState.getAttachedShader(shaderType);
+        if (glShader)
+        {
+            intermediateSources[shaderType].init(glShader->getTranslatedSource());
+        }
+    }
 
-    gl::ShaderMap<IntermediateShaderSource *> shaderSources{};
+    IntermediateShaderSource *vertexSource   = &intermediateSources[gl::ShaderType::Vertex];
+    IntermediateShaderSource *fragmentSource = &intermediateSources[gl::ShaderType::Fragment];
 
-    shaderSources[gl::ShaderType::Vertex]   = &vertexSource;
-    shaderSources[gl::ShaderType::Fragment] = &fragmentSource;
+    if (!vertexSource->empty())
+    {
+        AssignAttributeLocations(programState, vertexSource);
+        AssignOutputLocations(programState, fragmentSource);
+        AssignVaryingLocations(resources, vertexSource, fragmentSource);
+    }
+    AssignUniformBindings(&intermediateSources);
+    AssignBufferBindings(programState, &intermediateSources);
+    AssignTextureBindings(programState, &intermediateSources);
 
-    AssignAttributeLocations(programState, shaderSources[gl::ShaderType::Vertex]);
-    AssignOutputLocations(programState, shaderSources[gl::ShaderType::Fragment]);
-    AssignVaryingLocations(resources, shaderSources[gl::ShaderType::Vertex],
-                           shaderSources[gl::ShaderType::Fragment]);
-    AssignUniformBindings(shaderSources);
-    AssignBufferBindings(programState, shaderSources);
-    AssignTextureBindings(programState, shaderSources);
-
-    CleanupUnusedEntities(programState, resources, glVertexShader, shaderSources);
+    CleanupUnusedEntities(programState, resources,
+                          programState.getAttachedShader(gl::ShaderType::Vertex),
+                          &intermediateSources);
 
     // Write transform feedback output code.
-    if (programState.getLinkedTransformFeedbackVaryings().empty())
+    if (!vertexSource->empty())
     {
-        vertexSource.insertTransformFeedbackDeclaration("");
-        vertexSource.insertTransformFeedbackOutput("");
-    }
-    else
-    {
-        GenerateTransformFeedbackOutputs(programState, &vertexSource);
+        if (programState.getLinkedTransformFeedbackVaryings().empty())
+        {
+            vertexSource->insertTransformFeedbackDeclaration("");
+            vertexSource->insertTransformFeedbackOutput("");
+        }
+        else
+        {
+            GenerateTransformFeedbackOutputs(programState, vertexSource);
+        }
     }
 
-    *vertexSourceOut   = vertexSource.getShaderSource();
-    *fragmentSourceOut = fragmentSource.getShaderSource();
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        (*shaderSourcesOut)[shaderType] = intermediateSources[shaderType].getShaderSource();
+    }
 }
 
 // static
 angle::Result GlslangWrapper::GetShaderCode(vk::Context *context,
                                             const gl::Caps &glCaps,
                                             bool enableLineRasterEmulation,
-                                            const std::string &vertexSource,
-                                            const std::string &fragmentSource,
-                                            std::vector<uint32_t> *vertexCodeOut,
-                                            std::vector<uint32_t> *fragmentCodeOut)
+                                            const gl::ShaderMap<std::string> &shaderSources,
+                                            gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
     if (enableLineRasterEmulation)
     {
-        std::string patchedVertexSource   = vertexSource;
-        std::string patchedFragmentSource = fragmentSource;
+        ASSERT(shaderSources[gl::ShaderType::Compute].empty());
+
+        gl::ShaderMap<std::string> patchedSources = shaderSources;
 
         // #defines must come after the #version directive.
-        ANGLE_VK_CHECK(
-            context,
-            angle::ReplaceSubstring(&patchedVertexSource, kVersionDefine, kLineRasterDefine),
-            VK_ERROR_INVALID_SHADER_NV);
-        ANGLE_VK_CHECK(
-            context,
-            angle::ReplaceSubstring(&patchedFragmentSource, kVersionDefine, kLineRasterDefine),
-            VK_ERROR_INVALID_SHADER_NV);
+        ANGLE_VK_CHECK(context,
+                       angle::ReplaceSubstring(&patchedSources[gl::ShaderType::Vertex],
+                                               kVersionDefine, kLineRasterDefine),
+                       VK_ERROR_INVALID_SHADER_NV);
+        ANGLE_VK_CHECK(context,
+                       angle::ReplaceSubstring(&patchedSources[gl::ShaderType::Fragment],
+                                               kVersionDefine, kLineRasterDefine),
+                       VK_ERROR_INVALID_SHADER_NV);
 
-        return GetShaderCodeImpl(context, glCaps, patchedVertexSource, patchedFragmentSource,
-                                 vertexCodeOut, fragmentCodeOut);
+        return GetShaderCodeImpl(context, glCaps, patchedSources, shaderCodeOut);
     }
     else
     {
-        return GetShaderCodeImpl(context, glCaps, vertexSource, fragmentSource, vertexCodeOut,
-                                 fragmentCodeOut);
+        return GetShaderCodeImpl(context, glCaps, shaderSources, shaderCodeOut);
     }
 }
 
 // static
 angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
                                                 const gl::Caps &glCaps,
-                                                const std::string &vertexSource,
-                                                const std::string &fragmentSource,
-                                                std::vector<uint32_t> *vertexCodeOut,
-                                                std::vector<uint32_t> *fragmentCodeOut)
+                                                const gl::ShaderMap<std::string> &shaderSources,
+                                                gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
-    std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
-    std::array<int, 2> lengths          = {
-        {static_cast<int>(vertexSource.length()), static_cast<int>(fragmentSource.length())}};
-
     // Enable SPIR-V and Vulkan rules when parsing GLSL
     EShMessages messages = static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules);
-
-    glslang::TShader vertexShader(EShLangVertex);
-    vertexShader.setStringsWithLengths(&strings[0], &lengths[0], 1);
-    vertexShader.setEntryPoint("main");
 
     TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
     GetBuiltInResourcesFromCaps(glCaps, &builtInResources);
 
-    bool vertexResult =
-        vertexShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
-    if (!vertexResult)
-    {
-        ERR() << "Internal error parsing Vulkan vertex shader:\n"
-              << vertexShader.getInfoLog() << "\n"
-              << vertexShader.getInfoDebugLog() << "\n";
-        ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
-    }
-
+    glslang::TShader vertexShader(EShLangVertex);
     glslang::TShader fragmentShader(EShLangFragment);
-    fragmentShader.setStringsWithLengths(&strings[1], &lengths[1], 1);
-    fragmentShader.setEntryPoint("main");
-    bool fragmentResult =
-        fragmentShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
-    if (!fragmentResult)
+    glslang::TShader geometryShader(EShLangGeometry);
+    glslang::TShader computeShader(EShLangCompute);
+
+    gl::ShaderMap<glslang::TShader *> shaders = {
+        {gl::ShaderType::Vertex, &vertexShader},
+        {gl::ShaderType::Fragment, &fragmentShader},
+        {gl::ShaderType::Geometry, &geometryShader},
+        {gl::ShaderType::Compute, &computeShader},
+    };
+    glslang::TProgram program;
+
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        ERR() << "Internal error parsing Vulkan fragment shader:\n"
-              << fragmentShader.getInfoLog() << "\n"
-              << fragmentShader.getInfoDebugLog() << "\n";
-        ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
+        if (shaderSources[shaderType].empty())
+        {
+            continue;
+        }
+
+        const char *shaderString = shaderSources[shaderType].c_str();
+        int shaderLength         = static_cast<int>(shaderSources[shaderType].size());
+
+        glslang::TShader *shader = shaders[shaderType];
+        shader->setStringsWithLengths(&shaderString, &shaderLength, 1);
+        shader->setEntryPoint("main");
+
+        bool result = shader->parse(&builtInResources, 450, ECoreProfile, false, false, messages);
+        if (!result)
+        {
+            ERR() << "Internal error parsing Vulkan shader corresponding to " << shaderType << ":\n"
+                  << shader->getInfoLog() << "\n"
+                  << shader->getInfoDebugLog() << "\n";
+            ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
+        }
+
+        program.addShader(shader);
     }
 
-    glslang::TProgram program;
-    program.addShader(&vertexShader);
-    program.addShader(&fragmentShader);
     bool linkResult = program.link(messages);
     if (!linkResult)
     {
@@ -965,10 +973,16 @@ angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
         ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
     }
 
-    glslang::TIntermediate *vertexStage   = program.getIntermediate(EShLangVertex);
-    glslang::TIntermediate *fragmentStage = program.getIntermediate(EShLangFragment);
-    glslang::GlslangToSpv(*vertexStage, *vertexCodeOut);
-    glslang::GlslangToSpv(*fragmentStage, *fragmentCodeOut);
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        if (shaderSources[shaderType].empty())
+        {
+            continue;
+        }
+
+        glslang::TIntermediate *intermediate = program.getIntermediate(kShLanguageMap[shaderType]);
+        glslang::GlslangToSpv(*intermediate, (*shaderCodeOut)[shaderType]);
+    }
 
     return angle::Result::Continue;
 }

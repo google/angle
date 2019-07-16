@@ -970,6 +970,15 @@ class FramebufferHelper : public CommandGraphResource
     Framebuffer mFramebuffer;
 };
 
+// A special command graph resource to hold resource dependencies for dispatch calls.  It's the
+// equivalent of FramebufferHelper, though it doesn't contain a Vulkan object.
+class DispatchHelper : public CommandGraphResource
+{
+  public:
+    DispatchHelper();
+    ~DispatchHelper() override;
+};
+
 class ShaderProgramHelper : angle::NonCopyable
 {
   public:

@@ -331,6 +331,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                                          vk::CommandBuffer *commandBuffer);
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
+    std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
@@ -356,6 +357,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                     const void *indices,
                                     vk::CommandBuffer **commandBufferOut,
                                     size_t *numIndicesOut);
+    angle::Result setupDispatch(const gl::Context *context, vk::CommandBuffer **commandBufferOut);
 
     void updateViewport(FramebufferVk *framebufferVk,
                         const gl::Rectangle &viewport,
@@ -367,12 +369,18 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
-    angle::Result updateActiveTextures(const gl::Context *context);
+    angle::Result updateActiveTextures(const gl::Context *context,
+                                       vk::CommandGraphResource *recorder);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE);
+    }
+    ANGLE_INLINE void invalidateCurrentComputePipeline()
+    {
+        mComputeDirtyBits.set(DIRTY_BIT_PIPELINE);
+        mCurrentComputePipeline = nullptr;
     }
 
     void invalidateCurrentTextures();
@@ -399,6 +407,24 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result handleDirtyGraphicsDescriptorSets(const gl::Context *context,
                                                     vk::CommandBuffer *commandBuffer);
 
+    // Handlers for compute pipeline dirty bits.
+    angle::Result handleDirtyComputePipeline(const gl::Context *context,
+                                             vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyComputeTextures(const gl::Context *context,
+                                             vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyComputeUniformAndStorageBuffers(const gl::Context *context,
+                                                             vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyComputeDescriptorSets(const gl::Context *context,
+                                                   vk::CommandBuffer *commandBuffer);
+
+    // Common parts of the common dirty bit handlers.
+    angle::Result handleDirtyTexturesImpl(const gl::Context *context,
+                                          vk::CommandBuffer *commandBuffer,
+                                          vk::CommandGraphResource *recorder);
+    angle::Result handleDirtyUniformAndStorageBuffersImpl(const gl::Context *context,
+                                                          vk::CommandBuffer *commandBuffer,
+                                                          vk::CommandGraphResource *recorder);
+
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
     void freeAllInFlightResources();
@@ -416,6 +442,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     void waitForSwapchainImageIfNecessary();
 
     vk::PipelineHelper *mCurrentGraphicsPipeline;
+    vk::PipelineAndSerial *mCurrentComputePipeline;
     gl::PrimitiveMode mCurrentDrawMode;
 
     WindowSurfaceVk *mCurrentWindowSurface;
@@ -434,14 +461,19 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     // Dirty bits.
     DirtyBits mGraphicsDirtyBits;
+    DirtyBits mComputeDirtyBits;
     DirtyBits mNonIndexedDirtyBitsMask;
     DirtyBits mIndexedDirtyBitsMask;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
+    DirtyBits mNewComputeCommandBufferDirtyBits;
 
     // Cached back-end objects.
     VertexArrayVk *mVertexArray;
     FramebufferVk *mDrawFramebuffer;
     ProgramVk *mProgram;
+
+    // Graph resource used to record dispatch commands and hold resource dependencies.
+    vk::DispatchHelper mDispatcher;
 
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;
