@@ -937,6 +937,35 @@ TEST_P(RobustResourceInitTest, Texture)
     checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
 }
 
+// Test that uploading texture data with an unpack state set correctly initializes the texture and
+// the data is uploaded correctly.
+TEST_P(RobustResourceInitTest, TextureWithUnpackState)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // GL_UNPACK_ROW_LENGTH requires ES 3.0 or GL_EXT_unpack_subimage
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !EnsureGLExtensionEnabled("GL_EXT_unpack_subimage"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Upload a 2x2 rect using GL_UNPACK_ROW_LENGTH=4
+    GLColor colorData[8] = {
+        GLColor::green, GLColor::green, GLColor::red, GLColor::red,
+        GLColor::green, GLColor::green, GLColor::red, GLColor::red,
+    };
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 4);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, colorData);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    checkFramebufferNonZeroPixels(0, 0, 2, 2, GLColor::green);
+}
+
 template <typename PixelT>
 void RobustResourceInitTestES3::testIntegerTextureInit(const char *samplerType,
                                                        GLenum internalFormatRGBA,

@@ -1736,6 +1736,11 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
         }
     }
 
+    // Reset the pixel unpack state.  Because this call is made after synchronizing dirty bits in a
+    // glTexImage call, we need to make sure that the texture data to be uploaded later has the
+    // expected unpack state.
+    stateManager->setPixelUnpackState(context->getState().getUnpackState());
+
     return angle::Result::Continue;
 }
 
