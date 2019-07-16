@@ -277,7 +277,7 @@ angle::Result CommandGraphResource::beginRenderPass(
     mCurrentWritingNode->storeRenderPassInfo(framebuffer, renderArea, renderPassDesc,
                                              renderPassAttachmentOps, clearValues);
 
-    mCurrentWritingNode->setCommandBufferOwner(contextVk);
+    mCurrentWritingNode->setRenderPassOwner(contextVk);
 
     return mCurrentWritingNode->beginInsideRenderPassRecording(contextVk, commandBufferOut);
 }
@@ -353,7 +353,7 @@ CommandGraphNode::CommandGraphNode(CommandGraphNodeFunction function,
       mVisitedState(VisitedState::Unvisited),
       mGlobalMemoryBarrierSrcAccess(0),
       mGlobalMemoryBarrierDstAccess(0),
-      mCommandBufferOwner(nullptr)
+      mRenderPassOwner(nullptr)
 {}
 
 CommandGraphNode::~CommandGraphNode()

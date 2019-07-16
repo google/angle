@@ -58,19 +58,19 @@ enum class CommandGraphNodeFunction
     HostAvailabilityOperation,
 };
 
-// Receives notifications when a command buffer is no longer able to record. Can be used with
-// inheritance. Faster than using an interface class since it has inlined methods. Could be used
-// with composition by adding a getCommandBuffer method.
-class CommandBufferOwner
+// Receives notifications when a render pass command buffer is no longer able to record. Can be
+// used with inheritance. Faster than using an interface class since it has inlined methods. Could
+// be used with composition by adding a getCommandBuffer method.
+class RenderPassOwner
 {
   public:
-    CommandBufferOwner() = default;
-    virtual ~CommandBufferOwner() {}
+    RenderPassOwner() = default;
+    virtual ~RenderPassOwner() {}
 
-    ANGLE_INLINE void onCommandBufferFinished() { mCommandBuffer = nullptr; }
+    ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
 
   protected:
-    CommandBuffer *mCommandBuffer = nullptr;
+    CommandBuffer *mRenderPassCommandBuffer = nullptr;
 };
 
 // Only used internally in the command graph. Kept in the header for better inlining performance.
@@ -197,19 +197,19 @@ class CommandGraphNode final : angle::NonCopyable
     }
 
     // This can only be set for RenderPass nodes. Each RenderPass node can have at most one owner.
-    void setCommandBufferOwner(CommandBufferOwner *owner)
+    void setRenderPassOwner(RenderPassOwner *owner)
     {
-        ASSERT(mCommandBufferOwner == nullptr);
-        mCommandBufferOwner = owner;
+        ASSERT(mRenderPassOwner == nullptr);
+        mRenderPassOwner = owner;
     }
 
   private:
     ANGLE_INLINE void setHasChildren()
     {
         mHasChildren = true;
-        if (mCommandBufferOwner)
+        if (mRenderPassOwner)
         {
-            mCommandBufferOwner->onCommandBufferFinished();
+            mRenderPassOwner->onRenderPassFinished();
         }
     }
 
@@ -257,8 +257,8 @@ class CommandGraphNode final : angle::NonCopyable
     VkFlags mGlobalMemoryBarrierSrcAccess;
     VkFlags mGlobalMemoryBarrierDstAccess;
 
-    // Command buffer notifications.
-    CommandBufferOwner *mCommandBufferOwner;
+    // Render pass command buffer notifications.
+    RenderPassOwner *mRenderPassOwner;
 };
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial

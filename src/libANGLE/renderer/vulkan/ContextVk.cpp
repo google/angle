@@ -386,16 +386,16 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // function than an inlined if. We should probably replace the dirty bit dispatch table
     // with a switch with inlined handler functions.
     // TODO(jmadill): Use dirty bit. http://anglebug.com/3014
-    if (!mCommandBuffer)
+    if (!mRenderPassCommandBuffer)
     {
         mDirtyBits |= mNewCommandBufferDirtyBits;
 
         gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
-        if (!mDrawFramebuffer->appendToStartedRenderPass(getCurrentQueueSerial(),
-                                                         scissoredRenderArea, &mCommandBuffer))
+        if (!mDrawFramebuffer->appendToStartedRenderPass(
+                getCurrentQueueSerial(), scissoredRenderArea, &mRenderPassCommandBuffer))
         {
-            ANGLE_TRY(
-                mDrawFramebuffer->startNewRenderPass(this, scissoredRenderArea, &mCommandBuffer));
+            ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, scissoredRenderArea,
+                                                           &mRenderPassCommandBuffer));
         }
     }
 
@@ -403,7 +403,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // trigger a command buffer invalidation. The local copy ensures we retain the reference.
     // Command buffers are pool allocated and only deleted after submit. Thus we know the
     // command buffer will still be valid for the duration of this API call.
-    *commandBufferOut = mCommandBuffer;
+    *commandBufferOut = mRenderPassCommandBuffer;
     ASSERT(*commandBufferOut);
 
     if (mProgram->dirtyUniforms())
@@ -659,7 +659,7 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     // check for a new serial when starting a new command buffer. We just check that the current
     // recording command buffer is valid. Thus we need to explicitly notify every other Context
     // using this VkQueue that they their current command buffer is no longer valid.
-    onCommandBufferFinished();
+    onRenderPassFinished();
 
     // Store this command buffer in the in-flight list.
     batch.commandPool = std::move(mCommandPool);
@@ -1545,7 +1545,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // dirty bits. Thus we need to explicitly clear the current command buffer to
                 // ensure we start a new one. Note that we need a new command buffer because a
                 // command graph node can only support one RenderPass configuration at a time.
-                onCommandBufferFinished();
+                onRenderPassFinished();
 
                 mDrawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
                 updateFlipViewportDrawFramebuffer(glState);
