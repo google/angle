@@ -792,9 +792,8 @@ if (is_win) {
   angle_shared_library("libGL") {
     sources = libgl_sources
 
-    # Need to rename dll to openGL32.dll when using
-    # On Windows we noticed the NVIDIA driver was internally loading the wrong openGL32.dll
-    output_name = "libGL"
+    output_name = "openGL32"
+    output_dir = "$root_out_dir/angle_libs"
 
     configs += [
       ":angle_gl_visibility_config",

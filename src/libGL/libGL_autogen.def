@@ -4,7 +4,7 @@
 ; Copyright 2019 The ANGLE Project Authors. All rights reserved.
 ; Use of this source code is governed by a BSD-style license that can be
 ; found in the LICENSE file.
-LIBRARY libGL
+LIBRARY openGL32
 EXPORTS
 
     ; GL 1.0
