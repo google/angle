@@ -16,6 +16,24 @@
       "revId": "982a75078b96a1ab8811322f828213e086f4b56d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64670339_3f70fdd4",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp",
+        "patchSetId": 9
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1350412
+      },
+      "writtenOn": "2019-07-16T19:48:00Z",
+      "side": 1,
+      "message": "Updated comment to clarify that the comment is about sign extending value below.\nMoved `\u0026\u0026 valueBits \u003c 32` to the condition to address misleading name.",
+      "parentUuid": "84181098_2fd28c0a",
+      "revId": "982a75078b96a1ab8811322f828213e086f4b56d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

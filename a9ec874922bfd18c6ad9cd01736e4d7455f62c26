@@ -16,6 +16,24 @@
       "revId": "a9ec874922bfd18c6ad9cd01736e4d7455f62c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "976968f1_84d3f0c9",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1350412
+      },
+      "writtenOn": "2019-07-16T19:48:00Z",
+      "side": 0,
+      "message": "Don\u0027t see anything related to vertex attributes in either.",
+      "parentUuid": "a47b349f_c5bef9ae",
+      "revId": "a9ec874922bfd18c6ad9cd01736e4d7455f62c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
