@@ -177,12 +177,15 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     {
         // TODO: Make the pipeline invalidate more fine-grained. Only need to dirty here if PSO
         //  VtxInput state (stride, fmt, inputRate...) has changed. http://anglebug.com/3256
-        invalidateCurrentPipeline();
-        mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-        mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+        invalidateCurrentGraphicsPipeline();
+        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+        mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     }
 
-    ANGLE_INLINE void invalidateVertexBuffers() { mDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS); }
+    ANGLE_INLINE void invalidateVertexBuffers()
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+    }
 
     ANGLE_INLINE void onVertexAttributeChange(size_t attribIndex,
                                               GLuint stride,
@@ -223,7 +226,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void setIndexBufferDirty()
     {
-        mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+        mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
         mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
     }
 
@@ -327,7 +330,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     using DirtyBitHandler = angle::Result (ContextVk::*)(const gl::Context *,
                                                          vk::CommandBuffer *commandBuffer);
 
-    std::array<DirtyBitHandler, DIRTY_BIT_MAX> mDirtyBitHandlers;
+    std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
 
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
@@ -367,28 +370,34 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
-    ANGLE_INLINE void invalidateCurrentPipeline() { mDirtyBits.set(DIRTY_BIT_PIPELINE); }
+    ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE);
+    }
 
     void invalidateCurrentTextures();
     void invalidateCurrentUniformAndStorageBuffers();
     void invalidateDriverUniforms();
 
-    angle::Result handleDirtyDefaultAttribs(const gl::Context *context,
-                                            vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyPipeline(const gl::Context *context, vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyTextures(const gl::Context *context, vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyVertexBuffers(const gl::Context *context,
-                                           vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyIndexBuffer(const gl::Context *context,
-                                         vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyDriverUniforms(const gl::Context *context,
-                                            vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyUniformAndStorageBuffers(const gl::Context *context,
-                                                      vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyTransformFeedbackBuffers(const gl::Context *context,
-                                                      vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyDescriptorSets(const gl::Context *context,
-                                            vk::CommandBuffer *commandBuffer);
+    // Handlers for graphics pipeline dirty bits.
+    angle::Result handleDirtyGraphicsDefaultAttribs(const gl::Context *context,
+                                                    vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsPipeline(const gl::Context *context,
+                                              vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsTextures(const gl::Context *context,
+                                              vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsVertexBuffers(const gl::Context *context,
+                                                   vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsIndexBuffer(const gl::Context *context,
+                                                 vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsDriverUniforms(const gl::Context *context,
+                                                    vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsUniformAndStorageBuffers(const gl::Context *context,
+                                                              vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsTransformFeedbackBuffers(const gl::Context *context,
+                                                              vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyGraphicsDescriptorSets(const gl::Context *context,
+                                                    vk::CommandBuffer *commandBuffer);
 
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
@@ -406,7 +415,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void waitForSwapchainImageIfNecessary();
 
-    vk::PipelineHelper *mCurrentPipeline;
+    vk::PipelineHelper *mCurrentGraphicsPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
 
     WindowSurfaceVk *mCurrentWindowSurface;
@@ -424,10 +433,10 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::PackedEnumMap<gl::QueryType, vk::DynamicQueryPool> mQueryPools;
 
     // Dirty bits.
-    DirtyBits mDirtyBits;
+    DirtyBits mGraphicsDirtyBits;
     DirtyBits mNonIndexedDirtyBitsMask;
     DirtyBits mIndexedDirtyBitsMask;
-    DirtyBits mNewCommandBufferDirtyBits;
+    DirtyBits mNewGraphicsCommandBufferDirtyBits;
 
     // Cached back-end objects.
     VertexArrayVk *mVertexArray;
