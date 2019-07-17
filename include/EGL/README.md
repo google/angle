@@ -6,9 +6,18 @@ The EGL headers ANGLE uses are generated using the Khronos tools but modified to
 
 1. Install **Python 3** (not 2) with the **lxml** addon. You can do this using `pip install lxml` from your Python's Scripts folder.
 1. Clone [https://github.com/KhronosGroup/EGL-Registry.git](https://github.com/KhronosGroup/EGL-Registry.git).
-1. Edit `EGL-Registry/api/genheaders.py`:
-
+1. Edit `EGL-Registry/api/genheaders.py` and add the following under `glesProtoPrefixStrings`:
+```# EGL headers use a protection mechanism similar to GLES.
+eglProtoPrefixStrings = [
+    '#ifndef EGL_EGL_PROTOTYPES',
+    '#define EGL_EGL_PROTOTYPES 1',
+    '#endif',
+    ''
+]
+```
+4. Also in `EGL-Registry/api/genheaders.py`:
    1. Look for the section titled `# EGL API - EGL/egl.h (no function pointers, yet @@@)`
+   1. Set `prefixText` to `prefixStrings + eglPlatformStrings + eglProtoPrefixStrings + genDateCommentString`
    1. Change `genFuncPointers   = False,` to `genFuncPointers   = True,`
    1. Change `protectProto      = False,` to `protectProto      = 'nonzero',`
    1. Change `protectProtoStr   = 'EGL_EGLEXT_PROTOTYPES',` to `protectProtoStr   = 'EGL_EGL_PROTOTYPES',`
