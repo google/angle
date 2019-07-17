@@ -175,4 +175,25 @@ class ANGLERenderTest : public ANGLEPerfTest
     std::unique_ptr<angle::Library> mEntryPointsLib;
 };
 
+// Mixins.
+namespace params
+{
+template <typename ParamsT>
+ParamsT Offscreen(const ParamsT &input)
+{
+    ParamsT output   = input;
+    output.offscreen = true;
+    return output;
+}
+
+template <typename ParamsT>
+ParamsT NullDevice(const ParamsT &input)
+{
+    ParamsT output                  = input;
+    output.eglParameters.deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+    output.trackGpuTime             = false;
+    return output;
+}
+}  // namespace params
+
 #endif  // PERF_TESTS_ANGLE_PERF_TEST_H_

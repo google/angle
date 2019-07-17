@@ -35,10 +35,6 @@ DrawCallPerfParams DrawCallOpenGL();
 DrawCallPerfParams DrawCallValidation();
 DrawCallPerfParams DrawCallVulkan();
 DrawCallPerfParams DrawCallWGL();
-
-// Mixins.
-DrawCallPerfParams Offscreen(const DrawCallPerfParams &input);
-DrawCallPerfParams NullDevice(const DrawCallPerfParams &input);
 }  // namespace params
 
 #endif  // TESTS_PERF_TESTS_DRAW_CALL_PERF_PARAMS_H_

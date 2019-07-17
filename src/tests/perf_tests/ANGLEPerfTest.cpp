@@ -312,6 +312,8 @@ double ANGLEPerfTest::normalizedTime(size_t value) const
 
 std::string RenderTestParams::suffix() const
 {
+    std::stringstream strstr;
+
     switch (driver)
     {
         case angle::GLESDriverType::AngleEGL:
@@ -328,21 +330,34 @@ std::string RenderTestParams::suffix() const
     switch (getRenderer())
     {
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-            return "_d3d11";
+            strstr << "_d3d11";
+            break;
         case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-            return "_d3d9";
+            strstr << "_d3d9";
+            break;
         case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-            return "_gl";
+            strstr << "_gl";
+            break;
         case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-            return "_gles";
+            strstr << "_gles";
+            break;
         case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-            return "_default";
+            strstr << "_default";
+            break;
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
-            return "_vulkan";
+            strstr << "_vulkan";
+            break;
         default:
             assert(0);
             return "_unk";
     }
+
+    if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
+    {
+        strstr << "_null";
+    }
+
+    return strstr.str();
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)
