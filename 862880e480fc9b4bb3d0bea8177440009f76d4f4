@@ -328,6 +328,30 @@
       "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81050cb5_e495fd55",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-17T18:10:00Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "30c78410_c6388ec8",
+      "range": {
+        "startLine": 559,
+        "startChar": 3,
+        "endLine": 560,
+        "endChar": 27
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
