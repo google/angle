@@ -740,23 +740,27 @@ uint32_t AssignAtomicCounterBufferBindings(const std::vector<gl::AtomicCounterBu
                                            uint32_t bindingStart,
                                            gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
-    const std::string resourcesDescriptorSet = "set = " + Str(kShaderResourceDescriptorSetIndex);
-
-    // Currently, we only support a single atomic counter buffer binding.
-    ASSERT(buffers.size() <= 1);
-
-    uint32_t bindingIndex = bindingStart;
-    for (const gl::AtomicCounterBuffer &buffer : buffers)
+    if (buffers.size() == 0)
     {
-        const std::string bindingString =
-            resourcesDescriptorSet + ", binding = " + Str(bindingIndex++);
-
-        constexpr char kAtomicCounterBlockName[] = "ANGLEAtomicCounters";
-        AssignResourceBinding(buffer.activeShaders(), kAtomicCounterBlockName, bindingString,
-                              qualifier, kUnusedBlockSubstitution, shaderSources);
+        return bindingStart;
     }
 
-    return bindingIndex;
+    constexpr char kAtomicCounterBlockName[] = "ANGLEAtomicCounters";
+    const std::string bindingString =
+        "set = " + Str(kShaderResourceDescriptorSetIndex) + ", binding = " + Str(bindingStart);
+
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        IntermediateShaderSource &shaderSource = (*shaderSources)[shaderType];
+        if (!shaderSource.empty())
+        {
+            // All atomic counter buffers are placed under one binding shared between all stages.
+            shaderSource.insertLayoutSpecifier(kAtomicCounterBlockName, bindingString);
+            shaderSource.insertQualifierSpecifier(kAtomicCounterBlockName, qualifier);
+        }
+    }
+
+    return bindingStart + 1;
 }
 
 void AssignBufferBindings(const gl::ProgramState &programState,

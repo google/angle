@@ -48,8 +48,9 @@ const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
                                        TFieldList *fieldList,
                                        TQualifier qualifier,
                                        const TMemoryQualifier &memoryQualifier,
-                                       const char *blockTypeName,
-                                       const char *blockVariableName);
+                                       uint32_t arraySize,
+                                       const ImmutableString &blockTypeName,
+                                       const ImmutableString &blockVariableName);
 
 // If the input node is nullptr, return nullptr.
 // If the input node is a block node, return it.

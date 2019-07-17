@@ -130,15 +130,20 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
     // Crashes in older drivers.  http://anglebug.com/3738
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
 
+    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
+    // http://anglebug.com/3726
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     // Skipping due to a bug on the Adreno OpenGLES Android driver.
     // http://anglebug.com/2925
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
     constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
-layout(binding = 0, offset = 8) uniform atomic_uint ac[3];
 
 void atomicCounterInFunction(in atomic_uint counter[3]);
+
+layout(binding = 0, offset = 8) uniform atomic_uint ac[3];
 
 void atomicCounterInFunction(in atomic_uint counter[3])
 {
@@ -160,6 +165,10 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
     // Crashes in older drivers.  http://anglebug.com/3738
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
+
+    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
+    // http://anglebug.com/3726
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
     // http://anglebug.com/1729
@@ -199,6 +208,10 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 {
     // Crashes in older drivers.  http://anglebug.com/3738
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
+
+    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
+    // http://anglebug.com/3726
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     constexpr char kCS[] =
         "#version 310 es\n"
@@ -243,6 +256,10 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterMultipleBuffers)
 {
     // Crashes in older drivers.  http://anglebug.com/3738
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsAMD());
+
+    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
+    // http://anglebug.com/3726
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     GLint maxAtomicCounterBuffers = 0;
     glGetIntegerv(GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS, &maxAtomicCounterBuffers);

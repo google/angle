@@ -33,7 +33,10 @@ class BlockLayoutMapVisitor : public BlockEncoderVisitor
                         const std::string &mappedName) override
     {
         ASSERT(!gl::IsSamplerType(variable.type));
-        (*mInfoOut)[name] = variableInfo;
+        if (!gl::IsOpaqueType(variable.type))
+        {
+            (*mInfoOut)[name] = variableInfo;
+        }
     }
 
   private:

@@ -617,6 +617,12 @@
 3520 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterf = FAIL
 3520 VULKAN ANDROID : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameterfv = FAIL
 
+// Passing on recent drivers:
+3726 VULKAN ANDROID : dEQP-GLES31.functional.ssbo.layout.* = FAIL
+3726 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = FAIL
+3726 VULKAN ANDROID : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
+3726 VULKAN ANDROID : dEQP-GLES31.functional.compute.basic.atomic_counter* = FAIL
+
 // General Vulkan failures
 
 // Limits:
@@ -650,6 +656,10 @@
 // SSBO and Image qualifiers:
 3602 VULKAN : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
 
+// Array of array in atomic counters:
+3566 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.atomic_counter_buffer_index.default_block.array.var_array_array = SKIP
+3566 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.location.default_block.array.array.atomic_uint = SKIP
+
 // Struct referenced by:
 3596 VULKAN : dEQP-GLES31.functional.program_interface_query.*.referenced_by*struct* = FAIL
 3596 VULKAN : dEQP-GLES31.functional.program_interface_query.*random* = FAIL
@@ -665,11 +675,6 @@
 
 // Tessellation geometry interaction:
 3572 VULKAN : dEQP-GLES31.functional.tessellation_geometry_interaction.* = FAIL
-
-// dEQP bug where atomic counter bindings > max result in failure instead of not-supported:
-// https://github.com/KhronosGroup/VK-GL-CTS/issues/156
-3566 VULKAN : dEQP-GLES31.functional.atomic_counter.* = FAIL
-3566 VULKAN : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
 
 // Storage image:
 3563 VULKAN : dEQP-GLES31.functional.state_query.*image* = FAIL

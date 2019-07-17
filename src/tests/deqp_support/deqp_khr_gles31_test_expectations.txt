@@ -105,11 +105,14 @@
 // Blend equations:
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
 
+// Atomic Counter buffers:
+3566 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-multi-stage = FAIL
+
 // Storage image:
 3563 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_ComputeShader = FAIL
 3563 VULKAN : KHR-GLES31.core.layout_binding.block_layout_binding_block_ComputeShader = FAIL
-3563 VULKAN : KHR-GLES31.core.layout_binding.buffer_layout_binding_atomic* = SKIP
-3563 VULKAN : KHR-GLES31.core.layout_binding.atomic_uint_layout_binding_atomic* = FAIL
+3563 VULKAN : KHR-GLES31.core.layout_binding.buffer_layout_binding_atomicAdd_ComputeShader = FAIL
+3563 VULKAN : KHR-GLES31.core.layout_binding.atomic_uint_layout_binding_atomic_ComputeShader = FAIL
 
 3520 VULKAN : KHR-GLES31.core.internalformat.copy_tex_image* = FAIL
 3520 VULKAN : KHR-GLES31.core.internalformat.renderbuffer* = FAIL
@@ -118,3 +121,7 @@
 
 // Sampler objects:
 3208 VULKAN : KHR-GLES31.shaders.layout_location.*sampler* = FAIL
+
+// Passing on recent drivers:
+3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.* = FAIL
+3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.advanced-usage-* = SKIP

@@ -1115,10 +1115,13 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // Limit to ES3.0 if there are any blockers for 3.1.
 
     // ES3.1 requires at least one atomic counter buffer and four storage buffers in compute.
-    // Atomic counter buffers are emulated with storage buffers, so if Vulkan doesn't support at
-    // least 5 storage buffers in compute, we cannot support 3.1.
+    // Atomic counter buffers are emulated with storage buffers.  For simplicity, we always support
+    // either none or IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS atomic counter buffers.  So if
+    // Vulkan doesn't support at least that many storage buffers in compute, we don't support 3.1.
+    const uint32_t kMinimumStorageBuffersForES31 =
+        gl::limits::kMinimumComputeStorageBuffers + gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS;
     if (mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers <
-        gl::limits::kMinimumComputeStorageBuffers + 1)
+        kMinimumStorageBuffersForES31)
     {
         maxVersion = std::min(maxVersion, gl::Version(3, 0));
     }

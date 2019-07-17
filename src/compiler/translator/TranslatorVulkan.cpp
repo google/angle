@@ -163,6 +163,8 @@ TIntermConstantUnion *CreateFloatConstant(float value)
 constexpr ImmutableString kFlippedPointCoordName    = ImmutableString("flippedPointCoord");
 constexpr ImmutableString kFlippedFragCoordName     = ImmutableString("flippedFragCoord");
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
+constexpr ImmutableString kUniformsBlockName        = ImmutableString("ANGLEUniformBlock");
+constexpr ImmutableString kUniformsVarName          = ImmutableString("ANGLEUniforms");
 
 constexpr const char kViewport[]             = "viewport";
 constexpr const char kHalfRenderAreaHeight[] = "halfRenderAreaHeight";
@@ -375,7 +377,8 @@ const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *sym
 
     // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
     return DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
-                                 TMemoryQualifier::Create(), "ANGLEUniformBlock", "ANGLEUniforms");
+                                 TMemoryQualifier::Create(), 0, kUniformsBlockName,
+                                 kUniformsVarName);
 }
 
 TIntermPreprocessorDirective *GenerateLineRasterIfDef()

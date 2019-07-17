@@ -333,6 +333,10 @@ class TIntermConstantUnion : public TIntermExpression
     {
         return mUnionArrayPointer ? mUnionArrayPointer[index].getBConst() : false;
     }
+    bool isZero(size_t index) const
+    {
+        return mUnionArrayPointer ? mUnionArrayPointer[index].isZero() : false;
+    }
 
     TIntermConstantUnion *getAsConstantUnion() override { return this; }
     void traverse(TIntermTraverser *it) final;
