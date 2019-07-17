@@ -380,6 +380,7 @@ class GraphicsPipelineDesc final
                                        bool primitiveRestartEnabled);
 
     // Raster states
+    void setCullMode(VkCullModeFlagBits cullMode);
     void updateCullMode(GraphicsPipelineTransitionBits *transition,
                         const gl::RasterizerState &rasterState);
     void updateFrontFace(GraphicsPipelineTransitionBits *transition,

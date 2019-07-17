@@ -488,13 +488,25 @@ bool GraphicsPipelineDesc::operator==(const GraphicsPipelineDesc &other) const
 
 // TODO(jmadill): We should prefer using Packed GLenums. http://anglebug.com/2169
 
+// Initialize PSO states, it is consistent with initial value of gl::State
 void GraphicsPipelineDesc::initDefaults()
 {
+    // Set all vertex input attributes to default, the default format is Float
+    angle::FormatID defaultFormat = GetCurrentValueFormatID(gl::VertexAttribType::Float);
+    for (PackedAttribDesc &packedAttrib : mVertexInputAttribs.attribs)
+    {
+        SetBitField(packedAttrib.stride, 0);
+        SetBitField(packedAttrib.divisor, 0);
+        SetBitField(packedAttrib.format, defaultFormat);
+        SetBitField(packedAttrib.offset, 0);
+    }
+
     mRasterizationAndMultisampleStateInfo.bits.depthClampEnable           = 0;
     mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable = 0;
     SetBitField(mRasterizationAndMultisampleStateInfo.bits.polygonMode, VK_POLYGON_MODE_FILL);
-    SetBitField(mRasterizationAndMultisampleStateInfo.bits.cullMode, VK_CULL_MODE_NONE);
-    SetBitField(mRasterizationAndMultisampleStateInfo.bits.frontFace, VK_FRONT_FACE_CLOCKWISE);
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.cullMode, VK_CULL_MODE_BACK_BIT);
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.frontFace,
+                VK_FRONT_FACE_COUNTER_CLOCKWISE);
     mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable    = 0;
     mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = 0.0f;
     mRasterizationAndMultisampleStateInfo.depthBiasClamp          = 0.0f;
@@ -553,10 +565,10 @@ void GraphicsPipelineDesc::initDefaults()
 
     PackedColorBlendAttachmentState blendAttachmentState;
     SetBitField(blendAttachmentState.srcColorBlendFactor, VK_BLEND_FACTOR_ONE);
-    SetBitField(blendAttachmentState.dstColorBlendFactor, VK_BLEND_FACTOR_ONE);
+    SetBitField(blendAttachmentState.dstColorBlendFactor, VK_BLEND_FACTOR_ZERO);
     SetBitField(blendAttachmentState.colorBlendOp, VK_BLEND_OP_ADD);
     SetBitField(blendAttachmentState.srcAlphaBlendFactor, VK_BLEND_FACTOR_ONE);
-    SetBitField(blendAttachmentState.dstAlphaBlendFactor, VK_BLEND_FACTOR_ONE);
+    SetBitField(blendAttachmentState.dstAlphaBlendFactor, VK_BLEND_FACTOR_ZERO);
     SetBitField(blendAttachmentState.alphaBlendOp, VK_BLEND_OP_ADD);
 
     std::fill(&inputAndBlend.attachments[0],
@@ -565,6 +577,19 @@ void GraphicsPipelineDesc::initDefaults()
 
     inputAndBlend.primitive.topology = static_cast<uint16_t>(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
     inputAndBlend.primitive.restartEnable = 0;
+
+    // Viewport and scissor will be set to valid values when framebuffer being binded
+    mViewport.x        = 0.0f;
+    mViewport.y        = 0.0f;
+    mViewport.width    = 0.0f;
+    mViewport.height   = 0.0f;
+    mViewport.minDepth = 0.0f;
+    mViewport.maxDepth = 1.0f;
+
+    mScissor.offset.x      = 0;
+    mScissor.offset.y      = 0;
+    mScissor.extent.width  = 0;
+    mScissor.extent.height = 0;
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
@@ -876,11 +901,15 @@ void GraphicsPipelineDesc::updatePrimitiveRestartEnabled(GraphicsPipelineTransit
     transition->set(ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, primitive));
 }
 
+void GraphicsPipelineDesc::setCullMode(VkCullModeFlagBits cullMode)
+{
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.cullMode, cullMode);
+}
+
 void GraphicsPipelineDesc::updateCullMode(GraphicsPipelineTransitionBits *transition,
                                           const gl::RasterizerState &rasterState)
 {
-    mRasterizationAndMultisampleStateInfo.bits.cullMode =
-        static_cast<uint16_t>(gl_vk::GetCullMode(rasterState));
+    setCullMode(gl_vk::GetCullMode(rasterState));
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }
 

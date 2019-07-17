@@ -4822,14 +4822,15 @@ void Context::scissor(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void Context::stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
 {
+    GLint clampedRef = gl::clamp(ref, 0, std::numeric_limits<uint8_t>::max());
     if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
     {
-        mState.setStencilParams(func, ref, mask);
+        mState.setStencilParams(func, clampedRef, mask);
     }
 
     if (face == GL_BACK || face == GL_FRONT_AND_BACK)
     {
-        mState.setStencilBackParams(func, ref, mask);
+        mState.setStencilBackParams(func, clampedRef, mask);
     }
 
     mStateCache.onStencilStateChange(this);
