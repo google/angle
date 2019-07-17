@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4390edd9_beb39478",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "It doesn\u0027t have to be, we pass in the texture we want to read.",
+      "parentUuid": "ddeb90cd_0bcee6b0",
+      "range": {
+        "startLine": 498,
+        "startChar": 52,
+        "endLine": 498,
+        "endChar": 72
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2684834_76a39800",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49abf917_b927f29c",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2684834_76a39800",
+      "range": {
+        "startLine": 498,
+        "startChar": 7,
+        "endLine": 499,
+        "endChar": 38
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +142,54 @@
     },
     {
       "key": {
+        "uuid": "505ef3c5_73e916f9",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc963d2d_22dff9ac",
+      "range": {
+        "startLine": 550,
+        "startChar": 13,
+        "endLine": 550,
+        "endChar": 28
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e9991a4_a376249e",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3ca65e5_b7b36dfd",
+      "range": {
+        "startLine": 550,
+        "startChar": 32,
+        "endLine": 550,
+        "endChar": 39
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7ddb439_33da3d8a",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 4
@@ -114,6 +210,30 @@
       "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4084ee0_e0fea4ff",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7ddb439_33da3d8a",
+      "range": {
+        "startLine": 554,
+        "startChar": 3,
+        "endLine": 555,
+        "endChar": 71
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "b935b90e_2c9b9ac2",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6af87334_bc431a69",
+      "range": {
+        "startLine": 557,
+        "startChar": 4,
+        "endLine": 557,
+        "endChar": 52
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79b2f3d4_01e707e4",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 4
@@ -151,6 +295,30 @@
       "writtenOn": "2019-07-17T16:57:45Z",
       "side": 1,
       "message": "this is unusual. Are you sure this is necessary?",
+      "range": {
+        "startLine": 559,
+        "startChar": 3,
+        "endLine": 560,
+        "endChar": 27
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30c78410_c6388ec8",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2019-07-17T18:06:44Z",
+      "side": 1,
+      "message": "I was cribbing this test from DrawBuffersTest.cpp which does this in it\u0027s setup.\nI can try removing it and seeing what happens on the trybots.",
+      "parentUuid": "79b2f3d4_01e707e4",
       "range": {
         "startLine": 559,
         "startChar": 3,
