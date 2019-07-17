@@ -1531,6 +1531,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     features->clearToZeroOrOneBroken.enabled =
         IsApple() && IsIntel(vendor) && GetMacOSVersion() < OSVersion(10, 12, 6);
+
+    features->adjustSrcDstRegionBlitFramebuffer.enabled =
+        IsApple() || IsLinux() || (IsAndroid() && IsNvidia(vendor));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

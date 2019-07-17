@@ -323,6 +323,14 @@ struct FeaturesGL : FeatureSetBase
         "Limit max 3d texture size and max array texture layers to 1024 to avoid system hang on "
         "older Intel Linux",
         &members, "http://crbug.com/927470"};
+
+    // BlitFramebuffer has issues on some platforms with large source/dest texture sizes. This
+    // workaround adjusts the destination rectangle source and dest rectangle to fit within maximum
+    // twice the size of the framebuffer.
+    Feature adjustSrcDstRegionBlitFramebuffer = {
+        "adjust_src_dst_region_for_blitframebuffer", FeatureCategory::OpenGLWorkarounds,
+        "Many platforms have issues with blitFramebuffer when the parameters are large.", &members,
+        "http://crbug.com/830046"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

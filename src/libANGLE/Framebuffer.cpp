@@ -602,10 +602,15 @@ int FramebufferState::getBaseViewIndex() const
 
 Box FramebufferState::getDimensions() const
 {
+    Extents extents = getExtents();
+    return Box(0, 0, 0, extents.width, extents.height, extents.depth);
+}
+
+Extents FramebufferState::getExtents() const
+{
     ASSERT(attachmentsHaveSameDimensions());
     ASSERT(getFirstNonNullAttachment() != nullptr);
-    Extents extents = getFirstNonNullAttachment()->getSize();
-    return Box(0, 0, 0, extents.width, extents.height, extents.depth);
+    return getFirstNonNullAttachment()->getSize();
 }
 
 Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
@@ -2283,6 +2288,11 @@ void Framebuffer::markBufferInitialized(GLenum bufferType, GLint bufferIndex)
 Box Framebuffer::getDimensions() const
 {
     return mState.getDimensions();
+}
+
+Extents Framebuffer::getExtents() const
+{
+    return mState.getExtents();
 }
 
 angle::Result Framebuffer::ensureBufferInitialized(const Context *context,

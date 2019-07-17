@@ -506,6 +506,7 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     const Framebuffer *sourceFramebuffer = context->getState().getReadFramebuffer();
     const Framebuffer *destFramebuffer   = context->getState().getDrawFramebuffer();
@@ -583,9 +584,325 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
     stateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
     stateManager->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebufferID);
 
-    functions->blitFramebuffer(sourceArea.x, sourceArea.y, sourceArea.x1(), sourceArea.y1(),
-                               destArea.x, destArea.y, destArea.x1(), destArea.y1(), blitMask,
-                               filter);
+    if (features.adjustSrcDstRegionBlitFramebuffer.enabled)
+    {
+        gl::Rectangle newSourceArea;
+        gl::Rectangle newDestArea;
+        // This workaround is taken from chromium: http://crbug.com/830046
+        if (adjustSrcDstRegion(context, sourceArea, destArea, &newSourceArea, &newDestArea) ==
+            angle::Result::Continue)
+        {
+            functions->blitFramebuffer(newSourceArea.x, newSourceArea.y, newSourceArea.x1(),
+                                       newSourceArea.y1(), newDestArea.x, newDestArea.y,
+                                       newDestArea.x1(), newDestArea.y1(), blitMask, filter);
+        }
+    }
+    else
+    {
+        functions->blitFramebuffer(sourceArea.x, sourceArea.y, sourceArea.x1(), sourceArea.y1(),
+                                   destArea.x, destArea.y, destArea.x1(), destArea.y1(), blitMask,
+                                   filter);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result FramebufferGL::adjustSrcDstRegion(const gl::Context *context,
+                                                const gl::Rectangle &sourceArea,
+                                                const gl::Rectangle &destArea,
+                                                gl::Rectangle *newSourceArea,
+                                                gl::Rectangle *newDestArea)
+{
+    const Framebuffer *sourceFramebuffer = context->getState().getReadFramebuffer();
+    const Framebuffer *destFramebuffer   = context->getState().getDrawFramebuffer();
+
+    gl::Extents readSize = sourceFramebuffer->getExtents();
+    gl::Extents drawSize = destFramebuffer->getExtents();
+
+    CheckedNumeric<GLint> sourceWidthTemp = sourceArea.x1();
+    sourceWidthTemp -= sourceArea.x;
+    CheckedNumeric<GLint> sourceHeightTemp = sourceArea.y1();
+    sourceHeightTemp -= sourceArea.y;
+    CheckedNumeric<GLint> destWidthTemp = destArea.x1();
+    destWidthTemp -= destArea.x;
+    CheckedNumeric<GLint> destHeightTemp = destArea.y1();
+    destHeightTemp -= destArea.y;
+
+    GLint sourceX      = sourceArea.x1() > sourceArea.x ? sourceArea.x : sourceArea.x1();
+    GLint sourceY      = sourceArea.y1() > sourceArea.y ? sourceArea.y : sourceArea.y1();
+    GLuint sourceWidth = angle::base::checked_cast<GLuint>(sourceWidthTemp.Abs().ValueOrDefault(0));
+    GLuint sourceHeight =
+        angle::base::checked_cast<GLuint>(sourceHeightTemp.Abs().ValueOrDefault(0));
+
+    GLint destX       = destArea.x1() > destArea.x ? destArea.x : destArea.x1();
+    GLint destY       = destArea.y1() > destArea.y ? destArea.y : destArea.y1();
+    GLuint destWidth  = angle::base::checked_cast<GLuint>(destWidthTemp.Abs().ValueOrDefault(0));
+    GLuint destHeight = angle::base::checked_cast<GLuint>(destHeightTemp.Abs().ValueOrDefault(0));
+
+    if (destWidth == 0 || sourceWidth == 0 || destHeight == 0 || sourceHeight == 0)
+    {
+        return angle::Result::Stop;
+    }
+
+    gl::Rectangle sourceBounds(0, 0, readSize.width, readSize.height);
+    gl::Rectangle sourceRegion(sourceX, sourceY, sourceWidth, sourceHeight);
+
+    gl::Rectangle destBounds(0, 0, drawSize.width, drawSize.height);
+    gl::Rectangle destRegion(destX, destY, destWidth, destHeight);
+
+    if (!ClipRectangle(destBounds, destRegion, nullptr))
+    {
+        return angle::Result::Stop;
+    }
+
+    bool xFlipped = ((sourceArea.x1() > sourceArea.x) && (destArea.x1() < destArea.x)) ||
+                    ((sourceArea.x1() < sourceArea.x) && (destArea.x1() > destArea.x));
+    bool yFlipped = ((sourceArea.y1() > sourceArea.y) && (destArea.y1() < destArea.y)) ||
+                    ((sourceArea.y1() < sourceArea.y) && (destArea.y1() > destArea.y));
+
+    if (!destBounds.encloses(destRegion))
+    {
+        // destRegion is not within destBounds. We want to adjust it to a
+        // reasonable size. This is done by halving the destRegion until it is at
+        // most twice the size of the framebuffer. We cut it in half instead
+        // of arbitrarily shrinking it to fit so that we don't end up with
+        // non-power-of-two scale factors which could mess up pixel interpolation.
+        // Naively clipping the dst rect and then proportionally sizing the
+        // src rect yields incorrect results.
+
+        GLuint destXHalvings = 0;
+        GLuint destYHalvings = 0;
+        GLint destOriginX    = destX;
+        GLint destOriginY    = destY;
+
+        GLint destClippedWidth = destRegion.width;
+        while (destClippedWidth > 2 * destBounds.width)
+        {
+            destClippedWidth = destClippedWidth / 2;
+            destXHalvings++;
+        }
+
+        GLint destClippedHeight = destRegion.height;
+        while (destClippedHeight > 2 * destBounds.height)
+        {
+            destClippedHeight = destClippedHeight / 2;
+            destYHalvings++;
+        }
+
+        // Before this block, we check that the two rectangles intersect.
+        // Now, compute the location of a new region origin such that we use the
+        // scaled dimensions but the new region has the same intersection as the
+        // original region.
+
+        GLint left   = destRegion.x0();
+        GLint right  = destRegion.x1();
+        GLint top    = destRegion.y0();
+        GLint bottom = destRegion.y1();
+
+        GLint extraXOffset = 0;
+        if (left >= 0 && left < destBounds.width)
+        {
+            // Left edge is in-bounds
+            destOriginX = destX;
+        }
+        else if (right > 0 && right <= destBounds.width)
+        {
+            // Right edge is in-bounds
+            destOriginX = right - destClippedWidth;
+        }
+        else
+        {
+            // Region completely spans bounds
+            extraXOffset = (destRegion.width - destClippedWidth) / 2;
+            destOriginX  = destX + extraXOffset;
+        }
+
+        GLint extraYOffset = 0;
+        if (top >= 0 && top < destBounds.height)
+        {
+            // Top edge is in-bounds
+            destOriginY = destY;
+        }
+        else if (bottom > 0 && bottom <= destBounds.height)
+        {
+            // Bottom edge is in-bounds
+            destOriginY = bottom - destClippedHeight;
+        }
+        else
+        {
+            // Region completely spans bounds
+            extraYOffset = (destRegion.height - destClippedHeight) / 2;
+            destOriginY  = destY + extraYOffset;
+        }
+
+        destRegion = gl::Rectangle(destOriginX, destOriginY, destClippedWidth, destClippedHeight);
+
+        // Offsets from the bottom left corner of the original region to
+        // the bottom left corner of the clipped region.
+        // This value (after it is scaled) is the respective offset we will apply
+        // to the src origin.
+
+        CheckedNumeric<GLuint> checkedXOffset(destRegion.x - destX - extraXOffset / 2);
+        CheckedNumeric<GLuint> checkedYOffset(destRegion.y - destY - extraYOffset / 2);
+
+        // if X/Y is reversed, use the top/right out-of-bounds region to compute
+        // the origin offset instead of the left/bottom out-of-bounds region
+        if (xFlipped)
+        {
+            checkedXOffset = (destX + destWidth - destRegion.x1() + extraXOffset / 2);
+        }
+        if (yFlipped)
+        {
+            checkedYOffset = (destY + destHeight - destRegion.y1() + extraYOffset / 2);
+        }
+
+        // These offsets should never overflow
+        GLuint xOffset, yOffset;
+        if (!checkedXOffset.AssignIfValid(&xOffset) || !checkedYOffset.AssignIfValid(&yOffset))
+        {
+            UNREACHABLE();
+            return angle::Result::Stop;
+        }
+
+        // Adjust the src region by the same factor
+        sourceRegion = gl::Rectangle(
+            sourceX + (xOffset >> destXHalvings), sourceY + (yOffset >> destYHalvings),
+            sourceRegion.width >> destXHalvings, sourceRegion.height >> destYHalvings);
+
+        // if the src was scaled to 0, set it to 1 so the src is non-empty
+        if (sourceRegion.width == 0)
+        {
+            sourceRegion.width = 1;
+        }
+        if (sourceRegion.height == 0)
+        {
+            sourceRegion.height = 1;
+        }
+    }
+
+    if (!sourceBounds.encloses(sourceRegion))
+    {
+        // sourceRegion is not within sourceBounds. We want to adjust it to a
+        // reasonable size. This is done by halving the sourceRegion until it is at
+        // most twice the size of the framebuffer. We cut it in half instead
+        // of arbitrarily shrinking it to fit so that we don't end up with
+        // non-power-of-two scale factors which could mess up pixel interpolation.
+        // Naively clipping the source rect and then proportionally sizing the
+        // dest rect yields incorrect results.
+
+        GLuint sourceXHalvings = 0;
+        GLuint sourceYHalvings = 0;
+        GLint sourceOriginX    = sourceX;
+        GLint sourceOriginY    = sourceY;
+
+        GLint sourceClippedWidth = sourceRegion.width;
+        while (sourceClippedWidth > 2 * sourceBounds.width)
+        {
+            sourceClippedWidth = sourceClippedWidth / 2;
+            sourceXHalvings++;
+        }
+
+        GLint sourceClippedHeight = sourceRegion.height;
+        while (sourceClippedHeight > 2 * sourceBounds.height)
+        {
+            sourceClippedHeight = sourceClippedHeight / 2;
+            sourceYHalvings++;
+        }
+
+        // Before this block, we check that the two rectangles intersect.
+        // Now, compute the location of a new region origin such that we use the
+        // scaled dimensions but the new region has the same intersection as the
+        // original region.
+
+        GLint left   = sourceRegion.x0();
+        GLint right  = sourceRegion.x1();
+        GLint top    = sourceRegion.y0();
+        GLint bottom = sourceRegion.y1();
+
+        GLint extraXOffset = 0;
+        if (left >= 0 && left < sourceBounds.width)
+        {
+            // Left edge is in-bounds
+            sourceOriginX = sourceX;
+        }
+        else if (right > 0 && right <= sourceBounds.width)
+        {
+            // Right edge is in-bounds
+            sourceOriginX = right - sourceClippedWidth;
+        }
+        else
+        {
+            // Region completely spans bounds
+            extraXOffset  = (sourceRegion.width - sourceClippedWidth) / 2;
+            sourceOriginX = sourceX + extraXOffset;
+        }
+
+        GLint extraYOffset = 0;
+        if (top >= 0 && top < sourceBounds.height)
+        {
+            // Top edge is in-bounds
+            sourceOriginY = sourceY;
+        }
+        else if (bottom > 0 && bottom <= sourceBounds.height)
+        {
+            // Bottom edge is in-bounds
+            sourceOriginY = bottom - sourceClippedHeight;
+        }
+        else
+        {
+            // Region completely spans bounds
+            extraYOffset  = (sourceRegion.height - sourceClippedHeight) / 2;
+            sourceOriginY = sourceY + extraYOffset;
+        }
+
+        sourceRegion =
+            gl::Rectangle(sourceOriginX, sourceOriginY, sourceClippedWidth, sourceClippedHeight);
+
+        // Offsets from the bottom left corner of the original region to
+        // the bottom left corner of the clipped region.
+        // This value (after it is scaled) is the respective offset we will apply
+        // to the dest origin.
+
+        CheckedNumeric<GLuint> checkedXOffset(sourceRegion.x - sourceX - extraXOffset / 2);
+        CheckedNumeric<GLuint> checkedYOffset(sourceRegion.y - sourceY - extraYOffset / 2);
+
+        // if X/Y is reversed, use the top/right out-of-bounds region to compute
+        // the origin offset instead of the left/bottom out-of-bounds region
+        if (xFlipped)
+        {
+            checkedXOffset = (sourceX + sourceWidth - sourceRegion.x1() + extraXOffset / 2);
+        }
+        if (yFlipped)
+        {
+            checkedYOffset = (sourceY + sourceHeight - sourceRegion.y1() + extraYOffset / 2);
+        }
+
+        // These offsets should never overflow
+        GLuint xOffset, yOffset;
+        if (!checkedXOffset.AssignIfValid(&xOffset) || !checkedYOffset.AssignIfValid(&yOffset))
+        {
+            UNREACHABLE();
+            return angle::Result::Stop;
+        }
+
+        // Adjust the dest region by the same factor
+        destRegion = gl::Rectangle(
+            destX + (xOffset >> sourceXHalvings), destY + (yOffset >> sourceYHalvings),
+            destRegion.width >> sourceXHalvings, destRegion.height >> sourceYHalvings);
+    }
+    // Set the src and dst endpoints. If they were previously flipped,
+    // set them as flipped.
+    *newSourceArea = gl::Rectangle(
+        sourceArea.x0() < sourceArea.x1() ? sourceRegion.x0() : sourceRegion.x1(),
+        sourceArea.y0() < sourceArea.y1() ? sourceRegion.y0() : sourceRegion.y1(),
+        sourceArea.x0() < sourceArea.x1() ? sourceRegion.width : -sourceRegion.width,
+        sourceArea.y0() < sourceArea.y1() ? sourceRegion.height : -sourceRegion.height);
+
+    *newDestArea =
+        gl::Rectangle(destArea.x0() < destArea.x1() ? destRegion.x0() : destRegion.x1(),
+                      destArea.y0() < destArea.y1() ? destRegion.y0() : destRegion.y1(),
+                      destArea.x0() < destArea.x1() ? destRegion.width : -destRegion.width,
+                      destArea.y0() < destArea.y1() ? destRegion.height : -destRegion.height);
 
     return angle::Result::Continue;
 }
