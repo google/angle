@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddeb90cd_0bcee6b0",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-17T16:57:44Z",
+      "side": 1,
+      "message": "Should there be a `+ index`?",
+      "range": {
+        "startLine": 498,
+        "startChar": 52,
+        "endLine": 498,
+        "endChar": 72
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3ca65e5_b7b36dfd",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-17T16:57:44Z",
+      "side": 1,
+      "message": "processed",
+      "range": {
+        "startLine": 550,
+        "startChar": 32,
+        "endLine": 550,
+        "endChar": 39
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc963d2d_22dff9ac",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-17T16:57:44Z",
+      "side": 1,
+      "message": "I was mistaken to call it \"array of arrays\". It\u0027s just an \"array of fragment shader outputs\".",
+      "range": {
+        "startLine": 550,
+        "startChar": 13,
+        "endLine": 550,
+        "endChar": 28
+      },
+      "revId": "862880e480fc9b4bb3d0bea8177440009f76d4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
