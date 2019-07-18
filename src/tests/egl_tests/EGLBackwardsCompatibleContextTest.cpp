@@ -127,6 +127,36 @@ TEST_P(EGLBackwardsCompatibleContextTest, BackwardsCompatibleDisbled)
     }
 }
 
+// Test that if it's possible to create an ES3 context, requesting an ES2 context should return an
+// ES3 context as well
+TEST_P(EGLBackwardsCompatibleContextTest, BackwardsCompatibleEnabledES3)
+{
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_create_context_backwards_compatible"));
+
+    EGLint es3ContextAttribs[] = {
+        EGL_CONTEXT_MAJOR_VERSION, 3, EGL_CONTEXT_MINOR_VERSION, 0, EGL_NONE, EGL_NONE};
+
+    EGLContext es3Context = eglCreateContext(mDisplay, mConfig, nullptr, es3ContextAttribs);
+    ANGLE_SKIP_TEST_IF(es3Context == EGL_NO_CONTEXT);
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, mPbuffer, mPbuffer, es3Context));
+    auto es3ContextVersion = GetCurrentContextVersion();
+    eglDestroyContext(mDisplay, es3Context);
+
+    EGLint es2ContextAttribs[] = {
+        EGL_CONTEXT_MAJOR_VERSION, 2, EGL_CONTEXT_MINOR_VERSION, 0, EGL_NONE, EGL_NONE};
+
+    EGLContext es2Context = eglCreateContext(mDisplay, mConfig, nullptr, es2ContextAttribs);
+    EXPECT_NE(es2Context, EGL_NO_CONTEXT);
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, mPbuffer, mPbuffer, es2Context));
+    auto es2ContextVersion = GetCurrentContextVersion();
+    eglDestroyContext(mDisplay, es2Context);
+
+    EXPECT_EQ(es3ContextVersion, es2ContextVersion);
+}
+
 // Test that if ES1.1 is supported and a 1.0 context is requested, an ES 1.1 context is returned
 TEST_P(EGLBackwardsCompatibleContextTest, BackwardsCompatibleEnabledES1)
 {

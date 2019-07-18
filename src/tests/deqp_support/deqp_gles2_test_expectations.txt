@@ -82,6 +82,7 @@
 
 // Half float OES either has an implementation bug or a dEQP bug.
 3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
+3283 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_half_float_oes = FAIL
 
 // Shader failures.
 3434 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_* = FAIL
@@ -261,8 +262,14 @@
 // Nexus 5x failures
 3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
+3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
+3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = FAIL
+3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgb = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.polygon_offset.default_result_depth_clamp = FAIL
+3715 NEXUS5X GLES : dEQP-GLES2.functional.shaders.builtin_variable.max_draw_buffers_vertex = FAIL
+3715 NEXUS5X GLES : dEQP-GLES2.functional.shaders.builtin_variable.max_draw_buffers_fragment = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.return.output_write_in_func_always_vertex = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.return.output_write_in_func_always_fragment = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
@@ -273,9 +280,6 @@
 3309 NEXUS5X GLES : dEQP-GLES2.functional.uniform_api.random.3 = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.uniform_api.random.54 = FAIL
 
-// General Vulkan failures
-3300 VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
-
 // Only seen failing on Android
 3241 VULKAN ANDROID : dEQP-GLES2.functional.depth_stencil_clear.depth_scissored_masked = FAIL
 
@@ -283,38 +287,7 @@
 3253 VULKAN : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL
 3253 VULKAN : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 
-// These seem to fail on both D3D11 and Vulkan
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
-// D3D11 AMD already covered by Line 148
-3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
-3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
-3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
-3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
-3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
-3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
-3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
-3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
-
 // Fail with very tiny pixel differences
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_mirror = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_repeat = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_mirror = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL

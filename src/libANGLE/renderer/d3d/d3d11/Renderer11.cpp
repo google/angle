@@ -3704,8 +3704,8 @@ gl::Version Renderer11::getMaxSupportedESVersion() const
 
 gl::Version Renderer11::getMaxConformantESVersion() const
 {
-    // Always force a 2.0 context unless the user explicitly requests higher
-    return std::min(getMaxSupportedESVersion(), gl::Version(2, 0));
+    // 3.1 support is in progress.
+    return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
 }
 
 gl::DebugAnnotator *Renderer11::getAnnotator()

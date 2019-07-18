@@ -73,8 +73,8 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface,
 
 gl::Version DisplayGL::getMaxConformantESVersion() const
 {
-    // Always force a 2.0 context unless the user explicitly requests higher
-    return std::min(getMaxSupportedESVersion(), gl::Version(2, 0));
+    // 3.1 support is in progress.
+    return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
 }
 
 void DisplayGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
