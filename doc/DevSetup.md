@@ -127,8 +127,9 @@ adb shell am start -a android.intent.action.MAIN -n org.chromium.native_test/.Na
 ```
 After the tests finish, get the results with
 ```
-adb pull /sdcard/chromium_tests_root/angledata/TestResults.qpa .
+adb pull /sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/data/TestResults.qpa .
 ```
+Note: this location might change, one can double-check with `adb logcat -d | grep qpa`.
 
 In order to run GPU telemetry tests, build `chrome_public_apk` target. Then follow [GPU Testing](http://www.chromium.org/developers/testing/gpu-testing#TOC-Running-the-GPU-Tests-Locally) doc, using `--browser=android-chromium` argument. Make sure to set your `CHROMIUM_OUT_DIR` environment variable, so that your browser is found, otherwise the stock one will run.
 
