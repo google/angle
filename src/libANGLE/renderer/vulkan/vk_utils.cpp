@@ -52,9 +52,10 @@ egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
 
 namespace rx
 {
-// Mirrors std_validation_str in loader.c
-const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
-const char *g_VkValidationLayerNames[] = {
+// Unified layer that includes full validation layer stack
+const char *g_VkKhronosValidationLayerName  = "VK_LAYER_KHRONOS_validation";
+const char *g_VkStandardValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
+const char *g_VkValidationLayerNames[]      = {
     "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
     "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
     "VK_LAYER_GOOGLE_unique_objects"};
@@ -72,9 +73,14 @@ bool HasValidationLayer(const std::vector<VkLayerProperties> &layerProps, const 
     return false;
 }
 
+bool HasKhronosValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+{
+    return HasValidationLayer(layerProps, g_VkKhronosValidationLayerName);
+}
+
 bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
 {
-    return HasValidationLayer(layerProps, g_VkStdValidationLayerName);
+    return HasValidationLayer(layerProps, g_VkStandardValidationLayerName);
 }
 
 bool HasValidationLayers(const std::vector<VkLayerProperties> &layerProps)
@@ -215,9 +221,14 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
                                   bool mustHaveLayers,
                                   VulkanLayerVector *enabledLayerNames)
 {
-    if (HasStandardValidationLayer(layerProps))
+    // Favor unified Khronos layer, but fallback to standard validation
+    if (HasKhronosValidationLayer(layerProps))
     {
-        enabledLayerNames->push_back(g_VkStdValidationLayerName);
+        enabledLayerNames->push_back(g_VkKhronosValidationLayerName);
+    }
+    else if (HasStandardValidationLayer(layerProps))
+    {
+        enabledLayerNames->push_back(g_VkStandardValidationLayerName);
     }
     else if (HasValidationLayers(layerProps))
     {

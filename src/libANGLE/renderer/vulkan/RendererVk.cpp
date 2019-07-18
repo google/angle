@@ -119,6 +119,14 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-CoreValidation-Shader-PointSizeMissing",
     // http://anglebug.com/3832
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
+    // http://anglebug.com/3450
+    "VUID-vkDestroySemaphore-semaphore-parameter",
+    // http://anglebug.com/3924
+    "UNASSIGNED-Threading-Info",
+    // http://anglebug.com/3925
+    "VUID-vkDestroyDescriptorPool-descriptorPool-parameter",
+    "VUID-vkDestroyBuffer-buffer-parameter",
+    "VUID-vkDestroyImage-image-parameter",
 };
 
 // Suppress validation errors that are known
@@ -603,7 +611,13 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
     ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs),
                                                 ChooseICDFromAttribs(attribs));
+#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_WIN64)
+    // TODO: Re-enable validation layers on 32bit Windows
+    // http://anglebug.com/3946, http://anglebug.com/3924
+    mEnableValidationLayers = false;
+#else
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
+#endif
     mEnabledICD             = scopedEnvironment.getEnabledICD();
 
     // Gather global layer properties.
@@ -671,10 +685,15 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ExtensionNameList enabledInstanceExtensions;
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
     enabledInstanceExtensions.push_back(wsiExtension);
-
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // TODO: Enable DebugUtils on Android
+    // http://anglebug.com/3852
+    bool enableDebugUtils = false;
+#else
     bool enableDebugUtils =
         mEnableValidationLayers &&
         ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionNames);
+#endif
     bool enableDebugReport =
         mEnableValidationLayers && !enableDebugUtils &&
         ExtensionFound(VK_EXT_DEBUG_REPORT_EXTENSION_NAME, instanceExtensionNames);
@@ -740,7 +759,16 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
-
+#if defined(ANGLE_PLATFORM_ANDROID) && !defined(ANGLE_IS_64_BIT_CPU)
+    // TODO: Re-enable validation layers on 32-bit Android
+    // http://anglebug.com/3924
+    VkValidationFeatureDisableEXT vkValFeaturesDisable = VK_VALIDATION_FEATURE_DISABLE_ALL_EXT;
+    VkValidationFeaturesEXT validationFeatures         = {};
+    validationFeatures.sType                           = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+    validationFeatures.disabledValidationFeatureCount  = 1;
+    validationFeatures.pDisabledValidationFeatures     = &vkValFeaturesDisable;
+    instanceInfo.pNext                                 = &validationFeatures;
+#endif
     ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 
     if (enableDebugUtils)
