@@ -307,7 +307,7 @@ class StateCache final : angle::NonCopyable
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface
 {
   public:
-    Context(rx::EGLImplFactory *implFactory,
+    Context(egl::Display *display,
             const egl::Config *config,
             const Context *shareContext,
             TextureManager *shareTextures,

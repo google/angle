@@ -386,6 +386,11 @@ gl::Version DisplayD3D::getMaxSupportedESVersion() const
     return mRenderer->getMaxSupportedESVersion();
 }
 
+gl::Version DisplayD3D::getMaxConformantESVersion() const
+{
+    return mRenderer->getMaxConformantESVersion();
+}
+
 void DisplayD3D::handleResult(HRESULT hr,
                               const char *message,
                               const char *file,

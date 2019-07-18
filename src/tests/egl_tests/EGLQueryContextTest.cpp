@@ -86,7 +86,7 @@ TEST_P(EGLQueryContextTest, GetClientVersion)
     EGLint clientVersion;
     EXPECT_TRUE(eglQueryContext(mDisplay, mContext, EGL_CONTEXT_CLIENT_VERSION, &clientVersion) !=
                 EGL_FALSE);
-    EXPECT_TRUE(clientVersion == GetParam().majorVersion);
+    EXPECT_GE(clientVersion, GetParam().majorVersion);
 }
 
 TEST_P(EGLQueryContextTest, GetRenderBufferNoSurface)

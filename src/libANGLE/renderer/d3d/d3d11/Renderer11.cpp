@@ -3702,6 +3702,12 @@ gl::Version Renderer11::getMaxSupportedESVersion() const
     return d3d11_gl::GetMaximumClientVersion(mRenderer11DeviceCaps.featureLevel);
 }
 
+gl::Version Renderer11::getMaxConformantESVersion() const
+{
+    // Always force a 2.0 context unless the user explicitly requests higher
+    return std::min(getMaxSupportedESVersion(), gl::Version(2, 0));
+}
+
 gl::DebugAnnotator *Renderer11::getAnnotator()
 {
     return &mAnnotator;

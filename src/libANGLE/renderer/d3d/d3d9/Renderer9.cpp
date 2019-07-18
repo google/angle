@@ -3084,6 +3084,11 @@ gl::Version Renderer9::getMaxSupportedESVersion() const
     return gl::Version(2, 0);
 }
 
+gl::Version Renderer9::getMaxConformantESVersion() const
+{
+    return gl::Version(2, 0);
+}
+
 angle::Result Renderer9::clearRenderTarget(const gl::Context *context,
                                            RenderTargetD3D *renderTarget,
                                            const gl::ColorF &clearColorValue,

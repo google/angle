@@ -130,6 +130,7 @@ angle_end2end_tests_sources = [
   "gl_tests/WebGLCompatibilityTest.cpp",
   "gl_tests/WebGLFramebufferTest.cpp",
   "gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+  "egl_tests/EGLBackwardsCompatibleContextTest.cpp",
   "egl_tests/EGLBlobCacheTest.cpp",
   "egl_tests/EGLChooseConfigTest.cpp",
   "egl_tests/EGLContextCompatibilityTest.cpp",

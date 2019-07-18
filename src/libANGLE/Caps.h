@@ -913,6 +913,9 @@ struct DisplayExtensions
 
     // EGL_ANDROID_native_fence_sync
     bool nativeFenceSyncANDROID = false;
+
+    // EGL_ANGLE_create_context_backwards_compatible
+    bool createContextBackwardsCompatible = false;
 };
 
 struct DeviceExtensions

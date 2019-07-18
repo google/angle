@@ -387,6 +387,7 @@ class RendererD3D : public BufferFactoryD3D
     virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;
 
     virtual gl::Version getMaxSupportedESVersion() const = 0;
+    virtual gl::Version getMaxConformantESVersion() const = 0;
 
     angle::Result initRenderTarget(const gl::Context *context, RenderTargetD3D *renderTarget);
 

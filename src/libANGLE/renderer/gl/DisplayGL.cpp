@@ -71,6 +71,12 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface,
     return egl::NoError();
 }
 
+gl::Version DisplayGL::getMaxConformantESVersion() const
+{
+    // Always force a 2.0 context unless the user explicitly requests higher
+    return std::min(getMaxSupportedESVersion(), gl::Version(2, 0));
+}
+
 void DisplayGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     // Advertise robust resource initialization on all OpenGL backends for testing even though it is

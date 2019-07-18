@@ -71,6 +71,7 @@ class DisplayVk : public DisplayImpl, public vk::Context
     EGLSyncImpl *createSync(const egl::AttributeMap &attribs) override;
 
     gl::Version getMaxSupportedESVersion() const override;
+    gl::Version getMaxConformantESVersion() const override;
 
     virtual const char *getWSIExtension() const = 0;
     virtual const char *getWSILayer() const;

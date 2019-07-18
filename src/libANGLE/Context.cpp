@@ -42,8 +42,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
-#include "libANGLE/renderer/BufferImpl.h"
-#include "libANGLE/renderer/EGLImplFactory.h"
+#include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/validationES.h"
 
@@ -143,9 +142,34 @@ EGLint GetClientMinorVersion(const egl::AttributeMap &attribs)
     return static_cast<EGLint>(attribs.get(EGL_CONTEXT_MINOR_VERSION, 0));
 }
 
-Version GetClientVersion(const egl::AttributeMap &attribs)
+bool GetBackwardCompatibleContext(const egl::AttributeMap &attribs)
 {
-    return Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
+    return attribs.get(EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE, EGL_TRUE) == EGL_TRUE;
+}
+
+Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs)
+{
+    Version requestedVersion =
+        Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
+    if (GetBackwardCompatibleContext(attribs))
+    {
+        if (requestedVersion.major == 1)
+        {
+            // If the user requests an ES1 context, we cannot return an ES 2+ context.
+            return Version(1, 1);
+        }
+        else
+        {
+            // Always up the version to at least the max conformant version this display supports.
+            // Only return a higher client version if requested.
+            return std::max(display->getImplementation()->getMaxConformantESVersion(),
+                            requestedVersion);
+        }
+    }
+    else
+    {
+        return requestedVersion;
+    }
 }
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
@@ -272,7 +296,7 @@ enum SubjectIndexes : angle::SubjectIndex
 };
 }  // anonymous namespace
 
-Context::Context(rx::EGLImplFactory *implFactory,
+Context::Context(egl::Display *display,
                  const egl::Config *config,
                  const Context *shareContext,
                  TextureManager *shareTextures,
@@ -285,7 +309,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
              shareContext ? &shareContext->mState : nullptr,
              shareTextures,
              clientType,
-             GetClientVersion(attribs),
+             GetClientVersion(display, attribs),
              GetDebug(attribs),
              GetBindGeneratesResource(attribs),
              GetClientArraysEnabled(attribs),
@@ -294,7 +318,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mSkipValidation(GetNoError(attribs)),
       mDisplayTextureShareGroup(shareTextures != nullptr),
       mErrors(this),
-      mImplementation(implFactory->createContext(mState, &mErrors, config, shareContext, attribs)),
+      mImplementation(display->getImplementation()
+                          ->createContext(mState, &mErrors, config, shareContext, attribs)),
       mLabel(nullptr),
       mCompiler(),
       mConfig(config),

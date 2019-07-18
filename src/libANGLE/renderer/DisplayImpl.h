@@ -86,6 +86,7 @@ class DisplayImpl : public EGLImplFactory
     virtual egl::Error waitClient(const gl::Context *context)                = 0;
     virtual egl::Error waitNative(const gl::Context *context, EGLint engine) = 0;
     virtual gl::Version getMaxSupportedESVersion() const                     = 0;
+    virtual gl::Version getMaxConformantESVersion() const                    = 0;
     const egl::Caps &getCaps() const;
 
     virtual void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) {}

@@ -1164,6 +1164,21 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
+            case EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE:
+                if (!display->getExtensions().createContextBackwardsCompatible)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE "
+                              "requires EGL_ANGLE_create_context_backwards_compatible.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute()
+                           << "EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE must be "
+                              "either EGL_TRUE or EGL_FALSE.";
+                }
+                break;
+
             default:
                 return EglBadAttribute() << "Unknown attribute.";
         }

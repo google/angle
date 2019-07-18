@@ -231,6 +231,11 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQueryDisplayAttribANGLE(EGLDisplay dpy, EGLint 
 #define EGL_D3D11_TEXTURE_ANGLE 0x3484
 #endif /* EGL_ANGLE_image_d3d11_texture */
 
+#ifndef EGL_ANGLE_create_context_backwards_compatible
+#define EGL_ANGLE_create_context_backwards_compatible 1
+#define EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE 0x3483
+#endif /* EGL_ANGLE_create_context_backwards_compatible */
+
 // clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

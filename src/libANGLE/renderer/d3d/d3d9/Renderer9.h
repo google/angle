@@ -405,6 +405,7 @@ class Renderer9 : public RendererD3D
     DebugAnnotator9 *getAnnotator() { return &mAnnotator; }
 
     gl::Version getMaxSupportedESVersion() const override;
+    gl::Version getMaxConformantESVersion() const override;
 
     angle::Result clearRenderTarget(const gl::Context *context,
                                     RenderTargetD3D *renderTarget,
