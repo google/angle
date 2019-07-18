@@ -641,10 +641,14 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ExtensionNameList enabledInstanceExtensions;
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
     enabledInstanceExtensions.push_back(wsiExtension);
-
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // http://anglebug.com/3852
+    bool enableDebugUtils = false;
+#else
     bool enableDebugUtils =
         mEnableValidationLayers &&
         ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionNames);
+#endif
     bool enableDebugReport =
         mEnableValidationLayers && !enableDebugUtils &&
         ExtensionFound(VK_EXT_DEBUG_REPORT_EXTENSION_NAME, instanceExtensionNames);
