@@ -54,6 +54,7 @@ enum TBasicType
 {
     EbtVoid,
     EbtFloat,
+    EbtDouble,
     EbtInt,
     EbtUInt,
     EbtBool,
@@ -86,7 +87,25 @@ enum TBasicType
     EbtSampler2DShadow,
     EbtSamplerCubeShadow,
     EbtSampler2DArrayShadow,
-    EbtGuardSamplerEnd = EbtSampler2DArrayShadow,  // non type: see implementation of IsSampler()
+    EbtSampler1D,  // Desktop GLSL sampler types
+    EbtSampler1DArray,
+    EbtSampler1DArrayShadow,
+    EbtSamplerBuffer,
+    EbtSamplerCubeArray,
+    EbtSamplerCubeArrayShadow,
+    EbtSampler1DShadow,
+    EbtSampler2DRectShadow,
+    EbtISampler1D,
+    EbtISampler1DArray,
+    EbtISampler2DRect,
+    EbtISamplerBuffer,
+    EbtISamplerCubeArray,
+    EbtUSampler1D,
+    EbtUSampler1DArray,
+    EbtUSampler2DRect,
+    EbtUSamplerBuffer,
+    EbtUSamplerCubeArray,
+    EbtGuardSamplerEnd = EbtUSamplerCubeArray,  // non type: see implementation of IsSampler()
 
     // images
     EbtGuardImageBegin,
@@ -102,9 +121,40 @@ enum TBasicType
     EbtImageCube,
     EbtIImageCube,
     EbtUImageCube,
-    EbtGuardImageEnd = EbtUImageCube,
+    EbtImage1D,  // Desktop GLSL image types
+    EbtIImage1D,
+    EbtUImage1D,
+    EbtImage1DArray,
+    EbtIImage1DArray,
+    EbtUImage1DArray,
+    EbtImage2DMS,
+    EbtIImage2DMS,
+    EbtUImage2DMS,
+    EbtImage2DMSArray,
+    EbtIImage2DMSArray,
+    EbtUImage2DMSArray,
+    EbtImage2DRect,
+    EbtIImage2DRect,
+    EbtUImage2DRect,
+    EbtImageCubeArray,
+    EbtIImageCubeArray,
+    EbtUImageCubeArray,
+    EbtImageRect,
+    EbtIImageRect,
+    EbtUImageRect,
+    EbtImageBuffer,
+    EbtIImageBuffer,
+    EbtUImageBuffer,
+    EbtGuardImageEnd = EbtUImageBuffer,
 
-    EbtLastSimpleType = EbtGuardImageEnd,
+    EbtSubpassInput,
+    EbtISubpassInput,
+    EbtUSubpassInput,
+    EbtSubpassInputMS,
+    EbtISubpassInputMS,
+    EbtUSubpassInputMS,
+
+    EbtLastSimpleType = EbtUSubpassInputMS,
 
     EbtStruct,
     EbtInterfaceBlock,
@@ -132,6 +182,16 @@ class TBasicMangledName
         {
             mName[0] = '0';
             mName[1] = static_cast<char>('a' - 26 + t);
+        }
+        else if (t < 78)
+        {
+            mName[0] = '1';
+            mName[1] = static_cast<char>('A' - 52 + t);
+        }
+        else if (t < 104)
+        {
+            mName[0] = '1';
+            mName[1] = static_cast<char>('a' - 78 + t);
         }
     }
 

@@ -69,6 +69,7 @@ TSymbolTable::TSymbolTable()
     : mGlobalInvariant(false),
       mUniqueIdCounter(0),
       mShaderType(GL_FRAGMENT_SHADER),
+      mShaderSpec(SH_GLES2_SPEC),
       mGlInVariableWithArraySize(nullptr)
 {}
 
@@ -359,6 +360,7 @@ void TSymbolTable::initializeBuiltIns(sh::GLenum type,
                                       const ShBuiltInResources &resources)
 {
     mShaderType = type;
+    mShaderSpec = spec;
     mResources  = resources;
 
     // We need just one precision stack level for predefined precisions.

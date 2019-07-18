@@ -232,7 +232,7 @@ enum TOperator
     EOpBitwiseXorAssign,
     EOpBitwiseOrAssign,
 
-    //  barriers
+    // barriers
     EOpBarrier,
     EOpMemoryBarrier,
     EOpMemoryBarrierAtomicCounter,
@@ -251,9 +251,15 @@ enum TOperator
     EOpAtomicExchange,
     EOpAtomicCompSwap,
 
-    //  Geometry only
+    // Geometry only
     EOpEmitVertex,
-    EOpEndPrimitive
+    EOpEndPrimitive,
+
+    // Desktop GLSL functions
+    EOpFTransform,
+    EOpFma,
+    EOpPackDouble2x32,
+    EOpUnpackDouble2x32,
 };
 
 // Returns the string corresponding to the operator in GLSL

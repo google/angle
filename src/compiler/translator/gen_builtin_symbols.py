@@ -338,14 +338,98 @@ namespace BuiltInGroup
 parsed_variables = None
 
 basic_types_enumeration = [
-    'Void', 'Float', 'Int', 'UInt', 'Bool', 'AtomicCounter', 'YuvCscStandardEXT', 'Sampler2D',
-    'Sampler3D', 'SamplerCube', 'Sampler2DArray', 'SamplerExternalOES', 'SamplerExternal2DY2YEXT',
-    'Sampler2DRect', 'Sampler2DMS', 'Sampler2DMSArray', 'ISampler2D', 'ISampler3D', 'ISamplerCube',
-    'ISampler2DArray', 'ISampler2DMS', 'ISampler2DMSArray', 'USampler2D', 'USampler3D',
-    'USamplerCube', 'USampler2DArray', 'USampler2DMS', 'USampler2DMSArray', 'Sampler2DShadow',
-    'SamplerCubeShadow', 'Sampler2DArrayShadow', 'Image2D', 'IImage2D', 'UImage2D', 'Image3D',
-    'IImage3D', 'UImage3D', 'Image2DArray', 'IImage2DArray', 'UImage2DArray', 'ImageCube',
-    'IImageCube', 'UImageCube'
+    'Void',
+    'Float',
+    'Double',
+    'Int',
+    'UInt',
+    'Bool',
+    'AtomicCounter',
+    'YuvCscStandardEXT',
+    'Sampler2D',
+    'Sampler3D',
+    'SamplerCube',
+    'Sampler2DArray',
+    'SamplerExternalOES',
+    'SamplerExternal2DY2YEXT',
+    'Sampler2DRect',
+    'Sampler2DMS',
+    'Sampler2DMSArray',
+    'ISampler2D',
+    'ISampler3D',
+    'ISamplerCube',
+    'ISampler2DArray',
+    'ISampler2DMS',
+    'ISampler2DMSArray',
+    'USampler2D',
+    'USampler3D',
+    'USamplerCube',
+    'USampler2DArray',
+    'USampler2DMS',
+    'USampler2DMSArray',
+    'Sampler2DShadow',
+    'SamplerCubeShadow',
+    'Sampler2DArrayShadow',
+    'Sampler1D',
+    'Sampler1DArray',
+    'Sampler1DArrayShadow',
+    'SamplerBuffer',
+    'SamplerCubeArray',
+    'SamplerCubeArrayShadow',
+    'Sampler1DShadow',
+    'Sampler2DRectShadow',
+    'ISampler1D',
+    'ISampler1DArray',
+    'ISampler2DRect',
+    'ISamplerBuffer',
+    'ISamplerCubeArray',
+    'USampler1D',
+    'USampler1DArray',
+    'USampler2DRect',
+    'USamplerBuffer',
+    'USamplerCubeArray',
+    'Image2D',
+    'IImage2D',
+    'UImage2D',
+    'Image3D',
+    'IImage3D',
+    'UImage3D',
+    'Image2DArray',
+    'IImage2DArray',
+    'UImage2DArray',
+    'ImageCube',
+    'IImageCube',
+    'UImageCube',
+    'Image1D',
+    'IImage1D',
+    'UImage1D',
+    'Image1DArray',
+    'IImage1DArray',
+    'UImage1DArray',
+    'Image2DMS',
+    'IImage2DMS',
+    'UImage2DMS',
+    'Image2DMSArray',
+    'IImage2DMSArray',
+    'UImage2DMSArray',
+    'Image2DRect',
+    'IImage2DRect',
+    'UImage2DRect',
+    'ImageCubeArray',
+    'IImageCubeArray',
+    'UImageCubeArray',
+    'ImageRect',
+    'IImageRect',
+    'UImageRect',
+    'ImageBuffer',
+    'IImageBuffer',
+    'UImageBuffer',
+    'SubpassInput',
+    'ISubpassInput',
+    'USubpassInput',
+    'SubpassInputMS',
+    'ISubpassInputMS',
+    'USubpassInputMS',
 ]
 
 id_counter = 0
@@ -360,13 +444,24 @@ def get_basic_mangled_name(basic):
     index = basic_types_enumeration.index(basic)
     if index < 26:
         return '0' + chr(ord('A') + index)
-    return '0' + chr(ord('a') + index - 26)
+    if index < 52:
+        return '0' + chr(ord('a') + index - 26)
+    if index < 78:
+        return '1' + chr(ord('A') + index - 52)
+    return '1' + chr(ord('a') + index - 78)
 
 
-levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
+essl_levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
+
+glsl_levels = [
+    'GLSL4_6_BUILTINS', 'GLSL4_5_BUILTINS', 'GLSL4_4_BUILTINS', 'GLSL4_3_BUILTINS',
+    'GLSL4_2_BUILTINS', 'GLSL4_1_BUILTINS', 'GLSL4_BUILTINS', 'GLSL3_3_BUILTINS',
+    'GLSL1_5_BUILTINS', 'GLSL1_4_BUILTINS', 'GLSL1_3_BUILTINS', 'GLSL1_2_BUILTINS',
+    'GLSL1_1_BUILTINS', 'COMMON_BUILTINS'
+]
 
 
-def get_shader_version_condition_for_level(level):
+def get_essl_shader_version_condition_for_level(level):
     if level == 'ESSL3_1_BUILTINS':
         return 'shaderVersion >= 310'
     elif level == 'ESSL3_BUILTINS':
@@ -379,6 +474,66 @@ def get_shader_version_condition_for_level(level):
         raise Exception('Unsupported symbol table level')
 
 
+def get_glsl_shader_version_condition_for_level(level):
+    if level == 'GLSL1_1_BUILTINS':
+        return 'shaderVersion == 110'
+    elif level == 'GLSL1_2_BUILTINS':
+        return 'shaderVersion >= 120'
+    elif level == 'GLSL1_3_BUILTINS':
+        return 'shaderVersion >= 130'
+    elif level == 'GLSL1_4_BUILTINS':
+        return 'shaderVersion >= 140'
+    elif level == 'GLSL1_5_BUILTINS':
+        return 'shaderVersion >= 150'
+    elif level == 'GLSL3_3_BUILTINS':
+        return 'shaderVersion >= 330'
+    elif level == 'GLSL4_BUILTINS':
+        return 'shaderVersion >= 400'
+    elif level == 'GLSL4_1_BUILTINS':
+        return 'shaderVersion >= 410'
+    elif level == 'GLSL4_2_BUILTINS':
+        return 'shaderVersion >= 420'
+    elif level == 'GLSL4_3_BUILTINS':
+        return 'shaderVersion >= 430'
+    elif level == 'GLSL4_4_BUILTINS':
+        return 'shaderVersion >= 440'
+    elif level == 'GLSL4_5_BUILTINS':
+        return 'shaderVersion >= 450'
+    elif level == 'GLSL4_6_BUILTINS':
+        return 'shaderVersion >= 460'
+    elif level == 'COMMON_BUILTINS':
+        return ''
+    else:
+        raise Exception('Unsupported symbol table level')
+
+
+def get_specific_switch_code(level_dict, hashfn, script_generated_hash_tests):
+    code = []
+    for condition, objs in level_dict.iteritems():
+        if len(objs) > 0:
+            if condition != 'NO_CONDITION':
+                condition_header = '  if ({condition})\n {{'.format(condition=condition)
+                code.append(condition_header.replace('shaderType', 'mShaderType'))
+
+            switch = {}
+            for name, obj in objs.iteritems():
+                name_hash = mangledNameHash(name, hashfn, script_generated_hash_tests)
+                if name_hash not in switch:
+                    switch[name_hash] = []
+                switch[name_hash].append(obj['hash_matched_code'])
+
+            code.append('switch(nameHash) {')
+            for name_hash, obj in sorted(switch.iteritems()):
+                code.append('case 0x' + ('%08x' % name_hash) + 'u:\n{')
+                code += obj
+                code.append('break;\n}')
+            code.append('}')
+
+            if condition != 'NO_CONDITION':
+                code.append('}')
+    return code
+
+
 class GroupedList:
     """"Class for storing a list of objects grouped by symbol table level and condition."""
 
@@ -386,28 +541,55 @@ class GroupedList:
         self.objs = OrderedDict()
         self.max_name_length = 0
         # We need to add all the levels here instead of lazily since they must be in a specific order.
-        for l in levels:
-            self.objs[l] = OrderedDict()
+        self.objs['essl'] = OrderedDict()
+        for l in essl_levels:
+            self.objs['essl'][l] = OrderedDict()
+        self.objs['glsl'] = OrderedDict()
+        for l in glsl_levels:
+            self.objs['glsl'][l] = OrderedDict()
 
-    def add_obj(self, level, condition, name, obj):
-        if (level not in levels):
-            raise Exception('Unexpected level: ' + str(level))
-        if condition not in self.objs[level]:
-            self.objs[level][condition] = OrderedDict()
-        self.objs[level][condition][name] = obj
-        if len(name) > self.max_name_length:
-            self.max_name_length = len(name)
+    def add_obj(self, essl_level, glsl_level, condition, name, obj):
+        if essl_level:
+            if essl_level not in essl_levels:
+                raise Exception('Unexpected essl level: ' + str(essl_level))
+            if condition not in self.objs['essl'][essl_level]:
+                self.objs['essl'][essl_level][condition] = OrderedDict()
+            self.objs['essl'][essl_level][condition][name] = obj
+            if len(name) > self.max_name_length:
+                self.max_name_length = len(name)
 
-    def has_key(self, level, condition, name):
-        if (level not in levels):
-            raise Exception('Unexpected level: ' + str(level))
-        if condition not in self.objs[level]:
-            return False
-        return (name in self.objs[level][condition])
+        if glsl_level:
+            if glsl_level not in glsl_levels:
+                raise Exception('Unexpected glsl level: ' + str(glsl_level))
+            if condition not in self.objs['glsl'][glsl_level]:
+                self.objs['glsl'][glsl_level][condition] = OrderedDict()
+            self.objs['glsl'][glsl_level][condition][name] = obj
+            if len(name) > self.max_name_length:
+                self.max_name_length = len(name)
 
-    def get(self, level, condition, name):
-        if self.has_key(level, condition, name):
-            return self.objs[level][condition][name]
+    def has_key(self, essl_level, glsl_level, condition, name):
+        if essl_level:
+            if essl_level not in essl_levels:
+                raise Exception('Unexpected essl level: ' + str(essl_level))
+            if condition not in self.objs['essl'][essl_level]:
+                return False
+            if name not in self.objs['essl'][essl_level][condition]:
+                return False
+        if glsl_level:
+            if glsl_level not in glsl_levels:
+                raise Exception('Unexpected glsl level: ' + str(glsl_level))
+            if condition not in self.objs['glsl'][glsl_level]:
+                return False
+            if name not in self.objs['glsl'][glsl_level][condition]:
+                return False
+        return True
+
+    def get(self, essl_level, glsl_level, condition, name):
+        if self.has_key(essl_level, glsl_level, condition, name):
+            if essl_level:
+                return self.objs['essl'][essl_level][condition][name]
+            if glsl_level:
+                return self.objs['glsl'][glsl_level][condition][name]
         return None
 
     def get_max_name_length(self):
@@ -415,38 +597,38 @@ class GroupedList:
 
     def get_switch_code(self, hashfn, script_generated_hash_tests):
         code = []
-        for level in levels:
-            if len(self.objs[level]) == 0:
+        code.append('if (!IsDesktopGLSpec(mShaderSpec))\n {')
+        for level in essl_levels:
+            if len(self.objs['essl'][level]) == 0:
                 continue
-            level_condition = get_shader_version_condition_for_level(level)
+            level_condition = get_essl_shader_version_condition_for_level(level)
             if level_condition != '':
                 code.append('if ({condition})\n {{'.format(condition=level_condition))
 
-            for condition, objs in self.objs[level].iteritems():
-                if len(objs) > 0:
-                    if condition != 'NO_CONDITION':
-                        condition_header = '  if ({condition})\n {{'.format(condition=condition)
-                        code.append(condition_header.replace('shaderType', 'mShaderType'))
-
-                    switch = {}
-                    for name, obj in objs.iteritems():
-                        name_hash = mangledNameHash(name, hashfn, script_generated_hash_tests)
-                        if name_hash not in switch:
-                            switch[name_hash] = []
-                        switch[name_hash].append(obj['hash_matched_code'])
-
-                    code.append('switch(nameHash) {')
-                    for name_hash, obj in sorted(switch.iteritems()):
-                        code.append('case 0x' + ('%08x' % name_hash) + 'u:\n{')
-                        code += obj
-                        code.append('break;\n}')
-                    code.append('}')
-
-                    if condition != 'NO_CONDITION':
-                        code.append('}')
+            code.extend(
+                get_specific_switch_code(self.objs['essl'][level], hashfn,
+                                         script_generated_hash_tests))
 
             if level_condition != '':
                 code.append('}')
+
+        code.append('}\nelse\n{')
+
+        for level in glsl_levels:
+            if len(self.objs['glsl'][level]) == 0:
+                continue
+            level_condition = get_glsl_shader_version_condition_for_level(level)
+            if level_condition != '':
+                code.append('if ({condition})\n {{'.format(condition=level_condition))
+
+            code.extend(
+                get_specific_switch_code(self.objs['glsl'][level], hashfn,
+                                         script_generated_hash_tests))
+
+            if level_condition != '':
+                code.append('}')
+
+        code.append('}')
         code.append('return nullptr;')
         return '\n'.join(code)
 
@@ -491,7 +673,6 @@ class TType:
             mangled_name += chr(ord('0') + size_key)
         else:
             mangled_name += chr(ord('A') + size_key - 10)
-
         mangled_name += get_basic_mangled_name(self.data['basic'])
         return mangled_name
 
@@ -511,8 +692,8 @@ class TType:
     def get_object_size(self):
         return self.data['primarySize'] * self.data['secondarySize']
 
-    def specific_sampler_or_image_type(self, basic_type_prefix):
-        if 'genType' in self.data:
+    def specific_sampler_or_image_or_subpass_type(self, basic_type_prefix):
+        if 'genType' in self.data and self.data['genType'] == 'sampler_or_image_or_subpass':
             type = {}
             if 'basic' not in self.data:
                 type['basic'] = {'': 'Float', 'I': 'Int', 'U': 'UInt'}[basic_type_prefix]
@@ -536,6 +717,18 @@ class TType:
         return self
 
     def parse_type(self, glsl_header_type):
+        if glsl_header_type.startswith('readonly writeonly '):
+            type_obj = self.parse_type(glsl_header_type[19:])
+            type_obj['qualifier'] = 'Readonly Writeonly'
+            return type_obj
+        if glsl_header_type.startswith('readonly '):
+            type_obj = self.parse_type(glsl_header_type[9:])
+            type_obj['qualifier'] = 'Readonly'
+            return type_obj
+        if glsl_header_type.startswith('writeonly '):
+            type_obj = self.parse_type(glsl_header_type[10:])
+            type_obj['qualifier'] = 'Writeonly'
+            return type_obj
         if glsl_header_type.startswith('out '):
             type_obj = self.parse_type(glsl_header_type[4:])
             type_obj['qualifier'] = 'Out'
@@ -549,6 +742,7 @@ class TType:
             'float': 'Float',
             'int': 'Int',
             'uint': 'UInt',
+            'double': 'Double',
             'bool': 'Bool',
             'void': 'Void',
             'atomic_uint': 'AtomicCounter',
@@ -560,9 +754,18 @@ class TType:
 
         type_obj = {}
 
-        basic_type_prefix_map = {'': 'Float', 'i': 'Int', 'u': 'UInt', 'b': 'Bool', 'v': 'Void'}
+        basic_type_prefix_map = {
+            '': 'Float',
+            'i': 'Int',
+            'u': 'UInt',
+            'd': 'Double',
+            'b': 'Bool',
+            'v': 'Void'
+        }
 
-        vec_re = re.compile(r'^([iub]?)vec([234]?)$')
+        # textureGatherOffsets in GLSL has an ivec2[4] parameter that this needs to parse
+        # treating it as a mat4x2
+        vec_re = re.compile(r'^([iudb]?)vec([234]?)((\[[234]\])?)$')
         vec_match = vec_re.match(glsl_header_type)
         if vec_match:
             type_obj['basic'] = basic_type_prefix_map[vec_match.group(1)]
@@ -571,7 +774,12 @@ class TType:
                 type_obj['genType'] = 'vec'
             else:
                 # vec with specific size
-                type_obj['primarySize'] = int(vec_match.group(2))
+                if vec_match.group(3) != '':
+                    # vec array
+                    type_obj['primarySize'] = int(vec_match.group(3)[1])
+                    type_obj['secondarySize'] = int(vec_match.group(2))
+                else:
+                    type_obj['primarySize'] = int(vec_match.group(2))
             return type_obj
 
         mat_re = re.compile(r'^mat([234])(x([234]))?$')
@@ -587,7 +795,7 @@ class TType:
                 type_obj['secondarySize'] = int(mat_match.group(3))
             return type_obj
 
-        gen_re = re.compile(r'^gen([IUB]?)Type$')
+        gen_re = re.compile(r'^gen([IUDB]?)Type$')
         gen_match = gen_re.match(glsl_header_type)
         if gen_match:
             type_obj['basic'] = basic_type_prefix_map[gen_match.group(1).lower()]
@@ -598,15 +806,19 @@ class TType:
             type_obj['basic'] = glsl_header_type[0].upper() + glsl_header_type[1:]
             return type_obj
 
-        if glsl_header_type.startswith('gsampler') or glsl_header_type.startswith('gimage'):
+        if glsl_header_type.startswith('gsampler') or glsl_header_type.startswith(
+                'gimage') or glsl_header_type.startswith('gsubpassInput'):
             type_obj['basic'] = glsl_header_type[1].upper() + glsl_header_type[2:]
-            type_obj['genType'] = 'sampler_or_image'
+            type_obj['genType'] = 'sampler_or_image_or_subpass'
             return type_obj
 
         if glsl_header_type == 'gvec4':
-            return {'primarySize': 4, 'genType': 'sampler_or_image'}
+            return {'primarySize': 4, 'genType': 'sampler_or_image_or_subpass'}
         if glsl_header_type == 'gvec3':
-            return {'primarySize': 3, 'genType': 'sampler_or_image'}
+            return {'primarySize': 3, 'genType': 'sampler_or_image_or_subpass'}
+
+        if glsl_header_type == 'IMAGE_PARAMS':
+            return {'genType': 'image_params'}
 
         raise Exception('Unrecognized type: ' + str(glsl_header_type))
 
@@ -704,7 +916,7 @@ def get_function_names(group, mangled_names):
         for function_props in group['functions']:
             function_name = function_props['name']
             mangled_names.append(function_name)
-            function_variants = gen_function_variants(function_name, function_props)
+            function_variants = gen_function_variants(function_props)
             for function_props in function_variants:
                 parameters = get_parameters(function_props)
                 mangled_names.append(get_function_mangled_name(function_name, parameters))
@@ -812,36 +1024,69 @@ def define_constexpr_variable(template_args, variable_declarations):
     variable_declarations.append(template_variable_declaration.format(**template_args))
 
 
-def gen_function_variants(function_name, function_props):
+def gen_function_variants(function_props):
     function_variants = []
     parameters = get_parameters(function_props)
     function_is_gen_type = False
     gen_type = set()
-    for param in parameters:
+    image_params_index = 0
+    for param in parameters + [function_props['returnType']]:
         if 'genType' in param.data:
-            if param.data['genType'] not in ['sampler_or_image', 'vec', 'yes']:
-                raise Exception('Unexpected value of genType "' + str(param.data['genType']) +
-                                '" should be "sampler_or_image", "vec", or "yes"')
+            if param.data['genType'] not in [
+                    'sampler_or_image_or_subpass', 'vec', 'yes', 'image_params'
+            ]:
+                raise Exception(
+                    'Unexpected value of genType "' + str(param.data['genType']) +
+                    '" should be "sampler_or_image_or_subpass", "vec", "yes", or "image_params"')
             gen_type.add(param.data['genType'])
-            if len(gen_type) > 1:
-                raise Exception('Unexpected multiple values of genType set on the same function: '
-                                + str(list(gen_type)))
+            if param.data['genType'] == 'image_params':
+                image_params_index = parameters.index(param)
+
     if len(gen_type) == 0:
         function_variants.append(function_props)
         return function_variants
 
-    # If we have a gsampler_or_image then we're generating variants for float, int and uint
+    # If we have image_params then we're generating variants for 33 separate functions,
+    # each for a different type of image variable
+    if 'image_params' in gen_type:
+        variants = [['gimage2D', 'ivec2'], ['gimage3D', 'ivec3'], ['gimageCube', 'ivec3'],
+                    ['gimageBuffer', 'int'], ['gimage2DArray', 'ivec3'],
+                    ['gimageCubeArray', 'ivec3'], ['gimage1D', 'int'], ['gimage1DArray', 'ivec2'],
+                    ['gimage2DRect', 'ivec2'], ['gimage2DMS', 'ivec2', 'int'],
+                    ['gimage2DMSArray', 'ivec3', 'int']]
+        for variant in variants:
+            image_variant_parameters = []
+            for param in parameters:
+                if parameters.index(param) == image_params_index:
+                    for variant_param in variant:
+                        image_variant_parameters.append(TType(variant_param))
+                else:
+                    image_variant_parameters.append(param)
+            types = ['', 'I', 'U']
+            for type in types:
+                variant_props = function_props.copy()
+                variant_parameters = []
+                for param in image_variant_parameters:
+                    variant_parameters.append(
+                        param.specific_sampler_or_image_or_subpass_type(type))
+                variant_props['parameters'] = variant_parameters
+                variant_props['returnType'] = function_props[
+                    'returnType'].specific_sampler_or_image_or_subpass_type(type)
+                function_variants.append(variant_props)
+        return function_variants
+
+    # If we have a gsampler_or_image_or_subpass then we're generating variants for float, int and uint
     # samplers.
-    if 'sampler_or_image' in gen_type:
+    if 'sampler_or_image_or_subpass' in gen_type:
         types = ['', 'I', 'U']
         for type in types:
             variant_props = function_props.copy()
             variant_parameters = []
             for param in parameters:
-                variant_parameters.append(param.specific_sampler_or_image_type(type))
+                variant_parameters.append(param.specific_sampler_or_image_or_subpass_type(type))
             variant_props['parameters'] = variant_parameters
             variant_props['returnType'] = function_props[
-                'returnType'].specific_sampler_or_image_type(type)
+                'returnType'].specific_sampler_or_image_or_subpass_type(type)
             function_variants.append(variant_props)
         return function_variants
 
@@ -873,18 +1118,20 @@ def process_single_function_group(
 
     for function_props in group['functions']:
         function_name = function_props['name']
-        level = function_props['level']
+        essl_level = function_props['essl_level'] if 'essl_level' in function_props else None
+        glsl_level = function_props['glsl_level'] if 'glsl_level' in function_props else None
         extension = get_extension(function_props)
         template_args = {
             'name': function_name,
             'name_with_suffix': function_name + get_suffix(function_props),
-            'level': level,
+            'essl_level': essl_level,
+            'glsl_level': glsl_level,
             'extension': extension,
             'op': get_op(function_name, function_props),
             'known_to_not_have_side_effects': get_known_to_not_have_side_effects(function_props)
         }
 
-        function_variants = gen_function_variants(function_name, function_props)
+        function_variants = gen_function_variants(function_props)
 
         template_name_declaration = 'constexpr const ImmutableString {name_with_suffix}("{name}");'
         name_declaration = template_name_declaration.format(**template_args)
@@ -897,18 +1144,19 @@ def process_single_function_group(
 }}"""
         unmangled_if = template_unmangled_if.format(**template_args)
         unmangled_builtin_no_condition = unmangled_function_if_statements.get(
-            level, 'NO_CONDITION', function_name)
+            essl_level, glsl_level, 'NO_CONDITION', function_name)
         if unmangled_builtin_no_condition != None and unmangled_builtin_no_condition[
                 'extension'] == 'UNDEFINED':
             # We already have this unmangled name without a condition nor extension on the same level. No need to add a duplicate with a condition.
             pass
         elif (not unmangled_function_if_statements.has_key(
-                level, condition, function_name)) or extension == 'UNDEFINED':
+                essl_level, glsl_level, condition, function_name)) or extension == 'UNDEFINED':
             # We don't have this unmangled builtin recorded yet or we might replace an unmangled builtin from an extension with one from core.
-            unmangled_function_if_statements.add_obj(level, condition, function_name, {
-                'hash_matched_code': unmangled_if,
-                'extension': extension
-            })
+            unmangled_function_if_statements.add_obj(essl_level, glsl_level, condition,
+                                                     function_name, {
+                                                         'hash_matched_code': unmangled_if,
+                                                         'extension': extension
+                                                     })
             unmangled_builtin_declarations.add(
                 'constexpr const UnmangledBuiltIn {extension}(TExtension::{extension});'.format(
                     **template_args))
@@ -920,17 +1168,27 @@ def process_single_function_group(
 
             template_args['unique_name'] = get_unique_identifier_name(
                 template_args['name_with_suffix'], parameters)
-
-            if template_args['unique_name'] in defined_function_variants:
-                continue
-            defined_function_variants.add(template_args['unique_name'])
-
             template_args['param_count'] = len(parameters)
             template_args['return_type'] = function_props['returnType'].get_statictype_string()
             template_args['mangled_name'] = get_function_mangled_name(function_name, parameters)
             template_args['human_readable_name'] = get_function_human_readable_name(
                 template_args['name_with_suffix'], parameters)
             template_args['mangled_name_length'] = len(template_args['mangled_name'])
+            template_args['extension_condition'] = ' && mResources.{extension}'.format(
+                **template_args) if template_args['extension'] != 'UNDEFINED' else ''
+
+            template_mangled_if = """if (name == BuiltInName::{unique_name}{extension_condition})
+{{
+    return &BuiltInFunction::kFunction_{unique_name};
+}}"""
+            mangled_if = template_mangled_if.format(**template_args)
+            get_builtin_if_statements.add_obj(essl_level, glsl_level, condition,
+                                              template_args['mangled_name'],
+                                              {'hash_matched_code': mangled_if})
+
+            if template_args['unique_name'] in defined_function_variants:
+                continue
+            defined_function_variants.add(template_args['unique_name'])
 
             template_builtin_id_declaration = '    static constexpr const TSymbolUniqueId {human_readable_name} = TSymbolUniqueId({id});'
             builtin_id_declarations.append(template_builtin_id_declaration.format(**template_args))
@@ -976,13 +1234,6 @@ def process_single_function_group(
 
             template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name}("{mangled_name}");'
             name_declarations.add(template_mangled_name_declaration.format(**template_args))
-            template_mangled_if = """if (name == BuiltInName::{unique_name})
-{{
-    return &BuiltInFunction::kFunction_{unique_name};
-}}"""
-            mangled_if = template_mangled_if.format(**template_args)
-            get_builtin_if_statements.add_obj(level, condition, template_args['mangled_name'],
-                                              {'hash_matched_code': mangled_if})
 
             id_counter += 1
 
@@ -1168,7 +1419,8 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
     return &BuiltInVariable::kVar_{name_with_suffix};
 }}"""
                 name_if = template_name_if.format(**template_args)
-                get_builtin_if_statements.add_obj(level, condition, template_args['name'],
+                get_builtin_if_statements.add_obj(level, 'COMMON_BUILTINS', condition,
+                                                  template_args['name'],
                                                   {'hash_matched_code': name_if})
 
         if is_member:
@@ -1193,14 +1445,13 @@ def process_single_variable_group(condition, group_name, group, builtin_id_decla
             declare_member_variables.append(
                 template_declare_member_variable.format(**template_args))
 
-            if level != 'GLSL_BUILTINS':
-                template_name_if = """if (name == BuiltInName::{name})
+            template_name_if = """if (name == BuiltInName::{name})
 {{{condition_comment}
     return mVar_{name_with_suffix};
 }}"""
-                name_if = template_name_if.format(**template_args)
-                get_builtin_if_statements.add_obj(level, get_condition, variable_name,
-                                                  {'hash_matched_code': name_if})
+            name_if = template_name_if.format(**template_args)
+            get_builtin_if_statements.add_obj(level, 'COMMON_BUILTINS', get_condition,
+                                              variable_name, {'hash_matched_code': name_if})
 
         id_counter += 1
 
