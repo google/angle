@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a16f5219_86bba067",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "this should also go in util.h.",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 0
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01e03936_1ea8c50a",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "use const \u0026 or it will copy each time.",
+      "range": {
+        "startLine": 24,
+        "startChar": 64,
+        "endLine": 24,
+        "endChar": 81
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29d81be1_3965a0cf",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "use const \u0026",
+      "range": {
+        "startLine": 41,
+        "startChar": 9,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "305d4fc2_ef419240",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "nit: cast style",
+      "range": {
+        "startLine": 102,
+        "startChar": 23,
+        "endLine": 102,
+        "endChar": 38
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "930eacf6_30b11cbb",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "use const \u0026",
+      "range": {
+        "startLine": 114,
+        "startChar": 9,
+        "endLine": 114,
+        "endChar": 25
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfc8097e_e9b3f055",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "use ImmutableStringBuilder",
+      "range": {
+        "startLine": 117,
+        "startChar": 8,
+        "endLine": 118,
+        "endChar": 49
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cf775a4_f0476188",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 125,
+        "startChar": 32,
+        "endLine": 125,
+        "endChar": 37
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5dbf142d_607f66ec",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "can you use .emplace_back(newName) ?",
+      "range": {
+        "startLine": 139,
+        "startChar": 15,
+        "endLine": 139,
+        "endChar": 51
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "079a937a_0909d877",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "can you move this into a helper function to make it a bit more readable? maybe in a small prior refactor CL?",
+      "range": {
+        "startLine": 2105,
+        "startChar": 11,
+        "endLine": 2108,
+        "endChar": 30
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e125f7c6_6e3d500f",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "please use distinct names instead of overloading. it makes it easier to read. e.g. findGlobalWithConversion",
+      "range": {
+        "startLine": 119,
+        "startChar": 19,
+        "endLine": 119,
+        "endChar": 29
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad565ad5_2029a3a9",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T19:06:27Z",
+      "side": 1,
+      "message": "please use distinct names instead of overloading. it makes it easier to read. e.g. findBuiltInWithConversion",
+      "range": {
+        "startLine": 122,
+        "startChar": 19,
+        "endLine": 122,
+        "endChar": 30
+      },
+      "revId": "b2ea906b87d7f18593bf4e42723eb8c5d387ef91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
