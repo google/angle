@@ -94,6 +94,30 @@
       "revId": "b2aadd328b2545c4cec8166e4bf194f9fefcf576",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "610046bc_2224bd86",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T18:52:01Z",
+      "side": 1,
+      "message": "Good point.",
+      "parentUuid": "038d17ff_fba0a11e",
+      "range": {
+        "startLine": 666,
+        "startChar": 76,
+        "endLine": 666,
+        "endChar": 79
+      },
+      "revId": "b2aadd328b2545c4cec8166e4bf194f9fefcf576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
