@@ -251,6 +251,9 @@ void Image::onDestroy(const Display *display)
     // no siblings left.
     ASSERT(mState.targets.empty());
 
+    // Make sure the implementation gets a chance to clean up before we delete the source.
+    mImplementation->onDestroy(display);
+
     // Tell the source that it is no longer used by this image
     if (mState.source != nullptr)
     {
@@ -266,8 +269,6 @@ void Image::onDestroy(const Display *display)
 
         mState.source = nullptr;
     }
-
-    mImplementation->onDestroy(display);
 }
 
 Image::~Image()
