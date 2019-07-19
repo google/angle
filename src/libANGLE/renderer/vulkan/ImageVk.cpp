@@ -122,6 +122,9 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         mImageLayer       = 0;
     }
 
+    // mContext is no longer needed, make sure it's not used by accident.
+    mContext = nullptr;
+
     return egl::NoError();
 }
 
@@ -152,8 +155,8 @@ angle::Result ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sib
     }
 
     // Grab a fence from the releasing context to know when the image is no longer used
-    ASSERT(mContext != nullptr);
-    ContextVk *contextVk = vk::GetImpl(mContext);
+    ASSERT(context != nullptr);
+    ContextVk *contextVk = vk::GetImpl(context);
 
     // Flush the context to make sure the fence has been submitted.
     ANGLE_TRY(contextVk->flushImpl(nullptr));
