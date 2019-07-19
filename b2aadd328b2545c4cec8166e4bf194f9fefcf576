@@ -22,6 +22,30 @@
       "revId": "b2aadd328b2545c4cec8166e4bf194f9fefcf576",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8e784cb_e9c16e82",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1350412
+      },
+      "writtenOn": "2019-07-19T18:08:15Z",
+      "side": 1,
+      "message": ":D I originally had \"unsigned\", but it caused CQ to fail. This is the correct spelling.",
+      "parentUuid": "06000ab5_fddc8aeb",
+      "range": {
+        "startLine": 666,
+        "startChar": 76,
+        "endLine": 666,
+        "endChar": 79
+      },
+      "revId": "b2aadd328b2545c4cec8166e4bf194f9fefcf576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
