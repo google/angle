@@ -477,15 +477,20 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     attrib.pointer                 = pointer;
     attrib.vertexAttribArrayStride = stride;
 
-    if (bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride) &&
-        !attribDirty)
-    {
-        setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER_BUFFER);
-    }
-    else if (attribDirty)
-    {
-        setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
-    }
+    // "Pointer buffer" dirty bit disabled because of a bug. http://anglebug.com/3256
+    bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride);
+    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
+    ANGLE_UNUSED_VARIABLE(attribDirty);
+
+    // if (bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride) &&
+    //    !attribDirty)
+    //{
+    //    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER_BUFFER);
+    //}
+    // else if (attribDirty)
+    //{
+    //    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
+    //}
 
     mState.mNullPointerClientMemoryAttribsMask.set(attribIndex,
                                                    boundBuffer == nullptr && pointer == nullptr);
