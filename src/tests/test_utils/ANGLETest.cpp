@@ -1050,6 +1050,9 @@ void ANGLETestBase::checkD3D11SDKLayersMessages()
                     free(pMessage);
                 }
             }
+            // Clear the queue, so that previous failures are not reported
+            // for subsequent, otherwise passing, tests
+            infoQueue->ClearStoredMessages();
 
             FAIL() << numStoredD3DDebugMessages
                    << " D3D11 SDK Layers message(s) detected! Test Failed.\n";
