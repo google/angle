@@ -26,6 +26,7 @@ void DebugAnnotator11::beginEvent(const char *eventName, const char *eventMessag
     {
         std::mbstate_t state = std::mbstate_t();
         std::mbsrtowcs(mWCharMessage, &eventMessage, kMaxMessageLength, &state);
+        std::lock_guard<std::mutex> lock(mAnnotationMutex);
         mUserDefinedAnnotation->BeginEvent(mWCharMessage);
     }
 }
@@ -35,6 +36,7 @@ void DebugAnnotator11::endEvent(const char *eventName)
     angle::LoggingAnnotator::endEvent(eventName);
     if (mUserDefinedAnnotation != nullptr)
     {
+        std::lock_guard<std::mutex> lock(mAnnotationMutex);
         mUserDefinedAnnotation->EndEvent();
     }
 }
@@ -46,6 +48,7 @@ void DebugAnnotator11::setMarker(const char *markerName)
     {
         std::mbstate_t state = std::mbstate_t();
         std::mbsrtowcs(mWCharMessage, &markerName, kMaxMessageLength, &state);
+        std::lock_guard<std::mutex> lock(mAnnotationMutex);
         mUserDefinedAnnotation->SetMarker(mWCharMessage);
     }
 }
@@ -54,6 +57,7 @@ bool DebugAnnotator11::getStatus()
 {
     if (mUserDefinedAnnotation != nullptr)
     {
+        std::lock_guard<std::mutex> lock(mAnnotationMutex);
         return !!(mUserDefinedAnnotation->GetStatus());
     }
 

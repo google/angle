@@ -11,6 +11,8 @@
 
 #include "libANGLE/LoggingAnnotator.h"
 
+#include <mutex>
+
 namespace rx
 {
 
@@ -30,6 +32,7 @@ class DebugAnnotator11 : public angle::LoggingAnnotator
     angle::ComPtr<ID3DUserDefinedAnnotation> mUserDefinedAnnotation;
     static constexpr size_t kMaxMessageLength = 256;
     wchar_t mWCharMessage[kMaxMessageLength];
+    std::mutex mAnnotationMutex;
 };
 
 }  // namespace rx
