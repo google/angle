@@ -18,4 +18,4 @@ enum MouseButton
     MOUSEBUTTON_COUNT,
 };
 
-#endif // SAMPLE_UTIL_MOUSE_H
+#endif  // SAMPLE_UTIL_MOUSE_H

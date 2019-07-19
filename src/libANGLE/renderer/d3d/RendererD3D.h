@@ -275,7 +275,7 @@ class RendererD3D : public BufferFactoryD3D
     virtual UniformStorageD3D *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations
-    virtual ImageD3D *createImage()                                                        = 0;
+    virtual ImageD3D *createImage() = 0;
     virtual ExternalImageSiblingImpl *createExternalImageSibling(
         const gl::Context *context,
         EGLenum target,
@@ -386,7 +386,7 @@ class RendererD3D : public BufferFactoryD3D
     // Necessary hack for default framebuffers in D3D.
     virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;
 
-    virtual gl::Version getMaxSupportedESVersion() const = 0;
+    virtual gl::Version getMaxSupportedESVersion() const  = 0;
     virtual gl::Version getMaxConformantESVersion() const = 0;
 
     angle::Result initRenderTarget(const gl::Context *context, RenderTargetD3D *renderTarget);

@@ -54,7 +54,7 @@ class VulkanExternalHelper
     bool mHasExternalSemaphoreFd = false;
     PFN_vkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2 =
         nullptr;
-    PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR = nullptr;
+    PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR       = nullptr;
     PFN_vkGetSemaphoreFdKHR vkGetSemaphoreFdKHR = nullptr;
     PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
         vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = nullptr;

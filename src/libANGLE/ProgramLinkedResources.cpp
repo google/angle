@@ -407,10 +407,10 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
                             const std::string &name,
                             const std::string &mappedName) override
     {
-        bool isSampler                              = IsSamplerType(variable.type);
-        bool isImage                                = IsImageType(variable.type);
-        bool isAtomicCounter                        = IsAtomicCounterType(variable.type);
-        std::vector<LinkedUniform> *uniformList     = mUniforms;
+        bool isSampler                          = IsSamplerType(variable.type);
+        bool isImage                            = IsImageType(variable.type);
+        bool isAtomicCounter                    = IsAtomicCounterType(variable.type);
+        std::vector<LinkedUniform> *uniformList = mUniforms;
         if (isSampler)
         {
             uniformList = mSamplerUniforms;

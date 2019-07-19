@@ -27,7 +27,7 @@ class LabeledObject
   public:
     virtual ~LabeledObject() {}
     virtual void setLabel(const Context *context, const std::string &label) = 0;
-    virtual const std::string &getLabel() const     = 0;
+    virtual const std::string &getLabel() const                             = 0;
 };
 
 class Debug : angle::NonCopyable

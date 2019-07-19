@@ -24,13 +24,9 @@ RNG::RNG()
 }
 
 // Seed from fixed number.
-RNG::RNG(unsigned int seed) : mGenerator(seed)
-{
-}
+RNG::RNG(unsigned int seed) : mGenerator(seed) {}
 
-RNG::~RNG()
-{
-}
+RNG::~RNG() {}
 
 void RNG::reseed(unsigned int newSeed)
 {

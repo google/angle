@@ -121,7 +121,7 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2BenchmarkTestParam
         const BenchmarkInfo benchmarkInfo = kBenchmarks[std::get<1>(GetParam())];
         const char *benchmark             = benchmarkInfo.glmark2Config;
         const char *benchmarkName         = benchmarkInfo.name;
-        bool completeRun      = benchmark == nullptr || benchmark[0] == '\0';
+        bool completeRun                  = benchmark == nullptr || benchmark[0] == '\0';
 
         Optional<std::string> cwd = GetCWD();
 

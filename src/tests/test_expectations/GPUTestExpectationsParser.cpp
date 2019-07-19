@@ -350,9 +350,9 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
         SplitString(lineData, kWhitespaceASCII, KEEP_WHITESPACE, SPLIT_WANT_NONEMPTY);
     int32_t stage = kLineParserBegin;
     GPUTestExpectationEntry entry;
-    entry.lineNumber  = lineNumber;
-    entry.used        = false;
-    bool skipLine     = false;
+    entry.lineNumber = lineNumber;
+    entry.used       = false;
+    bool skipLine    = false;
     for (size_t i = 0; i < tokens.size() && !skipLine; ++i)
     {
         Token token = ParseToken(tokens[i]);

@@ -1032,7 +1032,7 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
 
     gl::StorageBuffersArray<VkDescriptorBufferInfo> descriptorBufferInfo;
     gl::StorageBuffersArray<VkWriteDescriptorSet> writeDescriptorInfo;
-    uint32_t writeCount     = 0;
+    uint32_t writeCount = 0;
     // The binding is incremented every time arrayElement 0 is encountered, which means there will
     // be an increment right at the start.  Start from -1 to get 0 as the first binding.
     int32_t currentBinding = -1;

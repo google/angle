@@ -825,8 +825,8 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
         out << "};\n";
     }
 
-    gl::Shader *shaderGL       = programData.getAttachedShader(shaderType);
-    const ShaderD3D *shaderD3D = GetImplAs<ShaderD3D>(shaderGL);
+    gl::Shader *shaderGL                     = programData.getAttachedShader(shaderType);
+    const ShaderD3D *shaderD3D               = GetImplAs<ShaderD3D>(shaderGL);
     const bool getDimensionsIgnoresBaseLevel = programD3D.usesGetDimensionsIgnoresBaseLevel();
 
     if (shaderD3D->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DSIZE)))

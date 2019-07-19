@@ -13,7 +13,8 @@ template <typename outType>
 inline outType *DynamicCastComObject(IUnknown *object)
 {
     outType *outObject = nullptr;
-    HRESULT result = object->QueryInterface(__uuidof(outType), reinterpret_cast<void**>(&outObject));
+    HRESULT result =
+        object->QueryInterface(__uuidof(outType), reinterpret_cast<void **>(&outObject));
     if (SUCCEEDED(result))
     {
         return outObject;
@@ -25,4 +26,4 @@ inline outType *DynamicCastComObject(IUnknown *object)
     }
 }
 
-#endif // UTIL_COM_UTILS_H
+#endif  // UTIL_COM_UTILS_H

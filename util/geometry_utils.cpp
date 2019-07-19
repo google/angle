@@ -14,21 +14,13 @@
 
 using namespace angle;
 
-SphereGeometry::SphereGeometry()
-{
-}
+SphereGeometry::SphereGeometry() {}
 
-SphereGeometry::~SphereGeometry()
-{
-}
+SphereGeometry::~SphereGeometry() {}
 
-CubeGeometry::CubeGeometry()
-{
-}
+CubeGeometry::CubeGeometry() {}
 
-CubeGeometry::~CubeGeometry()
-{
-}
+CubeGeometry::~CubeGeometry() {}
 
 void CreateSphereGeometry(size_t sliceCount, float radius, SphereGeometry *result)
 {
