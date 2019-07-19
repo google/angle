@@ -1,0 +1,464 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cfb7f94_95c21b47",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "can you use enum class here?",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 2
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05ece6b2_bb876866",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "can you put these in util.h? and make them not-inlined? (use the cpp)\n\nalso Caps for naming for static functions.",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70c9c25f_c355c2c5",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "make sure you use c++-style casts, see style guide:\n\nhttps://google.github.io/styleguide/cppguide.html#Casting\n\nalso can you make this a switch instead?",
+      "range": {
+        "startLine": 91,
+        "startChar": 15,
+        "endLine": 91,
+        "endChar": 22
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a692de3b_90e44b1e",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "make sure you use c++-style casts, see style guide:\n\nhttps://google.github.io/styleguide/cppguide.html#Casting\n\nalso can you make this a switch instead?",
+      "range": {
+        "startLine": 230,
+        "startChar": 0,
+        "endLine": 237,
+        "endChar": 5
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23ef4e1d_2730f570",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "make sure you use c++-style casts, see style guide:\n\nhttps://google.github.io/styleguide/cppguide.html#Casting\n\nalso can you make this a switch instead?",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 5
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8781f89e_b17df1b0",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "make sure you use c++-style casts, see style guide:\n\nhttps://google.github.io/styleguide/cppguide.html#Casting\n\nalso can you make this a switch instead?",
+      "range": {
+        "startLine": 254,
+        "startChar": 0,
+        "endLine": 266,
+        "endChar": 1
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f90c2447_94aa2276",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "couldn\u0027t this be simplified just by:\n\nif (constant.type \u003d\u003d type)\n{\n   // switch like you have\n}\nelse\n{\n   return constant.getFConst() \u003d\u003d getFConst()?\n}",
+      "range": {
+        "startLine": 285,
+        "startChar": 5,
+        "endLine": 311,
+        "endChar": 25
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d85f8cf0_7d2f25d2",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "similar comment here",
+      "range": {
+        "startLine": 347,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 5
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ff54efe_5a9601ca",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "similar comment here",
+      "range": {
+        "startLine": 380,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 5
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2a637fa_ee5718ef",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "similar comment here",
+      "range": {
+        "startLine": 417,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 26
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b96540f_4825c745",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "similar comment here",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 499,
+        "endChar": 26
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7ddf709_33725b00",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "similar comment here",
+      "range": {
+        "startLine": 511,
+        "startChar": 0,
+        "endLine": 548,
+        "endChar": 26
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03fcccc8_819cb017",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2239,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "similar comments here.",
+      "range": {
+        "startLine": 2208,
+        "startChar": 3,
+        "endLine": 2239,
+        "endChar": 0
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0bb6706_2bcead86",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5230,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "maybe we could refactor this:\n\nif (!isBitShift \u0026\u0026 conversion !\u003d same)\n{\n    if (!IsDesktopGLSpec())\n    {\n        return false;\n    }\n    \n    // check conversion validity.\n}",
+      "range": {
+        "startLine": 5223,
+        "startChar": 3,
+        "endLine": 5230,
+        "endChar": 5
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05ba7c75_8af44a77",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5325,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "can you use IsAssignment here?",
+      "range": {
+        "startLine": 5323,
+        "startChar": 0,
+        "endLine": 5325,
+        "endChar": 10
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37aae6d7_67e613ed",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5331,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "maybe you could make this a helper function - like CanOperatorHaveImplicitConversion? maybe in Operator.h?",
+      "range": {
+        "startLine": 5329,
+        "startChar": 0,
+        "endLine": 5331,
+        "endChar": 29
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b99a0e47_e05cf183",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5956,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "maybe you could use a new method in the symbol table for this? looks like the code is repeated and could be shared.",
+      "range": {
+        "startLine": 5944,
+        "startChar": 0,
+        "endLine": 5956,
+        "endChar": 9
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15dc8ec4_fedd631a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5988,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "maybe you could use a new method in the symbol table for this? looks like the code is repeated and could be shared.",
+      "range": {
+        "startLine": 5975,
+        "startChar": 0,
+        "endLine": 5988,
+        "endChar": 13
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1cd423c_023c05ac",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "maybe you could use a separate if statement before the switch... \n\nif (Desktop)\n{\n   // set everything undefined.\n}\nelse\n{\n   switch (...)\n   {\n   }\n}",
+      "range": {
+        "startLine": 341,
+        "startChar": 0,
+        "endLine": 356,
+        "endChar": 26
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1b4a14d_014f07a4",
+        "filename": "src/compiler/translator/tree_ops/ExpandIntegerPowExpressions.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-19T15:24:39Z",
+      "side": 1,
+      "message": "you can remove this as it\u0027s no longer relevant.",
+      "range": {
+        "startLine": 82,
+        "startChar": 3,
+        "endLine": 84,
+        "endChar": 56
+      },
+      "revId": "31b01055768927f37219d205b5bd2c8ec835dc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
