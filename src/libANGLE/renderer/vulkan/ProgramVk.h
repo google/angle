@@ -173,6 +173,11 @@ class ProgramVk : public ProgramImpl
                                                   uint32_t descriptorSetIndex,
                                                   bool *newPoolAllocatedOut);
     angle::Result initDefaultUniformBlocks(const gl::Context *glContext);
+    void generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> &layoutMap,
+                                      gl::ShaderMap<size_t> &requiredBufferSize);
+    void initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> &layoutMap);
+    angle::Result resizeUniformBlockMemory(ContextVk *contextVk,
+                                           gl::ShaderMap<size_t> &requiredBufferSize);
 
     void updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk);

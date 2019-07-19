@@ -677,11 +677,7 @@ void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
     WriteShaderVar(stream, var);
 
     stream->writeInt(var.bufferIndex);
-    stream->writeInt(var.blockInfo.offset);
-    stream->writeInt(var.blockInfo.arrayStride);
-    stream->writeInt(var.blockInfo.matrixStride);
-    stream->writeInt(var.blockInfo.isRowMajorMatrix);
-    stream->writeInt(var.blockInfo.topLevelArrayStride);
+    WriteBlockMemberInfo(stream, var.blockInfo);
     stream->writeInt(var.topLevelArraySize);
 
     for (ShaderType shaderType : AllShaderTypes())
@@ -694,13 +690,9 @@ void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
 {
     LoadShaderVar(stream, var);
 
-    var->bufferIndex                   = stream->readInt<int>();
-    var->blockInfo.offset              = stream->readInt<int>();
-    var->blockInfo.arrayStride         = stream->readInt<int>();
-    var->blockInfo.matrixStride        = stream->readInt<int>();
-    var->blockInfo.isRowMajorMatrix    = stream->readBool();
-    var->blockInfo.topLevelArrayStride = stream->readInt<int>();
-    var->topLevelArraySize             = stream->readInt<int>();
+    var->bufferIndex = stream->readInt<int>();
+    LoadBlockMemberInfo(stream, &var->blockInfo);
+    var->topLevelArraySize = stream->readInt<int>();
 
     for (ShaderType shaderType : AllShaderTypes())
     {
@@ -860,6 +852,24 @@ bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock)
 {
     // Only 'packed' blocks are allowed to be considered inactive.
     return interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED;
+}
+
+void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var)
+{
+    stream->writeInt(var.arrayStride);
+    stream->writeInt(var.isRowMajorMatrix);
+    stream->writeInt(var.matrixStride);
+    stream->writeInt(var.offset);
+    stream->writeInt(var.topLevelArrayStride);
+}
+
+void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var)
+{
+    var->arrayStride         = stream->readInt<int>();
+    var->isRowMajorMatrix    = stream->readBool();
+    var->matrixStride        = stream->readInt<int>();
+    var->offset              = stream->readInt<int>();
+    var->topLevelArrayStride = stream->readInt<int>();
 }
 
 // VariableLocation implementation.
@@ -4561,10 +4571,7 @@ void Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) 
         // FIXME: referenced
 
         stream.writeInt(uniform.bufferIndex);
-        stream.writeInt(uniform.blockInfo.offset);
-        stream.writeInt(uniform.blockInfo.arrayStride);
-        stream.writeInt(uniform.blockInfo.matrixStride);
-        stream.writeInt(uniform.blockInfo.isRowMajorMatrix);
+        WriteBlockMemberInfo(&stream, uniform.blockInfo);
 
         // Active shader info
         for (ShaderType shaderType : gl::AllShaderTypes())
@@ -4759,11 +4766,8 @@ angle::Result Program::deserialize(const Context *context,
         LinkedUniform uniform;
         LoadShaderVar(&stream, &uniform);
 
-        uniform.bufferIndex                = stream.readInt<int>();
-        uniform.blockInfo.offset           = stream.readInt<int>();
-        uniform.blockInfo.arrayStride      = stream.readInt<int>();
-        uniform.blockInfo.matrixStride     = stream.readInt<int>();
-        uniform.blockInfo.isRowMajorMatrix = stream.readBool();
+        uniform.bufferIndex = stream.readInt<int>();
+        LoadBlockMemberInfo(&stream, &uniform.blockInfo);
 
         uniform.typeInfo = &GetUniformTypeInfo(uniform.type);
 

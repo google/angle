@@ -388,6 +388,238 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
     testBinaryAndUBOBlockIndexes(false);
 }
 
+// Tests the difference between uniform static and active use
+TEST_P(ProgramBinaryES3Test, ActiveUniformShader)
+{
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "in vec4 position;\n"
+        "void main() {\n"
+        "    gl_Position = position;\n"
+        "}";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform float values[2];\n"
+        "out vec4 color;\n"
+        "bool isZero(float value) {\n"
+        "    return value == 0.0f;\n"
+        "}\n"
+        "void main() {\n"
+        "    color = isZero(values[1]) ? vec4(1.0f,0.0f,0.0f,1.0f) : vec4(0.0f,1.0f,0.0f,1.0f);\n"
+        "}";
+
+    // Init and draw with the program.
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint valuesLoc = glGetUniformLocation(program.get(), "values");
+    ASSERT_NE(-1, valuesLoc);
+
+    glUseProgram(program.get());
+    GLfloat values[2] = {0.5f, 1.0f};
+    glUniform1fv(valuesLoc, 2, values);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program.get(), GL_PROGRAM_BINARY_LENGTH_OES, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program.get(), programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary and draw.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+
+    valuesLoc = glGetUniformLocation(program.get(), "values");
+    ASSERT_NE(-1, valuesLoc);
+
+    glUseProgram(binaryProgram.get());
+    GLfloat values2[2] = {0.1f, 1.0f};
+    glUniform1fv(valuesLoc, 2, values2);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    drawQuad(binaryProgram.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that uses many uniforms in the shaders
+TEST_P(ProgramBinaryES3Test, BinaryWithLargeUniformCount)
+{
+    // Suspecting AMD driver bug - failure seen on bots running on ATI GPU on Windows.
+    // http://anglebug.com/3721
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && IsWindows());
+
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "uniform float redVS; \n"
+        "uniform block0 {\n"
+        "    float val0;\n"
+        "};\n"
+        "uniform float greenVS; \n"
+        "uniform float blueVS; \n"
+        "in vec4 position;\n"
+        "out vec4 color;\n"
+        "void main() {\n"
+        "    gl_Position = position;\n"
+        "    color = vec4(redVS + val0, greenVS, blueVS, 1.0f);\n"
+        "}";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform float redFS; \n"
+        "uniform float greenFS; \n"
+        "uniform block1 {\n"
+        "    float val1;\n"
+        "    float val2;\n"
+        "};\n"
+        "uniform float blueFS; \n"
+        "in vec4 color;\n"
+        "out vec4 colorOut;\n"
+        "void main() {\n"
+        "    colorOut = vec4(color.r + redFS,\n"
+        "                    color.g + greenFS + val1,\n"
+        "                    color.b + blueFS + val2, \n"
+        "                    color.a);\n"
+        "}";
+
+    // Init and draw with the program.
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    float block0Data[4] = {-0.7f, 1.0f, 1.0f, 1.0f};
+    float block1Data[4] = {0.4f, -0.8f, 1.0f, 1.0f};
+    GLuint bindIndex0   = 5;
+    GLuint bindIndex1   = 2;
+
+    GLBuffer ubo0;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo0.get());
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(block0Data), &block0Data, GL_STATIC_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, bindIndex0, ubo0.get(), 0, sizeof(block0Data));
+    ASSERT_GL_NO_ERROR();
+
+    GLBuffer ubo1;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo1.get());
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(block1Data), &block1Data, GL_STATIC_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, bindIndex1, ubo1.get(), 0, sizeof(block1Data));
+    ASSERT_GL_NO_ERROR();
+
+    GLint block0Index = glGetUniformBlockIndex(program.get(), "block0");
+    ASSERT_NE(-1, block0Index);
+
+    GLint block1Index = glGetUniformBlockIndex(program.get(), "block1");
+    ASSERT_NE(-1, block1Index);
+
+    glUniformBlockBinding(program.get(), block0Index, bindIndex0);
+    glUniformBlockBinding(program.get(), block1Index, bindIndex1);
+    ASSERT_GL_NO_ERROR();
+
+    GLint redVSLoc = glGetUniformLocation(program.get(), "redVS");
+    ASSERT_NE(-1, redVSLoc);
+    GLint greenVSLoc = glGetUniformLocation(program.get(), "greenVS");
+    ASSERT_NE(-1, greenVSLoc);
+    GLint blueVSLoc = glGetUniformLocation(program.get(), "blueVS");
+    ASSERT_NE(-1, blueVSLoc);
+    GLint redFSLoc = glGetUniformLocation(program.get(), "redFS");
+    ASSERT_NE(-1, redFSLoc);
+    GLint greenFSLoc = glGetUniformLocation(program.get(), "greenFS");
+    ASSERT_NE(-1, greenFSLoc);
+    GLint blueFSLoc = glGetUniformLocation(program.get(), "blueFS");
+    ASSERT_NE(-1, blueFSLoc);
+
+    glUseProgram(program.get());
+    glUniform1f(redVSLoc, 0.6f);
+    glUniform1f(greenVSLoc, 0.2f);
+    glUniform1f(blueVSLoc, 1.1f);
+    glUniform1f(redFSLoc, 0.1f);
+    glUniform1f(greenFSLoc, 0.4f);
+    glUniform1f(blueFSLoc, 0.7f);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program.get(), GL_PROGRAM_BINARY_LENGTH_OES, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program.get(), programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary and draw.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+
+    redVSLoc = glGetUniformLocation(program.get(), "redVS");
+    ASSERT_NE(-1, redVSLoc);
+    greenVSLoc = glGetUniformLocation(program.get(), "greenVS");
+    ASSERT_NE(-1, greenVSLoc);
+    blueVSLoc = glGetUniformLocation(program.get(), "blueVS");
+    ASSERT_NE(-1, blueVSLoc);
+    redFSLoc = glGetUniformLocation(program.get(), "redFS");
+    ASSERT_NE(-1, redFSLoc);
+    greenFSLoc = glGetUniformLocation(program.get(), "greenFS");
+    ASSERT_NE(-1, greenFSLoc);
+    blueFSLoc = glGetUniformLocation(program.get(), "blueFS");
+    ASSERT_NE(-1, blueFSLoc);
+
+    glUseProgram(binaryProgram.get());
+    glUniform1f(redVSLoc, 0.2f);
+    glUniform1f(greenVSLoc, -0.6f);
+    glUniform1f(blueVSLoc, 1.0f);
+    glUniform1f(redFSLoc, 1.5f);
+    glUniform1f(greenFSLoc, 0.2f);
+    glUniform1f(blueFSLoc, 0.8f);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    drawQuad(binaryProgram.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+}
+
 ANGLE_INSTANTIATE_TEST(ProgramBinaryES3Test,
                        ES3_D3D11(),
                        ES3_OPENGL(),

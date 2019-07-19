@@ -43,6 +43,7 @@ namespace gl
 {
 class Buffer;
 class BinaryInputStream;
+class BinaryOutputStream;
 struct Caps;
 class Context;
 struct Extensions;
@@ -164,6 +165,9 @@ void LogLinkMismatch(InfoLog &infoLog,
                      ShaderType shaderType2);
 
 bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
+
+void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var);
+void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation

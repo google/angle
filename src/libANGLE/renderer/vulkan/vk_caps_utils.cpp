@@ -331,6 +331,10 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxSamples = vk_gl::GetMaxSampleCount(sampleCounts);
 
     mNativeCaps.subPixelBits = limitsVk.subPixelPrecisionBits;
+
+    // Enable Program Binary extension.
+    mNativeExtensions.getProgramBinary = true;
+    mNativeCaps.programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
 }
 
 namespace egl_vk
