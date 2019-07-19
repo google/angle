@@ -83,7 +83,7 @@ SamplerGL::~SamplerGL()
     mSamplerID = 0;
 }
 
-void SamplerGL::syncState(const gl::Context *context)
+angle::Result SamplerGL::syncState(const gl::Context *context)
 {
     // clang-format off
     SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_MIN_FILTER, &gl::SamplerState::getMinFilter, &gl::SamplerState::setMinFilter);
@@ -99,6 +99,7 @@ void SamplerGL::syncState(const gl::Context *context)
     SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_SRGB_DECODE_EXT, &gl::SamplerState::getSRGBDecode, &gl::SamplerState::setSRGBDecode);
     SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_BORDER_COLOR, &gl::SamplerState::getBorderColor, &gl::SamplerState::setBorderColor);
     // clang-format on
+    return angle::Result::Continue;
 }
 
 GLuint SamplerGL::getSamplerID() const

@@ -20,6 +20,8 @@ class SamplerVk : public SamplerImpl
   public:
     SamplerVk(const gl::SamplerState &state);
     ~SamplerVk() override;
+
+    angle::Result syncState(const gl::Context *context) override;
 };
 
 }  // namespace rx

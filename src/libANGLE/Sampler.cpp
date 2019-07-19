@@ -178,10 +178,10 @@ rx::SamplerImpl *Sampler::getImplementation() const
     return mImpl;
 }
 
-void Sampler::syncState(const Context *context)
+angle::Result Sampler::syncState(const Context *context)
 {
     // TODO(jmadill): Use actual dirty bits for sampler.
-    mImpl->syncState(context);
+    return mImpl->syncState(context);
 }
 
 }  // namespace gl

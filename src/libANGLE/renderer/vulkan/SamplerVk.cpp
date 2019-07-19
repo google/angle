@@ -18,4 +18,9 @@ SamplerVk::SamplerVk(const gl::SamplerState &state) : SamplerImpl(state) {}
 
 SamplerVk::~SamplerVk() {}
 
+angle::Result SamplerVk::syncState(const gl::Context *context)
+{
+    return angle::Result::Continue;
+}
+
 }  // namespace rx

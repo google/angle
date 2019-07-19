@@ -75,7 +75,7 @@ class Sampler final : public RefCountObject, public LabeledObject, public angle:
 
     rx::SamplerImpl *getImplementation() const;
 
-    void syncState(const Context *context);
+    angle::Result syncState(const Context *context);
 
   private:
     SamplerState mState;
