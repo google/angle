@@ -425,6 +425,26 @@ void LoadX24S8ToS8(size_t width,
                    size_t outputRowPitch,
                    size_t outputDepthPitch);
 
+void LoadX32S8ToS8(size_t width,
+                   size_t height,
+                   size_t depth,
+                   const uint8_t *input,
+                   size_t inputRowPitch,
+                   size_t inputDepthPitch,
+                   uint8_t *output,
+                   size_t outputRowPitch,
+                   size_t outputDepthPitch);
+
+void LoadD32FS8X24ToD32F(size_t width,
+                         size_t height,
+                         size_t depth,
+                         const uint8_t *input,
+                         size_t inputRowPitch,
+                         size_t inputDepthPitch,
+                         uint8_t *output,
+                         size_t outputRowPitch,
+                         size_t outputDepthPitch);
+
 void LoadD32FS8X24ToD32FS8X24(size_t width,
                               size_t height,
                               size_t depth,
