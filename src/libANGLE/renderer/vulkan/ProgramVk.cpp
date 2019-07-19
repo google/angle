@@ -930,17 +930,11 @@ void ProgramVk::setUniformMatrixfv(GLint location,
             continue;
         }
 
-        bool updated = SetFloatUniformMatrixGLSL<cols, rows>::Run(
+        SetFloatUniformMatrixGLSL<cols, rows>::Run(
             locationInfo.arrayIndex, linkedUniform.getArraySizeProduct(), count, transpose, value,
             uniformBlock.uniformData.data() + layoutInfo.offset);
 
-        // If the uniformsDirty flag was true, we don't want to flip it to false here if the
-        // setter did not update any data. We still want the uniform to be included when we'll
-        // update the descriptor sets.
-        if (updated)
-        {
-            mDefaultUniformBlocksDirty.set(shaderType);
-        }
+        mDefaultUniformBlocksDirty.set(shaderType);
     }
 }
 

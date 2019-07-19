@@ -269,7 +269,7 @@ class IncompleteTextureSet final : angle::NonCopyable
 template <int cols, int rows>
 struct SetFloatUniformMatrixGLSL
 {
-    static bool Run(unsigned int arrayElementOffset,
+    static void Run(unsigned int arrayElementOffset,
                     unsigned int elementCount,
                     GLsizei countIn,
                     GLboolean transpose,
@@ -280,7 +280,7 @@ struct SetFloatUniformMatrixGLSL
 template <int cols, int rows>
 struct SetFloatUniformMatrixHLSL
 {
-    static bool Run(unsigned int arrayElementOffset,
+    static void Run(unsigned int arrayElementOffset,
                     unsigned int elementCount,
                     GLsizei countIn,
                     GLboolean transpose,
