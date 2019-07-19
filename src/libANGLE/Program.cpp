@@ -621,6 +621,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeInt(var.staticUse);
     stream->writeInt(var.active);
     stream->writeString(var.structName);
+    stream->writeInt(var.hasParentArrayIndex() ? var.parentArrayIndex() : -1);
     ASSERT(var.fields.empty());
 }
 
@@ -634,6 +635,7 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->staticUse  = stream->readBool();
     var->active     = stream->readBool();
     var->structName = stream->readString();
+    var->setParentArrayIndex(stream->readInt<int>());
 }
 
 void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
