@@ -121,6 +121,12 @@ class FramebufferGL : public FramebufferImpl
                                      gl::Rectangle *newSourceArea,
                                      gl::Rectangle *newDestArea);
 
+    angle::Result clipSrcRegion(const gl::Context *context,
+                                const gl::Rectangle &sourceArea,
+                                const gl::Rectangle &destArea,
+                                gl::Rectangle *newSourceArea,
+                                gl::Rectangle *newDestArea);
+
     GLuint mFramebufferID;
     bool mIsDefault;
 

@@ -331,6 +331,13 @@ struct FeaturesGL : FeatureSetBase
         "adjust_src_dst_region_for_blitframebuffer", FeatureCategory::OpenGLWorkarounds,
         "Many platforms have issues with blitFramebuffer when the parameters are large.", &members,
         "http://crbug.com/830046"};
+
+    // BlitFramebuffer has issues on Mac when the source bounds aren't enclosed by the framebuffer.
+    // This workaround clips the source region and adjust the dest region proportionally.
+    Feature clipSrcRegionBlitFramebuffer = {
+        "clip_src_region_for_blitframebuffer", FeatureCategory::OpenGLWorkarounds,
+        "Mac has issues with blitFramebuffer when the parameters don't match the framebuffer size.",
+        &members, "http://crbug.com/830046"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
