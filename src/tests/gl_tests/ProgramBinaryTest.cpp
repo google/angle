@@ -877,6 +877,9 @@ TEST_P(ProgramBinaryTransformFeedbackTest, GetTransformFeedbackVarying)
 
     ANGLE_SKIP_TEST_IF(!getAvailableProgramBinaryFormatCount());
 
+    // http://anglebug.com/3690
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsPixel2() && IsVulkan());
+
     std::vector<uint8_t> binary(0);
     GLint programLength = 0;
     GLint writtenLength = 0;
