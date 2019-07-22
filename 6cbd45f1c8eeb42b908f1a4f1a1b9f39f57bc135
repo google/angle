@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac5c0547_7edac34c",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-22T18:46:18Z",
+      "side": 1,
+      "message": "nit: desktop GLSL shaders only.",
+      "range": {
+        "startLine": 28,
+        "startChar": 38,
+        "endLine": 28,
+        "endChar": 43
+      },
+      "revId": "6cbd45f1c8eeb42b908f1a4f1a1b9f39f57bc135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

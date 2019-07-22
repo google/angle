@@ -447,6 +447,30 @@
     },
     {
       "key": {
+        "uuid": "f8b7c589_ae253e26",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-22T18:46:18Z",
+      "side": 1,
+      "message": "I see. Can you move IsValidImplicitConversion into util.h in that case please? We should avoid circular includes when possible.",
+      "parentUuid": "ecc83da4_32938140",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ce7c575f_8a088984",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 19
