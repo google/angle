@@ -645,7 +645,7 @@ class ImageHelper final : public CommandGraphResource
 
     angle::Result init(Context *context,
                        gl::TextureType textureType,
-                       const gl::Extents &extents,
+                       const gl::Extents &glExtents,
                        const Format &format,
                        GLint samples,
                        VkImageUsageFlags usage,
@@ -653,7 +653,7 @@ class ImageHelper final : public CommandGraphResource
                        uint32_t layerCount);
     angle::Result initExternal(Context *context,
                                gl::TextureType textureType,
-                               const gl::Extents &extents,
+                               const gl::Extents &glExtents,
                                const Format &format,
                                GLint samples,
                                VkImageUsageFlags usage,
@@ -693,7 +693,7 @@ class ImageHelper final : public CommandGraphResource
     //
     angle::Result init2DStaging(Context *context,
                                 const MemoryProperties &memoryProperties,
-                                const gl::Extents &extent,
+                                const gl::Extents &glExtents,
                                 const Format &format,
                                 VkImageUsageFlags usage,
                                 uint32_t layerCount);
@@ -711,7 +711,7 @@ class ImageHelper final : public CommandGraphResource
     void dumpResources(Serial serial, std::vector<GarbageObject> *garbageQueue);
 
     void init2DWeakReference(VkImage handle,
-                             const gl::Extents &extents,
+                             const gl::Extents &glExtents,
                              const Format &format,
                              GLint samples);
     void resetImageWeakReference();
@@ -760,7 +760,7 @@ class ImageHelper final : public CommandGraphResource
 
     angle::Result stageSubresourceUpdate(ContextVk *contextVk,
                                          const gl::ImageIndex &index,
-                                         const gl::Extents &extents,
+                                         const gl::Extents &glExtents,
                                          const gl::Offset &offset,
                                          const gl::InternalFormat &formatInfo,
                                          const gl::PixelUnpackState &unpack,
@@ -771,7 +771,7 @@ class ImageHelper final : public CommandGraphResource
     angle::Result stageSubresourceUpdateAndGetData(ContextVk *contextVk,
                                                    size_t allocationSize,
                                                    const gl::ImageIndex &imageIndex,
-                                                   const gl::Extents &extents,
+                                                   const gl::Extents &glExtents,
                                                    const gl::Offset &offset,
                                                    uint8_t **destData);
 
@@ -786,7 +786,7 @@ class ImageHelper final : public CommandGraphResource
     void stageSubresourceUpdateFromImage(vk::ImageHelper *image,
                                          const gl::ImageIndex &index,
                                          const gl::Offset &destOffset,
-                                         const gl::Extents &extents);
+                                         const gl::Extents &glExtents);
 
     // Stage a clear operation to a clear value based on WebGL requirements.
     void stageSubresourceRobustClear(const gl::ImageIndex &index, const angle::Format &format);
