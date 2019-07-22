@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b0a93e1_923136a4",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-22T14:35:21Z",
+      "side": 1,
+      "message": "nit: can this be const \u0026 ?",
+      "range": {
+        "startLine": 115,
+        "startChar": 9,
+        "endLine": 115,
+        "endChar": 25
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8456d9c_8dfc75ae",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 2113,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-22T14:35:21Z",
+      "side": 1,
+      "message": "rather I was suggesting you move this whole case block into a helper. non-blocking though.",
+      "range": {
+        "startLine": 2102,
+        "startChar": 8,
+        "endLine": 2113,
+        "endChar": 28
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfbde0e0_65d5a2e3",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2019-07-22T14:35:21Z",
+      "side": 1,
+      "message": "you can remove this if you are include util.h.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
