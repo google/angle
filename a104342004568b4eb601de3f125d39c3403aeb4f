@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "604fa60d_b6468425",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2019-07-22T19:11:51Z",
+      "side": 1,
+      "message": "I don\u0027t disagree with the functionality, I just mean that this case is probably impossible for the same reason it\u0027s impossible in the other functions. If I\u0027m right to understand that this is impossible, I\u0027d rather see it ASSERTed, so if it breaks we have a hole in our logic.",
+      "parentUuid": "150e2fc7_47af001b",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd852ea_e1b07dc0",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 19
