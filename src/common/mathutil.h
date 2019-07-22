@@ -1254,14 +1254,20 @@ inline constexpr unsigned int UnsignedCeilDivide(unsigned int value, unsigned in
     return (divided + ((value % divisor == 0) ? 0 : 1));
 }
 
+#if defined(__has_builtin)
+#    define ANGLE_HAS_BUILTIN(x) __has_builtin(x)
+#else
+#    define ANGLE_HAS_BUILTIN(x) 0
+#endif
+
 #if defined(_MSC_VER)
 
 #    define ANGLE_ROTL(x, y) _rotl(x, y)
 #    define ANGLE_ROTL64(x, y) _rotl64(x, y)
 #    define ANGLE_ROTR16(x, y) _rotr16(x, y)
 
-#elif defined(__clang__) && __has_builtin(__builtin_rotateleft32) && \
-    __has_builtin(__builtin_rotateleft64) && __has_builtin(__builtin_rotateright16)
+#elif defined(__clang__) && ANGLE_HAS_BUILTIN(__builtin_rotateleft32) && \
+    ANGLE_HAS_BUILTIN(__builtin_rotateleft64) && ANGLE_HAS_BUILTIN(__builtin_rotateright16)
 
 #    define ANGLE_ROTL(x, y) __builtin_rotateleft32(x, y)
 #    define ANGLE_ROTL64(x, y) __builtin_rotateleft64(x, y)
