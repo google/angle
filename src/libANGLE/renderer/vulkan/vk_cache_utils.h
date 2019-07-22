@@ -897,7 +897,7 @@ class PipelineLayoutCache final : angle::NonCopyable
 //   correspond to default uniforms in the vertex and fragment shaders respectively.  Additionally,
 //   transform feedback buffers are bound from binding 2 and up.
 // - Set 1 contains all textures.
-// - Set 2 contains all uniform and storage blocks.
+// - Set 2 contains all other shader resources.
 // - Set 3 contains the ANGLE driver uniforms at binding 0.  Note that driver uniforms are updated
 //   only under rare circumstances, such as viewport or depth range change.  However, there is only
 //   one binding in this set.
@@ -906,8 +906,8 @@ class PipelineLayoutCache final : angle::NonCopyable
 constexpr uint32_t kUniformsAndXfbDescriptorSetIndex = 0;
 // Textures set index:
 constexpr uint32_t kTextureDescriptorSetIndex = 1;
-// Uniform blocks set index:
-constexpr uint32_t kBufferDescriptorSetIndex = 2;
+// Other shader resources set index:
+constexpr uint32_t kShaderResourceDescriptorSetIndex = 2;
 // ANGLE driver uniforms set index (binding is always 3):
 constexpr uint32_t kDriverUniformsDescriptorSetIndex = 3;
 

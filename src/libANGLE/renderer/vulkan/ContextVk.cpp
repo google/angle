@@ -206,13 +206,13 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TEXTURES);
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS);
+    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
     mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 
     mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_PIPELINE);
     mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_TEXTURES);
-    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS);
+    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
     mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] =
@@ -224,8 +224,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_INDEX_BUFFER] = &ContextVk::handleDirtyGraphicsIndexBuffer;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] =
         &ContextVk::handleDirtyGraphicsDriverUniforms;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS] =
-        &ContextVk::handleDirtyGraphicsUniformAndStorageBuffers;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_SHADER_RESOURCES] =
+        &ContextVk::handleDirtyGraphicsShaderResources;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS] =
         &ContextVk::handleDirtyGraphicsTransformFeedbackBuffers;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] =
@@ -233,8 +233,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
 
     mComputeDirtyBitHandlers[DIRTY_BIT_PIPELINE] = &ContextVk::handleDirtyComputePipeline;
     mComputeDirtyBitHandlers[DIRTY_BIT_TEXTURES] = &ContextVk::handleDirtyComputeTextures;
-    mComputeDirtyBitHandlers[DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS] =
-        &ContextVk::handleDirtyComputeUniformAndStorageBuffers;
+    mComputeDirtyBitHandlers[DIRTY_BIT_SHADER_RESOURCES] =
+        &ContextVk::handleDirtyComputeShaderResources;
     mComputeDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] =
         &ContextVk::handleDirtyComputeDescriptorSets;
 
@@ -678,31 +678,29 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(const gl::Context *conte
     return angle::Result::Continue;
 }
 
-ANGLE_INLINE angle::Result ContextVk::handleDirtyUniformAndStorageBuffersImpl(
+ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     const gl::Context *context,
     vk::CommandBuffer *commandBuffer,
     vk::CommandGraphResource *recorder)
 {
     if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers())
     {
-        ANGLE_TRY(mProgram->updateUniformAndStorageBuffersDescriptorSet(this, recorder));
+        ANGLE_TRY(mProgram->updateShaderResourcesDescriptorSet(this, recorder));
     }
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyGraphicsUniformAndStorageBuffers(
-    const gl::Context *context,
-    vk::CommandBuffer *commandBuffer)
+angle::Result ContextVk::handleDirtyGraphicsShaderResources(const gl::Context *context,
+                                                            vk::CommandBuffer *commandBuffer)
 {
-    return handleDirtyUniformAndStorageBuffersImpl(context, commandBuffer,
-                                                   mDrawFramebuffer->getFramebuffer());
+    return handleDirtyShaderResourcesImpl(context, commandBuffer,
+                                          mDrawFramebuffer->getFramebuffer());
 }
 
-angle::Result ContextVk::handleDirtyComputeUniformAndStorageBuffers(
-    const gl::Context *context,
-    vk::CommandBuffer *commandBuffer)
+angle::Result ContextVk::handleDirtyComputeShaderResources(const gl::Context *context,
+                                                           vk::CommandBuffer *commandBuffer)
 {
-    return handleDirtyUniformAndStorageBuffersImpl(context, commandBuffer, &mDispatcher);
+    return handleDirtyShaderResourcesImpl(context, commandBuffer, &mDispatcher);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffers(
@@ -1698,7 +1696,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 invalidateCurrentTextures();
-                invalidateCurrentUniformAndStorageBuffers();
+                invalidateCurrentShaderResources();
                 if (glState.getProgram()->isCompute())
                 {
                     invalidateCurrentComputePipeline();
@@ -1726,12 +1724,13 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // Nothing to do.
                 break;
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
-                invalidateCurrentUniformAndStorageBuffers();
+                invalidateCurrentShaderResources();
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                invalidateCurrentUniformAndStorageBuffers();
+                invalidateCurrentShaderResources();
                 break;
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
+                invalidateCurrentShaderResources();
                 break;
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
                 break;
@@ -1951,14 +1950,14 @@ void ContextVk::invalidateCurrentTextures()
     }
 }
 
-void ContextVk::invalidateCurrentUniformAndStorageBuffers()
+void ContextVk::invalidateCurrentShaderResources()
 {
     ASSERT(mProgram);
     if (mProgram->hasUniformBuffers() || mProgram->hasStorageBuffers())
     {
-        mGraphicsDirtyBits.set(DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS);
+        mGraphicsDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-        mComputeDirtyBits.set(DIRTY_BIT_UNIFORM_AND_STORAGE_BUFFERS);
+        mComputeDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
         mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
 }

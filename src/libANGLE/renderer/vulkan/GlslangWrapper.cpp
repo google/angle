@@ -717,7 +717,7 @@ uint32_t AssignInterfaceBlockBindings(const std::vector<gl::InterfaceBlock> &blo
                                       uint32_t bindingStart,
                                       gl::ShaderMap<IntermediateShaderSource> *shaderSources)
 {
-    const std::string buffersDescriptorSet = "set = " + Str(kBufferDescriptorSetIndex);
+    const std::string resourcesDescriptorSet = "set = " + Str(kShaderResourceDescriptorSetIndex);
 
     uint32_t bindingIndex = bindingStart;
     for (const gl::InterfaceBlock &block : blocks)
@@ -725,7 +725,7 @@ uint32_t AssignInterfaceBlockBindings(const std::vector<gl::InterfaceBlock> &blo
         if (!block.isArray || block.arrayElement == 0)
         {
             const std::string bindingString =
-                buffersDescriptorSet + ", binding = " + Str(bindingIndex++);
+                resourcesDescriptorSet + ", binding = " + Str(bindingIndex++);
 
             AssignResourceBinding(block.activeShaders(), block.name, bindingString, qualifier,
                                   kUnusedBlockSubstitution, shaderSources);

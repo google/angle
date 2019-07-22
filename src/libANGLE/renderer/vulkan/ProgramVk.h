@@ -107,8 +107,8 @@ class ProgramVk : public ProgramImpl
 
     angle::Result updateUniforms(ContextVk *contextVk);
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
-    angle::Result updateUniformAndStorageBuffersDescriptorSet(ContextVk *contextVk,
-                                                              vk::CommandGraphResource *recorder);
+    angle::Result updateShaderResourcesDescriptorSet(ContextVk *contextVk,
+                                                     vk::CommandGraphResource *recorder);
     angle::Result updateTransformFeedbackDescriptorSet(ContextVk *contextVk,
                                                        vk::FramebufferHelper *framebuffer);
 
