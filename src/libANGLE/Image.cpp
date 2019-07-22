@@ -41,7 +41,7 @@ gl::ImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs
     else
     {
         ASSERT(layer == 0);
-        return gl::ImageIndex::MakeFromTarget(target, mip);
+        return gl::ImageIndex::MakeFromTarget(target, mip, 1);
     }
 }
 

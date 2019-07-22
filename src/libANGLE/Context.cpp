@@ -3818,7 +3818,7 @@ void Context::copyTexSubImage2D(TextureTarget target,
     Offset destOffset(xoffset, yoffset, 0);
     Rectangle sourceArea(x, y, width, height);
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, 1);
 
     Framebuffer *framebuffer = mState.getReadFramebuffer();
     Texture *texture         = getTextureByTarget(target);
@@ -3864,7 +3864,7 @@ void Context::framebufferTexture2D(GLenum target,
     if (texture != 0)
     {
         Texture *textureObj = getTexture(texture);
-        ImageIndex index    = ImageIndex::MakeFromTarget(textarget, level);
+        ImageIndex index    = ImageIndex::MakeFromTarget(textarget, level, 1);
         framebuffer->setAttachment(this, GL_TEXTURE, attachment, index, textureObj);
     }
     else

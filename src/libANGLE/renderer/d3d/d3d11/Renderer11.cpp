@@ -2353,13 +2353,13 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
 
         if (srcTarget == gl::TextureTarget::_2D || srcTarget == gl::TextureTarget::_3D)
         {
-            gl::ImageIndex sourceIndex = gl::ImageIndex::MakeFromTarget(srcTarget, sourceLevel);
+            gl::ImageIndex sourceIndex = gl::ImageIndex::MakeFromTarget(srcTarget, sourceLevel, 1);
 
             UINT sourceSubresource = 0;
             ANGLE_TRY(
                 sourceStorage11->getSubresourceIndex(context, sourceIndex, &sourceSubresource));
 
-            gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
+            gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel, 1);
 
             UINT destSubresource = 0;
             ANGLE_TRY(destStorage11->getSubresourceIndex(context, destIndex, &destSubresource));
@@ -2422,7 +2422,7 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
         if (destTarget == gl::TextureTarget::_2D || destTarget == gl::TextureTarget::_3D ||
             gl::IsCubeMapFaceTarget(destTarget))
         {
-            destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
+            destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel, 1);
         }
         else if (destTarget == gl::TextureTarget::_2DArray)
         {

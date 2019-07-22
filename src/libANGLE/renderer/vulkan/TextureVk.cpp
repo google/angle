@@ -333,7 +333,7 @@ angle::Result TextureVk::copyCompressedTexture(const gl::Context *context,
         contextVk->getRenderer()->getFormat(internalFormat.sizedInternalFormat);
     const gl::Extents size(static_cast<int>(source->getWidth(sourceTarget, sourceLevel)),
                            static_cast<int>(source->getHeight(sourceTarget, sourceLevel)), 1);
-    const gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(sourceTarget, destLevel);
+    const gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(sourceTarget, destLevel, 1);
 
     ANGLE_TRY(redefineImage(context, destIndex, vkFormat, size));
 

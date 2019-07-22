@@ -1021,7 +1021,7 @@ angle::Result Texture::setImage(Context *context,
     ANGLE_TRY(releaseTexImageInternal(context));
     ANGLE_TRY(orphanImages(context));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, size.depth);
 
     ANGLE_TRY(mTexture->setImage(context, index, internalFormat, size, format, type, unpackState,
                                  pixels));
@@ -1050,7 +1050,7 @@ angle::Result Texture::setSubImage(Context *context,
 
     ANGLE_TRY(ensureSubImageInitialized(context, target, level, area));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, area.depth);
 
     ANGLE_TRY(mTexture->setSubImage(context, index, area, format, type, unpackState, unpackBuffer,
                                     pixels));
@@ -1077,7 +1077,7 @@ angle::Result Texture::setCompressedImage(Context *context,
     ANGLE_TRY(releaseTexImageInternal(context));
     ANGLE_TRY(orphanImages(context));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, size.depth);
 
     ANGLE_TRY(mTexture->setCompressedImage(context, index, internalFormat, size, unpackState,
                                            imageSize, pixels));
@@ -1102,7 +1102,7 @@ angle::Result Texture::setCompressedSubImage(const Context *context,
 
     ANGLE_TRY(ensureSubImageInitialized(context, target, level, area));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, area.depth);
 
     ANGLE_TRY(mTexture->setCompressedSubImage(context, index, area, format, unpackState, imageSize,
                                               pixels));
@@ -1129,7 +1129,7 @@ angle::Result Texture::copyImage(Context *context,
     Box destBox(0, 0, 0, sourceArea.width, sourceArea.height, 1);
     ANGLE_TRY(ensureSubImageInitialized(context, target, level, destBox));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, 1);
 
     ANGLE_TRY(mTexture->copyImage(context, index, sourceArea, internalFormat, source));
 
@@ -1190,7 +1190,7 @@ angle::Result Texture::copyTexture(Context *context,
     // Note: we don't have a way to notify which portions of the image changed currently.
     ANGLE_TRY(source->ensureInitialized(context));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, ImageIndex::kEntireLevel);
 
     ANGLE_TRY(mTexture->copyTexture(context, index, internalFormat, type, sourceLevel, unpackFlipY,
                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source));
@@ -1227,7 +1227,7 @@ angle::Result Texture::copySubTexture(const Context *context,
                 sourceBox.depth);
     ANGLE_TRY(ensureSubImageInitialized(context, target, level, destBox));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, sourceBox.depth);
 
     ANGLE_TRY(mTexture->copySubTexture(context, index, destOffset, sourceLevel, sourceBox,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
@@ -1300,7 +1300,7 @@ angle::Result Texture::setImageExternal(Context *context,
     ANGLE_TRY(releaseTexImageInternal(context));
     ANGLE_TRY(orphanImages(context));
 
-    ImageIndex index = ImageIndex::MakeFromTarget(target, level);
+    ImageIndex index = ImageIndex::MakeFromTarget(target, level, size.depth);
 
     ANGLE_TRY(mTexture->setImageExternal(context, index, internalFormat, size, format, type));
 
@@ -1807,8 +1807,9 @@ angle::Result Texture::ensureSubImageInitialized(const Context *context,
 
     // Pre-initialize the texture contents if necessary.
     // TODO(jmadill): Check if area overlaps the entire texture.
-    ImageIndex imageIndex = ImageIndex::MakeFromTarget(target, static_cast<GLint>(level));
-    const auto &desc      = mState.getImageDesc(imageIndex);
+    ImageIndex imageIndex =
+        ImageIndex::MakeFromTarget(target, static_cast<GLint>(level), area.depth);
+    const auto &desc = mState.getImageDesc(imageIndex);
     if (desc.initState == InitState::MayNeedInit)
     {
         ASSERT(mState.mInitState == InitState::MayNeedInit);
