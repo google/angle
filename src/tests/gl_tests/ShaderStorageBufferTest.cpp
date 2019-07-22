@@ -515,6 +515,9 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
 // Test that the shader works well with an active SSBO but not statically used.
 TEST_P(ShaderStorageBufferTest31, ActiveSSBOButNotStaticallyUsed)
 {
+    // http://anglebug.com/3725
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsPixel2() && IsVulkan());
+
     constexpr char kComputeShaderSource[] =
         R"(#version 310 es
  layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
