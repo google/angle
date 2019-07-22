@@ -229,6 +229,7 @@ void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> 
                                      VkDescriptorType descType,
                                      uint32_t bindingIndex,
                                      uint32_t arrayElement,
+                                     VkDeviceSize requiredOffsetAlignment,
                                      VkDescriptorBufferInfo *bufferInfoOut,
                                      VkWriteDescriptorSet *writeInfoOut)
 {
@@ -241,7 +242,7 @@ void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> 
     ASSERT(bufferBinding.getSize() >= 0);
 
     BufferVk *bufferVk             = vk::GetImpl(buffer);
-    GLintptr offset                = bufferBinding.getOffset();
+    VkDeviceSize offset            = bufferBinding.getOffset();
     VkDeviceSize size              = bufferBinding.getSize();
     vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
@@ -253,6 +254,19 @@ void WriteBufferDescriptorSetBinding(const gl::OffsetBindingPointer<gl::Buffer> 
     if (maxSize > 0)
     {
         size = std::min(size, maxSize);
+    }
+
+    // If requiredOffsetAlignment is 0, the buffer offset is guaranteed to have the necessary
+    // alignment through other means (the backend specifying the alignment through a GLES limit that
+    // the frontend then enforces).  If it's not 0, we need to bind the buffer at an offset that's
+    // aligned.  The difference in offsets is communicated to the shader via driver uniforms.
+    if (requiredOffsetAlignment)
+    {
+        VkDeviceSize alignedOffset = (offset / requiredOffsetAlignment) * requiredOffsetAlignment;
+        VkDeviceSize offsetDiff    = offset - alignedOffset;
+
+        offset = alignedOffset;
+        size += offsetDiff;
     }
 
     bufferInfoOut->buffer = bufferHelper.getBuffer().getHandle();
@@ -565,8 +579,10 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     ANGLE_TRY(renderer->getDescriptorSetLayout(contextVk, texturesSetDesc,
                                                &mDescriptorSetLayouts[kTextureDescriptorSetIndex]));
 
+    VkShaderStageFlags driverUniformsStages =
+        mState.isCompute() ? VK_SHADER_STAGE_COMPUTE_BIT : VK_SHADER_STAGE_ALL_GRAPHICS;
     vk::DescriptorSetLayoutDesc driverUniformsSetDesc =
-        contextVk->getDriverUniformsDescriptorSetDesc();
+        contextVk->getDriverUniformsDescriptorSetDesc(driverUniformsStages);
     ANGLE_TRY(renderer->getDescriptorSetLayout(
         contextVk, driverUniformsSetDesc,
         &mDescriptorSetLayouts[kDriverUniformsDescriptorSetIndex]));
@@ -1238,7 +1254,7 @@ void ProgramVk::updateBuffersDescriptorSet(ContextVk *contextVk,
         VkWriteDescriptorSet &writeInfo    = writeDescriptorInfo[writeCount];
 
         WriteBufferDescriptorSetBinding(bufferBinding, maxBlockSize, descriptorSet, descriptorType,
-                                        binding, arrayElement, &bufferInfo, &writeInfo);
+                                        binding, arrayElement, 0, &bufferInfo, &writeInfo);
 
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
@@ -1281,6 +1297,10 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
     gl::AtomicCounterBuffersArray<VkWriteDescriptorSet> writeDescriptorInfo;
     gl::AtomicCounterBufferMask writtenBindings;
 
+    RendererVk *rendererVk = contextVk->getRenderer();
+    const VkDeviceSize requiredOffsetAlignment =
+        rendererVk->getPhysicalDeviceProperties().limits.minStorageBufferOffsetAlignment;
+
     // Write atomic counter buffers.
     for (uint32_t bufferIndex = 0; bufferIndex < atomicCounterBuffers.size(); ++bufferIndex)
     {
@@ -1299,7 +1319,7 @@ void ProgramVk::updateAtomicCounterBuffersDescriptorSet(ContextVk *contextVk,
 
         WriteBufferDescriptorSetBinding(bufferBinding, 0, descriptorSet,
                                         VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, bindingStart, binding,
-                                        &bufferInfo, &writeInfo);
+                                        requiredOffsetAlignment, &bufferInfo, &writeInfo);
 
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();

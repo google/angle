@@ -300,7 +300,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     RenderPassCache &getRenderPassCache() { return mRenderPassCache; }
 
-    vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc() const;
+    vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc(
+        VkShaderStageFlags shaderStages) const;
 
     // We use texture serials to optimize texture binding updates. Each permutation of a
     // {VkImage/VkSampler} generates a unique serial. These serials are combined to form a unique
@@ -334,6 +335,15 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
+
+    enum class PipelineType
+    {
+        Graphics = 0,
+        Compute  = 1,
+
+        InvalidEnum = 2,
+        EnumCount   = 2,
+    };
 
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
@@ -386,6 +396,7 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void invalidateCurrentTextures();
     void invalidateCurrentShaderResources();
+    void invalidateGraphicsDriverUniforms();
     void invalidateDriverUniforms();
 
     // Handlers for graphics pipeline dirty bits.
@@ -413,6 +424,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
                                              vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyComputeTextures(const gl::Context *context,
                                              vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyComputeDriverUniforms(const gl::Context *context,
+                                                   vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyComputeShaderResources(const gl::Context *context,
                                                     vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyComputeDescriptorSets(const gl::Context *context,
@@ -425,6 +438,21 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     angle::Result handleDirtyShaderResourcesImpl(const gl::Context *context,
                                                  vk::CommandBuffer *commandBuffer,
                                                  vk::CommandGraphResource *recorder);
+    struct DriverUniformsDescriptorSet;
+    angle::Result handleDirtyDescriptorSetsImpl(vk::CommandBuffer *commandBuffer,
+                                                VkPipelineBindPoint bindPoint,
+                                                const DriverUniformsDescriptorSet &driverUniforms);
+    angle::Result allocateDriverUniforms(size_t driverUniformsSize,
+                                         DriverUniformsDescriptorSet *driverUniforms,
+                                         VkBuffer *bufferOut,
+                                         uint8_t **ptrOut,
+                                         bool *newBufferOut);
+    angle::Result updateDriverUniformsDescriptorSet(VkBuffer buffer,
+                                                    bool newBuffer,
+                                                    size_t driverUniformsSize,
+                                                    DriverUniformsDescriptorSet *driverUniforms);
+
+    void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
                               vk::PrimaryCommandBuffer &&commandBuffer);
@@ -503,27 +531,22 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // at the end of the command buffer to make that write available to the host.
     bool mIsAnyHostVisibleBufferWritten;
 
-    // For shader uniforms such as gl_DepthRange and the viewport size.
-    struct DriverUniforms
+    struct DriverUniformsDescriptorSet
     {
-        std::array<float, 4> viewport;
+        vk::DynamicBuffer dynamicBuffer;
+        VkDescriptorSet descriptorSet;
+        uint32_t dynamicOffset;
+        vk::BindingPointer<vk::DescriptorSetLayout> descriptorSetLayout;
+        vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
 
-        float halfRenderAreaHeight;
-        float viewportYScale;
-        float negViewportYScale;
-        uint32_t xfbActiveUnpaused;
+        DriverUniformsDescriptorSet();
+        ~DriverUniformsDescriptorSet();
 
-        std::array<int32_t, 4> xfbBufferOffsets;
-
-        // We'll use x, y, z for near / far / diff respectively.
-        std::array<float, 4> depthRange;
+        void init(RendererVk *rendererVk);
+        void destroy(VkDevice device);
     };
 
-    vk::DynamicBuffer mDriverUniformsBuffer;
-    VkDescriptorSet mDriverUniformsDescriptorSet;
-    uint32_t mDriverUniformsDynamicOffset;
-    vk::BindingPointer<vk::DescriptorSetLayout> mDriverUniformsSetLayout;
-    vk::RefCountedDescriptorPoolBinding mDriverUniformsDescriptorPoolBinding;
+    angle::PackedEnumMap<PipelineType, DriverUniformsDescriptorSet> mDriverUniforms;
 
     // This cache should also probably include the texture index (shader location) and array
     // index (also in the shader). This info is used in the descriptor update step.

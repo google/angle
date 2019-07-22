@@ -349,6 +349,8 @@ class State : angle::NonCopyable
                                           GLintptr offset,
                                           GLsizeiptr size);
 
+    size_t getAtomicCounterBufferCount() const { return mAtomicCounterBuffers.size(); }
+
     const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;

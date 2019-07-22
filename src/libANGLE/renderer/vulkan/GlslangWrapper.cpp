@@ -668,12 +668,6 @@ void AssignUniformBindings(gl::ShaderMap<IntermediateShaderSource> *shaderSource
         }
     }
 
-    if (!(*shaderSources)[gl::ShaderType::Compute].empty())
-    {
-        // Compute doesn't need driver uniforms.
-        return;
-    }
-
     // Substitute layout and qualifier strings for the driver uniforms block.
     const std::string driverBlockLayoutString =
         "set = " + Str(kDriverUniformsDescriptorSetIndex) + ", binding = 0";

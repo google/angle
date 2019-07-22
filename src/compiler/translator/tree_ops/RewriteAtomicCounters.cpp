@@ -72,7 +72,9 @@ TIntermTyped *CreateAtomicCounterConstant(TType *atomicCounterType,
     return TIntermAggregate::CreateConstructor(*atomicCounterType, arguments);
 }
 
-TIntermBinary *CreateAtomicCounterRef(const TVariable *atomicCounters, TIntermTyped *bindingOffset)
+TIntermBinary *CreateAtomicCounterRef(const TVariable *atomicCounters,
+                                      const TIntermTyped *bindingOffset,
+                                      const TIntermTyped *bufferOffsets)
 {
     // The atomic counters storage buffer declaration looks as such:
     //
@@ -87,6 +89,8 @@ TIntermBinary *CreateAtomicCounterRef(const TVariable *atomicCounters, TIntermTy
     // return:
     //
     // atomicCounters[binding].counters[offset]
+    //
+    // The offset itself is the provided one plus an offset given through uniforms.
 
     TIntermSymbol *atomicCountersRef = new TIntermSymbol(atomicCounters);
 
@@ -96,8 +100,9 @@ TIntermBinary *CreateAtomicCounterRef(const TVariable *atomicCounters, TIntermTy
 
     // Create references to bindingOffset.binding and bindingOffset.offset.
     TIntermBinary *binding =
-        new TIntermBinary(EOpIndexDirectStruct, bindingOffset, bindingFieldRef);
-    TIntermBinary *offset = new TIntermBinary(EOpIndexDirectStruct, bindingOffset, offsetFieldRef);
+        new TIntermBinary(EOpIndexDirectStruct, bindingOffset->deepCopy(), bindingFieldRef);
+    TIntermBinary *offset =
+        new TIntermBinary(EOpIndexDirectStruct, bindingOffset->deepCopy(), offsetFieldRef);
 
     // Create reference to atomicCounters[bindingOffset.binding]
     TIntermBinary *countersBlock = new TIntermBinary(EOpIndexDirect, atomicCountersRef, binding);
@@ -106,7 +111,27 @@ TIntermBinary *CreateAtomicCounterRef(const TVariable *atomicCounters, TIntermTy
     TIntermBinary *counters =
         new TIntermBinary(EOpIndexDirectInterfaceBlock, countersBlock, countersFieldRef);
 
-    // return atomicCounters[bindingOffset.binding].counters[bindingOffset.offset]
+    // Create bufferOffsets[binding / 4].  Each uint in bufferOffsets contains offsets for 4
+    // bindings.
+    TIntermBinary *bindingDivFour =
+        new TIntermBinary(EOpDiv, binding->deepCopy(), CreateUIntConstant(4));
+    TIntermBinary *bufferOffsetUint =
+        new TIntermBinary(EOpIndexDirect, bufferOffsets->deepCopy(), bindingDivFour);
+
+    // Create (binding % 4) * 8
+    TIntermBinary *bindingModFour =
+        new TIntermBinary(EOpIMod, binding->deepCopy(), CreateUIntConstant(4));
+    TIntermBinary *bufferOffsetShift =
+        new TIntermBinary(EOpMul, bindingModFour, CreateUIntConstant(8));
+
+    // Create bufferOffsets[binding / 4] >> ((binding % 4) * 8) & 0xFF
+    TIntermBinary *bufferOffsetShifted =
+        new TIntermBinary(EOpBitShiftRight, bufferOffsetUint, bufferOffsetShift);
+    TIntermBinary *bufferOffset =
+        new TIntermBinary(EOpBitwiseAnd, bufferOffsetShifted, CreateUIntConstant(0xFF));
+
+    // return atomicCounters[bindingOffset.binding].counters[bindingOffset.offset + bufferOffset]
+    offset = new TIntermBinary(EOpAdd, offset, bufferOffset);
     return new TIntermBinary(EOpIndexDirect, counters, offset);
 }
 
@@ -119,9 +144,12 @@ TIntermBinary *CreateAtomicCounterRef(const TVariable *atomicCounters, TIntermTy
 class RewriteAtomicCountersTraverser : public TIntermTraverser
 {
   public:
-    RewriteAtomicCountersTraverser(TSymbolTable *symbolTable, const TVariable *atomicCounters)
+    RewriteAtomicCountersTraverser(TSymbolTable *symbolTable,
+                                   const TVariable *atomicCounters,
+                                   const TIntermTyped *acbBufferOffsets)
         : TIntermTraverser(true, true, true, symbolTable),
           mAtomicCounters(atomicCounters),
+          mAcbBufferOffsets(acbBufferOffsets),
           mCurrentAtomicCounterOffset(0),
           mCurrentAtomicCounterBinding(0),
           mCurrentAtomicCounterDecl(nullptr),
@@ -506,7 +534,8 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
         TIntermTyped *bindingOffset = mAtomicCounterFunctionCallArgs[param];
 
         TIntermSequence *substituteArguments = new TIntermSequence;
-        substituteArguments->push_back(CreateAtomicCounterRef(mAtomicCounters, bindingOffset));
+        substituteArguments->push_back(
+            CreateAtomicCounterRef(mAtomicCounters, bindingOffset, mAcbBufferOffsets));
         substituteArguments->push_back(CreateUIntConstant(valueChange));
 
         TIntermTyped *substituteCall = CreateBuiltInFunctionCallNode(
@@ -559,6 +588,7 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
     }
 
     const TVariable *mAtomicCounters;
+    const TIntermTyped *mAcbBufferOffsets;
 
     // A map from the atomic_uint variable to the binding/offset declaration.
     std::unordered_map<const TVariable *, TVariable *> mAtomicCounterBindingOffsets;
@@ -585,11 +615,13 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
 
 }  // anonymous namespace
 
-void RewriteAtomicCounters(TIntermBlock *root, TSymbolTable *symbolTable)
+void RewriteAtomicCounters(TIntermBlock *root,
+                           TSymbolTable *symbolTable,
+                           const TIntermTyped *acbBufferOffsets)
 {
     const TVariable *atomicCounters = DeclareAtomicCountersBuffers(root, symbolTable);
 
-    RewriteAtomicCountersTraverser traverser(symbolTable, atomicCounters);
+    RewriteAtomicCountersTraverser traverser(symbolTable, atomicCounters, acbBufferOffsets);
     root->traverse(&traverser);
     traverser.updateTree();
 

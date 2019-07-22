@@ -172,12 +172,17 @@ constexpr const char kViewportYScale[]       = "viewportYScale";
 constexpr const char kNegViewportYScale[]    = "negViewportYScale";
 constexpr const char kXfbActiveUnpaused[]    = "xfbActiveUnpaused";
 constexpr const char kXfbBufferOffsets[]     = "xfbBufferOffsets";
+constexpr const char kAcbBufferOffsets[]     = "acbBufferOffsets";
 constexpr const char kDepthRange[]           = "depthRange";
 
-constexpr size_t kNumDriverUniforms                                        = 7;
-constexpr std::array<const char *, kNumDriverUniforms> kDriverUniformNames = {
+constexpr size_t kNumGraphicsDriverUniforms                                                = 8;
+constexpr std::array<const char *, kNumGraphicsDriverUniforms> kGraphicsDriverUniformNames = {
     {kViewport, kHalfRenderAreaHeight, kViewportYScale, kNegViewportYScale, kXfbActiveUnpaused,
-     kXfbBufferOffsets, kDepthRange}};
+     kXfbBufferOffsets, kAcbBufferOffsets, kDepthRange}};
+
+constexpr size_t kNumComputeDriverUniforms                                               = 1;
+constexpr std::array<const char *, kNumComputeDriverUniforms> kComputeDriverUniformNames = {
+    {kAcbBufferOffsets}};
 
 size_t FindFieldIndex(const TFieldList &fieldList, const char *fieldName)
 {
@@ -324,10 +329,12 @@ void AppendVertexShaderTransformFeedbackOutputToMain(TIntermBlock *root, TSymbol
     RunAtTheEndOfShader(root, new TIntermSymbol(xfbPlaceholder), symbolTable);
 }
 
-// The AddDriverUniformsToShader operation adds an internal uniform block to a shader. The driver
+// The Add*DriverUniformsToShader operation adds an internal uniform block to a shader. The driver
 // block is used to implement Vulkan-specific features and workarounds. Returns the driver uniforms
 // variable.
-const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable)
+//
+// There are Graphics and Compute variations as they require different uniforms.
+const TVariable *AddGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable)
 {
     // Init the depth range type.
     TFieldList *depthRangeParamsFields = new TFieldList();
@@ -354,24 +361,50 @@ const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *sym
 
     DeclareGlobalVariable(root, depthRangeVar);
 
-    // This field list mirrors the structure of ContextVk::DriverUniforms.
+    // This field list mirrors the structure of GraphicsDriverUniforms in ContextVk.cpp.
     TFieldList *driverFieldList = new TFieldList;
 
-    const std::array<TType *, kNumDriverUniforms> kDriverUniformTypes = {{
+    const std::array<TType *, kNumGraphicsDriverUniforms> kDriverUniformTypes = {{
         new TType(EbtFloat, 4),
         new TType(EbtFloat),
         new TType(EbtFloat),
         new TType(EbtFloat),
         new TType(EbtUInt),
         new TType(EbtInt, 4),
+        new TType(EbtUInt, 4),
         emulatedDepthRangeType,
     }};
 
-    for (size_t uniformIndex = 0; uniformIndex < kNumDriverUniforms; ++uniformIndex)
+    for (size_t uniformIndex = 0; uniformIndex < kNumGraphicsDriverUniforms; ++uniformIndex)
     {
-        TField *driverUniformField = new TField(kDriverUniformTypes[uniformIndex],
-                                                ImmutableString(kDriverUniformNames[uniformIndex]),
-                                                TSourceLoc(), SymbolType::AngleInternal);
+        TField *driverUniformField =
+            new TField(kDriverUniformTypes[uniformIndex],
+                       ImmutableString(kGraphicsDriverUniformNames[uniformIndex]), TSourceLoc(),
+                       SymbolType::AngleInternal);
+        driverFieldList->push_back(driverUniformField);
+    }
+
+    // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
+    return DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
+                                 TMemoryQualifier::Create(), 0, kUniformsBlockName,
+                                 kUniformsVarName);
+}
+
+const TVariable *AddComputeDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable)
+{
+    // This field list mirrors the structure of ComputeDriverUniforms in ContextVk.cpp.
+    TFieldList *driverFieldList = new TFieldList;
+
+    const std::array<TType *, kNumComputeDriverUniforms> kDriverUniformTypes = {{
+        new TType(EbtUInt, 4),
+    }};
+
+    for (size_t uniformIndex = 0; uniformIndex < kNumComputeDriverUniforms; ++uniformIndex)
+    {
+        TField *driverUniformField =
+            new TField(kDriverUniformTypes[uniformIndex],
+                       ImmutableString(kComputeDriverUniformNames[uniformIndex]), TSourceLoc(),
+                       SymbolType::AngleInternal);
         driverFieldList->push_back(driverUniformField);
     }
 
@@ -653,7 +686,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         }
     }
 
-    // TODO(lucferron): Refactor this function to do less tree traversals.
+    // TODO(lucferron): Refactor this function to do fewer tree traversals.
     // http://anglebug.com/2461
     if (structTypesUsedForUniforms > 0)
     {
@@ -678,15 +711,27 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         sink << "};\n";
     }
 
-    if (atomicCounterCount > 0)
+    const TVariable *driverUniforms;
+    if (getShaderType() == GL_COMPUTE_SHADER)
     {
-        RewriteAtomicCounters(root, &getSymbolTable());
+        driverUniforms = AddComputeDriverUniformsToShader(root, &getSymbolTable());
+    }
+    else
+    {
+        driverUniforms = AddGraphicsDriverUniformsToShader(root, &getSymbolTable());
     }
 
-    const TVariable *driverUniforms = nullptr;
+    if (atomicCounterCount > 0)
+    {
+        // ANGLEUniforms.acbBufferOffsets
+        const TIntermBinary *acbBufferOffsets =
+            CreateDriverUniformRef(driverUniforms, kAcbBufferOffsets);
+
+        RewriteAtomicCounters(root, &getSymbolTable(), acbBufferOffsets);
+    }
+
     if (getShaderType() != GL_COMPUTE_SHADER)
     {
-        driverUniforms = AddDriverUniformsToShader(root, &getSymbolTable());
         ReplaceGLDepthRangeWithDriverUniform(root, driverUniforms, &getSymbolTable());
     }
 

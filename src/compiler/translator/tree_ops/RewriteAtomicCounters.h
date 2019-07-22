@@ -12,10 +12,13 @@
 namespace sh
 {
 class TIntermBlock;
+class TIntermTyped;
 class TSymbolTable;
 class TVariable;
 
-void RewriteAtomicCounters(TIntermBlock *root, TSymbolTable *symbolTable);
+void RewriteAtomicCounters(TIntermBlock *root,
+                           TSymbolTable *symbolTable,
+                           const TIntermTyped *acbBufferOffsets);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_REWRITEATOMICCOUNTERS_H_

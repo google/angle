@@ -105,9 +105,6 @@
 // Blend equations:
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
 
-// Atomic Counter buffers:
-3566 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-multi-stage = FAIL
-
 // Storage image:
 3563 VULKAN : KHR-GLES31.core.layout_binding.sampler2D_layout_binding_texture_ComputeShader = FAIL
 3563 VULKAN : KHR-GLES31.core.layout_binding.block_layout_binding_block_ComputeShader = FAIL
