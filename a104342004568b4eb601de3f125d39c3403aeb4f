@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c2ad1269_e79f32d4",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T19:27:50Z",
+      "side": 1,
+      "message": "I see what you\u0027re saying but I\u0027m not 100% sure it\u0027s impossible, the original version of this function had a check for different types that returned false and this is preserving that functionality. It didn\u0027t have any asserts, whereas the original versions of \u003e, \u003c, etc. did have asserts",
+      "parentUuid": "604fa60d_b6468425",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd852ea_e1b07dc0",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 19
@@ -207,6 +225,24 @@
     },
     {
       "key": {
+        "uuid": "a48af774_b2c9d4b3",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T19:27:50Z",
+      "side": 1,
+      "message": "The function calls that don\u0027t use implicit conversion should be searched for first though, so this only happens if the function take a [u]int and a float and the float parameter needs to be converted.",
+      "parentUuid": "087a4c4b_247cc7fe",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b0a93e1_923136a4",
         "filename": "src/compiler/translator/FunctionLookup.cpp",
         "patchSetId": 19
@@ -333,6 +369,24 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24d5bc95_e31f0f5d",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T19:27:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0b2bd5c_315c9fc9",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -486,6 +540,30 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "952d35d0_6d29f004",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T19:27:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8b7c589_ae253e26",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
