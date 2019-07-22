@@ -973,8 +973,8 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    const gl::Extents baseLevelExtents = mImage->getExtents();
-    uint32_t imageLayerCount           = mImage->getLayerCount();
+    const VkExtent3D baseLevelExtents = mImage->getExtents();
+    uint32_t imageLayerCount          = mImage->getLayerCount();
 
     uint8_t *imageData = nullptr;
     gl::Rectangle imageArea(0, 0, baseLevelExtents.width, baseLevelExtents.height);

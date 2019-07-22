@@ -885,7 +885,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         resolveRegion.srcOffset                     = {};
         resolveRegion.dstSubresource                = resolveRegion.srcSubresource;
         resolveRegion.dstOffset                     = {};
-        gl_vk::GetExtent(image.image.getExtents(), &resolveRegion.extent);
+        resolveRegion.extent                        = image.image.getExtents();
 
         ANGLE_TRY(image.image.recordCommands(contextVk, &swapCommands));
         mColorImageMS.resolve(&image.image, resolveRegion, swapCommands);

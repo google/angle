@@ -719,7 +719,7 @@ class ImageHelper final : public CommandGraphResource
     const Image &getImage() const { return mImage; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
-    const gl::Extents &getExtents() const { return mExtents; }
+    const VkExtent3D &getExtents() const { return mExtents; }
     uint32_t getLayerCount() const { return mLayerCount; }
     uint32_t getLevelCount() const { return mLevelCount; }
     const Format &getFormat() const { return *mFormat; }
@@ -927,7 +927,7 @@ class ImageHelper final : public CommandGraphResource
     DeviceMemory mDeviceMemory;
 
     // Image properties.
-    gl::Extents mExtents;
+    VkExtent3D mExtents;
     const Format *mFormat;
     GLint mSamples;
 
