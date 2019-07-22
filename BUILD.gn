@@ -122,6 +122,7 @@ config("extra_warnings") {
       # Enable after anglebug.com/3128 is fixed.
       # "-Wextra-semi-stmt",
 
+      "-Wfloat-conversion",
       "-Wnon-virtual-dtor",
       "-Wunneeded-internal-declaration",
     ]

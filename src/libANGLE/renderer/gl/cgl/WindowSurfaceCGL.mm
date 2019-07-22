@@ -298,12 +298,12 @@ void WindowSurfaceCGL::setSwapInterval(EGLint interval)
 
 EGLint WindowSurfaceCGL::getWidth() const
 {
-    return CGRectGetWidth([mLayer frame]);
+    return (EGLint)CGRectGetWidth([mLayer frame]);
 }
 
 EGLint WindowSurfaceCGL::getHeight() const
 {
-    return CGRectGetHeight([mLayer frame]);
+    return (EGLint)CGRectGetHeight([mLayer frame]);
 }
 
 EGLint WindowSurfaceCGL::isPostSubBufferSupported() const

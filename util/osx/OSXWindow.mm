@@ -129,8 +129,8 @@ static float YCoordToFromCG(float y)
     NSSize windowSize = [[mWindow->getNSWindow() contentView] frame].size;
     Event event;
     event.Type        = Event::EVENT_RESIZED;
-    event.Size.Width  = windowSize.width;
-    event.Size.Height = windowSize.height;
+    event.Size.Width  = (int)windowSize.width;
+    event.Size.Height = (int)windowSize.height;
     mWindow->pushEvent(event);
 }
 
@@ -139,8 +139,8 @@ static float YCoordToFromCG(float y)
     NSRect screenspace = [mWindow->getNSWindow() frame];
     Event event;
     event.Type   = Event::EVENT_MOVED;
-    event.Move.X = screenspace.origin.x;
-    event.Move.Y = YCoordToFromCG(screenspace.origin.y + screenspace.size.height);
+    event.Move.X = (int)screenspace.origin.x;
+    event.Move.Y = (int)YCoordToFromCG(screenspace.origin.y + screenspace.size.height);
     mWindow->pushEvent(event);
 }
 
@@ -474,8 +474,8 @@ static MouseButton TranslateMouseButton(int button)
     Event event;
     event.Type               = eventType;
     event.MouseButton.Button = button;
-    event.MouseButton.X      = [nsEvent locationInWindow].x;
-    event.MouseButton.Y      = [self translateMouseY:[nsEvent locationInWindow].y];
+    event.MouseButton.X      = (int)[nsEvent locationInWindow].x;
+    event.MouseButton.Y      = (int)[self translateMouseY:[nsEvent locationInWindow].y];
     mWindow->pushEvent(event);
 }
 
@@ -498,8 +498,8 @@ static MouseButton TranslateMouseButton(int button)
 {
     Event event;
     event.Type        = Event::EVENT_MOUSE_MOVED;
-    event.MouseMove.X = [nsEvent locationInWindow].x;
-    event.MouseMove.Y = [self translateMouseY:[nsEvent locationInWindow].y];
+    event.MouseMove.X = (int)[nsEvent locationInWindow].x;
+    event.MouseMove.Y = (int)[self translateMouseY:[nsEvent locationInWindow].y];
     mWindow->pushEvent(event);
 }
 
@@ -560,7 +560,7 @@ static MouseButton TranslateMouseButton(int button)
 
     Event event;
     event.Type             = Event::EVENT_MOUSE_WHEEL_MOVED;
-    event.MouseWheel.Delta = [nsEvent deltaY];
+    event.MouseWheel.Delta = (int)[nsEvent deltaY];
     mWindow->pushEvent(event);
 }
 
@@ -718,7 +718,7 @@ void OSXWindow::messageLoop()
 
 void OSXWindow::setMousePosition(int x, int y)
 {
-    y = [mWindow frame].size.height - y - 1;
+    y = (int)([mWindow frame].size.height) - y - 1;
     NSPoint screenspace;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_7
@@ -733,7 +733,7 @@ bool OSXWindow::setPosition(int x, int y)
 {
     // Given CG and NS's coordinate system, the "Y" position of a window is the Y coordinate
     // of the bottom of the window.
-    int newBottom    = [mWindow frame].size.height + y;
+    int newBottom    = (int)([mWindow frame].size.height) + y;
     NSRect emptyRect = NSMakeRect(x, YCoordToFromCG(newBottom), 0, 0);
     [mWindow setFrameOrigin:[mWindow frameRectForContentRect:emptyRect].origin];
     return true;
