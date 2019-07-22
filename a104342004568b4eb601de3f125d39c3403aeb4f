@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "150e2fc7_47af001b",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Since this is a comparator I think returning false if types are different is fine",
+      "parentUuid": "cdac7597_daac9c27",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd852ea_e1b07dc0",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 19
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "1c3e47fc_6df42d5d",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Good catch",
+      "parentUuid": "8bd852ea_e1b07dc0",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4497c9bd_f8bd75cd",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 19
@@ -50,6 +86,24 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "500cdc96_e5b2bfc9",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4497c9bd_f8bd75cd",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "05080b0e_fe9073f3",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba3ddf53_546bef7a",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "427f309a_9ac5899e",
         "filename": "src/compiler/translator/FunctionLookup.cpp",
         "patchSetId": 19
@@ -87,6 +165,24 @@
       "writtenOn": "2019-07-22T17:28:48Z",
       "side": 1,
       "message": "If the function actually takes a [u]int, you are generating unnecessary combinations, is that right?",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "087a4c4b_247cc7fe",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Correct",
+      "parentUuid": "427f309a_9ac5899e",
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "cbe3bdef_2d2d55c9",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b0a93e1_923136a4",
+      "range": {
+        "startLine": 115,
+        "startChar": 9,
+        "endLine": 115,
+        "endChar": 25
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d60c40da_7fe380c2",
         "filename": "src/compiler/translator/FunctionLookup.cpp",
         "patchSetId": 19
@@ -139,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "18ee8a3f_cb22ab04",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d60c40da_7fe380c2",
+      "range": {
+        "startLine": 117,
+        "startChar": 90,
+        "endLine": 117,
+        "endChar": 93
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e204724c_44e9dcaa",
         "filename": "src/compiler/translator/FunctionLookup.cpp",
         "patchSetId": 19
@@ -150,6 +294,24 @@
       "writtenOn": "2019-07-22T17:28:48Z",
       "side": 1,
       "message": "Is this generating exact same names that the autogenerated built-in function table expects?",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0b2bd5c_315c9fc9",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "I believe so, the strings are in the same format as the GetMangledName function",
+      "parentUuid": "e204724c_44e9dcaa",
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -179,6 +341,30 @@
     },
     {
       "key": {
+        "uuid": "67ca1d63_8b8ec032",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 2113,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8456d9c_8dfc75ae",
+      "range": {
+        "startLine": 2102,
+        "startChar": 8,
+        "endLine": 2113,
+        "endChar": 28
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b22cc805_be394135",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 19
@@ -193,6 +379,24 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0580712_fd570010",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3765,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b22cc805_be394135",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -219,6 +423,30 @@
     },
     {
       "key": {
+        "uuid": "ecc83da4_32938140",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "They include each other so forward declaration is needed",
+      "parentUuid": "bfbde0e0_65d5a2e3",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce7c575f_8a088984",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 19
@@ -233,6 +461,24 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f0add46_cfffc273",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce7c575f_8a088984",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -253,6 +499,24 @@
     },
     {
       "key": {
+        "uuid": "aba6d80e_8a3f7076",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a45ba638_bf47dd4e",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "523a93f1_710ee0ea",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 19
@@ -267,6 +531,24 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6ba429a_75fabd58",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "523a93f1_710ee0ea",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -287,6 +569,24 @@
     },
     {
       "key": {
+        "uuid": "68d99608_dd88bc63",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e0d47cf_5bc583f4",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f211c46_733e60ea",
         "filename": "src/compiler/translator/util.h",
         "patchSetId": 19
@@ -304,6 +604,24 @@
     },
     {
       "key": {
+        "uuid": "4014f0f1_0b7c12db",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f211c46_733e60ea",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9c8b4fa_4e7759e3",
         "filename": "src/tests/compiler_tests/ShCompile_test.cpp",
         "patchSetId": 19
@@ -318,6 +636,24 @@
       "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d652690_1934ff51",
+        "filename": "src/tests/compiler_tests/ShCompile_test.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1350638
+      },
+      "writtenOn": "2019-07-22T18:35:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9c8b4fa_4e7759e3",
+      "revId": "a104342004568b4eb601de3f125d39c3403aeb4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
