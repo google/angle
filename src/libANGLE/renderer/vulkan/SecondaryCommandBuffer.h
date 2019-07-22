@@ -44,6 +44,7 @@ enum class CommandID : uint16_t
     CopyImage,
     CopyImageToBuffer,
     Dispatch,
+    DispatchIndirect,
     Draw,
     DrawIndexed,
     DrawIndexedInstanced,
@@ -215,6 +216,13 @@ struct DispatchParams
     uint32_t groupCountZ;
 };
 VERIFY_4_BYTE_ALIGNMENT(DispatchParams)
+
+struct DispatchIndirectParams
+{
+    VkBuffer buffer;
+    VkDeviceSize offset;
+};
+VERIFY_4_BYTE_ALIGNMENT(DispatchIndirectParams)
 
 struct FillBufferParams
 {
@@ -427,6 +435,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                            const VkBufferImageCopy *regions);
 
     void dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ);
+
+    void dispatchIndirect(const Buffer &buffer, VkDeviceSize offset);
 
     void draw(uint32_t vertexCount, uint32_t firstVertex);
 
@@ -828,6 +838,15 @@ ANGLE_INLINE void SecondaryCommandBuffer::dispatch(uint32_t groupCountX,
     paramStruct->groupCountX    = groupCountX;
     paramStruct->groupCountY    = groupCountY;
     paramStruct->groupCountZ    = groupCountZ;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::dispatchIndirect(const Buffer &buffer,
+                                                           VkDeviceSize offset)
+{
+    DispatchIndirectParams *paramStruct =
+        initCommand<DispatchIndirectParams>(CommandID::DispatchIndirect);
+    paramStruct->buffer = buffer.getHandle();
+    paramStruct->offset = offset;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::draw(uint32_t vertexCount, uint32_t firstVertex)

@@ -160,6 +160,13 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                                   params->groupCountZ);
                     break;
                 }
+                case CommandID::DispatchIndirect:
+                {
+                    const DispatchIndirectParams *params =
+                        getParamPtr<DispatchIndirectParams>(currentCommand);
+                    vkCmdDispatchIndirect(cmdBuffer, params->buffer, params->offset);
+                    break;
+                }
                 case CommandID::Draw:
                 {
                     const DrawParams *params = getParamPtr<DrawParams>(currentCommand);

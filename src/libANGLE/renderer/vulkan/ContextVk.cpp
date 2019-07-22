@@ -2005,8 +2005,16 @@ angle::Result ContextVk::dispatchCompute(const gl::Context *context,
 
 angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    ANGLE_VK_UNREACHABLE(this);
-    return angle::Result::Stop;
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(setupDispatch(context, &commandBuffer));
+
+    gl::Buffer *glBuffer     = getState().getTargetBuffer(gl::BufferBinding::DispatchIndirect);
+    vk::BufferHelper &buffer = vk::GetImpl(glBuffer)->getBuffer();
+    buffer.onRead(&mDispatcher, VK_ACCESS_INDIRECT_COMMAND_READ_BIT);
+
+    commandBuffer->dispatchIndirect(buffer.getBuffer(), indirect);
+
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)

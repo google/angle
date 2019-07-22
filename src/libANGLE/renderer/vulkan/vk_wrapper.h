@@ -266,6 +266,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                    const VkImageCopy *regions);
 
     void dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ);
+    void dispatchIndirect(const Buffer &buffer, VkDeviceSize offset);
 
     void draw(uint32_t vertexCount,
               uint32_t instanceCount,
@@ -942,6 +943,12 @@ ANGLE_INLINE void CommandBuffer::dispatch(uint32_t groupCountX,
 {
     ASSERT(valid());
     vkCmdDispatch(mHandle, groupCountX, groupCountY, groupCountZ);
+}
+
+ANGLE_INLINE void CommandBuffer::dispatchIndirect(const Buffer &buffer, VkDeviceSize offset)
+{
+    ASSERT(valid());
+    vkCmdDispatchIndirect(mHandle, buffer.getHandle(), offset);
 }
 
 ANGLE_INLINE void CommandBuffer::bindPipeline(VkPipelineBindPoint pipelineBindPoint,

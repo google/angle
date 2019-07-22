@@ -632,9 +632,6 @@
 3520 VULKAN : dEQP-GLES31.functional.program_interface_query.program_*.resource_list.compute.empty = FAIL
 3520 VULKAN : dEQP-GLES31.functional.program_interface_query.shader_storage_block.buffer_data_size.* = FAIL
 
-// Indirect dispatch:
-3601 VULKAN : dEQP-GLES31.functional.compute.*indirect* = SKIP
-
 // Shader support:
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.frexp.* = FAIL
 3569 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.common.ldexp.* = FAIL
