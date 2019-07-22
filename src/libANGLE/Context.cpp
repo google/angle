@@ -3442,7 +3442,7 @@ void Context::updateCaps()
         // OpenGL ES 3.0 or prior does not support multisampling with integer formats
         if (!formatCaps.renderbuffer ||
             (getClientVersion() < ES_3_1 && !mSupportedExtensions.textureMultisample &&
-             (formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)))
+             formatInfo.isInt()))
         {
             formatCaps.sampleCounts.clear();
         }
@@ -3455,8 +3455,7 @@ void Context::updateCaps()
             // GLES 3.0.5 section 4.4.2.2: "Implementations must support creation of renderbuffers
             // in these required formats with up to the value of MAX_SAMPLES multisamples, with the
             // exception of signed and unsigned integer formats."
-            if (formatInfo.componentType != GL_INT && formatInfo.componentType != GL_UNSIGNED_INT &&
-                formatInfo.isRequiredRenderbufferFormat(getClientVersion()))
+            if (!formatInfo.isInt() && formatInfo.isRequiredRenderbufferFormat(getClientVersion()))
             {
                 ASSERT(getClientVersion() < ES_3_0 || formatMaxSamples >= 4);
                 mState.mCaps.maxSamples = std::min(mState.mCaps.maxSamples, formatMaxSamples);
@@ -3470,8 +3469,7 @@ void Context::updateCaps()
                 // the exception that the signed and unsigned integer formats are required only to
                 // support creation of renderbuffers with up to the value of MAX_INTEGER_SAMPLES
                 // multisamples, which must be at least one."
-                if (formatInfo.componentType == GL_INT ||
-                    formatInfo.componentType == GL_UNSIGNED_INT)
+                if (formatInfo.isInt())
                 {
                     mState.mCaps.maxIntegerSamples =
                         std::min(mState.mCaps.maxIntegerSamples, formatMaxSamples);

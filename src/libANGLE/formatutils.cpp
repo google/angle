@@ -488,6 +488,11 @@ bool InternalFormat::isRequiredRenderbufferFormat(const Version &version) const
     }
 }
 
+bool InternalFormat::isInt() const
+{
+    return componentType == GL_INT || componentType == GL_UNSIGNED_INT;
+}
+
 Format::Format(GLenum internalFormat) : Format(GetSizedInternalFormatInfo(internalFormat)) {}
 
 Format::Format(const InternalFormat &internalFormat) : info(&internalFormat) {}

@@ -2971,7 +2971,7 @@ bool ValidateRenderbufferStorageMultisample(Context *context,
     // format if samples is greater than zero. In ES3.1(section 9.2.5), it can support integer
     // multisample renderbuffer, but the samples should not be greater than MAX_INTEGER_SAMPLES.
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalformat);
-    if ((formatInfo.componentType == GL_UNSIGNED_INT || formatInfo.componentType == GL_INT))
+    if (formatInfo.isInt())
     {
         if ((samples > 0 && context->getClientVersion() == ES_3_0) ||
             static_cast<GLuint>(samples) > context->getCaps().maxIntegerSamples)

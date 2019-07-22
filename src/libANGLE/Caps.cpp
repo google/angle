@@ -75,8 +75,7 @@ TextureCaps GenerateMinimumTextureCaps(GLenum sizedInternalFormat,
     if (internalFormatInfo.isRequiredRenderbufferFormat(clientVersion))
     {
         if ((clientVersion.major >= 3 && clientVersion.minor >= 1) ||
-            (clientVersion.major >= 3 && internalFormatInfo.componentType != GL_UNSIGNED_INT &&
-             internalFormatInfo.componentType != GL_INT))
+            (clientVersion.major >= 3 && !internalFormatInfo.isInt()))
         {
             caps.sampleCounts.insert(4);
         }

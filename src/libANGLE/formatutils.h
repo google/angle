@@ -126,6 +126,8 @@ struct InternalFormat
     // extension formats are conservatively not included.
     bool isRequiredRenderbufferFormat(const Version &version) const;
 
+    bool isInt() const;
+
     bool operator==(const InternalFormat &other) const;
     bool operator!=(const InternalFormat &other) const;
 

@@ -1419,9 +1419,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
                 }
             }
 
-            if ((readFormat.info->componentType == GL_INT ||
-                 readFormat.info->componentType == GL_UNSIGNED_INT) &&
-                filter == GL_LINEAR)
+            if (readFormat.info->isInt() && filter == GL_LINEAR)
             {
                 context->validationError(GL_INVALID_OPERATION, kBlitIntegerWithLinearFilter);
                 return false;
