@@ -2,9 +2,9 @@
   "src/libANGLE/renderer/FormatID_autogen.h":
     "5e017d47bc2eb942cf5717e05e7d072a",
   "src/libANGLE/renderer/Format_table_autogen.cpp":
-    "d696378917e290bc41487a7e2311d555",
+    "e22b7e416108ca2f738730d5a5be4c21",
   "src/libANGLE/renderer/angle_format.py":
-    "ad11fef24bece29edfa62bcd2edff788",
+    "7ed0a2469779c02567c98e0f2e476843",
   "src/libANGLE/renderer/angle_format_data.json":
     "e39704d451d108335e737c39ad423113",
   "src/libANGLE/renderer/angle_format_map.json":

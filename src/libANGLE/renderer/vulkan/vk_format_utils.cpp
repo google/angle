@@ -146,35 +146,30 @@ void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo
 size_t Format::getImageCopyBufferAlignment() const
 {
     // vkCmdCopyBufferToImage must have an offset that is a multiple of 4 as well as a multiple
-    // of the pixel block size.
+    // of the texel size (if uncompressed) or pixel block size (if compressed).
     // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
     //
-    // We need lcm(4, blockSize) (lcm = least common multiplier).  Since 4 is constant, this
-    // can be calculated as:
+    // We need lcm(4, texelSize) (lcm = least common multiplier).  For compressed images,
+    // |texelSize| would contain the block size.  Since 4 is constant, this can be calculated as:
     //
-    //                      | blockSize             blockSize % 4 == 0
-    //                      | 4 * blockSize         blockSize % 4 == 1
-    // lcm(4, blockSize) = <
-    //                      | 2 * blockSize         blockSize % 4 == 2
-    //                      | 4 * blockSize         blockSize % 4 == 3
+    //                      | texelSize             texelSize % 4 == 0
+    //                      | 4 * texelSize         texelSize % 4 == 1
+    // lcm(4, texelSize) = <
+    //                      | 2 * texelSize         texelSize % 4 == 2
+    //                      | 4 * texelSize         texelSize % 4 == 3
     //
     // This means:
     //
-    // - blockSize % 2 != 0 gives a 4x multiplier
-    // - else blockSize % 4 != 0 gives a 2x multiplier
+    // - texelSize % 2 != 0 gives a 4x multiplier
+    // - else texelSize % 4 != 0 gives a 2x multiplier
     // - else there's no multiplier.
     //
     const angle::Format &format = imageFormat();
 
-    if (!format.isBlock)
-    {
-        // Currently, 4 is sufficient for any known non-block format.
-        return 4;
-    }
-
-    const size_t blockSize  = format.pixelBytes;
-    const size_t multiplier = blockSize % 2 != 0 ? 4 : blockSize % 4 != 0 ? 2 : 1;
-    const size_t alignment  = multiplier * blockSize;
+    ASSERT(format.pixelBytes != 0);
+    const size_t texelSize  = format.pixelBytes;
+    const size_t multiplier = texelSize % 2 != 0 ? 4 : texelSize % 4 != 0 ? 2 : 1;
+    const size_t alignment  = multiplier * texelSize;
 
     return alignment;
 }

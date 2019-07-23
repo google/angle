@@ -10,7 +10,7 @@ import json
 import os
 import re
 
-kChannels = "ABDGLRSX"
+kChannels = "ABDEGLRSX"
 
 
 def get_angle_format_map_abs_path():
