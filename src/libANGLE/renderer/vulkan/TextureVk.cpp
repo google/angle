@@ -120,6 +120,9 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
     : TextureImpl(state),
       mOwnsImage(false),
+      mImageNativeType(gl::TextureType::InvalidEnum),
+      mImageLayerOffset(0),
+      mImageLevelOffset(0),
       mImage(nullptr),
       mStagingBufferInitialSize(vk::kStagingBufferSize)
 {}
@@ -738,7 +741,7 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     ANGLE_TRY(
         memoryObjectVk->createImage(context, type, levels, internalFormat, size, offset, mImage));
 
-    ANGLE_TRY(initImageViews(contextVk, format, levels));
+    ANGLE_TRY(initImageViews(contextVk, format, levels, mImage->getLayerCount()));
 
     // TODO(spang): This needs to be reworked when semaphores are added.
     // http://anglebug.com/3289
@@ -770,7 +773,8 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     setImageHelper(contextVk, imageVk->getImage(), imageVk->getImageTextureType(), format,
                    imageVk->getImageLevel(), imageVk->getImageLayer(), false);
 
-    ANGLE_TRY(initImageViews(contextVk, format, 1));
+    ASSERT(type != gl::TextureType::CubeMap);
+    ANGLE_TRY(initImageViews(contextVk, format, 1, 1));
 
     // Transfer the image to this queue if needed
     uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
@@ -1065,7 +1069,8 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
     setImageHelper(contextVk, offscreenSurface->getColorAttachmentImage(), mState.getType(), format,
                    surface->getMipmapLevel(), 0, false);
 
-    return initImageViews(contextVk, format, 1);
+    ASSERT(mImage->getLayerCount() == 1);
+    return initImageViews(contextVk, format, 1, 1);
 }
 
 angle::Result TextureVk::releaseTexImage(const gl::Context *context)
@@ -1195,8 +1200,14 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     {
         if (mImage && mImage->valid())
         {
+            // We use a special layer count here to handle EGLImages. They might only be
+            // looking at one layer of a cube or 2D array texture.
+            uint32_t layerCount =
+                mState.getType() == gl::TextureType::_2D ? 1 : mImage->getLayerCount();
+
             releaseImageViews(contextVk);
-            ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(), mImage->getLevelCount()));
+            ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(), mImage->getLevelCount(),
+                                     layerCount));
         }
     }
 
@@ -1360,24 +1371,23 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     }
 
     VkExtent3D vkExtent;
-    gl_vk::GetExtent(extents, &vkExtent);
+    uint32_t layerCount;
+    gl_vk::GetExtentsAndLayerCount(mState.getType(), extents, &vkExtent, &layerCount);
 
     ANGLE_TRY(mImage->init(contextVk, mState.getType(), vkExtent, format, 1, imageUsageFlags,
-                           levelCount,
-                           mState.getType() == gl::TextureType::CubeMap ? gl::kCubeFaceCount : 1));
+                           levelCount, layerCount));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
     ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
-    ANGLE_TRY(initImageViews(contextVk, format, levelCount));
+    ANGLE_TRY(initImageViews(contextVk, format, levelCount, layerCount));
 
     // If the image has an emulated channel, always clear it.  These channels will be masked out in
     // future writes, and shouldn't contain uninitialized values.
     if (format.hasEmulatedImageChannels())
     {
         uint32_t levelCount = mImage->getLevelCount();
-        uint32_t layerCount = mImage->getLayerCount();
 
         for (uint32_t level = 0; level < levelCount; ++level)
         {
@@ -1394,7 +1404,8 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
 angle::Result TextureVk::initImageViews(ContextVk *contextVk,
                                         const vk::Format &format,
-                                        uint32_t levelCount)
+                                        uint32_t levelCount,
+                                        uint32_t layerCount)
 {
     ASSERT(mImage != nullptr);
 
@@ -1403,9 +1414,9 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
 
     // TODO: Support non-zero base level for ES 3.0 by passing it to getNativeImageLevel.
     // http://anglebug.com/3148
-    uint32_t baseLevel  = getNativeImageLevel(0);
-    uint32_t baseLayer  = getNativeImageLayer(0);
-    uint32_t layerCount = mState.getType() == gl::TextureType::CubeMap ? gl::kCubeFaceCount : 1;
+    uint32_t baseLevel = getNativeImageLevel(0);
+    uint32_t baseLayer = getNativeImageLayer(0);
+
     VkImageAspectFlags aspectFlags = vk::GetFormatAspectFlags(format.angleFormat());
     // If we are reading a depth buffer, select only the depth component/aspect
     if (aspectFlags & VK_IMAGE_ASPECT_DEPTH_BIT)
@@ -1419,7 +1430,9 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     ANGLE_TRY(mImage->initLayerImageView(contextVk, mState.getType(), aspectFlags, mappedSwizzle,
                                          &mReadBaseLevelImageView, baseLevel, 1, baseLayer,
                                          layerCount));
-    if (mState.getType() == gl::TextureType::CubeMap)
+    if (mState.getType() == gl::TextureType::CubeMap ||
+        mState.getType() == gl::TextureType::_2DArray ||
+        mState.getType() == gl::TextureType::_2DMultisampleArray)
     {
         gl::TextureType arrayType = vk::Get2DTextureType(layerCount, mImage->getSamples());
 

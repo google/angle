@@ -158,12 +158,24 @@ TextureType SamplerTypeToTextureType(GLenum samplerType)
     }
 }
 
-bool IsMultisampled(gl::TextureType type)
+bool IsMultisampled(TextureType type)
 {
     switch (type)
     {
-        case gl::TextureType::_2DMultisample:
-        case gl::TextureType::_2DMultisampleArray:
+        case TextureType::_2DMultisample:
+        case TextureType::_2DMultisampleArray:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool IsArrayTextureType(TextureType type)
+{
+    switch (type)
+    {
+        case TextureType::_2DArray:
+        case TextureType::_2DMultisampleArray:
             return true;
         default:
             return false;

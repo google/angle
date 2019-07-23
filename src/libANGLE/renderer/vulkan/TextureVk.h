@@ -278,7 +278,8 @@ class TextureVk : public TextureImpl
     uint32_t getLevelCount() const;
     angle::Result initImageViews(ContextVk *contextVk,
                                  const vk::Format &format,
-                                 uint32_t levelCount);
+                                 uint32_t levelCount,
+                                 uint32_t layerCount);
     angle::Result initCubeMapRenderTargets(ContextVk *contextVk);
 
     angle::Result ensureImageInitializedImpl(ContextVk *contextVk,

@@ -566,7 +566,7 @@ angle::Result ProgramVk::linkImpl(const gl::Context *glContext, gl::InfoLog &inf
     uint32_t storageBlockCount = static_cast<uint32_t>(mState.getShaderStorageBlocks().size());
     uint32_t atomicCounterBufferCount =
         static_cast<uint32_t>(mState.getAtomicCounterBuffers().size());
-    uint32_t textureCount      = static_cast<uint32_t>(mState.getSamplerBindings().size());
+    uint32_t textureCount = static_cast<uint32_t>(mState.getSamplerBindings().size());
 
     if (renderer->getFeatures().bindEmptyForUnusedDescriptorSets.enabled)
     {

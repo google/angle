@@ -56,7 +56,7 @@ SampleApplication::SampleApplication(std::string name,
       mEGLWindow(nullptr),
       mOSWindow(nullptr)
 {
-    mPlatformParams.renderer     = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+    mPlatformParams.renderer = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
 
     if (argc > 1 && strncmp(argv[1], kUseAngleArg, strlen(kUseAngleArg)) == 0)
     {

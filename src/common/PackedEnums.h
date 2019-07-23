@@ -214,6 +214,7 @@ using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
 TextureType SamplerTypeToTextureType(GLenum samplerType);
 
 bool IsMultisampled(gl::TextureType type);
+bool IsArrayTextureType(gl::TextureType type);
 
 enum class PrimitiveMode : uint8_t
 {

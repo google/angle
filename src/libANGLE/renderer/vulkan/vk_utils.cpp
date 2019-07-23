@@ -894,6 +894,34 @@ void GetViewport(const gl::Rectangle &viewport,
         viewportOut->height = -viewportOut->height;
     }
 }
+
+void GetExtentsAndLayerCount(gl::TextureType textureType,
+                             const gl::Extents &extents,
+                             VkExtent3D *extentsOut,
+                             uint32_t *layerCountOut)
+{
+    extentsOut->width  = extents.width;
+    extentsOut->height = extents.height;
+
+    switch (textureType)
+    {
+        case gl::TextureType::CubeMap:
+            extentsOut->depth = 1;
+            *layerCountOut    = gl::kCubeFaceCount;
+            break;
+
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisampleArray:
+            extentsOut->depth = 1;
+            *layerCountOut    = extents.depth;
+            break;
+
+        default:
+            extentsOut->depth = extents.depth;
+            *layerCountOut    = 1;
+            break;
+    }
+}
 }  // namespace gl_vk
 
 namespace vk_gl

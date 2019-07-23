@@ -607,6 +607,11 @@ void GetViewport(const gl::Rectangle &viewport,
                  bool invertViewport,
                  GLint renderAreaHeight,
                  VkViewport *viewportOut);
+
+void GetExtentsAndLayerCount(gl::TextureType textureType,
+                             const gl::Extents &extents,
+                             VkExtent3D *extentsOut,
+                             uint32_t *layerCountOut);
 }  // namespace gl_vk
 
 namespace vk_gl

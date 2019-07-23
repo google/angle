@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
                       case 'y': resources.EXT_YUV_target = 1; break;
                       default: failCode = EFailUsage;
                     }
-                        // clang-format on
+                    // clang-format on
                     }
                     else
                     {
