@@ -1159,8 +1159,7 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
 
 gl::Version RendererVk::getMaxConformantESVersion() const
 {
-    // 3.0 is needed to pass all of dEQP GLES 2.0 tests despite it not being fully conformant.
-    return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
+    return std::min(getMaxSupportedESVersion(), gl::Version(2, 0));
 }
 
 void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
