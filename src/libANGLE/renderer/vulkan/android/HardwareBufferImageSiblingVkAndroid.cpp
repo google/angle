@@ -122,8 +122,11 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     externalMemoryImageCreateInfo.handleTypes =
         VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID;
 
+    VkExtent3D vkExtents;
+    gl_vk::GetExtent(mSize, &vkExtents);
+
     mImage = new vk::ImageHelper();
-    ANGLE_TRY(mImage->initExternal(displayVk, gl::TextureType::_2D, mSize, vkFormat, 1, usage,
+    ANGLE_TRY(mImage->initExternal(displayVk, gl::TextureType::_2D, vkExtents, vkFormat, 1, usage,
                                    vk::ImageLayout::ExternalPreInitialized,
                                    &externalMemoryImageCreateInfo, 1, 1));
 

@@ -1493,20 +1493,20 @@ void ImageHelper::initStagingBuffer(RendererVk *renderer,
 
 angle::Result ImageHelper::init(Context *context,
                                 gl::TextureType textureType,
-                                const gl::Extents &glExtents,
+                                const VkExtent3D &extents,
                                 const Format &format,
                                 GLint samples,
                                 VkImageUsageFlags usage,
                                 uint32_t mipLevels,
                                 uint32_t layerCount)
 {
-    return initExternal(context, textureType, glExtents, format, samples, usage,
+    return initExternal(context, textureType, extents, format, samples, usage,
                         ImageLayout::Undefined, nullptr, mipLevels, layerCount);
 }
 
 angle::Result ImageHelper::initExternal(Context *context,
                                         gl::TextureType textureType,
-                                        const gl::Extents &glExtents,
+                                        const VkExtent3D &extents,
                                         const Format &format,
                                         GLint samples,
                                         VkImageUsageFlags usage,
@@ -1523,7 +1523,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     ASSERT(textureType != gl::TextureType::Rectangle || layerCount == 1);
     ASSERT(textureType != gl::TextureType::CubeMap || layerCount == gl::kCubeFaceCount);
 
-    gl_vk::GetExtent(glExtents, &mExtents);
+    mExtents    = extents;
     mFormat     = &format;
     mSamples    = samples;
     mLayerCount = layerCount;

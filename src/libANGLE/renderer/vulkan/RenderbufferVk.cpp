@@ -71,7 +71,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             (textureFormat.redBits > 0 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) |
             (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
 
-        gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
+        VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
         ANGLE_TRY(
             mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat, samples, usage, 1, 1));
 
