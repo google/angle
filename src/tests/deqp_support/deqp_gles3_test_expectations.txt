@@ -535,12 +535,6 @@
 // MAX_FRAGMENT_INPUT_COMPONENTS is 0
 3676 VULKAN : dEQP-GLES3.functional.state_query.integers.max_fragment_input_components_get* = FAIL
 
-// 3D texture:
-3188 VULKAN : dEQP-GLES3.functional.fbo.color.tex3d.* = SKIP
-
-// 2D array (anglebug.com/3189), new formats in ES 3.0 (anglebug.com/3190):
-3189 VULKAN : dEQP-GLES3.functional.fbo.color.tex2darray.* = SKIP
-
 //  New or broken formats in ES 3.0:
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth32* = FAIL
 3190 VULKAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.depth32* = FAIL

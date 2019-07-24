@@ -1439,8 +1439,22 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     size_t level         = renderTarget->getLevelIndex();
     size_t layer         = renderTarget->getLayerIndex();
     VkOffset3D srcOffset = {area.x, area.y, 0};
+
+    VkImageSubresourceLayers srcSubresource = {};
+    srcSubresource.aspectMask               = copyAspectFlags;
+    srcSubresource.mipLevel                 = level;
+    srcSubresource.baseArrayLayer           = layer;
+    srcSubresource.layerCount               = 1;
+
     VkExtent3D srcExtent = {static_cast<uint32_t>(area.width), static_cast<uint32_t>(area.height),
                             1};
+
+    if (srcImage->getExtents().depth > 1)
+    {
+        // Depth > 1 means this is a 3D texture and we need special handling
+        srcOffset.z                   = layer;
+        srcSubresource.baseArrayLayer = 0;
+    }
 
     // If the source image is multisampled, we need to resolve it into a temporary image before
     // performing a readback.
@@ -1461,10 +1475,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
         ASSERT(copyAspectFlags == VK_IMAGE_ASPECT_COLOR_BIT);
 
         VkImageResolve resolveRegion                = {};
-        resolveRegion.srcSubresource.aspectMask     = copyAspectFlags;
-        resolveRegion.srcSubresource.mipLevel       = level;
-        resolveRegion.srcSubresource.baseArrayLayer = layer;
-        resolveRegion.srcSubresource.layerCount     = 1;
+        resolveRegion.srcSubresource                = srcSubresource;
         resolveRegion.srcOffset                     = srcOffset;
         resolveRegion.dstSubresource.aspectMask     = copyAspectFlags;
         resolveRegion.dstSubresource.mipLevel       = 0;
@@ -1483,6 +1494,9 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
         level     = 0;
         layer     = 0;
         srcOffset = {0, 0, 0};
+        srcSubresource.baseArrayLayer = 0;
+        srcSubresource.layerCount     = 1;
+        srcSubresource.mipLevel       = 0;
     }
 
     VkBuffer bufferHandle      = VK_NULL_HANDLE;
@@ -1493,16 +1507,13 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     ANGLE_TRY(mReadPixelBuffer.allocate(contextVk, allocationSize, &readPixelBuffer, &bufferHandle,
                                         &stagingOffset, nullptr));
 
-    VkBufferImageCopy region               = {};
-    region.bufferImageHeight               = srcExtent.height;
-    region.bufferOffset                    = stagingOffset;
-    region.bufferRowLength                 = srcExtent.width;
-    region.imageExtent                     = srcExtent;
-    region.imageOffset                     = srcOffset;
-    region.imageSubresource.aspectMask     = copyAspectFlags;
-    region.imageSubresource.baseArrayLayer = layer;
-    region.imageSubresource.layerCount     = 1;
-    region.imageSubresource.mipLevel       = level;
+    VkBufferImageCopy region = {};
+    region.bufferImageHeight = srcExtent.height;
+    region.bufferOffset      = stagingOffset;
+    region.bufferRowLength   = srcExtent.width;
+    region.imageExtent       = srcExtent;
+    region.imageOffset       = srcOffset;
+    region.imageSubresource  = srcSubresource;
 
     commandBuffer->copyImageToBuffer(srcImage->getImage(), srcImage->getCurrentLayout(),
                                      bufferHandle, 1, &region);

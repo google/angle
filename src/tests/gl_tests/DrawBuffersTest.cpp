@@ -564,6 +564,9 @@ TEST_P(DrawBuffersTestES3, 3DTextures)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
 
+    // Fails on Intel (intel-hd-630) Ubuntu 17.04 with Vulkan: http://anglebug.com/3784
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
     GLTexture texture;
     glBindTexture(GL_TEXTURE_3D, texture.get());
     glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), getWindowWidth(),
@@ -653,4 +656,4 @@ ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
 
 ANGLE_INSTANTIATE_TEST(DrawBuffersWebGL2Test, ES3_D3D11(), ES3_OPENGL(), ES3_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(DrawBuffersTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(DrawBuffersTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN());

@@ -65,6 +65,12 @@ bool ForceCpuPathForCopy(RendererVk *renderer, vk::ImageHelper *image)
 {
     return image->getLayerCount() > 1 && renderer->getFeatures().forceCpuPathForCubeMapCopy.enabled;
 }
+
+uint32_t GetRenderTargetLayerCount(vk::ImageHelper *image)
+{
+    // Depth > 1 means this is a 3D texture and depth is our layer count
+    return image->getExtents().depth > 1 ? image->getExtents().depth : image->getLayerCount();
+}
 }  // anonymous namespace
 
 angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
@@ -892,8 +898,9 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     mRenderTarget.init(mImage, &mDrawBaseLevelImageView, &mFetchBaseLevelImageView,
                        getNativeImageLevel(0), getNativeImageLayer(0));
 
-    // Force re-creation of cube map render targets next time they are needed
+    // Force re-creation of layered render targets next time they are needed
     mCubeMapRenderTargets.clear();
+    m3DRenderTargets.clear();
 
     mSerial = contextVk->generateTextureSerial();
 }
@@ -1116,6 +1123,11 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
         case gl::TextureType::_2D:
             *rtOut = &mRenderTarget;
             break;
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_3D:
+            ANGLE_TRY(init3DRenderTargets(contextVk));
+            *rtOut = &m3DRenderTargets[imageIndex.getLayerIndex()];
+            break;
         case gl::TextureType::CubeMap:
             ANGLE_TRY(initCubeMapRenderTargets(contextVk));
             *rtOut = &mCubeMapRenderTargets[imageIndex.cubeMapFaceIndex()];
@@ -1160,6 +1172,38 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
     return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
                                       getNativeImageLayer(0), mImage->getLayerCount(),
                                       commandBuffer);
+}
+
+angle::Result TextureVk::init3DRenderTargets(ContextVk *contextVk)
+{
+    // Lazy init. Check if already initialized.
+    if (!m3DRenderTargets.empty())
+        return angle::Result::Continue;
+
+    uint32_t layerCount = GetRenderTargetLayerCount(mImage);
+
+    mLayerFetchImageView.resize(layerCount);
+    m3DRenderTargets.resize(layerCount);
+
+    for (size_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
+    {
+        vk::ImageView *drawView;
+        ANGLE_TRY(getLayerLevelDrawImageView(contextVk, layerIndex, 0, &drawView));
+
+        // Users of the render target expect the views to directly view the desired layer, so we
+        // need create a fetch view for each layer as well.
+        gl::SwizzleState mappedSwizzle;
+        MapSwizzleState(contextVk, mImage->getFormat(), mState.getSwizzleState(), &mappedSwizzle);
+        gl::TextureType arrayType = vk::Get2DTextureType(layerCount, mImage->getSamples());
+        ANGLE_TRY(mImage->initLayerImageView(contextVk, arrayType, mImage->getAspectFlags(),
+                                             mappedSwizzle, &mLayerFetchImageView[layerIndex],
+                                             getNativeImageLevel(0), 1,
+                                             getNativeImageLayer(layerIndex), 1));
+
+        m3DRenderTargets[layerIndex].init(mImage, drawView, &mLayerFetchImageView[layerIndex],
+                                          getNativeImageLevel(0), getNativeImageLayer(layerIndex));
+    }
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
@@ -1333,10 +1377,13 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
     ASSERT(mImage->valid());
     ASSERT(!mImage->getFormat().imageFormat().isBlock);
 
+    // For 3D textures, layer count is tracked as depth
+    uint32_t layerCount = mState.getType() == gl::TextureType::_3D ? mImage->getExtents().depth
+                                                                   : mImage->getLayerCount();
     // Lazily allocate the storage for image views
     if (mLayerLevelDrawImageViews.empty())
     {
-        mLayerLevelDrawImageViews.resize(mImage->getLayerCount());
+        mLayerLevelDrawImageViews.resize(layerCount);
     }
     ASSERT(mLayerLevelDrawImageViews.size() > layer);
 
@@ -1355,7 +1402,8 @@ angle::Result TextureVk::getLayerLevelDrawImageView(vk::Context *context,
     // Lazily allocate the image view itself.
     // Note that these views are specifically made to be used as color attachments, and therefore
     // don't have swizzle.
-    return mImage->initLayerImageView(context, mState.getType(), mImage->getAspectFlags(),
+    gl::TextureType viewType = vk::Get2DTextureType(layerCount, mImage->getSamples());
+    return mImage->initLayerImageView(context, viewType, mImage->getAspectFlags(),
                                       gl::SwizzleState(), *imageViewOut, getNativeImageLevel(level),
                                       1, getNativeImageLayer(layer), 1);
 }
@@ -1488,6 +1536,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
     releaseImageViews(contextVk);
 
     mCubeMapRenderTargets.clear();
+    m3DRenderTargets.clear();
 
     onStagingBufferChange();
 }
