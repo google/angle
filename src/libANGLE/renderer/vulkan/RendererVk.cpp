@@ -1123,6 +1123,13 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
         maxVersion = std::min(maxVersion, gl::Version(3, 0));
     }
 
+    // ES3.1 requires at least a maximum offset of at least 2047.
+    // If the Vulkan implementation can't support that, we cannot support 3.1.
+    if (mPhysicalDeviceProperties.limits.maxVertexInputAttributeOffset < 2047)
+    {
+        maxVersion = std::min(maxVersion, gl::Version(3, 0));
+    }
+
     // Limit to ES2.0 if there are any blockers for 3.0.
 
     // If the command buffer doesn't support queries, we can't support ES3.

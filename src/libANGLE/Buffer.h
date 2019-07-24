@@ -100,8 +100,7 @@ class Buffer final : public RefCountObject,
     angle::Result unmap(const Context *context, GLboolean *result);
 
     // These are called when another operation changes Buffer data.
-    void onTransformFeedback();
-    void onPixelPack();
+    void onDataChanged();
 
     angle::Result getIndexRange(const gl::Context *context,
                                 DrawElementsType type,

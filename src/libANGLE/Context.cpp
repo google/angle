@@ -2244,6 +2244,7 @@ void Context::drawArraysInstanced(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(
         mImplementation->drawArraysInstanced(this, mode, first, count, instanceCount));
     MarkTransformFeedbackBufferUsage(this, count, instanceCount);
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::drawElementsInstanced(PrimitiveMode mode,
@@ -2261,6 +2262,7 @@ void Context::drawElementsInstanced(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(
         mImplementation->drawElementsInstanced(this, mode, count, type, indices, instances));
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::drawRangeElements(PrimitiveMode mode,
@@ -2279,18 +2281,21 @@ void Context::drawRangeElements(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(
         mImplementation->drawRangeElements(this, mode, start, end, count, type, indices));
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawArraysIndirect(this, mode, indirect));
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::drawElementsIndirect(PrimitiveMode mode, DrawElementsType type, const void *indirect)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsIndirect(this, mode, type, indirect));
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::flush()
@@ -5395,12 +5400,16 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
 
     ANGLE_CONTEXT_TRY(prepareForDispatch());
     ANGLE_CONTEXT_TRY(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
+
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::dispatchComputeIndirect(GLintptr indirect)
 {
     ANGLE_CONTEXT_TRY(prepareForDispatch());
     ANGLE_CONTEXT_TRY(mImplementation->dispatchComputeIndirect(this, indirect));
+
+    MarkShaderStorageBufferUsage(this);
 }
 
 void Context::texStorage2D(TextureType target,
@@ -5456,6 +5465,7 @@ void Context::multiDrawArrays(PrimitiveMode mode,
             ANGLE_CONTEXT_TRY(
                 mImplementation->drawArrays(this, mode, firsts[drawID], counts[drawID]));
             MarkTransformFeedbackBufferUsage(this, counts[drawID], 1);
+            MarkShaderStorageBufferUsage(this);
         }
     }
     else
@@ -5469,6 +5479,7 @@ void Context::multiDrawArrays(PrimitiveMode mode,
             ANGLE_CONTEXT_TRY(
                 mImplementation->drawArrays(this, mode, firsts[drawID], counts[drawID]));
             MarkTransformFeedbackBufferUsage(this, counts[drawID], 1);
+            MarkShaderStorageBufferUsage(this);
         }
     }
 }
@@ -5494,6 +5505,7 @@ void Context::multiDrawArraysInstanced(PrimitiveMode mode,
             ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstanced(
                 this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID]));
             MarkTransformFeedbackBufferUsage(this, counts[drawID], instanceCounts[drawID]);
+            MarkShaderStorageBufferUsage(this);
         }
     }
     else
@@ -5507,6 +5519,7 @@ void Context::multiDrawArraysInstanced(PrimitiveMode mode,
             ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstanced(
                 this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID]));
             MarkTransformFeedbackBufferUsage(this, counts[drawID], instanceCounts[drawID]);
+            MarkShaderStorageBufferUsage(this);
         }
     }
 }
@@ -5531,6 +5544,7 @@ void Context::multiDrawElements(PrimitiveMode mode,
             programObject->setDrawIDUniform(drawID);
             ANGLE_CONTEXT_TRY(
                 mImplementation->drawElements(this, mode, counts[drawID], type, indices[drawID]));
+            MarkShaderStorageBufferUsage(this);
         }
     }
     else
@@ -5543,6 +5557,7 @@ void Context::multiDrawElements(PrimitiveMode mode,
             }
             ANGLE_CONTEXT_TRY(
                 mImplementation->drawElements(this, mode, counts[drawID], type, indices[drawID]));
+            MarkShaderStorageBufferUsage(this);
         }
     }
 }
@@ -5568,6 +5583,7 @@ void Context::multiDrawElementsInstanced(PrimitiveMode mode,
             programObject->setDrawIDUniform(drawID);
             ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstanced(
                 this, mode, counts[drawID], type, indices[drawID], instanceCounts[drawID]));
+            MarkShaderStorageBufferUsage(this);
         }
     }
     else
@@ -5580,6 +5596,7 @@ void Context::multiDrawElementsInstanced(PrimitiveMode mode,
             }
             ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstanced(
                 this, mode, counts[drawID], type, indices[drawID], instanceCounts[drawID]));
+            MarkShaderStorageBufferUsage(this);
         }
     }
 }
@@ -8705,6 +8722,7 @@ void StateCache::onProgramExecutableChange(Context *context)
     updateVertexElementLimits(context);
     updateBasicDrawStatesError();
     updateValidDrawModes(context);
+    updateActiveShaderStorageBufferIndices(context);
 }
 
 void StateCache::onVertexArrayFormatChange(Context *context)
@@ -8932,6 +8950,19 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
             {VertexAttribType::UnsignedShort, VertexAttribTypeCase::Valid},
             {VertexAttribType::UnsignedInt, VertexAttribTypeCase::Valid},
         }};
+    }
+}
+
+void StateCache::updateActiveShaderStorageBufferIndices(Context *context)
+{
+    mCachedActiveShaderStorageBufferIndices.reset();
+    Program *program = context->getState().getProgram();
+    if (program)
+    {
+        for (const InterfaceBlock &block : program->getState().getShaderStorageBlocks())
+        {
+            mCachedActiveShaderStorageBufferIndices.set(block.binding);
+        }
     }
 }
 }  // namespace gl

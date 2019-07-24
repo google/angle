@@ -377,4 +377,9 @@ void BufferVk::markConversionBuffersDirty()
     }
 }
 
+void BufferVk::onDataChanged()
+{
+    markConversionBuffersDirty();
+}
+
 }  // namespace rx

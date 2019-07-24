@@ -214,7 +214,7 @@ void TransformFeedback::onVerticesDrawn(const Context *context, GLsizei count, G
     {
         if (buffer.get() != nullptr)
         {
-            buffer->onTransformFeedback();
+            buffer->onDataChanged();
         }
     }
 }

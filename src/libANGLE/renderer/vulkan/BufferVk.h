@@ -79,6 +79,8 @@ class BufferVk : public BufferImpl
 
     GLint64 getSize() const { return mState.getSize(); }
 
+    void onDataChanged() override;
+
     const vk::BufferHelper &getBuffer() const
     {
         ASSERT(mBuffer.valid());

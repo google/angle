@@ -1512,7 +1512,7 @@ angle::Result Framebuffer::readPixels(const Context *context,
     Buffer *unpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (unpackBuffer)
     {
-        unpackBuffer->onPixelPack();
+        unpackBuffer->onDataChanged();
     }
 
     return angle::Result::Continue;

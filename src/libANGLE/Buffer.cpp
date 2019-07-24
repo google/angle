@@ -210,20 +210,14 @@ angle::Result Buffer::unmap(const Context *context, GLboolean *result)
     return angle::Result::Continue;
 }
 
-void Buffer::onTransformFeedback()
+void Buffer::onDataChanged()
 {
     mIndexRangeCache.clear();
 
     // Notify when data changes.
     onStateChange(angle::SubjectMessage::ContentsChanged);
-}
 
-void Buffer::onPixelPack()
-{
-    mIndexRangeCache.clear();
-
-    // Notify when data changes.
-    onStateChange(angle::SubjectMessage::ContentsChanged);
+    mImpl->onDataChanged();
 }
 
 angle::Result Buffer::getIndexRange(const gl::Context *context,
