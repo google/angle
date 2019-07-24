@@ -1768,6 +1768,81 @@ TEST_P(SimpleStateChangeTest, DrawElementsUBYTEX2ThenDrawElementsUSHORT)
     EXPECT_PIXEL_COLOR_EQ(quarterWidth, quarterHeight * 2, GLColor::blue);
 }
 
+// Draw a points use multiple unaligned vertex buffer with same data,
+// verify all the rendering results are the same.
+TEST_P(SimpleStateChangeTest, DrawRepeatUnalignedVboChange)
+{
+    const int kRepeat = 2;
+
+    // set up VBO, colorVBO is unaligned
+    GLBuffer positionBuffer;
+    constexpr size_t posOffset = 0;
+    const GLfloat posData[]    = {0.5f, 0.5f};
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(posData), posData, GL_STATIC_DRAW);
+
+    GLBuffer colorBuffers[kRepeat];
+    constexpr size_t colorOffset                = 1;
+    const GLfloat colorData[]                   = {0.515f, 0.515f, 0.515f, 1.0f};
+    constexpr size_t colorBufferSize            = colorOffset + sizeof(colorData);
+    uint8_t colorDataUnaligned[colorBufferSize] = {0};
+    memcpy(reinterpret_cast<void *>(colorDataUnaligned + colorOffset), colorData,
+           sizeof(colorData));
+    for (uint32_t i = 0; i < kRepeat; i++)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffers[i]);
+        glBufferData(GL_ARRAY_BUFFER, colorBufferSize, colorDataUnaligned, GL_STATIC_DRAW);
+    }
+
+    // set up frame buffer
+    GLFramebuffer framebuffer;
+    GLTexture framebufferTexture;
+    bindTextureToFbo(framebuffer, framebufferTexture);
+
+    // set up program
+    ANGLE_GL_PROGRAM(program, kSimpleVertexShader, kSimpleFragmentShader);
+    glUseProgram(program);
+    GLuint colorAttrLocation = glGetAttribLocation(program, "color");
+    glEnableVertexAttribArray(colorAttrLocation);
+    GLuint posAttrLocation = glGetAttribLocation(program, "position");
+    glEnableVertexAttribArray(posAttrLocation);
+    EXPECT_GL_NO_ERROR();
+
+    // draw and get drawing results
+    constexpr size_t kRenderSize = kWindowSize * kWindowSize;
+    std::array<GLColor, kRenderSize> pixelBufs[kRepeat];
+
+    for (uint32_t i = 0; i < kRepeat; i++)
+    {
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+        glVertexAttribPointer(posAttrLocation, 2, GL_FLOAT, GL_FALSE, 0,
+                              reinterpret_cast<const void *>(posOffset));
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffers[i]);
+        glVertexAttribPointer(colorAttrLocation, 4, GL_FLOAT, GL_FALSE, 0,
+                              reinterpret_cast<const void *>(colorOffset));
+
+        glDrawArrays(GL_POINTS, 0, 1);
+
+        // read drawing results
+        glReadPixels(0, 0, kWindowSize, kWindowSize, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixelBufs[i].data());
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // verify something is drawn
+    static_assert(kRepeat >= 2, "More than one repetition required");
+    std::array<GLColor, kRenderSize> pixelAllBlack{0};
+    EXPECT_NE(pixelBufs[0], pixelAllBlack);
+    // verify drawing results are all identical
+    for (uint32_t i = 1; i < kRepeat; i++)
+    {
+        EXPECT_EQ(pixelBufs[i - 1], pixelBufs[i]);
+    }
+}
+
 // Handles deleting a Buffer when it's being used.
 TEST_P(SimpleStateChangeTest, DeleteBufferInUse)
 {
