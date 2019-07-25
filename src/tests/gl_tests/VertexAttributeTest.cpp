@@ -1449,8 +1449,6 @@ TEST_P(VertexAttributeTestES31, ChangeAttribFormatAfterVertexAttribPointer)
 // Verify that only updating a binding without updating the bound format won't mess up this draw.
 TEST_P(VertexAttributeTestES31, OnlyUpdateBindingByBindVertexBuffer)
 {
-    ANGLE_SKIP_TEST_IF(IsVulkan());  // anglebug.com/3598 - vertex attrib binding
-
     // Default binding index for test
     constexpr GLint kTestBinding = 10;
     initOnlyUpdateBindingTest(kTestBinding);
@@ -1488,8 +1486,6 @@ TEST_P(VertexAttributeTestES31, OnlyUpdateBindingByBindVertexBuffer)
 // Verify that only updating a binding without updating the bound format won't mess up this draw.
 TEST_P(VertexAttributeTestES31, OnlyUpdateBindingByVertexAttribPointer)
 {
-    ANGLE_SKIP_TEST_IF(IsVulkan());  // anglebug.com/3598 - vertex attrib binding
-
     // Default binding index for test
     constexpr GLint kTestBinding = 10;
     initOnlyUpdateBindingTest(kTestBinding);

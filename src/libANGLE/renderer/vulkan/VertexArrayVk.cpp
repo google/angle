@@ -372,11 +372,14 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
 
                 ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_ATTRIB_FUNC)
 
-#define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                    \
-    case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                            \
-        ANGLE_TRY(syncDirtyAttrib(contextVk, attribs[INDEX],                      \
-                                  bindings[attribs[INDEX].bindingIndex], INDEX)); \
-        (*bindingBits)[INDEX].reset();                                            \
+#define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                                   \
+    case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                                           \
+        for (size_t attribIndex : bindings[INDEX].getBoundAttributesMask())                      \
+        {                                                                                        \
+            ANGLE_TRY(                                                                           \
+                syncDirtyAttrib(contextVk, attribs[attribIndex], bindings[INDEX], attribIndex)); \
+        }                                                                                        \
+        (*bindingBits)[INDEX].reset();                                                           \
         break;
 
                 ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BINDING_FUNC)
