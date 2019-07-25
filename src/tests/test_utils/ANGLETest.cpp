@@ -176,17 +176,9 @@ bool ShouldAlwaysForceNewDisplay()
 }
 }  // anonymous namespace
 
-GLColorRGB::GLColorRGB() : R(0), G(0), B(0) {}
-
-GLColorRGB::GLColorRGB(GLubyte r, GLubyte g, GLubyte b) : R(r), G(g), B(b) {}
-
 GLColorRGB::GLColorRGB(const Vector3 &floatColor)
     : R(ColorDenorm(floatColor.x())), G(ColorDenorm(floatColor.y())), B(ColorDenorm(floatColor.z()))
 {}
-
-GLColor::GLColor() : R(0), G(0), B(0), A(0) {}
-
-GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b), A(a) {}
 
 GLColor::GLColor(const Vector4 &floatColor)
     : R(ColorDenorm(floatColor.x())),

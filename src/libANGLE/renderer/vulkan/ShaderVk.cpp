@@ -40,6 +40,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_CLAMP_POINT_SIZE;
     }
 
+    if (contextVk->emulateSeamfulCubeMapSampling())
+    {
+        compileOptions |= SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING;
+    }
+
     return compileImpl(context, compilerInstance, mData.getSource(), compileOptions | options);
 }
 

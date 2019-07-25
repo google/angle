@@ -313,6 +313,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void updateScissor(const gl::State &glState);
 
+    bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -470,6 +472,8 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
 
     void waitForSwapchainImageIfNecessary();
 
+    bool shouldEmulateSeamfulCubeMapSampling() const;
+
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineAndSerial *mCurrentComputePipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -530,6 +534,9 @@ class ContextVk : public ContextImpl, public vk::Context, public vk::RenderPassO
     // If any host-visible buffer is written by the GPU since last submission, a barrier is inserted
     // at the end of the command buffer to make that write available to the host.
     bool mIsAnyHostVisibleBufferWritten;
+
+    // Whether this context should do seamful cube map sampling emulation.
+    bool mEmulateSeamfulCubeMapSampling;
 
     struct DriverUniformsDescriptorSet
     {

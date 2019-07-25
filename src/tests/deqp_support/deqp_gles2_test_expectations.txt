@@ -280,9 +280,6 @@
 3309 NEXUS5X GLES : dEQP-GLES2.functional.uniform_api.random.3 = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.uniform_api.random.54 = FAIL
 
-// General Vulkan failures
-3300 VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
-
 // Only seen failing on Android
 3241 VULKAN ANDROID : dEQP-GLES2.functional.depth_stencil_clear.depth_scissored_masked = FAIL
 
@@ -290,13 +287,6 @@
 3253 VULKAN : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL
 3253 VULKAN : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 
-// These seem to fail on both D3D11 and Vulkan
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
-3243 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
 // D3D11 AMD already covered by Line 148
 3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
 3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
@@ -312,16 +302,6 @@
 3243 D3D11 NVIDIA : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
 
 // Fail with very tiny pixel differences
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_mirror = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_repeat = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_mirror = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
-3240 VULKAN : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
 3240 D3D11 : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
@@ -348,6 +328,44 @@
 3306 VULKAN ANDROID : dEQP-GLES2.functional.polygon_offset.default_factor_1_slope = FAIL
 3306 VULKAN ANDROID : dEQP-GLES2.functional.polygon_offset.fixed16_factor_1_slope = FAIL
 3307 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = FAIL
+
+// Seamful cubemap sampling failures on Android (due to missing support subgroupQuad* operations).
+3243 VULKAN ANDROID : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_mirror = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_clamp = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_repeat = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_mirror = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
+3243 VULKAN ANDROID : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
+
+// These tests also fail on AMD windows driver as it is not allowed to use emulation due to errors.
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_clamp = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_mirror = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_clamp = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_mirror = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_clamp = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_repeat = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_mirror = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
+3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
 
 // Vulkan AMD drivers don't seem to support wide point clipping.
 2463 VULKAN WIN AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL

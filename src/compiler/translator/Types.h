@@ -329,6 +329,7 @@ class TType
     void realize();
 
     bool isSampler() const { return IsSampler(type); }
+    bool isSamplerCube() const { return type == EbtSamplerCube; }
     bool isAtomicCounter() const { return IsAtomicCounter(type); }
 
   private:

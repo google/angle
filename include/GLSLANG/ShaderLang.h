@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 210
+#define ANGLE_SH_VERSION 211
 
 enum ShShaderSpec
 {
@@ -286,6 +286,11 @@ const ShCompileOptions SH_FORCE_ATOMIC_VALUE_RESOLUTION = UINT64_C(1) << 42;
 
 // Rewrite gl_BaseVertex and gl_BaseInstance as uniform int
 const ShCompileOptions SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE = UINT64_C(1) << 43;
+
+// Emulate seamful cube map sampling for OpenGL ES2.0.  Currently only applies to the Vulkan
+// backend, as subgroup operations are used.  Once that dependency is broken, could be used with
+// the other backends as well.
+const ShCompileOptions SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING = UINT64_C(1) << 44;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

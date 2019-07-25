@@ -422,6 +422,20 @@ bool IsSamplerType(GLenum type)
     return false;
 }
 
+bool IsSamplerCubeType(GLenum type)
+{
+    switch (type)
+    {
+        case GL_SAMPLER_CUBE:
+        case GL_INT_SAMPLER_CUBE:
+        case GL_UNSIGNED_INT_SAMPLER_CUBE:
+        case GL_SAMPLER_CUBE_SHADOW:
+            return true;
+    }
+
+    return false;
+}
+
 bool IsImageType(GLenum type)
 {
     switch (type)

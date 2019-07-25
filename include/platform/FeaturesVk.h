@@ -194,6 +194,12 @@ struct FeaturesVk : FeatureSetBase
         "On Pixel2, keep using transient vkCommandBuffer to work around driver issue in reseting"
         "vkCommandBuffer",
         &members, "http://b/135763283"};
+
+    // Seamful cube map emulation misbehaves on the AMD windows driver, so it's disallowed.
+    Feature disallowSeamfulCubeMapEmulation = {
+        "disallow_seamful_cube_map_emulation", FeatureCategory::VulkanWorkarounds,
+        "Seamful cube map emulation misbehaves on the AMD windows driver, so it's disallowed",
+        &members, "http://anglebug.com/3243"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

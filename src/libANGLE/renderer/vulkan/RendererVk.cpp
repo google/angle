@@ -490,6 +490,7 @@ RendererVk::RendererVk()
       mDebugUtilsMessenger(VK_NULL_HANDLE),
       mDebugReportCallback(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
+      mPhysicalDeviceSubgroupProperties{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES},
       mQueue(VK_NULL_HANDLE),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mMaxVertexAttribDivisor(1),
@@ -1005,6 +1006,15 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         createInfo.pEnabledFeatures = &enabledFeatures.features;
     }
 
+    if (vkGetPhysicalDeviceProperties2KHR)
+    {
+        VkPhysicalDeviceProperties2 deviceProperties = {};
+        deviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+        deviceProperties.pNext = &mPhysicalDeviceSubgroupProperties;
+
+        vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
+    }
+
     createInfo.enabledExtensionCount = static_cast<uint32_t>(enabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         enabledDeviceExtensions.empty() ? nullptr : enabledDeviceExtensions.data();
@@ -1262,6 +1272,11 @@ void RendererVk::initFeatures(const ExtensionNameList &deviceExtensionNames)
         (IsWindows() && IsAMD(mPhysicalDeviceProperties.vendorID)))
     {
         mFeatures.perFrameWindowSizeQuery.enabled = true;
+    }
+
+    if (IsWindows() && IsAMD(mPhysicalDeviceProperties.vendorID))
+    {
+        mFeatures.disallowSeamfulCubeMapEmulation.enabled = true;
     }
 
     if (IsAndroid() && IsQualcomm(mPhysicalDeviceProperties.vendorID))

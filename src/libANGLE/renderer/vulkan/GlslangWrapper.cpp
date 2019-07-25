@@ -28,6 +28,7 @@ ANGLE_REENABLE_EXTRA_SEMI_WARNING
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/ProgramLinkedResources.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace rx
@@ -935,6 +936,7 @@ void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
 angle::Result GlslangWrapper::GetShaderCode(vk::Context *context,
                                             const gl::Caps &glCaps,
                                             bool enableLineRasterEmulation,
+                                            bool enableSeamfulCubeMapEmulation,
                                             const gl::ShaderMap<std::string> &shaderSources,
                                             gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
@@ -954,17 +956,20 @@ angle::Result GlslangWrapper::GetShaderCode(vk::Context *context,
                                                kVersionDefine, kLineRasterDefine),
                        VK_ERROR_INVALID_SHADER_NV);
 
-        return GetShaderCodeImpl(context, glCaps, patchedSources, shaderCodeOut);
+        return GetShaderCodeImpl(context, glCaps, enableSeamfulCubeMapEmulation, patchedSources,
+                                 shaderCodeOut);
     }
     else
     {
-        return GetShaderCodeImpl(context, glCaps, shaderSources, shaderCodeOut);
+        return GetShaderCodeImpl(context, glCaps, enableSeamfulCubeMapEmulation, shaderSources,
+                                 shaderCodeOut);
     }
 }
 
 // static
 angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
                                                 const gl::Caps &glCaps,
+                                                bool enableSeamfulCubeMapEmulation,
                                                 const gl::ShaderMap<std::string> &shaderSources,
                                                 gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
@@ -1000,6 +1005,11 @@ angle::Result GlslangWrapper::GetShaderCodeImpl(vk::Context *context,
         glslang::TShader *shader = shaders[shaderType];
         shader->setStringsWithLengths(&shaderString, &shaderLength, 1);
         shader->setEntryPoint("main");
+        if (enableSeamfulCubeMapEmulation)
+        {
+            // Enable SPIR-V 1.3 if this workaround is used, as it uses subgroup operations.
+            shader->setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_3);
+        }
 
         bool result = shader->parse(&builtInResources, 450, ECoreProfile, false, false, messages);
         if (!result)

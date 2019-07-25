@@ -438,6 +438,8 @@ angle::Result ContextVk::initialize()
         ANGLE_TRY(synchronizeCpuGpuTime());
     }
 
+    mEmulateSeamfulCubeMapSampling = shouldEmulateSeamfulCubeMapSampling();
+
     return angle::Result::Continue;
 }
 
@@ -2889,5 +2891,31 @@ vk::DescriptorSetLayoutDesc ContextVk::getDriverUniformsDescriptorSetDesc(
     vk::DescriptorSetLayoutDesc desc;
     desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1, shaderStages);
     return desc;
+}
+
+bool ContextVk::shouldEmulateSeamfulCubeMapSampling() const
+{
+    if (mState.getClientMajorVersion() != 2)
+    {
+        return false;
+    }
+
+    if (mRenderer->getFeatures().disallowSeamfulCubeMapEmulation.enabled)
+    {
+        return false;
+    }
+
+    constexpr VkSubgroupFeatureFlags kSeamfulCubeMapSubgroupOperations =
+        VK_SUBGROUP_FEATURE_BASIC_BIT | VK_SUBGROUP_FEATURE_BALLOT_BIT |
+        VK_SUBGROUP_FEATURE_QUAD_BIT;
+    const VkSubgroupFeatureFlags deviceSupportedOperations =
+        mRenderer->getPhysicalDeviceSubgroupProperties().supportedOperations;
+    bool hasSeamfulCubeMapSubgroupOperations =
+        (deviceSupportedOperations & kSeamfulCubeMapSubgroupOperations) ==
+        kSeamfulCubeMapSubgroupOperations;
+
+    // Only enable seamful cube map emulation if the necessary subgroup operations are supported.
+    // Without them, we cannot remove derivative-related artifacts caused by helper invocations.
+    return hasSeamfulCubeMapSubgroupOperations;
 }
 }  // namespace rx

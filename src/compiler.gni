@@ -156,6 +156,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/RewriteAtomicCounters.h",
   "src/compiler/translator/tree_ops/RewriteAtomicFunctionExpressions.cpp",
   "src/compiler/translator/tree_ops/RewriteAtomicFunctionExpressions.h",
+  "src/compiler/translator/tree_ops/RewriteCubeMapSamplersAs2DArray.cpp",
+  "src/compiler/translator/tree_ops/RewriteCubeMapSamplersAs2DArray.h",
   "src/compiler/translator/tree_ops/RewriteDfdy.cpp",
   "src/compiler/translator/tree_ops/RewriteDfdy.h",
   "src/compiler/translator/tree_ops/RewriteDoWhile.cpp",

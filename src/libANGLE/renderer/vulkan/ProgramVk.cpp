@@ -306,7 +306,8 @@ angle::Result ProgramVk::ShaderInfo::initShaders(ContextVk *contextVk,
 
     gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
     ANGLE_TRY(GlslangWrapper::GetShaderCode(
-        contextVk, contextVk->getCaps(), enableLineRasterEmulation, shaderSources, &shaderCodes));
+        contextVk, contextVk->getCaps(), enableLineRasterEmulation,
+        contextVk->emulateSeamfulCubeMapSampling(), shaderSources, &shaderCodes));
 
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -1436,6 +1437,8 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 
     const gl::ActiveTextureArray<TextureVk *> &activeTextures = contextVk->getActiveTextures();
 
+    bool emulateSeamfulCubeMapSampling = contextVk->emulateSeamfulCubeMapSampling();
+
     for (uint32_t textureIndex = 0; textureIndex < mState.getSamplerBindings().size();
          ++textureIndex)
     {
@@ -1456,6 +1459,13 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
             imageInfo.sampler     = textureVk->getSampler().getHandle();
             imageInfo.imageView   = textureVk->getReadImageView().getHandle();
             imageInfo.imageLayout = image.getCurrentLayout();
+
+            if (emulateSeamfulCubeMapSampling)
+            {
+                // If emulating seamful cubemapping, use the fetch image view.  This is basically
+                // the same image view as read, except it's a 2DArray view for cube maps.
+                imageInfo.imageView = textureVk->getFetchImageView().getHandle();
+            }
 
             VkWriteDescriptorSet &writeInfo = writeDescriptorInfo[writeCount];
 

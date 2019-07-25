@@ -72,6 +72,10 @@ class RendererVk : angle::NonCopyable
     {
         return mPhysicalDeviceProperties;
     }
+    const VkPhysicalDeviceSubgroupProperties &getPhysicalDeviceSubgroupProperties() const
+    {
+        return mPhysicalDeviceSubgroupProperties;
+    }
     const VkPhysicalDeviceFeatures &getPhysicalDeviceFeatures() const
     {
         return mPhysicalDeviceFeatures;
@@ -190,6 +194,7 @@ class RendererVk : angle::NonCopyable
     VkDebugReportCallbackEXT mDebugReportCallback;
     VkPhysicalDevice mPhysicalDevice;
     VkPhysicalDeviceProperties mPhysicalDeviceProperties;
+    VkPhysicalDeviceSubgroupProperties mPhysicalDeviceSubgroupProperties;
     VkPhysicalDeviceFeatures mPhysicalDeviceFeatures;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     std::mutex mQueueMutex;

@@ -18,6 +18,7 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/NameEmbeddedUniformStructs.h"
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
+#include "compiler/translator/tree_ops/RewriteCubeMapSamplersAs2DArray.h"
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
@@ -644,6 +645,11 @@ void TranslatorVulkan::translate(TIntermBlock *root,
 
     sink << "#version 450 core\n";
 
+    if (compileOptions & SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING)
+    {
+        sink << "#extension GL_KHR_shader_subgroup_quad : require\n";
+    }
+
     // Write out default uniforms into a uniform block assigned to a specific set/binding.
     int defaultUniformCount        = 0;
     int structTypesUsedForUniforms = 0;
@@ -678,6 +684,14 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         DeclareStructTypesTraverser structTypesTraverser(&outputGLSL);
         root->traverse(&structTypesTraverser);
         structTypesTraverser.updateTree();
+    }
+
+    // Rewrite samplerCubes as sampler2DArrays.  This must be done after rewriting struct samplers
+    // as it doesn't expect that.
+    if (compileOptions & SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING)
+    {
+        RewriteCubeMapSamplersAs2DArray(root, &getSymbolTable(),
+                                        getShaderType() == GL_FRAGMENT_SHADER);
     }
 
     if (defaultUniformCount > 0)
