@@ -523,6 +523,7 @@ void Context::initialize()
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
 
+    mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
     mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
     ANGLE_CONTEXT_TRY(mImplementation->initialize());
@@ -3546,6 +3547,7 @@ void Context::updateCaps()
         mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT);
         mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT);
         mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
+        mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
         mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
     }
 
@@ -3589,6 +3591,12 @@ angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
     ANGLE_TRY(mState.syncDirtyObject(this, GL_DRAW_FRAMEBUFFER));
     ANGLE_TRY(syncDirtyBits(mClearDirtyBits));
     return angle::Result::Continue;
+}
+
+ANGLE_INLINE angle::Result Context::prepareForCopyImage()
+{
+    ANGLE_TRY(syncDirtyObjects(mCopyImageDirtyObjects));
+    return syncDirtyBits(mCopyImageDirtyBits);
 }
 
 ANGLE_INLINE angle::Result Context::prepareForDispatch()
@@ -3787,7 +3795,7 @@ void Context::copyTexImage2D(TextureTarget target,
                              GLsizei height,
                              GLint border)
 {
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObjects(this, mCopyImageDirtyObjects));
+    ANGLE_CONTEXT_TRY(prepareForCopyImage());
 
     Rectangle sourceArea(x, y, width, height);
 
@@ -3811,7 +3819,7 @@ void Context::copyTexSubImage2D(TextureTarget target,
         return;
     }
 
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObjects(this, mCopyImageDirtyObjects));
+    ANGLE_CONTEXT_TRY(prepareForCopyImage());
 
     Offset destOffset(xoffset, yoffset, 0);
     Rectangle sourceArea(x, y, width, height);
@@ -3838,7 +3846,7 @@ void Context::copyTexSubImage3D(TextureTarget target,
         return;
     }
 
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObjects(this, mCopyImageDirtyObjects));
+    ANGLE_CONTEXT_TRY(prepareForCopyImage());
 
     Offset destOffset(xoffset, yoffset, zoffset);
     Rectangle sourceArea(x, y, width, height);

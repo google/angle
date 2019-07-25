@@ -461,6 +461,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                               angle::MemoryBuffer **zeroBufferOut) const;
     angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
 
+    angle::Result prepareForCopyImage();
     angle::Result prepareForDispatch();
 
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
@@ -682,6 +683,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     State::DirtyObjects mBlitDirtyObjects;
     State::DirtyBits mComputeDirtyBits;
     State::DirtyObjects mComputeDirtyObjects;
+    State::DirtyBits mCopyImageDirtyBits;
     State::DirtyObjects mCopyImageDirtyObjects;
 
     // Binding to container objects that use dependent state updates.
