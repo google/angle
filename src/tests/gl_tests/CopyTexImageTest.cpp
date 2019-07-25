@@ -371,9 +371,6 @@ TEST_P(CopyTexImageTest, SubDefaultFramebuffer)
 // Calling CopyTexSubImage from cubeMap texture.
 TEST_P(CopyTexImageTest, CopyTexSubImageFromCubeMap)
 {
-    // TODO: Diagnose and fix. http://anglebug.com/2954
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
-
     constexpr GLsizei kCubeMapFaceCount = 6;
 
     // The framebuffer will be a face of a cube map with a different colors for each face.  Each

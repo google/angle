@@ -339,9 +339,9 @@ angle::Result TextureVk::copyCompressedTexture(const gl::Context *context,
 
     ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk));
 
-    return copySubImageImplWithTransfer(contextVk, destIndex, gl::Offset(0, 0, 0), vkFormat,
-                                        sourceLevel, gl::Rectangle(0, 0, size.width, size.height),
-                                        &sourceVk->getImage());
+    return copySubImageImplWithTransfer(
+        contextVk, destIndex, gl::Offset(0, 0, 0), vkFormat, sourceLevel, 0,
+        gl::Rectangle(0, 0, size.width, size.height), &sourceVk->getImage());
 }
 
 angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
@@ -376,13 +376,14 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     const vk::Format &srcFormat  = colorReadRT->getImageFormat();
     const vk::Format &destFormat = renderer->getFormat(internalFormat.sizedInternalFormat);
 
-    bool isViewportFlipY = contextVk->isViewportFlipEnabledForDrawFBO();
+    bool isViewportFlipY = contextVk->isViewportFlipEnabledForReadFBO();
 
     // If it's possible to perform the copy with a transfer, that's the best option.
     if (!isViewportFlipY && CanCopyWithTransfer(renderer, srcFormat, destFormat))
     {
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, modifiedDestOffset,
-                                            destFormat, 0, clippedSourceArea,
+                                            destFormat, colorReadRT->getLevelIndex(),
+                                            colorReadRT->getLayerIndex(), clippedSourceArea,
                                             &colorReadRT->getImage());
     }
 
@@ -435,7 +436,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
         CanCopyWithTransfer(renderer, sourceVkFormat, destVkFormat))
     {
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, destOffset, destVkFormat,
-                                            sourceLevel, sourceArea, &source->getImage());
+                                            sourceLevel, 0, sourceArea, &source->getImage());
     }
 
     bool forceCpuPath = ForceCpuPathForCopy(renderer, mImage);
@@ -504,6 +505,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
                                                       const gl::Offset &destOffset,
                                                       const vk::Format &destFormat,
                                                       size_t sourceLevel,
+                                                      size_t sourceLayer,
                                                       const gl::Rectangle &sourceArea,
                                                       vk::ImageHelper *srcImage)
 {
@@ -527,7 +529,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     VkImageSubresourceLayers srcSubresource = {};
     srcSubresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
     srcSubresource.mipLevel                 = sourceLevel;
-    srcSubresource.baseArrayLayer           = 0;
+    srcSubresource.baseArrayLayer           = sourceLayer;
     srcSubresource.layerCount               = layerCount;
 
     // If destination is valid, copy the source directly into it.
@@ -576,6 +578,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
         destSubresource.mipLevel                 = 0;
+        destSubresource.baseArrayLayer           = 0;
 
         vk::ImageHelper::Copy(srcImage, stagingImage.get(), srcOffset, gl::Offset(), extents,
                               srcSubresource, destSubresource, commandBuffer);
