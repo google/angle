@@ -1987,7 +1987,8 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
 
     bool globalInitWarning = false;
     if (symbolTable.atGlobalLevel() &&
-        !ValidateGlobalInitializer(initializer, mShaderVersion, &globalInitWarning))
+        !ValidateGlobalInitializer(initializer, mShaderVersion, sh::IsWebGLBasedSpec(mShaderSpec),
+                                   &globalInitWarning))
     {
         // Error message does not completely match behavior with ESSL 1.00, but
         // we want to steer developers towards only using constant expressions.

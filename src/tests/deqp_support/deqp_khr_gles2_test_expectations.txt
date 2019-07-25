@@ -29,9 +29,6 @@
 // fails on Nexus5X with GLES backend (hangs)
 //  91531 NEXUS5X GLES : conformance_more_* = SKIP
 
-// Relates to a difference in spec with ES and Core GL.
-3381 : KHR-GLES2.shaders.negative.initialize = FAIL
-
 // Failures with floating point extensions
 3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgb_half_float_rgb16f = FAIL
 3451 D3D9 D3D11 OPENGL GLES : KHR-GLES2.core.internalformat.texture2d.rgba_half_float_rgba16f = FAIL

@@ -13,7 +13,10 @@ namespace sh
 class TIntermTyped;
 
 // Returns true if the initializer is valid.
-bool ValidateGlobalInitializer(TIntermTyped *initializer, int shaderVersion, bool *warning);
+bool ValidateGlobalInitializer(TIntermTyped *initializer,
+                               int shaderVersion,
+                               bool isWebGL,
+                               bool *warning);
 
 }  // namespace sh
 
