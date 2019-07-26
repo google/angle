@@ -278,6 +278,8 @@ void FrameCapture::captureClientArraySnapshot(const gl::Context *context,
             CaptureMemory(param.value.voidConstPointerVal, bytesToCapture, &updateMemory);
             updateParamBuffer.addParam(std::move(updateMemory));
 
+            updateParamBuffer.addValueParam<GLuint64>("size", ParamType::TGLuint64, bytesToCapture);
+
             mCalls.emplace_back("UpdateClientArrayPointer", std::move(updateParamBuffer));
 
             mClientArraySizes[attribIndex] =
@@ -319,6 +321,7 @@ void FrameCapture::saveCapturedFrameAsCpp()
     header << "#include \"util/gles_loader_autogen.h\"\n";
     header << "\n";
     header << "#include <cstdio>\n";
+    header << "#include <cstring>\n";
     header << "#include <vector>\n";
     header << "\n";
     header << "namespace\n";
@@ -330,10 +333,10 @@ void FrameCapture::saveCapturedFrameAsCpp()
     if (useClientArrays)
     {
         header << "std::vector<uint8_t> gClientArrays[" << gl::MAX_VERTEX_ATTRIBS << "];\n";
-        header << "template <size_t N>\n";
-        header << "void UpdateClientArrayPointer(int arrayIndex, const uint8_t (&data)[N])\n";
+        header << "void UpdateClientArrayPointer(int arrayIndex, const void *data, GLuint64 size)"
+               << "\n";
         header << "{\n";
-        header << "    memcpy(gClientArrays[arrayIndex].data(), data, N);\n";
+        header << "    memcpy(gClientArrays[arrayIndex].data(), data, size);\n";
         header << "}\n";
     }
 
@@ -482,8 +485,16 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
                     size_t offset = binaryData->size();
                     binaryData->resize(offset + data.size());
                     memcpy(binaryData->data() + offset, data.data(), data.size());
-                    out << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(&gBinaryData["
-                        << offset << "])";
+                    if (param.type == ParamType::TvoidConstPointer ||
+                        param.type == ParamType::TvoidPointer)
+                    {
+                        out << "&gBinaryData[" << offset << "]";
+                    }
+                    else
+                    {
+                        out << "reinterpret_cast<" << ParamTypeToString(param.type)
+                            << ">(&gBinaryData[" << offset << "])";
+                    }
                 }
                 else
                 {
