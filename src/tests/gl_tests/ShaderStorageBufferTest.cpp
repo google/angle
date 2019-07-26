@@ -1603,6 +1603,8 @@ TEST_P(ShaderStorageBufferTest31, LoadAndStoreBooleanValue)
     // on Vulkan.  http://anglebug.com/3694
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsOpenGL());
     ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan());
+    // Fails on 431.02 driver. http://anglebug.com/3749
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsD3D11());
 
     constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout (local_size_x=1) in;

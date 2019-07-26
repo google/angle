@@ -1116,6 +1116,9 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 // flush or finish after ClearBufferfv or each draw.
 TEST_P(ClearTestES3, RepeatedClear)
 {
+    // Fails on 431.02 driver. http://anglebug.com/3748
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsVulkan());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in highp vec2 position;\n"
