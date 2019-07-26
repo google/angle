@@ -162,10 +162,10 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
         if (context->getStateCache().hasAnyActiveClientAttrib())
         {
             // Get counts from paramBuffer.
-            GLint startVertex = call.params.getParam("start", ParamType::TGLint, 1).value.GLintVal;
+            GLint firstVertex = call.params.getParam("first", ParamType::TGLint, 1).value.GLintVal;
             GLsizei drawCount =
                 call.params.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
-            captureClientArraySnapshot(context, startVertex + drawCount, 1);
+            captureClientArraySnapshot(context, firstVertex + drawCount, 1);
         }
     }
     else if (call.name == "glDrawElements")
