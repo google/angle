@@ -1,20 +1,20 @@
 {
+  "src/compiler/translator/ImmutableString_autogen.cpp":
+    "325dc410635436401990388b73531c11",
   "src/compiler/translator/ParseContext_autogen.h":
     "58786d2f352ee1a58d529fb7572c86a4",
   "src/compiler/translator/SymbolTable_autogen.cpp":
-    "9a0b524e9254116e1a38e3ef1b57b669",
+    "040a451ff0ad57612d5614d853cebd5a",
   "src/compiler/translator/SymbolTable_autogen.h":
     "bdb3c8eab0d48267a2f264e3af635e1a",
   "src/compiler/translator/builtin_function_declarations.txt":
     "d0c15cb9f2ef6c0ba5cd6612470db000",
-  "src/compiler/translator/builtin_symbols_hash_autogen.txt":
-    "e2fb536afe6669e60e45f6b5d0730631",
   "src/compiler/translator/builtin_variables.json":
     "04f763459cfbd47831bec22299287e82",
   "src/compiler/translator/gen_builtin_symbols.py":
-    "5d5467e17ca5ed5bf9938df9a3391e6f",
+    "5fca8cb433dcbbd956ec27dc583ccee8",
   "src/compiler/translator/tree_util/BuiltIn_autogen.h":
     "69268b2f3bda048ba8aaabe60c9b9912",
   "src/tests/compiler_tests/ImmutableString_test_autogen.cpp":
-    "e23f23bbd011ab29c4bb37ea69cfb3bd"
+    "aafd90302c36e2a848711576aa3a1aee"
 }

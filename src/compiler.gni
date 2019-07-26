@@ -44,7 +44,7 @@ angle_translator_sources = [
   "src/compiler/translator/FunctionLookup.h",
   "src/compiler/translator/HashNames.cpp",
   "src/compiler/translator/HashNames.h",
-  "src/compiler/translator/ImmutableString.cpp",
+  "src/compiler/translator/ImmutableString_autogen.cpp",
   "src/compiler/translator/ImmutableString.h",
   "src/compiler/translator/ImmutableStringBuilder.cpp",
   "src/compiler/translator/ImmutableStringBuilder.h",

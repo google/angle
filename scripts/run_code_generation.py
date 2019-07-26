@@ -12,6 +12,7 @@ import json
 import os
 import subprocess
 import sys
+import platform
 
 script_dir = sys.path[0]
 root_dir = os.path.abspath(os.path.join(script_dir, '..'))
@@ -37,8 +38,12 @@ def rebase_script_path(script_path, relative_path):
     return os.path.relpath(os.path.join(os.path.dirname(script_path), relative_path), root_dir)
 
 
+def get_executable_name():
+    return 'vpython.bat' if platform.system() == 'Windows' else 'vpython'
+
+
 def grab_from_script(script, param):
-    res = subprocess.check_output(['python', script, param]).strip()
+    res = subprocess.check_output([get_executable_name(), script, param]).strip()
     if res == '':
         return []
     return [clean_path_slashes(rebase_script_path(script, name)) for name in res.split(',')]
@@ -183,7 +188,7 @@ def main():
                 os.chdir(get_child_script_dirname(script))
 
                 print('Running ' + name + ' code generator')
-                if subprocess.call(['python', os.path.basename(script)]) != 0:
+                if subprocess.call([get_executable_name(), os.path.basename(script)]) != 0:
                     sys.exit(1)
 
         # Update the hash dictionary.
