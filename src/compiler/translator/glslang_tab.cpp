@@ -408,20 +408,23 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
     }  \
 } while (0)
 
+// TODO(http://anglebug.com/3819): Update for GL version specific validation
 #define ES2_ONLY(S, L) do {  \
-    if (context->getShaderVersion() != 100) {  \
+    if (context->getShaderVersion() != 100 && !IsDesktopGLSpec(context->getShaderSpec())) {  \
         context->error(L, " supported in GLSL ES 1.00 only", S);  \
     }  \
 } while (0)
 
+// TODO(http://anglebug.com/3819): Update for GL version specific validation
 #define ES3_OR_NEWER(TOKEN, LINE, REASON) do {  \
-    if (context->getShaderVersion() < 300) {  \
+    if (context->getShaderVersion() < 300 && !IsDesktopGLSpec(context->getShaderSpec())) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.00 and above only", TOKEN);  \
     }  \
 } while (0)
 
+// TODO(http://anglebug.com/3819): Update for GL version specific validation
 #define ES3_1_ONLY(TOKEN, LINE, REASON) do {  \
-    if (context->getShaderVersion() != 310) {  \
+    if (context->getShaderVersion() != 310 && !IsDesktopGLSpec(context->getShaderSpec())) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.10 only", TOKEN);  \
     }  \
 } while (0)

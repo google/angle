@@ -70,12 +70,14 @@ int GL_APIENTRY wglDescribePixelFormat(HDC hdc, int ipfd, UINT cjpfd, PIXELFORMA
         ppfd->dwFlags      = ppfd->dwFlags | PFD_GENERIC_ACCELERATED;
         ppfd->dwFlags      = ppfd->dwFlags | PFD_DOUBLEBUFFER;
         ppfd->iPixelType   = PFD_TYPE_RGBA;
+        ppfd->cColorBits   = 24;
         ppfd->cRedBits     = 8;
         ppfd->cGreenBits   = 8;
         ppfd->cBlueBits    = 8;
         ppfd->cAlphaBits   = 8;
         ppfd->cDepthBits   = 24;
         ppfd->cStencilBits = 8;
+        ppfd->nVersion     = 1;
     }
     return 1;
 }
@@ -159,7 +161,7 @@ HGLRC GL_APIENTRY wglCreateContext(HDC hDc)
         "wglCreateContext", display, nullptr);
 
     // Initialize context
-    EGLint contextAttibutes[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_CONTEXT_MINOR_VERSION, 3,
+    EGLint contextAttibutes[] = {EGL_CONTEXT_CLIENT_VERSION, 4, EGL_CONTEXT_MINOR_VERSION, 6,
                                  EGL_NONE};
 
     gl::Context *sharedGLContext = static_cast<gl::Context *>(nullptr);

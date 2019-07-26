@@ -52,6 +52,7 @@ enum class BlockType
 
     // Required in OpenGL ES 3.1 extension GL_OES_shader_io_blocks.
     // TODO(jiawei.shao@intel.com): add BLOCK_OUT.
+    // Also used in GLSL
     BLOCK_IN
 };
 

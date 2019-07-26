@@ -241,6 +241,16 @@ inline bool IsIntegerSampler(TBasicType type)
         case EbtUSampler2DArray:
         case EbtUSampler2DMS:
         case EbtUSampler2DMSArray:
+        case EbtISampler1D:
+        case EbtISampler1DArray:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSampler1D:
+        case EbtUSampler1DArray:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
             return true;
         case EbtSampler2D:
         case EbtSampler3D:
@@ -254,6 +264,14 @@ inline bool IsIntegerSampler(TBasicType type)
         case EbtSampler2DArrayShadow:
         case EbtSampler2DMS:
         case EbtSampler2DMSArray:
+        case EbtSampler1D:
+        case EbtSampler1DArray:
+        case EbtSampler1DArrayShadow:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
+        case EbtSampler1DShadow:
+        case EbtSampler2DRectShadow:
             return false;
         default:
             assert(!IsSampler(type));
@@ -272,6 +290,11 @@ inline bool IsIntegerSamplerUnsigned(TBasicType type)
         case EbtISampler2DArray:
         case EbtISampler2DMS:
         case EbtISampler2DMSArray:
+        case EbtISampler1D:
+        case EbtISampler1DArray:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
             return false;
         case EbtUSampler2D:
         case EbtUSampler3D:
@@ -279,6 +302,11 @@ inline bool IsIntegerSamplerUnsigned(TBasicType type)
         case EbtUSampler2DArray:
         case EbtUSampler2DMS:
         case EbtUSampler2DMSArray:
+        case EbtUSampler1D:
+        case EbtUSampler1DArray:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
             return true;
         default:
             assert(!IsIntegerSampler(type));
@@ -317,10 +345,18 @@ inline bool IsFloatImage(TBasicType type)
 {
     switch (type)
     {
+        case EbtImage1D:
         case EbtImage2D:
         case EbtImage3D:
+        case EbtImage1DArray:
         case EbtImage2DArray:
         case EbtImageCube:
+        case EbtImage2DMS:
+        case EbtImage2DMSArray:
+        case EbtImage2DRect:
+        case EbtImageCubeArray:
+        case EbtImageRect:
+        case EbtImageBuffer:
             return true;
         default:
             break;
@@ -334,10 +370,18 @@ inline bool IsIntegerImage(TBasicType type)
 
     switch (type)
     {
+        case EbtIImage1D:
         case EbtIImage2D:
         case EbtIImage3D:
+        case EbtIImage1DArray:
         case EbtIImage2DArray:
         case EbtIImageCube:
+        case EbtIImage2DMS:
+        case EbtIImage2DMSArray:
+        case EbtIImage2DRect:
+        case EbtIImageCubeArray:
+        case EbtIImageRect:
+        case EbtIImageBuffer:
             return true;
         default:
             break;
@@ -351,10 +395,18 @@ inline bool IsUnsignedImage(TBasicType type)
 
     switch (type)
     {
+        case EbtUImage1D:
         case EbtUImage2D:
         case EbtUImage3D:
+        case EbtUImage1DArray:
         case EbtUImage2DArray:
         case EbtUImageCube:
+        case EbtUImage2DMS:
+        case EbtUImage2DMSArray:
+        case EbtUImage2DRect:
+        case EbtUImageCubeArray:
+        case EbtUImageRect:
+        case EbtUImageBuffer:
             return true;
         default:
             break;
@@ -373,6 +425,9 @@ inline bool IsSampler2D(TBasicType type)
         case EbtISampler2D:
         case EbtUSampler2D:
         case EbtSampler2DRect:
+        case EbtISampler2DRect:
+        case EbtUSampler2DRect:
+        case EbtSampler2DRectShadow:
         case EbtSamplerExternalOES:
         case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DShadow:
@@ -394,6 +449,21 @@ inline bool IsSampler2D(TBasicType type)
         case EbtUSamplerCube:
         case EbtSamplerCube:
         case EbtSamplerCubeShadow:
+        case EbtSampler1D:
+        case EbtSampler1DArray:
+        case EbtSampler1DArrayShadow:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
+        case EbtSampler1DShadow:
+        case EbtISampler1D:
+        case EbtISampler1DArray:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSampler1D:
+        case EbtUSampler1DArray:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
             return false;
         default:
             assert(!IsSampler(type));
@@ -431,6 +501,24 @@ inline bool IsSamplerCube(TBasicType type)
         case EbtUSampler2DMSArray:
         case EbtSampler2DShadow:
         case EbtSampler2DArrayShadow:
+        case EbtSampler1D:
+        case EbtSampler1DArray:
+        case EbtSampler1DArrayShadow:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
+        case EbtSampler1DShadow:
+        case EbtSampler2DRectShadow:
+        case EbtISampler1D:
+        case EbtISampler1DArray:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSampler1D:
+        case EbtUSampler1DArray:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
             return false;
         default:
             assert(!IsSampler(type));
@@ -468,6 +556,24 @@ inline bool IsSampler3D(TBasicType type)
         case EbtSampler2DShadow:
         case EbtSamplerCubeShadow:
         case EbtSampler2DArrayShadow:
+        case EbtSampler1D:
+        case EbtSampler1DArray:
+        case EbtSampler1DArrayShadow:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
+        case EbtSampler1DShadow:
+        case EbtSampler2DRectShadow:
+        case EbtISampler1D:
+        case EbtISampler1DArray:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSampler1D:
+        case EbtUSampler1DArray:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
             return false;
         default:
             assert(!IsSampler(type));
@@ -480,6 +586,10 @@ inline bool IsSamplerArray(TBasicType type)
 {
     switch (type)
     {
+        case EbtSampler1DArray:
+        case EbtISampler1DArray:
+        case EbtUSampler1DArray:
+        case EbtSampler1DArrayShadow:
         case EbtSampler2DArray:
         case EbtISampler2DArray:
         case EbtUSampler2DArray:
@@ -487,6 +597,10 @@ inline bool IsSamplerArray(TBasicType type)
         case EbtISampler2DMSArray:
         case EbtUSampler2DMSArray:
         case EbtSampler2DArrayShadow:
+        case EbtSamplerCubeArray:
+        case EbtISamplerCubeArray:
+        case EbtUSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
             return true;
         case EbtSampler2D:
         case EbtISampler2D:
@@ -505,6 +619,16 @@ inline bool IsSamplerArray(TBasicType type)
         case EbtSampler2DMS:
         case EbtISampler2DMS:
         case EbtUSampler2DMS:
+        case EbtSampler1D:
+        case EbtSamplerBuffer:
+        case EbtSampler1DShadow:
+        case EbtSampler2DRectShadow:
+        case EbtISampler1D:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtUSampler1D:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
             return false;
         default:
             assert(!IsSampler(type));
@@ -517,9 +641,13 @@ inline bool IsShadowSampler(TBasicType type)
 {
     switch (type)
     {
+        case EbtSampler1DShadow:
         case EbtSampler2DShadow:
         case EbtSamplerCubeShadow:
+        case EbtSampler1DArrayShadow:
         case EbtSampler2DArrayShadow:
+        case EbtSamplerCubeArrayShadow:
+        case EbtSampler2DRectShadow:
             return true;
         case EbtISampler2D:
         case EbtISampler3D:
@@ -542,6 +670,20 @@ inline bool IsShadowSampler(TBasicType type)
         case EbtSampler2DArray:
         case EbtSampler2DMS:
         case EbtSampler2DMSArray:
+        case EbtSampler1D:
+        case EbtSampler1DArray:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtISampler1D:
+        case EbtISampler1DArray:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSampler1D:
+        case EbtUSampler1DArray:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
             return false;
         default:
             assert(!IsSampler(type));
@@ -557,6 +699,12 @@ inline bool IsImage2D(TBasicType type)
         case EbtImage2D:
         case EbtIImage2D:
         case EbtUImage2D:
+        case EbtImage2DRect:
+        case EbtIImage2DRect:
+        case EbtUImage2DRect:
+        case EbtImage2DMS:
+        case EbtIImage2DMS:
+        case EbtUImage2DMS:
             return true;
         case EbtImage3D:
         case EbtIImage3D:
@@ -567,6 +715,24 @@ inline bool IsImage2D(TBasicType type)
         case EbtImageCube:
         case EbtIImageCube:
         case EbtUImageCube:
+        case EbtImage1D:
+        case EbtIImage1D:
+        case EbtUImage1D:
+        case EbtImage1DArray:
+        case EbtIImage1DArray:
+        case EbtUImage1DArray:
+        case EbtImage2DMSArray:
+        case EbtIImage2DMSArray:
+        case EbtUImage2DMSArray:
+        case EbtImageCubeArray:
+        case EbtIImageCubeArray:
+        case EbtUImageCubeArray:
+        case EbtImageRect:
+        case EbtIImageRect:
+        case EbtUImageRect:
+        case EbtImageBuffer:
+        case EbtIImageBuffer:
+        case EbtUImageBuffer:
             return false;
         default:
             assert(!IsImage(type));
@@ -592,6 +758,30 @@ inline bool IsImage3D(TBasicType type)
         case EbtImageCube:
         case EbtIImageCube:
         case EbtUImageCube:
+        case EbtImage1D:
+        case EbtIImage1D:
+        case EbtUImage1D:
+        case EbtImage1DArray:
+        case EbtIImage1DArray:
+        case EbtUImage1DArray:
+        case EbtImage2DMS:
+        case EbtIImage2DMS:
+        case EbtUImage2DMS:
+        case EbtImage2DMSArray:
+        case EbtIImage2DMSArray:
+        case EbtUImage2DMSArray:
+        case EbtImage2DRect:
+        case EbtIImage2DRect:
+        case EbtUImage2DRect:
+        case EbtImageCubeArray:
+        case EbtIImageCubeArray:
+        case EbtUImageCubeArray:
+        case EbtImageRect:
+        case EbtIImageRect:
+        case EbtUImageRect:
+        case EbtImageBuffer:
+        case EbtIImageBuffer:
+        case EbtUImageBuffer:
             return false;
         default:
             assert(!IsImage(type));
@@ -607,6 +797,9 @@ inline bool IsImage2DArray(TBasicType type)
         case EbtImage2DArray:
         case EbtIImage2DArray:
         case EbtUImage2DArray:
+        case EbtImage2DMSArray:
+        case EbtIImage2DMSArray:
+        case EbtUImage2DMSArray:
             return true;
         case EbtImage2D:
         case EbtIImage2D:
@@ -617,6 +810,27 @@ inline bool IsImage2DArray(TBasicType type)
         case EbtImageCube:
         case EbtIImageCube:
         case EbtUImageCube:
+        case EbtImage1D:
+        case EbtIImage1D:
+        case EbtUImage1D:
+        case EbtImage1DArray:
+        case EbtIImage1DArray:
+        case EbtUImage1DArray:
+        case EbtImage2DMS:
+        case EbtIImage2DMS:
+        case EbtUImage2DMS:
+        case EbtImage2DRect:
+        case EbtIImage2DRect:
+        case EbtUImage2DRect:
+        case EbtImageCubeArray:
+        case EbtIImageCubeArray:
+        case EbtUImageCubeArray:
+        case EbtImageRect:
+        case EbtIImageRect:
+        case EbtUImageRect:
+        case EbtImageBuffer:
+        case EbtIImageBuffer:
+        case EbtUImageBuffer:
             return false;
         default:
             assert(!IsImage(type));
@@ -642,6 +856,30 @@ inline bool IsImageCube(TBasicType type)
         case EbtImage2DArray:
         case EbtIImage2DArray:
         case EbtUImage2DArray:
+        case EbtImage1D:
+        case EbtIImage1D:
+        case EbtUImage1D:
+        case EbtImage1DArray:
+        case EbtIImage1DArray:
+        case EbtUImage1DArray:
+        case EbtImage2DMS:
+        case EbtIImage2DMS:
+        case EbtUImage2DMS:
+        case EbtImage2DMSArray:
+        case EbtIImage2DMSArray:
+        case EbtUImage2DMSArray:
+        case EbtImage2DRect:
+        case EbtIImage2DRect:
+        case EbtUImage2DRect:
+        case EbtImageCubeArray:
+        case EbtIImageCubeArray:
+        case EbtUImageCubeArray:
+        case EbtImageRect:
+        case EbtIImageRect:
+        case EbtUImageRect:
+        case EbtImageBuffer:
+        case EbtIImageBuffer:
+        case EbtUImageBuffer:
             return false;
         default:
             assert(!IsImage(type));
