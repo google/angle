@@ -6,123 +6,109 @@ These charts are generated nightly from the [chrome GPU waterfall bots](https://
 
 ## Win Desktop OpenGL Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=594707611](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=594707611)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=2131794282](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=2131794282)
 
-<iframe id="GLES 2.0 Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1757837108&format=interactive"></iframe>
+<iframe id="GLES 2.0 Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2017908944&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=689729939&format=interactive"></iframe>
+<iframe id="GLES 3.0 Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1311087567&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=296491407&format=interactive"></iframe>
+<iframe id="GLES 3.1 Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=786488695&format=interactive"></iframe>
 
-<iframe id="EGL Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1395342238&format=interactive"></iframe>
+<iframe id="EGL Desktop OpenGL Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=485763259&format=interactive"></iframe>
 
 ## Win Vulkan Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1309999426](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1309999426)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=88272764](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=88272764)
 
-<iframe id="GLES 2.0 Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1795052189&format=interactive"></iframe>
+<iframe id="GLES 2.0 Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1224536816&format=interactive"></iframe>
 
-<iframe id="GLES 2.0 Vulkan Win7 AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=119413727&format=interactive"></iframe>
+<iframe id="GLES 3.0 Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=470578632&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=312334963&format=interactive"></iframe>
+<iframe id="GLES 3.1 Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=304442659&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=308260870&format=interactive"></iframe>
-
-<iframe id="EGL Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=332822006&format=interactive"></iframe>
+<iframe id="EGL Vulkan Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=907538347&format=interactive"></iframe>
 
 ### KHR
 
-<iframe id="GLES 2.0 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1663999106&format=interactive"></iframe>
+<iframe id="GLES 2.0 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1264555977&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1654001661&format=interactive"></iframe>
+<iframe id="GLES 3.0 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=884611147&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=942613224&format=interactive"></iframe>
+<iframe id="GLES 3.1 Vulkan khr Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=441071086&format=interactive"></iframe>
 
 ## Win D3D11 Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1992689006](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1992689006)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1236517289](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1236517289)
 
-<iframe id="GLES 2.0 D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=671909715&format=interactive"></iframe>
+<iframe id="GLES 2.0 D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2018286499&format=interactive"></iframe>
 
-<iframe id="GLES 2.0 D3D11 Win10 Intel HD 630" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=132762914&format=interactive"></iframe>
+<iframe id="GLES 3.0 D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=725892266&format=interactive"></iframe>
 
-<iframe id="GLES 2.0 D3D11 Win7 AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=691522119&format=interactive"></iframe>
+<iframe id="GLES 3.1 D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=415437873&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2072341912&format=interactive"></iframe>
-
-<iframe id="GLES 3.1 D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=406549889&format=interactive"></iframe>
-
-<iframe id="EGL D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=930950454&format=interactive"></iframe>
+<iframe id="EGL D3D11 Win10 NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1558331750&format=interactive"></iframe>
 
 ## Mac Desktop Open GL Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=88498958](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=88498958)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=745187740](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=745187740)
 
-<iframe id="GLES 2.0 Desktop OpenGL Mac Intel" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1398568122&format=interactive"></iframe>
+<iframe id="GLES 2.0 Desktop OpenGL Mac AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=405516565&format=interactive"></iframe>
 
-<iframe id="GLES 2.0 Desktop OpenGL Mac AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=643230115&format=interactive"></iframe>
+<iframe id="GLES 3.0 Desktop OpenGL Mac AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1993001882&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Desktop OpenGL Mac Intel" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1798564334&format=interactive"></iframe>
-
-<iframe id="GLES 3.0 Desktop OpenGL Mac AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1757427900&format=interactive"></iframe>
-
-<iframe id="EGL Desktop OpenGL Mac Intel" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=994225021&format=interactive"></iframe>
-
-<iframe id="EGL Desktop OpenGL Mac AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1585073062&format=interactive"></iframe>
+<iframe id="EGL Desktop OpenGL Mac AMD" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=718088219&format=interactive"></iframe>
 
 ## Linux Desktop Open GL Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=399484153](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=399484153)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=518000832](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=518000832)
 
-<iframe id="GLES 2.0 Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=897813933&format=interactive"></iframe>
+<iframe id="GLES 2.0 Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1000752961&format=interactive"></iframe>
 
-<iframe id="GLES 2.0 Desktop OpenGL Linux Intel HD 630" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2135761292&format=interactive"></iframe>
+<iframe id="GLES 3.0 Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=658136720&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1171819777&format=interactive"></iframe>
+<iframe id="GLES 3.1 Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=637777434&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1209945637&format=interactive"></iframe>
-
-<iframe id="EGL Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1537853177&format=interactive"></iframe>
+<iframe id="EGL Desktop OpenGL Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1262725407&format=interactive"></iframe>
 
 ## Linux Vulkan Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1599548256](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1599548256)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1271046732](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1271046732)
 
-<iframe id="GLES 2.0 Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=534351971&format=interactive"></iframe>
+<iframe id="GLES 2.0 Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2098104121&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=918341071&format=interactive"></iframe>
+<iframe id="GLES 3.0 Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1985365791&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=183140611&format=interactive"></iframe>
+<iframe id="GLES 3.1 Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=288024561&format=interactive"></iframe>
 
-<iframe id="EGL Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2071210384&format=interactive"></iframe>
+<iframe id="EGL Vulkan Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1792478091&format=interactive"></iframe>
 
 ### KHR
 
-<iframe id="GLES 2.0 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=150384909&format=interactive"></iframe>
+<iframe id="GLES 2.0 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1734147637&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=580191095&format=interactive"></iframe>
+<iframe id="GLES 3.0 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1396798929&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1426177959&format=interactive"></iframe>
+<iframe id="GLES 3.1 Vulkan khr Linux NVIDIA" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=383448866&format=interactive"></iframe>
 
 ## Android Vulkan Charts
 
-[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1077550384](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=1077550384)
+[https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=703637628](https://docs.google.com/spreadsheets/d/1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek/edit#gid=703637628)
 
-<iframe id="GLES 2.0 Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1604064925&format=interactive"></iframe>
+<iframe id="GLES 2.0 Vulkan Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1563521823&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=893390360&format=interactive"></iframe>
+<iframe id="GLES 3.0 Vulkan Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=330631789&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1958488451&format=interactive"></iframe>
+<iframe id="GLES 3.1 Vulkan Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1089048598&format=interactive"></iframe>
 
-<iframe id="EGL Vulkan Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1349204511&format=interactive"></iframe>
+<iframe id="EGL Vulkan Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=345901518&format=interactive"></iframe>
 
 ### KHR
 
-<iframe id="GLES 2.0 Vulkan khr Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=2054991104&format=interactive"></iframe>
+<iframe id="GLES 2.0 Vulkan khr Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1369552559&format=interactive"></iframe>
 
-<iframe id="GLES 3.0 Vulkan khr Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=184736858&format=interactive"></iframe>
+<iframe id="GLES 3.0 Vulkan khr Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=211294637&format=interactive"></iframe>
 
-<iframe id="GLES 3.1 Vulkan khr Android 32 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=1407661866&format=interactive"></iframe>
+<iframe id="GLES 3.1 Vulkan khr Android 64 Pixel 2" width="1200px" height="371px" class="noborder" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKyd5j9B0BOl-SuEYeJfIdhYF8EZzASSA7M3nZeLL54i-7iAfEMx0kX7SF_CiwU7DrX8THgn6VKX8a/pubchart?oid=679956702&format=interactive"></iframe>
 
 ## Unexpected Passes/Failures
 
