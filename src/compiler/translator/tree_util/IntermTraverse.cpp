@@ -50,6 +50,10 @@ void TIntermTraverser::traverse(T *node)
     }
 }
 
+// Instantiate template for RewriteAtomicFunctionExpressions, in case this gets inlined thus not
+// exported from the TU.
+template void TIntermTraverser::traverse(TIntermNode *);
+
 void TIntermNode::traverse(TIntermTraverser *it)
 {
     it->traverse(this);
