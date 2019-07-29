@@ -13,6 +13,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/gl_enum_utils_autogen.h"
 
 namespace angle
 {
@@ -60,13 +61,14 @@ void WriteInlineData(const std::vector<uint8_t> &vec, std::ostream &out)
 constexpr size_t kInlineDataThreshold = 128;
 }  // anonymous namespace
 
-ParamCapture::ParamCapture() : type(ParamType::TGLenum) {}
+ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
 
 ParamCapture::ParamCapture(const char *nameIn, ParamType typeIn) : name(nameIn), type(typeIn) {}
 
 ParamCapture::~ParamCapture() = default;
 
-ParamCapture::ParamCapture(ParamCapture &&other) : type(ParamType::TGLenum)
+ParamCapture::ParamCapture(ParamCapture &&other)
+    : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup)
 {
     *this = std::move(other);
 }
@@ -76,6 +78,7 @@ ParamCapture &ParamCapture::operator=(ParamCapture &&other)
     std::swap(name, other.name);
     std::swap(type, other.type);
     std::swap(value, other.value);
+    std::swap(enumGroup, other.enumGroup);
     std::swap(data, other.data);
     std::swap(arrayClientPointerIndex, other.arrayClientPointerIndex);
     std::swap(readBufferSizeBytes, other.readBufferSizeBytes);
@@ -427,7 +430,18 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
         }
         else if (param.data.empty())
         {
-            out << param;
+            if (param.type == ParamType::TGLenum)
+            {
+                out << GLenumToString(param.enumGroup, param.value.GLenumVal);
+            }
+            else if (param.type == ParamType::TGLbitfield)
+            {
+                out << GLbitfieldToString(param.enumGroup, param.value.GLbitfieldVal);
+            }
+            else
+            {
+                out << param;
+            }
         }
         else
         {

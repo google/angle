@@ -15,6 +15,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/frame_capture_utils_autogen.h"
+#include "libANGLE/gl_enum_utils_autogen.h"
 
 #include <tuple>
 
@@ -32,6 +33,7 @@ struct ParamCapture : angle::NonCopyable
     std::string name;
     ParamType type;
     ParamValue value;
+    gl::GLenumGroup enumGroup;  // only used for param type GLenum, GLboolean and GLbitfield
     std::vector<std::vector<uint8_t>> data;
     int arrayClientPointerIndex = -1;
     size_t readBufferSizeBytes  = 0;
@@ -48,6 +50,11 @@ class ParamBuffer final : angle::NonCopyable
 
     template <typename T>
     void addValueParam(const char *paramName, ParamType paramType, T paramValue);
+    template <typename T>
+    void addEnumParam(const char *paramName,
+                      gl::GLenumGroup enumGroup,
+                      ParamType paramType,
+                      T paramValue);
 
     ParamCapture &getParam(const char *paramName, ParamType paramType, int index);
 
@@ -136,6 +143,18 @@ void ParamBuffer::addValueParam(const char *paramName, ParamType paramType, T pa
 {
     ParamCapture capture(paramName, paramType);
     InitParamValue(paramType, paramValue, &capture.value);
+    mParamCaptures.emplace_back(std::move(capture));
+}
+
+template <typename T>
+void ParamBuffer::addEnumParam(const char *paramName,
+                               gl::GLenumGroup enumGroup,
+                               ParamType paramType,
+                               T paramValue)
+{
+    ParamCapture capture(paramName, paramType);
+    InitParamValue(paramType, paramValue, &capture.value);
+    capture.enumGroup = enumGroup;
     mParamCaptures.emplace_back(std::move(capture));
 }
 

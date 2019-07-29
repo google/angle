@@ -81,6 +81,8 @@ generators = {
         'scripts/generate_loader.py',
     'GL/EGL entry points':
         'scripts/generate_entry_points.py',
+    'GLenum value to string map':
+        'scripts/gen_gl_enum_utils.py',
     'GL format map':
         'src/libANGLE/gen_format_map.py',
     'uniform type':

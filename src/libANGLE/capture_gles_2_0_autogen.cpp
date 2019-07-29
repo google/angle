@@ -12,6 +12,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/FrameCapture.h"
+#include "libANGLE/gl_enum_utils_autogen.h"
 #include "libANGLE/validationES2.h"
 
 using namespace angle;
@@ -23,7 +24,7 @@ CallCapture CaptureActiveTexture(const Context *context, bool isCallValid, GLenu
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("texture", ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
 
     return CallCapture(gl::EntryPoint::ActiveTexture, std::move(paramBuffer));
 }
@@ -80,7 +81,7 @@ CallCapture CaptureBindFramebuffer(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
     paramBuffer.addValueParam("framebuffer", ParamType::TGLuint, framebuffer);
 
     return CallCapture(gl::EntryPoint::BindFramebuffer, std::move(paramBuffer));
@@ -93,7 +94,7 @@ CallCapture CaptureBindRenderbuffer(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("target", GLenumGroup::RenderbufferTarget, ParamType::TGLenum, target);
     paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
 
     return CallCapture(gl::EntryPoint::BindRenderbuffer, std::move(paramBuffer));
@@ -133,7 +134,7 @@ CallCapture CaptureBlendEquation(const Context *context, bool isCallValid, GLenu
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("mode", ParamType::TGLenum, mode);
+    paramBuffer.addEnumParam("mode", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum, mode);
 
     return CallCapture(gl::EntryPoint::BlendEquation, std::move(paramBuffer));
 }
@@ -145,8 +146,10 @@ CallCapture CaptureBlendEquationSeparate(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("modeRGB", ParamType::TGLenum, modeRGB);
-    paramBuffer.addValueParam("modeAlpha", ParamType::TGLenum, modeAlpha);
+    paramBuffer.addEnumParam("modeRGB", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum,
+                             modeRGB);
+    paramBuffer.addEnumParam("modeAlpha", GLenumGroup::BlendEquationModeEXT, ParamType::TGLenum,
+                             modeAlpha);
 
     return CallCapture(gl::EntryPoint::BlendEquationSeparate, std::move(paramBuffer));
 }
@@ -158,8 +161,8 @@ CallCapture CaptureBlendFunc(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sfactor", ParamType::TGLenum, sfactor);
-    paramBuffer.addValueParam("dfactor", ParamType::TGLenum, dfactor);
+    paramBuffer.addEnumParam("sfactor", GLenumGroup::BlendingFactor, ParamType::TGLenum, sfactor);
+    paramBuffer.addEnumParam("dfactor", GLenumGroup::BlendingFactor, ParamType::TGLenum, dfactor);
 
     return CallCapture(gl::EntryPoint::BlendFunc, std::move(paramBuffer));
 }
@@ -173,10 +176,14 @@ CallCapture CaptureBlendFuncSeparate(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("sfactorRGB", ParamType::TGLenum, sfactorRGB);
-    paramBuffer.addValueParam("dfactorRGB", ParamType::TGLenum, dfactorRGB);
-    paramBuffer.addValueParam("sfactorAlpha", ParamType::TGLenum, sfactorAlpha);
-    paramBuffer.addValueParam("dfactorAlpha", ParamType::TGLenum, dfactorAlpha);
+    paramBuffer.addEnumParam("sfactorRGB", GLenumGroup::BlendingFactor, ParamType::TGLenum,
+                             sfactorRGB);
+    paramBuffer.addEnumParam("dfactorRGB", GLenumGroup::BlendingFactor, ParamType::TGLenum,
+                             dfactorRGB);
+    paramBuffer.addEnumParam("sfactorAlpha", GLenumGroup::BlendingFactor, ParamType::TGLenum,
+                             sfactorAlpha);
+    paramBuffer.addEnumParam("dfactorAlpha", GLenumGroup::BlendingFactor, ParamType::TGLenum,
+                             dfactorAlpha);
 
     return CallCapture(gl::EntryPoint::BlendFuncSeparate, std::move(paramBuffer));
 }
@@ -231,7 +238,7 @@ CallCapture CaptureCheckFramebufferStatus(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLenum);
     InitParamValue(ParamType::TGLenum, returnValue, &returnValueCapture.value);
@@ -244,7 +251,7 @@ CallCapture CaptureClear(const Context *context, bool isCallValid, GLbitfield ma
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("mask", ParamType::TGLbitfield, mask);
+    paramBuffer.addEnumParam("mask", GLenumGroup::ClearBufferMask, ParamType::TGLbitfield, mask);
 
     return CallCapture(gl::EntryPoint::Clear, std::move(paramBuffer));
 }
@@ -325,7 +332,8 @@ CallCapture CaptureCompressedTexImage2D(const Context *context,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
+    paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
+                             internalformat);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
     paramBuffer.addValueParam("border", ParamType::TGLint, border);
@@ -360,7 +368,7 @@ CallCapture CaptureCompressedTexSubImage2D(const Context *context,
     paramBuffer.addValueParam("yoffset", ParamType::TGLint, yoffset);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
-    paramBuffer.addValueParam("format", ParamType::TGLenum, format);
+    paramBuffer.addEnumParam("format", GLenumGroup::PixelFormat, ParamType::TGLenum, format);
     paramBuffer.addValueParam("imageSize", ParamType::TGLsizei, imageSize);
 
     ParamCapture dataParam("data", ParamType::TvoidConstPointer);
@@ -387,7 +395,8 @@ CallCapture CaptureCopyTexImage2D(const Context *context,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
+    paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
+                             internalformat);
     paramBuffer.addValueParam("x", ParamType::TGLint, x);
     paramBuffer.addValueParam("y", ParamType::TGLint, y);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
@@ -550,7 +559,7 @@ CallCapture CaptureDepthFunc(const Context *context, bool isCallValid, GLenum fu
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("func", ParamType::TGLenum, func);
+    paramBuffer.addEnumParam("func", GLenumGroup::DepthFunction, ParamType::TGLenum, func);
 
     return CallCapture(gl::EntryPoint::DepthFunc, std::move(paramBuffer));
 }
@@ -591,7 +600,7 @@ CallCapture CaptureDisable(const Context *context, bool isCallValid, GLenum cap)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("cap", ParamType::TGLenum, cap);
+    paramBuffer.addEnumParam("cap", GLenumGroup::EnableCap, ParamType::TGLenum, cap);
 
     return CallCapture(gl::EntryPoint::Disable, std::move(paramBuffer));
 }
@@ -646,7 +655,7 @@ CallCapture CaptureEnable(const Context *context, bool isCallValid, GLenum cap)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("cap", ParamType::TGLenum, cap);
+    paramBuffer.addEnumParam("cap", GLenumGroup::EnableCap, ParamType::TGLenum, cap);
 
     return CallCapture(gl::EntryPoint::Enable, std::move(paramBuffer));
 }
@@ -683,9 +692,11 @@ CallCapture CaptureFramebufferRenderbuffer(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
-    paramBuffer.addValueParam("attachment", ParamType::TGLenum, attachment);
-    paramBuffer.addValueParam("renderbuffertarget", ParamType::TGLenum, renderbuffertarget);
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
+                             attachment);
+    paramBuffer.addEnumParam("renderbuffertarget", GLenumGroup::RenderbufferTarget,
+                             ParamType::TGLenum, renderbuffertarget);
     paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
 
     return CallCapture(gl::EntryPoint::FramebufferRenderbuffer, std::move(paramBuffer));
@@ -701,8 +712,9 @@ CallCapture CaptureFramebufferTexture2D(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
-    paramBuffer.addValueParam("attachment", ParamType::TGLenum, attachment);
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
+                             attachment);
     paramBuffer.addValueParam("textargetPacked", ParamType::TTextureTarget, textargetPacked);
     paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
@@ -714,7 +726,7 @@ CallCapture CaptureFrontFace(const Context *context, bool isCallValid, GLenum mo
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("mode", ParamType::TGLenum, mode);
+    paramBuffer.addEnumParam("mode", GLenumGroup::FrontFaceDirection, ParamType::TGLenum, mode);
 
     return CallCapture(gl::EntryPoint::FrontFace, std::move(paramBuffer));
 }
@@ -938,7 +950,7 @@ CallCapture CaptureGetBooleanv(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetPName, ParamType::TGLenum, pname);
 
     ParamCapture dataParam("data", ParamType::TGLbooleanPointer);
     InitParamValue(ParamType::TGLbooleanPointer, data, &dataParam.value);
@@ -957,7 +969,7 @@ CallCapture CaptureGetBufferParameteriv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -983,7 +995,7 @@ CallCapture CaptureGetFloatv(const Context *context, bool isCallValid, GLenum pn
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetPName, ParamType::TGLenum, pname);
 
     ParamCapture dataParam("data", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, data, &dataParam.value);
@@ -1002,9 +1014,11 @@ CallCapture CaptureGetFramebufferAttachmentParameteriv(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
-    paramBuffer.addValueParam("attachment", ParamType::TGLenum, attachment);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
+                             attachment);
+    paramBuffer.addEnumParam("pname", GLenumGroup::FramebufferAttachmentParameterName,
+                             ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -1019,7 +1033,7 @@ CallCapture CaptureGetIntegerv(const Context *context, bool isCallValid, GLenum 
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetPName, ParamType::TGLenum, pname);
 
     ParamCapture dataParam("data", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, data, &dataParam.value);
@@ -1065,7 +1079,7 @@ CallCapture CaptureGetProgramiv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::ProgramPropertyARB, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -1083,8 +1097,9 @@ CallCapture CaptureGetRenderbufferParameteriv(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("target", GLenumGroup::RenderbufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("pname", GLenumGroup::RenderbufferParameterName, ParamType::TGLenum,
+                             pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -1131,8 +1146,9 @@ CallCapture CaptureGetShaderPrecisionFormat(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("shadertype", ParamType::TGLenum, shadertype);
-    paramBuffer.addValueParam("precisiontype", ParamType::TGLenum, precisiontype);
+    paramBuffer.addEnumParam("shadertype", GLenumGroup::ShaderType, ParamType::TGLenum, shadertype);
+    paramBuffer.addEnumParam("precisiontype", GLenumGroup::PrecisionType, ParamType::TGLenum,
+                             precisiontype);
 
     ParamCapture rangeParam("range", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, range, &rangeParam.value);
@@ -1185,7 +1201,7 @@ CallCapture CaptureGetShaderiv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::ShaderParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -1202,7 +1218,7 @@ CallCapture CaptureGetString(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("name", ParamType::TGLenum, name);
+    paramBuffer.addEnumParam("name", GLenumGroup::StringName, ParamType::TGLenum, name);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLubyteConstPointer);
     InitParamValue(ParamType::TGLubyteConstPointer, returnValue, &returnValueCapture.value);
@@ -1220,7 +1236,7 @@ CallCapture CaptureGetTexParameterfv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetTextureParameter, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
@@ -1240,7 +1256,7 @@ CallCapture CaptureGetTexParameteriv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetTextureParameter, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -1320,7 +1336,7 @@ CallCapture CaptureGetVertexAttribPointerv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture pointerParam("pointer", ParamType::TvoidPointerPointer);
     InitParamValue(ParamType::TvoidPointerPointer, pointer, &pointerParam.value);
@@ -1340,7 +1356,7 @@ CallCapture CaptureGetVertexAttribfv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
@@ -1359,7 +1375,7 @@ CallCapture CaptureGetVertexAttribiv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
@@ -1373,8 +1389,8 @@ CallCapture CaptureHint(const Context *context, bool isCallValid, GLenum target,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
-    paramBuffer.addValueParam("mode", ParamType::TGLenum, mode);
+    paramBuffer.addEnumParam("target", GLenumGroup::HintTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("mode", GLenumGroup::HintMode, ParamType::TGLenum, mode);
 
     return CallCapture(gl::EntryPoint::Hint, std::move(paramBuffer));
 }
@@ -1402,7 +1418,7 @@ CallCapture CaptureIsEnabled(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("cap", ParamType::TGLenum, cap);
+    paramBuffer.addEnumParam("cap", GLenumGroup::EnableCap, ParamType::TGLenum, cap);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
@@ -1513,7 +1529,7 @@ CallCapture CapturePixelStorei(const Context *context, bool isCallValid, GLenum 
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::PixelStoreParameter, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
     return CallCapture(gl::EntryPoint::PixelStorei, std::move(paramBuffer));
@@ -1548,8 +1564,8 @@ CallCapture CaptureReadPixels(const Context *context,
     paramBuffer.addValueParam("y", ParamType::TGLint, y);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
-    paramBuffer.addValueParam("format", ParamType::TGLenum, format);
-    paramBuffer.addValueParam("type", ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("format", GLenumGroup::PixelFormat, ParamType::TGLenum, format);
+    paramBuffer.addEnumParam("type", GLenumGroup::PixelType, ParamType::TGLenum, type);
 
     ParamCapture pixelsParam("pixels", ParamType::TvoidPointer);
     InitParamValue(ParamType::TvoidPointer, pixels, &pixelsParam.value);
@@ -1576,8 +1592,9 @@ CallCapture CaptureRenderbufferStorage(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("target", ParamType::TGLenum, target);
-    paramBuffer.addValueParam("internalformat", ParamType::TGLenum, internalformat);
+    paramBuffer.addEnumParam("target", GLenumGroup::RenderbufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
+                             internalformat);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
@@ -1632,7 +1649,8 @@ CallCapture CaptureShaderBinary(const Context *context,
                                 &shadersParam);
     paramBuffer.addParam(std::move(shadersParam));
 
-    paramBuffer.addValueParam("binaryformat", ParamType::TGLenum, binaryformat);
+    paramBuffer.addEnumParam("binaryformat", GLenumGroup::DefaultGroup, ParamType::TGLenum,
+                             binaryformat);
 
     ParamCapture binaryParam("binary", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, binary, &binaryParam.value);
@@ -1678,7 +1696,7 @@ CallCapture CaptureStencilFunc(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("func", ParamType::TGLenum, func);
+    paramBuffer.addEnumParam("func", GLenumGroup::StencilFunction, ParamType::TGLenum, func);
     paramBuffer.addValueParam("ref", ParamType::TGLint, ref);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
@@ -1694,8 +1712,8 @@ CallCapture CaptureStencilFuncSeparate(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("face", ParamType::TGLenum, face);
-    paramBuffer.addValueParam("func", ParamType::TGLenum, func);
+    paramBuffer.addEnumParam("face", GLenumGroup::StencilFaceDirection, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("func", GLenumGroup::StencilFunction, ParamType::TGLenum, func);
     paramBuffer.addValueParam("ref", ParamType::TGLint, ref);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
@@ -1718,7 +1736,7 @@ CallCapture CaptureStencilMaskSeparate(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("face", ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("face", GLenumGroup::StencilFaceDirection, ParamType::TGLenum, face);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
     return CallCapture(gl::EntryPoint::StencilMaskSeparate, std::move(paramBuffer));
@@ -1732,9 +1750,9 @@ CallCapture CaptureStencilOp(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("fail", ParamType::TGLenum, fail);
-    paramBuffer.addValueParam("zfail", ParamType::TGLenum, zfail);
-    paramBuffer.addValueParam("zpass", ParamType::TGLenum, zpass);
+    paramBuffer.addEnumParam("fail", GLenumGroup::StencilOp, ParamType::TGLenum, fail);
+    paramBuffer.addEnumParam("zfail", GLenumGroup::StencilOp, ParamType::TGLenum, zfail);
+    paramBuffer.addEnumParam("zpass", GLenumGroup::StencilOp, ParamType::TGLenum, zpass);
 
     return CallCapture(gl::EntryPoint::StencilOp, std::move(paramBuffer));
 }
@@ -1748,10 +1766,10 @@ CallCapture CaptureStencilOpSeparate(const Context *context,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("face", ParamType::TGLenum, face);
-    paramBuffer.addValueParam("sfail", ParamType::TGLenum, sfail);
-    paramBuffer.addValueParam("dpfail", ParamType::TGLenum, dpfail);
-    paramBuffer.addValueParam("dppass", ParamType::TGLenum, dppass);
+    paramBuffer.addEnumParam("face", GLenumGroup::StencilFaceDirection, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("sfail", GLenumGroup::StencilOp, ParamType::TGLenum, sfail);
+    paramBuffer.addEnumParam("dpfail", GLenumGroup::StencilOp, ParamType::TGLenum, dpfail);
+    paramBuffer.addEnumParam("dppass", GLenumGroup::StencilOp, ParamType::TGLenum, dppass);
 
     return CallCapture(gl::EntryPoint::StencilOpSeparate, std::move(paramBuffer));
 }
@@ -1776,8 +1794,8 @@ CallCapture CaptureTexImage2D(const Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
     paramBuffer.addValueParam("border", ParamType::TGLint, border);
-    paramBuffer.addValueParam("format", ParamType::TGLenum, format);
-    paramBuffer.addValueParam("type", ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("format", GLenumGroup::PixelFormat, ParamType::TGLenum, format);
+    paramBuffer.addEnumParam("type", GLenumGroup::PixelType, ParamType::TGLenum, type);
 
     ParamCapture pixelsParam("pixels", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, pixels, &pixelsParam.value);
@@ -1797,7 +1815,7 @@ CallCapture CaptureTexParameterf(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::TextureParameterName, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLfloat, param);
 
     return CallCapture(gl::EntryPoint::TexParameterf, std::move(paramBuffer));
@@ -1812,7 +1830,7 @@ CallCapture CaptureTexParameterfv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::TextureParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatConstPointer);
     InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
@@ -1831,7 +1849,7 @@ CallCapture CaptureTexParameteri(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::TextureParameterName, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
     return CallCapture(gl::EntryPoint::TexParameteri, std::move(paramBuffer));
@@ -1846,7 +1864,7 @@ CallCapture CaptureTexParameteriv(const Context *context,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::TextureParameterName, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintConstPointer);
     InitParamValue(ParamType::TGLintConstPointer, params, &paramsParam.value);
@@ -1876,8 +1894,8 @@ CallCapture CaptureTexSubImage2D(const Context *context,
     paramBuffer.addValueParam("yoffset", ParamType::TGLint, yoffset);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
-    paramBuffer.addValueParam("format", ParamType::TGLenum, format);
-    paramBuffer.addValueParam("type", ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("format", GLenumGroup::PixelFormat, ParamType::TGLenum, format);
+    paramBuffer.addEnumParam("type", GLenumGroup::PixelType, ParamType::TGLenum, type);
 
     ParamCapture pixelsParam("pixels", ParamType::TvoidConstPointer);
     InitParamValue(ParamType::TvoidConstPointer, pixels, &pixelsParam.value);

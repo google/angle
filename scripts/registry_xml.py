@@ -10,7 +10,8 @@
 # List of supported extensions. Add to this list to enable new extensions
 # available in gl.xml.
 
-import sys, os
+import sys
+import os
 import xml.etree.ElementTree as etree
 
 xml_inputs = [
@@ -123,6 +124,22 @@ strip_suffixes = ["ANGLE", "EXT", "KHR", "OES", "CHROMIUM"]
 # The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
 # Toggle generation here.
 support_EGL_ANGLE_explicit_context = True
+
+# For ungrouped GLenum types
+default_enum_group_name = "DefaultGroup"
+
+# Group names that appear in command/param, but not present in groups/group
+unsupported_enum_group_names = {
+    'GetMultisamplePNameNV',
+    'BufferPNameARB',
+    'BufferPointerNameARB',
+    'VertexAttribPointerPropertyARB',
+    'VertexAttribPropertyARB',
+    'FenceParameterNameNV',
+    'FenceConditionNV',
+    'BufferPointerNameARB',
+    'MatrixIndexPointerTypeARB',
+}
 
 
 def script_relative(path):

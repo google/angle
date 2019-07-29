@@ -302,6 +302,7 @@ template_capture_source = """// GENERATED FILE - DO NOT EDIT.
 
 #include "libANGLE/Context.h"
 #include "libANGLE/FrameCapture.h"
+#include "libANGLE/gl_enum_utils_autogen.h"
 #include "libANGLE/validation{annotation_no_dash}.h"
 
 using namespace angle;
@@ -339,6 +340,8 @@ CallCapture Capture{short_name}({params_with_type})
 """
 
 template_parameter_capture_value = """paramBuffer.addValueParam("{name}", ParamType::T{type}, {name});"""
+
+template_parameter_capture_gl_enum = """paramBuffer.addEnumParam("{name}", GLenumGroup::{group}, ParamType::T{type}, {name});"""
 
 template_parameter_capture_pointer = """
     ParamCapture {name}Param("{name}", ParamType::T{type});
@@ -676,6 +679,19 @@ def strip_suffix(name):
     return name
 
 
+def find_gl_enum_group_in_command(command_node, param_name):
+    group_name = None
+    for param_node in command_node.findall('./param'):
+        if param_node.find('./name').text == param_name:
+            group_name = param_node.attrib.get('group', None)
+            break
+
+    if group_name is None or group_name in registry_xml.unsupported_enum_group_names:
+        group_name = registry_xml.default_enum_group_name
+
+    return group_name
+
+
 def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
     internal_params = [just_the_name_packed(param, packed_gl_enums) for param in params]
@@ -754,7 +770,8 @@ def get_capture_param_type_name(param_type):
     return param_type
 
 
-def format_capture_method(cmd_name, proto, params, all_param_types, capture_pointer_funcs):
+def format_capture_method(command, cmd_name, proto, params, all_param_types,
+                          capture_pointer_funcs):
 
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
 
@@ -782,6 +799,10 @@ def format_capture_method(cmd_name, proto, params, all_param_types, capture_poin
             capture_pointer_func = template_parameter_capture_pointer_func.format(
                 name=capture_name, params=params_with_type + ", angle::ParamCapture *paramCapture")
             capture_pointer_funcs += [capture_pointer_func]
+        elif param_type in ('GLenum', 'GLbitfield'):
+            gl_enum_group = find_gl_enum_group_in_command(command, param_name)
+            capture = template_parameter_capture_gl_enum.format(
+                name=param_name, type=param_type, group=gl_enum_group)
         else:
             capture = template_parameter_capture_value.format(name=param_name, type=param_type)
 
@@ -893,7 +914,7 @@ def get_entry_points(all_commands, commands, is_explicit_context, is_wgl, all_pa
         validation_protos.append(format_validation_proto(cmd_name, param_text))
         capture_protos.append(format_capture_proto(cmd_name, proto_text, param_text))
         capture_methods.append(
-            format_capture_method(cmd_name, proto_text, param_text, all_param_types,
+            format_capture_method(command, cmd_name, proto_text, param_text, all_param_types,
                                   capture_pointer_funcs))
 
     return decls, defs, export_defs, validation_protos, capture_protos, capture_methods, capture_pointer_funcs
