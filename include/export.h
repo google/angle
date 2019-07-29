@@ -29,4 +29,12 @@
 #    endif
 #endif  // !defined(ANGLE_EXPORT)
 
+#if !defined(ANGLE_NO_EXPORT)
+#    if defined(__GNUC__)
+#        define ANGLE_NO_EXPORT __attribute__((visibility("hidden")))
+#    else
+#        define ANGLE_NO_EXPORT
+#    endif
+#endif  // !defined(ANGLE_NO_EXPORT)
+
 #endif  // LIBGLESV2_EXPORT_H_

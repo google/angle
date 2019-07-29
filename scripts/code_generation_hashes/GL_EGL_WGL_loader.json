@@ -4,7 +4,7 @@
   "scripts/egl_angle_ext.xml":
     "fc2e249239fb1365f6d145cdf1a3cfcf",
   "scripts/generate_loader.py":
-    "5a7cd014230fe04664d9613e65399d42",
+    "48c60c668bec42a80378179aae2acc61",
   "scripts/registry_xml.py":
     "97cca309a0561f3bf54e0e2c1cf0708b",
   "scripts/wgl.xml":
@@ -12,7 +12,7 @@
   "src/libEGL/egl_loader_autogen.cpp":
     "01d20878ff5644bb9ee9e22ec95c3587",
   "src/libEGL/egl_loader_autogen.h":
-    "fcaa495dbf4ad4841c60f669f5fabfb8",
+    "a9d4b21e3a74565a6710c76c4f3bcbdc",
   "util/egl_loader_autogen.cpp":
     "b9a444da4142a12a9fe6b7a9d33a4ea8",
   "util/egl_loader_autogen.h":
