@@ -13,6 +13,7 @@
 #include "angle_gl.h"
 #include "common/MemoryBuffer.h"
 #include "common/debug.h"
+#include "common/utilities.h"
 #include "compiler/translator/blocklayout.h"
 #include "libANGLE/angletypes.h"
 
@@ -61,13 +62,13 @@ struct LinkedUniform : public sh::Uniform, public ActiveVariable
     LinkedUniform &operator=(const LinkedUniform &uniform);
     ~LinkedUniform() override;
 
-    bool isSampler() const;
-    bool isImage() const;
-    bool isAtomicCounter() const;
-    bool isInDefaultBlock() const;
-    bool isField() const;
-    size_t getElementSize() const;
-    size_t getElementComponents() const;
+    bool isSampler() const { return typeInfo->isSampler; }
+    bool isImage() const { return typeInfo->isImageType; }
+    bool isAtomicCounter() const { return IsAtomicCounterType(type); }
+    bool isInDefaultBlock() const { return bufferIndex == -1; }
+    bool isField() const { return name.find('.') != std::string::npos; }
+    size_t getElementSize() const { return typeInfo->externalSize; }
+    size_t getElementComponents() const { return typeInfo->componentCount; }
 
     const UniformTypeInfo *typeInfo;
 

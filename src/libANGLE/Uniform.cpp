@@ -6,8 +6,6 @@
 
 #include "libANGLE/Uniform.h"
 
-#include "common/utilities.h"
-
 #include <cstring>
 
 namespace gl
@@ -96,41 +94,6 @@ LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
 }
 
 LinkedUniform::~LinkedUniform() {}
-
-bool LinkedUniform::isInDefaultBlock() const
-{
-    return bufferIndex == -1;
-}
-
-bool LinkedUniform::isSampler() const
-{
-    return typeInfo->isSampler;
-}
-
-bool LinkedUniform::isImage() const
-{
-    return typeInfo->isImageType;
-}
-
-bool LinkedUniform::isAtomicCounter() const
-{
-    return IsAtomicCounterType(type);
-}
-
-bool LinkedUniform::isField() const
-{
-    return name.find('.') != std::string::npos;
-}
-
-size_t LinkedUniform::getElementSize() const
-{
-    return typeInfo->externalSize;
-}
-
-size_t LinkedUniform::getElementComponents() const
-{
-    return typeInfo->componentCount;
-}
 
 BufferVariable::BufferVariable()
     : bufferIndex(-1), blockInfo(sh::kDefaultBlockMemberInfo), topLevelArraySize(-1)

@@ -757,12 +757,7 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
 
-    if (linkedUniform.isSampler())
-    {
-        // We could potentially cache some indexing here. For now this is a no-op since the mapping
-        // is handled entirely in ContextVk.
-        return;
-    }
+    ASSERT(!linkedUniform.isSampler());
 
     if (linkedUniform.typeInfo->type == entryPointType)
     {
@@ -872,6 +867,15 @@ void ProgramVk::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 
 void ProgramVk::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
+    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+    if (linkedUniform.isSampler())
+    {
+        // We could potentially cache some indexing here. For now this is a no-op since the mapping
+        // is handled entirely in ContextVk.
+        return;
+    }
+
     setUniformImpl(location, count, v, GL_INT);
 }
 
