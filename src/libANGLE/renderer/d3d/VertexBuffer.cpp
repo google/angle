@@ -103,7 +103,7 @@ angle::Result VertexBufferInterface::getSpaceRequired(const gl::Context *context
                                                &spaceRequired));
 
     // Align to 16-byte boundary
-    unsigned int alignedSpaceRequired = roundUp(spaceRequired, 16u);
+    unsigned int alignedSpaceRequired = roundUpPow2(spaceRequired, 16u);
     ANGLE_CHECK_GL_ALLOC(GetImplAs<ContextD3D>(context), alignedSpaceRequired >= spaceRequired);
 
     *spaceInBytesOut = alignedSpaceRequired;

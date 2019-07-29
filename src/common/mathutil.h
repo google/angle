@@ -34,7 +34,7 @@ const unsigned int Float32One   = 0x3F800000;
 const unsigned short Float16One = 0x3C00;
 
 template <typename T>
-inline bool isPow2(T x)
+inline constexpr bool isPow2(T x)
 {
     static_assert(std::is_integral<T>::value, "isPow2 must be called on an integer type.");
     return (x & (x - 1)) == 0 && (x != 0);
@@ -1246,6 +1246,13 @@ T roundUp(const T value, const T alignment)
 {
     auto temp = value + alignment - static_cast<T>(1);
     return temp - temp % alignment;
+}
+
+template <typename T>
+constexpr T roundUpPow2(const T value, const T alignment)
+{
+    ASSERT(gl::isPow2(alignment));
+    return (value + alignment - 1) & ~(alignment - 1);
 }
 
 template <typename T>

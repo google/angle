@@ -26,6 +26,7 @@ namespace
 // On some hardware, reading 4 bytes from address 4k returns 0, making it impossible to read the
 // last n bytes.  By rounding up the buffer sizes to a multiple of 4, the problem is alleviated.
 constexpr size_t kBufferSizeGranularity = 4;
+static_assert(gl::isPow2(kBufferSizeGranularity), "use as alignment, must be power of two");
 
 // Start with a fairly small buffer size. We can increase this dynamically as we convert more data.
 constexpr size_t kConvertedArrayBufferInitialSize = 1024 * 8;
@@ -109,7 +110,7 @@ angle::Result BufferVk::setData(const gl::Context *context,
         VkBufferCreateInfo createInfo    = {};
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         createInfo.flags                 = 0;
-        createInfo.size                  = roundUp(size, kBufferSizeGranularity);
+        createInfo.size                  = roundUpPow2(size, kBufferSizeGranularity);
         createInfo.usage                 = usageFlags;
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
