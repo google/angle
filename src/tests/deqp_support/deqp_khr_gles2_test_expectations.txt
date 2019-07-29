@@ -43,8 +43,3 @@
 
 // Unclear what is happening here, failing to validate a 2D texture format
 3190 VULKAN : KHR-GLES2.texture_3d.copy_sub_image.rgba8 = SKIP
-
-// Compressed texture tests on Android
-3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.rgba_astc_* = FAIL
-3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.sgb8_alpha8_astc_* = FAIL
-3190 VULKAN PIXEL2 : KHR-GLES2.texture_3d.compressed_texture.srgb8_alpha8_astc_* = FAIL

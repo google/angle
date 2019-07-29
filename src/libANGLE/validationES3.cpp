@@ -534,9 +534,10 @@ bool ValidateES3TexImageParametersBase(Context *context,
             return false;
         }
 
-        if (texType == TextureType::_3D)
+        if ((texType == TextureType::_3D) && IsETC2EACFormat(internalformat))
         {
-            context->validationError(GL_INVALID_OPERATION, kInvalidTextureTarget);
+            // ES 3.1, Section 8.7, page 169.
+            context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
             return false;
         }
 
@@ -682,13 +683,6 @@ bool ValidateES3TexImage3DParameters(Context *context,
     if (!ValidTexture3DDestinationTarget(context, target))
     {
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
-        return false;
-    }
-
-    if (IsETC2EACFormat(format) && target != TextureTarget::_2DArray)
-    {
-        // ES 3.1, Section 8.7, page 169.
-        context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
         return false;
     }
 
