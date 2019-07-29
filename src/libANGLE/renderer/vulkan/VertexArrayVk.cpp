@@ -29,17 +29,19 @@ constexpr size_t kDynamicIndexDataSize  = 1024 * 8;
 
 ANGLE_INLINE bool BindingIsAligned(const gl::VertexBinding &binding,
                                    const angle::Format &angleFormat,
-                                   unsigned int attribSize)
+                                   unsigned int attribSize,
+                                   GLuint relativeOffset)
 {
+    GLintptr totalOffset = binding.getOffset() + relativeOffset;
     GLuint mask = angleFormat.componentAlignmentMask;
     if (mask != std::numeric_limits<GLuint>::max())
     {
-        return ((binding.getOffset() & mask) == 0 && (binding.getStride() & mask) == 0);
+        return ((totalOffset & mask) == 0 && (binding.getStride() & mask) == 0);
     }
     else
     {
         unsigned int formatSize = angleFormat.pixelBytes;
-        return ((binding.getOffset() * attribSize) % formatSize == 0) &&
+        return ((totalOffset * attribSize) % formatSize == 0) &&
                ((binding.getStride() * attribSize) % formatSize == 0);
     }
 }
@@ -233,7 +235,8 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
                                                     const gl::VertexBinding &binding,
                                                     size_t attribIndex,
                                                     const vk::Format &vertexFormat,
-                                                    ConversionBuffer *conversion)
+                                                    ConversionBuffer *conversion,
+                                                    GLuint relativeOffset)
 {
     const angle::Format &srcFormat  = vertexFormat.angleFormat();
     const angle::Format &destFormat = vertexFormat.bufferFormat();
@@ -264,7 +267,7 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
     params.srcFormat   = &srcFormat;
     params.destFormat  = &destFormat;
     params.srcStride   = binding.getStride();
-    params.srcOffset   = binding.getOffset();
+    params.srcOffset   = binding.getOffset() + relativeOffset;
     params.destOffset  = static_cast<size_t>(conversion->lastAllocationOffset);
 
     ANGLE_TRY(contextVk->getUtils().convertVertexBuffer(
@@ -278,7 +281,8 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
                                                     const gl::VertexBinding &binding,
                                                     size_t attribIndex,
                                                     const vk::Format &vertexFormat,
-                                                    ConversionBuffer *conversion)
+                                                    ConversionBuffer *conversion,
+                                                    GLuint relativeOffset)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "VertexArrayVk::convertVertexBufferCpu");
     // Needed before reading buffer or we could get stale data.
@@ -298,7 +302,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
     void *src = nullptr;
     ANGLE_TRY(srcBuffer->mapImpl(contextVk, &src));
     const uint8_t *srcBytes = reinterpret_cast<const uint8_t *>(src);
-    srcBytes += binding.getOffset();
+    srcBytes += binding.getOffset() + relativeOffset;
     ASSERT(GetVertexInputAlignment(vertexFormat) <= vk::kVertexBufferAlignment);
     ANGLE_TRY(StreamVertexData(contextVk, &conversion->data, srcBytes, numVertices * dstFormatSize,
                                0, numVertices, binding.getStride(), vertexFormat.vertexLoadFunction,
@@ -434,35 +438,38 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         {
             BufferVk *bufferVk               = vk::GetImpl(bufferGL);
             const angle::Format &angleFormat = vertexFormat.angleFormat();
-            bool bindingIsAligned =
-                BindingIsAligned(binding, angleFormat, angleFormat.channelCount);
+            bool bindingIsAligned = BindingIsAligned(binding, angleFormat, angleFormat.channelCount,
+                                                     attrib.relativeOffset);
 
             if (vertexFormat.vertexLoadRequiresConversion || !bindingIsAligned)
             {
                 stride = vertexFormat.bufferFormat().pixelBytes;
 
-                // This will require supporting relativeOffset in ES 3.1.
                 ConversionBuffer *conversion = bufferVk->getVertexConversionBuffer(
-                    renderer, angleFormat.id, binding.getStride(), binding.getOffset());
+                    renderer, angleFormat.id, binding.getStride(),
+                    binding.getOffset() + attrib.relativeOffset);
                 if (conversion->dirty)
                 {
                     if (bindingIsAligned)
                     {
                         ANGLE_TRY(convertVertexBufferGPU(contextVk, bufferVk, binding, attribIndex,
-                                                         vertexFormat, conversion));
+                                                         vertexFormat, conversion,
+                                                         attrib.relativeOffset));
                         anyVertexBufferConvertedOnGpu = true;
                     }
                     else
                     {
                         ANGLE_TRY(convertVertexBufferCPU(contextVk, bufferVk, binding, attribIndex,
-                                                         vertexFormat, conversion));
+                                                         vertexFormat, conversion,
+                                                         attrib.relativeOffset));
                     }
                 }
 
                 mCurrentArrayBuffers[attribIndex] = conversion->data.getCurrentBuffer();
                 mCurrentArrayBufferHandles[attribIndex] =
                     mCurrentArrayBuffers[attribIndex]->getBuffer().getHandle();
-                mCurrentArrayBufferOffsets[attribIndex] = conversion->lastAllocationOffset;
+                mCurrentArrayBufferOffsets[attribIndex] =
+                    conversion->lastAllocationOffset - attrib.relativeOffset;
             }
             else
             {

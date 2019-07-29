@@ -735,5 +735,3 @@
 // Validation errors:
 // Optimal tiling not supported for format:
 3520 VULKAN : dEQP-GLES31.functional.state_query.texture_level.texture* = SKIP
-// Invalid vertex attribute alignment:
-3520 VULKAN : dEQP-GLES31.functional.vertex_attribute_binding.usage.single_binding.unaligned_offset_elements_1_aligned_elements = FAIL
