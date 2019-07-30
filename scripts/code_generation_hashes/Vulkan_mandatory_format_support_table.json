@@ -1,6 +1,6 @@
 {
   "src/libANGLE/renderer/angle_format.py":
-    "7ed0a2469779c02567c98e0f2e476843",
+    "eefe6befdc925574207746fa531165fd",
   "src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":
     "dab4614bbee0c3fbc5b3ccaaa11ba9d3",
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":

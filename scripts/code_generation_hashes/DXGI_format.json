@@ -1,8 +1,8 @@
 {
   "src/libANGLE/renderer/angle_format.py":
-    "7ed0a2469779c02567c98e0f2e476843",
+    "eefe6befdc925574207746fa531165fd",
   "src/libANGLE/renderer/angle_format_map.json":
-    "947fe0a2c3ca1a819a68b4a94bfcf614",
+    "ce3cf0c03ed74a997dbe9d6b7bf5e6f0",
   "src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json":
     "24f525b05dc665fbbc8c6d68fb863719",
   "src/libANGLE/renderer/d3d/d3d11/dxgi_format_map_autogen.cpp":

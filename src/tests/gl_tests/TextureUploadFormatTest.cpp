@@ -385,6 +385,17 @@ TEST_P(TextureUploadFormatTest, All)
 
         fnTest({GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, {1, 1, 1, 128});
         fnTest({GL_RGB5_A1, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, {8, 8, 8, 255});
+        fnTest({GL_RGBA, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, {1, 1, 1, 128});
+    }
+
+    // RGB+UNSIGNED_INT_2_10_10_10_REV
+    {
+        constexpr uint32_t src[] = {
+            (EncodeNormUint<10>(srcVals[0]) << 0) | (EncodeNormUint<10>(srcVals[1]) << 10) |
+            (EncodeNormUint<10>(srcVals[2]) << 20) | (EncodeNormUint<2>(srcVals[3]) << 30)};
+        ZeroAndCopy(srcBuffer, src);
+
+        fnTest({GL_RGB, GL_RGB, GL_UNSIGNED_INT_2_10_10_10_REV}, {1, 1, 1, 0});
     }
 
     // DEPTH_COMPONENT+UNSIGNED_SHORT

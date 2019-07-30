@@ -1349,6 +1349,13 @@ bool ValidateES2TexImageParametersBase(Context *context,
             case GL_HALF_FLOAT_OES:
             case GL_FLOAT:
                 break;
+            case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
+                if (!context->getExtensions().textureFormat2101010REV)
+                {
+                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                    return false;
+                }
+                break;
             default:
                 context->validationError(GL_INVALID_ENUM, kInvalidType);
                 return false;
@@ -1402,6 +1409,7 @@ bool ValidateES2TexImageParametersBase(Context *context,
                 {
                     case GL_UNSIGNED_BYTE:
                     case GL_UNSIGNED_SHORT_5_6_5:
+                    case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
                     case GL_FLOAT:
                     case GL_HALF_FLOAT_OES:
                         break;
@@ -1418,6 +1426,7 @@ bool ValidateES2TexImageParametersBase(Context *context,
                     case GL_UNSIGNED_SHORT_5_5_5_1:
                     case GL_FLOAT:
                     case GL_HALF_FLOAT_OES:
+                    case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
                         break;
                     default:
                         context->validationError(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
@@ -1683,6 +1692,32 @@ bool ValidateES2TexImageParametersBase(Context *context,
                         context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                         return false;
                     }
+                    break;
+
+                case GL_RGB10_A2_EXT:
+                    if (!context->getExtensions().textureFormat2101010REV)
+                    {
+                        context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
+                        return false;
+                    }
+
+                    if (type != GL_UNSIGNED_INT_2_10_10_10_REV_EXT || format != GL_RGBA)
+                    {
+                        context->validationError(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
+                        return false;
+                    }
+
+                    nonEqualFormatsAllowed = true;
+
+                    break;
+
+                case GL_RGB5_A1:
+                    if (context->getExtensions().textureFormat2101010REV &&
+                        type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGBA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+
                     break;
 
                 default:

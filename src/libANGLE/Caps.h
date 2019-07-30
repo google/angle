@@ -160,6 +160,9 @@ struct Extensions
     bool textureHalfFloat       = false;
     bool textureHalfFloatLinear = false;
 
+    // GL_EXT_texture_type_2_10_10_10_REV
+    bool textureFormat2101010REV = false;
+
     // GL_OES_texture_float and GL_OES_texture_float_linear
     // Implies that TextureCaps for GL_RGB32F, GL_RGBA32F, GL_ALPHA16F_EXT, GL_LUMINANCE16F_EXT and
     // GL_LUMINANCE_ALPHA16F_EXT exist

@@ -134,6 +134,8 @@ def get_channel_struct(angle_format):
             struct_name += 'D{}'.format(bits['D']) + component_suffix
         if channel == 's':
             struct_name += 'S{}'.format(bits['S'])
+        if channel == 'x':
+            struct_name += 'X{}'.format(bits['X'])
 
     if not is_depth_stencil(angle_format):
         struct_name += component_suffix

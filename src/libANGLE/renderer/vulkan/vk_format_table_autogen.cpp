@@ -1100,6 +1100,18 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             }
             break;
 
+        case angle::FormatID::R10G10B10X2_UNORM:
+            internalFormat               = GL_RGB10_UNORM_ANGLEX;
+            imageFormatID                = angle::FormatID::R10G10B10A2_UNORM;
+            vkImageFormat                = VK_FORMAT_A2B10G10R10_UNORM_PACK32;
+            imageInitializerFunction     = nullptr;
+            bufferFormatID               = angle::FormatID::NONE;
+            vkBufferFormat               = VK_FORMAT_UNDEFINED;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = true;
+            break;
+
         case angle::FormatID::R11G11B10_FLOAT:
             internalFormat               = GL_R11F_G11F_B10F;
             imageFormatID                = angle::FormatID::R11G11B10_FLOAT;
