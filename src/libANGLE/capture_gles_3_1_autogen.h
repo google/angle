@@ -46,7 +46,8 @@ angle::CallCapture CaptureCreateShaderProgramv(const Context *context,
                                                bool isCallValid,
                                                ShaderType typePacked,
                                                GLsizei count,
-                                               const GLchar *const *strings);
+                                               const GLchar *const *strings,
+                                               GLuint returnValue);
 angle::CallCapture CaptureDeleteProgramPipelines(const Context *context,
                                                  bool isCallValid,
                                                  GLsizei n,
@@ -113,12 +114,14 @@ angle::CallCapture CaptureGetProgramResourceIndex(const Context *context,
                                                   bool isCallValid,
                                                   GLuint program,
                                                   GLenum programInterface,
-                                                  const GLchar *name);
+                                                  const GLchar *name,
+                                                  GLuint returnValue);
 angle::CallCapture CaptureGetProgramResourceLocation(const Context *context,
                                                      bool isCallValid,
                                                      GLuint program,
                                                      GLenum programInterface,
-                                                     const GLchar *name);
+                                                     const GLchar *name,
+                                                     GLint returnValue);
 angle::CallCapture CaptureGetProgramResourceName(const Context *context,
                                                  bool isCallValid,
                                                  GLuint program,
@@ -151,7 +154,8 @@ angle::CallCapture CaptureGetTexLevelParameteriv(const Context *context,
                                                  GLint *params);
 angle::CallCapture CaptureIsProgramPipeline(const Context *context,
                                             bool isCallValid,
-                                            GLuint pipeline);
+                                            GLuint pipeline,
+                                            GLboolean returnValue);
 angle::CallCapture CaptureMemoryBarrier(const Context *context,
                                         bool isCallValid,
                                         GLbitfield barriers);

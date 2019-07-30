@@ -51,6 +51,7 @@ class ParamBuffer final : angle::NonCopyable
     ParamCapture &getParam(const char *paramName, ParamType paramType, int index);
 
     void addParam(ParamCapture &&param);
+    void addReturnValue(ParamCapture &&returnValue);
     bool hasClientArrayData() const { return mClientArrayDataParam != -1; }
     ParamCapture &getClientArrayPointerParameter();
     size_t getReadBufferSize() const { return mReadBufferSize; }
@@ -59,6 +60,7 @@ class ParamBuffer final : angle::NonCopyable
 
   private:
     std::vector<ParamCapture> mParamCaptures;
+    ParamCapture mReturnValueCapture;
     int mClientArrayDataParam = -1;
     size_t mReadBufferSize    = 0;
 };

@@ -85,7 +85,8 @@ CallCapture CaptureCreateShaderProgramv(const Context *context,
                                         bool isCallValid,
                                         ShaderType typePacked,
                                         GLsizei count,
-                                        const GLchar *const *strings)
+                                        const GLchar *const *strings,
+                                        GLuint returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -97,6 +98,10 @@ CallCapture CaptureCreateShaderProgramv(const Context *context,
     CaptureCreateShaderProgramv_strings(context, isCallValid, typePacked, count, strings,
                                         &stringsParam);
     paramBuffer.addParam(std::move(stringsParam));
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLuint);
+    InitParamValue(ParamType::TGLuint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glCreateShaderProgramv", std::move(paramBuffer));
 }
@@ -343,7 +348,8 @@ CallCapture CaptureGetProgramResourceIndex(const Context *context,
                                            bool isCallValid,
                                            GLuint program,
                                            GLenum programInterface,
-                                           const GLchar *name)
+                                           const GLchar *name,
+                                           GLuint returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -356,6 +362,10 @@ CallCapture CaptureGetProgramResourceIndex(const Context *context,
                                         &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLuint);
+    InitParamValue(ParamType::TGLuint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
     return CallCapture("glGetProgramResourceIndex", std::move(paramBuffer));
 }
 
@@ -363,7 +373,8 @@ CallCapture CaptureGetProgramResourceLocation(const Context *context,
                                               bool isCallValid,
                                               GLuint program,
                                               GLenum programInterface,
-                                              const GLchar *name)
+                                              const GLchar *name,
+                                              GLint returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -375,6 +386,10 @@ CallCapture CaptureGetProgramResourceLocation(const Context *context,
     CaptureGetProgramResourceLocation_name(context, isCallValid, program, programInterface, name,
                                            &nameParam);
     paramBuffer.addParam(std::move(nameParam));
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLint);
+    InitParamValue(ParamType::TGLint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glGetProgramResourceLocation", std::move(paramBuffer));
 }
@@ -495,11 +510,18 @@ CallCapture CaptureGetTexLevelParameteriv(const Context *context,
     return CallCapture("glGetTexLevelParameteriv", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsProgramPipeline(const Context *context, bool isCallValid, GLuint pipeline)
+CallCapture CaptureIsProgramPipeline(const Context *context,
+                                     bool isCallValid,
+                                     GLuint pipeline,
+                                     GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("pipeline", ParamType::TGLuint, pipeline);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsProgramPipeline", std::move(paramBuffer));
 }

@@ -148,7 +148,7 @@ template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_c
         {{
             returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
         }}
-        ANGLE_CAPTURE({name}, isCallValid, {validate_params});
+        ANGLE_CAPTURE({name}, isCallValid, {validate_params}, returnValue);
     }}
     else
     {{
@@ -278,7 +278,22 @@ namespace gl
 }}  // namespace gl
 """
 
-template_capture_method = """
+template_capture_method_with_return_value = """
+CallCapture Capture{short_name}({params_with_type}, {return_value_type_original} returnValue)
+{{
+    ParamBuffer paramBuffer;
+
+    {parameter_captures}
+
+    ParamCapture returnValueCapture("returnValue", ParamType::T{return_value_type_custom});
+    InitParamValue(ParamType::T{return_value_type_custom}, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
+    return CallCapture("gl{short_name}", std::move(paramBuffer));
+}}
+"""
+
+template_capture_method_no_return_value = """
 CallCapture Capture{short_name}({params_with_type})
 {{
     ParamBuffer paramBuffer;
@@ -689,7 +704,23 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
         return template_entry_point_with_return.format(**format_params)
 
 
-def format_capture_method(cmd_name, params, all_param_types, capture_pointer_funcs):
+def get_capture_param_type_name(param_type):
+
+    pointer_count = param_type.count("*")
+    is_const = "const" in param_type.split()
+
+    param_type = param_type.replace("*", "").strip()
+    param_type = " ".join([param for param in param_type.split() if param != "const"])
+
+    if is_const:
+        param_type += "Const"
+    for x in range(pointer_count):
+        param_type += "Pointer"
+
+    return param_type
+
+
+def format_capture_method(cmd_name, proto, params, all_param_types, capture_pointer_funcs):
 
     packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
 
@@ -706,22 +737,9 @@ def format_capture_method(cmd_name, params, all_param_types, capture_pointer_fun
         param_type = just_the_type_packed(param, packed_gl_enums).strip()
 
         pointer_count = param_type.count("*")
-        param_type = param_type.replace("*", "").strip()
-        is_const = "const" in param_type
-        param_type = param_type.replace("const", "").strip()
+        param_type = get_capture_param_type_name(param_type)
 
         if pointer_count > 0:
-            if is_const:
-                if pointer_count == 2:
-                    param_type += "ConstPointerPointer"
-                else:
-                    param_type += "ConstPointer"
-            else:
-                if pointer_count == 2:
-                    param_type += "PointerPointer"
-                else:
-                    param_type += "Pointer"
-
             params = params_just_name
             capture_name = "Capture%s_%s" % (cmd_name[2:], param_name)
             capture = template_parameter_capture_pointer.format(
@@ -737,12 +755,22 @@ def format_capture_method(cmd_name, params, all_param_types, capture_pointer_fun
 
         parameter_captures += [capture]
 
-    return template_capture_method.format(
-        full_name=cmd_name,
-        short_name=cmd_name[2:],
-        params_with_type=params_with_type,
-        params_just_name=params_just_name,
-        parameter_captures="\n    ".join(parameter_captures))
+    return_type = proto[:-len(cmd_name)].strip()
+
+    format_args = {
+        "full_name": cmd_name,
+        "short_name": cmd_name[2:],
+        "params_with_type": params_with_type,
+        "params_just_name": params_just_name,
+        "parameter_captures": "\n    ".join(parameter_captures),
+        "return_value_type_original": return_type,
+        "return_value_type_custom": get_capture_param_type_name(return_type)
+    }
+
+    if return_type == "void":
+        return template_capture_method_no_return_value.format(**format_args)
+    else:
+        return template_capture_method_with_return_value.format(**format_args)
 
 
 def get_internal_params(cmd_name, params):
@@ -787,9 +815,12 @@ def format_validation_proto(cmd_name, params):
     return template_validation_proto % (cmd_name[2:], internal_params)
 
 
-def format_capture_proto(cmd_name, params):
+def format_capture_proto(cmd_name, proto, params):
     internal_params = get_internal_params(cmd_name,
                                           ["const Context *context", "bool isCallValid"] + params)
+    return_type = proto[:-len(cmd_name)].strip()
+    if return_type != "void":
+        internal_params += ", %s returnValue" % return_type
     return template_capture_proto % (cmd_name[2:], internal_params)
 
 
@@ -826,9 +857,10 @@ def get_entry_points(all_commands, commands, is_explicit_context, is_wgl, all_pa
             format_libgles_entry_point_def(cmd_name, proto_text, param_text, is_explicit_context))
 
         validation_protos.append(format_validation_proto(cmd_name, param_text))
-        capture_protos.append(format_capture_proto(cmd_name, param_text))
+        capture_protos.append(format_capture_proto(cmd_name, proto_text, param_text))
         capture_methods.append(
-            format_capture_method(cmd_name, param_text, all_param_types, capture_pointer_funcs))
+            format_capture_method(cmd_name, proto_text, param_text, all_param_types,
+                                  capture_pointer_funcs))
 
     return decls, defs, export_defs, validation_protos, capture_protos, capture_methods, capture_pointer_funcs
 

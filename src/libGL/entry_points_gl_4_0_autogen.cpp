@@ -399,7 +399,8 @@ GLuint GL_APIENTRY GetSubroutineIndex(GLuint program, GLenum shadertype, const G
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
         }
-        ANGLE_CAPTURE(GetSubroutineIndex, isCallValid, context, program, shadertype, name);
+        ANGLE_CAPTURE(GetSubroutineIndex, isCallValid, context, program, shadertype, name,
+                      returnValue);
     }
     else
     {
@@ -429,8 +430,8 @@ GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
         }
-        ANGLE_CAPTURE(GetSubroutineUniformLocation, isCallValid, context, program, shadertype,
-                      name);
+        ANGLE_CAPTURE(GetSubroutineUniformLocation, isCallValid, context, program, shadertype, name,
+                      returnValue);
     }
     else
     {
@@ -492,7 +493,7 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
         }
-        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, id);
+        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, id, returnValue);
     }
     else
     {

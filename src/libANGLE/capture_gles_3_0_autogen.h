@@ -85,7 +85,8 @@ angle::CallCapture CaptureClientWaitSync(const Context *context,
                                          bool isCallValid,
                                          GLsync sync,
                                          GLbitfield flags,
-                                         GLuint64 timeout);
+                                         GLuint64 timeout,
+                                         GLenum returnValue);
 angle::CallCapture CaptureCompressedTexImage3D(const Context *context,
                                                bool isCallValid,
                                                TextureTarget targetPacked,
@@ -177,7 +178,8 @@ angle::CallCapture CaptureEndTransformFeedback(const Context *context, bool isCa
 angle::CallCapture CaptureFenceSync(const Context *context,
                                     bool isCallValid,
                                     GLenum condition,
-                                    GLbitfield flags);
+                                    GLbitfield flags,
+                                    GLsync returnValue);
 angle::CallCapture CaptureFlushMappedBufferRange(const Context *context,
                                                  bool isCallValid,
                                                  BufferBinding targetPacked,
@@ -239,7 +241,8 @@ angle::CallCapture CaptureGetBufferPointerv(const Context *context,
 angle::CallCapture CaptureGetFragDataLocation(const Context *context,
                                               bool isCallValid,
                                               GLuint program,
-                                              const GLchar *name);
+                                              const GLchar *name,
+                                              GLint returnValue);
 angle::CallCapture CaptureGetInteger64i_v(const Context *context,
                                           bool isCallValid,
                                           GLenum target,
@@ -291,7 +294,8 @@ angle::CallCapture CaptureGetSamplerParameteriv(const Context *context,
 angle::CallCapture CaptureGetStringi(const Context *context,
                                      bool isCallValid,
                                      GLenum name,
-                                     GLuint index);
+                                     GLuint index,
+                                     const GLubyte *returnValue);
 angle::CallCapture CaptureGetSynciv(const Context *context,
                                     bool isCallValid,
                                     GLsync sync,
@@ -311,7 +315,8 @@ angle::CallCapture CaptureGetTransformFeedbackVarying(const Context *context,
 angle::CallCapture CaptureGetUniformBlockIndex(const Context *context,
                                                bool isCallValid,
                                                GLuint program,
-                                               const GLchar *uniformBlockName);
+                                               const GLchar *uniformBlockName,
+                                               GLuint returnValue);
 angle::CallCapture CaptureGetUniformIndices(const Context *context,
                                             bool isCallValid,
                                             GLuint program,
@@ -347,17 +352,33 @@ angle::CallCapture CaptureInvalidateSubFramebuffer(const Context *context,
                                                    GLint y,
                                                    GLsizei width,
                                                    GLsizei height);
-angle::CallCapture CaptureIsQuery(const Context *context, bool isCallValid, GLuint id);
-angle::CallCapture CaptureIsSampler(const Context *context, bool isCallValid, GLuint sampler);
-angle::CallCapture CaptureIsSync(const Context *context, bool isCallValid, GLsync sync);
-angle::CallCapture CaptureIsTransformFeedback(const Context *context, bool isCallValid, GLuint id);
-angle::CallCapture CaptureIsVertexArray(const Context *context, bool isCallValid, GLuint array);
+angle::CallCapture CaptureIsQuery(const Context *context,
+                                  bool isCallValid,
+                                  GLuint id,
+                                  GLboolean returnValue);
+angle::CallCapture CaptureIsSampler(const Context *context,
+                                    bool isCallValid,
+                                    GLuint sampler,
+                                    GLboolean returnValue);
+angle::CallCapture CaptureIsSync(const Context *context,
+                                 bool isCallValid,
+                                 GLsync sync,
+                                 GLboolean returnValue);
+angle::CallCapture CaptureIsTransformFeedback(const Context *context,
+                                              bool isCallValid,
+                                              GLuint id,
+                                              GLboolean returnValue);
+angle::CallCapture CaptureIsVertexArray(const Context *context,
+                                        bool isCallValid,
+                                        GLuint array,
+                                        GLboolean returnValue);
 angle::CallCapture CaptureMapBufferRange(const Context *context,
                                          bool isCallValid,
                                          BufferBinding targetPacked,
                                          GLintptr offset,
                                          GLsizeiptr length,
-                                         GLbitfield access);
+                                         GLbitfield access,
+                                         void *returnValue);
 angle::CallCapture CapturePauseTransformFeedback(const Context *context, bool isCallValid);
 angle::CallCapture CaptureProgramBinary(const Context *context,
                                         bool isCallValid,
@@ -530,7 +551,8 @@ angle::CallCapture CaptureUniformMatrix4x3fv(const Context *context,
                                              const GLfloat *value);
 angle::CallCapture CaptureUnmapBuffer(const Context *context,
                                       bool isCallValid,
-                                      BufferBinding targetPacked);
+                                      BufferBinding targetPacked,
+                                      GLboolean returnValue);
 angle::CallCapture CaptureVertexAttribDivisor(const Context *context,
                                               bool isCallValid,
                                               GLuint index,

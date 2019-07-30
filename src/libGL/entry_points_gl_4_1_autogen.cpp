@@ -96,7 +96,8 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
         {
             returnValue = GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
         }
-        ANGLE_CAPTURE(CreateShaderProgramv, isCallValid, context, typePacked, count, strings);
+        ANGLE_CAPTURE(CreateShaderProgramv, isCallValid, context, typePacked, count, strings,
+                      returnValue);
     }
     else
     {
@@ -353,7 +354,7 @@ GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
         }
-        ANGLE_CAPTURE(IsProgramPipeline, isCallValid, context, pipeline);
+        ANGLE_CAPTURE(IsProgramPipeline, isCallValid, context, pipeline, returnValue);
     }
     else
     {

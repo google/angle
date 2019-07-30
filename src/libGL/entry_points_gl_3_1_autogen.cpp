@@ -227,7 +227,8 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
         }
-        ANGLE_CAPTURE(GetUniformBlockIndex, isCallValid, context, program, uniformBlockName);
+        ANGLE_CAPTURE(GetUniformBlockIndex, isCallValid, context, program, uniformBlockName,
+                      returnValue);
     }
     else
     {

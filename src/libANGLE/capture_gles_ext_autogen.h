@@ -750,12 +750,18 @@ angle::CallCapture CaptureLoseContextCHROMIUM(const Context *context,
                                               GraphicsResetStatus otherPacked);
 
 // GL_CHROMIUM_path_rendering
-angle::CallCapture CaptureGenPathsCHROMIUM(const Context *context, bool isCallValid, GLsizei range);
+angle::CallCapture CaptureGenPathsCHROMIUM(const Context *context,
+                                           bool isCallValid,
+                                           GLsizei range,
+                                           GLuint returnValue);
 angle::CallCapture CaptureDeletePathsCHROMIUM(const Context *context,
                                               bool isCallValid,
                                               GLuint first,
                                               GLsizei range);
-angle::CallCapture CaptureIsPathCHROMIUM(const Context *context, bool isCallValid, GLuint path);
+angle::CallCapture CaptureIsPathCHROMIUM(const Context *context,
+                                         bool isCallValid,
+                                         GLuint path,
+                                         GLboolean returnValue);
 angle::CallCapture CapturePathCommandsCHROMIUM(const Context *context,
                                                bool isCallValid,
                                                GLuint path,
@@ -908,12 +914,14 @@ angle::CallCapture CaptureBindFragDataLocationIndexedEXT(const Context *context,
 angle::CallCapture CaptureGetFragDataIndexEXT(const Context *context,
                                               bool isCallValid,
                                               GLuint program,
-                                              const GLchar *name);
+                                              const GLchar *name,
+                                              GLint returnValue);
 angle::CallCapture CaptureGetProgramResourceLocationIndexEXT(const Context *context,
                                                              bool isCallValid,
                                                              GLuint program,
                                                              GLenum programInterface,
-                                                             const GLchar *name);
+                                                             const GLchar *name,
+                                                             GLint returnValue);
 
 // GL_EXT_debug_marker
 angle::CallCapture CaptureInsertEventMarkerEXT(const Context *context,
@@ -974,7 +982,10 @@ angle::CallCapture CaptureGetQueryivEXT(const Context *context,
                                         QueryType targetPacked,
                                         GLenum pname,
                                         GLint *params);
-angle::CallCapture CaptureIsQueryEXT(const Context *context, bool isCallValid, GLuint id);
+angle::CallCapture CaptureIsQueryEXT(const Context *context,
+                                     bool isCallValid,
+                                     GLuint id,
+                                     GLboolean returnValue);
 angle::CallCapture CaptureQueryCounterEXT(const Context *context,
                                           bool isCallValid,
                                           GLuint id,
@@ -1024,7 +1035,8 @@ angle::CallCapture CaptureMapBufferRangeEXT(const Context *context,
                                             BufferBinding targetPacked,
                                             GLintptr offset,
                                             GLsizeiptr length,
-                                            GLbitfield access);
+                                            GLbitfield access,
+                                            void *returnValue);
 
 // GL_EXT_memory_object
 angle::CallCapture CaptureBufferStorageMemEXT(const Context *context,
@@ -1057,7 +1069,8 @@ angle::CallCapture CaptureGetUnsignedBytei_vEXT(const Context *context,
                                                 GLubyte *data);
 angle::CallCapture CaptureIsMemoryObjectEXT(const Context *context,
                                             bool isCallValid,
-                                            GLuint memoryObject);
+                                            GLuint memoryObject,
+                                            GLboolean returnValue);
 angle::CallCapture CaptureMemoryObjectParameterivEXT(const Context *context,
                                                      bool isCallValid,
                                                      GLuint memoryObject,
@@ -1115,7 +1128,9 @@ angle::CallCapture CaptureImportMemoryFdEXT(const Context *context,
 // GL_EXT_occlusion_query_boolean
 
 // GL_EXT_robustness
-angle::CallCapture CaptureGetGraphicsResetStatusEXT(const Context *context, bool isCallValid);
+angle::CallCapture CaptureGetGraphicsResetStatusEXT(const Context *context,
+                                                    bool isCallValid,
+                                                    GLenum returnValue);
 angle::CallCapture CaptureGetnUniformfvEXT(const Context *context,
                                            bool isCallValid,
                                            GLuint program,
@@ -1155,7 +1170,8 @@ angle::CallCapture CaptureGetSemaphoreParameterui64vEXT(const Context *context,
                                                         GLuint64 *params);
 angle::CallCapture CaptureIsSemaphoreEXT(const Context *context,
                                          bool isCallValid,
-                                         GLuint semaphore);
+                                         GLuint semaphore,
+                                         GLboolean returnValue);
 angle::CallCapture CaptureSemaphoreParameterui64vEXT(const Context *context,
                                                      bool isCallValid,
                                                      GLuint semaphore,
@@ -1238,7 +1254,8 @@ angle::CallCapture CaptureGetDebugMessageLogKHR(const Context *context,
                                                 GLuint *ids,
                                                 GLenum *severities,
                                                 GLsizei *lengths,
-                                                GLchar *messageLog);
+                                                GLchar *messageLog,
+                                                GLuint returnValue);
 angle::CallCapture CaptureGetObjectLabelKHR(const Context *context,
                                             bool isCallValid,
                                             GLenum identifier,
@@ -1295,12 +1312,18 @@ angle::CallCapture CaptureGetFenceivNV(const Context *context,
                                        GLuint fence,
                                        GLenum pname,
                                        GLint *params);
-angle::CallCapture CaptureIsFenceNV(const Context *context, bool isCallValid, GLuint fence);
+angle::CallCapture CaptureIsFenceNV(const Context *context,
+                                    bool isCallValid,
+                                    GLuint fence,
+                                    GLboolean returnValue);
 angle::CallCapture CaptureSetFenceNV(const Context *context,
                                      bool isCallValid,
                                      GLuint fence,
                                      GLenum condition);
-angle::CallCapture CaptureTestFenceNV(const Context *context, bool isCallValid, GLuint fence);
+angle::CallCapture CaptureTestFenceNV(const Context *context,
+                                      bool isCallValid,
+                                      GLuint fence,
+                                      GLboolean returnValue);
 
 // GL_OES_EGL_image
 angle::CallCapture CaptureEGLImageTargetRenderbufferStorageOES(const Context *context,
@@ -1365,7 +1388,8 @@ angle::CallCapture CaptureBindRenderbufferOES(const Context *context,
                                               GLuint renderbuffer);
 angle::CallCapture CaptureCheckFramebufferStatusOES(const Context *context,
                                                     bool isCallValid,
-                                                    GLenum target);
+                                                    GLenum target,
+                                                    GLenum returnValue);
 angle::CallCapture CaptureDeleteFramebuffersOES(const Context *context,
                                                 bool isCallValid,
                                                 GLsizei n,
@@ -1411,10 +1435,12 @@ angle::CallCapture CaptureGetRenderbufferParameterivOES(const Context *context,
                                                         GLint *params);
 angle::CallCapture CaptureIsFramebufferOES(const Context *context,
                                            bool isCallValid,
-                                           GLuint framebuffer);
+                                           GLuint framebuffer,
+                                           GLboolean returnValue);
 angle::CallCapture CaptureIsRenderbufferOES(const Context *context,
                                             bool isCallValid,
-                                            GLuint renderbuffer);
+                                            GLuint renderbuffer,
+                                            GLboolean returnValue);
 angle::CallCapture CaptureRenderbufferStorageOES(const Context *context,
                                                  bool isCallValid,
                                                  GLenum target,
@@ -1446,10 +1472,12 @@ angle::CallCapture CaptureGetBufferPointervOES(const Context *context,
 angle::CallCapture CaptureMapBufferOES(const Context *context,
                                        bool isCallValid,
                                        BufferBinding targetPacked,
-                                       GLenum access);
+                                       GLenum access,
+                                       void *returnValue);
 angle::CallCapture CaptureUnmapBufferOES(const Context *context,
                                          bool isCallValid,
-                                         BufferBinding targetPacked);
+                                         BufferBinding targetPacked,
+                                         GLboolean returnValue);
 
 // GL_OES_matrix_palette
 angle::CallCapture CaptureCurrentPaletteMatrixOES(const Context *context,
@@ -1481,7 +1509,8 @@ angle::CallCapture CapturePointSizePointerOES(const Context *context,
 angle::CallCapture CaptureQueryMatrixxOES(const Context *context,
                                           bool isCallValid,
                                           GLfixed *mantissa,
-                                          GLint *exponent);
+                                          GLint *exponent,
+                                          GLbitfield returnValue);
 
 // GL_OES_texture_3D
 angle::CallCapture CaptureCompressedTexImage3DOES(const Context *context,
@@ -1665,7 +1694,10 @@ angle::CallCapture CaptureGenVertexArraysOES(const Context *context,
                                              bool isCallValid,
                                              GLsizei n,
                                              GLuint *arrays);
-angle::CallCapture CaptureIsVertexArrayOES(const Context *context, bool isCallValid, GLuint array);
+angle::CallCapture CaptureIsVertexArrayOES(const Context *context,
+                                           bool isCallValid,
+                                           GLuint array,
+                                           GLboolean returnValue);
 
 // GL_OVR_multiview
 angle::CallCapture CaptureFramebufferTextureMultiviewOVR(const Context *context,

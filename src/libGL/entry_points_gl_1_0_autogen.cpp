@@ -1440,7 +1440,7 @@ GLuint GL_APIENTRY GenLists(GLsizei range)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GenLists, GLuint>();
         }
-        ANGLE_CAPTURE(GenLists, isCallValid, context, range);
+        ANGLE_CAPTURE(GenLists, isCallValid, context, range, returnValue);
     }
     else
     {
@@ -1516,7 +1516,7 @@ GLenum GL_APIENTRY GetError()
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetError, GLenum>();
         }
-        ANGLE_CAPTURE(GetError, isCallValid, context);
+        ANGLE_CAPTURE(GetError, isCallValid, context, returnValue);
     }
     else
     {
@@ -1769,7 +1769,7 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetString, const GLubyte *>();
         }
-        ANGLE_CAPTURE(GetString, isCallValid, context, name);
+        ANGLE_CAPTURE(GetString, isCallValid, context, name, returnValue);
     }
     else
     {
@@ -2169,7 +2169,7 @@ GLboolean GL_APIENTRY IsEnabled(GLenum cap)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsEnabled, GLboolean>();
         }
-        ANGLE_CAPTURE(IsEnabled, isCallValid, context, cap);
+        ANGLE_CAPTURE(IsEnabled, isCallValid, context, cap, returnValue);
     }
     else
     {
@@ -2195,7 +2195,7 @@ GLboolean GL_APIENTRY IsList(GLuint list)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsList, GLboolean>();
         }
-        ANGLE_CAPTURE(IsList, isCallValid, context, list);
+        ANGLE_CAPTURE(IsList, isCallValid, context, list, returnValue);
     }
     else
     {
@@ -3847,7 +3847,7 @@ GLint GL_APIENTRY RenderMode(GLenum mode)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::RenderMode, GLint>();
         }
-        ANGLE_CAPTURE(RenderMode, isCallValid, context, mode);
+        ANGLE_CAPTURE(RenderMode, isCallValid, context, mode, returnValue);
     }
     else
     {

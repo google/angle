@@ -81,7 +81,8 @@ angle::CallCapture CaptureBufferSubData(const Context *context,
                                         const void *data);
 angle::CallCapture CaptureCheckFramebufferStatus(const Context *context,
                                                  bool isCallValid,
-                                                 GLenum target);
+                                                 GLenum target,
+                                                 GLenum returnValue);
 angle::CallCapture CaptureClear(const Context *context, bool isCallValid, GLbitfield mask);
 angle::CallCapture CaptureClearColor(const Context *context,
                                      bool isCallValid,
@@ -139,10 +140,13 @@ angle::CallCapture CaptureCopyTexSubImage2D(const Context *context,
                                             GLint y,
                                             GLsizei width,
                                             GLsizei height);
-angle::CallCapture CaptureCreateProgram(const Context *context, bool isCallValid);
+angle::CallCapture CaptureCreateProgram(const Context *context,
+                                        bool isCallValid,
+                                        GLuint returnValue);
 angle::CallCapture CaptureCreateShader(const Context *context,
                                        bool isCallValid,
-                                       ShaderType typePacked);
+                                       ShaderType typePacked,
+                                       GLuint returnValue);
 angle::CallCapture CaptureCullFace(const Context *context,
                                    bool isCallValid,
                                    CullFaceMode modePacked);
@@ -255,7 +259,8 @@ angle::CallCapture CaptureGetAttachedShaders(const Context *context,
 angle::CallCapture CaptureGetAttribLocation(const Context *context,
                                             bool isCallValid,
                                             GLuint program,
-                                            const GLchar *name);
+                                            const GLchar *name,
+                                            GLint returnValue);
 angle::CallCapture CaptureGetBooleanv(const Context *context,
                                       bool isCallValid,
                                       GLenum pname,
@@ -265,7 +270,7 @@ angle::CallCapture CaptureGetBufferParameteriv(const Context *context,
                                                BufferBinding targetPacked,
                                                GLenum pname,
                                                GLint *params);
-angle::CallCapture CaptureGetError(const Context *context, bool isCallValid);
+angle::CallCapture CaptureGetError(const Context *context, bool isCallValid, GLenum returnValue);
 angle::CallCapture CaptureGetFloatv(const Context *context,
                                     bool isCallValid,
                                     GLenum pname,
@@ -319,7 +324,10 @@ angle::CallCapture CaptureGetShaderiv(const Context *context,
                                       GLuint shader,
                                       GLenum pname,
                                       GLint *params);
-angle::CallCapture CaptureGetString(const Context *context, bool isCallValid, GLenum name);
+angle::CallCapture CaptureGetString(const Context *context,
+                                    bool isCallValid,
+                                    GLenum name,
+                                    const GLubyte *returnValue);
 angle::CallCapture CaptureGetTexParameterfv(const Context *context,
                                             bool isCallValid,
                                             TextureType targetPacked,
@@ -333,7 +341,8 @@ angle::CallCapture CaptureGetTexParameteriv(const Context *context,
 angle::CallCapture CaptureGetUniformLocation(const Context *context,
                                              bool isCallValid,
                                              GLuint program,
-                                             const GLchar *name);
+                                             const GLchar *name,
+                                             GLint returnValue);
 angle::CallCapture CaptureGetUniformfv(const Context *context,
                                        bool isCallValid,
                                        GLuint program,
@@ -363,17 +372,34 @@ angle::CallCapture CaptureHint(const Context *context,
                                bool isCallValid,
                                GLenum target,
                                GLenum mode);
-angle::CallCapture CaptureIsBuffer(const Context *context, bool isCallValid, GLuint buffer);
-angle::CallCapture CaptureIsEnabled(const Context *context, bool isCallValid, GLenum cap);
+angle::CallCapture CaptureIsBuffer(const Context *context,
+                                   bool isCallValid,
+                                   GLuint buffer,
+                                   GLboolean returnValue);
+angle::CallCapture CaptureIsEnabled(const Context *context,
+                                    bool isCallValid,
+                                    GLenum cap,
+                                    GLboolean returnValue);
 angle::CallCapture CaptureIsFramebuffer(const Context *context,
                                         bool isCallValid,
-                                        GLuint framebuffer);
-angle::CallCapture CaptureIsProgram(const Context *context, bool isCallValid, GLuint program);
+                                        GLuint framebuffer,
+                                        GLboolean returnValue);
+angle::CallCapture CaptureIsProgram(const Context *context,
+                                    bool isCallValid,
+                                    GLuint program,
+                                    GLboolean returnValue);
 angle::CallCapture CaptureIsRenderbuffer(const Context *context,
                                          bool isCallValid,
-                                         GLuint renderbuffer);
-angle::CallCapture CaptureIsShader(const Context *context, bool isCallValid, GLuint shader);
-angle::CallCapture CaptureIsTexture(const Context *context, bool isCallValid, GLuint texture);
+                                         GLuint renderbuffer,
+                                         GLboolean returnValue);
+angle::CallCapture CaptureIsShader(const Context *context,
+                                   bool isCallValid,
+                                   GLuint shader,
+                                   GLboolean returnValue);
+angle::CallCapture CaptureIsTexture(const Context *context,
+                                    bool isCallValid,
+                                    GLuint texture,
+                                    GLboolean returnValue);
 angle::CallCapture CaptureLineWidth(const Context *context, bool isCallValid, GLfloat width);
 angle::CallCapture CaptureLinkProgram(const Context *context, bool isCallValid, GLuint program);
 angle::CallCapture CapturePixelStorei(const Context *context,

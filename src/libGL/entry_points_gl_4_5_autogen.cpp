@@ -97,7 +97,8 @@ GLenum GL_APIENTRY CheckNamedFramebufferStatus(GLuint framebuffer, GLenum target
         {
             returnValue = GetDefaultReturnValue<EntryPoint::CheckNamedFramebufferStatus, GLenum>();
         }
-        ANGLE_CAPTURE(CheckNamedFramebufferStatus, isCallValid, context, framebuffer, target);
+        ANGLE_CAPTURE(CheckNamedFramebufferStatus, isCallValid, context, framebuffer, target,
+                      returnValue);
     }
     else
     {
@@ -791,7 +792,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatus()
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatus, GLenum>();
         }
-        ANGLE_CAPTURE(GetGraphicsResetStatus, isCallValid, context);
+        ANGLE_CAPTURE(GetGraphicsResetStatus, isCallValid, context, returnValue);
     }
     else
     {
@@ -1768,7 +1769,7 @@ void *GL_APIENTRY MapNamedBuffer(GLuint buffer, GLenum access)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::MapNamedBuffer, void *>();
         }
-        ANGLE_CAPTURE(MapNamedBuffer, isCallValid, context, buffer, access);
+        ANGLE_CAPTURE(MapNamedBuffer, isCallValid, context, buffer, access, returnValue);
     }
     else
     {
@@ -1802,7 +1803,8 @@ void *GL_APIENTRY MapNamedBufferRange(GLuint buffer,
         {
             returnValue = GetDefaultReturnValue<EntryPoint::MapNamedBufferRange, void *>();
         }
-        ANGLE_CAPTURE(MapNamedBufferRange, isCallValid, context, buffer, offset, length, access);
+        ANGLE_CAPTURE(MapNamedBufferRange, isCallValid, context, buffer, offset, length, access,
+                      returnValue);
     }
     else
     {
@@ -2582,7 +2584,7 @@ GLboolean GL_APIENTRY UnmapNamedBuffer(GLuint buffer)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::UnmapNamedBuffer, GLboolean>();
         }
-        ANGLE_CAPTURE(UnmapNamedBuffer, isCallValid, context, buffer);
+        ANGLE_CAPTURE(UnmapNamedBuffer, isCallValid, context, buffer, returnValue);
     }
     else
     {

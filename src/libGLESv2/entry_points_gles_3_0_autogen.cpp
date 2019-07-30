@@ -272,7 +272,7 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
         {
             returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
         }
-        ANGLE_CAPTURE(ClientWaitSync, isCallValid, context, sync, flags, timeout);
+        ANGLE_CAPTURE(ClientWaitSync, isCallValid, context, sync, flags, timeout, returnValue);
     }
     else
     {
@@ -643,7 +643,7 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
         }
-        ANGLE_CAPTURE(FenceSync, isCallValid, context, condition, flags);
+        ANGLE_CAPTURE(FenceSync, isCallValid, context, condition, flags, returnValue);
     }
     else
     {
@@ -896,7 +896,7 @@ GLint GL_APIENTRY GetFragDataLocation(GLuint program, const GLchar *name)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataLocation, GLint>();
         }
-        ANGLE_CAPTURE(GetFragDataLocation, isCallValid, context, program, name);
+        ANGLE_CAPTURE(GetFragDataLocation, isCallValid, context, program, name, returnValue);
     }
     else
     {
@@ -1099,7 +1099,7 @@ const GLubyte *GL_APIENTRY GetStringi(GLenum name, GLuint index)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetStringi, const GLubyte *>();
         }
-        ANGLE_CAPTURE(GetStringi, isCallValid, context, name, index);
+        ANGLE_CAPTURE(GetStringi, isCallValid, context, name, index, returnValue);
     }
     else
     {
@@ -1178,7 +1178,8 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
         }
-        ANGLE_CAPTURE(GetUniformBlockIndex, isCallValid, context, program, uniformBlockName);
+        ANGLE_CAPTURE(GetUniformBlockIndex, isCallValid, context, program, uniformBlockName,
+                      returnValue);
     }
     else
     {
@@ -1336,7 +1337,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
         }
-        ANGLE_CAPTURE(IsQuery, isCallValid, context, id);
+        ANGLE_CAPTURE(IsQuery, isCallValid, context, id, returnValue);
     }
     else
     {
@@ -1362,7 +1363,7 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
         }
-        ANGLE_CAPTURE(IsSampler, isCallValid, context, sampler);
+        ANGLE_CAPTURE(IsSampler, isCallValid, context, sampler, returnValue);
     }
     else
     {
@@ -1388,7 +1389,7 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
         }
-        ANGLE_CAPTURE(IsSync, isCallValid, context, sync);
+        ANGLE_CAPTURE(IsSync, isCallValid, context, sync, returnValue);
     }
     else
     {
@@ -1414,7 +1415,7 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
         }
-        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, id);
+        ANGLE_CAPTURE(IsTransformFeedback, isCallValid, context, id, returnValue);
     }
     else
     {
@@ -1440,7 +1441,7 @@ GLboolean GL_APIENTRY IsVertexArray(GLuint array)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArray, GLboolean>();
         }
-        ANGLE_CAPTURE(IsVertexArray, isCallValid, context, array);
+        ANGLE_CAPTURE(IsVertexArray, isCallValid, context, array, returnValue);
     }
     else
     {
@@ -1475,7 +1476,8 @@ void *GL_APIENTRY MapBufferRange(GLenum target,
         {
             returnValue = GetDefaultReturnValue<EntryPoint::MapBufferRange, void *>();
         }
-        ANGLE_CAPTURE(MapBufferRange, isCallValid, context, targetPacked, offset, length, access);
+        ANGLE_CAPTURE(MapBufferRange, isCallValid, context, targetPacked, offset, length, access,
+                      returnValue);
     }
     else
     {
@@ -2135,7 +2137,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
         }
-        ANGLE_CAPTURE(UnmapBuffer, isCallValid, context, targetPacked);
+        ANGLE_CAPTURE(UnmapBuffer, isCallValid, context, targetPacked, returnValue);
     }
     else
     {

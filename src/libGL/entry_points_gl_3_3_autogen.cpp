@@ -185,7 +185,7 @@ GLint GL_APIENTRY GetFragDataIndex(GLuint program, const GLchar *name)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataIndex, GLint>();
         }
-        ANGLE_CAPTURE(GetFragDataIndex, isCallValid, context, program, name);
+        ANGLE_CAPTURE(GetFragDataIndex, isCallValid, context, program, name, returnValue);
     }
     else
     {
@@ -319,7 +319,7 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
         }
-        ANGLE_CAPTURE(IsSampler, isCallValid, context, sampler);
+        ANGLE_CAPTURE(IsSampler, isCallValid, context, sampler, returnValue);
     }
     else
     {

@@ -44,7 +44,7 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
         {
             returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
         }
-        ANGLE_CAPTURE(ClientWaitSync, isCallValid, context, sync, flags, timeout);
+        ANGLE_CAPTURE(ClientWaitSync, isCallValid, context, sync, flags, timeout, returnValue);
     }
     else
     {
@@ -170,7 +170,7 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
         }
-        ANGLE_CAPTURE(FenceSync, isCallValid, context, condition, flags);
+        ANGLE_CAPTURE(FenceSync, isCallValid, context, condition, flags, returnValue);
     }
     else
     {
@@ -308,7 +308,7 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
         }
-        ANGLE_CAPTURE(IsSync, isCallValid, context, sync);
+        ANGLE_CAPTURE(IsSync, isCallValid, context, sync, returnValue);
     }
     else
     {

@@ -126,7 +126,8 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
         {
             returnValue = GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
         }
-        ANGLE_CAPTURE(CreateShaderProgramv, isCallValid, context, typePacked, count, strings);
+        ANGLE_CAPTURE(CreateShaderProgramv, isCallValid, context, typePacked, count, strings,
+                      returnValue);
     }
     else
     {
@@ -409,7 +410,7 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
             returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
         }
         ANGLE_CAPTURE(GetProgramResourceIndex, isCallValid, context, program, programInterface,
-                      name);
+                      name, returnValue);
     }
     else
     {
@@ -443,7 +444,7 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
             returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
         }
         ANGLE_CAPTURE(GetProgramResourceLocation, isCallValid, context, program, programInterface,
-                      name);
+                      name, returnValue);
     }
     else
     {
@@ -578,7 +579,7 @@ GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
         }
-        ANGLE_CAPTURE(IsProgramPipeline, isCallValid, context, pipeline);
+        ANGLE_CAPTURE(IsProgramPipeline, isCallValid, context, pipeline, returnValue);
     }
     else
     {

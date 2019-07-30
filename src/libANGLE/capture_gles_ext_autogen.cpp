@@ -2578,11 +2578,18 @@ CallCapture CaptureLoseContextCHROMIUM(const Context *context,
     return CallCapture("glLoseContextCHROMIUM", std::move(paramBuffer));
 }
 
-CallCapture CaptureGenPathsCHROMIUM(const Context *context, bool isCallValid, GLsizei range)
+CallCapture CaptureGenPathsCHROMIUM(const Context *context,
+                                    bool isCallValid,
+                                    GLsizei range,
+                                    GLuint returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("range", ParamType::TGLsizei, range);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLuint);
+    InitParamValue(ParamType::TGLuint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glGenPathsCHROMIUM", std::move(paramBuffer));
 }
@@ -2600,11 +2607,18 @@ CallCapture CaptureDeletePathsCHROMIUM(const Context *context,
     return CallCapture("glDeletePathsCHROMIUM", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsPathCHROMIUM(const Context *context, bool isCallValid, GLuint path)
+CallCapture CaptureIsPathCHROMIUM(const Context *context,
+                                  bool isCallValid,
+                                  GLuint path,
+                                  GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("path", ParamType::TGLuint, path);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsPathCHROMIUM", std::move(paramBuffer));
 }
@@ -3130,7 +3144,8 @@ CallCapture CaptureBindFragDataLocationIndexedEXT(const Context *context,
 CallCapture CaptureGetFragDataIndexEXT(const Context *context,
                                        bool isCallValid,
                                        GLuint program,
-                                       const GLchar *name)
+                                       const GLchar *name,
+                                       GLint returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -3141,6 +3156,10 @@ CallCapture CaptureGetFragDataIndexEXT(const Context *context,
     CaptureGetFragDataIndexEXT_name(context, isCallValid, program, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLint);
+    InitParamValue(ParamType::TGLint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
     return CallCapture("glGetFragDataIndexEXT", std::move(paramBuffer));
 }
 
@@ -3148,7 +3167,8 @@ CallCapture CaptureGetProgramResourceLocationIndexEXT(const Context *context,
                                                       bool isCallValid,
                                                       GLuint program,
                                                       GLenum programInterface,
-                                                      const GLchar *name)
+                                                      const GLchar *name,
+                                                      GLint returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -3160,6 +3180,10 @@ CallCapture CaptureGetProgramResourceLocationIndexEXT(const Context *context,
     CaptureGetProgramResourceLocationIndexEXT_name(context, isCallValid, program, programInterface,
                                                    name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLint);
+    InitParamValue(ParamType::TGLint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glGetProgramResourceLocationIndexEXT", std::move(paramBuffer));
 }
@@ -3373,11 +3397,18 @@ CallCapture CaptureGetQueryivEXT(const Context *context,
     return CallCapture("glGetQueryivEXT", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsQueryEXT(const Context *context, bool isCallValid, GLuint id)
+CallCapture CaptureIsQueryEXT(const Context *context,
+                              bool isCallValid,
+                              GLuint id,
+                              GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsQueryEXT", std::move(paramBuffer));
 }
@@ -3504,7 +3535,8 @@ CallCapture CaptureMapBufferRangeEXT(const Context *context,
                                      BufferBinding targetPacked,
                                      GLintptr offset,
                                      GLsizeiptr length,
-                                     GLbitfield access)
+                                     GLbitfield access,
+                                     void *returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -3512,6 +3544,10 @@ CallCapture CaptureMapBufferRangeEXT(const Context *context,
     paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
     paramBuffer.addValueParam("length", ParamType::TGLsizeiptr, length);
     paramBuffer.addValueParam("access", ParamType::TGLbitfield, access);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TvoidPointer);
+    InitParamValue(ParamType::TvoidPointer, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glMapBufferRangeEXT", std::move(paramBuffer));
 }
@@ -3625,11 +3661,18 @@ CallCapture CaptureGetUnsignedBytei_vEXT(const Context *context,
     return CallCapture("glGetUnsignedBytei_vEXT", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsMemoryObjectEXT(const Context *context, bool isCallValid, GLuint memoryObject)
+CallCapture CaptureIsMemoryObjectEXT(const Context *context,
+                                     bool isCallValid,
+                                     GLuint memoryObject,
+                                     GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("memoryObject", ParamType::TGLuint, memoryObject);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsMemoryObjectEXT", std::move(paramBuffer));
 }
@@ -3771,9 +3814,15 @@ CallCapture CaptureImportMemoryFdEXT(const Context *context,
     return CallCapture("glImportMemoryFdEXT", std::move(paramBuffer));
 }
 
-CallCapture CaptureGetGraphicsResetStatusEXT(const Context *context, bool isCallValid)
+CallCapture CaptureGetGraphicsResetStatusEXT(const Context *context,
+                                             bool isCallValid,
+                                             GLenum returnValue)
 {
     ParamBuffer paramBuffer;
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLenum);
+    InitParamValue(ParamType::TGLenum, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glGetGraphicsResetStatusEXT", std::move(paramBuffer));
 }
@@ -3906,11 +3955,18 @@ CallCapture CaptureGetSemaphoreParameterui64vEXT(const Context *context,
     return CallCapture("glGetSemaphoreParameterui64vEXT", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsSemaphoreEXT(const Context *context, bool isCallValid, GLuint semaphore)
+CallCapture CaptureIsSemaphoreEXT(const Context *context,
+                                  bool isCallValid,
+                                  GLuint semaphore,
+                                  GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("semaphore", ParamType::TGLuint, semaphore);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsSemaphoreEXT", std::move(paramBuffer));
 }
@@ -4162,7 +4218,8 @@ CallCapture CaptureGetDebugMessageLogKHR(const Context *context,
                                          GLuint *ids,
                                          GLenum *severities,
                                          GLsizei *lengths,
-                                         GLchar *messageLog)
+                                         GLchar *messageLog,
+                                         GLuint returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -4204,6 +4261,10 @@ CallCapture CaptureGetDebugMessageLogKHR(const Context *context,
     CaptureGetDebugMessageLogKHR_messageLog(context, isCallValid, count, bufSize, sources, types,
                                             ids, severities, lengths, messageLog, &messageLogParam);
     paramBuffer.addParam(std::move(messageLogParam));
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLuint);
+    InitParamValue(ParamType::TGLuint, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glGetDebugMessageLogKHR", std::move(paramBuffer));
 }
@@ -4428,11 +4489,18 @@ CallCapture CaptureGetFenceivNV(const Context *context,
     return CallCapture("glGetFenceivNV", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsFenceNV(const Context *context, bool isCallValid, GLuint fence)
+CallCapture CaptureIsFenceNV(const Context *context,
+                             bool isCallValid,
+                             GLuint fence,
+                             GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsFenceNV", std::move(paramBuffer));
 }
@@ -4450,11 +4518,18 @@ CallCapture CaptureSetFenceNV(const Context *context,
     return CallCapture("glSetFenceNV", std::move(paramBuffer));
 }
 
-CallCapture CaptureTestFenceNV(const Context *context, bool isCallValid, GLuint fence)
+CallCapture CaptureTestFenceNV(const Context *context,
+                               bool isCallValid,
+                               GLuint fence,
+                               GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("fence", ParamType::TGLuint, fence);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glTestFenceNV", std::move(paramBuffer));
 }
@@ -4637,11 +4712,16 @@ CallCapture CaptureBindRenderbufferOES(const Context *context,
 
 CallCapture CaptureCheckFramebufferStatusOES(const Context *context,
                                              bool isCallValid,
-                                             GLenum target)
+                                             GLenum target,
+                                             GLenum returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLenum);
+    InitParamValue(ParamType::TGLenum, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glCheckFramebufferStatusOES", std::move(paramBuffer));
 }
@@ -4807,20 +4887,34 @@ CallCapture CaptureGetRenderbufferParameterivOES(const Context *context,
     return CallCapture("glGetRenderbufferParameterivOES", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsFramebufferOES(const Context *context, bool isCallValid, GLuint framebuffer)
+CallCapture CaptureIsFramebufferOES(const Context *context,
+                                    bool isCallValid,
+                                    GLuint framebuffer,
+                                    GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("framebuffer", ParamType::TGLuint, framebuffer);
 
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
     return CallCapture("glIsFramebufferOES", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsRenderbufferOES(const Context *context, bool isCallValid, GLuint renderbuffer)
+CallCapture CaptureIsRenderbufferOES(const Context *context,
+                                     bool isCallValid,
+                                     GLuint renderbuffer,
+                                     GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsRenderbufferOES", std::move(paramBuffer));
 }
@@ -4922,23 +5016,33 @@ CallCapture CaptureGetBufferPointervOES(const Context *context,
 CallCapture CaptureMapBufferOES(const Context *context,
                                 bool isCallValid,
                                 BufferBinding targetPacked,
-                                GLenum access)
+                                GLenum access,
+                                void *returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("access", ParamType::TGLenum, access);
 
+    ParamCapture returnValueCapture("returnValue", ParamType::TvoidPointer);
+    InitParamValue(ParamType::TvoidPointer, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
     return CallCapture("glMapBufferOES", std::move(paramBuffer));
 }
 
 CallCapture CaptureUnmapBufferOES(const Context *context,
                                   bool isCallValid,
-                                  BufferBinding targetPacked)
+                                  BufferBinding targetPacked,
+                                  GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glUnmapBufferOES", std::move(paramBuffer));
 }
@@ -5028,7 +5132,8 @@ CallCapture CapturePointSizePointerOES(const Context *context,
 CallCapture CaptureQueryMatrixxOES(const Context *context,
                                    bool isCallValid,
                                    GLfixed *mantissa,
-                                   GLint *exponent)
+                                   GLint *exponent,
+                                   GLbitfield returnValue)
 {
     ParamBuffer paramBuffer;
 
@@ -5041,6 +5146,10 @@ CallCapture CaptureQueryMatrixxOES(const Context *context,
     InitParamValue(ParamType::TGLintPointer, exponent, &exponentParam.value);
     CaptureQueryMatrixxOES_exponent(context, isCallValid, mantissa, exponent, &exponentParam);
     paramBuffer.addParam(std::move(exponentParam));
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLbitfield);
+    InitParamValue(ParamType::TGLbitfield, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glQueryMatrixxOES", std::move(paramBuffer));
 }
@@ -5616,11 +5725,18 @@ CallCapture CaptureGenVertexArraysOES(const Context *context,
     return CallCapture("glGenVertexArraysOES", std::move(paramBuffer));
 }
 
-CallCapture CaptureIsVertexArrayOES(const Context *context, bool isCallValid, GLuint array)
+CallCapture CaptureIsVertexArrayOES(const Context *context,
+                                    bool isCallValid,
+                                    GLuint array,
+                                    GLboolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("array", ParamType::TGLuint, array);
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TGLboolean);
+    InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
 
     return CallCapture("glIsVertexArrayOES", std::move(paramBuffer));
 }

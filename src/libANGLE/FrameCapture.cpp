@@ -119,6 +119,11 @@ void ParamBuffer::addParam(ParamCapture &&param)
     mParamCaptures.emplace_back(std::move(param));
 }
 
+void ParamBuffer::addReturnValue(ParamCapture &&returnValue)
+{
+    mReturnValueCapture = std::move(returnValue);
+}
+
 ParamCapture &ParamBuffer::getClientArrayPointerParameter()
 {
     ASSERT(hasClientArrayData());

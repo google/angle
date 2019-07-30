@@ -317,7 +317,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
         }
-        ANGLE_CAPTURE(IsBuffer, isCallValid, context, buffer);
+        ANGLE_CAPTURE(IsBuffer, isCallValid, context, buffer, returnValue);
     }
     else
     {
@@ -343,7 +343,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
         }
-        ANGLE_CAPTURE(IsQuery, isCallValid, context, id);
+        ANGLE_CAPTURE(IsQuery, isCallValid, context, id, returnValue);
     }
     else
     {
@@ -371,7 +371,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::MapBuffer, void *>();
         }
-        ANGLE_CAPTURE(MapBuffer, isCallValid, context, targetPacked, access);
+        ANGLE_CAPTURE(MapBuffer, isCallValid, context, targetPacked, access, returnValue);
     }
     else
     {
@@ -399,7 +399,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
         }
-        ANGLE_CAPTURE(UnmapBuffer, isCallValid, context, targetPacked);
+        ANGLE_CAPTURE(UnmapBuffer, isCallValid, context, targetPacked, returnValue);
     }
     else
     {

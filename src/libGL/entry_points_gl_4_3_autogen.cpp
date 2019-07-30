@@ -304,7 +304,7 @@ GLuint GL_APIENTRY GetDebugMessageLog(GLuint count,
             returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLog, GLuint>();
         }
         ANGLE_CAPTURE(GetDebugMessageLog, isCallValid, context, count, bufSize, sources, types, ids,
-                      severities, lengths, messageLog);
+                      severities, lengths, messageLog, returnValue);
     }
     else
     {
@@ -450,7 +450,7 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
             returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
         }
         ANGLE_CAPTURE(GetProgramResourceIndex, isCallValid, context, program, programInterface,
-                      name);
+                      name, returnValue);
     }
     else
     {
@@ -484,7 +484,7 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
             returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
         }
         ANGLE_CAPTURE(GetProgramResourceLocation, isCallValid, context, program, programInterface,
-                      name);
+                      name, returnValue);
     }
     else
     {
@@ -519,7 +519,7 @@ GLint GL_APIENTRY GetProgramResourceLocationIndex(GLuint program,
                 GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndex, GLint>();
         }
         ANGLE_CAPTURE(GetProgramResourceLocationIndex, isCallValid, context, program,
-                      programInterface, name);
+                      programInterface, name, returnValue);
     }
     else
     {

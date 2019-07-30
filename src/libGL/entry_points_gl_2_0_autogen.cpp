@@ -110,7 +110,7 @@ GLuint GL_APIENTRY CreateProgram()
         {
             returnValue = GetDefaultReturnValue<EntryPoint::CreateProgram, GLuint>();
         }
-        ANGLE_CAPTURE(CreateProgram, isCallValid, context);
+        ANGLE_CAPTURE(CreateProgram, isCallValid, context, returnValue);
     }
     else
     {
@@ -137,7 +137,7 @@ GLuint GL_APIENTRY CreateShader(GLenum type)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::CreateShader, GLuint>();
         }
-        ANGLE_CAPTURE(CreateShader, isCallValid, context, typePacked);
+        ANGLE_CAPTURE(CreateShader, isCallValid, context, typePacked, returnValue);
     }
     else
     {
@@ -346,7 +346,7 @@ GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar *name)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetAttribLocation, GLint>();
         }
-        ANGLE_CAPTURE(GetAttribLocation, isCallValid, context, program, name);
+        ANGLE_CAPTURE(GetAttribLocation, isCallValid, context, program, name, returnValue);
     }
     else
     {
@@ -470,7 +470,7 @@ GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
         }
-        ANGLE_CAPTURE(GetUniformLocation, isCallValid, context, program, name);
+        ANGLE_CAPTURE(GetUniformLocation, isCallValid, context, program, name, returnValue);
     }
     else
     {
@@ -604,7 +604,7 @@ GLboolean GL_APIENTRY IsProgram(GLuint program)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsProgram, GLboolean>();
         }
-        ANGLE_CAPTURE(IsProgram, isCallValid, context, program);
+        ANGLE_CAPTURE(IsProgram, isCallValid, context, program, returnValue);
     }
     else
     {
@@ -630,7 +630,7 @@ GLboolean GL_APIENTRY IsShader(GLuint shader)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsShader, GLboolean>();
         }
-        ANGLE_CAPTURE(IsShader, isCallValid, context, shader);
+        ANGLE_CAPTURE(IsShader, isCallValid, context, shader, returnValue);
     }
     else
     {

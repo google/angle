@@ -45,7 +45,8 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
         {
             returnValue = GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
         }
-        ANGLE_CAPTURE(AreTexturesResident, isCallValid, context, n, textures, residences);
+        ANGLE_CAPTURE(AreTexturesResident, isCallValid, context, n, textures, residences,
+                      returnValue);
     }
     else
     {
@@ -449,7 +450,7 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
         {
             returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
         }
-        ANGLE_CAPTURE(IsTexture, isCallValid, context, texture);
+        ANGLE_CAPTURE(IsTexture, isCallValid, context, texture, returnValue);
     }
     else
     {
