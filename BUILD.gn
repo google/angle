@@ -21,6 +21,10 @@ declare_args() {
 
   # Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
   angle_link_glx = false
+
+  # Defaults to capture building to $root_out_dir/angle_libs/with_capture.
+  # Switch on to build capture to $root_out_dir.
+  angle_with_capture_by_default = false
 }
 
 if (!build_with_chromium) {
@@ -564,7 +568,7 @@ if (angle_enable_vulkan) {
   }
 }
 
-angle_source_set("libANGLE") {
+angle_source_set("libANGLE_base") {
   sources = libangle_sources
 
   include_dirs = []
@@ -712,10 +716,29 @@ angle_source_set("libANGLE") {
   }
 }
 
+config("angle_frame_capture_disabled") {
+  defines = [ "ANGLE_CAPTURE_ENABLED=0" ]
+}
+
+config("angle_frame_capture_enabled") {
+  defines = [ "ANGLE_CAPTURE_ENABLED=1" ]
+}
+
+angle_source_set("libANGLE") {
+  public_deps = [
+    ":libANGLE_base",
+  ]
+  public_configs = [ ":angle_frame_capture_disabled" ]
+  sources = [
+    "src/libANGLE/FrameCapture.cpp",
+  ]
+}
+
 angle_source_set("libANGLE_with_capture") {
   public_deps = [
-    ":libANGLE",
+    ":libANGLE_base",
   ]
+  public_configs = [ ":angle_frame_capture_enabled" ]
   sources = libangle_capture_sources
 }
 
@@ -748,14 +771,20 @@ config("angle_static") {
   ]
 }
 
+set_defaults("angle_libGLESv2") {
+  sources = []
+  output_name = "libGLESv2"
+}
+
 template("angle_libGLESv2") {
   angle_shared_library(target_name) {
-    sources = libglesv2_sources
-    output_name = "${target_name}${angle_libs_suffix}"
+    sources = libglesv2_sources + invoker.sources
 
     if (is_win) {
-      sources += [ "src/libGLESv2/${target_name}_autogen.def" ]
+      sources += [ "src/libGLESv2/${invoker.output_name}_autogen.def" ]
     }
+
+    output_name = "${invoker.output_name}${angle_libs_suffix}"
 
     configs += [
       ":angle_gl_visibility_config",
@@ -763,12 +792,9 @@ template("angle_libGLESv2") {
       ":gl_prototypes",
     ]
 
-    defines = [ "LIBGLESV2_IMPLEMENTATION" ] + invoker.defines
+    defines = [ "LIBGLESV2_IMPLEMENTATION" ]
 
-    deps = [
-      ":includes",
-      invoker.libANGLE,
-    ]
+    deps = invoker.deps + [ ":includes" ]
 
     public_deps = [
       ":angle_version",
@@ -777,13 +803,23 @@ template("angle_libGLESv2") {
 }
 
 angle_libGLESv2("libGLESv2") {
-  libANGLE = ":libANGLE"
-  defines = [ "ANGLE_CAPTURE_ENABLED=0" ]
+  deps = [
+    ":libANGLE",
+  ]
+
+  if (angle_with_capture_by_default) {
+    output_name = "libGLESv2_no_capture"
+  }
 }
 
 angle_libGLESv2("libGLESv2_with_capture") {
-  libANGLE = ":libANGLE_with_capture"
-  defines = [ "ANGLE_CAPTURE_ENABLED=1" ]
+  deps = [
+    ":libANGLE_with_capture",
+  ]
+
+  if (!angle_with_capture_by_default) {
+    output_name = "libGLESv2_with_capture"
+  }
 }
 
 if (is_win) {

@@ -1239,6 +1239,7 @@ def main():
             '../src/libGLESv2/entry_points_gles_ext_autogen.h',
             '../src/libGLESv2/libGLESv2_autogen.cpp',
             '../src/libGLESv2/libGLESv2_autogen.def',
+            '../src/libGLESv2/libGLESv2_no_capture_autogen.def',
             '../src/libGLESv2/libGLESv2_with_capture_autogen.def',
             '../src/libGL/entry_points_gl_1_0_autogen.cpp',
             '../src/libGL/entry_points_gl_1_0_autogen.h',
@@ -1681,9 +1682,8 @@ def main():
 
     everything = "Khronos and ANGLE XML files"
 
-    write_windows_def_file(everything, "libGLESv2", "libGLESv2", "libGLESv2", libgles_ep_exports)
-    write_windows_def_file(everything, "libGLESv2_with_capture", "libGLESv2_with_capture",
-                           "libGLESv2", libgles_ep_exports)
+    for lib in ["libGLESv2" + suffix for suffix in ["", "_no_capture", "_with_capture"]]:
+        write_windows_def_file(everything, lib, lib, "libGLESv2", libgles_ep_exports)
     write_windows_def_file(everything, "libGL", "openGL32", "libGL", libgl_ep_exports)
 
     all_gles_param_types = sorted(all_gles_param_types)

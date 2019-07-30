@@ -16,6 +16,15 @@
 
 namespace angle
 {
+#if !ANGLE_CAPTURE_ENABLED
+CallCapture::~CallCapture() {}
+ParamBuffer::~ParamBuffer() {}
+ParamCapture::~ParamCapture() {}
+
+FrameCapture::FrameCapture() {}
+FrameCapture::~FrameCapture() {}
+void FrameCapture::onEndFrame() {}
+#else
 namespace
 {
 std::string GetCaptureFileName(size_t frameIndex, const char *suffix)
@@ -69,7 +78,7 @@ ParamCapture &ParamCapture::operator=(ParamCapture &&other)
     std::swap(value, other.value);
     std::swap(data, other.data);
     std::swap(arrayClientPointerIndex, other.arrayClientPointerIndex);
-    std::swap(readBufferSize, other.readBufferSize);
+    std::swap(readBufferSizeBytes, other.readBufferSizeBytes);
     return *this;
 }
 
@@ -106,7 +115,7 @@ void ParamBuffer::addParam(ParamCapture &&param)
         mClientArrayDataParam = static_cast<int>(mParamCaptures.size());
     }
 
-    mReadBufferSize = std::max(param.readBufferSize, mReadBufferSize);
+    mReadBufferSize = std::max(param.readBufferSizeBytes, mReadBufferSize);
     mParamCaptures.emplace_back(std::move(param));
 }
 
@@ -389,7 +398,7 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
         {
             out << "gClientArrays[" << param.arrayClientPointerIndex << "].data()";
         }
-        else if (param.readBufferSize > 0)
+        else if (param.readBufferSizeBytes > 0)
         {
             out << "reinterpret_cast<" << ParamTypeToString(param.type) << ">(gReadBuffer.data())";
         }
@@ -557,4 +566,5 @@ void WriteParamValueToStream<ParamType::TGLDEBUGPROCKHR>(std::ostream &os, GLDEB
 template <>
 void WriteParamValueToStream<ParamType::TGLDEBUGPROC>(std::ostream &os, GLDEBUGPROC value)
 {}
+#endif  // ANGLE_CAPTURE_ENABLED
 }  // namespace angle

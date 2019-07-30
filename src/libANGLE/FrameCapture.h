@@ -33,7 +33,7 @@ struct ParamCapture : angle::NonCopyable
     ParamValue value;
     std::vector<std::vector<uint8_t>> data;
     int arrayClientPointerIndex = -1;
-    size_t readBufferSize       = 0;
+    size_t readBufferSizeBytes  = 0;
 };
 
 class ParamBuffer final : angle::NonCopyable

@@ -156,7 +156,7 @@ void CaptureGenBuffers_buffers(const Context *context,
                                GLuint *buffers,
                                ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(GLuint) * n;
+    paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }
 
 void CaptureGenFramebuffers_framebuffers(const Context *context,
@@ -165,7 +165,7 @@ void CaptureGenFramebuffers_framebuffers(const Context *context,
                                          GLuint *framebuffers,
                                          ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(GLuint) * n;
+    paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }
 
 void CaptureGenRenderbuffers_renderbuffers(const Context *context,
@@ -174,7 +174,7 @@ void CaptureGenRenderbuffers_renderbuffers(const Context *context,
                                            GLuint *renderbuffers,
                                            ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(GLuint) * n;
+    paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }
 
 void CaptureGenTextures_textures(const Context *context,
@@ -183,7 +183,7 @@ void CaptureGenTextures_textures(const Context *context,
                                  GLuint *textures,
                                  ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(GLuint) * n;
+    paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
 }
 
 void CaptureGetActiveAttrib_length(const Context *context,
@@ -338,7 +338,7 @@ void CaptureGetBooleanv_data(const Context *context,
     GLenum type;
     unsigned int numParams;
     context->getQueryParameterInfo(pname, &type, &numParams);
-    paramCapture->readBufferSize = sizeof(GLboolean) * numParams;
+    paramCapture->readBufferSizeBytes = sizeof(GLboolean) * numParams;
 }
 
 void CaptureGetBufferParameteriv_params(const Context *context,
@@ -380,7 +380,7 @@ void CaptureGetIntegerv_data(const Context *context,
     GLenum type;
     unsigned int numParams;
     context->getQueryParameterInfo(pname, &type, &numParams);
-    paramCapture->readBufferSize = sizeof(GLint) * numParams;
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
 }
 
 void CaptureGetProgramInfoLog_length(const Context *context,
@@ -391,7 +391,7 @@ void CaptureGetProgramInfoLog_length(const Context *context,
                                      GLchar *infoLog,
                                      ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(GLsizei);
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetProgramInfoLog_infoLog(const Context *context,
@@ -404,7 +404,7 @@ void CaptureGetProgramInfoLog_infoLog(const Context *context,
 {
     gl::Program *programObj = context->getProgramResolveLink(program);
     ASSERT(programObj);
-    paramCapture->readBufferSize = programObj->getInfoLogLength() + 1;
+    paramCapture->readBufferSizeBytes = programObj->getInfoLogLength() + 1;
 }
 
 void CaptureGetProgramiv_params(const Context *context,
@@ -416,7 +416,7 @@ void CaptureGetProgramiv_params(const Context *context,
 {
     if (params)
     {
-        paramCapture->readBufferSize = sizeof(GLint);
+        paramCapture->readBufferSizeBytes = sizeof(GLint);
     }
 }
 
@@ -438,7 +438,7 @@ void CaptureGetShaderInfoLog_length(const Context *context,
                                     GLchar *infoLog,
                                     ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(GLsizei);
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetShaderInfoLog_infoLog(const Context *context,
@@ -451,7 +451,7 @@ void CaptureGetShaderInfoLog_infoLog(const Context *context,
 {
     gl::Shader *shaderObj = context->getShader(shader);
     ASSERT(shaderObj);
-    paramCapture->readBufferSize = shaderObj->getInfoLogLength() + 1;
+    paramCapture->readBufferSizeBytes = shaderObj->getInfoLogLength() + 1;
 }
 
 void CaptureGetShaderPrecisionFormat_range(const Context *context,
@@ -507,7 +507,7 @@ void CaptureGetShaderiv_params(const Context *context,
 {
     if (params)
     {
-        paramCapture->readBufferSize = sizeof(GLint);
+        paramCapture->readBufferSizeBytes = sizeof(GLint);
     }
 }
 
@@ -567,7 +567,7 @@ void CaptureGetVertexAttribPointerv_pointer(const Context *context,
                                             void **pointer,
                                             ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSize = sizeof(void *);
+    paramCapture->readBufferSizeBytes = sizeof(void *);
 }
 
 void CaptureGetVertexAttribfv_params(const Context *context,
@@ -578,7 +578,7 @@ void CaptureGetVertexAttribfv_params(const Context *context,
                                      ParamCapture *paramCapture)
 {
     // Can be up to 4 current state values.
-    paramCapture->readBufferSize = sizeof(GLfloat) * 4;
+    paramCapture->readBufferSizeBytes = sizeof(GLfloat) * 4;
 }
 
 void CaptureGetVertexAttribiv_params(const Context *context,
@@ -589,7 +589,7 @@ void CaptureGetVertexAttribiv_params(const Context *context,
                                      ParamCapture *paramCapture)
 {
     // Can be up to 4 current state values.
-    paramCapture->readBufferSize = sizeof(GLint) * 4;
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * 4;
 }
 
 void CaptureReadPixels_pixels(const Context *context,
@@ -603,7 +603,9 @@ void CaptureReadPixels_pixels(const Context *context,
                               void *pixels,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // Use a conservative upper bound instead of an exact size to be simple.
+    static constexpr GLsizei kMaxPixelSize = 32;
+    paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height;
 }
 
 void CaptureShaderBinary_shaders(const Context *context,

@@ -26,11 +26,6 @@
 #include "platform/Feature.h"
 #include "platform/FrontendFeatures.h"
 
-namespace angle
-{
-class FrameCapture;
-}  // namespace angle
-
 namespace gl
 {
 class Context;
@@ -212,9 +207,6 @@ class Display final : public LabeledObject, angle::NonCopyable
 
     EGLAttrib queryAttrib(const EGLint attribute);
 
-    angle::FrameCapture *getFrameCapture() { return mFrameCapture; }
-    void onPostSwap() const;
-
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -268,11 +260,6 @@ class Display final : public LabeledObject, angle::NonCopyable
     angle::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;
-
-    // Might want to revisit who owns this and has access in the future. Threaded use would mean
-    // it might make sense to use different captures for EGL and GLES contexts.
-    // Note: we use a raw pointer here so we can exclude frame capture sources from the build.
-    angle::FrameCapture *mFrameCapture;
 };
 
 }  // namespace egl
