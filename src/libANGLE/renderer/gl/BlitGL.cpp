@@ -517,7 +517,8 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
                                      bool *copySucceededOut)
 {
     ASSERT(source->getType() == gl::TextureType::_2D ||
-           source->getType() == gl::TextureType::External);
+           source->getType() == gl::TextureType::External ||
+           source->getType() == gl::TextureType::Rectangle);
     ANGLE_TRY(initializeResources());
 
     // Make sure the destination texture can be rendered to before setting anything else up.  Some
@@ -572,10 +573,15 @@ angle::Result BlitGL::copySubTexture(const gl::Context *context,
     mStateManager->activeTexture(0);
     mStateManager->bindTexture(source->getType(), source->getTextureID());
 
-    Vector2 scale(sourceArea.width / static_cast<float>(sourceSize.width),
-                  sourceArea.height / static_cast<float>(sourceSize.height));
-    Vector2 offset(sourceArea.x / static_cast<float>(sourceSize.width),
-                   sourceArea.y / static_cast<float>(sourceSize.height));
+    Vector2 scale(sourceArea.width, sourceArea.height);
+    Vector2 offset(sourceArea.x, sourceArea.y);
+    if (source->getType() != gl::TextureType::Rectangle)
+    {
+        scale.x() /= static_cast<float>(sourceSize.width);
+        scale.y() /= static_cast<float>(sourceSize.height);
+        offset.x() /= static_cast<float>(sourceSize.width);
+        offset.y() /= static_cast<float>(sourceSize.height);
+    }
     if (unpackFlipY)
     {
         offset.y() += scale.y();
@@ -628,7 +634,8 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     ContextGL *contextGL = GetImplAs<ContextGL>(context);
 
     ASSERT(source->getType() == gl::TextureType::_2D ||
-           source->getType() == gl::TextureType::External);
+           source->getType() == gl::TextureType::External ||
+           source->getType() == gl::TextureType::Rectangle);
     const auto &destInternalFormatInfo = gl::GetInternalFormatInfo(destFormat, destType);
     const gl::InternalFormat &sourceInternalFormatInfo =
         gl::GetSizedInternalFormatInfo(sourceSizedInternalFormat);

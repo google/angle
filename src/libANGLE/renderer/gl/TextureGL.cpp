@@ -814,7 +814,8 @@ angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
 
     // Check is this is a simple copySubTexture that can be done with a copyTexSubImage
     ASSERT(sourceGL->getType() == gl::TextureType::_2D ||
-           source->getType() == gl::TextureType::External);
+           source->getType() == gl::TextureType::External ||
+           source->getType() == gl::TextureType::Rectangle);
     const LevelInfoGL &sourceLevelInfo =
         sourceGL->getLevelInfo(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
     bool needsLumaWorkaround = sourceLevelInfo.lumaWorkaround.enabled;
