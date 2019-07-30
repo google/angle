@@ -114,7 +114,7 @@ extern "C" {{
 
 template_entry_point_decl = """ANGLE_EXPORT {return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
 
-template_entry_point_def = """{return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
+template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     {event_comment}EVENT("({format_params})"{comma_if_needed}{pass_params});
 
@@ -124,10 +124,36 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}{explicit_context_s
         ANGLE_CAPTURE({name}, {validate_params});
         if (context->skipValidation() || Validate{name}({validate_params}))
         {{
-            {return_if_needed}context->{name_lower_no_suffix}({internal_params});
+            context->{name_lower_no_suffix}({internal_params});
         }}
     }}
-{default_return_if_needed}}}
+}}
+"""
+
+template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
+{{
+    {event_comment}EVENT("({format_params})"{comma_if_needed}{pass_params});
+
+    Context *context = {context_getter};
+    {return_type} returnValue;
+    if (context)
+    {{{assert_explicit_context}{packed_gl_enum_conversions}
+        ANGLE_CAPTURE({name}, {validate_params});
+        if (context->skipValidation() || Validate{name}({validate_params}))
+        {{
+            returnValue = context->{name_lower_no_suffix}({internal_params});
+        }}
+        else
+        {{
+            returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
+        }}
+    }}
+    else
+    {{
+        returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
+    }}
+    return returnValue;
+}}
 """
 
 context_header = """// GENERATED FILE - DO NOT EDIT.
@@ -618,30 +644,47 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
     return_type = proto[:-len(cmd_name)]
     default_return = default_return_value(cmd_name, return_type.strip())
     event_comment = template_event_comment if cmd_name in no_event_marker_exceptions_list else ""
-    name_lower_no_suffix = cmd_name[2:3].lower() + cmd_name[3:]
-    name_lower_no_suffix = strip_suffix(name_lower_no_suffix)
+    name_lower_no_suffix = strip_suffix(cmd_name[2:3].lower() + cmd_name[3:])
 
-    return template_entry_point_def.format(
-        name=cmd_name[2:],
-        name_lower_no_suffix=name_lower_no_suffix,
-        return_type=return_type,
-        params=", ".join(params),
-        internal_params=", ".join(internal_params),
-        packed_gl_enum_conversions="".join(packed_gl_enum_conversions),
-        pass_params=", ".join(pass_params),
-        comma_if_needed=", " if len(params) > 0 else "",
-        validate_params=", ".join(["context"] + internal_params),
-        format_params=", ".join(format_params),
-        return_if_needed="" if default_return == "" else "return ",
-        default_return_if_needed=""
-        if default_return == "" else "\n    return " + default_return + ";\n",
-        context_getter=get_context_getter_function(cmd_name, is_explicit_context),
-        event_comment=event_comment,
-        explicit_context_suffix="ContextANGLE" if is_explicit_context else "",
-        explicit_context_param="GLeglContext ctx" if is_explicit_context else "",
-        explicit_context_comma=", " if is_explicit_context and len(params) > 0 else "",
-        assert_explicit_context="\nASSERT(context == GetValidGlobalContext());"
-        if is_explicit_context else "")
+    format_params = {
+        "name":
+            cmd_name[2:],
+        "name_lower_no_suffix":
+            name_lower_no_suffix,
+        "return_type":
+            return_type,
+        "params":
+            ", ".join(params),
+        "internal_params":
+            ", ".join(internal_params),
+        "packed_gl_enum_conversions":
+            "".join(packed_gl_enum_conversions),
+        "pass_params":
+            ", ".join(pass_params),
+        "comma_if_needed":
+            ", " if len(params) > 0 else "",
+        "validate_params":
+            ", ".join(["context"] + internal_params),
+        "format_params":
+            ", ".join(format_params),
+        "context_getter":
+            get_context_getter_function(cmd_name, is_explicit_context),
+        "event_comment":
+            event_comment,
+        "explicit_context_suffix":
+            "ContextANGLE" if is_explicit_context else "",
+        "explicit_context_param":
+            "GLeglContext ctx" if is_explicit_context else "",
+        "explicit_context_comma":
+            ", " if is_explicit_context and len(params) > 0 else "",
+        "assert_explicit_context":
+            "\nASSERT(context == GetValidGlobalContext());" if is_explicit_context else ""
+    }
+
+    if return_type.strip() == "void":
+        return template_entry_point_no_return.format(**format_params)
+    else:
+        return template_entry_point_with_return.format(**format_params)
 
 
 def format_capture_method(cmd_name, params, all_param_types, capture_pointer_funcs):

@@ -80,17 +80,25 @@ GLenum GL_APIENTRY CheckNamedFramebufferStatus(GLuint framebuffer, GLenum target
     EVENT("(GLuint framebuffer = %u, GLenum target = 0x%X)", framebuffer, target);
 
     Context *context = GetValidGlobalContext();
+    GLenum returnValue;
     if (context)
     {
         ANGLE_CAPTURE(CheckNamedFramebufferStatus, context, framebuffer, target);
         if (context->skipValidation() ||
             ValidateCheckNamedFramebufferStatus(context, framebuffer, target))
         {
-            return context->checkNamedFramebufferStatus(framebuffer, target);
+            returnValue = context->checkNamedFramebufferStatus(framebuffer, target);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::CheckNamedFramebufferStatus, GLenum>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::CheckNamedFramebufferStatus, GLenum>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::CheckNamedFramebufferStatus, GLenum>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY ClearNamedBufferData(GLuint buffer,
@@ -709,16 +717,24 @@ GLenum GL_APIENTRY GetGraphicsResetStatus()
     EVENT("()");
 
     Context *context = GetGlobalContext();
+    GLenum returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetGraphicsResetStatus, context);
         if (context->skipValidation() || ValidateGetGraphicsResetStatus(context))
         {
-            return context->getGraphicsResetStatus();
+            returnValue = context->getGraphicsResetStatus();
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatus, GLenum>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatus, GLenum>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatus, GLenum>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 *params)
@@ -1603,16 +1619,24 @@ void *GL_APIENTRY MapNamedBuffer(GLuint buffer, GLenum access)
     EVENT("(GLuint buffer = %u, GLenum access = 0x%X)", buffer, access);
 
     Context *context = GetValidGlobalContext();
+    void *returnValue;
     if (context)
     {
         ANGLE_CAPTURE(MapNamedBuffer, context, buffer, access);
         if (context->skipValidation() || ValidateMapNamedBuffer(context, buffer, access))
         {
-            return context->mapNamedBuffer(buffer, access);
+            returnValue = context->mapNamedBuffer(buffer, access);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::MapNamedBuffer, void *>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::MapNamedBuffer, void *>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::MapNamedBuffer, void *>();
+    }
+    return returnValue;
 }
 
 void *GL_APIENTRY MapNamedBufferRange(GLuint buffer,
@@ -1627,17 +1651,25 @@ void *GL_APIENTRY MapNamedBufferRange(GLuint buffer,
         access);
 
     Context *context = GetValidGlobalContext();
+    void *returnValue;
     if (context)
     {
         ANGLE_CAPTURE(MapNamedBufferRange, context, buffer, offset, length, access);
         if (context->skipValidation() ||
             ValidateMapNamedBufferRange(context, buffer, offset, length, access))
         {
-            return context->mapNamedBufferRange(buffer, offset, length, access);
+            returnValue = context->mapNamedBufferRange(buffer, offset, length, access);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::MapNamedBufferRange, void *>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::MapNamedBufferRange, void *>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::MapNamedBufferRange, void *>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
@@ -2344,16 +2376,24 @@ GLboolean GL_APIENTRY UnmapNamedBuffer(GLuint buffer)
     EVENT("(GLuint buffer = %u)", buffer);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(UnmapNamedBuffer, context, buffer);
         if (context->skipValidation() || ValidateUnmapNamedBuffer(context, buffer))
         {
-            return context->unmapNamedBuffer(buffer);
+            returnValue = context->unmapNamedBuffer(buffer);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::UnmapNamedBuffer, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::UnmapNamedBuffer, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::UnmapNamedBuffer, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY VertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex)

@@ -355,17 +355,25 @@ GLuint GL_APIENTRY GetSubroutineIndex(GLuint program, GLenum shadertype, const G
           program, shadertype, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetSubroutineIndex, context, program, shadertype, name);
         if (context->skipValidation() ||
             ValidateGetSubroutineIndex(context, program, shadertype, name))
         {
-            return context->getSubroutineIndex(program, shadertype, name);
+            returnValue = context->getSubroutineIndex(program, shadertype, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
+    }
+    return returnValue;
 }
 
 GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
@@ -376,17 +384,25 @@ GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
           program, shadertype, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetSubroutineUniformLocation, context, program, shadertype, name);
         if (context->skipValidation() ||
             ValidateGetSubroutineUniformLocation(context, program, shadertype, name))
         {
-            return context->getSubroutineUniformLocation(program, shadertype, name);
+            returnValue = context->getSubroutineUniformLocation(program, shadertype, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint *params)
@@ -427,16 +443,24 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
     EVENT("(GLuint id = %u)", id);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsTransformFeedback, context, id);
         if (context->skipValidation() || ValidateIsTransformFeedback(context, id))
         {
-            return context->isTransformFeedback(id);
+            returnValue = context->isTransformFeedback(id);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY MinSampleShading(GLfloat value)

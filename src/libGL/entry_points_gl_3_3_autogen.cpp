@@ -159,16 +159,24 @@ GLint GL_APIENTRY GetFragDataIndex(GLuint program, const GLchar *name)
           (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetFragDataIndex, context, program, name);
         if (context->skipValidation() || ValidateGetFragDataIndex(context, program, name))
         {
-            return context->getFragDataIndex(program, name);
+            returnValue = context->getFragDataIndex(program, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataIndex, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetFragDataIndex, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataIndex, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
@@ -276,16 +284,24 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
     EVENT("(GLuint sampler = %u)", sampler);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsSampler, context, sampler);
         if (context->skipValidation() || ValidateIsSampler(context, sampler))
         {
-            return context->isSampler(sampler);
+            returnValue = context->isSampler(sampler);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY MultiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords)

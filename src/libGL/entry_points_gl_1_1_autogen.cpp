@@ -32,17 +32,25 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
           n, (uintptr_t)textures, (uintptr_t)residences);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(AreTexturesResident, context, n, textures, residences);
         if (context->skipValidation() ||
             ValidateAreTexturesResident(context, n, textures, residences))
         {
-            return context->areTexturesResident(n, textures, residences);
+            returnValue = context->areTexturesResident(n, textures, residences);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY ArrayElement(GLint i)
@@ -398,16 +406,24 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
     EVENT("(GLuint texture = %u)", texture);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsTexture, context, texture);
         if (context->skipValidation() || ValidateIsTexture(context, texture))
         {
-            return context->isTexture(texture);
+            returnValue = context->isTexture(texture);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)

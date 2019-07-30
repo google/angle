@@ -202,17 +202,25 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
           (uintptr_t)uniformBlockName);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetUniformBlockIndex, context, program, uniformBlockName);
         if (context->skipValidation() ||
             ValidateGetUniformBlockIndex(context, program, uniformBlockName))
         {
-            return context->getUniformBlockIndex(program, uniformBlockName);
+            returnValue = context->getUniformBlockIndex(program, uniformBlockName);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetUniformIndices(GLuint program,

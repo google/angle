@@ -104,6 +104,7 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
           type, count, (uintptr_t)strings);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ShaderType typePacked = FromGLenum<ShaderType>(type);
@@ -111,11 +112,18 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
         if (context->skipValidation() ||
             ValidateCreateShaderProgramv(context, typePacked, count, strings))
         {
-            return context->createShaderProgramv(typePacked, count, strings);
+            returnValue = context->createShaderProgramv(typePacked, count, strings);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
@@ -351,17 +359,25 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
         program, programInterface, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetProgramResourceIndex, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceIndex(context, program, programInterface, name))
         {
-            return context->getProgramResourceIndex(program, programInterface, name);
+            returnValue = context->getProgramResourceIndex(program, programInterface, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
+    }
+    return returnValue;
 }
 
 GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
@@ -374,17 +390,25 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
         program, programInterface, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetProgramResourceLocation, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceLocation(context, program, programInterface, name))
         {
-            return context->getProgramResourceLocation(program, programInterface, name);
+            returnValue = context->getProgramResourceLocation(program, programInterface, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetProgramResourceName(GLuint program,
@@ -491,16 +515,24 @@ GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
     EVENT("(GLuint pipeline = %u)", pipeline);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsProgramPipeline, context, pipeline);
         if (context->skipValidation() || ValidateIsProgramPipeline(context, pipeline))
         {
-            return context->isProgramPipeline(pipeline);
+            returnValue = context->isProgramPipeline(pipeline);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY MemoryBarrier(GLbitfield barriers)

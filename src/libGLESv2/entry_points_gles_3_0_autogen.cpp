@@ -239,16 +239,24 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
           (uintptr_t)sync, flags, static_cast<unsigned long long>(timeout));
 
     Context *context = GetValidGlobalContext();
+    GLenum returnValue;
     if (context)
     {
         ANGLE_CAPTURE(ClientWaitSync, context, sync, flags, timeout);
         if (context->skipValidation() || ValidateClientWaitSync(context, sync, flags, timeout))
         {
-            return context->clientWaitSync(sync, flags, timeout);
+            returnValue = context->clientWaitSync(sync, flags, timeout);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY CompressedTexImage3D(GLenum target,
@@ -577,16 +585,24 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
     EVENT("(GLenum condition = 0x%X, GLbitfield flags = 0x%X)", condition, flags);
 
     Context *context = GetValidGlobalContext();
+    GLsync returnValue;
     if (context)
     {
         ANGLE_CAPTURE(FenceSync, context, condition, flags);
         if (context->skipValidation() || ValidateFenceSync(context, condition, flags))
         {
-            return context->fenceSync(condition, flags);
+            returnValue = context->fenceSync(condition, flags);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
@@ -801,16 +817,24 @@ GLint GL_APIENTRY GetFragDataLocation(GLuint program, const GLchar *name)
           (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetFragDataLocation, context, program, name);
         if (context->skipValidation() || ValidateGetFragDataLocation(context, program, name))
         {
-            return context->getFragDataLocation(program, name);
+            returnValue = context->getFragDataLocation(program, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataLocation, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetFragDataLocation, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataLocation, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
@@ -977,16 +1001,24 @@ const GLubyte *GL_APIENTRY GetStringi(GLenum name, GLuint index)
     EVENT("(GLenum name = 0x%X, GLuint index = %u)", name, index);
 
     Context *context = GetValidGlobalContext();
+    const GLubyte *returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetStringi, context, name, index);
         if (context->skipValidation() || ValidateGetStringi(context, name, index))
         {
-            return context->getStringi(name, index);
+            returnValue = context->getStringi(name, index);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetStringi, const GLubyte *>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetStringi, const GLubyte *>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetStringi, const GLubyte *>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY
@@ -1044,17 +1076,25 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
           (uintptr_t)uniformBlockName);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetUniformBlockIndex, context, program, uniformBlockName);
         if (context->skipValidation() ||
             ValidateGetUniformBlockIndex(context, program, uniformBlockName))
         {
-            return context->getUniformBlockIndex(program, uniformBlockName);
+            returnValue = context->getUniformBlockIndex(program, uniformBlockName);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetUniformIndices(GLuint program,
@@ -1182,16 +1222,24 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     EVENT("(GLuint id = %u)", id);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsQuery, context, id);
         if (context->skipValidation() || ValidateIsQuery(context, id))
         {
-            return context->isQuery(id);
+            returnValue = context->isQuery(id);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsSampler(GLuint sampler)
@@ -1199,16 +1247,24 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
     EVENT("(GLuint sampler = %u)", sampler);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsSampler, context, sampler);
         if (context->skipValidation() || ValidateIsSampler(context, sampler))
         {
-            return context->isSampler(sampler);
+            returnValue = context->isSampler(sampler);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsSync(GLsync sync)
@@ -1216,16 +1272,24 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
     EVENT("(GLsync sync = 0x%016" PRIxPTR ")", (uintptr_t)sync);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsSync, context, sync);
         if (context->skipValidation() || ValidateIsSync(context, sync))
         {
-            return context->isSync(sync);
+            returnValue = context->isSync(sync);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
@@ -1233,16 +1297,24 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
     EVENT("(GLuint id = %u)", id);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsTransformFeedback, context, id);
         if (context->skipValidation() || ValidateIsTransformFeedback(context, id))
         {
-            return context->isTransformFeedback(id);
+            returnValue = context->isTransformFeedback(id);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsVertexArray(GLuint array)
@@ -1250,16 +1322,24 @@ GLboolean GL_APIENTRY IsVertexArray(GLuint array)
     EVENT("(GLuint array = %u)", array);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsVertexArray, context, array);
         if (context->skipValidation() || ValidateIsVertexArray(context, array))
         {
-            return context->isVertexArray(array);
+            returnValue = context->isVertexArray(array);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArray, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsVertexArray, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArray, GLboolean>();
+    }
+    return returnValue;
 }
 
 void *GL_APIENTRY MapBufferRange(GLenum target,
@@ -1274,6 +1354,7 @@ void *GL_APIENTRY MapBufferRange(GLenum target,
         access);
 
     Context *context = GetValidGlobalContext();
+    void *returnValue;
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
@@ -1281,11 +1362,18 @@ void *GL_APIENTRY MapBufferRange(GLenum target,
         if (context->skipValidation() ||
             ValidateMapBufferRange(context, targetPacked, offset, length, access))
         {
-            return context->mapBufferRange(targetPacked, offset, length, access);
+            returnValue = context->mapBufferRange(targetPacked, offset, length, access);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::MapBufferRange, void *>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::MapBufferRange, void *>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::MapBufferRange, void *>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY PauseTransformFeedback()
@@ -1876,17 +1964,25 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     EVENT("(GLenum target = 0x%X)", target);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
         ANGLE_CAPTURE(UnmapBuffer, context, targetPacked);
         if (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked))
         {
-            return context->unmapBuffer(targetPacked);
+            returnValue = context->unmapBuffer(targetPacked);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY VertexAttribDivisor(GLuint index, GLuint divisor)

@@ -284,16 +284,24 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
     EVENT("(GLuint buffer = %u)", buffer);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsBuffer, context, buffer);
         if (context->skipValidation() || ValidateIsBuffer(context, buffer))
         {
-            return context->isBuffer(buffer);
+            returnValue = context->isBuffer(buffer);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsQuery(GLuint id)
@@ -301,16 +309,24 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     EVENT("(GLuint id = %u)", id);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsQuery, context, id);
         if (context->skipValidation() || ValidateIsQuery(context, id))
         {
-            return context->isQuery(id);
+            returnValue = context->isQuery(id);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
+    }
+    return returnValue;
 }
 
 void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
@@ -318,17 +334,25 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
     EVENT("(GLenum target = 0x%X, GLenum access = 0x%X)", target, access);
 
     Context *context = GetValidGlobalContext();
+    void *returnValue;
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
         ANGLE_CAPTURE(MapBuffer, context, targetPacked, access);
         if (context->skipValidation() || ValidateMapBuffer(context, targetPacked, access))
         {
-            return context->mapBuffer(targetPacked, access);
+            returnValue = context->mapBuffer(targetPacked, access);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::MapBuffer, void *>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::MapBuffer, void *>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::MapBuffer, void *>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
@@ -336,16 +360,24 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     EVENT("(GLenum target = 0x%X)", target);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
         ANGLE_CAPTURE(UnmapBuffer, context, targetPacked);
         if (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked))
         {
-            return context->unmapBuffer(targetPacked);
+            returnValue = context->unmapBuffer(targetPacked);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
+    }
+    return returnValue;
 }
 }  // namespace gl

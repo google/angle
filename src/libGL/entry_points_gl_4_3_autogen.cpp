@@ -267,6 +267,7 @@ GLuint GL_APIENTRY GetDebugMessageLog(GLuint count,
           (uintptr_t)severities, (uintptr_t)lengths, (uintptr_t)messageLog);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetDebugMessageLog, context, count, bufSize, sources, types, ids, severities,
@@ -275,12 +276,19 @@ GLuint GL_APIENTRY GetDebugMessageLog(GLuint count,
             ValidateGetDebugMessageLog(context, count, bufSize, sources, types, ids, severities,
                                        lengths, messageLog))
         {
-            return context->getDebugMessageLog(count, bufSize, sources, types, ids, severities,
-                                               lengths, messageLog);
+            returnValue = context->getDebugMessageLog(count, bufSize, sources, types, ids,
+                                                      severities, lengths, messageLog);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLog, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetDebugMessageLog, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLog, GLuint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)
@@ -395,17 +403,25 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
         program, programInterface, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetProgramResourceIndex, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceIndex(context, program, programInterface, name))
         {
-            return context->getProgramResourceIndex(program, programInterface, name);
+            returnValue = context->getProgramResourceIndex(program, programInterface, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
+    }
+    return returnValue;
 }
 
 GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
@@ -418,17 +434,25 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
         program, programInterface, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetProgramResourceLocation, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceLocation(context, program, programInterface, name))
         {
-            return context->getProgramResourceLocation(program, programInterface, name);
+            returnValue = context->getProgramResourceLocation(program, programInterface, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
+    }
+    return returnValue;
 }
 
 GLint GL_APIENTRY GetProgramResourceLocationIndex(GLuint program,
@@ -441,17 +465,26 @@ GLint GL_APIENTRY GetProgramResourceLocationIndex(GLuint program,
         program, programInterface, (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetProgramResourceLocationIndex, context, program, programInterface, name);
         if (context->skipValidation() ||
             ValidateGetProgramResourceLocationIndex(context, program, programInterface, name))
         {
-            return context->getProgramResourceLocationIndex(program, programInterface, name);
+            returnValue = context->getProgramResourceLocationIndex(program, programInterface, name);
+        }
+        else
+        {
+            returnValue =
+                GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndex, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndex, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndex, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetProgramResourceName(GLuint program,

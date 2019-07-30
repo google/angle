@@ -91,16 +91,24 @@ GLuint GL_APIENTRY CreateProgram()
     EVENT("()");
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(CreateProgram, context);
         if (context->skipValidation() || ValidateCreateProgram(context))
         {
-            return context->createProgram();
+            returnValue = context->createProgram();
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::CreateProgram, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::CreateProgram, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::CreateProgram, GLuint>();
+    }
+    return returnValue;
 }
 
 GLuint GL_APIENTRY CreateShader(GLenum type)
@@ -108,17 +116,25 @@ GLuint GL_APIENTRY CreateShader(GLenum type)
     EVENT("(GLenum type = 0x%X)", type);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ShaderType typePacked = FromGLenum<ShaderType>(type);
         ANGLE_CAPTURE(CreateShader, context, typePacked);
         if (context->skipValidation() || ValidateCreateShader(context, typePacked))
         {
-            return context->createShader(typePacked);
+            returnValue = context->createShader(typePacked);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::CreateShader, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::CreateShader, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::CreateShader, GLuint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY DeleteProgram(GLuint program)
@@ -292,16 +308,24 @@ GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar *name)
           (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetAttribLocation, context, program, name);
         if (context->skipValidation() || ValidateGetAttribLocation(context, program, name))
         {
-            return context->getAttribLocation(program, name);
+            returnValue = context->getAttribLocation(program, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetAttribLocation, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetAttribLocation, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetAttribLocation, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetProgramInfoLog(GLuint program,
@@ -399,16 +423,24 @@ GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
           (uintptr_t)name);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetUniformLocation, context, program, name);
         if (context->skipValidation() || ValidateGetUniformLocation(context, program, name))
         {
-            return context->getUniformLocation(program, name);
+            returnValue = context->getUniformLocation(program, name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetUniformfv(GLuint program, GLint location, GLfloat *params)
@@ -513,16 +545,24 @@ GLboolean GL_APIENTRY IsProgram(GLuint program)
     EVENT("(GLuint program = %u)", program);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsProgram, context, program);
         if (context->skipValidation() || ValidateIsProgram(context, program))
         {
-            return context->isProgram(program);
+            returnValue = context->isProgram(program);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsProgram, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsProgram, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsProgram, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsShader(GLuint shader)
@@ -530,16 +570,24 @@ GLboolean GL_APIENTRY IsShader(GLuint shader)
     EVENT("(GLuint shader = %u)", shader);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsShader, context, shader);
         if (context->skipValidation() || ValidateIsShader(context, shader))
         {
-            return context->isShader(shader);
+            returnValue = context->isShader(shader);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsShader, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsShader, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsShader, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY LinkProgram(GLuint program)

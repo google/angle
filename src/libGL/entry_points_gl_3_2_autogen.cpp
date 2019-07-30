@@ -31,16 +31,24 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
           (uintptr_t)sync, flags, static_cast<unsigned long long>(timeout));
 
     Context *context = GetValidGlobalContext();
+    GLenum returnValue;
     if (context)
     {
         ANGLE_CAPTURE(ClientWaitSync, context, sync, flags, timeout);
         if (context->skipValidation() || ValidateClientWaitSync(context, sync, flags, timeout))
         {
-            return context->clientWaitSync(sync, flags, timeout);
+            returnValue = context->clientWaitSync(sync, flags, timeout);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY DeleteSync(GLsync sync)
@@ -141,16 +149,24 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
     EVENT("(GLenum condition = 0x%X, GLbitfield flags = 0x%X)", condition, flags);
 
     Context *context = GetValidGlobalContext();
+    GLsync returnValue;
     if (context)
     {
         ANGLE_CAPTURE(FenceSync, context, condition, flags);
         if (context->skipValidation() || ValidateFenceSync(context, condition, flags))
         {
-            return context->fenceSync(condition, flags);
+            returnValue = context->fenceSync(condition, flags);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level)
@@ -260,16 +276,24 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
     EVENT("(GLsync sync = 0x%016" PRIxPTR ")", (uintptr_t)sync);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsSync, context, sync);
         if (context->skipValidation() || ValidateIsSync(context, sync))
         {
-            return context->isSync(sync);
+            returnValue = context->isSync(sync);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY MultiDrawElementsBaseVertex(GLenum mode,

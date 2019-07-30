@@ -1316,16 +1316,24 @@ GLuint GL_APIENTRY GenLists(GLsizei range)
     EVENT("(GLsizei range = %d)", range);
 
     Context *context = GetValidGlobalContext();
+    GLuint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GenLists, context, range);
         if (context->skipValidation() || ValidateGenLists(context, range))
         {
-            return context->genLists(range);
+            returnValue = context->genLists(range);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GenLists, GLuint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GenLists, GLuint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GenLists, GLuint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
@@ -1379,16 +1387,24 @@ GLenum GL_APIENTRY GetError()
     EVENT("()");
 
     Context *context = GetGlobalContext();
+    GLenum returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetError, context);
         if (context->skipValidation() || ValidateGetError(context))
         {
-            return context->getError();
+            returnValue = context->getError();
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetError, GLenum>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetError, GLenum>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetError, GLenum>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetFloatv(GLenum pname, GLfloat *data)
@@ -1600,16 +1616,24 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
     EVENT("(GLenum name = 0x%X)", name);
 
     Context *context = GetValidGlobalContext();
+    const GLubyte *returnValue;
     if (context)
     {
         ANGLE_CAPTURE(GetString, context, name);
         if (context->skipValidation() || ValidateGetString(context, name))
         {
-            return context->getString(name);
+            returnValue = context->getString(name);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::GetString, const GLubyte *>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetString, const GLubyte *>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::GetString, const GLubyte *>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
@@ -1963,16 +1987,24 @@ GLboolean GL_APIENTRY IsEnabled(GLenum cap)
     EVENT("(GLenum cap = 0x%X)", cap);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsEnabled, context, cap);
         if (context->skipValidation() || ValidateIsEnabled(context, cap))
         {
-            return context->isEnabled(cap);
+            returnValue = context->isEnabled(cap);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsEnabled, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsEnabled, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsEnabled, GLboolean>();
+    }
+    return returnValue;
 }
 
 GLboolean GL_APIENTRY IsList(GLuint list)
@@ -1980,16 +2012,24 @@ GLboolean GL_APIENTRY IsList(GLuint list)
     EVENT("(GLuint list = %u)", list);
 
     Context *context = GetValidGlobalContext();
+    GLboolean returnValue;
     if (context)
     {
         ANGLE_CAPTURE(IsList, context, list);
         if (context->skipValidation() || ValidateIsList(context, list))
         {
-            return context->isList(list);
+            returnValue = context->isList(list);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::IsList, GLboolean>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::IsList, GLboolean>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::IsList, GLboolean>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY LightModelf(GLenum pname, GLfloat param)
@@ -3503,16 +3543,24 @@ GLint GL_APIENTRY RenderMode(GLenum mode)
     EVENT("(GLenum mode = 0x%X)", mode);
 
     Context *context = GetValidGlobalContext();
+    GLint returnValue;
     if (context)
     {
         ANGLE_CAPTURE(RenderMode, context, mode);
         if (context->skipValidation() || ValidateRenderMode(context, mode))
         {
-            return context->renderMode(mode);
+            returnValue = context->renderMode(mode);
+        }
+        else
+        {
+            returnValue = GetDefaultReturnValue<EntryPoint::RenderMode, GLint>();
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::RenderMode, GLint>();
+    else
+    {
+        returnValue = GetDefaultReturnValue<EntryPoint::RenderMode, GLint>();
+    }
+    return returnValue;
 }
 
 void GL_APIENTRY Rotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z)
