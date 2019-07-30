@@ -40,7 +40,7 @@ void WriteParamStaticVarName(const CallCapture &call,
                              int counter,
                              std::ostream &out)
 {
-    out << call.name << "_" << param.name << "_" << counter;
+    out << call.name() << "_" << param.name << "_" << counter;
 }
 
 template <typename T, typename CastT = T>
@@ -130,8 +130,14 @@ ParamCapture &ParamBuffer::getClientArrayPointerParameter()
     return mParamCaptures[mClientArrayDataParam];
 }
 
-CallCapture::CallCapture(const char *nameIn, ParamBuffer &&paramsIn)
-    : name(nameIn), params(std::move(paramsIn))
+CallCapture::CallCapture(gl::EntryPoint entryPointIn, ParamBuffer &&paramsIn)
+    : entryPoint(entryPointIn), params(std::move(paramsIn))
+{}
+
+CallCapture::CallCapture(const std::string &customFunctionNameIn, ParamBuffer &&paramsIn)
+    : entryPoint(gl::EntryPoint::Invalid),
+      customFunctionName(customFunctionNameIn),
+      params(std::move(paramsIn))
 {}
 
 CallCapture::~CallCapture() = default;
@@ -143,9 +149,21 @@ CallCapture::CallCapture(CallCapture &&other)
 
 CallCapture &CallCapture::operator=(CallCapture &&other)
 {
-    std::swap(name, other.name);
+    std::swap(entryPoint, other.entryPoint);
+    std::swap(customFunctionName, other.customFunctionName);
     std::swap(params, other.params);
     return *this;
+}
+
+const char *CallCapture::name() const
+{
+    if (entryPoint == gl::EntryPoint::Invalid)
+    {
+        ASSERT(!customFunctionName.empty());
+        return customFunctionName.c_str();
+    }
+
+    return gl::GetEntryPointName(entryPoint);
 }
 
 FrameCapture::FrameCapture() : mFrameIndex(0), mReadBufferSize(0)
@@ -157,7 +175,7 @@ FrameCapture::~FrameCapture() = default;
 
 void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
 {
-    if (call.name == "glVertexAttribPointer")
+    if (call.entryPoint == gl::EntryPoint::VertexAttribPointer)
     {
         // Get array location
         GLuint index = call.params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
@@ -171,7 +189,7 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
             mClientVertexArrayMap[index] = -1;
         }
     }
-    else if (call.name == "glDrawArrays")
+    else if (call.entryPoint == gl::EntryPoint::DrawArrays)
     {
         if (context->getStateCache().hasAnyActiveClientAttrib())
         {
@@ -182,7 +200,7 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
             captureClientArraySnapshot(context, firstVertex + drawCount, 1);
         }
     }
-    else if (call.name == "glDrawElements")
+    else if (call.entryPoint == gl::EntryPoint::DrawElements)
     {
         if (context->getStateCache().hasAnyActiveClientAttrib())
         {
@@ -378,9 +396,9 @@ void FrameCapture::saveCapturedFrameAsCpp()
     printf("Saved '%s'.\n", fname.c_str());
 }
 
-int FrameCapture::getAndIncrementCounter(const std::string &callName, const std::string &paramName)
+int FrameCapture::getAndIncrementCounter(gl::EntryPoint entryPoint, const std::string &paramName)
 {
-    auto counterKey = std::tie(callName, paramName);
+    auto counterKey = std::tie(entryPoint, paramName);
     return mDataCounters[counterKey]++;
 }
 
@@ -389,7 +407,7 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
                                    std::ostream &header,
                                    std::vector<uint8_t> *binaryData)
 {
-    out << call.name << "(";
+    out << call.name() << "(";
 
     bool first = true;
     for (const ParamCapture &param : call.params.getParamCaptures())
@@ -421,7 +439,7 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
             }
             else if (param.type == ParamType::TGLcharConstPointerPointer)
             {
-                int counter = getAndIncrementCounter(call.name, param.name);
+                int counter = getAndIncrementCounter(call.entryPoint, param.name);
 
                 header << "const char *";
                 WriteParamStaticVarName(call, param, counter, header);
@@ -438,7 +456,7 @@ void FrameCapture::writeCallReplay(const CallCapture &call,
             }
             else
             {
-                int counter = getAndIncrementCounter(call.name, param.name);
+                int counter = getAndIncrementCounter(call.entryPoint, param.name);
 
                 ASSERT(param.data.size() == 1);
                 const std::vector<uint8_t> &data = param.data[0];

@@ -13,6 +13,7 @@
 #include "common/PackedEnums.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/entry_points_utils.h"
 #include "libANGLE/frame_capture_utils_autogen.h"
 
 #include <tuple>
@@ -67,13 +68,17 @@ class ParamBuffer final : angle::NonCopyable
 
 struct CallCapture
 {
-    CallCapture(const char *nameIn, ParamBuffer &&paramsIn);
+    CallCapture(gl::EntryPoint entryPointIn, ParamBuffer &&paramsIn);
+    CallCapture(const std::string &customFunctionNameIn, ParamBuffer &&paramsIn);
     ~CallCapture();
 
     CallCapture(CallCapture &&other);
     CallCapture &operator=(CallCapture &&other);
 
-    std::string name;
+    const char *name() const;
+
+    gl::EntryPoint entryPoint;
+    std::string customFunctionName;
     ParamBuffer params;
 };
 
@@ -89,7 +94,7 @@ class FrameCapture final : angle::NonCopyable
 
   private:
     // <CallName, ParamName>
-    using Counter = std::tuple<std::string, std::string>;
+    using Counter = std::tuple<gl::EntryPoint, std::string>;
 
     void captureClientArraySnapshot(const gl::Context *context,
                                     size_t vertexCount,
@@ -100,7 +105,7 @@ class FrameCapture final : angle::NonCopyable
                          std::ostream &header,
                          std::vector<uint8_t> *binaryData);
     void reset();
-    int getAndIncrementCounter(const std::string &callName, const std::string &paramName);
+    int getAndIncrementCounter(gl::EntryPoint entryPoint, const std::string &paramName);
     bool anyClientArray() const;
     void saveCapturedFrameAsCpp();
 
@@ -113,8 +118,7 @@ class FrameCapture final : angle::NonCopyable
 };
 
 template <typename CaptureFuncT, typename... ArgsT>
-void CaptureCallToFrameCapture(const char *entryPointName,
-                               CaptureFuncT captureFunc,
+void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
                                bool isCallValid,
                                gl::Context *context,
                                ArgsT... captureParams)

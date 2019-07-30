@@ -1362,5 +1362,7 @@ enum class EntryPoint
     WindowPos3s,
     WindowPos3sv
 };
+
+const char *GetEntryPointName(EntryPoint ep);
 }  // namespace gl
 #endif  // LIBANGLE_ENTRY_POINTS_ENUM_AUTOGEN_H_

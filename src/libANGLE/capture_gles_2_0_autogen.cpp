@@ -25,7 +25,7 @@ CallCapture CaptureActiveTexture(const Context *context, bool isCallValid, GLenu
 
     paramBuffer.addValueParam("texture", ParamType::TGLenum, texture);
 
-    return CallCapture("glActiveTexture", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ActiveTexture, std::move(paramBuffer));
 }
 
 CallCapture CaptureAttachShader(const Context *context,
@@ -38,7 +38,7 @@ CallCapture CaptureAttachShader(const Context *context,
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
 
-    return CallCapture("glAttachShader", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::AttachShader, std::move(paramBuffer));
 }
 
 CallCapture CaptureBindAttribLocation(const Context *context,
@@ -57,7 +57,7 @@ CallCapture CaptureBindAttribLocation(const Context *context,
     CaptureBindAttribLocation_name(context, isCallValid, program, index, name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
-    return CallCapture("glBindAttribLocation", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BindAttribLocation, std::move(paramBuffer));
 }
 
 CallCapture CaptureBindBuffer(const Context *context,
@@ -70,7 +70,7 @@ CallCapture CaptureBindBuffer(const Context *context,
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
     paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
 
-    return CallCapture("glBindBuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BindBuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureBindFramebuffer(const Context *context,
@@ -83,7 +83,7 @@ CallCapture CaptureBindFramebuffer(const Context *context,
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("framebuffer", ParamType::TGLuint, framebuffer);
 
-    return CallCapture("glBindFramebuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BindFramebuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureBindRenderbuffer(const Context *context,
@@ -96,7 +96,7 @@ CallCapture CaptureBindRenderbuffer(const Context *context,
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
 
-    return CallCapture("glBindRenderbuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BindRenderbuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureBindTexture(const Context *context,
@@ -109,7 +109,7 @@ CallCapture CaptureBindTexture(const Context *context,
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
 
-    return CallCapture("glBindTexture", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BindTexture, std::move(paramBuffer));
 }
 
 CallCapture CaptureBlendColor(const Context *context,
@@ -126,7 +126,7 @@ CallCapture CaptureBlendColor(const Context *context,
     paramBuffer.addValueParam("blue", ParamType::TGLfloat, blue);
     paramBuffer.addValueParam("alpha", ParamType::TGLfloat, alpha);
 
-    return CallCapture("glBlendColor", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BlendColor, std::move(paramBuffer));
 }
 
 CallCapture CaptureBlendEquation(const Context *context, bool isCallValid, GLenum mode)
@@ -135,7 +135,7 @@ CallCapture CaptureBlendEquation(const Context *context, bool isCallValid, GLenu
 
     paramBuffer.addValueParam("mode", ParamType::TGLenum, mode);
 
-    return CallCapture("glBlendEquation", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BlendEquation, std::move(paramBuffer));
 }
 
 CallCapture CaptureBlendEquationSeparate(const Context *context,
@@ -148,7 +148,7 @@ CallCapture CaptureBlendEquationSeparate(const Context *context,
     paramBuffer.addValueParam("modeRGB", ParamType::TGLenum, modeRGB);
     paramBuffer.addValueParam("modeAlpha", ParamType::TGLenum, modeAlpha);
 
-    return CallCapture("glBlendEquationSeparate", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BlendEquationSeparate, std::move(paramBuffer));
 }
 
 CallCapture CaptureBlendFunc(const Context *context,
@@ -161,7 +161,7 @@ CallCapture CaptureBlendFunc(const Context *context,
     paramBuffer.addValueParam("sfactor", ParamType::TGLenum, sfactor);
     paramBuffer.addValueParam("dfactor", ParamType::TGLenum, dfactor);
 
-    return CallCapture("glBlendFunc", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BlendFunc, std::move(paramBuffer));
 }
 
 CallCapture CaptureBlendFuncSeparate(const Context *context,
@@ -178,7 +178,7 @@ CallCapture CaptureBlendFuncSeparate(const Context *context,
     paramBuffer.addValueParam("sfactorAlpha", ParamType::TGLenum, sfactorAlpha);
     paramBuffer.addValueParam("dfactorAlpha", ParamType::TGLenum, dfactorAlpha);
 
-    return CallCapture("glBlendFuncSeparate", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BlendFuncSeparate, std::move(paramBuffer));
 }
 
 CallCapture CaptureBufferData(const Context *context,
@@ -200,7 +200,7 @@ CallCapture CaptureBufferData(const Context *context,
 
     paramBuffer.addValueParam("usagePacked", ParamType::TBufferUsage, usagePacked);
 
-    return CallCapture("glBufferData", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BufferData, std::move(paramBuffer));
 }
 
 CallCapture CaptureBufferSubData(const Context *context,
@@ -221,7 +221,7 @@ CallCapture CaptureBufferSubData(const Context *context,
     CaptureBufferSubData_data(context, isCallValid, targetPacked, offset, size, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    return CallCapture("glBufferSubData", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::BufferSubData, std::move(paramBuffer));
 }
 
 CallCapture CaptureCheckFramebufferStatus(const Context *context,
@@ -237,7 +237,7 @@ CallCapture CaptureCheckFramebufferStatus(const Context *context,
     InitParamValue(ParamType::TGLenum, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glCheckFramebufferStatus", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CheckFramebufferStatus, std::move(paramBuffer));
 }
 
 CallCapture CaptureClear(const Context *context, bool isCallValid, GLbitfield mask)
@@ -246,7 +246,7 @@ CallCapture CaptureClear(const Context *context, bool isCallValid, GLbitfield ma
 
     paramBuffer.addValueParam("mask", ParamType::TGLbitfield, mask);
 
-    return CallCapture("glClear", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Clear, std::move(paramBuffer));
 }
 
 CallCapture CaptureClearColor(const Context *context,
@@ -263,7 +263,7 @@ CallCapture CaptureClearColor(const Context *context,
     paramBuffer.addValueParam("blue", ParamType::TGLfloat, blue);
     paramBuffer.addValueParam("alpha", ParamType::TGLfloat, alpha);
 
-    return CallCapture("glClearColor", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ClearColor, std::move(paramBuffer));
 }
 
 CallCapture CaptureClearDepthf(const Context *context, bool isCallValid, GLfloat d)
@@ -272,7 +272,7 @@ CallCapture CaptureClearDepthf(const Context *context, bool isCallValid, GLfloat
 
     paramBuffer.addValueParam("d", ParamType::TGLfloat, d);
 
-    return CallCapture("glClearDepthf", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ClearDepthf, std::move(paramBuffer));
 }
 
 CallCapture CaptureClearStencil(const Context *context, bool isCallValid, GLint s)
@@ -281,7 +281,7 @@ CallCapture CaptureClearStencil(const Context *context, bool isCallValid, GLint 
 
     paramBuffer.addValueParam("s", ParamType::TGLint, s);
 
-    return CallCapture("glClearStencil", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ClearStencil, std::move(paramBuffer));
 }
 
 CallCapture CaptureColorMask(const Context *context,
@@ -298,7 +298,7 @@ CallCapture CaptureColorMask(const Context *context,
     paramBuffer.addValueParam("blue", ParamType::TGLboolean, blue);
     paramBuffer.addValueParam("alpha", ParamType::TGLboolean, alpha);
 
-    return CallCapture("glColorMask", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ColorMask, std::move(paramBuffer));
 }
 
 CallCapture CaptureCompileShader(const Context *context, bool isCallValid, GLuint shader)
@@ -307,7 +307,7 @@ CallCapture CaptureCompileShader(const Context *context, bool isCallValid, GLuin
 
     paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
 
-    return CallCapture("glCompileShader", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CompileShader, std::move(paramBuffer));
 }
 
 CallCapture CaptureCompressedTexImage2D(const Context *context,
@@ -337,7 +337,7 @@ CallCapture CaptureCompressedTexImage2D(const Context *context,
                                      width, height, border, imageSize, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    return CallCapture("glCompressedTexImage2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CompressedTexImage2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureCompressedTexSubImage2D(const Context *context,
@@ -369,7 +369,7 @@ CallCapture CaptureCompressedTexSubImage2D(const Context *context,
                                         width, height, format, imageSize, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    return CallCapture("glCompressedTexSubImage2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CompressedTexSubImage2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureCopyTexImage2D(const Context *context,
@@ -394,7 +394,7 @@ CallCapture CaptureCopyTexImage2D(const Context *context,
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
     paramBuffer.addValueParam("border", ParamType::TGLint, border);
 
-    return CallCapture("glCopyTexImage2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CopyTexImage2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureCopyTexSubImage2D(const Context *context,
@@ -419,7 +419,7 @@ CallCapture CaptureCopyTexSubImage2D(const Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    return CallCapture("glCopyTexSubImage2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CopyTexSubImage2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureCreateProgram(const Context *context, bool isCallValid, GLuint returnValue)
@@ -430,7 +430,7 @@ CallCapture CaptureCreateProgram(const Context *context, bool isCallValid, GLuin
     InitParamValue(ParamType::TGLuint, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glCreateProgram", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CreateProgram, std::move(paramBuffer));
 }
 
 CallCapture CaptureCreateShader(const Context *context,
@@ -446,7 +446,7 @@ CallCapture CaptureCreateShader(const Context *context,
     InitParamValue(ParamType::TGLuint, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glCreateShader", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CreateShader, std::move(paramBuffer));
 }
 
 CallCapture CaptureCullFace(const Context *context, bool isCallValid, CullFaceMode modePacked)
@@ -455,7 +455,7 @@ CallCapture CaptureCullFace(const Context *context, bool isCallValid, CullFaceMo
 
     paramBuffer.addValueParam("modePacked", ParamType::TCullFaceMode, modePacked);
 
-    return CallCapture("glCullFace", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::CullFace, std::move(paramBuffer));
 }
 
 CallCapture CaptureDeleteBuffers(const Context *context,
@@ -472,7 +472,7 @@ CallCapture CaptureDeleteBuffers(const Context *context,
     CaptureDeleteBuffers_buffers(context, isCallValid, n, buffers, &buffersParam);
     paramBuffer.addParam(std::move(buffersParam));
 
-    return CallCapture("glDeleteBuffers", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DeleteBuffers, std::move(paramBuffer));
 }
 
 CallCapture CaptureDeleteFramebuffers(const Context *context,
@@ -490,7 +490,7 @@ CallCapture CaptureDeleteFramebuffers(const Context *context,
                                            &framebuffersParam);
     paramBuffer.addParam(std::move(framebuffersParam));
 
-    return CallCapture("glDeleteFramebuffers", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DeleteFramebuffers, std::move(paramBuffer));
 }
 
 CallCapture CaptureDeleteProgram(const Context *context, bool isCallValid, GLuint program)
@@ -499,7 +499,7 @@ CallCapture CaptureDeleteProgram(const Context *context, bool isCallValid, GLuin
 
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
-    return CallCapture("glDeleteProgram", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DeleteProgram, std::move(paramBuffer));
 }
 
 CallCapture CaptureDeleteRenderbuffers(const Context *context,
@@ -517,7 +517,7 @@ CallCapture CaptureDeleteRenderbuffers(const Context *context,
                                              &renderbuffersParam);
     paramBuffer.addParam(std::move(renderbuffersParam));
 
-    return CallCapture("glDeleteRenderbuffers", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DeleteRenderbuffers, std::move(paramBuffer));
 }
 
 CallCapture CaptureDeleteShader(const Context *context, bool isCallValid, GLuint shader)
@@ -526,7 +526,7 @@ CallCapture CaptureDeleteShader(const Context *context, bool isCallValid, GLuint
 
     paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
 
-    return CallCapture("glDeleteShader", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DeleteShader, std::move(paramBuffer));
 }
 
 CallCapture CaptureDeleteTextures(const Context *context,
@@ -543,7 +543,7 @@ CallCapture CaptureDeleteTextures(const Context *context,
     CaptureDeleteTextures_textures(context, isCallValid, n, textures, &texturesParam);
     paramBuffer.addParam(std::move(texturesParam));
 
-    return CallCapture("glDeleteTextures", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DeleteTextures, std::move(paramBuffer));
 }
 
 CallCapture CaptureDepthFunc(const Context *context, bool isCallValid, GLenum func)
@@ -552,7 +552,7 @@ CallCapture CaptureDepthFunc(const Context *context, bool isCallValid, GLenum fu
 
     paramBuffer.addValueParam("func", ParamType::TGLenum, func);
 
-    return CallCapture("glDepthFunc", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DepthFunc, std::move(paramBuffer));
 }
 
 CallCapture CaptureDepthMask(const Context *context, bool isCallValid, GLboolean flag)
@@ -561,7 +561,7 @@ CallCapture CaptureDepthMask(const Context *context, bool isCallValid, GLboolean
 
     paramBuffer.addValueParam("flag", ParamType::TGLboolean, flag);
 
-    return CallCapture("glDepthMask", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DepthMask, std::move(paramBuffer));
 }
 
 CallCapture CaptureDepthRangef(const Context *context, bool isCallValid, GLfloat n, GLfloat f)
@@ -571,7 +571,7 @@ CallCapture CaptureDepthRangef(const Context *context, bool isCallValid, GLfloat
     paramBuffer.addValueParam("n", ParamType::TGLfloat, n);
     paramBuffer.addValueParam("f", ParamType::TGLfloat, f);
 
-    return CallCapture("glDepthRangef", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DepthRangef, std::move(paramBuffer));
 }
 
 CallCapture CaptureDetachShader(const Context *context,
@@ -584,7 +584,7 @@ CallCapture CaptureDetachShader(const Context *context,
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
     paramBuffer.addValueParam("shader", ParamType::TGLuint, shader);
 
-    return CallCapture("glDetachShader", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DetachShader, std::move(paramBuffer));
 }
 
 CallCapture CaptureDisable(const Context *context, bool isCallValid, GLenum cap)
@@ -593,7 +593,7 @@ CallCapture CaptureDisable(const Context *context, bool isCallValid, GLenum cap)
 
     paramBuffer.addValueParam("cap", ParamType::TGLenum, cap);
 
-    return CallCapture("glDisable", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Disable, std::move(paramBuffer));
 }
 
 CallCapture CaptureDisableVertexAttribArray(const Context *context, bool isCallValid, GLuint index)
@@ -602,7 +602,7 @@ CallCapture CaptureDisableVertexAttribArray(const Context *context, bool isCallV
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
-    return CallCapture("glDisableVertexAttribArray", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DisableVertexAttribArray, std::move(paramBuffer));
 }
 
 CallCapture CaptureDrawArrays(const Context *context,
@@ -617,7 +617,7 @@ CallCapture CaptureDrawArrays(const Context *context,
     paramBuffer.addValueParam("first", ParamType::TGLint, first);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
 
-    return CallCapture("glDrawArrays", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DrawArrays, std::move(paramBuffer));
 }
 
 CallCapture CaptureDrawElements(const Context *context,
@@ -639,7 +639,7 @@ CallCapture CaptureDrawElements(const Context *context,
                                 &indicesParam);
     paramBuffer.addParam(std::move(indicesParam));
 
-    return CallCapture("glDrawElements", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::DrawElements, std::move(paramBuffer));
 }
 
 CallCapture CaptureEnable(const Context *context, bool isCallValid, GLenum cap)
@@ -648,7 +648,7 @@ CallCapture CaptureEnable(const Context *context, bool isCallValid, GLenum cap)
 
     paramBuffer.addValueParam("cap", ParamType::TGLenum, cap);
 
-    return CallCapture("glEnable", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Enable, std::move(paramBuffer));
 }
 
 CallCapture CaptureEnableVertexAttribArray(const Context *context, bool isCallValid, GLuint index)
@@ -657,21 +657,21 @@ CallCapture CaptureEnableVertexAttribArray(const Context *context, bool isCallVa
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
 
-    return CallCapture("glEnableVertexAttribArray", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::EnableVertexAttribArray, std::move(paramBuffer));
 }
 
 CallCapture CaptureFinish(const Context *context, bool isCallValid)
 {
     ParamBuffer paramBuffer;
 
-    return CallCapture("glFinish", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Finish, std::move(paramBuffer));
 }
 
 CallCapture CaptureFlush(const Context *context, bool isCallValid)
 {
     ParamBuffer paramBuffer;
 
-    return CallCapture("glFlush", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Flush, std::move(paramBuffer));
 }
 
 CallCapture CaptureFramebufferRenderbuffer(const Context *context,
@@ -688,7 +688,7 @@ CallCapture CaptureFramebufferRenderbuffer(const Context *context,
     paramBuffer.addValueParam("renderbuffertarget", ParamType::TGLenum, renderbuffertarget);
     paramBuffer.addValueParam("renderbuffer", ParamType::TGLuint, renderbuffer);
 
-    return CallCapture("glFramebufferRenderbuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::FramebufferRenderbuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureFramebufferTexture2D(const Context *context,
@@ -707,7 +707,7 @@ CallCapture CaptureFramebufferTexture2D(const Context *context,
     paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
 
-    return CallCapture("glFramebufferTexture2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::FramebufferTexture2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureFrontFace(const Context *context, bool isCallValid, GLenum mode)
@@ -716,7 +716,7 @@ CallCapture CaptureFrontFace(const Context *context, bool isCallValid, GLenum mo
 
     paramBuffer.addValueParam("mode", ParamType::TGLenum, mode);
 
-    return CallCapture("glFrontFace", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::FrontFace, std::move(paramBuffer));
 }
 
 CallCapture CaptureGenBuffers(const Context *context, bool isCallValid, GLsizei n, GLuint *buffers)
@@ -730,7 +730,7 @@ CallCapture CaptureGenBuffers(const Context *context, bool isCallValid, GLsizei 
     CaptureGenBuffers_buffers(context, isCallValid, n, buffers, &buffersParam);
     paramBuffer.addParam(std::move(buffersParam));
 
-    return CallCapture("glGenBuffers", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GenBuffers, std::move(paramBuffer));
 }
 
 CallCapture CaptureGenFramebuffers(const Context *context,
@@ -747,7 +747,7 @@ CallCapture CaptureGenFramebuffers(const Context *context,
     CaptureGenFramebuffers_framebuffers(context, isCallValid, n, framebuffers, &framebuffersParam);
     paramBuffer.addParam(std::move(framebuffersParam));
 
-    return CallCapture("glGenFramebuffers", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GenFramebuffers, std::move(paramBuffer));
 }
 
 CallCapture CaptureGenRenderbuffers(const Context *context,
@@ -765,7 +765,7 @@ CallCapture CaptureGenRenderbuffers(const Context *context,
                                           &renderbuffersParam);
     paramBuffer.addParam(std::move(renderbuffersParam));
 
-    return CallCapture("glGenRenderbuffers", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GenRenderbuffers, std::move(paramBuffer));
 }
 
 CallCapture CaptureGenTextures(const Context *context,
@@ -782,7 +782,7 @@ CallCapture CaptureGenTextures(const Context *context,
     CaptureGenTextures_textures(context, isCallValid, n, textures, &texturesParam);
     paramBuffer.addParam(std::move(texturesParam));
 
-    return CallCapture("glGenTextures", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GenTextures, std::move(paramBuffer));
 }
 
 CallCapture CaptureGenerateMipmap(const Context *context,
@@ -793,7 +793,7 @@ CallCapture CaptureGenerateMipmap(const Context *context,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
 
-    return CallCapture("glGenerateMipmap", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GenerateMipmap, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetActiveAttrib(const Context *context,
@@ -836,7 +836,7 @@ CallCapture CaptureGetActiveAttrib(const Context *context,
                                 name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
-    return CallCapture("glGetActiveAttrib", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetActiveAttrib, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetActiveUniform(const Context *context,
@@ -879,7 +879,7 @@ CallCapture CaptureGetActiveUniform(const Context *context,
                                  name, &nameParam);
     paramBuffer.addParam(std::move(nameParam));
 
-    return CallCapture("glGetActiveUniform", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetActiveUniform, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetAttachedShaders(const Context *context,
@@ -906,7 +906,7 @@ CallCapture CaptureGetAttachedShaders(const Context *context,
                                       &shadersParam);
     paramBuffer.addParam(std::move(shadersParam));
 
-    return CallCapture("glGetAttachedShaders", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetAttachedShaders, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetAttribLocation(const Context *context,
@@ -928,7 +928,7 @@ CallCapture CaptureGetAttribLocation(const Context *context,
     InitParamValue(ParamType::TGLint, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glGetAttribLocation", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetAttribLocation, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetBooleanv(const Context *context,
@@ -945,7 +945,7 @@ CallCapture CaptureGetBooleanv(const Context *context,
     CaptureGetBooleanv_data(context, isCallValid, pname, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    return CallCapture("glGetBooleanv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetBooleanv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetBufferParameteriv(const Context *context,
@@ -965,7 +965,7 @@ CallCapture CaptureGetBufferParameteriv(const Context *context,
                                        &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetBufferParameteriv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetBufferParameteriv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetError(const Context *context, bool isCallValid, GLenum returnValue)
@@ -976,7 +976,7 @@ CallCapture CaptureGetError(const Context *context, bool isCallValid, GLenum ret
     InitParamValue(ParamType::TGLenum, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glGetError", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetError, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetFloatv(const Context *context, bool isCallValid, GLenum pname, GLfloat *data)
@@ -990,7 +990,7 @@ CallCapture CaptureGetFloatv(const Context *context, bool isCallValid, GLenum pn
     CaptureGetFloatv_data(context, isCallValid, pname, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    return CallCapture("glGetFloatv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetFloatv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetFramebufferAttachmentParameteriv(const Context *context,
@@ -1012,7 +1012,7 @@ CallCapture CaptureGetFramebufferAttachmentParameteriv(const Context *context,
                                                       pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetFramebufferAttachmentParameteriv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetFramebufferAttachmentParameteriv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetIntegerv(const Context *context, bool isCallValid, GLenum pname, GLint *data)
@@ -1026,7 +1026,7 @@ CallCapture CaptureGetIntegerv(const Context *context, bool isCallValid, GLenum 
     CaptureGetIntegerv_data(context, isCallValid, pname, data, &dataParam);
     paramBuffer.addParam(std::move(dataParam));
 
-    return CallCapture("glGetIntegerv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetIntegerv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetProgramInfoLog(const Context *context,
@@ -1053,7 +1053,7 @@ CallCapture CaptureGetProgramInfoLog(const Context *context,
                                      &infoLogParam);
     paramBuffer.addParam(std::move(infoLogParam));
 
-    return CallCapture("glGetProgramInfoLog", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetProgramInfoLog, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetProgramiv(const Context *context,
@@ -1072,7 +1072,7 @@ CallCapture CaptureGetProgramiv(const Context *context,
     CaptureGetProgramiv_params(context, isCallValid, program, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetProgramiv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetProgramiv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetRenderbufferParameteriv(const Context *context,
@@ -1092,7 +1092,7 @@ CallCapture CaptureGetRenderbufferParameteriv(const Context *context,
                                              &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetRenderbufferParameteriv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetRenderbufferParameteriv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetShaderInfoLog(const Context *context,
@@ -1119,7 +1119,7 @@ CallCapture CaptureGetShaderInfoLog(const Context *context,
                                     &infoLogParam);
     paramBuffer.addParam(std::move(infoLogParam));
 
-    return CallCapture("glGetShaderInfoLog", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetShaderInfoLog, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetShaderPrecisionFormat(const Context *context,
@@ -1146,7 +1146,7 @@ CallCapture CaptureGetShaderPrecisionFormat(const Context *context,
                                               range, precision, &precisionParam);
     paramBuffer.addParam(std::move(precisionParam));
 
-    return CallCapture("glGetShaderPrecisionFormat", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetShaderPrecisionFormat, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetShaderSource(const Context *context,
@@ -1173,7 +1173,7 @@ CallCapture CaptureGetShaderSource(const Context *context,
                                   &sourceParam);
     paramBuffer.addParam(std::move(sourceParam));
 
-    return CallCapture("glGetShaderSource", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetShaderSource, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetShaderiv(const Context *context,
@@ -1192,7 +1192,7 @@ CallCapture CaptureGetShaderiv(const Context *context,
     CaptureGetShaderiv_params(context, isCallValid, shader, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetShaderiv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetShaderiv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetString(const Context *context,
@@ -1208,7 +1208,7 @@ CallCapture CaptureGetString(const Context *context,
     InitParamValue(ParamType::TGLubyteConstPointer, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glGetString", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetString, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetTexParameterfv(const Context *context,
@@ -1228,7 +1228,7 @@ CallCapture CaptureGetTexParameterfv(const Context *context,
                                     &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetTexParameterfv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetTexParameterfv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetTexParameteriv(const Context *context,
@@ -1248,7 +1248,7 @@ CallCapture CaptureGetTexParameteriv(const Context *context,
                                     &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetTexParameteriv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetTexParameteriv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetUniformLocation(const Context *context,
@@ -1270,7 +1270,7 @@ CallCapture CaptureGetUniformLocation(const Context *context,
     InitParamValue(ParamType::TGLint, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glGetUniformLocation", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetUniformLocation, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetUniformfv(const Context *context,
@@ -1289,7 +1289,7 @@ CallCapture CaptureGetUniformfv(const Context *context,
     CaptureGetUniformfv_params(context, isCallValid, program, location, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetUniformfv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetUniformfv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetUniformiv(const Context *context,
@@ -1308,7 +1308,7 @@ CallCapture CaptureGetUniformiv(const Context *context,
     CaptureGetUniformiv_params(context, isCallValid, program, location, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetUniformiv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetUniformiv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetVertexAttribPointerv(const Context *context,
@@ -1328,7 +1328,7 @@ CallCapture CaptureGetVertexAttribPointerv(const Context *context,
                                            &pointerParam);
     paramBuffer.addParam(std::move(pointerParam));
 
-    return CallCapture("glGetVertexAttribPointerv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetVertexAttribPointerv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetVertexAttribfv(const Context *context,
@@ -1347,7 +1347,7 @@ CallCapture CaptureGetVertexAttribfv(const Context *context,
     CaptureGetVertexAttribfv_params(context, isCallValid, index, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetVertexAttribfv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetVertexAttribfv, std::move(paramBuffer));
 }
 
 CallCapture CaptureGetVertexAttribiv(const Context *context,
@@ -1366,7 +1366,7 @@ CallCapture CaptureGetVertexAttribiv(const Context *context,
     CaptureGetVertexAttribiv_params(context, isCallValid, index, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glGetVertexAttribiv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::GetVertexAttribiv, std::move(paramBuffer));
 }
 
 CallCapture CaptureHint(const Context *context, bool isCallValid, GLenum target, GLenum mode)
@@ -1376,7 +1376,7 @@ CallCapture CaptureHint(const Context *context, bool isCallValid, GLenum target,
     paramBuffer.addValueParam("target", ParamType::TGLenum, target);
     paramBuffer.addValueParam("mode", ParamType::TGLenum, mode);
 
-    return CallCapture("glHint", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Hint, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsBuffer(const Context *context,
@@ -1392,7 +1392,7 @@ CallCapture CaptureIsBuffer(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsBuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsBuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsEnabled(const Context *context,
@@ -1408,7 +1408,7 @@ CallCapture CaptureIsEnabled(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsEnabled", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsEnabled, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsFramebuffer(const Context *context,
@@ -1424,7 +1424,7 @@ CallCapture CaptureIsFramebuffer(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsFramebuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsFramebuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsProgram(const Context *context,
@@ -1440,7 +1440,7 @@ CallCapture CaptureIsProgram(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsProgram", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsProgram, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsRenderbuffer(const Context *context,
@@ -1456,7 +1456,7 @@ CallCapture CaptureIsRenderbuffer(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsRenderbuffer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsRenderbuffer, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsShader(const Context *context,
@@ -1472,7 +1472,7 @@ CallCapture CaptureIsShader(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsShader", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsShader, std::move(paramBuffer));
 }
 
 CallCapture CaptureIsTexture(const Context *context,
@@ -1488,7 +1488,7 @@ CallCapture CaptureIsTexture(const Context *context,
     InitParamValue(ParamType::TGLboolean, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture("glIsTexture", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::IsTexture, std::move(paramBuffer));
 }
 
 CallCapture CaptureLineWidth(const Context *context, bool isCallValid, GLfloat width)
@@ -1497,7 +1497,7 @@ CallCapture CaptureLineWidth(const Context *context, bool isCallValid, GLfloat w
 
     paramBuffer.addValueParam("width", ParamType::TGLfloat, width);
 
-    return CallCapture("glLineWidth", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::LineWidth, std::move(paramBuffer));
 }
 
 CallCapture CaptureLinkProgram(const Context *context, bool isCallValid, GLuint program)
@@ -1506,7 +1506,7 @@ CallCapture CaptureLinkProgram(const Context *context, bool isCallValid, GLuint 
 
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
-    return CallCapture("glLinkProgram", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::LinkProgram, std::move(paramBuffer));
 }
 
 CallCapture CapturePixelStorei(const Context *context, bool isCallValid, GLenum pname, GLint param)
@@ -1516,7 +1516,7 @@ CallCapture CapturePixelStorei(const Context *context, bool isCallValid, GLenum 
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
-    return CallCapture("glPixelStorei", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::PixelStorei, std::move(paramBuffer));
 }
 
 CallCapture CapturePolygonOffset(const Context *context,
@@ -1529,7 +1529,7 @@ CallCapture CapturePolygonOffset(const Context *context,
     paramBuffer.addValueParam("factor", ParamType::TGLfloat, factor);
     paramBuffer.addValueParam("units", ParamType::TGLfloat, units);
 
-    return CallCapture("glPolygonOffset", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::PolygonOffset, std::move(paramBuffer));
 }
 
 CallCapture CaptureReadPixels(const Context *context,
@@ -1557,14 +1557,14 @@ CallCapture CaptureReadPixels(const Context *context,
                              &pixelsParam);
     paramBuffer.addParam(std::move(pixelsParam));
 
-    return CallCapture("glReadPixels", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ReadPixels, std::move(paramBuffer));
 }
 
 CallCapture CaptureReleaseShaderCompiler(const Context *context, bool isCallValid)
 {
     ParamBuffer paramBuffer;
 
-    return CallCapture("glReleaseShaderCompiler", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ReleaseShaderCompiler, std::move(paramBuffer));
 }
 
 CallCapture CaptureRenderbufferStorage(const Context *context,
@@ -1581,7 +1581,7 @@ CallCapture CaptureRenderbufferStorage(const Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    return CallCapture("glRenderbufferStorage", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::RenderbufferStorage, std::move(paramBuffer));
 }
 
 CallCapture CaptureSampleCoverage(const Context *context,
@@ -1594,7 +1594,7 @@ CallCapture CaptureSampleCoverage(const Context *context,
     paramBuffer.addValueParam("value", ParamType::TGLfloat, value);
     paramBuffer.addValueParam("invert", ParamType::TGLboolean, invert);
 
-    return CallCapture("glSampleCoverage", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::SampleCoverage, std::move(paramBuffer));
 }
 
 CallCapture CaptureScissor(const Context *context,
@@ -1611,7 +1611,7 @@ CallCapture CaptureScissor(const Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    return CallCapture("glScissor", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Scissor, std::move(paramBuffer));
 }
 
 CallCapture CaptureShaderBinary(const Context *context,
@@ -1642,7 +1642,7 @@ CallCapture CaptureShaderBinary(const Context *context,
 
     paramBuffer.addValueParam("length", ParamType::TGLsizei, length);
 
-    return CallCapture("glShaderBinary", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ShaderBinary, std::move(paramBuffer));
 }
 
 CallCapture CaptureShaderSource(const Context *context,
@@ -1667,7 +1667,7 @@ CallCapture CaptureShaderSource(const Context *context,
     CaptureShaderSource_length(context, isCallValid, shader, count, string, length, &lengthParam);
     paramBuffer.addParam(std::move(lengthParam));
 
-    return CallCapture("glShaderSource", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ShaderSource, std::move(paramBuffer));
 }
 
 CallCapture CaptureStencilFunc(const Context *context,
@@ -1682,7 +1682,7 @@ CallCapture CaptureStencilFunc(const Context *context,
     paramBuffer.addValueParam("ref", ParamType::TGLint, ref);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
-    return CallCapture("glStencilFunc", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::StencilFunc, std::move(paramBuffer));
 }
 
 CallCapture CaptureStencilFuncSeparate(const Context *context,
@@ -1699,7 +1699,7 @@ CallCapture CaptureStencilFuncSeparate(const Context *context,
     paramBuffer.addValueParam("ref", ParamType::TGLint, ref);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
-    return CallCapture("glStencilFuncSeparate", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::StencilFuncSeparate, std::move(paramBuffer));
 }
 
 CallCapture CaptureStencilMask(const Context *context, bool isCallValid, GLuint mask)
@@ -1708,7 +1708,7 @@ CallCapture CaptureStencilMask(const Context *context, bool isCallValid, GLuint 
 
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
-    return CallCapture("glStencilMask", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::StencilMask, std::move(paramBuffer));
 }
 
 CallCapture CaptureStencilMaskSeparate(const Context *context,
@@ -1721,7 +1721,7 @@ CallCapture CaptureStencilMaskSeparate(const Context *context,
     paramBuffer.addValueParam("face", ParamType::TGLenum, face);
     paramBuffer.addValueParam("mask", ParamType::TGLuint, mask);
 
-    return CallCapture("glStencilMaskSeparate", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::StencilMaskSeparate, std::move(paramBuffer));
 }
 
 CallCapture CaptureStencilOp(const Context *context,
@@ -1736,7 +1736,7 @@ CallCapture CaptureStencilOp(const Context *context,
     paramBuffer.addValueParam("zfail", ParamType::TGLenum, zfail);
     paramBuffer.addValueParam("zpass", ParamType::TGLenum, zpass);
 
-    return CallCapture("glStencilOp", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::StencilOp, std::move(paramBuffer));
 }
 
 CallCapture CaptureStencilOpSeparate(const Context *context,
@@ -1753,7 +1753,7 @@ CallCapture CaptureStencilOpSeparate(const Context *context,
     paramBuffer.addValueParam("dpfail", ParamType::TGLenum, dpfail);
     paramBuffer.addValueParam("dppass", ParamType::TGLenum, dppass);
 
-    return CallCapture("glStencilOpSeparate", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::StencilOpSeparate, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexImage2D(const Context *context,
@@ -1785,7 +1785,7 @@ CallCapture CaptureTexImage2D(const Context *context,
                              height, border, format, type, pixels, &pixelsParam);
     paramBuffer.addParam(std::move(pixelsParam));
 
-    return CallCapture("glTexImage2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::TexImage2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexParameterf(const Context *context,
@@ -1800,7 +1800,7 @@ CallCapture CaptureTexParameterf(const Context *context,
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLfloat, param);
 
-    return CallCapture("glTexParameterf", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::TexParameterf, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexParameterfv(const Context *context,
@@ -1819,7 +1819,7 @@ CallCapture CaptureTexParameterfv(const Context *context,
     CaptureTexParameterfv_params(context, isCallValid, targetPacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glTexParameterfv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::TexParameterfv, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexParameteri(const Context *context,
@@ -1834,7 +1834,7 @@ CallCapture CaptureTexParameteri(const Context *context,
     paramBuffer.addValueParam("pname", ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
-    return CallCapture("glTexParameteri", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::TexParameteri, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexParameteriv(const Context *context,
@@ -1853,7 +1853,7 @@ CallCapture CaptureTexParameteriv(const Context *context,
     CaptureTexParameteriv_params(context, isCallValid, targetPacked, pname, params, &paramsParam);
     paramBuffer.addParam(std::move(paramsParam));
 
-    return CallCapture("glTexParameteriv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::TexParameteriv, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexSubImage2D(const Context *context,
@@ -1885,7 +1885,7 @@ CallCapture CaptureTexSubImage2D(const Context *context,
                                 height, format, type, pixels, &pixelsParam);
     paramBuffer.addParam(std::move(pixelsParam));
 
-    return CallCapture("glTexSubImage2D", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::TexSubImage2D, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform1f(const Context *context, bool isCallValid, GLint location, GLfloat v0)
@@ -1895,7 +1895,7 @@ CallCapture CaptureUniform1f(const Context *context, bool isCallValid, GLint loc
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("v0", ParamType::TGLfloat, v0);
 
-    return CallCapture("glUniform1f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform1f, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform1fv(const Context *context,
@@ -1914,7 +1914,7 @@ CallCapture CaptureUniform1fv(const Context *context,
     CaptureUniform1fv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform1fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform1fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform1i(const Context *context, bool isCallValid, GLint location, GLint v0)
@@ -1924,7 +1924,7 @@ CallCapture CaptureUniform1i(const Context *context, bool isCallValid, GLint loc
     paramBuffer.addValueParam("location", ParamType::TGLint, location);
     paramBuffer.addValueParam("v0", ParamType::TGLint, v0);
 
-    return CallCapture("glUniform1i", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform1i, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform1iv(const Context *context,
@@ -1943,7 +1943,7 @@ CallCapture CaptureUniform1iv(const Context *context,
     CaptureUniform1iv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform1iv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform1iv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform2f(const Context *context,
@@ -1958,7 +1958,7 @@ CallCapture CaptureUniform2f(const Context *context,
     paramBuffer.addValueParam("v0", ParamType::TGLfloat, v0);
     paramBuffer.addValueParam("v1", ParamType::TGLfloat, v1);
 
-    return CallCapture("glUniform2f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform2f, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform2fv(const Context *context,
@@ -1977,7 +1977,7 @@ CallCapture CaptureUniform2fv(const Context *context,
     CaptureUniform2fv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform2fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform2fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform2i(const Context *context,
@@ -1992,7 +1992,7 @@ CallCapture CaptureUniform2i(const Context *context,
     paramBuffer.addValueParam("v0", ParamType::TGLint, v0);
     paramBuffer.addValueParam("v1", ParamType::TGLint, v1);
 
-    return CallCapture("glUniform2i", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform2i, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform2iv(const Context *context,
@@ -2011,7 +2011,7 @@ CallCapture CaptureUniform2iv(const Context *context,
     CaptureUniform2iv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform2iv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform2iv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform3f(const Context *context,
@@ -2028,7 +2028,7 @@ CallCapture CaptureUniform3f(const Context *context,
     paramBuffer.addValueParam("v1", ParamType::TGLfloat, v1);
     paramBuffer.addValueParam("v2", ParamType::TGLfloat, v2);
 
-    return CallCapture("glUniform3f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform3f, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform3fv(const Context *context,
@@ -2047,7 +2047,7 @@ CallCapture CaptureUniform3fv(const Context *context,
     CaptureUniform3fv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform3fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform3fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform3i(const Context *context,
@@ -2064,7 +2064,7 @@ CallCapture CaptureUniform3i(const Context *context,
     paramBuffer.addValueParam("v1", ParamType::TGLint, v1);
     paramBuffer.addValueParam("v2", ParamType::TGLint, v2);
 
-    return CallCapture("glUniform3i", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform3i, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform3iv(const Context *context,
@@ -2083,7 +2083,7 @@ CallCapture CaptureUniform3iv(const Context *context,
     CaptureUniform3iv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform3iv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform3iv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform4f(const Context *context,
@@ -2102,7 +2102,7 @@ CallCapture CaptureUniform4f(const Context *context,
     paramBuffer.addValueParam("v2", ParamType::TGLfloat, v2);
     paramBuffer.addValueParam("v3", ParamType::TGLfloat, v3);
 
-    return CallCapture("glUniform4f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform4f, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform4fv(const Context *context,
@@ -2121,7 +2121,7 @@ CallCapture CaptureUniform4fv(const Context *context,
     CaptureUniform4fv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform4fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform4fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform4i(const Context *context,
@@ -2140,7 +2140,7 @@ CallCapture CaptureUniform4i(const Context *context,
     paramBuffer.addValueParam("v2", ParamType::TGLint, v2);
     paramBuffer.addValueParam("v3", ParamType::TGLint, v3);
 
-    return CallCapture("glUniform4i", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform4i, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniform4iv(const Context *context,
@@ -2159,7 +2159,7 @@ CallCapture CaptureUniform4iv(const Context *context,
     CaptureUniform4iv_value(context, isCallValid, location, count, value, &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniform4iv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Uniform4iv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniformMatrix2fv(const Context *context,
@@ -2181,7 +2181,7 @@ CallCapture CaptureUniformMatrix2fv(const Context *context,
                                   &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniformMatrix2fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::UniformMatrix2fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniformMatrix3fv(const Context *context,
@@ -2203,7 +2203,7 @@ CallCapture CaptureUniformMatrix3fv(const Context *context,
                                   &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniformMatrix3fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::UniformMatrix3fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUniformMatrix4fv(const Context *context,
@@ -2225,7 +2225,7 @@ CallCapture CaptureUniformMatrix4fv(const Context *context,
                                   &valueParam);
     paramBuffer.addParam(std::move(valueParam));
 
-    return CallCapture("glUniformMatrix4fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::UniformMatrix4fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureUseProgram(const Context *context, bool isCallValid, GLuint program)
@@ -2234,7 +2234,7 @@ CallCapture CaptureUseProgram(const Context *context, bool isCallValid, GLuint p
 
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
-    return CallCapture("glUseProgram", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::UseProgram, std::move(paramBuffer));
 }
 
 CallCapture CaptureValidateProgram(const Context *context, bool isCallValid, GLuint program)
@@ -2243,7 +2243,7 @@ CallCapture CaptureValidateProgram(const Context *context, bool isCallValid, GLu
 
     paramBuffer.addValueParam("program", ParamType::TGLuint, program);
 
-    return CallCapture("glValidateProgram", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::ValidateProgram, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib1f(const Context *context, bool isCallValid, GLuint index, GLfloat x)
@@ -2253,7 +2253,7 @@ CallCapture CaptureVertexAttrib1f(const Context *context, bool isCallValid, GLui
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
     paramBuffer.addValueParam("x", ParamType::TGLfloat, x);
 
-    return CallCapture("glVertexAttrib1f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib1f, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib1fv(const Context *context,
@@ -2270,7 +2270,7 @@ CallCapture CaptureVertexAttrib1fv(const Context *context,
     CaptureVertexAttrib1fv_v(context, isCallValid, index, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
-    return CallCapture("glVertexAttrib1fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib1fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib2f(const Context *context,
@@ -2285,7 +2285,7 @@ CallCapture CaptureVertexAttrib2f(const Context *context,
     paramBuffer.addValueParam("x", ParamType::TGLfloat, x);
     paramBuffer.addValueParam("y", ParamType::TGLfloat, y);
 
-    return CallCapture("glVertexAttrib2f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib2f, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib2fv(const Context *context,
@@ -2302,7 +2302,7 @@ CallCapture CaptureVertexAttrib2fv(const Context *context,
     CaptureVertexAttrib2fv_v(context, isCallValid, index, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
-    return CallCapture("glVertexAttrib2fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib2fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib3f(const Context *context,
@@ -2319,7 +2319,7 @@ CallCapture CaptureVertexAttrib3f(const Context *context,
     paramBuffer.addValueParam("y", ParamType::TGLfloat, y);
     paramBuffer.addValueParam("z", ParamType::TGLfloat, z);
 
-    return CallCapture("glVertexAttrib3f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib3f, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib3fv(const Context *context,
@@ -2336,7 +2336,7 @@ CallCapture CaptureVertexAttrib3fv(const Context *context,
     CaptureVertexAttrib3fv_v(context, isCallValid, index, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
-    return CallCapture("glVertexAttrib3fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib3fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib4f(const Context *context,
@@ -2355,7 +2355,7 @@ CallCapture CaptureVertexAttrib4f(const Context *context,
     paramBuffer.addValueParam("z", ParamType::TGLfloat, z);
     paramBuffer.addValueParam("w", ParamType::TGLfloat, w);
 
-    return CallCapture("glVertexAttrib4f", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib4f, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttrib4fv(const Context *context,
@@ -2372,7 +2372,7 @@ CallCapture CaptureVertexAttrib4fv(const Context *context,
     CaptureVertexAttrib4fv_v(context, isCallValid, index, v, &vParam);
     paramBuffer.addParam(std::move(vParam));
 
-    return CallCapture("glVertexAttrib4fv", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttrib4fv, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttribPointer(const Context *context,
@@ -2398,7 +2398,7 @@ CallCapture CaptureVertexAttribPointer(const Context *context,
                                        stride, pointer, &pointerParam);
     paramBuffer.addParam(std::move(pointerParam));
 
-    return CallCapture("glVertexAttribPointer", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::VertexAttribPointer, std::move(paramBuffer));
 }
 
 CallCapture CaptureViewport(const Context *context,
@@ -2415,7 +2415,7 @@ CallCapture CaptureViewport(const Context *context,
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
 
-    return CallCapture("glViewport", std::move(paramBuffer));
+    return CallCapture(gl::EntryPoint::Viewport, std::move(paramBuffer));
 }
 
 }  // namespace gl
